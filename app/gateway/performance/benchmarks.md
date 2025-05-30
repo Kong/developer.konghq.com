@@ -23,6 +23,14 @@ description: "View Kong's benchmark for the current {{site.base_gateway}} versio
 related_resources:
   - text: "Resource sizing guidelines"
     url: /gateway/resource-sizing-guidelines/
+  - text: "Establish a {{site.base_gateway}} performance benchmark"
+    url: /gateway/performance/establish-a-benchmark/
+  - text: "Optimize {{site.base_gateway}} performance"
+    url: /gateway/performance/optimize/
+
+next_steps:
+  - text: Establish your own {{site.base_gateway}} performance benchmark
+    url: /gateway/performance/establish-a-benchmark/
 ---
 
 As of {{site.base_gateway}} 3.6.x, Kong publishes performance results on {{site.base_gateway}}, along with the test methodology and details. 

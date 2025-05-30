@@ -265,6 +265,8 @@ sections:
       - path: /gateway/reserved-entity-names/
       - path: /gateway/tags/
       - path: /gateway/performance/benchmarks/
+      - path: /gateway/performance/establish-a-benchmark/
+      - path: /gateway/performance/optimize/
       - path: /gateway/logs/
       - path: /gateway/entities/consumer-group/
       - path: /gateway/entities/event-hook/
