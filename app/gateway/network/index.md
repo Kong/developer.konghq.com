@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} network"
+title: "{{site.base_gateway}} ports reference"
 content_type: reference
 layout: reference
 
@@ -59,11 +59,11 @@ columns:
 rows:
   - port: "`8001`"
     protocol: "HTTP"
-    kong_conf_setting: "[`admin_listen`](/gateway/configuration/#admin_listen)"
+    kong_conf_setting: "[`admin_listen`](/gateway/configuration/#admin-listen)"
     description: "Listens for Admin API calls from the command line over HTTP."
   - port: "`8444`"
     protocol: "HTTPS"
-    kong_conf_setting: "[`admin_listen`](/gateway/configuration/#admin_listen)"
+    kong_conf_setting: "[`admin_listen`](/gateway/configuration/#admin-listen)"
     description: "Listens for Admin API calls from the command line over HTTPS."
 {% endtable %}
 <!--vale on-->
@@ -89,31 +89,31 @@ rows:
      `8002`
     protocol: HTTP
     setting: |
-      [`admin_gui_listen`](/gateway/configuration/#admin_gui_listen)
+      [`admin_gui_listen`](/gateway/configuration/#admin-gui-listen)
     description: Kong Manager (GUI). Listens for HTTP traffic.
   - port: |
      `8445`
     protocol: HTTPS
     setting: |
-      [`admin_gui_listen`](/gateway/configuration/#admin_gui_listen)
+      [`admin_gui_listen`](/gateway/configuration/#admin-gui-listen)
     description: Kong Manager (GUI). Listens for HTTPS traffic.
   - port: |
      `8005`
     protocol: TCP
     setting: |
-      [`cluster_listen`](/gateway/configuration/#cluster_listen)
+      [`cluster_listen`](/gateway/configuration/#cluster-listen)
     description: Hybrid mode only. Control plane listens for traffic from data plane nodes.
   - port: |
      `8006`
     protocol: TCP
     setting: |
-      [`cluster_telemetry_listen`](/gateway/configuration/#cluster_telemetry_listen)
+      [`cluster_telemetry_listen`](/gateway/configuration/#cluster-telemetry-listen)
     description: Hybrid mode only. Control plane listens for Vitals telemetry data from data plane nodes.
   - port: |
      `8007`
-    protocol: HTT
+    protocol: HTTP
     setting: |
-      [`status_listen`](/gateway/configuration/#status_listen)
+      [`status_listen`](/gateway/configuration/#status-listen)
     description: |
       {% new_in 3.6 %} Status listener. Listens for calls from monitoring clients over HTTP.
 {% endtable %}
