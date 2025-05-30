@@ -10,7 +10,7 @@ capture: KONNECT_CONTROL_PLANE_ID
 body:
     name: {% if include.name %}{{ include.name }}{% else %}My KNEP Control Plane{% endif %}
     cluster_type: "CLUSTER_TYPE_KAFKA_NATIVE_EVENT_PROXY"
-jq: "-r .id"
+jq: ".id"
 {% endkonnect_api_request %}
 
 <!--vale on-->
