@@ -1165,6 +1165,7 @@ app/gateway/upgrade/backup-and-restore.md:
   - app/_src/gateway/upgrade/backup-and-restore.md
 app/gateway/db-less-mode.md:
   - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
+  - app/_src/gateway/admin-api/declarative-configuration.md
 app/gateway/upgrade/blue-green.md:
   - app/_src/gateway/upgrade/blue-green.md
 app/gateway/upgrade/index.md:
