@@ -1,0 +1,141 @@
+definitions:
+  - term: Admin
+    description: |
+      An admin is a Kong Gateway user account capable of accessing the Admin API or Kong Manager.
+    url: |
+      [Admin entity](/gateway/entities/admin/)
+  - term: Beta
+    description: A functionality of a feature or release version is of high quality and can be used in a **non-production** environment.
+    url: |
+      [Stages of software availability](/stages-of-software-availability/#beta)
+  - term: Consumer
+    description: |
+      A Consumer object represents the client of a Service. 
+    url: |
+      [Consumer entity](/gateway/entities/consumer/)
+  - term: Credential
+    description: |
+      A unique string associated with a Consumer, for example, an API key.
+    url: |
+      [Consumer entity](/gateway/entities/consumer/#what-are-credentials-and-why-do-i-need-them)
+  - term: Dev Portal
+    description: |
+      A web application that functions as a collection of API products, specs, and documentation objects. 
+      The purpose of a Dev Portal is to allow registration and consumption of services running through Kong to other teams, developers, and partners.
+    url: |
+      [Dev Portal](/dev-portal/)
+  - term: Groups
+    description: |
+      Sets of role-defined entities.
+    url: |
+      [Group entity](/gateway/entities/group/)
+  - term: Kong plugin or bundled plugin
+    description: |
+      A plugin developed, maintained, and supported by Kong. 
+      Unless otherwise noted in the plugin's description on the Kong Plugin Hub, all Kong-supported plugins are bundled with their relevant Kong Gateway install packages, and are available in Konnect.
+    url: |
+      [Kong Plugin Hub](/plugins/)
+  - term: Permissions
+    description: |
+      A permission is a policy representing the ability to create, read, update, or delete an Admin API entity defined by endpoints.
+      Permissions are a self-managed Kong Gateway Enterprise concept. 
+    url: |
+      [RBAC entity](/gateway/entities/rbac/)
+  - term: Insomnia plugin
+    description: |
+      Insomnia plugins can be used to extend the functionality of Insomnia with advanced features and customizable themes.
+    url: |
+      [Insomnia plugins](/insomnia/plugins/)
+  - term: Kong Gateway plugin
+    description: |
+      Kong Gateway plugins provide advanced functionality and extend the use of Kong Gateway, allowing you to add new features to your gateway. 
+      Plugins can be configured to run in a variety of contexts, ranging from a specific Route to all upstreams. Plugins can perform operations in your environment, such as authentication, rate limiting, or transformations on a proxied request.
+    url: |
+      [Plugin entity](/gateway/entities/plugin/)
+      <br><br>
+      [Plugin Hub](/plugins/)
+  - term: Mesh policy
+    description: |
+      Mesh policies bundle features for your service traffic and network configuration.
+    url: |
+      [Mesh policies](/mesh/policies/)
+  - term: Event Gateway policy
+    description: |
+      In Event Gateway, policies can be used to intercept client connections and transform messages between the client and the broker.
+    url: |
+      [Event Gateway policies](/event-gateway/policies/)
+  - term: Role
+    description: |
+      A role is a set of permissions that may be reused and assigned to admins and users.
+    url: |
+      [Roles in self-managed Kong Gateway](/gateway/entities/rbac/)
+      <br><br>
+      [Roles in Konnect](/konnect-platform/teams-and-roles/#roles)
+  - term: Route
+    description: |
+      A Route defines rules to match client requests to upstream services. 
+      Each Route is associated with a Gateway Service, and a Service may have multiple Routes associated with it.
+    url: |
+      [Route entity](/gateway/entities/route/)
+  - term: Gateway Service
+    description: |
+      Gateway Services represent the upstream services in your system. These applications are the business logic components of your system responsible for responding to requests.
+    url: |
+      [Gateway Service entity](/gateway/entities/service/)
+  - term: Service Catalog service
+    description: |
+      A Service Catalog service in Konnect represents a service running within your organization.
+      Each Service Catalog service aggregates both internal tools, like Gateway and Mesh Services, and external integrations,
+      like GitHub repositories and Slack webhooks.
+    url: |
+      [Service Catalog](/service-catalog/)
+  - term: Super admin
+    description: |
+      A super admin is a specialized role in self-managed Kong Gateway that manages Workspaces, admins, roles, and customizes permissions.
+    url: |
+      [Create a super admin](/how-to/create-a-super-admin/)
+  - term: Teams
+    description: |
+      Teams organize developers into working groups.
+    url: |
+      [Teams in self-managed Kong Gateway](/gateway/entities/rbac/)
+      <br><br>
+      [Teams in Konnect](/konnect-platform/teams-and-roles/#teams)
+  - term: Upstream service
+    description: |
+      An instance of your own application, usually running behind Kong Gateway, Mesh, etc.
+      Also referred to as an upstream application, service application, or backend service.
+    url: |
+      N/A
+  - term: Tech preview
+    description: |
+      An early-stage, experimental feature that **should not** be used in a production environment. Some products or projects may also call this stage *alpha*.
+    url: |
+      [Stages of software availability](/stages-of-software-availability/#tech-preview)
+  - term: Premium partner plugin
+    description: |
+      A third-party custom plugin that has been validated by Kong and meets certain standards. 
+      Although these plugins are developed, tested, and maintained by an external developer, the plugin owner also ensures the plugin's version compatibility with Kong Gateway.
+    url: |
+      [Premium partners](/premium-partners/)
+  - term: Third-party or community plugin
+    description: |
+      A custom plugin developed, maintained, and supported by an external developer, not by Kong. 
+      Unless explicitly labeled as a premium partner, Kong does not test these plugins or maintain their version compatibility. 
+      If you need any support with these plugins, contact the maintainer directly.
+    url: |
+      [Third-party plugins](/plugins/?support=third-party)
+  - term: Upstream
+    description: |
+      An Upstream enables load balancing by providing a virtual hostname and collection of Targets, or upstream service instances, to which client requests are forwarded.
+    url: |
+      [Upstream entity](/gateway/entities/upstream/)
+  - term: Workspace
+    description: |
+      Workspaces enable an organization to segment objects and admins into namespaces.
+      The segmentation allows teams of admins sharing the same Kong Gateway cluster to adopt roles for interacting with specific objects.
+      <br><br>
+      Workspaces are available in self-managed Kong Gateway Enterprise only. 
+      When running Kong Gateway in Konnect, entity and user segmentation is handled through Control Planes and Control Plane Groups.
+    url: |
+      [Workspace entity](/gateway/entities/workspace/)
