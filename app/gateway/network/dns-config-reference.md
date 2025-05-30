@@ -29,19 +29,19 @@ tags:
 related_resources:
   - text: "{{site.base_gateway}} network"
     url: /gateway/network/
+  - text: "Optimize {{site.base_gateway}} performance"
+    url: /gateway/performance/optimize/
 ---
 
 {{site.base_gateway}} provides Kong Manager, which must be able to interact with the Admin API. This application is subject to security restrictions enforced by browsers, and Kong must send appropriate information to browsers in order for it to function properly.
 
 These security restrictions use the applications’ DNS hostnames to evaluate whether the applications’ metadata satisfies the security constraints. As such, you must design your DNS structure to meet the requirements.
 
-
 ## DNS structure requirements
 
 The two types of requirements are: 
 
 * Kong Manager and the Admin API are served from the same hostname, typically by placing the Admin API under an otherwise unused path, such as `/_adminapi/`.
-
 * Kong Manager and the Admin API are served from different hostnames with a shared suffix (e.g. `kong.example` for `api.admin.kong.example` and `manager.admin.kong.example`). Admin session configuration sets `cookie_domain` to the shared suffix.
 
 The first option simplifies configuration in kong.conf, but requires an HTTP proxy in front of the applications (because it uses HTTP path-based routing). The Kong proxy can be used for this. The second option requires more configuration in kong.conf, but can be used without proxying the applications.
@@ -57,11 +57,9 @@ the two headers do not match, the browser will discard the response.
 
 ### CORS and Kong Manager
 
-
 Kong Manager operate by issuing requests to the Admin API using JavaScript. These requests may be cross-origin depending on your environment. The Admin API obtains its ACAO header value from the `admin_gui_url` in kong.conf.
 
 You can configure your environment such that these requests are not cross-origin by accessing both the Kong Manager and its associated API via the same hostname, for example: `https://admin.kong.example/` and the Admin API at `https://admin.kong.example/_api/`. This option requires placing a proxy in front of both Kong Manager and the Admin API to handle path-based routing. You can use Kong’s proxy for this purpose. Kong Manager must be served at the root of the domains and you cannot place the APIs at the root and Kong Manager under a path. You can manage CORS in {{site.base_gateway}} using the [CORS plugin](/plugins/cors/).
-
 
 ### Troubleshooting CORS
 
@@ -148,3 +146,79 @@ with `Set-Cookie`, they may have since been deleted, or may have expired.
 Review the `Set-Cookie` information to see when the cookie was set to expire
 and subsequent requests to determine if any other response has issued a
 `Set-Cookie` that deleted it (by setting expiration to a date in the past).
+
+## Migrate to new DNS client {% new_in 3.8 %}
+
+The 3.8 DNS client introduces a new standardized way to configure a Gateway Service, and helps improve performance.
+When migrating to the new client, review the following changes and make adjustments as necessary.
+
+### Record types
+
+The new DNS client introduces some changes in the support for different record types. 
+To avoid issues, make sure that your SRV records configuration is compatible with the new client before migrating.
+
+#### SRV
+
+SRV is included by default in the `resolver_family` directive, however the client will only query SRV records if the domain name follows the [RFC 2782](https://datatracker.ietf.org/doc/html/rfc2782) format (`_SERVICE._PROTO.NAME`). 
+If the SRV record query fails, the client will not attempt to query the domain's IP addresses (A and AAAA records) again.
+
+Before enabling SRV support with the new DNS client, make sure that the domain name is registered with your DNS service provider in the supported format. 
+This standard format also works with the old DNS. 
+Once you change the SRV format, it will continue to work with the old client, and there will no downtime during migration.
+
+#### CNAME
+
+CNAME dereferencing is not needed with the new DNS client. 
+This task is entirely handled by the DNS server, per the industry standard.
+
+{:.info}
+> The new DNS client does not consider the order of record types when querying a domain. 
+It only queries either IP addresses (A and AAAA records) or SRV records, but not both.
+
+### Custom directives
+
+If you had custom values for the directives in the [`DNS RESOLVER`](/gateway/configuration/#dns-resolver-section) section in `kong.conf`, 
+you will need to manually add these values to the corresponding directives under [`New DNS RESOLVER`](/gateway/configuration/#new-dns-resolver-section).
+
+{% table %}
+columns:
+  - title: Old DNS resolver directive
+    key: old
+  - title: New DNS resolver directive
+    key: new
+  - title: Notes
+    key: note
+rows:
+  - old: "`dns_resolver`"
+    new: "`resolver_address`"
+    note: Same behavior.
+  - old: "`dns_hostsfile`"
+    new: "`resolver_hostsfile`"
+    note: Same behavior.
+  - old: "`dns_order`"
+    new: "`resolver_family`"
+    note: The new directive is only used to define the supported query types. There is no specific order.
+  - old: "`dns_valid_ttl`"
+    new: "`resolver_valid_ttl`"
+    note: Same behavior.
+  - old: "`dns_stale_ttl`"
+    new: "`resolver_stale_ttl`"
+    note: Same behavior.
+  - old: "`dns_not_found_ttl` and `dns_error_ttl`"
+    new: "`resolver_error_ttl`"
+    note: "The two old directives are combined into a single directive in the new client."
+  - old: "`dns_cache_size`"
+    new: "`resolver_lru_cache_size` and `resolver_mem_cache_size`"
+    note: |
+      The old directive is split into the following new directives:
+      * `resolver_lru_cache_size` specifies the size of the L1 LRU lua VM cache
+      * `resolver_mem_cache_size` specifies the size of the L2 shared memory cache
+  - old: "`dns_no_sync`"
+    new: "N/A"
+    note: This directive no longer exists. Requests are always synchronized in the new client.
+{% endtable %}
+
+### Enable the new DNS client
+
+The new DNS client is disabled by default. 
+To enable it, set [`new_dns_client=on`](/gateway/configuration/#new-dns-client) in your `kong.conf` file.
