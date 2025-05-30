@@ -71,7 +71,7 @@ in these systems leads to suboptimal performance.
 [`nginx_http_keepalive_requests`](/gateway/configuration/#nginx-http-keepalive-requests) to `100000`.
 
 **Explanation:** In high throughput scenarios with 10 000 or more RPS, the overhead of setting up TCP and TLS 
-connections or insufficient connections can result in underutilization of network bandwidth or the upstream server.
+connections or insufficient connections can result in underuse of network bandwidth or the upstream server.
 
 To increase connection reuse, you can increase `upstream_keepalive_max_requests` and `nginx_http_keepalive_requests` to `100000`, or all the way up to `500000`.
 
