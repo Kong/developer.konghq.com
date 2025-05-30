@@ -20,6 +20,8 @@ cd tools/changelog-generator
 npm ci
 ```
 
+Make sure that the `./tmp` folder is empty before you run any of the commands.
+
 ### Generate temp files for specific versions
 
 To generate a temp file for a specific version run:
