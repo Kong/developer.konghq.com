@@ -1,0 +1,33 @@
+mtls-auth:
+  - mTLS Authentication
+
+hmac-auth:
+  - HMAC Authentication
+
+key-auth-enc:
+  - Key Authentication Encrypted
+
+ai-response-transformer:
+  - ai-transformers
+  - AI-Transformers
+
+ai-request-transformer:
+  - ai-transformers
+  - AI-Transformers
+
+oas-validation:
+  - OAS
+
+confluent-consume:
+  - Confluent Consume and Kafka Consume plugins
+
+kafka-consume:
+  - Confluent Consume and Kafka Consume plugins
+
+opentelemetry:
+  - OpenTelemetry / Zipkin
+  - OpenTelemetry, Zipkin
+
+zipkin:
+  - OpenTelemetry / Zipkin
+  - OpenTelemetry, Zipkin
