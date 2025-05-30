@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} network"
+title: "{{site.base_gateway}} ports reference"
 content_type: reference
 layout: reference
 
@@ -111,7 +111,7 @@ rows:
     description: Hybrid mode only. Control plane listens for Vitals telemetry data from data plane nodes.
   - port: |
      `8007`
-    protocol: HTT
+    protocol: HTTP
     setting: |
       [`status_listen`](/gateway/configuration/#status_listen)
     description: |
