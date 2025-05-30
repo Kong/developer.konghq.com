@@ -37,6 +37,15 @@ where:
 This creates a `./tmp/3.10.0.2.json` file containing all the changelog entries for that version.
 Note: the `./tmp` folder was added to `gitignore`.
 
+### Set the release date
+
+Open `app/_data/products/gateway.yml` and add a new entry in `release_dates`:
+
+```
+release_dates:
+  '3.10.0.2': 2025/05/20
+```
+
 ### Generate/update the changelog
 
 There are 3 folders and one file involved in the process:
