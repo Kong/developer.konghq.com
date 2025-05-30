@@ -4,10 +4,11 @@ Generate Gateway's changelog based on the entries defined in `kong-ee` repo and 
 
 ## How it works
 
-There are two stages to the process:
+There are three stages to the process:
 
-1. Generate temp files for new versions
-2. Merge the existing changelog file (`app/_data/changelog/gateway.json`) with the temp files generated in the previous step.
+1. Generate temp files for new versions.
+2. Set the release date for the release in `app/_data/products/gateway.yml`.
+3. Merge the existing changelog file (`app/_data/changelog/gateway.json`) with the temp files generated in the previous step.
 
 ## How to run it
 
