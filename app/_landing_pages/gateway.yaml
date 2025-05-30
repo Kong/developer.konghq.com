@@ -25,12 +25,15 @@ rows:
                     {{ site.base_gateway }} is a lightweight, fast, and flexible cloud-native API gateway. An API gateway is a reverse proxy that lets you manage, configure, and route requests to your APIs.
 
                     {{ site.base_gateway }} runs in front of any RESTful API and can be extended through modules and plugins.
-                    It’s designed to run on decentralized architectures, including hybrid-cloud and multi-cloud deployments.
+                    It's designed to run on decentralized architectures, including hybrid-cloud and multi-cloud deployments.
       - blocks:
-          - type: image
+          - type: structured_text
             config:
-              url: /assets/images/gateway/kong-gateway-overview.svg
-              alt_text: Diagram of how {{ site.base_gateway }} works
+              blocks:
+                - type: text
+                  text: |
+                    <img src="/assets/images/gateway/kong-gateway-overview-light.svg" alt="Diagram of how {{ site.base_gateway }} works" class="flex dark:hidden">
+                    <img src="/assets/images/gateway/kong-gateway-overview-dark.svg" alt="Diagram of how {{ site.base_gateway }} works" class="hidden dark:flex">
 
   - header:
       type: h2
