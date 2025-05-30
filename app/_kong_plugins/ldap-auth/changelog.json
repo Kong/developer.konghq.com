@@ -1,0 +1,21 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "**ldap-auth**: Add WWW-Authenticate headers to all 401 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `ldap-auth` changed from `1002` to `1200`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**LDAP Authentication**: Refactored ASN.1 parser using OpenSSL API through FFI.[#8663](https://github.com/Kong/kong/pull/8663)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "**AI-RAG-Injector**: Added a new plugin which allows automatically injecting documents to simplify building RAG pipelines.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

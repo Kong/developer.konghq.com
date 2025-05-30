@@ -1,0 +1,23 @@
+{
+  "3.6.0.0": [
+    {
+      "message": "**Request-Termination**: add support for consumer group scoping",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "**Request Termination**: Fixed an issue with the `echo` option, which caused the plugin to not return the `uri-captures`.[#10390](https://github.com/Kong/kong/pull/10390)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "**Request Termination**: The plugin no longer allows setting `status_code` to `null`.[#9400](https://github.com/Kong/kong/pull/9400)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

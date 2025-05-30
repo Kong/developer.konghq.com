@@ -1,0 +1,33 @@
+{
+  "3.2.1.0": [
+    {
+      "message": "**OPA**: This plugin can now handle custom messages from the OPA server.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "**OPA**: Added the `include_uri_captures_in_opa_input` field. When this field is set to true, the [regex capture groups](https://docs.konghq.com/gateway/latest/reference/proxy/#using-regex-in-paths) captured on the Kong Gateway route’s path field in the current request (if any) are included as input to OPA.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OPA**: Removed redundant deprecated code from the plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "**OPA**: New configuration parameter `include_body_in_opa_input`: When enabled, include the raw body as a string in the OPA input at `input.request.http.body` and the body size at `input.request.http.body_size`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OPA**: New configuration parameter `include_parsed_json_body_in_opa_input`: When enabled and content-type is `application/json`, the parsed JSON will be added to the OPA input at `input.request.http.parsed_body`.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "**Confluent Consume and Kafka Consume plugins**: An error message appears in the logs about a missing cluster name, even when the name is specified.\n",
+      "type": "known-issues",
+      "scope": "Plugin"
+    }
+  ]
+}

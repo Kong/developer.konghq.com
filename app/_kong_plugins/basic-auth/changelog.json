@@ -1,0 +1,30 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "**Basic-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.0": [
+    {
+      "message": "**Basic-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.5": [
+    {
+      "message": "**Basic-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `basic-auth` changed from `1001` to `1100`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ]
+}

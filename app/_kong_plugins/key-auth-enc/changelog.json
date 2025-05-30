@@ -1,0 +1,28 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "**key-auth-enc**: Added WWW-Authenticate headers to all 401 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "**Key Authentication Encrypted**: Fixed the `ttl` parameter. You can now set `ttl` for an encrypted key.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Key Authentication Encrypted**: Fixed an issue where this plugin didn’t accept tags.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "**Key Authentication - Encrypted**: Fixed an issue where using an API key that exists in multiple workspaces caused a 401 error. This occurred because of a caching issue.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

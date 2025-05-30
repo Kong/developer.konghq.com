@@ -1,0 +1,9 @@
+{
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `route-by-header` changed from `2000` to `850`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ]
+}
