@@ -1,0 +1,16 @@
+{
+  "3.9.0.0": [
+    {
+      "message": "**ai-request-transformer**, **ai-response-transformer**: Fixed an issue where Azure Managed Identity did not work for AI Transformer Plugins.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Introduced the new **AI Response Transformer** plugin that enables passing mid-flight upstream responses to an LLM for transformation or sanitization.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

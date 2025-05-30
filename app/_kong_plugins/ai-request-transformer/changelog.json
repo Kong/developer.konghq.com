@@ -1,0 +1,35 @@
+{
+  "3.9.0.0": [
+    {
+      "message": "**ai-transformers**: Fixed a bug where the correct LLM error message was not propagated to the caller.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**ai-request-transformer**, **ai-response-transformer**: Fixed an issue where Azure Managed Identity did not work for AI Transformer Plugins.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "**ai-transformers**: Fixed a bug where the correct LLM error message was not propagated to the caller.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "**AI-Transformers**: Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Introduced the new **AI Request Transformer** plugin that enables passing mid-flight consumer requests to an LLM for transformation or sanitization.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

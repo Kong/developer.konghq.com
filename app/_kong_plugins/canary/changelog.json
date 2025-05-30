@@ -1,0 +1,33 @@
+{
+  "3.2.1.0": [
+    {
+      "message": "**Canary**: Added a default value for the `start` field in the canary plugin. If not set, the start time defaults to the current timestamp.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `canary` changed from `13` to `20`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "**Canary**: Added the ability to configure `canary_by_header_name`. This parameter accepts a header name that, when present on a request, overrides the configured canary functionality. \n- If the configured header is present with the value `always`, the request will always go to the canary upstream.\n- If the header is present with the value `never`, the request will never go to the canary upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Canary**: If the configured header is present with the value `always`, the request will always go to the canary upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Canary**: If the header is present with the value `never`, the request will never go to the canary upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

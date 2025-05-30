@@ -1,0 +1,9 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "**header-cert-auth**: Added a new plugin for header-based certificate authentication.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

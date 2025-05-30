@@ -1,0 +1,206 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "**Prometheus**: Added gauge to expose connectivity state to the control plane.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Added the capability to enable or disable exporting of Proxy-Wasm metrics.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.1": [
+    {
+      "message": "**prometheus**: Fixed an issue where the metric `data_plane_config_hash` might not work correctly for incremental sync.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "**Prometheus**: Bumped KONG_LATENCY_BUCKETS bucket's maximal capacity to 6000",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Added support for Proxy-Wasm metrics.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "**Prometheus**: Bumped KONG_LATENCY_BUCKETS bucket's maximal capacity to 6000",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "**Prometheus**: Fixed an issue where CP/DP compatibility check was missing for the new configuration field `ai_metrics`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Improved error logging when having inconsistent labels count.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0": [
+    {
+      "message": "**Prometheus**: Added workspace label to Prometheus plugin metrics.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "**Prometheus**: has been optimized to reduce proxy latency impacts during scraping. [#10949](https://github.com/Kong/kong/pull/10949)[#11040](https://github.com/Kong/kong/pull/11040)[#11065](https://github.com/Kong/kong/pull/11065)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Prometheus (`prometheus`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "**Prometheus**: High cardinality metrics are now disabled by default.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Decreased performance penalty to proxy traffic when collecting metrics.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `http_status` to `http_requests_total`.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `kong_bandwidth` to `kong_bandwidth_bytes`.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_hconnections_total` (or `nginx_current_connections`?)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `request_count` and `consumer_status` were merged into http\\_requests\\_total.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Removed the following metric: `http_consumer_status`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: New metrics: \n- `session_duration_ms`: monitoring stream connections.\n- `node_info`: Single gauge set to 1 that outputs the node’s ID and Kong Gateway version.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `session_duration_ms`: monitoring stream connections.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `node_info`: Single gauge set to 1 that outputs the node’s ID and Kong Gateway version.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `http_requests_total` has a new label, `source`. It can be set to `exit`, `error`, or `service`.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: All memory metrics have a new label: `node_id`.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Updated the Grafana dashboard that comes packaged with Kong",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: The following metric names were adjusted to add units to standardize where possible: \n- `http_status` to `http_requests_total`.\n- \n`latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.\n\n- `kong_bandwidth` to `kong_bandwidth_bytes`.\n- `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_connections_total`.\n- `request_count` and `consumer_status` were merged into `http_requests_total`.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_connections_total`.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `request_count` and `consumer_status` were merged into `http_requests_total`.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Updated the Grafana dashboard that comes packaged with Kong[#8712](https://github.com/Kong/kong/pull/8712)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: The plugin doesn’t export status codes, latencies, bandwidth and upstream health check metrics by default. They can still be turned on manually by setting `status_code_metrics`,`lantency_metrics`, `bandwidth_metrics` and `upstream_health_metrics` respectively.[#9028](https://github.com/Kong/kong/pull/9028)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Prometheus (`prometheus`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.3": [
+    {
+      "message": "**Prometheus**: Provided options to reduce the plugin’s impact on performance. Added new `kong.conf` options to switch high cardinality metrics `on` or `off`: [`prometheus_plugin_status_code_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_status_code_metrics), [`prometheus_plugin_latency_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_latency_metrics), [`prometheus_plugin_bandwidth_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_bandwidth_metrics), and [`prometheus_plugin_upstream_health_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_upstream_health_metrics).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "**Prometheus**: Added three new metrics: \n- `kong_db_entities_total` (gauge): total number of entities in the database.\n- `kong_db_entity_count_errors` (counter): measures the number of errors encountered during the measurement of `kong_db_entities_total`.\n- `kong_nginx_timers` (gauge): total number of Nginx timers, in Running or Pending state. Tracks `ngx.timer.running_count()` and`ngx.timer.pending_count()`.[#8387](https://github.com/Kong/kong/pull/8387)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `kong_db_entities_total` (gauge): total number of entities in the database.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `kong_db_entity_count_errors` (counter): measures the number of errors encountered during the measurement of `kong_db_entities_total`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `kong_nginx_timers` (gauge): total number of Nginx timers, in Running or Pending state. Tracks `ngx.timer.running_count()` and`ngx.timer.pending_count()`.[#8387](https://github.com/Kong/kong/pull/8387)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

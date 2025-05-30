@@ -1,0 +1,21 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "**jq**: Fixed an issue where jq did not work properly with proxy-cache-advanced.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "**jq**: Use response buffering from the PDK.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**jq**: If plugin has no output, it will now return the raw body instead of attempting to restore the original response body.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "3.9.0.0": [
+    {
+      "message": "**degraphql**: Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "**degraphql**: Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "**degraphql**: Fixed an issue where multiple parameter types were not handled correctly when converting query parameters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "**DegraphQL**: Fixed an issue where GraphQL variables were not being correctly parsed and coerced into their defined types.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.2": [
+    {
+      "message": "**DegraphQL**: Fixed an issue where GraphQL variables were not being correctly parsed and coerced into their defined types.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "**DegraphQL**: Fixed an issue where GraphQL variables were not being correctly parsed and coerced into their defined types.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.6": [
+    {
+      "message": "**DegraphQL**: Fixed an issue where GraphQL variables were not being correctly parsed and coerced into their defined types.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "**DeGraphQL**: The GraphQL server path is now configurable with the `graphql_server_path` configuration parameter.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Updated the priority for some plugins.: `degraphql` changed from `1005` to `1500`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.9": [
+    {
+      "message": "**DegraphQL**: Fixed an issue where GraphQL variables were not being correctly parsed and coerced into their defined types.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}
