@@ -3,6 +3,8 @@ title: Stages of software availability
 
 description: This document describes the different stages of software availability for Kong products.
 
+permalink: /stages-of-software-availability/
+
 content_type: policy
 layout: reference
 tags:

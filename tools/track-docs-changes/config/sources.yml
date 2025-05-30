@@ -1228,9 +1228,11 @@ app/custom-plugins/testing.md:
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
-app/stages-of-software-availability.md:
+app/other/stages-of-software-availability.md:
   - app/_src/gateway/stability.md
   - app/konnect/availability-stages.md
+app/other/glossary.md:
+  - app/_src/gateway/glossary.md
 app/gateway/third-party-support.md:
   - app/_src/gateway/support/browser.md
   - app/_src/gateway/support/third-party.md
