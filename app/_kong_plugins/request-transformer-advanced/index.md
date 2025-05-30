@@ -35,6 +35,10 @@ tags:
 search_aliases:
   - request-transformer-advanced
 
+faqs:
+  - q: Can I use the Request Transformer Advanced plugin to rename or replace XML in the request body?
+    a: No, you can only rename or replace JSON in the request body.
+
 related_resources:
   - text: Request Transformer plugin
     url: /plugins/request-transformer/
