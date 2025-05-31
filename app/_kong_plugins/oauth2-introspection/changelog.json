@@ -1,0 +1,44 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "**oauth2-introspection**: Fixed an issue where the consumer's cache cannot be invalidated when oauth2-introspection uses `client_id` as `consumer_by`.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "**oauth2-introspection**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "**oauth2-introspection**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "**oauth2-introspection**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "**OAuth 2.0 Introspection**: Fixed an issue where the plugin failed when processing a request with JSON that is not a table.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "**OAuth2 Introspection**: Fixed issues with TLS connections when the IDP is behind a reverse proxy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

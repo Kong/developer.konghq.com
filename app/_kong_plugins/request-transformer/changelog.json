@@ -1,0 +1,54 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "**Request-Transformer**: Fixed an issue where renamed query parameters, url-encoded body parameters, and json body parameters were not handled properly when target name is the same as the source name in the request.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "**Request Transformer**: Fixed an issue where requests would intermittently be proxied with incorrect query parameters.[10539](https://github.com/Kong/kong/pull/10539)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Transformer**: The plugin now honors the value of the `untrusted_lua` configuration parameter.[#10327](https://github.com/Kong/kong/pull/10327)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Request Transformer (`request-transformer`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Transformer**: Fixed a bug when header renaming would override the existing header and cause unpredictable results.[#9442](https://github.com/Kong/kong/pull/9442)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Request Transformer (`request-transformer`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.3": [
+    {
+      "message": "**Request Transformer**: Fixed an issue where empty arrays were being converted to empty objects. Empty arrays are now preserved.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.1": [
+    {
+      "message": "**Request Transformer**: Fixed an issue where empty arrays were being converted to empty objects. Empty arrays are now preserved.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

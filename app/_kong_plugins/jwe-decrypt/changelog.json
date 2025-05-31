@@ -1,0 +1,23 @@
+{
+  "3.9.0.0": [
+    {
+      "message": "**jwe-decrypt**: Fixed an issue where an unnecessary warn log was printed.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "**JWE Decrypt**, **OAS Validation**, and **Vault Authentication**: Added the missing schema field `protocols` for `jwe-decrypt`, `oas-validation`, and `vault-auth`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "**JWE Decrypt**: Allows you to decrypt an inbound token (JWE) in a request.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

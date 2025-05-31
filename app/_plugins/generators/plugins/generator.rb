@@ -25,11 +25,11 @@ module Jekyll
 
       def generate_pages(plugin)
         generate_overview_page(plugin)
+        generate_changelog_page(plugin)
 
         return if site.config.dig('skip', 'plugins')
 
         generate_reference_page(plugin)
-        generate_changelog_page(plugin)
         generate_example_pages(plugin)
         generate_api_reference_page(plugin)
       end
@@ -55,7 +55,7 @@ module Jekyll
         return unless plugin.changelog_exists?
 
         changelog = Jekyll::PluginPages::Pages::Changelog
-                    .new(plugin:, file: File.join(plugin.folder, 'changelog.md'))
+                    .new(plugin:, file: File.join(plugin.folder, 'changelog.json'))
                     .to_jekyll_page
 
         site.pages << changelog

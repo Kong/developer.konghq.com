@@ -1,0 +1,147 @@
+{
+  "3.7.0.0": [
+    {
+      "message": "**mtls-auth**: Add `default_consumer` option that allows a default consumer to be used when the client certificate is valid but does not match any existing consumers.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.4": [
+    {
+      "message": "**mtls-auth**: Add `default_consumer` option that allows a default consumer to be used when the client certificate is valid but does not match any existing consumers.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "**Mtls-auth** print notice log if revocation check fails with revocation_check_mode = IGNORE_CA_ERROR",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "**mtls-auth**: Add `default_consumer` option that allows a default consumer to be used when the client certificate is valid but does not match any existing consumers.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.14": [
+    {
+      "message": "**mTLS-auth**: Fixed an issue where a 500 error occurs when the configuration changes with the mTLS plugin enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "**mtls-auth**: Add `default_consumer` option that allows a default consumer to be used when the client certificate is valid but does not match any existing consumers.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "**mTLS Authentication**: Fixed several revocation verification issues: \n- If `revocation_check_mode=IGNORE_CA_ERROR`, then the CRL revocation failure will be ignored.\n- Once a CRL is added into the store, it will always do CRL revocation check with this CRL file.\n- OCSP verification failed with `no issuer certificate in chain` error if the client only sent a leaf certificate.\n- `http_timeout` wasn’t correctly set.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: If `revocation_check_mode=IGNORE_CA_ERROR`, then the CRL revocation failure will be ignored.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: Once a CRL is added into the store, it will always do CRL revocation check with this CRL file.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: OCSP verification failed with `no issuer certificate in chain` error if the client only sent a leaf certificate.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: `http_timeout` wasn’t correctly set.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: Optimized CRL revocation verification.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: Fixed an issue that would cause an unexpected error when `skip_consumer_lookup` is enabled and `authenticated_group_by` is set to `null`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.2.5": [
+    {
+      "message": "**mTLS Authentication**: Fixed an issue that caused the plugin to cache network failures when running certificate revocation checks.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.1.2": [
+    {
+      "message": "**mTLS Authentication**: Fixed an issue where the plugin used the old route caches after routes were updated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "**mTLS Authentication**: Added the `config.send_ca_dn` configuration parameter to support sending CA DNs in the `CertificateRequest` message during SSL handshakes.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: Added the `allow_partial_chain` configuration parameter to allow certificate verification with only an intermediate certificate.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "**mTLS Authentication**: Introduced certificate revocation list (CRL) and OCSP server support with the following parameters: `http_proxy_host`, `http_proxy_port`, `https_proxy_host`, and `https_proxy_port`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Updated the priority for some plugins.: `mtls-auth` changed from `1006` to `1600`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "**mTLS Authentication**: Fixed an issue where the plugin used the old route caches after routes were updated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.1": [
+    {
+      "message": "**mTLS Authentication**: Fixed an issue where the plugin was causing requests to silently fail on Kong Gateway data planes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.1": [
+    {
+      "message": "**mTLS Authentication**: Introduced certificate revocation list (CRL) and OCSP server support with the following parameters: `http_proxy_host`, `http_proxy_port`, `https_proxy_host`, and `https_proxy_port`.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "**mTLS Authentication**: Fixed `attempt to index local 'workspace'` error, which occurred when accessing Routes or Services using TLS.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

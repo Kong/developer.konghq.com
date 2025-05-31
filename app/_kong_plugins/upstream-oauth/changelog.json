@@ -1,0 +1,9 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "**upstream-oauth**: Added the Upstream OAuth plugin, enabling Kong to obtain an OAuth2 token to consume an upstream API.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

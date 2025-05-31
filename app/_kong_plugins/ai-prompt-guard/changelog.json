@@ -1,0 +1,35 @@
+{
+  "3.9.0.0": [
+    {
+      "message": "**ai-prompt-guard**: Fixed an issue where the *ai-prompt-guard* plugin could fail when handling requests with multiple models.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "**AI-Prompt-Guard**: add `match_all_roles` option to allow match all roles in addition to `user`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**AI-Prompt-Guard**: Fixed an issue when `allow_all_conversation_history` is set to false, the first user request is selected instead of the last one.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0": [
+    {
+      "message": "**AI Prompt Guard**: Increased the maximum length of regex expressions to 500 for the allow and deny parameters.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Introduced the new **AI Prompt Guard** which can allow and/or block  LLM requests based on pattern matching.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

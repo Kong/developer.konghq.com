@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require 'json'
 
 module Jekyll
   module PluginPages
@@ -15,27 +16,21 @@ module Jekyll
         end
 
         def content
-          @content ||= parser.content
+          @content ||= File.read('app/_includes/plugins/changelog.html')
         end
 
         def data
           super
             .except('faqs')
-            .merge(metadata, 'changelog?' => true)
-        end
-
-        def metadata
-          @metadata ||= parser.frontmatter
+            .merge('content_type' => 'reference', 'changelog?' => true, 'changelog' => changelog)
         end
 
         def layout
           'plugins/with_aside'
         end
 
-        private
-
-        def parser
-          @parser ||= Jekyll::Utils::MarkdownParser.new(File.read(file))
+        def changelog
+          @changelog ||= Drops::Plugins::Changelog.new(JSON.parse(File.read(file)))
         end
       end
     end
