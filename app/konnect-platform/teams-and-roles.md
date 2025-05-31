@@ -219,11 +219,11 @@ rows:
   - role: "`Scorecard Viewer`"
     description: Access read-only permissions related to Scorecards.
   - role: "`Scorecard Admin`"
-    description: Can view and edit a select list of Scorecards.
+    description: Can view and edit a select list of Service Catalog services, map resources to those services, manage all resources, and has read-only access to all integrations and integration instances.
   - role: "`Service Admin`"
     description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
   - role: "`Service Creator`"
-    description: Can create new services, becomes the service admin for any service they create, and can view, edit, and create all resources and discovery rules.
+    description: Can create new Service Catalog services, becomes the Service Admin for any service they create, and can view and edit all resources. Includes read-only access to all integrations and integration instances.<br><br>This role does not grant access to existing services or their configurations, see the Service Admin role. <br><br>This role does not grant write access to integration instances, see the Integration Admin role.
   - role: "`Service Viewer`"
     description: Can view a select list of services and all resources and discovery rules.
 {% endtable %}
