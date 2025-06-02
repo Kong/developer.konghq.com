@@ -33,8 +33,24 @@ module Jekyll
         end
 
         def versions
-          @versions ||= @changelog.map { |number, entries| Version.new(number:, entries:) }
-                                  .sort_by { |v| Gem::Version.new(v.number) }.reverse
+          @versions ||= entries_by_version
+                        .map { |number, entries| Version.new(number:, entries:) }
+                        .sort_by { |v| Gem::Version.new(v.number) }.reverse
+        end
+
+        def entries_by_version
+          @entries_by_version ||= @changelog.each_with_object({}) do |(version, values), hash|
+            key = version_to_key(version)
+            hash[key] ||= []
+            hash[key].concat(values)
+          end
+        end
+
+        def version_to_key(version)
+          # treat ee and oss versions as ee versions
+          parts = version.split('.').map(&:to_i)
+          parts.fill(0, parts.size...4)
+          parts.join('.')
         end
       end
     end
