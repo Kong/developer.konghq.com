@@ -31,12 +31,15 @@ related_resources:
 ---
 
 Before you start any upgrade, back up your {{site.base_gateway}} data.
+
 Kong supports two back up methods for {{site.base_gateway}} entities: [database-native backup](#database-native-backup) and [declarative backup](#declarative-backup).
 A database-native backup backs up the entire {{site.base_gateway}} database, while a declarative backup works by managing declarative configuration files.
 
-We recommend backing up data using both methods, as this offers recovery flexibility:
+We recommend backing up data using both methods when possible, as this offers recovery flexibility:
 * The database-native tools are robust and can restore data instantly, compared to the declarative tools.
 * In case of data corruption, try to do a database-level restore first, otherwise bootstrap a new database and use [declarative tools](#declarative-tools-for-backup-and-restore) to load in entity data.
+
+When running {{site.base_gateway}} in {{site.konnect_short_name}}, only [declarative backup is available](#back-up-a-konnect-control-plane), as Kong manages the database.
 
 [Keyring materials](#keyring-materials-backup-and-restore) and {{site.base_gateway}} [configuration files](#other-files) must be backed up separately.
 See their respective sections below for details.
@@ -66,12 +69,12 @@ However, decK also has its limitations:
   or [`deck gateway diff`](/deck/gateway/diff/), or use decK’s
   [federated configuration](/deck/apiops/federated-configuration/) feature.
 
-* **Entities managed by decK**: decK does not manage Enterprise-only entities, like [RBAC roles](/gateway/entities/rbac/#default-kong-gateway-roles), credentials, [Keyring](/gateway/keyring/), [license](/gateway/entities/license/), etc. Configure these security related entities separately using the Admin API or Kong Manager.
+* **Entities managed by decK**: decK does not manage Enterprise-only entities, like [RBAC roles](/gateway/entities/rbac/#default-kong-gateway-roles), credentials, [Keyring](/gateway/keyring/), [license](/gateway/entities/license/), and so on. Configure these security related entities separately using the Admin API or Kong Manager.
 See the reference for [Entities managed by decK](/deck/reference/entities/) for a full list.
 
 Due to these limitations, we recommend prioritizing the [database-native method](#database-native-backup) in deployments using a database.
 
-## Back up Gateway entities
+## Back up Gateway entities in a self-managed deployment
 
 The following sections explain the different backup methods.
 
@@ -278,6 +281,72 @@ In DB-less mode, use the kong config CLI to restore your configuration from a de
 
 {% endnavtab %}
 {% endnavtabs %}
+
+## Back up Gateway entities for a {{site.konnect_short_name}} Control Plane
+
+If you're running {{site.base_gateway}} as a Control Plane in {{site.konnect_short_name}}, use decK for backup and restore.
+Review the list of [entities managed by decK](/deck/reference/entities/) to see what can be backed up using this method.
+
+{:.info}
+> **Note:** This method only backs up Control Plane configurations in Gateway Manager. 
+It does not back up Dev Portal, API Products, Service Catalog, and so on.
+
+### Back up a {{site.konnect_short_name}} Control Plane
+
+Use `deck gateway dump` to back up your configuration:
+
+```sh
+deck gateway dump -o my-backup.yaml \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-control-plane-name $CONTROL_PLANE_NAME
+```
+
+This command generates a state file for the Control Plane's entity
+configuration, for example:
+
+```yaml
+_format_version: "3.0"
+_konnect:
+    control_plane_name: us-west
+consumers:
+- username: example-user1
+- username: example-user2
+services:
+- connect_timeout: 60000
+    host: httpbin.konghq.com
+    name: MyService
+    tags:
+    - _KonnectService:example_service
+    ...
+```
+
+### Restore a {{site.konnect_short_name}} Control Plane
+
+You can restore entity configuration for a Control Plane using a declarative configuration file.
+You must do this for one group at a time.
+
+Assuming you have a backup file, for example, `my-backup.yaml`:
+
+1. Run a diff between your backup file and the Control Plane in {{site.konnect_short_name}} to 
+make sure you're applying the configuration you want:
+
+   ```sh
+   deck gateway diff my-backup.yaml \
+     --konnect-token $KONNECT_TOKEN \
+     --konnect-control-plane-name $CONTROL_PLANE_NAME
+   ```
+
+2. If you're satisfied with the diff result, run `deck gateway sync` to sync your configuration to 
+a Control Plane:
+
+   ```sh
+   deck gateway sync my-backup.yaml \
+     --konnect-token $KONNECT_TOKEN \
+     --konnect-control-plane-name $CONTROL_PLANE_NAME
+   ```
+
+Check your Control Plane in {{site.konnect_short_name}} to make sure the sync worked. 
+Open [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/), select your Control Plane, and check through the configured entities.
 
 ## Keyring materials backup and restore
 

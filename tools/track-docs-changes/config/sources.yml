@@ -1167,6 +1167,7 @@ app/gateway/upgrade/dual-cluster.md:
   - app/_src/gateway/upgrade/dual-cluster.md
 app/gateway/upgrade/backup-and-restore.md:
   - app/_src/gateway/upgrade/backup-and-restore.md
+  - app/konnect/gateway-manager/backup-restore.md
 app/gateway/db-less-mode.md:
   - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
   - app/_src/gateway/admin-api/declarative-configuration.md
