@@ -28,6 +28,11 @@ related_resources:
   - text: "{{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
 
+faqs:
+  - q: Is it recommended to have the Control Plane exporting to the backup store (`KONG_CLUSTER_FALLBACK_CONFIG_EXPORT`)?
+    a: While both the Control Plane and Data Plane can export the config, whatever node you select to export the config shouldn't proxy traffic due to performance implications. The Data Plane that exports config will have reduced performance. The recommended approach is to configure the Control Plane as the exporter and Data Planes as importers.
+  - q: During a Control Plane outage when `KONG_CLUSTER_FALLBACK_CONFIG_IMPORT=on`, does the Data Plane always pull data from object storage, even when the {{site.konnect_short_name}} Control Plane is back online? 
+    a: The Data Plane will always fetch config from {{site.konnect_short_name}} first. It will only fetch config from storage if fetching it from {{site.konnect_short_name}} fails. If the Data Plane fails to fetch the config from storage, it won't retry fetching it.
 
 ---
 

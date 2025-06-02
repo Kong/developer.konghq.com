@@ -1,0 +1,62 @@
+description: |
+  Set up the plugin to invoke a Lambda function with Dedicated Cloud Gateways.
+
+title: Dedicated Cloud Gateway configuration
+
+weight: 900
+
+requirements: 
+  - An AWS account with access to Lambda.
+  - A Lambda function.
+  - |
+    Configure the AWS IAM trust policy for the IAM role that is used to invoke the Lambda function. For example:
+      ```
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::$DCGW_ACCOUNT_ID:role/$NETWORK_ID-dataplane"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      }
+      ```
+      You can find your account ID and network ID in {{site.konnect_short_name}} by navigating to your Data Plane and Networks in Gateway Manager.
+      
+
+
+variables: 
+  key:
+    description: Your AWS access key ID.
+    value: AWS_KEY
+  secret:
+    description: Your AWS secret access key.
+    value: AWS_SECRET
+  region:
+    description: Your AWS region.
+    value: AWS_REGION
+  function:
+    description: The name or ARN of the Lambda function to invoke.
+    value: LAMBDA_FUNCTION
+  arn:
+    description: "The ARN of the IAM role used to invoke Lambda function. For example, `arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_ROLE`"
+    value: AWS_ASSUME_ROLE_ARN
+
+config: 
+  aws_key: ${key}
+  aws_secret: ${secret}
+  aws_region: ${region}
+  aws_assume_role_arn: ${arn}
+  function_name: ${function}
+  invocation_type: RequestResponse
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
