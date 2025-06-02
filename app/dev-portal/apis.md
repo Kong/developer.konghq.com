@@ -36,13 +36,13 @@ As an API Producer, you [publish an OpenAPI specification](/dev-portal/publishin
 
 All API specification files are validated during upload, although invalid specifications are permitted. If specifications are invalid, features like generated documentation and search may be degraded.
 
-### Validation methodology
+{{site.konnect_short_name}} looks for the following during spec validation:
 
 * Specs must be valid JSON or YAML.
-* Should be valid according to [OpenAPI 2.x or 3.x spec](https://spec.openapis.org/).
+* Spec should be valid according to [OpenAPI 2.x or 3.x specs](https://spec.openapis.org/).
     * OAS validation is performed using [Spectral](https://github.com/stoplightio/spectral).
     * To replicate validation in your own CI/CD pipeline, run `spectral lint [spec.yaml] .spectral.yaml`, where `.spectral.yaml` contains, `extends: ["spectral:oas"]`.
-* Invalid specs are permitted, and `validation_messages` will capture validation issues encountered.
+* Invalid specs are permitted, and `validation_messages` captures any validation issues.
 
 ## Documentation
 
