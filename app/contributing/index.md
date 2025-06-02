@@ -11,6 +11,12 @@ tags:
 
 description: "Learn about the page types and page blocks you can use to contribute documentation to the Kong Developer site."
 
+products:
+  - gateway
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 The Kong Developer site uses custom page types and Liquid template tags to render content on a page. This page explains how to write the different page types as well as the different template tags you can use on a page.
@@ -63,7 +69,7 @@ rows:
 Contributors should keep these core tenets in mind when creating or editing documentation on the Kong Developer site:
 
 * **Every page is page one:** Users should be able to answer their question in one page. Don't separate conceptual information from configuration information, all the reference information about a particular use case should be on one page.
-* **A how to should have automated testing:** The majority of how to pages should be written in a style so that users can copy and paste their way down the page. This allows us to run automated tests that verify that the how to, and the product, is functioning as intended.
+* **A how-to should have validation:** The majority of how-to pages should be written in a style so that users can copy and paste their way down the page. The final step in a how-to should validate that the how-to, and the product, is functioning as intended.
 
 ## How-to and reference page blocks
 
@@ -75,7 +81,8 @@ The `entity_examples` block generates an [Gateway entity](/gateway/entities/) ex
 
 If you want an entity example rendered in multiple formats, use [`entity_example`](#entity-example).
 
-Code example:
+{% navtabs "entity examples" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% entity_examples %}
@@ -86,11 +93,14 @@ entities:
       config:
         minute: 5
         hour: 1000
+formats:
+  - deck
 {% endentity_examples %}{% endraw %}
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% entity_examples %}
 entities:
@@ -100,9 +110,13 @@ entities:
       config:
         minute: 5
         hour: 1000
+formats:
+  - deck
 {% endentity_examples %}
 {:.no-copy-code}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Entity example
 
@@ -110,7 +124,8 @@ Generates a multi-tab example for an entity with one tab for each tool. For exam
 
 If you want to only render an example with one tool, use [`entity_examples`](#entity-examples).
 
-Code example:
+{% navtabs "entity example" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% entity_example %}
@@ -120,11 +135,14 @@ data:
   username: example-consumer
   tags:
     - silver-tier
+formats:
+  - deck
 {% endentity_example %}{% endraw %}
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% entity_example %}
 type: consumer
@@ -133,13 +151,18 @@ data:
   username: example-consumer
   tags:
     - silver-tier
+formats:
+  - deck
 {% endentity_example %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Tables
 All tables should use the `table` block and be written in `yaml`. 
 
-Code example:
+{% navtabs "tables" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% table %}
@@ -159,7 +182,8 @@ rows:
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% table %}
 columns:
@@ -176,12 +200,15 @@ rows:
     new: "`config.model.options.upstream_url`"
 {% endtable %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Feature table
 
 If you want a table that shows which features are supported or not, use the `feature_table` block. This turns boolean values into checkmarks or X.
 
-Code example:
+{% navtabs "feature table" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% feature_table %} 
@@ -205,7 +232,8 @@ features:
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% feature_table %} 
 item_title: Mesh RBAC Role
@@ -226,12 +254,15 @@ features:
 
 {% endfeature_table %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ### kong.conf table
 
 Renders a list of `kong.conf` parameters into a table.
 
-Code example:
+{% navtabs "configuration table" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% kong_config_table %}
@@ -243,7 +274,8 @@ config:
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% kong_config_table %}
 config:
@@ -252,6 +284,8 @@ config:
   - name: cluster_use_proxy
 {% endkong_config_table %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Tab groups
 
@@ -295,7 +329,8 @@ text about `license.json`
 
 Creates a table with the {{site.konnect_short_name}} roles and descriptions.
 
-Example:
+{% navtabs "roles table" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% konnect_roles_table %}
@@ -303,26 +338,34 @@ schema: control_planes
 {% endkonnect_roles_table %}{% endraw %}
 ```
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 {% konnect_roles_table %}
 schema: control_planes
 {% endkonnect_roles_table %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
+
 ### Version badge
 
 Displays which version a feature was introduced in. You can use this in headers, tables, and inline text.
 
-Code example:
+{% navtabs "badge" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% new_in 3.8 %} New feature{% endraw %}
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% new_in 3.8 %} New feature
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ### No copy code
 
@@ -339,25 +382,24 @@ Displays the code block/text only if the specified deployment type is selected.
 
 Add this tag immediately after a code block.
 <!--vale off-->
-```
-{% raw %}
-```
+{% raw %}```
 code for konnect
-```
 {: data-deployment-topology="konnect" }
+```{% endraw %}
 
-```
+{% raw %}```
 code for on-prem
-```
-{: data-deployment-topology="on-prem" }{% endraw %}
-```
+{: data-deployment-topology="on-prem" }
+```{% endraw %}
+
 <!--vale on-->
 
 ### Notes and warnings
 
 You can specify different types of notes and warnings.
 
-Code example:
+{% navtabs "notes" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{:.warning} # yellow note
@@ -370,7 +412,8 @@ Code example:
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 
 {:.warning}
@@ -395,15 +438,19 @@ Rendered output:
 > add `.no-icon` to any note type to remove the icon
 
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ### How-to validations
 
 The how-to pages typically include a validation step as the final step. This allows users to verify that the steps worked as intended. Validation steps are written in a `yaml` block to ensure consistency and that they are formatted correctly in the output.
+
 #### Rate limit check
 
-The `rate-limit-check` validation creates a code block that users can run to exceed rate limits.
+The `rate-limit-check` validation creates a code block that users can run to exceed rate limits. For a published example, see the [Rate limit a Consumer how-to](/how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/#validate).
 
-Code example:
+{% navtabs "rate limit check" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% validation rate-limit-check %}
@@ -415,7 +462,8 @@ headers:
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% validation rate-limit-check %}
 iterations: 6
@@ -424,12 +472,15 @@ headers:
  - 'apikey:example-key'
 {% endvalidation %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 #### Request check
 
-The `request-check` validation generates a code block that users can run to validate a request.
+The `request-check` validation generates a code block that users can run to validate a request. For a published example, see the [Adjust header names in a request](/how-to/adjust-header-names-in-request/#validate) how-to.
 
-Code example:
+{% navtabs "request check" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% validation request-check %}
@@ -447,7 +498,8 @@ body:  # accepts any request body
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% validation request-check %}
 url: '/anything' 
@@ -462,12 +514,15 @@ body:
     city: London
 {% endvalidation %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 #### Unauthorized check
 
-The `unauthorized-check` generates a code block that users can run to validate that a Consumer is unauthorized.
+The `unauthorized-check` generates a code block that users can run to validate that a Consumer is unauthorized. For a published example, see the first code block in the [Authenticate Consumers with basic authentication](/how-to/authenticate-consumers-with-basic-authentication/#validate) how-to.
 
-Code example:
+{% navtabs "unauthorized check" %}
+{% navtab "Code example" %}
 <!--vale off-->
 ```
 {% raw %}{% validation unauthorized-check %}
@@ -480,7 +535,8 @@ status_code: 401
 ```
 <!--vale on-->
 
-Rendered output:
+{% endnavtab %}
+{% navtab "Rendered output" %}
 <!--vale off-->
 {% validation unauthorized-check %}
 url: /anything
@@ -490,6 +546,8 @@ headers:
 status_code: 401
 {% endvalidation %}
 <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Landing page blocks
 
@@ -717,6 +775,8 @@ The Kong Developer site uses tools to help with automation.
 
 ### Broken link checker: ignore URls
 
+For more information, see the [broken link checker README](/Kong/developer.konghq.com/tree/main/tools/broken-link-checker#readme).
+
 <!--vale off-->
 ```
 tools/broken-link-checker/config/ignored_targets.json
@@ -724,6 +784,8 @@ tools/broken-link-checker/config/ignored_targets.json
 <!--vale on-->
 
 ### Generate kong.conf reference
+
+The []`kong.conf` reference](/gateway/configuration/) is autogenerated. For more information, see the [README](https://github.com/Kong/developer.konghq.com/blob/main/tools/kong-conf-to-json/README.md).
 
 ### Sources.yaml
 
