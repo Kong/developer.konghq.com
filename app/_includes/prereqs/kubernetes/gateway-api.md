@@ -8,7 +8,7 @@
 
 {% capture details_content %}
 
-{% assign gw_api_crd_version = "v1.2.0" %}
+{% assign gw_api_crd_version = "v1.3.0" %}
 
 {% if include.config.gateway_api == "experimental" %}
 
@@ -32,7 +32,7 @@
 
 1. Create a `Gateway` and `GatewayClass` instance to use.
 
-{% assign gwapi_version = "1.3.0" %}
+{% assign gwapi_version = "v1" %}
 
 {% assign allowedRoutes = "All" %}
 {% if include.config.gateway_api.allowed_routes %}
