@@ -1,4 +1,4 @@
-{% assign summary = 'Pre-configured entities' %}
+{% assign summary = 'Required entities' %}
 {% assign konnect_token = site.data.entity_examples.config.konnect_variables.pat.placeholder %}
 
 {% capture details_content %}
