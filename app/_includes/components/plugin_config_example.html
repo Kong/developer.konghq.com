@@ -2,10 +2,12 @@
 {% assign targets = plugin_config_example.targets %}
 {% assign formats = plugin_config_example.formats %}
 
-<div id="{{ plugin_config_example.id }}" class="entity-example content">
-  <div class="flex justify-end">
-    <div class="flex gap-2 text-xs">
-      {% if targets.size > 0 %}
+<div class="flex flex-col gap-4 heading-section">
+  <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+    <h2 id="set-up-the-plugin">Set up the plugin</h2>
+    <div class="flex w-full sm:w-fit sm:justify-end">
+      <div class="flex gap-2 text-xs">
+        {% if targets.size > 0 %}
         <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
           <label for="select-target-{{ plugin_config_example.id }}" class="sr-only">Select an entity</label>
           <select id="select-target-{{ plugin_config_example.id }}" class="select-target bg-secondary">
@@ -14,36 +16,40 @@
             {% endfor %}
           </select>
         </div>
-      {% endif %}
+        {% endif %}
 
-      {% if formats.size > 1 %}
-      <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
-        <label for="select-format-{{ plugin_config_example.id }}" class="sr-only">Select a format</label>
-        <select id="select-format-{{ plugin_config_example.id }}" class="select-format bg-secondary">
-          {% for format in formats %}
+        {% if formats.size > 1 %}
+        <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
+          <label for="select-format-{{ plugin_config_example.id }}" class="sr-only">Select a format</label>
+          <select id="select-format-{{ plugin_config_example.id }}" class="select-format bg-secondary">
+            {% for format in formats %}
             <option value="{{ format }}">{{ site.data.entity_examples.config.formats[format].label }}</option>
-          {% endfor %}
-        </select>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
 
-  {% if targets.size > 0 %}
+  <div id="{{ plugin_config_example.id }}" class="entity-example content">
+
+    {% if targets.size > 0 %}
     {% for entity_example in plugin_config_example.entity_examples %}
-     {% assign target = entity_example.target.key %}
+    {% assign target = entity_example.target.key %}
 
-     {% assign formatted_examples = entity_example.formatted_examples %}
-      <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
-
-        {% for formatted_example in formatted_examples %}
-          {% assign format = formatted_example.format %}
-          <div tabindex="0" class="entity-example-format-panel hidden content" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format }}">
-            {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=true %}{% endcapture %}
-            {{ markdown_template | markdownify }}
-          </div>
-        {% endfor %}
+    {% assign formatted_examples = entity_example.formatted_examples %}
+    <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
+      {% for formatted_example in formatted_examples %}
+      {% assign format = formatted_example.format %}
+      <div tabindex="0" class="entity-example-format-panel hidden content" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format }}">
+        {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=true %}{% endcapture %}
+        {{ markdown_template | markdownify }}
       </div>
+      {% endfor %}
+    </div>
     {% endfor %}
-  {% endif %}
+    {% endif %}
+  </div>
+
 </div>
