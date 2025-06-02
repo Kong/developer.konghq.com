@@ -1,10 +1,7 @@
 description: |
   Set up the plugin to invoke a Lambda function with Dedicated Cloud Gateways.
 
-extended_description: |
-  lkjlkj
-
-title: RequestResponse invocation
+title: Dedicated Cloud Gateway configuration
 
 weight: 900
 
@@ -20,13 +17,14 @@ requirements:
           {
             "Effect": "Allow",
             "Principal": {
-              "AWS": "arn:aws:iam::<DCGW_ACCOUNT_ID>:role/<NETWORK_ID>-dataplane"
+              "AWS": "arn:aws:iam::$DCGW_ACCOUNT_ID:role/$NETWORK_ID-dataplane"
             },
             "Action": "sts:AssumeRole"
           }
         ]
       }
       ```
+      You can find your account ID and network ID in {{site.konnect_short_name}} by navigating to your Data Plane and Networks in Gateway Manager.
       
 
 
