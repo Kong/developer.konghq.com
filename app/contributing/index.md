@@ -1,6 +1,6 @@
 ---
 title: "Contributing to docs"
-content_type: reference
+content_type: policy
 layout: reference
 
 breadcrumbs:
@@ -11,21 +11,9 @@ tags:
 
 description: "Learn about the page types and page blocks you can use to contribute documentation to the Kong Developer site."
 
-related_resources:
-  - text: "placeholder"
-    url: /
-
-products:
-    - gateway
-
-works_on:
-    - konnect
-    - on-prem
-tools:
-    - deck
 ---
 
-The Kong Developer site uses custom page types and Liquid blocks to render content on a page. This page explains how to write the different page types as well as the different blocks you can use on a page.
+The Kong Developer site uses custom page types and Liquid template tags to render content on a page. This page explains how to write the different page types as well as the different template tags you can use on a page.
 
 ## Page types
 
@@ -43,20 +31,19 @@ rows:
   - type: Reference
     description: Describes conceptual information as well as reference information, like tables, schemas, or diagrams.
     examples: |
-        * [Gateway Service entity](/gateway/entities/service/)<br>
         * [{{site.konnect_short_name}} teams and roles](/konnect-platform/teams-and-roles/)<br>
         * [KIC fallback configuration](/kubernetes-ingress-controller/fallback-configuration/)<br>
         * [Service Catalog scorecards](/service-catalog/scorecards/)<br>
   - type: Landing page
-    description: Acts as a "sign-post" page to direct users to the correct reference or how to page. These can contain some conceptual or reference material, like feature tables, as long as the goal is to help a user determine which page they should click next.
+    description: Acts as a "sign post" page to direct users to the correct reference or how-to page. These can contain some conceptual or reference material, like feature tables, as long as the goal is to help a user determine which page they should click next.
     examples: |
         * [{{site.base_gateway}} overview](/gateway/)<br>
         * [Load balancing with {{site.base_gateway}}](/gateway/load-balancing/)<br>
         * [AI Gateway overview](/ai-gateway/)<br>
         * [Securing {{site.base_gateway}}](/gateway/security/)<br>
-  - type: How to
+  - type: How-to
     description: |
-        Provides an end-to-end tutorial on a use case. In most scenarios, the goal is for users to copy and paste down the page to achieve their goal. All prerequisites are listed in the how to. A how to **never** assumes a user has tools, products, or specific configurations installed.
+        Provides an end-to-end tutorial on a use case. In most scenarios, the goal is for users to copy and paste down the page to achieve their goal. All prerequisites are listed in the how-to. A how-to **never** assumes a user has tools, products, or specific configurations installed.
     examples: |
         * [Get started with {{site.base_gateway}}](/gateway/get-started/)<br>
         * [Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin](/how-to/use-ai-rag-injector-plugin/)<br>
@@ -78,13 +65,15 @@ Contributors should keep these core tenets in mind when creating or editing docu
 * **Every page is page one:** Users should be able to answer their question in one page. Don't separate conceptual information from configuration information, all the reference information about a particular use case should be on one page.
 * **A how to should have automated testing:** The majority of how to pages should be written in a style so that users can copy and paste their way down the page. This allows us to run automated tests that verify that the how to, and the product, is functioning as intended.
 
-## How to and reference page blocks
+## How-to and reference page blocks
 
-You can use certain Liquid syntax blocks in how to and reference pages to help render {{site.base_gateway}} entity examples or curl requests.
+You can use certain Liquid syntax blocks in how-to and reference pages to help render code.
 
 ### Entity examples
 
-The `entity_examples` block generates an entity example, with support for multiple entities in a block. This renders in the format based on the tool you've specified in the page metadata. Use `entity_example` if you want an entity example with a tab for each supported tool.
+The `entity_examples` block generates an [Gateway entity](/gateway/entities/) example, with support for multiple entities in a block. This renders in _one_ format based on the tool you've specified in the page metadata. 
+
+If you want an entity example rendered in multiple formats, use [`entity_example`](#entity-example).
 
 Code example:
 <!--vale off-->
@@ -117,7 +106,9 @@ entities:
 
 ### Entity example
 
-Generates a multi-tab example for an entity with one tab for each tool. For example, the [Set up a Consumer](/gateway/entities/consumer/#set-up-a-consumer ) section. Use `entity_examples` if you want to only render the example for one tool.
+Generates a multi-tab example for an entity with one tab for each tool. For example, the [Set up a Consumer](/gateway/entities/consumer/#set-up-a-consumer ) section. 
+
+If you want to only render an example with one tool, use [`entity_examples`](#entity-examples).
 
 Code example:
 <!--vale off-->
@@ -248,7 +239,6 @@ config:
   - name: proxy_server
   - name: proxy_server_ssl_verify
   - name: cluster_use_proxy
-  - name: lua_ssl_trusted_certificate
 {% endkong_config_table %}{% endraw %}
 ```
 <!--vale on-->
@@ -260,7 +250,6 @@ config:
   - name: proxy_server
   - name: proxy_server_ssl_verify
   - name: cluster_use_proxy
-  - name: lua_ssl_trusted_certificate
 {% endkong_config_table %}
 <!--vale on-->
 
@@ -291,12 +280,12 @@ Rendered output:
 {% navtabs "deploy-a-license" %}
 {% navtab "Admin API" %}
 
-text
+text about admin api
 
 {% endnavtab %}
 {% navtab "license.json" %}
 
-text
+text about `license.json`
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -305,6 +294,8 @@ text
 ### {{site.konnect_short_name}} roles
 
 Creates a table with the {{site.konnect_short_name}} roles and descriptions.
+
+Example:
 <!--vale off-->
 ```
 {% raw %}{% konnect_roles_table %}
@@ -312,6 +303,11 @@ schema: control_planes
 {% endkonnect_roles_table %}{% endraw %}
 ```
 
+Rendered output:
+{% konnect_roles_table %}
+schema: control_planes
+{% endkonnect_roles_table %}
+<!--vale on-->
 ### Version badge
 
 Displays which version a feature was introduced in. You can use this in headers, tables, and inline text.
@@ -340,9 +336,19 @@ Prevents users from copying code in a code block.
 ### Render code block/text per deployment type
 
 Displays the code block/text only if the specified deployment type is selected.
+
+Add this tag immediately after a code block.
 <!--vale off-->
 ```
-{% raw %}{: data-deployment-topology="konnect" }
+{% raw %}
+```
+code for konnect
+```
+{: data-deployment-topology="konnect" }
+
+```
+code for on-prem
+```
 {: data-deployment-topology="on-prem" }{% endraw %}
 ```
 <!--vale on-->
@@ -366,19 +372,33 @@ Code example:
 
 Rendered output:
 <!--vale off-->
-{:.warning} # yellow note
-{:.info} # blue note
-{:.success} # green note
-{:.danger} # red note
-{:.neutral} # grey note
-{:.decorative} # purple note
-{:.info .no-icon} # add to any note type to remove the icon
+
+{:.warning}
+> yellow note
+
+{:.info}
+> blue note
+
+{:.success}
+> green note
+
+{:.danger}
+> red note
+
+{:.neutral} 
+> grey note
+
+{:.decorative}
+> purple note
+
+{:.info .no-icon}
+> add `.no-icon` to any note type to remove the icon
+
 <!--vale on-->
 
-### How to validations
+### How-to validations
 
-The how to pages typically include a validation step as the final step. This allows users to verify that the steps worked as intended. Validation steps are written in a `yaml` block to ensure consistency and that it is formatted correctly in the output.
-
+The how-to pages typically include a validation step as the final step. This allows users to verify that the steps worked as intended. Validation steps are written in a `yaml` block to ensure consistency and that they are formatted correctly in the output.
 #### Rate limit check
 
 The `rate-limit-check` validation creates a code block that users can run to exceed rate limits.
@@ -474,6 +494,36 @@ status_code: 401
 ## Landing page blocks
 
 Landing pages are built in `yaml` and they use columns that contain blocks to render content. For example, if you have a column that contains one block, the one block will span the page width. If you have a column with two or three blocks, the blocks will equally split the span of the page.
+
+You can also specify a strict number of columns using `column_count`, forcing the section to always arrange all blocks into that number of columns.
+```yaml
+ - columns:
+   column_count: 3
+     - blocks:
+        - type: plugin
+          config:
+            slug: rate-limiting
+        - type: plugin
+          config:
+            slug: rate-limiting-advanced
+```
+
+### Headers
+
+Any section can have a header. 
+* Use H1 headers only for page titles. 
+* Structure headers in sequential order. 
+For example, you can have H1 > H2 > H3 > H2 > H3, but not H1 > H3 > H2.
+
+```yaml
+  - header:
+      type: h1
+      text: "Konnect Advanced Analytics"
+      sub_text: A single location for context-rich, business-critical API and AI insights
+
+  - header:
+      type: h2
+      text: "Traditional mode"
 
 ### Structured text
 
@@ -579,9 +629,9 @@ Displays the title, icon, description, and link to a plugin as a card/tile on a 
 ```
 <!--vale on-->
 
-### Autogenerated how to list
+### Autogenerated how-to list
 
-Displays a list of how to pages that contain the specified metadata.
+Displays a list of how-to pages that contain the specified metadata.
 
 <!--vale off-->
 ```yaml
