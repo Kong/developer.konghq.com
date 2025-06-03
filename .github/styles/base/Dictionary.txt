@@ -825,6 +825,7 @@ unshorten
 unshortened
 unstash
 untemplated
+untrusted
 untyped
 unvetted
 unversioned
