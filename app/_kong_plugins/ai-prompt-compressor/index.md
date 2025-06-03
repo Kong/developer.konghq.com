@@ -37,14 +37,14 @@ tags:
   - ai
 
 related_resources:
+  - text: About AI Gateway
+    url: /ai-gateway/
   - text: All AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI RAG Injector
     url: /plugins/ai-rag-injector/
-  - text: About AI Gateway
-    url: /ai-gateway/
-  - text: AI Semantic Cache plugin
-    url: /plugins/ai-semantic-cache/
+  - text: AI Prompt Decorator
+    url: /plugins/ai-prompt-decorator/
 
 search_aliases:
   - ai
