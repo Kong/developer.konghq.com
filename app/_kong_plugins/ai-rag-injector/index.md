@@ -56,6 +56,28 @@ search_aliases:
   - intelligence
   - language
   - model
+
+faqs:
+  - q: What [embedding dimension](/plugins/ai-rag-injector/reference/#schema--config-vectordb-dimensions) should I use in my `vectordb` config?
+    a: It depends on your model and use case. More dimensions improve accuracy but increase cost. `1536` is a balanced default if you use the OpenAI `text-embedding-3-large` model.
+
+  - q: Can I reduce embedding dimensions to save resources?
+    a: Yes. Use PCA, t-SNE, or UMAP to keep key features while lowering memory and latency.
+
+  - q: What chunk size should I use for RAG?
+    a: Common sizes are 200–1000 tokens. Smaller chunks give precision; larger ones preserve context.
+
+  - q: Should I add chunk overlap?
+    a: Yes. Overlap helps maintain context between chunks and improves retrieval quality.
+
+  - q: How should I split text into chunks?
+    a: Use token-, sentence-, or semantic-based chunking based on your data and query type.
+
+  - q: Which [distance metric](/plugins/ai-rag-injector/reference/#schema--config-vectordb-distance-metric) works best with embeddings?
+    a: Cosine similarity is best for text. Use Euclidean only for coordinate-based data.
+
+  - q: Where should I inject RAG context in the prompt?
+    a: Use `system` for strong guidance, but it carries higher prompt injection risk. `user` is safer for untrusted content. `assistant` offers moderate influence. You can set it via [`inject_as_role`](/plugins/ai-rag-injector/reference/#schema--config-inject-as-role) setting.
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?
