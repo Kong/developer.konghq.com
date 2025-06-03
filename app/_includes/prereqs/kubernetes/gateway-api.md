@@ -64,7 +64,6 @@ metadata:
   name: kong
   annotations:
     konghq.com/gatewayclass-unmanaged: 'true'
-
 spec:
   controllerName: {{ controllerName }}
 ---
