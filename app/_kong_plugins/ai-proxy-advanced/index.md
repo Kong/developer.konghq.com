@@ -53,6 +53,12 @@ related_resources:
     url: /ai-gateway/ai-providers/
   - text: AI Proxy
     url: /plugins/ai-proxy/
+
+examples_groups:
+  - slug: open-ai
+    text: OpenAI use cases
+  - slug: load-balancing
+    text: Load balancing use cases
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
