@@ -256,6 +256,9 @@ sections:
     items:
       - path: /gateway-manager/
       - path: /gateway-manager/**/*
+      - text: Troubleshoot Data Plane nodes
+        description: Learn how to resolve some common issues with Data Plane nodes
+        url: /gateway-manager/data-plane-reference/#troubleshoot-data-plane-nodes
 
   - title: Reference
     allow_duplicates: true
