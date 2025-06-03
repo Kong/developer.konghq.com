@@ -94,7 +94,18 @@ async function generateChangelogData(plugins, pluginEntriesByVersion) {
         plugins
       );
 
-      if (pluginIdentifiers.length === 0) {
+      if (entry.plugins) {
+        for (const slug of entry.plugins) {
+          changelogs[slug] ||= {};
+          changelogs[slug][version] ||= [];
+          changelogs[slug][version].push(entry);
+        }
+        entry.message = entry.message.replace(
+          /\*\*(?!Improved Plugin Documentation\*\*).*?\*\*:(\s|\n)?/,
+          ""
+        );
+        delete entry.plugins;
+      } else if (pluginIdentifiers.length === 0) {
         noIdentifiers[version] ||= [];
         noIdentifiers[version].push(entry);
       } else {
@@ -102,6 +113,10 @@ async function generateChangelogData(plugins, pluginEntriesByVersion) {
           const plugin = await findPluginByIdentifier(plugins, identifier);
 
           if (plugin) {
+            entry.message = entry.message.replace(
+              /\*\*(?!Improved Plugin Documentation\*\*).*?\*\*:(\s|\n)?/,
+              ""
+            );
             changelogs[plugin.slug] ||= {};
             changelogs[plugin.slug][version] ||= [];
             changelogs[plugin.slug][version].push(entry);
@@ -181,7 +196,9 @@ async function writeChangelogs(plugins, changelogs) {
     }
 
     const newChangelog = changelogs[plugin.slug];
-    if (!newChangelog) continue;
+    if (!newChangelog) {
+      continue;
+    }
 
     const combined = {
       ...existingChangelog,
