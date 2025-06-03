@@ -1,5 +1,5 @@
 ---
-title: Dev Portal custom pages
+title: Dev Portal pages and content
 content_type: reference
 layout: reference
 
@@ -76,6 +76,12 @@ Like a website, you can create different pages for your Dev Portal. Pages can co
 On the left panel inside the Portal Editor, you'll see a list of pages in your Dev Portal. The name for each page is a `slug`, and will be used to build the URL for that page. You can nest child pages under other pages. If pages are nested, the slugs will be combined to build the URL.
 
 For example, if the `about` has a child page, `contact`, the URL for the `contact` page would be `/about/contact`.
+
+```
+about         ← URL: "/about"
+└ contact    ← URL: "/about/contact"
+```
+{:.no-copy-code}
 
 ### Page visibility and publishing
 
