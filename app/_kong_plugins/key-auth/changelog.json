@@ -1,21 +1,35 @@
 {
+  "3.10.0.0": [
+    {
+      "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
-      "message": "**key-auth**: Fixed to retain order of query arguments when hiding the credentials.",
+      "message": "Fixed to retain order of query arguments when hiding the credentials.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**Key-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.7)",
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.7)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.7.1.0": [
     {
-      "message": "**Key-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.7)",
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.7)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0": [
+    {
+      "message": "Added WWW-Authenticate headers to all 401 responses in the Key Auth plugin.",
       "type": "bugfix",
       "scope": "Plugin"
     }

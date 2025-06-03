@@ -1,7 +1,7 @@
 {
   "3.8.0.0": [
     {
-      "message": "**standard-webhooks**: Added standard webhooks plugin.\n",
+      "message": "Added standard webhooks plugin.\n",
       "type": "feature",
       "scope": "Plugin"
     }

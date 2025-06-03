@@ -1,14 +1,14 @@
 {
   "3.10.0.0": [
     {
-      "message": "**grpc-web** and **grpc-gateway**: Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
+      "message": "Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.9.0.1": [
     {
-      "message": "**grpc-web** and **grpc-gateway**: Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
+      "message": "Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
       "type": "bugfix",
       "scope": "Plugin"
     }

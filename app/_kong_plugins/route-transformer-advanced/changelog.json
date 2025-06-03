@@ -1,7 +1,14 @@
 {
+  "3.6.0.0": [
+    {
+      "message": "Provide better error messages in the route-transformer-advanced plugin",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.1.0.0": [
     {
-      "message": "**Route Transformer Advanced**: Added the `config.escape_path` configuration parameter, which lets you escape the transformed path.",
+      "message": "Added the `config.escape_path` configuration parameter, which lets you escape the transformed path.",
       "type": "feature",
       "scope": "Plugin"
     }
@@ -15,7 +22,7 @@
   ],
   "2.8.2.0": [
     {
-      "message": "**Route Transformer Advanced**: Fixed an issue where URIs that included `%20` or a whitespace would return a `400 Bad Request`.",
+      "message": "Fixed an issue where URIs that included `%20` or a whitespace would return a `400 Bad Request`.",
       "type": "bugfix",
       "scope": "Plugin"
     }

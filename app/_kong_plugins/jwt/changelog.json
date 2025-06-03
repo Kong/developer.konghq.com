@@ -1,28 +1,45 @@
 {
+  "3.10.0.0": [
+    {
+      "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
-      "message": "**jwt**: ensure `rsa_public_key` isn't base64-decoded.",
+      "message": "ensure `rsa_public_key` isn't base64-decoded.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**jwt**: Add WWW-Authenticate headers to 401 responses.",
+      "message": "Add WWW-Authenticate headers to 401 responses.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.7.0": [
     {
-      "message": "**Jwt**: Fixed an issue where the plugin would fail when using invalid public keys for ES384 and ES512 algorithms.",
+      "message": "Addded support for EdDSA algorithms in JWT plugin\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for ES512, PS256, PS384, PS512 algorithms in JWT plugin\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin would fail when using invalid public keys for ES384 and ES512 algorithms.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.2.1.0": [
     {
-      "message": "**JWT**: This plugin now denies requests that have different tokens in the JWT token search locations.\n\nThanks Jackson ‘Che-Chun’ Kuo from Latacora for reporting this issue.[#9946](https://github.com/Kong/kong/pull/9946)",
+      "message": "This plugin now denies requests that have different tokens in the JWT token search locations.\n\nThanks Jackson ‘Che-Chun’ Kuo from Latacora for reporting this issue.[#9946](https://github.com/Kong/kong/pull/9946)",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -34,14 +51,14 @@
       "scope": "Plugin"
     },
     {
-      "message": "**JWT**: The authenticated JWT is no longer put into the nginx context (`ngx.ctx.authenticated_jwt_token`). Custom plugins which depend on that value being set under that name must be updated to use Kong’s shared context instead (`kong.ctx.shared.authenticated_jwt_token`) before upgrading to 3.0.",
+      "message": "The authenticated JWT is no longer put into the nginx context (`ngx.ctx.authenticated_jwt_token`). Custom plugins which depend on that value being set under that name must be updated to use Kong’s shared context instead (`kong.ctx.shared.authenticated_jwt_token`) before upgrading to 3.0.",
       "type": "breaking_change",
       "scope": "Plugin"
     }
   ],
   "2.8.2.3": [
     {
-      "message": "**JWT**: Fixed an issue where the JWT plugin could potentially forward an unverified token to the upstream.",
+      "message": "Fixed an issue where the JWT plugin could potentially forward an unverified token to the upstream.",
       "type": "bugfix",
       "scope": "Plugin"
     }

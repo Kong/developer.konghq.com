@@ -1,42 +1,75 @@
 {
   "3.8.0.0": [
     {
-      "message": "**oauth2-introspection**: Fixed an issue where the consumer's cache cannot be invalidated when oauth2-introspection uses `client_id` as `consumer_by`.",
+      "message": "Fixed an issue where the consumer's cache cannot be invalidated when oauth2-introspection uses `client_id` as `consumer_by`.",
       "scope": "Plugin",
       "type": "bugfix"
     }
   ],
   "3.6.0.0": [
     {
-      "message": "**oauth2-introspection**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "message": "Mark the `authorization_value` in the `oauth2-introspection` plugin as an encrypted field",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0.4": [
     {
-      "message": "**oauth2-introspection**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.2": [
+    {
+      "message": "Mark the `authorization_value` in the `oauth2-introspection` plugin as an encrypted field",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.5": [
     {
-      "message": "**oauth2-introspection**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.1": [
+    {
+      "message": "Mark the `authorization_value` in the `oauth2-introspection` plugin as an encrypted field",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.0.0": [
     {
-      "message": "**OAuth 2.0 Introspection**: Fixed an issue where the plugin failed when processing a request with JSON that is not a table.",
+      "message": "Fixed an issue where the plugin failed when processing a request with JSON that is not a table.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.1.0": [
+    {
+      "message": "Fixed an issue with the Oauth 2.0 Introspection plugin where a request with JSON that is not a table failed.: ",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.2": [
+    {
+      "message": "Fixed an issue with the Oauth 2.0 Introspection plugin where a request with JSON that is not a table failed.: ",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.0.0": [
     {
-      "message": "**OAuth2 Introspection**: Fixed issues with TLS connections when the IDP is behind a reverse proxy.",
+      "message": "Fixed issues with TLS connections when the IDP is behind a reverse proxy.",
       "type": "bugfix",
       "scope": "Plugin"
     }

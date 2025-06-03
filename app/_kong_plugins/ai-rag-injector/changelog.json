@@ -1,7 +1,22 @@
 {
   "3.10.0.0": [
     {
-      "message": "**AI-RAG-Injector**: Added a new plugin which allows automatically injecting documents to simplify building RAG pipelines.",
+      "message": "Fixed an issue where AI upstream URL trailing would be empty.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added a new plugin which allows automatically injecting documents to simplify building RAG pipelines.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `huggingface`, `azure`, `vertex`, and `bedrock` providers to embeddings. They can be used by the ai-proxy-advanced, ai-semantic-cache, ai-semantic-prompt-guard, and ai-rag-injector plugins.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allow authentication to Bedrock services with assume roles in AWS.\n",
       "type": "feature",
       "scope": "Plugin"
     }

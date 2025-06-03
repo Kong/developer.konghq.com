@@ -1,85 +1,85 @@
 {
   "3.10.0.0": [
     {
-      "message": "**ai-rate-limiting-advanced**: Added support for allowing multiple rate limits for the same providers.\n",
+      "message": "Added support for allowing multiple rate limits for the same providers.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: `window_size` and `limit` now require an array of numbers instead of a single number.\nIf you configured the plugin before 3.10 and use `kong migrations` to upgrade to 3.10, it will be automatically migrated to use the array.\n",
+      "message": "`window_size` and `limit` now require an array of numbers instead of a single number.\nIf you configured the plugin before 3.10 and use `kong migrations` to upgrade to 3.10, it will be automatically migrated to use the array.\n",
       "type": "Breaking Change",
       "scope": "Plugin"
     }
   ],
   "3.9.0.0": [
     {
-      "message": "**ai-rate-limiting-advanced**: Added support for Huggingface provider to the AI Rate Limiting Advanced plugin.\n",
+      "message": "Added support for Huggingface provider to the AI Rate Limiting Advanced plugin.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**AI Rate Limiting Advanced**: Updated the error message for rate limit exceeded to include AI-related information.",
+      "message": "Updated the error message for rate limit exceeded to include AI-related information.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
+      "message": "Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
+      "message": "Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.1.0": [
     {
-      "message": "**ai-rate-limiting-advanced**: Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
+      "message": "Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**ai-rate-limiting-advanced**: Add the cost strategy to AI rate Limiting plugin.",
+      "message": "Add the cost strategy to AI rate Limiting plugin.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Added the `bedrock` and `gemini` providers to the providers list in \nthe `ai-rate-limiting-advanced` plugin.\n",
+      "message": "Added the `bedrock` and `gemini` providers to the providers list in \nthe `ai-rate-limiting-advanced` plugin.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Add the stats when reaching limit and exiting AI rate Limiting plugin.",
+      "message": "Add the stats when reaching limit and exiting AI rate Limiting plugin.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Edit the logic for the window ajustement and fix missing passing window to shm",
+      "message": "Edit the logic for the window ajustement and fix missing passing window to shm",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Added Redis cluster_max_redirections configuration option.",
+      "message": "Added Redis cluster_max_redirections configuration option.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Switched to sentinel_nodes and cluster_nodes for redis configuration.",
+      "message": "Switched to sentinel_nodes and cluster_nodes for redis configuration.",
       "type": "deprecation",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-rate-limiting-advanced**: Deprecated timeout config field in redis config in favor of connect_/send_/read_timeout (timeout field will be removed in 4.0).",
+      "message": "Deprecated timeout config field in redis config in favor of connect_/send_/read_timeout (timeout field will be removed in 4.0).",
       "type": "deprecation",
       "scope": "Plugin"
     }
   ],
   "3.7.1.0": [
     {
-      "message": "**ai-rate-limiting-advanced**: Edit the logic for the window ajustement and fix missing passing window to shm",
+      "message": "Edit the logic for the window ajustement and fix missing passing window to shm",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -1,7 +1,7 @@
 {
   "3.6.0.0": [
     {
-      "message": "**azure-functions**: azure-functions plugin now eliminates upstream/request URI and only use `routeprefix` configuration field to construct request path when requesting Azure API",
+      "message": "azure-functions plugin now eliminates upstream/request URI and only use `routeprefix` configuration field to construct request path when requesting Azure API",
       "type": "Breaking Change",
       "scope": "Plugin"
     }
@@ -13,17 +13,17 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Azure Functions**: Fixed an issue where calls made by this plugin would fail in the following situations: \n- The plugin was associated with a route that had no service.\n- The route’s associated service had a `path` value.[#9177](https://github.com/Kong/kong/pull/9177)",
+      "message": "Fixed an issue where calls made by this plugin would fail in the following situations: \n- The plugin was associated with a route that had no service.\n- The route’s associated service had a `path` value.[#9177](https://github.com/Kong/kong/pull/9177)",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Azure Functions**: The plugin was associated with a route that had no service.",
+      "message": "The plugin was associated with a route that had no service.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Azure Functions**: The route’s associated service had a `path` value.[#9177](https://github.com/Kong/kong/pull/9177)",
+      "message": "The route’s associated service had a `path` value.[#9177](https://github.com/Kong/kong/pull/9177)",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -37,17 +37,17 @@
   ],
   "2.8.2.1": [
     {
-      "message": "**Azure Functions**: Fixed an issue where calls made by this plugin would fail in the following situations: \n- The plugin was associated with a route that had no service.\n- The route’s associated service had a `path` value.",
+      "message": "Fixed an issue where calls made by this plugin would fail in the following situations: \n- The plugin was associated with a route that had no service.\n- The route’s associated service had a `path` value.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Azure Functions**: The plugin was associated with a route that had no service.",
+      "message": "The plugin was associated with a route that had no service.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Azure Functions**: The route’s associated service had a `path` value.",
+      "message": "The route’s associated service had a `path` value.",
       "type": "bugfix",
       "scope": "Plugin"
     }

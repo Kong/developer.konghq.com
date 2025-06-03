@@ -1,14 +1,14 @@
 {
   "3.9.0.0": [
     {
-      "message": "**exit-transformer**: Fixed an issue where the exit-transformer could not take effect on invalid non-admin requests.",
+      "message": "Fixed an issue where the exit-transformer could not take effect on invalid non-admin requests.",
       "scope": "Plugin",
       "type": "bugfix"
     }
   ],
   "2.8.0.0": [
     {
-      "message": "**Exit Transformer**: Fixed an issue where the Exit Transformer plugin would break the plugin iterator, causing later plugins not to run.",
+      "message": "Fixed an issue where the Exit Transformer plugin would break the plugin iterator, causing later plugins not to run.",
       "type": "bugfix",
       "scope": "Plugin"
     }

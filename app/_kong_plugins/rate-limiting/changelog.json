@@ -1,95 +1,95 @@
 {
   "3.9.0.0": [
     {
-      "message": "**rate-limiting**: Fix a bug where the return values from `get_redis_connection()` are mistaken.",
+      "message": "Fix a bug where the return values from `get_redis_connection()` are mistaken.",
       "scope": "Plugin",
       "type": "bugfix"
     },
     {
-      "message": "**Rate-Limiting**: Fixed an issue that caused an HTTP 500 error when `hide_client_headers` is set to `true` and the request exceeds the rate limit.\n",
+      "message": "Fixed an issue that caused an HTTP 500 error when `hide_client_headers` is set to `true` and the request exceeds the rate limit.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.1.0": [
     {
-      "message": "**Rate-Limiting**: Fixed an issue that caused an HTTP 500 error when `hide_client_headers` is set to `true` and the request exceeds the rate limit.\n",
+      "message": "Fixed an issue that caused an HTTP 500 error when `hide_client_headers` is set to `true` and the request exceeds the rate limit.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**Rate-Limiting**: Fixed an issue of DP reporting that deprecated config fields are used when configuration from CP is pushed",
+      "message": "Fixed an issue of DP reporting that deprecated config fields are used when configuration from CP is pushed",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.7.0.0": [
     {
-      "message": "**Rate-Limiting**: Fixed migration of redis configuration.",
+      "message": "Fixed migration of redis configuration.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.6.1.5": [
     {
-      "message": "**Rate-Limiting**: Fixed migration of redis configuration.",
+      "message": "Fixed migration of redis configuration.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.6.0.0": [
     {
-      "message": "**Rate Limiting**: fix to provide better accuracy in counters when sync_rate is used with the redis policy.",
+      "message": "fix to provide better accuracy in counters when sync_rate is used with the redis policy.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Rate Limiting**: fix an issuer where all counters are synced to the same DB at the same rate.",
+      "message": "fix an issuer where all counters are synced to the same DB at the same rate.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Rate Limiting**: Standardize redis configuration across plugins. The redis configuration right now follows common schema that is shared across other plugins.",
+      "message": "Standardize redis configuration across plugins. The redis configuration right now follows common schema that is shared across other plugins.",
       "type": "deprecation",
       "scope": "Plugin"
     },
     {
-      "message": "**rate-limiting**: add support for consumer group scoping",
+      "message": "add support for consumer group scoping",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**rate-limiting**: support to ratelimit by consumer group",
+      "message": "support to ratelimit by consumer group",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.5.0.2": [
     {
-      "message": "**Rate Limiting**: fix an issuer where all counters are synced to the same DB at the same rate.",
+      "message": "fix an issuer where all counters are synced to the same DB at the same rate.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.1": [
     {
-      "message": "**Rate Limiting**: fix an issuer where all counters are synced to the same DB at the same rate.",
+      "message": "fix an issuer where all counters are synced to the same DB at the same rate.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.2.2.4": [
     {
-      "message": "**Rate Limiting**: The redis rate limiting strategy now returns an error when Redis Cluster is down.",
+      "message": "The redis rate limiting strategy now returns an error when Redis Cluster is down.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.0.0": [
     {
-      "message": "**Rate Limiting**: The HTTP status code and response body for rate-limited requests can now be customized. Thanks, [@utix](https://github.com/utix)! [#8930](https://github.com/Kong/kong/pull/8930)",
+      "message": "The HTTP status code and response body for rate-limited requests can now be customized. Thanks, [@utix](https://github.com/utix)! [#8930](https://github.com/Kong/kong/pull/8930)",
       "type": "feature",
       "scope": "Plugin"
     }
@@ -101,31 +101,31 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Rate Limiting**: The default policy is now local for all deployment modes.[#9344](https://github.com/Kong/kong/pull/9344)",
+      "message": "The default policy is now local for all deployment modes.[#9344](https://github.com/Kong/kong/pull/9344)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "**Rate Limiting**: Fixed a PostgreSQL deadlock issue that occurred when the `cluster` policy was used with two or more metrics (for example, `second` and `day`.)[#8968](https://github.com/Kong/kong/pull/8968)",
+      "message": "Fixed a PostgreSQL deadlock issue that occurred when the `cluster` policy was used with two or more metrics (for example, `second` and `day`.)[#8968](https://github.com/Kong/kong/pull/8968)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.1.2": [
     {
-      "message": "**Rate Limiting**: Fixed a PostgreSQL deadlock issue that occurred when the `cluster` policy was used with two or more metrics (for example, `second` and `day`.)",
+      "message": "Fixed a PostgreSQL deadlock issue that occurred when the `cluster` policy was used with two or more metrics (for example, `second` and `day`.)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.0.0": [
     {
-      "message": "**Rate Limiting**: ",
+      "message": "",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Rate Limiting**: Fixed a 500 error associated with performing arithmetic functions on a nil value by adding a nil value check after performing `ngx.shared.dict` operations.",
+      "message": "Fixed a 500 error associated with performing arithmetic functions on a nil value by adding a nil value check after performing `ngx.shared.dict` operations.",
       "type": "bugfix",
       "scope": "Plugin"
     }

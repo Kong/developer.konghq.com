@@ -1,25 +1,32 @@
 {
   "3.9.0.0": [
     {
-      "message": "**Kafka Log**: Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",
+      "message": "Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**kafka-log**: Reduced noisy logs from kafka-log and counters.",
+      "message": "Reduced noisy logs from kafka-log and counters.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.0.0": [
     {
-      "message": "**Kafka Log**: The Kafka Log plugin now supports the `custom_fields_by_lua` configuration for dynamic modification of log fields using Lua code.",
+      "message": "The Kafka Log plugin now supports the `custom_fields_by_lua` configuration for dynamic modification of log fields using Lua code.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Kafka Log** and **Kafka Upstream**: Fixed an issue where the plugin could lose connection to a broker when the broker leadership changed.",
+      "message": "Fixed an issue where the plugin could lose connection to a broker when the broker leadership changed.",
       "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "WebSocket service/route support was added for logging plugins: kafka-log",
+      "type": "feature",
       "scope": "Plugin"
     }
   ]

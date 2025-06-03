@@ -1,35 +1,35 @@
 {
   "3.7.0.0": [
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.6.1.4": [
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0.4": [
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.8": [
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.0.0": [
     {
-      "message": "**XML Threat Protection**: This new plugin allows you to reduce the risk of XML attacks by checking the structure of XML payloads. This validates maximum complexity (depth of the tree), maximum size of elements and attributes.",
+      "message": "This new plugin allows you to reduce the risk of XML attacks by checking the structure of XML payloads. This validates maximum complexity (depth of the tree), maximum size of elements and attributes.",
       "type": "feature",
       "scope": "Plugin"
     }
