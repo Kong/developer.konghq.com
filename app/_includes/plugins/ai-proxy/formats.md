@@ -65,15 +65,11 @@ The Kong AI Proxy accepts the following inputs formats, standardized across all 
             "content": "What is the theory of relativity?"
         }
     ],
-    "extra_body":
-        {
-            "guardrailConfig":
-                {
-                    "guardrailIdentifier":"<guardrail_identifier>",
-                    "guardrailVersion":"1",
-                    "trace":"enabled"
-                }
-        }
+      "guardrailConfig": {
+              "guardrailIdentifier":"<guardrail_identifier>",
+              "guardrailVersion":"1",
+              "trace":"enabled"
+          }
 }
 ```
 
