@@ -435,6 +435,7 @@ linkStyle
 liveness
 LLM
 llm
+LLMLingua
 LLMs
 Loggly
 Loggly
@@ -824,6 +825,7 @@ unshorten
 unshortened
 unstash
 untemplated
+untrusted
 untyped
 unvetted
 unversioned
