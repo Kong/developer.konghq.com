@@ -87,6 +87,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: August 2026
           default: true
       - ubuntu2004:
@@ -104,6 +106,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: August 2026
           default: true
     third_party_support:
@@ -254,6 +258,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: May 2025
           default: true
       - ubuntu2004:
@@ -271,6 +277,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: May 2025
           default: true
     third_party_support:
@@ -416,6 +424,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Sept 2025
           default: true
       - ubuntu2004:
@@ -433,6 +443,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Sept 2025
           default: true
     third_party_support:
@@ -580,6 +592,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Dec 2025
           default: true
       - ubuntu2004:
@@ -597,6 +611,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Dec 2025
       - ubuntu2404:
           package: true
@@ -605,6 +621,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Dec 2025
           default: true
     third_party_support:
@@ -748,6 +766,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
       - ubuntu2004:
           package: true
@@ -764,6 +784,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
       - ubuntu2404:
           package: true
           package_support:
@@ -771,6 +793,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
     third_party_support:
       ai_providers:
@@ -919,6 +943,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
       - ubuntu2004:
           package: true
@@ -935,6 +961,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
       - ubuntu2404:
           package: true
           package_support:
@@ -942,6 +970,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
     third_party_support:
       ai_providers:
