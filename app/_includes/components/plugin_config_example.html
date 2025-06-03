@@ -2,7 +2,7 @@
 {% assign targets = plugin_config_example.targets %}
 {% assign formats = plugin_config_example.formats %}
 
-<div class="flex flex-col gap-4 heading-section entity-example">
+<div class="flex flex-col gap-4 heading-section entity-example" id="{{ plugin_config_example.id }}">
   <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
     <h2 id="set-up-the-plugin">Set up the plugin</h2>
     <div class="flex w-full sm:w-fit sm:justify-end">
@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <div id="{{ plugin_config_example.id }}" class="entity-example content">
+  <div class="content">
 
     {% if targets.size > 0 %}
     {% for entity_example in plugin_config_example.entity_examples %}
