@@ -14,7 +14,7 @@
 {% navtabs "http-route" %}
 {% unless include.disable_gateway %}
 {% navtab "Gateway API" %}
-{% assign gwapi_version = "1.3.0" %}
+{% assign gwapi_version = "v1" %}
 ```bash
 echo "
 apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
@@ -29,8 +29,8 @@ metadata:
 spec:
   parentRefs:
   - name: kong{% unless namespace == '' %}
-    namespace: {{ gateway_namespace }}{% endunless %}{% unless include.section_name == '' %}
-    sectionName: {{ include.section_name }}{% endunless %}{% unless include.skip_host %}
+    namespace: {{ gateway_namespace }}{% endunless %}{% if include.section_name %}
+    sectionName: {{ include.section_name }}{% endif %}{% unless include.skip_host %}
   hostnames:
   - '{{ hostname }}'{% endunless %}
   rules:{% for i in (0..count) %}
