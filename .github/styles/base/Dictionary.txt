@@ -435,6 +435,7 @@ linkStyle
 liveness
 LLM
 llm
+LLMLingua
 LLMs
 Loggly
 Loggly
