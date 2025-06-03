@@ -12,7 +12,7 @@ This is a Konnect tutorial and requires a Konnect personal access token.
     export KONNECT_TOKEN='YOUR_KONNECT_PAT'
     ```
 
-1. Run the [Quickstart script](https://get.konghq.com/quickstart) to automatically provision a Control Plane and Data Plane, and configure your environment:
+1. Run the [quickstart script](https://get.konghq.com/quickstart) to automatically provision a Control Plane and Data Plane, and configure your environment:
 
     ```bash
     curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN --deck-output
