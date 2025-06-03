@@ -536,7 +536,12 @@
       {
         "message": "**AI Plugins**: - Fixed an issue where templates weren't being resolved correctly.\n- The plugins now support nested fields.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-rate-limiting-advanced**: `window_size` and `limit` now require an array of numbers instead of a single number.\nIf you configured the plugin before 3.10 and use `kong migrations` to upgrade to 3.10, it will be automatically migrated to use the array.\n",
@@ -1411,7 +1416,13 @@
       {
         "message": "AI plugins: retrieved latency data and pushed it to logs and metrics.",
         "type": "feature",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer",
+          "prometheus"
+        ]
       },
       {
         "message": "**prometheus**: Added `ai_requests_total`, `ai_cost_total` and `ai_tokens_total` metrics in the Prometheus plugin to start counting AI usage.",
@@ -1424,7 +1435,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "allow AI plugin to read request from buffered file",
+        "message": "**AI plugins**: allow AI plugin to read request from buffered file",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1436,7 +1447,12 @@
       {
         "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nall AWS Bedrock \"Converse API\" models.\n",
         "type": "feature",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**AI-proxy**: Fixed a bug where certain Azure models would return partial tokens/words \nwhen in response-streaming mode.\n",
@@ -1446,7 +1462,11 @@
       {
         "message": "**AI-Transformers**: Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
         "scope": "Plugin",
-        "type": "bugfix"
+        "type": "bugfix",
+        "plugins": [
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**AI-proxy**: Fixed a bug where Cohere and Anthropic providers don't read the `model` parameter properly \nfrom the caller's request body.\n",
@@ -1471,7 +1491,12 @@
       {
         "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nthe Google Gemini \"chat\" (generateContent) interface.\n",
         "type": "feature",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-proxy**: Allowed mistral provider to use mistral.ai managed service by omitting upstream_url",
@@ -1606,7 +1631,12 @@
       {
         "message": "Fixed certain AI plugins cannot be applied per consumer or per service.",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-prompt-template",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**AI-Prompt-Guard**: Fixed an issue when `allow_all_conversation_history` is set to false, the first user request is selected instead of the last one.",
@@ -1691,7 +1721,12 @@
       {
         "message": "**AI Plugins**: Fixed an issue for multi-modal inputs are not properly validated and calculated.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+                "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**OpenTelemetry**: Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
@@ -1953,7 +1988,12 @@
       {
         "message": "Fixed a bug where Azure Managed-Identity tokens would never rotate  \nin case of a network failure when authenticating.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-rate-limiting-advanced**: Add the stats when reaching limit and exiting AI rate Limiting plugin.",
@@ -2123,7 +2163,10 @@
       {
         "message": "Fixed a Redis schema issue where `connect_timeout`, `read_timeout`, `send_timeout` were\nreset to `null` if the deprecated `timeout` is `null`.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "rate-limiting-advanced"
+        ]
       },
       {
         "message": "License expiry warnings are no longer logged and license info is removed from /metrics in Konnect.",
@@ -2848,7 +2891,11 @@
       {
         "message": "Improve error handling in AI plugins.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-prompt-guard",
+          "ai-prompt-decorator"
+        ]
       },
       {
         "message": "Fixed an issue where the `pg_timeout` was overridden to `60s` even if `--db-timeout`\nwas not explicitly passed in CLI arguments.\n",
@@ -3532,7 +3579,10 @@
       {
         "message": "Expose metrics for serviceless routes",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "prometheus"
+        ]
       },
       {
         "message": "**Rate Limiting**: fix to provide better accuracy in counters when sync_rate is used with the redis policy.",
@@ -3824,12 +3874,18 @@
       {
         "message": "check if `sync_rate` is `nil` when calling the RLA phase `configure()`",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "rate-limiting-advanced"
+        ]
       },
       {
         "message": "Skip sync with DB or Redis if `sync_rate` is `nil` or `null`.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "rate-limiting-advanced"
+        ]
       },
       {
         "message": "**Forward-Proxy**: Fixed the issue where request payload is being discarded when payload exceeded the `client_body_buffer_size`.",
@@ -4074,7 +4130,11 @@
       {
         "message": "validate private and public key for keys entity",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "acme",
+          "jwe-decrypt"
+        ]
       }
     ],
     "kong-manager-ee": [
@@ -4225,6 +4285,9 @@
         "message": "add scan_count to redis storage schema",
         "type": "feature",
         "scope": "Plugin",
+        "plugins": [
+          "acme"
+        ],
         "prs": [
           11532
         ]
@@ -4443,7 +4506,10 @@
       {
         "message": "fix flooded json decoding warning logs",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "response-transformer"
+        ]
       },
       {
         "message": "Fix an issue that remove FIPS from free mode. Add a check of FIPS state and license type in validate_fips. If no license with FIPS `on` will throw an error and exit.",
@@ -4453,7 +4519,10 @@
       {
         "message": "allow the 'start' field be a past time",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "canary"
+        ]
       },
       {
         "message": "Add troubleshooting tool",
@@ -4617,7 +4686,14 @@
       {
         "message": "Enhance error responses for authentication failures in the Admin API",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "basic-auth",
+          "key-auth",
+          "ldap-auth",
+          "key-auth-enc",
+          "vault-auth"
+        ]
       },
       {
         "message": "Apply Nginx patch for detecting HTTP/2 stream reset attacks early (CVE-2023-44487)",
@@ -4711,6 +4787,9 @@
         "scope": "Plugin",
         "githubs": [
           5813
+        ],
+        "plugins": [
+          "openid-connect"
         ]
       },
       {
@@ -4830,7 +4909,12 @@
       {
         "message": "**AI Plugins**: Fixed issue of template not being resolved correctly and supported nested fields.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-semantic-cache**: Fixed issue of SSE body may have extra trailing in some cases.\n",
@@ -4949,7 +5033,12 @@
       {
         "message": "**AI Plugins**: Reverted the analytics container key from \"proxy\" to \"ai-proxy\" to align with previous versions.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "Fixed an issue that certificate entity configured with vault reference may not get refreshed on time when initial with an invalid string.",
@@ -5282,7 +5371,10 @@
       {
         "message": "reduce upstream health iteration latency spike during scrape",
         "type": "performance",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "prometheus"
+        ]
       },
       {
         "message": "A unique Request ID is now populated in the error log, access log, error templates, log serializer, and in a new X-Kong-Request-Id header (configurable for upstream/downstream using the `headers` and `headers_upstream` configuration options). \n",
@@ -8404,6 +8496,9 @@
         "scope": "Plugin",
         "githubs": [
           7390
+        ],
+        "plugins": [
+          "openid-connect"
         ]
       },
       {
@@ -8652,7 +8747,10 @@
       {
         "message": "allow the 'start' field be a past time",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "canary"
+        ]
       },
       {
         "message": "**SAML**: When the redis session storage is incorrectly configured, users now receive a 500 error instead of being redirected endlessly",
@@ -12128,12 +12226,7 @@
         "scope": "Core"
       },
       {
-        "message": "Validation for plugin queue related parameters has been improved. [#10840](https: `max_batch_size`, `max_entries`, and `max_bytes` are now declared as `integer` not `number`.",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "Validation for plugin queue related parameters has been improved. [#10840](https: `initial_retry_delay` and `max_retry_delay` must now be numbers greater than 0.001 (in seconds).",
+        "message": "Validation for plugin queue related parameters has been improved.",
         "type": "feature",
         "scope": "Plugin"
       },
