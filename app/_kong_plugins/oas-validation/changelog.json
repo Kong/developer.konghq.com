@@ -1,92 +1,92 @@
 {
   "3.10.0.0": [
     {
-      "message": "**oas-validation**: Added support for the `discriminator` keyword in OpenAPI specs.",
+      "message": "Added support for the `discriminator` keyword in OpenAPI specs.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**oas-validation**: Added support for `oneOf`, `anyOf`, `allOf`, and `not` keywords.",
+      "message": "Added support for `oneOf`, `anyOf`, `allOf`, and `not` keywords.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**oas-validation**: Fixed an issue where query params without values caused an assertion failure.",
+      "message": "Fixed an issue where query params without values caused an assertion failure.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**oas-validation**: Improved performance on OpenAPI 3.0.",
+      "message": "Improved performance on OpenAPI 3.0.",
       "type": "performance",
       "scope": "Plugin"
     }
   ],
   "3.9.0.0": [
     {
-      "message": "**OAS-validation**: Fixed an issue where the error message was omitted if `notify_only_request_body_validation_failure` or `notify_only_response_body_validation_failure` was set to `false`.",
+      "message": "Fixed an issue where the error message was omitted if `notify_only_request_body_validation_failure` or `notify_only_response_body_validation_failure` was set to `false`.",
       "scope": "Plugin",
       "type": "bugfix"
     },
     {
-      "message": "**oas-validation**: Fixed an issue where the `include_base_path` did not work when multiple servers were provided.",
+      "message": "Fixed an issue where the `include_base_path` did not work when multiple servers were provided.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS**: Fixed an issue where the spec could not be located if the `Content-Type` in the request/response body included parameters (e.g., `application/json; charset=utf8`), while the openapi specification defined in `api_spec` did not include parameters.",
+      "message": "Fixed an issue where the spec could not be located if the `Content-Type` in the request/response body included parameters (e.g., `application/json; charset=utf8`), while the openapi specification defined in `api_spec` did not include parameters.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**OAS Validation**: Fixed an issue where parameter serialization does not behave the same as in the OpenAPI specification",
+      "message": "Fixed an issue where parameter serialization does not behave the same as in the OpenAPI specification",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed a bug where the non-string primitive types passed via URL query were unexpectedly cast to string when OpenAPI spec is v3.1.0.",
+      "message": "Fixed a bug where the non-string primitive types passed via URL query were unexpectedly cast to string when OpenAPI spec is v3.1.0.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue where the plugin cannot obtain the value when the path parameter name contains hyphen characters.",
+      "message": "Fixed an issue where the plugin cannot obtain the value when the path parameter name contains hyphen characters.",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.7.0.0": [
     {
-      "message": "**OAS-Validation**: Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
+      "message": "Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Add the `custom_base_path` field to specifiy a custom base path. It will be used with the `deck file namespace` feature",
+      "message": "Add the `custom_base_path` field to specifiy a custom base path. It will be used with the `deck file namespace` feature",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Supported OpenAPI Specification v3.1.0. The plugin now switches to a new JSONSchema validator when the specification version is v3.1.0.",
+      "message": "Supported OpenAPI Specification v3.1.0. The plugin now switches to a new JSONSchema validator when the specification version is v3.1.0.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.6.1.4": [
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.6.1.2": [
     {
-      "message": "**OAS-Validation**: Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
+      "message": "Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
       "type": "feature",
       "scope": "Plugin"
     }
@@ -98,39 +98,39 @@
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the plugin throws a runtime error while validating parameters with AnyType schema and style keyword defined.",
+      "message": "Fixed an issue that the plugin throws a runtime error while validating parameters with AnyType schema and style keyword defined.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the cookie parameters are not being validated.",
+      "message": "Fixed an issue that the cookie parameters are not being validated.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: bypass schema validation when content-type is not `application/json`.",
+      "message": "bypass schema validation when content-type is not `application/json`.",
       "type": "Breaking Change",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the nullable keyword did not take effect.",
+      "message": "Fixed an issue that the nullable keyword did not take effect.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue where the request path could not matched when containing regex escape characters.",
+      "message": "Fixed an issue where the request path could not matched when containing regex escape characters.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the URI component escaped characters were incorrectly unescaped.",
+      "message": "Fixed an issue that the URI component escaped characters were incorrectly unescaped.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0.0": [
     {
-      "message": "**OAS-Validation**: Introduces a new property `include_base_path` to indicate whether to include the base path when performing the path match evaluation.",
+      "message": "Introduces a new property `include_base_path` to indicate whether to include the base path when performing the path match evaluation.",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -140,34 +140,34 @@
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fix an issue where a null pointer exception may occur in some scenarios when configuration notify_only_request_validation_failure is true",
+      "message": "Fix an issue where a null pointer exception may occur in some scenarios when configuration notify_only_request_validation_failure is true",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fix the issue that path parameter cannot match non-ascii characters.",
+      "message": "Fix the issue that path parameter cannot match non-ascii characters.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fix an issue where valid recursive schemas are always rejected.",
+      "message": "Fix an issue where valid recursive schemas are always rejected.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0.4": [
     {
-      "message": "**OAS-Validation**: Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
+      "message": "Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the cookie parameters are not being validated.",
+      "message": "Fixed an issue that the cookie parameters are not being validated.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -179,118 +179,118 @@
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the plugin throws a runtime error while validating parameters with AnyType schema and style keyword defined.",
+      "message": "Fixed an issue that the plugin throws a runtime error while validating parameters with AnyType schema and style keyword defined.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the nullable keyword did not take effect.",
+      "message": "Fixed an issue that the nullable keyword did not take effect.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the URI component escaped characters were incorrectly unescaped.",
+      "message": "Fixed an issue that the URI component escaped characters were incorrectly unescaped.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.8": [
     {
-      "message": "**OAS Validation**, **WebSocket Size Limit**, **WebSocket Validator**, **XML Threat Protection**:\npriorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
+      "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.6": [
     {
-      "message": "**OAS-Validation**: Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
+      "message": "Add a new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.4.3.3": [
     {
-      "message": "**OAS-Validation**: Fixed an issue that the cookie parameters are not being validated.",
+      "message": "Fixed an issue that the cookie parameters are not being validated.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.1": [
     {
-      "message": "**OAS-Validation**: Fix a bug where the plugin throws a runtime error caused by the ref parameter schema not being dereferenced.",
+      "message": "Fix a bug where the plugin throws a runtime error caused by the ref parameter schema not being dereferenced.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fix an issue where valid recursive schemas are always rejected.",
+      "message": "Fix an issue where valid recursive schemas are always rejected.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the plugin throws a runtime error while validating parameters with AnyType schema and style keyword defined.",
+      "message": "Fixed an issue that the plugin throws a runtime error while validating parameters with AnyType schema and style keyword defined.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the nullable keyword did not take effect.",
+      "message": "Fixed an issue that the nullable keyword did not take effect.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS-Validation**: Fixed an issue that the URI component escaped characters were incorrectly unescaped.",
+      "message": "Fixed an issue that the URI component escaped characters were incorrectly unescaped.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fix the issue that path parameter cannot match non-ascii characters.",
+      "message": "Fix the issue that path parameter cannot match non-ascii characters.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.0.0": [
     {
-      "message": "**OAS Validation**: Fixed an issue where the plugin was unable to pass the validation even if path parameter was valid.",
+      "message": "Fixed an issue where the plugin was unable to pass the validation even if path parameter was valid.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fixed an issue where the plugin always validated the request body even if the method spec had no `requestBody` defined.",
+      "message": "Fixed an issue where the plugin always validated the request body even if the method spec had no `requestBody` defined.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fixed an issue where the comparison between large absolute value numbers could be incorrect due to the number being converted to exponential notation.",
+      "message": "Fixed an issue where the comparison between large absolute value numbers could be incorrect due to the number being converted to exponential notation.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.3.0.0": [
     {
-      "message": "**JWE Decrypt**, **OAS Validation**, and **Vault Authentication**: Added the missing schema field `protocols` for `jwe-decrypt`, `oas-validation`, and `vault-auth`.",
+      "message": "Added the missing schema field `protocols` for `jwe-decrypt`, `oas-validation`, and `vault-auth`.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.1.2": [
     {
-      "message": "**OAS Validation**: Added the OAS Validation plugin back into the bundled plugins list. The plugin is now available by default with no extra configuration necessary through `kong.conf`.",
+      "message": "Added the OAS Validation plugin back into the bundled plugins list. The plugin is now available by default with no extra configuration necessary through `kong.conf`.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fixed an issue where the plugin returned the wrong error message when failing to get the path schema spec.",
+      "message": "Fixed an issue where the plugin returned the wrong error message when failing to get the path schema spec.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAS Validation**: Fixed a `500` error that occurred when the response body schema had no content field.",
+      "message": "Fixed a `500` error that occurred when the response body schema had no content field.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.0.0": [
     {
-      "message": "**OAS Validation**: Validate HTTP requests and responses based on an OpenAPI 3.0 or Swagger API Specification.",
+      "message": "Validate HTTP requests and responses based on an OpenAPI 3.0 or Swagger API Specification.",
       "type": "feature",
       "scope": "Plugin"
     }

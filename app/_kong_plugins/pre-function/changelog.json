@@ -1,14 +1,14 @@
 {
   "3.10.0.0": [
     {
-      "message": "**pre-function**: Fixed an issue where a duplicate `protocols` field was accidentally added to the `pre-function` schema.\n",
+      "message": "Fixed an issue where a duplicate `protocols` field was accidentally added to the `pre-function` schema.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.3.0.0": [
     {
-      "message": "**Pre-function** and **Post-function**: `kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
+      "message": "`kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
       "type": "breaking_change",
       "scope": "Plugin"
     }
@@ -27,12 +27,12 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Pre-function**: Removed the deprecated `config.functions` configuration parameter from the Serverless Functions plugins’ schemas. Use the `config.access` phase instead.[#8559](https://github.com/Kong/kong/pull/8559)",
+      "message": "Removed the deprecated `config.functions` configuration parameter from the Serverless Functions plugins’ schemas. Use the `config.access` phase instead.[#8559](https://github.com/Kong/kong/pull/8559)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "**Pre-function**: Fixed a problem that could cause a crash.[#9269](https://github.com/Kong/kong/pull/9269)",
+      "message": "Fixed a problem that could cause a crash.[#9269](https://github.com/Kong/kong/pull/9269)",
       "type": "bugfix",
       "scope": "Plugin"
     }

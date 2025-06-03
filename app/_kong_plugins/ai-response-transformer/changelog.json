@@ -1,7 +1,24 @@
 {
+  "3.10.0.0": [
+    {
+      "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI upstream URL trailing would be empty.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allow authentication to Bedrock services with assume roles in AWS.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
-      "message": "**ai-request-transformer**, **ai-response-transformer**: Fixed an issue where Azure Managed Identity did not work for AI Transformer Plugins.",
+      "message": "Fixed an issue where Azure Managed Identity did not work for AI Transformer Plugins.",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -1,73 +1,110 @@
 {
   "3.10.0.0": [
     {
-      "message": "**ai-proxy-advanced**: Added new `priority` balancer algorithm, which allows setting apriority group for each upstream model.\n",
-      "type": "feature",
+      "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
+      "type": "deprecation",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-proxy-advanced**: Added the `failover_criteria` configuration option, which allows retrying requests to the next upstream server in case of failure.\n",
-      "type": "feature",
+      "message": "Changed the serialized log key of AI metrics from `ai.ai-proxy` to `ai.proxy` to avoid conflicts with metrics generated from plugins other than AI Proxy and AI Proxy Advanced. If you are using logging plugins (for example, File Log, HTTP Log, etc.), you will have to update metrics pipeline configurations to reflect this change.\n",
+      "type": "Breaking Change",
       "scope": "Plugin"
     },
     {
-      "message": "**AI Proxy Advanced**: Added cost to `tokens_count_strategy` when using the lowest-usage load balancing strategy.",
-      "type": "feature",
-      "scope": "Plugin"
-    },
-    {
-      "message": "**AI Proxy Advanced**: Added the ability to set a catch-all target in semantic routing.",
-      "type": "feature",
-      "scope": "Plugin"
-    },
-    {
-      "message": "**ai-proxy-advanced**: Fixed an issue where the ai-proxy-advanced plugin failed to failover between providers of different formats.\n",
+      "message": "Fixed an issue where AI upstream URL trailing would be empty.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-proxy-advanced**: Fixed an issue where the ai-proxy-advanced plugin identity running failed in retry scenarios.\n",
+      "message": "Added support for boto3 SDKs for Bedrock provider, and for Google GenAI SDKs for Gemini provider.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added new `priority` balancer algorithm, which allows setting apriority group for each upstream model.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `failover_criteria` configuration option, which allows retrying requests to the next upstream server in case of failure.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added cost to `tokens_count_strategy` when using the lowest-usage load balancing strategy.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `huggingface`, `azure`, `vertex`, and `bedrock` providers to embeddings. They can be used by the ai-proxy-advanced, ai-semantic-cache, ai-semantic-prompt-guard, and ai-rag-injector plugins.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allow authentication to Bedrock services with assume roles in AWS.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the ability to set a catch-all target in semantic routing.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ai-proxy-advanced plugin failed to failover between providers of different formats.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ai-proxy-advanced plugin identity running failed in retry scenarios.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.1": [
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced would use corrupted plugin config.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.9.0.0": [
     {
-      "message": "**ai-proxy-advanced**: Added support for streaming responses to the AI Proxy Advanced plugin.\n",
+      "message": "Added support for streaming responses to the AI Proxy Advanced plugin.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-semantic-cache**, **ai-semantic-prompt-guard**, **ai-proxy-advanced**: Made the\n`embeddings.model.name` config field a free text entry, enabling use of a\nself-hosted (or otherwise compatible) model.\n",
+      "message": "Made the\n`embeddings.model.name` config field a free text entry, enabling use of a\nself-hosted (or otherwise compatible) model.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-proxy-advanced**, **ai-semantic-prompt-guard**: Fixed an issue where stale plugin config was not updated in dbless and hybrid mode.",
+      "message": "Fixed an issue where stale plugin config was not updated in dbless and hybrid mode.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-proxy-advanced**: Fixed an issue where lowest-usage and lowest-latency strategy did not update data points correctly.",
+      "message": "Fixed an issue where lowest-usage and lowest-latency strategy did not update data points correctly.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.1.0": [
     {
-      "message": "**ai-proxy-advanced**, **ai-semantic-prompt-guard**: Fixed an issue where stale plugin config was not updated in dbless and hybrid mode.",
+      "message": "Fixed an issue where stale plugin config was not updated in dbless and hybrid mode.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-proxy-advanced**: Fixed an issue where lowest-usage and lowest-latency strategy did not update data points correctly.",
+      "message": "Fixed an issue where lowest-usage and lowest-latency strategy did not update data points correctly.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**ai-proxy-advanced**: Added the `ai-proxy-advanced` plugin that supports advanced load balancing between LLM services.",
+      "message": "Added the `ai-proxy-advanced` plugin that supports advanced load balancing between LLM services.",
       "type": "feature",
       "scope": "Plugin"
     }

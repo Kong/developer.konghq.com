@@ -1,209 +1,239 @@
 {
   "3.10.0.0": [
     {
-      "message": "**openid-connect**: Fixed an issue where forbidden requests were redirected to `unauthorized_redirect_uri` if configured. After the fix, forbidden requests will be redirected to `forbidden_redirect_uri` if configured.\n",
+      "message": "Fixed an issue where forbidden requests were redirected to `unauthorized_redirect_uri` if configured. After the fix, forbidden requests will be redirected to `forbidden_redirect_uri` if configured.\n",
       "type": "Breaking Change",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: Removed issuer discovery from schema to improve performance upon plugin initialization or updating. The issuer discovery will only be triggerd by client requests.",
+      "message": "Removed issuer discovery from schema to improve performance upon plugin initialization or updating. The issuer discovery will only be triggerd by client requests.",
       "type": "performance",
       "scope": "Plugin"
     }
   ],
   "3.10.0.2": [
     {
-      "message": "**OpenID Connect**: Fixed an issue which caused an IdP to report invalid `redirect_uri` errors when `config.redirect_uri` was not configured and the URI path contained spaces.",
+      "message": "Fixed an issue which caused an IdP to report invalid `redirect_uri` errors when `config.redirect_uri` was not configured and the URI path contained spaces.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.9.0.0": [
     {
-      "message": "**openid-connect**: Allowed `http_proxy_authorization` and `https_proxy_authorization` to be referenceable.\n",
+      "message": "Allowed `http_proxy_authorization` and `https_proxy_authorization` to be referenceable.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**openid-connect**: Added the `introspection_post_args_client_headers` config option, \nallowing you to pass client headers as introspection POST body arguments.\n",
+      "message": "Added the `introspection_post_args_client_headers` config option, \nallowing you to pass client headers as introspection POST body arguments.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**openid-connect**: Fixed an `500` error caused by JSON `null` from the request body when parsing bearer tokens or client IDs.",
+      "message": "Fixed an `500` error caused by JSON `null` from the request body when parsing bearer tokens or client IDs.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**openid-connect**: Fixed an issue where the configured Redis database was ignored.",
+      "message": "Fixed an issue where the configured Redis database was ignored.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Fixed an issue where the `token_cache_key_include_scope` feature was not considering scopes defined via `config.scopes` to generate the cache key.\n",
+      "message": "Fixed an issue where the `token_cache_key_include_scope` feature was not considering scopes defined via `config.scopes` to generate the cache key.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**OpenID Connect**: Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
+      "message": "Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
+      "message": "Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-connect**: Fixed an issue where using_pseudo_issuer does not work when patching.",
+      "message": "Fixed an issue where using_pseudo_issuer does not work when patching.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-connect**: Added `claims_forbidden` property to restrict access.",
+      "message": "Added `claims_forbidden` property to restrict access.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: Added support for redis cache for introspection result with new fields `cluster_cache_strategy` and `cluster_cache_redis`. When configured, the plugin will share the tokens introspection responses cache across nodes configured to use the same Redis Database.",
+      "message": "Added support for redis cache for introspection result with new fields `cluster_cache_strategy` and `cluster_cache_redis`. When configured, the plugin will share the tokens introspection responses cache across nodes configured to use the same Redis Database.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**openid-connect**: Standardized Redis configuration across plugins. The Redis configuration now follows a common schema shared with other plugins.",
+      "message": "Standardized Redis configuration across plugins. The Redis configuration now follows a common schema shared with other plugins.",
       "type": "deprecation",
       "scope": "Plugin"
     }
   ],
   "3.7.1.0": [
     {
-      "message": "**OpenID Connect**: Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
+      "message": "Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.7.0.0": [
     {
-      "message": "**OpenID Connect**: Added support for DPoP (Demonstrating Proof-of-Possession) tokens validation. The feature is available by enabling `proof_of_possession_dpop`",
+      "message": "Added support for DPoP (Demonstrating Proof-of-Possession) tokens validation. The feature is available by enabling `proof_of_possession_dpop`",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Add support for JWT Secured Authorization Requests (JAR) on Authorization and Pushed Authorization (PAR) endpoints, see: `config.require_signed_request_object`",
+      "message": "Add support for JWT Secured Authorization Requests (JAR) on Authorization and Pushed Authorization (PAR) endpoints, see: `config.require_signed_request_object`",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Add support for JARM response modes: `query.jwt`, `form_post.jwt`, `fragment.jwt`, `jwt`",
+      "message": "Add support for JARM response modes: `query.jwt`, `form_post.jwt`, `fragment.jwt`, `jwt`",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.6.1.5": [
     {
-      "message": "**OpenID Connect**: Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
+      "message": "Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.6.0.0": [
     {
-      "message": "**Openid-Connect**: Fix logout uri suffix detection by using normalized version of `kong.request.get_forwarded_path()` instead of `ngx.var.request_uri` (especially when passing query strings to logout)",
+      "message": "Mark the `introspection_headers_values` in the `openid-connect` plugin as an encrypted and referenceable field",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: remove unwanted argument `ignore_signature.userinfo` from the `userinfo_load` function",
+      "message": "Fix logout uri suffix detection by using normalized version of `kong.request.get_forwarded_path()` instead of `ngx.var.request_uri` (especially when passing query strings to logout)",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**openid-connect**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "message": "remove unwanted argument `ignore_signature.userinfo` from the `userinfo_load` function",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: fix the cache key collision when config `issuer` and `extra_jwks_uris` contain the same uri",
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: Correctly handle boundary conditions for token expiration time checking",
+      "message": "fix the cache key collision when config `issuer` and `extra_jwks_uris` contain the same uri",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: update time when calculating token expire",
+      "message": "Correctly handle boundary conditions for token expiration time checking",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
+      "message": "update time when calculating token expire",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: extend `token_post_args_client` to support injection from headers",
+      "message": "extend `token_post_args_client` to support injection from headers",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: add support for explicit proof key for code exchange (PKCE).",
+      "message": "add support for explicit proof key for code exchange (PKCE).",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: add support for pushed authorization requests (PAR).",
+      "message": "add support for pushed authorization requests (PAR).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Support the `tls_client_auth` and `self_signed_tls_client_auth` auth methods in the OpenID Connect plugin, allowing to do mTLS Client Authentication with the IdP.\n",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.5.0.0": [
     {
-      "message": "**Openid-Connect**: New field `unauthorized_destroy_session`, which when set to true, we destory the session (delete the user's session cookie) when the request is unauthorized. Default to true. Set to false to preserve the session.",
+      "message": "New field `unauthorized_destroy_session`, which when set to true, we destory the session (delete the user's session cookie) when the request is unauthorized. Default to true. Set to false to preserve the session.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: New field `using_pseudo_issuer`. When set to true, the plugin instance will not discover configuration from the issuer.",
+      "message": "New field `using_pseudo_issuer`. When set to true, the plugin instance will not discover configuration from the issuer.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: Fix issue on token revocation on logout where the code was revoking refresh token when it was supposed to revoke access token when using the discovered revocation endpoint.",
+      "message": "Fix issue on token revocation on logout where the code was revoking refresh token when it was supposed to revoke access token when using the discovered revocation endpoint.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid Connect**: Fix the issue where `using_pseudo_issuer` does not work.",
+      "message": "bump the dependency `kong-openid-connect` of oidc plugin from 2.5.5 to 2.5.7.",
+      "type": "dependency",
+      "scope": "Plugin"
+    },
+    {
+      "message": "'openid-connect' plugin now supports public client",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "OpenID-Connect now support designate parameter name of token for introspection and revocation with `introspection_token_param_name` and `revocation_token_param_name` respectively.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fix the issue where `using_pseudo_issuer` does not work.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0.5": [
     {
-      "message": "**OpenID Connect**: Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
+      "message": "Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0.4": [
     {
-      "message": "**openid-connect**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "message": "Mark the `introspection_headers_values` in the `openid-connect` plugin as an encrypted and referenceable field",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0.2": [
     {
-      "message": "**Openid-Connect**: Fix logout uri suffix detection by using normalized version of `kong.request.get_forwarded_path()` instead of `ngx.var.request_uri` (especially when passing query strings to logout)",
+      "message": "Fix logout uri suffix detection by using normalized version of `kong.request.get_forwarded_path()` instead of `ngx.var.request_uri` (especially when passing query strings to logout)",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: update time when calculating token expire",
+      "message": "update time when calculating token expire",
       "type": "bugfix",
       "scope": "Plugin"
     },
@@ -213,130 +243,135 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: extend `token_post_args_client` to support injection from headers",
+      "message": "extend `token_post_args_client` to support injection from headers",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.4.3.9": [
     {
-      "message": "**OpenID Connect**: Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
+      "message": "Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.5": [
     {
-      "message": "**openid-connect**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "message": "Mark the `introspection_headers_values` in the `openid-connect` plugin as an encrypted and referenceable field",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.3.1": [
     {
-      "message": "**OpenID-Connect**: update time when calculating token expire",
+      "message": "update time when calculating token expire",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
+      "message": "configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: extend `token_post_args_client` to support injection from headers",
+      "message": "extend `token_post_args_client` to support injection from headers",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.4.3.18": [
     {
-      "message": "**OpenID Connect**: Fixed an issue which caused IdPs to report invalid `redirect_uri` errors when `config.redirect_uri` was not configured and the URI path contained spaces.",
+      "message": "Fixed an issue which caused IdPs to report invalid `redirect_uri` errors when `config.redirect_uri` was not configured and the URI path contained spaces.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.2.0": [
     {
-      "message": "**Openid Connect**: Fix the issue where `using_pseudo_issuer` does not work.",
+      "message": "Fix the issue where `using_pseudo_issuer` does not work.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.1.0": [
     {
-      "message": "**Openid-Connect**: New field `unauthorized_destroy_session`, which when set to true, we destory the session (delete the user's session cookie) when the request is unauthorized. Default to true. Set to false to preserve the session.",
+      "message": "New field `unauthorized_destroy_session`, which when set to true, we destory the session (delete the user's session cookie) when the request is unauthorized. Default to true. Set to false to preserve the session.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID-Connect**: New field `using_pseudo_issuer`. When set to true, the plugin instance will not discover configuration from the issuer.",
+      "message": "New field `using_pseudo_issuer`. When set to true, the plugin instance will not discover configuration from the issuer.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: Fix issue on token revocation on logout where the code was revoking refresh token when it was supposed to revoke access token when using the discovered revocation endpoint.",
+      "message": "Fix issue on token revocation on logout where the code was revoking refresh token when it was supposed to revoke access token when using the discovered revocation endpoint.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.0.0": [
     {
-      "message": "**OpenID Connect**: This plugin now supports the error reason header. This header can be turned off by setting `expose_error_code` to `false`.",
+      "message": "This plugin now supports the error reason header. This header can be turned off by setting `expose_error_code` to `false`.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: OpenID Connect now supports adding scope to the token cache key by setting `token_cache_key_include_scope` to `true`.",
+      "message": "OpenID Connect now supports adding scope to the token cache key by setting `token_cache_key_include_scope` to `true`.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Changed some log levels from `notice` to `error` for better visibility.",
+      "message": "Changed some log levels from `notice` to `error` for better visibility.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Correctly set the right table key on `log` and `message`.",
+      "message": "Correctly set the right table key on `log` and `message`.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: If an invalid opaque token is provided but verification fails, the plugin now prints the correct error.",
+      "message": "If an invalid opaque token is provided but verification fails, the plugin now prints the correct error.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.2.2.4": [
     {
-      "message": "**OpenID Connect**: Correctly set the right table key on `log` and `message`.",
+      "message": "Correctly set the right table key on `log` and `message`.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: If an invalid opaque token is provided but verification fails, print the correct error.",
+      "message": "If an invalid opaque token is provided but verification fails, print the correct error.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.2.1.0": [
     {
-      "message": "**Session**, **OpenID Connect**, and **SAML**: These plugins now use `lua-resty-session` v4.0.0.\n\nThis update includes new session functionalities such as configuring audiences to manage multiple sessions in a single cookie, global timeout, and persistent cookies.\n\nDue to this update, there are also a number of deprecated and removed parameters in these plugins. See the invidividual plugin documentation for the full list of changed parameters in each plugin.\n\n- [Session changelog](/plugins/session/#changelog)\n- [OpenID Connect changelog](/plugins/openid-connect/#changelog)\n- [SAML changelog](/plugins/saml/#changelog)",
+      "message": "These plugins now use `lua-resty-session` v4.0.0.\n\nThis update includes new session functionalities such as configuring audiences to manage multiple sessions in a single cookie, global timeout, and persistent cookies.\n\nDue to this update, there are also a number of deprecated and removed parameters in these plugins. See the invidividual plugin documentation for the full list of changed parameters in each plugin.\n\n- [Session changelog](/plugins/session/#changelog)\n- [OpenID Connect changelog](/plugins/openid-connect/#changelog)\n- [SAML changelog](/plugins/saml/#changelog)",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Session**, **OpenID Connect**, and **SAML**: [Session changelog](/plugins/session/#changelog)",
+      "message": "[Session changelog](/plugins/session/#changelog)",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Session**, **OpenID Connect**, and **SAML**: [OpenID Connect changelog](/plugins/openid-connect/#changelog)",
+      "message": "[OpenID Connect changelog](/plugins/openid-connect/#changelog)",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Session**, **OpenID Connect**, and **SAML**: [SAML changelog](/plugins/saml/#changelog)",
+      "message": "[SAML changelog](/plugins/saml/#changelog)",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -351,12 +386,12 @@
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Fixed an issue where it was not possible to specify an anonymous consumer by name.",
+      "message": "Fixed an issue where it was not possible to specify an anonymous consumer by name.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Fixed an issue where the `authorization_cookie_httponly` and `session_cookie_httponly` parameters would always be set to `true`, even if they were configured as `false`.",
+      "message": "Fixed an issue where the `authorization_cookie_httponly` and `session_cookie_httponly` parameters would always be set to `true`, even if they were configured as `false`.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -368,33 +403,33 @@
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Fixed an issue with `kong_oauth2` consumer mapping.",
+      "message": "Fixed an issue with `kong_oauth2` consumer mapping.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.4.6": [
     {
-      "message": "**OpenID-Connect**: update time when calculating token expire",
+      "message": "update time when calculating token expire",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.4.5": [
     {
-      "message": "**Openid-Connect**: New field `unauthorized_destroy_session`, which when set to true, we destory the session (delete the user's session cookie) when the request is unauthorized. Default to true. Set to false to preserve the session.",
+      "message": "New field `unauthorized_destroy_session`, which when set to true, we destory the session (delete the user's session cookie) when the request is unauthorized. Default to true. Set to false to preserve the session.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**Openid-Connect**: Fix issue on token revocation on logout where the code was revoking refresh token when it was supposed to revoke access token when using the discovered revocation endpoint.",
+      "message": "Fix issue on token revocation on logout where the code was revoking refresh token when it was supposed to revoke access token when using the discovered revocation endpoint.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.4.3": [
     {
-      "message": "**OpenID-Connect**: If an invalid opaque token is provided but verified failed, print the correct error.",
+      "message": "If an invalid opaque token is provided but verified failed, print the correct error.",
       "type": "bugfix",
       "scope": "Plugin",
       "jiras": [
@@ -404,36 +439,36 @@
   ],
   "2.8.2.0": [
     {
-      "message": "**OpenID Connect**: Fixed issues with OIDC role mapping where admins couldn’t be added to more than one workspace, and permissions were not being updated.",
+      "message": "Fixed issues with OIDC role mapping where admins couldn’t be added to more than one workspace, and permissions were not being updated.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.1.0": [
     {
-      "message": "**OpenID Connect**: Provide valid upstream headers e.g. `X-Consumer-Id`, `X-Consumer-Username`",
+      "message": "Provide valid upstream headers e.g. `X-Consumer-Id`, `X-Consumer-Username`",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.0.0": [
     {
-      "message": "**OpenID Connect**: Added Redis ACL support (Redis v6.0.0+) for storing and retrieving a session. Use the `session_redis_username` and `session_redis_password` configuration parameters to configure it.\n\n{:.important}\n> These parameters replace the `session_redis_auth` field, which is now **deprecated** and planned to be removed in 3.x.x.",
+      "message": "Added Redis ACL support (Redis v6.0.0+) for storing and retrieving a session. Use the `session_redis_username` and `session_redis_password` configuration parameters to configure it.\n\n{:.important}\n> These parameters replace the `session_redis_auth` field, which is now **deprecated** and planned to be removed in 3.x.x.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Added support for distributed claims. Set the `resolve_distributed_claims` configuration parameter to `true` to tell OIDC to explicitly resolve distributed claims.\n\nDistributed claims are represented by the `_claim_names` and `_claim_sources` members of the JSON object containing the claims.",
+      "message": "Added support for distributed claims. Set the `resolve_distributed_claims` configuration parameter to `true` to tell OIDC to explicitly resolve distributed claims.\n\nDistributed claims are represented by the `_claim_names` and `_claim_sources` members of the JSON object containing the claims.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: **Beta feature:** The `client_id`, `client_secret`, `session_secret`, `session_redis_username`, and `session_redis_password` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "message": "**Beta feature:** The `client_id`, `client_secret`, `session_secret`, `session_redis_username`, and `session_redis_password` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**OpenID Connect**: Fixed negative caching, which was loading wrong a configuration value.",
+      "message": "Fixed negative caching, which was loading wrong a configuration value.",
       "type": "bugfix",
       "scope": "Plugin"
     }

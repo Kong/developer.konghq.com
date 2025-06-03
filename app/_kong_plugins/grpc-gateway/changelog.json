@@ -1,45 +1,45 @@
 {
   "3.10.0.0": [
     {
-      "message": "**grpc-web** and **grpc-gateway**: Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
+      "message": "Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.9.0.1": [
     {
-      "message": "**grpc-web** and **grpc-gateway**: Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
+      "message": "Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**grpc-gateway**: When there is a JSON decoding error, respond with status 400 and error information in the body instead of status 500.",
+      "message": "When there is a JSON decoding error, respond with status 400 and error information in the body instead of status 500.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.0.0": [
     {
-      "message": "**gRPC Gateway**: Fixed an issue where an array with one element would fail to be encoded.",
+      "message": "Fixed an issue where an array with one element would fail to be encoded.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**gRPC Gateway**: Fixed an issue where empty (all default value) messages couldn’t be unframed correctly.[#10836](https://github.com/Kong/kong/pull/10836)",
+      "message": "Fixed an issue where empty (all default value) messages couldn’t be unframed correctly.[#10836](https://github.com/Kong/kong/pull/10836)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.3.0.0": [
     {
-      "message": "**gRPC Gateway**: Fixed an issue where having a `null` value in the JSON payload caused an uncaught exception to be thrown during `pb.encode`.[#10687](https://github.com/Kong/kong/pull/10687)",
+      "message": "Fixed an issue where having a `null` value in the JSON payload caused an uncaught exception to be thrown during `pb.encode`.[#10687](https://github.com/Kong/kong/pull/10687)",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**gRPC Gateway**: Fixed an issue where empty arrays in JSON were incorrectly encoded as `\"{}\"`. They are now encoded as `\"[]\"` to comply with standards.[#10790](https://github.com/Kong/kong/pull/10790)",
+      "message": "Fixed an issue where empty arrays in JSON were incorrectly encoded as `\"{}\"`. They are now encoded as `\"[]\"` to comply with standards.[#10790](https://github.com/Kong/kong/pull/10790)",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -53,7 +53,7 @@
   ],
   "3.0.0.0": [
     {
-      "message": "**gRPC Gateway**: Fixed the handling of boolean fields from URI arguments.[#9180](https://github.com/Kong/kong/pull/9180)",
+      "message": "Fixed the handling of boolean fields from URI arguments.[#9180](https://github.com/Kong/kong/pull/9180)",
       "type": "bugfix",
       "scope": "Plugin"
     }

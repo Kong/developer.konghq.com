@@ -1,70 +1,110 @@
 {
   "3.10.0.0": [
     {
-      "message": "**ai-semantic-cache**: Fixed an issue where the Refresh header wasn't properly sent to the client.\n",
+      "message": "Fixed an issue where AI upstream URL trailing would be empty.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-semantic-cache**: Fixed issue where the SSE body may have extra trailing.\n",
+      "message": "Added support for boto3 SDKs for Bedrock provider, and for Google GenAI SDKs for Gemini provider.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `huggingface`, `azure`, `vertex`, and `bedrock` providers to embeddings. They can be used by the ai-proxy-advanced, ai-semantic-cache, ai-semantic-prompt-guard, and ai-rag-injector plugins.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allow authentication to Bedrock services with assume roles in AWS.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Refresh header wasn't properly sent to the client.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed issue where the SSE body may have extra trailing.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.9.1.1": [
     {
-      "message": "**ai-semantic-cache**: Fixed issue of SSE body may have extra trailing in some cases.\n",
+      "message": "Fixed issue of SSE body may have extra trailing in some cases.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.9.0.0": [
     {
-      "message": "**ai-semantic-cache**, **ai-semantic-prompt-guard**, **ai-proxy-advanced**: Made the\n`embeddings.model.name` config field a free text entry, enabling use of a\nself-hosted (or otherwise compatible) model.\n",
-      "type": "feature",
-      "scope": "Plugin"
-    },
-    {
-      "message": "**ai-semantic-cache**: Fixed the exact matching to catch everything including embeddings.\n",
+      "message": "Fixed an bug that AI semantic cache can't use request provided models",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-semantic-cache**: Added `ignore_tool` configuration option to discard tool role prompts from the input text.\n",
+      "message": "Made the\n`embeddings.model.name` config field a free text entry, enabling use of a\nself-hosted (or otherwise compatible) model.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-semantic-cache**: Plugin can now be enabled on Consumer Groups.\n",
-      "type": "feature",
-      "scope": "Plugin"
-    },
-    {
-      "message": "**ai-semantic-cache**: Fixed an issue where the ai-semantic-cache plugin put the wrong type value in the metrics when using the prometheus plugin.",
+      "message": "Fixed the exact matching to catch everything including embeddings.\n",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-semantic-cache**: Fixed an issue where the plugin failed when handling requests with multiple models.",
+      "message": "Added `ignore_tool` configuration option to discard tool role prompts from the input text.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Plugin can now be enabled on Consumer Groups.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ai-semantic-cache plugin would abort in stream mode when another plugin enable the buffering proxy mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ai-semantic-cache plugin put the wrong type value in the metrics when using the prometheus plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin failed when handling requests with multiple models.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.1.0": [
     {
-      "message": "**ai-semantic-cache**: Fixed an issue where the ai-semantic-cache plugin put the wrong type value in the metrics when using the prometheus plugin.",
+      "message": "Fixed an bug that AI semantic cache can't use request provided models",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ai-semantic-cache plugin would abort in stream mode when another plugin enable the buffering proxy mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ai-semantic-cache plugin put the wrong type value in the metrics when using the prometheus plugin.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**ai-semantic-cache**: Introduced AI Semantic Caching plugin, enabling you \nto configure an embeddings-based caching system for Large Language Model responses.\n",
+      "message": "Introduced AI Semantic Caching plugin, enabling you \nto configure an embeddings-based caching system for Large Language Model responses.\n",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-semantic-cache**: Fix the `ai-semantic-caching` plugin with a condition for calculating latencies when no embeddings, add deep copy for the request table and fix countback.",
+      "message": "Fix the `ai-semantic-caching` plugin with a condition for calculating latencies when no embeddings, add deep copy for the request table and fix countback.",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -1,21 +1,35 @@
 {
+  "3.10.0.0": [
+    {
+      "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
-      "message": "**Basic-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.6)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.7.1.0": [
     {
-      "message": "**Basic-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.6)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.6.1.5": [
     {
-      "message": "**Basic-Auth**: Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Add missing WWW-Authenticate headers to 401 response in basic auth plugin.",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -1,7 +1,7 @@
 {
   "3.10.0.0": [
     {
-      "message": "**file-log**: Fixed an issue where an error would occur when there were spaces at the beginning or end of a path.",
+      "message": "Fixed an issue where an error would occur when there were spaces at the beginning or end of a path.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -14,6 +14,13 @@
     },
     {
       "message": "**Improved Plugin Documentation**: [File Log](/plugins/file-log/)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "WebSocket service/route support was added for logging plugins: file-log",
       "type": "feature",
       "scope": "Plugin"
     }

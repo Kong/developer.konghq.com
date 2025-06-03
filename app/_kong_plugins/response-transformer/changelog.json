@@ -1,28 +1,35 @@
 {
+  "3.8.0.0": [
+    {
+      "message": "Added support for json_body rename in response-transformer plugin\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.0.0": [
     {
-      "message": "**Response Transformer** and **Request Transformer Advanced**: Fixed an issue where the plugin wouldn’t transform the response body when the upstream returned a Content-Type with a `+json` suffix as the subtype.",
+      "message": "Fixed an issue where the plugin wouldn’t transform the response body when the upstream returned a Content-Type with a `+json` suffix as the subtype.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.2.1.0": [
     {
-      "message": "**Response Transformer**: Fixed an issue where the `allow.json` configuration parameter couldn’t use nested JSON object and array syntax.",
+      "message": "Fixed an issue where the `allow.json` configuration parameter couldn’t use nested JSON object and array syntax.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.0.0": [
     {
-      "message": "**Response Transformer**: Fixed the bug that the plugin would break when receiving an unexpected body.[#9463](https://github.com/Kong/kong/pull/9463)",
+      "message": "Fixed the bug that the plugin would break when receiving an unexpected body.[#9463](https://github.com/Kong/kong/pull/9463)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.2.1": [
     {
-      "message": "**Response Transformer**: Fixed an issue where the plugin couldn’t process string responses.",
+      "message": "Fixed an issue where the plugin couldn’t process string responses.",
       "type": "bugfix",
       "scope": "Plugin"
     }

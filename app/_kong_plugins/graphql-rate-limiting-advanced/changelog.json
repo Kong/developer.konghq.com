@@ -1,90 +1,90 @@
 {
   "3.9.0.0": [
     {
-      "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
+      "message": "Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**GraphQL-Rate-Limiting-Advanced**: Added Redis cluster_max_redirections configuration option.",
+      "message": "Added Redis cluster_max_redirections configuration option.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**graphql-rate-limiting-advanced**: Deprecated timeout config field in redis config in favor of connect_/send_/read_timeout (timeout field will be removed in 4.0).",
+      "message": "Deprecated timeout config field in redis config in favor of connect_/send_/read_timeout (timeout field will be removed in 4.0).",
       "type": "deprecation",
       "scope": "Plugin"
     },
     {
-      "message": "**graphql-rate-limiting-advanced**: Switched to sentinel_nodes and cluster_nodes for redis configuration.",
+      "message": "Switched to sentinel_nodes and cluster_nodes for redis configuration.",
       "type": "deprecation",
       "scope": "Plugin"
     }
   ],
   "3.5.0.0": [
     {
-      "message": "**graphql-rate-limiting-advanced**: Fix a bug in the schema validation which prevents from using redis in cluster mode",
+      "message": "Fix a bug in the schema validation which prevents from using redis in cluster mode",
       "type": "Breaking Change",
       "scope": "Plugin"
     }
   ],
   "3.4.3.14": [
     {
-      "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
+      "message": "Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.4.1.0": [
     {
-      "message": "**graphql-rate-limiting-advanced**: Fix a bug in the schema validation which prevents from using redis in cluster mode",
+      "message": "Fix a bug in the schema validation which prevents from using redis in cluster mode",
       "type": "Breaking Change",
       "scope": "Plugin"
     }
   ],
   "3.4.0.0": [
     {
-      "message": "**GraphQL Rate Limiting Advanced**: The `host` field of this plugin now accepts Kong upstream targets.",
+      "message": "The `host` field of this plugin now accepts Kong upstream targets.",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.2.1.0": [
     {
-      "message": "**GraphQL Rate Limiting Advanced** and **Rate Limiting Advanced**: In hybrid and DB-less modes, these plugins now support `sync_rate = -1` with any strategy, including the default `cluster` strategy.",
+      "message": "In hybrid and DB-less modes, these plugins now support `sync_rate = -1` with any strategy, including the default `cluster` strategy.",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "2.8.2.0": [
     {
-      "message": "**GraphQL Rate Limiting Advanced**: The plugin now returns a `500` error when using the `cluster` strategy in hybrid or DB-less modes instead of crashing.",
+      "message": "The plugin now returns a `500` error when using the `cluster` strategy in hybrid or DB-less modes instead of crashing.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.1.1": [
     {
-      "message": "**GraphQL Rate Limiting Advanced**: Fixed `deserialize_parse_tree` logic when building GraphQL AST with non-nullable or list types.",
+      "message": "Fixed `deserialize_parse_tree` logic when building GraphQL AST with non-nullable or list types.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "2.8.0.0": [
     {
-      "message": "**GraphQL Rate Limiting Advanced**: Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
+      "message": "Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**GraphQL Rate Limiting Advanced**: Added the `redis.username` and `redis.sentinel_username` configuration parameters.",
+      "message": "Added the `redis.username` and `redis.sentinel_username` configuration parameters.",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**GraphQL Rate Limiting Advanced**: **Beta feature:** The `redis.username`, `redis.password`, `redis.sentinel_username`, and `redis.sentinel_password`configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "message": "**Beta feature:** The `redis.username`, `redis.password`, `redis.sentinel_username`, and `redis.sentinel_password`configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
       "type": "feature",
       "scope": "Plugin"
     }

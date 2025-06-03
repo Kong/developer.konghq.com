@@ -1,21 +1,21 @@
 {
   "3.10.0.0": [
     {
-      "message": "**Vault Auth**: The Vault Auth plugin doesn't clear its cache when incremental sync is turned on. This means that deleted secrets will remain in the cache, and can still be accessed by the plugin.\n",
+      "message": "The Vault Auth plugin doesn't clear its cache when incremental sync is turned on. This means that deleted secrets will remain in the cache, and can still be accessed by the plugin.\n",
       "type": "known-issues",
       "scope": "Plugin"
     }
   ],
   "3.3.0.0": [
     {
-      "message": "**JWE Decrypt**, **OAS Validation**, and **Vault Authentication**: Added the missing schema field `protocols` for `jwe-decrypt`, `oas-validation`, and `vault-auth`.",
+      "message": "Added the missing schema field `protocols` for `jwe-decrypt`, `oas-validation`, and `vault-auth`.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.0.0": [
     {
-      "message": "**Vault Authentication**: Added support for KV Secrets Engine v2.",
+      "message": "Added support for KV Secrets Engine v2.",
       "type": "feature",
       "scope": "Plugin"
     }
@@ -29,7 +29,7 @@
   ],
   "2.8.0.0": [
     {
-      "message": "**Vault Authentication**: **Beta feature:** The `vaults.vault_token` form field is now marked as referenceable, which means it can be securely stored as a[secret](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "message": "**Beta feature:** The `vaults.vault_token` form field is now marked as referenceable, which means it can be securely stored as a[secret](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
       "type": "feature",
       "scope": "Plugin"
     }

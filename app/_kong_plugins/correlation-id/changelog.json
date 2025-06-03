@@ -1,7 +1,7 @@
 {
   "3.8.0.0": [
     {
-      "message": "**correlation-id**: Fixed an issue where the plugin would not work if we explicitly set the `generator` to `null`.\n",
+      "message": "Fixed an issue where the plugin would not work if we explicitly set the `generator` to `null`.\n",
       "scope": "Plugin",
       "type": "bugfix"
     }

@@ -1,7 +1,7 @@
 {
   "3.9.0.0": [
     {
-      "message": "**redirect**: Add a new plugin to redirect requests to another location\n",
+      "message": "Add a new plugin to redirect requests to another location\n",
       "type": "feature",
       "scope": "Plugin"
     }

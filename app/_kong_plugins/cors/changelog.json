@@ -1,28 +1,28 @@
 {
   "3.10.0.0": [
     {
-      "message": "**CORS**: Added an option to skip returning the Access-Control-Allow-Origin response header when requests don't have the Origin header.",
+      "message": "Added an option to skip returning the Access-Control-Allow-Origin response header when requests don't have the Origin header.",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**CORS**: Fixed an issue where the `Access-Control-Allow-Origin` header was not sent when `conf.origins` has multiple entries but includes `*`.",
+      "message": "Fixed an issue where the `Access-Control-Allow-Origin` header was not sent when `conf.origins` has multiple entries but includes `*`.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.5.0": [
     {
-      "message": "**CORS**: Support the `Access-Control-Request-Private-Network` header in crossing-origin pre-light requests",
+      "message": "Support the `Access-Control-Request-Private-Network` header in crossing-origin pre-light requests",
       "type": "feature",
       "scope": "Plugin"
     }
   ],
   "3.4.3.5": [
     {
-      "message": "**CORS**: Support the `Access-Control-Request-Private-Network` header in crossing-origin pre-light requests",
+      "message": "Support the `Access-Control-Request-Private-Network` header in crossing-origin pre-light requests",
       "type": "feature",
       "scope": "Plugin",
       "jiras": [
@@ -44,7 +44,7 @@
   ],
   "2.8.0.0": [
     {
-      "message": "**CORS**: The CORS plugin does not send the `Vary: Origin` header anymore when the header `Access-Control-Allow-Origin` is set to `*`.\n\nThanks, [@jkla-dr](https://github.com/jkla-dr)! [#8401](https://github.com/Kong/kong/pull/8401)",
+      "message": "The CORS plugin does not send the `Vary: Origin` header anymore when the header `Access-Control-Allow-Origin` is set to `*`.\n\nThanks, [@jkla-dr](https://github.com/jkla-dr)! [#8401](https://github.com/Kong/kong/pull/8401)",
       "type": "bugfix",
       "scope": "Plugin"
     }

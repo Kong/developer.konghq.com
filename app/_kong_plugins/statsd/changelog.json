@@ -1,14 +1,21 @@
 {
   "3.8.0.0": [
     {
-      "message": "**statsd**:Fixed an issue where the exported workspace was always `default` when the workspace identifier was set to the workspace name.",
+      "message": "Fixed an issue where the exported workspace was always `default` when the workspace identifier was set to the workspace name.",
       "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "Plugin batch queuing: [HTTP Log](/plugins/http-log/), [StatsD](/plugins/statsd/), [OpenTelemetry](/plugins/opentelemetry/), and [Datadog](/plugins/datadog/) \n\nThe queuing system has been reworked, causing some plugin parameters to not function as expected anymore. If you use queues in these plugins, new parameters must be configured. See each plugin’s documentation for details.",
+      "type": "breaking_change",
       "scope": "Plugin"
     }
   ],
   "3.2.1.0": [
     {
-      "message": "**StatsD**: Added the `tag_style` configuration parameter, which allows the plugin to send metrics with [tags](https://github.com/prometheus/statsd_exporter#tagging-extensions). The parameter defaults to `nil`, which means that no tags are added to the metrics.[#10118](https://github.com/Kong/kong/pull/10118)",
+      "message": "Added the `tag_style` configuration parameter, which allows the plugin to send metrics with [tags](https://github.com/prometheus/statsd_exporter#tagging-extensions). The parameter defaults to `nil`, which means that no tags are added to the metrics.[#10118](https://github.com/Kong/kong/pull/10118)",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -23,41 +30,46 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Datadog**,**OpenTelemetry**, and **StatsD**: Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.[#10052](https://github.com/Kong/kong/pull/10052) [#10044](https://github.com/Kong/kong/pull/10044)",
+      "message": "Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.[#10052](https://github.com/Kong/kong/pull/10052) [#10044](https://github.com/Kong/kong/pull/10044)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.1.2": [
     {
-      "message": "**Datadog**,**OpenTelemetry**, and **StatsD**: Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.",
+      "message": "Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.0.0.0": [
     {
-      "message": "**StatsD**: **Newly open-sourced plugin capabilities** : All capabilities of the StatsD Advanced plugin are now bundled in the [StatsD](/plugins/statsd) plugin.[#9046](https://github.com/Kong/kong/pull/9046)",
+      "message": "**Newly open-sourced plugin capabilities** : All capabilities of the StatsD Advanced plugin are now bundled in the [StatsD](/plugins/statsd) plugin.[#9046](https://github.com/Kong/kong/pull/9046)",
       "type": "feature",
       "scope": "Plugin"
     },
     {
-      "message": "**StatsD**: Any metric name that is related to a service now has a `service.` prefix: `kong.service.<service_identifier>.request.count`. \n- The metric `kong.<service_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.status.<status>`.\n- The metric `kong.<service_identifier>.user.<consumer_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`.",
+      "message": "Any metric name that is related to a service now has a `service.` prefix: `kong.service.<service_identifier>.request.count`. \n- The metric `kong.<service_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.status.<status>`.\n- The metric `kong.<service_identifier>.user.<consumer_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`.",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "**StatsD**: The metric `kong.<service_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.status.<status>`.",
+      "message": "The metric `kong.<service_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.status.<status>`.",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "**StatsD**: The metric `kong.<service_identifier>.user.<consumer_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`.",
+      "message": "The metric `kong.<service_identifier>.user.<consumer_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`.",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "**StatsD**: The metric `*.status.<status>.total` from metrics `status_count` and `status_count_per_user` has been removed.",
+      "message": "The metric `*.status.<status>.total` from metrics `status_count` and `status_count_per_user` has been removed.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Deprecated** : The StatsD Advanced plugin has been deprecated and will be removed in 4.0. All capabilities are now available in the [StatsD](/plugins/statsd/) plugin.",
       "type": "breaking_change",
       "scope": "Plugin"
     }

@@ -1,26 +1,43 @@
 {
-  "3.9.0.0": [
+  "3.10.0.0": [
     {
-      "message": "**ai-transformers**: Fixed a bug where the correct LLM error message was not propagated to the caller.",
+      "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI upstream URL trailing would be empty.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**ai-request-transformer**, **ai-response-transformer**: Fixed an issue where Azure Managed Identity did not work for AI Transformer Plugins.",
+      "message": "Allow authentication to Bedrock services with assume roles in AWS.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "Fixed a bug where the correct LLM error message was not propagated to the caller.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Azure Managed Identity did not work for AI Transformer Plugins.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.1.0": [
     {
-      "message": "**ai-transformers**: Fixed a bug where the correct LLM error message was not propagated to the caller.",
+      "message": "Fixed a bug where the correct LLM error message was not propagated to the caller.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.8.0.0": [
     {
-      "message": "**AI-Transformers**: Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
+      "message": "Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
       "scope": "Plugin",
       "type": "bugfix"
     }

@@ -1,33 +1,40 @@
 {
+  "3.10.0.0": [
+    {
+      "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
-      "message": "**OAuth2**: Add WWW-Authenticate headers to all 401 responses and realm option.",
+      "message": "Add WWW-Authenticate headers to all 401 responses and realm option.",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.3.0.0": [
     {
-      "message": "**OAuth2**: Fixed an issue where the OAuth2 token was being cached as `nil` if the wrong service was accessed first.[#10522](https://github.com/Kong/kong/pull/10522)",
+      "message": "Fixed an issue where the OAuth2 token was being cached as `nil` if the wrong service was accessed first.[#10522](https://github.com/Kong/kong/pull/10522)",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "**OAuth2**: This plugin now prevents an authorization code created by one plugin instance from being exchanged for an access token created by a different plugin instance.[#10011](https://github.com/Kong/kong/pull/10011)",
+      "message": "This plugin now prevents an authorization code created by one plugin instance from being exchanged for an access token created by a different plugin instance.[#10011](https://github.com/Kong/kong/pull/10011)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.2.1.0": [
     {
-      "message": "**OAuth2**: `refresh_token_ttl` is now limited to a range between `0` and `100000000` by the schema validator. Previously, numbers that were too large caused requests to fail.[#10068](https://github.com/Kong/kong/pull/10068)",
+      "message": "`refresh_token_ttl` is now limited to a range between `0` and `100000000` by the schema validator. Previously, numbers that were too large caused requests to fail.[#10068](https://github.com/Kong/kong/pull/10068)",
       "type": "bugfix",
       "scope": "Plugin"
     }
   ],
   "3.1.1.5": [
     {
-      "message": "**Oauth2**: Fixed a bug that `refresh_token` could be shared across instances.",
+      "message": "Fixed a bug that `refresh_token` could be shared across instances.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -41,7 +48,7 @@
   ],
   "2.8.0.0": [
     {
-      "message": "**OAuth2**: The plugin clears the `X-Authenticated-UserId` and`X-Authenticated-Scope` headers when it is configured in logical OR and is used in conjunction with another authentication plugin.[#8422](https://github.com/Kong/kong/pull/8422)",
+      "message": "The plugin clears the `X-Authenticated-UserId` and`X-Authenticated-Scope` headers when it is configured in logical OR and is used in conjunction with another authentication plugin.[#8422](https://github.com/Kong/kong/pull/8422)",
       "type": "bugfix",
       "scope": "Plugin"
     }
