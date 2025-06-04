@@ -36,7 +36,7 @@ faqs:
       The `home` page represents the `/` root path of your Dev Portal. 
       If it is deleted, you’ll need to recreate it using the [Pages API](/api/konnect/portal-management/#/operations/create-portal-page).
 
-  - q: Is there a size limit for custom pages?
+  - q: Is there a character limit for custom pages?
     a: |
       Yes. Custom pages are limited to a maximum of 1,000,000 characters.
   - q: Why aren’t parameterized values appearing in the page Preview?
@@ -52,7 +52,7 @@ faqs:
     a: |
       Snippets are created with the default page visibility setting configured in your [Portal settings](/dev-portal/portal-settings/).
 
-  - q: Is there a size limit for snippets?
+  - q: Is there a character limit for snippets?
     a: |
       Yes. Snippets are limited to a maximum of 1,000,000 characters.
 
@@ -69,13 +69,13 @@ In your Dev Portal, you can create pages that contain content such as text, butt
 
 ## Pages
 
-Like a website, you can create different pages for your Dev Portal. Pages can contain text and other objects, like containers and buttons. To get started creating pages, navigate to your Dev Portal and click **Portal Editor** in the sidebar. Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).
+You can create multiple pages in the Dev Portal, similar to how a website is structured. Pages can contain text and other objects, like containers and buttons. To get started creating pages, navigate to your Dev Portal and click **Portal Editor** in the sidebar. Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).
 
 ### Page structure
 
 On the left panel inside the Portal Editor, you'll see a list of pages in your Dev Portal. The name for each page is a `slug`, and will be used to build the URL for that page. You can nest child pages under other pages. If pages are nested, the slugs will be combined to build the URL.
 
-For example, if the `about` has a child page, `contact`, the URL for the `contact` page would be `/about/contact`.
+For example, if `about` has a child page called `contact`, its URL will be `/about/contact`.
 
 ```
 about         ← URL: "/about"
