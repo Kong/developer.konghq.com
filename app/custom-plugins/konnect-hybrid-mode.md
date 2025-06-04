@@ -184,12 +184,13 @@ For example, if your original plugin is named `delay`, you can name the new vers
 When you need to make plugin changes, we recommend updating the schema in {{site.konnect_short_name}} first, and then on the Data Plane nodes.
 
 This is especially important making a [breaking change to the schema](#what-does-a-non-breaking-change-to-a-plugin-schema-look-like), 
-as the the change will affect each Data Plane node as soon as the node receives its first payload. 
+as the change will affect each Data Plane node as soon as the node receives its first payload. 
 This will happen even if there are no changes in the Control Plane for existing or new plugins using the updated schema. 
 
 See the following table for a comparison of possible changes and upgrade paths, in the case of 
 a configuration parameter change in a custom plugin's schema:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Scenario
@@ -219,6 +220,7 @@ rows:
     opt_def: "CP/DP sync required"
     opt_non_def: "CP/DP sync required"
 {% endtable %}
+<!--vale on-->
 
 Based on your specific use case, you have to take one of the following paths:
 
