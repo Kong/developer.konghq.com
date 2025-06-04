@@ -17,8 +17,6 @@ module Jekyll
             UnauthorizedCheck.new(id:, yaml:)
           when 'request-check'
             RequestCheck.new(id:, yaml:)
-          when 'traffic-generator'
-            TrafficGenerator.new(id:, yaml:)
           when 'grpc-check'
             GrpcCheck.new(id:, yaml:)
           when 'vault-secret'

@@ -140,39 +140,6 @@ async function unauthorizedCheck(validationName, config, runtimeConfig) {
   ]);
 }
 
-async function trafficGenerator(validationName, config, runtimeConfig) {
-  let assertions = [];
-
-  for (let i = 0; i < config.iterations; i++) {
-    const requestNumber = i + 1;
-    const expectedStatus =
-      requestNumber === config.iterations ? config.status_code : 200;
-
-    const result = await validateRequest(
-      validationName,
-      config,
-      runtimeConfig,
-      [
-        (response) => ({
-          assert: response.status === expectedStatus,
-          message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
-        }),
-        ...(requestNumber === config.iterations
-          ? [
-              (response, body) => ({
-                assert: body.message === config.message,
-                message: `Expected: last request to have message '${config.message}', got: '${body.message}'.`,
-              }),
-            ]
-          : []),
-      ]
-    );
-    assertions.push(...result);
-    log(`     request #${requestNumber}: ✅ .`);
-  }
-  return assertions;
-}
-
 export async function validate(validation, runtimeConfig) {
   let result;
   log(`   ${validation.name}`);
@@ -194,13 +161,6 @@ export async function validate(validation, runtimeConfig) {
       break;
     case "unauthorized-check":
       result = await unauthorizedCheck(
-        validation.name,
-        validation.config,
-        runtimeConfig
-      );
-      break;
-    case "traffic-generator":
-      result = await trafficGenerator(
         validation.name,
         validation.config,
         runtimeConfig

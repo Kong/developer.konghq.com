@@ -113,7 +113,7 @@ You can validate that the plugin is collecting metrics by generating traffic to 
 
 Run the following in a new terminal:
 
-{% validation traffic-generator %}
+{% traffic_generator %}
 iterations: 60
 url: '/anything'
 sleep: 1
