@@ -5,6 +5,7 @@ import matter from "gray-matter";
 import path from "path";
 import yaml from "js-yaml";
 import semver from "semver";
+import minimist from "minimist";
 
 const PLUGIN_DOCS = "improved plugin documentation";
 
@@ -166,7 +167,7 @@ async function kongPlugins() {
   return plugins;
 }
 
-async function pluginEntries() {
+async function pluginEntries(version) {
   const filePath = "../../app/_data/changelogs/gateway.json";
   const raw = await fs.readFile(filePath, "utf-8");
   const changelog = JSON.parse(raw);
@@ -179,7 +180,11 @@ async function pluginEntries() {
       plugins[version].push(...entries.filter((e) => e.scope === "Plugin"));
     }
   }
-  return plugins;
+  if (version) {
+    return { [version]: plugins[version] };
+  } else {
+    return plugins;
+  }
 }
 
 function sortEntries(changelog) {
@@ -216,8 +221,14 @@ async function writeChangelogs(plugins, changelogs) {
 }
 
 (async function main() {
+  const args = minimist(process.argv.slice(2), { string: ["version"] });
+  let version;
+  if (args.version) {
+    version = args.version;
+  }
+
   const plugins = await kongPlugins();
-  const pluginEntriesByVersion = await pluginEntries();
+  const pluginEntriesByVersion = await pluginEntries(version);
 
   const { outliers, noIdentifiers, changelogs } = await generateChangelogData(
     plugins,
