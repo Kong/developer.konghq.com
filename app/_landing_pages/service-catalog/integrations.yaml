@@ -1,5 +1,5 @@
 metadata:
-  title: "Service Catalog integrations"
+  title: "{{site.konnect_catalog}} integrations"
   content_type: landing_page
   products:
     - service-catalog
@@ -12,7 +12,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Service Catalog Integrations"
+      text: "{{site.konnect_catalog}} Integrations"
       sub_text: "Integrate third-party applications into your {{site.konnect_short_name}} organization."
 
   - columns:
@@ -22,7 +22,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    **Integrations** are applications—either {{site.konnect_short_name}}-internal or external—that extend the functionality of the Service Catalog.
+                    **Integrations** are applications—either {{site.konnect_short_name}}-internal or external—that extend the functionality of the {{site.konnect_catalog}}.
 
                     When enabled, an integration allows you to:
                     - **Discover new resources** from connected systems
@@ -65,7 +65,7 @@ rows:
           - type: card
             config:
               title: GitLab
-              description: Associate a Service Catalog Service to one or more GitLab projects
+              description: Associate a {{site.konnect_catalog}} Service to one or more GitLab projects
               icon: /assets/icons/third-party/gitlab.svg
               cta:
                 text: Learn more
@@ -74,7 +74,7 @@ rows:
           - type: card
             config:
               title: SwaggerHub
-              description: Expand Service Catalog functionality with SwaggerHub to visualize OpenAPI specs.
+              description: Expand {{site.konnect_catalog}} functionality with SwaggerHub to visualize OpenAPI specs.
               icon: /assets/icons/third-party/swaggerhub.svg
               cta:
                 text: Learn more
@@ -92,7 +92,7 @@ rows:
           - type: card
             config:
               title: Slack
-              description: Expand Konnect Service Catalog functionality with features from Slack.
+              description: Expand Konnect {{site.konnect_catalog}} functionality with features from Slack.
               icon: /assets/icons/third-party/slack.svg
               cta:
                 text: Learn more

@@ -18,10 +18,10 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The Traceable integration lets you connect Traceable entities directly to your Service Catalog services.
+description: The Traceable integration lets you connect Traceable entities directly to your {{site.konnect_catalog}} services.
 
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Traceable plugin
     url: /plugins/traceable/
@@ -29,11 +29,11 @@ discovery_support: true
 bindable_entities: "Traceable Service"
 ---
 
-The Traceable integration lets you connect Traceable Services directly to your Service Catalog services.
+The Traceable integration lets you connect Traceable Services directly to your {{site.konnect_catalog}} services.
 
 ## Authenticate the Traceable integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **{{site.konnect_catalog}}** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Select **Traceable**, then **Install Traceable**.
 3. Select **Authorize**. 
 

@@ -18,15 +18,15 @@ breadcrumbs:
 works_on:
     - konnect
 
-description: The GitLab integration allows you to associate your Service Catalog Service to one or more GitLab projects
+description: The GitLab integration allows you to associate your {{site.konnect_catalog}} Service to one or more GitLab projects
 
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
 discovery_support: true
 bindable_entities: "Projects"
 ---
-The GitLab integration allows you to associate your Service Catalog service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
+The GitLab integration allows you to associate your {{site.konnect_catalog}} service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
 
@@ -54,7 +54,7 @@ To use the GitLab integration in a self-hosted environment:
 1. Click **Authorize** to complete the connection.
 {% endnavtab %}
 {% navtab "SaaS" %}
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **{{site.konnect_catalog}}** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 1. Select **GitLab**, then **Install GitLab**.
 1. Click **Authorize**. 
 {% endnavtab %}
@@ -70,7 +70,7 @@ columns:
     key: description
 rows:
   - entity: Projects
-    description: Organizes all the data for a specific development project that relates to a Service Catalog Service.
+    description: Organizes all the data for a specific development project that relates to a {{site.konnect_catalog}} Service.
 {% endtable %}
 <!--vale on-->
 
