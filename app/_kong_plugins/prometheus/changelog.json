@@ -39,6 +39,11 @@
   ],
   "3.8.0.0": [
     {
+      "message": "AI plugins: retrieved latency data and pushed it to logs and metrics.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
       "message": "Fixed an issue where CP/DP compatibility check was missing for the new configuration field `ai_metrics`.\n",
       "type": "bugfix",
       "scope": "Plugin"
@@ -53,6 +58,13 @@
     {
       "message": "Added workspace label to Prometheus plugin metrics.\n",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Expose metrics for serviceless routes",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],
@@ -164,6 +176,13 @@
     {
       "message": "The plugin doesn’t export status codes, latencies, bandwidth and upstream health check metrics by default. They can still be turned on manually by setting `status_code_metrics`,`lantency_metrics`, `bandwidth_metrics` and `upstream_health_metrics` respectively.[#9028](https://github.com/Kong/kong/pull/9028)",
       "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.5": [
+    {
+      "message": "reduce upstream health iteration latency spike during scrape",
+      "type": "performance",
       "scope": "Plugin"
     }
   ],

@@ -34,6 +34,20 @@
       "scope": "Plugin"
     }
   ],
+  "3.5.0.0": [
+    {
+      "message": "Enhance error responses for authentication failures in the Admin API",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "[**Authentication plugins**](/plugins/#authentication): The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.0.0.0": [
     {
       "message": "Updated the priority for some plugins.: `basic-auth` changed from `1001` to `1100`",

@@ -32,6 +32,13 @@
       "type": "feature"
     }
   ],
+  "3.7.0.0": [
+    {
+      "message": "Improve error handling in AI plugins.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.6.0.0": [
     {
       "message": "Introduced the new **AI Prompt Guard** which can allow and/or block  LLM requests based on pattern matching.",

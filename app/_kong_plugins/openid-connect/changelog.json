@@ -197,6 +197,14 @@
       "scope": "Plugin"
     },
     {
+      "message": "Fix when the Dev portal OIDC is enabled, a 500 error is thrown when the administrator login successfully and then retrieves the session",
+      "type": "feature",
+      "scope": "Plugin",
+      "githubs": [
+        5813
+      ]
+    },
+    {
       "message": "OpenID-Connect now support designate parameter name of token for introspection and revocation with `introspection_token_param_name` and `revocation_token_param_name` respectively.",
       "type": "feature",
       "scope": "Plugin"
@@ -282,6 +290,14 @@
       "message": "extend `token_post_args_client` to support injection from headers",
       "type": "feature",
       "scope": "Plugin"
+    },
+    {
+      "message": "Fix when the Dev portal OIDC is enabled, a 500 error is thrown when the administrator login successfully and then retrieves the session",
+      "type": "feature",
+      "scope": "Plugin",
+      "githubs": [
+        7390
+      ]
     }
   ],
   "3.4.3.18": [
