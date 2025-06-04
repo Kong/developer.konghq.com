@@ -1278,6 +1278,7 @@ app/gateway-manager/data-plane-reference.md:
   - app/konnect/gateway-manager/data-plane-nodes/verify-node.md
   - app/konnect/gateway-manager/data-plane-nodes/secure-communications.md
   - app/konnect/gateway-manager/data-plane-nodes/custom-dp-labels.md
+  - app/konnect/gateway-manager/troubleshoot.md
 app/konnect-platform/account.md:
   - app/konnect/org-management/deactivation.md
 app/konnect-platform/teams-and-roles.md:
