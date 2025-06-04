@@ -34,6 +34,7 @@ For each linked project, the UI can show a **Project Summary** with simple data 
 
 * You need the [Owner GitLab role](https://docs.gitlab.com/ee/user/permissions.html) to authorize the integration. This is required for event ingestion.
 * Only [GitLab.com subscriptions](https://docs.gitlab.com/ee/subscriptions/gitlab_com/) are supported at this time.
+* Self-hosted users require their GitLab instance is accessible from the public internet or is otherwise reachable by {{site.konnect_short_name}}. 
 
 ## Authorize the GitLab integration
 {% navtabs "Authorize" %}
