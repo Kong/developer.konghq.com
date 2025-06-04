@@ -230,6 +230,27 @@ Disable access logs for high throughput benchmarking tests by setting the `proxy
 **Explanation:** Check {{site.base_gateway}}’s error log for internal errors. 
 Internal errors can highlight issues within {{site.base_gateway}} or a third-party system that {{site.base_gateway}} relies on to proxy traffic.
 
+## Enable Brotli compression to decrease payload size
+
+**Action**: Enable Brotli compression at a 4 or 5 compression level.
+
+Set the following parameters in `kong.conf` to enable Brotli compression:
+
+```
+nginx_proxy_brotli = "on"
+nginx_proxy_brotli_comp_level = 5
+nginx_proxy_brotli_types = "text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript text/x-js"
+```
+
+**Explanation**: [Brotli](https://github.com/google/brotli) is a compression algorithm for high-performance websites. 
+{{site.base_gateway}} supports the [`ngx_brotli`](https://github.com/google/ngx_brotli) module through its [Nginx directives injection mechanism](/gateway/nginx-directives/). 
+It's designed to be better at compression than other commonly used algorithms such as gzip and deflate.
+You can use it to speed up your applications, improve page speed, reduce data transmitted, and improve the overall performance of {{site.base_gateway}}.
+
+The `nginx_proxy_brotli*` parameters are [injected Nginx directives](/gateway/configuration/#nginx-injected-directives-section) that you can manage through `kong.conf`.
+We recommend setting a compression level (`nginx_proxy_brotli_comp_level`) of 4 or 5 as a balanced option, 
+as it still provides a smaller payload than the highest gzip compression level [without compromising processing time](https://paulcalvano.com/2018-07-25-brotli-compression-how-much-will-it-reduce-your-content/).
+
 ## Sample kong.conf for benchmarking
 
 The following `kong.conf` file examples contain all the recommended parameters from the previous sections:

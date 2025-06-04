@@ -1118,6 +1118,7 @@ app/gateway/performance/establish-a-benchmark.md:
   - app/_src/gateway/production/performance/benchmark.md
 app/gateway/performance/optimize.md:
   - app/_src/gateway/production/performance/benchmark.md
+  - app/_src/gateway/production/performance/brotli.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
 app/gateway/kong-manager/configuration.md:
