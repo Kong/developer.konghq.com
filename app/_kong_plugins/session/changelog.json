@@ -79,6 +79,11 @@
   ],
   "3.1.0.0": [
     {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
       "message": "Added the missing `protocols` field to the following plugin schemas: Session (`session`)",
       "type": "bugfix",
       "scope": "Plugin"

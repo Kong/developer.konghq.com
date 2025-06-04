@@ -1,4 +1,18 @@
 {
+  "3.8.0.0": [
+    {
+      "message": "remove redundant deprecation warnings",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0": [
+    {
+      "message": "The propagation module has been reworked. The new\noptions allow better control over the configuration of tracing headers propagation.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.0.0": [
     {
       "message": "Fixed an issue where traces weren’t being generated correctly when instrumentations were enabled.[#10983](https://github.com/Kong/kong/pull/10983)",

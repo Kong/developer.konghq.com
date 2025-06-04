@@ -108,6 +108,11 @@
   ],
   "3.1.0.0": [
     {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
       "message": "Added the `config.send_ca_dn` configuration parameter to support sending CA DNs in the `CertificateRequest` message during SSL handshakes.",
       "type": "feature",
       "scope": "Plugin"

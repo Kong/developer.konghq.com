@@ -99,6 +99,11 @@
   ],
   "3.8.0.0": [
     {
+      "message": "allow AI plugin to read request from buffered file",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
       "message": "Introduced AI Semantic Caching plugin, enabling you \nto configure an embeddings-based caching system for Large Language Model responses.\n",
       "type": "feature",
       "scope": "Plugin"

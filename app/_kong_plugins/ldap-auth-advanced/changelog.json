@@ -149,6 +149,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.1.0.0": [
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.0.0.0": [
     {
       "message": "This plugin now allows authorization based on group membership. The new configuration parameter, `groups_required`, is an array of string elements that indicates the groups that users must belong to for the request to be authorized.",

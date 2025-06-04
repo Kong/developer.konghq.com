@@ -61,6 +61,11 @@
       "scope": "Plugin"
     },
     {
+      "message": "allow AI plugin to read request from buffered file",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
       "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nall AWS Bedrock \"Converse API\" models.\n",
       "type": "feature",
       "scope": "Plugin"
