@@ -30,14 +30,13 @@ rows:
                     Plugins consist of modules interacting with the request/response objects or
                     streams via a PDK to implement arbitrary logic. With custom plugins, you can configure these modules to provide custom functionality to {{site.base_gateway}}.
 
-                    <!--* [Other language support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)-->
   - columns:
       - blocks:
           - type: card
             config:
               title: Get started with custom plugins
               description: |
-                Learn about custom plugin development by following a series of tutorials that walk you through all the steps to build a new custom plugin for {{site.base_gateway}}.
+                Learn about custom plugin development by following a series of tutorials that walk you through all the steps to build a new custom plugin for {{site.base_gateway}}
               icon: /assets/icons/KogoBlue.svg
               cta:
                 text: See tutorial
@@ -47,7 +46,7 @@ rows:
             config:
               title: Custom plugins reference
               description: |
-                Learn about how to develop custom plugins for {{site.base_gateway}}.
+                Learn about how to develop custom plugins for {{site.base_gateway}}
               icon: /assets/icons/plug.svg
               cta:
                 text: See reference
@@ -58,75 +57,107 @@ rows:
               title: Plugin Development Kit reference
               description: |
                 The Plugin Development Kit (PDK) is a set of Lua functions and variables
-                that can be used by plugins to implement their own logic.
+                that can be used by plugins to implement their own logic
               icon: /assets/icons/code.svg
               cta:
                 text: See reference
                 url: "/gateway/pdk/reference/"
+
+  - header:
+      type: h2
+      text: "Deploying custom plugins"
+    columns:
       - blocks:
           - type: card
             config:
               title: Custom plugin installation and distribution
               description: |
-                Learn about the different ways to deploy a custom plugin.
+                Learn about the different ways to deploy a custom plugin
               icon: /assets/icons/deployment.svg
               cta:
                 text: See reference
                 url: "/custom-plugins/installation-and-distribution/"
-  # - columns:
-  #    - blocks:
-  #        - type: structured_text
-  #          config:
-  #            header:
-  #              text: "Plugin Development Kits (PDKs)"
-  #            blocks:
-  #              - type: text
-  #                text:
-  #                  "PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
-  #                  and the core (or other components) of Kong. Kong provides PDKs in the following languages:"
+      - blocks:
+          - type: card
+            config:
+              title: Custom plugins in Konnect hybrid mode
+              description: |
+                Learn how to deploy a custom plugin in {{site.konnect_short_name}} hybrid mode
+              icon: /assets/icons/serverless-gateway.svg
+              cta:
+                text: See reference
+                url: "/custom-plugins/konnect-hybrid-mode/"
+      - blocks:
+          - type: card
+            config:
+              title: Custom plugin streaming in Dedicated Cloud Gateways
+              description: |
+                Learn how to deploy a custom plugin on a Dedicated Cloud Gateway
+              icon: /assets/icons/dedicated-cloud-gateway.svg
+              cta:
+                text: See reference
+                url: "/dedicated-cloud-gateways/reference/#custom-plugins"
+          
+  - columns:
+     - blocks:
+         - type: structured_text
+           config:
+             header:
+               text: "Plugin Development Kits (PDKs)"
+             blocks:
+               - type: text
+                 text:
+                   "PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
+                   and the core (or other components) of Kong. Kong provides PDKs in the following languages:"
 
-  # - columns:
-  #    - blocks:
-  #        - type: structured_text
-  #          config:
-  #            header:
-  #              text: "Lua"
-  #            blocks:
-  #              - type: text
-  #                text: "{{site.base_gateway}} provides a broad plugin development environment including an SDK, database abstractions, migrations"
-  #              - type: text
-  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/">Lua PDK &rarr;</a>
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Lua
+          description: |
+            {{site.base_gateway}} provides a broad plugin development environment including an SDK, database abstractions, migrations
+          ctas:
+            - text: Kong Lua PDK
+              url: "/gateway/pdk/reference/"
+            - text: Plugin template
+              url: https://github.com/Kong/kong-plugin
 
-  #    - blocks:
-  #        - type: structured_text
-  #          config:
-  #            header:
-  #              text: "Go"
-  #            blocks:
-  #              - type: text
-  #                text: "{{site.base_gateway}} supports the Go language with the Go PDK, a library that provides Go bindings for {{site.base_gateway}}"
-  #              - type: text
-  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/">Go PDK &rarr;</a>
-  #    - blocks:
-  #        - type: structured_text
-  #          config:
-  #            header:
-  #              text: "Python"
-  #            blocks:
-  #              - type: text
-  #                text: "{{site.base_gateway}} support for Python plugin development is provided by the [kong-python-pdk](https://github.com/Kong/kong-python-pdk) library."
-  #              - type: text
-  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/python/">Python PDK &rarr;</a>
-  #    - blocks:
-  #        - type: structured_text
-  #          config:
-  #            header:
-  #              text: "JavaScript"
-  #            blocks:
-  #              - type: text
-  #                text: "{{site.base_gateway}} support for the JavaScript language is provided by the [JavaScript PDK](https://github.com/Kong/kong-js-pdk)."
-  #              - type: text
-  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/javascript/">JavaScript PDK &rarr;</a>
+    - blocks:
+      - type: card
+        config:
+          title: Go
+          description: |
+            {{site.base_gateway}} supports the Go language with the Go PDK, a library that provides Go bindings for {{site.base_gateway}}
+          ctas:
+            - text: Kong Go PDK
+              url: https://pkg.go.dev/github.com/Kong/go-pdk
+            - text: Example plugins
+              url: https://github.com/Kong/go-pdk/tree/master/examples
+
+    - blocks:
+      - type: card
+        config:
+          title: Python
+          description: |
+            {{site.base_gateway}} support for Python plugin development is provided by the `kong-python-pdk` library
+          ctas:
+            - text: Kong Python PDK
+              url: https://github.com/Kong/kong-python-pdk
+            - text: Example plugins
+              url: https://github.com/Kong/kong-python-pdk/tree/master/examples
+
+    - blocks:
+      - type: card
+        config:
+          title: JavaScript
+          description: |
+            {{site.base_gateway}} support for the JavaScript language is provided by the JavaScript PDK
+          ctas:
+            - text: Kong JavaScript PDK
+              url: https://github.com/Kong/kong-js-pdk
+            - text: Example plugins
+              url: https://github.com/Kong/kong-js-pdk/tree/master/examples
 
   - columns:
       - blocks:

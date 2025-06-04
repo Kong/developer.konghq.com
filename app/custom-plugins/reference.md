@@ -44,7 +44,7 @@ related_resources:
 
 Kong allows you to develop and deploy custom plugins.
 
-Before building custom plugins, it's' important to understand how {{site.base_gateway}} 
+Before building custom plugins, it's important to understand how {{site.base_gateway}} 
 is built, how it integrates with Nginx, and how the high performance [Lua](https://www.lua.org/about.html) 
 language is used.
 
@@ -89,7 +89,7 @@ plugins = my-custom-plugin
 
 Now, {{site.base_gateway}} will try to load several Lua modules from the following namespace:
 ```
-kong.plugins.my-custom-plugin.<module_name>
+kong.plugins.my-custom-plugin.your_module_name
 ```
 {:.no-copy-code}
 
