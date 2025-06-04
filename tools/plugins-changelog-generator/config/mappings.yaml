@@ -1,19 +1,24 @@
 mtls-auth:
   - mTLS Authentication
+  - Authentication plugins
 
 hmac-auth:
   - HMAC Authentication
+  - Authentication plugins
 
 key-auth-enc:
   - Key Authentication Encrypted
+  - Authentication plugins
 
 ai-response-transformer:
   - ai-transformers
   - AI-Transformers
+  - AI plugins
 
 ai-request-transformer:
   - ai-transformers
   - AI-Transformers
+  - AI plugins
 
 oas-validation:
   - OAS
@@ -31,3 +36,46 @@ opentelemetry:
 zipkin:
   - OpenTelemetry / Zipkin
   - OpenTelemetry, Zipkin
+
+ai-semantic-prompt-guard:
+  - AI plugins
+ai-semantic-cache:
+  - AI plugins
+ai-rate-limiting-advanced:
+  - AI plugins
+ai-proxy-advanced:
+  - AI plugins
+ai-proxy:
+  - AI plugins
+ai-prompt-template:
+  - AI plugins
+ai-prompt-guard:
+  - AI plugins
+ai-prompt-decorator:
+  - AI plugins
+ai-azure-content-safety:
+  - AI pluginss
+
+
+basic-auth:
+  - Authentication plugins
+jwt:
+  - Authentication plugins
+jwt-signer:
+  - Authentication plugins
+ldap-auth:
+  - Authentication plugins
+oauth2:
+  - Authentication plugins
+ldap-auth-advanced:
+  - Authentication plugins
+oauth2-introspection:
+  - Authentication plugins
+openid-connect:
+  - Authentication plugins
+session:
+  - Authentication plugins
+saml:
+  - Authentication plugins
+vault-auth:
+  - Authentication plugins
