@@ -67,6 +67,9 @@ related_resources:
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
 
+![Dev Portal Editor](/assets/images/dev-portal/dev-portal-editor.png)
+> _**Figure 1:** The Portal Editor UI in Dev Portal._
+
 ## Pages
 
 You can create multiple pages in the Dev Portal, similar to how a website is structured. Pages can contain text and other objects, like containers and buttons. To get started creating pages, navigate to your Dev Portal and click **Portal Editor** in the sidebar. Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).
