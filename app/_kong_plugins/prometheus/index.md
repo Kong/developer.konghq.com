@@ -10,6 +10,8 @@ description: 'Expose metrics related to {{site.base_gateway}} and proxied upstre
 related_resources:
   - text: Monitor metrics with Prometheus and Grafana with KIC
     url: /kubernetes-ingress-controller/observability/prometheus-grafana/
+  - text: Collect {{site.base_gateway}} metrics with the Prometheus plugin
+    url: /how-to/collect-metrics-with-prometheus/
   - text: Prometheus metrics reference for KIC
     url: /kubernetes-ingress-controller/observability/prometheus/
 

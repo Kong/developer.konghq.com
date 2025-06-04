@@ -270,6 +270,8 @@ app/_how-tos/visualize-ai-gateway-metrics-with-kibana.md:
 app/_how-tos/configure-rbac-user-in-kong-gateway.md:
   - app/_src/gateway/kong-manager/auth/rbac/add-role.md
   - app/_src/gateway/kong-manager/auth/rbac/add-user.md
+app/_how-tos/collect-metrics-with-prometheus.md:
+  - app/_src/gateway/production/monitoring/prometheus.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
