@@ -123,12 +123,14 @@ Kong supports the following versions of {{site.base_gateway}}:
 
 {% navtabs "gateway-version" %}
 {% for release in releases %}
+{% unless release.sunset == true %}
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{tab_name}} %}
 {{site.base_gateway}} {{tab_name}} supports the following deployment targets until {{release.eol}}, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
   {% include support/gateway.html release=release %}
 {% endnavtab %}
+{% endunless %}
 {% endfor %}
 {% endnavtabs %}
 
@@ -165,6 +167,10 @@ columns:
   - title: End of Sunset Support
     key: end-sunset
 rows:
+  - version: "3.7.x.x"
+    release-date: "2024-05-28"
+    end-full: "2025-05-28"
+    end-sunset: "2026-05-28"
   - version: "3.6.x.x"
     release-date: "2024-02-12"
     end-full: "2025-02-12"

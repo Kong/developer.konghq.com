@@ -194,6 +194,7 @@ releases:
     ee-version: "3.7.1.5"
     ce-version: "3.7.1"
     eol: May 2025
+    sunset: true
     distributions:
       - amazonlinux2:
           package: true
