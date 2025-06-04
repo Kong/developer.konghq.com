@@ -147,7 +147,7 @@ curl -i -X GET \
   https://us.api.konghq.com/v2/control-planes/CONTROL_PLANE_ID/core-entities/plugin-schemas/your-plugin
 ```
 
-If successful, the request returns an `HTTP 200` response with the schema for your plugin as a JSON object.
+If it's successful, the request returns an `HTTP 200` response with the schema for your plugin as a JSON object.
 
 ### Upload files to Data Plane nodes
 

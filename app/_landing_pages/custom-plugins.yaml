@@ -83,7 +83,7 @@ rows:
               title: Custom plugins in Konnect hybrid mode
               description: |
                 Learn how to deploy a custom plugin in {{site.konnect_short_name}} hybrid mode
-              icon: /assets/icons/serverless-gateway.svg
+              icon: /assets/icons/KogoBlue.svg
               cta:
                 text: See reference
                 url: "/custom-plugins/konnect-hybrid-mode/"
