@@ -64,6 +64,11 @@
   ],
   "3.8.0.0": [
     {
+      "message": "Fixed a Redis schema issue where `connect_timeout`, `read_timeout`, `send_timeout` were\nreset to `null` if the deprecated `timeout` is `null`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
       "message": "Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
       "type": "bugfix",
       "scope": "Plugin"
@@ -206,6 +211,16 @@
     }
   ],
   "3.6.0.0": [
+    {
+      "message": "check if `sync_rate` is `nil` when calling the RLA phase `configure()`",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Skip sync with DB or Redis if `sync_rate` is `nil` or `null`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
     {
       "message": "support to ratelimit by consumer group",
       "type": "feature",

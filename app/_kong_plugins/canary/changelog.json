@@ -1,4 +1,18 @@
 {
+  "3.5.0.0": [
+    {
+      "message": "allow the 'start' field be a past time",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.1.0": [
+    {
+      "message": "allow the 'start' field be a past time",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.2.1.0": [
     {
       "message": "Added a default value for the `start` field in the canary plugin. If not set, the start time defaults to the current timestamp.",

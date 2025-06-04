@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.5.0.0": [
+    {
+      "message": "Enhance error responses for authentication failures in the Admin API",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.3.0.0": [
     {
       "message": "Added the missing schema field `protocols` for `jwe-decrypt`, `oas-validation`, and `vault-auth`.",

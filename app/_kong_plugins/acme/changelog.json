@@ -49,6 +49,21 @@
       "message": "Standardize redis configuration across plugins. The redis configuration right now follows common schema that is shared across other plugins.",
       "type": "deprecation",
       "scope": "Plugin"
+    },
+    {
+      "message": "validate private and public key for keys entity",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0": [
+    {
+      "message": "add scan_count to redis storage schema",
+      "type": "feature",
+      "scope": "Plugin",
+      "prs": [
+        11532
+      ]
     }
   ],
   "3.5.0.4": [

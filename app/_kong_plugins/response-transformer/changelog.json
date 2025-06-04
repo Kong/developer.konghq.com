@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.5.0.0": [
+    {
+      "message": "fix flooded json decoding warning logs",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.0.0": [
     {
       "message": "Fixed an issue where the plugin wouldn’t transform the response body when the upstream returned a Content-Type with a `+json` suffix as the subtype.",

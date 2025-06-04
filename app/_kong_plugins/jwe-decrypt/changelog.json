@@ -11,6 +11,11 @@
       "message": "Fix typo in jwe-decrypt error message",
       "type": "bugfix",
       "scope": "Plugin"
+    },
+    {
+      "message": "validate private and public key for keys entity",
+      "type": "bugfix",
+      "scope": "Plugin"
     }
   ],
   "3.5.0.2": [
