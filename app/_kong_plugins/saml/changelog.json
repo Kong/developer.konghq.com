@@ -140,6 +140,11 @@
       "message": "Provides SAML v2.0 authentication and authorization between a service provider (Kong Gateway) and an identity provider (IdP).",
       "type": "feature",
       "scope": "Plugin"
+    },
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
     }
   ]
 }

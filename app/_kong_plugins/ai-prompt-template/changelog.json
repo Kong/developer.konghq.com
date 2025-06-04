@@ -1,6 +1,11 @@
 {
   "3.8.0.0": [
     {
+      "message": "allow AI plugin to read request from buffered file",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
       "message": "Fixed certain AI plugins cannot be applied per consumer or per service.",
       "type": "bugfix",
       "scope": "Plugin"

@@ -43,7 +43,7 @@
   ],
   "3.1.0.0": [
     {
-      "message": "[**Authentication plugins**](/plugins/#authentication): The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
       "type": "feature",
       "scope": "Plugin"
     }

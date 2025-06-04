@@ -205,6 +205,11 @@
       "scope": "Plugin"
     },
     {
+      "message": "allow AI plugin to read request from buffered file",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
       "message": "Add `allow_override` option to allow overriding the upstream model auth parameter or header from the caller's request.\n",
       "scope": "Plugin",
       "type": "feature"

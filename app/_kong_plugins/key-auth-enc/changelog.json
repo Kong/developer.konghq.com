@@ -25,6 +25,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.1.0.0": [
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "2.8.4.0": [
     {
       "message": "Fixed an issue where using an API key that exists in multiple workspaces caused a 401 error. This occurred because of a caching issue.",

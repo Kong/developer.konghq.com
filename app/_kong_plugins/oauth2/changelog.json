@@ -39,6 +39,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.1.0.0": [
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.0.0.0": [
     {
       "message": "Updated the priority for some plugins.: `oauth2` changed from `1004` to `1400`",
