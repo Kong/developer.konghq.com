@@ -40,7 +40,7 @@ For each linked project, the UI can show a **Project Summary** with simple data 
 {% navtab "Self-Managed" %}
 To use the GitLab integration in a self-hosted environment:
 
-1. [Create a group-owned application](https://docs.gitlab.com/integration/oauth_provider/) in your GitLab instance. This is required to enable OAuth access for your organization.
+1. [Create a group-owned application](https://docs.gitlab.com/integrations/oauth_provider/) in your GitLab instance. This is required to enable OAuth access for your organization.
    * Set the redirect URI in GitLab to `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integration/gitlab`
    * Make sure the application has the `api` scope.
 1. In the {{site.konnect_short_name}} UI, navigate to the [GitLab integration](https://cloud.konghq.com/service-catalog/integrations/gitlab/configuration)
