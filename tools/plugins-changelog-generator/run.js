@@ -32,10 +32,10 @@ function extractPluginIdentifiersInBold(message) {
   return matches.map((match) => match[1]);
 }
 
-async function findPluginByIdentifier(plugins, identifier) {
+async function findPluginsByIdentifier(plugins, identifier) {
   const slugsFromMappings = findPluginMapping(identifier);
 
-  return plugins.find(
+  return plugins.filter(
     (p) =>
       slugify(p.name.toLowerCase()) === slugify(identifier.toLowerCase()) ||
       p.slug === slugify(identifier.toLowerCase()) ||
@@ -51,9 +51,9 @@ async function extractPluginIdentifiersInSnippets(message, plugins) {
     const matches = [...title.matchAll(/`(.+?)`/g)];
     const pluginCandidates = matches.map((match) => match[1]);
     for (const candidate of pluginCandidates) {
-      const found = await findPluginByIdentifier(plugins, candidate);
-      if (found) {
-        pluginIdentifiers.push(found.slug);
+      const found = await findPluginsByIdentifier(plugins, candidate);
+      if (found.length > 0) {
+        pluginIdentifiers.push(found[0].slug);
       }
     }
   }
@@ -110,19 +110,24 @@ async function generateChangelogData(plugins, pluginEntriesByVersion) {
         noIdentifiers[version].push(entry);
       } else {
         for (const identifier of pluginIdentifiers) {
-          const plugin = await findPluginByIdentifier(plugins, identifier);
+          const matchingPlugins = await findPluginsByIdentifier(
+            plugins,
+            identifier
+          );
 
-          if (plugin) {
-            entry.message = entry.message.replace(
-              /\*\*(?!Improved Plugin Documentation\*\*).*?\*\*:(\s|\n)?/,
-              ""
-            );
-            changelogs[plugin.slug] ||= {};
-            changelogs[plugin.slug][version] ||= [];
-            changelogs[plugin.slug][version].push(entry);
-          } else {
-            outliers[version] ||= [];
-            outliers[version].push(entry);
+          for (const plugin of matchingPlugins) {
+            if (plugin) {
+              entry.message = entry.message.replace(
+                /\*\*(?!Improved Plugin Documentation\*\*).*?\*\*:(\s|\n)?/,
+                ""
+              );
+              changelogs[plugin.slug] ||= {};
+              changelogs[plugin.slug][version] ||= [];
+              changelogs[plugin.slug][version].push(entry);
+            } else {
+              outliers[version] ||= [];
+              outliers[version].push(entry);
+            }
           }
         }
       }
