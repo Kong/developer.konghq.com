@@ -305,11 +305,11 @@ If the logs show a license issue, or if you are unable to resolve sync issues us
 **Solution:** Check that your Data Plane nodes are up to date, and update them if they are not. 
 For Dedicated Cloud Gateways, see the [upgrade documentation](#upgrade-data-planes).
 
-If running {{site.base_gateway}} in hybrid mode, check that Data Plane node versions are up to date:
+If you're running {{site.base_gateway}} in hybrid mode, check that the Data Plane node versions are up-to-date:
 
 1. Open [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), then open your Control Plane.
 
-1. Select **Data Plane Nodes** from the side menu, then click the **New Data Plane Node** button.
+1. Select **Data Plane Nodes** from the side menu, then click **New Data Plane Node**.
 
 1. Check the {{site.base_gateway}} version in the code block. 
 This is the version that the {{site.konnect_short_name}} Control Plane is running.
@@ -319,9 +319,9 @@ This is the version that the {{site.konnect_short_name}} Control Plane is runnin
 1. Check the Data Plane node versions in the table. 
 If you see a node running an older version of {{site.base_gateway}}, your Data Plane node may need [upgrading](#upgrade-data-planes).
 
-If your version is up to date but the feature still isn't working, contact [Kong Support](https://support.konghq.com/).
+If your version is up-to-date but the feature still isn't working, contact [Kong Support](https://support.konghq.com/).
 
-### Kubernetes Data Plane node installation does not work
+### Kubernetes Data Plane node installation doesn't work
 
 **Problem:** You followed the Kubernetes installation instructions in Gateway Manager but your Data Plane node isn't connecting.
  
@@ -337,10 +337,3 @@ If you find any errors and need to update `values.yaml`, make your changes, save
 helm upgrade my-kong kong/kong -n kong \
   --values ./values.yaml
 ```
-
-### Connect to a Data Plane located behind a non-transparent forward proxy
-
-**Problem:** You need to connect the Control Plane to a Data Plane node that is behind a non-transparent forward proxy.
-
-**Solution:** Configure each {{site.base_gateway}} Data Plane node to authenticate with the proxy server and allow traffic through.
-For more information, learn how to [use a forward proxy to secure communication across a firewall](/gateway/cp-dp-communication/#use-a-forward-proxy-to-secure-communication-across-a-firewall).
