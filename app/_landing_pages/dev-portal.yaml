@@ -130,19 +130,11 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Custom pages
+              title: Pages and content
               description: |
-                Customize Dev Portal Pages using Markdown Components (MDC).
+                Customize Dev Portal pages and snippets using Markdown Components (MDC).
               cta:
-                url: /dev-portal/custom-pages/
-      - blocks:
-          - type: card
-            config:
-              title: Snippets
-              description: |
-                Snippets allow you to reuse content and MDC components across Pages.
-              cta:
-                url: /dev-portal/snippets/
+                url: /dev-portal/pages-and-content/
       - blocks:
           - type: card
             config:
@@ -151,8 +143,6 @@ rows:
                 Use a custom URL for Dev Portal.
               cta:
                 url: /dev-portal/custom-domains/
-  - column_count: 3
-    columns:
       - blocks:
           - type: card
             config:
