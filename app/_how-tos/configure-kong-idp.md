@@ -29,8 +29,8 @@ prereqs:
   inline: 
     - title: "{{site.konnect_short_name}} Labs"
       content: |
-        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. Kong Identity requires {{site.konnect_short_name}} Labs access. 
-        You can [opt-in](https://cloud.konghq.com/global/labs/) from {{site.konnect_short_name}} 
+        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. Kong Identity can be opted in through {{site.konnect_short_name}} Labs. 
+        You can view [Labs](https://cloud.konghq.com/global/labs/) in {{site.konnect_short_name}} 
       icon_url: /assets/icons/world.svg
 
 
