@@ -3,17 +3,17 @@ title: Dynamic templates
 content_type: reference
 layout: reference
 
-products:
-  - gateway
 permalink: /kong-identity/dynamic-templates
-works_on:
-  - konnect
+products:
+    - konnect-platform
+tech_preview: true
 search_aliases:
   - Kong IDP
   - Dynamic templates
 breadcrumbs:
   - /konnect/
-tech_preivew: true
+works_on:
+    - konnect
 api_specs:
     - gateway/admin-ee
     - konnect/control-planes-config
