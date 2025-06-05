@@ -11,13 +11,13 @@ tech_preview: true
 products:
     - konnect-platform
 works_on:
-    - konnect
+  - konnect
 tags:
     - get-started
 description: Use this tutorial to get started with Kong IDP.
 
 tldr: 
-  q: ADD A TLDR here
+  q: How do I configure Kong Identity?
   a: | 
     Get started with Kong Identity by setting up an Authorization Server, Claims, Scopes and clients, then configuring the OpenID Connect plugin in a {{site.konnect_short_name}} Control Plane using the APIs.
 
@@ -25,61 +25,39 @@ tools:
     - konnect-api
   
 prereqs:
-    - title: Example of writing your own prereq
-      position: before
+  skip_product: true
+  inline: 
+    - title: "{{site.konnect_short_name}} Labs"
       content: |
-          Before configuring this plugin, you must enable {{site.base_gateway}}'s encryption [Keyring](/gateway/keyring).
+        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. Kong Identity requires {{site.konnect_short_name}} Labs access. 
+        You can [opt-in](https://cloud.konghq.com/global/labs/) from {{site.konnect_short_name}} 
+      icon_url: /assets/icons/world.svg
 
-          Use the `openssl` CLI to generate an RSA key pair that can be used to export and recover Keyring material:
-          ```sh
-          openssl genrsa -out key.pem 2048
-          openssl rsa -in key.pem -pubout -out cert.pem
-          ```
-
-          To enable data encryption, you must modify the {{site.base_gateway}} configuration.
-
-          Create the following environment variables:
-          ```sh
-          export KONG_KEYRING_ENABLED=on
-          export KONG_KEYRING_STRATEGY=cluster
-          export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat cert.pem | base64)
-          ```
-      icon_url: /assets/icons/keyring.svg
-
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
 
 automated_tests: false
 related_resources:
-  - text: "{{site.event_gateway_short}} configuration schema"
-    url: /api/event-gateway/knep/
-  - text: Event Gateway
-    url: /event-gateway/
+  - text: "Kong Identity"
+    url: /kong-identity/
+  - text: Dynamic Templating
+    url: /kong-identity/dynamic-templates/
 ---
 
-## Pre-requisite
-Opt-in to Kong Identity on the Labs page in your Konnect org
 
 ## Create an auth server in Kong Identity with the appropriate audience
-It is recommended to have different auth servers for different env or different subsidiaries. Auth Server name is unique per org, per Konnect region. Auth Server ID, Issuer and Metadata_url is generated as part of the response
+It is recommended to have different auth servers for different env or different subsidiaries. Auth Server name is unique per org, per Konnect region. Auth Server ID, Issuer and `metadata_url` is generated as part of the response
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/auth-servers
 status_code: 200
 method: POST
 headers:
-  - 'Authorization: Bearer $KONNECT_TOKEN'
   - 'Content-Type: application/json'
 body:
   name: "Appointments Dev"
   audience: "http://myhttpbin.dev"
   description: "auth server for Appointment's dev environment"
-{% endcontrol_plane_request %}
-<!--vale on-->
+{% endkonnect_api_request %}
 
 
 ## Configure the auth server with scopes and custom claims 
@@ -87,12 +65,11 @@ Advanced settings also enable dynamic custom claims. Claim ID and Scope ID are g
 
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/auth-servers/$auth-server-ID/scopes 
 status_code: 200
 method: POST
 headers:
-  - 'Authorization: Bearer $KONNECT_TOKEN'
   - 'Content-Type: application/json'
 body:
   name: "Scope"
@@ -100,16 +77,15 @@ body:
   default: false
   include_in_metadata: false
   enabled: true
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/auth-servers/$auth-server-ID/claims 
 status_code: 200
 method: POST
 headers:
-  - 'Authorization: Bearer $KONNECT_TOKEN'
   - 'Content-Type: application/json'
 body:
   name: "Claim"
@@ -119,7 +95,7 @@ body:
   "include_in_scopes": ["scope123", "scope456"]
   "enabled": true
 
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 
@@ -128,12 +104,11 @@ Client is the machine to machine credential. Client has a “grant type” that 
 
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/auth-servers/1234/clients
 status_code: 201
 method: POST
 headers:
-  - 'Authorization: Bearer $KONNECT_TOKEN'
   - 'Content-Type: application/json'
 body:
   name: Client
@@ -150,7 +125,7 @@ body:
   response_types:
     - id_token
     - token
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Apply OpenID Connect plugin to a Control plane using Kong Identity as the IdP
@@ -160,12 +135,11 @@ You can use the OIDC plugin to use Kong Identity as the identity provider for yo
 Generate a token for the client by making a call to the issuer URL. Use this generated token to access the GW service.
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: $issuer-url-from-auth-server
 status_code: 201
 method: POST
 headers:
-  - 'Authorization: Bearer $KONNECT_TOKEN'
   - 'Content-Type: application/x-www-form-urlencoded'
 body:
   grant_types = client_credentials
@@ -173,7 +147,7 @@ body:
   client_secret = $generated-client-secret
   scope = $scope-name
   
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Access the Gateway service using the token 

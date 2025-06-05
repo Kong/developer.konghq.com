@@ -3,7 +3,7 @@ title: Dynamic templates
 content_type: reference
 layout: reference
 
-permalink: /kong-identity/dynamic-templates
+permalink: /kong-identity/dynamic-templates/
 products:
     - konnect-platform
 tech_preview: true
@@ -21,7 +21,8 @@ api_specs:
 related_resources:
 - text: Kong Identity
   url: /kong-identity/
-
+- text: How to configure Kong Identity
+  url: /kong-identity/get-started/
 
 description: |
   Insert Templating description here
@@ -87,16 +88,15 @@ ID:             string
 ### Testing
 To test the templating you can use this endpoint:
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/auth-servers/$authServerId/clients/$clientId/test-claim
 status_code: 200
 method: POST
 headers:
-  - 'Authorization: Bearer $KONNECT_TOKEN'
   - 'Content-Type: application/json'
 body:
   test-something: "${ \"bar\" | upper }"
   test-something-else: "${ uuidv4 }"
   context-auth-server-id: "${ .Context.AuthServer.ID }"
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
