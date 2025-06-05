@@ -1,0 +1,39 @@
+metadata:
+  title: "Metrics and monitoring with {{site.base_gateway}}"
+  short_title: "Monitoring"
+  content_type: landing_page
+  description: Learn about how you can monitor {{site.base_gateway}} metrics.
+  tags:
+    - metrics
+    - analytics
+    - monitoring
+  search_aliases:
+    - Datadog
+    - Prometheus
+    - StatsD
+  breadcrumbs:
+    - /gateway/
+  products:
+    - gateway
+  works_on:
+  - on-prem
+  - konnect
+rows:
+  - header:
+      type: h1
+      text: "Metrics and monitoring"
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "How do I monitor {{site.base_gateway}} metrics?"
+            blocks:
+              - type: text
+                text: |
+                  API gateways isolate your applications from the outside world and provide critical path
+                  protection for your upstream services. Understanding the state of your API gateway
+                  system is critical to providing reliable API-based systems.
+
+                  There are many monitoring and alerting systems available, and {{site.base_gateway}} integrates with 
+                  multiple solutions:
