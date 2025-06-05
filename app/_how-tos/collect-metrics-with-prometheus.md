@@ -41,7 +41,10 @@ prereqs:
     services:
       - example-service
     routes:
-      - example-route
+      - example-route 
+  konnect:
+    - name: KONG_STATUS_LISTEN
+      value: '0.0.0.0:8100'
 
 cleanup:
   inline:
@@ -95,6 +98,16 @@ scrape_configs:
    static_configs:
      - targets: ['kong-quickstart-gateway:8001']
 ```
+{: data-deployment-topology="on-prem" }
+
+```yaml
+scrape_configs:
+ - job_name: 'kong'
+   scrape_interval: 5s
+   static_configs:
+     - targets: ['kong-quickstart-gateway:8100']
+```
+{: data-deployment-topology="konnect" }
 
 Run a Prometheus server, and pass it the configuration file created in the previous step:
 
@@ -111,7 +124,7 @@ Prometheus will begin to scrape metrics data from {{site.base_gateway}}.
 
 You can validate that the plugin is collecting metrics by generating traffic to the example service. The following command generates 60 requests over one minute. 
 
-Run the following in a new terminal:
+Run the following in the same terminal:
 
 {% validation traffic-generator %}
 iterations: 60
@@ -119,7 +132,7 @@ url: '/anything'
 sleep: 1
 {% endvalidation %}
 
-In a different terminal, run the following to query the collected `kong_http_requests_total` metric data:
+Run the following to query the collected `kong_http_requests_total` metric data:
 
 ```sh
 curl -s 'localhost:9090/api/v1/query?query=kong_http_requests_total'
