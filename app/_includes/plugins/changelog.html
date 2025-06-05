@@ -1,6 +1,5 @@
-{% assign changelog = page.changelog %}
-
-{% for version in changelog.versions %}
+{%- assign changelog = page.changelog -%}
+{%- for version in changelog.versions -%}
 <h2 id="{{version.number | slugify }}">{{version.number}}</h2>
 <p class="text-sm"><strong>Release date</strong> {{version.release_date}}</p>
 
@@ -13,5 +12,4 @@
 {% endfor %}
 </ul>
 {% endfor %}
-
 {% endfor %}
