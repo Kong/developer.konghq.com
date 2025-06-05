@@ -6,14 +6,12 @@ breadcrumbs:
 
 permalink: /kong-identity/get-started/
 
-tech_preivew: true
+tech_preview: true
 
 products:
-  - gateway
-
+    - konnect-platform
 works_on:
-  - konnect
-
+    - konnect
 tags:
     - get-started
 description: Use this tutorial to get started with Kong IDP.
@@ -26,7 +24,27 @@ tldr:
 tools:
     - konnect-api
   
+prereqs:
+    - title: Example of writing your own prereq
+      position: before
+      content: |
+          Before configuring this plugin, you must enable {{site.base_gateway}}'s encryption [Keyring](/gateway/keyring).
 
+          Use the `openssl` CLI to generate an RSA key pair that can be used to export and recover Keyring material:
+          ```sh
+          openssl genrsa -out key.pem 2048
+          openssl rsa -in key.pem -pubout -out cert.pem
+          ```
+
+          To enable data encryption, you must modify the {{site.base_gateway}} configuration.
+
+          Create the following environment variables:
+          ```sh
+          export KONG_KEYRING_ENABLED=on
+          export KONG_KEYRING_STRATEGY=cluster
+          export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat cert.pem | base64)
+          ```
+      icon_url: /assets/icons/keyring.svg
 
 cleanup:
   inline:

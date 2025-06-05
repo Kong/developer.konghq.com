@@ -2,12 +2,14 @@
 title: Kong Identity
 content_type: reference
 layout: reference
-tech_preivew: true
+tech_preview: true
+
 products:
-  - gateway
+    - konnect-platform
+
 permalink: /kong-identity/
 works_on:
-  - konnect
+    - konnect
 search_aliases:
   - Kong IDP
 breadcrumbs:
