@@ -37,9 +37,12 @@ tags:
   - openai
 
 tldr:
-  q: How do I
-  a: You do
-
+  q: How do I keep RAG prompts under control and avoid bloated LLM requests?
+  a: |
+    Use the AI RAG Injector in combination with the AI Prompt Compressor plugin to retrieve relevant chunks and keep the final prompt within reasonable limits to prevent:
+    - Increased latency
+    - Token limit errors
+    - Unexpected bills from your LLM provider
 
 tools:
   - deck
@@ -91,4 +94,97 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-Hello
+## Configure the AI Proxy Advanced plugin
+
+First, you'll need to configure the AI Proxy Advanced plugin to proxy prompt requests to your model provider, and handle authentication:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy-advanced
+      config:
+        targets:
+          - route_type: llm/v1/chat
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${openai_api_key}
+            model:
+              provider: openai
+              name: gpt-4o
+              options:
+                max_tokens: 512
+                temperature: 1.0
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+{% endentity_examples %}
+
+## Configure the AI RAG Injector plugin
+
+Next, configure the AI RAG Injector plugin to insert the RAG context into the user message only, and wrap it with <LLMLINGUA> tags so the AI Prompt Compressor plugin can compress it effectively.
+
+{% entity_examples %}
+entities:
+  plugins:
+  - name: ai-rag-injector
+    config:
+      fetch_chunks_count: 5
+      inject_as_role: user
+      inject_template: <LLMLINGUA><CONTEXT></LLMLINGUA> | <PROMPT>
+      embeddings:
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${openai_api_key}
+        model:
+          provider: openai
+          name: text-embedding-3-large
+      vectordb:
+        strategy: redis
+        redis:
+          host: ${redis_host}
+          port: 6379
+        distance_metric: cosine
+        dimensions: 3072
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+  redis_host:
+    value: $REDIS_HOST
+{% endentity_examples %}
+
+{:.info}
+> If your Redis instance runs in a separate Docker container from Kong, use `host.docker.internal` for `vectordb.redis.host`.
+>
+> If you're using a model other than `text-embedding-3-large`, be sure to update the `vectordb.dimensions` value to match the model’s embedding size.
+
+## Ingest data to Redis
+
+TBA
+
+## Test ingestion
+
+TBA
+
+## Configure the AI Prompt Compressor plugin
+
+Then, configure the AI Prompt Compressor plugin to apply compression to the wrapped RAG context using defined token ranges and compression settings.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-rag-injector
+      config:
+        compression_ranges:
+          - max_tokens: 100
+            min_tokens: 20
+            value: 0.8
+          - max_tokens: 1000000
+            min_tokens: 100
+            value: 0.3
+        compressor_type: rate
+        compressor_url: http://compress-service:8080
+        keepalive_timeout: 60000
+        log_text_data: false
+        stop_on_error: true
+        timeout: 10000
+{% endentity_examples %}

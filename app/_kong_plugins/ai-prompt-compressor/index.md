@@ -55,9 +55,19 @@ search_aliases:
   - model
 ---
 
-The Kong **AI Prompt Compressor** plugin compresses retrieved chunks before sending them to a Large Language Model (LLM). It uses the LLMLingua library to reduce text length while preserving meaning.
+Thanks for the clarification! Here's the revised section with your original intro sentence reworded for clarity and tone, followed by the appended LLMLingua capabilities in a clean, developer-docs style:
+
+---
+
+The **Kong AI Prompt Compressor** plugin compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The plugin supports:
+
+* **Ratio-based or target token compression** — for example, reduce to 80% of the original length or compress to 150 tokens.
+* **Configurable compression ranges** — for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
+* **Selective compression** using `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt.
 
 ## Why use prompt compression
+
+Efficient prompt compression helps you manage token limits, cut costs, and speed up LLM requests — all while keeping sensitive data safe and your prompts focused.
 
 The table below outlines common use cases for the plugin and the configuration options available to tailor its behavior.
 
@@ -135,10 +145,9 @@ docker push yourrepo/kong-compressor:amd
 {:.info}
 > The Docker image is production-ready and includes Gunicorn as the web server to run the underlying Flask app.
 
-
 ### Image configuration options
 
-You can configure the compressor service using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
+You can configure the Kong Compressor Service using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
 
 <!-- vale off -->
 {% table %}
@@ -172,7 +181,7 @@ The compressor service exposes both REST and JSON-RPC endpoints. You can use the
 
 * **POST `/llm/v1/compressPrompt`**: Compresses a prompt using either a compression ratio or a target token count. Supports selective compression via `<LLMLINGUA>` tags.
 
-* **GET `/llm/v1/status`**: Returns information about the currently loaded LLMLingua model and device settings (e.g., CPU or GPU).
+* **GET `/llm/v1/status`**: Returns information about the currently loaded LLMLingua model and device settings (for example, CPU or GPU).
 
 * **POST `/`**: JSON-RPC endpoint that supports the `llm.v1.compressPrompt` method. Use this to invoke compression programmatically over JSON-RPC.
 
@@ -190,10 +199,10 @@ columns:
 rows:
   - option: Compression by ratio
     description: |
-      Compress the prompt to a percentage of its original length (e.g., reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
+      Compress the prompt to a percentage of its original length (for example, reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
   - option: Compression by token count
     description: |
-      Compress the prompt to a specific token target (e.g., 150 tokens). Useful when working close to LLM context window limits.
+      Compress the prompt to a specific token target (for example, 150 tokens). Useful when working close to LLM context window limits.
   - option: Conditional rules
     description: |
       Apply different compression strategies based on prompt length. For example, compress prompts under 100 tokens using a 0.8 ratio, and compress longer prompts to a fixed token count.
