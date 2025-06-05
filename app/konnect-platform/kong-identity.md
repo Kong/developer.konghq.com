@@ -54,7 +54,7 @@ Kong Identity enables customers to use Konnect to generate, authenticate and aut
   3. Upstream OAuth plugin
 
 
-**Flow**
+## Kong Identity Flow
 <!--vale off-->
 {% mermaid %}
 sequenceDiagram
@@ -96,9 +96,47 @@ body:
 
 
 ## Use cases
-Placeholder text about the individual cases
+Kong Identity can be used with multiple usecases with Kong Gateway in Konnect.
+
+{% navtabs "use cases" %}
+{% navtab "OIDC Plugin" %}
+
+You can use the OIDC plugin to use Kong Identity as the identity provider for your GW services. Apply the OIDC plugin at global/service level with the following fields:
+
+```yaml
+- name: openid-connect
+  config:
+    issuer: https://foo.us.identity.konghq.com/auth
+```
+
+Generate a token for the client by making a call to the issuer URL:
+
+<!--vale off-->
+{% http_request %}
+url: https://<Issuer_URI>/auth/oauth/token
+method: POST
+headers:
+  - "Content-Type: application/x-www-form-urlencoded"
+body:
+  grant_type: client_credentials
+  client_id: generated_client_id
+  client_secret: generated_client_secret
+  scope: Scope
+{% endhttp_request %}
+<!--vale on-->
 
 
+**Response:**
+```json
+{
+  "access_token": "thisisademoaccesstoken",
+  "token_type": "Bearer",
+  "expires_in": 3599,
+  "scope": "Scope"
+}
+```
+
+{% endnavtab %}
 
 {% navtabs "use cases" %}
 {% navtab "OAuth2.0 Introspection Plugin" %}
