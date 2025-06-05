@@ -34,7 +34,7 @@ faqs:
       1. The **client application** displays the user consent page and authenticates the user (this part is handled outside Kong).
       2. When the user clicks "Authorize," the client app calls the `/authorize` endpoint created by attaching the OAuth2 plugin to a service.
       3. The request includes the client ID, secret, and scopes the user consented to.
-      4. The **authorization server** (Kong Gateway with OAuth2 plugin) validates the client credentials and returns an **authorization code**.
+      4. The **authorization server** ({{site.base_gateway}} with OAuth2 plugin) validates the client credentials and returns an **authorization code**.
       5. The client exchanges this code at the `/accesstoken` endpoint for access tokens.
       6. The access token is used to call protected APIs.
       7. When the API call is made, the **introspection plugin** validates the token with the Identity Provider (IdP), identifies the associated consumer, and adds `x-consumer-*` headers to the upstream request.
