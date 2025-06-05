@@ -119,7 +119,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    To expose an MCP server in production, you need to secure access, govern usage, optimize cost, and observe behavior. Kong AI Gateway provides the policy framework to do exactly that:
+                    To expose an MCP server in production, you must secure access, govern usage, optimize cost, and observe behavior. Kong AI Gateway provides the policy framework to do exactly that:
 
                     - **Secure access** with authentication plugins like OpenID Connect or Key Auth.
                     - **Govern usage** with rate limiting policies based on tokens or request volume.
