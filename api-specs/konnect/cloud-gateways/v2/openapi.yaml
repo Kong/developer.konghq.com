@@ -874,12 +874,28 @@ components:
         - cidr_blocks
         - reserved_cidr_blocks
       title: Provider Region
+    HighVelocityProviderRegion:
+      description: Region ID and human-readable name for a cloud provider region.
+      type: object
+      properties:
+        region:
+          $ref: '#/components/schemas/ProviderRegionId'
+      additionalProperties: false
+      required:
+        - region
+      title: HighVelocity Provider Region
     ProviderRegions:
       description: List of available regions to run cloud gateway instances on for a given cloud provider.
       type: array
       items:
         $ref: '#/components/schemas/ProviderRegion'
       title: Provider Regions
+    HighVelocityProviderRegions:
+      description: List of available regions to run high velocity cloud gateway instances  on for a given cloud provider.
+      type: array
+      items:
+        $ref: '#/components/schemas/HighVelocityProviderRegion'
+      title: High Velocity Provider Regions
     ProviderName:
       description: Name of cloud provider.
       type: string
@@ -888,6 +904,12 @@ components:
         - aws
         - azure
       title: Provider Name
+    HighVelocityCloudGatewaysProviderName:
+      description: Name of cloud provider.
+      type: string
+      example: aws
+      enum:
+        - aws
     Provider:
       description: Description of cloud provider that runs cloud gateway instances.
       type: object
@@ -901,12 +923,31 @@ components:
         - provider
         - regions
       title: Provider
+    HighVelocityProvider:
+      description: Description of cloud provider that runs high velocity cloud gateway instances.
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/HighVelocityCloudGatewaysProviderName'
+        regions:
+          $ref: '#/components/schemas/HighVelocityProviderRegions'
+      additionalProperties: false
+      required:
+        - provider
+        - regions
+      title: High Velocity Provider
     Providers:
       description: List of supported cloud providers that run cloud gateway instances.
       type: array
       items:
         $ref: '#/components/schemas/Provider'
       title: Providers
+    HighVelocityProviders:
+      description: List of supported cloud providers that run high velocity cloud gateway instances.
+      type: array
+      items:
+        $ref: '#/components/schemas/HighVelocityProvider'
+      title: High Velocity Providers
     AvailabilityDocument:
       description: Document containing availability information for configurations.
       type: object
@@ -917,18 +958,21 @@ components:
           $ref: '#/components/schemas/InstanceTypes'
         providers:
           $ref: '#/components/schemas/Providers'
+        high_velocity_providers:
+          $ref: '#/components/schemas/HighVelocityProviders'
       additionalProperties: false
       required:
         - versions
         - instance_types
         - providers
+        - high_velocity_providers
       title: Availability Document
     ConfigurationDataPlaneGroupAutoscale:
       oneOf:
         - $ref: '#/components/schemas/ConfigurationDataPlaneGroupAutoscaleStatic'
         - $ref: '#/components/schemas/ConfigurationDataPlaneGroupAutoscaleAutopilot'
     ConfigurationDataPlaneGroupAutoscaleStatic:
-      description: Object that describes the static autoscaling strategy.
+      description: Object that describes the static autoscaling strategy. Deprecated in favor of the autopilot autoscaling strategy. Static autoscaling will be removed in a future version.
       type: object
       properties:
         kind:
@@ -942,6 +986,7 @@ components:
           type: integer
           example: 3
       additionalProperties: false
+      deprecated: true
       required:
         - kind
         - instance_type
