@@ -194,6 +194,7 @@ releases:
     ee-version: "3.7.1.5"
     ce-version: "3.7.1"
     eol: May 2025
+    sunset: true
     distributions:
       - amazonlinux2:
           package: true
@@ -540,7 +541,7 @@ releases:
               - Confluent Cloud
   - release: "3.9"
     ee-version: "3.9.1.1"
-    ce-version: "3.9.0"
+    ce-version: "3.9.1"
     eol: Dec 2025
     distributions:
       - amazonlinux2:

@@ -1118,6 +1118,7 @@ app/gateway/performance/establish-a-benchmark.md:
   - app/_src/gateway/production/performance/benchmark.md
 app/gateway/performance/optimize.md:
   - app/_src/gateway/production/performance/benchmark.md
+  - app/_src/gateway/production/performance/brotli.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
 app/gateway/kong-manager/configuration.md:
@@ -1167,6 +1168,7 @@ app/gateway/upgrade/dual-cluster.md:
   - app/_src/gateway/upgrade/dual-cluster.md
 app/gateway/upgrade/backup-and-restore.md:
   - app/_src/gateway/upgrade/backup-and-restore.md
+  - app/konnect/gateway-manager/backup-restore.md
 app/gateway/db-less-mode.md:
   - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
   - app/_src/gateway/admin-api/declarative-configuration.md
@@ -1230,6 +1232,10 @@ app/custom-plugins/schema.lua.md:
   - app/_src/gateway/plugin-development/configuration.md
 app/custom-plugins/testing.md:
   - app/_src/gateway/plugin-development/tests.md
+app/custom-plugins/konnect-hybrid-mode.md:
+  - app/konnect/gateway-manager/plugins/add-custom-plugin.md
+  - app/konnect/gateway-manager/plugins/update-custom-plugin.md
+  - app/konnect/gateway-manager/plugins/index.md
 
 # policies
 app/gateway/vulnerabilities.md:
@@ -2265,6 +2271,9 @@ app/_landing_pages/advanced-analytics.yaml:
   - app/konnect/analytics/index.md
 app/_landing_pages/custom-plugins.yaml:
   - app/_src/gateway/kong-plugins/index.md
+  - app/_src/gateway/plugin-development/pluginserver/go.md
+  - app/_src/gateway/plugin-development/pluginserver/python.md
+  - app/_src/gateway/plugin-development/pluginserver/javascript.md
 app/_landing_pages/gateway/openid-connect.yaml:
   - app/_hub/kong-inc/openid-connect/overview/_index.md
 app/_landing_pages/konnect-api.yaml:
