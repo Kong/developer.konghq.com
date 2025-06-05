@@ -100,7 +100,7 @@ body:
 
 
 ## Create a client in the Auth Server
-Client is the machine to machine credential. Client has a “grant type” that can take values of client_credentials, implicit, authorization_code. An existing Client ID and Client Secret can be imported in the auth server. A client ID and client secret can also be automatically be created for the client. Token duration (in seconds) is configured per client
+Client is the machine to machine credential. Client has a “grant type” that can take values of `client_credentials`, implicit, `authorization_code`. An existing Client ID and Client Secret can be imported in the auth server. A client ID and client secret can also be automatically be created for the client. Token duration (in seconds) is configured per client
 
 
 <!--vale off-->
