@@ -20,10 +20,10 @@ api_specs:
     - konnect/control-planes-config
 
 related_resources:
-- text: Upstream entity
-  url: /gateway/entities/upstream/
-- text: Target entity
-  url: /gateway/entities/target/
+- text: How to configure Kong Identity
+  url: /kong-identity/get-started/
+- text: Dynamic Templating
+  url: /kong-identity/dynamic-templates/
 
 description: |
   Kong Identity enables customers to use {{site.konnect_short_name}} to generate, authenticate and authorize API access. Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. 
@@ -91,6 +91,92 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
+
+
+
+
+## Use cases
+Placeholder text about the individual cases
+
+
+
+{% navtabs "use cases" %}
+{% navtab "OAuth2.0 Introspection Plugin" %}
+
+You can validate access tokens sent by developers using Kong Identity’s Authorization Server by leveraging the introspection endpoint. This plugin assumes that the consumer already has an access token that will be validated against a third-party OAuth 2.0 server.
+
+Apply the OAuth2.0 introspection plugin at global/service level with the following fields:
+
+```yaml
+- name: oauth2-introspection
+  config:
+    introspection_url: "https://foo.us.identity.konghq.com/auth/introspection"
+    authorization_value: "Basic a29uZzpub3Qtc28tc2VjcmV0"
+    consumer_by: "client_id"
+    custom_claims_forward:
+      - "my-claim"
+```
+
+Generate a token for the client by making a call to the issuer URL:
+
+<!--vale off-->
+{% http_request %}
+url: https://<Issuer_URI>/auth/oauth/token
+method: POST
+headers:
+  - "Content-Type: application/x-www-form-urlencoded"
+body:
+  grant_type: client_credentials
+  client_id: generated_client_id
+  client_secret: generated_client_secret
+  scope: Scope
+{% endhttp_request %}
+<!--vale on-->
+
+
+**Response:**
+```json
+{
+  "access_token": "thisisademoaccesstoken",
+  "token_type": "Bearer",
+  "expires_in": 3599,
+  "scope": "Scope"
+}
+```
+
+{% endnavtab %}
+
+{% navtab "Upstream OAuth Plugin" %}
+
+The Upstream OAuth plugin allows Kong Gateway to support OAuth flows between Kong and the upstream API. The plugin can support storing tokens issued by Kong Identity.
+
+The Upstream OAuth plugin automatically authenticates the client on protected paths in the Kong Gateway.
+
+Apply the plugin at global or scoped level. Use Kong Identity’s OAuth Token Endpoint in the configuration.
+
+Send an unauthenticated request to the Gateway. This route's plugin configuration will mint a new Bearer access token and use it to authenticate the request to the upstream service.
+
+{% endnavtab %}
+
+{% navtab "Consumer-scoped Plugins" %}
+
+- Create a consumer per client in the respective control plane.
+- You do not need to migrate the client credential to a consumer credential.
+- The OIDC plugin will map clients to consumers using claims with the `consumer_claim` field.
+- Apply the consumer-scoped plugin to the consumer entity in the control plane.
+
+{% endnavtab %}
+
+{% navtab "Consumer Group-scoped Plugins" %}
+
+- Create a consumer per client in the respective control plane.
+- No need to migrate the client credential to a consumer credential.
+- The OIDC plugin maps clients to consumers using claims.
+- Create the required consumer groups and apply the plugin at the consumer group scope.
+- Add each consumer to the appropriate consumer group in the control plane.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 
 ## Glossary 
