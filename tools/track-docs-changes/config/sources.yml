@@ -1076,6 +1076,8 @@ app/_landing_pages/ai-gateway.yaml:
   - app/_src/gateway/ai-gateway/index.md
 app/_landing_pages/ai-gateway/ai-providers.yaml:
   - app/_src/gateway/ai-gateway/index.md
+app/_landing_pages/gateway/monitoring.yaml:
+  - app/_src/gateway/production/monitoring/index.md
 
 # references
 app/gateway/nginx-directives.md:
