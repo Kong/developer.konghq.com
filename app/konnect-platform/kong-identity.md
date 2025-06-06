@@ -96,7 +96,7 @@ body:
 
 
 ## Use cases
-Kong Identity can be used with multiple usecases with {{site.base_gateway}} in {{site.konnect_short_name}}.
+Kong Identity can be used with multiple use cases with {{site.base_gateway}} in {{site.konnect_short_name}}.
 
 {% navtabs "use cases" %}
 {% navtab "OIDC Plugin" %}
