@@ -1,4 +1,4 @@
 FROM ubuntu:latest
 RUN apt-get update -y && apt-get install -y curl && apt-get install -y docker.io
-RUN curl -L https://github.com/mheap/setup-deck-apply-preview/raw/refs/heads/main/deck-ubuntu > /usr/local/bin/deck
-RUN chmod +x /usr/local/bin/deck
+RUN curl -L -o deck_v1.48.deb https://github.com/Kong/deck/releases/download/v1.48.0/deck_v1.48.0_amd64.deb && \
+    dpkg -i deck_v1.48.deb
