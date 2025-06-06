@@ -85,6 +85,34 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+faqs:
+  - q: How should I balance temperature across models?
+    a: |
+      Use low temperature (e.g., `0`) for deterministic outputs like code or calculations. Moderate values (e.g., `0.3`) are good for IT help or troubleshooting. Use higher values (e.g., `1.0`) for creative or open-ended prompts.
+
+  - q: What’s a good default model for catchall requests?
+    a: |
+      `gpt-4o-mini` is a good choice for general-purpose fallback. It’s fast, cost-effective, and can handle a wide variety of queries with creative flair.
+
+  - q: How do I fine-tune model routing for semantic matching?
+    a: |
+      Adjust your `threshold` under `vectordb` config. A higher threshold (e.g., `0.75`) routes only stronger matches to specific targets, while a lower value (e.g., `0.6`) allows looser matches.
+
+  - q: Should I assign different token limits per model?
+    a: |
+      Yes. Set higher `max_tokens` (e.g., `826`) for complex or technical responses. Use smaller values (e.g., `256`) for concise or cost-sensitive outputs.
+
+  - q: Can temperature affect which model is selected?
+    a: |
+      Indirectly. Temperature influences output style and can help distinguish models during embedding training or similarity scoring. Use it to align behavior with intent categories.
+
+  - q: What’s the best use case for each model?
+    a: |
+      * `gpt-3.5-turbo`: Technical queries, deterministic logic, Python help
+      * `gpt-4o`: IT support, configuration steps, guided troubleshooting
+      * `gpt-4o-mini`: Catchall requests, creative writing, casual help
+
 ---
 
 ## Configure AI Proxy Advanced Plugin
@@ -140,7 +168,7 @@ entities:
           dimensions: 1024
           distance_metric: cosine
           strategy: redis
-          threshold: 0.7
+          threshold: 0.75
           redis:
             host: host.docker.internal
             port: 16379
@@ -157,7 +185,8 @@ entities:
               options:
                 max_tokens: 826
                 temperature: 0
-            description: Specialist in python
+            description: Expert in Python programming and code optimization. Handles technical programming questions and advanced scripting.
+
           - route_type: llm/v1/chat
             auth:
               header_name: Authorization
@@ -168,7 +197,8 @@ entities:
               options:
                 max_tokens: 512
                 temperature: 0.3
-            description: Requests related to IT support
+            description: IT support assistant for corporate environments. Handles email, VPN, 2FA, device setup, and troubleshooting.
+
           - route_type: llm/v1/chat
             auth:
               header_name: Authorization
@@ -179,7 +209,7 @@ entities:
               options:
                 max_tokens: 256
                 temperature: 1.0
-            description: CATCHALL
+            description: General-purpose assistant for open-ended, creative, or uncategorized queries.
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
@@ -241,7 +271,7 @@ body:
 
 {% navtab "`gpt-4o` (IT support questions)" %}
 
-These examples target common IT support questions where gpt-4o’s balanced creativity and token limit suit troubleshooting and configuration help.
+These examples target common IT support questions where `gpt-4o`’s balanced creativity and token limit suit troubleshooting and configuration help.
 
 {% validation request-check %}
 url: /anything
@@ -278,9 +308,9 @@ body:
 
 {% endnavtab %}
 
-{% navtab "gpt-4o-mini (catchall)" %}
+{% navtab "`gpt-4o-mini` (Catchall model)" %}
 
-These catchall prompts reflect general or casual queries best handled by the lightweight gpt-4o-mini model.
+These catchall prompts reflect general or casual queries best handled by the lightweight `gpt-4o-mini` model.
 
 {% validation request-check %}
 url: /anything
