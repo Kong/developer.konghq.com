@@ -14,7 +14,7 @@ tags:
 min_version:
   gateway: '3.4'
 
-description: placeholder
+description: "Learn how {{site.base_gateway}} tracing works and about the tracing API."
 search_aliases:
   - OTEL
 
