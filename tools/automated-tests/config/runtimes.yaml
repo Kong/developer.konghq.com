@@ -1,5 +1,9 @@
 gateway:
   versions:
+    - version: "3.10"
+      env:
+        KONG_IMAGE_NAME: kong/kong-gateway
+        KONG_IMAGE_TAG: "3.10"
     - version: "3.9"
       env:
         KONG_IMAGE_NAME: kong/kong-gateway
