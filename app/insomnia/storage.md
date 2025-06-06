@@ -14,7 +14,7 @@ products:
 
 related_resources:
   - text: Security at Insomnia
-    url: /insomnia/security/
+    url: /insomnia/manage-insomnia/#security
   - text: SSO
     url: /insomnia/authentication-authorization/#set-up-sso
 
@@ -152,6 +152,7 @@ Key features:
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.
+* {% new_in 10.2 %} **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
 
 ### Git sync data flow
 
