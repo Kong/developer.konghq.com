@@ -45,7 +45,7 @@ cleanup:
   inline:
     - title: StatsD
       content: |
-        Once you are done experimenting with StatsD and {{site.base_gateway}}, you can use the following
+        Once you are done experimenting with StatsD, you can use the following
         command to stop the StatsD server you created in this guide:
 
         ```sh
@@ -89,10 +89,14 @@ entities:
 
 ## Validate
 
-You can validate that the plugin is collecting metrics by generating traffic to the example service. The following command generates 60 requests over one minute:
-```
-for _ in {1..60}; do {curl -i localhost:8000/anything; sleep 1;} done
-```
+You can validate that the plugin is collecting metrics by generating traffic to the example service:
+<!--vale off -->
+{% validation request-check %}
+url: '/anything'
+status_code: 200
+display_headers: true
+{% endvalidation %}
+<!--vale on -->
 
 Run this command to check the metrics collected with StatsD:
 ```
