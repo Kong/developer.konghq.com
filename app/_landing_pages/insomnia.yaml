@@ -40,7 +40,7 @@ rows:
         - type: card
           config:
             title: Documents
-            description: Use documents to design and preview new APIs with OpenAPI.
+            description: Build and iterate on your OpenAPI specs to design your next API.
             icon:  /assets/icons/file.svg
             cta:
               text: Learn more
@@ -49,7 +49,7 @@ rows:
         - type: card
           config:
             title: Collections
-            description: Use collections to test APIs and run automated tests.
+            description: Use collections to call APIs and run automated tests.
             icon: /assets/icons/bars.svg
             cta:
               text: Learn more
@@ -58,7 +58,7 @@ rows:
         - type: card
           config:
             title: Mock servers
-            description: Use mock servers to simulate API endpoints.
+            description: Use mock servers to simulate API endpoints when building features.
             icon: /assets/icons/server.svg
             cta:
               text: Learn more
@@ -87,7 +87,7 @@ rows:
         - type: card
           config:
             title: Inso CLI
-            description: Automate Insomnia tasks using the Inso CLI tool.
+            description: Include Inso CLI in your CI/CD pipelines to automate Insomnia tasks.
             icon:  /assets/icons/terminal.svg
             cta:
               text: Learn more
@@ -142,7 +142,7 @@ rows:
         - type: card
           config:
             title: RBAC
-            description: Use Role-Based Access Control (RBAC) to scope access to Insomnia resources.
+            description: Use Role-based access control (RBAC) for fine-grain control over who can access which Insomnia resources.
             icon: /assets/icons/rbac.svg
             cta:
               text: Learn more
@@ -151,7 +151,7 @@ rows:
         - type: card
           config:
             title: SSO
-            description: Set up Single Sign-On (SSO) for your enterprise account.
+            description: Set up Single Sign-On (SSO) to allow your users to log in using your preferred Identity Provider.
             icon: /assets/icons/key.svg
             cta:
               text: Learn more
@@ -160,7 +160,7 @@ rows:
         - type: card
           config:
             title: SCIM
-            description: Set up System for Cross-domain Identity Management (SCIM) provisioning for your enterprise account.
+            description: Set up System for Cross-domain Identity Management (SCIM) provisioning to manage users and teams from your Identity Provider.
             icon: /assets/icons/domain.svg
             cta:
               text: Learn more
@@ -181,47 +181,50 @@ rows:
                 - title: Enterprise
                   key: ee
               features:
-                - title: Local storage
+                - title: |
+                    [Local storage](/insomnia/storage/#local-vault)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: API Testing tools
+                - title: |
+                    [API testing](/insomnia/test/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Cloud-hosted mock server
+                - title: |
+                    [Cloud-hosted mock server](/insomnia/mock-servers/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Automated API testing
+                - title: |
+                    [Automated API testing](/inso-cli/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Cloud Sync
+                - title: |
+                    [End-to-End Encryption](/insomnia/end-to-end-encryption/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Git Sync
+                - title: |
+                    [Cloud Sync](/insomnia/storage/#cloud-sync)
+                  hobby: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [Git Sync](/insomnia/storage/#git-sync)
                   hobby: false
                   individual: false
                   pro: true
                   ee: true
-                - title: Text editor key mapping
-                  hobby: true
-                  individual: true
-                  pro: true
-                  ee: true
-                - title: Enterprise SSO (SAML, OIDC)
+                - title: |
+                    [Enterprise SSO (SAML, OIDC)](/insomnia/sso/)
                   hobby: false
                   individual: false
                   pro: false
                   ee: true
-                - title: Enterprise support
+                - title: |
+                    [Enterprise support](/insomnia/enterprise/)
                   hobby: false
                   individual: false
                   pro: false
