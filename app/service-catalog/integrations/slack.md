@@ -18,10 +18,10 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The Slack integration allows you to see Slack communication channels that are relevant to a Service Catalog service.
+description: The Slack integration allows you to see Slack communication channels that are relevant to a {{site.konnect_catalog}} service.
 
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Traceable plugin
     url: /plugins/traceable/
@@ -32,7 +32,7 @@ mechanism: "pull/ingestion model"
 ---
 
 
-The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a Service Catalog service.
+The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a {{site.konnect_catalog}} service.
 
 ## Prerequisites
 
@@ -40,7 +40,7 @@ The Slack integration allows you to see communication channels (via [Slack chann
 
 ## Authenticate the Slack integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
+1. From the **{{site.konnect_catalog}}** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
 2. Select **Slack**, then **Install Slack**.
 3. Select **Authorize**. 
    Only Slack admins can authorize the integration.
@@ -59,7 +59,7 @@ columns:
 rows:
   - entity: Slack Channel 
     description: 
-       A Slack channel that indicates who owns the Service Catalog service. Ideally, this helps users identify who they can contact if they have questions about a service.
+       A Slack channel that indicates who owns the {{site.konnect_catalog}} service. Ideally, this helps users identify who they can contact if they have questions about a service.
 {% endtable %}
 <!--vale on-->
 

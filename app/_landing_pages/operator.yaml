@@ -100,7 +100,7 @@ rows:
                 supported: Planned
               - product: Developer Portal
                 supported: Planned
-              - product: Service Catalog
+              - product: {{site.konnect_catalog}}
                 supported: Planned
               - product: Analytics
                 supported: Planned

@@ -18,22 +18,22 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The GitHub integration allows you to associate your Service Catalog service to one or more GitHub repositories. 
+description: The GitHub integration allows you to associate your {{site.konnect_catalog}} service to one or more GitHub repositories. 
 
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
 discovery_support: true
 bindable_entities: "Repositories"
 ---
 
-The GitHub integration allows you to associate your Service Catalog service to one or more GitHub repositories.
+The GitHub integration allows you to associate your {{site.konnect_catalog}} service to one or more GitHub repositories.
 
 For each linked repository, the UI can show a **Repository Summary** with simple data pulled from the GitHub API, such as the number of open issues, open pull requests, most recently closed pull requests, languages, and more.
 
 ## Authorize the GitHub integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **{{site.konnect_catalog}}** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Select **GitHub**, then **Install GitHub**.
 3. Select **Authorize**. 
 
@@ -54,7 +54,7 @@ columns:
     key: description
 rows:
   - entity: Repository
-    description: A GitHub repository relating to the Service Catalog service.
+    description: A GitHub repository relating to the {{site.konnect_catalog}} service.
 {% endtable %}
 <!--vale on-->
 

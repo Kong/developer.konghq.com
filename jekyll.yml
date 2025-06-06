@@ -114,6 +114,7 @@ konnect_saas: Kong Konnect
 operator_product_name: Kong Gateway Operator
 event_gateway: Kong Native Event Proxy
 event_gateway_short: KNEP
+konnect_catalog: Konnect Catalog
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
