@@ -12,7 +12,7 @@ module Jekyll
         end
 
         def data_validate
-          JSON.dump(variables)
+          JSON.dump({name: id, config: variables})
         end
 
         def validate_yaml!
