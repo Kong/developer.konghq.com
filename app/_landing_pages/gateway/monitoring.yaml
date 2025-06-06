@@ -73,6 +73,10 @@ rows:
             ctas:
               - text: Prometheus plugin
                 url: "/plugins/prometheus/"
+              - text: Collect metrics with {{site.base_gateway}}
+                url: "/how-to/collect-metrics-with-prometheus/"
+              - text: Monitor metrics with KIC
+                url: "/kubernetes-ingress-controller/observability/prometheus-grafana/"
       - blocks:
         - type: card
           config:
