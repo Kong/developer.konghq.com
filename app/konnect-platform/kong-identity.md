@@ -96,12 +96,12 @@ body:
 
 
 ## Use cases
-Kong Identity can be used with multiple usecases with Kong Gateway in Konnect.
+Kong Identity can be used with multiple usecases with {{site.base_gateway}} in {{site.konnect_short_name}}.
 
 {% navtabs "use cases" %}
 {% navtab "OIDC Plugin" %}
 
-You can use the OIDC plugin to use Kong Identity as the identity provider for your GW services. Apply the OIDC plugin at global/service level with the following fields:
+You can use the OIDC plugin to use Kong Identity as the identity provider for your {{site.base_gateway}} services. Apply the [OIDC plugin](/plugins/openid-connect/) at global/service level with the following fields:
 
 ```yaml
 - name: openid-connect
@@ -138,7 +138,6 @@ body:
 
 {% endnavtab %}
 
-{% navtabs "use cases" %}
 {% navtab "OAuth2.0 Introspection Plugin" %}
 
 You can validate access tokens sent by developers using Kong Identity’s Authorization Server by leveraging the introspection endpoint. This plugin assumes that the consumer already has an access token that will be validated against a third-party OAuth 2.0 server.
