@@ -14,7 +14,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Operationalize MCP traffic with Kong AI Gateway"
+      text: "A trust and control layer for proxing traffic to MCP servers"
       sub_text: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
 
   - header:
@@ -28,7 +28,7 @@ rows:
 
               Key concerns like authentication, context propagation, load balancing, and service discovery are familiar to those working in API infrastructure. As such, the API gateway—already proven in securing and scaling HTTP services—offers a strong foundation for bringing MCP to production.
 
-              Kong’s AI Gateway extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience
+              Kong’s AI Gateway extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience.
 
 
       - blocks:
@@ -141,11 +141,11 @@ rows:
           description: |
             Follow the tutorials below to learn how to secure, govern, and observe your MCP traffic using Kong AI Gateway.
           ctas:
-            - text: Secure MCP traffic with AI Gateway
+            - text: Start securing your MCP traffic now
               url: "/mcp/"
-            - text: Govern MCP traffic with AI Gateway
+            - text: Take control of your MCP traffic governance
               url: "/mcp/"
-            - text: Observe MCP Traffic with AI Gateway
+            - text: Monitor your MCP traffic
               url: "/mcp/"
     - blocks:
       - type: card
