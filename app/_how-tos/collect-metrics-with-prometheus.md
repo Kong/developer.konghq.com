@@ -122,7 +122,7 @@ Prometheus will begin to scrape metrics data from {{site.base_gateway}}.
 
 ## Validate
 
-You can validate that the plugin is collecting metrics by generating traffic to the example service. The following command generates 60 requests over one minute. 
+You can validate that the plugin is collecting metrics by generating traffic to the example service. 
 
 Run the following in the same terminal:
 
