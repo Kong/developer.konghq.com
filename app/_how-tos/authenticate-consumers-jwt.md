@@ -125,9 +125,10 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9
 {:.no-copy-code}
 
 Save the token as an environment variable:
-```bash
-export JWT_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiJ9.xG-DrlD4vcYBqhuhK_jrwFIALvVvU-qTOiNyIfUhn_Y"
-```
+
+{% validation env-variables %}
+JWT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiJ9.xG-DrlD4vcYBqhuhK_jrwFIALvVvU-qTOiNyIfUhn_Y
+{% endvalidation %}
 
 ## Validate
 

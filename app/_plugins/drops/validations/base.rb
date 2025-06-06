@@ -27,6 +27,8 @@ module Jekyll
             KubernetesResourceProperty.new(id:, yaml:)
           when 'traffic-generator'
             TrafficGenerator.new(id:, yaml:)
+          when 'env-variables'
+            EnvVariables.new(id:, yaml:)
           when 'custom-command'
             CustomCommand.new(id:, yaml:)
           else
