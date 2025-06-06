@@ -1,5 +1,5 @@
 metadata:
-  title: "Kong MCP Traffic Gateway"
+  title: "MCP Traffic Gateway"
   content_type: landing_page
   description: This page is an introduction to MCP Traffic Gateway capabilites in Kong AI Gateway.
   products:
@@ -14,21 +14,12 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Kong MCP Traffic Gateway"
-      sub_text: Modernize AI agent infrastructure with AI gateway-driven MCP capabilities
-
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Kong MCP Traffic Gateway enables AI assistants to interact with {{site.konnect_product_name}} using natural language to access analytics, configurations, and control plane operations.
+      text: "Operationalize MCP traffic with Kong AI Gateway"
+      sub_text: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
 
   - header:
       type: h2
-      text: What is MCP and how it interacts with Kong AI Gateway?
+      text: Bring MCP to production securely with Kong AI Gateway
     columns:
       - blocks:
           - type: text
@@ -135,8 +126,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                      Kong MCP server connects AI assistants like Claude to {{site.konnect_product_name}}’s API Gateway. It enables natural language access to key gateway tools, including analytics, configuration inspection, and control plane management to:
-
+                      Want to quickly test MCP workflows with Claude? Kong MCP Server makes it easy to connect AI assistants to {{site.konnect_product_name}}. Use natural language to access key tools like analytics, configuration inspection, and control plane management:
                       * Query API analytics with customizable filters
                       * List and inspect services, routes, consumers, and plugins
                       * Manage control planes and control plane groups
