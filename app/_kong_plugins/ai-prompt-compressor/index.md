@@ -55,10 +55,6 @@ search_aliases:
   - model
 ---
 
-Thanks for the clarification! Here's the revised section with your original intro sentence reworded for clarity and tone, followed by the appended LLMLingua capabilities in a clean, developer-docs style:
-
----
-
 The **Kong AI Prompt Compressor** plugin compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The plugin supports:
 
 * **Ratio-based or target token compression** — for example, reduce to 80% of the original length or compress to 150 tokens.
