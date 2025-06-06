@@ -162,4 +162,16 @@ rows:
               text: Explore analytics
               url: /advanced-analytics/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Tracing
+            description: |
+              {{site.base_gateway}} has OpenTelemetry tracing capabilities. 
+              You can use plugins to collect traces.
+            icon: /assets/icons/codeblock.svg
+            cta:
+              text: See reference
+              url: /gateway/tracing/
+              align: end
             

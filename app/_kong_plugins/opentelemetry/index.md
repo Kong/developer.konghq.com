@@ -40,6 +40,14 @@ search_aliases:
   - logging
   - analytics
   - monitoring
+
+related_resources:
+  - text: "{{site.base_gateway}} tracing"
+    url: /gateway/tracing/
+  - text: Zipkin plugin
+    url: /plugins/zipkin/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 ---
 
 Propagate distributed tracing spans and report low-level spans to a OTLP-compatible server.
@@ -107,7 +115,7 @@ The top level span has the following attributes:
 - `http.flavor`: HTTP version
 - `net.peer.ip`: Client IP address
 
-<!-- TODO: link to Gateway 3.0 tracing docs for details -->
+For more information, see the [Tracing reference](/gateway/tracing/).
 
 ### Propagation
 
