@@ -275,7 +275,7 @@ By default, the span will be released after the Nginx request ends.
 
 Because the traces are compatible with OpenTelemetry, they can be natively visualized through any OpenTelemetry UI.
 
-See the [OpenTelemetry plugin](/hub/kong-inc/opentelemetry/) to learn how to visualize the traces.
+See the [OpenTelemetry plugin](/plugins/opentelemetry/) to learn how to visualize the traces.
 
 ## Write a custom trace exporter
 
