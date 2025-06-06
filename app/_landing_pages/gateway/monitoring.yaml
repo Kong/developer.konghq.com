@@ -131,7 +131,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    While every environment is unique and can have its own set of circumstances, we encourage you to follow these general recommendations:
+                    While infrastructure environments can vary widely, we encourage you to follow these general recommendations:
 
                     * Enable the [`status_listen`](/gateway/configuration/#status-listen) configuration parameter.
                     * Always health check {{site.base_gateway}} and track the health in monitoring dashboards such as Datadog, Grafana, AppDynamics, and so on.
