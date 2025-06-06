@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import minimist from "minimist";
 import { generateInstructionFiles } from "./instructions/extractor.js";
 import { testeableUrlsFromFiles } from "./instructions-file.js";
+import fastGlob from "fast-glob";
 
 (async function main() {
   try {
