@@ -1,16 +1,15 @@
 ---
-title: Get started with MCP Gateway
+title: Get started with Kong Konnect MCP Server
 content_type: how_to
 permalink: /mcp/get-started/
 breadcrumbs:
     - /mcp/
-description: Learn how to quickly get started with AI Gateway
+description: Learn how to quickly get started with using Kong Konnect MCP Server
 products:
     - ai-gateway
     - gateway
 
 works_on:
-    - on-prem
     - konnect
 
 plugins:
@@ -23,11 +22,15 @@ tags:
     - get-started
     - ai
 
+related_resources:
+  - text: Konng MCP
+    url: https://github.com/metorial/mcp-containers/blob/main/catalog/Kong/mcp-konnect/mcp-konnect/README.md
+
 tldr:
-  q: What is MCP Gateway, and how can I get started with it?
+  q: What is Kong Konnect MCP Server, and how can I get started with it?
   a: |
 
-    With Kong's Model Context Protocol (MCP) Gateway, you can enable AI assistants like Claude or Cursor to interact directly with {{site.konnect_product_name}}’s API Gateway. This integration allows you to query analytics data, inspect configuration details, and manage control planes—all through natural language conversation.
+    With Kong's Model Context Protocol (MCP) Server, you can enable AI assistants like Claude to interact directly with {{site.konnect_product_name}}’s API Gateway. This integration allows you to query analytics data, inspect configuration details, and manage control planes—all through natural language conversation.
 
     This tutorial will help you get started with MCP by connecting an AI assistant to {{site.konnect_product_name}}.
 
@@ -54,7 +57,7 @@ prereqs:
       icon_url: /assets/icons/third-party/claude.svg
     - title: Node.js
       content: |
-        To use [Kong MCP Gateway](https://github.com/Kong/mcp-konnect), you'll need Node.js version `≥20.0`. Run `node --version` in your terminal to check your installed version.
+        To use [Kong MCP Server](https://github.com/Kong/mcp-konnect), you'll need Node.js version `≥20.0`. Run `node --version` in your terminal to check your installed version.
       icon_url: /assets/icons/gateway.svg
 cleanup:
   inline:
