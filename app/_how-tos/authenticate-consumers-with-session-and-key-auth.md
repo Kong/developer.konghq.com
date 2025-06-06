@@ -150,7 +150,7 @@ message: 'Forbidden'
 Then, run the following command to verify that a user can authenticate via sessions:
 
 <!--vale off-->
-{% validation unauthorized-check %}
+{% validation request-check %}
 url: /anything
 headers:
   - 'apikey: hello_world'
@@ -168,7 +168,7 @@ export COOKIE_HEADER='YOUR-COOKIE-HEADER-HERE'
 
 Use your session token in the request, but don't provide the API key. Even without the key, you will still be authenticated because {{site.base_gateway}} is using the session cookie granted by the Session plugin:
 <!--vale off-->
-{% validation unauthorized-check %}
+{% validation request-check %}
 url: /anything
 headers:
   - 'cookie: "$COOKIE_HEADER"'
