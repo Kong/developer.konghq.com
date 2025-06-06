@@ -45,6 +45,8 @@ related_resources:
 faqs:
   - q: When does the HTTP Log plugin record log entries in a request/response timeline?
     a: The log is executed after {{site.base_gateway}} sends the last response byte to the client. 
+  - q: Can the HTTP Log plugin expose latency metrics for individual phases of the request lifecycle (such as `rewrite`, `access`, `header_filter`, and `body_filter`)?
+    a: The HTTP Log plugin doesn't provide latency metrics at this granular level. Instead, use [active tracing in {{site.konnect_short_name}}](/konnect-platform/active-tracing/).
 ---
 
 The HTTP Log plugin lets you send request and response logs to an HTTP server.

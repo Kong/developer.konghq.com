@@ -212,18 +212,22 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: "`Discovery Admin`"
-    description: Access to all read and write permissions related to service discoveries.
-  - role: "`Discovery Viewer`"
-    description: Access to read-only permissions related to service discoveries.
   - role: "`Integration Admin`"
     description: Can view and edit all integrations (install/authorize).
   - role: "`Integration Viewer`"
     description: Access to read-only permissions to integrations.
+  - role: "`Scorecard Viewer`"
+    description: Access read-only permissions related to Scorecards.
+  - role: "`Scorecard Admin`"
+    description: Can view and edit a select list of Service Catalog services, map resources to those services, manage all resources, and has read-only access to all integrations and integration instances.
   - role: "`Service Admin`"
     description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
   - role: "`Service Creator`"
-    description: Can create new services, becomes the service admin for any service they create, and can view, edit, and create all resources and discovery rules.
+    description: |
+      Can create new Service Catalog services, becomes the Service Admin for any service they create, and can view and edit all resources. 
+      Includes read-only access to all integrations and integration instances.
+      <br><br>This role does not grant access to _existing_ services or their configurations. See the `Service Admin` role. 
+      <br><br>This role does not grant write access to integration instances. See the `Integration Admin` role.
   - role: "`Service Viewer`"
     description: Can view a select list of services and all resources and discovery rules.
 {% endtable %}

@@ -58,13 +58,13 @@ sections:
     items:
     - title: Provision a serverless gateway
       description: Create a serverless Control Plane and hosted Data Plane.
-      url: /serverless-gateways/#how-do-i-provision-a-serverless-gateway
+      url: /serverless-gateways/reference/#how-do-i-provision-a-serverless-gateway
     - title: Custom domains
       description: Konnect integrates domain name management and configuration with serverless gateways.
-      url: /serverless-gateways/#how-do-i-configure-a-custom-domain
+      url: /serverless-gateways/reference/#how-do-i-configure-a-custom-domain
     - title: FAQs
       description: Frequently asked questions about serverless gateways.
-      url: /serverless-gateways/#faqs
+      url: /serverless-gateways/reference/#faqs
 
   - title: Dedicated Cloud Gateways
     items:
@@ -256,6 +256,9 @@ sections:
     items:
       - path: /gateway-manager/
       - path: /gateway-manager/**/*
+      - text: Troubleshoot Data Plane nodes
+        description: Learn how to resolve some common issues with Data Plane nodes
+        url: /gateway-manager/data-plane-reference/#troubleshoot-data-plane-nodes
 
   - title: Reference
     allow_duplicates: true
@@ -265,8 +268,11 @@ sections:
       - path: /gateway/reserved-entity-names/
       - path: /gateway/tags/
       - path: /gateway/performance/benchmarks/
+      - path: /gateway/performance/establish-a-benchmark/
+      - path: /gateway/performance/optimize/
       - path: /gateway/logs/
       - path: /gateway/entities/consumer-group/
       - path: /gateway/entities/event-hook/
       - path: /gateway/entities/partial/
       - path: /how-to/restart-kong-gateway-container/
+      - path: /gateway/nginx-directives/

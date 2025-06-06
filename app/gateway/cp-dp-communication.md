@@ -284,17 +284,17 @@ To use a forward proxy for Control Plane and Data Plane communication, you need 
 {% navtabs "http-protocol-example" %}
 {% navtab "HTTP example" %}
 ```
-proxy_server = 'http://<username>:<password>@<proxy-host>:<proxy-port>'
+proxy_server = 'http://USERNAME:PASSWORD@PROXY_HOST:PROXY_PORT'
 proxy_server_ssl_verify = off
 cluster_use_proxy = on
 ```
 {% endnavtab %}
 {% navtab "HTTPS example" %}
 ```
-proxy_server = 'https://<username>:<password>@<proxy-host>:<proxy-port>'
+proxy_server = 'https://USERNAME:PASSWORD@PROXY_HOST:PROXY_PORT'
 proxy_server_ssl_verify = on
 cluster_use_proxy = on
-lua_ssl_trusted_certificate = system  # or <certificate> or <path-to-cert>
+lua_ssl_trusted_certificate = system  # or the full certificate or path to cert file
 ```
 {% endnavtab %}
 {% endnavtabs %}

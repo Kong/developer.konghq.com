@@ -1,0 +1,16 @@
+{
+  "3.1.0.0": [
+    {
+      "message": "WebSocket service/route support was added for logging plugins: syslog",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "The `conf.facility` default value is now set to `user`.[#8564](https://github.com/Kong/kong/pull/8564)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

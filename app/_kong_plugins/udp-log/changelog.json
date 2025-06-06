@@ -1,0 +1,9 @@
+{
+  "3.1.0.0": [
+    {
+      "message": "WebSocket service/route support was added for logging plugins: udp-log",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

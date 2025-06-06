@@ -8,7 +8,7 @@
 
 {% capture details_content %}
 
-{% assign gw_api_crd_version = "v1.2.0" %}
+{% assign gw_api_crd_version = "v1.3.0" %}
 
 {% if include.config.gateway_api == "experimental" %}
 
@@ -64,7 +64,6 @@ metadata:
   name: kong
   annotations:
     konghq.com/gatewayclass-unmanaged: 'true'
-
 spec:
   controllerName: {{ controllerName }}
 ---

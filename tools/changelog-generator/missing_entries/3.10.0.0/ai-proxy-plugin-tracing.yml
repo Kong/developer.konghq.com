@@ -1,0 +1,4 @@
+message: |
+  **AI Proxy**: Some active tracing latency values are incorrectly reported as having zero length when using the AI Proxy plugin.
+type: "known-issues"
+scope: "Plugin"

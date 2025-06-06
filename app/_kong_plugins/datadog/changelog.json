@@ -1,0 +1,42 @@
+{
+  "3.6.0.0": [
+    {
+      "message": "Fix a bug that datadog plugin is not triggered for serviceless routes. In this fix, datadog plugin is always triggered, and the value of tag `name`(service_name) is set as an empty value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "The `host` configuration parameter is now referenceable.[#10484](https://github.com/Kong/kong/pull/10484)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Plugin batch queuing: [HTTP Log](/plugins/http-log/), [StatsD](/plugins/statsd/), [OpenTelemetry](/plugins/opentelemetry/), and [Datadog](/plugins/datadog/) \n\nThe queuing system has been reworked, causing some plugin parameters to not function as expected anymore. If you use queues in these plugins, new parameters must be configured. See each plugin’s documentation for details.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.[#10052](https://github.com/Kong/kong/pull/10052) [#10044](https://github.com/Kong/kong/pull/10044)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.1.2": [
+    {
+      "message": "Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "The plugin schema now lists the default values for configuration options in a single place instead of in two separate places.[#8315](https://github.com/Kong/kong/pull/8315)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

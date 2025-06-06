@@ -1,0 +1,54 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Added support for sending messages to multiple topics with `topics_query_arg`, and enabled topic allowlisting with `allowed_topics`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for message manipulation with the new configuration field `message_by_lua_functions`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "Fixed an issue where the plugin could lose connection to a broker when the broker leadership changed.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Added support for the `SCRAM-SHA-512` authentication mechanism.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.1": [
+    {
+      "message": "Fixed the `Bad Gateway` error that would occur when using the Kafka Upstream plugin with the configuration `producer_async=false`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.1": [
+    {
+      "message": "Added support for the `SCRAM-SHA-512` authentication mechanism.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "Added the ability to identify a Kafka cluster using the `cluster_name` configuration parameter. By default, this field generates a random string. You can also set your own custom cluster identifier.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Beta feature:** The `authentication.user` and `authentication.password` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

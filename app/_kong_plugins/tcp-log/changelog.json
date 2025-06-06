@@ -1,0 +1,23 @@
+{
+  "3.5.0": [
+    {
+      "message": "fix an issue of unnecessary handshakes when reusing TLS connection",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.1": [
+    {
+      "message": "fix an issue of unnecessary handshakes when reusing TLS connection",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "WebSocket service/route support was added for logging plugins: tcp-log",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

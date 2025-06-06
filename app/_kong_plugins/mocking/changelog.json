@@ -1,0 +1,148 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where random delays were out of range.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "Add the `custom_base_path` field to specifiy a custom base path. It will be used with the `deck file namespace` feature",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Fix an issue where valid recursive schemas are always rejected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fix an issue where the plugin failed to return the mock response when `resposnes` contains `default` or wildcard codes like 2XX.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.0": [
+    {
+      "message": "Introduces a new property `include_base_path` to indicate whether to include the base path when performing the path match evaluation.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fix the issue that path parameter cannot match non-ascii characters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.2": [
+    {
+      "message": "Fix an issue where valid recursive schemas are always rejected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.1": [
+    {
+      "message": "Fix the issue that path parameter cannot match non-ascii characters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "Fixed an issue where the plugin threw an error when the arbitrary elements were defined in the path node.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "Fixed UUID pattern matching.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added the `included_status_codes` and `random_status_code` fields. These allow you to configure the HTTP status codes for the plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now lets you auto-generate a random response based on the schema definition without defining examples.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "You can now control behavior or obtain a specific response by sending behavioral headers: `X-Kong-Mocking-Delay`, `X-Kong-Mocking-Example-Id`, and `X-Kong-Mocking-Status-Code`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "This plugin now supports: \n- MIME types priority match\n- All HTTP codes\n- `$ref`",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "MIME types priority match",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "All HTTP codes",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`$ref`",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with `accept` headers not being split and not working with wildcards. The `;q=` (q-factor weighting) of `accept` headers is now supported.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Fixed an issue where `204` responses were not handled correctly and you would see the following error:`\"No examples exist in API specification for this resource\"`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`204` response specs now support empty content elements.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.3": [
+    {
+      "message": "Fixed UUID pattern matching.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.3": [
+    {
+      "message": "Fixed an issue where the plugin didn’t accept empty values in examples.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.2": [
+    {
+      "message": "Fixed an issue where `204` responses were not handled correctly and you would see the following error:`\"No examples exist in API specification for this resource\"`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`204` response specs now support empty content elements.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

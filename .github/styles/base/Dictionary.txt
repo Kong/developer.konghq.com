@@ -435,6 +435,7 @@ linkStyle
 liveness
 LLM
 llm
+LLMLingua
 LLMs
 Loggly
 Loggly
@@ -721,6 +722,7 @@ submodule
 submodule's
 subnet
 subnets
+subresource
 substring
 subtable
 subtables
@@ -799,6 +801,7 @@ unchecking
 uncomment
 uncommented
 uncommenting
+underuse
 unencrypted
 unescaped
 ungroup
@@ -822,6 +825,7 @@ unshorten
 unshortened
 unstash
 untemplated
+untrusted
 untyped
 unvetted
 unversioned

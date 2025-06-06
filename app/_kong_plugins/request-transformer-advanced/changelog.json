@@ -1,0 +1,56 @@
+{
+  "3.4.0.0": [
+    {
+      "message": "Fixed an issue where the plugin wouldn’t transform the response body when the upstream returned a Content-Type with a `+json` suffix as the subtype.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "The plugin now honors the following Kong Gateway configuration parameters: `untrusted_lua`, `untrusted_lua_sandbox_requires`, `untrusted_lua_sandbox_environment`. These parameters apply to advanced templates (Lua expressions).",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.1.5": [
+    {
+      "message": "Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.1.4": [
+    {
+      "message": "Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added support for navigating nested JSON objects and arrays when transforming a JSON payload.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now supports vault references.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.1.0": [
+    {
+      "message": "Values stored in `key:value` pairs in this plugin’s configuration are now referenceable, which means they can be stored as [secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/) in a vault.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.0": [
+    {
+      "message": "Fixed an issue where empty arrays were being converted to empty objects. Empty arrays are now preserved.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

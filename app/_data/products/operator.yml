@@ -1,9 +1,9 @@
 name: Kong Gateway Operator
 
 releases:
-  - release: "1.6"
-    releaseDate: "2025-05-08"
-    endOfLifeDate: "2026-05-08"
+  - release: "1.6.1"
+    releaseDate: "2025-05-28"
+    endOfLifeDate: "2026-05-28"
     latest: true
   - release: "1.5"
     releaseDate: "2025-04-01"

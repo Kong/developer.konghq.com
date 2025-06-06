@@ -1,0 +1,35 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Add WWW-Authenticate headers to 401 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `hmac-auth` changed from `1000` to `1030`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Removed deprecated signature format using `ngx.var.uri`.[#8558](https://github.com/Kong/kong/pull/8558)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

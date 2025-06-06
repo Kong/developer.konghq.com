@@ -159,4 +159,4 @@ mesh:
     - '\[.*\]\(https:\/\/github\.com\/[kK]ong\/kong-mesh.*\)'
 
 # Version vars
-latest_gateway_oss_version: "3.9"
+latest_gateway_oss_version: "3.9.1"

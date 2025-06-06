@@ -1,0 +1,420 @@
+{
+  "kong-ee": [
+    {
+      "message": "Deprecated Alpine Linux images and packages.\n\nKong is announcing our intent to remove support for Alpine images and packages later this year. These images and packages are available in 3.2 and will continue to be available in 3.3. We will stop building Alpine images and packages in Kong Gateway 3.4.",
+      "type": "deprecation",
+      "scope": "Core"
+    },
+    {
+      "message": "The default PostgreSQL SSL version has been bumped to TLS 1.2. In `kong.conf`:\n\n- The default [`pg_ssl_version`](https://docs.konghq.com/gateway/latest/reference/configuration/#postgres-settings) is now `tlsv1_2`.\n- Constrained the valid values of this configuration option to only accept the following: `tlsv1_1`, `tlsv1_2`, `tlsv1_3` or `any`.\n\nThis mirrors the setting `ssl_min_protocol_version` in PostgreSQL 12.x and onward. See the [PostgreSQL documentation](https://postgresqlco.nf/doc/en/param/ssl_min_protocol_version/) for more information about that parameter.\n\nTo use the default setting in `kong.conf`, verify that your Postgres server supports TLS 1.2 or higher versions, or set the TLS version yourself. TLS versions lower than `tlsv1_2` are already deprecated and considered insecure from PostgreSQL 12.x onward.",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "Added the [`allow_debug_header`](https://docs.konghq.com/gateway/latest/reference/configuration/#allow_debug_header) configuration property to `kong.conf` to constrain the `Kong-Debug` header for debugging. This option defaults to `off`.\n\nIf you were previously relying on the `Kong-Debug` header to provide debugging information, set `allow_debug_header: on` to continue doing so.",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "[**JWT plugin**](/plugins/jwt/) (`jwt`)\n\n- The JWT plugin now denies any request that has different tokens in the JWT token search locations.[#9946](https: The JWT plugin now denies any request that has different tokens in the JWT token search locations.[#9946](https://github.com/Kong/kong/pull/9946)",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "Sessions library upgrade [#10199](https://github.com/Kong/kong/pull/10199):\n\n- The [`lua-resty-session`](https://github.com/bungle/lua-resty-session) library has been upgraded to v4.0.0. This version includes a full rewrite of the session library, and is not backwards compatible.<br>This library is used by the following plugins: [**Session**](/plugins/session/), [**OpenID Connect**](/plugins/openid-connect/), and [**SAML**](/plugins/saml/). This also affects any session configuration that uses the Session or OpenID Connect plugin in the background, including sessions for Kong Manager and Dev Portal.<br>All existing sessions are invalidated when upgrading to this version. For sessions to work as expected in this version, all nodes must run Kong Gateway 3.2.x or later. For that reason, we recommend that during upgrades, proxy nodes with mixed versions run for as little time as possible. During that time, the invalid sessions could cause failures and partial downtime.\n\n- Parameters:\n\n  - The new parameter `idling_timeout`, which replaces `cookie_lifetime`, now has a default value of 900. Unless configured differently, sessions expire after 900 seconds (15 minutes) of idling.\n  - The new parameter `absolute_timeout` has a default value of 86400. Unless configured differently, sessions expire after 86400 seconds (24 hours).\n  - Many session parameters have been renamed or removed. Although your configuration will continue to work as previously configured, we recommend adjusting your configuration to avoid future unexpected behavior. Refer to the [upgrade guide for 3.2](https://docs.konghq.com/gateway/latest/upgrade/#session-library-upgrade) for all session configuration changes and guidance on how to convert your existing session configuration.",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "Changed the underlying operating system (OS) for our convenience Docker tags (for example, `latest`, `3.2.1.0`, `3.2`) from Debian to Ubuntu.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "When `router_flavor` is set to`traditional_compatible`, Kong Gateway verifies routes created using the expression router instead of the traditional router to ensure created routes are compatible.[#9987](https://github.com/Kong/kong/pull/9987)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "In DB-less mode, the `/config` API endpoint can now flatten all schema validation errors into a single array using the optional `flatten_errors` query parameter.[#10161](https://github.com/Kong/kong/pull/10161)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "The upstream entity now has a new load balancing algorithm option: [`latency`](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/#balancing-algorithms). This algorithm chooses a target based on the response latency of each target from prior requests.[#9787](https://github.com/Kong/kong/pull/9787)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "The Nginx `charset` directive can now be configured with Nginx directive injections. Set it in Kong Gateway’s configuration with [`nginx_http_charset`](https://docs.konghq.com/gateway/latest/reference/configuration/#nginx_http_charset)[#10111](https://github.com/Kong/kong/pull/10111)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "The services upstream TLS configuration is now extended to the stream subsystem.[#9947](https://github.com/Kong/kong/pull/9947)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Added the new configuration parameter [`ssl_session_cache_size`](https://docs.konghq.com/gateway/latest/reference/configuration/#ssl_session_cache_size), which lets you set the Nginx directive `ssl_session_cache`. This configuration parameter defaults to `10m`. Thanks [Michael Kotten](https://github.com/michbeck100) for contributing this change.[#10021](https://github.com/Kong/kong/pull/10021)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "[`status_listen`](https://docs.konghq.com/gateway/latest/reference/configuration/#status_listen) now supports HTTP2. [#9919](https://github.com/Kong/kong/pull/9919)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "The shared Redis connector now supports username + password authentication for cluster connections, improving on the existing single-node connection support. This automatically applies to all plugins using the shared Redis configuration.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "**FIPS Support**: \n- The OpenID Connect, Key Authentication - Encrypted, and JWT Signer plugins are now [FIPS 140-2 compliant](https://docs.konghq.com/gateway/latest/kong-enterprise/fips-support/).\nIf you are migrating from Kong Gateway 3.1 to 3.2 in FIPS mode and are using the `key-auth-enc` plugin, you should send [PATCH or POST requests](/plugins/key-auth-enc/#create-a-key) to all existing `key-auth-enc` credentials to re-hash them in SHA256.\n\n- FIPS-compliant Kong Gateway packages now support PostgreSQL SSL connections.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "**Plugin entity**: Added an optional `instance_name` field, which identifies a particular plugin entity.[#10077](https://github.com/Kong/kong/pull/10077): ",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Zipkin**: Added support for setting the durations of Kong phases as span tags through the configuration property `phase_duration_flavor`.[#9891](https://github.com/Kong/kong/pull/9891)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**HTTP Log**: The `headers` configuration parameter is now referenceable, which means it can be securely stored in a vault.[#9948](https://github.com/Kong/kong/pull/9948)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**AWS Lambda**: Added the configuration parameter `aws_imds_protocol_version`, which lets you select the IMDS protocol version. This option defaults to `v1` and can be set to `v2` to enable IMDSv2.[#9962](https://github.com/Kong/kong/pull/9962)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: This plugin can now be scoped to individual services, routes, and consumers.[#10096](https://github.com/Kong/kong/pull/10096)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**StatsD**: Added the `tag_style` configuration parameter, which allows the plugin to send metrics with [tags](https://github.com/prometheus/statsd_exporter#tagging-extensions). The parameter defaults to `nil`, which means that no tags are added to the metrics.[#10118](https://github.com/Kong/kong/pull/10118)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Session**, **OpenID Connect**, and **SAML**: These plugins now use `lua-resty-session` v4.0.0.\n\nThis update includes new session functionalities such as configuring audiences to manage multiple sessions in a single cookie, global timeout, and persistent cookies.\n\nDue to this update, there are also a number of deprecated and removed parameters in these plugins. See the invidividual plugin documentation for the full list of changed parameters in each plugin.\n\n- [Session changelog](/plugins/session/#changelog)\n- [OpenID Connect changelog](/plugins/openid-connect/#changelog)\n- [SAML changelog](/plugins/saml/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Session**, **OpenID Connect**, and **SAML**: [Session changelog](/plugins/session/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Session**, **OpenID Connect**, and **SAML**: [OpenID Connect changelog](/plugins/openid-connect/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Session**, **OpenID Connect**, and **SAML**: [SAML changelog](/plugins/saml/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**GraphQL Rate Limiting Advanced** and **Rate Limiting Advanced**: In hybrid and DB-less modes, these plugins now support `sync_rate = -1` with any strategy, including the default `cluster` strategy.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OPA**: This plugin can now handle custom messages from the OPA server.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Canary**: Added a default value for the `start` field in the canary plugin. If not set, the start time defaults to the current timestamp.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: Split the plugin compatibility table into a technical compatibility page.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: Updated the plugin compatibility information for more clarity on supported network protocols and on entity scopes.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: Revised docs for the following plugins to include examples: \n- [CORS](/plugins/cors/)\n- [File Log](/plugins/file-log/)\n- [HTTP Log](/plugins/http-log/)\n- [JWT Signer](/plugins/jwt-signer/)\n- [Key Auth](/plugins/key-auth/)\n- [OpenID Connect](/plugins/openid-connect/)\n- [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)\n- [SAML](/plugins/saml/)\n- [StatsD](/plugins/statsd/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [CORS](/plugins/cors/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [File Log](/plugins/file-log/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [HTTP Log](/plugins/http-log/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [JWT Signer](/plugins/jwt-signer/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [Key Auth](/plugins/key-auth/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [OpenID Connect](/plugins/openid-connect/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [SAML](/plugins/saml/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [StatsD](/plugins/statsd/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added back PostgreSQL `FLOOR` function when calculating `ttl`, so `ttl` is always returned as a whole integer.[#9960](https://github.com/Kong/kong/pull/9960)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Exposed PostreSQL connection pool configuration.[#9603](https://github.com/Kong/kong/pull/9603)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Nginx template** : The default charset is no longer added to the `Content-Type` response header when the upstream response doesn’t contain it.[#9905](https://github.com/Kong/kong/pull/9905)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where, after a valid declarative configuration was loaded, the configuration hash was incorrectly set to the value `00000000000000000000000000000000`.[#9911](https://github.com/Kong/kong/pull/9911)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Updated the batch queues module so that queues no longer grow without bounds if their consumers fail to process the entries. Instead, old batches are now dropped and an error is logged.[#10247](https://github.com/Kong/kong/pull/10247)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where `X-Kong-Upstream-Status` couldn’t be emitted when a response was buffered.[#10056](https://github.com/Kong/kong/pull/10056)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Improved the error message for invalid JWK entries.[#9904](https://github.com/Kong/kong/pull/9904)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where the `#` character wasn’t parsed correctly from environment variables and vault references.[10132](https://github.com/Kong/kong/pull/10132)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where control plane didn’t downgrade configuration for the AWS Lambda and Zipkin plugins for older versions of data planes.[#10346](https://github.com/Kong/kong/pull/10346)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue in DB-less mode, where validation of regex routes could be skipped when using a configuration format older than `3.0`.[#10348](https://github.com/Kong/kong/pull/10348)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where the forward proxy between the data plane and the control plane didn’t support telemetry port 8006.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fix the PostgreSQL mTLS error `bad client cert type`.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed issues with the Admin API’s `/licenses` endpoint: \n- The Enterprise license wasn’t being picked up by other nodes in a cluster.\n- Vitals routes weren’t accessible.\n- Vitals wasn’t showing up in hybrid mode.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed RBAC issues: \n- Fixed an issue where workspace admins couldn’t add rate limiting policies to consumer groups.\n- Fixed an issue where workspace admins in one workspace would have admin rights in other workspaces. Workspace admins are now correctly restricted to their own workspaces.\n- Fixed a role precedence issue with RBAC. RBAC rules involving deny (negative) rules now correctly take precedence over allow (non-negative) roles.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Zipkin**: Fixed an issue where the global plugin’s sample ratio overrode the route-specific ratio.[#9877](https://github.com/Kong/kong/pull/9877)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Zipkin**: Fixed an issue where `trace-id` and `parent-id` strings with decimals were not processed correctly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT**: This plugin now denies requests that have different tokens in the JWT token search locations.\n\nThanks Jackson ‘Che-Chun’ Kuo from Latacora for reporting this issue.[#9946](https://github.com/Kong/kong/pull/9946)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Datadog**,**OpenTelemetry**, and **StatsD**: Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.[#10052](https://github.com/Kong/kong/pull/10052) [#10044](https://github.com/Kong/kong/pull/10044)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Fixed non-compliances to specification: \n- For `http.uri` in spans, the field is now the full HTTP URI. [#10036](https://github.com/Kong/kong/pull/10036)\n- `http.status_code` is now present on spans for requests that have a status code. [#10160](https://github.com/Kong/kong/pull/10160)\n- `http.flavor` is now a string value, not a double. [#10160](https://github.com/Kong/kong/pull/10160)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: For `http.uri` in spans, the field is now the full HTTP URI. [#10036](https://github.com/Kong/kong/pull/10036)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: `http.status_code` is now present on spans for requests that have a status code. [#10160](https://github.com/Kong/kong/pull/10160)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: `http.flavor` is now a string value, not a double. [#10160](https://github.com/Kong/kong/pull/10160)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Fixed an issue with getting the traces of other formats, where the trace ID reported and propagated could be of incorrect length. This caused traces originating from Kong Gateway to incorrectly connect with the target service, causing Kong Gateway and the target service to submit separate traces.[#10332](https://github.com/Kong/kong/pull/10332)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OAuth2**: `refresh_token_ttl` is now limited to a range between `0` and `100000000` by the schema validator. Previously, numbers that were too large caused requests to fail.[#10068](https://github.com/Kong/kong/pull/10068)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect**: Fixed an issue where it was not possible to specify an anonymous consumer by name.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect**: Fixed an issue where the `authorization_cookie_httponly` and `session_cookie_httponly` parameters would always be set to `true`, even if they were configured as `false`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Matched the plugin’s behavior to the Rate Limiting plugin. When an `HTTP 429` status code was returned, rate limiting related headers were missed from the PDK module `kong.response.exit()`. This made the plugin incompatible with other Kong components like the Exit Transformer plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Response Transformer**: Fixed an issue where the `allow.json` configuration parameter couldn’t use nested JSON object and array syntax.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Mocking**: Fixed UUID pattern matching.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**SAML**: Fixed an issue where the `session_cookie_httponly` parameter would always be set to `true`, even if it was configured as `false`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Key Authentication Encrypted**: Fixed the `ttl` parameter. You can now set `ttl` for an encrypted key.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Key Authentication Encrypted**: Fixed an issue where this plugin didn’t accept tags.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Bumped`lua-resty-openssl` from 0.8.15 to 0.8.17",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `libexpat` from 2.4.9 to 2.5.0",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `kong-openid-connect` from v2.5.0 to v2.5.2",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `openssl` from 1.1.1q to 1.1.1t",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "`libyaml` is no longer built with Kong Gateway. System `libyaml` is used instead.",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `luarocks` from 3.9.1 to 3.9.2[#9942](https://github.com/Kong/kong/pull/9942)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `atc-router` from 1.0.1 to 1.0.5[#9925](https://github.com/Kong/kong/pull/9925)[#10143](https://github.com/Kong/kong/pull/10143)[#10208](https://github.com/Kong/kong/pull/10208)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-openssl` from 0.8.15 to 0.8.17[#9583](https://github.com/Kong/kong/pull/9583)[#10144](https://github.com/Kong/kong/pull/10144)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-kong-nginx-module` from 0.5.0 to 0.5.1[#10181](https://github.com/Kong/kong/pull/10181)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-session` from 3.10 to 4.0.0[#10199](https://github.com/Kong/kong/pull/10199)[#10230](https://github.com/Kong/kong/pull/10230)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `libxml` from 2.10.2 to 2.10.3 to resolve [CVE-2022-40303](https://nvd.nist.gov/vuln/detail/cve-2022-40303) and [CVE-2022-40304](https://nvd.nist.gov/vuln/detail/cve-2022-40304)",
+      "type": "dependency",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}

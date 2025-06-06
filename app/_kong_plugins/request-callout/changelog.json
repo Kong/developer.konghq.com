@@ -1,0 +1,51 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Added the `request-callout` plugin, which provides complex request augmentation and internal authentication.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.2": [
+    {
+      "message": "The plugin now logs the request URL, response code, and request latency (in milliseconds).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a callout response wasn’t available to response `by_lua` code.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where caching options modified via `by_lua` would apply to all subsequent callouts.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where callouts with the same name would be accepted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Query parameters specified via `callout.request.query` now correctly replace those in the callout URL.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where values in `custom` wouldn’t accept explicit null values for removal of fields.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where callout and upstream request body customizations weren’t performed when an empty request body was provided. Now, an empty JSON body is used and `Content-Type: application/json` is added to the request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Request Callout plugin failed with a timeout when `callouts.request.body.custom` was null and `callouts.request.headers.forward` was set to `true`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

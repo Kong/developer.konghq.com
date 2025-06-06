@@ -1,0 +1,63 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "Fixed to retain order of query arguments when hiding the credentials.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.7)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.0": [
+    {
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.7)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0": [
+    {
+      "message": "Added WWW-Authenticate headers to all 401 responses in the Key Auth plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.0": [
+    {
+      "message": "Enhance error responses for authentication failures in the Admin API",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "**Improved Plugin Documentation**: Revised docs for the following plugins to include examples: \n- [CORS](/plugins/cors/)\n- [File Log](/plugins/file-log/)\n- [HTTP Log](/plugins/http-log/)\n- [JWT Signer](/plugins/jwt-signer/)\n- [Key Auth](/plugins/key-auth/)\n- [OpenID Connect](/plugins/openid-connect/)\n- [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)\n- [SAML](/plugins/saml/)\n- [StatsD](/plugins/statsd/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [Key Auth](/plugins/key-auth/)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `key-auth` changed from `1003` to `1250`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ]
+}

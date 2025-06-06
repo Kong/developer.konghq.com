@@ -1,0 +1,65 @@
+{
+  "kong-ee": [
+    {
+      "message": "**Kong Manager:**\n- Fixed an issue where admins needed the specific `rbac/role` permission to edit RBAC roles. Now, admins can edit RBAC roles with the `/admins` permission.\n- Fixed an issue where the client certificate ID didn’t display properly in the upstream update form.\n- Fixed an issue in the service documents UI which allowed users to upload multiple documents. Since each service only supports one document, the documents would not display correctly. Uploading a new document now overrides the previous document.\n- Fixed an issue where the **New Workspace** button on the global workspace dashboard wasn’t clickable on the first page load.\n- Fixed an RBAC issue where the roles page listed deleted roles.\n- Removed New Relic from Kong Manager. Previously, `VUE_APP_NEW_RELIC_LICENSE_KEY` and`VUE_APP_SEGMENT_WRITE_KEY` were being exposed in Kong Manager with invalid values.\n- Fixed an RBAC issue where permissions applied to specific endpoints (for example, an individual service or route) were not reflected in the Kong Manager UI.\n- Fixed an issue with group to role mapping, where it didn’t support group names with spaces.\n- Fixed an issue with individual workspace dashboards, where right-clicking on **View All** and choosing “Open Link in New Tab” or “Copy Link” for services, routes, and plugins redirected to the default workspace and caused an `HTTP 404` error.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Dev Portal** : Fixed an issue where Dev Portal response examples weren’t rendered when media type was vendor-specific.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Targets with a weight of `0` are no longer included in health checks, and checking their status via the `upstreams/<upstream>/health` endpoint results in the status `HEALTHCHECK_OFF`. Previously, the `upstreams/<upstream>/health` endpoint was incorrectly reporting targets with `weight=0` as `HEALTHY`, and the health check was reporting the same targets as `UNDEFINED`.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the default `logrotate` configuration, which lacked permissions to access logs.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Kafka Upstream**: Fixed the `Bad Gateway` error that would occur when using the Kafka Upstream plugin with the configuration `producer_async=false`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Response Transformer**: Fixed an issue where the plugin couldn’t process string responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: Fixed an issue where the plugin was causing requests to silently fail on Kong Gateway data planes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Transformer**: Fixed an issue where empty arrays were being converted to empty objects. Empty arrays are now preserved.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Azure Functions**: Fixed an issue where calls made by this plugin would fail in the following situations: \n- The plugin was associated with a route that had no service.\n- The route’s associated service had a `path` value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Azure Functions**: The plugin was associated with a route that had no service.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Azure Functions**: The route’s associated service had a `path` value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**LDAP Auth Advanced**: Fixed an issue where operational attributes referenced by `group_member_attribute` weren’t returned in search query results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "kong-manager-ee": []
+}

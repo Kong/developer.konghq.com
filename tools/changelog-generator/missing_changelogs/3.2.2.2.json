@@ -1,0 +1,20 @@
+{
+  "kong-ee": [
+    {
+      "message": "Fixed the OpenResty `ngx.print` chunk encoding duplicate free buffer issue that led to the corruption of chunk-encoded response data.[#10816](https://github.com/Kong/kong/pull/10816)[#10824](https://github.com/Kong/kong/pull/10824)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the UDP socket leak in `resty.dns.client` caused by frequent DNS queries.[#10691](https://github.com/Kong/kong/pull/10691)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed the log flooding issue caused by low `sync_rate` settings.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "kong-manager-ee": []
+}

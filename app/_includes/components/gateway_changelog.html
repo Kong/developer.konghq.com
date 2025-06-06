@@ -1,0 +1,49 @@
+{% for version in changelog.versions %}
+<h2 id="{{version.number | slugify }}">{{version.number}}</h2>
+<p class="text-sm"><strong>Release date</strong> {{version.release_date}}</p>
+
+{% for type in version.entries_by_type %}
+<h3 id="{{ type[0] | slugify }}-{{ version.number | slugify }}">{{type[0] | capitalize | titleize}}</h3>
+
+{% for entries_by_scope in type[1].by_scope %}
+<h4 id="{{entries_by_scope[0] | downcase }}-{{forloop.parentloop.index}}"> {{entries_by_scope[0]}}</h4>
+
+{% if entries_by_scope[0] == 'Plugin' %}
+
+<ul>
+{% for plugin in entries_by_scope[1] %}
+{% if plugin[0] == '_no_link_' %}
+
+{% for entry in plugin[1] %}
+<li>{{entry.message | rstrip | markdownify}}</li>
+{% endfor %}
+
+{% else %}
+<li>
+<p>{{plugin[0] | markdownify}}</p>
+<ul>
+{% for entry in plugin[1] %}
+<li>{{entry.message | rstrip | markdownify}}</li>
+{% endfor %}
+</ul>
+</li>
+{% endif %}
+
+{% endfor %}
+</ul>
+
+{% else %}
+
+<ul>
+{% for entry in entries_by_scope[1] %}
+<li>{{entry.message | rstrip | markdownify}}</li>
+{% endfor %}
+</ul>
+
+{% endif %}
+
+{% endfor %}
+
+{% endfor %}
+
+{% endfor %}
