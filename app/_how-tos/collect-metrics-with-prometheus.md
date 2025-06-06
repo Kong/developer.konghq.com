@@ -10,6 +10,8 @@ related_resources:
     url: /plugins/prometheus/
   - text: Monitor metrics with Prometheus and Grafana with KIC
     url: /kubernetes-ingress-controller/observability/prometheus-grafana/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 
 works_on:
     - on-prem

@@ -218,6 +218,7 @@ sections:
 
   - title: Analytics and Monitoring
     items:
+      - path: /gateway/monitoring/
       - type: how-to
         products:
           - gateway
