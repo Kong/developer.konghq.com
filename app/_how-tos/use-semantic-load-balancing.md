@@ -89,7 +89,9 @@ faqs:
 
 ## Configure AI Proxy Advanced Plugin
 
-This configuration uses the AI Proxy Advanced plugin’s semantic load balancing to route requests. Queries are matched against provided model descriptions using vector embeddings to make sure each request goes to the model best suited for its content. Such a distribution helps improve response relevance while optimizing resource use an cost, while also improving response latency.
+This configuration uses the AI Proxy Advanced plugin’s semantic load balancing to route requests. Queries are matched against provided model descriptions using vector embeddings to make sure each request goes to the model best suited for its content. Such a distribution helps improve response relevance while optimizing resource use an cost, while also improving response latency. 
+
+The plugin also uses "temperature" to determine the level of creativity that the model uses in the response. Higher temperature values (closer to 1) increase randomness and creativity. Lower values (closer to 0) make outputs more focused and predictable.
 
 The table below outlines how different types of queries are semantically routed to specific models in this configuration:
 
@@ -122,6 +124,9 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+
+Configure the AI Proxy Advanced plugin to route requests to specific models:
+
 {% entity_examples %}
 entities:
   plugins:
@@ -140,7 +145,7 @@ entities:
           strategy: redis
           threshold: 0.75
           redis:
-            host: localhost
+            host: ${redis_host}
             port: 6379
         balancer:
           algorithm: semantic
@@ -183,23 +188,24 @@ entities:
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
+  redis_host:
+    value: $REDIS_HOST
 {% endentity_examples %}
 
 
 {:.info}
 > You can also consider alternative models and temperature settings to better suit your workload needs. For example, specialized code models for coding tasks, full GPT-4 for nuanced IT support, and lighter models with higher temperature for general or creative queries.
-> - **Technical coding (precision-focused):**- `code-davinci-002` with **temperature: 0*- — ensures consistent, deterministic code completions.
+> - **Technical coding (precision-focused):** `code-davinci-002` with *temperature: 0*. Ensures consistent, deterministic code completions.
 > - **IT support (balanced creativity):**
-  `gpt-4o` with **temperature: 0.3*- — allows helpful, slightly creative answers without being too loose.
+  `gpt-4o` with *temperature: 0.3* . Allows helpful, slightly creative answers without being too loose.
 > - **Catchall/general queries (more creative):**
-  `gpt-3.5-turbo` or `gpt-4o-mini` with **temperature: 0.7–1.0*- — encourages creative, varied responses for open-ended questions.
-> Note that higher temperature values (closer to 1) increase randomness and creativity; lower values (closer to 0) make outputs more focused and predictable.
+  `gpt-3.5-turbo` or `gpt-4o-mini` with *temperature: 0.7–1.0* Encourages creative, varied responses for open-ended questions.
 
 ## Test the configuration
 
-{% navtabs "Example prompts by model" %}
+Now, you can test the configuration by sending requests that should be routed to the correct model. 
 
-{% navtab "`gpt-3.5-turbo` (specialist in Python)" %}
+### Test Python coding and technical questions
 
 These prompts are focused on Python coding and technical questions, leveraging gpt-3.5-turbo’s strength in programming expertise. The response to all related questions should return `"model": "gpt-3.5-turbo"`.
 
@@ -225,9 +231,7 @@ body:
       content: How to implement a custom iterator class in Python
 {% endvalidation %}
 
-{% endnavtab %}
-
-{% navtab "`gpt-4o` (IT support questions)" %}
+### Test IT support questions
 
 These examples target common IT support questions where `gpt-4o`’s balanced creativity and token limit suit troubleshooting and configuration help. The response to all related questions should return `"model": "gpt-4o"`.
 
@@ -253,9 +257,7 @@ body:
       content: How do I configure two-factor authentication on my corporate laptop?
 {% endvalidation %}
 
-{% endnavtab %}
-
-{% navtab "`gpt-4o-mini` (Catchall model)" %}
+### Test general, catchall questions
 
 These catchall prompts reflect general or casual queries best handled by the lightweight `gpt-4o-mini` model. The response to all related questions should return `"model": "gpt-4o-mini"`.
 
@@ -281,16 +283,13 @@ body:
       content: What is doppelganger effect?
 {% endvalidation %}
 
-{% endnavtab %}
-
-{% endnavtabs %}
 
 
 ## Enforce governance and cost usage with AI Prompt Guard plugin
 
 We can reinforce our load balancing strategy using the AI Prompt Guard plugin. It runs early in the request lifecycle to inspect incoming prompts before any model execution or token consumption occurs.
 
-The AI Prompt Guard plugin blocks prompts that match dangerous or high-risk patterns. This prevents misuse, reduces token waste, and enforces governance policies up front—before any calls to embeddings or LLMs. All requests that match the below patterns will return `404` HTTP code in response:
+The AI Prompt Guard plugin blocks prompts that match dangerous or high-risk patterns. This prevents misuse, reduces token waste, and enforces governance policies up front, before any calls to embeddings or LLMs. All requests that match the below patterns will return a `404` HTTP code in the response:
 
 <!-- vale off -->
 {% table %}

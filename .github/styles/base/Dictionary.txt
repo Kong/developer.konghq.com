@@ -831,7 +831,7 @@ untrusted
 untyped
 unvetted
 unversioned
-unwated
+unwanted
 updated_at
 upsert
 upstream
