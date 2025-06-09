@@ -29,6 +29,12 @@ related_resources:
 works_on:
   - on-prem
   - konnect
+faqs:
+  - q: When did OpenTelemetry replace the Granular Tracing feature?
+    a: |
+      Granular Tracing was removed from {{site.base_gateway}} starting in 3.7,
+      and configurations like `tracing = on` are no longer available. Instead, use the
+      OpenTelemetry tracing ([`tracing_instrumentations`](/gateway/configuration/#tracing-instrumentations)) described on this page.
 ---
 
 OpenTelemetry tracing is now the standard for distributed tracing. Use the OpenTelemetry tracing guidance on this page to set up tracing in your environment.
