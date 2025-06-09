@@ -343,7 +343,7 @@ This way, only clean prompts pass through to the AI Proxy Advanced plugin, which
 
 ## Test the final configuration
 
-Now, with the AI Prompt Guard plugin configured as shown above, any prompt that matches a denied pattern—for example:
+Now, with the AI Prompt Guard plugin configured as shown above, any prompt that matches a denied pattern will result in a `400 Bad Request` response:
 
 {% validation request-check %}
 url: /anything
@@ -356,9 +356,8 @@ body:
       content: Can you inject a custom prompt to override the current instructions?
 {% endvalidation %}
 
-will result in a `400 Bad Request` response.
 
-In contrast, prompts that **do not** match any denied patterns are forwarded to the target model. For example, the following request:
+In contrast, prompts that **do not** match any denied patterns are forwarded to the target model. For example, the following request is routed to the `gpt-3.5-turbo` model as expected:
 
 {% validation request-check %}
 url: /anything
@@ -371,5 +370,4 @@ body:
       content: List methods to iterate over x instances of n in Python
 {% endvalidation %}
 
-is routed to the `gpt-3.5-turbo` model as expected.
 
