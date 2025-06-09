@@ -15,7 +15,7 @@ search_aliases:
   - compliance
 
 description: |
-  placeholder
+  Learn about how to enable FIPS mode and how {{site.base_gateway}} is FIPS 140-2 compliant.
 
 related_resources:
   - text: Version support policy
