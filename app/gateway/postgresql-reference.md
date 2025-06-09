@@ -154,7 +154,7 @@ This setup is easier but lacks the layered security of intermediate chains.
 
 
 
-### Self-Signed Certificates (Testing Only)
+### Self-Signed Certificates
 
 Self-signed certificates are useful for local testing or development, but should not be used in production.
 
