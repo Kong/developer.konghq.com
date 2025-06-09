@@ -1,5 +1,5 @@
 ---
-title: Saving LLM usage costs with AI Proxy Advanced load balancing
+title: Saving LLM usage costs with AI Proxy Advanced semantic load balancing
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -46,31 +46,8 @@ prereqs:
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
     - title: Redis stack
-      content: |
-          To complete this tutorial, you must have a [Redis stack](https://redis.io/docs/latest/) configured in your environment.
-          Set your Redis host as an environment variable:
-          ```sh
-          export DECK_REDIS_HOST='YOUR-REDIS-HOST'
-          ```
+      include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
-    - title: PgVector (optional)
-      content: |
-        Test
-      icon_url: /assets/icons/database.svg
-    - title: Langchain splitters
-      content: |
-        To complete this tutorial, you'll need **Python (version 3.7 or later)*- and `pip` installed on your machine. You can verify it by running:
-
-        ```bash
-        python3
-        python3 -m pip --version
-         ```
-
-        Once that's set up, install the required packages by running the following command in your terminal:
-        ```
-        python3 -m pip install langchain langchain_text_splitters requests
-        ```
-      icon_url: /assets/icons/python.svg
   entities:
     services:
         - example-service
@@ -89,19 +66,19 @@ cleanup:
 faqs:
   - q: How should I balance temperature across models?
     a: |
-      Use low temperature (e.g., `0`) for deterministic outputs like code or calculations. Moderate values (e.g., `0.3`) are good for IT help or troubleshooting. Use higher values (e.g., `1.0`) for creative or open-ended prompts.
+      Use low temperature (for example, `0`) for deterministic outputs like code or calculations. Moderate values (for example, `0.3`) are good for IT help or troubleshooting. Use higher values (for example, `1.0`) for creative or open-ended prompts.
 
-  - q: What’s a good default model for catchall requests?
+  - q: What’s a good default model for CATCHALL requests?
     a: |
       `gpt-4o-mini` is a good choice for general-purpose fallback. It’s fast, cost-effective, and can handle a wide variety of queries with creative flair.
 
   - q: How do I fine-tune model routing for semantic matching?
     a: |
-      Adjust your `threshold` under `vectordb` config. A higher threshold (e.g., `0.75`) routes only stronger matches to specific targets, while a lower value (e.g., `0.6`) allows looser matches.
+      Adjust your `threshold` under `vectordb` config. A higher threshold (for example, `0.75`) routes only stronger matches to specific targets, while a lower value (for example, `0.6`) allows looser matches.
 
   - q: Should I assign different token limits per model?
     a: |
-      Yes. Set higher `max_tokens` (e.g., `826`) for complex or technical responses. Use smaller values (e.g., `256`) for concise or cost-sensitive outputs.
+      Yes. Set higher `max_tokens` (for example, `826`) for complex or technical responses. Use smaller values (for example, `256`) for concise or cost-sensitive outputs.
 
   - q: Can temperature affect which model is selected?
     a: |
@@ -135,7 +112,7 @@ rows:
   - route: Queries about Python or technical coding
     model: gpt-3.5-turbo
     description: |
-      Requests semantically matched to the "Specialist in python" category.
+      Requests semantically matched to the "Expert in python programming" category.
       Handles complex coding or technical questions with deterministic output (temperature 0).
   - route: IT support related questions
     model: gpt-4o
@@ -170,8 +147,8 @@ entities:
           strategy: redis
           threshold: 0.75
           redis:
-            host: host.docker.internal
-            port: 16379
+            host: localhost
+            port: 6379
         balancer:
           algorithm: semantic
         targets:
@@ -185,7 +162,7 @@ entities:
               options:
                 max_tokens: 826
                 temperature: 0
-            description: Expert in Python programming and code optimization. Handles technical programming questions and advanced scripting.
+            description: Expert in Python programming.
 
           - route_type: llm/v1/chat
             auth:
@@ -197,7 +174,7 @@ entities:
               options:
                 max_tokens: 512
                 temperature: 0.3
-            description: IT support assistant for corporate environments. Handles email, VPN, 2FA, device setup, and troubleshooting.
+            description: All IT support questions.
 
           - route_type: llm/v1/chat
             auth:
@@ -209,7 +186,7 @@ entities:
               options:
                 max_tokens: 256
                 temperature: 1.0
-            description: General-purpose assistant for open-ended, creative, or uncategorized queries.
+            description: CATCHALL
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
@@ -223,16 +200,15 @@ variables:
   `gpt-4o` with **temperature: 0.3*- — allows helpful, slightly creative answers without being too loose.
 > - **Catchall/general queries (more creative):**
   `gpt-3.5-turbo` or `gpt-4o-mini` with **temperature: 0.7–1.0*- — encourages creative, varied responses for open-ended questions.
-> Higher temperature values (closer to 1) increase randomness and creativity; lower values (closer to 0) make outputs more focused and predictable.
+> Note that higher temperature values (closer to 1) increase randomness and creativity; lower values (closer to 0) make outputs more focused and predictable.
 
 ## Test the configuration
-
 
 {% navtabs "Example prompts by model" %}
 
 {% navtab "`gpt-3.5-turbo` (specialist in Python)" %}
 
-These prompts are focused on Python coding and technical questions, leveraging gpt-3.5-turbo’s strength in programming expertise.
+These prompts are focused on Python coding and technical questions, leveraging gpt-3.5-turbo’s strength in programming expertise. The response to all related questions should return `"model": "gpt-3.5-turbo"`.
 
 {% validation request-check %}
 url: /anything
@@ -242,7 +218,7 @@ headers:
 body:
   messages:
     - role: user
-      content: How do I write a Python function?
+      content: How do I write a Python function to calculate the factorial of a number?
 {% endvalidation %}
 
 {% validation request-check %}
@@ -253,25 +229,14 @@ headers:
 body:
   messages:
     - role: user
-      content: Optimize this Python code snippet for speed
-{% endvalidation %}
-
-{% validation request-check %}
-url: /anything
-headers:
-- 'Content-Type: application/json'
-- 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-  - role: user
-    content: How to implement a custom iterator class in Python
+      content: How to implement a custom iterator class in Python
 {% endvalidation %}
 
 {% endnavtab %}
 
 {% navtab "`gpt-4o` (IT support questions)" %}
 
-These examples target common IT support questions where `gpt-4o`’s balanced creativity and token limit suit troubleshooting and configuration help.
+These examples target common IT support questions where `gpt-4o`’s balanced creativity and token limit suit troubleshooting and configuration help. The response to all related questions should return `"model": "gpt-4o"`.
 
 {% validation request-check %}
 url: /anything
@@ -303,14 +268,14 @@ headers:
 body:
   messages:
     - role: user
-      content: How do I configure two-factor authentication on Windows 10 for our company network?
+      content: How do I configure two-factor authentication on my corporate laptop?
 {% endvalidation %}
 
 {% endnavtab %}
 
 {% navtab "`gpt-4o-mini` (Catchall model)" %}
 
-These catchall prompts reflect general or casual queries best handled by the lightweight `gpt-4o-mini` model.
+These catchall prompts reflect general or casual queries best handled by the lightweight `gpt-4o-mini` model. The response to all related questions should return `"model": "gpt-4o-mini"`.
 
 {% validation request-check %}
 url: /anything
@@ -320,7 +285,7 @@ headers:
 body:
   messages:
     - role: user
-      content: What’s the weather like today?
+      content: What is qubit?
 {% endvalidation %}
 
 {% validation request-check %}
@@ -331,20 +296,12 @@ headers:
 body:
   messages:
     - role: user
-      content: Write a short poem about the beauty of autumn.
-{% endvalidation %}
-
-{% validation request-check %}
-url: /anything
-headers:
-- 'Content-Type: application/json'
-- 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: Can you suggest some tips for improving creativity?
+      content: How does hail form?
 {% endvalidation %}
 
 {% endnavtab %}
 
 {% endnavtabs %}
+
+{:.info}
+> To optimize model usage and control input quality, combine semantic load balancing with the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin.
