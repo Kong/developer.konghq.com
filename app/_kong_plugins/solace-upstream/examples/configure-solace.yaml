@@ -1,0 +1,48 @@
+description: |
+  Configure the plugin to connect to a Solace broker using basic authentication, 
+  and send messages to multiple queues with persistent delivery. 
+  This example includes a Lua function to transform message content before sending.
+
+title: 'Send messages to Solace queues with persistent delivery'
+
+weight: 900
+
+variables:
+  host:
+    description: 'The URI of your Solace broker'
+    value: tcp://192.168.88.20:55555
+  username:
+    description: 'Username for authenticating with Solace'
+    value: admin
+  password:
+    description: 'Password for authenticating with Solace'
+    value: admin
+  queue1:
+    description: 'First destination queue name'
+    value: test
+  queue2:
+    description: 'Second destination queue name'
+    value: test2
+
+config:
+  session:
+    host: ${host}
+    vpn_name: default
+    authentication:
+      scheme: BASIC
+      username: ${username}
+      password: ${password}
+  message:
+    destinations:
+      - name: ${queue1}
+        type: QUEUE
+      - name: ${queue2}
+        type: QUEUE
+    delivery_mode: PERSISTENT
+    default_content: hello
+    functions:
+      - "return string.upper(message)"
+
+tools:
+  - deck
+  - admin-api
