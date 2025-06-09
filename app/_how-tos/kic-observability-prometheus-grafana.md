@@ -7,6 +7,8 @@ related_resources:
     url: /kubernetes-ingress-controller/observability/prometheus/
   - text: Prometheus plugin
     url: /plugins/prometheus/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 
 permalink: /kubernetes-ingress-controller/observability/prometheus-grafana/
 breadcrumbs:

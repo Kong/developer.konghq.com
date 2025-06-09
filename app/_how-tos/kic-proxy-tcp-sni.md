@@ -23,7 +23,7 @@ entities: []
 
 tldr:
   q: How do I route TCP traffic with {{ site.kic_product_name }}?
-  a: Create a `TCPRoute` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/). TLS passthrough is _not_ supported using `TCPIngress`.
+  a: Create a `TLSRoute` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/). TLS passthrough is _not_ supported using `TCPIngress`.
 
 prereqs:
   kubernetes:

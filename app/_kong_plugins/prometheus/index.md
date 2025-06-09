@@ -10,6 +10,8 @@ description: 'Expose metrics related to {{site.base_gateway}} and proxied upstre
 related_resources:
   - text: Monitor metrics with Prometheus and Grafana with KIC
     url: /kubernetes-ingress-controller/observability/prometheus-grafana/
+  - text: Collect {{site.base_gateway}} metrics with the Prometheus plugin
+    url: /how-to/collect-metrics-with-prometheus/
   - text: Prometheus metrics reference for KIC
     url: /kubernetes-ingress-controller/observability/prometheus/
 
@@ -49,7 +51,7 @@ exposition format, which can be scraped by a Prometheus Server.
 
 Metrics tracked by this plugin are available on both the [Admin API](/api/gateway/admin-ee/) and [Status API](/api/gateway/status/#/paths/metrics/get) at the `/metrics`
 endpoint. The URL to those APIs will be specific to your
-installation. See [Accessing the metrics](#accessing-the-metrics) for more information.
+installation. If you're using {{site.konnect_short_name}} you **must** use the Status API for metrics. See [Accessing the metrics](#accessing-the-metrics) for more information.
 
 This plugin records and exposes metrics at the node level. Your Prometheus
 server will need to discover all {{site.base_gateway}} nodes via a Service discovery mechanism,
@@ -135,7 +137,7 @@ allow access to the `/metrics` endpoint to Prometheus:
 
 1. If the [Status API](/gateway/configuration/#status-listen)
    is enabled, then its `/metrics` endpoint can be used.
-   This is the preferred method.
+   This is the preferred method. If you're using {{site.konnect_short_name}} you **must** use the Status API for metrics.
 
 1. The `/metrics` endpoint is also available on the [Admin API](/api/gateway/admin-ee/), which can be used
    if the Status API is not enabled. This endpoint is unavailable
