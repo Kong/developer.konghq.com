@@ -37,7 +37,7 @@ tags:
 
 tldr:
   q: How do I use the AI Proxy Advanced plugin with OpenAI to save costs?
-  a: Set up the Gateway Service and Route, then enable the AI Proxy Advanced plugin. Configure it with OpenAI API credentials, use semantic routing with embeddings and Redis vector DB, and define multiple target models—specializing on task type—to optimize usage and reduce expenses. Then, block unwated and dangerous prompts using the AI Prompt Guard plugin.
+  a: Set up the Gateway Service and Route, then enable the AI Proxy Advanced plugin. Configure it with OpenAI API credentials, use semantic routing with embeddings and Redis vector DB, and define multiple target models—specializing on task type—to optimize usage and reduce expenses. Then, block unwanted and dangerous prompts using the AI Prompt Guard plugin.
 
 tools:
   - deck
