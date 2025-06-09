@@ -89,9 +89,9 @@ faqs:
 
 ## Configure AI Proxy Advanced Plugin
 
-This configuration uses the AI Proxy Advanced plugin’s semantic load balancing to intelligently route requests. Queries are matched against model descriptions using vector embeddings, ensuring each request goes to the model best suited for its content. This helps improve response relevance while optimizing resource use and cost.
+This configuration uses the AI Proxy Advanced plugin’s semantic load balancing to route requests. Queries are matched against provided model descriptions using vector embeddings to make sure each request goes to the model best suited for its content. Such a distribution helps improve response relevance while optimizing resource use an cost, while also improving response latency.
 
-The table below outlines how different types of queries are semantically routed to specific models, optimizing response quality and cost efficiency.
+The table below outlines how different types of queries are semantically routed to specific models in this configuration:
 
 <!-- vale off -->
 
