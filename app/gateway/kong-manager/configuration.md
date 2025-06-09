@@ -77,6 +77,42 @@ This example uses the default Kong Manager path and URL.
 
 To verify that Kong Manager is running, access it on port `8002` at the default URL: [http://localhost:8002/workspaces](http://localhost:8002/workspaces).
 
+## Kong Manager networking
+
+By default, Kong Manager starts up without authentication (see
+[`admin_gui_auth`]), and it assumes that the Admin API is available
+on [port 8001](/gateway/{{page.release}}/production/networking/default-ports/) of the same host that serves Kong Manager.
+
+Here are some common configuration scenarios for Kong Manager:
+
+{% table %}
+columns:
+  - title: Use case
+    key: use-case
+  - title: Configuration
+    key: configuration
+rows:
+  - use-case: Serving Kong Manager from a dedicated Kong node
+    configuration: |
+      When Kong Manager is on a dedicated Kong node, it must make
+      external calls to the Admin API. Set [`admin_api_uri`] to the
+      location of your Admin API.
+  - use-case: Securing Kong Manager through an authentication plugin
+    configuration: |
+      When Kong Manager is secured through an authentication plugin
+      and is _not_ on a dedicated node, it makes calls to the Admin API on
+      the same host. By default, the Admin API listens on ports 8001 and
+      8444 on localhost. Change [`admin_listen`] if necessary, or set
+      [`admin_api_uri`].
+      > **Important**: If you need to expose the `admin_listen` port to the internet in a production environment, 
+      [secure it with authentication](/gateway/{{include.release}}/production/running-kong/secure-admin-api/).
+  - use-case: Securing Kong Manager and serving it from a dedicated node
+    configuration: |
+      When Kong Manager is **secured and served from a dedicated node**,
+      set [`admin_api_uri`] to the location of the Admin API.
+{% endtable %}
+
+
 
 ## Multiple domains {% new_in 3.9 %}
 To configure Kong Manager to be accessible from multiple domains, you can list the domains as comma-separated values in the [`admin_gui_url`](/gateway/configuration/#admin_gui_url) parameter in your Kong configuration. For example:
