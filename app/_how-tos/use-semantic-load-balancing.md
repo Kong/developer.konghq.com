@@ -6,6 +6,8 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
+  - text: AI Prompt Guard
+    url: /plugins/ai-prompt-guard/
 
 description: Configure the AI Proxy Advanced plugin to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
 
@@ -22,6 +24,7 @@ min_version:
 
 plugins:
   - ai-proxy-advanced
+  - ai-prompt-guard
 
 entities:
   - service
@@ -34,8 +37,7 @@ tags:
 
 tldr:
   q: How do I use the AI Proxy Advanced plugin with OpenAI to save costs?
-  a: Set up the Gateway Service and Route, then enable the AI Proxy Advanced plugin. Configure it with OpenAI API credentials, use semantic routing with embeddings and Redis vector DB, and define multiple target models—specializing on task type—to optimize usage and reduce expenses.
-
+  a: Set up the Gateway Service and Route, then enable the AI Proxy Advanced plugin. Configure it with OpenAI API credentials, use semantic routing with embeddings and Redis vector DB, and define multiple target models—specializing on task type—to optimize usage and reduce expenses. Then, block unwated and dangerous prompts using the AI Prompt Guard plugin.
 
 tools:
   - deck
@@ -118,8 +120,6 @@ rows:
       Catchall for all other queries not strongly matched to other categories.
       Prioritizes cost efficiency and creative responses (temperature 1.0).
 {% endtable %}
-
-
 <!-- vale on -->
 
 {% entity_examples %}
@@ -249,17 +249,6 @@ headers:
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
 body:
   messages:
-  - role: user
-    content: My VPN keeps disconnecting; help me troubleshoot it?
-{% endvalidation %}
-
-{% validation request-check %}
-url: /anything
-headers:
-- 'Content-Type: application/json'
-- 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
     - role: user
       content: How do I configure two-factor authentication on my corporate laptop?
 {% endvalidation %}
@@ -296,5 +285,60 @@ body:
 
 {% endnavtabs %}
 
-{:.info}
-> To optimize model usage and control input quality, combine semantic load balancing with the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin.
+
+## Enforce governance and cost usage with AI Prompt Guard plugin
+
+We can reinforce our load balancing strategy using the AI Prompt Guard plugin. It runs early in the request lifecycle to inspect incoming prompts before any model execution or token consumption occurs.
+
+The AI PRompt Guard plugin blocks prompts that match dangerous or high-risk patterns. This prevents misuse, reduces token waste, and enforces governance policies up front—before any calls to embeddings or LLMs.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Category
+    key: category
+  - title: Pattern Summary
+    key: pattern
+rows:
+  - category: Prompt injection
+    pattern: |
+      ignore, override, forget, or inject paired with instructions, policy, or context
+  - category: Malicious code
+    pattern: |
+      Includes eval, exec, os, rm, shutdown, etc.
+  - category: Sensitive info requests
+    pattern: |
+     Matches password, token, api_key, credential, etc.
+  - category: Model probing
+    pattern: |
+      Queries model internals like weights, training data, or source code
+  - category: Persona hijacking
+    pattern: |
+      Attempts to act as, pretend to be, or simulate a role
+  - category: Unsafe content
+    pattern: |
+      Mentions of self-harm, suicide, exploit, or malware
+{% endtable %}
+
+<!-- vale on -->
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-prompt-guard
+      config:
+        deny_patterns:
+        - ".*(ignore|bypass|override|disregard|skip).*(instructions|rules|policy|previous|above|below).*"
+        - ".*(forget|delete|remove).*(previous|above|below|instructions|context).*"
+        - ".*(inject|insert|override).*(prompt|command|instruction).*"
+        - ".*(ignore|disable).*(safety|filter|guard|policy).*"
+        - ".*(eval|exec|system|os|bash|shell|cmd|command).*"
+        - ".*(shutdown|restart|format|delete|drop|kill|remove|rm|sudo).*"
+        - ".*(password|secret|token|api[_-]?key|credential|private key).*"
+        - ".*(model weights|architecture|training data|internal|source code|debug info).*"
+        - ".*(act as|pretend to be|become|simulate|impersonate).*"
+        - ".*(self-harm|suicide|illegal|hack|exploit|malware|virus).*"
+{% endentity_examples %}
+
+
+This way, only clean prompts pass through to the AI Proxy Advanced plugin, which then embeds the input and semantically routes it to the most appropriate OpenAI model based on intent and similarity.
