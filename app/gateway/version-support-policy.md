@@ -134,7 +134,7 @@ Kong supports the following versions of {{site.base_gateway}}:
 {% endfor %}
 {% endnavtabs %}
 
-For information about FIPS, see the [Kong compliance page](https://konghq.com/compliance).
+For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
 ## Marketplaces
 
 {{site.base_gateway}} is available through the following marketplaces:
