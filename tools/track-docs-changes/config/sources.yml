@@ -70,6 +70,7 @@ app/_gateway_entities/rbac.md:
   - app/_src/gateway/production/access-control/start-securely.md
   - app/_src/gateway/production/access-control/register-admin-api.md
   - app/_src/gateway/kong-manager/auth/rbac/index.md
+  - app/_src/gateway/kong-manager/networking.md
 app/_gateway_entities/group.md:
   - app/_src/gateway/kong-manager/auth/ldap/service-directory-mapping.md
 
@@ -1128,6 +1129,7 @@ app/ai-gateway/ai-audit-log-reference.md:
 app/gateway/kong-manager/configuration.md:
   - app/_src/gateway/kong-manager/enable.md
   - app/_src/gateway/kong-manager/troubleshoot.md
+  - app/_src/gateway/kong-manager/networking.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
 app/ai-gateway/streaming.md:

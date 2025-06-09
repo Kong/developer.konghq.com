@@ -80,8 +80,8 @@ To verify that Kong Manager is running, access it on port `8002` at the default 
 ## Kong Manager networking
 
 By default, Kong Manager starts up without authentication (see
-[`admin_gui_auth`]), and it assumes that the Admin API is available
-on [port 8001](/gateway/{{page.release}}/production/networking/default-ports/) of the same host that serves Kong Manager.
+[`admin_gui_auth`](/gateway/configuration/#admin-gui-auth)), and it assumes that the Admin API is available
+on [port 8001](/gateway/network/#admin-api-ports) of the same host that serves Kong Manager.
 
 Here are some common configuration scenarios for Kong Manager:
 
@@ -92,27 +92,77 @@ columns:
   - title: Configuration
     key: configuration
 rows:
-  - use-case: Serving Kong Manager from a dedicated Kong node
+  - use-case: Serving Kong Manager from a dedicated {{site.base_gateway}} node
     configuration: |
-      When Kong Manager is on a dedicated Kong node, it must make
-      external calls to the Admin API. Set [`admin_api_uri`] to the
+      When Kong Manager is on a dedicated {{site.base_gateway}} node, it must make
+      external calls to the Admin API. Set [`admin-gui-api-url`](/gateway/configuration/#admin-gui-api-url) to the
       location of your Admin API.
   - use-case: Securing Kong Manager through an authentication plugin
     configuration: |
       When Kong Manager is secured through an authentication plugin
       and is _not_ on a dedicated node, it makes calls to the Admin API on
       the same host. By default, the Admin API listens on ports 8001 and
-      8444 on localhost. Change [`admin_listen`] if necessary, or set
-      [`admin_api_uri`].
+      8444 on localhost. Change [`admin_listen`](/gateway/configuration/#admin-listen) if necessary, or set
+      [`admin-gui-api-url`](/gateway/configuration/#admin-gui-api-url).
       > **Important**: If you need to expose the `admin_listen` port to the internet in a production environment, 
-      [secure it with authentication](/gateway/{{include.release}}/production/running-kong/secure-admin-api/).
+      [secure it with authentication](/gateway/secure-the-admin-api/).
   - use-case: Securing Kong Manager and serving it from a dedicated node
     configuration: |
       When Kong Manager is **secured and served from a dedicated node**,
-      set [`admin_api_uri`] to the location of the Admin API.
-{% endtable %}
+      set [`admin-gui-api-url`](/gateway/configuration/#admin-gui-api-url) to the location of the Admin API.
+{% endtable %}                                             
 
+## Enable authentication
 
+To enable authentication for Kong Manager, configure the following properties (`admin_gui_auth_conf` is optional and `enforce_rbac` must be set to `on`):
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: admin_gui_auth
+  - name: admin_gui_auth_conf
+  - name: admin_gui_session_conf
+  - name: enforce_rbac
+{% endkong_config_table %}
+<!--vale on-->
+
+{:.warning}
+> **Important:** When Kong Manager authentication is enabled, [RBAC](/gateway/entities/rbac/) must be enabled to enforce authorization rules. Otherwise, anyone who can log in
+to Kong Manager can perform any operation available on the Admin API.
+
+### TLS Certificates
+
+By default, if Kong Manager’s URL is accessed over HTTPS _without_ a certificate issued by a CA, it will
+receive a self-signed certificate that modern web browsers will not trust. This prevents the application
+from accessing the Admin API.
+
+To serve Kong Manager over HTTPS, use a trusted certificate authority to issue TLS certificates
+and have the resulting `.crt` and `.key` files ready for the next step.
+
+1. Move `.crt` and `.key` files into the desired directory of the {{site.base_gateway}} node.
+
+1. Point [`admin_gui_ssl_cert`](/gateway/configuration/#admin-gui-ssl-cert) and [`admin_gui_ssl_cert_key`](/gateway/configuration/#admin-gui-ssl-cert-key) at the absolute paths of the certificate and key.
+   ```
+   admin_gui_ssl_cert = ./test.crt
+   admin_gui_ssl_cert_key = ./test.key
+   ```
+1. Ensure that `admin_gui_url` is prefixed with `https` to use TLS. For example:
+   ```
+   admin_gui_url = https://YOUR-DOMAIN.com:8445
+   ```
+
+### Using https://localhost
+
+If you're serving Kong Manager on `localhost`, you might want to use HTTP as the protocol. If you're also using RBAC,
+set `cookie_secure=false` in [`admin_gui_session_conf`](/gateway/configuration/#admin-gui-session-conf). Creating TLS certificates for `localhost` requires more effort and configuration, so you should only use TLS when:
+
+* Data is in transit between hosts
+* You're testing an application with [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) (which Kong Manager doesn't use)
+
+External CAs cannot provide a certificate since no one uniquely owns `localhost`, nor is it rooted in a top-level
+domain (for example, `.com`, `.org`). Likewise, self-signed certificates won't be trusted in modern browsers. Instead, you must use a private CA that allows you to issue your own certificates. Also, ensure that the SSL state
+is cleared from the browser after testing to prevent stale certificates from interfering with future access to
+`localhost`.
 
 ## Multiple domains {% new_in 3.9 %}
 To configure Kong Manager to be accessible from multiple domains, you can list the domains as comma-separated values in the [`admin_gui_url`](/gateway/configuration/#admin_gui_url) parameter in your Kong configuration. For example:
