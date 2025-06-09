@@ -8,6 +8,7 @@ metadata:
     - konnect
   tags:
     - kafka
+    - solace
     - events
   
 rows:
@@ -79,6 +80,10 @@ rows:
         - type: plugin
           config:
             slug: confluent-consume
+      - blocks:
+        - type: plugin
+          config:
+            slug: solace-upstream
   - header:
       type: h2
       text: Get started with {{site.event_gateway_short}} (Beta)
