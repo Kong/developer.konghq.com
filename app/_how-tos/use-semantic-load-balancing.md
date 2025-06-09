@@ -238,8 +238,8 @@ headers:
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
 body:
   messages:
-  - role: user
-    content: How do I reset my corporate email password?
+    - role: user
+      content: How can I configure my corporate VPN?
 {% endvalidation %}
 
 {% validation request-check %}
