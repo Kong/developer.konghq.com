@@ -83,13 +83,6 @@ faqs:
   - q: Can temperature affect which model is selected?
     a: |
       Indirectly. Temperature influences output style and can help distinguish models during embedding training or similarity scoring. Use it to align behavior with intent categories.
-
-  - q: What’s the best use case for each model?
-    a: |
-      * `gpt-3.5-turbo`: Technical queries, deterministic logic, Python help
-      * `gpt-4o`: IT support, configuration steps, guided troubleshooting
-      * `gpt-4o-mini`: Catchall requests, creative writing, casual help
-
 ---
 
 ## Configure AI Proxy Advanced Plugin
