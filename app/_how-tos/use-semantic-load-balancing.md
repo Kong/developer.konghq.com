@@ -297,27 +297,27 @@ The AI Prompt Guard plugin blocks prompts that match dangerous or high-risk patt
 columns:
   - title: Category
     key: category
-  - title: Pattern Summary
+  - title: Pattern summary
     key: pattern
 rows:
   - category: Prompt injection
     pattern: |
-      ignore, override, forget, or inject paired with instructions, policy, or context
+      Ignore, override, forget, or inject paired with instructions, policy, or context.
   - category: Malicious code
     pattern: |
-      Includes eval, exec, os, rm, shutdown, etc.
-  - category: Sensitive info requests
+      Includes eval, exec, os, rm, shutdown, and others.
+  - category: Sensitive data requests
     pattern: |
-     Matches password, token, api_key, credential, etc.
+     Matches password, token, api_key, credential, and others.
   - category: Model probing
     pattern: |
-      Queries model internals like weights, training data, or source code
+      Queries model internals like weights, training data, or source code.
   - category: Persona hijacking
     pattern: |
-      Attempts to act as, pretend to be, or simulate a role
+      Attempts to act as, pretend to be, or simulate a role.
   - category: Unsafe content
     pattern: |
-      Mentions of self-harm, suicide, exploit, or malware
+      Mentions of self-harm, suicide, exploit, or malware.
 {% endtable %}
 
 <!-- vale on -->
