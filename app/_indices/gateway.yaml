@@ -121,6 +121,7 @@ sections:
       - path: /gateway/entities/key/
       - path: /gateway/entities/key-set/
       - path: /gateway/audit-logs/
+      - path: /gateway/fips-support/
       - type: how-to
         products:
           - gateway
