@@ -278,7 +278,7 @@ headers:
 body:
   messages:
     - role: user
-      content: How does hail form?
+      content: What is doppelganger effect?
 {% endvalidation %}
 
 {% endnavtab %}
