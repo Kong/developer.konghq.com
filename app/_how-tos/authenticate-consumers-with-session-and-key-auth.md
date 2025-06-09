@@ -156,6 +156,9 @@ headers:
   - 'apikey: hello_world'
 message: OK
 status_code: 200
+extract_headers:
+  - name: Set-Cookie
+    variable: COOKIE_HEADER
 {% endvalidation %}
 <!--vale on-->
 
@@ -171,7 +174,7 @@ Use your session token in the request, but don't provide the API key. Even witho
 {% validation request-check %}
 url: /anything
 headers:
-  - 'cookie: "$COOKIE_HEADER"'
+  - 'cookie: $COOKIE_HEADER'
 message: OK
 status_code: 200
 {% endvalidation %}
