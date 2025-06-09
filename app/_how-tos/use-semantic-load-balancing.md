@@ -290,7 +290,7 @@ body:
 
 We can reinforce our load balancing strategy using the AI Prompt Guard plugin. It runs early in the request lifecycle to inspect incoming prompts before any model execution or token consumption occurs.
 
-The AI PRompt Guard plugin blocks prompts that match dangerous or high-risk patterns. This prevents misuse, reduces token waste, and enforces governance policies up front—before any calls to embeddings or LLMs.
+The AI Prompt Guard plugin blocks prompts that match dangerous or high-risk patterns. This prevents misuse, reduces token waste, and enforces governance policies up front—before any calls to embeddings or LLMs. All requests that match the below patterns will return `404` HTTP code in response:
 
 <!-- vale off -->
 {% table %}
@@ -339,6 +339,5 @@ entities:
         - ".*(act as|pretend to be|become|simulate|impersonate).*"
         - ".*(self-harm|suicide|illegal|hack|exploit|malware|virus).*"
 {% endentity_examples %}
-
 
 This way, only clean prompts pass through to the AI Proxy Advanced plugin, which then embeds the input and semantically routes it to the most appropriate OpenAI model based on intent and similarity.
