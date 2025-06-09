@@ -188,7 +188,7 @@ variables:
 
 {:.info}
 > You can also consider alternative models and temperature settings to better suit your workload needs. For example, specialized code models for coding tasks, full GPT-4 for nuanced IT support, and lighter models with higher temperature for general or creative queries.
-> - **Technical coding (precision-focused):*- `code-davinci-002` with **temperature: 0*- — ensures consistent, deterministic code completions.
+> - **Technical coding (precision-focused):**- `code-davinci-002` with **temperature: 0*- — ensures consistent, deterministic code completions.
 > - **IT support (balanced creativity):**
   `gpt-4o` with **temperature: 0.3*- — allows helpful, slightly creative answers without being too loose.
 > - **Catchall/general queries (more creative):**
