@@ -131,7 +131,9 @@ app/gateway/install.md:
   - app/_src/gateway/install/linux/debian.md
   - app/_src/gateway/install/linux/rhel.md
   - app/_src/gateway/install/linux/ubuntu.md
-
+app/gateway/postgresql-reference.md:
+  - app/_src/gateway/production/networking/configure-postgres-tls.md
+  - app/_src/gateway/production/networking//troubleshoot-postgres-tls.md
 # how-tos
 ## gateway
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md:
