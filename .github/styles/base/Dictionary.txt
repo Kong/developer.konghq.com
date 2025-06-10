@@ -182,6 +182,7 @@ DNs
 DNs
 dockerfile
 dockerfiles
+doppelganger
 downsample
 downsampled
 downstreams
@@ -608,6 +609,7 @@ proxy_ssl
 proxying
 public_key
 Qdrant
+qubit
 querystring
 qux
 ratelimit
@@ -829,6 +831,7 @@ untrusted
 untyped
 unvetted
 unversioned
+unwanted
 updated_at
 upsert
 upstream
