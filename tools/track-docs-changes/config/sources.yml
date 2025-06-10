@@ -430,6 +430,7 @@ app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
 app/_kong_plugins/session/index.md:
   - app/_hub/kong-inc/session/overview/_index.md
+  - app/_src/gateway/kong-manager/auth/sessions.md
 app/_kong_plugins/zipkin/changelog.md:
   - app/_hub/kong-inc/zipkin/_changelog.md
 app/_kong_plugins/zipkin/index.md:
