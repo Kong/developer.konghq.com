@@ -1,11 +1,11 @@
 ---
-title: Set up AI Proxy with Ollama
+title: Set up AI Proxy Advanced with Ollama
 content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
   - text: AI Proxy Advanced
-    url: /plugins/ai-proxy/
+    url: /plugins/ai-proxy-advanced/
 
 description: Configure the AI Proxy Advanced plugin to create a chat route using Ollama.
 
@@ -33,8 +33,8 @@ tags:
   - openai
 
 tldr:
-  q: How do I use the AI Proxy plugin with Ollama?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the Ollama provider, and the llama2 model.
+  q: How do I use the AI Proxy Advanced plugin with Ollama?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the Ollama provider, and the Llama2 model.
 
 tools:
   - deck
@@ -68,18 +68,19 @@ Set up the AI Proxy Advanced plugin to route chat requests to Ollama’s Llama2 
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-proxy
+    - name: ai-proxy-advanced
       config:
-        route_type: llm/v1/chat
-        model:
-          provider: llama2
-          name: llama2
-          options:
-            llama2_format: ollama
-            upstream_url: ${ollama_upstream_url}
+        targets:
+            - route_type: llm/v1/chat
+              model:
+                provider: llama2
+                name: llama2
+                options:
+                    llama2_format: ollama
+                    upstream_url: ${ollama_upstream_url}/api/chat
 variables:
   ollama_upstream_url:
-    value: $OLLAMA_UPSTREAM_URL
+    value: $ANTHROPIC_API_KEY
 {% endentity_examples %}
 
 {:.info}
