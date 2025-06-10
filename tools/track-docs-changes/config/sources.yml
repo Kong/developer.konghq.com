@@ -1137,7 +1137,10 @@ app/ai-gateway/monitor-ai-llm-metrics.md:
 app/ai-gateway/streaming.md:
   - app/_hub/kong-inc/ai-proxy/how-to/_streaming.md
   - app/_hub/kong-inc/ai-proxy-advanced/how-to/_streaming.md
-
+app/gateway/tracing.md:
+  - app/_src/gateway/production/tracing/index.md
+  - app/_src/gateway/production/tracing/api.md
+  - app/_src/gateway/production/tracing/write-custom-trace-exporter.md
 app/gateway/reserved-entity-names.md:
   - app/_src/gateway/reference/reserved-entity-names.md
 app/gateway/breaking-changes.md:
