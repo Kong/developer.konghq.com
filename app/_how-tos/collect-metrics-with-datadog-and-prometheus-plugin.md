@@ -106,7 +106,7 @@ Create the `conf.yaml` file:
 touch ./.datadog-agent/conf.d/openmetrics.d/conf.yaml
 ```
 
-This command uses the the macOS directory location. For other distributions, see Datadog's [Agent configuration directory](https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory). 
+This command uses the macOS directory location. For other distributions, see Datadog's [Agent configuration directory](https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory). 
 
 Copy and paste the following configuration in the `conf.yaml` file:
 ```yaml
