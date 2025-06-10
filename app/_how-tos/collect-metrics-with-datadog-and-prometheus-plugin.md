@@ -29,24 +29,43 @@ tags:
 search_aliases:
   - Datadog
 tldr:
-    q: placeholder 
-    a: placeholder
+    q: How do I scrape {{site.base_gateway}} metrics with Datadog and the Prometheus plugin?
+    a: Install the Datadog Agent and enable the Prometheus plugin. Configure the Datadog Agent with the {{site.base_gateway}} `/metrics` endpoint and set `kong.*` for `metrics`. Restart the Datadog Agent, and send requests to generate metrics. You should see the metrics in Datadog Metrics summary.
 
 tools:
     - deck
 
 prereqs:
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
   inline: 
     - title: Datadog
       content: |
-        placeholder
+        For this tutorial, you'll need to configure the following:
+        * A [Datadog account](https://www.datadoghq.com/)
+        * Install the Datadog Agent by navigating to the [Agent Installation](https://app.datadoghq.com/account/settings/agent/latest) page or **Integration** > **Install agents** in the Datadog UI.
+        * Your Datadog [API key](https://docs.datadoghq.com/getting_started/site/) and [app key](https://app.datadoghq.com/access/application-keys). You can find these in the Datadog UI in **Organization settings**.
+
+        Set the following as environment variables:
+        ```sh
+        export DD_API_KEY='YOUR-API-KEY'
+        export DD_APP_KEY='YOUR-APPLICATION-KEY'
+        export DD_SITE_API_URL='YOUR-API-SITE-URL'
+        ```
+        
+        {:.warning}
+        > * Some distributions require you to modify the `datadog.yaml` file and add your API key and Datadog site URL. Ensure this file is configured correctly or Datadog won't be able to scrape metrics.
+        > * Your Datadog site API URL [varies depending on the region](https://docs.datadoghq.com/getting_started/site/) you're using. For example, for the `US5` region, the URL would be `https://api.us5.datadoghq.com`.
       icon_url: /assets/icons/third-party/datadog.svg
 
 cleanup:
   inline:
     - title: Datadog
       content: |
-        placeholder
+        To stop collecting {{site.base_gateway}} metrics, you can [uninstall the Datadog Agent](https://docs.datadoghq.com/agent/guide/how-do-i-uninstall-the-agent/).
       icon_url: /assets/icons/third-party/datadog.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
@@ -60,13 +79,11 @@ next_steps:
     url: /plugins/prometheus/reference/
 ---
 
-## Install Datadog agent
-
-https://app.datadoghq.com/account/settings/agent/latest
-
 ## Enable the Prometheus plugin
 
-Before you configure the 
+Before you configure the Datadog Agent to scrape metrics from {{site.base_gateway}}, you first need to enable the Prometheus plugin. 
+
+The following configuration enables the plugin globally and [exports status code metrics](/plugins/prometheus/reference/#schema--config-status-code-metrics), like the total number of HTTP requests:
 
 {% entity_examples %}
 entities:
@@ -79,37 +96,66 @@ entities:
 
 ## Configure the Datadog Agent to collect {{site.base_gateway}} metrics
 
+Now that the Prometheus plugin is configured, you can configure the Datadog Agent to scrape {{site.base_gateway}} metrics.
+
 macOS (others: https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory)
-```
+
+Create the `conf.yaml` file:
+
+```sh
 touch ./.datadog-agent/conf.d/openmetrics.d/conf.yaml
 ```
 
-In the file:
-```
+This command uses the the macOS directory location. For other distributions, see Datadog's [Agent configuration directory](https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory). 
+
+Copy and paste the following configuration in the `conf.yaml` file:
+```yaml
 instances:
- - prometheus_url: http://localhost:8001/metrics
-   namespace: "kong"
-   metrics:
-     - kong_*
+  - openmetrics_endpoint: http://localhost:8001/metrics
+    namespace: kong
+    metrics:
+      - kong.*
 ```
-The following is an example configuration for pulling all the `kong_` prefixed metrics.
+
+This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} metrics endpoint (`http://localhost:8001/metrics`).
 
 ## Restart the Datadog Agent
 
 You must restart the agent to start collecting metrics:
 
-```
+```sh
+launchctl stop com.datadoghq.agent
 launchctl start com.datadoghq.agent
 ```
 
-This is for macOS, see Datadog's [Agent commands](https://docs.datadoghq.com/agent/configuration/agent-commands/#start-stop-and-restart-the-agent) documentation for all restart commands.
+This example is for macOS, see Datadog's [Agent commands](https://docs.datadoghq.com/agent/configuration/agent-commands/#start-stop-and-restart-the-agent) documentation for all restart commands.
+
+The Datadog Agent may take a few minutes to restart.
 
 ## Validate
 
+Now, you can validate that Datadog can scrape {{site.base_gateway}} metrics by first sending requests to generate metrics:
+
 {% validation request-check %}
-url: '/anything' # prepends the proxy URL, either konnect or on-prem
+url: '/anything' 
+count: 10
 status_code: 200
 {% endvalidation %}
 
-You can validate that {{site.base_gateway}} is sending metrics to Datadog by navigating to the Metric summary page and searching for `kong`. 
+You can validate that {{site.base_gateway}} is sending metrics to Datadog by running the following:
+
+```sh
+curl -X GET "$DD_SITE_API_URL/api/v1/search?q=kong.kong_http_requests.count" \
+-H "Accept: application/json" \
+-H "DD-API-KEY: $DD_API_KEY" \
+-H "DD-APPLICATION-KEY: $DD_APP_KEY"
+```
+
+You should get the following response:
+```sh
+{"results":{"metrics":["kong.kong_http_requests.count"],"hosts":[]}}
+```
+{:.no-copy-code}
+
+Alternatively, you can navigate to the Metrics Explorer page in the Datadog UI and search for `kong.kong_http_requests.count`. You should see the 10 requests that you just sent.
 
