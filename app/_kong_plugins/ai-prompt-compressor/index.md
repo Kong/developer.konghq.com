@@ -90,9 +90,6 @@ rows:
   - option: Dynamic prompt optimization
     description: |
       Automatically strip verbose or low-value content before sending to the LLM, keeping the focus on what's most relevant.
-  - option: Multi-system context consolidation
-    description: |
-      Combine and compress context from multiple upstream systems (for example, CRM, support logs) into a single prompt for summarization or question-answering tasks.
 {% endtable %}
 <!-- vale on -->
 
@@ -118,24 +115,6 @@ To run the container and expose the service on port 9000:
 
 ```bash
 docker run -d --name kong-compressor -p 9000:8080 kong-compressor
-```
-
-To enable GPU acceleration (if your host supports NVIDIA drivers):
-
-```bash
-docker run -d --runtime=nvidia --gpus all \
-  --name kong-compressor \
-  -p 9000:8080 \
-  -e LLMLINGUA_MODEL_NAME="microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank" \
-  -e LLMLINGUA_DEVICE_MAP="cuda" \
-  kong-compressor
-```
-
-To tag and push the image to your own container registry:
-
-```bash
-docker tag kong-compressor:latest yourrepo/kong-compressor:amd
-docker push yourrepo/kong-compressor:amd
 ```
 
 {:.info}
