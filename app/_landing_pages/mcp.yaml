@@ -19,7 +19,7 @@ rows:
 
   - header:
       type: h2
-      text: Bring MCP to production securely with Kong AI Gateway
+      text: Bring MCP servers to production securely with Kong AI Gateway
     columns:
       - blocks:
           - type: text
@@ -30,43 +30,47 @@ rows:
 
               Kong’s AI Gateway extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience.
 
-
       - blocks:
-          - type: mermaid
+          - type: image
             config:
-              diagram: |
-                flowchart LR
-                  %% MCP Client at the top
-                  client(((MCP Client)))
+              url: /assets/images/gateway/mcp-architecture.svg
+              alt_text: Overview of AI gateway
+      # - blocks:
+      #     - type: mermaid
+      #       config:
+      #         diagram: |
+      #           flowchart LR
+      #             %% MCP Client at the top
+      #             client(((MCP Client)))
 
-                  %% External systems
+      #             %% External systems
 
-                  server[[MCP Server]]
-                  upstream([Upstream APIs])
-                  llm([LLM])
+      #             server[[MCP Server]]
+      #             upstream([Upstream APIs])
+      #             llm([LLM])
 
-                  %% Gateway Layer: all proxies inside
-                  subgraph Gateway_Layer ["AI Gateway"]
-                      direction TB
-                      proxy_llm[AI proxy]
-                      proxy_server[AI proxy]
-                      proxy_upstream[AI proxy]
-                  end
+      #             %% Gateway Layer: all proxies inside
+      #             subgraph Gateway_Layer ["AI Gateway"]
+      #                 direction TB
+      #                 proxy_llm[AI proxy]
+      #                 proxy_server[AI proxy]
+      #                 proxy_upstream[AI proxy]
+      #             end
 
-                  %% Simulated merge point
-                  merge_point(( #8648; ))
+      #             %% Simulated merge point
+      #             merge_point(( #8648; ))
 
-                  %% Flows
-                  server -->|Context/tool data| proxy_server --> merge_point
-                  merge_point --> client
-                  llm -->|Prompt/tool result| proxy_llm --> merge_point
-                  upstream -->|Tool call execution| proxy_upstream <--> server
+      #             %% Flows
+      #             server -->|Context/tool data| proxy_server --> merge_point
+      #             merge_point --> client
+      #             llm -->|Prompt/tool result| proxy_llm --> merge_point
+      #             upstream -->|Tool call execution| proxy_upstream <--> server
 
-                  %% Styles
-                  style proxy_llm stroke-dasharray: 3 3
-                  style proxy_server stroke-dasharray: 3 3
-                  style proxy_upstream stroke-dasharray: 3 3
-                  style Gateway_Layer fill:#ffffff00,stroke-dasharray: 5 5
+      #             %% Styles
+      #             style proxy_llm stroke-dasharray: 3 3
+      #             style proxy_server stroke-dasharray: 3 3
+      #             style proxy_upstream stroke-dasharray: 3 3
+      #             style Gateway_Layer fill:#ffffff00,stroke-dasharray: 5 5
 
   # - columns:
   #     - blocks:
