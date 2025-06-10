@@ -8,6 +8,12 @@ products:
 related_resources:
   - text: "Datadog documentation: Prometheus and OpenMetrics metrics collection from a host"
     url: https://docs.datadoghq.com/integrations/guide/prometheus-host-collection/
+  - text: Collect {{site.base_gateway}} metrics with the Prometheus plugin
+    url: /how-to/collect-metrics-with-prometheus/
+  - text: Monitor metrics with Prometheus and Grafana with KIC
+    url: /kubernetes-ingress-controller/observability/prometheus-grafana/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 
 works_on:
     - on-prem
@@ -41,6 +47,9 @@ prereqs:
         - example-service
     routes:
         - example-route
+  konnect:
+    - name: KONG_STATUS_LISTEN
+      value: '0.0.0.0:8100'
   inline: 
     - title: Datadog
       content: |
@@ -81,7 +90,7 @@ next_steps:
 
 ## Enable the Prometheus plugin
 
-Before you configure the Datadog Agent to scrape metrics from {{site.base_gateway}}, you first need to enable the Prometheus plugin. 
+Before you configure the Datadog Agent to scrape metrics from {{site.base_gateway}}, you first need to enable the [Prometheus plugin](/plugins/prometheus/). 
 
 The following configuration enables the plugin globally and [exports status code metrics](/plugins/prometheus/reference/#schema--config-status-code-metrics), like the total number of HTTP requests:
 
@@ -109,6 +118,7 @@ touch ./.datadog-agent/conf.d/openmetrics.d/conf.yaml
 This command uses the macOS directory location. For other distributions, see Datadog's [Agent configuration directory](https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory). 
 
 Copy and paste the following configuration in the `conf.yaml` file:
+
 ```yaml
 instances:
   - openmetrics_endpoint: http://localhost:8001/metrics
@@ -116,6 +126,16 @@ instances:
     metrics:
       - kong.*
 ```
+{: data-deployment-topology="on-prem" }
+
+```yaml
+instances:
+  - openmetrics_endpoint: http://localhost:8100/metrics
+    namespace: kong
+    metrics:
+      - kong.*
+```
+{: data-deployment-topology="konnect" }
 
 This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} metrics endpoint (`http://localhost:8001/metrics`).
 
@@ -125,6 +145,8 @@ You must restart the agent to start collecting metrics:
 
 ```sh
 launchctl stop com.datadoghq.agent
+```
+```sh
 launchctl start com.datadoghq.agent
 ```
 
