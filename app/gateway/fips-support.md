@@ -90,7 +90,7 @@ rows:
 {:.info .no-icon}
 > **\[1\]**: As of {{site.base_gateway}} FIPS 3.0, RBAC uses PBKDF2 as password hashing algorithm.
 <br><br>
-> **\[2\]**: As of {{site.base_gateway}} FIPS 3.1, the oauth2 plugin disables `hash_secret` feature, so the user can’t turn it on. This means password will be stored plaintext in the database; however, users can choose to use secrets management or db encryption instead.
+> **\[2\]**: As of {{site.base_gateway}} FIPS 3.1, the oauth2 plugin disables the `hash_secret` feature, so you can’t turn it on. This means password will be stored plaintext in the database; however, you can choose to use secrets management or database encryption instead.
 <br><br>
 > **\[3\]**: As of {{site.base_gateway}} FIPS 3.1, key-auth-enc uses SHA1 to speed up lookup of a key in DB. As of {{site.base_gateway}} FIPS 3.2, SHA1 support is “read-only”, meaning existing credentials in DB are still validated, but any new credentials will be hashed in SHA256.
 
@@ -101,7 +101,8 @@ rows:
 
 FIPS only defines the approved algorithms to use for each specific purpose, so FIPS policy doesn't explicitly restrict the usage of cryptographic algorithms to only cases where they are necessary. 
 
-For example, using SHA256 as the message digest algorithm is approved while using MD5 is not. But that doesn’t mean MD5 can’t exist in the application at all. For example, the FIPS 140-2 approved [BoringSSL](https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3678.pdf) version allows MD5 when it's used with the TLS protocol version 1.0 and 1.1. 
+
+For example, using SHA-256 as the message digest algorithm is approved, while MD5 is not. However, that doesn’t mean MD5 must be completely absent from the application. For instance, the FIPS 140-2–approved version of [BoringSSL](https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3678.pdf) permits MD5 when used with TLS protocol versions 1.0 and 1.1.
 
 The following table explains where cryptographic algorithms are used for non-cryptographic purposes in {{site.base_gateway}}:
 
