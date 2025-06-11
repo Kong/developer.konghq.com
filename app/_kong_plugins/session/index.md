@@ -127,7 +127,7 @@ To enable sessions authentication, configure the following parameters in `kong.c
 
 ```
 enforce_rbac = on
-admin_gui_auth = <set to desired auth type>
+admin_gui_auth = $AUTH_PLUGIN
 admin_gui_session_conf = {
     "secret":"$SET_SECRET",
     "cookie_name":"$SET_COOKIE_NAME",
@@ -160,16 +160,16 @@ rows:
       The duration (in seconds) that the session will remain open. <br> The default value is `3600`.
   - attribute: "`cookie_secure`"
     description: >
-      Applies the Secure directive so that the cookie may be sent to the server only with an encrypted request over the HTTPS protocol. See [Session Security](#session-security) for exceptions. <br> The default value is `true`.
+      Applies the Secure directive so that the cookie may be sent to the server only with an encrypted request over the HTTPS protocol. See [Session security overview](#session-security-overview) for exceptions. <br> The default value is `true`.
   - attribute: "`cookie_same_site`"
     description: >
-      Determines whether and how a cookie may be sent with cross-site requests. See [Session Security](#session-security) for exceptions. <br> The default value is `strict`.
+      Determines whether and how a cookie may be sent with cross-site requests. See [Session security overview](#session-security-overview) for exceptions. <br> The default value is `strict`.
   - attribute: "`hash_subject`"
     description: >
       Whether to hash or not the subject when `store_metadata` is enabled. The default value is `false`.
   - attribute: "`store_metadata`"
     description: >
-      Whether to also store metadata of sessions, such as collecting data of sessions for a specific audience belonging to a specific subject. The default value is `false`. Upon enabling this option, please also set `storage` to `kong`.
+      Whether to also store metadata of sessions, such as collecting data of sessions for a specific audience belonging to a specific subject. The default value is `false`. Upon enabling this option, also set `storage` to `kong`.
 {% endtable %}
 
 For more information on configuring Kong Manager see the Kong Manager [reference documentation](/gateway/kong-manager/configuration/)
@@ -184,8 +184,7 @@ For more information on configuring Kong Manager see the Kong Manager [reference
 However, certain settings must be adjusted depending on your environment:
 
 * Use `"cookie_secure": false` when testing over HTTP (not recommended for production)
-* If the Admin API and Kong Manager run on separate domains:
-  * Use `"cookie_same_site": "Lax"`
+* If the Admin API and Kong Manager run on separate domains, use `"cookie_same_site": "Lax"`
 
 When using `"storage": "cookie"`, logging out only deletes the session client-side. To fully invalidate sessions server-side, use `"storage": "kong"`.
 
@@ -196,7 +195,7 @@ When using `"storage": "cookie"`, logging out only deletes the session client-si
 * Use `storage = "kong"` to store session data server-side and support logout invalidation.
 * Set `cookie_secure = false` only in testing environments without HTTPS.
 * Use `store_metadata = true` to support session invalidation on password change.
-* To avoid storing raw session subjects (for PII reasons), set `hash_subject = true` alongside `store_metadata = true`.
+* Set `hash_subject = true` alongside `store_metadata = true` to avoid storing raw session subjects (for PII reasons).
 
 These options allow fine-tuning of security, privacy, and logout behavior depending on your deployment model.
 
