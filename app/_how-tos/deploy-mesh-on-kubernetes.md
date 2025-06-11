@@ -2,7 +2,7 @@
 title: Deploy Mesh on Kubernetes
 description: "Learn how to install Mesh on an existing Kubernetes cluster, and deploy the {{site.mesh_product_name}} demo application."
 content_type: how_to
-permalink: /mesh/deploy-mesh-kubernetes/
+permalink: /mesh/kubernetes/
 bread-crumbs: 
   - /mesh/
 related_resources:
