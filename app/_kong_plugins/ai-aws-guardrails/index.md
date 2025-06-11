@@ -5,19 +5,19 @@ name: 'AI AWS Guardrails'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Use AI AWS Guardrails to '
+description: 'Use AWS AI Guardrails to check and audit AI Proxy plugin messages before proxying them to an upstream LLM'
 
 
 products:
-    - gateway
-    - ai-gateway
+  - gateway
+  - ai-gateway
 
 works_on:
-    - on-prem
-    - konnect
+  - on-prem
+  - konnect
 
 min_version:
-    gateway: '3.11'
+  gateway: '3.11'
 
 on_prem:
   - hybrid
@@ -28,7 +28,7 @@ konnect_deployments:
   - cloud-gateways
   - serverless
 
-icon: ai-aws-guardrails.png # e.g. acme.svg or acme.png
+icon: ai-aws-guardrails.png
 
 categories:
   - ai
