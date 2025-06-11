@@ -1004,6 +1004,8 @@ app/_kong_plugins/ai-proxy-advanced/examples/sdk-dynamic-model-selection.yml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
+app/_how-tos/enable-basic-auth-on-kong-manager.md:
+  - app/_src/gateway/kong-manager/auth/basic.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
