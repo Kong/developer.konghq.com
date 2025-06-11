@@ -25,6 +25,9 @@ faqs:
       ```
       -p 127.0.0.1:8002:8002
       ```
+  - q: How do I configure the session cookies with Kong Manager?
+    a: |
+      The [Session](/plugins/session/#kong-manager) plugin can be configured through `kong.conf` to manage session cookies.
 
 related_resources:
   - text: Kong Manager
@@ -212,3 +215,7 @@ config:
   - name: admin_gui_login_banner_body
 {% endkong_config_table %}
 <!--vale on-->
+
+## Session management
+
+The Session configuration is secure by default, which may require alteration if using HTTP or different domains for the Admin API and Kong Manager. The encrypted session data may be stored either in {{site.base_gateway}} or the cookie itself. For more information on the Session plugin, review the [plugin documentation](/plugins/session/)
