@@ -1,6 +1,6 @@
 ---
-title: Enable a Plugin
-description: "Enable a Plugin in {{site.konnect_short_name}} using the KongPlugin and KongPluginBinding CRDs and configure it for use with your Control Plane."
+title: Enable a Plugin on a Service
+description: "Enable a Plugin on a Service in {{site.konnect_short_name}} using the KongPlugin and KongPluginBinding CRDs and configure it for use with your Control Plane."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/plugin/
