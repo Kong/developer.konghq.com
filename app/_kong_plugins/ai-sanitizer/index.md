@@ -89,7 +89,7 @@ Password: <your_token>
 ```
 
 {:.info}
-> **Note**: This is a token-based login with read-only access. You can pull images but not push them.
+> This is a token-based login with read-only access. You can pull images but not push them.
 
 #### Pull AI PII service image
 
