@@ -87,11 +87,11 @@ columns:
     key: value
 rows:
   - setting: "Name"
-    value: "`email`"
+    value: "email"
   - setting: "Source"
-    value: "**Attribute**"
+    value: "Attribute"
   - setting: "Source attribute"
-    value: "`user.email`"
+    value: "user.email"
 {% endtable %}
 {% endcapture %}
 
