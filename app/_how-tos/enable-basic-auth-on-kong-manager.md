@@ -24,6 +24,7 @@ min_version:
 
 tags:
     - authentication
+    - kong-manager
 
 tldr:
     q: How do I enable basic authentication for Kong Manager?
