@@ -76,6 +76,6 @@ For more information about the values, see the [RBAC](/gateway/entities/rbac/) r
 
 To validate that basic authentication was configured correctly for Kong Manager, navigate to the Kong Manager GUI at [http://localhost:8002](http://localhost:8002) and use the username (`kong_admin`) and the password (`kong`) you set when you created the {{site.base_gateway}} container.
 
-{:.important}
+{:.warning}
 > To log in to Kong Manage with basic auth, you must have [super admin permissions](/how-to/create-a-super-admin/) or a user that has `/admins` and `/rbac` read and write access.
 
