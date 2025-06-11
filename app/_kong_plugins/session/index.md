@@ -172,7 +172,7 @@ rows:
       Whether to also store metadata of sessions, such as collecting data of sessions for a specific audience belonging to a specific subject. The default value is `false`. Upon enabling this option, please also set `storage` to `kong`.
 {% endtable %}
 
-For more information on configuring Kong Manager see the Kong Manager [reference documentation](/kong-manager/configuration/)
+For more information on configuring Kong Manager see the Kong Manager [reference documentation](/gateway/kong-manager/configuration/)
 
 ### Session security overview
 

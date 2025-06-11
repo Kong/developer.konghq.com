@@ -27,7 +27,7 @@ faqs:
       ```
   - q: How do I configure the session cookies with Kong Manager?
     a: |
-      The [Session](/plugin/session/) plugin can be [configured](/plugin/session/#kong-manager) through `kong.conf` to manage session cookies.
+      The [Session](/plugins/session/) plugin can be [configured](/plugins/session/#kong-manager) through `kong.conf` to manage session cookies.
 
 related_resources:
   - text: Kong Manager
