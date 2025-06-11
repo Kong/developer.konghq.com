@@ -68,7 +68,7 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
 
 This enables RBAC, sets `basic-auth` as the authentication method, and creates a session secret.
 
-Kong Manager uses the [Sessions](/plugins/sessions/) plugin in the background.
+Kong Manager uses the [Session](/plugins/session/) plugin in the background.
 This plugin (configured with `admin_gui_session_conf`) requires a secret and is configured securely by default. Under all circumstances, the `secret` must be manually set to a string.
 
 For more information about the values, see the [RBAC](/gateway/entities/rbac/) reference.
