@@ -65,7 +65,24 @@ prereqs:
         To complete this tutorial, you must run the Kong Compressor Service. Kong provides Compressor service as a private Docker image in a Cloudsmith repository. Contact [Kong Support](https://support.konghq.com/support/s/) to get access to it. Once you've received your Cloudsmith access token, run the following commands in Docker to pull the image:
         ```sh
         docker login docker.cloudsmith.io
-        docker pull ai-compressor-service
+        ```
+
+        Docker will then prompt you to enter username and password:
+
+        ```bash
+        Username: kong/ai-compress
+        Password: <your_token>
+        ```
+        To pull an image:
+
+        ```bash
+        docker pull docker.cloudsmith.io/kong/ai-compress/<image-name>:<tag>
+        ```
+
+        Replace `<image-name>` and `<tag>` with the appropriate image and version, such as:
+
+        ```bash
+        docker pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
         ```
         Once you've pulled the image, build and run it in your Docker container.
       icon_url: /assets/icons/cloudsmith.svg
