@@ -99,26 +99,47 @@ Kong provides a Docker image for the AI Prompt Compressor service, which compres
 
 The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in Kong Gateway.
 
-{:.warning}
-> You will need access to Kong’s private Cloudsmith repository to pull the compressor service image.
-> Contact Kong Sales to obtain the necessary credentials.
+### Access the Docker images
 
-### Build and run the compression service
+Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access. To pull images, you must authenticate first with the token provided by the Support.
 
-To build the image:
+#### Authenticate
 
 ```bash
-docker build --platform linux/amd64 -t kong-compressor
+docker login docker.cloudsmith.io
 ```
 
-To run the container and expose the service on port 9000:
+Docker will then prompt you to enter username and password:
 
 ```bash
-docker run -d --name kong-compressor -p 9000:8080 kong-compressor
+Username: kong/ai-compress
+Password: <your_token>
 ```
 
 {:.info}
-> The Docker image is production-ready and includes Gunicorn as the web server to run the underlying Flask app.
+> This is a token-based login with read-only access. You can pull images but not push them.
+
+#### Pull AI PII service image
+
+To pull an image:
+
+```bash
+docker pull docker.cloudsmith.io/kong/ai-compress/<image-name>:<tag>
+```
+
+Replace `<image-name>` and `<tag>` with the appropriate image and version, such as:
+
+```bash
+docker pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
+```
+
+#### Dockerfile usage
+
+To use an image in a `Dockerfile`, reference it as follows:
+
+```dockerfile
+FROM pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
+```
 
 ### Image configuration options
 
