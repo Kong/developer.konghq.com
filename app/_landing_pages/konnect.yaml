@@ -149,7 +149,7 @@ rows:
             icon: /assets/icons/lock.svg
             cta: 
               text: View the reference
-              url: "/konnect/cmek/"
+              url: "/konnect-platform/cmek/"
               
   
   - columns:
