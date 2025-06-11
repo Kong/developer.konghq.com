@@ -1191,6 +1191,8 @@ app/gateway/upgrade/lts-upgrade.md:
   - app/_src/gateway/upgrade/lts-upgrade.md
 app/gateway/kong-manager/content-security-policy.md:
   - app/_src/gateway/kong-manager/strengthen-security.md
+app/gateway/debug-requests.md:
+  - app/_src/gateway/production/debug-request.md
 
 # traffic control
 app/gateway/routing/expressions.md:

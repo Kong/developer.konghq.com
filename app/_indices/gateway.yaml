@@ -279,3 +279,4 @@ sections:
       - path: /gateway/entities/partial/
       - path: /how-to/restart-kong-gateway-container/
       - path: /gateway/nginx-directives/
+      - path: /gateway/debug-requests/
