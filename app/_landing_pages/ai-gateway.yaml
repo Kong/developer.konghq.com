@@ -486,6 +486,34 @@ rows:
               align: end
 
   - header:
+      type: h3
+      text: "Externalized API Keys"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Securely managing API keys is critical when integrating with external services like LLMs. Instead of hardcoding credentials into plugin configurations, {{site.base_gateway}} allows you to externalize secrets using vaults. This lets you reference sensitive values at runtime using a secure syntax.
+
+                    You can also layer federated authentication with credential mediation — for example, using the [OpenID Connect plugin](/plugins/openid-connect/) to authenticate users, and the AI Proxy plugin to inject an API key stored in a [secret manager](/how-to/configure-the-konnect-config-store/).
+  - columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: openid-connect
+      - blocks:
+        - type: card
+          config:
+            title: Secrets management
+            description: Use Konnect Config Store to store and reference your LLM provider API keys
+            icon: /assets/icons/lock.svg
+            cta:
+              url: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
+              align: end
+
+  - header:
       type: h2
       text: How-to Guides
 
