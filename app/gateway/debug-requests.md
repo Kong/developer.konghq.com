@@ -25,12 +25,12 @@ related_resources:
     url: /gateway/configuration/
 ---
 
-{{site.base_gateway}} admins can debug requests by collecting timing information about a given request, on demand. 
-Request debugging is triggered using a secure token and the resulting data is returned in a response header named `X-Kong-Request-Debug-Output`. 
+{{site.base_gateway}} admins can debug requests by collecting timing information about a given request on demand. 
+Request debugging is triggered with a secure token and the resulting data is returned in a response header named `X-Kong-Request-Debug-Output`. 
 
 Request debugging provides the following insights:
-* Time spent in various {{site.base_gateway}} components, such as plugins, DNS resolution, and load balancing. 
-* Contextual information, such as the domain name tried during these processes.
+* Time spent in various {{site.base_gateway}} components, such as plugins, DNS resolution, and load balancing 
+* Contextual information, such as the domain name tried during these processes
 
 {:.info}
 > **Note:** This feature is meant for live debugging. The JSON schema of the header containing the timing should never be considered static and is always subject to change.
@@ -47,7 +47,7 @@ request_debug = on
 request_debug_token = <random>
 ```
 
-The usage of the debug token prevents abuse of the feature as only authorized personnel are able to issue debug requests. By default {{site.base_gateway}} generates a token randomly when it starts, restarts, and reloads, but you can also define a token explicitly with the [`request_debug_token`](/gateway/configuration/#request-debug-token).
+The debug token prevents feature abuse because only authorized personnel can issue debug requests. By default, {{site.base_gateway}} generates a token randomly when it starts, restarts, and reloads, but you can also define a token explicitly with the [`request_debug_token`](/gateway/configuration/#request-debug-token).
 
 You can find the debug token in the following locations:
 * **{{site.base_gateway}} error log:** The debug token is logged in the error log (notice level) when {{site.base_gateway}} starts, restarts, or reloads. The log line will have the `[request-debug]` prefix to aid in searching.
@@ -82,7 +82,7 @@ If the `X-Kong-Request-Debug-Log` header is set to true, timing information will
 
 ### X-Kong-Request-Debug-Token header
 
-The `X-Kong-Request-Debug-Token` is a token for authenticating the client and making the debug request to prevent abuse. Debug requests originating from loopback addresses don't require this header.
+The `X-Kong-Request-Debug-Token` is the token used to authenticate the client and make debug request. This prevents debugging abuse. Debug requests originating from loopback addresses don't require this header.
 
 ### X-Kong-Request-Id header {% new_in 3.5 %}
 
