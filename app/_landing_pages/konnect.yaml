@@ -140,6 +140,17 @@ rows:
             cta:
               text: Add Rate Limiting with {{ site.base_gateway }}
               url: "/gateway/rate-limiting/"
+      - blocks: 
+        - type: card
+          config: 
+            title: Customer-Managed Encryption Keys (CMEK)
+            description: | 
+              Customer-Managed Encryption Keys (CMEK) enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
+            icon: /assets/icons/lock.svg
+            cta: 
+              text: View the reference
+              url: "/konnect/cmek/"
+              
   
   - columns:
       - blocks:

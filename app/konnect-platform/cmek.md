@@ -5,7 +5,7 @@ layout: reference
 description: 'Use Customer-Managed Encryption Keys (CMEK) in Konnect to encrypt sensitive data using keys from your AWS KMS account.'
 breadcrumbs:
   - /konnect/
-content_type: reference
+
 
 products:
     - konnect-platform
@@ -19,7 +19,7 @@ works_on:
 
 ## Overview
 
-Konnect supports **Customer-Managed Encryption Keys (CMEK)**, allowing you to use your own symmetric key stored in **AWS Key Management Service (KMS)** to encrypt sensitive data. This feature enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
+{{site.konnect_short_name}} supports **Customer-Managed Encryption Keys (CMEK)**, allowing you to use your own symmetric key stored in **AWS Key Management Service (KMS)** to encrypt sensitive data. This feature enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
 
 ## Benefits of CMEK
 
@@ -27,19 +27,18 @@ Konnect supports **Customer-Managed Encryption Keys (CMEK)**, allowing you to us
 * **Exclusive decryption access** {{site.base_gateway}} cannot access unencrypted data without your key
 * **Instant revocation** removing the key from AWS KMS makes encrypted data unreadable
 
-## CMEK Scope in {{site.konnect_short_name}}
+## CMEK scope in {{site.konnect_short_name}}
 
 CMEK currently applies to:
 
 * Payloads captured through [**Active Tracing**](/konnect-platform/active-tracing/)
 * Request logs stored in tracing workflows
 
+The steps required are: 
 
-## How It Works
-
-1. You create a **symmetric encryption key** in AWS KMS.
-1. You provide the **key ARN** to Konnect through the UI.
-1. Konnect encrypts specified data using the key during write operations.
+1. Create a **symmetric encryption key** in AWS KMS.
+1. Provide the **key ARN** to Konnect through the UI.
+1. {{site.konnect_short_name}} encrypts specified data using the key during write operations.
 1. Decryption occurs via AWS KMS at read time, contingent on key availability.
 
 ### User Responsibilities
