@@ -1,0 +1,9 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Added a new plugin that can sanitize the PII information in requests before the requests are proxied by the AI Proxy or AI Proxy Advanced plugin.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

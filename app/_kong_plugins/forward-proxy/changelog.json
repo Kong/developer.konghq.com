@@ -1,0 +1,145 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where the `upstream_status` field was empty in logs when using the `forward-proxy` plugin.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "**forward-proxy** fallback to the non-streaming proxy when the request body has already been read",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the issue where request payload is being discarded when payload exceeded the `client_body_buffer_size`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "**forward-proxy** fallback to the non-streaming proxy when the request body has already been read",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.2": [
+    {
+      "message": "Fixed the issue where request payload is being discarded when payload exceeded the `client_body_buffer_size`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "fallback to the non-streaming proxy when the request body has already been read",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.1": [
+    {
+      "message": "Fixed the issue where request payload is being discarded when payload exceeded the `client_body_buffer_size`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "Fixed an issue which caused the wrong `latencies.proxy` to be used in the logging plugins. This plugin now evaluates `ctx.WAITING_TIME` in the forward proxy instead of doing it in the subsequent phase.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "`x_headers` field added. This field indicates how the plugin handles the headers`X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`, `X-Forwarded-Host`, and `X-Forwarded-Port`.\n\nThe field can take one of the following options:\n\n- `append`: append information from this hop in the chain to those headers. This is the default setting.\n- `transparent`: leave the headers unchanged, as if the the Kong Gateway was not a proxy.\n- `delete`: remove all the headers, as if the Kong Gateway was the originating client.\n\nNote that all options respect the trusted IP setting, and will ignore headers from the last hop in the chain if they are not from clients with trusted IPs.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`append`: append information from this hop in the chain to those headers. This is the default setting.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`transparent`: leave the headers unchanged, as if the the Kong Gateway was not a proxy.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`delete`: remove all the headers, as if the Kong Gateway was the originating client.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Fixed a proxy authentication error caused by incorrect base64 encoding.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Use lowercase when overwriting the Nginx request host header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now allows multi-value response headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.1": [
+    {
+      "message": "Fixed an issue which occurred when receiving an HTTP `408` from the upstream through a forward proxy. Nginx exited the process with this code, which resulted in Nginx ending the request without any contents.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.0": [
+    {
+      "message": "If the `https_proxy` configuration parameter is not set, it now defaults to `http_proxy` to avoid DNS errors.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.1": [
+    {
+      "message": "Fixed an `invalid header value` error for HTTPS requests. The plugin now accepts multi-value response headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an error where basic authentication headers containing the `=`character weren’t forwarded.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed request errors that occurred when a scheme had no proxy set. The`https` proxy now falls back to the `http` proxy if not specified, and the`http` proxy falls back to `https`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.0": [
+    {
+      "message": "Use lowercase when overwriting the `host` header",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "Added `http_proxy_host`, `http_proxy_port`, `https_proxy_host`, and`https_proxy_port` configuration parameters for mTLS support.\n\n{:.important}\n> These parameters replace the `proxy_port` and `proxy_host` fields, which are now **deprecated** and planned to be removed in 3.x.x.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The `auth_password` and `auth_username` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

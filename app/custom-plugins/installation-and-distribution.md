@@ -26,6 +26,10 @@ related_resources:
     url: /custom-plugins/
   - text: Custom plugins reference
     url: /custom-plugins/reference/
+  - text: Custom plugins in {{site.konnect_short_name}} hybrid mode
+    url: /custom-plugins/konnect-hybrid-mode/
+  - text: Custom plugins in Dedicated Cloud Gateways
+    url: /dedicated-cloud-gateways/reference/#custom-plugins
 ---
 
 Custom plugins for {{site.base_gateway}} consist of Lua source files that need to be in the file system of each of your {{site.base_gateway}} nodes. 
@@ -51,7 +55,7 @@ To package your plugin as a rock, run the following commands from within the plu
 
 2. Pack the installed rock:
    ```sh
-   luarocks pack {plugin-name} {version}
+   luarocks pack YOUR-PLUGIN-NAME PLUGIN-VERSION
    ```
    This creates a `.rock` file.
 
@@ -63,18 +67,29 @@ You can also include the `.rockspec` file if you do have LuaRocks on the target 
 
 The contents of this archive should look like this:
 ```
-tree {plugin-name}
-{plugin-name}
+tree your-plugin-name
+your-plugin-name
 ├── INSTALL.txt
 ├── README.md
 ├── kong
 │   └── plugins
-│       └── {plugin-name}
+│       └── your-plugin-name
 │           ├── handler.lua
 │           └── schema.lua
-└── {plugin-name}-{version}.rockspec
+└── name-version.rockspec
 ```
 {:.no-copy-code}
+
+## Upload plugin to a {{site.konnect_short_name}} Control Plane
+
+If you want to use a custom plugin in {{site.konnect_short_name}}, you have two options:
+
+* With Dedicated Cloud Gateways, you can [upload your entire plugin to {{site.konnect_short_name}}](/dedicated-cloud-gateways/reference/#custom-plugins).
+You only need to upload the plugin once, and {{site.konnect_short_name}} handles plugin distribution to all Data Planes in the same Control Plane.
+* In {{site.konnect_short_name}} Hybrid mode, you need to upload the plugin's `schema.lua` file to {{site.konnect_short_name}}, then manually install the plugin on each Data Plane.
+
+In either case, the plugin must meet specific requirements to be used in {{site.konnect_short_name}}. 
+Review [Custom plugins in {{site.konnect_short_name}}](/custom-plugins/konnect-hybrid-mode/) for more information.
 
 ## Install the plugin
 
@@ -89,7 +104,7 @@ The `.rock` file is a self contained package that can be installed locally or fr
 
 If the `luarocks` utility is installed in your system, you can install the rock in your LuaRocks tree:
 ```sh
-luarocks install {rock-filename}
+luarocks install YOUR-ROCK-FILENAME
 ```
 
 The filename can be a local name, or any of the supported methods, for example `http://myrepository.lan/rocks/my-plugin-0.1.0-1.all.rock`.
@@ -98,11 +113,11 @@ The filename can be a local name, or any of the supported methods, for example `
 
 If the `luarocks` utility is installed in your system, you can install the Lua sources in your LuaRocks tree:
 ```sh
-cd {plugin-name}
+cd YOUR-PLUGIN-NAME
 luarocks make
 ```
 
-This will install the Lua sources in `kong/plugins/{plugin-name}` in your system's LuaRocks tree, where all the {{site.base_gateway}} sources are already present.
+This will install the Lua sources in `kong/plugins/your-plugin-name` in your system's LuaRocks tree, where all the {{site.base_gateway}} sources are already present.
 
 ### Via a Dockerfile or docker run (install and load)
 
@@ -137,7 +152,7 @@ CMD ["kong", "docker-start"]
 
 You can also include the following in your `docker run` command:
 ```sh
--v "{custom_plugin_folder}:/tmp/custom_plugins/kong" 
+-v "./example-plugin-folder:/tmp/custom_plugins/kong" 
 -e "KONG_LUA_PACKAGE_PATH=/tmp/custom_plugins/?.lua;;"
 -e "KONG_PLUGINS=bundled,example-plugin"
 ```
@@ -150,13 +165,13 @@ You can do that with the [`lua_package_path`](/gateway/configuration/#lua-packag
 
 Those properties contain a semicolon-separated list of directories in which to search for Lua sources:
 ```
-lua_package_path = /{path-to-plugin-location}/?.lua;;
+lua_package_path = /path/?.lua;;
 ```
 
 In this example:
-* `/{path-to-plugin-location}` is the path to the directory containing the extracted archive. 
+* `/path/` is the path to the directory containing the extracted archive. 
   Replace it with the location of the `kong` directory from the archive.
-* `?` is a placeholder that will be replaced by `kong.plugins.{plugin-name}` when {{site.base_gateway}} tries to load your plugin. 
+* `?` is a placeholder that will be replaced by `kong.plugins.example-plugin-name` when {{site.base_gateway}} tries to load your plugin. 
   Do not change it.
 * `;;` a placeholder for the default Lua path. Do not change it.
 
@@ -169,7 +184,7 @@ lua_package_path = /usr/local/custom/?.lua;;
 
 If you want to install two or more custom plugins this way, you can set the variable to something like:
 ```
-lua_package_path = /path/to/plugin1/?.lua;/path/to/plugin2/?.lua;;
+lua_package_path = /plugin1/?.lua;/plugin2/?.lua;;
 ```
 
 In this example:
@@ -183,7 +198,7 @@ You can also set this property via its environment variable equivalent: `KONG_LU
 1. Add the custom plugin's name to the [`plugins`](/gateway/configuration/#plugins) list in your {{site.base_gateway}} configuration:
 
    ```
-   plugins = bundled,<plugin-name>
+   plugins = bundled,YOUR-PLUGIN-NAME
    ```
 
    If you are using two or more custom plugins, insert commas in between:
@@ -218,7 +233,7 @@ log_level = debug
 Then, you should see the following log for each plugin being loaded:
 
 ```
-[debug] Loading plugin {plugin-name}
+[debug] Loading plugin your-plugin-name
 ```
 {:.no-copy-code}
 

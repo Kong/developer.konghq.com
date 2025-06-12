@@ -1,0 +1,66 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where usage headers that were supposed to be sent to the upstream were lost instead.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Fixed an issue of DP reporting that deprecated config fields are used when configuration from CP is pushed",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "Fixed migration of redis configuration.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.5": [
+    {
+      "message": "Fixed migration of redis configuration.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Standardize redis configuration across plugins. The redis configuration right now follows common schema that is shared across other plugins.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0": [
+    {
+      "message": "add support for secret rotation with redis connection ",
+      "type": "feature",
+      "scope": "Plugin",
+      "prs": [
+        10570
+      ]
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added support for Redis SSL through configuration properties`redis_ssl` (can be set to `true` or `false`), `ssl_verify`, and `ssl_server_name`. Thanks, [@dominikkukacka](https://github.com/dominikkukacka)! [#8595](https://github.com/Kong/kong/pull/8595)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `redis_username` configuration parameter.\n\nThanks, [@27ascii](https://github.com/27ascii) for the original contribution! [#8213](https://github.com/Kong/kong/pull/8213)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

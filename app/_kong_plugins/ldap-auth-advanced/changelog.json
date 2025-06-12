@@ -1,0 +1,221 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where binary string was truncated at the first null character.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.1": [
+    {
+      "message": "Fixed an issue where binary string was truncated at the first null character.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Supported decoding an empty sequence or set represented in long form length",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added WWW-Authenticate headers to all 401 response.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.5": [
+    {
+      "message": "Fixed an issue where binary string was truncated at the first null character.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix an issue where an exception will be thrown when ldap search fails",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.8": [
+    {
+      "message": "fix an issue where an exception will be thrown when ldap search fails",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.0": [
+    {
+      "message": "fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "fix some cache-related issues which cause groups_required to not work properly and unexpected return codes after a non-200 response",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support decoding non-standard asn1 integer and enumerated encoded with redundant leading padding",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "fix some cache-related issues which cause groups_required to not work properly and unexpected return codes after a non-200 response",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support decoding non-standard asn1 integer and enumerated encoded with redundant leading padding",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.17": [
+    {
+      "message": "Fixed an issue where binary string was truncated at the first null character.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.12": [
+    {
+      "message": "Fixed an issue where an exception will be thrown when ldap search fails",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.4": [
+    {
+      "message": "fix some cache-related issues which cause groups_required to not work properly and unexpected return codes after a non-200 response",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.2": [
+    {
+      "message": "support decoding non-standard asn1 integer and enumerated encoded with redundant leading padding",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "The plugin now performs authentication before authorization, and returns a 403 HTTP code when a user isn’t in the authorized groups.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now supports setting the groups to an empty array when groups are not empty.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "This plugin now allows authorization based on group membership. The new configuration parameter, `groups_required`, is an array of string elements that indicates the groups that users must belong to for the request to be authorized.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The character `.` is now allowed in group attributes.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The character `:` is now allowed in the password field.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Updated the priority for some plugins.: `ldap-auth-advanced` changed from `1002` to `1200`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Kong Manager LDAP authentication failed when `base_dn` was the domain root.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.8": [
+    {
+      "message": "fix some cache-related issues which cause groups_required to not work properly and unexpected return codes after a non-200 response",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.1": [
+    {
+      "message": "Fixed an issue where operational attributes referenced by `group_member_attribute` weren’t returned in search query results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.0": [
+    {
+      "message": "The characters `.` and `:` are now allowed in group attributes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.0": [
+    {
+      "message": "Support passwords that contain a `:` character",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "**Beta feature:** The `ldap_password` and `bind_dn` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

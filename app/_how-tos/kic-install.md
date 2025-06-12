@@ -97,7 +97,7 @@ Content-Type: application/json; charset=utf-8
 Connection: keep-alive
 Content-Length: 48
 X-Kong-Response-Latency: 0
-Server: kong/3.9.0
+Server: kong/{{site.latest_gateway_oss_version}}
 
 {"message":"no Route matched with those values"}
 ```

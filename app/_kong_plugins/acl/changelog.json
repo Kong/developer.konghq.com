@@ -1,0 +1,23 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "Added a new config `always_use_authenticated_groups` to support using authenticated groups even when an authenticated consumer already exists.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Add support for consumer-groups",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Removed the deprecated `blacklist` and `whitelist` configuration parameters. [#8560](https://github.com/Kong/kong/pull/8560)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "Fixed an issue where the Age header was not being updated correctly when serving cached responses.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "add support for consumer group scoping",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "Added the configuration parameter `ignore_uri_case` to allow handling the cache key URI as lowercase.[#10453](https://github.com/Kong/kong/pull/10453)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Proxy Caching (`proxy-cache`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "These plugins don’t store response data in `ngx.ctx.proxy_cache_hit` anymore. Logging plugins that need the response data must now read it from `kong.ctx.shared.proxy_cache_hit`.[#8607](https://github.com/Kong/kong/pull/8607)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Proxy Caching (`proxy-cache`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

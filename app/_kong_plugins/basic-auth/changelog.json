@@ -1,0 +1,58 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.0": [
+    {
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.5": [
+    {
+      "message": "Fix an issue of realm field not recognized for older kong versions (before 3.6)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Add missing WWW-Authenticate headers to 401 response in basic auth plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.0": [
+    {
+      "message": "Enhance error responses for authentication failures in the Admin API",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `basic-auth` changed from `1001` to `1100`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ]
+}
