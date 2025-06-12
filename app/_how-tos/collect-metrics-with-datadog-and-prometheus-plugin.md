@@ -50,6 +50,8 @@ prereqs:
   konnect:
     - name: KONG_STATUS_LISTEN
       value: '0.0.0.0:8100'
+  ports:
+    - "8100:8100"
   inline: 
     - title: Datadog
       content: |
@@ -107,14 +109,11 @@ entities:
 
 Now that the Prometheus plugin is configured, you can configure the Datadog Agent to scrape {{site.base_gateway}} metrics.
 
-macOS (others: https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory)
-
 Create the `conf.yaml` file:
 
 ```sh
 touch ./.datadog-agent/conf.d/openmetrics.d/conf.yaml
 ```
-
 This command uses the macOS directory location. For other distributions, see Datadog's [Agent configuration directory](https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory). 
 
 Copy and paste the following configuration in the `conf.yaml` file:
@@ -138,6 +137,10 @@ instances:
 {: data-deployment-topology="konnect" }
 
 This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} metrics endpoint (`http://localhost:8001/metrics`).
+{: data-deployment-topology="on-prem" }
+
+This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} [Status API metrics](/api/gateway/status/v1/#/paths/metrics/get) endpoint (`http://localhost:8100/metrics`).
+{: data-deployment-topology="konnect" }
 
 ## Restart the Datadog Agent
 
