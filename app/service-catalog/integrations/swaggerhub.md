@@ -2,7 +2,6 @@
 title: SwaggerHub
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -27,10 +26,12 @@ bindable_entities: "SwaggerHub API version"
 ---
 
 The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
+{% include /service-catalog/multi-resource.md %}
 
 ## Prerequisites
 
 You need a [SwaggerHub API key](https://swagger.io/docs/specification/v3_0/authentication/api-keys/) to authenticate your SwaggerHub account with {{site.konnect_short_name}}.
+
 
 ## Authenticate the SwaggerHub integration
 

@@ -28,10 +28,15 @@ rows:
                     - **Discover new resources** from connected systems
                     - **Create new services** based on existing resources
                     - **View key events** associated with the integration
+                    
+                    
+                    > You can configure multiple instances of any third-party integration (such as Datadog or GitLab), including multiple instances of the same type.
+
+
 
   - header:
       type: h2
-      text: "Available integrations"
+      text: "Third-party integrations"
     column_count: 3
     columns:
       - blocks:
@@ -97,3 +102,36 @@ rows:
               cta:
                 text: Learn more
                 url: /service-catalog/integrations/slack/
+  - header:
+      type: h2
+      text: "Built-in Integrations"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Gateway Manager
+              description: Map Gateway Services from Konnect Gateway Manager to visualize services across multiple Control Planes.
+              icon: /assets/icons/gateway.svg
+              cta:
+                text: Learn more
+                url: /gateway-manager/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.konnect_short_name}} Analytics"
+              description: Manage and secure services that Traceable discovers by analyzing API traffic.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /advanced-analytics/
+      - blocks:
+          - type: card
+            config:
+              title: Mesh Manager
+              description: Map Mesh Services from Konnect Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh-manager/
+      
