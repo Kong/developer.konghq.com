@@ -176,15 +176,75 @@ variables:
 
 ## Ingest data to Redis
 
-TBA
+Create an inject_template.py file by pasting the following into your terminal. This script fetches a Wikipedia article, splits the content into chunks, and sends each chunk to a local RAG ingestion endpoint.
 
-## Test ingestion
+```python
+cat <<EOF > inject_template.py
+import requests
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-TBA
+def get_wikipedia_extract(title):
+    url = "https://en.wikipedia.org/w/api.php"
+    params = {
+        "format": "json",
+        "action": "query",
+        "prop": "extracts",
+        "exlimit": "max",
+        "explaintext": True,
+        "titles": title,
+        "redirects": 1
+    }
+
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    data = response.json()
+    pages = data.get("query", {}).get("pages", {})
+
+    for page_id, page in pages.items():
+        if "extract" in page:
+            return page["extract"]
+    return None
+
+# --- Main execution ---
+
+title = "Shark"
+text = get_wikipedia_extract(title)
+
+if not text:
+    print(f"Failed to retrieve Wikipedia content for: {title}")
+    exit()
+
+# Prepend title (optional but improves RAG context)
+text = f"# {title}\n\n{text}"
+
+# Split into manageable chunks
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+docs = text_splitter.create_documents([text])
+
+print(f"Injecting {len(docs)} chunks...")
+
+for doc in docs:
+    response = requests.post(
+        "http://localhost:8001/ai-rag-injector/e9a44a33-4128-4cb4-aeae-0601206b4c16/ingest_chunk",
+        data={"content": doc.page_content}
+    )
+    print(response.status_code, response.text)
+EOF
+
+```
+
+If successful, your terminal will print the following:
+
+```sh
+Injecting 91 chunks...
+200 {"metadata":{"chunk_id":"c55d8869-6858-496f-83d2-ac9126d329e3","ingest_duration":615,"embeddings_tokens_count":2}}
+200 {"metadata":{"chunk_id":"fc7d4fd7-21e0-443e-9504-aef41b8c1932","ingest_duration":779,"embeddings_tokens_count":231}}
+200 {"metadata":{"chunk_id":"8d2aebe1-04e4-40c7-b16f-36300b58fbd3","ingest_duration":569,"embeddings_tokens_count":184}}
+```
 
 ## Configure the AI Prompt Compressor plugin
 
-Then, configure the AI Prompt Compressor plugin to apply compression to the wrapped RAG context using defined token ranges and compression settings.
+Now, you can configure the AI Prompt Compressor plugin to apply compression to the wrapped RAG context using defined token ranges and compression settings.
 
 {% entity_examples %}
 entities:
@@ -205,3 +265,28 @@ entities:
         stop_on_error: true
         timeout: 10000
 {% endentity_examples %}
+
+## Validate your configuration
+
+TBA - ADD HTTP LOG plugin
+
+## Check prompt compression
+
+TBA
+
+## Govern your LLM pipeline
+
+To govern your LLM pipeline further, you can use the AI Prompt Decorator to make sure that the LLM responds only to questions related to the injected RAG context:
+
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-prompt-decorator
+      config:
+        prompts:
+          append:
+          - role: system
+            content:  Use only the information passed before the question in the user message. If no data is provided with the question, respond with ‘no internal data available'
+{% endentity_examples %}
+
