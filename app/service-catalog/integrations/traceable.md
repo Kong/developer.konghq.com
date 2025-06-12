@@ -2,7 +2,6 @@
 title: Traceable Integration
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -30,6 +29,7 @@ bindable_entities: "Traceable Service"
 ---
 
 The Traceable integration lets you connect Traceable Services directly to your Service Catalog services.
+{% include /service-catalog/multi-resource.md %}
 
 ## Authenticate the Traceable integration
 

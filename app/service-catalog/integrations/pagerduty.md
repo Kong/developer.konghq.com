@@ -2,7 +2,6 @@
 title: "PagerDuty"
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -26,7 +25,8 @@ discovery_support: true
 bindable_entities: "PagerDuty Service"
 ---
 
-The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory. 
+The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory.
+{% include /service-catalog/multi-resource.md %}
 
 For each linked PagerDuty service, a summary will be provided on the Service Catalog service's details page, showing current unresolved incidents and the current on-call user.
 

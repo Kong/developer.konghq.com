@@ -2,7 +2,6 @@
 title: Slack Integration
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -33,6 +32,7 @@ mechanism: "pull/ingestion model"
 
 
 The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a Service Catalog service.
+{% include /service-catalog/multi-resource.md %}
 
 ## Prerequisites
 
