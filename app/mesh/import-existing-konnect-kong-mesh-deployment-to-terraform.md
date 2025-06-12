@@ -222,7 +222,7 @@ done
 ```
 </details>
 
-Example useage:
+Example use:
 
 ```bash
 # Usage: import.sh <Mesh Control Plane ID> <Region>

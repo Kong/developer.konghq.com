@@ -24,7 +24,7 @@ When the `MeshOPA` policy is applied, the control plane configures the following
 
 ## TargetRef support matrix
 
-{% if_version gte:2.11.x %}Add commentMore actions
+{% if_version gte:2.11.x %}Add `commentMore` actions
 {% tabs %}
 {% tab Sidecar %}
 | `targetRef`           | Allowed kinds                                            |
