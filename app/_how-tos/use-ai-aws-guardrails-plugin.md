@@ -25,7 +25,7 @@ min_version:
 
 plugins:
   - ai-proxy
-  - ai-azure-content-safety
+  - ai-aws-guardrails
 
 entities:
   - service
@@ -60,9 +60,6 @@ prereqs:
       icon_url: /assets/icons/aws.svg
     - title: Bedrock guardrail
       include_content: prereqs/bedrock
-
-
-
       icon_url: /assets/icons/bedrock.svg
 
   entities:
@@ -82,3 +79,54 @@ cleanup:
 
 automated_tests: false
 ---
+
+## Configure the AI Proxy Advanced plugin
+
+First, you'll need to configure the AI Proxy Advanced plugin to proxy prompt requests to your model provider, and handle authentication:
+
+{% entity_examples %}
+entities:
+  plugins:
+    config:
+      targets:
+      - route_type: llm/v1/chat
+        auth:
+          allow_override: false
+          aws_access_key_id: ${aws_access_key_id}
+          aws_secret_access_key: ${aws_secret_access_key}
+        model:
+          provider: bedrock
+          name: meta.llama3-70b-instruct-v1:0
+          options:
+            bedrock:
+              aws_region: us-east-1
+variables:
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+{% endentity_examples %}
+
+## Configure the AI AWS Guardrails plugin
+
+{% entity_examples %}
+entities:
+  plugins:
+    config:
+      guardrails_id: ${guardrails_id}
+      guardrails_version: ${guardrails_version}
+      aws_region: ${aws_region}
+      aws_access_key_id: ${aws_access_key_id}
+      aws_secret_access_key: ${aws_secret_access_key}
+variables:
+  guardrails_id:
+    value: $GUARDRAILS_ID
+  guardrails_version:
+    value: $GUARDRAILS_VERSION
+  aws_region:
+    value: $AWS_REGION
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+{% endentity_examples %}
