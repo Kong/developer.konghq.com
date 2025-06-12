@@ -86,6 +86,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: Manage Insomnia
+            description: Learn how to manage your Insomnia account and security.
+            icon:  /assets/icons/terminal.svg
+            cta:
+              text: Learn more
+              url: /inso-cli/
+      - blocks:
+        - type: card
+          config:
             title: Inso CLI
             description: Include Inso CLI in your CI/CD pipelines to automate Insomnia tasks.
             icon:  /assets/icons/terminal.svg

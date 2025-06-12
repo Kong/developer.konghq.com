@@ -3,6 +3,8 @@ sections:
   - title: Overview
     items:
       - path: /insomnia/
+      - path: /insomnia/manage-insomnia/
+      - path: /insomnia/enterprise/
       - path: /insomnia/collections/
       - path: /insomnia/documents/
       - path: /insomnia/api-specs/
