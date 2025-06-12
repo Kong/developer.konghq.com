@@ -9,8 +9,7 @@ products:
     - gateway
 
 tags:
-  - logging
-  - audit-logging
+  - aws
 
 min_version:
     gateway: '3.3'
