@@ -47,6 +47,7 @@ prereqs:
            cd conjur-quickstart
            ```
         1. Modify the `docker-compose.yml` file in this directory to change the proxy port from `8443` to `9443`:
+           <!--vale off-->
            ```yaml
            services:
             openssl:
@@ -136,6 +137,7 @@ prereqs:
                 volumes:
                 - ./conf/policy:/policy
            ```
+           <!--vale on-->
            
            {:.warning}
            > **Important:** We're using port `9443` instead of `8443` here because {{site.base_gateway}} also uses port `8443` and both will be running in Docker containers.
@@ -194,6 +196,7 @@ docker network connect conjur-net conjur_server
 
 Using decK, create a [Vault](/gateway/entities/vault/) entity with the required parameters for CyberArk Conjur:
 
+<!--vale off-->
 {% entity_examples %}
 entities:
   vaults:
@@ -216,6 +219,7 @@ variables:
   api_key:
     value: $CONJUR_API_KEY
 {% endentity_examples %}
+<!--vale on-->
 
 ## Validate
 
