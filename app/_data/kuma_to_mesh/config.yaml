@@ -36,7 +36,7 @@ pages:
       - text: Manage control plane permissions on Kubernetes
         url: '/mesh/manage-control-plane-permissions-on-kubernetes/'
     min_version:
-      mesh: '3.11'
+      mesh: '2.11'
   -
     path: app/_src/production/secure-deployment/manage-control-plane-permissions-on-kubernetes.md
     title: 'Manage Control Plane permissions on Kubernetes'
@@ -46,7 +46,7 @@ pages:
       - text: Restrict permissions to selected namespaces on Kubernetes
         url: '/mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/'
     min_version:
-      mesh: '3.11'
+      mesh: '2.11'
   -
   
     path: app/_src/guides/federate-kv.md
