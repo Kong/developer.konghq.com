@@ -18,7 +18,7 @@ search_aliases:
 tier: pro
 ---
 
-Insomnia organizations allows users to share collections and environments safely and securely with their colleagues using Insomnia Cloud.
+Insomnia organizations allows users to share collections and environments safely and securely with their colleagues.
 
 Members of an organization can make commits and set up branches for their collections. They can also view commits and branches from other members.
 
@@ -29,7 +29,7 @@ Members of an organization can make commits and set up branches for their collec
 1. Enter a name and click **Create organization**.
 
 {:.info}
-> New organizations can only be created by the account owner.
+> New organizations can only be created by the account owner or co-owners.
 
 ### Invite users to your organization
 
