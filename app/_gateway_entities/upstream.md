@@ -67,7 +67,7 @@ faqs:
     a: |
       Sticky sessions use a client-side cookie to maintain affinity with a specific Target,
       ensuring consistent routing even if Targets change. Consistent hashing relies on hash inputs
-      (like IP or header values) and can rebalance if Targets are added or removed, without guaranteeing session stickiness.
+      (like IP or header values) and can re-balance if Targets are added or removed, without guaranteeing session stickiness.
 
 ---
 
