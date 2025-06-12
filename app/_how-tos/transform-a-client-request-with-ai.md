@@ -9,6 +9,7 @@ description: Use the AI Request Transformer plugin with OpenAI to transform a cl
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -20,7 +21,7 @@ min_version:
 plugins:
   - ai-request-transformer
 
-entities: 
+entities:
   - service
   - route
   - plugin
