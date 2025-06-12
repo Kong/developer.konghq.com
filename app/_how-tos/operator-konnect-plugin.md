@@ -1,6 +1,6 @@
 ---
-title: Enable a plugin on a Service
-description: "Enable a plugin on a Service in {{site.konnect_short_name}} using the KongPlugin and KongPluginBinding CRDs and configure it for use with your Control Plane."
+title: Enable a plugin on a Route
+description: "Enable a plugin on a Route in {{site.konnect_short_name}} using the KongPlugin and KongPluginBinding CRDs and configure it for use with your Control Plane."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/plugin/
@@ -44,7 +44,7 @@ prereqs:
 
 ## Create a `KongService` 
  
-In this tutorial, we'll bind a plugin to {{site.base_gateway}} entities, like a Gateway Service, using the `KongPluginBinding` CRD. 
+In this tutorial, we'll bind a plugin to {{site.base_gateway}} entities, like a Route, using the `KongPluginBinding` CRD. 
 
 First, create a Gateway Service in [{{site.konnect_short_name}} Gateway Manager](/gateway-manager/) using the `KongService` CRD:
 
@@ -109,23 +109,23 @@ config:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-Then, to bind the plugin to the Service, create a `KongPluginBinding`:
+Then, to bind the plugin to the Route, create a `KongPluginBinding`:
 
 <!-- vale off -->
 {% konnect_crd %}
 kind: KongPluginBinding
 apiVersion: configuration.konghq.com/v1alpha1
 metadata:
-  name: binding-service-example-rate-limiting
+  name: binding-route-example-rate-limiting
 spec:
   pluginRef:
     kind: KongPlugin
     name: rate-limiting-minute-5
   targets:
-    serviceRef:
+    routeRef:
       group: configuration.konghq.com
-      kind: KongService
-      name: example-service
+      kind: KongRoute
+      name: example-route
   controlPlaneRef:
     type: konnectNamespacedRef
     konnectNamespacedRef:
@@ -138,6 +138,6 @@ spec:
 <!-- vale off -->
 {% validation kubernetes-resource %}
 kind: KongPluginBinding
-name: binding-service-example-rate-limiting
+name: binding-route-example-rate-limiting
 {% endvalidation %}
 <!-- vale on -->
