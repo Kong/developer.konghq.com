@@ -1194,6 +1194,8 @@ app/gateway/kong-manager/content-security-policy.md:
   - app/_src/gateway/kong-manager/strengthen-security.md
 app/gateway/debug-requests.md:
   - app/_src/gateway/production/debug-request.md
+app/gateway/amazon-rds-authentication-with-aws-iam.md:
+  - app/_src/gateway/kong-enterprise/aws-iam-auth-to-rds-database.md
 
 # traffic control
 app/gateway/routing/expressions.md:
