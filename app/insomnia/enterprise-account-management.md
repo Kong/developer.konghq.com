@@ -64,8 +64,4 @@ The owner of an Insomnia Enterprise account can invite other users to be co-owne
 
 To add a co-owner:
 1. [Invite](/insomnia/organizations/#invite-users-to-your-organization) the user to your an organization in your Enterprise account.
-1. Once they have accepted the invitation, go to [**Enterprise Controls** > **Co-owners**](https://app.insomnia.rest/app/enterprise/co-owners), search for the user's email address and invite them.
-  
-  By default they will be added with the **Co-owner** role, but you can change it to **Billing-only** to only give them to the [billing settings](https://app.insomnia.rest/app/enterprise/billing). 
-  
-  If you select the **Member** role, the user will be removed as co-owner.
+1. Once they have accepted the invitation, go to [**Enterprise Controls** > **Co-owners**](https://app.insomnia.rest/app/enterprise/co-owners), search for the user's email address and select a role, then click **Invite**.
