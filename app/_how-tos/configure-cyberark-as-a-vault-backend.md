@@ -151,14 +151,14 @@ prereqs:
            ```
            You can find your API key listed under `myConjurAccount:host:BotApp/myDemoApp` in the `my_app_data` file.
 
-      icon_url: /assets/icons/code.svg
+      icon_url: /assets/icons/cyberark.svg
 
 cleanup:
   inline:
     - title: Clean up CyberArk Conjur
       content: |
         To clean up Conjur, delete the `conjur-quickstart` Docker container.
-      icon_url: /assets/icons/code.svg
+      icon_url: /assets/icons/cyberark.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
