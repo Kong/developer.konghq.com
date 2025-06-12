@@ -1,5 +1,5 @@
 ---
-title: Verify build provenance for signed {{site.base_gateway}} images with Cosign
+title: Verify build provenance for signed {{site.base_gateway}} images
 description: Use Cosign and regctl to verify build provenance for signed {{site.base_gateway}} images.
 content_type: how_to
 related_resources:
@@ -30,7 +30,7 @@ tags:
     - docker
 
 tldr:
-    q: How do I verify {{site.ee_product_name}} Docker build provenance with Cosign?
+    q: How do I verify {{site.ee_product_name}} Docker build provenance?
     a: |
       Use `regclt` to gather the digest information for the image, then use `cosign verify-attestation` to verify build provenance.
 ---
