@@ -30,6 +30,13 @@ faqs:
 
 You can use teams to manage access for multiple users. You can add users to a team, and the team can then be assigned to organizations. 
 
+Let's say that you have an engineering organization and a product organization. You could create:
+* An admin team with has access to all organizations
+* A dev team with has access to the engineering organization only
+* A product team with has access to the product organization only
+
+This would allow you to automatically add users to the relevant organizations by adding them to a team.
+
 Teams are managed in [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team). 
 You can create new teams, invite users to teams, and assign organizations to teams.
 
