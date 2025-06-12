@@ -30,6 +30,17 @@ related_resources:
     url: /gateway/audit-logs/
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
+
+faqs:
+  - q: How can I verify {{site.konnect_short_name}} audit log signatures
+    a: |
+      {{site.konnect_short_name}} and Dev Portal use an [ED25519 signature](https://ed25519.cr.yp.to/) on the audit logs they produce. You can verify the signature in your audit logs to confirm that it's from {{site.konnect_short_name}} instead of a bad actor.
+
+      To do that:
+      1. Retrieve the public key from the [audit log JWKS endpoint](/api/konnect/audit-logs/v2/#/operations/get-audit-log-jwks). The public key is stored in the `x` field.
+      1. Get an audit log from {{site.konnect_short_name}} and remove the `sig` value, but make sure to save the signature, you'll need it in the next step.
+      1. Decode the Base64-encoded signature and private key.
+      1. Use your preferred tool, [OpenSSL](https://www.openssl.org/) for example, to verify the ED25519 signature using the signature-less audit log entry, and the decoded signature and public key.
 ---
 
 
