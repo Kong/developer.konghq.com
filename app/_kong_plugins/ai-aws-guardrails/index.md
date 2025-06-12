@@ -63,13 +63,7 @@ The plugin includes a configurable [`response_buffer_size`](/plugins/ai-aws-guar
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
 
-You can control the inspection scope using the [`guarding_mode`](plugins/ai-aws-guardrails/reference/unreleased/#schema--config-guarding-mode) field:
-
-* `INPUT`: Evaluate only the incoming user prompt.
-* `OUTPUT`: Evaluate only the LLM-generated response.
-* `BOTH`: Evaluate both the user input and the model output.
-
-For response content inspection, you can also configure the [`text_source`](/plugins/ai-aws-guardrails/reference/unreleased/#schema--config-text-source) field to control which parts of the response are sent to the AWS Guardrails Content Guard Service. This setting determines whether the plugin inspects only the user's input or the full exchange between user and assistant. Use `concatenate_user_content` to focus on user prompts (for example, for prompt restriction policies), or `concatenate_all_content` to apply guardrails across the entire message history, including `system` and `assistant` responses.
+For response and request inspection, the plugin by default guards input only. You can change this behavior with the [`guarding_mode`](plugins/ai-aws-guardrails/reference/unreleased/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use the [`text_source`](/plugins/ai-aws-guardrails/reference/unreleased/#schema--config-text-source) field. Set it to `concatenate_user_content` to inspect only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
 
 ## Format
 
