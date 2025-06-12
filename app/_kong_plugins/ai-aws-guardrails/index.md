@@ -49,8 +49,14 @@ search_aliases:
 
 The **AI AWS Guardrails** plugin enforces introspection on both inbound requests and outbound responses handled by the [AI Proxy](/plugins/ai-proxy/) plugin. It integrates with the [AWS Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) service to apply compliance and safety policies at the gateway level. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
 
-{:.info}
-> You must configure the required guardrail policies in advance in the [AWS console](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-create.html) or [API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_CreateGuardrail.html).
+Yes — you're absolutely right. This kind of requirement belongs in a **Prerequisites** section rather than a warning block. A warning implies potential danger or misuse, but this is simply a setup requirement.
+
+## Prerequisites
+
+Before using the AI AWS Guardrails plugin, you must define your guardrail policies in AWS. You can do this through:
+
+* The [AWS Console](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-create.html)
+* The [CreateGuardrail API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_CreateGuardrail.html)
 
 ## Overview
 
