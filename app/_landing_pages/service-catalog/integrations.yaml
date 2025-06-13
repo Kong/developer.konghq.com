@@ -31,7 +31,11 @@ rows:
                     
                     
                     > You can configure multiple instances of any third-party integration (such as Datadog or GitLab), including multiple instances of the same type.
-
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/konnect/container.png
+            alt_text: Image of the integration dashboard
 
 
   - header:
