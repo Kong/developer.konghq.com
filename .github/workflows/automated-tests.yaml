@@ -1,0 +1,84 @@
+name: Scheduled Automated Tests
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 0 * * *'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
+
+env:
+  VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        gateway:
+          - '3.9'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      # Configure Ruby to build Jekyll site
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+      - name: Ruby gem cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Bundle Setup
+        run: bundle config path ${{ github.workspace }}/vendor/bundle
+      - name: Bundle Install
+        run: bundle install --jobs 4 --retry 3
+
+      # Configure Node to build assets
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Cache node modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: npm install
+        run: npm ci
+
+      - name: Run site
+        run: |
+          npx netlify dev & npx wait-on http://localhost:8888
+
+      - name: Download Kong License
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      - name: Generate instruction files
+        working-directory: tools/automated-tests
+        run: |
+          npm ci
+          npm run generate-instruction-files
+
+      - name: Run tests
+        working-directory: tools/automated-tests
+        env:
+          KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
+          RUNTIME: gateway
+          GATEWAY_VERSION: ${{ matrix.gateway }}
+        run: |
+          npm run run-tests
