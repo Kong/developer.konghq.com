@@ -39,10 +39,7 @@ tags:
 tldr:
   q: How do I keep RAG prompts under control and avoid bloated LLM requests?
   a: |
-    Use the AI RAG Injector in combination with the AI Prompt Compressor plugin to retrieve relevant chunks and keep the final prompt within reasonable limits to prevent:
-    - Increased latency
-    - Token limit errors
-    - Unexpected bills from your LLM provider
+    Use the AI RAG Injector in combination with the AI Prompt Compressor and AI Prompt Decorator plugins to retrieve relevant chunks and keep the final prompt within reasonable limits to prevent increased latency, token limit errors an unexpected bills from LLM providers.
 
 tools:
   - deck
@@ -53,12 +50,7 @@ prereqs:
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
     - title: Redis stack
-      content: |
-          To complete this tutorial, you must have a [Redis stack](https://redis.io/docs/latest/) configured in your environment.
-          Set your Redis host as an environment variable:
-          ```sh
-          export DECK_REDIS_HOST='YOUR-REDIS-HOST'
-          ```
+      include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
     - title: Kong Prompt Compressor service via Cloudsmith
       content: |
@@ -86,15 +78,10 @@ prereqs:
         ```
         Once you've pulled the image, build and run it in your Docker container.
       icon_url: /assets/icons/cloudsmith.svg
-    - title: Python 3
-      content: |
-        To complete this tutorial, you'll need **Python (version 3.7 or later)** and `pip` installed on your machine. You can verify it by running:
-
-        ```bash
-        python3
-        python3 -m pip --version
-         ```
+    - title: Langchain splitters
+      include_content: prereqs/langchain
       icon_url: /assets/icons/python.svg
+
   entities:
     services:
         - example-service
@@ -138,7 +125,7 @@ variables:
 
 ## Configure the AI RAG Injector plugin
 
-Next, configure the AI RAG Injector plugin to insert the RAG context into the user message only, and wrap it with <LLMLINGUA> tags so the AI Prompt Compressor plugin can compress it effectively.
+Next, configure the AI RAG Injector plugin to insert the RAG context into the user message only, and wrap it with `<LLMLINGUA>` tags so the AI Prompt Compressor plugin can compress it effectively.
 
 {% entity_examples %}
 entities:
@@ -176,7 +163,7 @@ variables:
 
 ## Ingest data to Redis
 
-Create an inject_template.py file by pasting the following into your terminal. This script fetches a Wikipedia article, splits the content into chunks, and sends each chunk to a local RAG ingestion endpoint.
+Create an `inject_template.py` file by pasting the following into your terminal. This script fetches a Wikipedia article, splits the content into chunks, and sends each chunk to a local RAG ingestion endpoint.
 
 ```python
 cat <<EOF > inject_template.py
@@ -205,7 +192,6 @@ def get_wikipedia_extract(title):
             return page["extract"]
     return None
 
-# --- Main execution ---
 
 title = "Shark"
 text = get_wikipedia_extract(title)
@@ -214,10 +200,8 @@ if not text:
     print(f"Failed to retrieve Wikipedia content for: {title}")
     exit()
 
-# Prepend title (optional but improves RAG context)
 text = f"# {title}\n\n{text}"
 
-# Split into manageable chunks
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
 docs = text_splitter.create_documents([text])
 
@@ -230,16 +214,20 @@ for doc in docs:
     )
     print(response.status_code, response.text)
 EOF
+```
+Now, run this script with Python:
 
+```sh
+python3 inject_template.py
 ```
 
 If successful, your terminal will print the following:
 
 ```sh
 Injecting 91 chunks...
-200 {"metadata":{"chunk_id":"c55d8869-6858-496f-83d2-ac9126d329e3","ingest_duration":615,"embeddings_tokens_count":2}}
-200 {"metadata":{"chunk_id":"fc7d4fd7-21e0-443e-9504-aef41b8c1932","ingest_duration":779,"embeddings_tokens_count":231}}
-200 {"metadata":{"chunk_id":"8d2aebe1-04e4-40c7-b16f-36300b58fbd3","ingest_duration":569,"embeddings_tokens_count":184}}
+200 {"metadata":{"chunk_id":"c55d8869-6858-496f-83d2-abcdefghij12","ingest_duration":615,"embeddings_tokens_count":2}}
+200 {"metadata":{"chunk_id":"fc7d4fd7-21e0-443e-9504-abcdefghij13","ingest_duration":779,"embeddings_tokens_count":231}}
+200 {"metadata":{"chunk_id":"8d2aebe1-04e4-40c7-b16f-abcdefghij14","ingest_duration":569,"embeddings_tokens_count":184}}
 ```
 
 ## Configure the AI Prompt Compressor plugin
@@ -296,16 +284,13 @@ class LogHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         timestamp = datetime.datetime.now().isoformat()
 
-        # Read request body
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length).decode('utf-8')
 
-        # Log to file
         log_entry = f"{timestamp} - {post_data}\n"
         with open(LOG_FILE, "a") as f:
             f.write(log_entry)
 
-        # Verbose console output
         print("="*60)
         print(f"Received POST request at {timestamp}")
         print(f"Path: {self.path}")
@@ -353,10 +338,10 @@ When sending the following request:
   body:
     messages:
       - role: user
-        content: What are sharks?
+        content: How many species of sharks are there in the world?
   {% endvalidation %}
 
-You should see something like this in the output of your HTTP log plugin endpoint:
+You should see output like this in your HTTP log plugin endpoint, showing how many tokens were saved through compression:
 
 ```json
 "compressor": {
