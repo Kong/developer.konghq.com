@@ -9,7 +9,7 @@ related_resources:
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
 
-description: Learn how to use the AI Compressor plugin alongside the RAG Injector and AI Prompt Decorator plugins to keep prompts lean, reduce latency, and avoid token limit errors
+description: Learn how to use the AI Compressor plugin alongside the RAG Injector and AI Prompt Decorator plugins to keep prompts lean, reduce latency, and optimize LLM usage for cost efficiency
 
 products:
   - gateway
@@ -39,7 +39,7 @@ tags:
 tldr:
   q: How do I keep RAG prompts under control and avoid bloated LLM requests?
   a: |
-    Use the AI RAG Injector in combination with the AI Prompt Compressor and AI Prompt Decorator plugins to retrieve relevant chunks and keep the final prompt within reasonable limits to prevent increased latency, token limit errors an unexpected bills from LLM providers.
+    Use the AI RAG Injector in combination with the AI Prompt Compressor and AI Prompt Decorator plugins to retrieve relevant chunks and keep the final prompt within reasonable limits to prevent increased latency, token limit errors and unexpected bills from LLM providers.
 
 tools:
   - deck

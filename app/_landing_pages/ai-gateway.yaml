@@ -267,6 +267,25 @@ rows:
             cta:
               url: /how-to/configure-the-konnect-config-store/
               align: end
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Prompt compression
+            description: Keep your prompts lean, reduce latency, and optimize LLM usage for cost efficiency
+            icon: /assets/icons/plugins/ai-prompt-compressor.png
+            cta:
+              url: /plugins/ai-prompt-compressor
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: LLM cost control
+            description: Reduce LLM usage costs by giving you control over how prompts are built and routed
+            icon: /assets/icons/money.svg
+            cta:
+              url: ./#llm-cost-control
+              align: end
 
 
   - header:
@@ -483,6 +502,32 @@ rows:
             icon: /assets/icons/redo.svg
             cta:
               url: /ai-gateway/load-balancing/#retry-and-fallback
+              align: end
+  - header:
+      type: h3
+      text: "LLM Cost Control"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The AI Gateway helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity—balancing performance and cost.
+
+  - columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-prompt-compressor
+      - blocks:
+        - type: card
+          config:
+            title: Save LLM usage costs with semantic load balancing
+            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
+            icon: /assets/icons/money.svg
+            cta:
+              url: /how-to/use-semantic-load-balancing
               align: end
 
   - header:
