@@ -209,7 +209,7 @@ Run `terraform apply -auto-approve` and you will see the Mesh being updated in p
     }
 ```
 
-For full schema of the Mesh resource, see the [konnect-beta provider documentation](https://github.com/Kong/terraform-provider-konnect-beta/blob/v{{ TF_BETA_VERSION }}/docs/resources/mesh.md).
+For full schema of the Mesh resource, see the [konnect-beta provider documentation](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/docs/resources/mesh.md).
 
 ### Adding an example policy
 
