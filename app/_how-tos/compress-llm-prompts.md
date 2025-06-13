@@ -225,7 +225,7 @@ print(f"Injecting {len(docs)} chunks...")
 
 for doc in docs:
     response = requests.post(
-        "http://localhost:8001/ai-rag-injector/e9a44a33-4128-4cb4-aeae-0601206b4c16/ingest_chunk",
+        "http://localhost:8001/ai-rag-injector/{your_rag_injector_plugin_id}/ingest_chunk",
         data={"content": doc.page_content}
     )
     print(response.status_code, response.text)
@@ -266,17 +266,119 @@ entities:
         timeout: 10000
 {% endentity_examples %}
 
+## Log prompt compression
+
+Before we send requests to our LLM, we need to set up the HTTP Logs plugin to check how many tokens we've managed to save by using our configuration. First, create a HTTP logs plugin:
+
+{% entity_examples%}
+entities:
+  plugins:
+    - name: http-log
+      service: example-route
+      config:
+        http_endpoint: http://host.docker.internal:9999/
+        headers:
+          Authorization: Bearer some-token
+        method: POST
+        timeout: 3000
+{% endentity_examples%}
+
+Let's run a simple log collector script which collect logs at `9999` port. Copy and run this snippet in your terminal:
+
+```
+cat <<EOF > log_server.py
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import datetime
+
+LOG_FILE = "kong_logs.txt"
+
+class LogHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        timestamp = datetime.datetime.now().isoformat()
+
+        # Read request body
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
+
+        # Log to file
+        log_entry = f"{timestamp} - {post_data}\n"
+        with open(LOG_FILE, "a") as f:
+            f.write(log_entry)
+
+        # Verbose console output
+        print("="*60)
+        print(f"Received POST request at {timestamp}")
+        print(f"Path: {self.path}")
+        print("Headers:")
+        for header, value in self.headers.items():
+            print(f"  {header}: {value}")
+        print("Body:")
+        print(post_data)
+        print("="*60)
+
+        # Send OK response
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"OK")
+
+if __name__ == '__main__':
+    server_address = ('', 9999)
+    httpd = HTTPServer(server_address, LogHandler)
+    print("Starting log server on http://0.0.0.0:9999")
+    httpd.serve_forever()
+EOF
+```
+
+Now, run this script with Python:
+
+```sh
+python3 log_server.py
+```
+
+If script is successful, you'll receive the following prompt in your terminal:
+
+```sh
+Starting log server on http://0.0.0.0:9999
+```
+
 ## Validate your configuration
 
-TBA - ADD HTTP LOG plugin
+When sending the following request:
 
-## Check prompt compression
+ {% validation request-check %}
+  url: /anything
+  headers:
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  body:
+    messages:
+      - role: user
+        content: What are sharks?
+  {% endvalidation %}
 
-TBA
+You should see something like this in the output of your HTTP log plugin endpoint:
+
+```json
+"compressor": {
+  "compress_items": [
+    {
+      "compress_token_count": 244,
+      "original_token_count": 700,
+      "compress_value": 0.3,
+      "information": "Compression was performed and saved 456 tokens",
+      "compressor_model": "microsoft/llmlingua-2-xlm-roberta-large-meetingbank",
+      "msg_id": 1,
+      "compress_type": "rate",
+      "save_token_count": 456
+    }
+  ],
+  "duration": 1092
+}
+```
 
 ## Govern your LLM pipeline
 
-To govern your LLM pipeline further, you can use the AI Prompt Decorator to make sure that the LLM responds only to questions related to the injected RAG context:
+To govern your LLM pipeline further, you can use the AI Prompt Decorator plugin to make sure that the LLM responds only to questions related to the injected RAG context. Let's apply the following configuration:
 
 
 {% entity_examples %}
@@ -290,3 +392,49 @@ entities:
             content:  Use only the information passed before the question in the user message. If no data is provided with the question, respond with ‘no internal data available'
 {% endentity_examples %}
 
+## Validate final configuration
+
+Now, on any request not related to the ingested content, for example:
+
+{% validation request-check %}
+  url: /anything
+  headers:
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  body:
+    messages:
+      - role: user
+        content: Who founded the city of Ravenna?
+  {% endvalidation %}
+
+  You will receive the following response:
+
+```
+"choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "no internal data available",
+    ...
+      }
+    }
+]
+```
+
+With the following compression applied:
+
+```json
+"compress_items": [
+  {
+    "compress_token_count": 301,
+    "original_token_count": 957,
+    "compress_value": 0.3,
+    "information": "Compression was performed and saved 656 tokens",
+    "compressor_model": "microsoft/llmlingua-2-xlm-roberta-large-meetingbank",
+    "msg_id": 1,
+    "compress_type": "rate",
+    "save_token_count": 656
+  }
+]
+```

@@ -133,12 +133,12 @@ Replace `<image-name>` and `<tag>` with the appropriate image and version, such 
 docker pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
 ```
 
-#### Dockerfile usage
+#### Run the image
 
-To use an image in a `Dockerfile`, reference it as follows:
+You can run the image by pasting the following command in Docker:
 
-```dockerfile
-FROM pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
+```bash
+docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
 ```
 
 ### Image configuration options
