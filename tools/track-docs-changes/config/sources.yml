@@ -2331,4 +2331,5 @@ app/_how-tos/use-sdks-with-ai-proxy.md:
   - app/_hub/kong-inc/ai-proxy/how-to/_sdk-usage.md
 app/mesh/provenance-verification-images.md:
   - app/_src/mesh/features/provenance-verification-images.md
-
+app/_how-tos/verify-build-provenance-for-signed-images.md:
+  - app/_src/gateway/kong-enterprise/provenance-verification.md
