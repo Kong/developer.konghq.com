@@ -18,15 +18,15 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
+description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} services.
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
 discovery_support: true
 bindable_entities: "SwaggerHub API version"
 ---
 
-The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
+The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} services.
 
 ## Prerequisites
 
@@ -34,7 +34,7 @@ You need a [SwaggerHub API key](https://swagger.io/docs/specification/v3_0/authe
 
 ## Authenticate the SwaggerHub integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
+1. From the **{{site.konnect_catalog}}** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
 2. Select **SwaggerHub**, then **Install SwaggerHub**.
 3. Select **Authorize**. 
 
