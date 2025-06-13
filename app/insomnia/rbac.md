@@ -10,14 +10,8 @@ breadcrumbs:
 products:
     - insomnia
 related_resources:
-  - text: Storage
-    url: /insomnia/storage/
-  - text: Git sync
-    url: /insomnia/storage/#git-sync
-  - text: Local vault
-    url: /insomnia/storage/#local-vault
-  - text: External vault
-    url: /insomnia/external-vault/
+  - text: Team RBAC and domain capture
+    url: https://konghq.com/blog/product-releases/insomnia-teams-rbac-and-domain-capture
 ---
 
 Insomnia Organizations allows Insomnia Users to share Collections and Environments safely and securely with their colleagues using Insomnia Cloud or Git sync for collaboration.
