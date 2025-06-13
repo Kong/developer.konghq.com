@@ -24,16 +24,16 @@ works_on:
   - on-prem
 ---
 
-You can use AWS Identity and Access Management (IAM) authentication to connect to the Amazon RDS database that you use for {{site.base_gateway}}. This page describes how to use this feature to secure your database configurations and database connections.
+You can use AWS Identity and Access Management (IAM) authentication to connect to the Amazon RDS database that you use for {{site.base_gateway}}. This page explains how to configure IAM authentication to secure your database settings and connections.
 
-When you enable this feature, you don't need to use a password when you connect to a database instance. Instead, you use a temporary authentication token. Because AWS IAM manages the authentication externally, the database doesn't store user credentials. If you use Amazon RDS for {{site.base_gateway}}'s database, you can enable this feature on your running cluster. This ensures that you don't have to store database user credentials on both the {{site.base_gateway}} (`pg_password`) and RDS database side. 
+With IAM authentication enabled, you don't need a password to connect to a database instance. Instead, you use a temporary authentication token. Because AWS IAM manages the authentication externally, the database doesn't store user credentials. If you're using Amazon RDS for {{site.base_gateway}}'s database, you can enable IAM authentication on your running cluster. This eliminates the need to store user credentials on both the {{site.base_gateway}} (`pg_password`) and RDS sides.
 
 ## AWS IAM authentication limitations
 
 AWS IAM authentication has some limitations. Go through each one before you use this feature in your production environment:
 
 * For a traditional {{site.base_gateway}} cluster or single traditional nodes, only use IAM database authentication if {{site.base_gateway}} requires less than 200 new IAM database authentications per second. Establishing more connections per second can result in throttling. Authentication only happens on each connection's initialization part after the connection is successfully established; the following queries and communication don't authenticate. Check the TPS of the connection establishment on your database to ensure you aren't encountering this limitation. Traditional clusters are more likely to encounter this limitation because each node needs to establish connections to the database. For more information, see [Recommendations for IAM database authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html#UsingWithRDS.IAMDBAuth.ConnectionsPerSecond) in the Amazon RDS user guide. 
-* Enabling AWS IAM authentication requires SSL connection to the database. To do this, you must configure your RDS cluster correctly and provide the correct SSL-related configuration on the {{site.base_gateway}} side. Enabling SSL also results in some performance overhead if you didn't previously use it. Currently, TLSv1.3 isn't supported by Amazon RDS.
+* Enabling AWS IAM authentication requires SSL connection to the database. To do this, you must configure your RDS cluster correctly and provide the correct SSL-related configuration on the {{site.base_gateway}} side. Enabling SSL may cause some performance overhead if you weren't using it before. Currently, TLSv1.3 isn't supported by Amazon RDS.
 - Since the Postgres RDS does not support mTLS, you can't enable mTLS between the {{site.base_gateway}} and the Postgres RDS database when AWS IAM authentication is enabled.
 - You **can't** change the value of the environment variables that you use for the AWS credential after booting {{site.base_gateway}}.
 
@@ -42,10 +42,10 @@ For additional recommendations and limitations, see [IAM database authentication
 
 ## Enabling AWS IAM authentication
 
-You can enable AWS IAM authentication by using an environment variable or using the {{site.base_gateway}} configuration file. You can enable this feature in both read-only and read-write mode, or just in read-only mode. 
+You can enable AWS IAM authentication through an environment variable or the Kong Gateway configuration file. It supports both read-only and read-write modes, or you can enable it in read-only mode only.
 
 {:.info}
-> **Note:** When the AWS IAM authentication is enabled, {{site.base_gateway}} will ignore the related password configs. Enabling the authentication only in read-only mode will not influence the read-write related configs, so `pg_user` and `pg_password` function normally. 
+> **Note:** When AWS IAM authentication is enabled, {{site.base_gateway}} ignores the corresponding password configurations. If authentication is enabled only for read-only mode, the read-write settings—such as `pg_user` and `pg_password`—remain unaffected and continue to function as usual.
 
 Before you enable AWS IAM authentication, you must do the following in the `kong.conf` file:
 * Remove `pg_password` or `pg_ro_password`.
@@ -63,7 +63,7 @@ Before you enable the AWS IAM authentication, you must configure your Amazon RDS
    
       Using an IAM role defined by `serviceaccount` requires a request to the AWS STS service, so you also need to make sure that your Kong instance inside the Pod can access the AWS STS service endpoint. 
    
-      If you're using STS regional endpoints, make sure you have `AWS_STS_REGIONAL_ENDPOINTS` defined in your environment variables.
+      When using STS regional endpoints, you must set the `AWS_STS_REGIONAL_ENDPOINTS` environment variable.
    - If you run {{site.base_gateway}} locally, use the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to define the access key and secret key, or `AWS_PROFILE` and `AWS_SHARED_CREDENTIALS_FILE` to use a profile and a credentials file.
    
    {:.warning}
@@ -72,7 +72,7 @@ Before you enable the AWS IAM authentication, you must configure your Amazon RDS
    {:.info}
    > **Note:** IAM Identity Center credential provider and Process credential provider are not supported.
 
-   - {% new_in 3.8 %} If you want to assume a role, make sure that the original IAM role that Kong uses has the correct permission to assume the role of the target IAM role, and that the target IAM role has the correct permission to connect to the database using IAM authentication.
+   - {% new_in 3.8 %} If you want Kong to assume a different IAM role, ensure that the original IAM role it uses has permission to assume the target role, and that the target role has permission to connect to the database using IAM authentication.
    - {% new_in 3.8 %} If you have users with non-public VPC networks and private VPC endpoints (without private DNS names enabled), you can configure an AWS Service Token Service (STS) endpoint globally with `vault_aws_sts_endpoint_url` or on a custom AWS Vault entity with `sts_endpoint_url`.
 
 - **Assign an IAM policy to the {{site.base_gateway}} IAM role**. For more information, see [Creating and using an IAM policy for IAM database access](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.IAMPolicy.html) in the Amazon RDS documentation.
@@ -109,12 +109,11 @@ KONG_PG_RO_IAM_AUTH=on
 KONG_PG_IAM_AUTH_ASSUME_ROLE_ARN=$ROLE_ARN
 KONG_PG_IAM_AUTH_ROLE_SESSION_NAME=$ROLE_SESSION_NAME
 
-# Optional, specify the custom STS endpoint URL used for the IAM assume role
+# Optional: Specify a custom STS endpoint URL for IAM role assumption
 # This value will override the default STS endpoint URL, which should be
 # `https://sts.amazonaws.com`, or `https://sts.$REGION.amazonaws.com` if
 # `AWS_STS_REGIONAL_ENDPOINTS` is set to `regional`(by default).
-# If you are not using a private VPC endpoint for STS service, you should
-# not specify this value
+# Only set this if you're using a private VPC endpoint for the STS service
 KONG_PG_IAM_AUTH_STS_ENDPOINT_URL=$STS_ENDPOINT
 
 # For read-only connections, if you need a different role than for read-write
@@ -142,18 +141,17 @@ pg_ro_iam_auth=on
 # For read-write connections
 pg_iam_auth_assume_role_arn=$ROLE_ARN
 pg_iam_auth_role_session_name=$ROLE_SESSION_NAME
-# Optional, specify the custom STS endpoint URL used for the IAM assume role
+# Optional: Specify a custom STS endpoint URL for IAM role assumption 
 # This value will override the default STS endpoint URL, which should be
 # `https://sts.amazonaws.com`, or `https://sts.$REGION.amazonaws.com` if
 # `AWS_STS_REGIONAL_ENDPOINTS` is set to `regional`(by default).
-# If you are not using a private VPC endpoint for STS service, you should
-# not specify this value
+# Only set this if you're using a private VPC endpoint for the STS service 
 pg_iam_auth_sts_endpoint_url=$STS_ENDPOINT
 
 # For read-only connections, if you need a different role than for read-write
 pg_ro_iam_auth_assume_role_arn=$ROLE_ARN
 pg_ro_iam_auth_role_session_name=$ROLE_SESSION_NAME
-# Optional, same as `pg_iam_auth_sts_endpoint_url`
+# Optional: same as `pg_iam_auth_sts_endpoint_url`
 pg_ro_iam_auth_sts_endpoint_url=$STS_ENDPOINT
 ```
 
