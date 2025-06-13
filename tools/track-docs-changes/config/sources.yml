@@ -1019,6 +1019,7 @@ app/_landing_pages/advanced-analytics.md:
 app/konnect-platform/audit-logs.md:
   - app/konnect/org-management/audit-logging/index.md
   - app/konnect/reference/audit-logs.md
+  - app/konnect/reference/verify-signatures.md
 app/gateway-manager/konnect-logs.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md
 app/gateway-manager/konnect-labels.md:
