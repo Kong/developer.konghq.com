@@ -505,7 +505,7 @@ rows:
               align: end
   - header:
       type: h3
-      text: "LLM Cost Control"
+      text: "LLM cost control"
     columns:
       - blocks:
           - type: structured_text
