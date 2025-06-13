@@ -45,7 +45,7 @@ For additional recommendations and limitations, see [IAM database authentication
 You can enable AWS IAM authentication through an environment variable or the Kong Gateway configuration file. It supports both read-only and read-write modes, or you can enable it in read-only mode only.
 
 {:.info}
-> **Note:** When AWS IAM authentication is enabled, {{site.base_gateway}} ignores the corresponding password configurations. If authentication is enabled only for read-only mode, the read-write settings—such as `pg_user` and `pg_password`—remain unaffected and continue to function as usual.
+> **Note:** When AWS IAM authentication is enabled, {{site.base_gateway}} ignores the corresponding password configurations. If authentication is enabled only for read-only mode, the read-write settings—such as `pg_user` and `pg_password` remain unaffected and continue to function as usual.
 
 Before you enable AWS IAM authentication, you must do the following in the `kong.conf` file:
 * Remove `pg_password` or `pg_ro_password`.
