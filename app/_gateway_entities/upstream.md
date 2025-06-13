@@ -123,7 +123,7 @@ The load balancer supports the following [load balancing algorithms](/gateway/lo
 - `least-connections`
 - `latency`
 {% if_version gte:3.11 %} 
-- `sticky-sessions`
+- `sticky-sessions` {% new_in 3.11 %}
 {% endif_version %}
 
 {:.info}
@@ -244,7 +244,7 @@ When choosing this algorithm, consider the following:
 
 {% if_version gte:3.11 %} 
 
-### Sticky Sessions
+### Sticky Sessions {% new_in 3.11 %}
 
 Sticky sessions allow {{site.base_gateway}} to route repeat requests from the same client to the same backend Target using a browser-managed cookie.
 
