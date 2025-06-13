@@ -61,7 +61,7 @@ This guide uses the `konnect` and `konnect-beta` Terraform providers.
 The `konnect` provider is the [General Availability](/mesh/{{page.release}}/availability-stages/#general-availability) version.
 Features initially available in the beta version (`konnect-beta`) will move to the GA version (`konnect`) once they are stable and fully tested.
 
-There is a [beta version](/availability-stages/#beta) of the provider called `konnect-beta` that has the latest features.
+There is a [beta version](/stages-of-software-availability/#beta) of the provider called `konnect-beta` that has the latest features.
 
 Mesh resources are available only in the beta provider, but they will be available in the `konnect` provider shortly.
 
