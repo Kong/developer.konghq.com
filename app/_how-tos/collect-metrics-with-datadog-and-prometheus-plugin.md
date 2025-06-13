@@ -142,6 +142,9 @@ This configuration pulls all the `kong.` prefixed metrics from the {{site.base_g
 This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} [Status API metrics](/api/gateway/status/v1/#/paths/metrics/get) endpoint (`http://localhost:8100/metrics`).
 {: data-deployment-topology="konnect" }
 
+{:.warning}
+> **Important:** If you're running {{site.base_gateway}} and the Datadog Agent in Docker, you'll need to replace `localhost` in the `config.yaml` with the name of the {{site.base_gateway}} container. Also, both containers need to be running on the same network for them to communicate.
+
 ## Restart the Datadog Agent
 
 You must restart the agent to start collecting metrics:
