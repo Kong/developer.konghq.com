@@ -133,7 +133,7 @@ module Jekyll
       end
 
       def max_version
-        @max_version ||= metadata.fetch('maxs_version', {})
+        @max_version ||= metadata.fetch('max_version', {})
       end
     end
   end

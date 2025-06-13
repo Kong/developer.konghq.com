@@ -58,17 +58,18 @@ rows:
 
                   You can configure Kong Manager settings (like URL and path) and customization (like header and footer colors) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains, see [multiple domains](/gateway/kong-manager/configuration/#multiple-domains).
   
-  # - columns:
-  #     - blocks:
-  #       - type: structured_text
-  #         config:
-  #           header:
-  #             text: "Kong Manager authentication"
-  #           blocks:
-  #             - type: text
-  #               text: |
-  #                 Kong Manager comes packaged with several authentication methods.
-  # - columns:
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Kong Manager authentication"
+            blocks:
+              - type: text
+                text: |
+                  Kong Manager comes packaged with several authentication methods.
+  - column_count: 3
+    columns:
   #     - blocks:
   #       - type: card
   #         config:
@@ -79,16 +80,16 @@ rows:
   #           icon: /assets/icons/plugins/openid-connect.png
   #           cta:
   #             url: "/how-to/enable-oidc-for-kong-manager/"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Enable Basic Auth for Kong Manager
-  #           description: |
-  #             Configure basic authentication for Kong Manager.
+      - blocks:
+        - type: card
+          config:
+            title: Enable Basic Auth for Kong Manager
+            description: |
+              Configure basic authentication for Kong Manager.
               
-  #           icon: /assets/icons/plugins/basic-auth.png
-  #           cta:
-  #             url: "/how-to/enable-basic-auth-on-kong-manager/"
+            icon: /assets/icons/plugins/basic-auth.png
+            cta:
+              url: "/how-to/enable-basic-auth-on-kong-manager/"
   #     - blocks:
   #       - type: card
   #         config:
