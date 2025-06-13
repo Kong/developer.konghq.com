@@ -54,7 +54,7 @@ cleanup:
   inline:
     - title: Prometheus
       content: |
-        Once you are done experimenting with Prometheus and {{site.base_gateway}}, you can use the following
+        Once you are done experimenting with Prometheus, you can use the following
         commands to stop the Prometheus server you created in this guide:
 
         ```sh

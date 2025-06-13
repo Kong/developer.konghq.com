@@ -76,7 +76,7 @@ cleanup:
   inline:
     - title: Datadog
       content: |
-        To stop collecting {{site.base_gateway}} metrics, you can [uninstall the Datadog Agent](https://docs.datadoghq.com/agent/guide/how-do-i-uninstall-the-agent/).
+        To stop collecting metrics, you can [uninstall the Datadog Agent](https://docs.datadoghq.com/agent/guide/how-do-i-uninstall-the-agent/).
       icon_url: /assets/icons/third-party/datadog.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
