@@ -73,5 +73,6 @@
     "https://platform.openai.com/*",
     "https://docs.sigstore.dev/system_config/installation/",
     "https://konghq.com/products/kong-ai-gateway",
-    "https://packages.konghq.com/public/kong-mesh-binaries-release/raw/names/security-assets/versions/security-assets.tar.gz"
+    "https://packages.konghq.com/public/kong-mesh-binaries-release/raw/names/security-assets/versions/security-assets.tar.gz",
+    "https://cloudsmith.io/~kong/repos/ai-pii/packages/"
   ]

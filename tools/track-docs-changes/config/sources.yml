@@ -70,6 +70,7 @@ app/_gateway_entities/rbac.md:
   - app/_src/gateway/production/access-control/start-securely.md
   - app/_src/gateway/production/access-control/register-admin-api.md
   - app/_src/gateway/kong-manager/auth/rbac/index.md
+  - app/_src/gateway/kong-manager/networking.md
 app/_gateway_entities/group.md:
   - app/_src/gateway/kong-manager/auth/ldap/service-directory-mapping.md
 
@@ -131,7 +132,9 @@ app/gateway/install.md:
   - app/_src/gateway/install/linux/debian.md
   - app/_src/gateway/install/linux/rhel.md
   - app/_src/gateway/install/linux/ubuntu.md
-
+app/gateway/postgresql-reference.md:
+  - app/_src/gateway/production/networking/configure-postgres-tls.md
+  - app/_src/gateway/production/networking//troubleshoot-postgres-tls.md
 # how-tos
 ## gateway
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md:
@@ -428,6 +431,7 @@ app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
 app/_kong_plugins/session/index.md:
   - app/_hub/kong-inc/session/overview/_index.md
+  - app/_src/gateway/kong-manager/auth/sessions.md
 app/_kong_plugins/zipkin/changelog.md:
   - app/_hub/kong-inc/zipkin/_changelog.md
 app/_kong_plugins/zipkin/index.md:
@@ -1000,6 +1004,8 @@ app/_kong_plugins/ai-proxy-advanced/examples/sdk-dynamic-model-selection.yml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
+app/_how-tos/enable-basic-auth-on-kong-manager.md:
+  - app/_src/gateway/kong-manager/auth/basic.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
@@ -1128,12 +1134,16 @@ app/ai-gateway/ai-audit-log-reference.md:
 app/gateway/kong-manager/configuration.md:
   - app/_src/gateway/kong-manager/enable.md
   - app/_src/gateway/kong-manager/troubleshoot.md
+  - app/_src/gateway/kong-manager/networking.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
 app/ai-gateway/streaming.md:
   - app/_hub/kong-inc/ai-proxy/how-to/_streaming.md
   - app/_hub/kong-inc/ai-proxy-advanced/how-to/_streaming.md
-
+app/gateway/tracing.md:
+  - app/_src/gateway/production/tracing/index.md
+  - app/_src/gateway/production/tracing/api.md
+  - app/_src/gateway/production/tracing/write-custom-trace-exporter.md
 app/gateway/reserved-entity-names.md:
   - app/_src/gateway/reference/reserved-entity-names.md
 app/gateway/breaking-changes.md:
@@ -1184,6 +1194,8 @@ app/gateway/upgrade/lts-upgrade.md:
   - app/_src/gateway/upgrade/lts-upgrade.md
 app/gateway/kong-manager/content-security-policy.md:
   - app/_src/gateway/kong-manager/strengthen-security.md
+app/gateway/debug-requests.md:
+  - app/_src/gateway/production/debug-request.md
 
 # traffic control
 app/gateway/routing/expressions.md:
@@ -1254,7 +1266,9 @@ app/gateway/third-party-support.md:
   - app/_src/gateway/support/third-party.md
 app/gateway/version-support-policy.md:
   - app/_src/gateway/support/index.md
+app/gateway/fips-support.md:
   - app/_src/gateway/kong-enterprise/fips-support/index.md
+  - app/_src/gateway/kong-enterprise/fips-support/install.md
 app/gateway/sbom.md:
   - app/_src/gateway/support/sbom.md
 

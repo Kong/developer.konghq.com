@@ -121,6 +121,7 @@ sections:
       - path: /gateway/entities/key/
       - path: /gateway/entities/key-set/
       - path: /gateway/audit-logs/
+      - path: /gateway/fips-support/
       - type: how-to
         products:
           - gateway
@@ -228,6 +229,7 @@ sections:
       - title: Analytics and monitoring plugins
         description: Gateway plugins for monitoring your deployments.
         url: /plugins/?category=analytics-and-monitoring
+      - path: /gateway/tracing/
       
   - title: Custom Plugin Development
     items:
@@ -277,3 +279,4 @@ sections:
       - path: /gateway/entities/partial/
       - path: /how-to/restart-kong-gateway-container/
       - path: /gateway/nginx-directives/
+      - path: /gateway/debug-requests/
