@@ -11,7 +11,6 @@ related_resources:
 
 works_on:
     - on-prem
-    - konnect
 
 min_version:
   gateway: '3.11'
@@ -37,121 +36,23 @@ prereqs:
   inline: 
     - title: CyberArk Conjur
       content: |
-        To run this tutorial, you'll need to run the CyberArk Conjur quickstart in Docker:
-        1. Clone the `conjur-quickstart` GitHub repository:
-           ```sh
-           git clone https://github.com/cyberark/conjur-quickstart.git
-           ```
-        1. Navigate to the `conjur-quickstart` directory:
-           ```sh
-           cd conjur-quickstart
-           ```
-        1. Modify the `docker-compose.yml` file in this directory to change the proxy port from `8443` to `9443`:
-           <!--vale off-->
-           ```yaml
-           services:
-            openssl:
-                image: cyberark/conjur
-                container_name: openssl
-                entrypoint:
-                - openssl
-                - req
-                - -newkey
-                - rsa:2048
-                - -days
-                - "365"
-                - -nodes
-                - -x509
-                - -config
-                - /tmp/conf/tls.conf
-                - -extensions
-                - v3_ca
-                - -keyout
-                - /tmp/conf/nginx.key
-                - -out
-                - /tmp/conf/nginx.crt
-                volumes:
-                - ./conf/tls/:/tmp/conf
+        To run this tutorial, you'll need CyberArk Conjur running with a secret stored. 
+        
+        If you don't already have CyberArk Conjur, you can follow the Docker quickstart guide to [setup an OSS environment](https://www.conjur.org/get-started/quick-start/oss-environment/), [define a policy](https://www.conjur.org/get-started/quick-start/define-policy/), and [store a secret](https://www.conjur.org/get-started/quick-start/store-secret/). 
 
-            bot_app:
-                image: cfmanteiga/alpine-bash-curl-jq
-                privileged: true
-                container_name: bot_app
-                command: tail -F anything
-                volumes:
-                - ./program.sh:/tmp/program.sh
-                restart: on-failure
+        {:.warning}
+        > If you're running Conjur in Docker, change the proxy ports in `docker-compose.yml` to `"9443:443"`. The {{site.base_gateway}} and Conjur containers must also be using the same Docker network.
+        
+        Export the Conjur environment variables:
+        ```sh
+        export DECK_CONJUR_ENDPOINT_URL='http://conjur_server:80'
+        export DECK_CONJUR_ACCOUNT='myConjurAccount'
+        export DECK_CONJUR_LOGIN='host/BotApp/myDemoApp'
+        export DECK_CONJUR_API_KEY='YOUR-API-KEY'
+        ```
+        These environment variables use values from the Conjur Docker quickstart. If you are running Conjur in a different environment, modify them as needed.
 
-            database:
-                image: postgres:15
-                container_name: postgres_database
-                environment:
-                POSTGRES_HOST_AUTH_METHOD: password
-                POSTGRES_PASSWORD: SuperSecretPg
-                ports:
-                - "8432:5432"
-
-            pgadmin:
-            #    https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
-                image: dpage/pgadmin4
-                environment:
-                PGADMIN_DEFAULT_EMAIL: user@domain.com
-                PGADMIN_DEFAULT_PASSWORD: SuperSecret
-                ports:
-                - "8081:80"
-
-            conjur:
-                image: cyberark/conjur
-                container_name: conjur_server
-                command: server
-                environment:
-                DATABASE_URL: postgres://postgres:SuperSecretPg@database/postgres
-                CONJUR_DATA_KEY:
-                CONJUR_AUTHENTICATORS:
-                CONJUR_TELEMETRY_ENABLED: 'false'
-                depends_on:
-                - database
-                restart: on-failure
-                ports:
-                - "8080:80"
-
-            proxy:
-                image: nginx:latest
-                container_name: nginx_proxy
-                ports:
-                - "9443:443"
-                volumes:
-                - ./conf/:/etc/nginx/conf.d/:ro
-                - ./conf/tls/:/etc/nginx/tls/:ro
-                depends_on:
-                - conjur
-                - openssl
-                restart: on-failure
-
-            client:
-                image: cyberark/conjur-cli:8
-                container_name: conjur_client
-                depends_on: [ proxy ]
-                entrypoint: sleep
-                command: infinity
-                volumes:
-                - ./conf/policy:/policy
-           ```
-           <!--vale on-->
-           
-           {:.warning}
-           > **Important:** We're using port `9443` instead of `8443` here because {{site.base_gateway}} also uses port `8443` and both will be running in Docker containers.
-        1. Finish [setting up the Conjur OSS environment](https://www.conjur.org/get-started/quick-start/oss-environment/).
-        1. [Define a policy](https://www.conjur.org/get-started/quick-start/define-policy/).
-        1. [Store a secret](https://www.conjur.org/get-started/quick-start/store-secret/).
-        1. Export the Conjur environment variables:
-           ```sh
-           export DECK_CONJUR_ENDPOINT_URL='http://conjur_server:80'
-           export DECK_CONJUR_ACCOUNT='myConjurAccount'
-           export DECK_CONJUR_LOGIN='host/BotApp/myDemoApp'
-           export DECK_CONJUR_API_KEY='YOUR-API-KEY'
-           ```
-           You can find your API key listed under `myConjurAccount:host:BotApp/myDemoApp` in the `my_app_data` file.
+        You can find your API key listed under `myConjurAccount:host:BotApp/myDemoApp` in the `my_app_data` file.
 
       icon_url: /assets/icons/cyberark.svg
 
@@ -159,13 +60,10 @@ cleanup:
   inline:
     - title: Clean up CyberArk Conjur
       content: |
-        To clean up Conjur, delete the `conjur-quickstart` Docker container.
+        If you're using the Conjur Docker quickstart, you can clean up Conjur by deleting the `conjur-quickstart` Docker container.
       icon_url: /assets/icons/cyberark.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 
 faqs:
@@ -182,15 +80,6 @@ next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
 ---
-
-## Configure Conjur and {{site.base_gateway}} Docker networks
-
-Because you are using Docker for both Conjur and {{site.base_gateway}} in this tutorial, you must configure the containers to use the same Docker network. This allows them to communicate with each other:
-
-```sh
-docker network connect conjur-net kong-quickstart-gateway
-docker network connect conjur-net conjur_server
-```
 
 ## Create a Vault entity for HashiCorp Vault 
 
@@ -223,11 +112,13 @@ variables:
 
 ## Validate
 
-To validate that the secret was stored correctly in Conjur, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
+To validate that the secret was stored correctly in Conjur, you can call a secret from your vault using the `kong vault get` command within the Data Plane container: 
 
 {% validation vault-secret %}
 secret: '{vault://conjur-vault/BotApp%2FsecretVar}'
 value: 'your-secret'
 {% endvalidation %}
+
+This assumes your secret was stored in `BotApp/secretVar` in Conjur.
 
 If the Vault was configured correctly, this command should return the value of the secret. You can use `{vault://my-conjur/BotApp%2FsecretVar}` to reference the secret in any referenceable field.
