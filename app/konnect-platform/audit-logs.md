@@ -40,7 +40,7 @@ faqs:
       1. Retrieve the public key from the [audit log JWKS endpoint](/api/konnect/audit-logs/v2/#/operations/get-audit-log-jwks). The public key is stored in the `x` field.
       1. Get an audit log from {{site.konnect_short_name}} and remove the `sig` value. Make sure to save the signature, you'll need it in the next step.
       1. Decode the Base64-encoded signature and private key.
-      1. Use your preferred tool, [OpenSSL](https://www.openssl.org/) for example, to verify the ED25519 signature using the signature-less audit log entry, and the decoded signature and public key.
+      1. Use your preferred tool (for example, [OpenSSL](https://www.openssl.org/)) to verify the ED25519 signature by using the signature-less audit log entry together with the decoded signature and public key.
 ---
 
 
