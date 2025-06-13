@@ -110,6 +110,11 @@ rows:
 
 {% include_cached entities/permissions-table.md %}
 
+### Kong Manager authentication
+
+When [Kong Manager authentication is enabled](/gateway/kong-manager/configuration/#enable-authentication), RBAC must be enabled to enforce authorization rules. Otherwise, anyone who can log in
+to Kong Manager can perform any operation available on the Admin API.
+
 ## RBAC precedence order
 
 {{site.base_gateway}} uses a precedence model when checking if a user has sufficient permissions to access an endpoint, a resource, or a Workspace. This information is collected from the various permissions or applied across the roles and groups assigned to a user. 

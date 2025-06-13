@@ -60,3 +60,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: load-balancing

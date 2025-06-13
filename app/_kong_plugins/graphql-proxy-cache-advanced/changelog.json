@@ -1,0 +1,40 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "Added Redis cluster_max_redirections configuration option.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Switched to sentinel_nodes and cluster_nodes for redis configuration.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Deprecated timeout config field in redis config in favor of connect_/send_/read_timeout (timeout field will be removed in 4.0).",
+      "type": "deprecation",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "Addded redis strategy support and `bypass_on_err` config for `graphql-proxy-cache-advanced` plugin.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `graphql-proxy-cache-advanced` changed from `100` to `99`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.0": [
+    {
+      "message": "Fixed the error `function cannot be called in access phase (only in: log)`, which was preventing the plugin from working consistently.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

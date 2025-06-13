@@ -1,0 +1,9 @@
+{
+  "3.3.0.0": [
+    {
+      "message": "`kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ]
+}

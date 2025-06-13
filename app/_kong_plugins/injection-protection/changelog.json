@@ -1,0 +1,9 @@
+{
+  "3.9.0.0": [
+    {
+      "message": "Added the `injection-protection` plugin that supports blocking requests based on regex patterns.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

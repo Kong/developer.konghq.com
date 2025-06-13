@@ -39,7 +39,7 @@ config:
     algorithm: semantic
   targets:
   - model:
-      name: gpt-35-turbo
+      name: gpt-3.5-turbo
       provider: openai
       options:
         max_tokens: 826
@@ -83,3 +83,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: load-balancing

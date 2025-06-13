@@ -1,0 +1,150 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "Standardized Redis configuration across plugins. The Redis configuration now follows a common schema shared with other plugins.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "adjust the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other consumer-based plugins",
+      "type": "Breaking Change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.0": [
+    {
+      "message": "When the redis session storage is incorrectly configured, users now receive a 500 error instead of being redirected endlessly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Reduce severity of 'session was not found' messages to 'info'",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.2": [
+    {
+      "message": "adjust the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other consumer-based plugins",
+      "type": "Breaking Change",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.1": [
+    {
+      "message": "adjust the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other consumer-based plugins",
+      "type": "Breaking Change",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.1.1": [
+    {
+      "message": "Reduce severity of 'session was not found' messages to 'info'",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.1.0": [
+    {
+      "message": "When the redis session storage is incorrectly configured, users now receive a 500 error instead of being redirected endlessly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.1.1": [
+    {
+      "message": "When the redis session storage is incorrectly configured, users now receive a 500 error instead of being redirected endlessly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.2.5": [
+    {
+      "message": "Users will now receive a 500 error instead of being endlessly redirected when the Redis session storage is incorrectly configured.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.2.0": [
+    {
+      "message": "The SAML plugin now works on read-only file systems.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The SAML plugin can now handle the field `session_auth_ttl` (removed since 3.2.0.0).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "These plugins now use `lua-resty-session` v4.0.0.\n\nThis update includes new session functionalities such as configuring audiences to manage multiple sessions in a single cookie, global timeout, and persistent cookies.\n\nDue to this update, there are also a number of deprecated and removed parameters in these plugins. See the invidividual plugin documentation for the full list of changed parameters in each plugin.\n\n- [Session changelog](/plugins/session/#changelog)\n- [OpenID Connect changelog](/plugins/openid-connect/#changelog)\n- [SAML changelog](/plugins/saml/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "[Session changelog](/plugins/session/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "[OpenID Connect changelog](/plugins/openid-connect/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "[SAML changelog](/plugins/saml/#changelog)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: Revised docs for the following plugins to include examples: \n- [CORS](/plugins/cors/)\n- [File Log](/plugins/file-log/)\n- [HTTP Log](/plugins/http-log/)\n- [JWT Signer](/plugins/jwt-signer/)\n- [Key Auth](/plugins/key-auth/)\n- [OpenID Connect](/plugins/openid-connect/)\n- [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)\n- [SAML](/plugins/saml/)\n- [StatsD](/plugins/statsd/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [SAML](/plugins/saml/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `session_cookie_httponly` parameter would always be set to `true`, even if it was configured as `false`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Provides SAML v2.0 authentication and authorization between a service provider (Kong Gateway) and an identity provider (IdP).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": " The `anonymous` field can now be configured as the username of the consumer. This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

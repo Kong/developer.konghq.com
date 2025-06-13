@@ -1,0 +1,47 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where a duplicate `protocols` field was accidentally added to the `pre-function` schema.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "`kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Serverless pre-function (`pre-function`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `pre-function` changed from `+inf` to `1000000`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Removed the deprecated `config.functions` configuration parameter from the Serverless Functions plugins’ schemas. Use the `config.access` phase instead.[#8559](https://github.com/Kong/kong/pull/8559)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a problem that could cause a crash.[#9269](https://github.com/Kong/kong/pull/9269)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: Serverless pre-function (`pre-function`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

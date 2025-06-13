@@ -1,0 +1,106 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI upstream URL trailing would be empty.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allow authentication to Bedrock services with assume roles in AWS.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "- Fixed an issue where templates weren't being resolved correctly.\n- The plugins now support nested fields.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.1": [
+    {
+      "message": "Fixed issue of template not being resolved correctly and supported nested fields.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "Fixed a bug where the correct LLM error message was not propagated to the caller.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Azure Managed Identity did not work for AI Transformer Plugins.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.1": [
+    {
+      "message": "Reverted the analytics container key from \"proxy\" to \"ai-proxy\" to align with previous versions.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "Fixed a bug where the correct LLM error message was not propagated to the caller.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "AI plugins: retrieved latency data and pushed it to logs and metrics.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "allow AI plugin to read request from buffered file",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nall AWS Bedrock \"Converse API\" models.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nthe Google Gemini \"chat\" (generateContent) interface.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed certain AI plugins cannot be applied per consumer or per service.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue for multi-modal inputs are not properly validated and calculated.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where Azure Managed-Identity tokens would never rotate  \nin case of a network failure when authenticating.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Introduced the new **AI Response Transformer** plugin that enables passing mid-flight upstream responses to an LLM for transformation or sanitization.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

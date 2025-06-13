@@ -14,7 +14,7 @@ faqs:
   - q: How can I verify that a Data Plane node is running?
     a: |
       You can verify a Data Plane node by accessing a configured route through its proxy URL. 
-      By default, {{site.base_gateway}} listens on port `8000`, so a request to `http://localhost:8000/{your-route}` (or your custom hostname) 
+      By default, {{site.base_gateway}} listens on port `8000`, so a request to `http://localhost:8000/YOUR-ROUTE` (or your custom hostname) 
       should return the expected response from your upstream service.
 
   - q: How do I access Services through a Data Plane node running on Kubernetes?
@@ -168,15 +168,12 @@ body:
 
 <!-- vale on -->
 
-
 {{site.konnect_short_name}} performs a rolling upgrade of the fully-managed Data Plane nodes. 
 This is a zero downtime upgrade because {{site.konnect_short_name}} synchronizes the Data Plane with load balancer registration and de-registration and gracefully terminates the old Data Plane nodes to reduce the impact on the ongoing traffic.
 
 {% endnavtab %}
 
-
 {% navtab "Hybrid mode" %}
-
 
 1. Open [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane,
 and provision a new Data Plane node through the Gateway Manager.
@@ -242,7 +239,7 @@ rows:
     description: "Enables mTLS on connections between the Control Plane and the Data Plane. In this case, set to `\"pki\"`."
   - parameter: "`cluster_control_plane`"
     field: "n/a"
-    description: "Sets the address of the {{site.konnect_short_name}} Control Plane. Must be in the format `host:port`, with port set to `443`.<br><br>**Example:**<br>Control plane endpoint in {{site.konnect_short_name}}:<br>`https://example.cp.khcp.konghq.com`<br>Configuration value:<br>`example.cp.khcp.konghq.com:443`"
+    description: "Sets the address of the {{site.konnect_short_name}} Control Plane. Must be in the format `host:port`, with port set to `443`.<br><br>**Example:**<br>Control Plane endpoint in {{site.konnect_short_name}}:<br>`https://example.cp.khcp.konghq.com`<br>Configuration value:<br>`example.cp.khcp.konghq.com:443`"
   - parameter: "`cluster_server_name`"
     field: "n/a"
     description: "The SNI (Server Name Indication extension) to use for Data Plane connections to the Control Plane through TLS. When not set, Data Plane will use `kong_clustering` as the SNI."
@@ -269,7 +266,74 @@ rows:
     description: "Legacy Vitals analytics reporting mechanism. Set to `off` for all {{site.base_gateway}} versions >= 3.0. Set to `on` for {{site.base_gateway}} 2.8.x to collect Vitals data and send it to the Control Plane for Analytics dashboards and metrics."
 {% endtable %}
 
-
 ## Custom Data Plane labels
 
 Labels are commonly used for metadata information. Set anything that you need to identify your Data Plane nodes -- deployment type, region, size, the team that the node belongs to, the purpose it serves, or any other identifiable information. For more information, review the [{{site.konnect_short_name}} labels](/gateway-manager/konnect-labels/) documentation.
+
+## Troubleshoot Data Plane nodes
+
+Learn how to resolve some common issues with Data Plane nodes.
+
+### Out of sync Data Plane node
+
+**Problem:** Occasionally, a {{site.base_gateway}} Data Plane node might get out of sync with the {{site.konnect_short_name}} Control Plane. 
+If this happens, you will see the status `Out of sync` on the Data Plane Nodes page, meaning the Control Plane can't communicate with the node.
+
+**Solution:** Troubleshoot the issue using the following methods:
+
+* Ensure the Data Plane node is running. If it's not running, start it; if it is running, restart it. 
+After starting it, check the sync status in the Gateway Manager.
+
+* Check the logs of the Data Plane node that's appearing as `Out of sync`. 
+The default directory for {{site.base_gateway}} logs is [`/usr/local/kong/logs`](/gateway/configuration/#log-level).
+
+    If you find any of the following errors:
+
+    * Data Plane node failed to connect to the Control Plane.
+    * Data Plane node failed to ping the Control Plane.
+    * Data Plane node failed to receive a ping response from the Control Plane.
+
+    You may have an issue on the host network where the node resides.
+    Diagnose and resolve the issue, then restart the node and check the sync status in the Gateway Manager.
+
+If the logs show a license issue, or if you are unable to resolve sync issues using the above methods, contact [Kong Support](https://support.konghq.com/).
+
+### Missing functionality
+
+**Problem:** If a {{site.konnect_short_name}} feature isn’t working or isn't available on your Data Plane node, the version may be out of date.
+
+**Solution:** Check that your Data Plane nodes are up to date, and update them if they are not. 
+For Dedicated Cloud Gateways, see the [upgrade documentation](#upgrade-data-planes).
+
+If you're running {{site.base_gateway}} in hybrid mode, check that the Data Plane node versions are up-to-date:
+
+1. Open [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), then open your Control Plane.
+
+1. Select **Data Plane Nodes** from the side menu, then click **New Data Plane Node**.
+
+1. Check the {{site.base_gateway}} version in the code block. 
+This is the version that the {{site.konnect_short_name}} Control Plane is running.
+
+1. Return to the Data Plane nodes page.
+
+1. Check the Data Plane node versions in the table. 
+If you see a node running an older version of {{site.base_gateway}}, your Data Plane node may need [upgrading](#upgrade-data-planes).
+
+If your version is up-to-date but the feature still isn't working, contact [Kong Support](https://support.konghq.com/).
+
+### Kubernetes Data Plane node installation doesn't work
+
+**Problem:** You followed the Kubernetes installation instructions in Gateway Manager but your Data Plane node isn't connecting.
+ 
+**Solution:** Check your deployment logs for errors:
+
+```bash
+kubectl logs deployment/my-kong-kong -n kong
+```
+
+If you find any errors and need to update `values.yaml`, make your changes, save the file, then reapply the configuration by running the Helm `upgrade` command:
+
+```bash
+helm upgrade my-kong kong/kong -n kong \
+  --values ./values.yaml
+```

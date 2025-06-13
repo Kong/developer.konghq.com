@@ -40,24 +40,18 @@ prereqs:
   gateway:
     - name: KONG_TRACING_INSTRUMENTATIONS
     - name: KONG_TRACING_SAMPLING_RATE
+  konnect:
+    - name: KONG_TRACING_INSTRUMENTATIONS
+    - name: KONG_TRACING_SAMPLING_RATE
   inline:
   - title: Tracing environment variables
     position: before
     content: |
       Set the following Jaeger tracing variables before you configure the Data Plane:
-      {: data-deployment-topology="on-prem" }
       ```sh
       export KONG_TRACING_INSTRUMENTATIONS=all
       export KONG_TRACING_SAMPLING_RATE=1.0
       ```
-      {: data-deployment-topology="on-prem" }
-      When you create the Data Plane in {{site.konnect_short_name}}, add the following {{site.base_gateway}} configuration variables for Jaeger tracing:
-      {: data-deployment-topology="konnect" }
-      ```sh
-      -e "KONG_TRACING_INSTRUMENTATIONS=all" \
-      -e "KONG_TRACING_SAMPLING_RATE=1.0" \
-      ```
-      {: data-deployment-topology="konnect" }
   - title: Jaeger
     content: |
       This tutorial requires you to install [Jaeger](https://www.jaegertracing.io/docs/2.5/getting-started/).

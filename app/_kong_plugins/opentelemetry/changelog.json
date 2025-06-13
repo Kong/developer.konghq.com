@@ -1,0 +1,289 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "This plugin now supports variable resource attributes.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "This plugin now supports instana headers in propagation.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "remove redundant deprecation warnings",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved accuracy of sampling decisions.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for OpenTelemetry formatted logs.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0": [
+    {
+      "message": "Increased queue max batch size to 200.",
+      "type": "performance",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an OTEL sampling mode Lua panic bug, which happened when the `http_response_header_for_traceid` option was enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The propagation module has been reworked. The new\noptions allow better control over the configuration of tracing headers propagation.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.8": [
+    {
+      "message": "Fixed an issue where header_type being nil caused a concatenation error.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.3": [
+    {
+      "message": "Improved robustness of parsing for short trace IDs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.0": [
+    {
+      "message": "increase queue max batch size to 200",
+      "type": "performance",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix otel sampling mode lua panic bug when http_response_header_for_traceid option enable",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0": [
+    {
+      "message": "fix an issue that resulted in invalid parent IDs in the propagated tracing headers",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix an issue that resulted in traces with invalid parent IDs when `balancer` instrumentation was enabled",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.0": [
+    {
+      "message": "A new value is added to the parameter `header_type`, which allows Kong to inject datadog headers into the headers of requests forwarding to upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "increase queue max batch size to 200",
+      "type": "performance",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix otel sampling mode lua panic bug when http_response_header_for_traceid option enable",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.13": [
+    {
+      "message": "Fixed an issue where header_type being nil caused a concatenation error.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "increase queue max batch size to 200",
+      "type": "performance",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix otel sampling mode lua panic bug when http_response_header_for_traceid option enable",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.2.0": [
+    {
+      "message": "fix an issue that resulted in traces with invalid parent IDs when `balancer` instrumentation was enabled",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.1": [
+    {
+      "message": "fix an issue that resulted in invalid parent IDs in the propagated tracing headers",
+      "type": "bugfix",
+      "scope": "Plugin",
+      "prs": [
+        11468
+      ],
+      "jiras": [
+        "KAG-2281"
+      ]
+    }
+  ],
+  "3.4.1.0": [
+    {
+      "message": "fix an issue that resulted in invalid parent IDs in the propagated tracing headers",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "A new value is added to the parameter `header_type`, which allows Kong to inject datadog headers into the headers of requests forwarding to upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "Introduced support for the AWS X-Ray propagation header. The field `header_type`now accepts the `aws` value to handle this specific propagation header.[#11075](https://github.com/Kong/kong/pull/11075)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The `endpoint` parameter is now referenceable, and can be stored as a secret in a vault.[#11220](https://github.com/Kong/kong/pull/11220)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.1.1": [
+    {
+      "message": "fix an issue that resulted in invalid parent IDs in the propagated tracing headers",
+      "type": "bugfix",
+      "scope": "Plugin",
+      "prs": [
+        11468
+      ],
+      "jiras": [
+        "KAG-2281"
+      ]
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "These plugins now convert `traceid` in HTTP response headers to hex format.[#10534](https://github.com/Kong/kong/pull/10534)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Spans are now correctly correlated in downstream Datadog traces.[10531](https://github.com/Kong/kong/pull/10531)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `header_type` field. Previously, the `header_type` was hardcoded to `preserve`. Now it can be set to one of the following values: `preserve`, `ignore`, `b3`, `b3-single`,`w3c`, `jaeger`, or `ot`.[#10620](https://github.com/Kong/kong/pull/10620)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the new span attribute `http.client_ip` to capture the client IP when behind a proxy.[#10723](https://github.com/Kong/kong/pull/10723)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `http_response_header_for_traceid` configuration parameter. Setting a string value in this field sets a corresponding header in the response.[#10379](https://github.com/Kong/kong/pull/10379)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where reconfiguring the plugin didn’t take effect.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue that caused spans to be propagated incorrectly resulting in the wrong hierarchy being rendered on tracing backends.[#10663](https://github.com/Kong/kong/pull/10663)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "This plugin can now be scoped to individual services, routes, and consumers.[#10096](https://github.com/Kong/kong/pull/10096)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.[#10052](https://github.com/Kong/kong/pull/10052) [#10044](https://github.com/Kong/kong/pull/10044)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed non-compliances to specification: \n- For `http.uri` in spans, the field is now the full HTTP URI. [#10036](https://github.com/Kong/kong/pull/10036)\n- `http.status_code` is now present on spans for requests that have a status code. [#10160](https://github.com/Kong/kong/pull/10160)\n- `http.flavor` is now a string value, not a double. [#10160](https://github.com/Kong/kong/pull/10160)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "For `http.uri` in spans, the field is now the full HTTP URI. [#10036](https://github.com/Kong/kong/pull/10036)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`http.status_code` is now present on spans for requests that have a status code. [#10160](https://github.com/Kong/kong/pull/10160)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`http.flavor` is now a string value, not a double. [#10160](https://github.com/Kong/kong/pull/10160)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with getting the traces of other formats, where the trace ID reported and propagated could be of incorrect length. This caused traces originating from Kong Gateway to incorrectly connect with the target service, causing Kong Gateway and the target service to submit separate traces.[#10332](https://github.com/Kong/kong/pull/10332)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.1.2": [
+    {
+      "message": "Fixed an issue in these plugins’ batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added referenceable attribute to the `headers` field that could be stored in vaults.[#9611](https://github.com/Kong/kong/pull/9611)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue that the default propagation header was not configured to `w3c` correctly.[#9457](https://github.com/Kong/kong/pull/9457)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Replaced the worker-level table cache with`BatchQueue` to avoid data race.[#9504](https://github.com/Kong/kong/pull/9504)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue that the `parent_id` was not set on the span when propagating w3c traceparent.[#9628](https://github.com/Kong/kong/pull/9628)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

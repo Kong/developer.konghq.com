@@ -32,6 +32,8 @@ module SectionWrapper
         doc.children.first.add_previous_sibling(content) if content && content.children.any?
 
         doc.css('h2').each do |h2|
+          next if h2.ancestors('.heading-section').any?
+
           title = h2.content
           slug = h2['id']
 
@@ -72,7 +74,7 @@ module SectionWrapper
     def move_sibling_content_into_wrapper(h2, wrapper)
       current_node = h2.next_element
 
-      while current_node && current_node.name != 'h2'
+      while current_node && current_node.name != 'h2' && !current_node.matches?('.heading-section')
         next_node = current_node.next_element
         wrapper.at_css('.content').add_child(current_node)
         current_node = next_node

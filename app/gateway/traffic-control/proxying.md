@@ -25,6 +25,9 @@ breadcrumbs:
 works_on:
   - on-prem
   - konnect
+
+search_aliases:
+  - websocket connections
 ---
 
 Proxying is when {{site.base_gateway}} matches an HTTP request with a [Route](/gateway/entities/route/) and forwards the request. This page explains how {{site.base_gateway}} handles proxying.
