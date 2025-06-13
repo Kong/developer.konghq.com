@@ -21,7 +21,11 @@ module Jekyll
         end
 
         def data
-          super.merge('overview?' => true, 'search_aliases' => @plugin.metadata['search_aliases'])
+          super.merge(
+            'overview?' => true,
+            'search_aliases' => @plugin.metadata['search_aliases'],
+            'release' => @plugin.latest_release_in_range
+          )
         end
 
         private
