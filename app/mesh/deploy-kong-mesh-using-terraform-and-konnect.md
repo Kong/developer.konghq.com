@@ -58,7 +58,7 @@ export TF_VAR_region="us"
 
 This guide uses the `konnect` and `konnect-beta` Terraform providers.
 
-The `konnect` provider is the [General Availability](/mesh/{{page.release}}/availability-stages/#general-availability) version.
+The `konnect` provider is the [General Availability](/stages-of-software-availability/#general-availability) version.
 Features initially available in the beta version (`konnect-beta`) will move to the GA version (`konnect`) once they are stable and fully tested.
 
 There is a [beta version](/stages-of-software-availability/#beta) of the provider called `konnect-beta` that has the latest features.
