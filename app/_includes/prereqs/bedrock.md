@@ -1,0 +1,134 @@
+To complete this tutorial, you must have a Guardrail policy created in your AWS Bedrock account:
+
+1. **Install AWS CLI v2**
+   Follow [the official installation guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
+   After installation, confirm it by running:
+
+   ```bash
+   aws --version
+   ````
+
+2. **Configure AWS credentials**
+   Run the following command and provide your IAM user or role credentials:
+
+   ```bash
+   aws configure
+   ```
+
+   You will be prompted to enter:
+
+   * AWS Access Key ID
+   * AWS Secret Access Key
+   * Default region name (e.g., `us-east-1`)
+   * Default output format (e.g., `json`)
+
+   Make sure your IAM user or role has Bedrock permissions such as `bedrock:CreateGuardrail`, `bedrock:CreateGuardrailVersion`, and others necessary for managing guardrails.
+   For more details, see the [AWS CLI configuration documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html).
+
+3. **Verify Bedrock permissions**
+   Test that you can call Bedrock operations by running:
+
+   ```bash
+   aws bedrock list-models
+   ```
+
+   If this command fails, check your credentials, permissions, and configured region.
+
+
+4. Create a `guardrail.json` configuration file:
+
+    ```bash
+    cat <<EOF > guardrail.json
+    {
+    "name": "example-guardrail",
+    "description": "My first Bedrock guardrail via CLI",
+    "blockedInputMessaging": "Input blocked due to policy violation.",
+    "blockedOutputsMessaging": "Output blocked due to policy violation.",
+    "wordPolicyConfig": {
+        "wordsConfig": [
+        {
+            "inputAction": "BLOCK",
+            "inputEnabled": true,
+            "outputAction": "BLOCK",
+            "outputEnabled": true,
+            "text": "badword1"
+        },
+        {
+            "inputAction": "BLOCK",
+            "inputEnabled": true,
+            "outputAction": "BLOCK",
+            "outputEnabled": true,
+            "text": "badword2"
+        }
+        ]
+    },
+    "topicPolicyConfig": {
+        "topicsConfig": [
+        {
+            "name": "quantum computing",
+            "definition": "Anything related to quantum computing",
+            "examples": [],
+            "type": "DENY",
+            "inputAction": "BLOCK",
+            "outputAction": "BLOCK",
+            "inputEnabled": true,
+            "outputEnabled": true
+        }
+        ]
+    },
+    "contentPolicyConfig": {
+        "filtersConfig": [
+        {
+            "type": "VIOLENCE",
+            "inputStrength": "HIGH",
+            "outputStrength": "HIGH",
+            "inputAction": "BLOCK",
+            "outputAction": "BLOCK"
+        },
+        {
+            "type": "PROMPT_ATTACK",
+            "inputStrength": "HIGH",
+            "outputStrength": "NONE",
+            "inputAction": "BLOCK"
+        },
+        {
+            "type": "MISCONDUCT",
+            "inputStrength": "HIGH",
+            "outputStrength": "HIGH",
+            "inputAction": "BLOCK",
+            "outputAction": "BLOCK"
+        },
+        {
+            "type": "HATE",
+            "inputStrength": "HIGH",
+            "outputStrength": "HIGH",
+            "inputAction": "BLOCK",
+            "outputAction": "BLOCK"
+        },
+        {
+            "type": "SEXUAL",
+            "inputStrength": "HIGH",
+            "outputStrength": "HIGH",
+            "inputAction": "BLOCK",
+            "outputAction": "BLOCK"
+        },
+        {
+            "type": "INSULTS",
+            "inputStrength": "HIGH",
+            "outputStrength": "HIGH",
+            "inputAction": "BLOCK",
+            "outputAction": "BLOCK"
+        }
+        ]
+    }
+    }
+    EOF
+    ```
+
+5. Apply this configuration by running the following command in your terminal:
+
+```bash
+aws bedrock create-guardrail \
+  --cli-input-json file://$HOME/guardrail.json \
+  --region <your_aws_region>
+```
