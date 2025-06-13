@@ -97,7 +97,7 @@ rows:
 
 Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity.
 
-The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in Kong Gateway.
+The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in AI Gateway.
 
 ### Access the Docker images
 

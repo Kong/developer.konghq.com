@@ -256,7 +256,7 @@ entities:
 
 ## Log prompt compression
 
-Before we send requests to our LLM, we need to set up the HTTP Logs plugin to check how many tokens we've managed to save by using our configuration. First, create a HTTP logs plugin:
+Before we send requests to our LLM, we need to set up the HTTP Logs plugin to check how many tokens we've managed to save by using our configuration. First, create an HTTP logs plugin:
 
 {% entity_examples%}
 entities:
