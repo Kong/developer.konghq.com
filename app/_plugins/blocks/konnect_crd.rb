@@ -44,7 +44,6 @@ module Jekyll
     end
 
     def add_defaults(config)
-      kind = config['kind']
 
       defaults = {
         'kind' => '@TODO', # Needed to make sure kind is the first item in the YAML output
@@ -52,12 +51,12 @@ module Jekyll
         'metadata' => {
           'name' => '@TODO',
           'namespace' => 'kong'
-        }
+        },
+          'spec' => {}
       }
 
-      # Only include 'spec: {}' for non-KongPlugin resources
-      unless kind == 'KongPlugin'
-        defaults['spec'] = {}
+      if  config['kind'] == 'KongPlugin'
+        defaults.delete('spec') 
       end
 
       defaults.deep_merge(config)
