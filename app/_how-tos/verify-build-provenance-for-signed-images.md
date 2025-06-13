@@ -32,7 +32,7 @@ tags:
 tldr:
     q: How do I verify {{site.ee_product_name}} Docker build provenance?
     a: |
-      Use `regclt` to gather the digest information for the image, then use `cosign verify-attestation` to verify build provenance.
+      Use `regctl` to gather the digest information for the image, then use `cosign verify-attestation` to verify build provenance.
 ---
 
 ## Gather the digest information
