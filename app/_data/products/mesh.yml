@@ -53,12 +53,16 @@ releases:
     branch: release-2.9
   - release: "2.10"
     version: 2.10.1
-    latest: true
     releaseDate: "2025-03-20"
     eol: "2026-03-20"
     branch: release-2.10
-  - edition: mesh
+  - release: "2.11"
+    version: 2.11.0
+    releaseDate: "2025-06-10"
+    endOfLifeDate: "2026-06-10"
+    branch: release-2.11
+    latest: true
+  - release: 2.12
     version: preview
-    release: 2.11
     branch: master
     label: dev
