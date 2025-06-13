@@ -353,7 +353,7 @@ rows:
                     - [**Guardrails and content safety**](./#guardrails-and-content-safety): Enforce policies to prevent inappropriate, unsafe, or non-compliant responses.
                     - [**Automated RAG injection**](./#automated-rag): Seamlessly inject relevant, vetted data into AI prompts without manual RAG implementations.
                     - [**Load balancing**](./#load-balancing): Distribute AI traffic efficiently across multiple model endpoints to ensure performance and reliability.
-
+                    - [**LLM cost control**](./#llm-cost-control): Use the AI Compressor, RAG Injector, and Prompt Decorator to compress and structure prompts efficiently. Combine with AI Proxy Advanced to route requests across OpenAI models by semantic similarity—optimizing for cost and performance.
   - header:
       type: h3
       text: "Data governance"
