@@ -87,6 +87,7 @@ module Jekyll
           return false unless versions.any? { |v| v == current_version }
         end
         if params.key? :gte
+          return true if ENV['RENDER_IF_VERSION_UNRELEASED'] && ENV['JEKYLL_ENV'] != 'production'
           # If there's a greater than or equal to check, fail if it's lower
           version = to_version(params[:gte])
           return false unless current_version >= version
