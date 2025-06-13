@@ -75,6 +75,8 @@ rows:
                 url: "/plugins/prometheus/"
               - text: Collect metrics with {{site.base_gateway}}
                 url: "/how-to/collect-metrics-with-prometheus/"
+              - text: Collect metrics with Datadog
+                url: /how-to/collect-metrics-with-datadog-and-prometheus-plugin/
               - text: Monitor metrics with KIC
                 url: "/kubernetes-ingress-controller/observability/prometheus-grafana/"
       - blocks:

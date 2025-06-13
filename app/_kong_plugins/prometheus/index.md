@@ -12,8 +12,12 @@ related_resources:
     url: /kubernetes-ingress-controller/observability/prometheus-grafana/
   - text: Collect {{site.base_gateway}} metrics with the Prometheus plugin
     url: /how-to/collect-metrics-with-prometheus/
+  - text: Collect metrics with Datadog and the Prometheus plugin
+    url: /how-to/collect-metrics-with-datadog-and-prometheus-plugin/
   - text: Prometheus metrics reference for KIC
     url: /kubernetes-ingress-controller/observability/prometheus/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 
 products:
     - gateway
