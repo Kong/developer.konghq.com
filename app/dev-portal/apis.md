@@ -132,6 +132,12 @@ Once published, the API appears in the selected Portal. If [user authentication]
 
 If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/dev-portal/access-and-approval/) to access the API.
 
+## Filtering published APIs in Dev Portal
+
+You can filter and categorize published APIs on your Dev Portals with custom attributes. By assigning attributes to an API, like `Internal` or `Platform: Web`, this allows users to filter APIs in the Dev Portal sidebar. 
+
+For more information about how to add custom attributes to APIs, see the [MDC documentation](https://portaldocs.konghq.com/components/).
+
 ## Gateway service link
 
 {{site.konnect_short_name}} APIs support linking to a {{site.konnect_short_name}} Gateway Service to enable Developer self-service and generate credentials or API keys. 
