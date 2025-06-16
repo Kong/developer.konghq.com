@@ -83,10 +83,10 @@ rows:
             config:
               title: Private hosted zones
               description: |
-                Connect your Data Plane to your {{site.konnect_short_name}} Control Plane with a private connection to stay compliant and save data transfer costs.
+                Enable private DNS resolution for your Dedicated Cloud Gateway using either a private hosted zone or an Outbound DNS Resolver.
               icon: /assets/icons/aws.svg
               cta:
-                text: Set up an AWS Private Link connection
+                text: Set up an AWS private hosted zone connection
                 url: /dedicated-cloud-gateways/private-hosted-zones/
       - blocks:
           - type: card
