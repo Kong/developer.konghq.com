@@ -18,7 +18,7 @@ related_resources:
     url: /dedicated-cloud-gateways/
   - text: AWS VPC Peering Documentation
     url: https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html
-  - text: Privated hosted zones
+  - text: Private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
 prereqs:
   skip_product: true

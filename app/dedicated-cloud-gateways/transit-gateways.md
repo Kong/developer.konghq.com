@@ -30,7 +30,7 @@ related_resources:
     url: /gateway/hybrid-mode/
   - text: Azure Peering
     url: /dedicated-cloud-gateways/azure-peering/
-  - text: Privated hosted zones
+  - text: Private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
 ---
 
