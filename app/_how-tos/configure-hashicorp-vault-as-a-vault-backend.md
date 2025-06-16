@@ -74,8 +74,8 @@ faqs:
         and {{site.base_gateway}} will call the unwrap API `/v1/sys/wrapping/unwrap` to unwrap the response wrapping token to fetch 
         the real secret ID. {{site.base_gateway}} will use the AppRole role ID and secret ID to call the login API for the AppRole auth path
         on the HashiCorp Vault server and retrieve a client token.
-       - {% new_in 3.11 %} If you're using the `cert` auth method, {{site.base_gateway}} uses a client certificate and private key to retrieve a client token. The certificate has to be previously configured in Hashicorp Vault as a trusted certificate; alternatively, the issuing CA certificate can be set as a trusted CA. The trusted certificate role name is configured by the field `config.cert_auth_role_name`;
-        if one is not provided, Hashicorp vault attempts to authenticate against all configured trusted certificates or trusted CAs. The certificate via the configuration `config.cert_auth_cert`, and the key via `cert_auth_cert_key`.
+       - {% new_in 3.11 %} If you're using the `cert` auth method, {{site.base_gateway}} uses a client certificate and private key to retrieve a client token. The certificate must be previously configured in Hashicorp Vault as a trusted certificate; alternatively, the issuing CA certificate can be set as a trusted CA. The trusted certificate role name is configured by the field `config.cert_auth_role_name`;
+        if one is not provided, Hashicorp vault attempts to authenticate against all configured trusted certificates or trusted CAs. The certificate is configured via the field `config.cert_auth_cert`, and the key via `cert_auth_cert_key`.
       
       By calling the login API, {{site.base_gateway}} will retrieve a client token and then use it in the next step as the value of `X-Vault-Token` header to retrieve a secret.
 
