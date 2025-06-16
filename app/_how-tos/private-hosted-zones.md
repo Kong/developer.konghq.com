@@ -7,7 +7,8 @@ breadcrumbs:
   - /dedicated-cloud-gateways/
 products:
     - gateway
-
+api_specs: 
+  - konnect/cloud-gateways
 works_on:
     - konnect
 

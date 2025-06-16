@@ -12,11 +12,9 @@ api_specs:
   - konnect/control-planes-config
 
 breadcrumbs:
-  - /dedicated-cloud-gateways/
+  - /gateway-manager/
 
 related_resources:
-  - text: Dedicated Cloud Gateways
-    url: /dedicated-cloud-gateways/
   - text: AWS PrivateLink Interface Endpoints
     url: https://docs.aws.amazon.com/vpc/latest/privatelink/create-interface-endpoint.html
   - text: Amazon VPC Documentation

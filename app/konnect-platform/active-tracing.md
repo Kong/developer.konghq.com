@@ -6,7 +6,8 @@ breadcrumbs:
   - /konnect/
 content_type: reference
 layout: reference
-
+search_aliases: 
+  - active tracing
 products:
     - konnect-platform
 works_on:
