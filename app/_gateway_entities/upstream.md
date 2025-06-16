@@ -244,7 +244,7 @@ When choosing this algorithm, consider the following:
 
 {% if_version gte:3.11 %} 
 
-### Sticky Sessions {% new_in 3.11 %}
+### Sticky sessions {% new_in 3.11 %}
 
 Sticky sessions allow {{site.base_gateway}} to route repeat requests from the same client to the same backend Target using a browser-managed cookie.
 
@@ -272,22 +272,24 @@ The cookie settings can be customized per Upstream:
 }
 ```
 
-#### Sticky Sessions vs Consistent Hashing
+#### Sticky sessions vs consistent hashing
+
+The following table describes how sticky sessions differ from consistent hashing:
 
 {% table %}
 columns:
   - title: Feature
     key: feature
-  - title: Sticky Sessions
+  - title: Sticky sessions
     key: sticky
-  - title: Consistent Hashing
+  - title: Consistent hashing
     key: hashing
 rows:
   - feature: "Session Affinity"
     sticky: "Enforced via cookie."
-    hashing: "Dependent on hash input (e.g. IP or header); no persistence if Targets change."
+    hashing: "Dependent on hash input (e.g. IP or header). No persistence if Targets change"
   - feature: "Target Removal Handling"
-    sticky: "Picks a new Target if original is removed."
+    sticky: "Picks a new Target if the original is removed."
     hashing: "Minimally adjusts based on available Targets."
   - feature: "Load Distribution"
     sticky: "May be uneven with long-lived sessions."
