@@ -1,6 +1,6 @@
 ---
 title: "Active tracing spans"
-description: "Spans represent a single unit of trace in {{site.base_gateway}} this doc contains all of the spans availble."
+description: "Spans represent a single unit of trace in {{site.base_gateway}} this doc contains all of the spans available."
 breadcrumbs:
   - /konnect/
 content_type: reference

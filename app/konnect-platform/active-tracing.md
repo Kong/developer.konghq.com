@@ -52,7 +52,7 @@ Tracing follows OpenTelemetry naming conventions for spans and attributes wherev
 
 ## Logs
 
-For deeper insights, tracing sessions can include log capture. When starting a session, administrators can enable this option to collect detailed Kong Gateway logs for its duration. These logs are automatically correlated with trace data using `trace_id` and `span_id`, offering a comprehensive view of all logs generated during a specific trace or span.
+For deeper insights, tracing sessions can include log capture. When starting a session, administrators can enable this option to collect detailed {{site.base_gateway}} logs for its duration. These logs are automatically correlated with trace data using `trace_id` and `span_id`, offering a comprehensive view of all logs generated during a specific trace or span.
 
 ## Payload capture
 
