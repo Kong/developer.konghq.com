@@ -30,6 +30,8 @@ related_resources:
     url: /gateway/hybrid-mode/
   - text: Azure Peering
     url: /dedicated-cloud-gateways/azure-peering/
+  - text: Privated hosted zones
+    url: /dedicated-cloud-gateways/private-hosted-zones/
 ---
 
 When you host your Data Plane nodes on [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) in {{site.konnect_short_name}}, you can use AWS Transit Gateway to establish private connectivity between your AWS-hosted services and the {{site.konnect_short_name}} platform. This creates a secure and scalable network path that avoids exposing internal APIs to the public internet.
