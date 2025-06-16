@@ -280,3 +280,4 @@ sections:
       - path: /how-to/restart-kong-gateway-container/
       - path: /gateway/nginx-directives/
       - path: /gateway/debug-requests/
+      - path: /gateway/amazon-rds-authentication-with-aws-iam/#configuring-your-aws-resources
