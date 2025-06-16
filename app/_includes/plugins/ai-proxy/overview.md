@@ -8,9 +8,33 @@
 
 The plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
 
-The following table describes which providers and requests the {{ plugin }} plugin supports:
+## Overview of capabilities
+
+The following tables present detailed feature support across all supported LLM providers.
+
+### Core text generation feature
+
+The following table summarizes provider support for core text generation features in {{ plugin }} plugin.
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
+
+### Advanced text generation features
+
+The following table summarizes provider support for avanced text generation via {{ plugin }} plugin.
+
+{% include plugins/ai-proxy/tables/supported-providers-2.html providers=providers %}
+
+### Audio capabilities
+
+The following table shows which GenAI providers support audio-based features—text-to-speech, transcriptions, and translations—when accessed through the {{ plugin }} plugin.
+
+{% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
+
+### Image and realtime capabilities
+
+The table below lists support for image generation, image editing, and realtime interaction capabilities via the {{ plugin }} plugin.
+
+{% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers %}
 
 ## How it works
 
