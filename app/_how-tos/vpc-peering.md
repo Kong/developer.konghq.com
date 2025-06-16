@@ -41,7 +41,9 @@ prereqs:
         export AWS_REGION='us-east-2'
         export AWS_VPC_CIDR='10.1.0.0/16'
         ```
-
+related_resources: 
+  - text: Privated hosted zones
+    url: /dedicated-cloud-gateways/private-hosted-zones/
 ---
 
 ## Initiate the VPC peering connection

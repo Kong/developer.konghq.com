@@ -28,8 +28,6 @@ related_resources:
     url: https://docs.aws.amazon.com/vpc/latest/tgw/tgw-getting-started.html
   - text: Hybrid mode
     url: /gateway/hybrid-mode/
-  - text: AWS PrivateLink Peering
-    url: /dedicated-cloud-gateways/aws-private-link/
   - text: Azure Peering
     url: /dedicated-cloud-gateways/azure-peering/
 ---
