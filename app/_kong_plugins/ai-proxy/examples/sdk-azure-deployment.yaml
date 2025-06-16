@@ -7,9 +7,11 @@ extended_description: |
   > For this plugin to work properly, you need a Gateway Route with the following configuration:
   > ```
   > routes:
-  >   - name: azure-chat-model-from-path
-  >     paths:
-  >        - "~/azure/.*"
+  >  - name: azure-chat-model-from-path
+  >    paths:
+  >      - "~/azure/.*"
+  >    methods:
+  >      - POST
   > ```
 
   Using the below configuration, you can target an Azure model deployment named `west-europe-gpt-4o` with the following sample request:
@@ -42,7 +44,6 @@ requirements:
 - Azure OpenAI Service account
 
 config:
-  route_type: "llm/v1/chat"
   auth:
     azure_use_managed_identity: true
   model:
