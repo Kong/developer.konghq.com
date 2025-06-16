@@ -47,6 +47,7 @@ These traces are visualized directly in {{site.konnect_short_name}}’s built-in
 
 Tracing follows OpenTelemetry naming conventions for spans and attributes wherever possible, ensuring consistency and interoperability.
 
+
 {{site.konnect_product_name}}'s active tracing provides exclusive, in-depth insights that are not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
 
 
