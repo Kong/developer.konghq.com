@@ -5,8 +5,7 @@ layout: reference
 description: | 
     {{site.konnect_short_name}} can leverage Azure to create virtual networks, and ingest data from your Azure services and expose them to the internet via {{site.konnect_short_name}}. 
 
-search_aliases: 
-  - azure peering
+
 products:
     - gateway
 works_on:

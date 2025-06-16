@@ -12,7 +12,7 @@ api_specs:
   - konnect/control-planes-config
 
 breadcrumbs:
-  - /konnect/
+  - /gateway-manager/
 
 related_resources:
   - text: AWS PrivateLink Interface Endpoints

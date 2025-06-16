@@ -7,9 +7,7 @@ breadcrumbs:
   - /dedicated-cloud-gateways/
 products:
     - gateway
-search_aliases: 
-  - outbound resolver
-  - outbound dns
+
 works_on:
     - konnect
 
