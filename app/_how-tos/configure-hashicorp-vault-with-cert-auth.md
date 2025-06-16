@@ -1,7 +1,7 @@
 ---
-title: Configure HashiCorp Vault as a vault backend
+title: Configure HashiCorp Vault as a vault backend with certificate authentication
 content_type: how_to
-description: "Learn how to reference HashiCorp Vault secrets from {{site.base_gateway}}."
+description: "Learn how to configure HashiCorp Vault with certificate authentication and reference HashiCorp Vault secrets from {{site.base_gateway}}."
 products:
     - gateway
 
@@ -15,10 +15,9 @@ related_resources:
 
 works_on:
     - on-prem
-    - konnect
 
 min_version:
-  gateway: '3.4'
+  gateway: '3.11'
 
 entities: 
   - vault
@@ -30,9 +29,9 @@ tags:
 search_aliases:
   - Hashicorp Vault
 tldr:
-    q: How can I access HashiCorp Vaults secrets in {{site.base_gateway}}? 
+    q: How can I configure HashiCorp Vault as a Vault backend with certificate authentication access Vault secrets in {{site.base_gateway}}? 
     a: |
-      [Install and run HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault) in dev mode or self-managed. [Write a secret to the Vault](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv?variants=vault-deploy%3Aselfhosted#write-secrets) like `vault kv put secret/customer/acme name="ACME Inc."`. Save your HashiCorp Vault token, host, port, protocol, and KV secrets engine version and use them to configure a {{site.base_gateway}} [Vault entity](/gateway/entities/vault/). Use `{vault://hashicorp-vault/customer/acme/name}` to reference the secret in any referenceable field.
+      placeholder
 
 tools:
     - deck
@@ -88,26 +87,71 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## Create a secret in HashiCorp Vault
+## HCV 
 
-Write a secret to HashiCorp Vault:
 ```
-vault kv put secret/customer/acme name="ACME Inc."
+openssl req -x509 -nodes -days 365 \
+  -newkey rsa:2048 \
+  -keyout ./vault/certs/vault.key \
+  -out ./vault/certs/vault.crt \
+  -subj "/CN=localhost" \
+  -addext "subjectAltName = DNS:host.docker.internal, IP:127.0.0.1"
+
+
+
+
+vault server -dev -dev-root-token-id root -dev-tls
+
+vault policy write rw-secrets ./vault/rw-secrets.hcl
+
+vault server -dev \
+  -dev-root-token-id=root \
+  -dev-listen-address="0.0.0.0:8200" \
+  -dev-tls-cert=./vault/certs/kong.example.com.crt \
+  -dev-tls-key=./vault/certs/kong.example.com.key
+
+vault auth enable cert
+
+vault write auth/cert/config certificate=./vault/certs/rootCA.crt
+
+vault write auth/cert/certs/gw311 \
+  display_name="gw311" \
+  policies="rw-secrets" \
+  certificate=@./vault/certs/rootCA.crt \
+  allow_subdomains=false
+
+vault login -method=cert \
+  -client-cert=./vault/certs/kong.example.com.crt \
+  -client-key=./vault/certs/kong.example.com.key
+
+vault secrets enable -path=kong kv
+
+vault kv put kong/headers/request header="x-kong:test"
+
+vault kv get kong/headers/request
 ```
 
-## Create decK environment variables 
+## LUA trusted cert
 
-We'll use decK environment variables for the `host` and `token` in the {{site.base_gateway}} Vault configuration. This is because these values typically vary between environments. 
+in terminal
+docker cp ./vault/certs/vault.crt kong-quickstart-gateway:./vault.crt
 
-In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault is using. This is because if you used the quick-start script {{site.base_gateway}} is running in a container and uses a different `localhost`.
+in container
+```
+cp /etc/kong/kong.conf.default /etc/kong/kong.conf
+echo "lua_ssl_trusted_certificate = ./vault.crt" >> /etc/kong/kong.conf
+kong reload -c /etc/kong/kong.conf
+```
 
-Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value. 
+
+## Set env var
 
 ```
 export DECK_HCV_HOST=host.docker.internal
 export DECK_HCV_TOKEN='root'
+export DECK_HCV_CERT_KEY=$(awk 'NR > 1 {printf "\\n"} {printf "%s", $0} END {printf ""}' ./vault/certs/kong.example.com.key)
+export DECK_HCV_CERT=$(awk 'NR > 1 {printf "\\n"} {printf "%s", $0} END {printf ""}' ./vault/certs/kong.example.com.crt)
 ```
-
 
 ## Create a Vault entity for HashiCorp Vault 
 
@@ -123,30 +167,30 @@ entities:
         host: ${hcv_host}
         token: ${hcv_token}
         kv: v2
-        mount: secret
+        mount: kong
         port: 8200
-        protocol: http
+        protocol: https
+        auth_method: cert
+        cert_auth_cert_key: ${cert_key}
+        cert_auth_cert: ${cert}
 
 variables:
   hcv_host:
     value: $HCV_HOST
   hcv_token:
     value: $HCV_TOKEN
+  cert_key:
+    value: $HCV_CERT_KEY
+  cert:
+    value: $HCV_CERT
 {% endentity_examples %}
 
 ## Validate
 
-Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
-{: data-deployment-topology="konnect" }
-```sh
-export KONNECT_DP_CONTAINER='your-dp-container-name'
-```
-{: data-deployment-topology="konnect" }
-
 To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
 
 {% validation vault-secret %}
-secret: '{vault://hashicorp-vault/customer/acme/name}'
+secret: '{vault://hashicorp-vault/headers/request/header}'
 value: 'ACME Inc.'
 {% endvalidation %}
 

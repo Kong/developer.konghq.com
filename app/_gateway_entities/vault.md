@@ -527,6 +527,26 @@ rows:
     field-name: "approle_response_wrapping"
     description: |
       Whether the secret ID is a response-wrapping token. Defaults to `false`. When `true`, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes.
+  - parameter: |
+      `vaults.config.cert_auth_cert_key` {% new_in 3.11 %}
+    field-name: "cert_auth_cert_key"
+    description: |
+      The key file for the client certificate.
+  - parameter: |
+      `vaults.config.cert_auth_cert` {% new_in 3.11 %}
+    field-name: "cert_auth_cert"
+    description: |
+      The client certificate file.
+  - parameter: |
+      `vaults.config.cert_auth_cert_verify` {% new_in 3.11 %}
+    field-name: "cert_auth_cert_verify"
+    description: |
+      Whether to perform SSL verification (boolean).
+  - parameter: |
+      `vaults.config.cert_auth_role_name` {% new_in 3.11 %}
+    field-name: "cert_auth_role_name"
+    description: |
+      The trusted certificate role name
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
