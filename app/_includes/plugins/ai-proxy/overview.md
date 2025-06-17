@@ -18,19 +18,19 @@ The following table summarizes provider support for core text generation feature
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
 
-### Advanced text generation features
+### Advanced text generation features {% new_in 3.11 %}
 
-The following table summarizes provider support for avanced text generation via {{ plugin }} plugin.
+The following table summarizes provider support for advanced text generation via {{ plugin }} plugin.
 
 {% include plugins/ai-proxy/tables/supported-providers-2.html providers=providers %}
 
-### Audio capabilities
+### Audio capabilities {% new_in 3.11 %}
 
 The following table shows which GenAI providers support audio-based features—text-to-speech, transcriptions, and translations—when accessed through the {{ plugin }} plugin.
 
 {% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
 
-### Image and realtime capabilities
+### Image and realtime capabilities {% new_in 3.11 %}
 
 The table below lists support for image generation, image editing, and realtime interaction capabilities via the {{ plugin }} plugin.
 
@@ -55,4 +55,5 @@ The {{ plugin }} plugin will mediate the following for you:
 
 Flattening all of the provider formats allows you to standardize the manipulation of the data before and after transmission. It also allows your to provide a choice of LLMs to the Kong consumers, using consistent request and response formats, regardless of the backend provider or model.
 
-This plugin currently only supports REST-based full text responses.
+{:.info}
+> {% new_in 3.11 %} This plugin supports REST-based full-text responses, including RESTful endpoints like `llm/v1/responses`. RESTful endpoints support multiple HTTP methods—for example, you can `POST` to create a response, `GET` to retrieve it, or `DELETE` to remove it.
