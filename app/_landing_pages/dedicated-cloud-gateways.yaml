@@ -81,13 +81,13 @@ rows:
       - blocks:
           - type: card
             config:
-              title: AWS Private Link
+              title: Private hosted zones
               description: |
-                Connect your Data Plane to your {{site.konnect_short_name}} Control Plane with a private connection to stay compliant and save data transfer costs.
+                Enable private DNS resolution for your Dedicated Cloud Gateway using either a private hosted zone or an Outbound DNS Resolver.
               icon: /assets/icons/aws.svg
               cta:
-                text: Set up an AWS Private Link connection
-                url: /dedicated-cloud-gateways/aws-private-link/
+                text: Set up an AWS private hosted zone connection
+                url: /dedicated-cloud-gateways/private-hosted-zones/
       - blocks:
           - type: card
             config:
@@ -98,6 +98,16 @@ rows:
               cta:
                 text: Set up Azure VNet peering
                 url: /dedicated-cloud-gateways/azure-peering/
+      - blocks:
+          - type: card
+            config:
+              title: VPC Peering
+              description: |
+                Set up an AWS VPC peering connection using the API
+              icon: /assets/icons/aws.svg
+              cta:
+                text: How to configure VPC peering with AWS
+                url: /dedicated-cloud-gateways/aws-vpc-peering/
 
   - header:
       type: h2
@@ -167,16 +177,6 @@ rows:
               cta:
                 text: See the reference
                 url: /dedicated-cloud-gateways/reference/
-      - blocks:
-          - type: card
-            config:
-              title: VPC Peering
-              description: |
-                Set up an AWS VPC peering connection using the API
-              icon: /assets/icons/service-document.svg
-              cta:
-                text: How to configure VPC peering with AWS
-                url: /dedicated-cloud-gateways/aws-vpc-peering/
       - blocks:
           - type: card
             config:
