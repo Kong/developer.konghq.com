@@ -16,13 +16,9 @@ Once you've received your Cloudsmith access token, run the following commands in
     ```
 
     {:.info}
-    > This is a token-based login with read-only access. You can pull images but not push them.
+    > This is a token-based login with read-only access. You can pull images but not push them. Contact support for your token.
 
 3. To pull an image:
-
-    ```bash
-    docker pull docker.cloudsmith.io/kong/ai-compress/<image-name>:<tag>
-    ```
 
     Replace `<image-name>` and `<tag>` with the appropriate image and version, such as:
 

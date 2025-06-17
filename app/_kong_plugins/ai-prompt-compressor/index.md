@@ -169,13 +169,13 @@ rows:
 ## How it works
 
 1. The user sends the final prompt to the AI Prompt Compressor plugin.
-2. The plugin checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
+1. The plugin checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
     - If tags are found, only the tagged sections are sent to LLMLingua 2 for compression.
     - If no tags are found, the entire prompt is sent to LLMLingua 2 for compression.
-3. Compression is applied based on configured rules—by ratio, target token count, or conditional length-based rules.
-4. The compressed prompt is returned to the plugin.
-5. The plugin sends the compressed prompt to the Large Language Model (LLM).
-6. The LLM processes the prompt and returns the response to the user.
+1. Compression is applied based on configured rules—by ratio, target token count, or conditional length-based rules.
+1. The compressed prompt is returned to the plugin.
+1. The plugin sends the compressed prompt to the Large Language Model (LLM).
+1. The LLM processes the prompt and returns the response to the user.
 
 The diagram below illustrates how the AI Prompt Compressor plugin processes and compresses incoming prompts based on tagging and configured rules.
 
