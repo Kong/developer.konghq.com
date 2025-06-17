@@ -277,6 +277,8 @@ app/_how-tos/collect-metrics-with-prometheus.md:
   - app/_src/gateway/production/monitoring/prometheus.md
 app/_how-tos/collect-metrics-with-datadog-and-prometheus-plugin.md:
   - app/_src/gateway/production/monitoring/datadog.md
+app/_how-tos/collect-metrics-with-statsd.md:
+  - app/_src/gateway/production/monitoring/statsd.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
