@@ -363,7 +363,8 @@ You should see output like this in your HTTP log plugin endpoint, showing how ma
 
 ## Govern your LLM pipeline
 
-To govern your LLM pipeline further, you can use the AI Prompt Decorator plugin to make sure that the LLM responds only to questions related to the injected RAG context. Let's apply the following configuration:
+You can use the AI Prompt Decorator plugin to make sure that the LLM responds only to questions related to the injected RAG context.
+Let's apply the following configuration:
 
 
 {% entity_examples %}
