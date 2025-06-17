@@ -95,47 +95,9 @@ rows:
 
 ## AI Prompt Compression Service
 
-Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity.
+Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in AI Gateway.
 
-The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in AI Gateway.
-
-### Access the Docker images
-
-Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
-
-1. To pull images, you must authenticate first with the token provided by the Support:
-
-  ```bash
-  docker login docker.cloudsmith.io
-  ```
-
-2. Docker will then prompt you to enter username and password:
-
-  ```bash
-  Username: kong/ai-compress
-  Password: <YOUR_TOKEN>
-  ```
-
-  {:.info}
-  > This is a token-based login with read-only access. You can pull images but not push them.
-
-3. To pull an image:
-
-  ```bash
-  docker pull docker.cloudsmith.io/kong/ai-compress/<image-name>:<tag>
-  ```
-
-  Replace `<image-name>` and `<tag>` with the appropriate image and version, such as:
-
-  ```bash
-  docker pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
-  ```
-
-4. You can now run the image by pasting the following command in Docker:
-
-  ```bash
-  docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
-  ```
+{% include prereqs/cloudsmith.md %}
 
 ### Image configuration options
 
