@@ -3,7 +3,6 @@ title: Migrate a self-managed zone Control Plane to {{site.konnect_short_name}}
 content_type: reference
 description: 'Move your existing {{site.mesh_product_name}} zone Control Planes from a self-managed global Control Plane to a managed global Control Plane in {{site.konnect_short_name}}.'
 layout: reference
-permalink: /mesh-manager/migrate-zone/
 breadcrumbs:
   - /mesh-manager/
 products:
@@ -33,7 +32,7 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 ## Prerequisites
 
 * A Kubernetes or universal cluster with a zone Control Plane connected to a self-managed global Control Plane
-* [`kumactl`](/mesh/latest/production/install-kumactl/) installed and configured
+* [`kumactl`](/mesh/#install-kong-mesh) installed and configured
 * A [global Control Plane in {{site.konnect_short_name}}](/mesh-manager/service-mesh/)
 * [`yq`](https://github.com/mikefarah/yq) installed
 
@@ -81,7 +80,7 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 
    * **Builtin CA:** Copy secrets named `{mesh}.ca-builtin-cert-{backend}` and `{mesh}.ca-builtin-key-{backend}`.
    * **Provided CA:** Copy the secrets listed in the mesh resource.
-   See [mTLS secret storage](/mesh/latest/policies/mutual-tls/#storage-of-secrets) for details.
+   See [mTLS secret storage](/mesh/policies/meshtls/#storage-of-secrets) for details.
 
 1. Switch to the {{site.konnect_short_name}} global Control Plane:
 
@@ -97,11 +96,13 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 
 ## Connect the zone Control Plane to {{site.konnect_short_name}}
 
-1. [Create a new zone](/konnect/mesh-manager/service-mesh/#create-a-zone-in-the-global-control-plane) in {{site.konnect_short_name}}.
+1. [Create a new zone](/mesh-manager/service-mesh/#create-a-zone-in-the-global-control-plane) in {{site.konnect_short_name}}.
+
 
    Use the same name as the existing zone. Replace your current zone's `values.yaml` with the config provided by the UI wizard.
 
-1. If [KDS TLS](/mesh/latest/production/secure-deployment/certificates/#control-plane-to-control-plane-multizone) is enabled with self-signed certs, disable custom certs so the zone can use {{site.konnect_short_name}}'s default CA:
+1. If [KDS TLS](/mesh/production/secure-deployment/certificates/#control-plane-to-control-plane-multizone) is enabled with self-signed certs, disable custom certs so the zone can use {{site.konnect_short_name}}'s default CA:
+
 
    ```bash
    kumactl install control-plane \

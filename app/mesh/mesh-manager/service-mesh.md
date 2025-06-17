@@ -2,8 +2,9 @@
 title: Configure a Mesh global Control Plane with the Kubernetes demo app
 content_type: reference
 description: 'Set up a global Control Plane in {{site.konnect_short_name}}, add a zone, and deploy the Kubernetes demo app to test your {{site.mesh_product_name}} mesh.'
-permalink: /mesh-manager/service-mesh/
 layout: reference
+breadcrumbs:
+  - /mesh-manager/
 products:
   - mesh
 works_on:
