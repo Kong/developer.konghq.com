@@ -29,6 +29,9 @@ plugins:
   - jekyll-include-cache
   - jekyll/vite
 
+include:
+  - _headers
+
 # Collections
 collections:
   gateway_entities:
@@ -141,6 +144,7 @@ mesh_ignored_links_regex:
   - '\[.*\]\(https:\/\/github\.com\/[kK]ong\/kong-mesh.*\)'
 mesh_raw_generated_paths:
   - app/assets/mesh
+  - app/.repos/kuma/app/assets
 mesh_product_name_path: kong-mesh
 mesh_cp_zone_sync_name_prefix: kong-mesh-
 mesh_docker_org: kong

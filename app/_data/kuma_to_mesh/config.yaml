@@ -18,7 +18,7 @@ links:
 pages:
 # Must for GA
   -
-    path: app/_src/guides/consumer-producer-policies.md
+    path: app/_src/guides/consumer-producer-policies-kv.md
     title: 'Producer and Consumer policies'
     description: 'Understand how producer and consumer policies work in {{site.base_product}} to control traffic at the namespace level. This guide walks through setup, roles, and overrides using real examples with MeshService and MeshTimeout.'
     url: /mesh/consumer-producer-policies/
@@ -28,7 +28,28 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/guides/federate.md
+    path: app/_src/guides/restrict-permissions-to-selected-namespaces-on-kubernetes.md
+    title: 'Restrict permissions to selected namespaces on Kubernetes'
+    description: 'This guide explains how to limit Kuma to specific namespaces, giving you greater control over security and resource management.'
+    url: /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/
+    related_resources: 
+      - text: Manage control plane permissions on Kubernetes
+        url: '/mesh/manage-control-plane-permissions-on-kubernetes/'
+    min_version:
+      mesh: '2.11'
+  -
+    path: app/_src/production/secure-deployment/manage-control-plane-permissions-on-kubernetes.md
+    title: 'Manage Control Plane permissions on Kubernetes'
+    description: 'This guide explains how to manage Control Plane permissions on Kubernetes'
+    url: /mesh/manage-control-plane-permissions-on-kubernetes/
+    related_resources: 
+      - text: Restrict permissions to selected namespaces on Kubernetes
+        url: '/mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/'
+    min_version:
+      mesh: '2.11'
+  -
+  
+    path: app/_src/guides/federate-kv.md
     title: 'Federate zone Control Plane'
     description: 'Learn how to federate a {{site.base_product}} zone Control Plane into a multi-zone deployment. This guide walks through setting up a global Control Plane, copying resources, connecting zones, and verifying policy synchronization.'
     url: /mesh/federate/
@@ -56,7 +77,7 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/guides/gateway-builtin.md
+    path: app/_src/guides/gateway-builtin-kv.md
     title: 'Add a builtin gateway'
     description: 'Deploy a built-in gateway in {{site.base_product}} to expose internal mesh services to external traffic. This guide walks through setting up MeshGatewayInstance and MeshGateway resources, defining routes with MeshHTTPRoute, configuring permissions, and securing the gateway with TLS.'
     url: /mesh/add-builtin-gateway/
@@ -68,7 +89,7 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/guides/gateway-delegated.md
+    path: app/_src/guides/gateway-delegated-kv.md
     title: 'Use Kong as a delegated Gateway'
     description: 'Set up {{site.base_gateway}} as a delegated gateway for {{site.base_product}} to expose internal services to external traffic. This guide covers installing the Kong Ingress Controller, enabling sidecar injection, creating routes, configuring permissions with MeshTrafficPermission, and verifying traffic access.'
     url: /mesh/gateway-delegated/
@@ -107,7 +128,7 @@ pages:
       mesh: '2.7'
 
   -
-    path: app/_src/guides/progressively-rolling-in-strict-mtls.md
+    path: app/_src/guides/progressively-rolling-in-strict-mtls-kv.md
     title: 'Progressively rolling in strict mTLS'
     description: 'Progressively roll in mutual TLS with the MeshTLS policy in {{site.mesh_product_name}} without disrupting traffic.'
     url: '/mesh/progressively-rolling-in-strict-mtls/'
@@ -368,6 +389,27 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
+<<<<<<< deploy-mesh-on-k8s
+=======
+    path: app/_src/quickstart/kubernetes-demo-kv.md
+    title: 'Deploy Kong Mesh on Kubernetes'
+    description: 'Step-by-step guide to deploy {{site.mesh_product_name}} on Kubernetes using Helm and Minikube. Includes demo app setup, GUI exploration, and enabling mTLS for zero-trust security.'
+    url: '/mesh/kubernetes/'
+    related_resources:
+      - text: Zone Egress
+        url: /mesh/zone-egress/
+      - text: MeshMultiZoneService
+        url: /mesh/meshmultizoneservice/
+      - text: Mesh requirements
+        url: '/mesh/requirements/'
+      - text: Deploy {{site.mesh_product_name}} in production with Helm
+        url: /mesh/production-usuage-values/
+    search_aliases:
+      - k8s
+    min_version:
+      mesh: '2.6'
+  -
+>>>>>>> main
     path: app/_src/quickstart/universal-docker-demo.md
     title: 'Deploy Kong Mesh on Universal'
     description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
