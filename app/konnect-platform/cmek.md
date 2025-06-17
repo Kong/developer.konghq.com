@@ -45,7 +45,7 @@ The steps required are:
 
 * **Key rotation**: 
   * AWS KMS can rotate keys automatically if the ARN stays constant.
-  * Manual rotation with a new ARN requires updating the key in Konnect.
+  * Manual rotation with a new ARN requires updating the key in Konnect. If the key's ARN changes, data encrypted with the previous key cannot be decrypted in Konnect
 * **Key revocation**: 
   * Revoking or deleting your key in AWS KMS renders associated data permanently unreadable.
 * **Performance impact**: 
