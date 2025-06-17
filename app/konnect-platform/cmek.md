@@ -25,7 +25,7 @@ works_on:
 
 * **Regulatory compliance** with standards such as HIPAA, GDPR, and PCI-DSS
 * **Exclusive decryption access** {{site.base_gateway}} cannot access unencrypted data without your key
-* **Instant revocation** removing the key from AWS KMS makes encrypted data unreadable
+* **Instant revocation** removing the key from AWS KMS makes encrypted data in {{site.konnect_short_name}} unreadable
 
 ## CMEK scope in {{site.konnect_short_name}}
 
