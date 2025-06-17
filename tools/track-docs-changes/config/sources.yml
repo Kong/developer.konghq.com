@@ -275,6 +275,8 @@ app/_how-tos/configure-rbac-user-in-kong-gateway.md:
   - app/_src/gateway/kong-manager/auth/rbac/add-user.md
 app/_how-tos/collect-metrics-with-prometheus.md:
   - app/_src/gateway/production/monitoring/prometheus.md
+app/_how-tos/collect-metrics-with-datadog-and-prometheus-plugin.md:
+  - app/_src/gateway/production/monitoring/datadog.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
