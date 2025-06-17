@@ -100,15 +100,9 @@ openssl req -x509 -nodes -days 365 \
 
 
 
-vault server -dev -dev-root-token-id root -dev-tls
+vault server -config=/vault/config.hcl
 
 vault policy write rw-secrets ./vault/rw-secrets.hcl
-
-vault server -dev \
-  -dev-root-token-id=root \
-  -dev-listen-address="0.0.0.0:8200" \
-  -dev-tls-cert=./vault/certs/kong.example.com.crt \
-  -dev-tls-key=./vault/certs/kong.example.com.key
 
 vault auth enable cert
 
