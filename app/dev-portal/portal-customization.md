@@ -123,7 +123,7 @@ Custom pages allow you to define a page structure/tree that organizes your pages
 ## Developer email customization
 
 You can customize both the email domain and content of emails that developers receive for the following events:
-* Welcome (developer signup approved)
+* Welcome (developer sign-up approved)
 * App registration approved
 * App registration rejected
 * App registration revoked
