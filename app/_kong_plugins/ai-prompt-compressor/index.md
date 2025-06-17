@@ -113,7 +113,7 @@ Kong distributes these images via a private Cloudsmith registry. Contact [Kong S
 
   ```bash
   Username: kong/ai-compress
-  Password: <your_token>
+  Password: <YOUR_TOKEN>
   ```
 
   {:.info}
