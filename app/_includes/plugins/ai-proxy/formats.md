@@ -12,9 +12,9 @@
 {% assign providers = site.data.plugins.ai-proxy.providers %}
 
 
-The plugin's [`{{ route_type }}`](./reference/#{{ route_type_slug }}) should be set based on the target upstream endpoint and model, based on this capability matrix:
+The plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-type) should be set based on the target upstream endpoint and model, based on this capability matrix:
 
-{% include plugins/ai-proxy/tables/upstream-paths.html providers=providers %}
+{% include plugins/ai-proxy/grouped-upstreams.md %}
 
 The following upstream URL patterns are used:
 
