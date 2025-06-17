@@ -25,7 +25,7 @@ related_resources:
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
   - text: Dev Portal security settings
-    url: /dev-portal/security/
+    url: /dev-portal/security-settings/
 ---
 
 Publishing an API makes it available to one or more Dev Portals. 

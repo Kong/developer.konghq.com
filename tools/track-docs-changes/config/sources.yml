@@ -431,6 +431,7 @@ app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
 app/_kong_plugins/session/index.md:
   - app/_hub/kong-inc/session/overview/_index.md
+  - app/_src/gateway/kong-manager/auth/sessions.md
 app/_kong_plugins/zipkin/changelog.md:
   - app/_hub/kong-inc/zipkin/_changelog.md
 app/_kong_plugins/zipkin/index.md:
@@ -1003,6 +1004,8 @@ app/_kong_plugins/ai-proxy-advanced/examples/sdk-dynamic-model-selection.yml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
+app/_how-tos/enable-basic-auth-on-kong-manager.md:
+  - app/_src/gateway/kong-manager/auth/basic.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
@@ -1016,6 +1019,7 @@ app/_landing_pages/advanced-analytics.md:
 app/konnect-platform/audit-logs.md:
   - app/konnect/org-management/audit-logging/index.md
   - app/konnect/reference/audit-logs.md
+  - app/konnect/reference/verify-signatures.md
 app/gateway-manager/konnect-logs.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md
 app/gateway-manager/konnect-labels.md:
@@ -1193,6 +1197,8 @@ app/gateway/kong-manager/content-security-policy.md:
   - app/_src/gateway/kong-manager/strengthen-security.md
 app/gateway/debug-requests.md:
   - app/_src/gateway/production/debug-request.md
+app/gateway/amazon-rds-authentication-with-aws-iam.md:
+  - app/_src/gateway/kong-enterprise/aws-iam-auth-to-rds-database.md
 
 # traffic control
 app/gateway/routing/expressions.md:
@@ -2327,4 +2333,5 @@ app/_how-tos/use-sdks-with-ai-proxy.md:
   - app/_hub/kong-inc/ai-proxy/how-to/_sdk-usage.md
 app/mesh/provenance-verification-images.md:
   - app/_src/mesh/features/provenance-verification-images.md
-
+app/_how-tos/verify-build-provenance-for-signed-images.md:
+  - app/_src/gateway/kong-enterprise/provenance-verification.md
