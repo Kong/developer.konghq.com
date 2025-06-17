@@ -136,7 +136,7 @@ If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must b
 
 You can filter and categorize published APIs on your Dev Portals with custom attributes. By assigning attributes to an API, this allows users to filter APIs in the Dev Portal sidebar. For an API, you can define one or more custom attributes, and each attribute can have one or more values. For example, if you had a Billing API, you could label it with `"visibility": ["Internal"]` and `"platform": ["Web", "Mobile"]`.
 
-For more information about how to add custom attributes to APIs, see the [MDC documentation](https://portaldocs.konghq.com/components/apis-list).
+For more information about how to use custom attributes for filtering APIs displayed in your Dev Portal, see the [MDC documentation](https://portaldocs.konghq.com/components/apis-list).
 
 ## Gateway service link
 
