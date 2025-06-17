@@ -2,7 +2,7 @@
 title: Customer-Managed Encryption Keys (CMEK)
 content_type: reference
 layout: reference
-description: 'Use Customer-Managed Encryption Keys (CMEK) in Konnect to encrypt sensitive data using keys from your AWS KMS account.'
+description: 'Use Customer-Managed Encryption Keys (CMEK) in Konnect to encrypt sensitive data using keys from your AWS Key Management Service (KMS) account.'
 breadcrumbs:
   - /konnect/
 
