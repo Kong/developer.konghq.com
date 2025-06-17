@@ -23,7 +23,7 @@ The following upstream URL patterns are used:
 {:.warning}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
 > For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](./reference/#{{ upstream_url_slug }}) plugin option.<br/><br/>
-> {% new_in 3.10 %} If you are using each provider's native SDK, {{site.base_gateway}} allows you to transparently proxy the request without any transformation and return the response unmodified. This can be done by setting [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`, such as `gemini` or `bedrock`.
+> {% new_in 3.10 %} If you are using each provider's native SDK, {{site.base_gateway}} allows you to transparently proxy the request without any transformation and return the response unmodified. This can be done by setting [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`, such as `gemini` or `bedrock`. See the [section below](./#supported-native-llm-formats) for more details.
 > <br><br>
 > In this mode, {{site.base_gateway}} will still provide useful analytics, logging, and cost calculation.
 
@@ -82,6 +82,54 @@ The Kong AI Proxy accepts the following inputs formats, standardized across all 
 }
 ```
 {% endnavtab %}
+
+{% navtab "llm/v1/files" %}
+
+```json
+curl https://localhost:8000 \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -F purpose="fine-tune" \
+  -F file="@mydata.jsonl"
+```
+{% endnavtab %}
+
+{% navtab "llm/v1/batches" %}
+
+```json
+{
+    "input_file_id": "file-abc123",
+    "endpoint": "/v1/chat/completions",
+    "completion_window": "24h"
+}
+```
+{% endnavtab %}
+
+{% navtab "llm/v1/assisstants" %}
+
+```json
+{
+    "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
+    "name": "Math Tutor",
+    "tools": [{"type": "code_interpreter"}],
+    "model": "gpt-4o"
+  }
+```
+{% endnavtab %}
+
+{% navtab "llm/v1/audio/speech" %}
+
+```json
+curl https://localhost:8000 \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o-mini-tts",
+    "input": "The quick brown fox jumped over the lazy dog.",
+    "voice": "alloy"
+  }' \
+  --output speech.mp3
+```
+{% endnavtab%}
 {% endnavtabs %}
 
 ### Response formats
@@ -138,7 +186,145 @@ Conversely, the response formats are also transformed to a standard format acros
 }
 ```
 {% endnavtab %}
+
+{% navtab "llm/v1/files" %}
+
+```json
+{
+  "id": "file-abc123",
+  "object": "file",
+  "bytes": 120000,
+  "created_at": 1677610602,
+  "filename": "mydata.jsonl",
+  "purpose": "fine-tune",
+}
+```
+{% endnavtab %}
+
+{% navtab "llm/v1/batches" %}
+
+```json
+{
+    "input_file_id": "file-abc123",
+    "endpoint": "/v1/chat/completions",
+    "completion_window": "24h"
+}
+```
+{% endnavtab %}
+
+```json
+{
+  "id": "batch_abc123",
+  "object": "batch",
+  "endpoint": "/v1/chat/completions",
+  "errors": null,
+  "input_file_id": "file-abc123",
+  "completion_window": "24h",
+  "status": "validating",
+  "output_file_id": null,
+  "error_file_id": null,
+  "created_at": 1711471533,
+  "in_progress_at": null,
+  "expires_at": null,
+  "finalizing_at": null,
+  "completed_at": null,
+  "failed_at": null,
+  "expired_at": null,
+  "cancelling_at": null,
+  "cancelled_at": null,
+  "request_counts": {
+    "total": 0,
+    "completed": 0,
+    "failed": 0
+  },
+  "metadata": {
+    "customer_id": "user_123456789",
+    "batch_description": "Nightly eval job",
+  }
+}
+```
+{% navtab "llm/v1/assisstants" %}
+
+```json
+{
+  "id": "asst_abc123",
+  "object": "assistant",
+  "created_at": 1698984975,
+  "name": "Math Tutor",
+  "description": null,
+  "model": "gpt-4o",
+  "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "metadata": {},
+  "top_p": 1.0,
+  "temperature": 1.0,
+  "response_format": "auto"
+}
+```
+
+{% endnavtab %}
+
+{% navtab "llm/v1/audio/file/speech" %}
+
+The audio file content `speech.mp3`
+
+{% endnavtab %}
 {% endnavtabs %}
 
-The request and response formats are loosely based on OpenAI.
-See the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml) for more detail on the supported formats.
+
+The request and response formats are loosely modeled after OpenAI’s API. For detailed format specifications, see the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml).
+
+## Supported native LLM formats
+
+{% navtabs "llm_format_providers" %}
+
+{% navtab "Gemini native format" %}
+When `llm_format` is set to `"gemini"`, only the Gemini provider is supported. The following Gemini APIs are available:
+
+* `/generateContent`
+* `/streamGenerateContent`
+{% endnavtab %}
+
+{% navtab "Bedrock native format" %}
+When `llm_format` is set to `"bedrock"`, only the Bedrock provider is supported. Supported Bedrock APIs include:
+
+* `/converse`
+* `/converse-stream`
+* `/retrieveAndGenerate`
+* `/retrieveAndGenerateStream`
+* `/rerank`
+{% endnavtab %}
+
+{% navtab "Cohere native format" %}
+When `llm_format` is set to `"cohere"`, only the Cohere provider is supported. Available Cohere APIs are:
+
+* `/v1/rerank`
+* `/v2/rerank`
+{% endnavtab %}
+
+{% navtab "Hugging Face native format" %}
+When `llm_format` is set to `"huggingface"`, only the Hugging Face provider is supported. The following Hugging Face APIs are supported:
+
+* `/generate`
+* `/generate-stream`
+{% endnavtab %}
+
+{% endnavtabs %}
+
+### Caveats and limitations
+
+#### Provider-specific limitations
+
+* **Anthropic**: Does not support `llm/v1/completions` or `llm/v1/embeddings`.
+* **Llama2**: Raw format lacks support for `llm/v1/embeddings`.
+* **Bedrock** and **Gemini**: Only support `auth.allow_override = false`.
+
+#### Statistics logging limitations
+
+* **Anthropic**: No statistics logging for `llm/v1/completions`.
+* **OpenAI** and **Azure**: No statistics logging for assistants, batch, or audio APIs.
+* **Bedrock**: No statistics logging for image generation or editing APIs.

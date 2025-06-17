@@ -6,33 +6,33 @@
 
 {{ page.description | liquify }}
 
-The plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
+{{ plugin }} plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
 
-## Overview of capabilities
+## Overview of Capabilities
 
-The following tables present detailed feature support across all supported LLM providers.
+The following tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
 
-### Core text generation feature
+### Core Text Generation
 
-The following table summarizes provider support for core text generation features in {{ plugin }} plugin.
+This table outlines support for core text generation features such as chat, completions, and embeddings.
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
 
-### Advanced text generation features {% new_in 3.11 %}
+### Advanced Text Generation {% new_in 3.11 %}
 
-The following table summarizes provider support for advanced text generation via {{ plugin }} plugin.
+This table highlights support for advanced text generation features, including function calling, tool use, and batch processing.
 
 {% include plugins/ai-proxy/tables/supported-providers-2.html providers=providers %}
 
-### Audio capabilities {% new_in 3.11 %}
+### Audio Features {% new_in 3.11 %}
 
-The following table shows which GenAI providers support audio-based features—text-to-speech, transcriptions, and translations—when accessed through the {{ plugin }} plugin.
+This table shows which providers support audio-based capabilities—text-to-speech, transcription, and translation.
 
 {% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
 
-### Image and realtime capabilities {% new_in 3.11 %}
+### Image and Realtime Features {% new_in 3.11 %}
 
-The table below lists support for image generation, image editing, and realtime interaction capabilities via the {{ plugin }} plugin.
+This table lists support for image generation, image editing, and realtime interaction features.
 
 {% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers %}
 
@@ -56,4 +56,4 @@ The {{ plugin }} plugin will mediate the following for you:
 Flattening all of the provider formats allows you to standardize the manipulation of the data before and after transmission. It also allows your to provide a choice of LLMs to the Kong consumers, using consistent request and response formats, regardless of the backend provider or model.
 
 {:.info}
-> {% new_in 3.11 %} This plugin supports REST-based full-text responses, including RESTful endpoints like `llm/v1/responses`. RESTful endpoints support multiple HTTP methods—for example, you can `POST` to create a response, `GET` to retrieve it, or `DELETE` to remove it.
+> {% new_in 3.11 %} {{ plugin }} supports REST-based full-text responses, including RESTful endpoints such as `llm/v1/responses`, `llm/v1/files`, `llm/v1/assisstants` and `llm/v1/batches`. RESTful endpoints support CRUD operations— you can `POST` to create a response, `GET` to retrieve it, or `DELETE` to remove it.

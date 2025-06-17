@@ -388,3 +388,9 @@ providers:
       route_type: 'llm/v1/embeddings'
       model_example: '<a href="https://huggingface.co/models?pipeline_tag=feature-extraction">Use the embedding model name</a>'
       min_version: '3.11'
+parameters:
+  provider: 'config.targets.model.provider'
+  route_type: 'config.targets.route_type'
+  options: 'config.targets.model.options'
+  upstream_url: 'config.targets.model.options.upstream_url'
+  model_name: 'config.targets.model.name'
