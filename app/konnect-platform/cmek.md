@@ -70,7 +70,8 @@ The steps required are:
 ## API and Automation Support
 
 * CMEK can currently only be configured via the **Konnect UI**.
-* API and Terraform support are planned for future releases.
+
+Once CMEK has been configured {{site.konnect_short_name}} data that is encrypted using CMEK will be visible from the {{site.konnect_short_name}} UI APIs, decK and Terraform after decryption. 
 
 ## Configure CMEK
 
