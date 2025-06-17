@@ -89,7 +89,7 @@ entities:
 
 ## Validate
 
-You can validate that the plugin is collecting metrics by generating traffic to the example service:
+You can validate that the plugin is collecting metrics by generating traffic to the example Service:
 <!--vale off -->
 {% validation request-check %}
 url: '/anything'
@@ -102,7 +102,14 @@ Run this command to check the metrics collected with StatsD:
 ```
 echo "counters" | nc localhost 8126
 ```
-
+In the response from StatsD, you should see a request count, the response code received, and a few other metrics. 
+In this case, the request to the `/anything` path should have generated:
+```
+  'kong.service.example-service.request.count': 1,
+  'kong.service.example-service.status.200': 1,
+  ...
+```
+{:.no-copy-code}
 
 
 
