@@ -34,8 +34,8 @@ The Traceable integration lets you connect Traceable Services directly to your S
 ## Authenticate the Traceable integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
-2. Select **Traceable**, then **Install Traceable**.
-3. Select **Authorize**. 
+2. Select **Add Traceable Instance**.
+3. Configure the instance, add authorization and name the instance. 
 
 ## Resources
 

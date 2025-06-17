@@ -32,7 +32,7 @@ The Datadog integration lets you connect Datadog entities directly to your Servi
 ## Authenticate the Datadog integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
-1. Select **Datadog**, then **Install Datadog**.
+1. Select **Add Datadog Instance**.
 1. Select your Datadog region and enter your [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/). 
 1. Select **Authorize**. 
 

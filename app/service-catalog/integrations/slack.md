@@ -41,8 +41,8 @@ The Slack integration allows you to see communication channels (via [Slack chann
 ## Authenticate the Slack integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
-2. Select **Slack**, then **Install Slack**.
-3. Select **Authorize**. 
+2. Select **Add Slack Instance**.
+3. Select **Authorize in Slack**, and name the instance.
    Only Slack admins can authorize the integration.
 
 Slack will ask you to grant consent to {{site.konnect_product_name}}. Both read and write scopes are required.
