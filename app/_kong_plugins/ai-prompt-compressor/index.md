@@ -249,4 +249,4 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-Rather than trimming prompts arbitrarily or risking token overflows, the AI Prompt Compressor plugin applies structured compression to preserve essential context of prompts sent by users. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
+The AI Prompt Compressor plugin applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
