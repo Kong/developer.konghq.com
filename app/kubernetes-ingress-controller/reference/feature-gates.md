@@ -100,7 +100,7 @@ rows:
     until: TBD
   - feature: CombinedServicesFromDifferentHTTPRoutes
     default: '`false`'
-    stage: Alpha
+    stage: GA
     since: 3.4.0
     until: TBD
 {% endtable %}
