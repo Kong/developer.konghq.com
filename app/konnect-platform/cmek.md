@@ -2,7 +2,7 @@
 title: Customer-Managed Encryption Keys (CMEK)
 content_type: reference
 layout: reference
-description: 'Use Customer-Managed Encryption Keys (CMEK) in Konnect to encrypt sensitive data using keys from your AWS Key Management Service (KMS) account.'
+description: 'Use Customer-Managed Encryption Keys (CMEK) in {{site.konnect_short_name}} to encrypt sensitive data using keys from your AWS Key Management Service (KMS) account.'
 breadcrumbs:
   - /konnect/
 
@@ -37,7 +37,7 @@ CMEK currently applies to:
 The steps required are: 
 
 1. Create a **symmetric encryption key** in AWS KMS.
-1. Provide the **key ARN** to Konnect through the UI.
+1. Provide the **key ARN** to {{site.konnect_short_name}} through the UI.
 1. {{site.konnect_short_name}} encrypts specified data using the key during write operations.
 1. Decryption occurs via AWS KMS at read time, contingent on key availability.
 
@@ -45,7 +45,7 @@ The steps required are:
 
 * **Key rotation**: 
   * AWS KMS can rotate keys automatically if the ARN stays constant.
-  * Manual rotation with a new ARN requires updating the key in Konnect. If the key's ARN changes, data encrypted with the previous key cannot be decrypted in Konnect
+  * Manual rotation with a new ARN requires updating the key in {{site.konnect_short_name}}. If the key's ARN changes, data encrypted with the previous key cannot be decrypted in {{site.konnect_short_name}}
 * **Key revocation**: 
   * Revoking or deleting your key in AWS KMS renders associated data permanently unreadable.
 * **Performance impact**: 
@@ -60,27 +60,27 @@ The steps required are:
 ### Key Rotation
 
 * Rotating keys within AWS KMS (without changing the ARN) is supported automatically.
-* If you change the ARN, you must update the key in Konnect manually.
+* If you change the ARN, you must update the key in {{site.konnect_short_name}} manually.
 
 ### Key Revocation
 
 * If the AWS KMS key is revoked or deleted, encrypted data becomes inaccessible.
-* Konnect will display decryption errors when this occurs.
+* {{site.konnect_short_name}} will display decryption errors when this occurs.
 
 ## API and Automation Support
 
-* CMEK can currently only be configured via the **Konnect UI**.
+* CMEK can currently only be configured via the **{{site.konnect_short_name}} UI**.
 
 Once CMEK has been configured {{site.konnect_short_name}} data that is encrypted using CMEK will be visible from the {{site.konnect_short_name}} UI APIs, decK and Terraform after decryption. 
 
 ## Configure CMEK
 
 * A **symmetric key** in AWS KMS
-* **Org Admin** role in Konnect
+* **Org Admin** role in {{site.konnect_short_name}}
 
 ### Setup Workflow
 
-1. Go to **Organization Settings > Encryption Keys** in Konnect.
+1. Go to **Organization Settings > Encryption Keys** in {{site.konnect_short_name}}.
 1. Click **Add Key**.
 1. Enter the **Key ARN**, **name**, and an optional **description**.
 1. Click **Save** to activate CMEK.
