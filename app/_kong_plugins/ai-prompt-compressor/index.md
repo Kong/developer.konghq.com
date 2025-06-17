@@ -57,7 +57,7 @@ search_aliases:
 
 The **Kong AI Prompt Compressor** plugin compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The plugin supports:
 
-* **Ratio-based or target token compression** — for example, reduce to 80% of the original length or compress to 150 tokens.
+* **Ratio-based or target token compression** — for example, reduce a message to 80% of the original length or compress to 150 tokens.
 * **Configurable compression ranges** — for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
 * **Selective compression** using `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector plugin](/plugins/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor**.
 
