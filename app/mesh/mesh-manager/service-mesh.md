@@ -34,7 +34,7 @@ After creating the global Control Plane, add a zone to connect services and rece
 1. In the `example-cp` Control Plane, click **Create Zone**.
 1. Enter `zone-1` as the name, then click **Create Zone & generate token**.
 
-    {:.note}
+    {:.info}
     > The zone name must use lowercase alphanumeric characters or hyphens, and start and end with an alphanumeric character.
 
 1. Follow the Helm and token setup instructions in the UI. Once the zone is running, it will appear in Mesh Manager.
@@ -64,7 +64,7 @@ For more, see [Explore {{site.mesh_product_name}} with the Kubernetes demo app](
 
 ## Configure `kumactl` to connect to the global Control Plane
 
-{:.note}
+{:.info}
 > Because the mesh is deployed on Kubernetes, `kumactl` is read-only. You manage resources using `kubectl`. Still, it's best practice to configure `kumactl` for visibility and diagnostics.
 
 1. In [**Mesh Manager**](https://cloud.konghq.com/mesh-manager), select `example-cp`.
