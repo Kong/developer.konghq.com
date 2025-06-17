@@ -8,8 +8,12 @@ products:
 related_resources:
   - text: Prometheus plugin
     url: /plugins/prometheus/
+  - text: Collect metrics with Datadog and the Prometheus plugin
+    url: /how-to/collect-metrics-with-datadog-and-prometheus-plugin/
   - text: Monitor metrics with Prometheus and Grafana with KIC
     url: /kubernetes-ingress-controller/observability/prometheus-grafana/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 
 works_on:
     - on-prem
@@ -50,7 +54,7 @@ cleanup:
   inline:
     - title: Prometheus
       content: |
-        Once you are done experimenting with Prometheus and {{site.base_gateway}}, you can use the following
+        Once you are done experimenting with Prometheus, you can use the following
         commands to stop the Prometheus server you created in this guide:
 
         ```sh

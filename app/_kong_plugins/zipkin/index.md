@@ -38,6 +38,12 @@ search_aliases:
 related_resources:
   - text: Tracing With Zipkin in {{site.base_gateway}}
     url: https://konghq.com/blog/engineering/tracing-with-zipkin-in-kong-2-1-0
+  - text: "{{site.base_gateway}} tracing"
+    url: /gateway/tracing/
+  - text: OpenTelemetry plugin
+    url: /plugins/opentelemetry/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 ---
 
 When enabled, the Zipkin plugin traces requests in a way that's compatible with [zipkin](https://zipkin.io/).

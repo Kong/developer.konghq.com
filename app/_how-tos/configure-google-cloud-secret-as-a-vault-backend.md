@@ -43,6 +43,9 @@ prereqs:
   gateway:
     - name: GCP_SERVICE_ACCOUNT
     - name: KONG_LUA_SSL_TRUSTED_CERTIFICATE
+  konnect:
+    - name: GCP_SERVICE_ACCOUNT
+    - name: KONG_LUA_SSL_TRUSTED_CERTIFICATE
   cloud:
     gcp:
       secret: true

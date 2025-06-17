@@ -61,14 +61,74 @@ The AI Sanitizer plugin uses the AI PII Anonymizer Service, which can run in a D
 
 ## AI PII Anonymizer service
 
-Kong provides several [AI PII Anonymizer service](https://hub.docker.com/r/kong/ai-pii-service) Docker images, each of which has its own built-in NLP model and is tagged with the `version-lang_code` pattern. For example, `ai-pii-service:v0.1.2-en` means the version of the image is 0.1.2 and its built-in NLP model is English, `ai-pii-service:v0.1.2-it` is version 0.1.2 for Italian, `ai-pii-service:v0.1.2-fr` is version 0.1.2 for French, and so on.
+Kong provides several [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
-The image tagged with `all` contains English, French, German, Italian, Japanese, Portuguese, and Spanish models. If you need to use other NLP models, customize `ai_pii_service/nlp_engine_conf.yml` with any of the available images.
+* `service:v0.1.2-en`: English model, version 0.1.2
+* `service:v0.1.2-it`: Italian model, version 0.1.2
+* `service:v0.1.2-fr`: French model, version 0.1.2
 
 {:.info}
-> These Docker images are private, contact [Kong Support](https://support.konghq.com/support/s/) to get access to them.
->
-> The PII Anonymizer service loads NLP models, with one model loaded by default. Ensure that you have at least 600MB of free memory to run the image.
+> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.2`
+> If you need to add or modify models, edit the configuration file at `ai_pii_service/nlp_engine_conf.yml`.
+
+### Access the Docker images
+
+Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access. 
+
+#### Authenticate with the private Cloudsmith registry
+
+To pull images, you must authenticate first with the token provided by the Support:
+
+```bash
+docker login docker.cloudsmith.io
+```
+
+Docker will then prompt you to enter username and password:
+
+```bash
+Username: kong/ai-pii
+Password: YOUR-TOKEN
+```
+
+{:.info}
+> This is a token-based login with read-only access. You can pull images but not push them.
+
+#### Pull the AI PII service image
+
+To pull an image:
+
+```bash
+docker pull docker.cloudsmith.io/kong/ai-pii/IMAGE-NAME:TAG
+```
+
+Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
+
+```bash
+docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
+```
+
+#### AI PII service Dockerfile usage
+
+To use an image in a `Dockerfile`, reference it as follows:
+
+```dockerfile
+FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.2-en
+```
+
+### Available language tags
+
+The following language-specific images are currently available:
+
+* `-en` (English)
+* `-fr` (French)
+* `-de` (German)
+* `-it` (Italian)
+* `-ja` (Japanese)
+* `-pt` (Portuguese)
+* `-ko` (Korean)
+
+{:.info}
+> The PII Anonymizer service loads one NLP model by default. Ensure at least **600MB of free memory** is available when running the container.
 
 ### Image configuration options
 
@@ -87,11 +147,11 @@ This service takes the following optional environment variables at startup:
 You can anonymize data in requests using the following redact modes:
 
 * `placeholder`: Replaces sensitive data with a fixed placeholder pattern, `PLACEHOLDER{i}`, where `i` is a sequence number. Identical original values receive the same placeholder.
-   
+
    For example, the location `New York City` might be replaced with `LOCATION`.
-   
-* `synthetic`: Redact the sensitive data with a word in the same type. 
-   
+
+* `synthetic`: Redact the sensitive data with a word in the same type.
+
    For example, the name `John` might be replaced with `Amir`.
 
   * Custom patterns are replaced with `CUSTOM{i}`.
@@ -99,7 +159,7 @@ You can anonymize data in requests using the following redact modes:
 
 ### Custom patterns
 
-You can define an array of custom patterns on a per-request basis.  
+You can define an array of custom patterns on a per-request basis.
 Currently, only regex patterns are supported, and all fields are required: `name`, `regex`, and `score`.
 
 The `name` must be unique for each pattern.
