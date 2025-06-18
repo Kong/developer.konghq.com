@@ -47,6 +47,9 @@ tools:
 
 prereqs:
   inline:
+    - title: OpenAI
+      include_content: prereqs/openai
+      icon_url: /assets/icons/openai.svg
     - title: AWS Account
       content: |
         To complete this tutorial, you will need the following credentials
@@ -58,7 +61,7 @@ prereqs:
         You can get all of these from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed.
       icon_url: /assets/icons/aws.svg
 
-    - title: Bedrock guardrail
+    - title: Bedrock Guardrail
       include_content: prereqs/bedrock
       icon_url: /assets/icons/bedrock.svg
 
@@ -76,6 +79,10 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+related_resources:
+  - text: Use AI AWS Guardrails plugin
+    url: /how-to/use-ai-aws-guardrails-plugin/
 
 automated_tests: false
 ---
@@ -108,6 +115,8 @@ variables:
 {% endentity_examples %}
 
 ## Configure the AI AWS Guardrails plugin
+
+Now, we can configure our AI AWS Guardrails plugin to enforce content moderation policies by attaching a predefined Bedrock guardrail to requests.
 
 {% entity_examples %}
 entities:
