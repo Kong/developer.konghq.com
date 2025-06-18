@@ -37,7 +37,7 @@ prereqs:
   inline: 
     - title: CyberArk Conjur
       content: |
-        To run this tutorial, you'll need CyberArk Conjur running with a secret stored. 
+        To run this tutorial, you'll need CyberArk Conjur running with a secret stored.  
         
         If you don't already have CyberArk Conjur, you can follow the Docker quickstart guide to [setup an OSS environment](https://www.conjur.org/get-started/quick-start/oss-environment/), [define a policy](https://www.conjur.org/get-started/quick-start/define-policy/), and [store a secret](https://www.conjur.org/get-started/quick-start/store-secret/). 
 
