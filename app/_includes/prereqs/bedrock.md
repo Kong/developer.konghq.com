@@ -127,8 +127,27 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
 
 5. Apply this configuration by running the following command in your terminal:
 
-```bash
-aws bedrock create-guardrail \
-  --cli-input-json file://$HOME/guardrail.json \
-  --region <your_aws_region>
-```
+    ```bash
+    aws bedrock create-guardrail \
+    --cli-input-json file://$HOME/guardrail.json \
+    --region <your_aws_region>
+    ```
+
+    If successful, your terminal will output the following:
+
+    ```json
+    {
+        "guardrailId": "0abcs5r0q3abcd",
+        "guardrailArn": "arn:aws:bedrock:us-east-1:111111141111:guardrail/0nhw5r0q3abcd",
+        "version": "DRAFT",
+        "createdAt": "2025-06-18T08:49:40.678019+00:00"
+    }
+    ```
+
+    Export the Guardrail ID and Guardrail version as an environment variable:
+
+    ```bash
+    export DECK_GUARDRAILS_ID=0nhw5r0q3zf8
+    export DECK_GUARDRAILS_VERSION=DRAFT
+    ```
+

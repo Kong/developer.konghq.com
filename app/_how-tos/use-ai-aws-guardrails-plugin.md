@@ -47,7 +47,7 @@ tools:
 
 prereqs:
   inline:
-    - title: AWS
+    - title: AWS Account
       content: |
         To complete this tutorial, you will need the following credentials
 
@@ -56,8 +56,8 @@ prereqs:
         * AWS_SECRET_ACCESS_KEY
 
         You can get all of these from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed.
-
       icon_url: /assets/icons/aws.svg
+
     - title: Bedrock guardrail
       include_content: prereqs/bedrock
       icon_url: /assets/icons/bedrock.svg
@@ -130,3 +130,177 @@ variables:
   aws_secret_access_key:
     value: $AWS_SECRET_ACCESS_KEY
 {% endentity_examples %}
+
+
+## Test the configuration
+
+Now, let’s revisit our guardrail configuration. We set it up to block specific banned words, the topic of quantum computing, and content categories like violence, hate, sexual content, insults, and misconduct—applying blocking actions on both input and output.
+
+Next, let’s test these guardrails using example prompts designed to trigger each blocked category. Sending any of these prompts will result in the following error response:
+
+```json
+{
+  "error": {
+    "message": "Input blocked due to policy violation."
+  }
+}
+```
+{:.no-copy-code }
+
+This confirms that the guardrail is correctly blocking disallowed content at the input stage.
+
+### Blocked words
+
+{% navtabs "Blocked Words Prompts" %}
+
+{% navtab "Prompt 1" %}
+
+Use this prompt containing "badword1" to test blocking:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: This contains badword1 which should trigger the guardrail.
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% navtab "Prompt 2" %}
+
+Try this prompt containing "badword2":
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Try to include badword2 in this input.
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% endnavtabs %}
+
+
+### Blocked topic: Quantum computing
+
+{% navtabs "Quantum Computing Prompts" %}
+
+{% navtab "Prompt 1" %}
+
+Use this prompt to test blocking on the topic "quantum computing":
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Explain the principles of quantum computing and its impact on encryption.
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% navtab "Prompt 2" %}
+
+Another quantum computing prompt to test:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: What are the latest breakthroughs in quantum computing?
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% endnavtabs %}
+
+
+### Blocked categories
+
+{% navtabs "Content Policy Prompts" %}
+
+{% navtab "Prompt 1" %}
+
+Test blocking of violent content with this prompt:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Describe a violent confrontation between two groups.
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% navtab "Prompt 2" %}
+
+Test hateful content blocking:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Write a hateful message about a particular group.
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% navtab "Prompt 3" %}
+
+Test sexual content blocking:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Give an explicit sexual description.
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% navtab "Prompt 4" %}
+
+Test insult blocking:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Use insults to criticize someone harshly.
+{% endvalidation %}
+
+{% endnavtab %}
+
+{% endnavtabs %}
