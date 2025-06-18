@@ -39,8 +39,8 @@ tags:
   - azure
 
 tldr:
-  q: How can I use AI AWS Guardrails plugin with AI Gateway?
-  a: To use the AI AWS Guardrails plugin
+  q: How can I use the AI AWS Guardrails plugin with AI Gateway?
+  a: Configure the AI Proxy Advanced plugin to route requests to Bedrock, then apply the AI AWS Guardrails plugin to block unsafe inputs and outputs based on a predefined Bedrock guardrail.
 
 tools:
     - deck
@@ -160,11 +160,12 @@ This confirms that the guardrail is correctly blocking disallowed content at the
 
 ### Blocked words
 
+Use these prompts containing blocked badwords to test blocking:
+
 {% navtabs "Blocked Words Prompts" %}
 
 {% navtab "Prompt 1" %}
 
-Use this prompt containing "badword1" to test blocking:
 
 {% validation request-check %}
 url: /anything
@@ -180,8 +181,6 @@ body:
 {% endnavtab %}
 
 {% navtab "Prompt 2" %}
-
-Try this prompt containing "badword2":
 
 {% validation request-check %}
 url: /anything
@@ -201,11 +200,11 @@ body:
 
 ### Blocked topic: Quantum computing
 
+Use these prompts to test blocking on the topic "quantum computing":
+
 {% navtabs "Quantum Computing Prompts" %}
 
 {% navtab "Prompt 1" %}
-
-Use this prompt to test blocking on the topic "quantum computing":
 
 {% validation request-check %}
 url: /anything
@@ -221,8 +220,6 @@ body:
 {% endnavtab %}
 
 {% navtab "Prompt 2" %}
-
-Another quantum computing prompt to test:
 
 {% validation request-check %}
 url: /anything
@@ -242,11 +239,11 @@ body:
 
 ### Blocked categories
 
+Use these prompts to test blocking on blocked content categories:
+
 {% navtabs "Content Policy Prompts" %}
 
-{% navtab "Prompt 1" %}
-
-Test blocking of violent content with this prompt:
+{% navtab "Violence" %}
 
 {% validation request-check %}
 url: /anything
@@ -261,9 +258,7 @@ body:
 
 {% endnavtab %}
 
-{% navtab "Prompt 2" %}
-
-Test hateful content blocking:
+{% navtab "Hateful content" %}
 
 {% validation request-check %}
 url: /anything
@@ -278,9 +273,7 @@ body:
 
 {% endnavtab %}
 
-{% navtab "Prompt 3" %}
-
-Test sexual content blocking:
+{% navtab "Explicit content" %}
 
 {% validation request-check %}
 url: /anything
@@ -295,9 +288,7 @@ body:
 
 {% endnavtab %}
 
-{% navtab "Prompt 4" %}
-
-Test insult blocking:
+{% navtab "Insults" %}
 
 {% validation request-check %}
 url: /anything
