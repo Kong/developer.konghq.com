@@ -3,7 +3,7 @@ title: "Collect {{site.konnect_short_name}} audit logs with SumoLogic"
 description: "Learn how to configure you SIEM provider to collect {{site.konnect_short_name}} logs and configure a {{site.konnect_short_name}} audit log webhook."
 content_type: how_to
 related_resources:
-  - text: Konnect audit logs
+  - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
 automated_tests: false
 products:
@@ -19,6 +19,7 @@ entities:
 tags:
     - security
     - logging
+    - audit-logging
 
 tldr:
     q: How do I send {{site.konnect_short_name}} audit logs to a SIEM provider like SumoLogic?
@@ -50,9 +51,6 @@ prereqs:
 tools:
   - konnect-api
 
-faqs:
-  - q: How do I replace certificates used in {{site.base_gateway}} data plane nodes with a secret reference?
-    a: Set up a {{site.konnect_short_name}} or any other Vault and define the certificate and key in a secret in the Vault.
 cleanup:
   inline:
     - title: Clean up {{site.konnect_short_name}} environment
