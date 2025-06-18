@@ -9,6 +9,8 @@ related_resources:
     url: /plugins/ai-azure-content-safety/
   - text: AI Gateway
     url: /ai-gateway/
+  - text: Use AI AWS Guardrails plugin
+    url: /how-to/use-ai-aws-guardrails-plugin/
 
 description: Learn how to use the AI AWS Guardrails Safety plugin.
 
@@ -79,10 +81,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-related_resources:
-  - text: Use AI AWS Guardrails plugin
-    url: /how-to/use-ai-aws-guardrails-plugin/
 
 automated_tests: false
 ---
