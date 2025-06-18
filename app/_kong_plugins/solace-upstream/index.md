@@ -1,12 +1,12 @@
 ---
-title: 'solace-upstream'
-name: 'solace-upstream'
+title: 'Solace Upstream'
+name: 'Solace Upstream'
 
 content_type: plugin
 
 publisher: kong-inc
 description: 'Transform requests into Solace messages in a Solace queue or topic'
-
+beta: true
 
 products:
   - gateway
@@ -19,6 +19,7 @@ tags:
   - traffic-control
   - events
   - solace
+  - beta
 
 min_version:
   gateway: '3.11'
@@ -52,8 +53,6 @@ Solace queues or topics. For more details, see [Solace event messaging overview]
 This plugin uses the official [Solace C API](https://docs.solace.com/API/Messaging-APIs/C-API/c-api-home.htm) as the client
 when communicating with the Solace server.
 
-When configured to forward request bodies, several things happen:
-
 When encoding request bodies, several things happen:
 
 * For requests with a content-type header of `application/x-www-form-urlencoded`, `multipart/form-data`,
@@ -64,6 +63,3 @@ When encoding request bodies, several things happen:
   then the body will be base64-encoded to ensure that the message can be sent as JSON. In such a case,
   the message has an extra attribute called `body_base64` set to `true`.
 
-## Known issues and limitations
-
-The plugin is currently release as a **beta**.

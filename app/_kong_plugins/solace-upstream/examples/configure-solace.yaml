@@ -1,6 +1,10 @@
 description: |
   Configure the plugin to connect to a Solace broker using basic authentication, 
   and send messages to multiple queues with persistent delivery. 
+  
+extended_description: |
+  Configure the plugin to connect to a Solace broker using basic authentication, 
+  and send messages to multiple queues with persistent delivery. 
   This example uses a statically configured message and includes a Lua function to
   transform message content before sending (in this case the message that the plugin
   will send is "HELLO").
@@ -11,7 +15,7 @@ weight: 900
 
 variables:
   host:
-    description: 'The IPv4 or IPv6 address or host name of the Solace broker to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).'
+    description: 'The [IPv4 or IPv6 address or hostname](https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry) of the Solace broker to connect to.'
     value: tcp://127.0.0.1:55555
   username:
     description: 'The username used with `BASIC` authentication scheme when connecting to an event broker.'
