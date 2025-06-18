@@ -8,7 +8,8 @@ products:
 related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
-
+  - text: Configuration parameters for CyberArk Conjur vaults
+    url: /gateway/entities/vault/?tab=conjur#vault-provider-specific-configuration-parameters
 works_on:
     - on-prem
 
@@ -60,7 +61,7 @@ cleanup:
   inline:
     - title: Clean up CyberArk Conjur
       content: |
-        If you're using the Conjur Docker quickstart, you can clean up Conjur by deleting the `conjur-quickstart` Docker container.
+        If you're using the Conjur Docker quickstart, you can clean up Conjur by deleting the `conjur-quickstart` Docker compose stack.
       icon_url: /assets/icons/cyberark.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway

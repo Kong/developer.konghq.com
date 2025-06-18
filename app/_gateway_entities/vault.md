@@ -531,7 +531,6 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Conjur" %}
-{% if_version gte:3.11.x %}
 <!--vale off-->
 {% table %}
 columns:
@@ -544,7 +543,8 @@ columns:
 rows:
   - parameter: "`vaults.config.endpoint_url`"
     field-name: "Endpoint URL"
-    description: The CyberArk Conjur backend URL to connect with. Accepts `http` or `https` protocols.
+    description: |
+      The CyberArk Conjur backend URL to connect with. Accepts `http` or `https` protocols.
   - parameter: "`vaults.config.auth_method`"
     field-name: "Authentication method"
     description: "Defines the authentication mechanism for connecting to the CyberArk Conjur Vault service. Accepted value: `api_key`."
@@ -562,13 +562,17 @@ rows:
     description: Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use at least 60 seconds.
   - parameter: "`vaults.config.neg_ttl`"
     field-name: "Negative TTL"
-    description: Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. Kong retries after `neg_ttl` expires.
+    description: |
+      Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. 
+      Kong retries after `neg_ttl` expires.
   - parameter: "`vaults.config.resurrect_ttl`"
     field-name: "Resurrect TTL"
-    description: Duration (in seconds) that secrets remain usable after expiration (`config.ttl` is over). Useful when the vault is unreachable or a secret is deleted but not yet replaced. Kong continues retrying for `resurrect_ttl` seconds, then stops. The default is 1e8 seconds (~3 years).
+    description: |
+      Duration (in seconds) that secrets remain usable after expiration (`config.ttl` is over). 
+      Useful when the vault is unreachable or a secret is deleted but not yet replaced. 
+      Kong continues retrying for `resurrect_ttl` seconds, then stops. The default is 1e8 seconds (~3 years).
 {% endtable %}
 <!--vale on-->
-{% endif_version %}
 {% endnavtab %}
 {% endnavtabs %}
 
