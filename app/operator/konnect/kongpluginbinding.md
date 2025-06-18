@@ -12,6 +12,9 @@ breadcrumbs:
   - index: operator
     group: Konnect
     section: Key Concepts
+related_resources:
+  - text: "Enable a Plugin with KGO"
+    url: /operator/konnect/crd/gateway/plugin/
 
 ---
 
@@ -27,13 +30,14 @@ This CRD has the following fields:
 * `spec.targets`: Refers to the entity or combination of entities that the plugin is attached to. At least one target has to be specified when `spec.scope` is `OnlyTargets` (default).
 * `spec.controlPlaneRef`: Refers to the {{site.konnect_product_name}} control plane this `KongPluginBinding` is associated with.
 
-You can refer to the CR [API](/operator/reference/custom-resources/#kongpluginbinding) to see all the available fields.
+You can refer to the Custom Resource [API](/operator/reference/custom-resources/#kongpluginbinding) to see all the available fields.
 
 ## Using an unmanaged `KongPluginBinding`
 
-You can directly create a `KongPluginBinding` to bind your plugin to a Konnect entity. Assuming that you have an existing and programmed `KonnectGatewayControlPlane` with the name `cp` in the `default` namespace.
+You can directly create a `KongPluginBinding` to bind your plugin to a Konnect entity. For a end-to-end tutorial, see [Enable a Plugin with KGO](/operator/konnect/crd/gateway/plugin/).
 
-First, create a service and a plugin by `KongService` and `KongPlugin` CRD:
+
+Assuming that you have an existing and programmed `KonnectGatewayControlPlane` with the name `cp` in the `default` namespace, first, create a Gateway Service and a plugin with the `KongService` and `KongPlugin` CRDs:
 
 ```shell
 echo '
