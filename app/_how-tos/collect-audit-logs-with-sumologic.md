@@ -45,7 +45,7 @@ prereqs:
            export SIEM_TOKEN='YOUR-ACCESS-KEY'
            ```
 
-        1. Configure your network's firewall settings to allow traffic through the `8071` TCP or UDP port that {{site.konnect_short_name}} uses for audit logging. See the [Konnect ports and network requirements](/konnect/network/).
+        1. Configure your network's firewall settings to allow traffic through the `8071` TCP or UDP port that {{site.konnect_short_name}} uses for audit logging. See the [Konnect ports and network requirements](/konnect-platform/network/).
 
 tools:
   - konnect-api
