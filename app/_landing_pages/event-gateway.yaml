@@ -63,6 +63,7 @@ rows:
   - header:
       type: h2
       text: Protocol mediation plugins
+    column_count: 3
     columns:
       - blocks:       
         - type: plugin
