@@ -158,7 +158,7 @@ This confirms that the guardrail is correctly blocking disallowed content at the
 
 ### Blocked words
 
-Use these prompts containing blocked badwords to test blocking:
+Use these prompts containing blocked `badwords` to test the guardrail:
 
 {% navtabs "Blocked Words Prompts" %}
 
@@ -198,7 +198,7 @@ body:
 
 ### Blocked topic: Quantum computing
 
-Use these prompts to test blocking on the topic "quantum computing":
+Use these prompts to test the guardrail on the topic "quantum computing":
 
 {% navtabs "Quantum Computing Prompts" %}
 
@@ -237,7 +237,7 @@ body:
 
 ### Blocked categories
 
-Use these prompts to test blocking on blocked content categories:
+Use these prompts to test the guardrail on blocked content categories:
 
 {% navtabs "Content Policy Prompts" %}
 
