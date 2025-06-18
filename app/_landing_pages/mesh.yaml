@@ -130,7 +130,16 @@ rows:
   - header:
       type: h2
       text: "Next steps"
-    columns:
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Routing within the Mesh
+              description: |
+                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
+              cta:
+                text: Learn more 
+                url: /mesh/mesh-multi-tenancy/
       - blocks:
           - type: card
             config:
@@ -139,8 +148,7 @@ rows:
                 Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
               cta:
                 text: Learn more 
-                url: /mesh/single-zone/
-                # Pull in https://docs.konghq.com/mesh/2.11.x/production/mesh/
+                url: /mesh/mesh-multi-tenancy/
       - blocks:
           - type: card
             config:
@@ -149,10 +157,7 @@ rows:
                 Configure ingress (north / south traffic into your Mesh) using built-in or Kong gateway.
               cta:
                 text: Learn more 
-                url: /mesh/mesh-multizone-service-deployment/
-                # Will need an "Ingress" landing page (https://docs.konghq.com/mesh/2.11.x/using-mesh/managing-ingress-traffic/overview/)
-                # which will then link to the following... in https://docs.konghq.com/mesh/2.11.x/guides/gateway-api/ & https://docs.konghq.com/mesh/2.11.x/guides/gateway-delegated/,
-                # but will also need to pull in everything in the old docs from "Managing incoming traffic with gateways"
+                url: /mesh/ingress/
 
       - blocks:
           - type: card
@@ -163,6 +168,7 @@ rows:
               cta:
                 text: Learn more 
                 url: /mesh/policies/
+  - columns:
       - blocks:
           - type: card
             config:
@@ -171,8 +177,7 @@ rows:
                 Monitor service to service communication
               cta:
                 text: Learn more 
-                url: /mesh/mesh-multizone-service-deployment/
-                # Pull in https://docs.konghq.com/mesh/2.11.x/explore/observability
+                url: /mesh/observability/
   - header:
       type: h2
       text: Key references
@@ -205,8 +210,6 @@ rows:
               cta:
                 text: See enterprise features 
                 url: /mesh/enterprise/
-  
-  
   - columns:
       - blocks:
           - type: card
