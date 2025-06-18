@@ -138,6 +138,14 @@ variables:
 >
 > If you're using a model other than `text-embedding-3-large`, be sure to update the `vectordb.dimensions` value to match the model’s embedding size.
 
+Once the plugin is created, **copy its `id`** from the Deck response. Then, export it so the ingestion script can reference it later:
+
+```bash
+export PLUGIN_ID=<YOUR_PLUGIN_ID>
+```
+
+Replace `<YOUR_PLUGIN_ID>` with the actual `id` returned from the plugin creation API response. You’ll need this environment variable when generating the ingestion script that sends chunked content to the plugin.
+
 ## Ingest data to Redis
 
 Create an `inject_template.py` file by pasting the following into your terminal. This script fetches a Wikipedia article, splits the content into chunks, and sends each chunk to a local RAG ingestion endpoint.
@@ -146,6 +154,8 @@ Create an `inject_template.py` file by pasting the following into your terminal.
 cat <<EOF > inject_template.py
 import requests
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+plugin_id = "${PLUGIN_ID}"
 
 def get_wikipedia_extract(title):
     url = "https://en.wikipedia.org/w/api.php"
@@ -169,7 +179,6 @@ def get_wikipedia_extract(title):
             return page["extract"]
     return None
 
-
 title = "Shark"
 text = get_wikipedia_extract(title)
 
@@ -177,7 +186,7 @@ if not text:
     print(f"Failed to retrieve Wikipedia content for: {title}")
     exit()
 
-text = f"# {title}\n\n{text}"
+text = f"# {title}\\n\\n{text}"
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
 docs = text_splitter.create_documents([text])
@@ -186,7 +195,7 @@ print(f"Injecting {len(docs)} chunks...")
 
 for doc in docs:
     response = requests.post(
-        "http://localhost:8001/ai-rag-injector/{your_rag_injector_plugin_id}/ingest_chunk",
+        f"http://localhost:8001/ai-rag-injector/{plugin_id}/ingest_chunk",
         data={"content": doc.page_content}
     )
     print(response.status_code, response.text)
@@ -206,6 +215,8 @@ Injecting 91 chunks...
 200 {"metadata":{"chunk_id":"fc7d4fd7-21e0-443e-9504-abcdefghij13","ingest_duration":779,"embeddings_tokens_count":231}}
 200 {"metadata":{"chunk_id":"8d2aebe1-04e4-40c7-b16f-abcdefghij14","ingest_duration":569,"embeddings_tokens_count":184}}
 ```
+{:.info}
+> Wait until all 91 chunks have been injected before moving on to the next step.
 
 ## Configure the AI Prompt Compressor plugin
 

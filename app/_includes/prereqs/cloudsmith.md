@@ -30,4 +30,4 @@ Once you've received your Cloudsmith access token, run the following commands in
 
     ```bash
     docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
-    ``
+    ```
