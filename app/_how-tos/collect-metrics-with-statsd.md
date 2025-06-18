@@ -111,6 +111,9 @@ In this case, the request to the `/anything` path should have generated:
 ```
 {:.no-copy-code}
 
+{:.info}
+> The StatsD server may take a few minutes to connect. If you're not getting any metrics, wait a few minutes and try these validation steps again.
+
 
 
 
