@@ -1,0 +1,1 @@
+For this tutorial, you’ll need a Dev Portal pre-configured. These settings are essential for Dev Portal to function, but configuring them isn’t the focus of this guide. If you don't have these settings already configured, [create a Dev Portal](https://cloud.konghq.com/portals/create).
