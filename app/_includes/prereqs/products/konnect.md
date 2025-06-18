@@ -15,7 +15,7 @@ This is a Konnect tutorial and requires a Konnect personal access token.
 1. Run the [quickstart script](https://get.konghq.com/quickstart) to automatically provision a Control Plane and Data Plane, and configure your environment:
 
     ```bash
-    curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN {% for variable in include.env_variables %} -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% endfor %} --deck-output
+    curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN{% for variable in include.env_variables %} -e {{ variable.name }}{% if variable.value %}={{ variable.value }}{% endif %}{% endfor %}{% if include.ports %}{% for port in include.ports %} -p {{ port }}{% endfor %}{% endif %} --deck-output
     ```
 
     This sets up a Konnect Control Plane named `quickstart`, provisions a local Data Plane, and prints out the following environment variable exports:
