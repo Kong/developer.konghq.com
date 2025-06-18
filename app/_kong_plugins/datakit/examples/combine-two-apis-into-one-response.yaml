@@ -1,0 +1,40 @@
+description: |
+  Make requests to multiple APIs and combine their responses into one response.
+
+title: Combine multiple API responses
+weight: 900
+
+config:
+  debug: true
+  nodes:
+  - name: CAT_FACT
+    type: call
+    url:  https://catfact.ninja/fact
+  - name: DOG_FACT
+    type: call
+    url:  https://dogapi.dog/api/v1/facts
+  - name: JOIN
+    type: jq
+    inputs:
+    - cat: CAT_FACT.body
+    - dog: DOG_FACT.body
+    jq: |
+      {
+        "cat_fact": $cat.fact,
+        "dog_fact": $dog.facts[0]
+      }
+  - name: EXIT
+    type: exit
+    inputs:
+    - body: JOIN
+    status: 200
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.9'
