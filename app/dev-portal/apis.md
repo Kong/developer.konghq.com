@@ -30,7 +30,7 @@ related_resources:
 
 An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/access-and-approval/) for use with specific APIs.
 
-As an API Producer, you [publish an OpenAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
+As an API Producer, you [publish an OpenAPI or AsyncAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
 
 ## Validation
 
