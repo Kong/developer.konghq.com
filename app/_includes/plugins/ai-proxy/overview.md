@@ -10,6 +10,34 @@
 
 ## Overview of Capabilities
 
+{{ plugin }} plugin supports capabilities across batch processing, multimodal embeddings, agents, audio, image, streaming, and more, spanning multiple providers:
+
+For {{ site.base_gateway }} versions ≤ `3.6`
+
+* **Chat APIs**: multi-turn conversations with system/user/assistant roles.
+
+* **Completions API**: generates free-form text from a prompt.
+
+For {{ site.base_gateway }} version {% new_in 3.11 %}:
+
+* **Batch, assistants, and files APIs**: parallel LLM calls for efficiency; Assistants allow building stateful, tool-augmented agents; Files provide persistent document storage for richer context across sessions.
+
+* **Audio capabilities APIs**: Speech-to-text transcription, real-time translation, and text-to-speech synthesis empower voice agents, multilingual interfaces, and meeting analysis
+
+* **Image generation and editing APIs**: Generate and modify images from text prompts; support multimodal agents with visual input/output.
+
+* **Realtime streaming**: Stream completions token-by-token for low-latency, interactive experiences with analytics.
+
+* **Responses API**: Response metadata for debugging, evaluation, and response tuning.
+
+* **Rerank APIs**: Improve relevance in (RAG) pipelines via contextual reranking.
+
+* **AWS Bedrock Agent APIs**: advanced orchestration and real-time RAG with Converse, ConverseStream, RetrieveAndGenerate, and RetrieveAndGenerateStream.
+
+* **Hugging face text generation**: Enable text generation and streaming using open-source Hugging Face models.
+
+* **Embeddings API**: Unified text-to-vector embedding generation with multi-vendor support and analytics.
+
 The following tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
 
 ### Core Text Generation
