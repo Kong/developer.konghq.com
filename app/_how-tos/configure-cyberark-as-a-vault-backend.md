@@ -42,7 +42,7 @@ prereqs:
         If you don't already have CyberArk Conjur, you can follow the Docker quickstart guide to [setup an OSS environment](https://www.conjur.org/get-started/quick-start/oss-environment/), [define a policy](https://www.conjur.org/get-started/quick-start/define-policy/), and [store a secret](https://www.conjur.org/get-started/quick-start/store-secret/). 
 
         {:.warning}
-        > If you're running Conjur in Docker, change the proxy ports in `docker-compose.yml` to `"9443:443"`. The {{site.base_gateway}} and Conjur containers must also be using the same Docker network.
+        > If you're running Conjur in Docker, change the proxy ports in `docker-compose.yml` to `"9443:443"`. Make sure the {{site.base_gateway}} and Conjur containers are using the same Docker network. If they aren't, you can run `docker network connect kong-quickstart-net conjur_server` to connect the Conjur compose stack to the {{site.base_gateway}} quickstart network.
         
         Export the Conjur environment variables:
         ```sh
