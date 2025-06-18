@@ -1,0 +1,46 @@
+description: |
+  Configure the Datakit plugin to allow {{site.base_gateway}} to authenticate to a third-party service.
+
+title: Authenticate {{site.base_gateway}} to a third-party service
+weight: 900
+
+config:
+  debug: true
+  nodes:
+  - name: BUILD_AUTH_HEADERS
+    jq: |
+      {
+          "Authorization": "Basic YGA8NNu8877lkOmNsagsdWAyZXQ=",   
+      }
+    type: jq
+  - name: BUILD_AUTH_BODY
+    type: handlebars
+    template: |
+        grant_type=client_credentials
+  - name: AUTH_CALL
+    type: call
+    inputs:
+    - headers: BUILD_AUTH_HEADERS
+    - body: BUILD_AUTH_BODY
+    url:  http://auth-server:5000/token
+    method: post
+  - name: BUILD_UPSTREAM_AUTH_HEADERS
+    type: jq
+    inputs:
+    - auth: AUTH_CALL
+    output:
+      service_request.headers
+    jq: |
+      {
+      "Authorization":$auth.token_type + " " +    $auth.access_token
+      }
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.9'

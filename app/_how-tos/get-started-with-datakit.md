@@ -1,7 +1,6 @@
 ---
 title: Get started with Datakit
 content_type: how_to
-tech_preview: true
 description: Learn how to configure the Datakit plugin.
 products:
     - gateway
@@ -20,14 +19,12 @@ entities:
 tags:
   - get-started
   - transformations
-  - tech-preview
 
 tldr: 
   q: What is Datakit, and how can I get started with it?
   a: |
     Datakit is a {{site.base_gateway}} plugin that allows you to interact with third-party APIs.
-    To enable it, start {{site.base_gateway}} with `wasm = on`. 
-    Then, you can configure the plugin to combine responses from two third-party API calls and return directly to the client.
+    In this guide, learn how to configure the plugin to combine responses from two third-party API calls and return directly to the client.
 
 tools:
   - deck
@@ -46,22 +43,18 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 min_version:
-    gateway: '3.9'
+    gateway: '3.11'
 
 related_resources:
   - text: Datakit plugin
     url: /plugins/datakit/
+
+faqs:
+  - q: How do I run Datakit in {{site.base_gateway}} 3.9 or 3.10?
+    a: |
+      Prior to 3.11, Datakit ran on the WASM engine. 
+      If you are running {{site.base_gateway}} 3.9 or 3.10, set `wasm=on` in `kong.conf`, then reload your {{site.base_gateway}} instance before configuring the plugin.
 ---
-
-## Start {{site.base_gateway}} with the WASM engine
-
-Start the {{site.base_gateway}} container with the `KONG_WASM` variable:
-
-```sh
-curl -Ls https://get.konghq.com/quickstart | bash -s -- \
-   -e KONG_LICENSE_DATA \
-   -e KONG_WASM=on
-```
 
 ## Create a Service and a Route
 

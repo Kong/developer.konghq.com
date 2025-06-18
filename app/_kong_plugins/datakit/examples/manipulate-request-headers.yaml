@@ -1,0 +1,37 @@
+description: |
+  Use the Datakit plugin to dynamically adjust request headers before passing them to a third-party service.
+
+title: Manipulate request headers
+weight: 900
+
+config:
+  debug: true
+  nodes:
+  - name: MY_HEADERS
+    type: jq
+    inputs:
+    - req: request.headers
+    jq: |
+      {
+        "X-My-Call-Header": $req.apikey // "default value"
+      }
+  - name: CALL
+    type: call
+    inputs:
+    - headers: MY_HEADERS
+    url: https://httpbin.konghq.com/anything
+  - name: EXIT
+    type: exit
+    inputs:
+    - body: CALL.body
+    status: 200
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.9'
