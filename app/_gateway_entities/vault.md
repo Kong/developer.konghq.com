@@ -538,11 +538,6 @@ rows:
     description: |
       The client certificate file.
   - parameter: |
-      `vaults.config.cert_auth_cert_verify` {% new_in 3.11 %}
-    field-name: "cert_auth_cert_verify"
-    description: |
-      Whether to perform SSL verification (boolean).
-  - parameter: |
       `vaults.config.cert_auth_role_name` {% new_in 3.11 %}
     field-name: "cert_auth_role_name"
     description: |
