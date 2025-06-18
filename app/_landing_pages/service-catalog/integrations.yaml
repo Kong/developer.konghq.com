@@ -119,7 +119,7 @@ rows:
               icon: /assets/icons/gateway.svg
               cta:
                 text: Learn more
-                url: /gateway-manager/
+                url: /service-catalog/integrations/gateway-manager/
       - blocks:
           - type: card
             config:
@@ -128,7 +128,7 @@ rows:
               icon: /assets/icons/analytics.svg
               cta:
                 text: Learn more
-                url: /advanced-analytics/
+                url: /service-catalog/integrations/konnect-analytics/
       - blocks:
           - type: card
             config:
@@ -137,5 +137,5 @@ rows:
               icon: /assets/icons/mesh.svg
               cta:
                 text: Learn more
-                url: /mesh-manager/
+                url: /service-catalog/integrations/mesh-manager/
       
