@@ -15,20 +15,20 @@ weight: 900
 
 variables:
   host:
-    description: 'The [IPv4 or IPv6 address or hostname](https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry) of the Solace broker to connect to.'
-    value: tcp://127.0.0.1:55555
+    description: 'The [IPv4 or IPv6 address or hostname](https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry) of the Solace broker to connect to. For example, `tcp://127.0.0.1:55555`.'
+    value: SOLACE_HOST
   username:
     description: 'The username used with `BASIC` authentication scheme when connecting to an event broker.'
-    value: admin
+    value: SOLACE_USERNAME
   password:
     description: 'The password used with `BASIC` authentication scheme when connecting to an event broker.'
-    value: admin
+    value: SOLACE_PASSWORD
   queue1:
     description: 'The name of the first destination queue.'
-    value: test
+    value: QUEUE_NAME
   queue2:
     description: 'The name of the second destination queue.'
-    value: test2
+    value: ANOTHER_QUEUE_NAME
 
 config:
   session:
