@@ -1,5 +1,5 @@
 ---
-title: Slack Integration
+title: Slack
 content_type: reference
 layout: reference
 

@@ -23,7 +23,7 @@ related_resources:
     url: /service-catalog/
 discovery_support: true
 discovery_default: true
-bindable_entities: "Service"
+bindable_entities: "Report"
 ---
 
 The {{site.konnect_short_name}} Analytics integration will allow users to connect Reports from the {{site.konnect_short_name}} Analytics product directly to their services. Users browsing the catalog will be able to see what reports are important to that service, and be brought directly to the report by clicking through.
