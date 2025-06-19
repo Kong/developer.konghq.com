@@ -62,13 +62,14 @@ automated_tests: false
 Using the Admin API, create a Key Set to hold PEM keys:
 
 {% control_plane_request %}
-  url: /key-sets
-  method: POST
-  headers:
-      - 'Accept: application/json'
-      - 'Content-Type: application/json'
-  body:
-      name: my-pem-key-set
+url: /key-sets
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+body:
+    name: my-pem-key-set
+status_code: 201
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with details about the new Key Set.
@@ -79,20 +80,21 @@ Create a Key and use either the `set.id` from the response in the previous step,
 To avoid errors, the private and public keys should be strings, and newlines should replaced with `\n`:
 
 {% control_plane_request %}
-  url: /keys
-  method: POST
-  headers:
-      - 'Accept: application/json'
-      - 'Content-Type: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-  body:
-      name: my-pem-key
-      kid: my-pem-key
-      set:
-        name: my-pem-key-set
-      pem:
-        private_key: "-----BEGIN PRIVATE KEY-----\nprivate-key-content\n-----END PRIVATE KEY-----"
-        public_key: "-----BEGIN PUBLIC KEY-----\npublic-key-content\n-----END PUBLIC KEY-----"
+url: /keys
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+body:
+    name: my-pem-key
+    kid: my-pem-key
+    set:
+      name: my-pem-key-set
+    pem:
+      private_key: "-----BEGIN PRIVATE KEY-----\nprivate-key-content\n-----END PRIVATE KEY-----"
+      public_key: "-----BEGIN PUBLIC KEY-----\npublic-key-content\n-----END PUBLIC KEY-----"
+status_code: 201
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with details about the new Key, including the Key Set ID.
