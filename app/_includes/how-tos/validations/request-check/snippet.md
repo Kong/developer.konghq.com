@@ -4,6 +4,8 @@
 {% assign is_https = false %}
 {% if include.mtls %}{% assign is_https = true %}{% endif %}
 {% if include.insecure %}{% assign is_https = true %}{% endif %}
+{% if include.url contains 'https://' %}{% assign is_https = false %}{% endif %}
+
 ```bash
 {% if include.capture -%}
 {{include.capture}}=$({% endif %}{% if include.sleep %}sleep {{include.sleep}} && {% endif %}{% if count > 1%}for _  in {1..{{count}}}; do
