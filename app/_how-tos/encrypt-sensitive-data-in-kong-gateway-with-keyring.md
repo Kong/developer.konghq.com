@@ -50,10 +50,14 @@ min_version:
 ## Generate an RSA key pair
 
 These keys are needed for [disaster recovery](/gateway/keyring/#disaster-recovery). You can generate them using OpenSSL:
-```sh
-openssl genrsa -out private.pem 2048
-openssl rsa -in private.pem -pubout -out public.pem
-```
+
+{% validation custom-command %}
+command: |
+  openssl genrsa -out private.pem 2048
+  openssl rsa -in private.pem -pubout -out public.pem
+expected:
+  return_code: 0
+{% endvalidation %}
 
 ## Set environment variables
 
@@ -76,12 +80,16 @@ KONG_KEYRING_RECOVERY_PUBLIC_KEY: "$(cat public.pem | base64 -w 0)"
 ## Start {{site.base_gateway}}
 
 Create the {{site.base_gateway}} container with the environment variables. In this example, we can use the quickstart:
-```sh
-curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
-    -e KONG_KEYRING_ENABLED \
-    -e KONG_KEYRING_STRATEGY \
-    -e KONG_KEYRING_RECOVERY_PUBLIC_KEY
-```
+
+{% validation custom-command %}
+command: |
+  curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
+      -e KONG_KEYRING_ENABLED \
+      -e KONG_KEYRING_STRATEGY \
+      -e KONG_KEYRING_RECOVERY_PUBLIC_KEY
+expected:
+  return_code: 0
+{% endvalidation %}
 
 ## Generate a key
 
