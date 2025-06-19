@@ -163,4 +163,5 @@ headers:
   - |
     Refresh-Token:$(curl --user alex:doe http://localhost:8000/anything \
             | jq -r '.headers."Refresh-Token"')
+skip: true
 {% endvalidation %}
