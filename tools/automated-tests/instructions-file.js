@@ -9,9 +9,7 @@ export async function testeableUrlsFromFiles(config, files) {
     const { data: frontmatter, content } = matter.read(file);
 
     const isTesteable =
-      frontmatter.products &&
-      frontmatter.products.length === 1 &&
-      frontmatter.products.includes("gateway");
+      frontmatter.products && frontmatter.products.includes("gateway");
 
     if (isTesteable) {
       const skipHowTo =
