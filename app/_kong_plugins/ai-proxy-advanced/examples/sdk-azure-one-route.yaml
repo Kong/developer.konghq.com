@@ -9,7 +9,7 @@ extended_description: |
   This allows a single Route to support multiple Azure model deployments dynamically.
 
     {:.warning}
-    > For this configuration to work properly, you need a Gateway Route with the following configuration:
+    > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
     > ```
     > routes:
     >  - name: azure-chat-model-from-path

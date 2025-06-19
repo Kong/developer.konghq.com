@@ -1,10 +1,10 @@
 title: "OpenAI SDK: Multi-deployment chat routing"
-description: Use separate Kong routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
+description: Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
 extended_description: |
-  Use separate Kong routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
+  Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
 
-  Using OpenAI SDK with the AI Proxy Advanced plugin, you can configure multiple routes in Kong Gateway to represent different Azure OpenAI deployments.
-  Each route maps a unique path segment (such as `azure-gpt-3-5` or `azure-gpt-4`) to the corresponding deployment ID and model name.
+  Using OpenAI SDK with the AI Proxy Advanced plugin, you can configure multiple Routes in Kong Gateway to represent different Azure OpenAI deployments.
+  Each Route maps a unique path segment (such as `azure-gpt-3-5` or `azure-gpt-4`) to the corresponding deployment ID and model name.
   This setup allows you to use a single Azure-compatible OpenAI SDK client to switch between deployments by changing only the base URL.
 
   For example:
@@ -25,7 +25,7 @@ extended_description: |
   {{site.base_gateway}} reads the deployment path, maps it to the appropriate Azure deployment ID and model, and handles authentication automatically.
 
     {:.warning}
-    > For this configuration to work properly, you need a Gateway Route with the following configuration:
+    > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
     > ```
     > routes:
     >  - name: azure-chat-gpt-3-5
