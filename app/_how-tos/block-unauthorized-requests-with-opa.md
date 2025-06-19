@@ -62,6 +62,8 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Create a policy file
