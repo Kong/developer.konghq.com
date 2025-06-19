@@ -67,11 +67,11 @@ prereqs:
             * **Login URL** 
             * **Certificate (Base64)** 
 
-            ```sh
-            export DECK_IDENTIFIER=<SAML application identifier>
-            export DECK_LOGIN_URL=<SAML login URL>
-            export DECK_CERTIFICATE=<certificate contents>
-            ```
+            {% validation env-variables %}
+            DECK_IDENTIFIER: SAML-application-identifier
+            DECK_LOGIN_URL: SAML-login-URL
+            DECK_CERTIFICATE: certificate-contents
+            {% endvalidation %}
 
         {:.warning}
         > Do not include the `BEGIN CERTIFICATE` and `END CERTIFICATE` lines in the certificate variable. Add only the certificate contents.

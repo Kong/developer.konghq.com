@@ -27,12 +27,14 @@ prereqs:
             * `KONG_ADMIN_TOKEN`: The `kong_password` variable set when configuring {{site.base_gateway}}
             * `ADMIN_NAME`: The name of the RBAC user that will be associated with the Super Admin Role.
             * `USER_TOKEN`: The authentication token to be presented to the Admin API.
-            For example: 
-            ```sh
-            export KONG_ADMIN_TOKEN=kong
-            export ADMIN_NAME=tim
-            export USER_TOKEN=my-admin-token
-            ```
+            For example:
+
+            {% validation env-variables %}
+            KONG_ADMIN_TOKEN: kong
+            ADMIN_NAME: tim
+            USER_TOKEN: my-admin-token
+            {% endvalidation %}
+
         icon_url: /assets/icons/file.svg
 
 min_version:
