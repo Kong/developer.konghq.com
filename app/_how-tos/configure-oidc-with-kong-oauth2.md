@@ -156,12 +156,22 @@ In this example:
 
 Retrieve the token from the OAuth token endpoint:
 
-```sh
-curl -X POST --insecure https://localhost:8443/anything/oauth2/token \
-  --data "client_id=client" \
-  --data "client_secret=secret" \
-  --data "grant_type=client_credentials"
-```
+{% validation request-check %}
+insecure: true
+method: POST
+url: /anything/oauth2/token
+on_prem_url: https://localhost:8443
+headers:
+  - "Content-Type: application/json"
+body:
+  client_id: client
+  client_secret: secret
+  grant_type: client_credentials
+extract_body:
+  - name: 'access_token'
+    variable: ACCESS_TOKEN
+status_code: 200
+{% endvalidation%}
 
 You should see an `access-token` in the response.
 
