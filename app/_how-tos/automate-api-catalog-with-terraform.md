@@ -233,7 +233,7 @@ PORTAL_URL=$(terraform show -json | jq -r '
   | .values.default_domain')
 ```
 
-To validate that the API was created and published in your Dev Portal, navigate to your Dev Portal and log in with the developer account you [created in the prerequisites](/how-to/automate-api-catalog/#dev-portal):
+To validate that the API was created and published in your Dev Portal, navigate to your Dev Portal:
 
 ```sh
 open https://$PORTAL_URL/apis
