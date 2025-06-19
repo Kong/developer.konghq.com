@@ -9,6 +9,8 @@ products:
 works_on:
     - on-prem
 
+wasm: true
+
 plugins:
   - datakit
 
