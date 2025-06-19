@@ -45,6 +45,8 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+automated_tests: false
 ---
 
 ## Generate an RSA key pair
