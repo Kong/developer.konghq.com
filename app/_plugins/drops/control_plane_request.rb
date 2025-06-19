@@ -41,6 +41,14 @@ module Jekyll
         ).to_s
       end
 
+      def data_validate_konnect
+        JSON.dump({ name: 'control_plane_request', config: config.merge(url: konnect_url) })
+      end
+
+      def data_validate_on_prem
+        JSON.dump({ name: 'control_plane_request', config: config.merge(url: on_prem_url) })
+      end
+
       def config
         @config ||= @yaml.except('url')
       end
