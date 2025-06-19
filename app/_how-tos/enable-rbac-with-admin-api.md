@@ -38,6 +38,8 @@ prereqs:
             ```sh
             export USER_TOKEN=my-admin-token
             ```
+
+automated_tests: false
 ---
 
 
