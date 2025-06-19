@@ -50,8 +50,9 @@ In this guide, we're going to use an example user named `alex` with the password
 #### Export to environment variables
 Export your client secret, client ID, and issuer URL to environment variables so that you can pass them more securely.
 For example:
-```
-export DECK_ISSUER=http://host.docker.internal:8080/realms/master
-export DECK_CLIENT_ID=kong
-export DECK_CLIENT_SECRET=UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
-```
+
+{% validation env-variables %}
+DECK_ISSUER: http://host.docker.internal:8080/realms/master
+DECK_CLIENT_ID: kong
+DECK_CLIENT_SECRET: UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
+{% endvalidation %}
