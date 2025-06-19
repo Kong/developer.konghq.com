@@ -55,13 +55,14 @@ Create an [RBAC](/gateway/entities/rbac/) user by sending a `POST` request to th
 
 <!-- vale off -->
 {% control_plane_request %}
-  url: /rbac/users
-  method: POST
-  body:
-      name: alex
-      user_token: alex-token
-  headers:
-      - 'Kong-Admin-Token:kong'
+url: /rbac/users
+method: POST
+body:
+    name: alex
+    user_token: alex-token
+headers:
+    - 'Kong-Admin-Token:kong'
+status_code: 201
 {% endcontrol_plane_request %}
 <!-- vale on -->
 
@@ -79,6 +80,7 @@ headers:
   - 'Kong-Admin-Token:kong'
 body:
   name: dev
+status_code: 201
 {% endcontrol_plane_request %}
 
 Then, assign endpoint permissions to the role, allowing access **only** to the `/services` endpoint:
@@ -93,6 +95,7 @@ body:
   workspace: default
   actions: 
     - '*'
+status_code: 201
 {% endcontrol_plane_request %}
 
 ## Assign role to user
@@ -106,6 +109,7 @@ headers:
   - 'Kong-Admin-Token:kong'
 body:
   roles: dev
+status_code: 201
 {% endcontrol_plane_request %}
 
 ## Validate 
@@ -118,6 +122,7 @@ url: /routes
 headers:
   - "Kong-Admin-Token:alex-token"
 display_headers: true
+status_code: 403
 {% endcontrol_plane_request %}
 
 If RBAC was enabled correctly, this request returns the following error message:
@@ -137,6 +142,7 @@ body:
   host: httpbin.konghq.com
 headers:
   - "Kong-Admin-Token:alex-token"
+status_code: 201
 {% endcontrol_plane_request %}
 
-This time, the request succeeds with a `200` and creates a new Service.
+This time, the request succeeds with a `201` and creates a new Service.
