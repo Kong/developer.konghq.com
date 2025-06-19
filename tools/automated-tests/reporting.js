@@ -37,13 +37,18 @@ export async function logResults(results) {
   const failed = results.filter((r) => r.status === "failed");
   const skipped = results.filter((r) => r.status === "skipped");
 
+  let expectedCount = 0;
+  let failedCount = 0;
+
   console.log();
 
   if (failed.length > 0) {
     for (const failure of failed) {
       if (isFailureExpected(failure)) {
+        expectedCount++;
         continue;
       }
+      failedCount++;
 
       console.error(`Test: ${failure.file} failed.`);
       console.error(failure.assertions);
@@ -51,11 +56,7 @@ export async function logResults(results) {
   }
 
   console.log(
-    `Summary: ${results.length} total. ${passed.length} passed, ${
-      failed.length
-    } failed, ${skipped.length} skipped, expected failures: ${
-      Object.entries(expectedFailures).length || 0
-    }.`
+    `Summary: ${results.length} total. ${passed.length} passed, ${failedCount} failed, ${skipped.length} skipped, expected failures: ${expectedCount}.`
   );
 
   console.log("Tests result logged to ./testReport.json");
