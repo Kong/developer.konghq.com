@@ -52,7 +52,7 @@ async function runConfig(config, container) {
   }
 }
 
-async function checkSetup(setup, runtimeConfig) {
+async function checkSetup(setup, runtimeConfig, container) {
   const { runtime, version: minVersion } = await getSetupConfig(setup);
   if (runtime !== runtimeConfig.runtime) {
     throw new Error(
@@ -72,6 +72,7 @@ async function checkSetup(setup, runtimeConfig) {
       return false;
     }
   }
+
   return true;
 }
 
@@ -99,7 +100,7 @@ async function runSteps(steps, runtimeConfig, container) {
             // XXX: Sleep needed here because we need to wait for the iterator
             // rebuilding in Gateway.
             await new Promise((resolve) => setTimeout(resolve, 5000));
-            const result = await validate(command, runtimeConfig);
+            const result = await validate(container, command, runtimeConfig);
             assertions.push(...result);
           }
         }
