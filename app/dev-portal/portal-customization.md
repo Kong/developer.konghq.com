@@ -157,7 +157,7 @@ rows:
   - variable: "<code>&#123;&#123;application_name&#125;&#125;</code>"
     description: The name of the developer's application.
   - variable: "<code>&#123;&#123;dev_portal_reply_to&#125;&#125;</code>"
-    description: The Dev Portal reply to email address.
+    description: The Dev Portal reply-to email address.
   - variable: "<code>&#123;&#123;developer_email&#125;&#125;</code>"
     description: The email address of the developer.
   - variable: "<code>&#123;&#123;developer_fullname&#125;&#125;</code>"
@@ -173,7 +173,7 @@ rows:
 
 ### Customize the email domain
 
-If you want to change the from and reply to email domains, you can configure a different domain through Dev Portal settings. 
+If you want to change the from and reply-to email domains, you can configure a different domain through Dev Portal settings. 
 Navigate to your Dev Portal, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings. 
 
 Once you've added your new domain, you must add the CNAME records to your DNS server. 
