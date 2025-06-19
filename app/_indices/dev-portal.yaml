@@ -3,13 +3,16 @@ sections:
   - title: Overview
     items:
       - path: /dev-portal/
+      - path: /dev-portal/**/*
+      - path: /dev-portal/analytics/
+    auto_exclude: true   
+  - title: API catalog
+    items:
       - path: /dev-portal/apis/
       - title: Publish APIs
         description: Learn how to publish APIs with Dev Portal and control who can see published APIs.
         url: /dev-portal/publishing/
-      - path: /dev-portal/**/*
-      - path: /dev-portal/analytics/
-    auto_exclude: true   
+      - path: /how-to/automate-api-catalog/
   - title: Application registration
     items:
       - title: Developer sign-up

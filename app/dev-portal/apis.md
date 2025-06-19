@@ -22,6 +22,8 @@ search_aliases:
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:
+  - text: Automate your API catalog with Dev Portal
+    url: /how-to/automate-api-catalog/
   - text: Publishing
     url: /dev-portal/publishing/
   - text: Application registration

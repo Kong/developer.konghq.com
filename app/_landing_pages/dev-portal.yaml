@@ -37,7 +37,8 @@ rows:
       type: h2
       text: "Get started"
 
-  - columns:
+  - column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -48,26 +49,6 @@ rows:
               icon: /assets/icons/dev-portal.svg
               cta:
                 url: "https://cloud.konghq.com/portals/create"
-      - blocks:
-          - type: card
-            config:
-              title: Add APIs to Dev Portal
-              description: |
-                Dev Portal APIs serve as a repository for your API specifications and documentation. 
-                You can optionally version your APIs and publish them to one or more Portals. 
-                This supports maintaining a central source of truth while offering developer-specific visibility.
-              icon: /assets/icons/api.svg
-              cta:
-                url: "/dev-portal/apis/"
-      - blocks:
-          - type: card
-            config:
-              title: Publish APIs to Dev Portal
-              description: |
-                Learn how to publish APIs with Dev Portal and control who can see published APIs.
-              icon: /assets/icons/book.svg
-              cta:
-                url: "/dev-portal/publishing/"
       - blocks:
           - type: card
             config:
@@ -122,6 +103,38 @@ rows:
                   * Public visibility without authentication
                   * Publish APIs suited to general audiences
                   * Build custom landing pages and SEO-optimized docs
+  
+  - header:
+      type: h2
+      text: "Create an API catalog"
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Automate your API catalog with Dev Portal
+              description: |
+                Learn how to automate your API catalog in Dev Portal using {{site.konnect_short_name}} APIs.
+              cta:
+                url: /how-to/automate-api-catalog/
+      - blocks:
+          - type: card
+            config:
+              title: Add APIs to Dev Portal
+              description: |
+                Dev Portal APIs serve as a repository for your API specifications and documentation. 
+                You can optionally version your APIs and publish them to one or more Portals. 
+                This supports maintaining a central source of truth while offering developer-specific visibility.
+              cta:
+                url: "/dev-portal/apis/"
+      - blocks:
+          - type: card
+            config:
+              title: Publish APIs to Dev Portal
+              description: |
+                Learn how to publish APIs with Dev Portal and control who can see published APIs.
+              cta:
+                url: "/dev-portal/publishing/"
   
   - header:
       type: h2

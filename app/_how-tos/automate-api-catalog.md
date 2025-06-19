@@ -2,7 +2,7 @@
 title: Automate your API catalog with Dev Portal
 description: Learn how to automate your API catalog in Dev Portal using Konnect APIs.
 content_type: how_to
-
+automated_tests: false
 products:
     - gateway
     - dev-portal
@@ -15,18 +15,13 @@ tools:
     - deck
     # - konnect-api
 tags:
-    - dynamic-client-registration
-    - application-registration
-    - openid-connect
-    - authentication
-    - auth0
+    - api-catalog
 search_aliases:
-    - dcr
-    - OpenID Connect
+    - API catalog
 
 tldr:
-    q: placeholder
-    a: placeholder
+    q: How do I automate the creation and publication of my API catalog in Dev Portal?
+    a: Create an API (`/v3/apis`), optionally associate a document (`/v3/apis/{apiId}/documents`) or spec (`/v3/apis/{apiId}/specifications`) with the API, then associate the API with a Gateway Service (`/v3/apis/{apiId}/implementations`). Finally, publish it by sending a `PUT` request to the `/v3/apis/{apiId}/publications/{portalId}` endpoint.
 
 prereqs:
   inline:
@@ -48,17 +43,23 @@ cleanup:
 min_version:
     gateway: '3.4'
 related_resources:
-  - text: placeholder
-    url: /
+  - text: Dev Portal APIs reference
+    url: /dev-portal/apis/
+  - text: Self-service developer and application registration
+    url: /dev-portal/application-registration/
+  - text: Application authentication strategies
+    url: /dev-portal/auth-strategies/
 
 next_steps:
-  - text: placeholder
-    url: /
+  - text: Apply an authentication strategy to your APIs
+    url: /dev-portal/auth-strategies/
 ---
 
 ## Create an API
 
-(/api/konnect/api-builder/v3/#/operations/create-api)
+In this tutorial, you'll automate your API catalog by creating an API along with a document and spec, associating it with a Gateway Service, and finally publishing it to a Dev Portal. 
+
+First, [create an API](/api/konnect/api-builder/v3/#/operations/create-api) using the `/v3/apis` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -74,13 +75,17 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
+Export the ID of your API from the response:
+
 ```sh
 export API_ID='YOUR-API-ID'
 ```
 
 ## Create and associate an API document 
 
-(/api/konnect/api-builder/v3/#/operations/create-api-document)
+An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal.
+
+[Create and associate an API document](/api/konnect/api-builder/v3/#/operations/create-api-document) using the `/v3/apis/{apiId}/documents` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -101,7 +106,7 @@ body:
 
 ## Create and associate an API spec
 
-(/api/konnect/api-builder/v3/#/operations/create-api-spec)
+[Create and associate a spec](/api/konnect/api-builder/v3/#/operations/create-api-spec) with your API using the `/v3/apis/{apiId}/specifications` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -120,11 +125,15 @@ body:
 
 ## Associate the API with a Gateway Service
 
-(/api/konnect/control-planes/v2/#/operations/list-control-planes)
+[Gateway Services](/gateway/entities/service/) represent the upstream services in your system. By associating a Service with an API, this allows developers to generate credentials or API keys for your API. 
+
+Before you can associate the API with the Service, you need the Control Plane ID and the ID of the `example-service` Service you [created in the prerequisites](/how-to/automate-api-catalog/#required-entities). 
+
+First, send a request to the `/v2/control-planes` endpoint to [get the ID of the `quickstart` Control Plane](/api/konnect/control-planes/v2/#/operations/list-control-planes):
 
 <!--vale off-->
 {% control_plane_request %}
-url: /v2/control-planes
+url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
 status_code: 201
 method: GET
 headers:
@@ -134,11 +143,13 @@ headers:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
+Export your Control Plane ID:
+
 ```sh
 export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
 ```
 
-(/api/konnect/control-planes-config/v2/#/operations/list-service)
+Next, [list Services](/api/konnect/control-planes-config/v2/#/operations/list-service) by using the `/v2/control-planes/{controlPlaneId}/core-entities/services` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -152,11 +163,13 @@ headers:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
+Export the ID of the `example-service`:
+
 ```sh
 export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
 ```
 
-(/api/konnect/api-builder/v3/#/operations/create-api-implementation)
+[Associate the API with a Service](/api/konnect/api-builder/v3/#/operations/create-api-implementation) using the `/v3/apis/{apiId}/implementations` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -176,7 +189,9 @@ body:
 
 ## Publish the API to Dev Portal
 
-(/api/konnect/portal-management/v3/#/operations/list-portals)
+Now you can publish the API to a Dev Portal. 
+
+First, [list your Dev Portals](/api/konnect/portal-management/v3/#/operations/list-portals) using `/v3/portals` endpoint so you can copy the ID of the Dev Portal you want to publish to:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -190,11 +205,14 @@ headers:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
+Export your Dev Portal ID and domain:
+
 ```sh
 export PORTAL_ID='YOUR-DEV-PORTAL-ID'
+export PORTAL_URL='YOUR-DEV-PORTAL-DOMAIN'
 ```
 
-(/api/konnect/api-builder/v3/#/operations/publish-api-to-portal)
+[Publish the API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -207,3 +225,14 @@ headers:
     - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 {% endcontrol_plane_request %}
 <!--vale on-->
+
+## Validate
+
+To validate that the API was created and published in your Dev Portal, navigate to your Dev Portal and log in with the developer account you [created in the prerequisites](/how-to/automate-api-catalog/#dev-portal):
+
+```sh
+open https://$PORTAL_URL/apis
+```
+
+You should see `myApi` in the list of APIs. 
+
