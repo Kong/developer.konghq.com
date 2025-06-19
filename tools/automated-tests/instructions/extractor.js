@@ -61,7 +61,10 @@ async function extractSetup(page) {
   const setups = await page.$$("[data-test-setup]");
 
   for (const elem of setups) {
-    if (await elem.isVisible()) {
+    if (
+      (await elem.isVisible()) ||
+      (await page.evaluate((el) => el.classList.contains("invisible"), elem))
+    ) {
       const instruction = await elem.evaluate((el) => el.dataset.testSetup);
       let key;
 
