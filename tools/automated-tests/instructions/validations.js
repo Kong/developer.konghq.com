@@ -12,7 +12,8 @@ export class ValidationError extends Error {
   }
 }
 
-function processHeaders(config) {
+async function processHeaders(config, runtimeConfig) {
+  const env = await runtimeEnvironment(runtimeConfig);
   let headers = {};
   if (config.headers) {
     config.headers.forEach((header) => {

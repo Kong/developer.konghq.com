@@ -4,7 +4,12 @@ import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
-import { executeCommand, removeContainer } from "../docker-helper.js";
+import {
+  addEnvVariablesFromContainer,
+  executeCommand,
+  removeContainer,
+  getLiveEnv,
+} from "../docker-helper.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
@@ -114,12 +119,28 @@ async function runSteps(steps, runtimeConfig, container) {
 
 export async function runInstructions(instructions, runtimeConfig, container) {
   let result = {};
+  const { rbac, wasm } = await getSetupConfig(instructions.setup);
   try {
-    const check = await checkSetup(instructions.setup, runtimeConfig);
+    const check = await checkSetup(
+      instructions.setup,
+      runtimeConfig,
+      container
+    );
 
     if (!check) {
       result["status"] = "skipped";
       return result;
+    }
+
+    if (rbac) {
+      for (const command of runtimeConfig.setup.rbac.commands) {
+        await executeCommand(container, command);
+      }
+    }
+    if (wasm) {
+      for (const command of runtimeConfig.setup.wasm.commands) {
+        await executeCommand(container, command);
+      }
     }
 
     await runPrereqs(instructions.prereqs, container);
@@ -140,6 +161,13 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       result["assertions"] = [err.message];
     }
   }
+
+  if (rbac || wasm) {
+    for (const command of runtimeConfig.setup.commands) {
+      await executeCommand(container, command);
+    }
+  }
+
   return result;
 }
 

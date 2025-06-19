@@ -34,18 +34,16 @@ faqs:
   - q: When accessing a restricted resource with an RBAC user via the Admin API, why do I get `Invalid RBAC credentials` instead of a permissions error?
     a: If you see an `Invalid RBAC credentials` error, this means that the user token you provided is incorrect or doesn't exist. Check your credentials and try again.
 
-prereqs:
-  skip_product: true
-  inline:
-    - title: Start {{site.base_gateway}} with RBAC
-      include_content: prereqs/enable-rbac
-      icon_url: /assets/icons/gateway.svg
+rbac: true
 
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+min_version:
+  gateway: '3.4'
 ---
 
 ## Create an RBAC user
