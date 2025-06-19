@@ -29,7 +29,7 @@ rows:
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
           - type: button
             config:
-              text: Create a Dev Portal in Konnect
+              text: "Create a Dev Portal in {{site.konnect_short_name}}"
               url: https://cloud.konghq.com/portals/create
       - blocks:
           - type: image
@@ -152,7 +152,7 @@ rows:
             config:
               title: Email customization
               description: |
-                Learn how to cusomize the content and domain for the emails developers receive for Dev Portal events.
+                Learn how to customize the content and domain for the emails developers receive for Dev Portal events.
               cta:
                 url: /dev-portal/portal-customization/#developer-email-customization
       - blocks:

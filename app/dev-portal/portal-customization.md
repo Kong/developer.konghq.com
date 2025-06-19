@@ -173,7 +173,10 @@ rows:
 
 ### Customize the email domain
 
-If you want to change the from and reply to email domains, you can configure a different domain by navigating to your Dev Portal, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings. Once you've added your new domain, you must add the CNAME records to your DNS server. 
+If you want to change the from and reply to email domains, you can configure a different domain through Dev Portal settings. 
+Navigate to your Dev Portal, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings. 
+
+Once you've added your new domain, you must add the CNAME records to your DNS server. 
 
 {:.info}
 > Certain domain names are restricted. See [Domain name restrictions](/dev-portal/custom-domains/#domain-name-restrictions) for more information.
