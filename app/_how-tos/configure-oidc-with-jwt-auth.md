@@ -122,6 +122,10 @@ method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+extract_body:
+  - name: 'headers.Authorization'
+    variable: TOKEN
+    strip_bearer: true
 {% endvalidation %}
 
 You'll see an `Authorization` header with your access token in the response.

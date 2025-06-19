@@ -154,6 +154,9 @@ method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+extract_body:
+  - name: 'headers.Authorization'
+    variable: TOKEN
 {% endvalidation %}
 
 You'll see an `Authorization` header in the response. 
