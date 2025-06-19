@@ -91,9 +91,10 @@ The [OAuth2 plugin](/plugins/oauth2/) adds an OAuth 2.0 authentication layer to 
 
 First, you'll need a key to provision the plugin. Generate a UUID and export it to an environment variable:
 
-```
-export DECK_PROVISION_KEY=$(uuidgen)
-```
+{% validation env-variables %}
+DECK_PROVISION_KEY: $(uuidgen)
+{% endvalidation %}
+
 
 Apply the OAuth2 plugin to the `example-route` Route you created in the [prerequisites](#prerequisites):
 
