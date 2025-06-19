@@ -6,7 +6,7 @@ tags:
     - api-catalog
 tools:
   - terraform
-
+beta: true
 works_on:
   - konnect
 
