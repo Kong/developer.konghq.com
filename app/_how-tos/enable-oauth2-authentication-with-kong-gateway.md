@@ -96,15 +96,24 @@ variables:
 ## Generate a token
 
 Use the applications's client credentials to generate a token:
-```sh
-curl -X POST "https://localhost:8443/anything/oauth2/token" \
-  --header "Content-Type: application/json" \
-  --json '{ 
-    "client_id": "'$CLIENT_ID'", 
-    "client_secret": "'$CLIENT_SECRET'", 
-    "grant_type": "client_credentials" 
-  }'
-```
+
+{% validation request-check %}
+on_prem_url: https://localhost:8443
+url: '/anything/oauth2/token'
+display_headers: true
+method: POST
+headers:
+  - "Content-Type: application/json"
+status_code: 200
+insecure: true
+body:
+    client_id: $CLIENT_ID
+    client_secret: $CLIENT_SECRET
+    grant_type: "client_credentials"
+extract_body:
+  - name: access_token
+    variable: TOKEN
+{% endvalidation %}
 
 Export the token to an environment variable:
 ```sh
