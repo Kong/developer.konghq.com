@@ -124,6 +124,9 @@ method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+extract_body:
+  - name: 'headers.Refresh-Token'
+    variable: 'REFRESH_TOKEN'
 {% endvalidation %}
 
 You should see a `Refresh-Token` header in the response.
