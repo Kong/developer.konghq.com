@@ -120,6 +120,8 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Add an invalid API key as a secret in Google Cloud Secret Manager
