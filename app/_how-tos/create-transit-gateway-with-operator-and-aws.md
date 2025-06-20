@@ -41,7 +41,19 @@ prereqs:
 
 tldr:
   q: How can I create an AWS transit gateway and link it to {{site.konnect_short_name}} using {{ site.operator_product_name }}?
-  a: Create a transit gateway in AWS and create a resources share to share the transit gateway with the AWS account linked to your {{site.konnect_short_name}} account, then create a `KonnectCloudGatewayTransitGateway` and accept the transit gateway attachment in AWS.
+  a: Create a transit gateway in AWS and create a resources share to share the transit gateway with the AWS account linked to your {{site.konnect_short_name}} account, then create a [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) and accept the transit gateway attachment in AWS.
+
+faqs:
+  - q: Can I create a {{site.konnect_short_name}} Transit Gateway linked to an Azure virtual network?
+    a: Yes, refer to [Azure peering](/dedicated-cloud-gateways/azure-peering/) to learn how to configure your VNET Peering App on Azure, then configure the [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) resource with the [`azureTransitGateway`](/operator/reference/custom-resources/#azuretransitgateway) field.
+
+related_resources:
+  - text: AWS Transit Gateway peering
+    url: /dedicated-cloud-gateways/transit-gateways/
+  - text: Azure peering
+    url: /dedicated-cloud-gateways/azure-peering/
+  - text: Dedicated Cloud Gateways
+    url: /dedicated-cloud-gateways/
 ---
 
 ## Create a transit gateway in AWS
@@ -50,6 +62,9 @@ Use this command to create a transit gateway in AWS:
 ```sh
 aws ec2 create-transit-gateway
 ```
+
+{:.warning}
+> Make sure to create the transit gateway in the same region as the {{site.konnect_short_name}} network provider. You can set the region in the [AWS CLI configuration](#aws-cli) or use the `--region` flag in each command.
 
 Export the transit gateway ID and ARN to your environment:
 ```sh
@@ -71,7 +86,7 @@ export RESOURCE_SHARE_ARN='YOUR RESOURCE SHARE ARN'
 
 ## Create the KonnectCloudGatewayTransitGateway resource
 
-Create your Transit Gateway in {{site.konnect_short_name}}:
+Create your Transit Gateway in {{site.konnect_short_name}} with the [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) resource:
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -107,7 +122,7 @@ Retrieve the relevant attachment ID:
 export ATTACHMENT_ID='YOUR AWS TRANSIT GATEWAY VPC ATTACHMENT ID'
 ```
 
-Accept the Transit Gateway attachment:
+Accept the transit gateway attachment:
 ```sh
 aws ec2 accept-transit-gateway-vpc-attachment --transit-gateway-attachment-id $ATTACHMENT_ID
 ```
