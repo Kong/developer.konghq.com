@@ -3,6 +3,8 @@ sections:
   - title: Overview
     items:
       - path: /insomnia/
+      - path: /insomnia/manage-insomnia/
+      - path: /insomnia/enterprise/
       - path: /insomnia/collections/
       - path: /insomnia/documents/
       - path: /insomnia/api-specs/
@@ -58,7 +60,7 @@ sections:
 
   - title: Data security
     items:
-      - path: /insomnia/security/
+      - path: /insomnia/manage-insomnia/#security
       - path: /insomnia/data-security/
       - path: /insomnia/collected-data/
       - path: /insomnia/incident-response/

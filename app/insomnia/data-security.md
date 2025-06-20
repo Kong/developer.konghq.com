@@ -6,7 +6,7 @@ description: Learn the options that Insomnia offers to encrypt and store encrypt
 content_type: reference
 layout: reference
 breadcrumbs: 
-  - /insomnia/security/
+  - /insomnia/manage-insomnia/
 search_aliases:
   - insomnia data policy
   - insomnia data encryption
@@ -14,7 +14,7 @@ products:
     - insomnia
 related_resources:
   - text: Security at Insomnia
-    url: /insomnia/security/
+    url: /insomnia/manage-insomnia/#security
   - text: About version control in Insomnia
     url: /insomnia/version-control/
   - text: Insomnia concepts
