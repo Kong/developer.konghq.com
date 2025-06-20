@@ -58,7 +58,12 @@ prereqs:
         * AWS_ACCESS_KEY_ID
         * AWS_SECRET_ACCESS_KEY
 
-        You can get the access key ID and secret access key from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed.
+        You can get the access key ID and secret access key from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed. Once you have them, export them as environment variables by running the following command and replacing placeholder values with your secrets:
+        ```bash
+        export DECK_AWS_REGION=<YOUR_AWS_REGION>
+        export DECK_AWS_ACCESS_KEY_ID=<YOUR_AWS_ACCESS_KEY>
+        export DECK_AWS_SECRET_ACCESS_KEY=<YOUR_AWS_SECRET_ACCESS_KEY>
+        ```
       icon_url: /assets/icons/aws.svg
 
     - title: Bedrock Guardrail
@@ -90,25 +95,22 @@ First, you'll need to configure the AI Proxy Advanced plugin to proxy prompt req
 {% entity_examples %}
 entities:
   plugins:
- - name: ai-proxy-advanced
-    config:
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          allow_override: false
-          aws_access_key_id: ${aws_access_key_id}
-          aws_secret_access_key: ${aws_secret_access_key}
-        model:
-          provider: bedrock
-          name: meta.llama3-70b-instruct-v1:0
-          options:
-            bedrock:
-              aws_region: us-east-1
+    - name: ai-proxy-advanced
+      config:
+        targets:
+          - route_type: llm/v1/chat
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${openai_api_key}
+            model:
+              provider: openai
+              name: gpt-4o
+              options:
+                max_tokens: 512
+                temperature: 1.0
 variables:
-  aws_access_key_id:
-    value: $AWS_ACCESS_KEY_ID
-  aws_secret_access_key:
-    value: $AWS_SECRET_ACCESS_KEY
+  openai_api_key:
+    value: $OPENAI_API_KEY
 {% endentity_examples %}
 
 ## Configure the AI AWS Guardrails plugin
@@ -118,13 +120,13 @@ Now, we can configure our AI AWS Guardrails plugin to enforce content moderation
 {% entity_examples %}
 entities:
   plugins:
- - name: ai-aws-guardrails
-    config:
-      guardrails_id: ${guardrails_id}
-      guardrails_version: ${guardrails_version}
-      aws_region: ${aws_region}
-      aws_access_key_id: ${aws_access_key_id}
-      aws_secret_access_key: ${aws_secret_access_key}
+    - name: ai-aws-guardrails
+      config:
+        guardrails_id: ${guardrails_id}
+        guardrails_version: ${guardrails_version}
+        aws_region: ${aws_region}
+        aws_access_key_id: ${aws_access_key_id}
+        aws_secret_access_key: ${aws_secret_access_key}
 variables:
   guardrails_id:
     value: $GUARDRAILS_ID
