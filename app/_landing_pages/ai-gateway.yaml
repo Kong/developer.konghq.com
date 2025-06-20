@@ -419,6 +419,10 @@ rows:
           config:
             slug: ai-azure-content-safety
       - blocks:
+        - type: plugin
+          config:
+            slug: ai-aws-guardrails
+      - blocks:
         - type: card
           config:
             title: Amazon Bedrock guardrails
