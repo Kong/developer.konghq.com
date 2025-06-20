@@ -3,7 +3,8 @@ In order to mange Cloud Gateway Networks you need to have a Cloud Gateway Provid
 ```
 curl -s -H 'Content-Type: application/json' -H "Authorization: Bearer $KONNECT_TOKEN" -XGET https://global.api.konghq.com/v2/cloud-gateways/provider-accounts | jq
 ```
-Export the value of your desired ID: 
+
+Export the ID to your environment: 
 
 ```
 export CLOUD_GATEWAY_PROVIDER_ID='YOUR PROVIDER ID'
