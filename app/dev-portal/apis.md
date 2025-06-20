@@ -30,7 +30,7 @@ related_resources:
 
 An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/access-and-approval/) for use with specific APIs.
 
-As an API Producer, you [publish an OpenAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
+As an API Producer, you [publish an OpenAPI or AsyncAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
 
 ## Validation
 
@@ -39,10 +39,12 @@ All API specification files are validated during upload, although invalid specif
 {{site.konnect_short_name}} looks for the following during spec validation:
 
 * Specs must be valid JSON or YAML.
-* Spec should be valid according to [OpenAPI 2.x or 3.x specs](https://spec.openapis.org/).
+* Spec should be valid according to the [OpenAPI 2.x or 3.x specification](https://spec.openapis.org/) or the [AsyncAPI 2.x or 3.0.0 specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0).
     * OAS validation is performed using [Spectral](https://github.com/stoplightio/spectral).
-    * To replicate validation in your own CI/CD pipeline, run `spectral lint [spec.yaml] .spectral.yaml`, where `.spectral.yaml` contains, `extends: ["spectral:oas"]`.
-* Invalid specs are permitted, and `validation_messages` captures any validation issues.
+    * To replicate validation in your own CI/CD pipeline, run `spectral lint [spec.yaml] .spectral.yaml`, where `.spectral.yaml` should contain the following: 
+        * OpenAPI `spectral.yaml`: Should contain `extends: "spectral:oas"`.
+        * AsyncAPI `spectral.yaml`: Should contain `extends: "spectral:asyncapi"`.
+* Invalid specs are permitted (with potential degraded experience), and `validation_messages` captures any validation issues.
 
 ## Documentation
 
@@ -114,10 +116,6 @@ curl -X POST https://us.api.konghq.com/v3/apis \
 This API will be accessible as `my-test-api-v3` in your list of APIs. The API will not be visible in a portal until you [publish](/dev-portal/publishing).
 
 The `version` field is a free text string. This allows you to follow semantic versioning (e.g. `v1`, `v2`), date based versioning (e.g. `2024-05-10`, `2024-10-22`) or any custom naming scheme (e.g. `a1b2c3-internal-xxyyzz00`)
-
-## Validation
-
-All API specification files are validated during upload. Specs much be valid JSON or YAML, and must be valid according to [OpenAPI 3.x spec](https://spec.openapis.org/). This ensures accurate generation of spec documentation.
 
 ## Publishing 
 
