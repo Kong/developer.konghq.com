@@ -362,7 +362,7 @@ The last of these spans (or the only one, if the first attempt succeeds) ends as
 ensuring that the total time captured by the parent `kong.upstream.selection` span always reflects only the time 
 spent *connecting* to the selected upstream.
 
-Depending on how the [proxy_next_upstream](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_next_upstream) directive is configured, earlier (failed) tries may involve additional I/O. 
+Depending on how the [`proxy_next_upstream`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_next_upstream) directive is configured, earlier (failed) tries may involve additional I/O. 
 For example, if retries are triggered based on the upstream’s status code or header validity, those attempts will include sending the request and reading the response status line and headers which is enough for Kong to determine whether to retry.
 
 This span has the following attributes:
