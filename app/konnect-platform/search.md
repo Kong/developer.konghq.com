@@ -132,30 +132,43 @@ columns:
   - title: Example
     key: example
 rows:
-  - selector: "`type:{entity_type}`"
+  - selector: |
+      `type:{entity_type}`
     function: Searches for a specific entity type.
-    example: "`type:control_plane`"
+    example: |
+      `type:control_plane`
   - selector: "`{value}`"
     function: "Searches for a match in `{value}` on any all searchable attributes."
     example: "`foobar`"
-  - selector: "`id:{value}`"
-    function: "`Searches for a match on `id`.`"
-    example: "`id:df968c45-3f20-4b80-8980-e223b250dec5`"
-  - selector: "`name:{value}`"
+  - selector: |
+      `id:{value}`
+    function: "Searches for a match on `id`."
+    example: |
+      `id:df968c45-3f20-4b80-8980-e223b250dec5`
+  - selector: |
+      `name:{value}`
     function: "Searches for a match on `name`."
-    example: "`name:default`"
-  - selector: "`description:{value}`"
+    example: |
+      `name:default`
+  - selector: |
+      `description:{value}`
     function: "Searches for a match on `description`."
-    example: "`description:temporary`"
-  - selector: "`labels.{label_key}:{label_value}`"
+    example: |
+      `description:temporary`
+  - selector: |
+      `labels.{label_key}:{label_value}`
     function: "Searches for an exact match for a labeled entity."
-    example: "`labels.env:prod`"
-  - selector: "`@public_labels.{label_key}:{label_value}`"
+    example: |
+      `labels.env:prod`
+  - selector: |
+      `@public_labels.{label_key}:{label_value}`
     function: "Searches for an exact match for a labeled entity in Dev Portal."
     example: "`@public_labels.env:prod`"
-  - selector: "`@{attribute_key}:{attribute_value}`"
+  - selector: |
+      `@{attribute_key}:{attribute_value}`
     function: "Searches for an exact match for an entity specific attribute."
-    example: "`@email:"admin@domain.com"`"
+    example: |
+      `@email:"admin@domain.com"`
 {% endtable %}
 <!--vale on-->
 
@@ -221,7 +234,8 @@ rows:
     query: "`Dana`"
     description: "This query searches for entities with a searchable attribute containing the value `Dana`."
   - type: Simple
-    query: "`name:Dana`"
+    query: |
+      `name:Dana`
     description: "This query searches for entities with the name `Dana`."
   - type: Simple
     query: |
@@ -229,22 +243,30 @@ rows:
     description: |
       This query searches for entities with the name `"Dana H"`. The quotes around `"Dana H"` indicate an exact match, including spaces.
   - type: Logical
-    query: "`type:team AND name:*_qa`"
-    description: "This query finds teams in the QA department. It combines multiple selectors: `type:team` limits the search to the `teams` entity type and `name:*_qa` filters for teams that have a `_qa` suffix."
+    query: |
+      `type:team AND name:*_qa`
+    description: |
+      This query finds teams in the QA department. 
+      It combines multiple selectors: `type:team` limits the search to the `teams` entity type and `name:*_qa` filters for teams that have a `_qa` suffix.
   - type: Logical
-    query: "`name:*dev* OR name:*qa* OR name:*test`"
+    query: |
+      `name:*dev* OR name:*qa* OR name:*test`
     description: "This query finds any entities that contain `dev` or `qa` or `test` in its name. It combines multiple `name:` selectors to limit the results to entities that match one of these terms."
   - type: Exclusion
-    query: "`type:system_account AND NOT *temp*`"
+    query: |
+      `type:system_account AND NOT *temp*`
     description: "This query finds system accounts that don't contain `temp` in their name and description. The `NOT` logical operator is used to exclude entities."
   - type: Exclusion
-    query: "`type:team AND NOT name:team-blue AND NOT description:*blue*`"
+    query: |
+      `type:team AND NOT name:team-blue AND NOT description:*blue*`
     description: "This query finds teams that are not named `team-blue` and don't contain `blue` in its description. The `NOT` logical operator is used to exclude entities."
   - type: Wildcards
-    query: "`name:Project*`"
+    query: |
+      `name:Project*`
     description: "This query uses a wildcard to find entities starting with the prefix `Project`. The `*` serves as a wildcard."
   - type: Wildcards
-    query: "`description:*_prod`"
+    query: |
+      `description:*_prod`
     description: "This query uses a wildcard to find entities ending with the description `_prod`. The `*` serves as a wildcard."
 {% endtable %}
 <!--vale on-->
