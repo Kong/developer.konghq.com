@@ -48,7 +48,7 @@ providers:
     responses:
       supported: true
       streaming: false
-      upstream_path: '/v1/threads/runs/response'
+      upstream_path: '/v1/responses'
       route_type: 'llm/v1/responses'
       model_example: 'gpt-4-1106-preview'
       min_version: '3.11'
