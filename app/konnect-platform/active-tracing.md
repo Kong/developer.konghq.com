@@ -430,6 +430,6 @@ A span capturing the execution of a plugin configured to run in the `body_filter
 This span has the following attributes:
 {{instance_id}}
 
-## kong.wait_for_client_read
+### kong.wait_for_client_read
 A span that measures the time Kong spends finishing the response write to the client. 
 This duration may be extended for slow-reading clients, resulting in a longer span.
