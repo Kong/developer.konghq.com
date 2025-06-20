@@ -34,25 +34,25 @@ The following reference tables detail feature availability across supported LLM 
 
 ### Core Text Generation
 
-This table outlines support for core text generation features such as chat, completions, and embeddings.
+Support for chat, completions, and embeddings.
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
 
-### Advanced text generation {% new_in 3.11 %}
+### Advanced Text Generation {% new_in 3.11 %}
 
-This table highlights support for advanced text generation features, including function calling, tool use, and batch processing.
+Support for function calling, tool use, and batch processing.
 
 {% include plugins/ai-proxy/tables/supported-providers-2.html providers=providers %}
 
-### Audio features {% new_in 3.11 %}
+### Audio Features {% new_in 3.11 %}
 
-This table shows which providers support audio-based capabilities—text-to-speech, transcription, and translation.
+Support for text-to-speech, transcription, and translation.
 
 {% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
 
-### Image and realtime features {% new_in 3.11 %}
+### Image and Realtime Features {% new_in 3.11 %}
 
-This table lists support for image generation, image editing, and realtime interaction features.
+Support for image generation, image editing, and realtime interaction.
 
 {% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers %}
 
