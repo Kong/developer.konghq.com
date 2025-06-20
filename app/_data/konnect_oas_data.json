@@ -251,6 +251,27 @@
     ]
   },
   {
+    "id": "090a2dcc-506d-4b09-9488-14778dc26fc4",
+    "title": "Kong Identity - Tech preview",
+    "latestVersion": {
+      "name": "v1",
+      "id": "62d001b6-6892-43a3-ad97-346047341169"
+    },
+    "description": null,
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "62d001b6-6892-43a3-ad97-346047341169",
+        "created_at": "2025-06-20T15:40:50.990Z",
+        "updated_at": "2025-06-20T15:51:52.567Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "f8ebf955-6f09-40f6-b020-1feb80b4a773",
     "title": "Kong Native Event Proxy (Beta)",
     "latestVersion": {
@@ -483,7 +504,7 @@
       "name": "4.0.0",
       "id": "b9e0b85a-7188-4f80-b7d3-ec91fd5f5b41"
     },
-    "description": "Konnect endpoint for extracting and computing metrics, similar to the data that is used to build graphs in Konnect Advanced Analytics. This endpoint is used to query the Advanced Analytics platform for aggregated metrics down to ten seconds for recent data. Data can be requested to group by any 2 dimensions, up to 3 metrics and any number of filter conditions in 1 query.\n\nThis endpoint is only available for Konnect Advanced Analytics.",
+    "description": "Konnect endpoint for extracting and computing metrics, similar to the data that is used to build graphs in Konnect Advanced Analytics.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
