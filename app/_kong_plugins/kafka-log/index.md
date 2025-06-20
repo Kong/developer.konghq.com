@@ -71,4 +71,6 @@ When encoding request bodies, several things happen:
 
 {% include /plugins/logging/log-custom-fields-by-lua.md %}
 
+## Schema registry support {% new_in 3.11 %}
 
+{% include /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}

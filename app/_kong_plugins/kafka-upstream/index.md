@@ -60,6 +60,10 @@ When encoding request bodies, several things happen:
   then the body will be base64-encoded to ensure that the message can be sent as JSON. In such a case,
   the message has an extra attribute called `body_base64` set to `true`.
 
+## Schema registry support {% new_in 3.11 %}
+
+{% include /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
+
 ## Known issues and limitations
 
 Known limitations:
