@@ -409,6 +409,7 @@ KPI
 KPI
 KPIs
 KPIs
+ksearch
 kubeconfig
 kubectl
 kubelet
