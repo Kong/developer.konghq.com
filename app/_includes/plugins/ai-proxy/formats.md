@@ -52,7 +52,7 @@ The Kong AI Proxy accepts the following inputs formats, standardized across all 
 }
 ```
 
-{% new_in 3.9 %}With Amazon Bedrock, you can include your [guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) configuration in the request:
+{% new_in 3.9 %} With Amazon Bedrock, you can include your [guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) configuration in the request:
 ```json
 {
     "messages": [
@@ -129,7 +129,21 @@ curl https://localhost:8000 \
   }' \
   --output speech.mp3
 ```
-{% endnavtab%}
+{% endnavtab %}
+
+{% navtab "llm/v1/responses" %}
+
+{:.info}
+> This is a RESTful endpoint that supports all CRUD operations, but this preview example demonstrates only a `POST` request.
+
+
+```json
+  {
+    "input": "Tell me a three sentence bedtime story about a unicorn."
+  }
+```
+{% endnavtab %}
+
 {% endnavtabs %}
 
 ### Response formats
@@ -273,8 +287,71 @@ Conversely, the response formats are also transformed to a standard format acros
 The audio file content `speech.mp3`
 
 {% endnavtab %}
-{% endnavtabs %}
 
+{% navtab "llm/v1/responses" %}
+
+```json
+{
+  "id": "resp_67ccd2bed1ec8190b14f964abc0542670bb6a6b452d3795b",
+  "object": "response",
+  "created_at": 1741476542,
+  "status": "completed",
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "model": "gpt-4.1-2025-04-14",
+  "output": [
+    {
+      "type": "message",
+      "id": "msg_67ccd2bf17f0819081ff3bb2cf6508e60bb6a6b452d3795b",
+      "status": "completed",
+      "role": "assistant",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "In a peaceful grove beneath a silver moon, a unicorn named Lumina discovered a hidden pool that reflected the stars. As she dipped her horn into the water, the pool began to shimmer, revealing a pathway to a magical realm of endless night skies. Filled with wonder, Lumina whispered a wish for all who dream to find their own hidden magic, and as she glanced back, her hoofprints sparkled like stardust.",
+          "annotations": []
+        }
+      ]
+    }
+  ],
+  "parallel_tool_calls": true,
+  "previous_response_id": null,
+  "reasoning": {
+    "effort": null,
+    "summary": null
+  },
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    }
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 36,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 87,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 123
+  },
+  "user": null,
+  "metadata": {}
+}
+```
+
+{% endnavtab %}
+
+{% endnavtabs %}
 
 The request and response formats are loosely modeled after OpenAI’s API. For detailed format specifications, see the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml).
 
@@ -283,14 +360,16 @@ The request and response formats are loosely modeled after OpenAI’s API. For d
 {% navtabs "llm_format_providers" %}
 
 {% navtab "Gemini native format" %}
-When `llm_format` is set to `"gemini"`, only the Gemini provider is supported. The following Gemini APIs are available:
+
+When [`config.llm_format`](./reference/#schema--config-llm-format) is set to `gemini`, only the Gemini provider is supported. The following Gemini APIs are available:
 
 * `/generateContent`
 * `/streamGenerateContent`
 {% endnavtab %}
 
 {% navtab "Bedrock native format" %}
-When `llm_format` is set to `"bedrock"`, only the Bedrock provider is supported. Supported Bedrock APIs include:
+
+When `llm_format` is set to `bedrock`, only the Bedrock provider is supported. Supported Bedrock APIs include:
 
 * `/converse`
 * `/converse-stream`
@@ -300,7 +379,7 @@ When `llm_format` is set to `"bedrock"`, only the Bedrock provider is supported.
 {% endnavtab %}
 
 {% navtab "Cohere native format" %}
-When `llm_format` is set to `"cohere"`, only the Cohere provider is supported. Available Cohere APIs are:
+When [`config.llm_format`](./reference/#schema--config-llm-format) is set to `cohere`, only the Cohere provider is supported. Available Cohere APIs are:
 
 * `/v1/rerank`
 * `/v2/rerank`
@@ -311,6 +390,7 @@ When `llm_format` is set to `"huggingface"`, only the Hugging Face provider is s
 
 * `/generate`
 * `/generate-stream`
+
 {% endnavtab %}
 
 {% endnavtabs %}
