@@ -60,9 +60,9 @@ prereqs:
 
         You can get the access key ID and secret access key from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed. Once you have them, export them as environment variables by running the following command and replacing placeholder values with your secrets:
         ```bash
-        export DECK_AWS_REGION=<YOUR_AWS_REGION>
-        export DECK_AWS_ACCESS_KEY_ID=<YOUR_AWS_ACCESS_KEY>
-        export DECK_AWS_SECRET_ACCESS_KEY=<YOUR_AWS_SECRET_ACCESS_KEY>
+        export DECK_AWS_REGION='YOUR_AWS_REGION'
+        export DECK_AWS_ACCESS_KEY_ID='YOUR_AWS_ACCESS_KEY'
+        export DECK_AWS_SECRET_ACCESS_KEY='YOUR_AWS_SECRET_ACCESS_KEY'
         ```
       icon_url: /assets/icons/aws.svg
 
