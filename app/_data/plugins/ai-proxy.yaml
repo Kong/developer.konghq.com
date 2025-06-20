@@ -48,7 +48,7 @@ providers:
     responses:
       supported: true
       streaming: false
-      upstream_path: '/v1/threads/runs/response'
+      upstream_path: '/v1/responses'
       route_type: 'llm/v1/responses'
       model_example: 'gpt-4-1106-preview'
       min_version: '3.11'
@@ -169,7 +169,7 @@ providers:
     responses:
       supported: true
       streaming: false
-      upstream_path: '/openai/threads/runs/response'
+      upstream_path: '/openai/v1/responses'
       route_type: 'llm/v1/responses'
       model_example: 'n/a'
       min_version: '3.11'
@@ -389,8 +389,8 @@ providers:
       model_example: '<a href="https://huggingface.co/models?pipeline_tag=feature-extraction">Use the embedding model name</a>'
       min_version: '3.11'
 parameters:
-  provider: 'config.targets.model.provider'
+  provider: 'config.targets[].model.provider'
   route_type: 'config.targets.route_type'
-  options: 'config.targets.model.options'
-  upstream_url: 'config.targets.model.options.upstream_url'
-  model_name: 'config.targets.model.name'
+  options: 'config.targets[].model.options'
+  upstream_url: 'config.targets[].model.options.upstream_url'
+  model_name: 'config.targets[].model.name'
