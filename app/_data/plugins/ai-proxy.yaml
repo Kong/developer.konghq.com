@@ -116,7 +116,7 @@ providers:
     embeddings:
       supported: true
       streaming: false
-      upstream_path: '/v1/embed'
+      upstream_path: '/v2/embed'
       route_type: 'llm/v1/embeddings'
       model_example: 'embed-english-v3.0'
       min_version: '3.11'
