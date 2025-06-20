@@ -45,6 +45,10 @@ search_aliases:
   - language
   - model
   - moderation
+
+related_resources:
+  - text: Use the AI AWS Guardrails plugin
+    url: /how-to/use-ai-aws-guardrails-plugin/
 ---
 
 The **AI AWS Guardrails** plugin enforces introspection on both inbound requests and outbound responses handled by the [AI Proxy](/plugins/ai-proxy/) plugin. It integrates with the [AWS Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) service to apply compliance and safety policies at the gateway level. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.

@@ -25,8 +25,7 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
    Make sure your IAM user or role has Bedrock permissions such as `bedrock:CreateGuardrail`, `bedrock:CreateGuardrailVersion`, and others necessary for managing guardrails.
    For more details, see the [AWS CLI configuration documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html).
 
-3. **Verify Bedrock permissions**
-   Test that you can call Bedrock operations by running:
+3. Test that you can call Bedrock operations by running:
 
    ```bash
    aws bedrock list-models
@@ -130,7 +129,7 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
     ```bash
     aws bedrock create-guardrail \
     --cli-input-json file://$HOME/guardrail.json \
-    --region <your_aws_region>
+    --region $DECK_AWS_REGION
     ```
 
     If successful, your terminal will output the following:
@@ -144,7 +143,7 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
     }
     ```
 
-    Export the Guardrail ID and Guardrail version as an environment variable:
+    Export the Guardrail ID and Guardrail version as environment variables:
 
     ```bash
     export DECK_GUARDRAILS_ID=0nhw5r0q3zf8

@@ -1,5 +1,5 @@
 ---
-title: Use AI AWS Guardrails plugin
+title: Use the AI AWS Guardrails plugin
 content_type: how_to
 
 related_resources:
@@ -9,10 +9,8 @@ related_resources:
     url: /plugins/ai-azure-content-safety/
   - text: AI Gateway
     url: /ai-gateway/
-  - text: Use AI AWS Guardrails plugin
-    url: /how-to/use-ai-aws-guardrails-plugin/
 
-description: Learn how to use the AI AWS Guardrails Safety plugin.
+description: Learn how to use the AI AWS Guardrails plugin.
 
 products:
     - gateway
@@ -26,7 +24,7 @@ min_version:
   gateway: '3.11'
 
 plugins:
-  - ai-proxy
+  - ai-proxy-advanced
   - ai-aws-guardrails
 
 entities:
@@ -42,7 +40,7 @@ tags:
 
 tldr:
   q: How can I use the AI AWS Guardrails plugin with AI Gateway?
-  a: Configure the AI Proxy Advanced plugin to route requests to Bedrock, then apply the AI AWS Guardrails plugin to block unsafe inputs and outputs based on a predefined Bedrock guardrail.
+  a: Configure the AI Proxy Advanced plugin to route requests to any LLM upstreams, then apply the AI AWS Guardrails plugin to block unsafe inputs and outputs based on a predefined Bedrock guardrail.
 
 tools:
     - deck
@@ -60,7 +58,7 @@ prereqs:
         * AWS_ACCESS_KEY_ID
         * AWS_SECRET_ACCESS_KEY
 
-        You can get all of these from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed.
+        You can get the access key ID and secret access key from the AWS IAM Console under **Users > Security credentials**, and the region from the AWS Console where your resources are deployed.
       icon_url: /assets/icons/aws.svg
 
     - title: Bedrock Guardrail
@@ -92,6 +90,7 @@ First, you'll need to configure the AI Proxy Advanced plugin to proxy prompt req
 {% entity_examples %}
 entities:
   plugins:
+ - name: ai-proxy-advanced
     config:
       targets:
       - route_type: llm/v1/chat
@@ -119,6 +118,7 @@ Now, we can configure our AI AWS Guardrails plugin to enforce content moderation
 {% entity_examples %}
 entities:
   plugins:
+ - name: ai-aws-guardrails
     config:
       guardrails_id: ${guardrails_id}
       guardrails_version: ${guardrails_version}
@@ -141,7 +141,7 @@ variables:
 
 ## Test the configuration
 
-Now, let’s revisit our guardrail configuration. We set it up to block specific banned words, the topic of quantum computing, and content categories like violence, hate, sexual content, insults, and misconduct—applying blocking actions on both input and output.
+Now, let’s revisit our [guardrail configuration](#bedrock-guardrail). We set it up to block specific banned words, the topic of quantum computing, and content categories like violence, hate, sexual content, insults, and misconduct—applying blocking actions on both input and output.
 
 Next, let’s test these guardrails using example prompts designed to trigger each blocked category. Sending any of these prompts will result in the following error response:
 
