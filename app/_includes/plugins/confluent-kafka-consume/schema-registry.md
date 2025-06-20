@@ -13,7 +13,7 @@ Using a schema registry with {{site.base_gateway}} provides several benefits:
 To learn more about Kong's supported schema registry, see:
 
 * [Confluent Schema Registry Documentation](https://docs.confluent.io/platform/current/schema-registry/index.html)
-* [AVRO Specification](https://avro.apache.org/docs/current/spec.html)
+* [AVRO Specification](https://avro.apache.org/docs/++version++/specification/)
 
 ### How schema registry validation works
 
