@@ -1,7 +1,7 @@
 The {{include.name}} plugin supports integration with Confluent Schema Registry for AVRO and JSON schemas. 
 
 Schema registries provide a centralized repository for managing and validating schemas for data formats like AVRO and JSON.
-Integrating with a schema regiallows the plugin to validate and serialize/deserialize messages in a standardized format.
+Integrating with a schema registry allows the plugin to validate and serialize/deserialize messages in a standardized format.
 
 Using a schema registry with {{site.base_gateway}} provides several benefits:
 
