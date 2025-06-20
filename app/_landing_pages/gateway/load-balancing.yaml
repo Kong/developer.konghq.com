@@ -107,6 +107,15 @@ rows:
             cta:
               text: Least-connections load balancing 
               url: /gateway/entities/upstream/#least-connections
+      - blocks:
+        - type: card
+          config:
+            title: Sticky sessions
+            description: |
+              Sticky sessions allow {{site.base_gateway}} to route repeat requests from the same client to the same backend Target using a browser-managed cookie.
+            cta:
+              text: Sticky session load balancing
+              url: /gateway/entities/upstream/#sticky-sessions
 
       - blocks:
         - type: card

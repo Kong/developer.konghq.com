@@ -48,30 +48,10 @@ prereqs:
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
     - title: Redis stack
-      content: |
-          To complete this tutorial, you must have a [Redis stack](https://redis.io/docs/latest/) configured in your environment.
-          Set your Redis host as an environment variable:
-          ```sh
-          export DECK_REDIS_HOST='YOUR-REDIS-HOST'
-          ```
+      include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
-    - title: PgVector (optional)
-      content: |
-        Test
-      icon_url: /assets/icons/database.svg
     - title: Langchain splitters
-      content: |
-        To complete this tutorial, you'll need **Python (version 3.7 or later)** and `pip` installed on your machine. You can verify it by running:
-
-        ```bash
-        python3
-        python3 -m pip --version
-         ```
-
-        Once that's set up, install the required packages by running the following command in your terminal:
-        ```
-        python3 -m pip install langchain langchain_text_splitters requests
-        ```
+      include_content: prereqs/langchain
       icon_url: /assets/icons/python.svg
   entities:
     services:
