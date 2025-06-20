@@ -102,6 +102,8 @@ rows:
             ctas:
               - text: StatsD plugin
                 url: "/plugins/statsd/"
+              - text: Collect metrics with StatsD
+                url: "/how-to/collect-metrics-with-statsd/"
       - blocks:
         - type: card
           config:

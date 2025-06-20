@@ -214,6 +214,12 @@ features:
     oss: false
     enterprise: true
     supports_konnect: true
+  - title: |
+      CyberArk Conjur {% new_in 3.11 %}
+    url: /how-to/configure-cyberark-as-a-vault-backend/
+    oss: false
+    enterprise: true
+    supports_konnect: true
 {% endfeature_table %}
 
 ## How do I reference secrets stored in a Vault?
@@ -303,6 +309,9 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "AWS" %}
+For a complete tutorial on how to set up AWS as a Vault entity, see the following:
+* [Set up AWS with {{ site.base_gateway }}](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)
+* [Set up AWS with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/aws/)
 
 <!--vale off-->
 {% table %}
@@ -395,6 +404,9 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Google" %}
+For a complete tutorial on how to set up Google Cloud as a Vault entity, see the following:
+* [Set up Google Cloud with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
+* [Set up Google Cloud with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
 
 <!--vale off-->
 {% table %}
@@ -426,6 +438,9 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "HashiCorp" %}
+For a complete tutorial on how to set up HashiCorp Vault as a Vault entity, see the following:
+* [Set up HashiCorp Vault with {{ site.base_gateway }}](/how-to/configure-hashicorp-vault-as-a-vault-backend/)
+* [Set up HashiCorp Vault with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/hashicorp/)
 
 <!--vale off-->
 {% table %}
@@ -527,6 +542,61 @@ rows:
     field-name: "approle_response_wrapping"
     description: |
       Whether the secret ID is a response-wrapping token. Defaults to `false`. When `true`, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Conjur" %}
+
+See a tutorial about how to [set up CyberArk Conjur as a Vault in {{site.base_gateway}}](/how-to/configure-cyberark-as-a-vault-backend/).
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Field name
+    key: field-name
+  - title: Description
+    key: description
+rows:
+  - parameter: |
+      `vaults.config.endpoint_url` {% new_in 3.11 %}
+    field-name: "Endpoint URL"
+    description: |
+      The CyberArk Conjur backend URL to connect with. Accepts `http` or `https` protocols.
+  - parameter: |
+      `vaults.config.auth_method` {% new_in 3.11 %}
+    field-name: "Authentication method"
+    description: "Defines the authentication mechanism for connecting to the CyberArk Conjur Vault service. Accepted value: `api_key`."
+  - parameter: |
+      `vaults.config.account` {% new_in 3.11 %}
+    field-name: "Account"
+    description: The Conjur organization account name.
+  - parameter: |
+      `vaults.config.login` {% new_in 3.11 %}
+    field-name: "Login"
+    description: The login name of the workload identity.
+  - parameter: |
+      `vaults.config.api_key` {% new_in 3.11 %}
+    field-name: "API Key"
+    description: The API key of the workload identity.
+  - parameter: |
+      `vaults.config.ttl` {% new_in 3.11 %}
+    field-name: "TTL"
+    description: Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use at least 60 seconds.
+  - parameter: |
+      `vaults.config.neg_ttl` {% new_in 3.11 %}
+    field-name: "Negative TTL"
+    description: |
+      Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. 
+      Kong retries after `neg_ttl` expires.
+  - parameter: |
+      `vaults.config.resurrect_ttl` {% new_in 3.11 %}
+    field-name: "Resurrect TTL"
+    description: |
+      Duration (in seconds) that secrets remain usable after expiration (`config.ttl` is over). 
+      Useful when the vault is unreachable or a secret is deleted but not yet replaced. 
+      Kong continues retrying for `resurrect_ttl` seconds, then stops. The default is 1e8 seconds (~3 years).
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
