@@ -295,9 +295,7 @@ columns:
     key: description
 rows:
   - parameter: "`vaults.config.prefix`"
-    field-name: |
-      config-prefix (Kong Manager)  
-      Environment variable prefix ({{site.konnect_short_name}})
+    field-name: Environment Variable Prefix
     description: The prefix for the environment variable that the value will be stored in.
 {% endtable %}
 <!--vale on-->
@@ -438,36 +436,24 @@ columns:
     key: description
 rows:
   - parameter: "`vaults.config.protocol`"
-    field-name: |
-      config-protocol (Kong Manager)  
-      Protocol ({{site.konnect_short_name}})
+    field-name: Protocol
     description: |
       The protocol to connect with. Accepts one of `http` or `https`.
   - parameter: "`vaults.config.host`"
-    field-name: |
-      config-host (Kong Manager)  
-      Host ({{site.konnect_short_name}})
+    field-name: Host
     description: The hostname of your HashiCorp vault.
   - parameter: "`vaults.config.port`"
-    field-name: |
-      config-port (Kong Manager)  
-      Port ({{site.konnect_short_name}})
+    field-name: Port
     description: The port number of your HashiCorp vault.
   - parameter: "`vaults.config.mount`"
-    field-name: |
-      config-mount (Kong Manager)  
-      Mount ({{site.konnect_short_name}})
+    field-name: Mount
     description: The mount point.
   - parameter: "`vaults.config.kv`"
-    field-name: |
-      config-kv (Kong Manager)  
-      Kv ({{site.konnect_short_name}})
+    field-name: Kv
     description: |
       The secrets engine version. Accepts `v1` or `v2`.
   - parameter: "`vaults.config.token`"
-    field-name: |
-      config-token (Kong Manager)  
-      Token ({{site.konnect_short_name}})
+    field-name: Token
     description: A token string.
   - parameter: "`vaults.config.ttl`"
     field-name: "TTL"
@@ -483,65 +469,65 @@ rows:
       Time (in seconds) that secrets remain in use after expiration (`config.ttl` is over). Useful if the vault is unreachable or a secret is deleted. Kong continues retrying for `resurrect_ttl` seconds, then stops. Default is 1e8 seconds (~3 years).
   - parameter: |
       `vaults.config.namespace` {% new_in 3.1 %}
-    field-name: "namespace"
+    field-name: "Namespace"
     description: Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully.
   - parameter: |
       `vaults.config.auth_method` {% new_in 3.1 %}
-    field-name: "auth-method"
+    field-name: Authentication Method
     description: |
       Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, or `approle`.
   - parameter: |
       `vaults.config.kube_role` {% new_in 3.1 %}
-    field-name: "kube-role"
+    field-name: Kubernetes Role
     description: |
       Role assigned to the Kubernetes service account. Only used when `keyring_vault_auth_method` is set to `kubernetes`.
   - parameter: |
       `vaults.config.kube_api_token_file` {% new_in 3.1 %}
-    field-name: "kube-api-token-file"
+    field-name: Kubernetes API Token File
     description: |
       Path to the Kubernetes service account token file. Defaults to `/run/secrets/kubernetes.io/serviceaccount/token` if unspecified.
   - parameter: |
       `vaults.config.kube_auth_path` {% new_in 3.4 %}
-    field-name: "kube-auth-path"
+    field-name: Kubernetes Auth Path
     description: |
       Path for enabling the Kubernetes auth method. Defaults to `kubernetes`. Single leading/trailing slashes are trimmed.
   - parameter: |
       `vaults.config.approle_auth_path` {% new_in 3.4 %}
-    field-name: "approle_auth_path"
+    field-name: App Role Auth Path
     description: |
       Path for enabling the AppRole auth method. Defaults to `AppRole`. Single leading/trailing slashes are trimmed.
   - parameter: |
       `vaults.config.approle_role_id` {% new_in 3.4 %}
-    field-name: "approle_role_id"
+    field-name: App Role Role ID
     description: Specifies the AppRole role ID in HashiCorp Vault.
   - parameter: |
       `vaults.config.approle_secret_id` {% new_in 3.4 %}
-    field-name: "approle_secret_id"
+    field-name: App Role Secret ID
     description: Defines the AppRole's secret ID in HashiCorp Vault.
   - parameter: |
       `vaults.config.approle_secret_id_file` {% new_in 3.4 %}
-    field-name: "approle_secret_id_file"
+    field-name: App Role Secret ID File
     description: Path to a file containing the AppRole secret ID.
   - parameter: |
       `vaults.config.approle_response_wrapping` {% new_in 3.4 %}
-    field-name: "approle_response_wrapping"
+    field-name: App Role Response Wrapping
     description: |
       Whether the secret ID is a response-wrapping token. Defaults to `false`. When `true`, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes.
   - parameter: |
       `vaults.config.cert_auth_cert_key` {% new_in 3.11 %}
-    field-name: "cert_auth_cert_key"
+    field-name: Cert Key
     description: |
       The key file for the client certificate.
   - parameter: |
       `vaults.config.cert_auth_cert` {% new_in 3.11 %}
-    field-name: "cert_auth_cert"
+    field-name: Cert
     description: |
       The client certificate file.
   - parameter: |
       `vaults.config.cert_auth_role_name` {% new_in 3.11 %}
-    field-name: "cert_auth_role_name"
+    field-name: Role Name
     description: |
-      The trusted certificate role name
+      The trusted certificate role name.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
