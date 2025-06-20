@@ -1,9 +1,14 @@
 import debug from "debug";
 import fs from "fs/promises";
 import yaml from "js-yaml";
-import { executeCommand, fetchImage } from "./docker-helper.js";
+import { executeCommand, fetchImage, setEnvVariable } from "./docker-helper.js";
+import path from "path";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
 const log = debug("tests:setup:runtime");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export async function getRuntimeConfig(runtime) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
@@ -33,6 +38,7 @@ export async function runtimeEnvironment(runtimeConfig) {
   for (const [key, value] of Object.entries({ ...runtimeConfig.env })) {
     environment[`DECK_${key}`] = value;
   }
+
   if (version) {
     const versionConfig = runtimeConfig["versions"].find(
       (v) => v["version"] == version
@@ -70,17 +76,29 @@ export async function setupRuntime(runtimeConfig, docker) {
     ([key, value]) => `${key}=${value}`
   );
 
+  const exportedRealmHostPath = path.resolve(
+    __dirname,
+    "./config/keycloak-realms"
+  );
+
+  env["REALM_PATH"] = exportedRealmHostPath;
+
   const container = await docker.createContainer({
     Image: runtimeConfig.imageName,
     Tty: true,
     ENV: env,
     HostConfig: {
-      Binds: ["/var/run/docker.sock:/var/run/docker.sock"],
+      Binds: [
+        "/var/run/docker.sock:/var/run/docker.sock",
+        `${exportedRealmHostPath}:/realms`,
+      ],
       NetworkMode: "host",
     },
   });
 
   await container.start();
+
+  await setEnvVariable(container, "REALM_PATH", exportedRealmHostPath);
 
   log("Setting things up...");
   if (runtimeConfig.setup.commands) {
@@ -105,6 +123,24 @@ export async function resetRuntime(runtimeConfig, container) {
   log("Resetting...");
   if (runtimeConfig.reset.commands) {
     for (const command of runtimeConfig.reset.commands) {
+      await executeCommand(container, command);
+    }
+  }
+}
+
+export async function beforeAll(testsConfig, container) {
+  log("BeforeAll...");
+  if (testsConfig.before.commands) {
+    for (const command of testsConfig.before.commands) {
+      await executeCommand(container, command);
+    }
+  }
+}
+
+export async function afterAll(testsConfig, container) {
+  log("AfterAll...");
+  if (testsConfig.after.commands) {
+    for (const command of testsConfig.after.commands) {
       await executeCommand(container, command);
     }
   }
