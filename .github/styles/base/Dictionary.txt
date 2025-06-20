@@ -621,6 +621,8 @@ readme
 readonly
 real_ip_header
 real_ip_recursive
+Realtime
+realtime
 reconverge
 redis
 reentrant
@@ -641,6 +643,8 @@ requery
 Requeue
 requeue
 RequestResponse
+Rerank
+reranking
 resourceVersion
 Resty
 Resty
