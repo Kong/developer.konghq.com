@@ -299,9 +299,10 @@ rows:
       config-prefix (Kong Manager)  
       Environment variable prefix ({{site.konnect_short_name}})
     description: The prefix for the environment variable that the value will be stored in.
-  - parameter: "`vaults.config.base64_decode`"
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
     field-name: "Base64 Decode"
-    description: Decode all secrets in this vault as base64, useful for binary data. If some of the secrets are not base64 encoded, an error will occur when using them. It's recommended to create a separate vault for base64 secrets.
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
@@ -345,9 +346,10 @@ rows:
   - parameter: "`vaults.config.resurrect_ttl`"
     field-name: "Resurrect TTL"
     description: The duration (in seconds) for which expired secrets will continue to be used if the vault is unreachable or the secret is deleted. After this time, Kong stops retrying. The default is 1e8 seconds (~3 years) to ensure resilience during unexpected issues.
-  - parameter: "`vaults.config.base64_decode`"
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
     field-name: "Base64 Decode"
-    description: Decode all secrets in this vault as base64, useful for binary data. If some of the secrets are not base64 encoded, an error will occur when using them. It's recommended to create a separate vault for base64 secrets.
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 
@@ -397,9 +399,10 @@ rows:
     field-name: "Resurrect TTL"
     description: |
       Duration (in seconds) that secrets remain usable after expiration (`config.ttl` limit). Useful when the vault is unreachable or a secret is deleted. Kong retries refreshing the secret for this duration. Afterward, it stops. The default is 1e8 seconds (~3 years) to ensure resiliency during issues.
-  - parameter: "`vaults.config.base64_decode`"
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
     field-name: "Base64 Decode"
-    description: Decode all secrets in this vault as base64, useful for binary data. If some of the secrets are not base64 encoded, an error will occur when using them. It's recommended to create a separate vault for base64 secrets.
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
@@ -431,9 +434,10 @@ rows:
     field-name: "Resurrect TTL"
     description: |
       Time (in seconds) that secrets remain in use after expiration (`config.ttl` ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for `resurrect_ttl` seconds before giving up. The default is 1e8 seconds (~3 years) to support uninterrupted service during outages.
-  - parameter: "`vaults.config.base64_decode`"
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
     field-name: "Base64 Decode"
-    description: Decode all secrets in this vault as base64, useful for binary data. If some of the secrets are not base64 encoded, an error will occur when using them. It's recommended to create a separate vault for base64 secrets.
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
@@ -539,9 +543,10 @@ rows:
     field-name: "approle_response_wrapping"
     description: |
       Whether the secret ID is a response-wrapping token. Defaults to `false`. When `true`, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes.
-  - parameter: "`vaults.config.base64_decode`"
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
     field-name: "Base64 Decode"
-    description: Decode all secrets in this vault as base64, useful for binary data. If some of the secrets are not base64 encoded, an error will occur when using them. It's recommended to create a separate vault for base64 secrets.
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
