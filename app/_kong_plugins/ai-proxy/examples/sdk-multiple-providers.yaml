@@ -3,18 +3,18 @@ description: Configure one route to proxy multiple models deployed in the same A
 extended_description: |
   Configure one route to proxy multiple models deployed in the same Azure instance.
 
-  {:.warning}
-  > For this plugin to work properly, you need a Gateway Route with the following configuration:
-  > ```
-  > routes:
-  >  - name: azure-chat
-  >    paths:
-  >      - "~/openai/deployments/(?<azure_instance>[^#?/]+)/chat/completions"
-  >    methods:
-  >      - POST
-  > ```
-
   When you apply this configuration, you can set the SDK endpoint to `http://localhost:8000/azure`. When the Azure instance parameter is set to `my-gpt-3-5`, the Python SDK produces the URL `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions` and is directed to the respective Azure deployment ID and model.
+
+    {:.warning}
+    > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+    > ```
+    > routes:
+    >  - name: azure-chat
+    >    paths:
+    >      - "~/openai/deployments/(?<azure_instance>[^#?/]+)/chat/completions"
+    >    methods:
+    >      - POST
+    > ```
 
 weight: 103
 
@@ -40,7 +40,7 @@ config:
 variables:
   azure_key:
     value: $AZURE_API_KEY
-    description: The API key used to authenticate requests to Cohere.
+    description: The API key used to authenticate requests to Azure.
 
 tools:
   - deck

@@ -1,0 +1,95 @@
+title: "OpenAI SDK: Multi-deployment chat routing"
+description: Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
+extended_description: |
+  Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
+
+  Using OpenAI SDK with the AI Proxy Advanced plugin, you can configure multiple Routes in {{site.base_gateway}} to represent different Azure OpenAI deployments.
+  Each Route maps a unique path segment (such as `azure-gpt-3-5` or `azure-gpt-4`) to the corresponding deployment ID and model name.
+  This setup allows you to use a single Azure-compatible OpenAI SDK client to switch between deployments by changing only the base URL.
+
+  For example:
+
+  ```python
+  client = OpenAI(
+    base_url="http://127.0.0.1:8000/openai/deployments/azure-gpt-3-5"
+  )
+  ```
+
+  Or:
+
+  ```python
+  client = OpenAI(
+    base_url="http://127.0.0.1:8000/openai/deployments/azure-gpt-4"
+  )
+  ```
+  {{site.base_gateway}} reads the deployment path, maps it to the appropriate Azure deployment ID and model, and handles authentication automatically.
+
+    {:.warning}
+    > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+    > ```
+    > routes:
+    >  - name: azure-chat-gpt-3-5
+    >    paths:
+    >      - "~/openai/deployments/azure-gpt-3-5/chat/completions$"
+    >    methods:
+    >      - POST
+    > ```
+    > and:
+    > ```
+    > routes:
+    >  - name: azure-chat-gpt-4
+    >    paths:
+    >      - "~/openai/deployments/azure-gpt-4/chat/completions$"
+    >    methods:
+    >      - POST
+    > ```
+
+weight: 106
+
+requirements:
+- Azure account
+
+config:
+  - targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: "api-key"
+        header_value: ${azure_key}
+      logging:
+        log_statistics: true
+        log_payloads: false
+      model:
+        provider: "azure"
+        name: "gpt-35-turbo"
+        options:
+          azure_instance: "my-openai-instace"
+          azure_deployment_id: "my-gpt-3-5"
+  - targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: "api-key"
+        header_value: ${azure_key}
+      logging:
+        log_statistics: true
+        log_payloads: false
+      model:
+        provider: "azure"
+        name: "gpt-4"
+        options:
+          azure_instance: "my-openai-instace"
+          azure_deployment_id: "my-gpt-4"
+
+variables:
+  azure:
+    value: $AZURE_API_KEY
+    description: The API key to authenticate requests to Azure.
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: open-ai
