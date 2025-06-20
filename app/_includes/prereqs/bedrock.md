@@ -28,101 +28,101 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
 3. Test that you can call Bedrock operations by running:
 
    ```bash
-   aws bedrock list-models
+   aws bedrock list-foundation-models
    ```
 
    If this command fails, check your credentials, permissions, and configured region.
 
-
 4. Create a `guardrail.json` configuration file:
+   This configuration defines an Amazon Bedrock guardrail named `example-guardrail` that blocks harmful or restricted content—including specific words, topics like quantum computing, and categories such as violence, hate, and prompt attacks—in both input and output messages.
 
-    ```bash
-    cat <<EOF > guardrail.json
-    {
-    "name": "example-guardrail",
-    "description": "My first Bedrock guardrail via CLI",
-    "blockedInputMessaging": "Input blocked due to policy violation.",
-    "blockedOutputsMessaging": "Output blocked due to policy violation.",
-    "wordPolicyConfig": {
-        "wordsConfig": [
-        {
-            "inputAction": "BLOCK",
-            "inputEnabled": true,
-            "outputAction": "BLOCK",
-            "outputEnabled": true,
-            "text": "badword1"
-        },
-        {
-            "inputAction": "BLOCK",
-            "inputEnabled": true,
-            "outputAction": "BLOCK",
-            "outputEnabled": true,
-            "text": "badword2"
-        }
-        ]
-    },
-    "topicPolicyConfig": {
-        "topicsConfig": [
-        {
-            "name": "quantum computing",
-            "definition": "Anything related to quantum computing",
-            "examples": [],
-            "type": "DENY",
-            "inputAction": "BLOCK",
-            "outputAction": "BLOCK",
-            "inputEnabled": true,
-            "outputEnabled": true
-        }
-        ]
-    },
-    "contentPolicyConfig": {
-        "filtersConfig": [
-        {
-            "type": "VIOLENCE",
-            "inputStrength": "HIGH",
-            "outputStrength": "HIGH",
-            "inputAction": "BLOCK",
-            "outputAction": "BLOCK"
-        },
-        {
-            "type": "PROMPT_ATTACK",
-            "inputStrength": "HIGH",
-            "outputStrength": "NONE",
-            "inputAction": "BLOCK"
-        },
-        {
-            "type": "MISCONDUCT",
-            "inputStrength": "HIGH",
-            "outputStrength": "HIGH",
-            "inputAction": "BLOCK",
-            "outputAction": "BLOCK"
-        },
-        {
-            "type": "HATE",
-            "inputStrength": "HIGH",
-            "outputStrength": "HIGH",
-            "inputAction": "BLOCK",
-            "outputAction": "BLOCK"
-        },
-        {
-            "type": "SEXUAL",
-            "inputStrength": "HIGH",
-            "outputStrength": "HIGH",
-            "inputAction": "BLOCK",
-            "outputAction": "BLOCK"
-        },
-        {
-            "type": "INSULTS",
-            "inputStrength": "HIGH",
-            "outputStrength": "HIGH",
-            "inputAction": "BLOCK",
-            "outputAction": "BLOCK"
-        }
-        ]
-    }
-    }
-    EOF
-    ```
+   ```
+   cat <<'EOF' > guardrail.json
+   {
+     "name": "example-guardrail",
+     "description": "My first Bedrock guardrail via CLI",
+     "blockedInputMessaging": "Input blocked due to policy violation.",
+     "blockedOutputsMessaging": "Output blocked due to policy violation.",
+     "wordPolicyConfig": {
+       "wordsConfig": [
+         {
+           "inputAction": "BLOCK",
+           "inputEnabled": true,
+           "outputAction": "BLOCK",
+           "outputEnabled": true,
+           "text": "badword1"
+         },
+         {
+           "inputAction": "BLOCK",
+           "inputEnabled": true,
+           "outputAction": "BLOCK",
+           "outputEnabled": true,
+           "text": "badword2"
+         }
+       ]
+     },
+     "topicPolicyConfig": {
+       "topicsConfig": [
+         {
+           "name": "quantum computing",
+           "definition": "Anything related to quantum computing",
+           "examples": [],
+           "type": "DENY",
+           "inputAction": "BLOCK",
+           "outputAction": "BLOCK",
+           "inputEnabled": true,
+           "outputEnabled": true
+         }
+       ]
+     },
+     "contentPolicyConfig": {
+       "filtersConfig": [
+         {
+           "type": "VIOLENCE",
+           "inputStrength": "HIGH",
+           "outputStrength": "HIGH",
+           "inputAction": "BLOCK",
+           "outputAction": "BLOCK"
+         },
+         {
+           "type": "PROMPT_ATTACK",
+           "inputStrength": "HIGH",
+           "outputStrength": "NONE",
+           "inputAction": "BLOCK"
+         },
+         {
+           "type": "MISCONDUCT",
+           "inputStrength": "HIGH",
+           "outputStrength": "HIGH",
+           "inputAction": "BLOCK",
+           "outputAction": "BLOCK"
+         },
+         {
+           "type": "HATE",
+           "inputStrength": "HIGH",
+           "outputStrength": "HIGH",
+           "inputAction": "BLOCK",
+           "outputAction": "BLOCK"
+         },
+         {
+           "type": "SEXUAL",
+           "inputStrength": "HIGH",
+           "outputStrength": "HIGH",
+           "inputAction": "BLOCK",
+           "outputAction": "BLOCK"
+         },
+         {
+           "type": "INSULTS",
+           "inputStrength": "HIGH",
+           "outputStrength": "HIGH",
+           "inputAction": "BLOCK",
+           "outputAction": "BLOCK"
+         }
+       ]
+     }
+   }
+   EOF
+   ```
 
 5. Apply this configuration by running the following command in your terminal:
 
@@ -146,7 +146,7 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
     Export the Guardrail ID and Guardrail version as environment variables:
 
     ```bash
-    export DECK_GUARDRAILS_ID=0nhw5r0q3zf8
+    export DECK_GUARDRAILS_ID=0abcs5r0q3abcd
     export DECK_GUARDRAILS_VERSION=DRAFT
     ```
 
