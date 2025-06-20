@@ -90,4 +90,4 @@ This mode provides parity with HTTP-based consumption, including support for:
 
 ## Schema registry support {% new_in 3.11 %}
 
-{% include /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}
+{% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}

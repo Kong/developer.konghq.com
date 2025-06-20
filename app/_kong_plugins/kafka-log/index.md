@@ -73,4 +73,4 @@ When encoding request bodies, several things happen:
 
 ## Schema registry support {% new_in 3.11 %}
 
-{% include /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
+{% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
