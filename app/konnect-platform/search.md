@@ -14,7 +14,7 @@ works_on:
 search_aliases: 
   - ksearch
 
-description: "Learn how to use the {{site.konnect_short_name}} Search to search through all {{site.konnect_short_name}} entities.
+description: "Learn how to use the {{site.konnect_short_name}} Search to search through all {{site.konnect_short_name}} entities."
 
 related_resources:
   - text: "{{site.konnect_short_name}} Search API"
