@@ -16,14 +16,14 @@ module Jekyll
 
       contents = super
 
-      unless @page.fetch('products', []).include?('gateway')
-        raise ArgumentError,
-              'Unsupported product for {% control-plane-request %}'
-      end
-      unless @page.key?('works_on')
-        raise ArgumentError,
-              "Required metadata `works_on` for {% control-plane-request %} missing on #{@page['path']}"
-      end
+      # unless @page.fetch('products', []).include?('gateway')
+      #   raise ArgumentError,
+      #         'Unsupported product for {% control-plane-request %}'
+      # end
+      # unless @page.key?('works_on')
+      #   raise ArgumentError,
+      #         "Required metadata `works_on` for {% control-plane-request %} missing on #{@page['path']}"
+      # end
 
       config = YAML.load(contents)
       drop = Drops::ControlPlaneRequest.new(yaml: config)
