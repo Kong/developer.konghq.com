@@ -99,7 +99,7 @@ body:
 Kong Identity can be used with multiple use cases with {{site.base_gateway}} in {{site.konnect_short_name}}.
 
 {% navtabs "use cases" %}
-{% navtab "OIDC Plugin" %}
+{% navtab "OIDC" %}
 
 You can use the OIDC plugin to use Kong Identity as the identity provider for your {{site.base_gateway}} services. Apply the [OIDC plugin](/plugins/openid-connect/) at global/service level with the following fields:
 
@@ -138,7 +138,7 @@ body:
 
 {% endnavtab %}
 
-{% navtab "OAuth2.0 Introspection Plugin" %}
+{% navtab "OAuth2.0 Introspection" %}
 
 You can validate access tokens sent by developers using Kong Identity’s Authorization Server by leveraging the introspection endpoint. This plugin assumes that the consumer already has an access token that will be validated against a third-party OAuth 2.0 server.
 
@@ -183,7 +183,7 @@ body:
 
 {% endnavtab %}
 
-{% navtab "Upstream OAuth Plugin" %}
+{% navtab "Upstream OAuth" %}
 
 The Upstream OAuth plugin allows {{site.base_gateway}} to support OAuth flows between Kong and the upstream API. The plugin can support storing tokens issued by Kong Identity.
 
@@ -195,8 +195,9 @@ Send an unauthenticated request to the Gateway. This route's plugin configuratio
 
 {% endnavtab %}
 
-{% navtab "Consumer-scoped Plugins" %}
+{% navtab "Consumer-scoped" %}
 
+For Consumer-scoped plugins:
 - Create a consumer per client in the respective control plane.
 - You do not need to migrate the client credential to a consumer credential.
 - The OIDC plugin will map clients to consumers using claims with the `consumer_claim` field.
@@ -204,8 +205,9 @@ Send an unauthenticated request to the Gateway. This route's plugin configuratio
 
 {% endnavtab %}
 
-{% navtab "Consumer Group-scoped Plugins" %}
+{% navtab "Consumer Group-scoped" %}
 
+For Consumer Group-scoped plugins:
 - Create a consumer per client in the respective control plane.
 - No need to migrate the client credential to a consumer credential.
 - The OIDC plugin maps clients to consumers using claims.
