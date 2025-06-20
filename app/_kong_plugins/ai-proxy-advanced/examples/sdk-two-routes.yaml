@@ -65,7 +65,7 @@ config:
         name: $(uri_captures.model)
 
 variables:
-  openai_key:
+  cohere_key:
     value: $COHERE_API_KEY
     description: The API key to authenticate requests to Cohere.
   mistral_key:

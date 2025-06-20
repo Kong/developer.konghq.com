@@ -4,7 +4,7 @@ extended_description: |
   Use a single OpenAI SDK client to route chat requests to different LLM providers by defining separate Routes per provider.
 
   Configure multiple chat Routes in {{site.base_gateway}}, each targeting a different LLM provider such as Cohere or Mistral,
-  while using the same OpenAI-compatible SDK client. The AI Proxy Advanced plugin extracts the model name from the request path,
+  while using the same OpenAI-compatible SDK client. The AI Proxy plugin extracts the model name from the request path,
   and injects provider-specific credentials automatically. This lets you arbitrate between providers without changing client logic,
   using only the base URL to select a provider.
 
@@ -72,7 +72,7 @@ config:
       name: $(uri_captures.model)
 
 variables:
-  openai_key:
+  cohere_key:
     value: $COHERE_API_KEY
     description: The API key to authenticate requests to Cohere.
   mistral_key:

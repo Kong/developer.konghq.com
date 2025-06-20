@@ -3,7 +3,7 @@ description: Use separate Routes to map Azure OpenAI SDK requests to specific de
 extended_description: |
   Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
 
-  Using OpenAI SDK with the AI Proxy Advanced plugin, you can configure multiple Routes in Kong Gateway to represent different Azure OpenAI deployments.
+  Using OpenAI SDK with the AI Proxy Advanced plugin, you can configure multiple Routes in {{site.base_gateway}} to represent different Azure OpenAI deployments.
   Each Route maps a unique path segment (such as `azure-gpt-3-5` or `azure-gpt-4`) to the corresponding deployment ID and model name.
   This setup allows you to use a single Azure-compatible OpenAI SDK client to switch between deployments by changing only the base URL.
 
