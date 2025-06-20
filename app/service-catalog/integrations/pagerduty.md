@@ -2,7 +2,6 @@
 title: "PagerDuty"
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -26,15 +25,16 @@ discovery_support: true
 bindable_entities: "PagerDuty Service"
 ---
 
-The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory. 
+The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory.
+{% include /service-catalog/multi-resource.md %}
 
 For each linked PagerDuty service, a summary will be provided on the Service Catalog service's details page, showing current unresolved incidents and the current on-call user.
 
 ## Authenticate the PagerDuty integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
-2. Select **PagerDuty**, then **Install PagerDuty**.
-3. Select **Authorize**. 
+2. Select **Add PagerDuty Instance**
+3. Configure the **Region**, add **authorization**, and name the instance. 
 
 PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. **Both Read and Write scopes are required.**
 

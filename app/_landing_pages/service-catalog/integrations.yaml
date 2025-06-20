@@ -3,6 +3,7 @@ metadata:
   content_type: landing_page
   products:
     - service-catalog
+  breadcrumb: /service-catalog/
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
     - integrations
@@ -28,10 +29,19 @@ rows:
                     - **Discover new resources** from connected systems
                     - **Create new services** based on existing resources
                     - **View key events** associated with the integration
+                    
+                    
+                    > You can configure multiple instances of any third-party integration (such as Datadog or GitLab), including multiple instances of the same type.
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/konnect/container.png
+            alt_text: Image of the integration dashboard
+
 
   - header:
       type: h2
-      text: "Available integrations"
+      text: "Third-party integrations"
     column_count: 3
     columns:
       - blocks:
@@ -97,3 +107,36 @@ rows:
               cta:
                 text: Learn more
                 url: /service-catalog/integrations/slack/
+  - header:
+      type: h2
+      text: "Built-in Integrations"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Gateway Manager
+              description: "Map Gateway Services from {{site.konnect_short_name}} Gateway Manager to visualize services across multiple Control Planes."
+              icon: /assets/icons/gateway.svg
+              cta:
+                text: Learn more
+                url: /service-catalog/integrations/gateway-manager/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.konnect_short_name}} Analytics"
+              description: View real-time, highly contextual analytics to gain insight into API health, performance, and usage.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /service-catalog/integrations/konnect-analytics/
+      - blocks:
+          - type: card
+            config:
+              title: Mesh Manager
+              description: "Map Mesh Services from {{site.konnect_short_name}} Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones."
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /service-catalog/integrations/mesh-manager/
+      
