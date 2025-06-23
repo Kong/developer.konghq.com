@@ -7,23 +7,30 @@ weight: 900
 config:
   debug: true
   nodes:
-  - name: MY_HEADERS
+  # create a new header map from the client request headers, adding an
+  # additional `X-My-API-Header` header with the value of the `foo` query
+  # parameter (or the string "default value" if unset)
+  - name: HEADERS
     type: jq
     inputs:
-    - req: request.headers
+      query: request.query
+      headers: request.headers
     jq: |
-      {
-        "X-My-Call-Header": $req.apikey // "default value"
+      .headers * {
+        "X-My-API-Header": (.foo // "default value"),
       }
-  - name: CALL
+
+  # send the updated request headers to an external API
+  - name: API
     type: call
+    url: https://example.com/
     inputs:
-    - headers: MY_HEADERS
-    url: https://httpbin.konghq.com/anything
+      headers: HEADERS
+
+  # send a response to the client with the API headers + body
   - name: EXIT
     type: exit
-    inputs:
-    - body: CALL.body
+    input: API
     status: 200
 
 tools:
@@ -34,4 +41,4 @@ tools:
   - terraform
 
 min_version:
-  gateway: '3.9'
+  gateway: '3.11'
