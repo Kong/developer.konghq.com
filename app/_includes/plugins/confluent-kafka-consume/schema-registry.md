@@ -5,10 +5,10 @@ Integrating with a schema registry allows the plugin to validate and serialize/d
 
 Using a schema registry with {{site.base_gateway}} provides several benefits:
 
-* **Data validation**: Ensures messages conform to a predefined schema before being processed
-* **Schema evolution**: Manages schema changes and versioning
-* **Interoperability**: Enables seamless communication between different services using standardized data formats
-* **Reduced overhead**: Minimizes the need for custom validation logic in your applications
+* **Data validation**: Ensures messages conform to a predefined schema before being processed.
+* **Schema evolution**: Manages schema changes and versioning.
+* **Interoperability**: Enables seamless communication between different services using standardized data formats.
+* **Reduced overhead**: Minimizes the need for custom validation logic in your applications.
 
 To learn more about Kong's supported schema registry, see:
 
