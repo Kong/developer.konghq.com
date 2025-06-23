@@ -7,32 +7,41 @@ weight: 900
 config:
   debug: true
   nodes:
-  - name: BUILD_AUTH_HEADERS
-    jq: |
-      {
-          "Authorization": "Basic YGA8NNu8877lkOmNsagsdWAyZXQ=",   
-      }
+  # set some static values that will be used as inputs to other nodes
+  - name: STATIC_INPUTS
+    type: static
+    values:
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      body: grant_type=client_credentials
+
+  # merge the statically defined headers with the request headers received from
+  # the client
+  - name: MERGE_HEADERS
     type: jq
-  - name: BUILD_AUTH_BODY
-    type: handlebars
-    template: |
-        grant_type=client_credentials
-  - name: AUTH_CALL
+    inputs:
+      static: STATIC_INPUTS.headers
+      request: request.headers
+    jq: ".request * .static"
+
+  # make a POST request to the auth service
+  - name: AUTH_REQUEST
     type: call
     inputs:
-    - headers: BUILD_AUTH_HEADERS
-    - body: BUILD_AUTH_BODY
-    url:  http://auth-server:5000/token
-    method: post
-  - name: BUILD_UPSTREAM_AUTH_HEADERS
+      headers: MERGE_HEADERS
+      body: STATIC_INPUTS.body
+    url: "https://my-token-service/auth-token"
+    method: POST
+
+  # compose an Authorization header from the access token received from the
+  # auth service and add it to the service request headers before proxying
+  - name: UPSTREAM_AUTH_HEADER
     type: jq
-    inputs:
-    - auth: AUTH_CALL
-    output:
-      service_request.headers
+    input: AUTH_REQUEST.body
+    output: service_request.headers
     jq: |
       {
-      "Authorization":$auth.token_type + " " +    $auth.access_token
+        Authorization: (.token_type + " " + .access_token)
       }
 
 tools:
@@ -43,4 +52,4 @@ tools:
   - terraform
 
 min_version:
-  gateway: '3.9'
+  gateway: '3.11'
