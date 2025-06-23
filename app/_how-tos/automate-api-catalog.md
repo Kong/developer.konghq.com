@@ -6,7 +6,6 @@ automated_tests: false
 products:
     - gateway
     - dev-portal
-beta: true
 works_on:
     - konnect
 
@@ -72,6 +71,7 @@ headers:
     - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: myApi
+    attributes: {"env":["development"],"domains":["web","mobile"]}
 {% endcontrol_plane_request %}
 <!--vale on-->
 
@@ -80,31 +80,6 @@ Export the ID of your API from the response:
 ```sh
 export API_ID='YOUR-API-ID'
 ```
-
-## Create and associate an API document 
-
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a parent document and child documents.
-
-APIs should have API documents or specs, and can have both. If neither are specified, {{site.konnect_short_name}} can't render documentation.
-
-[Create and associate an API document](/api/konnect/api-builder/v3/#/operations/create-api-document) using the `/v3/apis/{apiId}/documents` endpoint:
-
-<!--vale off-->
-{% control_plane_request %}
-url: /v3/apis/$API_ID/documents
-status_code: 201
-method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
-body:
-    slug: api-document
-    status: published
-    title: API Document
-    content: '# API Document Header'
-{% endcontrol_plane_request %}
-<!--vale on-->
 
 ## Create and associate an API spec
 
@@ -122,6 +97,32 @@ headers:
 body:
     content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
     type: oas3
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+{:.warning}
+> APIs should have API documents or specs, and can have both. If neither are specified, {{site.konnect_short_name}} can't render documentation.
+
+## Create and associate an API document 
+
+An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a parent document and child documents.
+
+[Create and associate an API document](/api/konnect/api-builder/v3/#/operations/create-api-document) using the `/v3/apis/{apiId}/documents` endpoint:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /v3/apis/$API_ID/documents
+status_code: 201
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
+body:
+    slug: api-document
+    status: published
+    title: API Document
+    content: '# API Document Header'
 {% endcontrol_plane_request %}
 <!--vale on-->
 
