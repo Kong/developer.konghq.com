@@ -361,9 +361,8 @@ rows:
 <!--vale off-->
 
 The `headers` ports produce and consume maps from header names to their values.
-Keys are header names are normalized to lowercase.
-Values are strings if there is a single instance of a header,
-or arrays of strings if there are multiple instances of the same header.
+Keys are header names. Values are strings if there is a single instance of a
+header, or arrays of strings if there are multiple instances of the same header.
 
 The `query` ports produce and consume maps with key-value pairs representing
 decoded URL query strings. If the value in the pair is JSON null,
