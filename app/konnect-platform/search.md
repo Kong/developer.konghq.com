@@ -18,7 +18,7 @@ description: "Learn how to use the {{site.konnect_short_name}} Search to search 
 
 related_resources:
   - text: "{{site.konnect_short_name}} Search API"
-    url: /api/konnect/ksearch/v1/
+    url: /api/konnect/ksearch/
 ---
 
 {{site.konnect_short_name}} Search allows you to perform simple and advanced searches across all {{site.konnect_short_name}} entities within an organization. 
