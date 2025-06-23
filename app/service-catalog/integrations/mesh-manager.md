@@ -26,7 +26,7 @@ discovery_default: true
 bindable_entities: "Mesh Service"
 ---
 
-The {{site.konnect_short_name}} Mesh integration allows users gain visibility into how their service is deployed across meshes and zones, determine whether their deployment is healthy, and - if used in conjunction with other built-in integrations - to identify links between their mesh services and other {{site.konnect_short_name}} resources.
+The {{site.konnect_short_name}} Mesh integration allows users gain visibility into how their service is deployed across meshes and zones, determine whether their deployment is healthy, and (if used in conjunction with other built-in integrations) to identify links between their mesh services and other {{site.konnect_short_name}} resources.
 
 ## Authorize the Mesh Manager integration
 
@@ -46,7 +46,7 @@ columns:
     key: description
 rows:
   - entity: "Mesh Service"
-    description: "A Mesh Service (Service + Global Control Plane) with the Zone dimension included"
+    description: "A Mesh Service (Service and Global Control Plane) with the Zone dimension included"
 {% endtable %}
 
 

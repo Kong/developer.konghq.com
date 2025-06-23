@@ -35,7 +35,7 @@ The {{site.konnect_short_name}} Analytics integration is built directly into Ser
 
 ## Resources
 
-Available Mesh Manager entities:
+Available {{site.konnect_short_name}} Analytics entities:
 
 {% table %}
 columns:
