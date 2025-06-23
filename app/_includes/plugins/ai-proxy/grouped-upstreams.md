@@ -23,6 +23,10 @@
 {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-anthropic.html providers=providers %}
 {% endnavtab %}
 
+{% navtab "Cohere" %}
+{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-cohere.html providers=providers %}
+{% endnavtab %}
+
 {% navtab "Hugging Face" %}
 {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-huggingface.html providers=providers %}
 {% endnavtab %}

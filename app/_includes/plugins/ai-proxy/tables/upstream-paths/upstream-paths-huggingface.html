@@ -1,7 +1,6 @@
 <table>
     <thead>
       <tr>
-        <th>Provider name</th>
         <th>Provider path</th>
         <th>Kong route type</th>
         <th>Example model name</th>
@@ -13,7 +12,7 @@
         {% if provider.name == 'Hugging Face' %}
           {% if provider.chat.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.chat.upstream_path }}</td>
             <td>{{ provider.chat.route_type }}</td>
             <td>{{ provider.chat.model_example }}</td>
@@ -23,7 +22,7 @@
 
           {% if provider.completions.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.completions.upstream_path }}</td>
             <td>{{ provider.completions.route_type }}</td>
             <td>{{ provider.completions.model_example }}</td>
@@ -33,7 +32,7 @@
 
           {% if provider.embeddings.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.embeddings.upstream_path }}</td>
             <td>{{ provider.embeddings.route_type }}</td>
             <td>{{ provider.embeddings.model_example }}</td>
@@ -43,7 +42,7 @@
 
           {% if provider.files.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.files.upstream_path }}</td>
             <td>{{ provider.files.route_type }}</td>
             <td>{{ provider.files.model_example }}</td>
@@ -53,7 +52,7 @@
 
           {% if provider.batches.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.batches.upstream_path }}</td>
             <td>{{ provider.batches.route_type }}</td>
             <td>{{ provider.batches.model_example }}</td>
@@ -63,7 +62,7 @@
 
           {% if provider.assistants.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.assistants.upstream_path }}</td>
             <td>{{ provider.assistants.route_type }}</td>
             <td>{{ provider.assistants.model_example }}</td>
@@ -73,7 +72,7 @@
 
           {% if provider.responses.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.responses.upstream_path }}</td>
             <td>{{ provider.responses.route_type }}</td>
             <td>{{ provider.responses.model_example }}</td>
@@ -83,7 +82,7 @@
 
           {% if provider.realtime.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.realtime.upstream_path }}</td>
             <td>{{ provider.realtime.route_type }}</td>
             <td>{{ provider.realtime.model_example }}</td>
@@ -93,7 +92,7 @@
 
           {% if provider.audio.speech.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.audio.speech.upstream_path }}</td>
             <td>{{ provider.audio.speech.route_type }}</td>
             <td>{{ provider.audio.speech.model_example }}</td>
@@ -103,7 +102,7 @@
 
           {% if provider.audio.transcriptions.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.audio.transcriptions.upstream_path }}</td>
             <td>{{ provider.audio.transcriptions.route_type }}</td>
             <td>{{ provider.audio.transcriptions.model_example }}</td>
@@ -113,7 +112,7 @@
 
           {% if provider.audio.translations.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.audio.translations.upstream_path }}</td>
             <td>{{ provider.audio.translations.route_type }}</td>
             <td>{{ provider.audio.translations.model_example }}</td>
@@ -123,7 +122,7 @@
 
           {% if provider.image.generations.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.image.generations.upstream_path }}</td>
             <td>{{ provider.image.generations.route_type }}</td>
             <td>{{ provider.image.generations.model_example }}</td>
@@ -133,11 +132,21 @@
 
           {% if provider.image.edits.upstream_path %}
           <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}</td>
+
             <td>{{ provider.image.edits.upstream_path }}</td>
             <td>{{ provider.image.edits.route_type }}</td>
             <td>{{ provider.image.edits.model_example }}</td>
             <td>{{ provider.image.edits.min_version }}</td>
+          </tr>
+          {% endif %}
+
+          {% if provider.realtime.upstream_path %}
+          <tr id="{{ provider.name }}">
+
+            <td>{{ provider.realtime.upstream_path }}</td>
+            <td>{{ provider.realtime.route_type }}</td>
+            <td>{{ provider.realtime.model_example }}</td>
+            <td>{{ provider.realtime.min_version }}</td>
           </tr>
           {% endif %}
         {% endif %}

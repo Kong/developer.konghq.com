@@ -9,9 +9,10 @@
     </thead>
     <tbody>
       {% for provider in include.providers %}
-        {% if provider.name == 'OpenAI' %}
+        {% if provider.name == 'Cohere' %}
           {% if provider.chat.upstream_path %}
           <tr id="{{ provider.name }}">
+
             <td>{{ provider.chat.upstream_path }}</td>
             <td>{{ provider.chat.route_type }}</td>
             <td>{{ provider.chat.model_example }}</td>

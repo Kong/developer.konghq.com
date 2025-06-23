@@ -8,7 +8,7 @@
 
 {{ plugin }} plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
 
-## Overview of Capabilities
+## Overview of capabilities
 
 {{ plugin }} plugin supports capabilities across batch processing, multimodal embeddings, agents, audio, image, streaming, and more, spanning multiple providers:
 
@@ -32,25 +32,25 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 
 The following reference tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
 
-### Core Text Generation
+### Core text generation
 
 Support for chat, completions, and embeddings.
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
 
-### Advanced Text Generation {% new_in 3.11 %}
+### Advanced text generation {% new_in 3.11 %}
 
 Support for function calling, tool use, and batch processing.
 
 {% include plugins/ai-proxy/tables/supported-providers-2.html providers=providers %}
 
-### Audio Features {% new_in 3.11 %}
+### Audio features {% new_in 3.11 %}
 
 Support for text-to-speech, transcription, and translation.
 
 {% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
 
-### Image and Realtime Features {% new_in 3.11 %}
+### Image and realtime features {% new_in 3.11 %}
 
 Support for image generation, image editing, and realtime interaction.
 

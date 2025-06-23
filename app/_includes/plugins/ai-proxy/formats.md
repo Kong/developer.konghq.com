@@ -53,6 +53,7 @@ The Kong AI Proxy accepts the following inputs formats, standardized across all 
 ```
 
 {% new_in 3.9 %} With Amazon Bedrock, you can include your [guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) configuration in the request:
+
 ```json
 {
     "messages": [
@@ -86,7 +87,7 @@ The Kong AI Proxy accepts the following inputs formats, standardized across all 
 {% navtab "llm/v1/files" %}
 
 ```json
-curl https://localhost:8000 \
+curl http://localhost:8000 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -F purpose="fine-tune" \
   -F file="@mydata.jsonl"
@@ -119,15 +120,38 @@ curl https://localhost:8000 \
 {% navtab "llm/v1/audio/speech" %}
 
 ```json
-curl https://localhost:8000 \
+curl http://localhost:8000 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4o-mini-tts",
     "input": "The quick brown fox jumped over the lazy dog.",
     "voice": "alloy"
   }' \
   --output speech.mp3
+```
+{% endnavtab %}
+
+{% navtab "llm/v1/images/generations" %}
+
+```json
+{
+    "prompt": "A cute baby sea otter",
+    "n": 1,
+    "size": "1024x1024"
+}
+
+```
+
+{% endnavtab %}
+
+{% navtab "llm/v1/embeddings" %}
+
+```json
+  {
+    "input": "The food was delicious and the waiter...",
+    "model": "text-embedding-ada-002",
+    "encoding_format": "float"
+  }
 ```
 {% endnavtab %}
 
@@ -286,6 +310,57 @@ Conversely, the response formats are also transformed to a standard format acros
 
 The audio file content `speech.mp3`
 
+{% endnavtab %}
+
+{% navtab "llm/v1/images/generations" %}
+
+```json
+  {
+  "created": 1713833628,
+  "data": [
+    {
+      "b64_json": "..."
+    }
+  ],
+  "usage": {
+    "total_tokens": 100,
+    "input_tokens": 50,
+    "output_tokens": 50,
+    "input_tokens_details": {
+      "text_tokens": 10,
+      "image_tokens": 40
+    }
+  }
+}
+
+```
+
+{% endnavtab %}
+
+{% navtab "llm/v1/embeddings" %}
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "object": "embedding",
+      "embedding": [
+        0.0023064255,
+        -0.009327292,
+        .... (1536 floats total for ada-002)
+        -0.0028842222,
+      ],
+      "index": 0
+    }
+  ],
+  "model": "text-embedding-ada-002",
+  "usage": {
+    "prompt_tokens": 8,
+    "total_tokens": 8
+  }
+}
+```
 {% endnavtab %}
 
 {% navtab "llm/v1/responses" %}

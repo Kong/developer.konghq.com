@@ -299,14 +299,14 @@ providers:
     completions:
       supported: true
       streaming: true
-      upstream_path: 'n/a'
+      upstream_path: 'Use the LLM <code>completions</code> upstream path'
       route_type: 'llm/v1/completions'
       model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
       min_version: '3.8'
     embeddings:
       supported: true
       streaming: false
-      upstream_path: 'n/a'
+      upstream_path: 'Use the LLM <code>embeddings</code> upstream path'
       route_type: 'llm/v1/embeddings'
       model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
       min_version: '3.11'
@@ -314,14 +314,14 @@ providers:
       generations:
         supported: true
         streaming: false
-        upstream_path: 'n/a'
+        upstream_path: 'Use the LLM <code>image/generations</code> upstream path'
         route_type: 'image/v1/images/generations'
         model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
         min_version: '3.11'
       edits:
         supported: true
         streaming: false
-        upstream_path: 'n/a'
+        upstream_path: 'Use the LLM <code>image/edits</code> upstream path'
         route_type: 'image/v1/images/edits'
         model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
         min_version: '3.11'
