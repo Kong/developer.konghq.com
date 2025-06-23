@@ -275,6 +275,12 @@ app/_how-tos/configure-rbac-user-in-kong-gateway.md:
   - app/_src/gateway/kong-manager/auth/rbac/add-user.md
 app/_how-tos/collect-metrics-with-prometheus.md:
   - app/_src/gateway/production/monitoring/prometheus.md
+app/_how-tos/collect-metrics-with-datadog-and-prometheus-plugin.md:
+  - app/_src/gateway/production/monitoring/datadog.md
+app/_how-tos/collect-metrics-with-statsd.md:
+  - app/_src/gateway/production/monitoring/statsd.md
+app/_how-tos/collect-audit-logs-with-sumologic.md:
+  - app/konnect/org-management/audit-logging/webhook.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -1006,6 +1012,7 @@ app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 app/_how-tos/enable-basic-auth-on-kong-manager.md:
   - app/_src/gateway/kong-manager/auth/basic.md
+  - app/_src/gateway/kong-manager/auth/reset-password.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
