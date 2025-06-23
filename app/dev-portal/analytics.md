@@ -8,9 +8,7 @@ products:
 
 breadcrumbs: 
   - /dev-portal/
-beta: true
 tags:
-  - beta
   - analytics
 
 works_on:

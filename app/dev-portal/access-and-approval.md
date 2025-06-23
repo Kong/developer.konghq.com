@@ -9,7 +9,6 @@ products:
 tags:
   - access-control
   - developer-management
-  - beta
 works_on:
   - konnect
 breadcrumbs:
@@ -25,7 +24,6 @@ related_resources:
     url: /dev-portal/developer-signup/
   - text: Dev Portal access and authentication settings
     url: /dev-portal/security-settings/
-beta: true
 ---
 
 When Dev Portal [security settings](/dev-portal/security-settings/) require manual approval, Dev Portal admins are notified to approve new Developer and Application registrations. You can manage developer and application approvals by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Developers** or **Applications** in the sidebar.

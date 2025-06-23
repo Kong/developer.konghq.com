@@ -8,7 +8,6 @@ products:
 tags:
   - authentication
   - sso
-  - beta
 breadcrumbs:
   - /dev-portal/
 api_specs:
@@ -17,7 +16,6 @@ search_aliases:
   - Portal
   - OpenID Connect
   - SSO
-beta: true
 works_on:
   - konnect
 related_resources:

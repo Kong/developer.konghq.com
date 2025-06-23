@@ -8,9 +8,8 @@ products:
 
 breadcrumbs: 
   - /dev-portal/
-beta: true
 tags:
-  - beta
+  - api-catalog
 
 works_on:
     - konnect

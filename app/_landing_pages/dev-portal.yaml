@@ -4,8 +4,6 @@ metadata:
   description: Manage API publishing, developer self-service, and documentation with Konnect Dev Portal.
   products:
     - dev-portal
-  tags:
-    - beta
 
 rows:
 

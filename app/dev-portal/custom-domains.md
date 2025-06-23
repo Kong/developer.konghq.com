@@ -8,9 +8,8 @@ products:
     - dev-portal
 api_specs:
   - konnect/portal-management
-beta: true
 tags:
-  - beta
+  - custom-domain
 search_aliases:
   - Portal
 works_on:
