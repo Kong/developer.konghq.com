@@ -147,7 +147,8 @@ faqs:
     a: Add the self-signed certificate in `kong.conf` to the parameter `lua_ssl_trusted_certificate`.
   - q: "I'm getting an `unable to retrieve secret from vault: certificate host mismatch` error, how do I fix this?"
     a: The hostname specified in your Vault entity does not match the cert presented by the Vault server. Confirm the Kong Vault `config.host` matches the name of the certificate presented by the Vault server certificate.
-  - q: "I'm getting an `invalid response code 400 received when performing certificate-based authentication: {"errors":["auth methods cannot create root tokens"]}` error, how do I fix this?"
+  - q: |
+      I'm getting an `invalid response code 400 received when performing certificate-based authentication: {"errors":["auth methods cannot create root tokens"]}` error, how do I fix this?
     a: |
       The certificate is mapped to a policy that would allow creation of a root token, which Vault explicitly forbids. Check the policy associated with your certificate
       to ensure that it does not include `CREATE`, `UPDATE`, `READ` operations on the path `auth/token/root`
@@ -156,7 +157,8 @@ faqs:
       This will usually occur for one of two reasons:
       * You have a certificate chain and only a portion of it was uploaded for {{site.base_gateway}} to use. Fix: Include the entire chain in `KONG_LUA_SSL_TRUSTED_CERTIFICATE`.
       * HashiCorp Vault was setup in dev mode. This **does not** allow you to provide your own CA and instead uses an ephemeral cert for SAN: “localhost, 127.0.0.1, 0.0.0.0.”
-  - q: "I'm getting an `invalid response code 503 received when performing certificate-based authentication: {"errors":["Vault is sealed"]}` error, how do I fix this?"
+  - q: |
+      I'm getting an `invalid response code 503 received when performing certificate-based authentication: {"errors":["Vault is sealed"]}` error, how do I fix this?
     a: To perform any operation on the Vault, it must be unsealed first. It was likely sealed intentionally or through a restart of the Vault process.
 
 next_steps:
