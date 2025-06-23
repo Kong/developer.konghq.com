@@ -39,7 +39,7 @@ columns:
   - title: Direct Download link
     key: download
 rows:
-- version: 3.11.0.0
+  - version: 3.11.0.0
     download: |
       [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.11 SBOM](https://packages.konghq.com/public/gateway-311/raw/versions/3.11.0.0/security-assets.tar.gz)
   - version: 3.10.0.0
