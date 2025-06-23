@@ -7,26 +7,35 @@ weight: 900
 config:
   debug: true
   nodes:
+  # make a GET request to https://catfact.ninja/fact
   - name: CAT_FACT
     type: call
     url:  https://catfact.ninja/fact
+
+  # make a GET request to https://dogapi.dog/api/v1/facts
   - name: DOG_FACT
     type: call
     url:  https://dogapi.dog/api/v1/facts
+
+  # combine the JSON response bodies of CAT_FACT and DOG_FACT into a single
+  # JSON object
   - name: JOIN
     type: jq
     inputs:
-    - cat: CAT_FACT.body
-    - dog: DOG_FACT.body
+      cat: CAT_FACT.body
+      dog: DOG_FACT.body
     jq: |
       {
-        "cat_fact": $cat.fact,
-        "dog_fact": $dog.facts[0]
+        cat_fact: .cat.fact,
+        dog_fact: .dog.facts[0],
       }
+
+  # send a response to the client with the combined API response data; this
+  # terminates the request instead of proxying it upstream
   - name: EXIT
     type: exit
     inputs:
-    - body: JOIN
+      body: JOIN
     status: 200
 
 tools:
@@ -37,4 +46,4 @@ tools:
   - terraform
 
 min_version:
-  gateway: '3.9'
+  gateway: '3.11'
