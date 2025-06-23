@@ -6,7 +6,6 @@ tags:
     - api-catalog
 tools:
   - terraform
-beta: true
 works_on:
   - konnect
 
@@ -48,34 +47,44 @@ prereqs:
     - title: Required entities
       content: |
         For this tutorial, you’ll need {{site.base_gateway}} entities, like Gateway Services and Routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn’t the focus of this guide.
+
+        1. Before configuring a Service and a Route, you need to create a Control Plane. If you have an existing Control Plane that you'd like to reuse, you can use the [`konnect_gateway_control_plane_list`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/data/gateway_control_plane_list.tf) data source.
+           ```hcl
+           echo '
+           resource "konnect_gateway_control_plane" "my_cp" {
+             name         = "Terraform Control Plane"
+             description  = "Configured using the demo at developer.konghq.com"
+             cluster_type = "CLUSTER_TYPE_CONTROL_PLANE"
+           }
+           ' > main.tf
+           ```
         
-        Our example Service uses `httpbin.org` as the upstream, and matches the `/anything` path which echos the response back to the client. 
+        1. Our example Service uses `httpbin.org` as the upstream, and matches the `/anything` path which echos the response back to the client. 
+           ```hcl
+           echo '
+           resource "konnect_gateway_service" "httpbin" {
+             name             = "example-service"
+             protocol         = "https"
+             host             = "httpbin.org"
+             port             = 443
+             path             = "/"
+             control_plane_id = konnect_gateway_control_plane.my_cp.id
+           }
 
-        ```hcl
-        echo '
-        resource "konnect_gateway_service" "httpbin" {
-        name             = "example-service"
-        protocol         = "https"
-        host             = "httpbin.org"
-        port             = 443
-        path             = "/"
-        control_plane_id = konnect_gateway_control_plane.my_cp.id
-        }
+           resource "konnect_gateway_route" "hello" {
+             methods = ["GET"]
+             name    = "Anything"
+             paths   = ["/anything"]
 
-        resource "konnect_gateway_route" "hello" {
-        methods = ["GET"]
-        name    = "Anything"
-        paths   = ["/anything"]
+             strip_path = false
 
-        strip_path = false
-
-        control_plane_id = konnect_gateway_control_plane.my_cp.id
-        service = {
-            id = konnect_gateway_service.httpbin.id
-        }
-        }
-        ' >> main.tf
-        ```
+             control_plane_id = konnect_gateway_control_plane.my_cp.id
+             service = {
+               id = konnect_gateway_service.httpbin.id
+           }
+           }
+           ' >> main.tf
+           ```
       icon_url: /assets/icons/widgets.svg
     - title: Dev Portal
       include_content: prereqs/api-catalog-terraform
@@ -101,27 +110,6 @@ resource "konnect_api" "my_api" {
     key = "value"
   }
   name         = "MyAPI"
-}
-' >> main.tf
-```
-
-## Create and associate an API document 
-
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf).
-
-APIs should have API documents or specs, and can have both. If neither are specified, {{site.konnect_short_name}} can't render documentation.
-
-Create and associate an API document:
-
-```hcl
-echo '
-resource "konnect_api_document" "my_apidocument" {
-  provider = konnect-beta
-  api_id  = konnect_api.my_api.id
-  content = "# API Document Header"
-  slug               = "api-document"
-  status             = "published"
-  title              = "API Document"
 }
 ' >> main.tf
 ```
@@ -158,6 +146,28 @@ resource "konnect_api_specification" "my_api_specification" {
   }
 }
 JSON
+}
+' >> main.tf
+```
+
+{:.warning}
+> APIs should have API documents or specs, and can have both. If neither are specified, {{site.konnect_short_name}} can't render documentation.
+
+## Create and associate an API document 
+
+An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf).
+
+Create and associate an API document:
+
+```hcl
+echo '
+resource "konnect_api_document" "my_apidocument" {
+  provider = konnect-beta
+  api_id  = konnect_api.my_api.id
+  content = "# API Document Header"
+  slug               = "api-document"
+  status             = "published"
+  title              = "API Document"
 }
 ' >> main.tf
 ```
@@ -215,7 +225,7 @@ Create all of the defined resources using Terraform:
 terraform apply -auto-approve
 ```
 
-You will see six resources created:
+You will see five resources created:
 
 ```text
 Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
@@ -239,4 +249,4 @@ To validate that the API was created and published in your Dev Portal, navigate 
 open https://$PORTAL_URL/apis
 ```
 
-You should see `MyAPI` in the list of APIs. 
+You should see `MyAPI` in the list of APIs. If an API is published as private, you must enable Dev Portal RBAC and [developers must sign in](/dev-portal/developer-signup/) to see APIs.
