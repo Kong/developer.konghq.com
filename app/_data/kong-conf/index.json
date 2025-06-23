@@ -1959,27 +1959,42 @@
     "dedicated_config_processing": {
       "defaultValue": "on",
       "description": "Enables or disables a special worker\nprocess for configuration processing. This process\nincreases memory usage a little bit while\nallowing to reduce latencies by moving some\nbackground tasks, such as CP/DP connection\nhandling, to an additional worker process specific\nto handling these background tasks.\nCurrently this has effect only on data planes.\n",
-      "sectionTitle": "GENERAL"
+      "sectionTitle": "GENERAL",
+      "min_version": {
+        "gateway": "3.5"
+      }
     },
     "debug_listen_local": {
       "defaultValue": "on",
       "description": "Expose `debug_listen` functionalities via a\nUnix domain socket under the Kong prefix.\n\nThis option allows local users to use `kong debug` command\nto invoke various debug functionalities without needing to\nenable `debug_listen` ahead of time.\n",
-      "sectionTitle": "NGINX"
+      "sectionTitle": "NGINX",
+      "min_version": {
+        "gateway": "3.5"
+      }
     },
     "admin_gui_ssl_protocols": {
       "defaultValue": "TLSv1.2 TLSv1.3",
       "description": "Defines the TLS versions supported\nfor Kong Manager\n",
-      "sectionTitle": "KONG MANAGER"
+      "sectionTitle": "KONG MANAGER",
+      "min_version": {
+        "gateway": "3.5"
+      }
     },
     "analytics_debug": {
       "defaultValue": "off",
       "description": "Outputs analytics payload to Kong logs.\n",
-      "sectionTitle": "Analytics for Konnect"
+      "sectionTitle": "Analytics for Konnect",
+      "min_version": {
+        "gateway": "3.5"
+      }
     },
     "cluster_fallback_export_s3_config": {
       "defaultValue": null,
       "description": "Fallback config export S3 configuration.\nThis is used only when `cluster_fallback_config_storage` is an S3-like schema.\nIf set, it will add the config table to the Kong exporter config S3 putObject request.\nThe config table should be in JSON format and can be unserialized into a table.\nIt should contain the necessary parameters as described in the documentation:\nhttps://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property.\nFor example, if you want to set the ServerSideEncryption headers/KMS Key ID\nfor the S3 putObject request, you can set the config table to:\n`{\"ServerSideEncryption\": \"aws:kms\", \"SSEKMSKeyId\": \"your-kms-key-id\"}`\n",
-      "sectionTitle": "CLUSTER FALLBACK CONFIGURATION"
+      "sectionTitle": "CLUSTER FALLBACK CONFIGURATION",
+      "min_version": {
+        "gateway": "3.5"
+      }
     },
     "wasm_filters": {
       "defaultValue": [
@@ -1987,22 +2002,34 @@
         "user"
       ],
       "description": "Comma-separated list of Wasm filters to be made\navailable for use in filter chains.\n\nWhen the `off` keyword is specified as the\nonly value, no filters will be available for use.\n\nWhen the `bundled` keyword is specified, all filters\nbundled with Kong will be available.\n\nWhen the `user` keyword is specified, all filters\nwithin the `wasm_filters_path` will be available.\n\n**Examples:**\n\n- `wasm_filters = bundled,user` enables _all_ bundled\n  and user-supplied filters\n- `wasm_filters = user` enables _only_ user-supplied\n  filters\n- `wasm_filters = filter-a,filter-b` enables _only_\n  filters named `filter-a` or `filter-b` (whether\n  bundled _or_ user-supplied)\n\nIf a conflict occurs where a bundled filter and a\nuser-supplied filter share the same name, a warning\nwill be logged, and the user-supplied filter will\nbe used instead.\n",
-      "sectionTitle": "WEBASSEMBLY (WASM)"
+      "sectionTitle": "WEBASSEMBLY (WASM)",
+      "min_version": {
+        "gateway": "3.7"
+      }
     },
     "new_dns_client": {
       "defaultValue": "off",
       "description": "Enable or disable the new DNS resolver\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_address": {
       "defaultValue": "<name servers parsed from resolv.conf>",
       "description": "Comma-separated list of nameservers, each\nentry in `ip[:port]` format to be used by\nKong. If not specified, the nameservers in\nthe local `resolv.conf` file will be used.\nPort defaults to 53 if omitted. Accepts\nboth IPv4 and IPv6 addresses.\n\nExamples:\n\n```\nresolver_address = 8.8.8.8\nresolver_address = 8.8.8.8, [::1]\nresolver_address = 8.8.8.8:53, [::1]:53\n```\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_hosts_file": {
       "defaultValue": "/etc/hosts",
       "description": "The hosts file to use. This file is read\nonce and its content is static in memory.\nTo read the file again after modifying it,\nKong must be reloaded.\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_family": {
       "defaultValue": [
@@ -2010,82 +2037,130 @@
         "SRV"
       ],
       "description": "The supported query types.\n\nFor a domain name, Kong will only query\neither IP addresses (A or AAAA) or SRV\nrecords, but not both.\n\nIt will query SRV records only when the\ndomain matches the\n\"_<proto>._<service>.<name>\" format, for\nexample, \"_ldap._tcp.example.com\".\n\nFor IP addresses (A or AAAA) resolution, it\nfirst attempts IPv4 (A) and then queries\nIPv6 (AAAA).\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_valid_ttl": {
       "defaultValue": "<TTL from responses>",
       "description": "By default, DNS records are cached using\nthe TTL value of a response. This optional\nparameter (in seconds) allows overriding it.\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_error_ttl": {
       "defaultValue": "1",
       "description": "TTL in seconds for error responses and empty\nresponses.\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_stale_ttl": {
       "defaultValue": "3600",
       "description": "Defines, in seconds, how long a record will\nremain in cache past its TTL. This value\nwill be used while the new DNS record is\nfetched in the background.\n\nStale data will be used from expiry of a\nrecord until either the refresh query\ncompletes, or the `resolver_stale_ttl` number\nof seconds have passed.\n\nThis configuration enables Kong to be more\nresilient during the DNS server downtime.\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_lru_cache_size": {
       "defaultValue": "10000",
       "description": "The DNS client uses a two-layer cache system:\nL1 - worker-level LRU Lua VM cache\nL2 - across-workers shared memory cache\n\nThis value specifies the maximum allowed\nnumber of DNS responses stored in the L1 LRU\nlua VM cache.\n\nA single name query can easily take up 1~10\nslots, depending on attempted query types and\nextended domains from /etc/resolv.conf\noptions `domain` or `search`.\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "resolver_mem_cache_size": {
       "defaultValue": "5m",
       "description": "This value specifies the size of the L2\nshared memory cache for DNS responses,\n`kong_dns_cache`.\n\nAccepted units are `k` and `m`, with a\nminimum recommended value of a few MBs.\n\n5MB shared memory size could store\n~20000 DNS responeses with single A record or\n~10000 DNS responeses with 2~3 A records.\n\n10MB shared memory size could store\n~40000 DNS responeses with single A record or\n~20000 DNS responeses with 2~3 A records.\n",
-      "sectionTitle": "New DNS RESOLVER"
+      "sectionTitle": "New DNS RESOLVER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "admin_gui_auth_change_password_attempts": {
       "defaultValue": "0",
       "description": "Number of times a user can attempt to change password.\n0 means infinite attempts allowed.\n",
-      "sectionTitle": "KONG MANAGER"
+      "sectionTitle": "KONG MANAGER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "admin_gui_auth_change_password_ttl": {
       "defaultValue": "86400",
       "description": "Length, in seconds, of the TTL for changing password attempts\nrecords. Records in the database older than\ntheir TTL are automatically purged.\n\nExample, 1 days: `1 * 24 * 60 * 60 = 86400.`\n",
-      "sectionTitle": "KONG MANAGER"
+      "sectionTitle": "KONG MANAGER",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "keyring_recovery_public_key": {
       "defaultValue": null,
       "description": "Defines the public key to optionally encrypt\nall keyring materials and back them up in the\ndatabase.\n\nValues:\n- absolute path to the public key\n- public key content\n- base64 encoded public key content\n",
-      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT"
+      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "keyring_encrypt_license": {
       "defaultValue": "off",
       "description": "Enables keyring encryption for license payloads stored\nin the database.\n\n**Warning:** For Kong deployments that rely entirely on\nthe database for license provisioning (i.e. not using\n`KONG_LICENSE_DATA` or `KONG_LICENSE_PATH`), enabling\nthis option will delay license activation until after\nthe node's keyring has been activated.\n",
-      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT"
+      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "test": {
       "defaultValue": "on",
       "description": "test\n",
-      "sectionTitle": "WASM injected directives"
+      "sectionTitle": "WASM injected directives",
+      "min_version": {
+        "gateway": "3.8"
+      }
     },
     "admin_gui_auth_login_attempts_ttl": {
       "defaultValue": "604800",
       "description": "Length, in seconds, of the TTL for changing login attempts\nrecords. Records in the database older than\ntheir TTL are automatically purged.\n\nThis argument can be set to an integer between 0 and 100000000.\n\nExample, 7 days: `7 * 24 * 60 * 60 = 604800.`\n",
-      "sectionTitle": "KONG MANAGER"
+      "sectionTitle": "KONG MANAGER",
+      "min_version": {
+        "gateway": "3.9"
+      }
     },
     "incremental_sync": {
       "defaultValue": "off",
       "description": "The setting to enable or disable the incremental\nsynchronization of configuration changes.\nInstead of sending the entire entity config to data planes on\neach config update, incremental config sync lets you send only\nthe changed configuration to data planes for hybrid mode deployments.\nThe valid values are `on` and `off`.\nTo enable, set this value to `on`.\n\nIn hybrid mode, this setting must be configured\non both control plane and data plane nodes.\n",
-      "sectionTitle": "HYBRID MODE"
+      "sectionTitle": "HYBRID MODE",
+      "min_version": {
+        "gateway": "3.10"
+      }
     },
     "consumers_mem_cache_size": {
       "defaultValue": "128m",
       "description": "Size of the shared memory cache for consumers\nand credentials.\n\nThe accepted units are `k` and `m`, with a minimum\nrecommended value of a few MBs.\n\n**Note**: This is only used when the \"externalized consumers\"\nfeature is active.\n",
-      "sectionTitle": "NGINX"
+      "sectionTitle": "NGINX",
+      "min_version": {
+        "gateway": "3.10"
+      }
     },
     "admin_gui_csp_header": {
       "defaultValue": "off",
       "description": "Enable or disable the `Content-Security-Policy` (CSP) header for Kong Manager\n\nThis configuration controls the presence of the CSP header when serving\nKong Manager. The default CSP header value will be used unless customized.\n\nTo modify the value of the served CSP header, refer to the `admin_gui_csp_header_value`\nconfiguration.\n\nSet this configuration to `on` to enable the CSP header.\n",
-      "sectionTitle": "KONG MANAGER"
+      "sectionTitle": "KONG MANAGER",
+      "min_version": {
+        "gateway": "3.10"
+      }
     },
     "admin_gui_csp_header_value": {
       "defaultValue": null,
       "description": "The value of the `Content-Security-Policy` (CSP) header for Kong Manager.\n\nThis configuration controls the value of the CSP header when serving\nKong Manager. If omitted or left empty, the default CSP header value\nwill be used.\n\nThis is an advanced configuration intended for cases where the default\nCSP header value does not meet your requirements. Use with caution.\n\nFor more information on the CSP header, see:\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n",
-      "sectionTitle": "KONG MANAGER"
+      "sectionTitle": "KONG MANAGER",
+      "min_version": {
+        "gateway": "3.10"
+      }
     },
     "vault_hcv_cert_auth_role_name": {
       "defaultValue": null,
