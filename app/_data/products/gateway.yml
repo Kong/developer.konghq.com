@@ -20,7 +20,7 @@ releases:
   - release: "3.4"
     ee-version: "3.4.3.19"
     ce-version: "3.4.2"
-    eol: August 2026
+    eol: 2026-08-31
     lts: true
     distributions:
       - amazonlinux2:
@@ -193,7 +193,7 @@ releases:
   - release: "3.7"
     ee-version: "3.7.1.5"
     ce-version: "3.7.1"
-    eol: May 2025
+    eol: 2025-05-31
     sunset: true
     distributions:
       - amazonlinux2:
@@ -374,7 +374,7 @@ releases:
   - release: "3.8"
     ee-version: "3.8.1.1"
     ce-version: "3.8.1"
-    eol: Sept 2025
+    eol: 2025-09-30
     distributions:
       - amazonlinux2:
           package: true
@@ -542,7 +542,7 @@ releases:
   - release: "3.9"
     ee-version: "3.9.1.1"
     ce-version: "3.9.1"
-    eol: Dec 2025
+    eol: 2025-12-30
     distributions:
       - amazonlinux2:
           package: true
@@ -721,7 +721,7 @@ releases:
     ee-version: "3.10.0.2"
     lts: true
     latest: true
-    eol: Mar 2028
+    eol: 2028-03-31
     distributions:
       - amazonlinux2:
           package: true
