@@ -31,3 +31,6 @@
 {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-huggingface.html providers=providers %}
 {% endnavtab %}
 {% endnavtabs %}
+
+{:.warning}
+> To use the `realtime/v1/realtime` route, users must configure the [`protocols`](/plugins/ai-proxy-advanced/reference/#schema--protocols) to `ws` and/or `wss` on both the service and on the route where the plugin is associated.
