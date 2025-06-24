@@ -148,7 +148,7 @@ rows:
             - text: Start securing your MCP traffic now
               url: "/how-to/secure-mcp-traffic/"
             - text: Take control of your MCP traffic governance
-              url: "/mcp/"
+              url: "/how-to/govern-mcp-traffic/unreleased/"
             - text: Monitor your MCP traffic
               url: "/mcp/"
     - blocks:
