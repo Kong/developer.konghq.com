@@ -191,11 +191,13 @@ curl http://localhost:8000/ \
 
 {% navtab "audio/v1/audio/translations" %}
 Supported in: {% new_in 3.11 %}
+```json
 curl http://localhost:8000/ \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: multipart/form-data" \
   -F file="@/path/to/file/german.m4a" \
   -F model="whisper-1"
+```
 
 {% endnavtab %}
 
