@@ -123,6 +123,7 @@ entities:
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.The Consumer needs an API key to access any {{site.base_gateway}} Services.
 
+<!-- vale off -->
 {% entity_examples %}
 entities:
   consumers:
@@ -130,6 +131,7 @@ entities:
       keyauth_credentials:
         - key: hello_world
 {% endentity_examples %}
+<!-- vale on -->
 
 ## Validate
 
@@ -137,6 +139,7 @@ After configuring the Key Authentication plugin, you can verify that it was conf
 
 The following request is valid, as it includes the `apikey` required by the Consumer:
 
+<!-- vale off -->
 {% validation request-check %}
   url: /anything/v1/responses
   headers:
@@ -155,9 +158,11 @@ The following request is valid, as it includes the `apikey` required by the Cons
   status_code: 200
   message: 'OK'
 {% endvalidation %}
+<!-- vale on -->
 
 On the following request including an invalid value for `apikey`:
 
+<!-- vale off -->
 {% validation request-check %}
   url: /anything/v1/responses
   headers:
@@ -176,9 +181,11 @@ On the following request including an invalid value for `apikey`:
   status_code: 400
   message: 'Unauthorized'
 {% endvalidation %}
+<!-- vale on -->
 
 If the request doesn't contain the required `apikey`:
 
+<!-- vale off -->
 {% validation request-check %}
   url: /anything/v1/responses
   headers:
@@ -196,3 +203,4 @@ If the request doesn't contain the required `apikey`:
   status_code: 401
   message: 'Unauthorized: No API key found in request'
 {% endvalidation %}
+<!-- vale on -->
