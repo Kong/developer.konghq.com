@@ -5,7 +5,6 @@ title: Manipulate request headers
 weight: 900
 
 config:
-  debug: true
   nodes:
   # create a new header map from the client request headers, adding an
   # additional `X-My-API-Header` header with the value of the `foo` query

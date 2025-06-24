@@ -1026,11 +1026,287 @@ Set common request headers for different API requests:
 
 ## Debugging
 
-Datakit includes support for debugging your configuration using execution tracing.
+Datakit includes support for debugging your configuration.
 
-By setting the `X-DataKit-Debug-Trace` header, Datakit records the execution flow and the values of intermediate nodes, 
-reporting the output in the request body in JSON format.
+{:.warning}
+Enabling the `debug` option in Datakit is considered unsafe for production
+environments, as it can cause arbitrary information to leak into client
+responses.
 
-If the debug header value is set to `0`, `false`, or `off`, this is equivalent to un-setting the debug header. 
-In this case, tracing won't happen and execution will run as normal. 
-Any other value will enable debug tracing.
+### Making node execution errors visible
+
+When a Datakit node encounters an error, the default behavior is to exit
+immediately with a generic 500 error so as not to leak any information to the
+client:
+
+```json
+{
+  "message": "An unexpected error occurred",
+  "request_id": "f5e07609d55bd66508c8315b8cf6583a"
+}
+```
+
+The entire error is included in the `error.log` file for review:
+
+> 2025/06/24 10:55:32 [error] 917449#0: *1292 [lua] runtime.lua:406: handler(): node #1 (API) failed with error: "non-2XX response code: 403", client: 127.0.0.1, server: kong, request: "GET / HTTP/1.1", host: "test-010.datakit.test", request_id: "f5e07609d55bd66508c8315b8cf6583a"
+
+For quicker feedback during local development and testing, the error can also be
+passed through to the client response by enabling the `debug` option in your
+Datakit plugin configuration. In addition to the full error message, the
+response contains information about the node which failed, including the node
+name, type, and index (the position of the node within the `nodes` array in your
+plugin configuration):
+
+```json
+{
+  "message": "node execution error",
+  "request_id": "f5e07609d55bd66508c8315b8cf6583a",
+  "error": "non-2XX response code: 403",
+  "node": {
+    "index": 1,
+    "name": "API",
+    "type": "call"
+  }
+}
+```
+
+### Execution debug tracing
+
+With `debug` enabled in the plugin configuration, add the
+`X-DataKit-Debug-Trace` header with a value of `"true"`, `"yes"`, `"on"`, `"1"`,
+or `"enabled"` to prompt Datakit to perform detailed execution tracing and return
+a full report in the client response.
+
+Here's an example where the `API` node failed due to its endpoint returning a
+`403` status code. The failure caused all pending/running node tasks to be
+canceled and resulted in an execution plan error ("PLAN_ERROR"):
+
+```json
+{
+  "started_at": 1750789142.703118,
+  "status": "PLAN_ERROR",
+  "ended_at": 1750789142.705158,
+  "nodes": [
+    {
+      "name": "API",
+      "type": "call",
+      "status": "NODE_ERROR",
+      "error": "non-2XX response code: 403"
+    },
+    {
+      "name": "SLOW_API",
+      "status": "NODE_CANCELED",
+      "type": "call"
+    },
+    {
+      "name": "FILTER",
+      "status": "NODE_CANCELED",
+      "type": "jq"
+    },
+    {
+      "name": "request",
+      "status": "NODE_COMPLETE",
+      "type": "request"
+    }
+  ],
+  "duration": 0.002039670944213867,
+  "events": [
+    {
+      "name": "request",
+      "action": "run",
+      "values": [],
+      "type": "request",
+      "at": 0.00001406669616699219
+    },
+    {
+      "name": "request",
+      "action": "complete",
+      "values": [
+        {
+          "type": "any",
+          "key": "headers"
+        },
+        {
+          "type": "any",
+          "key": "body"
+        },
+        {
+          "type": "map",
+          "value": {
+            "b": "123",
+            "a": "true"
+          },
+          "key": "query"
+        }
+      ],
+      "type": "request",
+      "at": 0.0000324249267578125
+    },
+    {
+      "name": "API",
+      "action": "run",
+      "values": [
+        {
+          "type": "map",
+          "key": "headers"
+        },
+        {
+          "type": "any",
+          "key": "body"
+        },
+        {
+          "type": "map",
+          "value": {
+            "b": "123",
+            "a": "true"
+          },
+          "key": "query"
+        }
+      ],
+      "type": "call",
+      "at": 0.00003552436828613281
+    },
+    {
+      "type": "call",
+      "action": "run",
+      "at": 0.00005054473876953125,
+      "name": "API"
+    },
+    {
+      "name": "SLOW_API",
+      "action": "run",
+      "values": [
+        {
+          "type": "map",
+          "key": "headers"
+        },
+        {
+          "type": "any",
+          "key": "body"
+        },
+        {
+          "type": "map",
+          "value": {
+            "b": "123",
+            "a": "true"
+          },
+          "key": "query"
+        }
+      ],
+      "type": "call",
+      "at": 0.00005173683166503906
+    },
+    {
+      "type": "call",
+      "action": "run",
+      "at": 0.00005674362182617188,
+      "name": "SLOW_API"
+    },
+    {
+      "name": "API",
+      "action": "resume",
+      "type": "call",
+      "at": 0.001984357833862305,
+      "duration": 0.001933813095092773
+    },
+    {
+      "name": "API",
+      "action": "fail",
+      "values": [
+        {
+          "type": "error",
+          "value": "non-2XX response code: 403"
+        },
+        {
+          "type": "map",
+          "value": {
+            "Connection": "keep-alive",
+            "X-Powered-By": "mock_upstream",
+            "Content-Length": "824",
+            "Content-Type": "application/json",
+            "Date": "Tue, 24 Jun 2025 18:19:02 GMT",
+            "Server": "mock-upstream/1.0.0"
+          },
+          "key": "headers"
+        },
+        {
+          "type": "any",
+          "value": {
+            "url": "http://127.0.0.1:15555/status/403?b=123&a=true",
+            "post_data": {
+              "params": null,
+              "text": "",
+              "kind": "unknown"
+            },
+            "code": 403,
+            "vars": {
+              "host": "127.0.0.1",
+              "request_method": "GET",
+              "binary_remote_addr": "\u007f\u0000\u0000\u0001",
+              "uri": "/status/403",
+              "request_time": "0.000",
+              "remote_addr": "127.0.0.1",
+              "request_length": "119",
+              "remote_port": "50902",
+              "scheme": "http",
+              "ssl_server_name": "no SNI",
+              "hostname": "soup",
+              "request_uri": "/status/403?b=123&a=true",
+              "server_port": "15555",
+              "server_name": "mock_upstream",
+              "request": "GET /status/403?b=123&a=true HTTP/1.1",
+              "server_protocol": "HTTP/1.1",
+              "https": "",
+              "realip_remote_addr": "127.0.0.1",
+              "server_addr": "127.0.0.1",
+              "realip_remote_port": "50902",
+              "is_args": "?"
+            },
+            "uri_args": {
+              "b": "123",
+              "a": "true"
+            },
+            "headers": {
+              "user-agent": "lua-resty-http/0.17.2 (Lua) ngx_lua/10028",
+              "host": "127.0.0.1:15555"
+            }
+          },
+          "key": "body"
+        },
+        {
+          "type": "number",
+          "value": 403,
+          "key": "status"
+        }
+      ],
+      "type": "call",
+      "at": 0.00200200080871582
+    },
+    {
+      "name": "SLOW_API",
+      "action": "cancel",
+      "type": "call",
+      "at": 0.002033710479736328,
+      "duration": 0.001976966857910156
+    },
+    {
+      "type": "jq",
+      "action": "cancel",
+      "at": 0.002036333084106445,
+      "name": "FILTER"
+    }
+  ]
+}
+```
+
+Be aware that the tracing output is emited _instead of_ any other pending client
+response body (originating from Datakit or elsewhere), so there are limits to
+what can be observed in the trace. The `response` node, for instance, cannot
+execute fully when tracing is enabled and will appear in the tracing report with
+a result of `NODE_SKIPPED`.
+
+{:.warning}
+The contents of the tracing report are unstable and intended for human
+consumption to aid development and testing. Backwards-incompatible changes to
+the report format _may_ be included with any new release of
+{{site.base_gateway}}.

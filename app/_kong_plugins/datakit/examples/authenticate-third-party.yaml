@@ -5,7 +5,6 @@ title: Authenticate {{site.base_gateway}} to a third-party service
 weight: 900
 
 config:
-  debug: true
   nodes:
   # set some static values that will be used as inputs to other nodes
   - name: STATIC_INPUTS

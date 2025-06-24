@@ -5,7 +5,6 @@ title: Combine multiple API responses
 weight: 900
 
 config:
-  debug: true
   nodes:
   # make a GET request to https://catfact.ninja/fact
   - name: CAT_FACT
