@@ -1,10 +1,10 @@
 ---
-title: Get started with Kong Konnect MCP Server
+title: Get started with {{site.konnect_product_name}} MCP Server
 content_type: how_to
 permalink: /mcp/get-started/
 breadcrumbs:
     - /mcp/
-description: Learn how to quickly get started with using Kong Konnect MCP Server
+description: Learn how to quickly get started with using {{site.konnect_product_name}} MCP Server
 products:
     - ai-gateway
     - gateway
@@ -27,7 +27,7 @@ related_resources:
     url: https://github.com/metorial/mcp-containers/blob/main/catalog/Kong/mcp-konnect/mcp-konnect/README.md
 
 tldr:
-  q: What is Kong Konnect MCP Server, and how can I get started with it?
+  q: What is {{site.konnect_product_name}} MCP Server, and how can I get started with it?
   a: |
 
     With Kong's Model Context Protocol (MCP) Server, you can enable AI assistants like Claude to interact directly with {{site.konnect_product_name}}’s API Gateway. This integration allows you to query analytics data, inspect configuration details, and manage control planes—all through natural language conversation.
