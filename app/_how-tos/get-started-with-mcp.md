@@ -23,7 +23,7 @@ tags:
     - ai
 
 related_resources:
-  - text: Konng MCP
+  - text: Kong MCP
     url: https://github.com/metorial/mcp-containers/blob/main/catalog/Kong/mcp-konnect/mcp-konnect/README.md
 
 tldr:
