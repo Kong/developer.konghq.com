@@ -92,7 +92,7 @@ Note that the above config publishes the following ports to the host:
 - `kafka:9094` for SASL username/password auth
 - `kafka-ui:8082` for access to the Kafka UI
 - `schema-registry:8081` for access to the schema registry
-- `knep:9192` to `know:9292` for access to the {{site.event_gateway_short}} proxy (the port range is wide to allow many virtual clusters to be created)
+- `knep:9192` to `knep:9292` for access to the {{site.event_gateway_short}} proxy (the port range is wide to allow many virtual clusters to be created)
 - `knep:8080` for probes and metrics access to {{site.event_gateway_short}}
 
 The {{site.event_gateway_short}} container will use environment variables from `knep.env` file. Let's create it:
