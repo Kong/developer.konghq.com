@@ -40,7 +40,7 @@ tldr:
     Enable the Key Authentication plugin on your MCP service and require API keys from Consumers. Kong AI Gateway then enforces these keys on all incoming MCP requests, ensuring secure, authorized access.
 
     {:.info}
-    > For further authentication of your MCP traffic you can also use [The OpenID Connect](/plugins/openid-connect/) (OIDC) plugin lets you integrate Kong Gateway with an identity provider (IdP), or you can extend plugins to support fine-grained Authorization models via JWT claims or declarative [Access Control Lists](/plugins/acl/) (ACLs)
+    > For further authentication of your MCP traffic you can also use [The OpenID Connect](/plugins/openid-connect/) (OIDC) plugin lets you integrate {{ site.base_gateway }} with an identity provider (IdP), or you can extend plugins to support fine-grained Authorization models via JWT claims or declarative [Access Control Lists](/plugins/acl/) (ACLs)
 
 
 tools:
