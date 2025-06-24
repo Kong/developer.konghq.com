@@ -33,7 +33,12 @@ search_aliases:
 tldr:
     q: How can I configure HashiCorp Vault as a Vault backend with certificate authentication access Vault secrets in {{site.base_gateway}}? 
     a: |
-      Start a HashiCorp Vault with a client certificates and a certificate that is served from HashiCorp Vault with a `subjectAltName` that matches the name requested by {{site.base_gateway}}. Configure HashiCorp Vault to use certificate-based authentication with `vault auth enable cert`. Set the `lua_ssl_trusted_certificate` parameter in `kong.conf` to use the certificate that is served from HashiCorp Vault. Configure a Vault entity in {{site.base_gateway}}, using the initial root token for your `config.token`, set the `config.auth_method` to `cert`, and set `config.cert_auth_cert_key` and `config.cert_auth_cert`. 
+      Start a HashiCorp Vault with a client certificates and a certificate that is served from HashiCorp Vault with a `subjectAltName` that matches the name requested by {{site.base_gateway}}. 
+      
+      Then in {{site.base_gateway}}:
+      * Configure HashiCorp Vault to use certificate-based authentication with `vault auth enable cert`. 
+      * Set the `lua_ssl_trusted_certificate` parameter in `kong.conf` to use the certificate that is served from HashiCorp Vault. 
+      * Configure a Vault entity in {{site.base_gateway}}, using the initial root token for your `config.token`, set the `config.auth_method` to `cert`, and set `config.cert_auth_cert_key` and `config.cert_auth_cert`. 
 
 tools:
     - deck
@@ -267,37 +272,37 @@ Now, you can configure HashiCorp Vault to use certificate-based authentication.
 
 Because the certificates in this tutorial are self-signed, we must configure the [`lua_ssl_trusted_certificate` parameter](/gateway/configuration/#lua-ssl-trusted-certificate) in `kong.conf` to use the certificate that is served from HashiCorp Vault, `vault.crt`.
 
-In terminal, copy your `vault.crt` file to your Docker container:
-```
-docker cp ./vault/certs/vault.crt kong-quickstart-gateway:./vault.crt
-```
+1. In terminal, copy your `vault.crt` file to your Docker container:
+    ```sh
+    docker cp ./vault/certs/vault.crt kong-quickstart-gateway:./vault.crt
+    ```
 
-In your Docker container, make a copy of the default Kong configuration file:
-```
-cp /etc/kong/kong.conf.default /etc/kong/kong.conf
-```
+1. In your Docker container, make a copy of the default Kong configuration file:
+    ```sh
+    cp /etc/kong/kong.conf.default /etc/kong/kong.conf
+    ```
 
-Open `kong.conf` in your Docker container, find `lua_ssl_trusted_certificate`, uncomment it and replace it with the following:
-```
-lua_ssl_trusted_certificate = ./vault.crt
-```
+1. Open `kong.conf` in your Docker container, find `lua_ssl_trusted_certificate`, uncomment it and replace it with the following:
+    ```
+    lua_ssl_trusted_certificate = ./vault.crt
+    ```
 
-Reload {{site.base_gateway}} in your Docker container to get the setting to take effect:
-```
-kong reload -c /etc/kong/kong.conf
-```
+1. Reload {{site.base_gateway}} in your Docker container to get the setting to take effect:
+    ```sh
+    kong reload -c /etc/kong/kong.conf
+    ```
 
 ## Set environment variables
 
 Export the following environment variables:
 
-```
+```sh
 export DECK_HCV_HOST=host.docker.internal
 export DECK_HCV_CERT_KEY=$(awk 'NR > 1 {printf "\\n"} {printf "%s", $0} END {printf ""}' ./vault/certs/kong.example.com.key)
 export DECK_HCV_CERT=$(awk 'NR > 1 {printf "\\n"} {printf "%s", $0} END {printf ""}' ./vault/certs/kong.example.com.crt)
 ```
 
-In this tutorial, we’re using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault is using. This is because if you used the quick-start script, {{site.base_gateway}} is running in a container and uses a different `localhost`.
+In this tutorial, we’re using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault is using. This is because if you used the quickstart script, {{site.base_gateway}} is running in a container and uses a different `localhost`.
 
 ## Create a Vault entity for HashiCorp Vault 
 
