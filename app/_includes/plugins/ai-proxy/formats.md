@@ -574,7 +574,7 @@ When [`config.llm_format`](./reference/#schema--config-llm-format) is set to `co
 When `llm_format` is set to `"huggingface"`, only the Hugging Face provider is supported. The following Hugging Face APIs are supported:
 
 * `/generate`
-* `/generate-stream`
+* `/generate_stream`
 
 {% endnavtab %}
 
