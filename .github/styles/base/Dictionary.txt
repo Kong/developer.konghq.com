@@ -9,6 +9,7 @@ addons
 admin_listen
 admin's
 admin's
+agentic
 Alertmanager
 allow_terminated
 allowlist

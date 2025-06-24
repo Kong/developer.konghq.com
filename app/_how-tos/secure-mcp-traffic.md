@@ -40,7 +40,7 @@ tldr:
     Enable the Key Authentication plugin on your MCP service and require API keys from Consumers. Kong AI Gateway then enforces these keys on all incoming MCP requests, ensuring secure, authorized access.
 
     {:.info}
-    > For further authentication of your MCP traffic you can also use [The OpenID Connect](https://developer.konghq.com/plugins/openid-connect/) (OIDC) plugin lets you integrate Kong Gateway with an identity provider (IdP), or you can extend plugins to support fine-grained Authorization models via JWT claims or declarative [Access Control Lists](https://developer.konghq.com/plugins/acl/) (ACLs)
+    > For further authentication of your MCP traffic you can also use [The OpenID Connect](/plugins/openid-connect/) (OIDC) plugin lets you integrate Kong Gateway with an identity provider (IdP), or you can extend plugins to support fine-grained Authorization models via JWT claims or declarative [Access Control Lists](/plugins/acl/) (ACLs)
 
 
 tools:
@@ -88,18 +88,19 @@ Using OpenAI’s `/responses` endpoint with Kong AI Gateway simplifies integrati
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-proxy
+    - name: ai-proxy-advanced
       config:
-        route_type: llm/v1/responses
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${openai_api_key}
-        model:
-          provider: openai
-          name: gpt-4o
-          options:
-            max_tokens: 512
-            temperature: 1.0
+        targets:
+          - route_type: llm/v1/chat
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${openai_api_key}
+            model:
+              provider: openai
+              name: gpt-4o
+              options:
+                max_tokens: 512
+                temperature: 1.0
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY

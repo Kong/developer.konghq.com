@@ -155,11 +155,11 @@ rows:
       - type: card
         config:
           icon: /assets/icons/rocket.svg
-          title: Use Kong Konnect MCP Server
+          title: Use {{site.konnect_product_name}} MCP Server
           description: |
-            Follow the tutorials below to get started with Kong Konnect MCP Server using GitHub setup or Docker deployment, plus explore available tools.
+            Follow the tutorials below to get started with {{site.konnect_product_name}} MCP Server using GitHub setup or Docker deployment, plus explore available tools.
           ctas:
-            - text: Get started with Kong Konnect MCP Server
+            - text: Get started with {{site.konnect_product_name}} MCP Server
               url: "/mcp/get-started"
             - text: Get started with Kong MCP server using Docker
               url: "https://hub.docker.com/r/mcp/kong"
