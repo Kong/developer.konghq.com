@@ -14,6 +14,15 @@
 
 The plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-type) should be set based on the target upstream endpoint and model, based on this capability matrix:
 
+{:.warning}
+> The following requirements are enforced by upstream providers:
+>
+> - For **Azure Responses API**, set `config.azure_api_version` to `"preview"`.
+> - For **OpenAI** and **Azure Realtime APIs**, include the header `OpenAI-Beta: realtime=v1`.
+> - Only **WebSocket** is supported—**WebRTC is not supported**.
+> - For **OpenAI** and **Azure Assistant APIs**, include the header `OpenAI-Beta: assistants=v2`.
+> - For requests with large payloads (e.g., image edits, audio transcription/translation), consider increasing `config.max_request_body_size` to **three times the raw binary size**.
+
 {% include plugins/ai-proxy/grouped-upstreams.md %}
 
 The following upstream URL patterns are used:
@@ -35,7 +44,11 @@ The following upstream URL patterns are used:
 
 The Kong AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples:
 
-{% navtabs "ai-proxy-route-type" %}
+#### Text generation inputs
+
+The following examples show standardized text-based request formats for each supported `llm/v1/*` route. These formats are normalized across providers to help simplify downstream parsing and integration.
+
+{% navtabs "text-generation" %}
 {% navtab "llm/v1/chat" %}
 ```json
 {
@@ -84,6 +97,17 @@ The Kong AI Proxy accepts the following inputs formats, standardized across all 
 ```
 {% endnavtab %}
 
+{% navtab "llm/v1/embeddings" %}
+Supported in: {% new_in 3.11 %}
+```json
+  {
+    "input": "The food was delicious and the waiter...",
+    "model": "text-embedding-ada-002",
+    "encoding_format": "float"
+  }
+```
+{% endnavtab %}
+
 {% navtab "llm/v1/files" %}
 Supported in: {% new_in 3.11 %}
 ```json
@@ -91,17 +115,6 @@ curl http://localhost:8000 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -F purpose="fine-tune" \
   -F file="@mydata.jsonl"
-```
-{% endnavtab %}
-
-{% navtab "llm/v1/batches" %}
-Supported in: {% new_in 3.11 %}
-```json
-{
-    "input_file_id": "file-abc123",
-    "endpoint": "/v1/chat/completions",
-    "completion_window": "24h"
-}
 ```
 {% endnavtab %}
 
@@ -117,41 +130,14 @@ Supported in: {% new_in 3.11 %}
 ```
 {% endnavtab %}
 
-{% navtab "llm/v1/audio/speech" %}
-Supported in: {% new_in 3.11 %}
-```json
-curl http://localhost:8000 \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "input": "The quick brown fox jumped over the lazy dog.",
-    "voice": "alloy"
-  }' \
-  --output speech.mp3
-```
-{% endnavtab %}
-
-{% navtab "llm/v1/images/generations" %}
+{% navtab "llm/v1/batches" %}
 Supported in: {% new_in 3.11 %}
 ```json
 {
-    "prompt": "A cute baby sea otter",
-    "n": 1,
-    "size": "1024x1024"
+    "input_file_id": "file-abc123",
+    "endpoint": "/v1/chat/completions",
+    "completion_window": "24h"
 }
-
-```
-
-{% endnavtab %}
-
-{% navtab "llm/v1/embeddings" %}
-Supported in: {% new_in 3.11 %}
-```json
-  {
-    "input": "The food was delicious and the waiter...",
-    "model": "text-embedding-ada-002",
-    "encoding_format": "float"
-  }
 ```
 {% endnavtab %}
 
@@ -170,9 +156,101 @@ Supported in: {% new_in 3.11 %}
 
 {% endnavtabs %}
 
+
+#### Audio, image and realtime generation inputs
+
+The following examples show standardized audio, image and realtime request formats for each supported route. These formats are normalized across providers to help simplify downstream parsing and integration.
+
+{% navtabs "audio-image" %}
+
+{% navtab "audio/v1/audio/speech" %}
+Supported in: {% new_in 3.11 %}
+```json
+curl http://localhost:8000 \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": "The quick brown fox jumped over the lazy dog.",
+    "voice": "alloy"
+  }' \
+  --output speech.mp3
+```
+{% endnavtab %}
+
+{% navtab "audio/v1/audio/transcriptions" %}
+Supported in: {% new_in 3.11 %}
+```json
+curl http://localhost:8000/ \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F file="@/path/to/file/audio.mp3" \
+  -F model="gpt-4o-transcribe"
+```
+
+{% endnavtab %}
+
+{% navtab "audio/v1/audio/translations" %}
+Supported in: {% new_in 3.11 %}
+curl http://localhost:8000/ \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F file="@/path/to/file/german.m4a" \
+  -F model="whisper-1"
+
+{% endnavtab %}
+
+{% navtab "image/v1/images/generations" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "prompt": "A cute baby sea otter",
+  "n": 1,
+  "size": "1024x1024"
+}
+```
+
+{% endnavtab %}
+
+{% navtab "image/v1/images/edits" %}
+Supported in: {% new_in 3.11 %}
+```json
+curl -s -D >(grep -i x-request-id >&2) \
+  -o >(jq -r '.data[0].b64_json' | base64 --decode > gift-basket.png) \
+  -X POST "https://api.openai.com/v1/images/edits" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -F "model=gpt-image-1" \
+  -F "image[]=@body-lotion.png" \
+  -F "image[]=@bath-bomb.png" \
+  -F "image[]=@incense-kit.png" \
+  -F "image[]=@soap.png" \
+  -F 'prompt=Create a lovely gift basket with these four items in it'
+
+```
+
+{% endnavtab %}
+
+{% navtab "realtime/v1/realtime" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "system", "content": "You are a helpful assistant." },
+    { "role": "user", "content": "Explain how rainbows form." }
+  ]
+}
+```
+
+{% endnavtab %}
+
+{% endnavtabs %}
+
 ### Response formats
 
 Conversely, the response formats are also transformed to a standard format across all providers:
+
+#### Text-based responses
+
 
 {% navtabs "ai-proxy-route-type" %}
 {% navtab "llm/v1/chat" %}
@@ -225,120 +303,6 @@ Conversely, the response formats are also transformed to a standard format acros
 ```
 {% endnavtab %}
 
-{% navtab "llm/v1/files" %}
-Supported in: {% new_in 3.11 %}
-```json
-{
-  "id": "file-abc123",
-  "object": "file",
-  "bytes": 120000,
-  "created_at": 1677610602,
-  "filename": "mydata.jsonl",
-  "purpose": "fine-tune",
-}
-```
-{% endnavtab %}
-
-{% navtab "llm/v1/batches" %}
-Supported in: {% new_in 3.11 %}
-```json
-{
-    "input_file_id": "file-abc123",
-    "endpoint": "/v1/chat/completions",
-    "completion_window": "24h"
-}
-```
-{% endnavtab %}
-Supported in: {% new_in 3.11 %}
-```json
-{
-  "id": "batch_abc123",
-  "object": "batch",
-  "endpoint": "/v1/chat/completions",
-  "errors": null,
-  "input_file_id": "file-abc123",
-  "completion_window": "24h",
-  "status": "validating",
-  "output_file_id": null,
-  "error_file_id": null,
-  "created_at": 1711471533,
-  "in_progress_at": null,
-  "expires_at": null,
-  "finalizing_at": null,
-  "completed_at": null,
-  "failed_at": null,
-  "expired_at": null,
-  "cancelling_at": null,
-  "cancelled_at": null,
-  "request_counts": {
-    "total": 0,
-    "completed": 0,
-    "failed": 0
-  },
-  "metadata": {
-    "customer_id": "user_123456789",
-    "batch_description": "Nightly eval job",
-  }
-}
-```
-{% navtab "llm/v1/assisstants" %}
-Supported in: {% new_in 3.11 %}
-```json
-{
-  "id": "asst_abc123",
-  "object": "assistant",
-  "created_at": 1698984975,
-  "name": "Math Tutor",
-  "description": null,
-  "model": "gpt-4o",
-  "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
-  "tools": [
-    {
-      "type": "code_interpreter"
-    }
-  ],
-  "metadata": {},
-  "top_p": 1.0,
-  "temperature": 1.0,
-  "response_format": "auto"
-}
-```
-
-{% endnavtab %}
-
-{% navtab "llm/v1/audio/file/speech" %}
-
-Supported in: {% new_in 3.11 %}
-
-The response contains the audio file content of `speech.mp3`.
-
-{% endnavtab %}
-
-{% navtab "llm/v1/images/generations" %}
-Supported in: {% new_in 3.11 %}
-```json
-  {
-  "created": 1713833628,
-  "data": [
-    {
-      "b64_json": "..."
-    }
-  ],
-  "usage": {
-    "total_tokens": 100,
-    "input_tokens": 50,
-    "output_tokens": 50,
-    "input_tokens_details": {
-      "text_tokens": 10,
-      "image_tokens": 40
-    }
-  }
-}
-
-```
-
-{% endnavtab %}
-
 {% navtab "llm/v1/embeddings" %}
 Supported in: {% new_in 3.11 %}
 ```json
@@ -363,6 +327,56 @@ Supported in: {% new_in 3.11 %}
   }
 }
 ```
+{% endnavtab %}
+
+{% navtab "llm/v1/files" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "id": "file-abc123",
+  "object": "file",
+  "bytes": 120000,
+  "created_at": 1677610602,
+  "filename": "mydata.jsonl",
+  "purpose": "fine-tune",
+}
+```
+{% endnavtab %}
+
+{% navtab "llm/v1/batches" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+    "input_file_id": "file-abc123",
+    "endpoint": "/v1/chat/completions",
+    "completion_window": "24h"
+}
+```
+{% endnavtab %}
+
+{% navtab "llm/v1/assisstants" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "id": "asst_abc123",
+  "object": "assistant",
+  "created_at": 1698984975,
+  "name": "Math Tutor",
+  "description": null,
+  "model": "gpt-4o",
+  "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
+  "tools": [
+    {
+      "type": "code_interpreter"
+    }
+  ],
+  "metadata": {},
+  "top_p": 1.0,
+  "temperature": 1.0,
+  "response_format": "auto"
+}
+```
+
 {% endnavtab %}
 
 {% navtab "llm/v1/responses" %}
@@ -427,7 +441,101 @@ Supported in: {% new_in 3.11 %}
 ```
 
 {% endnavtab %}
+{% endnavtabs %}
 
+#### Image, audio and realtime responses
+
+The following examples show standardized response formats returned by supported `audio/`, `image/`, and `/realtime` routes. These formats are normalized across providers to support consistent multimodal output parsing.
+
+{% navtabs "responses-audio-image-realtime" %}
+
+{% navtab "llm/v1/audio/file/speech" %}
+
+Supported in: {% new_in 3.11 %}
+
+The response contains the audio file content of `speech.mp3`.
+
+{% endnavtab %}
+
+{% navtab "audio/v1/audio/transcriptions" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "text": "Imagine the wildest idea that you've ever had, and you're curious about how it might scale to something that's a 100, a 1,000 times bigger. This is a place where you can get to do that.",
+  "usage": {
+    "type": "tokens",
+    "input_tokens": 14,
+    "input_token_details": {
+      "text_tokens": 0,
+      "audio_tokens": 14
+    },
+    "output_tokens": 45,
+    "total_tokens": 59
+  }
+}
+```
+{% endnavtab %}
+
+{% navtab "audio/v1/audio/translations" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "text": "Hello, my name is Wolfgang and I come from Germany. Where are you heading today?"
+}
+```
+{% endnavtab %}
+
+{% navtab "image/v1/images/generations" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "created": 1713833628,
+  "data": [
+    {
+      "b64_json": "..."
+    }
+  ],
+  "usage": {
+    "total_tokens": 100,
+    "input_tokens": 50,
+    "output_tokens": 50,
+    "input_tokens_details": {
+      "text_tokens": 10,
+      "image_tokens": 40
+    }
+  }
+}
+```
+{% endnavtab %}
+
+{% navtab "image/v1/images/edit" %}
+Supported in: {% new_in 3.11 %}
+```json
+{
+  "created": 1713833628,
+  "data": [
+    {
+      "b64_json": "..."
+    }
+  ],
+  "usage": {
+    "total_tokens": 100,
+    "input_tokens": 50,
+    "output_tokens": 50,
+    "input_tokens_details": {
+      "text_tokens": 10,
+      "image_tokens": 40
+    }
+  }
+}
+```
+{% endnavtab %}
+
+{% navtab "realtime/v1/realtime" %}
+```json
+{ "type": "message_fragment", "content": "Rainbows form when light is refracted, reflected, and dispersed in water droplets." }
+```
+{% endnavtab %}
 {% endnavtabs %}
 
 The request and response formats are loosely modeled after OpenAI’s API. For detailed format specifications, see the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml).
