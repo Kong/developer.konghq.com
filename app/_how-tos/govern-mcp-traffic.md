@@ -99,8 +99,8 @@ entities:
               header_name: Authorization
               header_value: Bearer ${openai_api_key}
             logging:
-              log_payloads: true
-              log_statistics: true
+              log_payloads: false
+              log_statistics: false
             weight: 50
           - model:
               provider: openai
@@ -113,8 +113,8 @@ entities:
               header_name: Authorization
               header_value: Bearer ${openai_api_key}
             logging:
-              log_payloads: true
-              log_statistics: true
+              log_payloads: false
+              log_statistics: false
             weight: 50
 variables:
   openai_api_key:
