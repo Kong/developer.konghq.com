@@ -345,22 +345,22 @@ columns:
   - title: Description
     key: description
 rows:
-  - node: request
+  - node: "`request`"
     inputs: none
     outputs: "`body`, `headers`, `query`"
-    description: The incoming request
+    description: Reads incoming client request properties
   - node: "`service_request`"
     inputs: "`body`, `headers`, `query`"
     outputs: none
-    description: Request sent to the service being proxied to
+    description: Updates properties of the request sent to the service being proxied to
   - node: "`service_response`"
     inputs: none
     outputs: "`body`, `headers`"
-    description: Response sent by the service being proxied to
+    description: Reads response properties from the service being proxied to
   - node: "`response`"
     inputs: "`body`, `headers`"
     outputs: none
-    description: Response to be sent to the incoming request
+    description: Updates properties of the outgoing client response
 {% endtable %}
 <!--vale off-->
 
