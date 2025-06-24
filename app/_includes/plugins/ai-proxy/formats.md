@@ -467,7 +467,7 @@ The response contains the audio file content of `speech.mp3`.
 Supported in: {% new_in 3.11 %}
 ```json
 {
-  "text": "Imagine the wildest idea that you've ever had, and you're curious about how it might scale to something that's a 100, a 1,000 times bigger. This is a place where you can get to do that.",
+  "text": "Imagine the wildest idea that you've ever had, and you're curious about how it might scale to something that's a 100 or a 1,000 times bigger. This is a place where you can get to do that.",
   "usage": {
     "type": "tokens",
     "input_tokens": 14,
