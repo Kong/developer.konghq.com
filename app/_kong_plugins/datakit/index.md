@@ -899,7 +899,7 @@ rows:
 ### `static` node
 
 Emits static values to be used as inputs for other nodes. If you are wondering
-"how do I hardcode some known value for an input?" then the static node is for
+"how do I hard-code some known value for an input?" then the static node is for
 you.
 
 #### Inputs
@@ -1031,6 +1031,6 @@ Datakit includes support for debugging your configuration using execution tracin
 By setting the `X-DataKit-Debug-Trace` header, Datakit records the execution flow and the values of intermediate nodes, 
 reporting the output in the request body in JSON format.
 
-If the debug header value is set to `0`, `false`, or `off`, this is equivalent to unsetting the debug header. 
+If the debug header value is set to `0`, `false`, or `off`, this is equivalent to un-setting the debug header. 
 In this case, tracing won't happen and execution will run as normal. 
 Any other value will enable debug tracing.
