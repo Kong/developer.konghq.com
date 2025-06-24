@@ -609,6 +609,52 @@ configurations to avoid this case:
 
 * `jq`: the jq script to execute when the node is triggered.
 
+
+#### A word of warning: handling HTTP headers in jq
+
+In order to enable a high level of transparency and compatibility when
+communicating with external services, `headers` outputs in Datakit always
+preserve the original case of header names. While HTTP-centric nodes within
+Datakit are careful to account for this and perform header lookups and
+transformations in a case-insensitive manner, `jq` at its core is a library for
+operating upon JSON data, and JSON object keys are strictly case-sensitive.
+
+It is imperative to be mindful of this fact when handling headers in a `jq`
+filter. Failure to do so can result in buggy, error-prone behavior. Example:
+
+```yaml
+# adds the `X-Extra` header to the service request if not set by the client
+- name: ADD_HEADERS
+  type: jq
+  input: request.headers
+  output: service_request.headers
+  jq: |
+    {
+      "X-Extra": ( .["X-Extra"] // "default value" ),
+    }
+```
+
+This filter will function correctly if the client sets the `X-Extra` header or
+omits it entirely, but it will not have the intended effect if the client sets
+the header `X-EXTRA` or `x-extra`.
+
+Thankfully, `jq` is powerful enough to let us write a robust filter that handles
+this condition. This implementation normalizes header names to lowercase before
+looking up values from the input:
+
+```yaml
+# adds the `X-Extra` header to the service request if not set by the client
+- name: ADD_HEADERS
+  type: jq
+  input: request.headers
+  output: service_request.headers
+  jq: |
+    with_entries(.key |= ascii_downcase)
+    | {
+        "X-Extra": ( .["x-extra"] // "default value" ),
+    }
+```
+
 #### Examples
 
 Coerece the client request body to an object:
