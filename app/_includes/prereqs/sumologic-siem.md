@@ -3,7 +3,7 @@ To use the audit log webhook, you need a configured SIEM provider. In this tutor
 Before you can push audit logs to your SIEM provider, configure the service to receive logs. 
 This configuration is specific to your vendor.
 
-1. In SumoLogic, [configure an HTTPS data collection endpoint](https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source) you can send CEF or raw JSON data logs to. {{site.konnect_short_name}} supports any HTTP authorization header type. 
+1. In SumoLogic, [configure an HTTPS data collection endpoint](https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source) you can send CEF or raw JSON data logs to. {{site.konnect_short_name}} supports any HTTP authorization header type. In this example, we'll name the source `Konnect`.
 1. Copy and export the endpoint URL:
    ```sh
    export SIEM_ENDPOINT='YOUR-SIEM-HTTP-ENDPOINT'
