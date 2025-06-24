@@ -9,7 +9,7 @@ related_resources:
   - text: Key Auth plugin
     url: /plugins/key-auth/
 
-description: Learn how to gover MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and AI Prompt Guard plugins
+description: Learn how to govern MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and AI Prompt Guard plugins
 
 products:
   - gateway
@@ -200,6 +200,8 @@ entities:
 
 {% navtabs "Allowed MCP calls"%}
 {% navtab "Create an issue"%}
+
+<!-- vale off -->
 {% validation request-check %}
 url: /anything/v1/responses
 headers:
@@ -222,11 +224,13 @@ message: >
   The issue has been successfully created in the repository YOUR_REPOSITORY. Title Example Issue Kong Title
   Description: This is the description of the issue created via MCP. If you need further assistance, feel free to ask!
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab%}
 
 {% navtab "Create a branch" %}
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything/v1/responses
 headers:
@@ -247,10 +251,12 @@ status_code: 200
 message: >
   The branch "test-branch" has been successfully created from the "main" branch in the repository "YOUR_REPOSITORY". You can view it [here](https://api.github.com/repos/<path_to_your_repository>/git/refs/heads/test-branch).
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% navtab "Inspect branches" %}
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything/v1/responses
 headers:
@@ -270,6 +276,7 @@ body:
 status_code: 200
 message: The repository YOUR_REPOSITORY_NAME has {n} active branches.
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -281,6 +288,8 @@ Each input below matches a deny pattern like `.*(backdoor|exfiltrate|CVE-\d{4}-\
 {% navtabs "Denied requests" %}
 
 {% navtab "Backdoor exploit attempt" %}
+
+<!-- vale off -->
 {% validation request-check %}
 url: /anything/v1/responses
 headers:
@@ -300,9 +309,13 @@ body:
 status_code: 400
 message: Bad request
 {% endvalidation %}
+<!-- vale off -->
+
 {% endnavtab %}
 
 {% navtab "Data exfiltration" %}
+
+<!-- vale off -->
 {% validation request-check %}
 url: /anything/v1/responses
 headers:
@@ -322,9 +335,13 @@ body:
 status_code: 400
 message: Bad request
 {% endvalidation %}
+<!-- vale on -->
+
 {% endnavtab %}
 
 {% navtab "Exploit CVE" %}
+
+<!-- vale off -->
 {% validation request-check %}
 url: /anything/v1/responses
 headers:
@@ -344,6 +361,8 @@ body:
 status_code: 400
 message: Bad request
 {% endvalidation %}
+<!-- vale on -->
+
 {% endnavtab %}
 
 {% endnavtabs %}
