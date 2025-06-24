@@ -1,0 +1,31 @@
+name: Update mesh metadata after sync
+
+on:
+  pull_request:
+    branches:
+      - chore/docs-sync-Kong/kong-mesh
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - chore/docs-sync-Kong/kong-mesh
+
+jobs:
+  run-on-pr-or-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: chore/docs-sync-Kong/kong-mesh
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update mesh metadata
+        run: yq e '.releases[].release |= (sub("\\.x$"; "") | tostring)' -i app/_data/products/mesh.yml
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "kong-docs[bot]"
+          git config user.email "team-docs@konghq.com"
+          git add app/_data/products/mesh.yml
+          git diff --cached --quiet || git commit -m "Normalize mesh metadata."
+          git push --quiet
