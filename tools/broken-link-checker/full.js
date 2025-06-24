@@ -33,4 +33,5 @@ const argv = minimist(process.argv.slice(2));
 
   const result = await checkSite({ excluded, host });
   processResult(result);
+  process.exit(0);
 })();
