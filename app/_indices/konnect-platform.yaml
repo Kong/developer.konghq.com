@@ -7,6 +7,10 @@ sections:
       - path: /konnect-platform/network/
       - path: /konnect-platform/compatibility/
       - path: /konnect-platform/**/*
+      - path: /konnect-api/
+      - title: System accounts
+        description: Set up service accounts in {{site.konnect_short_name}} for automation and integrations.
+        url: /konnect-api/#system-accounts-and-access-tokens
     auto_exclude: true
 
   - title: Platform Auth
@@ -15,6 +19,9 @@ sections:
       - path: /konnect-platform/teams-and-roles/
       - path: /konnect-platform/saml-idp-mapping/
       - path: /konnect-platform/sso/
+      - title: API authentication
+        description: Use access tokens to access the Konnect APIs.
+        url: /konnect-api/#konnect-api-authentication
   
   - title: Auditing
     items:

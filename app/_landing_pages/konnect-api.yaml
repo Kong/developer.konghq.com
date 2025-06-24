@@ -68,8 +68,11 @@ rows:
     - blocks:
         - type: text
           config: |
-            The recommended method of authentication for {{site.konnect_short_name}} is the Personal Access Token (PAT), which can be obtained from the [personal access token page](https://cloud.konghq.com/global/account/tokens) in {{site.konnect_short_name}}. 
-            You can also use the Identity API to generate [system account access tokens](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens).
+            The recommended method of authentication for {{site.konnect_short_name}} is an access token.
+            There are two types of access tokens available for {{site.konnect_short_name}}:
+            * Personal access tokens associated with user accounts, generated using the [personal access token page](https://cloud.konghq.com/global/account/tokens) in {{site.konnect_short_name}}.
+            * System account access tokens associated with system accounts, generated using the [system accounts page](https://cloud.konghq.com/global/organization/system-accounts/) 
+            or the [Identity API](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens)
 
             The access token must be passed in the `Authorization` header of all requests, for example: 
 
@@ -77,12 +80,67 @@ rows:
             curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT'
             ```
 
-            Before you generate a PAT, keep the following in mind:
-
+  - header:
+    columns:
+      - header:
+          type: h3
+          text: "Personal access tokens"
+        blocks:
+        - type: text
+          config: |
+            Personal access tokens (PATs) let you access the Konnect API and CLIs as your personal user account. 
+            They are useful for admin tasks, and are the most commonly used and recommended token type.
+            
+            When using a PAT, be aware of the following:
+            
             * A PAT is granted all of the permissions that the user has access to via their most up-to-date role assignment.
             * The PAT has a maximum duration of 12 months.
             * There is a limit of 10 personal access tokens per user.
             * Unused tokens are deleted and revoked after 12 months of inactivity.
+      - header:
+          type: h3
+          text: "System accounts and access tokens"
+        blocks:
+        - type: text
+          config: |
+            A system account is a service account in {{site.konnect_short_name}}, meant to be used for automation and integrations:
+            
+            * System accounts are intended to be used with APIs and CLIs. 
+            They don't have sign-in credentials and can't access the {{site.konnect_short_name}} UI. 
+            * System accounts are not associated with an email address, so they aren't attached to any person's identity.
+            * When you use a user account as part of an automation or integration and that user leaves the company, automation and integrations break. 
+            If you use a system account instead, the automation and integrations wouldn't break.
+
+            An access token created by a system account inherits the roles assigned to the system account, 
+            and can be assigned roles directly or inherit the roles of a [team](/konnect-platform/teams-and-roles/).
+    
+      - header:
+          type: h3
+          text: "Managed system accounts"
+        blocks:
+        - type: text
+          config: |
+            Managed system accounts, denoted by `konnect_managed:true` in the Identity API, are system accounts whose lifecycle is managed by {{site.konnect_short_name}} instead of the user. 
+
+            [Mesh Manager](/mesh-manager/) automatically creates a managed system account that is only used to issue a token during the zone creation process. 
+            This managed system account can't be edited or deleted manually. 
+            Instead, it is deleted automatically by {{site.konnect_short_name}} when the zone is deleted.
+    
+  - header:
+        type: h3
+        text: "Access token expiration"
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            When a token is about to expire, a notification email is sent to all users who have the `create` permission for tokens in the org.
+            By default, the following notifications are sent:
+          
+            * **Expiring**: Reminders are sent 14 days, 7 days, and 1 day before the token expiration date.
+            * **Expired**: A notification is sent once the token has expired.
+
+            Each user can toggle these notifications on or off in the [org notification settings](https://cloud.konghq.com/global/notifications/configurations) for personal and system access tokens.
+            The timing and target email for the notifications can't be changed.
 
   - header:
       type: h2
