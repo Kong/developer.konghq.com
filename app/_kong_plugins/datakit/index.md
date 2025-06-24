@@ -866,11 +866,11 @@ columns:
 rows:
   - property: "`kong.service.target`"
     desc: "`kong.service.set_target({host}, {port})`"
-    type: "`string` (`{host}:{port}`)
+    type: "`string` (`{host}:{port}`)"
 
   - property: "`kong.service.request_scheme`"
     desc: "`kong.service.set_service_request_scheme({scheme})`"
-    type: "`string` (`{scheme}`)
+    type: "`string` (`{scheme}`)"
 {% endtable %}
 <!--vale on-->
 
