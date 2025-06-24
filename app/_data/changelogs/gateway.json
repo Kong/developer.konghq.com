@@ -69,6 +69,7 @@
       {
         "message": "**AI Plugins**: Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
         "type": "deprecation",
+        "plugins": ["ai-proxy", "ai-proxy-advanced", "ai-request-transformer", "ai-response-transformer"],
         "scope": "Plugin"
       },
       {
@@ -104,6 +105,7 @@
       {
         "message": "**AI Plugins**: Changed the serialized log key of AI metrics from `ai.ai-proxy` to `ai.proxy` to avoid conflicts with metrics generated from plugins other than AI Proxy and AI Proxy Advanced. If you are using logging plugins (for example, File Log, HTTP Log, etc.), you will have to update metrics pipeline configurations to reflect this change.\n",
         "type": "Breaking Change",
+        "plugins": ["ai-proxy", "ai-proxy-advanced"],
         "scope": "Plugin"
       },
       {
@@ -129,6 +131,7 @@
       {
         "message": "**AI Plugins**: Fixed an issue where AI upstream URL trailing would be empty.",
         "type": "bugfix",
+        "plugins": ["ai-proxy-advanced", "ai-proxy", "ai-rag-injector", "ai-request-transformer", "ai-response-transformer", "ai-semantic-cache", "ai-semantic-propmt-guard"],
         "scope": "Plugin"
       },
       {
@@ -194,6 +197,7 @@
       {
         "message": "**authentications**: Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
         "type": "bugfix",
+        "plugins": ["basic-auth", "hmac-auth", "jwt", "key-auth", "ldap-auth", "oauth2"],
         "scope": "Plugin"
       },
       {
@@ -301,6 +305,7 @@
       {
         "message": "**ai**: Added support for boto3 SDKs for Bedrock provider, and for Google GenAI SDKs for Gemini provider.\n",
         "type": "feature",
+        "plugins": ["ai-prompt-decorator", "ai-prompt-guard", "ai-proxy-advanced", "ai-proxy", "ai-ratel-limiting-advanced", "ai-semantic-cache", "ai-semantic-propmt-guard"],
         "scope": "Plugin"
       },
       {
@@ -376,6 +381,7 @@
       {
         "message": "**AI Plugins**: Added the `huggingface`, `azure`, `vertex`, and `bedrock` providers to embeddings. They can be used by the ai-proxy-advanced, ai-semantic-cache, ai-semantic-prompt-guard, and ai-rag-injector plugins.\n",
         "type": "feature",
+        "plugins": ["ai-proxy-advanced", "ai-semantic-cache", "ai-semantic-propmt-guard", "ai-rag-injector"],
         "scope": "Plugin"
       },
       {
@@ -396,6 +402,7 @@
       {
         "message": "**AI Plugins**: Allow authentication to Bedrock services with assume roles in AWS.\n",
         "type": "feature",
+        "plugins": ["ai-proxy-advanced", "ai-proxy", "ai-rag-injector", "ai-request-transformer", "ai-response-transformer", "ai-semantic-cache", "ai-semantic-propmt-guard"],
         "scope": "Plugin"
       },
       {
@@ -536,7 +543,12 @@
       {
         "message": "**AI Plugins**: - Fixed an issue where templates weren't being resolved correctly.\n- The plugins now support nested fields.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-rate-limiting-advanced**: `window_size` and `limit` now require an array of numbers instead of a single number.\nIf you configured the plugin before 3.10 and use `kong migrations` to upgrade to 3.10, it will be automatically migrated to use the array.\n",
@@ -898,6 +910,7 @@
       {
         "message": "Fixed an bug that AI semantic cache can't use request provided models",
         "type": "bugfix",
+        "plugins": ["ai-semantic-cache"],
         "scope": "Plugin"
       },
       {
@@ -1150,6 +1163,7 @@
       {
         "message": "Fixed an issue where the ai-semantic-cache plugin would abort in stream mode when another plugin enable the buffering proxy mode.",
         "type": "bugfix",
+        "plugins": ["ai-semantic-cache"],
         "scope": "Plugin"
       },
       {
@@ -1411,7 +1425,13 @@
       {
         "message": "AI plugins: retrieved latency data and pushed it to logs and metrics.",
         "type": "feature",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer",
+          "prometheus"
+        ]
       },
       {
         "message": "**prometheus**: Added `ai_requests_total`, `ai_cost_total` and `ai_tokens_total` metrics in the Prometheus plugin to start counting AI usage.",
@@ -1424,7 +1444,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "allow AI plugin to read request from buffered file",
+        "message": "**AI plugins**: allow AI plugin to read request from buffered file",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1436,7 +1456,12 @@
       {
         "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nall AWS Bedrock \"Converse API\" models.\n",
         "type": "feature",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**AI-proxy**: Fixed a bug where certain Azure models would return partial tokens/words \nwhen in response-streaming mode.\n",
@@ -1446,7 +1471,11 @@
       {
         "message": "**AI-Transformers**: Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
         "scope": "Plugin",
-        "type": "bugfix"
+        "type": "bugfix",
+        "plugins": [
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**AI-proxy**: Fixed a bug where Cohere and Anthropic providers don't read the `model` parameter properly \nfrom the caller's request body.\n",
@@ -1471,7 +1500,12 @@
       {
         "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nthe Google Gemini \"chat\" (generateContent) interface.\n",
         "type": "feature",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-proxy**: Allowed mistral provider to use mistral.ai managed service by omitting upstream_url",
@@ -1576,6 +1610,7 @@
       {
         "message": "Added support for json_body rename in response-transformer plugin\n",
         "type": "feature",
+        "plugins": ["response-transformer"],
         "scope": "Plugin"
       },
       {
@@ -1606,7 +1641,12 @@
       {
         "message": "Fixed certain AI plugins cannot be applied per consumer or per service.",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-prompt-template",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**AI-Prompt-Guard**: Fixed an issue when `allow_all_conversation_history` is set to false, the first user request is selected instead of the last one.",
@@ -1691,7 +1731,12 @@
       {
         "message": "**AI Plugins**: Fixed an issue for multi-modal inputs are not properly validated and calculated.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+                "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**OpenTelemetry**: Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
@@ -1953,7 +1998,12 @@
       {
         "message": "Fixed a bug where Azure Managed-Identity tokens would never rotate  \nin case of a network failure when authenticating.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-rate-limiting-advanced**: Add the stats when reaching limit and exiting AI rate Limiting plugin.",
@@ -2123,7 +2173,10 @@
       {
         "message": "Fixed a Redis schema issue where `connect_timeout`, `read_timeout`, `send_timeout` were\nreset to `null` if the deprecated `timeout` is `null`.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "rate-limiting-advanced"
+        ]
       },
       {
         "message": "License expiry warnings are no longer logged and license info is removed from /metrics in Konnect.",
@@ -2454,11 +2507,13 @@
       {
         "message": "AI Proxy now reads most prompt tuning parameters from the client,\nwhile the plugin config parameters under `model_options` are now just defaults.\nThis fixes support for using the respective provider's native SDK.\n",
         "type": "feature",
+        "plugins": ["ai-proxy"],
         "scope": "Plugin"
       },
       {
         "message": "AI Proxy now has a `preserve` option for `route_type`, where the requests and responses\nare passed directly to the upstream LLM. This is to enable compatibility with any\nand all models and SDKs that may be used when calling the AI services.\n",
         "type": "feature",
+        "plugins": ["ai-proxy"],
         "scope": "Plugin"
       },
       {
@@ -2584,11 +2639,13 @@
       {
         "message": "Addded support for EdDSA algorithms in JWT plugin\n",
         "type": "feature",
+        "plugins": ["jwt"],
         "scope": "Plugin"
       },
       {
         "message": "Added support for ES512, PS256, PS384, PS512 algorithms in JWT plugin\n",
         "type": "feature",
+        "plugins": ["jwt"],
         "scope": "Plugin"
       },
       {
@@ -2719,6 +2776,7 @@
       {
         "message": "Added WWW-Authenticate headers to all 401 responses in the Key Auth plugin.",
         "type": "bugfix",
+        "plugins": ["key-auth"],
         "scope": "Plugin"
       },
       {
@@ -2848,7 +2906,11 @@
       {
         "message": "Improve error handling in AI plugins.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-prompt-guard",
+          "ai-prompt-decorator"
+        ]
       },
       {
         "message": "Fixed an issue where the `pg_timeout` was overridden to `60s` even if `--db-timeout`\nwas not explicitly passed in CLI arguments.\n",
@@ -2910,6 +2972,7 @@
       {
         "message": "Added support for Managed Identity authentication when using the\nAzure provider with AI Proxy.\n",
         "type": "feature",
+        "plugins": ["ai-proxy"],
         "scope": "Plugin"
       },
       {
@@ -3020,6 +3083,7 @@
       {
         "message": "Degraphql plugin now uses new configure handler to update graphql router with better error handling",
         "type": "bugfix",
+        "plugins": ["degrapqhl"],
         "scope": "Plugin"
       },
       {
@@ -3080,6 +3144,7 @@
       {
         "message": "Support pseudo json value in add_claims and set_claims for JWT-Signer. We can achieve the goal of passing multiple values to a key by passing a JSON string as the value. And add add_access_token_claims, set_access_token_claims, add_channel_token_claims, set_channel_token_claims for individually adding claims to access tokens and channel tokens. Additionally, add remove_access_token_claims and remove_channel_token_claims to support the removal of claims.",
         "type": "feature",
+        "plugins": ["jwt-signer"],
         "scope": "Plugin"
       },
       {
@@ -3272,6 +3337,7 @@
       {
         "message": "Add missing WWW-Authenticate headers to 401 response in basic auth plugin.",
         "type": "bugfix",
+        "plugins": ["basic-auth"],
         "scope": "Plugin"
       },
       {
@@ -3532,7 +3598,10 @@
       {
         "message": "Expose metrics for serviceless routes",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "prometheus"
+        ]
       },
       {
         "message": "**Rate Limiting**: fix to provide better accuracy in counters when sync_rate is used with the redis policy.",
@@ -3597,6 +3666,7 @@
       {
         "message": "Tracing Sampling Rate can now be set via the `config.sampling_rate` property of the OpenTelemetry plugin instead of it just being a global setting for the gateway.\n",
         "type": "feature",
+        "plugins": ["opentelemety"],
         "scope": "Plugin"
       },
       {
@@ -3629,6 +3699,7 @@
       {
         "message": "Mark the `authorization_value` in the `oauth2-introspection` plugin as an encrypted field",
         "type": "bugfix",
+        "plugins": ["oauth2-introspection"],
         "scope": "Plugin"
       },
       {
@@ -3639,6 +3710,7 @@
       {
         "message": "Mark the `introspection_headers_values` in the `openid-connect` plugin as an encrypted and referenceable field",
         "type": "bugfix",
+        "plugins": ["openid-connect"],
         "scope": "Plugin"
       },
       {
@@ -3659,6 +3731,7 @@
       {
         "message": "Add CONTROLLER_CERTIFICATE_FILE and CONTROLLER_CERTIFICATE_DIR env config for AppDynamics plugin to use self-signed certificate",
         "type": "feature",
+        "plugins": ["app-dynamics"],
         "scope": "Plugin"
       },
       {
@@ -3739,6 +3812,7 @@
       {
         "message": "Fix typo in jwe-decrypt error message",
         "type": "bugfix",
+        "plugins": ["jwe-decrypt"],
         "scope": "Plugin"
       },
       {
@@ -3824,12 +3898,18 @@
       {
         "message": "check if `sync_rate` is `nil` when calling the RLA phase `configure()`",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "rate-limiting-advanced"
+        ]
       },
       {
         "message": "Skip sync with DB or Redis if `sync_rate` is `nil` or `null`.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "rate-limiting-advanced"
+        ]
       },
       {
         "message": "**Forward-Proxy**: Fixed the issue where request payload is being discarded when payload exceeded the `client_body_buffer_size`.",
@@ -3954,6 +4034,7 @@
       {
         "message": "Support the `tls_client_auth` and `self_signed_tls_client_auth` auth methods in the OpenID Connect plugin, allowing to do mTLS Client Authentication with the IdP.\n",
         "type": "feature",
+        "plugins": ["openid-connect"],
         "scope": "Plugin"
       },
       {
@@ -4044,6 +4125,7 @@
       {
         "message": "Provide better error messages in the route-transformer-advanced plugin",
         "type": "bugfix",
+        "plugins": ["route-transformer-advanced"],
         "scope": "Plugin"
       },
       {
@@ -4074,7 +4156,11 @@
       {
         "message": "validate private and public key for keys entity",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "acme",
+          "jwe-decrypt"
+        ]
       }
     ],
     "kong-manager-ee": [
@@ -4225,6 +4311,9 @@
         "message": "add scan_count to redis storage schema",
         "type": "feature",
         "scope": "Plugin",
+        "plugins": [
+          "acme"
+        ],
         "prs": [
           11532
         ]
@@ -4284,6 +4373,7 @@
       {
         "message": "Cache the AWS lambda service by those lambda service related fields",
         "type": "bugfix",
+        "plugins": ["aws-lambda"],
         "scope": "Plugin"
       },
       {
@@ -4433,6 +4523,7 @@
       {
         "message": "mtls-auth should not cache the network failure when doing revocation check",
         "type": "bugfix",
+        "plugins": ["mtls-auth"],
         "scope": "Plugin"
       },
       {
@@ -4443,7 +4534,10 @@
       {
         "message": "fix flooded json decoding warning logs",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "response-transformer"
+        ]
       },
       {
         "message": "Fix an issue that remove FIPS from free mode. Add a check of FIPS state and license type in validate_fips. If no license with FIPS `on` will throw an error and exit.",
@@ -4453,7 +4547,10 @@
       {
         "message": "allow the 'start' field be a past time",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "canary"
+        ]
       },
       {
         "message": "Add troubleshooting tool",
@@ -4607,6 +4704,7 @@
       {
         "message": "bump the dependency `kong-openid-connect` of oidc plugin from 2.5.5 to 2.5.7.",
         "type": "dependency",
+        "plugins": ["openid-connect"],
         "scope": "Plugin"
       },
       {
@@ -4617,7 +4715,14 @@
       {
         "message": "Enhance error responses for authentication failures in the Admin API",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "basic-auth",
+          "key-auth",
+          "ldap-auth",
+          "key-auth-enc",
+          "vault-auth"
+        ]
       },
       {
         "message": "Apply Nginx patch for detecting HTTP/2 stream reset attacks early (CVE-2023-44487)",
@@ -4673,6 +4778,7 @@
       {
         "message": "'openid-connect' plugin now supports public client",
         "type": "feature",
+        "plugins": ["openid-connect"],
         "scope": "Plugin"
       },
       {
@@ -4711,11 +4817,15 @@
         "scope": "Plugin",
         "githubs": [
           5813
+        ],
+        "plugins": [
+          "openid-connect"
         ]
       },
       {
         "message": "OpenID-Connect now support designate parameter name of token for introspection and revocation with `introspection_token_param_name` and `revocation_token_param_name` respectively.",
         "type": "feature",
+        "plugins": ["openid-connect"],
         "scope": "Plugin"
       },
       {
@@ -4770,6 +4880,7 @@
       {
         "message": "Fixed an issue where AI Proxy and AI Proxy Advanced would use corrupted plugin config.\n",
         "type": "bugfix",
+        "plugins": ["ai-proxy", "ai-proxy-advanced"],
         "scope": "Plugin"
       },
       {
@@ -4830,7 +4941,12 @@
       {
         "message": "**AI Plugins**: Fixed issue of template not being resolved correctly and supported nested fields.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "**ai-semantic-cache**: Fixed issue of SSE body may have extra trailing in some cases.\n",
@@ -4949,7 +5065,12 @@
       {
         "message": "**AI Plugins**: Reverted the analytics container key from \"proxy\" to \"ai-proxy\" to align with previous versions.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-request-transformer",
+          "ai-response-transformer"
+        ]
       },
       {
         "message": "Fixed an issue that certificate entity configured with vault reference may not get refreshed on time when initial with an invalid string.",
@@ -5282,7 +5403,10 @@
       {
         "message": "reduce upstream health iteration latency spike during scrape",
         "type": "performance",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "prometheus"
+        ]
       },
       {
         "message": "A unique Request ID is now populated in the error log, access log, error templates, log serializer, and in a new X-Kong-Request-Id header (configurable for upstream/downstream using the `headers` and `headers_upstream` configuration options). \n",
@@ -5299,6 +5423,7 @@
       {
         "message": "mtls-auth should not cache the network failure when doing revocation check",
         "type": "bugfix",
+        "plugins": ["mtls-auth"],
         "scope": "Plugin"
       },
       {
@@ -5628,6 +5753,7 @@
       {
         "message": "Fixed an bug that AI semantic cache can't use request provided models",
         "type": "bugfix",
+        "plugins": ["ai-semantic-cache"],
         "scope": "Plugin"
       },
       {
@@ -5665,6 +5791,7 @@
       {
         "message": "Fixed an issue where the ai-semantic-cache plugin would abort in stream mode when another plugin enable the buffering proxy mode.",
         "type": "bugfix",
+        "plugins": ["ai-semantic-cache"],
         "scope": "Plugin"
       },
       {
@@ -6803,6 +6930,7 @@
       {
         "message": "Mark the `introspection_headers_values` in the `openid-connect` plugin as an encrypted and referenceable field",
         "type": "bugfix",
+        "plugins": ["openid-connect"],
         "scope": "Plugin"
       },
       {
@@ -7135,6 +7263,7 @@
       {
         "message": "Mark the `authorization_value` in the `oauth2-introspection` plugin as an encrypted field",
         "type": "bugfix",
+        "plugins": ["oauth2-introspection"],
         "scope": "Plugin"
       },
       {
@@ -7155,6 +7284,7 @@
       {
         "message": "Fix typo in jwe-decrypt error message",
         "type": "bugfix",
+        "plugins": ["jwe-decrypt"],
         "scope": "Plugin"
       },
       {
@@ -7859,6 +7989,7 @@
       {
         "message": "Mark the `introspection_headers_values` in the `openid-connect` plugin as an encrypted and referenceable field",
         "type": "bugfix",
+        "plugins": ["openid-connect"],
         "scope": "Plugin"
       },
       {
@@ -8072,6 +8203,7 @@
       {
         "message": "Add CONTROLLER_CERTIFICATE_FILE and CONTROLLER_CERTIFICATE_DIR env config for AppDynamics plugin to use self-signed certificate",
         "type": "feature",
+        "plugins": ["app-dynamics"],
         "scope": "Plugin"
       },
       {
@@ -8179,11 +8311,13 @@
       {
         "message": "the AWS-Lambda plugin has been refactored by using `lua-resty-aws` as an underlying AWS library. The refactor simplifies the AWS-Lambda plugin code base and adding support for multiple IAM authenticating scenarios.",
         "type": "feature",
+        "plugins": ["aws-lambda"],
         "scope": "Plugin"
       },
       {
         "message": "Cache the AWS lambda service by those lambda service related fields",
         "type": "bugfix",
+        "plugins": ["aws-lambda"],
         "scope": "Plugin"
       },
       {
@@ -8276,6 +8410,7 @@
       {
         "message": "Mark the `authorization_value` in the `oauth2-introspection` plugin as an encrypted field",
         "type": "bugfix",
+        "plugins": ["oauth2-introspection"],
         "scope": "Plugin"
       },
       {
@@ -8316,6 +8451,7 @@
       {
         "message": "Fix typo in jwe-decrypt error message",
         "type": "bugfix",
+        "plugins": ["jwe-decrypt"],
         "scope": "Plugin"
       },
       {
@@ -8404,6 +8540,9 @@
         "scope": "Plugin",
         "githubs": [
           7390
+        ],
+        "plugins": [
+          "openid-connect"
         ]
       },
       {
@@ -8647,12 +8786,16 @@
       {
         "message": "mtls-auth should not cache the network failure when doing revocation check",
         "type": "bugfix",
+        "plugins": ["mtls-auth"],
         "scope": "Plugin"
       },
       {
         "message": "allow the 'start' field be a past time",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "canary"
+        ]
       },
       {
         "message": "**SAML**: When the redis session storage is incorrectly configured, users now receive a 500 error instead of being redirected endlessly",
@@ -9617,6 +9760,7 @@
       {
         "message": "New plugins:\n- **OpenTelemetry**: Export tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n- **TLS Handshake Modifier**: Make certificates available to other plugins acting on the same request.\n- **TLS Metadata Headers**: Proxy TLS client certificate metadata to upstream services via an HTTP headers.\n- **WebSocket Size Limit**: Allows operators to specify a maximum size for incoming WebSocket messages.\n- **WebSocket Validator**: Validate individual WebSocket messages against a user-specified schema before proxying them.",
         "type": "feature",
+        "plugins": ["opentelemety", "tls-handshake-modifier", "tls-metadata-headers", "websocket-size-limit", "websocket-validator"],
         "scope": "Plugin"
       },
       {
@@ -10167,6 +10311,7 @@
       {
         "message": "**Deprecated** : The StatsD Advanced plugin has been deprecated and will be removed in 4.0. All capabilities are now available in the [StatsD](/plugins/statsd/) plugin.",
         "type": "breaking_change",
+        "plugins": ["statsd"],
         "scope": "Plugin"
       },
       {
@@ -11804,6 +11949,7 @@
       {
         "message": "Fixed an issue with the Oauth 2.0 Introspection plugin where a request with JSON that is not a table failed.: ",
         "type": "bugfix",
+        "plugins": ["oauth2-introspection"],
         "scope": "Plugin"
       },
       {
@@ -12128,12 +12274,7 @@
         "scope": "Core"
       },
       {
-        "message": "Validation for plugin queue related parameters has been improved. [#10840](https: `max_batch_size`, `max_entries`, and `max_bytes` are now declared as `integer` not `number`.",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "Validation for plugin queue related parameters has been improved. [#10840](https: `initial_retry_delay` and `max_retry_delay` must now be numbers greater than 0.001 (in seconds).",
+        "message": "Validation for plugin queue related parameters has been improved.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -12566,6 +12707,7 @@
       {
         "message": "Fixed an issue with the Oauth 2.0 Introspection plugin where a request with JSON that is not a table failed.: ",
         "type": "bugfix",
+        "plugins": ["oauth2-introspection"],
         "scope": "Plugin"
       },
       {
@@ -13126,6 +13268,7 @@
       {
         "message": "Plugin batch queuing: [HTTP Log](/plugins/http-log/), [StatsD](/plugins/statsd/), [OpenTelemetry](/plugins/opentelemetry/), and [Datadog](/plugins/datadog/) \n\nThe queuing system has been reworked, causing some plugin parameters to not function as expected anymore. If you use queues in these plugins, new parameters must be configured. See each plugin’s documentation for details.",
         "type": "breaking_change",
+        "plugins": ["http-log", "statsd", "opentelemety", "datadog"],
         "scope": "Plugin"
       },
       {
@@ -13821,36 +13964,43 @@
       {
         "message": "WebSocket service/route support was added for logging plugins: http-log",
         "type": "feature",
+        "plugins": ["http-log"],
         "scope": "Plugin"
       },
       {
         "message": "WebSocket service/route support was added for logging plugins: file-log",
         "type": "feature",
+        "plugins": ["file-log"],
         "scope": "Plugin"
       },
       {
         "message": "WebSocket service/route support was added for logging plugins: udp-log",
         "type": "feature",
+        "plugins": ["udp-log"],
         "scope": "Plugin"
       },
       {
         "message": "WebSocket service/route support was added for logging plugins: tcp-log",
         "type": "feature",
+        "plugins": ["tcp-log"],
         "scope": "Plugin"
       },
       {
         "message": "WebSocket service/route support was added for logging plugins: loggly",
         "type": "feature",
+        "plugins": ["loggly"],
         "scope": "Plugin"
       },
       {
         "message": "WebSocket service/route support was added for logging plugins: syslog",
         "type": "feature",
+        "plugins": ["syslog"],
         "scope": "Plugin"
       },
       {
         "message": "WebSocket service/route support was added for logging plugins: kafka-log",
         "type": "feature",
+        "plugins": ["kafka-log"],
         "scope": "Plugin"
       },
       {

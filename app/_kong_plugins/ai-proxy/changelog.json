@@ -1,0 +1,376 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Changed the serialized log key of AI metrics from `ai.ai-proxy` to `ai.proxy` to avoid conflicts with metrics generated from plugins other than AI Proxy and AI Proxy Advanced. If you are using logging plugins (for example, File Log, HTTP Log, etc.), you will have to update metrics pipeline configurations to reflect this change.\n",
+      "type": "Breaking Change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug in the Azure provider where `model.options.upstream_path` overrides would always return a 404 response.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where Azure streaming responses would be missing individual tokens.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where response streaming in Gemini and Bedrock providers was returning whole chat responses in one chunk.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug with the Gemini provider, where multimodal requests (in OpenAI format) would not transform properly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI upstream URL trailing would be empty.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for boto3 SDKs for Bedrock provider, and for Google GenAI SDKs for Gemini provider.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allow authentication to Bedrock services with assume roles in AWS.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini streaming responses were getting truncated and/or missing tokens.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an incorrect error thrown when trying to log streaming responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "- Fixed an issue where templates weren't being resolved correctly.\n- The plugins now support nested fields.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed tool calls not working in streaming mode for Bedrock and Gemini providers.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed preserve mode.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Some active tracing latency values are incorrectly reported as having zero length when using the AI Proxy plugin.\n",
+      "type": "known-issues",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.1": [
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced would use corrupted plugin config.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.1": [
+    {
+      "message": "Fixed issue of template not being resolved correctly and supported nested fields.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed preserve mode.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.0": [
+    {
+      "message": "Fixed Gemini streaming responses getting truncated and/or missing tokens.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed incorrect error thrown when trying to log streaming responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed tool calls not working in streaming mode for Bedrock and Gemini providers.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "Fixed a bug where tools (function) calls to Anthropic would return empty results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where tools (function) calls to Bedrock would return empty results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where Bedrock Guardrail config was ignored.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where tools (function) calls to Cohere would return empty results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where Gemini provider would return an error if content safety failed in AI Proxy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where tools (function) calls to Gemini (or via Vertex) would return empty results.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Transformer plugins always returned a 404 error when using 'Google One' Gemini subscriptions.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Disabled HTTP/2 ALPN handshake for connections on routes configured with AI-proxy. \n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed issue where multi-modal requests is blocked on azure provider. \n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.1": [
+    {
+      "message": "Fixed a bug in the Azure provider where `model.options.upstream_path` overrides would always return 404.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where Azure streaming responses would be missing individual tokens.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where response streaming in Gemini and Bedrock providers was returning whole chat responses in one chunk.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where multimodal requests (in OpenAI format) would not transform properly, when using the Gemini provider.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Reverted the analytics container key from \"proxy\" to \"ai-proxy\" to align with previous versions.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "Fixed an issue where AI Transformer plugins always returned a 404 error when using 'Google One' Gemini subscriptions.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed issue where multi-modal requests is blocked on azure provider. \n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "AI plugins: retrieved latency data and pushed it to logs and metrics.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "allow AI plugin to read request from buffered file",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Add `allow_override` option to allow overriding the upstream model auth parameter or header from the caller's request.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    },
+    {
+      "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nall AWS Bedrock \"Converse API\" models.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where certain Azure models would return partial tokens/words \nwhen in response-streaming mode.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where Cohere and Anthropic providers don't read the `model` parameter properly \nfrom the caller's request body.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where using \"OpenAI Function\" inference requests would log a \nrequest error, and then hang until timeout.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where AI Proxy would still allow callers to specify their own model,  \nignoring the plugin-configured model name.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where AI Proxy would not take precedence of the \nplugin's configured model tuning options, over those in the user's LLM request.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Kong AI Gateway (AI Proxy and associated plugin family) now supports \nthe Google Gemini \"chat\" (generateContent) interface.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allowed mistral provider to use mistral.ai managed service by omitting upstream_url",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added a new response header X-Kong-LLM-Model that displays the name of the language model used in the AI-Proxy plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where setting OpenAI SDK model parameter \"null\" caused analytics \nto not be written to the logging plugin(s).\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed issue when response is gzipped even if client doesn't accept.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed certain AI plugins cannot be applied per consumer or per service.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Resolved a bug where the object constructor would set data on the class instead of the instance",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue for multi-modal inputs are not properly validated and calculated.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where Azure Managed-Identity tokens would never rotate  \nin case of a network failure when authenticating.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.3": [
+    {
+      "message": "Fixed a bug where certain Azure models would return partial tokens/words \nwhen in response-streaming mode.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where Cohere and Anthropic providers don't read the `model` parameter properly \nfrom the caller's request body.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where using \"OpenAI Function\" inference requests would log a \nrequest error, and then hang until timeout.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where AI Proxy would still allow callers to specify their own model,  \nignoring the plugin-configured model name.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where AI Proxy would not take precedence of the \nplugin's configured model tuning options, over those in the user's LLM request.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed a bug where setting OpenAI SDK model parameter \"null\" caused analytics \nto not be written to the logging plugin(s).\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.7.1.0": [
+    {
+      "message": "Resolved a bug where the object constructor would set data on the class instead of the instance",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0": [
+    {
+      "message": "To support the new messages API of `Anthropic`, the upstream path of the `Anthropic` for `llm/v1/chat` route type has changed from `/v1/complete` to `/v1/messages`.\n",
+      "type": "Breaking Change",
+      "scope": "Plugin",
+      "jiras": [
+        "FTI-5770"
+      ]
+    },
+    {
+      "message": "AI Proxy now reads most prompt tuning parameters from the client,\nwhile the plugin config parameters under `model_options` are now just defaults.\nThis fixes support for using the respective provider's native SDK.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "AI Proxy now has a `preserve` option for `route_type`, where the requests and responses\nare passed directly to the upstream LLM. This is to enable compatibility with any\nand all models and SDKs that may be used when calling the AI services.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the bug that the `route_type` `/llm/v1/chat` didn't include the analytics in the responses.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Added support for streaming event-by-event responses back to the client on supported providers.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "Added support for Managed Identity authentication when using the\nAzure provider with AI Proxy.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "Introduced the new **AI Proxy** plugin that enables simplified integration with various AI provider Large Language Models.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

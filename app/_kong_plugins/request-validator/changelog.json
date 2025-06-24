@@ -1,0 +1,92 @@
+{
+  "3.9.0.0": [
+    {
+      "message": "Fixed an issue where requests get rejected when defining an object parameter with form style and exploded.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Fix an issue where the plugin may fail to handle requests when param_schema is $ref schema.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added a new configuration field `content_type_parameter_validation` to determine whether to enable Content-Type parameters validation.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.0": [
+    {
+      "message": "Fix an issue where the plugin may fail to handle requests when param_schema is $ref schema.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added a new configuration field `content_type_parameter_validation` to determine whether to enable Content-Type parameters validation.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.5": [
+    {
+      "message": "Fix an issue where the plugin may fail to handle requests when param_schema is $ref schema.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added a new configuration field `content_type_parameter_validation` to determine whether to enable Content-Type parameters validation.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "**Request Validator** The Request Validator plugin now validates the request body schema when json is the suffix value in the request content type's subtype, for example `application/merge-patch+json`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "Optimized the response message for invalid requests.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "Errors are now logged for validation failures.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the validation function for the `allowed_content_types` parameter was too strict, making it impossible to use media types that contained a `-` character.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "The plugin now supports the `charset` option for the`config.allowed_content_types` parameter.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.5": [
+    {
+      "message": "Fix an issue where the `allowed_content_types` configuration is unable to contain the \"-\" character caused by the over-strict validation rule.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.1": [
+    {
+      "message": "The plugin now allows requests carrying a `content-type` with a parameter to match its `content-type` without a parameter.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

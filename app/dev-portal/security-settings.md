@@ -28,8 +28,8 @@ description: "Security settings help you configure visibility and access control
 related_resources:
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
-  - text: Custom pages
-    url: /dev-portal/custom-pages/
+  - text: Pages and content
+    url: /dev-portal/pages-and-content/
   - text: Publish APIs with Dev Portal
     url: /dev-portal/publishing/
   - text: Custom domains

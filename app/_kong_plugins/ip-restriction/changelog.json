@@ -1,0 +1,16 @@
+{
+  "3.6.0.0": [
+    {
+      "message": "add support for consumer group scoping",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "Added support for the `tcp`, `tls`, `grpc`, and `grpcs` protocols.\n\nThanks [@scrudge](https://github.com/scrudge) for contributing this change.[#10245](https://github.com/Kong/kong/pull/10245)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

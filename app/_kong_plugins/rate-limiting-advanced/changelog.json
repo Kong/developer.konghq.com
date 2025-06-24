@@ -1,0 +1,624 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where the runtime failed due to `sync_rate` not being set if the `strategy` was `local`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "Added a new configuration field `lock_dictionary_name` to support specifying an independent shared memory for storing locks.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for authentication from Kong Gateway to Envoy Proxy.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for combining multiple identifier items with the new configuration field `compound_identifier`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a warn log was printed when event_hooks was disabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.1": [
+    {
+      "message": "Fixed an issue where the `kong.plugins.rate-limiting-advanced.migrations` module was not being loaded when upgrading to `3.8.x.y`.\nThis issue was introduced in `3.8.0.0` and Kong refuses to start if `redis.timeout` and `redis.connect_timeout` are set to different values.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "Fixed an issue where a warn log was printed when event_hooks was disabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Fixed a Redis schema issue where `connect_timeout`, `read_timeout`, `send_timeout` were\nreset to `null` if the deprecated `timeout` is `null`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** Fixed an issue where the sync timer may stop working due to race condition.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added Redis cluster_max_redirections configuration option.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Deprecated timeout config field in redis config in favor of connect_/send_/read_timeout (timeout field will be removed in 4.0).",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Switched to sentinel_nodes and cluster_nodes for redis configuration.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved that timer spikes do not occur when there is network instability with the central data store.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.3": [
+    {
+      "message": "Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the sync timer may stop working due to race condition.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.0": [
+    {
+      "message": "Improved that timer spikes do not occur when there is network instability with the central data store.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Falling back to local strategy if sync_rate = 0 when redis goes down",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Print error log when multiple plugins with the same namespace have different configurations",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.8": [
+    {
+      "message": "**Rate Limiting Advanced** Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** Fixed an issue where the sync timer may stop working due to race condition.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.5": [
+    {
+      "message": "**Rate Limiting Advanced** Improved that timer spikes do not occur when there is network instability with the central data store.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.4": [
+    {
+      "message": "Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.2": [
+    {
+      "message": "Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.1.1": [
+    {
+      "message": "**Rate Limiting Advanced** Falling back to local strategy if sync_rate = 0 when redis goes down",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "check if `sync_rate` is `nil` when calling the RLA phase `configure()`",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Skip sync with DB or Redis if `sync_rate` is `nil` or `null`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "support to ratelimit by consumer group",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** Check the error of queries in the redis pipeline",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** Enhance the resolution of RLA sliding window weight",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.0": [
+    {
+      "message": "**Rate Limiting Advanced** to use the new Plugin:configure for building namespaces without looping through all the plugins",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.5": [
+    {
+      "message": "**Rate Limiting Advanced** Improved that timer spikes do not occur when there is network instability with the central data store.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Falling back to local strategy if sync_rate = 0 when redis goes down",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.14": [
+    {
+      "message": "Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.13": [
+    {
+      "message": "Fixed an issue where the sync timer may stop working due to race condition.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Enhance the resolution of RLA sliding window weight",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.12": [
+    {
+      "message": "Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.9": [
+    {
+      "message": "Improved that timer spikes do not occur when there is network instability with the central data store.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.8": [
+    {
+      "message": "Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.6": [
+    {
+      "message": "Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "Falling back to local strategy if sync_rate = 0 when redis goes down",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.0.0": [
+    {
+      "message": "The `redis` strategy now catches strategy connection failures.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue that impacted the accuracy with the `redis` policy. Thanks [@giovanibrioni](https://github.com/giovanibrioni) for contributing this change.[#10559](https://github.com/Kong/kong/pull/10559)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "The `redis` rate limiting strategy now returns an error when Redis Cluster is down.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the rate limiting `cluster_events` broadcast the wrong data in traditional cluster mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The control plane no longer creates namespace or syncs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.2.4": [
+    {
+      "message": "The control plane no longer attempts to create namespace or synchronize counters with Redis.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.2.2": [
+    {
+      "message": "Fixed the log flooding issue caused by low `sync_rate` settings.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "In hybrid and DB-less modes, these plugins now support `sync_rate = -1` with any strategy, including the default `cluster` strategy.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: Revised docs for the following plugins to include examples: \n- [CORS](/plugins/cors/)\n- [File Log](/plugins/file-log/)\n- [HTTP Log](/plugins/http-log/)\n- [JWT Signer](/plugins/jwt-signer/)\n- [Key Auth](/plugins/key-auth/)\n- [OpenID Connect](/plugins/openid-connect/)\n- [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)\n- [SAML](/plugins/saml/)\n- [StatsD](/plugins/statsd/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Matched the plugin’s behavior to the Rate Limiting plugin. When an `HTTP 429` status code was returned, rate limiting related headers were missed from the PDK module `kong.response.exit()`. This made the plugin incompatible with other Kong components like the Exit Transformer plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.1.5": [
+    {
+      "message": "Fixed an issue where the control plane was trying to sync the rate-limiting-advanced counters with Redis.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `rl cluster_events` broadcasted the wrong data in traditional cluster mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.1.2": [
+    {
+      "message": "Fixed an issue with the `local` strategy, which was not working correctly when `window_size` was set to `fixed`, and the cache would expire while the window was still valid.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added support for deleting customer groups using the API.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added `config.disable_penalty` to control whether to count `429` or not in sliding window mode.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now ensures that shared dict TTL is higher than `config.sync_rate`, otherwise Kong Gateway would lose all request counters in shared dict.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `rate-limiting-advanced` changed from `902` to `910`",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed error handling when calling `get_window` and added more buffer on the window reserve.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed error handling for plugin strategy configuration when in hybrid or DB-less mode and strategy is set to `cluster`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.13": [
+    {
+      "message": "Fixed an issue where the sync timer may stop working due to race condition.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.10": [
+    {
+      "message": "**Rate Limiting Advanced** Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.8": [
+    {
+      "message": "**Rate Limiting Advanced** Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** Falling back to local strategy if sync_rate = 0 when redis goes down",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.7": [
+    {
+      "message": "**Rate Limiting Advanced** The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** fix the return info and log of previous errors are missing when use redis cluster mode connection fails",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** Check the error of queries in the redis pipeline",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced** fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.3": [
+    {
+      "message": "cp should not create namespace or do sync.",
+      "type": "bugfix",
+      "scope": "Plugin",
+      "jiras": [
+        "FTI-4960"
+      ]
+    },
+    {
+      "message": "Fix a bug where the rl cluster_events broadcast the wrong data in traditional cluster mode.",
+      "type": "bugfix",
+      "scope": "Plugin",
+      "jiras": [
+        "FTI-5014"
+      ]
+    }
+  ],
+  "2.8.2.3": [
+    {
+      "message": "Fixed a maintenance cycle lock leak in the `kong_locks` dictionary. Kong Gateway now clears old namespaces from the maintenance cycle schedule when a namespace is updated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.3": [
+    {
+      "message": "Fixed an issue with `cluster` strategy timestamp precision in Cassandra.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.1": [
+    {
+      "message": "Fixed rate limiting advanced errors that appeared when the Rate Limiting Advanced plugin was not in use.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an error where rate limiting counters were not updating response headers due to incorrect key expiration tracking. Redis key expiration is now tracked properly in `lua_shared_dict kong_rate_limiting_counters`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.0": [
+    {
+      "message": "Skip namespace creation if the plugin is not enabled. This prevents the error “[rate-limiting-advanced] no shared dictionary was specified” being logged.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `redis.username` and `redis.sentinel_username` configuration parameters.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Beta feature:** The `redis.username`, `redis.password`, `redis.sentinel_username`, and `redis.sentinel_password`configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a 500 error that occurred when consumer groups were enforced but no proper configurations were provided. Now, if no specific consumer group configuration exists, the consumer group defaults to the original plugin configuration.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a timer leak that caused the timers to be exhausted and failed to start any other timers used by Kong, showing the error `too many pending timers`.\n\nBefore, the plugin used one timer for each namespace maintenance process, increasing timer usage on instances with a large number of rate limiting namespaces. Now, it uses a single timer for all namespace maintenance.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `local` strategy was not working with DB-less and hybrid deployments. We now allow `sync_rate = null` and `sync_rate = -1`when a `local` strategy is defined.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

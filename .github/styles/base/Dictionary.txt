@@ -105,6 +105,7 @@ CloudFormation
 CloudFormation
 Cloudformation
 Cloudformation
+Cloudsmith
 cmd
 cncf
 cncf's
@@ -116,6 +117,7 @@ config
 config_hash
 configs
 configurability
+Conjur
 conntrack
 consumer_group
 consumer_id
@@ -182,6 +184,7 @@ DNs
 DNs
 dockerfile
 dockerfiles
+doppelganger
 downsample
 downsampled
 downstreams
@@ -407,6 +410,7 @@ KPI
 KPI
 KPIs
 KPIs
+ksearch
 kubeconfig
 kubectl
 kubelet
@@ -608,6 +612,7 @@ proxy_ssl
 proxying
 public_key
 Qdrant
+qubit
 querystring
 qux
 ratelimit
@@ -829,6 +834,7 @@ untrusted
 untyped
 unvetted
 unversioned
+unwanted
 updated_at
 upsert
 upstream

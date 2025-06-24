@@ -90,7 +90,7 @@ module Jekyll
       def changelog_exists?
         return @changelog_exists if defined?(@changelog_exists)
 
-        @changelog_exists = File.exist?(File.join(folder, 'changelog.md'))
+        @changelog_exists = File.exist?(File.join(folder, 'changelog.json'))
       end
 
       def third_party?
@@ -133,7 +133,7 @@ module Jekyll
       end
 
       def max_version
-        @max_version ||= metadata.fetch('maxs_version', {})
+        @max_version ||= metadata.fetch('max_version', {})
       end
     end
   end

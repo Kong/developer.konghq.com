@@ -87,6 +87,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: August 2026
           default: true
       - ubuntu2004:
@@ -104,6 +106,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: August 2026
           default: true
     third_party_support:
@@ -190,6 +194,7 @@ releases:
     ee-version: "3.7.1.5"
     ce-version: "3.7.1"
     eol: May 2025
+    sunset: true
     distributions:
       - amazonlinux2:
           package: true
@@ -254,6 +259,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: May 2025
           default: true
       - ubuntu2004:
@@ -271,6 +278,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: May 2025
           default: true
     third_party_support:
@@ -416,6 +425,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Sept 2025
           default: true
       - ubuntu2004:
@@ -433,6 +444,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Sept 2025
           default: true
     third_party_support:
@@ -528,7 +541,7 @@ releases:
               - Confluent Cloud
   - release: "3.9"
     ee-version: "3.9.1.1"
-    ce-version: "3.9.0"
+    ce-version: "3.9.1"
     eol: Dec 2025
     distributions:
       - amazonlinux2:
@@ -580,6 +593,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Dec 2025
           default: true
       - ubuntu2004:
@@ -597,6 +612,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Dec 2025
       - ubuntu2404:
           package: true
@@ -605,6 +622,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           eol: Dec 2025
           default: true
     third_party_support:
@@ -748,6 +767,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
       - ubuntu2004:
           package: true
@@ -764,6 +785,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
       - ubuntu2404:
           package: true
           package_support:
@@ -771,6 +794,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
     third_party_support:
       ai_providers:
@@ -919,6 +944,8 @@ releases:
             arm: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
       - ubuntu2004:
           package: true
@@ -935,6 +962,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
       - ubuntu2404:
           package: true
           package_support:
@@ -942,6 +971,8 @@ releases:
             graviton: true
             fips: true
           docker: true
+          docker_support:
+            fips: true
           default: true
     third_party_support:
       ai_providers:
@@ -1164,6 +1195,9 @@ release_dates:
 
 public_keys:
   # e.g.: https://cloudsmith.io/~kong/repos/internal-gateway-37/pub-keys/
+  "311":
+    rsa_key: D0099E9501A25DF6
+    gpg_key: CF9CDA9D288571F9
   "310":
     rsa_key: F95F9D51CE8D04A7
     gpg_key: 5F07A9706C09A6C6

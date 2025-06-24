@@ -1,0 +1,30 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.1": [
+    {
+      "message": "Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: gRPC Web (`grpc-web`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "Added the missing `protocols` field to the following plugin schemas: gRPC Web (`grpc-web`)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

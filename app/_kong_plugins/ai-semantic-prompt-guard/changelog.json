@@ -1,0 +1,52 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where Kong Gateway was not able to reconfigure the plugin when using DB-less mode.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.0": [
+    {
+      "message": "Fixed an issue where the plugin was not able to reconfigure the plugin when using DB-less mode.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "Made the\n`embeddings.model.name` config field a free text entry, enabling use of a\nself-hosted (or otherwise compatible) model.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where stale plugin config was not updated in dbless and hybrid mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where requests with multiple models caused failures.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "Fixed an issue where stale plugin config was not updated in dbless and hybrid mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "allow AI plugin to read request from buffered file",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `ai-semantic-prompt-guard` plugin that supports semantic similarity-based prompt guarding.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

@@ -33,10 +33,8 @@ faqs:
       * `Private` Menus in headers or footers **will not** be shown.
 
 related_resources:
-  - text: Custom pages
-    url: /dev-portal/custom-pages/
-  - text: Portal snippets
-    url: /dev-portal/snippets/
+  - text: Pages and content
+    url: /dev-portal/pages-and-content/
   - text: Custom domains
     url: /dev-portal/custom-domains/
 ---

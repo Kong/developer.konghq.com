@@ -1,0 +1,21 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Fixed an issue where the runtime failed due to `sync_rate` not being set if the `strategy` was `local`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Enhanced robustness for user misconfigurations. The following use cases are now handled:\n  - RLA and service-protection are configured on the same service.\n  - There is no service but the service-protection plugin is enabled with global scope.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "Implemented a new plugin to protect services with request rate limiting.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

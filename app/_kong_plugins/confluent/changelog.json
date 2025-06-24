@@ -1,0 +1,21 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "Added support for message manipulation with the new configuration field `message_by_lua_functions`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for sending messages to multiple topics with `topics_query_arg`, and enabled topic allowlisting with `allowed_topics`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "Added the `confluent` plugin which allows to interface with Confluent.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

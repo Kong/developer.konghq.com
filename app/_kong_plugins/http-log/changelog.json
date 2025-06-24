@@ -1,0 +1,95 @@
+{
+  "3.8.0.0": [
+    {
+      "message": "Fix an issue where the plugin doesn't include port information in the HTTP host header when sending requests to the log server.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "If the log server responds with a 3xx HTTP status code, the plugin now considers it to be an error and retries according to the retry configuration. Previously, 3xx status codes would be interpreted as a success, causing the log entries to be dropped.[#10172](https://github.com/Kong/kong/pull/10172)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added the `application/json; charset=utf-8` option for the `Content-Type` header to support log collectors that require that character set declaration.[#10533](https://github.com/Kong/kong/pull/10533)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Plugin batch queuing: [HTTP Log](/plugins/http-log/), [StatsD](/plugins/statsd/), [OpenTelemetry](/plugins/opentelemetry/), and [Datadog](/plugins/datadog/) \n\nThe queuing system has been reworked, causing some plugin parameters to not function as expected anymore. If you use queues in these plugins, new parameters must be configured. See each plugin’s documentation for details.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "The `headers` configuration parameter is now referenceable, which means it can be securely stored in a vault.[#9948](https://github.com/Kong/kong/pull/9948)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: Revised docs for the following plugins to include examples: \n- [CORS](/plugins/cors/)\n- [File Log](/plugins/file-log/)\n- [HTTP Log](/plugins/http-log/)\n- [JWT Signer](/plugins/jwt-signer/)\n- [Key Auth](/plugins/key-auth/)\n- [OpenID Connect](/plugins/openid-connect/)\n- [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)\n- [SAML](/plugins/saml/)\n- [StatsD](/plugins/statsd/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [HTTP Log](/plugins/http-log/)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "WebSocket service/route support was added for logging plugins: http-log",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where queue ID serialization did not include `queue_size` and `flush_timeout`.[#9789](https://github.com/Kong/kong/pull/9789)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "The `headers` field now only takes a single string per header name, where it previously took an array of values.[#6992](https://github.com/Kong/kong/pull/6992)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Log output is now restricted to the workspace the plugin is running in. Previously, the plugin could log requests from outside of its workspace.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.4.0": [
+    {
+      "message": "Fixed an issue in this plugin’s batch queue processing, where metrics would be published multiple times. This caused a memory leak, where memory usage would grow without limit.[#10052](https://github.com/Kong/kong/pull/10052) [#10044](https://github.com/Kong/kong/pull/10044)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.3": [
+    {
+      "message": "Fixed the `could not update kong admin` internal error caused by empty headers. This error occurred when using this plugin with the Kong Ingress Controller.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.2": [
+    {
+      "message": "Log output is now restricted to the workspace the plugin is running in. Previously, the plugin could log requests from outside of its workspace.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.0": [
+    {
+      "message": "Include provided query string parameters when sending logs to the `http_endpoint`",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

@@ -121,6 +121,7 @@ sections:
       - path: /gateway/entities/key/
       - path: /gateway/entities/key-set/
       - path: /gateway/audit-logs/
+      - path: /gateway/fips-support/
       - type: how-to
         products:
           - gateway
@@ -218,6 +219,7 @@ sections:
 
   - title: Analytics and Monitoring
     items:
+      - path: /gateway/monitoring/
       - type: how-to
         products:
           - gateway
@@ -227,6 +229,7 @@ sections:
       - title: Analytics and monitoring plugins
         description: Gateway plugins for monitoring your deployments.
         url: /plugins/?category=analytics-and-monitoring
+      - path: /gateway/tracing/
       
   - title: Custom Plugin Development
     items:
@@ -256,6 +259,9 @@ sections:
     items:
       - path: /gateway-manager/
       - path: /gateway-manager/**/*
+      - text: Troubleshoot Data Plane nodes
+        description: Learn how to resolve some common issues with Data Plane nodes
+        url: /gateway-manager/data-plane-reference/#troubleshoot-data-plane-nodes
 
   - title: Reference
     allow_duplicates: true
@@ -273,3 +279,5 @@ sections:
       - path: /gateway/entities/partial/
       - path: /how-to/restart-kong-gateway-container/
       - path: /gateway/nginx-directives/
+      - path: /gateway/debug-requests/
+      - path: /gateway/amazon-rds-authentication-with-aws-iam/#configuring-your-aws-resources
