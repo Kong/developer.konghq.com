@@ -34,7 +34,7 @@ rows:
                   * GitHub
                   * Microsoft
 
-                  Multi-Factor Authentication (MFA) is required for all users using built-in authentication or social login. Users will be prompted to set up their MFA when they login to Konnect for the first time. Please reach out to Kong Support to reset your MFA.
+                  Multi-Factor Authentication (MFA) is required for all users using built-in authentication or social login. Users will be prompted to set up MFA when they log in to Konnect for the first time. Please reach out to Kong Support to reset your MFA.
 
   - header:
       type: h2
