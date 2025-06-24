@@ -1,5 +1,5 @@
 ---
-title: "Part 1: Secure MCP traffic with the Key Authentication plugin"
+title: "Part 2: Govern MCP traffic with Kong AI Gateway"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -9,7 +9,7 @@ related_resources:
   - text: Key Auth plugin
     url: /plugins/key-auth/
 
-description: Learn how to secure MCP traffic within GitHub remote MCP server with the Key Authentication plugin
+description: Learn how to gover MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and AI Prompt Guard plugins
 
 products:
   - gateway
@@ -35,12 +35,9 @@ tags:
   - openai
 
 tldr:
-  q: How can I secure my MCP traffic using {{ site.base_gateway }}?
+  q: How can I gover my MCP traffic using Kong AI Gateway?
   a: |
-    Enable the Key Authentication plugin on your MCP service and require API keys from Consumers. Kong AI Gateway then enforces these keys on all incoming MCP requests, ensuring secure, authorized access.
-
-    {:.info}
-    > For further authentication of your MCP traffic you can also use [The OpenID Connect](https://developer.konghq.com/plugins/openid-connect/) (OIDC) plugin lets you integrate Kong Gateway with an identity provider (IdP), or you can extend plugins to support fine-grained Authorization models via JWT claims or declarative [Access Control Lists](https://developer.konghq.com/plugins/acl/) (ACLs)
+    ADD
 
 
 tools:
@@ -60,11 +57,15 @@ prereqs:
         ```bash
         export GITHUB_PAT=<YOUR_GITHUB_TOKEN>
         ```
-      icon_url: assets/third-party/github.svg
-    - title: Entities
-      content: |
-        For this tutorial, you’ll need Kong Gateway entities, like Gateway Services and Routes, pre-configured. These entities are essential for Kong Gateway to function but installing them isn’t the focus of this guide. Follow these steps to pre-configure them:
-
+      icon_url: /assets/icons/third-party/github.svg
+    - inline: Completed [Part 1](/how-to/secure-mcp-traffic/) tutorial
+      content: "Before starting, complete Part 1: Secure MCP Traffic with the Key Authentication Plugin."
+  prereqs:
+    entities:
+        services:
+            - example-clean-service
+        routes:
+            - example-clean-route
 
 cleanup:
   inline:
@@ -75,3 +76,78 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
+
+## Reconfigure the AI Proxy Advanced Plugin
+
+This configuration uses the `ai-proxy-advanced` plugin to load balance requests between OpenAI’s `gpt-4` and `gpt-4o` models using a round-robin algorithm. Both models are configured to call a GitHub-hosted remote MCP server via the `llm/v1/responses` route. The plugin injects the required OpenAI API key for authentication and logs both payloads and statistics. With equal weights assigned to each target, traffic is split evenly between the two models.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy-advanced
+      config:
+        balancer:
+          algorithm: round-robin
+        targets:
+          - model:
+              provider: openai
+              name: gpt-4
+              options:
+                max_tokens: 512
+                temperature: 1.0
+            route_type: llm/v1/responses
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${openai_api_key}
+            logging:
+              log_payloads: true
+              log_statistics: true
+            weight: 50
+          - model:
+              provider: openai
+              name: gpt-4o
+              options:
+                max_tokens: 512
+                temperature: 1.0
+            route_type: llm/v1/responses
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${openai_api_key}
+            logging:
+              log_payloads: true
+              log_statistics: true
+            weight: 50
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+{% endentity_examples %}
+
+## Validate MCP Traffic balancing
+
+Now, we can test if the lkoad balancing works
+
+
+```bash
+for i in {1..10}; do
+  echo -n "Request #$i — Model: "
+  curl -s -X POST "http://localhost:8000/anything/v1/responses" \
+    -H "Accept: application/json" \
+    -H "apikey: hello_world" \
+    -H "Content-Type: application/json" \
+    --json "{
+      \"tools\": [
+        {
+          \"type\": \"mcp\",
+          \"server_label\": \"gitmcp\",
+          \"server_url\": \"https://api.githubcopilot.com/mcp/x/repos\",
+          \"require_approval\": \"never\",
+          \"headers\": {
+            \"Authorization\": \"Bearer $GITHUB_PAT\"
+          }
+        }
+      ],
+      \"input\": \"tools available with github mcp\"
+    }" | jq -r '.model'
+  sleep 3
+done
+```
