@@ -48,13 +48,6 @@ Datakit allows you to create an API workflow, which can include:
 * Adjusting Kong entity configuration
 * Returning directly to users instead of proxying
 
-{:.warning}
-> Prior to {{site.base_gateway}} 3.11, the Datakit plugin was not available in {{site.base_gateway}} packages by default. 
-If you are running {{site.base_gateway}} 3.9 or 3.10, enable the plugin in one of the following ways:
-> * **Package install:** Set `wasm=on` in [`kong.conf`](/gateway/configuration/#wasm-section) before starting {{site.base_gateway}}
-> * **Docker:** Set `export WASM=on` in the environment
-> * **Kubernetes:** Set `WASM=on` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugins/) instructions
-
 ## Use cases for Datakit
 
 The following are examples of common use cases for Datakit:
@@ -81,7 +74,6 @@ rows:
 ## How does the Datakit plugin work?
 
 The core component of Datakit is a node. Nodes are inputs to other nodes, which creates the execution path for a given Datakit configuration. 
-
 
 The following diagram shows how Datakit can be used to combine two third-party API calls into one response:
 

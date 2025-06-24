@@ -49,11 +49,6 @@ related_resources:
   - text: Datakit plugin
     url: /plugins/datakit/
 
-faqs:
-  - q: How do I run Datakit in {{site.base_gateway}} 3.9 or 3.10?
-    a: |
-      Prior to 3.11, Datakit ran on the WASM engine. 
-      If you are running {{site.base_gateway}} 3.9 or 3.10, set `wasm=on` in `kong.conf`, then reload your {{site.base_gateway}} instance before configuring the plugin.
 ---
 
 ## Create a Service and a Route
