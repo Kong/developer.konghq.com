@@ -753,101 +753,101 @@ columns:
   - title: Data type
     key: type
 rows:
-  - property: `kong.client.consumer`
-    desc: `kong.client.get_consumer()`
-    type: `object`
+  - property: "`kong.client.consumer`"
+    desc: "`kong.client.get_consumer()`"
+    type: "`object`"
 
-  - property: `kong.client.consumer_groups`
-    desc: `kong.client.get_consumer_groups()`
-    type: `array`
+  - property: "`kong.client.consumer_groups`"
+    desc: "`kong.client.get_consumer_groups()`"
+    type: "`array`"
 
-  - property: `kong.client.credential`
-    desc: `kong.client.get_credential()`
-    type: `object`
+  - property: "`kong.client.credential`"
+    desc: "`kong.client.get_credential()`"
+    type: "`object`"
 
-  - property: `kong.client.get_identity_realm_source`
-    desc: `kong.client.get_identity_realm_source()`
-    type: `object`
+  - property: "`kong.client.get_identity_realm_source`"
+    desc: "`kong.client.get_identity_realm_source()`"
+    type: "`object`"
 
-  - property: `kong.client.forwarded_ip`
-    desc: `kong.client.get_forwarded_ip()`
-    type: `string`
+  - property: "`kong.client.forwarded_ip`"
+    desc: "`kong.client.get_forwarded_ip()`"
+    type: "`string`"
 
-  - property: `kong.client.forwarded_port`
-    desc: `kong.client.get_forwarded_port()`
-    type: `number`
+  - property: "`kong.client.forwarded_port`"
+    desc: "`kong.client.get_forwarded_port()`"
+    type: "`number`"
 
-  - property: `kong.client.ip`
-    desc: `kong.client.get_ip()`
-    type: `string`
+  - property: "`kong.client.ip`"
+    desc: "`kong.client.get_ip()`"
+    type: "`string`"
 
-  - property: `kong.client.port`
-    desc: `kong.client.get_port()`
-    type: `number`
+  - property: "`kong.client.port`"
+    desc: "`kong.client.get_port()`"
+    type: "`number`"
 
-  - property: `kong.client.protocol`
-    desc: `kong.client.get_protocol()`
-    type: `string`
+  - property: "`kong.client.protocol`"
+    desc: "`kong.client.get_protocol()`"
+    type: "`string`"
 
-  - property: `kong.request.forwarded_host`
-    desc: `kong.request.get_forwarded_host()`
-    type: `string`
+  - property: "`kong.request.forwarded_host`"
+    desc: "`kong.request.get_forwarded_host()`"
+    type: "`string`"
 
-  - property: `kong.request.forwarded_port`
-    desc: `kong.request.get_forwarded_port()`
-    type: `number`
+  - property: "`kong.request.forwarded_port`"
+    desc: "`kong.request.get_forwarded_port()`"
+    type: "`number`"
 
-  - property: `kong.request.forwarded_scheme`
-    desc: `kong.request.get_forwarded_scheme()`
-    type: `string`
+  - property: "`kong.request.forwarded_scheme`"
+    desc: "`kong.request.get_forwarded_scheme()`"
+    type: "`string`"
 
-  - property: `kong.request.port`
-    desc: `kong.request.get_port()`
-    type: `number`
+  - property: "`kong.request.port`"
+    desc: "`kong.request.get_port()`"
+    type: "`number`"
 
-  - property: `kong.response.source`
-    desc: `kong.response.get_source()`
-    type: `string`
+  - property: "`kong.response.source`"
+    desc: "`kong.response.get_source()`"
+    type: "`string`"
 
-  - property: `kong.router.route`
-    desc: `kong.router.get_route()`
-    type: `object`
+  - property: "`kong.router.route`"
+    desc: "`kong.router.get_route()`"
+    type: "`object`"
 
-  - property: `kong.route_id`
+  - property: "`kong.route_id`"
     desc: Gets the current Route's ID
-    type: `string`
+    type: "`string`"
 
-  - property: `kong.route_name`
+  - property: "`kong.route_name`"
     desc: Gets the current Route's name
-    type: `string`
+    type: "`string`"
 
-  - property: `kong.router.service`
-    desc: `kong.router.get_service()`
-    type: `object`
+  - property: "`kong.router.service`"
+    desc: "`kong.router.get_service()`"
+    type: "`object`"
 
-  - property: `kong.service_name`
+  - property: "`kong.service_name`"
     desc: Gets the current Service's name
-    type: `string`
+    type: "`string`"
 
-  - property: `kong.service_id`
+  - property: "`kong.service_id`"
     desc: Gets the current Service's ID
-    type: `string`
+    type: "`string`"
 
-  - property: `kong.service.response.status`
-    desc: `kong.service.response.status`
-    type: `number`
+  - property: "`kong.service.response.status`"
+    desc: "`kong.service.response.status`"
+    type: "`number`"
 
-  - property: `kong.version`
+  - property: "`kong.version`"
     desc: Gets the Kong version
-    type: `string`
+    type: "`string`"
 
-  - property: `kong.node.id`
-    desc: `kong.node.get_id()`
-    type: `string`
+  - property: "`kong.node.id`"
+    desc: "`kong.node.get_id()`"
+    type: "`string`"
 
-  - property: `kong.configuration.{key}`
-    desc: Reads `{key}` from the node configuration
-    type: `any`
+  - property: "`kong.configuration.{key}`"
+    desc: Reads "`{key}` from the node configuration
+    type: "`any`"
 
 {% endtable %}
 <!--vale on-->
@@ -864,13 +864,13 @@ columns:
   - title: Data type
     key: type
 rows:
-  - property: `kong.service.target`
-    desc: `kong.service.set_target({host}, {port})`
-    type: `string` (`{host}:{port}`)
+  - property: "`kong.service.target`"
+    desc: "`kong.service.set_target({host}, {port})`"
+    type: "`string` (`{host}:{port}`)
 
-  - property: `kong.service.request_scheme`
-    desc: `kong.service.set_service_request_scheme({scheme})`
-    type: `string` (`{scheme}`)
+  - property: "`kong.service.request_scheme`"
+    desc: "`kong.service.set_service_request_scheme({scheme})`"
+    type: "`string` (`{scheme}`)
 {% endtable %}
 <!--vale on-->
 
@@ -886,13 +886,13 @@ columns:
   - title: Data type
     key: type
 rows:
-  - property: `kong.ctx.plugin.{key}`
-    desc: `Gets or sets kong.ctx.plugin.{key}`
-    type: `any`
+  - property: "`kong.ctx.plugin.{key}`"
+    desc: "`Gets or sets kong.ctx.plugin.{key}`"
+    type: "`any`"
 
-  - property: `kong.ctx.shared.{key}`
-    desc: `Gets or sets kong.ctx.shared.{key}`
-    type: `any`
+  - property: "`kong.ctx.shared.{key}`"
+    desc: "`Gets or sets kong.ctx.shared.{key}`"
+    type: "`any`"
 {% endtable %}
 <!--vale on-->
 
