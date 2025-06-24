@@ -73,7 +73,7 @@ The {{ plugin }} plugin will mediate the following for you:
 * Optionally, additionally recording all post-transformation request and response messages from users, to and from the configured LLM
 * Fulfillment of requests to self-hosted models, based on select supported format transformations
 
-Flattening all of the provider formats allows you to standardize the manipulation of the data before and after transmission. It also allows your to provide a choice of LLMs to the Kong consumers, using consistent request and response formats, regardless of the backend provider or model.
+Flattening all of the provider formats allows you to standardize the manipulation of the data before and after transmission. It also allows your to provide a choice of LLMs to the {{site.base_gateway}} Consumers, using consistent request and response formats, regardless of the backend provider or model.
 
 {:.info}
 > {% new_in 3.11 %} {{ plugin }} supports REST-based full-text responses, including RESTful endpoints such as `llm/v1/responses`, `llm/v1/files`, `llm/v1/assisstants` and `llm/v1/batches`. RESTful endpoints support CRUD operations— you can `POST` to create a response, `GET` to retrieve it, or `DELETE` to remove it.
