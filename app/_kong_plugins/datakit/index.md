@@ -778,7 +778,7 @@ rows:
     type: `number`
 
   - property: `kong.client.ip`
-    desc: `kong.client.get_ip()``
+    desc: `kong.client.get_ip()`
     type: `string`
 
   - property: `kong.client.port`
