@@ -85,7 +85,7 @@ The Kong AI Proxy accepts the following inputs formats, standardized across all 
 {% endnavtab %}
 
 {% navtab "llm/v1/files" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 curl http://localhost:8000 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -95,7 +95,7 @@ curl http://localhost:8000 \
 {% endnavtab %}
 
 {% navtab "llm/v1/batches" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
     "input_file_id": "file-abc123",
@@ -106,7 +106,7 @@ curl http://localhost:8000 \
 {% endnavtab %}
 
 {% navtab "llm/v1/assisstants" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
     "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
@@ -118,7 +118,7 @@ curl http://localhost:8000 \
 {% endnavtab %}
 
 {% navtab "llm/v1/audio/speech" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 curl http://localhost:8000 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -132,7 +132,7 @@ curl http://localhost:8000 \
 {% endnavtab %}
 
 {% navtab "llm/v1/images/generations" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
     "prompt": "A cute baby sea otter",
@@ -145,7 +145,7 @@ curl http://localhost:8000 \
 {% endnavtab %}
 
 {% navtab "llm/v1/embeddings" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
   {
     "input": "The food was delicious and the waiter...",
@@ -156,7 +156,7 @@ curl http://localhost:8000 \
 {% endnavtab %}
 
 {% navtab "llm/v1/responses" %}
-
+Supported in: {% new_in 3.11 %}
 {:.info}
 > This is a RESTful endpoint that supports all CRUD operations, but this preview example demonstrates only a `POST` request.
 
@@ -226,7 +226,7 @@ Conversely, the response formats are also transformed to a standard format acros
 {% endnavtab %}
 
 {% navtab "llm/v1/files" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
   "id": "file-abc123",
@@ -240,7 +240,7 @@ Conversely, the response formats are also transformed to a standard format acros
 {% endnavtab %}
 
 {% navtab "llm/v1/batches" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
     "input_file_id": "file-abc123",
@@ -249,7 +249,7 @@ Conversely, the response formats are also transformed to a standard format acros
 }
 ```
 {% endnavtab %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
   "id": "batch_abc123",
@@ -282,7 +282,7 @@ Conversely, the response formats are also transformed to a standard format acros
 }
 ```
 {% navtab "llm/v1/assisstants" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
   "id": "asst_abc123",
@@ -308,12 +308,14 @@ Conversely, the response formats are also transformed to a standard format acros
 
 {% navtab "llm/v1/audio/file/speech" %}
 
-The audio file content `speech.mp3`
+Supported in: {% new_in 3.11 %}
+
+The response contains the audio file content of `speech.mp3`.
 
 {% endnavtab %}
 
 {% navtab "llm/v1/images/generations" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
   {
   "created": 1713833628,
@@ -338,7 +340,7 @@ The audio file content `speech.mp3`
 {% endnavtab %}
 
 {% navtab "llm/v1/embeddings" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
   "object": "list",
@@ -364,7 +366,7 @@ The audio file content `speech.mp3`
 {% endnavtab %}
 
 {% navtab "llm/v1/responses" %}
-
+Supported in: {% new_in 3.11 %}
 ```json
 {
   "id": "resp_67ccd2bed1ec8190b14f964abc0542670bb6a6b452d3795b",
@@ -471,7 +473,7 @@ When `llm_format` is set to `"huggingface"`, only the Hugging Face provider is s
 {% endnavtabs %}
 
 ### Caveats and limitations
-
+The following sections detail the provider and statistic logging limitations.
 #### Provider-specific limitations
 
 * **Anthropic**: Does not support `llm/v1/completions` or `llm/v1/embeddings`.
