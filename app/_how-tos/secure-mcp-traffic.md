@@ -1,5 +1,5 @@
 ---
-title: "Part 1: Secure MCP traffic with the Key Authentication plugin"
+title: "Part 1: Secure GitHub MCP Server Traffic with {{ site.base_gateway }} and Kong AI Gateway"
 content_type: how_to
 related_resources:
   - text: AI Gateway
