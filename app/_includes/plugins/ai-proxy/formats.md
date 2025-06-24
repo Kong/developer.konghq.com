@@ -32,7 +32,7 @@ The following upstream URL patterns are used:
 {:.warning}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
 > For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](./reference/#{{ upstream_url_slug }}) plugin option.<br/><br/>
-> {% new_in 3.10 %} If you are using each provider's native SDK, {{site.base_gateway}} allows you to transparently proxy the request without any transformation and return the response unmodified. This can be done by setting [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`, such as `gemini` or `bedrock`. See the [section below](./#supported-native-llm-formats) for more details.
+> {% new_in 3.11 %} If you are using each provider's native SDK, {{site.base_gateway}} allows you to transparently proxy the request without any transformation and return the response unmodified. This can be done by setting [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`, such as `gemini` or `bedrock`. See the [section below](./#supported-native-llm-formats) for more details.
 > <br><br>
 > In this mode, {{site.base_gateway}} will still provide useful analytics, logging, and cost calculation.
 
@@ -231,6 +231,10 @@ curl -s -D >(grep -i x-request-id >&2) \
 
 {% navtab "realtime/v1/realtime" %}
 Supported in: {% new_in 3.11 %}
+
+{:.warning}
+> To use the realtime route, users must configure the protocols ws and/or wss on both the service and on the route where the plugin is associated.
+
 ```json
 {
   "model": "gpt-4o",
