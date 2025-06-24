@@ -1,5 +1,5 @@
 ---
-title: "Part 3: Observe MCP traffic with Kong AI Gateway"
+title: "Part 3: Observe GitHub MCP traffic with Kong AI Gateway"
 content_type: how_to
 related_resources:
   - text: AI Gateway

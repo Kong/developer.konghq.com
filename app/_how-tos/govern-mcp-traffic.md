@@ -1,5 +1,5 @@
 ---
-title: "Part 2: Govern MCP traffic with Kong AI Gateway"
+title: "Part 2: Use Kong AI Gateway to control GitHub MCP traffic"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -98,9 +98,6 @@ entities:
             auth:
               header_name: Authorization
               header_value: Bearer ${openai_api_key}
-            logging:
-              log_payloads: false
-              log_statistics: false
             weight: 50
           - model:
               provider: openai
@@ -112,9 +109,6 @@ entities:
             auth:
               header_name: Authorization
               header_value: Bearer ${openai_api_key}
-            logging:
-              log_payloads: false
-              log_statistics: false
             weight: 50
 variables:
   openai_api_key:
