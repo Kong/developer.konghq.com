@@ -1,5 +1,5 @@
 description: |
-  Configure the Datakit plugin to allow {{site.base_gateway}} to authenticate to a third-party service.
+  Use internal auth within your ecosystem by sending response headers to upstreams.
 
 title: Authenticate {{site.base_gateway}} to a third-party service
 weight: 900
