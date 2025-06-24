@@ -235,7 +235,7 @@ curl -s -D >(grep -i x-request-id >&2) \
 Supported in: {% new_in 3.11 %}
 
 {:.warning}
-> To use the realtime route, users must configure the protocols ws and/or wss on both the service and on the route where the plugin is associated.
+> To use the realtime route, you must configure the protocols `ws` and/or `wss` on both the Service and on the Route where the plugin is associated.
 
 ```json
 {
