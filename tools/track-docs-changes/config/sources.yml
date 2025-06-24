@@ -1519,7 +1519,7 @@ app/dev-portal/auth-strategies.md:
   - app/dev-portal/app-reg/auth-strategies/oidc/index.md
   - app/dev-portal/app-reg/auth-strategies/key-auth/index.md
 
-app/dev-portal/access-and-approval.md:
+app/dev-portal/self-service.yaml:
   - app/dev-portal/access-and-approvals/teams.md
   - app/dev-portal/access-and-approvals/index.md
   - app/konnect/dev-portal/access-and-approval/manage-teams.md

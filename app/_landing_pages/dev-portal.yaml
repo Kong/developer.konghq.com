@@ -71,13 +71,13 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Allow developers to register apps
+              title: Developer self-service and app registration
               description: |
                 Configure application registration and role-based access for developers.
                 Grant or revoke access for developers to register applications and acquire credentials.
               icon: /assets/icons/document-list.svg
               cta:
-                url: "/dev-portal/application-registration/"
+                url: "/dev-portal/self-service/"
 
 
   - header:
@@ -198,8 +198,9 @@ rows:
               title: Self-service developer and application registration
               description: |
                 Enable self-service registration flows for developers and applications using authentication strategies and {{site.konnect_short_name}} application auth.
+                Approve and manage developer registrations and applications for the {{site.konnect_short_name}} Dev Portal.
               cta:
-                url: "/dev-portal/application-registration/"
+                url: "/dev-portal/self-service/"
       - blocks:
           - type: card
             config:
@@ -211,21 +212,13 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Developer and application approvals
-              description: |
-                Approve and manage developer registrations and applications for the {{site.konnect_short_name}} Dev Portal.
-              cta:
-                url: "/dev-portal/access-and-approval/"
-  - column_count: 3
-    columns:
-      - blocks:
-          - type: card
-            config:
               title: Authentication strategies
               description: |
                 Learn how to set up authentication strategies for Dev Portal.
               cta:
                 url: "/dev-portal/auth-strategies/"
+  - column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
