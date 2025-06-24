@@ -7,6 +7,12 @@ related_resources:
     url: /kubernetes-ingress-controller/observability/prometheus/
   - text: Prometheus plugin
     url: /plugins/prometheus/
+  - text: Collect {{site.base_gateway}} metrics with the Prometheus plugin
+    url: /how-to/collect-metrics-with-prometheus/
+  - text: Collect metrics with Datadog and the Prometheus plugin
+    url: /how-to/collect-metrics-with-datadog-and-prometheus-plugin/
+  - text: "{{site.base_gateway}} monitoring and metrics"
+    url: /gateway/monitoring/
 
 permalink: /kubernetes-ingress-controller/observability/prometheus-grafana/
 breadcrumbs:

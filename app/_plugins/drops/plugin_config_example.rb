@@ -64,6 +64,10 @@ module Jekyll
         @weight ||= example.fetch('weight')
       end
 
+      def min_version
+        @min_version ||= example['min_version'] || @plugin.send(:min_version)
+      end
+
       def entity_examples # rubocop:disable Metrics/MethodLength
         @entity_examples ||= targets.map do |target|
           EntityExampleBlock::Plugin.new(

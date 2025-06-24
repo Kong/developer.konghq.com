@@ -25,7 +25,7 @@ related_resources:
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
   - text: Dev Portal security settings
-    url: /dev-portal/security/
+    url: /dev-portal/security-settings/
 ---
 
 Publishing an API makes it available to one or more Dev Portals. 
@@ -67,7 +67,7 @@ Change the **Visibility** or **Authentication Strategy** of an API that has been
 Visibility, authentication strategies, and user authentication can be independently configured to maximize flexibility in how you publish your API to a given developer audience. 
 
 {:.info}
-> * The visibility of [pages](/dev-portal/custom-pages/) and [menus](/dev-portal/portal-customization/) is configured independently from APIs, maximizing your flexibility.
+> * The visibility of [pages](/dev-portal/pages-and-content/) and [menus](/dev-portal/portal-customization/) is configured independently from APIs, maximizing your flexibility.
 > * {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
 The following table describes various Dev Portal access control scenarios and their settings:

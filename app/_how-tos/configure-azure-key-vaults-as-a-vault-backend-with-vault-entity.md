@@ -28,6 +28,7 @@ tags:
   - azure
 search_aliases:
   - key vault
+  - Azure
 
 tldr:
     q: How can I access Azure Key Vaults secrets in {{site.base_gateway}}?
@@ -42,6 +43,8 @@ faqs:
     a: You can only reference secrets. Azure Key Vaults keys and certificates are not supported.
 prereqs:
   gateway:
+    - name: AZURE_CLIENT_SECRET
+  konnect:
     - name: AZURE_CLIENT_SECRET
   cloud:
     azure:

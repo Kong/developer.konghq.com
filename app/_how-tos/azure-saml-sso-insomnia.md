@@ -81,15 +81,17 @@ rows:
 {% capture table2 %}
 {% table %}
 columns:
-  - title: You need...
-    key: need
-  - title: Use the following plugin policy strategies...
-    key: strategy
+  - title: Azure setting
+    key: setting
+  - title: Value
+    key: value
 rows:
-  - need: "A high level of accuracy in critical transactions. An example is a transaction with financial consequences."
-    strategy: "`cluster` or `redis`"
-  - need: "Protect backend services from overloading caused by specific users or attacks. High accuracy is not as relevant."
-    strategy: "`local`"
+  - setting: "Name"
+    value: "email"
+  - setting: "Source"
+    value: "Attribute"
+  - setting: "Source attribute"
+    value: "user.email"
 {% endtable %}
 {% endcapture %}
 

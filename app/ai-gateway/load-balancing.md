@@ -149,7 +149,10 @@ flowchart LR
 
 #### Retry and fallback configuration
 
-The AI Gateway load balancer offers several configuration options to fine-tune request retries, timeouts, and failover behavior:
+The AI Gateway load balancer supports fine-grained control over failover behavior. Use [`failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria) to define when a request should retry on the next upstream target. By default, retries occur on `error` and `timeout`. An `error` means a failure occurred while connecting to the server, forwarding the request, or reading the response header. A `timeout` indicates that any of those stages exceeded the allowed time.
+
+You can add more criteria to adjust retry behavior as needed:
+
 
 <!--vale off-->
 {% table %}

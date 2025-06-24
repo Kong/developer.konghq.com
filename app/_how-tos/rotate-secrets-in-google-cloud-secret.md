@@ -55,6 +55,8 @@ prereqs:
         - example-route
   gateway:
     - name: GCP_SERVICE_ACCOUNT
+  konnect:
+    - name: GCP_SERVICE_ACCOUNT
   inline:
     - title: Google Cloud Secret Manager
       position: before
@@ -85,7 +87,7 @@ prereqs:
           Set the environment variables needed to authenticate to Google Cloud:
           ```sh
           export GCP_SERVICE_ACCOUNT=$(cat /path/to/file/service-account.json)
-          export MISTRAL_API_KEY="Bearer <Mistral-API-key>"
+          export MISTRAL_API_KEY="Bearer YOUR-MISTRAL-API-KEY"
           ```
 
           Note that the `GCP_SERVICE_ACCOUNT` variables **must** be passed when creating your data plane container.
