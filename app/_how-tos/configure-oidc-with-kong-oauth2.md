@@ -156,6 +156,7 @@ In this example:
 
 Retrieve the token from the OAuth token endpoint:
 
+<!-- vale off -->
 {% validation request-check %}
 insecure: true
 method: POST
@@ -172,6 +173,8 @@ extract_body:
     variable: ACCESS_TOKEN
 status_code: 200
 {% endvalidation%}
+<!-- vale on -->
+
 
 You should see an `access-token` in the response.
 
@@ -185,6 +188,7 @@ export ACCESS_TOKEN='YOUR_ACCESS_TOKEN'
 
 Now, validate the setup by accessing the `example-route` Route and passing the bearer token you received from the Kong OAuth plugin:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
@@ -193,5 +197,7 @@ display_headers: true
 headers:
   - "Authorization: Bearer $ACCESS_TOKEN"
 {% endvalidation %}
+<!-- vale on -->
+
 
 {% include_cached plugins/oidc/cache.md %}

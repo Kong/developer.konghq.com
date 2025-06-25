@@ -97,6 +97,7 @@ variables:
 
 Use the applications's client credentials to generate a token:
 
+<!-- vale off -->
 {% validation request-check %}
 on_prem_url: https://localhost:8443
 url: '/anything/oauth2/token'
@@ -114,6 +115,8 @@ extract_body:
   - name: access_token
     variable: TOKEN
 {% endvalidation %}
+<!-- vale on -->
+
 
 Export the token to an environment variable:
 ```sh
@@ -123,9 +126,12 @@ export TOKEN={access_token}
 ## Validate
 
 To validate that the configuration works as expected, send a request to the `/anything` Route using the token we generated:
+
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
   - 'Authorization: Bearer $TOKEN'
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
