@@ -29,11 +29,11 @@ prereqs:
             * `USER_TOKEN`: The authentication token to be presented to the Admin API.
             For example:
 
-            {% validation env-variables %}
+            {% env_variables %}
             KONG_ADMIN_TOKEN: kong
             ADMIN_NAME: tim
             USER_TOKEN: my-admin-token
-            {% endvalidation %}
+            {% endenv_variables %}
 
         icon_url: /assets/icons/file.svg
 
