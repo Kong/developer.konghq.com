@@ -823,9 +823,45 @@ looking up values from the input:
 
 ##### Recipe: merging header objects
 
-This `jq` filter merges client request headers with some static header values.
-Header name casing is preserved when updating any header that was originally set
-by the client.
+These examples take in client request headers and update them from a set of
+pre-defined values.
+
+The [HTTP specification RFC](https://datatracker.ietf.org/doc/html/rfc2616)
+defines header names to be case-insensitive, so in almost all cases it is
+sufficient to simply normalize header names to lowercase for ease of merging the
+two objects:
+
+```yaml
+- name: header_updates
+  type: static
+  values:
+    X-Foo: "123"
+    X-Custom: "my header"
+    X-Multi:
+      - "first"
+      - "second"
+
+- name: merged_headers
+  type: jq
+  inputs:
+    original: request.headers
+    updates: header_updates
+  jq: |
+    (.original | with_entries(.key |= ascii_downcase))
+    *
+    (.updates | with_entries(.key |= ascii_downcase))
+
+- name: api
+  type: call
+  url: "https://example.com/"
+  inputs:
+    headers: merged_headers
+```
+
+However, when dealing with a service/upstream/API that is not fully compliant
+with the HTTP spec, it is sometimes necessary to preserve original header name
+casing. This is much more involved to achieve, but by the magic of `jq` it is
+fully possible:
 
 ```yaml
 - name: header_updates
