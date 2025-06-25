@@ -83,7 +83,7 @@ cleanup:
 
 ## Reconfigure the AI Proxy Advanced plugin
 
-Now we enable detailed logging for all configured models in the AI Proxy Advanced plugin. This captures request/response payloads and performance statistics. We then scrape those statistics using the Prometheus plugin for monitoring and analysis. Below is an example configuration that sets logging options to true for multiple models.
+Now we enable detailed logging for all configured models in the AI Proxy Advanced plugin. This captures request/response payloads and performance statistics. We then scrape those statistics using the Prometheus plugin for monitoring and analysis. Apply the configuration below to enable logging for both used models.
 
 {% entity_examples %}
 entities:
