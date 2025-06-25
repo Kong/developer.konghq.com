@@ -45,8 +45,6 @@ faqs:
       To retrieve your client secret, you must access the credentials stored in the service or plugin configuration. 
       If the secret was not saved securely by the client application, you may need to generate a new secret through the Kong Admin API or relevant client management interface.
 
-
-
 ---
 Kong Identity enables customers to use Konnect to generate, authenticate and authorize API access. Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. Kong Identity can be used with the following Kong plugins today:
   1. OpenID Connect plugin
@@ -75,9 +73,8 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
-
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/auth-servers
 status_code: 201
 method: POST
@@ -88,12 +85,8 @@ body:
   name: Appointments Dev
   audience: http://myhttpbin.dev
   description: auth server for Appointment's dev environment
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
-
-
-
-
 
 ## Use cases
 Kong Identity can be used with multiple use cases with {{site.base_gateway}} in {{site.konnect_short_name}}.
