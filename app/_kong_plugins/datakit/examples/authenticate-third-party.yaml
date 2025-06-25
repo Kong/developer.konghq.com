@@ -1,7 +1,7 @@
 description: |
   Use internal auth within your ecosystem to inject request headers before proxying a request.
 
-title: Authenticate {{site.base_gateway}} to a third-party service
+title: Authenticate Kong to a third-party service
 weight: 900
 
 config:

@@ -44,8 +44,8 @@ It sends requests to third-party APIs, then uses the response data to seed infor
 Datakit allows you to create an API workflow, which can include:
 * Making calls to third party APIs
 * Transforming or combining API responses
-* Modifying client requests and service responses
-* Adjusting Kong entity configuration
+* Modifying client requests and upstream service responses
+* Adjusting {{site.base_gateway}} entity configuration
 * Returning directly to users instead of proxying
 
 ## Use cases for Datakit
@@ -71,30 +71,26 @@ rows:
 
 ## How does the Datakit plugin work?
 
+The following sections describes what Datakit nodes are and how they work.
+
 ### The `node` object
 
 The core component of Datakit is the `node` object. A `node` represents some
-task that consumes input data, produces output data, or a combination of the
-two. Datakit nodes can:
+task that consumes input data, produces output data, or a combination of the two. 
+Datakit nodes can:
 
-* read client request attributes
-* send an external HTTP request
-* modify the response from an upstream before sending it to the client
+* Read client request attributes
+* Send an external HTTP request
+* Modify the response from an upstream before sending it to the client
 
-Most of these tasks can be performed in isolation by an existing plugin. The
-power of Datakit stems from being able to string together an execution plan from
-several nodes, connecting the output from one into the input of another:
+Most of these tasks can be performed in isolation by an existing plugin. 
+Datakit can string together an execution plan from several nodes, connecting the output from one into the input of another:
 
-* read client request attributes _**and use them to craft an external HTTP
-    request**_
-* send an external HTTP request _**and use the response to augment the service
-    request before proxying upstream**_
-* modify the response from an upstream before sending it to the client
-    _**using a custom jq filter to enrich the response with data from a
-    third-party API**_
+* Read client request attributes _and_ use them to craft an external HTTP request
+* Send an external HTTP request _and_ use the response to augment the service request before proxying upstream
+* Modify the response from an upstream _then_ send it to the client using a custom jq filter to enrich the response with data from a third-party API
 
-The following diagram shows how Datakit can be used to combine two third-party
-API calls into one response:
+The following diagram shows how Datakit can be used to combine two third-party API calls into one response:
 
 <!--vale off-->
 {% mermaid %}
@@ -115,9 +111,12 @@ sequenceDiagram
 
 ### Node I/O
 
-A datakit node consumes data via `inputs` and emits data via `outputs`.
+A Datakit node consumes data via `inputs` and emits data via `outputs`.
 Connecting the output of one node to the input of another is accomplished by
-referencing the node's unique `name` in the plugin's configuration:
+referencing the node's unique `name` in the plugin's configuration.
+
+For example, the following snippet establishes a connection from `GET_PROPERTY -> FILTER`, where
+`GET_PROPERTY` is the source node, and `FILTER` is the target node:
 
 ```yaml
 # fetch the value of `my_property` from the shared request context, if it exists
@@ -132,10 +131,7 @@ referencing the node's unique `name` in the plugin's configuration:
   input: GET_PROPERTY
 ```
 
-This establishes a connection from `GET_PROPERTY -> FILTER`, where
-`GET_PROPERTY` is the source node, and `FILTER` is the target node.
-
-Connections can also be reflexively defined in terms of the source node. This
+Connections can also be reflexively defined in terms of the source node. The following
 configuration will yield an execution plan with the same `GET_PROPERTY -> FILTER`
 connection:
 
@@ -153,8 +149,8 @@ connection:
 ```
 
 Some nodes have structured, object-like inputs and outputs that can be
-referenced by their field name in an I/O label. Note how this allows sending
-different outputs of `API` to entirely different nodes:
+referenced by their field name in an I/O label. For example, 
+the following configuration allows sending different outputs of `API` to entirely different nodes:
 
 ```yaml
 - name: API
@@ -213,7 +209,7 @@ connected to one output. This configuration is okay:
   input: GET_FOO
 ```
 
-...but this configuration will yield an error:
+But this configuration will yield an error:
 
 ```yaml
 - name: GET_FOO
@@ -255,7 +251,7 @@ alternate version of that last configuration that actually works:
 ```
 
 Connecting the output of a node to the input of another node establishes a
-dependency relationship. Datakit always ensures that a node does not run until
+dependency relationship. Datakit always ensures that a node doesn't run until
 its dependencies are satisfied, which means that nodes don't even need to be in
 the right order in your configuration:
 
@@ -278,56 +274,51 @@ the right order in your configuration:
   property: kong.ctx.shared.bar
 ```
 
-While that example isn't particularly useful for crafting your datakit
-configuration, it serves to demonstrate an important facet of datakit's runtime
-behavior: **order of execution is NOT strictly defined by your configuration.**
-As of this writing, configuration order _is_ a facet in determining execution
-order, but in a general sense it is unsound to rely on your configuration to
-dictate the exact order in which nodes will be executed, as datakit can and will
-re-order nodes to optimize its execution plan.
+**Order of execution is NOT strictly defined by your configuration.**
+
+Configuration order _is_ a facet in determining execution order, 
+but don't rely on your configuration to dictate the exact order in which nodes will be executed, 
+as Datakit can and will re-order nodes to optimize its execution plan.
 
 #### Data types, validation, and connection semantics
 
-A key component of Datakit is its type system. As of this writing, Datakit types
-are the following:
+A key component of Datakit is its type system. Datakit supports the following types:
 
-* primitive, scalar types like `string`s and `number`s
-* non-scalar container types:
-    * `object` - statically-defined, struct-like values)
-    * `map` - dynamic string keys and static or dynamically typed values
-* dynamic types:
-    * `any` - values whose type may not be known until runtime
+* Primitive, scalar types like `string`s and `number`s
+* Non-scalar container types:
+    * `object`: Statically-defined, struct-like values
+    * `map`: Dynamic string keys and static or dynamically typed values
+* Dynamic types:
+    * `any`: Values whose type may not be known until runtime
 
-Datakit performs as much validation at "config-time" (when the plugin is created
+Datakit performs validation at "config-time" (when the plugin is created
 or updated via the admin API) by inspecting the type info on either side of a
 connection, falling back to runtime checks when necessary:
 
-* if the input and output have the same type (e.g. `string -> string`, `any ->
-    any`), connection is permitted since data compatibility at runtime is
+* If the input and output have the same type (for example, `string -> string`, 
+`any -> any`), the connection is permitted since data compatibility at runtime is
     guaranteed
-* if the input type can be converted to the output type, runtime compatibility
-    is not guaranteed, but connection is permitted with an additional runtime
-    check to ensure that a node does not receive invalid input data. Examples:
+* If the input type can be converted to the output type, runtime compatibility
+  isn't guaranteed, but the connection is permitted with an additional runtime
+    check to ensure that a node doesn't receive invalid input data. For example:
     * `string -> number`
     * `number -> string`
     * `any -> number`
     * `any -> string`
     * `any -> object`
     * `any -> map`
-* if the input type and output type are known to be incompatible (e.g.
-    `number -> object`), connection is not permitted
+* If the input type and output type are known to be incompatible (for example,
+    `number -> object`), the connection isn't permitted
 
-As seen in prior examples, connection labels can be in the form of `{node_name}`
-or `{node_name}.{field_name}`. Connections without a field name are referred to
-in this document node-wise or `$self` connections.
+Connection labels can be in the form of `{node_name}` or `{node_name}.{field_name}`. 
+Connections without a field name are referred to in this reference as "node-wise" or `$self` connections.
 
 ##### object -> object
 
-For this type of connection, Datakit iterates over each field that the nodes
-have in common and connects them. If the nodes have no fields in common, a
-validation error will be raised.
+For this type of connection, Datakit iterates over each field that the nodes have in common and connects them. 
+If the nodes have no fields in common, a validation error will be raised.
 
-Example:
+For example:
 
 ```yaml
 - name: api_call
@@ -352,37 +343,31 @@ All of the `request` node outputs directly map to `api_call` node inputs, but in
 * `api_call.status` is ignored because `service_request` has no `status` input
 * `service_request.query` is ignored because `api_call` has no `query` output
 
-The same intent can be expressed explicitly by setting individual fields on the
-`inputs` attribute:
+The same intent can be expressed explicitly by setting individual fields on the `inputs` attribute:
 
-```diff
---- implicit
-+++ explicit
-@@ -2,5 +2,10 @@
-   type: call
-   url: "https://example.com/"
-   method: POST
--  input: request
--  output: service_request
-+  inputs:
-+    body: request.body
-+    query: request.query
-+    headers: request.headers
-+  outputs:
-+    body: service_request.body
-+    headers: service_request.headers
+```yaml
+- type: call
+  url: "https://example.com/"
+  method: POST
+  inputs:
+    body: request.body
+    query: request.query
+    headers: request.headers
+  outputs:
+    body: service_request.body
+    headers: service_request.headers
 ```
 
 {:.warning}
+> Be careful when using this type of connection.
 Implicit `object` connections like this one are dynamically expanded after
 reading the configuration, so a newly-added field in a subsequent Datakit
 release may be inherited by a configuration from a previous version and lead to
-unintended behavior changes. Therefore, this type of connection should be used
-with care.
+unintended behavior changes. 
 
 ##### object -> map
 
-This type of connection is currently not permitted.
+This type of connection is not permitted.
 
 ##### object -> any
 
@@ -398,9 +383,11 @@ keys `body`, `query`, and `headers`:
 ```
 
 {:.warning}
-This use case comes with the same warning as the `object -> object` example: any
-field changes (i.e. a new `request` field) in subsequent Datakit releases will
-be observed by this connection, which may cause its output to change.
+> Be careful when using this type of connection.
+Implicit `object` connections like this one are dynamically expanded after
+reading the configuration, so a newly-added field in a subsequent Datakit
+release may be inherited by a configuration from a previous version and lead to
+unintended behavior changes. 
 
 ##### * -> any
 
@@ -412,7 +399,7 @@ runtime the data is copied as-is.
 Connections from `any` output types are permitted under almost all conditions
 and incur a runtime type conversion check (unless the target type is also `any`).
 
-Of note, a node-wise `any -> object` or `any -> map` connection conflicts with
+A node-wise `any -> object` or `any -> map` connection conflicts with
 any field-level connections:
 
 ```yaml
@@ -425,7 +412,7 @@ any field-level connections:
 - name: get-bar
   type: property
   property: kong.ctx.shared.bar
-  # Datakit rejects this connection because it cannot validate that it will not
+  # Datakit rejects this connection because it can't validate that it will not
   # overlap with `get-foo -> response`
   output: response.body
 ```
@@ -543,21 +530,21 @@ Send an HTTP request and retrieve the response.
 
 #### Input ports
 
-* `body`: request body
-* `headers`: request headers
-* `query`: key-value pairs to encode as the request query string
+* `body`: Request body
+* `headers`: Request headers
+* `query`: Key-value pairs to encode as the request query string
 
 #### Output ports
 
-* `body`: the response body
-* `headers`: the response headers
-* `status`: the HTTP status code of the response
+* `body`: The response body
+* `headers`: The response headers
+* `status`: The HTTP status code of the response
 
 #### Configuration attributes
 
-* `url` (**required**): the URL
-* `method`: the HTTP method (default is `GET`)
-* `timeout`: the dispatch timeout, in milliseconds
+* `url` (**required**): The URL
+* `method`: The HTTP method (default is `GET`)
+* `timeout`: The dispatch timeout, in milliseconds
 
 #### Examples
 
@@ -603,7 +590,7 @@ depend on it). Multiple call nodes are executed concurrently when no dependency
 order enforces it.
 
 In this example, both `CALL_FOO` and `CALL_BAR` will be started as soon as
-possible, and then Datakit will block until both have finished in order to run
+possible, and then Datakit will block until both have finished to run
 `JOIN`:
 
 ```yaml
@@ -632,8 +619,8 @@ not valid JSON.
 
 #### Limitations
 
-Due to platform limitations, the `call` node cannot be executed after proxying a
-request, so attempting to configure the node using outputs from the service
+Due to platform limitations, the `call` node can't be executed after proxying a
+request, so attempting to configure the node using outputs from the upstream service
 response will yield an error:
 
 ```yaml
@@ -735,7 +722,7 @@ User-defined. A `jq` filter script can produce _any_ type of data:
 ```
 
 It's impossible for Datakit to know ahead of time what kind of data `jq` will
-emit, so Datakit utilizes runtime checks when the output of `jq` is connected to
+emit, so Datakit uses runtime checks when the output of `jq` is connected to
 another node's input. It's important to carefully test and validate your Datakit
 configurations to avoid this case:
 
@@ -753,7 +740,7 @@ configurations to avoid this case:
     headers: HEADERS
 ```
 
-This is also why the `jq` node does not allow explicitly referencing individual
+This is also why the `jq` node doesn't allow explicitly referencing individual
 fields with `outputs` at config-time:
 
 ```yaml
@@ -762,7 +749,7 @@ fields with `outputs` at config-time:
   jq: |
     "this is completely opaque to Datakit"
 
-  # Datakit will reject this configuration because it cannot confirm that the
+  # Datakit will reject this configuration because it can't confirm that the
   # output of HEADERS is an object or has a `body` field
   outputs:
     body: EXIT.body
@@ -776,20 +763,20 @@ fields with `outputs` at config-time:
 * `jq`: the jq script to execute when the node is triggered.
 
 
-#### A word of warning: handling HTTP headers in jq
+#### Handling HTTP headers in jq
 
-In order to enable a high level of transparency and compatibility when
+To enable a high level of transparency and compatibility when
 communicating with external services, `headers` outputs in Datakit always
 preserve the original case of header names. While HTTP-centric nodes within
 Datakit are careful to account for this and perform header lookups and
 transformations in a case-insensitive manner, `jq` at its core is a library for
 operating upon JSON data, and JSON object keys are strictly case-sensitive.
 
-It is imperative to be mindful of this fact when handling headers in a `jq`
-filter. Failure to do so can result in buggy, error-prone behavior. Example:
+Be mindful of this when handling headers in a `jq` filter to avoid buggy, error-prone behavior. 
+For example:
 
 ```yaml
-# adds the `X-Extra` header to the service request if not set by the client
+# adds the `X-Extra` header to the upstream service request if not set by the client
 - name: ADD_HEADERS
   type: jq
   input: request.headers
@@ -801,15 +788,14 @@ filter. Failure to do so can result in buggy, error-prone behavior. Example:
 ```
 
 This filter will function correctly if the client sets the `X-Extra` header or
-omits it entirely, but it will not have the intended effect if the client sets
+omits it entirely, but it won't have the intended effect if the client sets
 the header `X-EXTRA` or `x-extra`.
 
-Thankfully, `jq` is powerful enough to let us write a robust filter that handles
-this condition. This implementation normalizes header names to lowercase before
-looking up values from the input:
+`jq` lets you write a robust filter that handles this condition. 
+The following implementation normalizes header names to lowercase before looking up values from the input:
 
 ```yaml
-# adds the `X-Extra` header to the service request if not set by the client
+# adds the `X-Extra` header to the upstream service request if not set by the client
 - name: ADD_HEADERS
   type: jq
   input: request.headers
@@ -827,8 +813,8 @@ These examples take in client request headers and update them from a set of
 pre-defined values.
 
 The [HTTP specification RFC](https://datatracker.ietf.org/doc/html/rfc2616)
-defines header names to be case-insensitive, so in almost all cases it is
-sufficient to simply normalize header names to lowercase for ease of merging the
+defines header names to be case-insensitive, so in most cases it's 
+enough to normalize header names to lowercase for ease of merging the
 two objects:
 
 ```yaml
@@ -858,10 +844,9 @@ two objects:
     headers: merged_headers
 ```
 
-However, when dealing with a service/upstream/API that is not fully compliant
-with the HTTP spec, it is sometimes necessary to preserve original header name
-casing. This is much more involved to achieve, but by the magic of `jq` it is
-fully possible:
+However, when dealing with a upstream service or API that isn't fully compliant
+with the HTTP spec, it might be necessary to preserve original header name
+casing. For example:
 
 ```yaml
 - name: header_updates
@@ -902,7 +887,7 @@ fully possible:
 
 #### Examples
 
-Coerece the client request body to an object:
+Coerce the client request body to an object:
 
 ```yaml
 - name: BODY
@@ -942,8 +927,8 @@ a proxied response.
 
 #### Inputs
 
-* `body`: body to use in the early-exit response.
-* `headers`: headers to use in the early-exit response.
+* `body`: Body to use in the early-exit response.
+* `headers`: Headers to use in the early-exit response.
 
 #### Outputs
 
@@ -951,8 +936,8 @@ None.
 
 #### Configuration attributes
 
-* `status`: the HTTP status code to use in the early-exit response (default is
-  200).
+* `status`: The HTTP status code to use in the early-exit response (default is
+  `200`).
 
 #### Examples
 
@@ -972,10 +957,10 @@ Make an HTTP request and send the response directly to the client:
 
 Get and set {{site.base_gateway}} host and request properties.
 
-Whether a **get** or **set** operation is performed depends upon the node inputs:
+Whether a `get` or `set` operation is performed depends upon the node inputs:
 
-* If an input port is configured, **set** the property
-* If no input port is configured, **get** the property and map it to the output
+* If an input port is configured, `set` the property
+* If no input port is configured, `set` the property and map it to the output
 
 #### Inputs
 
@@ -994,7 +979,7 @@ No individual field-level inputs are permitted:
 - name: STORE_REQUEST_BY_FIELD
   type: property
   property: kong.ctx.shared.my_request
-  # error! property input does not allow field access
+  # error! property input doesn't allow field access
   inputs:
     body: request.body
 ```
@@ -1010,24 +995,23 @@ This node produces the `$self` output.
   output: response.body
 ```
 
-Field-level output connections are currently not supported, even if the output
-data has known fields:
+Field-level output connections are not supported, even if the output data has known fields:
 
 ```yaml
 - name: GET_ROUTE_ID
   type: property
   property: kong.router.route
-  # error! property output does not allow field access
+  # error! property output doesn't allow field access
   outputs:
     id: response.body
 ```
 
 #### Configuration attributes
 
-* `property` (**required**): the name of the property
-* `content_type`: the expected mime type of the property value. When set to
-    `application/json`, **set** operations will JSON-encode input data before
-    writing it, and **get** operations will JSON-decode output data after
+* `property` (**required**): The name of the property
+* `content_type`: The expected mime type of the property value. When set to
+    `application/json`, `set` operations will JSON-encode input data before
+    writing it, and `get` operations will JSON-decode output data after
     reading it. Otherwise, this setting has no effect.
 
 #### Supported properties
@@ -1143,7 +1127,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-The following properties support **set** operations:
+The following properties support `set` operations:
 
 <!--vale off-->
 {% table %}
@@ -1165,7 +1149,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-The following properties support **get** and **set** operations:
+The following properties support `get` and `set` operations:
 
 <!--vale off-->
 {% table %}
@@ -1190,7 +1174,7 @@ rows:
 ### `static` node
 
 Emits static values to be used as inputs for other nodes. If you are wondering
-"how do I hard-code some known value for an input?" then the static node is for
+"how do I hardcode some known value for an input?", then the static node is for
 you.
 
 #### Inputs
@@ -1223,9 +1207,9 @@ This node produces outputs for each item in its `values` attribute:
   input: CALL_INPUTS
 ```
 
-The static nature of these values comes in handy, because Datakit can eagerly
-validate them when creating/updating the plugin configuration. Attempting to
-create a plugin with the following configuration will yield an admin API
+The static nature of these values comes in handy, because Datakit can
+validate them when creating or updating the plugin configuration. Attempting to
+create a plugin with the following configuration will yield an Admin API
 validation error _instead_ of bubbling up at runtime:
 
 ```yaml
@@ -1243,7 +1227,7 @@ validation error _instead_ of bubbling up at runtime:
 
 #### Configuration attributes
 
-* `values` (**required**): a mapping of string keys to arbitrary values
+* `values` (**required**): A mapping of string keys to arbitrary values
 
 #### Examples
 
@@ -1305,7 +1289,7 @@ Set common request headers for different API requests:
 Datakit includes support for debugging your configuration.
 
 {:.warning}
-Enabling the `debug` option in Datakit is considered unsafe for production
+> Enabling the `debug` option in Datakit is considered unsafe for production
 environments, as it can cause arbitrary information to leak into client
 responses.
 
@@ -1322,10 +1306,12 @@ client:
 }
 ```
 
-The entire error is included in the `error.log` file for review:
+You can find the entire error in the {{site.base_gateway}} `error.log` file:
 
 <!--vale off-->
+```
 > 2025/06/24 10:55:32 [error] 917449#0: *1292 [lua] runtime.lua:406: handler(): node #1 (API) failed with error: "non-2XX response code: 403", client: 127.0.0.1, server: kong, request: "GET / HTTP/1.1", host: "test-010.datakit.test", request_id: "f5e07609d55bd66508c8315b8cf6583a"
+```
 <!--vale on-->
 
 For quicker feedback during local development and testing, the error can also be
@@ -1357,7 +1343,7 @@ a full report in the client response.
 
 Here's an example where the `API` node failed due to its endpoint returning a
 `403` status code. The failure caused all pending/running node tasks to be
-canceled and resulted in an execution plan error ("PLAN_ERROR"):
+canceled and resulted in an execution plan error (`PLAN_ERROR`):
 
 ```json
 {
@@ -1577,14 +1563,14 @@ canceled and resulted in an execution plan error ("PLAN_ERROR"):
 }
 ```
 
-Be aware that the tracing output is emitted _instead of_ any other pending client
+The tracing output is emitted _instead of_ any other pending client
 response body (originating from Datakit or elsewhere), so there are limits to
-what can be observed in the trace. The `response` node, for instance, cannot
+what can be observed in the trace. The `response` node, for instance, can't
 execute fully when tracing is enabled and will appear in the tracing report with
 a result of `NODE_SKIPPED`.
 
 {:.warning}
-The contents of the tracing report are unstable and intended for human
+> The contents of the tracing report are unstable and intended for human
 consumption to aid development and testing. Backwards-incompatible changes to
 the report format _may_ be included with any new release of
 {{site.base_gateway}}.
