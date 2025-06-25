@@ -6,25 +6,29 @@ weight: 900
 
 config:
   nodes:
-  # create a new header map from the client request headers, adding an
-  # additional `X-My-API-Header` header with the value of the `foo` query
-  # parameter (or the string "default value" if unset)
+  # set some additional headers to add to the API call
   - name: HEADERS
+    type: static
+    values:
+      X-API-Header-One: foo
+      X-API-Header-Two: bar
+
+  # create a new header map, prefixing each request header with `X-Request-`
+  # and merging in the static headers from HEADERS
+  - name: MERGE_HEADERS
     type: jq
     inputs:
-      query: request.query
-      headers: request.headers
+      static: HEADERS
+      request: request.headers
     jq: |
-      .headers * {
-        "X-My-API-Header": (.foo // "default value"),
-      }
+      .static * (.request | with_entries(.key = "X-Request-" + .key))
 
   # send the updated request headers to an external API
   - name: API
     type: call
     url: https://example.com/
     inputs:
-      headers: HEADERS
+      headers: MERGE_HEADERS
 
   # send a response to the client with the API headers + body
   - name: EXIT
