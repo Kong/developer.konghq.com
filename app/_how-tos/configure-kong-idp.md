@@ -72,7 +72,7 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: "Scope"
+  name: "openid"
   description: "Scope Description"
   default: false
   include_in_metadata: false
