@@ -960,7 +960,7 @@ Get and set {{site.base_gateway}} host and request properties.
 Whether a `get` or `set` operation is performed depends upon the node inputs:
 
 * If an input is connected, `set` the property
-* If no input is connected, `set` the property and map it to the output
+* If no input is connected, `get` the property and map it to the output
 
 #### Inputs
 
