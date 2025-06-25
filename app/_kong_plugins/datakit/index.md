@@ -73,7 +73,7 @@ rows:
 
 The following sections describes what Datakit nodes are and how they work.
 
-### The `node` object
+### The node object
 
 The core component of Datakit is the `node` object. A `node` represents some
 task that consumes input data, produces output data, or a combination of the two. 
