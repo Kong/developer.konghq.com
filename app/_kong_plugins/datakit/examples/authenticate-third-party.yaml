@@ -22,7 +22,7 @@ config:
       headers: STATIC_INPUTS.headers
       query: request.query
     jq: |
-      .static * {
+      .headers * {
         "X-Api-Key": (.query.api_key // "none")
       }
 
