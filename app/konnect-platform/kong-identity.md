@@ -79,7 +79,6 @@ url: /v1/auth-servers
 status_code: 201
 method: POST
 headers:
-  - 'Authorization: Bearer $KONNECT_TOKEN'
   - 'Content-Type: application/json'
 body:
   name: Appointments Dev
