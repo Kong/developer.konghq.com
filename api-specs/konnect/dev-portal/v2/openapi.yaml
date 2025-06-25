@@ -1752,11 +1752,7 @@ components:
         - $ref: '#/components/schemas/PortalAuthStrategyKeyAuth'
         - $ref: '#/components/schemas/PortalAuthStrategyClientCredentials'
     Scopes:
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        The granted scopes for the application. Will only be included if supported by the application's auth strategy.
+      description: The granted scopes for the application. Will only be included if supported by the application's auth strategy.
       type: array
       items:
         type: string
