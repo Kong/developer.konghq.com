@@ -83,6 +83,17 @@ You no longer need to specify the Gateway Service to associate with an implement
 
 The following endpoints no longer include `application_count` in the response body:
 
-* `/v3/portals/{portalId}/developers`  
-* `/v3/portals/{portalId}/developers/{developerId}`
+* GET `/v3/portals/{portalId}/developers`  
+* GET `/v3/portals/{portalId}/developers/{developerId}`
 
+## Portal logo and favicon no longer use filename
+
+Portal logo and favicon asset endpoints won't accept `filename` in the request bodies.
+
+* PUT `/v3/portals/{portalId}/assets/logo`
+* PUT `/portals/{portalId}/assets/favicon`
+
+## Move page and API documentation is now POST, not PUT
+
+* PUT `/v3/portals/{portalId}/pages/{pageId}/move` has changed to POST
+* PUT `/v3/apis/{apiId}/documents/{documentId}/move` has changed to POST
