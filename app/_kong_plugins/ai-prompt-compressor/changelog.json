@@ -1,1 +1,9 @@
-{}
+{
+  "3.11.0.0": [
+    {
+      "message": "Added a new plugin that compresses prompt information in requests before they are proxied by the AI Proxy or AI Proxy Advanced plugin.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}
