@@ -146,11 +146,11 @@ rows:
             Follow the tutorials below to learn how to secure, govern, and observe your MCP traffic using Kong AI Gateway.
           ctas:
             - text: Start securing your MCP traffic now
-              url: "/how-to/secure-mcp-traffic/"
+              url: "/mcp/secure-mcp-traffic/"
             - text: Take control of your MCP traffic governance
-              url: "/how-to/govern-mcp-traffic/unreleased/"
-            - text: Monitor your MCP traffic
-              url: "/mcp/"
+              url: "/mcp/govern-mcp-traffic/"
+            - text: Observe your MCP traffic
+              url: "/mcp/observe-mcp-traffic/"
     - blocks:
       - type: card
         config:
