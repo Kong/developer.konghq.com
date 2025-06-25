@@ -16,7 +16,7 @@ module Jekyll
 
       contents = super
       config = YAML.load(contents)
-      drop = Drops::EnvVariables.new(yaml: config)
+      drop = Drops::Validations::Base.make_for(id: 'env-variables', yaml: config)
 
       context.stack do
         context['config'] = drop
