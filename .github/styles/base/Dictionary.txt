@@ -130,6 +130,7 @@ crds
 created_at
 creationTimestamp
 cronjob
+CrowdStrike
 cryptocurrency
 Curity
 curity
