@@ -1,5 +1,5 @@
 ---
-title: "Part 1: Secure GitHub MCP Server Traffic with {{ site.base_gateway }} and Kong AI Gateway"
+title: "Part 1: Secure GitHub MCP Server traffic with {{ site.base_gateway }} and Kong AI Gateway"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -80,7 +80,7 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-To set up AI Proxy with OpenAI, specify the [model](https://platform.openai.com/docs/models) and set the appropriate authentication header. To make requests to a GitHub-hosted remote MCP server, we use the OpenAI `/responses` API endpoint—supported natively by Kong AI Gateway.
+To set up AI Proxy with OpenAI, specify the [model](https://platform.openai.com/docs/models) and set the appropriate authentication header. To make requests to a GitHub-hosted remote MCP server, we use the OpenAI `/responses` API endpoint—supported natively by Kong AI Gateway. This approach gives you conversational control over your Git repositories while adding a robust security layer through Kong AI Gateway’s capabilities.
 
 Using OpenAI’s `/responses` endpoint with Kong AI Gateway simplifies integration with remote MCP servers in agentic applications. Instead of routing each tool invocation through your backend, the gateway forwards model-generated requests directly to the MCP server. That server exposes standardized tools—which we’ll explore in the next tutorial. By supporting the OpenAI `/responses` API, Kong AI Gateway removes the need for custom glue code and enables direct, low-latency model-to-server calls.
 

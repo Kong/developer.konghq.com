@@ -360,3 +360,90 @@ message: Bad request
 {% endnavtab %}
 
 {% endnavtabs %}
+
+## Enforce local rate limiting
+
+Sure! Here’s the updated intro with that note included:
+
+---
+
+This configuration enables the `ai-rate-limiting-advanced` plugin to enforce strict rate limits on requests to the OpenAI provider. It uses a **local strategy** with a **fixed window** of 10 seconds, allowing only **1 request per 10-second window**. Requests exceeding this limit within the same window will receive a `429 Too Many Requests` response, effectively controlling request bursts and protecting backend resources.
+
+{:.info}
+> **Note:** This configuration is for showcase and testing purposes only. In a production environment, rate limits and window sizes should be adjusted to match actual usage patterns and performance requirements.
+
+
+{% entity_examples %}
+entities:
+    plugins:
+    - name: ai-rate-limiting-advanced
+      config:
+        strategy: local
+        window_type: fixed
+        llm_providers:
+        - name: openai
+        window_size:
+        - 10
+        limit:
+        - 1
+{% endentity_examples %}
+
+
+## Validate rate limiting
+
+We can test our simple rate limiting configuration by running the following script:
+
+```bash
+for i in {1..6}; do
+  echo -n "Request #$i — Status: "
+  http_status=$(curl -s -o /dev/null -w '%{http_code}' -X POST "http://localhost:8000/anything/v1/responses" \
+    -H "Accept: application/json" \
+    -H "apikey: hello_world" \
+    -H "Content-Type: application/json" \
+    --json "{
+      \"tools\": [
+        {
+          \"type\": \"mcp\",
+          \"server_label\": \"gitmcp\",
+          \"server_url\": \"https://api.githubcopilot.com/mcp/x/repos\",
+          \"require_approval\": \"never\",
+          \"headers\": {
+            \"Authorization\": \"Bearer $GITHUB_PAT\"
+          }
+        }
+      ],
+      \"input\": \"tools available with github mcp\"
+    }")
+  echo "$http_status"
+
+  if [[ $i == 3 ]]; then
+    sleep 10
+  else
+    sleep 1
+  fi
+done
+```
+
+Which should give the following output:
+
+```text
+Request #1 — Status: 200
+Request #2 — Status: 200
+Request #3 — Status: 429
+Request #4 — Status: 200
+Request #5 — Status: 429
+Request #6 — Status: 429
+```
+{:. no-copy-code  }
+
+Our rate limit configuration is allowing 2 requests per 60 seconds, which means that:
+
+- Requests #1 and #2 are allowed (status `200`).
+
+- Request #3 exceeds the limit (status `429`).
+
+- After sleeping 10 seconds, the window partially resets.
+
+- Request #4 falls into a new window and gets allowed (status `200`).
+
+- Requests #5 and #6 again exceed the limit (status `429`).
