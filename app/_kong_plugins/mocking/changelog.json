@@ -51,6 +51,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.19": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.0.0": [
     {
       "message": "Fixed an issue where the plugin threw an error when the arbitrary elements were defined in the path node.",

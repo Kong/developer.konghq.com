@@ -307,6 +307,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.20": [
+    {
+      "message": "Fixed an `500` error caused by receiving a JSON `null` from the request body when parsing bearer tokens or client IDs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.2.0": [
     {
       "message": "Fix the issue where `using_pseudo_issuer` does not work.",
