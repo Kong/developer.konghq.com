@@ -318,7 +318,7 @@ connection, falling back to runtime checks when necessary:
     `number -> object`), connection is not permitted
 
 As seen in prior examples, connection labels can be in the form of `{node_name}`
-or `{node_name}.{field_name}`. Connections without a field name are refered to
+or `{node_name}.{field_name}`. Connections without a field name are referred to
 in this document node-wise or `$self` connections.
 
 ##### object -> object
@@ -1260,7 +1260,9 @@ client:
 
 The entire error is included in the `error.log` file for review:
 
+<!--vale off-->
 > 2025/06/24 10:55:32 [error] 917449#0: *1292 [lua] runtime.lua:406: handler(): node #1 (API) failed with error: "non-2XX response code: 403", client: 127.0.0.1, server: kong, request: "GET / HTTP/1.1", host: "test-010.datakit.test", request_id: "f5e07609d55bd66508c8315b8cf6583a"
+<!--vale on-->
 
 For quicker feedback during local development and testing, the error can also be
 passed through to the client response by enabling the `debug` option in your
@@ -1511,7 +1513,7 @@ canceled and resulted in an execution plan error ("PLAN_ERROR"):
 }
 ```
 
-Be aware that the tracing output is emited _instead of_ any other pending client
+Be aware that the tracing output is emitted _instead of_ any other pending client
 response body (originating from Datakit or elsewhere), so there are limits to
 what can be observed in the trace. The `response` node, for instance, cannot
 execute fully when tracing is enabled and will appear in the tracing report with
