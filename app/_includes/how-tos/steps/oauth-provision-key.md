@@ -1,5 +1,5 @@
 Use `uuidgen` to generate a provision key for the OAuth 2.0 Authentication plugin:
 
-{% validation env-variables %}
+{% env_variables %}
 DECK_PROVISION_KEY: $(uuidgen)
-{% endvalidation %}
+{% endenv_variables %}

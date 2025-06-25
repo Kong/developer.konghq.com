@@ -65,12 +65,12 @@ expected:
 
 Set the variables needed to start {{site.base_gateway}} with Keyring enabled. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
 
-{% validation env-variables %}
+{% env_variables %}
 KONG_LICENSE_DATA: "LICENSE-CONTENTS-GO-HERE"
 KONG_KEYRING_ENABLED: on
 KONG_KEYRING_STRATEGY: cluster
 KONG_KEYRING_RECOVERY_PUBLIC_KEY: "$(cat public.pem | base64 -w 0)"
-{% endvalidation %}
+{% endenv_variables %}
 
 
 {:.info}
