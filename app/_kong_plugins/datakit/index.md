@@ -1058,7 +1058,7 @@ rows:
     type: "`string`"
 
   - property: "`kong.configuration.{key}`"
-    desc: Reads "`{key}` from the node configuration
+    desc: Reads `{key}` from the node configuration
     type: "`any`"
 
 {% endtable %}
