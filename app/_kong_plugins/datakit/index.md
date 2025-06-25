@@ -1219,21 +1219,6 @@ Set common request headers for different API requests:
   url: https://example.com/bar
   inputs:
     headers: HEADERS
-
-- name: BAZ_HEADERS
-  type: jq
-  inputs:
-    headers: HEADERS
-  jq: |
-    . * {
-      "X-Baz": "extra header for CALL_BAZ"
-    }
-
-- name: CALL_BAZ
-  type: call
-  url: https://example.com/baz
-  inputs:
-    headers: BAZ_HEADERS
 ```
 
 ## Debugging
