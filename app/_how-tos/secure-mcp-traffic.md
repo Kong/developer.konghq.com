@@ -1,5 +1,5 @@
 ---
-title: "Part 1: Secure GitHub MCP Server traffic with {{ site.base_gateway }} and Kong AI Gateway"
+title: "Secure GitHub MCP Server traffic with {{ site.base_gateway }} and Kong AI Gateway"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -9,7 +9,13 @@ related_resources:
   - text: Key Auth plugin
     url: /plugins/key-auth/
 
+permalink: /mcp/secure-mcp-traffic
+
 description: Learn how to secure MCP traffic within GitHub remote MCP server with the Key Authentication plugin
+
+series:
+    id: mcp-traffic
+    position: 1
 
 products:
   - gateway
@@ -20,7 +26,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.11'
+  gateway: '3.10'
 
 plugins:
   - ai-proxy
