@@ -115,9 +115,9 @@ sequenceDiagram
 
 ### Node I/O
 
-A datakit node consumes data via `inputs` and emits data via `outputs`. Linking
-the output of one node to the input of another is accomplished by referencing
-the node's unique `name` in the plugin's configuration:
+A datakit node consumes data via `inputs` and emits data via `outputs`.
+Connecting the output of one node to the input of another is accomplished by
+referencing the node's unique `name` in the plugin's configuration:
 
 ```yaml
 # fetch the value of `my_property` from the shared request context, if it exists
@@ -132,8 +132,12 @@ the node's unique `name` in the plugin's configuration:
   input: GET_PROPERTY
 ```
 
-I/O links can be reflexively defined, so this configuration will yield the same
-execution plan:
+This establishes a connection from `GET_PROPERTY -> FILTER`, where
+`GET_PROPERTY` is the source node, and `FILTER` is the target node.
+
+Connections can also be reflexively defined in terms of the source node. This
+configuration will yield an execution plan with the same `GET_PROPERTY -> FILTER`
+connection:
 
 ```yaml
 # fetch the value of `my_property` from the shared request context, if it exists
@@ -170,7 +174,7 @@ different outputs of `API` to entirely different nodes:
   input: API.headers
 ```
 
-Another way to express this type of linkage is by using the `outputs` property
+Another way to express this type of connection is by using the `outputs` property
 on the source node to select a target node for each named output:
 
 ```yaml
@@ -281,6 +285,150 @@ As of this writing, configuration order _is_ a facet in determining execution
 order, but in a general sense it is unsound to rely on your configuration to
 dictate the exact order in which nodes will be executed, as datakit can and will
 re-order nodes to optimize its execution plan.
+
+#### Data types, validation, and connection semantics
+
+A key component of Datakit is its type system. As of this writing, Datakit types
+are the following:
+
+* primitive, scalar types like `string`s and `number`s
+* non-scalar container types:
+    * `object` - statically-defined, struct-like values)
+    * `map` - dynamic string keys and static or dynamically typed values
+* dynamic types:
+    * `any` - values whose type may not be known until runtime
+
+Datakit performs as much validation at "config-time" (when the plugin is created
+or updated via the admin API) by inspecting the type info on either side of a
+connection, falling back to runtime checks when necessary:
+
+* if the input and output have the same type (e.g. `string -> string`, `any ->
+    any`), connection is permitted since data compatibility at runtime is
+    guaranteed
+* if the input type can be converted to the output type, runtime compatibility
+    is not guaranteed, but connection is permitted with an additional runtime
+    check to ensure that a node does not receive invalid input data. Examples:
+    * `string -> number`
+    * `number -> string`
+    * `any -> number`
+    * `any -> string`
+    * `any -> object`
+    * `any -> map`
+* if the input type and output type are known to be incompatible (e.g.
+    `number -> object`), connection is not permitted
+
+As seen in prior examples, connection labels can be in the form of `{node_name}`
+or `{node_name}.{field_name}`. Connections without a field name are refered to
+in this document node-wise or `$self` connections.
+
+##### object -> object
+
+For this type of connection, Datakit iterates over each field that the nodes
+have in common and connects them. If the nodes have no fields in common, a
+validation error will be raised.
+
+Example:
+
+```yaml
+- name: api_call
+  type: call
+  url: "https://example.com/"
+  method: POST
+  input: request
+  output: service_request
+```
+
+This results in 5 connections:
+
+* `request.body -> api_call.body`
+* `request.query -> api_call.query`
+* `request.headers -> api_call.headers`
+* `api_call.body -> service_request.body`
+* `api_call.headers -> service_request.headers`
+
+All of the `request` node outputs directly map to `api_call` node inputs, but in the
+`api_call -> service_request` connection, some fields remain unconnected:
+
+* `api_call.status` is ignored because `service_request` has no `status` input
+* `service_request.query` is ignored because `api_call` has no `query` output
+
+The same intent can be expressed explicitly by setting individual fields on the
+`inputs` attribute:
+
+```diff
+--- implicit
++++ explicit
+@@ -2,5 +2,10 @@
+   type: call
+   url: "https://example.com/"
+   method: POST
+-  input: request
+-  output: service_request
++  inputs:
++    body: request.body
++    query: request.query
++    headers: request.headers
++  outputs:
++    body: service_request.body
++    headers: service_request.headers
+```
+
+{:.warning}
+Implicit `object` connections like this one are dynamically expanded after
+reading the configuration, so a newly-added field in a subsequent Datakit
+release may be inherited by a configuration from a previous version and lead to
+unintended behavior changes. Therefore, this type of connection should be used
+with care.
+
+##### object -> map
+
+This type of connection is currently not permitted.
+
+##### object -> any
+
+This type of connection copies all data from the source `object` to the target
+input. In this example, `filter` will receive a JSON object as input with the
+keys `body`, `query`, and `headers`:
+
+```yaml
+- name: filter
+  type: jq
+  input: request
+  jq: "..."
+```
+
+{:.warning}
+This use case comes with the same warning as the `object -> object` example: any
+field changes (i.e. a new `request` field) in subsequent Datakit releases will
+be observed by this connection, which may cause its output to change.
+
+##### * -> any
+
+Connections of any output type to an `any` input type are always permitted. At
+runtime the data is copied as-is.
+
+##### any -> *
+
+Connections from `any` output types are permitted under almost all conditions
+and incur a runtime type conversion check (unless the target type is also `any`).
+
+Of note, a node-wise `any -> object` or `any -> map` connection conflicts with
+any field-level connections:
+
+```yaml
+- name: get-foo
+  type: property
+  property: kong.ctx.shared.foo
+  # connect `get-foo -> response`
+  output: response
+
+- name: get-bar
+  type: property
+  property: kong.ctx.shared.bar
+  # Datakit rejects this connection because it cannot validate that it will not
+  # overlap with `get-foo -> response`
+  output: response.body
+```
 
 ## Node types
 
@@ -603,6 +751,24 @@ configurations to avoid this case:
     # this will cause Datakit to return a 500 error to the client when
     # encountered
     headers: HEADERS
+```
+
+This is also why the `jq` node does not allow explicitly referencing individual
+fields with `outputs` at config-time:
+
+```yaml
+- name: HEADERS
+  name: jq
+  jq: |
+    "this is completely opaque to Datakit"
+
+  # Datakit will reject this configuration because it cannot confirm that the
+  # output of HEADERS is an object or has a `body` field
+  outputs:
+    body: EXIT.body
+
+- name: EXIT
+  type: exit
 ```
 
 #### Configuration attributes
