@@ -102,6 +102,6 @@ This request includes an invalid API key:
 url: /anything
 headers:
   - 'apikey: another_key'
-status_code: 400
+status_code: 401
 {% endvalidation %}
 <!-- vale on -->
