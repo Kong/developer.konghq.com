@@ -1,5 +1,5 @@
 description: |
-  Use internal auth within your ecosystem by sending response headers to upstreams.
+  Use internal auth within your ecosystem to inject request headers before proxying a request.
 
 title: Authenticate {{site.base_gateway}} to a third-party service
 weight: 900
@@ -14,20 +14,23 @@ config:
         Content-Type: application/x-www-form-urlencoded
       body: grant_type=client_credentials
 
-  # merge the statically defined headers with the request headers received from
-  # the client
-  - name: MERGE_HEADERS
+  # fetch an API key from the client query and inject it into the request
+  # headers that will be sent to the auth service
+  - name: BUILD_HEADERS
     type: jq
     inputs:
-      static: STATIC_INPUTS.headers
-      request: request.headers
-    jq: ".request * .static"
+      headers: STATIC_INPUTS.headers
+      query: request.query
+    jq: |
+      .static * {
+        "X-Api-Key": (.query.api_key // "none")
+      }
 
   # make a POST request to the auth service
   - name: AUTH_REQUEST
     type: call
     inputs:
-      headers: MERGE_HEADERS
+      headers: BUILD_HEADERS
       body: STATIC_INPUTS.body
     url: "https://my-token-service/auth-token"
     method: POST

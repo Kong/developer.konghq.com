@@ -61,7 +61,7 @@ columns:
     key: description
 rows:
   - usecase: "[Third-Party Auth](/plugins/datakit/examples/authenticate-third-party/)"
-    description: Use internal auth within your ecosystem by sending response headers to upstreams.
+    description: Use internal auth within your ecosystem to inject request headers before proxying a request.
   - usecase: "[Request Multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)"
     description: Make requests to multiple APIs and combine their responses into one response.
   - usecase: "[Manipulate Request Headers](/plugins/datakit/examples/manipulate-request-headers/)"
