@@ -1,5 +1,5 @@
 ---
-title: "Part 2: Use Kong AI Gateway to control GitHub MCP traffic"
+title: "Use Kong AI Gateway to govern GitHub MCP traffic"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -10,6 +10,11 @@ related_resources:
     url: /plugins/ai-prompt-guard/
   - text: AI Rate Limiting Advanced plugin
     url: /plugins/ai-rate-limiting-advanced/
+permalink: /mcp/govern-mcp-traffic
+
+series:
+    id: mcp-traffic
+    position: 2
 
 description: Learn how to govern MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and AI Prompt Guard plugins
 
@@ -22,7 +27,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.11'
+  gateway: '3.10'
 
 plugins:
   - ai-proxy
@@ -59,8 +64,6 @@ prereqs:
         export GITHUB_PAT=<YOUR_GITHUB_TOKEN>
         ```
       icon_url: /assets/icons/third-party/github.svg
-    - inline: Completed [Part 1](/how-to/secure-mcp-traffic/) tutorial
-      content: "Before starting, complete Part 1: Secure MCP Traffic with the Key Authentication Plugin."
   prereqs:
     entities:
         services:

@@ -1,5 +1,5 @@
 ---
-title: "Part 3: Observe GitHub MCP traffic with Kong AI Gateway"
+title: "Observe GitHub MCP traffic with Kong AI Gateway"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -10,6 +10,11 @@ related_resources:
     url: /plugins/prometheus/
   - text: Monitor AI LLM metrics
     url: /ai-gateway/monitor-ai-llm-metrics/
+permalink: /mcp/observe-mcp-traffic
+
+series:
+    id: mcp-traffic
+    position: 3
 
 description: Learn how to observe MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and {{ site.base_gateway }} Prometheus plugin
 
@@ -22,7 +27,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.11'
+  gateway: '3.10'
 
 plugins:
   - ai-proxy
@@ -59,8 +64,6 @@ prereqs:
         export GITHUB_PAT=<YOUR_GITHUB_TOKEN>
         ```
       icon_url: /assets/icons/third-party/github.svg
-    - inline: Completed [Part 1](/how-to/secure-mcp-traffic/) tutorial
-      content: "Before starting, complete Part 2: Govern MCP Traffic"
   prereqs:
     entities:
         services:
