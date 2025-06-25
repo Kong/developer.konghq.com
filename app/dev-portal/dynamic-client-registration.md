@@ -8,9 +8,8 @@ products:
 
 breadcrumbs: 
   - /dev-portal/
-beta: true
 tags:
-  - beta
+  - dynamic-client-registration
 
 works_on:
     - konnect
