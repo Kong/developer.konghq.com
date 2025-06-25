@@ -53,6 +53,7 @@ automated_tests: false
 
 These keys are needed for [disaster recovery](/gateway/keyring/#disaster-recovery). You can generate them using OpenSSL:
 
+<!-- vale off -->
 {% validation custom-command %}
 command: |
   openssl genrsa -out private.pem 2048
@@ -60,6 +61,7 @@ command: |
 expected:
   return_code: 0
 {% endvalidation %}
+<!-- vale on -->
 
 ## Set environment variables
 
