@@ -683,7 +683,7 @@ filter is done by using dot (`.`) notation:
   inputs:
     service: SERVICE
     ip: IP
-  # yields: { "$self": "object", "service": "object", "ip": "object" }
+  # yields: { "$self": "object", "service": "object", "ip": "string" }
   jq: |
     {
       "$self":   (.        | type),
