@@ -45,3 +45,4 @@ topology_switcher
 discovery_default
 examples_groups
 basic_examples
+wasm
