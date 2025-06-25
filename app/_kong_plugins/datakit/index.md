@@ -38,8 +38,8 @@ tags:
   - transformations
 ---
 
-The {{site.base_gateway}} Datakit plugin allows you to interact with third-party APIs. 
-It sends requests to third-party APIs, then uses the response data to seed information for subsequent calls, either upstream or to other APIs. 
+The {{site.base_gateway}} Datakit plugin allows you to interact with third-party APIs.
+It sends requests to third-party APIs, then uses the response data to seed information for subsequent calls, either upstream or to other APIs.
 
 Datakit allows you to create an API workflow, which can include:
 * Making calls to third party APIs
@@ -900,7 +900,6 @@ fully possible:
     headers: merged_headers
 ```
 
-
 #### Examples
 
 Coerece the client request body to an object:
@@ -968,7 +967,7 @@ Make an HTTP request and send the response directly to the client:
   type: exit
   input: CALL
 ```
-  
+
 ### `property` node
 
 Get and set {{site.base_gateway}} host and request properties.
