@@ -528,13 +528,13 @@ If the corresponding `Content-Type` header matches the JSON mime-type, the
 
 Send an HTTP request and retrieve the response.
 
-#### Input ports
+#### Inputs
 
 * `body`: Request body
 * `headers`: Request headers
 * `query`: Key-value pairs to encode as the request query string
 
-#### Output ports
+#### Outputs
 
 * `body`: The response body
 * `headers`: The response headers
@@ -959,8 +959,8 @@ Get and set {{site.base_gateway}} host and request properties.
 
 Whether a `get` or `set` operation is performed depends upon the node inputs:
 
-* If an input port is configured, `set` the property
-* If no input port is configured, `set` the property and map it to the output
+* If an input is connected, `set` the property
+* If no input is connected, `set` the property and map it to the output
 
 #### Inputs
 
