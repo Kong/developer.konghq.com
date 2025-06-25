@@ -821,6 +821,50 @@ looking up values from the input:
     }
 ```
 
+##### Recipe: merging header objects
+
+This `jq` filter merges client request headers with some static header values.
+Header name casing is preserved when updating any header that was originally set
+by the client.
+
+```yaml
+- name: header_updates
+  type: static
+  values:
+    X-Foo: "123"
+    X-Custom: "my header"
+    X-Multi:
+      - "first"
+      - "second"
+
+- name: merged_headers
+  type: jq
+  inputs:
+    original: request.headers
+    updates: header_updates
+  jq: |
+    . as $input
+
+    # store .original key names for lookup
+    | $input.original
+    | with_entries({ key: .key | ascii_downcase, value: .key })
+      as $keys
+
+    # rewrite .updates with .original key names
+    | $input.updates
+    | with_entries(.key = ($keys[.key | ascii_downcase] // .key))
+      as $updates
+
+    | $input.original * $updates
+
+- name: api
+  type: call
+  url: "https://example.com/"
+  inputs:
+    headers: merged_headers
+```
+
+
 #### Examples
 
 Coerece the client request body to an object:
