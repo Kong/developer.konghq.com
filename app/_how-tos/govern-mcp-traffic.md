@@ -6,8 +6,10 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advance/
-  - text: Key Auth plugin
-    url: /plugins/key-auth/
+  - text: AI Prompt Guard plugin
+    url: /plugins/ai-prompt-guard/
+  - text: AI Rate Limiting Advanced plugin
+    url: /plugins/ai-rate-limiting-advanced/
 
 description: Learn how to govern MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and AI Prompt Guard plugins
 
@@ -79,6 +81,9 @@ cleanup:
 ## Reconfigure the AI Proxy Advanced Plugin
 
 This configuration uses the `ai-proxy-advanced` plugin to load balance requests between OpenAI’s `gpt-4` and `gpt-4o` models using a round-robin algorithm. Both models are configured to call a GitHub-hosted remote MCP server via the `llm/v1/responses` route. The plugin injects the required OpenAI API key for authentication and logs both payloads and statistics. With equal weights assigned to each target, traffic is split evenly between the two models.
+
+{:.info}
+> This configuration is for demonstration purposes only and is not intended for production use.
 
 {% entity_examples %}
 entities:
