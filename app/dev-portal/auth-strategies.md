@@ -9,8 +9,6 @@ products:
 tags:
   - authentication
   - application-registration
-  - beta
-beta: true
 works_on:
   - konnect
 
