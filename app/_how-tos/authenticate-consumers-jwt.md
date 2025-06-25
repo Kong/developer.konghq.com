@@ -126,9 +126,9 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9
 
 Save the token as an environment variable:
 
-{% validation env-variables %}
+{% env_variables %}
 JWT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiJ9.xG-DrlD4vcYBqhuhK_jrwFIALvVvU-qTOiNyIfUhn_Y
-{% endvalidation %}
+{% endenv_variables %}
 
 ## Validate
 
