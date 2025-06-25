@@ -5,7 +5,7 @@ related_resources:
   - text: AI Gateway
     url: /ai-gateway/
   - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advance/
+    url: /plugins/ai-proxy-advanced/
   - text: Prometheus plugin
     url: /plugins/prometheus/
   - text: Monitor AI LLM metrics
