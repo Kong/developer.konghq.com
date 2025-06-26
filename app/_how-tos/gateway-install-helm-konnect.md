@@ -12,6 +12,7 @@ products:
 
 works_on:
   - konnect
+  - on-prem
 
 entities: []
 
