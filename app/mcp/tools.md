@@ -1,9 +1,9 @@
 ---
-title: "MCP Server Tools"
+title: "{{site.konnect_product_name}} MCP Server tools"
 content_type: reference
 layout: reference
 permalink: /mcp/tools/
-description: This reference provides an overview of tools available in Kong MCP Server
+description: This reference provides an overview of tools available in {{site.konnect_product_name}} MCP Server
 
 works_on:
  - on-prem
@@ -27,7 +27,7 @@ min_version:
   gateway: '3.6'
 
 related_resources:
-    - text: Kong MCP Konnect
+    - text: "{{site.konnect_product_name}} MCP Server"
       url: 'https://github.com/Kong/mcp-konnect'
     - text: Kong MCP Konnect on Docker
       url: 'https://hub.docker.com/r/mcp/kong'
@@ -36,7 +36,7 @@ related_resources:
       url: /ai-gateway/
 ---
 
-Kong’s MCP Server provides a set of API-accessible tools to support analytics, configuration management, and control plane administration. These tools help users monitor traffic, query resource metadata, and manage control plane hierarchies programmatically.
+{{site.konnect_product_name}} MCP Server provides a set of API-accessible tools to support analytics, configuration management, and control plane administration. These tools help users monitor traffic, query resource metadata, and manage control plane hierarchies programmatically.
 
 ## Analytics tools
 

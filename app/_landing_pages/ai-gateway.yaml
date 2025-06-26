@@ -286,6 +286,15 @@ rows:
             cta:
               url: ./#llm-cost-control
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic gateway
+            description: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
+            icon: /assets/icons/mcp.svg
+            cta:
+              url: /mcp
+              align: end
 
 
   - header:

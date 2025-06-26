@@ -14,7 +14,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "A trust and control layer for proxing traffic to MCP servers"
+      text: "A trust and control layer for proxying traffic to MCP servers"
       sub_text: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
 
   - header:
