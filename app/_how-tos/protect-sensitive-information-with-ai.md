@@ -70,7 +70,7 @@ prereqs:
         ```
         {:.info}
         > Each image includes a built-in NLP model. Check [AI Sanitizer documentation](/plugins/ai-sanitizer/#ai-pii-anonymizer-service) for more details
-      icon_url: /assets/icons/ai.svg
+      icon_url: /assets/icons/cloudsmith.svg
 
 cleanup:
   inline:
