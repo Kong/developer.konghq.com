@@ -882,3 +882,8 @@
 .select-popover.popover .popover-container {
   @apply border-none py-0 !important;
 }
+
+/* How-to lists */
+ol:has(code) {
+  @apply flex flex-col gap-4;
+}
