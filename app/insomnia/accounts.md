@@ -15,6 +15,67 @@ search_aliases:
 related_resources:
   - text: Enterprise
     url: /insomnia/enterprise/
+
+faqs:
+  - q: What platforms does Insomnia run on?
+    a: |
+      Insomnia is available as a desktop application for 64-bit versions of macOS, Windows, and Linux.
+
+  - q: Does Insomnia provide 32-bit binaries?
+    a: |
+      No. Insomnia currently supports only 64-bit systems.
+
+  - q: What software license does Insomnia use?
+    a: |
+      The Insomnia desktop app and related software packages are open source under the [Apache License 2.0](https://opensource.org/license/apache-2-0/). 
+      The source code is available on [GitHub](https://github.com/Kong/insomnia). 
+      Note that the server-side software that powers the paid sync service is closed source.
+
+  - q: Can I use Insomnia for commercial use?
+    a: |
+      Yes! Insomnia can be used commercially. Visit our [pricing page](https://insomnia.rest/pricing) for available plans.
+
+  - q: How can I support Insomnia?
+    a: |
+      Thanks for your support! You can:
+      * Spread the word about Insomnia
+      * Submit bug reports or feature requests
+      * Contribute to our [open source repo](https://github.com/Kong/insomnia)
+      * Share how you use Insomnia
+      * Sign up for a [paid plan](https://insomnia.rest/pricing)
+
+  - q: Does Insomnia have a EULA?
+    a: |
+      Currently, Insomnia does not have a dedicated End User License Agreement (EULA). 
+      It is governed by the [Apache License 2.0](https://opensource.org/license/apache-2-0/), along with our [Terms of Service](https://insomnia.rest/terms) and [Privacy Policy](https://insomnia.rest/privacy). 
+      A formal EULA may be introduced in the future.
+
+  - q: What is the team size limit for a free trial?
+    a: |
+      The free trial supports up to 5 team members. After the trial, you will be billed based on the number of member seats in your subscription. 
+      See our [pricing page](https://insomnia.rest/pricing) for more details.
+
+  - q: How do I increase the number of seats on my team?
+    a: |
+      The team owner can update the subscription to include more seats by:
+      1. Visiting [https://app.insomnia.rest](https://app.insomnia.rest)
+      2. Navigating to **Account → Change Subscription**
+      3. Increasing the team size as needed
+
+      The updated seat count will be reflected in your next billing cycle.
+
+  - q: How can I customize receipt data?
+    a: |
+      You can add custom details (company name, address, VAT number, etc.) when [creating or updating your subscription](https://app.insomnia.rest/app/subscribe/). 
+      These details will appear on invoices available through the [Invoice History](https://app.insomnia.rest/app/invoices/) page.
+
+      **Note**: Invoice details only appear on downloaded invoices, not the emailed versions.
+
+  - q: Why do I see multiple charges for my Insomnia plan?
+    a: |
+      Some banks may show multiple charge attempts due to currency differences. 
+      However, our payment provider (Stripe) only processes a single charge per billing cycle. 
+      If you have concerns, please contact us through the [support page](https://insomnia.rest/support).
 ---
 
 ## Create an Insomnia account
