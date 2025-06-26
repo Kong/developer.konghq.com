@@ -8,6 +8,7 @@ metadata:
     - konnect
   tags:
     - kafka
+    - solace
     - events
   
 rows:
@@ -62,6 +63,7 @@ rows:
   - header:
       type: h2
       text: Protocol mediation plugins
+    column_count: 3
     columns:
       - blocks:       
         - type: plugin
@@ -79,6 +81,10 @@ rows:
         - type: plugin
           config:
             slug: confluent-consume
+      - blocks:
+        - type: plugin
+          config:
+            slug: solace-upstream
   - header:
       type: h2
       text: Get started with {{site.event_gateway_short}} (Beta)
