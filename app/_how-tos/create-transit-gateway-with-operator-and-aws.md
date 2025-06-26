@@ -36,7 +36,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
       network: true
 
 tldr:
@@ -55,6 +54,26 @@ related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
 ---
+
+## Create a KonnectGatewayControlPlane resource
+
+Use the following command to create a Control Plane:
+
+<!-- vale off -->
+{% konnect_crd %}
+kind: KonnectGatewayControlPlane
+apiVersion: konnect.konghq.com/v1alpha1
+metadata:
+  name: gateway-control-plane
+  namespace: kong
+spec:
+  name: gateway-control-plane
+  konnect:
+    authRef:
+      name: konnect-api-auth
+  cloud_gateway: true
+{% endkonnect_crd %}
+<!-- vale on -->
 
 ## Create a transit gateway in AWS
 
