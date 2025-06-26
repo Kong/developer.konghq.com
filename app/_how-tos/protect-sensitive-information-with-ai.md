@@ -43,10 +43,33 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: AI PII Anonymizer service access
       content: |
-        In this tutorial, we'll use the [AI PII Anonymizer service](https://hub.docker.com/r/kong/ai-pii-service) provided by Kong. Since this Docker image is private, you need to reach out to [Kong Support](https://support.konghq.com/support/s/) to get access.
+        Kong provides [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository.These images are distributed via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
 
-        You can also use your own service.
+        To pull images, you must authenticate first with the token provided by the Support:
 
+        ```bash
+        docker login docker.cloudsmith.io
+        ```
+
+        Docker will then prompt you to enter username and password:
+
+        ```bash
+        Username: kong/ai-pii
+        Password: YOUR-TOKEN
+        ```
+        To pull an image:
+
+        ```bash
+        docker pull docker.cloudsmith.io/kong/ai-pii/IMAGE-NAME:TAG
+        ```
+
+        Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
+
+        ```bash
+        docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
+        ```
+        {:.info}
+        > Each image includes a built-in NLP model. Check [AI Sanitizer documentation](/plugins/ai-sanitizer/#ai-pii-anonymizer-service) for more details
       icon_url: /assets/icons/ai.svg
 
 cleanup:
