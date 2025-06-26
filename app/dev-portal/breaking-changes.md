@@ -86,6 +86,14 @@ The following endpoints no longer include `application_count` in the response bo
 * GET `/v3/portals/{portalId}/developers`  
 * GET `/v3/portals/{portalId}/developers/{developerId}`
 
+## API documentation `labels` property removed
+
+API Documentation entities will no longer support `labels`, API entity should be used instead.
+
+* GET `/v3/apis/{apiId}/documents`
+* GET `/v3/apis/{apiId}/documents/{documentId}`
+* PATCH `/v3/apis/{apiId}/documents/{documentId}`
+
 ## Portal logo and favicon no longer use filename
 
 Portal logo and favicon asset endpoints won't accept `filename` in the request bodies.
