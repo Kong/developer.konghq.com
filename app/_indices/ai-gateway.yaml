@@ -189,6 +189,24 @@ sections:
       - title: AI AWS Guardrails Changelog
         description: See the latest updates and improvements for the AI AWS Guardrails plugin.
         url: /plugins/ai-aws-guardrails/changelog/
+  - title: MCP traffic gateway
+    items:
+      - path: /mcp/
+      - title: Secure MCP traffic
+        description: Secure GitHub MCP Server traffic with Kong Gateway and Kong AI Gateway
+        url: /mcp/secure-mcp-traffic/
+      - title: Govern MCP traffic
+        description: Use Kong AI Gateway to govern GitHub MCP traffic
+        url: /mcp/govern-mcp-traffic
+      - title: Observe MCP traffic
+        description: Observe GitHub MCP traffic with Kong AI Gateway
+        url: /mcp/observe-mcp-traffic
+      - title: "{{site.konnect_product_name}} MCP Server"
+        description: Get started with {{site.konnect_product_name}} MCP Server
+        url: /mcp/get-started/
+      - title: "{{site.konnect_product_name}} MCP Server tools"
+        description: Check available {{site.konnect_product_name}} MCP Server tools
+        url: /mcp/tools/
   - title: AI load balancing
     items:
       - title: Consistent Hashing - AI Proxy Advanced
