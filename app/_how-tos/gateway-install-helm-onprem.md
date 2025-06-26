@@ -17,10 +17,7 @@ works_on:
 
 entities: []
 
-tldr:
-  q: Question
-  a: |
-    Answer
+tldr: null
 
 prereqs:
   skip_product: true
