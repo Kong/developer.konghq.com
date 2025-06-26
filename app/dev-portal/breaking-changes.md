@@ -98,20 +98,24 @@ The following endpoints no longer include `application_count` in the response bo
 
 ## API documentation `labels` property removed
 
-API Documentation entities will no longer support `labels`, API entity should be used instead.
+API documentation entities will no longer support `labels`:
 
-* GET `/v3/apis/{apiId}/documents`
-* GET `/v3/apis/{apiId}/documents/{documentId}`
-* PATCH `/v3/apis/{apiId}/documents/{documentId}`
+* `GET /v3/apis/{apiId}/documents`
+* `GET /v3/apis/{apiId}/documents/{documentId}`
+* `PATCH /v3/apis/{apiId}/documents/{documentId}`
+
+Use the API entity instead.
 
 ## Portal logo and favicon no longer use filename
 
-Portal logo and favicon asset endpoints won't accept `filename` in the request bodies.
+Portal logo and favicon asset endpoints won't accept `filename` in the request bodies:
 
-* PUT `/v3/portals/{portalId}/assets/logo`
-* PUT `/portals/{portalId}/assets/favicon`
+* `PUT /v3/portals/{portalId}/assets/logo`
+* `PUT /v3/portals/{portalId}/assets/favicon`
 
-## Move page and API documentation is now POST, not PUT
+## Move page and API documentation endpoints are now POST, not PUT
 
-* PUT `/v3/portals/{portalId}/pages/{pageId}/move` has changed to POST
-* PUT `/v3/apis/{apiId}/documents/{documentId}/move` has changed to POST
+The following endpoint HTTP methods have been updated:
+
+* `PUT /v3/portals/{portalId}/pages/{pageId}/move` has changed to POST
+* `PUT /v3/apis/{apiId}/documents/{documentId}/move` has changed to POST
