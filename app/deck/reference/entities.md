@@ -51,7 +51,8 @@ features:
     managed: true
   - title: Vaults
     managed: true
-  - title: Keys and Key Sets
+  - title: |
+      Keys and Key Sets {% new_in 1.48 %}
     managed: true
   - title: Licenses
     managed: false
