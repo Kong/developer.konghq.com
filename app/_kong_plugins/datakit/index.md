@@ -42,7 +42,7 @@ The {{site.base_gateway}} Datakit plugin allows you to interact with third-party
 It sends requests to third-party APIs, then uses the response data to seed information for subsequent calls, either upstream or to other APIs.
 
 Datakit allows you to create an API workflow, which can include:
-* Making calls to third party APIs
+* Making calls to third-party APIs
 * Transforming or combining API responses
 * Modifying client requests and upstream service responses
 * Adjusting {{site.base_gateway}} entity configuration
@@ -191,7 +191,7 @@ on the source node to select a target node for each named output:
 ```
 
 Node outputs can be copied to any number of inputs, but each input may only be
-connected to one output. This configuration is okay:
+connected to one output. This configuration is correct:
 
 ```yaml
 - name: GET_FOO
@@ -274,7 +274,7 @@ the right order in your configuration:
   property: kong.ctx.shared.bar
 ```
 
-**Order of execution is NOT strictly defined by your configuration.**
+Order of execution is *not* strictly defined by your configuration.
 
 Configuration order _is_ a facet in determining execution order, 
 but don't rely on your configuration to dictate the exact order in which nodes will be executed, 
@@ -528,19 +528,19 @@ If the corresponding `Content-Type` header matches the JSON mime-type, the
 
 Send an HTTP request and retrieve the response.
 
-#### Inputs
+Inputs:
 
 * `body`: Request body
 * `headers`: Request headers
 * `query`: Key-value pairs to encode as the request query string
 
-#### Outputs
+Outputs:
 
 * `body`: The response body
 * `headers`: The response headers
 * `status`: The HTTP status code of the response
 
-#### Configuration attributes
+Configuration attributes:
 
 * `url` (**required**): The URL
 * `method`: The HTTP method (default is `GET`)
@@ -635,7 +635,7 @@ response will yield an error:
 
 ### `jq` node type
 
-Execution of a jq script for processing JSON. See the official
+The `jq` node executes a jq script for processing JSON. See the official
 [jq docs](https://jqlang.org/) for more details.
 
 #### Inputs
@@ -760,7 +760,7 @@ fields with `outputs` at config-time:
 
 #### Configuration attributes
 
-* `jq`: the jq script to execute when the node is triggered.
+`jq`: the jq script to execute when the node is triggered.
 
 
 #### Handling HTTP headers in jq
@@ -925,16 +925,14 @@ Join the output of two API calls:
 Trigger an early exit that produces a direct response, rather than forwarding
 a proxied response.
 
-#### Inputs
+Inputs:
 
 * `body`: Body to use in the early-exit response.
 * `headers`: Headers to use in the early-exit response.
 
-#### Outputs
+Outputs: None
 
-None.
-
-#### Configuration attributes
+Configuration attributes:
 
 * `status`: The HTTP status code to use in the early-exit response (default is
   `200`).
@@ -1173,9 +1171,7 @@ rows:
 
 ### `static` node
 
-Emits static values to be used as inputs for other nodes. If you are wondering
-"how do I hardcode some known value for an input?", then the static node is for
-you.
+Emits static values to be used as inputs for other nodes. The `static` node can help you with hardcoding some known value for an input.
 
 #### Inputs
 
