@@ -5,7 +5,7 @@ layout: reference
 breadcrumbs:
   - /dev-portal/
 products:
-    - gateway
+    - dev-portal
 
 works_on:
     - konnect
@@ -31,29 +31,39 @@ During Tech Preview and Beta, new Dev Portals were served on `https://{portalId}
 
 You must update Dev Portal domain names everywhere they are referenced, including the following:
 
-* [OIDC or SAML](/dev-portal/sso/) callback URLs  
-* [CORS plugin](/plugins/cors/) origin configuration  
-* All links and bookmarks to your Dev Portal  
-* [Custom domains](/dev-portal/custom-domains/) migration  
-  In the next 1-2 weeks, we will provide emails to all Beta customers with guidance on migrating custom domains. 
+* [OIDC or SAML](/dev-portal/sso/) callback URLs . 
+* [CORS plugin](/plugins/cors/) origin configuration.  
+* All links and bookmarks to your Dev Portal.
+* [Custom domain](/dev-portal/custom-domains/) migration.  
+  All beta customers will receive emails with guidance on migrating custom domains. 
 
 ## API specifications deprecated in favor of API versions
 
-The [API specification endpoint](/api/konnect/api-builder/v3/#/operations/create-api-spec) is being deprecated on October 1, 2025 in favor of the [API versions endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version). By moving to the `/apis/{id}/versions` endpoints, this allows you to support additional versions of a spec. Existing automation with specifications operations should work in parallel during this transition. Each existing specification will be 1:1 with a wrapping version entity.
+The [API specification endpoint](/api/konnect/api-builder/v3/#/operations/create-api-spec) is being deprecated on October 1, 2025 in favor of the [API versions endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version). 
+Moving to the `/apis/{id}/versions` endpoints allows you to support additional versions of a spec. 
+Existing automation with specifications operations should work in parallel during this transition. 
+Each existing specification will be mapped one-to-one with a wrapping version entity.
 
-The following `/apis/{id}/specifications` endpoints will be deprecated on October 1, 2025:  
-* GET `/v3/apis/{id}/specifications` 
-* GET `/v3/apis/{id}/specifications/{specId}`  
-* PATCH `/v3/apis/{id}/specifications/{specId}`  
-* DELETE `/v3/apis/{id}/specifications/{specId}`  
-* POST `/v3/apis/{id}/specifications`  
+The following `/apis/{id}/specifications` endpoints will be deprecated on October 1, 2025 and replaced with `/apis/{id}/versions` endpoints:
 
-They will be replaced with the following `/apis/{id}/versions` endpoints:
-* GET `/v3/apis/{id}/versions`  
-* GET `/v3/apis/{id}/versions/{versionId}`  
-* PATCH `/v3/apis/{id}/versions/{versionId}`  
-* DELETE `/v3/apis/{id}/versions/{versionId}`  
-* POST `/v3/apis/{id}/versions`
+{% table %}
+columns:
+  - title: Old endpoint
+    key: old
+  - title: New endpoint
+    key: new
+rows:
+  - old: "`GET /v3/apis/{id}/specifications`"
+    new: "`GET /v3/apis/{id}/versions`"
+  - old: "`GET /v3/apis/{id}/specifications/{specId}`"
+    new: "`GET /v3/apis/{id}/versions/{versionId}`"
+  - old: "`PATCH /v3/apis/{id}/specifications/{specId}`" 
+    new: "`PATCH /v3/apis/{id}/versions/{versionId}`"
+  - old: "`DELETE /v3/apis/{id}/specifications/{specId}`" 
+    new: "`DELETE /v3/apis/{id}/versions/{versionId}`"
+  - old: "`POST /v3/apis/{id}/specifications`"
+    new: "`POST /v3/apis/{id}/versions`"
+{% endtable %}
 
 ## Auth strategy sync errors moving
 
@@ -61,8 +71,8 @@ Auth strategy sync errors will be moving from the API entity to the implementati
 
 The following endpoints are impacted:
 
-* GET `/v3/apis`  
-* GET `/v3/apis/{id}`
+* `GET /v3/apis`  
+* `GET /v3/apis/{id}`
 
 The `auth_strategy_sync_error` property will no longer be included on the API entity response. It will now be optionally included on the API implementation service property object. For example, if there's an error syncing the auth strategy configuration to the given implementation service when sending a GET request to the `/v3/apis/{id}/implementations` endpoint or a GET request to the `/v3/api-implementations` endpoint, the `response.body.service.auth_strategy_sync_error` will be present.
 
@@ -70,8 +80,8 @@ The `auth_strategy_sync_error` property will no longer be included on the API en
 
 `response.body.developers` will no longer be included in the following endpoints:
 
-* GET `/v3/portals/{portalId}/applications`  
-* GET `/v3/portals/{portalId}/applications/{applicationId}`
+* `GET /v3/portals/{portalId}/applications`  
+* `GET /v3/portals/{portalId}/applications/{applicationId}`
 
 Use the GET `/v3/portals/{portalId}/applications/{applicationId}/developers` endpoint instead.
 
