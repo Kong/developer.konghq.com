@@ -116,6 +116,8 @@ sections:
       - path: /plugins/ai-response-transformer/
       - path: /plugins/ai-semantic-prompt-guard/
       - path: /plugins/ai-sanitizer/
+      - path: /plugins/ai-prompt-compressor/
+      - path: /plugins/ai-aws-guardrails/
   - title: Plugin configuration reference
     items:
       - path: /plugins/ai-prompt-decorator/reference/**/*
@@ -129,6 +131,8 @@ sections:
       - path: /plugins/ai-response-transformer/reference/**/*
       - path: /plugins/ai-semantic-prompt-guard/reference/**/*
       - path: /plugins/ai-sanitizer/reference/**/*
+      - path: /plugins/ai-prompt-compressor/reference/**/*
+      - path: /plugins/ai-aws-guardrails/reference/**/*
   - title: Plugin configuration examples
     items:
       - path: /plugins/ai-prompt-decorator/examples/**/*
@@ -142,6 +146,8 @@ sections:
       - path: /plugins/ai-response-transformer/examples/**/*
       - path: /plugins/ai-semantic-prompt-guard/examples/**/*
       - path: /plugins/ai-sanitizer/examples/**/*
+      - path: /plugins/ai-prompt-compressor/**/*
+      - path: /plugins/ai-aws-guardrails/**/*
   - title: Plugin changelogs
     items:
       - title: AI Prompt Decorator Changelog
@@ -177,6 +183,12 @@ sections:
       - title: AI Sanitizer Changelog
         description: See the latest updates and improvements for the AI Sanitizer plugin.
         url: /plugins/ai-sanitizer/changelog/
+      - title: AI Prompt Compressor Changelog
+        description: See the latest updates and improvements for the AI Prompt Compressor plugin.
+        url: /plugins/ai-prompt-compressor/changelog/
+      - title: AI AWS Guardrails Changelog
+        description: See the latest updates and improvements for the AI AWS Guardrails plugin.
+        url: /plugins/ai-aws-guardrails/changelog/
   - title: AI load balancing
     items:
       - title: Consistent Hashing - AI Proxy Advanced
