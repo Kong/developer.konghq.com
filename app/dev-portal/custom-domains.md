@@ -26,11 +26,6 @@ related_resources:
   - text: Dev Portal settings
     url: /dev-porta/portal-settings/
 faqs:
-  - q: What is the difference between Beta and previous Dev Portal URLs?
-    a: |
-      Beta Dev Portals include `edge` before the region in the default URL (for example, `example.edge.us.portal.konghq.com`), 
-      whereas previous Dev Portals don't.
-
   - q: How do I delete a custom domain from a Dev Portal?
     a: |
       To delete a custom domain, go to your Dev Portal, click **Settings**, then click the trash/delete icon next to the domain entry.
@@ -51,14 +46,14 @@ faqs:
 
       The output should show something like:
       ```
-      portal.example.com. 172 IN CNAME example.edge.us.portal.konghq.com.
+      portal.example.com. 172 IN CNAME example.us.kongportals.com.
       ```
 
       This confirms that your custom domain points to the expected default domain.
 ---
 
 Every Dev Portal instance has an auto-generated default URL. You can also manage custom URLs within {{site.konnect_short_name}}.
-This gives users the ability to access the Dev Portal from either the default URL, for example `https://example.edge.us.portal.konghq.com`, or a custom URL like `portal.example.com`.
+This gives users the ability to access the Dev Portal from either the default URL, for example `https://example.us.kongportals.com`, or a custom URL like `portal.example.com`.
 
 To add a custom URL to Dev Portal, you need:
 
@@ -82,10 +77,10 @@ columns:
 rows:
   - type: CNAME
     name: portal
-    value: "`https://$YOUR_PORTAL_URL.edge.us.portal.konghq.com`"
+    value: "`https://$YOUR_PORTAL_URL.us.kongportals.com`"
 {% endtable %}
 
-If your domain has specific CAA DNS records that list authorized certificate authorities/issuers, you'll also need to create a new CAA DNS record to permit [Google Trust Services](https://pki.goog/faq/#caa) as an issuer. 
+If your domain has specific CAA DNS records that list authorized certificate authorities/issuers, you'll also need to create a new CAA DNS record to permit [Google Trust Services](https://pki.goog/faq/#caa) as an issuer.
 If your domain doesn't currently have any CAA DNS records, it means all issuers are implicitly allowed, and there's no need for a new CAA DNS record in that case.
 
 ## Update Dev Portal URL settings {#update-portal}
