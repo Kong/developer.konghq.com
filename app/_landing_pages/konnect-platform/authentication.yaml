@@ -27,12 +27,16 @@ rows:
             blocks:
               - type: text
                 text: |
-                  The default authentication option in {{site.konnect_short_name}} is basic authentication, where users can log in with a username and password.
+                  The default authentication option in {{site.konnect_short_name}} is basic authentication, where users can log in with a username and password. Users can also set up passkeys when they log into {{site.konnect_short_name}} using their username and password.
                   
                   Users can also register for and sign in to {{site.konnect_short_name}} accounts using their social identity from the following providers:
                   * Google
                   * GitHub
                   * Microsoft
+
+                  Multi-Factor Authentication (MFA) is required for all users using built-in authentication or social login. 
+                  Users will be prompted to set up MFA when they log in to {{site.konnect_short_name}} for the first time. 
+                  If you need to reset your MFA, reach out to [Kong Support](https://support.konghq.com).
 
   - header:
       type: h2
