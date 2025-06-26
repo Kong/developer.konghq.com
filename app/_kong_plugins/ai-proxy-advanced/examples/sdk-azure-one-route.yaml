@@ -14,7 +14,7 @@ extended_description: |
     > routes:
     >  - name: azure-chat-model-from-path
     >    paths:
-    >      - "~/openai/deployments/azure-gpt-3-5/chat/completions$"
+    >      - "~/openai/deployments/(?<azure_instance>[^/]+)/chat/completions$"
     >    methods:
     >      - POST
     > ```
