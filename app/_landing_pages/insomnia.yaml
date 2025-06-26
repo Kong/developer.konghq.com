@@ -88,7 +88,7 @@ rows:
           config:
             title: Manage Insomnia
             description: Learn how to manage your Insomnia account and security.
-            icon:  /assets/icons/terminal.svg
+            icon:  /assets/icons/profile.svg
             cta:
               text: Learn more
               url: /inso-cli/
