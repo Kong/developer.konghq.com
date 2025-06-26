@@ -1058,6 +1058,8 @@ app/_landing_pages/konnect-platform/authentication.yaml:
   - app/konnect/org-management/social-identity-login.md
 app/konnect-platform/active-tracing.md:
   - app/konnect/gateway-manager/active-tracing.md
+app/_how-tos/collect-dev-portal-audit-logs-with-sumologic.md:
+  - app/konnect/dev-portal/audit-logging/webhook.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
