@@ -115,10 +115,11 @@ export INSOMNIA_GCP_SERVICEACCOUNTKEYFILEPATH = 'GCP SERVICE ACCOUNT KEY FILE PA
 
 1. Navigate to **Preferences > Cloud Credentials**.
 1. Click **Add Credentials**, select **HashiCorp**, and choose your environment:
-  - For HashiCorp Vault Server, select **On-Premises** and choose an authentication method:
-    - With [**AppRole**](https://developer.hashicorp.com/vault/docs/auth/approle), enter the server address, role ID, and secret ID.
-    - With [**Token**](https://developer.hashicorp.com/vault/docs/auth/token), enter the server address and authentication token.
-  - For HashiCorp Cloud Platform, select **Cloud** and provide credentials using a [service principal](https://developer.hashicorp.com/hcp/docs/hcp/iam/service-principal#create-a-service-principal) client ID and client secret.
+    * For HashiCorp Cloud Platform, select **Cloud** and provide credentials using a [service principal](https://developer.hashicorp.com/hcp/docs/hcp/iam/service-principal#create-a-service-principal) client ID and client secret.
+    * For HashiCorp Vault Server, select **On-Premises** and choose an authentication method:
+        * With [**AppRole**](https://developer.hashicorp.com/vault/docs/auth/approle), enter the server address, role ID, and secret ID.
+        * With [**Token**](https://developer.hashicorp.com/vault/docs/auth/token), enter the server address and authentication token.
+
 {% endnavtab %}
 
 {% navtab "Inso CLI" %}
