@@ -13,6 +13,11 @@ export async function fetchImage(docker, imageName, runtime, log) {
     log(`Image '${imageName}' already exists.`);
     return;
   } catch (err) {
+    if (err.statusCode !== 404) {
+      log(`Unexpected error while fetching image: ${err.message}`);
+      throw err;
+    }
+
     log(`Image '${imageName}' not found, building it...`);
 
     return new Promise((resolve, reject) => {
@@ -29,15 +34,11 @@ export async function fetchImage(docker, imageName, runtime, log) {
             return reject(error);
           }
 
-          docker.modem.followProgress(stream, onFinished, onProgress);
-
-          function onFinished(err, output) {
-            if (err) {
-              return reject(err);
-            }
-            return resolve(output);
-          }
-          function onProgress(event) {}
+          docker.modem.followProgress(
+            stream,
+            (err, res) => (err ? reject(err) : resolve(res)),
+            (event) => debugLog(event.stream?.trim())
+          );
         }
       );
     });
