@@ -52,7 +52,7 @@ features:
   - title: Vaults
     managed: true
   - title: Keys and Key Sets
-    managed: false
+    managed: true
   - title: Licenses
     managed: false
   - title: Workspaces <sup>1</sup>
