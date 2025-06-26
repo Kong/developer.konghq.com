@@ -219,7 +219,7 @@ body:
       headers:
         Authorization: Bearer $GITHUB_PAT
   input: >
-    Create an issue in the repository tlabuk/this-cursive-page with title: Example Issue Title
+    Create an issue in the repository YOUR_REPOSITORY_NAME with title: Example Issue Title
     and body: This is the description of the issue created via MCP.
 status_code: 200
 message: >
