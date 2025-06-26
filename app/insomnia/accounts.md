@@ -22,13 +22,13 @@ related_resources:
 To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app/authorize) and select a sign up option. You'll be prompted to create a [passphrase](#passphrase) to enable [End-to-End Encryption](/insomnia/end-to-end-encryption/).
 
 {:.danger}
-> **Warning**: If you reset your passphrase, you will lose the data encrypted with the previous passphrase. To avoid this, make sure to securely back up your passphrase.
+> **Warning**: If you reset your passphrase, you will lose the data encrypted with the previous passphrase. To avoid this, make sure to securely back up your passphrase, in a password manager for example.
 
 If needed, you can click **Upgrade** from the Insomnia dashboard to upgrade to a Pro plan or activate an Enterprise plan.
 
 ## Invite users
 
-You can invite users to collaborate on your projects by adding them to your organizations.
+Owners and admins can invite users to collaborate on projects by adding them to organizations.
 
 To do that, you can
 * Go to [your organizations](https://app.insomnia.rest/app/dashboard/organizations), select the organization in which you want to invite users, and go to **Collaborators** tab to invite them.

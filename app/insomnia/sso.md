@@ -17,6 +17,9 @@ related_resources:
 
 Insomnia allows you to configure Single Sign-On (SSO) to authenticate users with your preferred SAML or OIDC Identity Provider.
 
+{:.warning}
+> Once you enable SSO on your Enterprise account, users will no longer be able to use other login methods.
+
 ## Configure SSO
 
 To configure SSO, you need to:
