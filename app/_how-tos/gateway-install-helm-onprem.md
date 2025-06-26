@@ -245,13 +245,13 @@ manager:
 
 {{ values_file | indent }}
 
-1. Run `helm install` to create the release.
+1. Run `helm install` to create the release:
 
    ```bash
    helm install kong-dp kong/kong -n kong --values ./values-dp.yaml
    ```
 
-1. Run `kubectl get pods -n kong`. Ensure that the data plane is running as expected.
+1. Run `kubectl get pods -n kong` to ensure that the Data Plane is running as expected:
 
    ```
    NAME                                 READY   STATUS
@@ -263,33 +263,33 @@ manager:
 
 {{ site.base_gateway }} is now running. To send some test traffic, try the following:
 
-1. Fetch the `LoadBalancer` address for the `kong-dp` service and store it in the `PROXY_IP` environment variable
+1. Fetch the `LoadBalancer` address for the `kong-dp` service and store it in the `PROXY_IP` environment variable:
 
    ```bash
    PROXY_IP=$(kubectl get service --namespace kong kong-dp-kong-proxy \
      -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
    ```
 
-1. Make a HTTP request to your `$PROXY_IP`. This will return a `HTTP 404` served by {{ site.base_gateway }}
+1. Make an HTTP request to your `$PROXY_IP`. This will return a `HTTP 404` served by {{ site.base_gateway }}:
 
    ```bash
    curl $PROXY_IP/mock/anything
    ```
 
-1. In another terminal, run `kubectl port-forward` to set up port forwarding and access the admin API.
+1. In another terminal, run `kubectl port-forward` to set up port forwarding and access the Admin API:
 
    ```bash
    kubectl port-forward -n kong service/kong-cp-kong-admin 8001
    ```
 
-1. Create a mock service and route
+1. Create a mock Service and Route:
 
    ```bash
    curl localhost:8001/services -d name=mock -d url="https://httpbin.konghq.com"
    curl localhost:8001/services/mock/routes -d "paths=/mock"
    ```
 
-1. Make a HTTP request to your `$PROXY_IP` again. This time {{ site.base_gateway }} will route the request to httpbin.
+1. Make an HTTP request to your `$PROXY_IP` again. This time {{ site.base_gateway }} will route the request to httpbin:
 
    ```bash
    curl $PROXY_IP/mock/anything

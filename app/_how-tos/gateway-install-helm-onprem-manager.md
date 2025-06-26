@@ -26,13 +26,13 @@ prereqs:
   skip_product: true
 
 faqs:
-  - q: I can't log in to Kong Manager
+  - q: I can't log in to Kong Manager.
     a: Check that `env.password` was set in `values-cp.yaml` before installing Kong. {{ site.base_gateway }} generates a random admin password if this is not set. This password can not be recovered and you must reinstall Kong to set a new admin password.
 
   - q: What are my login credentials?
     a: The Kong super admin username is `kong_admin`, and the password is the value set in `env.password` in `values-cp.yaml`.
 
-  - q: Kong Manager shows a white screen
+  - q: Kong Manager shows a white screen.
     a: Ensure that `env.admin_gui_api_url` is set correctly in `values-cp.yaml`.
 
 automated_tests: false
@@ -40,26 +40,26 @@ automated_tests: false
 
 Kong Manager is the graphical user interface (GUI) for {{ site.base_gateway }}. It uses the Kong Admin API under the hood to administer and control {{ site.base_gateway }}.
 
-{:.important}
+{:.warning}
 > Kong's Admin API must be accessible over HTTP from your local machine to use Kong Manager
 
 ## Installation
 
 Kong Manager is served from the same node as the Admin API. To enable Kong Manager, make the following changes to your `values-cp.yaml` file.
 
-1. Set `admin_gui_url`, `admin_gui_api_url` and `admin_gui_session_conf` under the `env` key.
+1. Set `admin_gui_url`, `admin_gui_api_url` and `admin_gui_session_conf` under the `env` key:
 
    ```yaml
    env:
      admin_gui_url: http://manager.example.com
      admin_gui_api_url: http://admin.example.com
-     # Change the secret and set cookie_secure to true if using a HTTPS endpoint
+     # Change the secret and set cookie_secure to true if using an HTTPS endpoint
      admin_gui_session_conf: '{"secret":"secret","storage":"kong","cookie_secure":false}'
    ```
 
 1. Replace `example.com` in the configuration with your domain.
 
-1. Enable Kong Manager authentication under the `enterprise` key.
+1. Enable Kong Manager authentication under the `enterprise` key:
 
    ```yaml
    enterprise:

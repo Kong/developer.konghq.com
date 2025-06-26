@@ -41,6 +41,8 @@ helm repo update
 
 ## Create certificates
 
+Create a certificate and key:
+
 ```bash
 openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) -keyout ./tls.key -out ./tls.crt -days 1095 -subj "/CN=kong_clustering"
 ```
@@ -143,6 +145,8 @@ manager:
  enabled: false
 ' > values-dp.yaml
 ```
+
+Deploy the Data Plane using the `values-dp.yaml`:
 
 ```bash
 helm install kong kong/kong --values ./values-dp.yaml -n kong --create-namespace
