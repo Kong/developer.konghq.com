@@ -45,7 +45,7 @@ prereqs:
       content: |
         Kong provides [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository. These images are distributed via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
 
-        To pull images, you must authenticate first with the token provided by the Support:
+        To pull images, first authenticate with the token provided by Support:
 
         ```bash
         docker login docker.cloudsmith.io
