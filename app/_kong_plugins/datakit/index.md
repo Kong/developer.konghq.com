@@ -209,7 +209,7 @@ connected to one output. This configuration is correct:
   input: GET_FOO
 ```
 
-But this configuration will yield an error:
+But this configuration will yield an error for `GET_BAR.output`:
 
 ```yaml
 - name: GET_FOO
@@ -220,13 +220,16 @@ But this configuration will yield an error:
 - name: GET_BAR
   type: property
   property: kong.ctx.shared.bar
-  # error! the input of `FILTER` is already connected
   output: FILTER
 
 - name: FILTER
   type: jq
   jq: "."
 ```
+
+<!--vale off-->
+> invalid connection ("GET_BAR" -> "FILTER"): conflicts with existing connection ("GET_FOO" -> "FILTER")
+<!--vale on-->
 
 The `jq` node is especially flexible, allowing you to craft an ad-hoc input
 object by defining individual input fields in your configuration. Here's an
@@ -369,6 +372,17 @@ unintended behavior changes.
 
 This type of connection is not permitted.
 
+```yaml
+- name: invalid
+  type: call
+  url: https://example.com/
+  output: service_request.headers
+```
+
+<!--vale off-->
+> invalid connection ("invalid" -> "service_request.headers"): type mismatch: object -> map
+<!--vale on-->
+
 ##### object -> any
 
 This type of connection copies all data from the source `object` to the target
@@ -416,6 +430,10 @@ any field-level connections:
   # overlap with `get-foo -> response`
   output: response.body
 ```
+
+<!--vale off-->
+> invalid connection ("get-bar" -> "response.body"): conflicts with existing connection ("get-foo" -> "response.body")
+<!--vale on-->
 
 ## Node types
 
@@ -632,6 +650,10 @@ response will yield an error:
     # dependency error!
     body: service_response.body
 ```
+
+<!--vale off-->
+> invalid dependency (node #1 (CALL) -> node service_response): circular dependency
+<!--vale on-->
 
 ### `jq` node type
 
