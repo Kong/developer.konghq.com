@@ -1319,15 +1319,15 @@ app/dev-portal/apis/docs.md:
 app/dev-portal/portals/publishing.md:
   - /dev-portal/publishing/
 app/dev-portal/app-reg/index.md:
-  - /dev-portal/application-registration/
+  - /dev-portal/self-service/
 app/dev-portal/app-reg/auth-strategies/oidc/index.md:
   - /dev-portal/auth-strategies/
 app/dev-portal/app-reg/auth-strategies/key-auth/index.md:
   - /dev-portal/auth-strategies/
 app/dev-portal/access-and-approvals/teams.md:
-  - /dev-portal/access-and-approval/
+  - /dev-portal/self-service/
 app/dev-portal/access-and-approvals/index.md:
-  - /dev-portal/access-and-approval/
+  - /dev-portal/self-service/
 app/dev-portal/access-and-approvals/developers.md:
   - /dev-portal/developer-signup/
 app/index.html:

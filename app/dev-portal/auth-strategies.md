@@ -26,8 +26,8 @@ search_aliases:
 related_resources:
   - text: SSO reference
     url: /dev-portal/sso/
-  - text: Application registration
-    url: /dev-portal/application-registration/
+  - text: Developer self-service and app registration
+    url: /dev-portal/self-service/
   - text: About Dev Portal Dynamic Client Registration
     url: /dev-portal/dynamic-client-registration/
   - text: About OIDC Dynamic Client Registration
