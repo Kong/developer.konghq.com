@@ -389,24 +389,6 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
-    path: app/_src/quickstart/kubernetes-demo-kv.md
-    title: 'Deploy Kong Mesh on Kubernetes'
-    description: 'Step-by-step guide to deploy {{site.mesh_product_name}} on Kubernetes using Helm and Minikube. Includes demo app setup, GUI exploration, and enabling mTLS for zero-trust security.'
-    url: '/mesh/kubernetes/'
-    related_resources:
-      - text: Zone Egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
-      - text: Deploy {{site.mesh_product_name}} in production with Helm
-        url: /mesh/production-usuage-values/
-    search_aliases:
-      - k8s
-    min_version:
-      mesh: '2.6'
-  -
     path: app/_src/quickstart/universal-docker-demo.md
     title: 'Deploy Kong Mesh on Universal'
     description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'

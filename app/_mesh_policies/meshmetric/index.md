@@ -1,9 +1,9 @@
 ---
-title: MeshMetric
+title: Mesh Metric
 name: MeshMetrics
 products:
     - mesh
-description: "{{site.mesh_product_name}} facilitates consistent traffic metrics across all data plane proxies in your mesh."
+description: "Gather traffic metrics across all data plane proxies in the mesh."
 content_type: plugin
 type: policy
 min_version:
