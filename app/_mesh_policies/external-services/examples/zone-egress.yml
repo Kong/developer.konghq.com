@@ -1,0 +1,56 @@
+title: 'ExternalService and ZoneEgress'
+
+description: ExternalService and ZoneEgress
+
+extended_description: |
+  In scenarios when traffic to external services needs to be sent through a unique set of hosts you will [configure ZoneEgress](/docs/{{ page.release }}/production/cp-deployment/zoneegress/).
+
+  For example when there is:
+  * [disabled passthrough mode](/docs/{{ page.release }}/networking/non-mesh-traffic#outgoing)
+  * `ZoneEgress` deployed
+  * `ExternalService` configuration that allows communicating with `https://example.com`.
+
+  When application makes a request to `https://example.com`, it will be first routed to `ZoneEgress` and then to `https://example.com`.
+  You can completely block your instances to communicate to things outside the mesh by [disabling passthrough mode](/docs/{{ page.release }}/networking/non-mesh-traffic#outgoing).
+  In this setup, applications will only be able to communicate with other applications in the mesh or external-services via the `ZoneEgress`.
+
+  {:.warning}
+  >  The `ExternalService` with the same `kuma.io/service` name cannot mix dns names and IP addresses of the endpoint.
+    Example:
+    ```yaml
+    ---
+    type: ExternalService
+    mesh: default
+    name: example-1
+    tags:
+      kuma.io/service: example
+      kuma.io/protocol: tcp
+    networking:
+      address: example.com:443
+    ---
+    type: ExternalService
+    mesh: default
+    name: example-2
+    tags:
+      kuma.io/service: example
+      kuma.io/protocol: tcp
+    networking:
+      address: 192.168.0.1:443
+    ```
+    The above configuration is incorrect and configuration generation will fail.
+
+weight: 900
+
+namespace: kuma-demo
+
+config:
+  type: ExternalService
+  mesh: default
+  name: example
+  tags:
+    kuma.io/service: example
+    kuma.io/protocol: tcp
+  networking:
+    address: example.com:443
+    tls:
+      enabled: false
