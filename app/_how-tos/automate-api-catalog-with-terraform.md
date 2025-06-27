@@ -22,7 +22,7 @@ tldr:
 
     * `konnect_api`
     * `konnect_api_document`
-    * `konnect_api_specification`
+    * `konnect_api_version`
     * `konnect_api_implementation`
     * `konnect_api_publication`
 
@@ -114,38 +114,39 @@ resource "konnect_api" "my_api" {
 ' >> main.tf
 ```
 
-## Create and associate an API spec
+## Create and associate an API spec and version
 
-Create and associate a spec with your API:
+[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf) with your API:
 
 ```hcl
 echo '
-resource "konnect_api_specification" "my_api_specification" {
+resource "konnect_api_version" "my_api_spec" {
   provider = konnect-beta
-  api_id   = konnect_api.my_api.id
-  type     = "oas3"
-
-  content = <<JSON
-{
-  "openapi": "3.0.3",
-  "info": {
-    "title": "Example API",
-    "version": "1.0.0"
-  },
-  "paths": {
-    "/example": {
-      "get": {
-        "summary": "Example endpoint",
-        "responses": {
-          "200": {
-            "description": "Successful response"
+  api_id = konnect_api.my_api.id
+  spec = {
+    content = <<JSON
+      {
+        "openapi": "3.0.3",
+        "info": {
+          "title": "Example API",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/example": {
+            "get": {
+              "summary": "Example endpoint",
+              "responses": {
+                "200": {
+                  "description": "Successful response"
+                }
+              }
+            }
           }
         }
       }
-    }
+      JSON
   }
-}
-JSON
+  version = "1.0.0"
 }
 ' >> main.tf
 ```
@@ -189,7 +190,7 @@ resource "konnect_api_implementation" "my_api_implementation" {
   }
   depends_on = [
     konnect_api.my_api,
-    konnect_api_specification.my_api_specification,
+    konnect_api_version.my_api_spec,
     konnect_gateway_control_plane.my_cp,
     konnect_gateway_service.httpbin
   ]
@@ -207,7 +208,7 @@ resource "konnect_api_publication" "my_apipublication" {
   provider = konnect-beta
   api_id = konnect_api.my_api.id
   portal_id                  = konnect_portal.my_portal.id
-  visibility                 = "private"
+  visibility                 = "public"
 
   depends_on = [
     konnect_api_implementation.my_api_implementation,

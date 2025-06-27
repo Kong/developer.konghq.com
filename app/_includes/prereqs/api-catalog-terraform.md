@@ -9,7 +9,7 @@ For this tutorial, you’ll need a Dev Portal pre-configured. These settings are
      auto_approve_applications            = false
      auto_approve_developers              = true
      default_api_visibility               = "public"
-     default_page_visibility              = "private"
+     default_page_visibility              = "public"
      description                          = "...my_description..."
      display_name                         = "...my_display_name..."
      force_destroy                        = "false"
