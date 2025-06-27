@@ -165,7 +165,7 @@ The zone key is purely static and arbitrary. Different zone values for different
 ### Prerequisites
 
 - [Redis installed](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack)
-- [{{site.mesh_product_name}} installed](/install)
+- [{{site.mesh_product_name}} installed](/mesh)
 - [Demo app downloaded from GitHub](https://github.com/kumahq/kuma-counter-demo):
 
   ```sh
@@ -199,8 +199,7 @@ kumactl generate dataplane-token --tag kuma.io/service=app --valid-for=720h > ku
 ```
 
 {% warning %}
-This action requires [authentication](/docs/{{ page.release }}/production/secure-deployment/api-server-auth/#admin-user-token) unless executed against a control-plane running on localhost.
-If `kuma-cp` is running inside docker container please see [docker authentication docs](/docs/{{ page.release }}/production/cp-deployment/stand-alone/).
+This action requires [authentication](/mesh/authentication-with-the-api-server/#admin-user-token) unless executed against a control-plane running on localhost.
 {% endwarning %}
 
 ### Create a data plane proxy for each service

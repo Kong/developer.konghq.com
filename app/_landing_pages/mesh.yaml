@@ -150,10 +150,12 @@ rows:
               title: Observability
               icon: /assets/icons/monitor.svg
               description: |
-                Monitor service to service communication
-              cta:
-                text: Learn more 
-                url: /mesh/observability/
+                Monitor service to service communication using Prometheus and/or OpenTelemetry.
+              ctas:
+                - text: Introduction 
+                  url: /mesh/observability/
+                - text: OpenTelemetry configuration 
+                  url: /mesh/collect-metrics-with-opentelemetry/
       - blocks:
           - type: card
             config:
@@ -183,6 +185,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: "Configure Mutual TLS"
+              description: |
+                Enables automatic encrypted mTLS traffic for all the services in a Mesh, as well as assigning an identity to every data plane proxy.
+              cta:
+                text: View the reference 
+                url: /mesh/policies/mutual-tls/
+                align: end
+      - blocks:
+          - type: card
+            config:
               title: "{{site.mesh_product_name}} audit logs"
               description: |
                 Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends.
@@ -203,7 +215,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Secure access across services"
+              title: "Secure access between Mesh components"
               description: |
                 Learn how secure access is provided across a Kong Mesh deployment.
               cta:

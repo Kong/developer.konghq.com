@@ -126,6 +126,16 @@ pages:
         url: /mesh/policies/
     min_version:
       mesh: '2.7'
+  -
+    path: app/_src/policies/mutual-tls.md
+    title: 'Configuring Mutual TLS'
+    description: 'Configuring Mutual TLS for your workloads'
+    url: '/mesh/policies/mutual-tls/'
+    related_resources:
+      - text: MeshTLS Policy
+        url: /mesh/policies/meshtls/
+    min_version:
+      mesh: '2.9'
 
   -
     path: app/_src/guides/progressively-rolling-in-strict-mtls-kv.md
