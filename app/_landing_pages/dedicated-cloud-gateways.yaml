@@ -136,7 +136,7 @@ rows:
   - header:
       type: h2
       text: "More information"
-    columns:
+  - columns:
       - blocks:
           - type: card
             config:
@@ -150,6 +150,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Dedicated Cloud Gateway domain breaking changes
+              description: |
+                Review domain breaking changes for Dedicated Cloud Gateways and migrate to the new domain before September 30, 2025.
+              icon: /assets/icons/domain.svg
+              cta:
+                text: Review breaking changes
+                url: /dedicated-cloud-gateways/breaking-changes/
+      - blocks:
+          - type: card
+            config:
               title: Custom domains
               description: |
                 Use custom DNS settings for Dedicated Cloud Gateways.
@@ -157,6 +167,7 @@ rows:
               cta:
                 text: Set up custom domains
                 url: /dedicated-cloud-gateways/reference/#custom-dns
+  - columns:
       - blocks:
           - type: card
             config:
