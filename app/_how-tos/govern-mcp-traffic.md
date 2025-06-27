@@ -198,6 +198,8 @@ entities:
 
 ## Validate your configuration
 
+Now you can validate your configuration by testing tool requests and sending requests that should be denied.
+
 ### Allowed tool requests to GitHub MCP Server
 
 {% navtabs "Allowed MCP calls"%}
