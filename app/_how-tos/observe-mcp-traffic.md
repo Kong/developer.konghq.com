@@ -163,7 +163,7 @@ You can validate that the plugin is collecting metrics by generating traffic to 
 Now, we can run the script from the previous tutorial again:
 
 ```bash
-for i in {1..10}; do
+for i in {1..5}; do
   echo -n "Request #$i — Model: "
   curl -s -X POST "http://localhost:8000/anything/v1/responses" \
     -H "Accept: application/json" \
@@ -181,9 +181,9 @@ for i in {1..10}; do
           }
         }
       ],
-      \"input\": \"tools available with github mcp\"
+      \"input\": \"How do I\"
     }" | jq -r '.model'
-  sleep 3
+  sleep 10
 done
 ```
 
