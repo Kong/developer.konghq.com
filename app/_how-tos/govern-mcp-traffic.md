@@ -393,14 +393,14 @@ for i in {1..6}; do
           }
         }
       ],
-      \"input\": \"tools available with github mcp\"
+      \"input\": \"How do I\"
     }")
   echo "$http_status"
 
   if [[ $i == 3 ]]; then
-    sleep 10
+    sleep 20
   else
-    sleep 1
+    sleep 2
   fi
 done
 ```
@@ -417,14 +417,16 @@ Request #6 — Status: 429
 ```
 {:. no-copy-code  }
 
-Our rate limit configuration is allowing 2 requests per 60 seconds, which means that:
+Our rate limit configuration is allowing 1 requests per 60 seconds, which means that:
 
-- Requests #1 and #2 are allowed (status `200`).
+- Request #1 is allowed (status 200) — first request within the rate limit.
 
-- Request #3 exceeds the limit (status `429`).
+- Request #2 gets status 429 (Too Many Requests) — limit is 1 request per 10 seconds, so this second request exceeds it.
 
-- After sleeping 10 seconds, the window partially resets.
+- Request #3 also gets 429 — still within the same 10-second window, so rate limiting blocks it.
 
-- Request #4 falls into a new window and gets allowed (status `200`).
+- After sleeping 20 seconds (more than the 10-second window), the rate limit resets.
 
-- Requests #5 and #6 again exceed the limit (status `429`).
+- Request #4 falls into a fresh window and is allowed (status 200).
+
+- Requests #5 and #6 happen shortly after and exceed the limit again, getting 429.
