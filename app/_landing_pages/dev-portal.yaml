@@ -25,7 +25,7 @@ rows:
                     It enables developers to browse and search API documentation, try API operations, and manage their own credentials. 
                     The Portal supports both internal and external APIs through flexible deployment options.
 
-                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. 
+                    Dev Portal APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation. 
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
           - type: button
             config:
