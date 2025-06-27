@@ -37,34 +37,6 @@ rows:
 
   - header:
       type: h2
-      text: "Get started"
-
-  - column_count: 3
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Create a Dev Portal
-              description: |
-                {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. 
-                You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
-              icon: /assets/icons/dev-portal.svg
-              cta:
-                url: "https://cloud.konghq.com/portals/create"
-      - blocks:
-          - type: card
-            config:
-              title: Allow developers to register apps
-              description: |
-                Configure application registration and role-based access for developers.
-                Grant or revoke access for developers to register applications and acquire credentials.
-              icon: /assets/icons/document-list.svg
-              cta:
-                url: "/dev-portal/application-registration/"
-
-
-  - header:
-      type: h2
       text: "Deployment options"
     columns:
       - blocks:

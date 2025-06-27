@@ -20,7 +20,7 @@ search_aliases:
 
 tldr:
     q: How do I automate the creation and publication of my API catalog in Dev Portal?
-    a: Create an API (`/v3/apis`), optionally associate a document (`/v3/apis/{apiId}/documents`) or spec (`/v3/apis/{apiId}/specifications`) with the API, then associate the API with a Gateway Service (`/v3/apis/{apiId}/implementations`). Finally, publish it by sending a `PUT` request to the `/v3/apis/{apiId}/publications/{portalId}` endpoint.
+    a: You can automate the creation and publication of APIs to your Dev Portal API catalog using the {{site.konnect_short_name}} API. Create an API (`/v3/apis`), optionally associate a document (`/v3/apis/{apiId}/documents`) or spec (`/v3/apis/{apiId}/versions`) with the API, then associate the API with a Gateway Service (`/v3/apis/{apiId}/implementations`). Finally, publish it by sending a `PUT` request to the `/v3/apis/{apiId}/publications/{portalId}` endpoint.
 
 prereqs:
   inline:
@@ -70,7 +70,7 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
-    name: myApi
+    name: MyAPI
     attributes: {"env":["development"],"domains":["web","mobile"]}
 {% endcontrol_plane_request %}
 <!--vale on-->
@@ -81,13 +81,13 @@ Export the ID of your API from the response:
 export API_ID='YOUR-API-ID'
 ```
 
-## Create and associate an API spec
+## Create and associate an API spec and version
 
-[Create and associate a spec](/api/konnect/api-builder/v3/#/operations/create-api-spec) with your API using the `/v3/apis/{apiId}/specifications` endpoint:
+[Create and associate a spec and version](/api/konnect/api-builder/v3/#/operations/create-api-version) with your API using the `/v3/apis/{apiId}/versions` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
-url: /v3/apis/$API_ID/specifications
+url: /v3/apis/$API_ID/versions
 status_code: 201
 method: POST
 headers:
@@ -95,8 +95,9 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
-    content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
-    type: oas3
+    version: 1.0.0
+    spec:
+        content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
 {% endcontrol_plane_request %}
 <!--vale on-->
 
@@ -192,30 +193,7 @@ body:
 
 ## Publish the API to Dev Portal
 
-Now you can publish the API to a Dev Portal. 
-
-First, [list your Dev Portals](/api/konnect/portal-management/v3/#/operations/list-portals) using `/v3/portals` endpoint so you can copy the ID of the Dev Portal you want to publish to:
-
-<!--vale off-->
-{% control_plane_request %}
-url: /v3/portals
-status_code: 201
-method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
-{% endcontrol_plane_request %}
-<!--vale on-->
-
-Export your Dev Portal ID and domain:
-
-```sh
-export PORTAL_ID='YOUR-DEV-PORTAL-ID'
-export PORTAL_URL='YOUR-DEV-PORTAL-DOMAIN'
-```
-
-[Publish the API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
+Now you can [publish the API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -231,11 +209,11 @@ headers:
 
 ## Validate
 
-To validate that the API was created and published in your Dev Portal, navigate to your Dev Portal and log in with the developer account you [created in the prerequisites](/how-to/automate-api-catalog/#dev-portal):
+To validate that the API was created and published in your Dev Portal, navigate to your Dev Portal:
 
 ```sh
 open https://$PORTAL_URL/apis
 ```
 
-You should see `myApi` in the list of APIs. 
+You should see `MyAPI` in the list of APIs. If an API is published as private, you must enable Dev Portal RBAC and [developers must sign in](/dev-portal/developer-signup/) to see APIs.
 
