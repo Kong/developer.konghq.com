@@ -24,7 +24,6 @@ products:
 
 works_on:
   - on-prem
-  - konnect
 
 min_version:
   gateway: '3.10'
@@ -359,17 +358,15 @@ Now you can enforce local rate limiting by configuring the AI Rate Limiting Adva
 
 {% entity_examples %}
 entities:
-    plugins:
+  plugins:
     - name: ai-rate-limiting-advanced
       config:
-        strategy: local
-        window_type: fixed
         llm_providers:
         - name: openai
-        window_size:
-        - 10
-        limit:
-        - 1
+          limit:
+          - 1
+          window_size:
+          - 10
 {% endentity_examples %}
 
 
@@ -412,7 +409,7 @@ Which should give the following output:
 
 ```text
 Request #1 — Status: 200
-Request #2 — Status: 200
+Request #2 — Status: 429
 Request #3 — Status: 429
 Request #4 — Status: 200
 Request #5 — Status: 429

@@ -5,9 +5,10 @@ permalink: /mcp/get-started/
 breadcrumbs:
     - /mcp/
 description: Learn how to quickly get started with using {{site.konnect_product_name}} MCP Server
+
 products:
-    - ai-gateway
     - gateway
+    - ai-gateway
 
 works_on:
     - konnect
@@ -45,6 +46,9 @@ prereqs:
   entities:
     services:
         - example-service
+    consumers:
+        - example-consumer
+
   inline:
     - title: OpenAI
       content: |
@@ -142,7 +146,7 @@ You can see a list of all {{site.konnect_short_name}} regions in the [Geographic
 
 ## Configure Claude Desktop
 
-Claude uses a configuration file to register custom MCP servers. You’ll need to create or edit this file based on your operating system:
+Claude uses a configuration file to register custom MCP servers. You’ll need to **create** or edit this file based on your operating system:
 
 * **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 * **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
@@ -176,7 +180,9 @@ After saving the `claude_desktop_config.json` file, restart Claude for Desktop. 
 
 
 ## Analyze API traffic using Claude and Kong MCP Server
+
 Now that you've configured Claude Desktop with the {{site.konnect_short_name}} MCP server, you can analyze API traffic.
+
 ### List all Control Planes
 
 {% navtabs "list-all-control-planes" %}
