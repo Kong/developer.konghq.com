@@ -69,7 +69,7 @@ prereqs:
         docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
         ```
         {:.info}
-        > Each image includes a built-in NLP model. Check [AI Sanitizer documentation](/plugins/ai-sanitizer/#ai-pii-anonymizer-service) for more details
+        > Each image includes a built-in NLP model. Check the [AI Sanitizer documentation](/plugins/ai-sanitizer/#ai-pii-anonymizer-service) for more detail.
       icon_url: /assets/icons/cloudsmith.svg
 
 cleanup:
