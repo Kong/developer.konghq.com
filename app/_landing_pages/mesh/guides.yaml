@@ -1,0 +1,268 @@
+metadata:
+  title: "Kong Mesh"
+  content_type: landing_page
+  description: Learn how Kong Mesh works and how to configure it.
+  products:
+    - mesh
+  tags:
+    - control-plane
+    - data-plane
+
+rows:
+  - header:
+      type: h1
+      text: "Kong Mesh guides"
+      sub_text: Learn how to use Mesh to solve common challenges
+
+
+
+  - header:
+      type: h2
+      text: "Security and Enforcing policies"
+      sub_text: "One of the key tenants of a Service Mesh is the ability to encrypt and control service to service communication.  With {{site.mesh_product_name}}, your application developers can concentrate on core business logic, whilst Mesh deals with security."
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Service to Service encryption (mTLS)
+              description: |
+                Learn how to configure service to service encryption,  generate certificates, configure external Certificate Authorities
+              icon: /assets/icons/lock.svg
+              ctas:
+                - text: Enable mTLS
+                  url: "https://github.com/Kong/terraform-provider-konnect"
+                - text: Certificate authority integration
+                  url: "https://registry.terraform.io/providers/Kong/konnect/latest"
+
+      - blocks:
+          - type: card
+            config:
+              title: Common enforcment policies
+              description: |
+                Guide to deploying Kong Mesh in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.
+              icon: /assets/icons/plug.svg
+              ctas:
+                - text: MeshTLS
+                  url: "https://github.com/Kong/terraform-provider-konnect"
+                - text: MeshTrafficPermission
+                  url: "https://registry.terraform.io/providers/Kong/konnect/latest"
+
+      - blocks:
+          - type: card
+            config:
+              title: Role based access
+              description: |
+                Configure what rights and access your developers and platform teams have whilst using {{site.mesh_product_name}}
+              icon: /assets/icons/key.svg
+              ctas:
+                - text: Enable mTLS
+                  url: "https://github.com/Kong/terraform-provider-konnect"
+                - text: Certificate authority integration
+                  url: "https://registry.terraform.io/providers/Kong/konnect/latest"
+
+
+  - header:
+      type: h2
+      text: "Deployment modes"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Single-zone
+              description: |
+                Run {{site.mesh_product_name}} in a single zone with a standalone Control Plane and interconnected Data Plane proxies.
+              cta:
+                text: Learn more 
+                url: /mesh/single-zone/
+      - blocks:
+          - type: card
+            config:
+              title: Multi-zone
+              description: |
+                Group equivalent MeshServices across zones and expose a unified, zone-agnostic service with global failover capabilities.
+              cta:
+                text: Learn more 
+                url: /mesh/mesh-multizone-service-deployment/
+  - header:
+      type: h2
+      text: "Next steps"
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Routing within the Mesh
+              description: |
+                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
+              cta:
+                text: Learn more 
+                url: /mesh/mesh-multi-tenancy/
+      - blocks:
+          - type: card
+            config:
+              title: Multi tenant Mesh
+              description: |
+                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
+              cta:
+                text: Learn more 
+                url: /mesh/mesh-multi-tenancy/
+      - blocks:
+          - type: card
+            config:
+              title: Configure ingress traffic
+              description: |
+                Configure ingress (north / south traffic into your Mesh) using built-in or Kong gateway.
+              cta:
+                text: Learn more 
+                url: /mesh/ingress/
+
+      - blocks:
+          - type: card
+            config:
+              title: Apply network policies
+              description: |
+                Use policies to control your service to service and network traffic
+              cta:
+                text: Learn more 
+                url: /mesh/policies/
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Observability
+              description: |
+                Monitor service to service communication
+              cta:
+                text: Learn more 
+                url: /mesh/observability/
+  - header:
+      type: h2
+      text: Key references
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} changelog"
+              description: |
+                See new {{site.mesh_product_name}} features and bug fixes.
+              cta:
+                text: View the release notes 
+                url: /mesh/changelog/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Policy Hub
+              description: |
+                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+              cta:
+                text: See policies 
+                url: /mesh/policies/
+      - blocks:
+          - type: card
+            config:
+              title: Enterprise features
+              description: |
+                Explore the features included with {{site.mesh_product_name}} Enterprise, including mTLS backends, RBAC, FIPS support, and signed container images.
+              cta:
+                text: See enterprise features 
+                url: /mesh/enterprise/
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} CLI"
+              description: |
+                Reference for the CLI tools included in Kong Mesh, including usage examples and commands for kumactl, kuma-cp, and kuma-dp.
+              cta:
+                text: View the reference 
+                url: /mesh/cli/
+                align: end 
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} requirements"
+              description: |
+                See the different requirements to deploy {{site.mesh_product_name}}
+              cta:
+                text: View the requirements 
+                url: /mesh/requirements/
+                align: end 
+      - blocks:
+          - type: card
+            config:
+              title: "kuma-cp reference"
+              description: |
+                Configuration reference for kuma-cp.
+              cta:
+                text: View the reference 
+                url: /mesh/reference/kuma-cp/
+                align: end 
+  - header:
+      type: h2
+      text: Security and access
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} audit logs"
+              description: |
+                Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends.
+              cta:
+                text: View the reference 
+                url: /mesh/access-audit/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} RBAC"
+              description: |
+                Use AccessRole and AccessRoleBinding resources in {{site.mesh_product_name}} to implement fine-grained, role-based access to policies and actions.
+              cta:
+                text: View the reference 
+                url: /mesh/rbac/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Secure access across services"
+              description: |
+                Learn how secure access is provided across a Kong Mesh deployment.
+              cta:
+                text: View the reference 
+                url: /mesh/secure-access/
+                align: end
+  - header:
+      type: h2
+      text: Support policies
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} version support policy"
+              description: |
+                The {{site.mesh_product_name}} version support policy outlines the {{site.mesh_product_name}} 
+                versioning scheme and version lifecycle, from release to sunset support.
+              cta:
+                text: View the version support policy 
+                url: /mesh/support-policy/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} vulnerability patching process"
+              description: |
+                Understand how Kong addresses and patches vulnerabilities in {{site.mesh_product_name}} binaries, third-party dependencies, and Docker images.
+              cta:
+                text: View the vulnerability support policy 
+                url: /mesh/vulnerability-patching-process
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} software bill of materials"
+              description: |
+                See the SBOM for {{site.mesh_product_name}} releases.
+              cta:
+                text: View the SBOM 
+                url: /mesh/sbom/
+                align: end

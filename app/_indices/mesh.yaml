@@ -27,7 +27,12 @@ sections:
       - title: Mesh Manager
         description: Manage service meshes and Control Planes in Konnect.
         url: /mesh-manager/
-  
+
+  - title: Mesh guides
+    items:
+      - path: /mesh/guides
+      - path: /how-to/mesh/*
+
   - title: How Mesh Works
     items:
       - path: /mesh/about/
@@ -35,6 +40,7 @@ sections:
       - path: /mesh/architecture/
       - path: /mesh/ingress/
       - path: /mesh/kuma-user-interface-gui/
+      - path: /mesh/use-mesh/
 
   - title: Production Deployments
     items:
@@ -66,7 +72,7 @@ sections:
   - title: Deletegated Gateways
     items:
       - path: /mesh/ingress-gateway-delegated/
-      - path: /mesh/gateway-delegated/
+      - path: /mesh/using-mesh/managing-ingress-traffic/delegated
 
   - title: Authentication and Authorization
     items:
