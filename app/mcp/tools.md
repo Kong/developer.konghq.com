@@ -29,7 +29,7 @@ min_version:
 related_resources:
     - text: "{{site.konnect_product_name}} MCP Server"
       url: 'https://github.com/Kong/mcp-konnect'
-    - text: Kong MCP Konnect on Docker
+    - text: MCP Server on Docker
       url: 'https://hub.docker.com/r/mcp/kong'
       icon: /assets/icons/third-party/docker.svg
     - text: AI Gateway
@@ -62,10 +62,10 @@ rows:
       - `maxResults`: Cap the number of returned entries
   - tool: "Get Consumer Requests"
     description: |
-      Analyze API requests made by a specific consumer, with filters for success/failure and time range.<br/><br/>
+      Analyze API requests made by a specific Consumer, with filters for success/failure and time range.<br/><br/>
 
       **Inputs**:
-      - `consumerId`: Target consumer
+      - `consumerId`: Target Consumer
       - `timeRange`: Time window for analysis
       - `successOnly`, `failureOnly`: Optional filters by result type
       - `maxResults`: Result count limit
@@ -74,7 +74,7 @@ rows:
 
 ## Configuration tools
 
-Configuration tools provide read-access to the Kong resource objects associated with a control plane, enabling inventory audits, automation, or UI rendering for dashboards.
+Configuration tools provide read-access to the {{site.base_gateway}} resource objects associated with a Control Plane. This allows you to do inventory audits, automation, or UI rendering for dashboards.
 
 <!--vale off-->
 {% table %}
@@ -86,26 +86,26 @@ columns:
 rows:
   - tool: "List Services"
     description: |
-      Enumerates all services within a specific control plane.<br/><br/>
+      Enumerates all Gateway Services within a specific Control Plane.<br/><br/>
 
       **Inputs**:
-      - `controlPlaneId`: Target control plane ID
+      - `controlPlaneId`: Target Control Plane ID
       - `size`, `offset`: Pagination controls
   - tool: "List Routes"
     description: |
-      Lists all route configurations deployed within a control plane.<br/><br/>
+      Lists all Route configurations deployed within a Control Plane.<br/><br/>
 
       **Inputs**:
       - `controlPlaneId`, `size`, `offset`
   - tool: "List Consumers"
     description: |
-      Fetches all consumer records within a control plane.
+      Fetches all Consumer records within a Control Plane.
 
       **Inputs**:
       - `controlPlaneId`, `size`, `offset`
   - tool: "List Plugins"
     description: |
-      Retrieves all plugins configured under the specified control plane.<br/><br/>
+      Retrieves all plugins configured under the specified Control Plane.<br/><br/>
 
       **Inputs**:
       - `controlPlaneId`, `size`, `offset`
@@ -114,7 +114,7 @@ rows:
 
 ## Control Plane tools
 
-These tools help users manage multiple control planes and their organizational relationships. Useful for environments with many clusters and regional deployments.
+These tools help users manage multiple Control Planes and their organizational relationships. This is useful for environments with many clusters and regional deployments.
 
 <!--vale off-->
 {% table %}
@@ -126,28 +126,28 @@ columns:
 rows:
   - tool: "List Control Planes"
     description: |
-      Lists all control planes in the organization, with options to filter and sort.<br/><br/>
+      Lists all Control Planes in the organization, with options to filter and sort.<br/><br/>
 
       **Inputs**:
       - `pageSize`, `pageNumber`: Pagination
       - `filterName`, `filterClusterType`, `filterCloudGateway`, `labels`, `sort`: Query refinement options
   - tool: "Get Control Plane"
     description: |
-      Retrieves detailed metadata about a specific control plane.<br/><br/>
+      Retrieves detailed metadata about a specific Control Plane.<br/><br/>
 
       **Inputs**:
-      - `controlPlaneId`: Unique ID of the control plane
+      - `controlPlaneId`: Unique ID of the Control Plane
   - tool: "List Control Plane Group Memberships"
     description: |
-      Lists all control planes that belong to a specified group.<br/><br/>
+      Lists all Control Planes that belong to a specified group.<br/><br/>
 
       **Inputs**:
       - `groupId`, `pageSize`, `pageAfter`
   - tool: "Check Control Plane Group Membership"
     description: |
-      Verifies whether a given control plane belongs to any group.<br/><br/>
+      Verifies whether a given Control Plane belongs to any group.<br/><br/>
 
       **Inputs**:
-      - `controlPlaneId`: Control plane to check
+      - `controlPlaneId`: Control Plane to check
 {% endtable %}
 <!--vale on-->

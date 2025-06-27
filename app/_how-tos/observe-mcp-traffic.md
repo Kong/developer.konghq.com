@@ -49,27 +49,6 @@ tldr:
 tools:
   - deck
 
-prereqs:
-  inline:
-    - title: OpenAI
-      include_content: prereqs/openai
-      icon_url: /assets/icons/openai.svg
-    - title: GitHub
-      content: |
-        To complete this tutorial, you'll need access to GitHub, access to GitHub repository and [Github Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-
-        Once you've created your Github Personal Access Token, make sure to export it as an environment variable by running the following command:
-
-        ```bash
-        export GITHUB_PAT=<YOUR_GITHUB_TOKEN>
-        ```
-      icon_url: /assets/icons/third-party/github.svg
-  prereqs:
-    entities:
-        services:
-            - example-clean-service
-        routes:
-            - example-clean-route
 
 cleanup:
   inline:
@@ -83,7 +62,7 @@ cleanup:
 
 ## Reconfigure the AI Proxy Advanced plugin
 
-Now we enable detailed logging for all configured models in the AI Proxy Advanced plugin. This captures request/response payloads and performance statistics. We then scrape those statistics using the Prometheus plugin for monitoring and analysis. Apply the configuration below to enable logging for both used models.
+Now, you can enable detailed logging for all configured models in the AI Proxy Advanced plugin. This captures request/response payloads and performance statistics. You can then scrape those statistics using the Prometheus plugin for monitoring and analysis. Apply the configuration below to enable logging for both models.
 
 {% entity_examples %}
 entities:
