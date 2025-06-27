@@ -272,6 +272,7 @@ gzip
 gzipped
 hackathon
 hackathons
+hardcode
 hardcoded
 hardcoding
 hashicorp
