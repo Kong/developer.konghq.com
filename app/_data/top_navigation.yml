@@ -3,7 +3,8 @@ platform:
     text: |
           Manage everything in one place?
           Explore Konnect, our unified API platform.
-    icon: '/assets/logos/Konnect-logo.svg'
+    icon_dark: '/assets/logos/Konnect-logo.svg'
+    icon_light: '/assets/logos/Konnect-logo-light.svg'
     link:
       url: /konnect/
       text: Learn more &rarr;

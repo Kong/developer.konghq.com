@@ -36,8 +36,11 @@ export async function handler(event, context) {
       id = feedbackId;
     }
 
+    const url = new URL(pageUrl);
+    url.hash = "";
+
     const payload = {
-      text: `New feedback received:\n• Page: ${pageUrl}\n• Vote: ${
+      text: `New feedback received:\n• Page: ${url}\n• Vote: ${
         vote ? "Yes" : "No"
       }\n• Feedback Id: ${id}`,
     };

@@ -12,8 +12,11 @@ export async function handler(event, context) {
   try {
     const { pageUrl, feedbackId, message } = JSON.parse(event.body);
 
+    const url = new URL(pageUrl);
+    url.hash = "";
+
     const payload = {
-      text: `Update feedback received:\n• Page: ${pageUrl}\n• Feedback Id: ${feedbackId}\n• Message: ${message}`,
+      text: `Update feedback received:\n• Page: ${url}\n• Feedback Id: ${feedbackId}\n• Message: ${message}`,
     };
 
     const response = await fetch(webhookUrl, {

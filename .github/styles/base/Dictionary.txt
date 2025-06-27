@@ -9,6 +9,7 @@ addons
 admin_listen
 admin's
 admin's
+agentic
 Alertmanager
 allow_terminated
 allowlist
@@ -21,6 +22,7 @@ anonymization
 anonymized
 Anonymizer
 api
+apikey
 APIm
 APIOps
 APIOps
@@ -217,6 +219,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+exfiltrate
 failover
 fapi
 Fargate
@@ -278,6 +281,7 @@ hashicorp
 Hasura
 hcv
 header_filter
+hello_world
 headmatter
 healthcheck
 healthchecks
@@ -462,6 +466,7 @@ matchers
 max_args
 max_headers
 mbps
+mcp
 md
 mebibytes
 Memcached

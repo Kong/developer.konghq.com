@@ -150,7 +150,8 @@
 
                   <div class="hidden lg:flex shadow-primary relative border rounded-lg border-transparent background-gradient">
                     <div class="flex flex-col gap-3 lg:p-6 rounded-md bg-primary">
-                      {% include_svg site.data.top_navigation.platform.konnect.icon %}
+                      <span class="hidden dark:inline">{% include_svg site.data.top_navigation.platform.konnect.icon_dark %}</span>
+                      <span class="inline dark:hidden">{% include_svg site.data.top_navigation.platform.konnect.icon_light %}</span>
                       <p class="text-sm text-secondary">{{site.data.top_navigation.platform.konnect.text}}</p>
                       <a class="text-sm text-brand" href="{{site.data.top_navigation.platform.konnect.link.url}}">{{site.data.top_navigation.platform.konnect.link.text}}</a>
                     </div>
