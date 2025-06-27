@@ -27,7 +27,7 @@ With the GA release of the new Dev Portal (v3) in June 2025, some features and A
 
 ## Dev Portal default domain names
 
-During Tech Preview and Beta, new Dev Portals were served on `https://{portalId}.edge.us.portal.konghq.tech`. The `https://{portalId}.edge.us.portal.konghq.tech` domain name will be discontinued on October 1, 2025 in favor of the `https://{portalId}.us.kongportals.com` domain. During the transition period from Dev Portal v3 release to October 2025, both domain names will be served, but Kong recommends updating your domain names to the new naming convention during the transition period. 
+During Tech Preview and Beta, new Dev Portals were served on `https://{portalId}.edge.{geo}.portal.konghq.tech`. The `https://{portalId}.edge.{geo}.portal.konghq.tech` domain name will be discontinued on October 1, 2025 in favor of the `https://{portalId}.{geo}.kongportals.com` domain. During the transition period from Dev Portal v3 release to October 2025, both domain names will be served, but Kong recommends updating your domain names to the new naming convention during the transition period. 
 
 You must update Dev Portal domain names everywhere they are referenced, including the following:
 
