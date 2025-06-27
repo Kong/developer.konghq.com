@@ -121,12 +121,12 @@ rows:
               description: |
                 Enforce service-to-service communication with fine-grained policies for access control, mutual TLS, traffic permissions, and L4/L7 routing. Ensuring secure and compliant traffic flows across your mesh.
               ctas:
-                - text: Learn more 
-                  url: /mesh/mesh-multi-tenancy/
-                - text: Learn more 
-                  url: /mesh/mesh-multi-tenancy/
-                - text: Learn more 
-                  url: /mesh/mesh-multi-tenancy/
+                - text: Mesh Traffic Permission 
+                  url: /mesh/policies/meshtrafficpermission/
+                - text: Mesh HTTP Route 
+                  url: /mesh/policies/meshhttproute/
+                - text: Mesh TCP Route 
+                  url: /mesh/policies/meshtcproute/
       - blocks:
           - type: card
             config:
@@ -135,12 +135,12 @@ rows:
               description: |
                 Improve service reliability with built-in policies for health checks, circuit breakers, timeouts, and outlier detection. Automatically prevent unhealthy or overloaded services from impacting the rest of your mesh.
               ctas:
-                - text: Learn more 
-                  url: /mesh/policies/
-                - text: Learn more 
-                  url: /mesh/policies/
-                - text: Learn more 
-                  url: /mesh/policies/
+                - text: Mesh Health Check 
+                  url: /mesh/policies/meshhealthcheck/
+                - text: Mesh Retry 
+                  url: /mesh/policies/meshretry/
+                - text: Mesh Circuit Breaker 
+                  url: /mesh/policies/meshcircuitbreaker/
 
 
   - columns:
