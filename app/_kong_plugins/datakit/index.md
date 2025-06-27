@@ -397,7 +397,7 @@ keys `body`, `query`, and `headers`:
 - name: filter
   type: jq
   input: request
-  jq: "..."
+  jq: "."
 ```
 
 {:.warning}
