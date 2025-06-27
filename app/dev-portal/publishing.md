@@ -5,9 +5,7 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 tags:
-  - beta
   - publish-apis
 works_on:
     - konnect
