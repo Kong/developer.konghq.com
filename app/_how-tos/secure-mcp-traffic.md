@@ -97,7 +97,7 @@ entities:
     - name: ai-proxy-advanced
       config:
         targets:
-          - route_type: llm/v1/chat
+          - route_type: llm/v1/responses
             auth:
               header_name: Authorization
               header_value: Bearer ${openai_api_key}

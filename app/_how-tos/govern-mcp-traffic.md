@@ -371,11 +371,7 @@ message: Bad request
 
 ## Enforce local rate limiting
 
-Sure! Here’s the updated intro with that note included:
-
----
-
-This configuration enables the `ai-rate-limiting-advanced` plugin to enforce strict rate limits on requests to the OpenAI provider. It uses a **local strategy** with a **fixed window** of 10 seconds, allowing only **1 request per 10-second window**. Requests exceeding this limit within the same window will receive a `429 Too Many Requests` response, effectively controlling request bursts and protecting backend resources.
+Now you can enforce local rate limiting by configuring the AI Rate Limiting Advanced plugin to enforce strict rate limits on requests to the OpenAI provider. This uses a local strategy with a fixed window of 10 seconds, which only allows one request per 10-second window. Requests exceeding this limit within the same window will receive a `429 Too Many Requests` response, effectively controlling request bursts and protecting backend resources.
 
 {:.info}
 > **Note:** This configuration is for showcase and testing purposes only. In a production environment, rate limits and window sizes should be adjusted to match actual usage patterns and performance requirements.
