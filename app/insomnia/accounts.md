@@ -14,7 +14,7 @@ search_aliases:
   - e2ee
 related_resources:
   - text: Manage Insomnia
-    url: /insomnia/manage-insomnia
+    url: /insomnia/manage-insomnia/
   - text: End-to-End Encryption
     url: /insomnia/end-to-end-encryption/
   - text: Insomnia Enterprise
