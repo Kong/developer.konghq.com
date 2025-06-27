@@ -246,11 +246,11 @@ alternate version of that last configuration that actually works:
 
 - name: COMBINE
   type: jq
-  jq: ".foo * .bar"
-  # jq will be fed an object with fields `.foo` and `.bar`
+  # jq will be fed an object with fields `foo` and `bar`
   inputs:
     foo: GET_FOO
     bar: GET_BAR
+  jq: ".foo * .bar"
 ```
 
 Connecting the output of a node to the input of another node establishes a
@@ -266,11 +266,11 @@ the right order in your configuration:
 # this node won't be executed until after `GET_FOO` _and_ `GET_BAR`
 - name: COMBINE
   type: jq
-  jq: ".foo * .bar"
-  # jq will be fed an object with fields `.foo` and `.bar`
+  # jq will be fed an object with fields `foo` and `bar`
   inputs:
     foo: GET_FOO
     bar: GET_BAR
+  jq: ".foo * .bar"
 
 - name: GET_BAR
   type: property
