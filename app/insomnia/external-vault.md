@@ -3,6 +3,7 @@ title: External vault integration
 description: 'Learn how to configure external vault integrations in Insomnia using AWS, GCP, Azure, and HashiCorp vault providers.'
 content_type: reference
 layout: reference
+tier: enterprise
 products:
   - insomnia
 tags:
@@ -21,6 +22,8 @@ related_resources:
     url: /insomnia/storage/
   - text: Git sync
     url: /insomnia/storage/#git-sync
+min_version:
+  insomnia: '11'
 ---
 
 Insomnia supports integrating with external vault service providers to retrieve secret values automatically when sending requests.

@@ -1653,13 +1653,15 @@ app/insomnia/environment-variables.md:
   - /insomnia/environment-variables.md
   - /insomnia/global-environments.md
   - /insomnia/secret-environment-variables.md
-app/insomnia/account-management.md:
+app/insomnia/accounts.md:
   - /insomnia/forgot-passphrase.md
   - /insomnia/accounts.md
+  - /insomnia/faq.md
+app/insomnia/organizations.md:
   - /insomnia/organizations.md
   - /insomnia/transfer-ownership-organization.md
+app/insomnia/enterprise-account-management.md:
   - /insomnia/multiple-owners.md
-  - /insomnia/faq.md
   - /insomnia/invite-control.md
 app/insomnia/data-security.md:
   - /insomnia/security-standards.md
