@@ -58,13 +58,61 @@ You can use decK to configure a Service by providing a `name` and a `url`. Any r
 {% entity_examples %}
 entities:
   services:
-  - name: example-service
+  - name: my-example-service
     url: http://httpbin.konghq.com
+
 {% endentity_examples %}
+
+## Check kong.yaml file
+
+This command just applied configuration using `deck gateway apply`, which is a shorthand command that lets you make updates quickly, 
+and helps us illustrate each piece for the demo.
+For production usage, you should apply the whole configuration each time with `deck gateway sync`.
+
+To export the complete configuration into a file, run:
+```sh
+deck gateway dump -o kong.yaml
+``` 
+
+Open the newly created `kong.yaml` in your favorite editor.
+
+Try changing the number of retries to `6`, and then sync the entire configuration back up:
+
+```sh
+deck gateway sync kong.yaml
+```
+
+You'll see the following output:
+
+```sh
+updating service example-service  {
+   "connect_timeout": 60000,
+   "enabled": true,
+   "host": "httpbin.konghq.com",
+   "id": "c1727515-6179-49c4-bc4c-c0b46d39460e9",
+   "name": "example-service",
+   "port": 80,
+   "protocol": "http",
+   "read_timeout": 60000,
+-  "retries": 5,
++  "retries": 6,
+   "write_timeout": 60000
+ }
+
+Summary:
+  Created: 0
+  Updated: 1
+  Deleted: 0
+```
+
+You can run a `deck gateway dump` at any time in this guide to see your full configuration.
 
 ## Create a Route
 
-To access this Service, you need to configure a Route. Create a Route that matches incoming requests that start with `/`, and attach it to the service that was previously created by specifying `service.name`:
+Let's go back to using `deck gateway apply` for this guide.
+
+To access this Service, you need to configure a Route. 
+Create a Route that matches incoming requests that start with `/`, and attach it to the Service that was previously created by specifying `service.name`:
 
 {% entity_examples %}
 entities:
@@ -106,9 +154,9 @@ url: '/anything'
 
 ## Add authentication
 
-You may have noticed that the rate limiting plugin used the `limit_by: consumer` configuration option. This means that each uniquely identified consumer is allowed 5 requests per minute.
+You may have noticed that the Rate Limiting plugin used the `limit_by: consumer` configuration option. This means that each uniquely identified Consumer is allowed 5 requests per minute.
 
-To identify a consumer, let's add the [Key Auth plugin](/plugins/key-auth/) and create a test user named `alice`:
+To identify a Consumer, let's add the [Key Auth plugin](/plugins/key-auth/) and create a test user named `alice`:
 
 {% entity_examples %}
 entities:
