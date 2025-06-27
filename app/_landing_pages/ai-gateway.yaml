@@ -168,11 +168,11 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Request transformations
-            description: Use AI to transform requests and responses.
-            icon: /assets/icons/plugins/ai-request-transformer.png
+            title: MCP traffic gateway
+            description: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
+            icon: /assets/icons/mcp.svg
             cta:
-              url: ./#request-transformations
+              url: /mcp
               align: end
       - blocks:
         - type: card
@@ -289,11 +289,11 @@ rows:
       - blocks:
         - type: card
           config:
-            title: MCP traffic gateway
-            description: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
-            icon: /assets/icons/mcp.svg
+            title: Request transformations
+            description: Use AI to transform requests and responses.
+            icon: /assets/icons/plugins/ai-request-transformer.png
             cta:
-              url: /mcp
+              url: ./#request-transformations
               align: end
 
 
