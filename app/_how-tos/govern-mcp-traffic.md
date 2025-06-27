@@ -145,7 +145,6 @@ Request #8 — Model: gpt-4o-2024-08-06
 Request #9 — Model: gpt-4o-2024-08-06
 Request #10 — Model: gpt-4-0613
 ```
-
 {:. no-copy-code }
 
 ## Configure the AI Prompt Guard plugin
