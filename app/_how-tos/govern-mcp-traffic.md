@@ -60,7 +60,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Reconfigure the AI Proxy Advanced Plugin
+## Reconfigure the AI Proxy Advanced plugin
 
 This configuration uses the AI Proxy Advanced plugin to load balance requests between OpenAI’s `gpt-4` and `gpt-4o` models using a round-robin algorithm. Both models are configured to call a GitHub-hosted remote MCP server via the `llm/v1/responses` route. The plugin injects the required OpenAI API key for authentication and logs both payloads and statistics. With equal weights assigned to each target, traffic is split evenly between the two models.
 
