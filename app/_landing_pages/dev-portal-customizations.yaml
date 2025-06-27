@@ -1,0 +1,70 @@
+metadata:
+  title: "Dev Portal customizations"
+  content_type: landing_page
+  description: Customize the look, structure, and access of your Dev Portal with flexible page controls and branding options
+  products:
+    - dev-portal
+  tags:
+    - beta
+  permalink: /dev-portal/dev-portal-customizations
+
+rows:
+
+  - header:
+      type: h1
+      text: "Dev Portal customizations"
+      sub_text: Customize the look, structure, and access of your Dev Portal with flexible page controls and branding options
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can customize every part of your Dev Portal, from the layout and navigation to your branding and domain settings. With Markdown Components (MDC), you can easily build and structure content-rich pages, nest information as needed, and reuse snippets to keep your content consistent and flexible. You have full control over visibility, publishing, and SEO metadata, and with global settings for appearance, custom CSS, and menus, you can tailor the experience to suit your needs. You can also manage custom domains and URL structures so your Dev Portal works exactly the way you envision.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/dev-portal/dev-portal-editor.png
+              alt_text: "KongAir Dev Portal"
+  - header:
+        type: h2
+        text: "Customize Dev Portal"
+    columns:
+        - blocks:
+            - type: card
+              config:
+                title: Pages and content
+                description: |
+                  Customize Dev Portal pages and snippets using Markdown Components (MDC).
+                icon: /assets/icons/link.svg
+                cta:
+                  url: /dev-portal/pages-and-content/
+        - blocks:
+            - type: card
+              config:
+                title: Custom domains
+                description: |
+                  Use a custom URL for Dev Portal.
+                icon: /assets/icons/domain.svg
+                cta:
+                  url: /dev-portal/custom-domains/
+        - blocks:
+            - type: card
+              config:
+                title: Customization settings
+                description: |
+                  Change the Dev Portal UI appearance.
+                icon: /assets/icons/cog.svg
+                cta:
+                  url: /dev-portal/portal-customization/
+        - blocks:
+            - type: card
+              config:
+                title: Dev Portal settings
+                description: |
+                  Learn about the settings you can configure for Dev Portal.
+                icon: /assets/icons/domain.svg
+                cta:
+                  url: /dev-portal/portal-settings/
