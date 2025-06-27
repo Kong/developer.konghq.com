@@ -13,7 +13,7 @@ products:
   - mesh
 
 tldr:
-  q: How do I install Kong Mesh with a Konnect managed Control plane
+  q: How do I install {{site.mesh_product_name}} with a Konnect managed Control plane
   a: Install {{site.mesh_product_name}} on your environment and let Kong take care of the Control plane.
 
 prereqs:
@@ -22,7 +22,7 @@ prereqs:
       content: |
         You will need a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
 
-        After creating your {{site.konnect_short_name}} account, [create the Kong Mesh Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy your data plane.
+        After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy your data plane.
 
 ---
 
@@ -82,7 +82,7 @@ kuma:
 CONTROL_PLANE_ID and CONTROL_PLANE_URL will be created automatically in Konnect
 {% endtip %}
 
-Install Kong Mesh:
+Install {{site.mesh_product_name}}:
 
 ```sh
 helm upgrade --install -n kong-mesh-system kong-mesh kong-mesh/kong-mesh -f values.yaml
@@ -119,7 +119,7 @@ experimental:
 CONTROL_PLANE_ID and CONTROL_PLANE_URL will be created automatically in Konnect
 {% endtip %}
 
-Download Kong Mesh and connect to the zone:
+Download {{site.mesh_product_name}} and connect to the zone:
 
 ```sh
 curl -L https://docs.konghq.com/mesh/installer.sh | sh - \
@@ -158,7 +158,7 @@ kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --ti
 {% endnavtab %}
 {% navtab "Universal / VM / Baremetal" %}
 
-The `demo-app` service listens on port 5000. When it starts, it expects to find a zone key in Redis that specifies the name of the datacenter (or cluster) where the Redis instance is running. This name is displayed in the browser.
+The `demo-app` service listens on port 5000. When it starts, it expects to find a zone key in Redis that specifies the name of the data center (or cluster) where the Redis instance is running. This name is displayed in the browser.
 
 The zone key is purely static and arbitrary. Different zone values for different Redis instances let you keep track of which Redis instance stores the counter if you manage routes across different zones, clusters, and clouds.
 

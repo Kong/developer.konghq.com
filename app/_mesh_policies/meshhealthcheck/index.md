@@ -13,7 +13,7 @@ icon: meshhealthcheck.png
 
 {% warning %}
 This policy uses new policy matching algorithm. 
-Do **not** combine with the the deprecated HealthCheck policy.
+Do **not** combine with the deprecated HealthCheck policy.
 {% endwarning %}
 
 This policy enables {{site.mesh_product_name}} to keep track of the health of every data plane proxy,

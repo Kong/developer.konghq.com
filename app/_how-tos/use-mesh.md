@@ -1,6 +1,6 @@
 ---
-title: Use Kong Mesh CLI
-description: How to commiunicate with Mesh components
+title: Use {{site.mesh_product_name}} CLI
+description: How to communicate with Mesh components
 content_type: how_to
 breadcrumbs:
   - /mesh/
@@ -9,7 +9,7 @@ products:
   - mesh
 
 tldr:
-  q: How do I use the CLI components and communicate with Kong Mesh?
+  q: How do I use the CLI components and communicate with {{site.mesh_product_name}}?
   a: "kumactl and kubectl can be used to communicate with the Mesh Control plane"
 prereqs:
   inline:
