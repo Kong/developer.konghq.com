@@ -125,7 +125,7 @@ variables:
 
 ## Validate MCP Traffic balancing
 
-After configuring the `ai-proxy-advanced` plugin with round-robin load balancing, you can verify that traffic is distributed across both OpenAI models. This script sends 10 test requests to the MCP server route and prints the model used in each response. If load balancing is working correctly, the output should alternate between `gpt-4` and `gpt-4o` based on their configured weights.
+Now that the AI Proxy Advanced plugin is configured with round-robin load balancing, you can verify that traffic is distributed across both OpenAI models. This script sends 10 test requests to the MCP server Route and prints the model used in each response. If load balancing is working correctly, the output should alternate between `gpt-4` and `gpt-4o` based on their configured weights.
 
 ```bash
 for i in {1..10}; do
