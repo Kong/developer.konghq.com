@@ -24,7 +24,6 @@ products:
 
 works_on:
   - on-prem
-  - konnect
 
 min_version:
   gateway: '3.10'
@@ -115,6 +114,7 @@ entities:
     - name: prometheus
       config:
         status_code_metrics: true
+        ai_metrics: true
 {% endentity_examples %}
 
 ## Configure Prometheus
