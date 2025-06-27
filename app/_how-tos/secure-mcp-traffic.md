@@ -1,5 +1,5 @@
 ---
-title: "Secure GitHub MCP Server traffic with {{ site.base_gateway }} and Kong AI Gateway"
+title: "Secure GitHub MCP Server traffic with {{ site.base_gateway }} and AI Gateway"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -59,12 +59,12 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: GitHub
       content: |
-        To complete this tutorial, you'll need access to GitHub, access to GitHub repository and [Github Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+        To complete this tutorial, you'll need access to GitHub, a GitHub repository, and a [Github Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
-        Once you've created your Github Personal Access Token, make sure to export it as an environment variable by running the following command:
+        Once you've created your Github Personal Access Token, export it as an environment variable by running the following command:
 
         ```bash
-        export GITHUB_PAT=<YOUR_GITHUB_TOKEN>
+        export GITHUB_PAT='YOUR_GITHUB_TOKEN'
         ```
       icon_url: /assets/icons/third-party/github.svg
   entities:
@@ -86,9 +86,9 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-To set up AI Proxy with OpenAI, specify the [model](https://platform.openai.com/docs/models) and set the appropriate authentication header. To make requests to a GitHub-hosted remote MCP server, we use the OpenAI `/responses` API endpoint—supported natively by Kong AI Gateway. This approach gives you conversational control over your Git repositories while adding a robust security layer through Kong AI Gateway’s capabilities.
+To set up AI Proxy with OpenAI, specify the [model](https://platform.openai.com/docs/models) and set the appropriate authentication header. To make requests to a GitHub-hosted remote MCP server, we use the OpenAI `/responses` API endpoint, which is supported natively by Kong AI Gateway. This approach gives you conversational control over your Git repositories while adding a robust security layer through Kong AI Gateway’s capabilities.
 
-Using OpenAI’s `/responses` endpoint with Kong AI Gateway simplifies integration with remote MCP servers in agentic applications. Instead of routing each tool invocation through your backend, the gateway forwards model-generated requests directly to the MCP server. That server exposes standardized tools—which we’ll explore in the next tutorial. By supporting the OpenAI `/responses` API, Kong AI Gateway removes the need for custom glue code and enables direct, low-latency model-to-server calls.
+Using OpenAI’s `/responses` endpoint with Kong AI Gateway simplifies integration with remote MCP servers in agentic applications. Instead of routing each tool invocation through your backend, the gateway forwards model-generated requests directly to the MCP server. That server exposes standardized tools, which we’ll explore in the next tutorial in this series. By supporting the OpenAI `/responses` API, Kong AI Gateway removes the need for custom glue code and enables direct, low-latency model-to-server calls.
 
 
 {% entity_examples %}
@@ -128,7 +128,7 @@ entities:
 
 ## Create a Consumer
 
-[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.The Consumer needs an API key to access any {{site.base_gateway}} Services.
+[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. The Consumer needs an API key to access any Services.
 
 <!-- vale off -->
 {% entity_examples %}
@@ -161,13 +161,13 @@ The following request is valid, as it includes the `apikey` required by the Cons
         require_approval: never
         headers:
             Authorization: Bearer $GITHUB_PAT
-    input: how do i use github mcp
+    input: How do I use GitHub MCP?
   status_code: 200
   message: 'OK'
 {% endvalidation %}
 <!-- vale on -->
 
-On the following request including an invalid value for `apikey`:
+On the following request, include an invalid value for `apikey`:
 
 <!-- vale off -->
 {% validation request-check %}
@@ -190,7 +190,7 @@ On the following request including an invalid value for `apikey`:
 {% endvalidation %}
 <!-- vale on -->
 
-If the request doesn't contain the required `apikey`:
+Now, remove the required `apikey` from the request entirely:
 
 <!-- vale off -->
 {% validation request-check %}

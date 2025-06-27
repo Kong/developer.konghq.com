@@ -24,11 +24,9 @@ rows:
       - blocks:
           - type: text
             config: |
-              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
-
-              Key concerns like authentication, context propagation, load balancing, and service discovery are familiar to those working in API infrastructure. As such, the API gateway—already proven in securing and scaling HTTP services—offers a strong foundation for bringing MCP to production.
-
-              Kong’s AI Gateway extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience.
+              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges. 
+              
+              Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and service discovery.
 
       - blocks:
           - type: image
@@ -98,11 +96,11 @@ rows:
             config:
               header:
                 type: h2
-                text: "User paths"
+                text: "MCP server options"
               blocks:
                 - type: text
                   text: |
-                    Whether you're using your own MCP server or getting started with Kong's built-in MCP server, Kong AI Gateway makes it easy to secure, govern, and scale AI-native traffic.
+                    You have the option to either use your own MCP server or use Kong's built-in MCP server.
   - header:
     columns:
       - blocks:
@@ -110,7 +108,7 @@ rows:
             config:
               header:
                 type: h4
-                text: "Secure and govern your MCP server with Kong AI Gateway"
+                text: "External MCP server"
               blocks:
                 - type: text
                   text: |
@@ -126,7 +124,7 @@ rows:
             config:
               header:
                 type: h4
-                text: "Have conversational control of {{site.konnect_product_name}} with Kong MCP Server"
+                text: "Kong's built-in MCP server"
               blocks:
                 - type: text
                   text: |
@@ -145,25 +143,25 @@ rows:
           description: |
             Follow the tutorials below to learn how to secure, govern, and observe your MCP traffic using Kong AI Gateway.
           ctas:
-            - text: Start securing your MCP traffic now
+            - text: Secure your MCP traffic
               url: "/mcp/secure-mcp-traffic/"
-            - text: Take control of your MCP traffic governance
+            - text: Govern MCP traffic
               url: "/mcp/govern-mcp-traffic/"
-            - text: Observe your MCP traffic
+            - text: Observe MCP traffic
               url: "/mcp/observe-mcp-traffic/"
     - blocks:
       - type: card
         config:
           icon: /assets/icons/rocket.svg
-          title: Use {{site.konnect_product_name}} MCP Server
+          title: "{{site.konnect_product_name}} MCP Server"
           description: |
             Follow the tutorials below to get started with {{site.konnect_product_name}} MCP Server using GitHub setup or Docker deployment, plus explore available tools.
           ctas:
-            - text: Get started with {{site.konnect_product_name}} MCP Server
+            - text: Get started with GitHub
               url: "/mcp/get-started"
-            - text: Get started with Kong MCP server using Docker
+            - text: Get started with Docker
               url: "https://hub.docker.com/r/mcp/kong"
-            - text: Check available tools
+            - text: See MCP server tools
               url: "/mcp/tools"
 
 
@@ -180,17 +178,3 @@ rows:
               quantity: 5
               allow_empty: true
 
-  - header:
-      text: "Frequently Asked Questions"
-      type: h2
-    columns:
-      - blocks:
-        - type: faqs
-          config:
-            - q: Question 1
-              a: |
-                Yes
-
-            - q: Question 2
-              a: |
-                Yes
