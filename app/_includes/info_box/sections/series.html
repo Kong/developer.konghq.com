@@ -2,8 +2,10 @@
     <div class="text-primary font-medium">In This Series</div>
     <ol class="flex flex-col gap-1.5">
         {% for item in page.series.items %}
+            {% assign title = item.title %}
+            {% if item.short_title %}{% assign title = item.short_title %}{% endif %}
             <li class="text-sm {% if page.series.position == item.series.position %}font-semibold text-primary{% else %} text-terciary{% endif %}">
-                <a href="{{ item.url }}">{{ item.title | liquify }}</a>
+                <a href="{{ item.url }}">{{ title | liquify }}</a>
             </li>
         {% endfor %}
     </ol>

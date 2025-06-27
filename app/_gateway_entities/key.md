@@ -33,6 +33,7 @@ api_specs:
   - konnect/control-planes-config 
 
 tools:
+  - deck
   - admin-api
   - konnect-api
 

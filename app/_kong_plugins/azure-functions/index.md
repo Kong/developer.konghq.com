@@ -37,6 +37,10 @@ search_aliases:
 tags:
   - serverless
   - azure
+
+related_resources:
+  - text: Use an Azure Function through {{site.base_gateway}}
+    url: /how-to/use-an-azure-function-through-gateway/
 ---
 
 This plugin invokes [Azure Functions](https://azure.microsoft.com/en-us/services/functions/).

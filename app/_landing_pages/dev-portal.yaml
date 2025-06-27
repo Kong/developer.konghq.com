@@ -4,8 +4,6 @@ metadata:
   description: Manage API publishing, developer self-service, and documentation with Konnect Dev Portal.
   products:
     - dev-portal
-  tags:
-    - beta
 
 rows:
 
@@ -25,8 +23,12 @@ rows:
                     It enables developers to browse and search API documentation, try API operations, and manage their own credentials. 
                     The Portal supports both internal and external APIs through flexible deployment options.
 
-                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. 
+                    Dev Portal APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation. 
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
+          - type: button
+            config:
+              text: "Create a Dev Portal in {{site.konnect_short_name}}"
+              url: https://cloud.konghq.com/portals/create
       - blocks:
           - type: image
             config:
@@ -42,13 +44,23 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Create a Dev Portal
+              title: Add APIs to Dev Portal
               description: |
-                {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. 
-                You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
-              icon: /assets/icons/dev-portal.svg
+                Dev Portal APIs serve as a repository for your API specifications and documentation. 
+                You can optionally version your APIs and publish them to one or more Portals. 
+                This supports maintaining a central source of truth while offering developer-specific visibility.
+              icon: /assets/icons/api.svg
               cta:
-                url: "https://cloud.konghq.com/portals/create"
+                url: "/dev-portal/apis/"
+      - blocks:
+          - type: card
+            config:
+              title: Publish APIs to Dev Portal
+              description: |
+                Learn how to publish APIs with Dev Portal and control who can see published APIs.
+              icon: /assets/icons/book.svg
+              cta:
+                url: "/dev-portal/publishing/"
       - blocks:
           - type: card
             config:
@@ -164,6 +176,16 @@ rows:
                 Change the Dev Portal UI appearance.
               cta:
                 url: /dev-portal/portal-customization/
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Email customization
+              description: |
+                Learn how to customize the content and domain for the emails developers receive for Dev Portal events.
+              cta:
+                url: /dev-portal/portal-customization/#developer-email-customization
       - blocks:
           - type: card
             config:

@@ -63,9 +63,9 @@
 /docs/:version/*    /mesh/:splat
 
 # Mesh don't migrate ever
-/mesh/reference/http-api       /mesh/
+/mesh/reference/http-api       /mesh/kubernetes-gateway-api/
+/mesh/networking/non-mesh-traffic/  /mesh/policies/meshtrafficpermission/
 /mesh/production/cp-deployment/single-zone /mesh/
-/mesh/networking/non-mesh-traffic /mesh/
 /mesh/production/cp-deployment/multi-zone   /mesh/
 /mesh/production/cp-deployment/single-zone /mesh/
 /mesh/production/cp-deployment/stand-alone    /mesh/
