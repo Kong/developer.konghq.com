@@ -1,7 +1,7 @@
 ---
 title: Get started with {{site.konnect_product_name}} MCP Server
 content_type: how_to
-permalink: /mcp/get-started/
+permalink: /mcp/kong-mcp/get-started/
 breadcrumbs:
     - /mcp/
 description: Learn how to quickly get started with using {{site.konnect_product_name}} MCP Server
