@@ -349,7 +349,8 @@ All of the `request` node outputs directly map to `api_call` node inputs, but in
 The same intent can be expressed explicitly by setting individual fields on the `inputs` attribute:
 
 ```yaml
-- type: call
+- name: api_call
+  type: call
   url: "https://example.com/"
   method: POST
   inputs:
@@ -675,13 +676,13 @@ _any_ type:
   property: kong.client.ip
 
 - name: FILTER_SERVICE
-  name: jq
+  type: jq
   input: SERVICE
   # yields: "object"
   jq: ". | type"
 
 - name: FILTER_IP
-  name: jq
+  type: jq
   input: IP
   # yields: "string"
   jq: ". | type"
@@ -701,7 +702,7 @@ filter is done by using dot (`.`) notation:
   property: kong.client.ip
 
 - name: FILTER_SERVICE_AND_IP
-  name: jq
+  type: jq
   inputs:
     service: SERVICE
     ip: IP
@@ -720,22 +721,22 @@ User-defined. A `jq` filter script can produce _any_ type of data:
 
 ```yaml
 - name: STRING
-  name: jq
+  type: jq
   jq: |
     "my string"
 
 - name: NUMBER
-  name: jq
+  type: jq
   jq: |
     54321
 
 - name: BOOLEAN
-  name: jq
+  type: jq
   jq: |
     true
 
 - name: OBJECT
-  name: jq
+  type: jq
   jq: |
     {
       a: 1,
@@ -750,7 +751,7 @@ configurations to avoid this case:
 
 ```yaml
 - name: HEADERS
-  name: jq
+  type: jq
   jq: |
     "oops, not an object/map"
 
@@ -767,7 +768,7 @@ fields with `outputs` at config-time:
 
 ```yaml
 - name: HEADERS
-  name: jq
+  type: jq
   jq: |
     "this is completely opaque to Datakit"
 
@@ -928,11 +929,11 @@ Join the output of two API calls:
 ```yaml
 - name: FOO
   type: call
-  call: https://example.com/foo
+  url: https://example.com/foo
 
 - name: BAR
   type: call
-  call: https://example.com/bar
+  url: https://example.com/bar
 
 - name: JOIN
   type: jq
@@ -966,7 +967,7 @@ Make an HTTP request and send the response directly to the client:
 ```yaml
 - name: CALL
   type: call
-  call: https://example.com/
+  url: https://example.com/
 
 - name: EXIT
   type: exit
