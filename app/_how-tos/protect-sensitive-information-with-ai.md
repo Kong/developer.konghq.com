@@ -43,7 +43,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: AI PII Anonymizer service access
       content: |
-        Kong provides [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository.These images are distributed via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
+        Kong provides [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository. These images are distributed via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
 
         To pull images, you must authenticate first with the token provided by the Support:
 
