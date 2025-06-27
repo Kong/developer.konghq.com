@@ -330,6 +330,7 @@ Show me all API requests for the example-service Gateway Service in the last hou
 }
 ```
 {:.no-copy-code}
+{:.no-copy-code}
 
 {% endnavtab %}
 {% endnavtabs %}
