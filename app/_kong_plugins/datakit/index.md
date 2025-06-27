@@ -324,6 +324,9 @@ If the nodes have no fields in common, a validation error will be raised.
 For example:
 
 ```yaml
+# note: don't copy this example. This is a "valid" configuration from Datakit's
+# perspective but performs a nonsensical action of copying response headers from
+# `api_call` as request headers to `service_request`
 - name: api_call
   type: call
   url: "https://example.com/"
