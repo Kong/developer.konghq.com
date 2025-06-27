@@ -52,7 +52,7 @@ faqs:
 
   - q: What is the team size limit for a free trial?
     a: |
-      The free trial supports up to 5 team members. After the trial, you will be billed based on the number of member seats in your subscription. 
+      The free trial supports up to five team members. After the trial, you will be billed based on the number of member seats in your subscription. 
       See our [pricing page](https://insomnia.rest/pricing) for more details.
 
   - q: How do I increase the number of seats on my team?
@@ -69,7 +69,8 @@ faqs:
       You can add custom details (company name, address, VAT number, etc.) when [creating or updating your subscription](https://app.insomnia.rest/app/subscribe/). 
       These details will appear on invoices available through the [Invoice History](https://app.insomnia.rest/app/invoices/) page.
 
-      **Note**: Invoice details only appear on downloaded invoices, not the emailed versions.
+      {:.info}
+      > **Note**: Invoice details only appear on downloaded invoices, not the emailed versions.
 
   - q: Why do I see multiple charges for my Insomnia plan?
     a: |
@@ -83,7 +84,7 @@ faqs:
 To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app/authorize) and select a sign up option. You'll be prompted to create a [passphrase](#passphrase) to enable [End-to-End Encryption](/insomnia/end-to-end-encryption/).
 
 {:.danger}
-> **Warning**: If you reset your passphrase, you will lose the data encrypted with the previous passphrase. To avoid this, make sure to securely back up your passphrase, in a password manager for example.
+> **Warning**: If you reset your passphrase, you will lose the data encrypted with the previous passphrase. To avoid this, make sure to securely back up your passphrase in a password manager, for example.
 
 If needed, you can click **Upgrade** from the Insomnia dashboard to upgrade to a Pro plan or activate an Enterprise plan.
 
@@ -91,15 +92,14 @@ If needed, you can click **Upgrade** from the Insomnia dashboard to upgrade to a
 
 Owners and admins can invite users to collaborate on projects by adding them to organizations.
 
-To do that, you can
-* Go to [your organizations](https://app.insomnia.rest/app/dashboard/organizations), select the organization in which you want to invite users, and go to **Collaborators** tab to invite them.
-* {% new_in 10.1 %} In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
+1. Go to [your organizations](https://app.insomnia.rest/app/dashboard/organizations), select the organization in which you want to invite users, and go to **Collaborators** tab to invite them.
+1. {% new_in 10.1 %} In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
 
-Invited users will receive an email, they will need to log in to Insomnia and accept the invite.
+Invited users will receive an email. They will need to log in to Insomnia and accept the invite.
 
 ## End-to-End Encryption
 
-Hobby accounts created from June 4th 2024 onwards have E2EE disabled by default. While your data remains encrypted at rest and in transit, E2EE offers an additional layer of security by encrypting data such that only the parties involved in the communication can decrypt it.
+Hobby accounts created from June 4th 2024 onwards have E2EE disabled by default. While your data remains encrypted at rest and in transit, E2EE offers an additional layer of security by encrypting data so that only the parties involved in the communication can decrypt it.
 
 You can enable or disable E2EE from the **Encryption** tab in your account settings.
 

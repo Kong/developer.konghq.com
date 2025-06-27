@@ -17,6 +17,8 @@ tier: enterprise
 related_resources:
   - text: Enterprise
     url: /insomnia/enterprise/
+  - text: Enterprise user management
+    url: /insomnia/enterprise-user-management/
 ---
 
 ## Enable Enterprise membership

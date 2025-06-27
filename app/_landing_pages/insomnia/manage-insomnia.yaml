@@ -15,7 +15,15 @@ rows:
   - header:
       type: h1
       text: "Manage Insomnia"            
-    columns:
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Manage your Insomnia account and security settings.
+  - columns:
       - blocks:
         - type: card
           config:

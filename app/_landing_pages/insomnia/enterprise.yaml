@@ -20,7 +20,7 @@ rows:
                 - type: text
                   text: |
                     The Enterprise plan for Insomnia provides advanced options for user management and security.
-                    Insomnia's end-to-end-encryption (E2EE), storage control and strong access governance rules are easily configured for users on our Enterprise plan.
+                    You can configure Insomnia's end-to-end-encryption (E2EE), storage control, and strong access governance rules on the Enterprise plan.
 
                     To compare plans, see the [pricing page](https://insomnia.rest/pricing).
   - columns:

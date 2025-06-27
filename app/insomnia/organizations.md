@@ -14,7 +14,9 @@ search_aliases:
   - insomnia organization
   - insomnia workspace
   - personal workspace
-
+related_resources:
+  - text: Accounts
+    url: /insomnia/accounts/
 tier: pro
 ---
 
@@ -31,7 +33,7 @@ Members of an organization can make commits and set up branches for their collec
 {:.info}
 > New organizations can only be created by the account owner or co-owners.
 
-### Invite users to your organization
+## Invite users to your organization
 
 Organization owners and admins can invite new users to an organization:
 1. Go to [your organization](https://app.insomnia.rest/app/dashboard/organizations).

@@ -24,7 +24,7 @@ All data is encrypted using randomly generated 256-bit symmetric keys for use wi
 Each user sets their own encryption passphrase. Their passphrase is never shared or stored.
 The user's project data is encrypted with a randomly generated symmetric key, which is then encrypted separately for each user using their public encryption key. Only someone with the matching private key can decrypt the symmetric key.
 
-### What does Insomnia store?
+## What does Insomnia store?
 
 Insomnia stores encrypted workspace data and the encrypted symmetric key for each authorized user. Nothing is ever stored in plain text, not even the shared secret key.
 
