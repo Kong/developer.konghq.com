@@ -108,7 +108,7 @@ Now that the AI Proxy Advanced plugin is configured with round-robin load balanc
 ```bash
 for i in {1..10}; do
   echo -n "Request #$i — Model: "
-  curl -s -X POST "http://localhost:8000/anything/v1/responses" \
+  curl -s -X POST "http://localhost:8000/anything" \
     -H "Accept: application/json" \
     -H "apikey: hello_world" \
     -H "Content-Type: application/json" \
@@ -124,7 +124,7 @@ for i in {1..10}; do
           }
         }
       ],
-      \"input\": \"tools available with github mcp\"
+      \"input\": \"Test\"
     }" | jq -r '.model'
   sleep 3
 done
@@ -166,6 +166,7 @@ entities:
           - "(?i).*(create|update|view|get|comment|merge|manage).*"
           - "(?i).*(workflow|assistant|automatically|initialize|fork|diff).*"
           - "(?i).*(auth(entication)?|token|scan|quality|security|setup).*"
+          - "(?i).*test*"
         deny_patterns:
           - ".*(hacking|hijacking|exploit|bypass|malware|backdoor|ddos|phishing|payload|sql injection).*"
           - ".*(root access|unauthorized|breach|exfiltrate|data leak|ransomware).*"
@@ -184,7 +185,7 @@ Now you can validate your configuration by testing tool requests and sending req
 
 <!-- vale off -->
 {% validation request-check %}
-url: /anything/v1/responses
+url: /anything
 headers:
   - 'Content-Type: application/json'
   - 'apikey: hello_world'
@@ -213,7 +214,7 @@ message: >
 
 <!-- vale off -->
 {% validation request-check %}
-url: /anything/v1/responses
+url: /anything
 headers:
   - 'Content-Type: application/json'
   - 'apikey: hello_world'
@@ -239,7 +240,7 @@ message: >
 
 <!-- vale off -->
 {% validation request-check %}
-url: /anything/v1/responses
+url: /anything
 headers:
   - 'Content-Type: application/json'
   - 'apikey: hello_world'
@@ -272,7 +273,7 @@ Each input below matches a deny pattern like `.*(backdoor|exfiltrate|CVE-\d{4}-\
 
 <!-- vale off -->
 {% validation request-check %}
-url: /anything/v1/responses
+url: /anything
 headers:
   - 'Content-Type: application/json'
   - 'apikey: hello_world'
@@ -298,7 +299,7 @@ message: Bad request
 
 <!-- vale off -->
 {% validation request-check %}
-url: /anything/v1/responses
+url: /anything
 headers:
   - 'Content-Type: application/json'
   - 'apikey: hello_world'
@@ -324,7 +325,7 @@ message: Bad request
 
 <!-- vale off -->
 {% validation request-check %}
-url: /anything/v1/responses
+url: /anything
 headers:
   - 'Content-Type: application/json'
   - 'apikey: hello_world'
@@ -377,7 +378,7 @@ We can test our simple rate limiting configuration by running the following scri
 ```bash
 for i in {1..6}; do
   echo -n "Request #$i — Status: "
-  http_status=$(curl -s -o /dev/null -w '%{http_code}' -X POST "http://localhost:8000/anything/v1/responses" \
+  http_status=$(curl -s -o /dev/null -w '%{http_code}' -X POST "http://localhost:8000/anything" \
     -H "Accept: application/json" \
     -H "apikey: hello_world" \
     -H "Content-Type: application/json" \

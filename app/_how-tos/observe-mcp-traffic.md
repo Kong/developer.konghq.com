@@ -165,7 +165,7 @@ Now, we can run the script from the previous tutorial again:
 ```bash
 for i in {1..5}; do
   echo -n "Request #$i — Model: "
-  curl -s -X POST "http://localhost:8000/anything/v1/responses" \
+  curl -s -X POST "http://localhost:8000/anything" \
     -H "Accept: application/json" \
     -H "apikey: hello_world" \
     -H "Content-Type: application/json" \
@@ -181,7 +181,7 @@ for i in {1..5}; do
           }
         }
       ],
-      \"input\": \"How do I\"
+      \"input\": \"test\"
     }" | jq -r '.model'
   sleep 10
 done

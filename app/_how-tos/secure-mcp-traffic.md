@@ -147,7 +147,7 @@ The following request is valid, as it includes the `apikey` required by the Cons
 
 <!-- vale off -->
 {% validation request-check %}
-  url: /anything/v1/responses
+  url: /anything
   headers:
     - 'Content-Type: application/json'
     - 'apikey: hello_world'
@@ -170,7 +170,7 @@ On the following request, include an invalid value for `apikey`:
 
 <!-- vale off -->
 {% validation request-check %}
-  url: /anything/v1/responses
+  url: /anything
   headers:
     - 'Content-Type: application/json'
     - 'apikey: another_key'
@@ -193,7 +193,7 @@ Now, remove the required `apikey` from the request entirely:
 
 <!-- vale off -->
 {% validation request-check %}
-  url: /anything/v1/responses
+  url: /anything
   headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_API_KEY'
