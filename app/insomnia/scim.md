@@ -15,6 +15,10 @@ related_resources:
     url: /insomnia/sso/
   - text: Insomnia Enterprise
     url: /insomnia/enterprise/
+  - text: Enterprise user management
+    url: /insomnia/enterprise-user-management/
+  - text: Enterprise account management
+    url: /insomnia/enterprise-account-management/
 ---
 
 System for Cross-domain Identity Management (SCIM) allows Insomnia to provision Enterprise member accounts and teams using an Identity Provider configured for [Single Sign-On](/insomnia/sso/). 

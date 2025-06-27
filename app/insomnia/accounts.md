@@ -13,8 +13,16 @@ search_aliases:
   - insomnia account
   - e2ee
 related_resources:
-  - text: Enterprise
+  - text: Manage Insomnia
+    url: /insomnia/manage-insomnia
+  - text: End-to-End Encryption
+    url: /insomnia/end-to-end-encryption/
+  - text: Insomnia Enterprise
     url: /insomnia/enterprise/
+  - text: Enterprise user management
+    url: /insomnia/enterprise-user-management/
+  - text: Enterprise account management
+    url: /insomnia/enterprise-account-management/
 
 faqs:
   - q: What platforms does Insomnia run on?

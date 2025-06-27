@@ -11,8 +11,14 @@ products:
     - insomnia
 tier: enterprise
 related_resources:
-  - text: Enterprise
+  - text: Insomnia Enterprise
     url: /insomnia/enterprise/
+  - text: Enterprise user management
+    url: /insomnia/enterprise-user-management/
+  - text: Enterprise account management
+    url: /insomnia/enterprise-account-management/
+  - text: SCIM for Insomnia
+    url: /insomnia/scim/
 ---
 
 Insomnia allows you to configure Single Sign-On (SSO) to authenticate users with your preferred SAML or OIDC Identity Provider.

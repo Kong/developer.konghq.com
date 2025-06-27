@@ -11,6 +11,8 @@ related_resources:
     url: /insomnia/authentication-authorization/
   - text: Configure Okta SAML SSO in Insomnia
     url: /how-to/okta-saml-sso-insomnia/
+  - text: SSO for Insomnia
+    url: /insomnia/sso/
 
 tier: enterprise
 breadcrumbs:

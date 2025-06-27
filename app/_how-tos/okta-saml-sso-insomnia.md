@@ -11,6 +11,10 @@ related_resources:
     url: /insomnia/authentication-authorization/
   - text: Configure Azure SAML SSO in Insomnia
     url: /how-to/azure-saml-sso-insomnia/
+  - text: SSO for Insomnia
+    url: /insomnia/sso/
+  - text: Configure SCIM for Insomnia with Okta
+    url: /how-to/configure-scim-for-insomnia-with-okta/
 
 tier: enterprise
 
