@@ -150,7 +150,7 @@ Request #10 — Model: gpt-4-0613
 
 ## Configure the AI Prompt Guard plugin
 
-In this step, we secure our MCP traffic even further by adding the AI Prompt Guard plugin. This plugin enforces content-level filtering using allow and deny patterns. It ensures only safe, relevant prompts reach the model—for example, questions about GitHub MCP capabilities—while blocking potentially harmful or abusive inputs like exploit attempts or security threats.
+In this step, we'll secure our MCP traffic even further by adding the AI Prompt Guard plugin. This plugin enforces content-level filtering using allow and deny patterns. It ensures only safe, relevant prompts reach the model—for example, questions about GitHub MCP capabilities—while blocking potentially harmful or abusive inputs like exploit attempts or security threats.
 
 
 {% entity_examples %}
