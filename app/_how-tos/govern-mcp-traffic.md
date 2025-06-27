@@ -10,6 +10,8 @@ related_resources:
     url: /plugins/ai-prompt-guard/
   - text: AI Rate Limiting Advanced plugin
     url: /plugins/ai-rate-limiting-advanced/
+breadcrumbs:
+    - /mcp/
 permalink: /mcp/govern-mcp-traffic
 
 series:
