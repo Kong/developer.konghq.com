@@ -86,9 +86,9 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-To set up AI Proxy with OpenAI, specify the [model](https://platform.openai.com/docs/models) and set the appropriate authentication header. To make requests to a GitHub-hosted remote MCP server, we use the OpenAI `/responses` API endpoint, which is supported natively by Kong AI Gateway. This approach gives you conversational control over your Git repositories while adding a robust security layer through Kong AI Gateway’s capabilities.
+To set up AI Proxy with OpenAI, specify the [model](https://platform.openai.com/docs/models) and set the appropriate authentication header. To make requests to a GitHub-hosted remote MCP server, you can use the [OpenAI `/responses` API](https://cookbook.openai.com/examples/mcp/mcp_tool_guide) endpoint, which is supported natively by Kong AI Gateway. This approach gives you conversational control over your Git repositories while adding a security layer through Kong AI Gateway’s capabilities.
 
-Using OpenAI’s `/responses` endpoint with Kong AI Gateway simplifies integration with remote MCP servers in agentic applications. Instead of routing each tool invocation through your backend, the gateway forwards model-generated requests directly to the MCP server. That server exposes standardized tools, which we’ll explore in the next tutorial in this series. By supporting the OpenAI `/responses` API, Kong AI Gateway removes the need for custom glue code and enables direct, low-latency model-to-server calls.
+Using OpenAI’s `/responses` endpoint with Kong AI Gateway simplifies integration with remote MCP servers in agentic applications. Instead of routing each tool invocation through your backend, the gateway forwards model-generated requests directly to the MCP server. That server exposes standardized tools, which we’ll explore in the next tutorial in this series. By supporting the OpenAI `/responses` API, Kong AI Gateway removes the need for custom glue code.
 
 
 {% entity_examples %}
@@ -184,7 +184,7 @@ On the following request, include an invalid value for `apikey`:
         require_approval: never
         headers:
           Authorization: Bearer $GITHUB_PAT
-    input: how do i use github mcp
+    input: How do I use GitHub MCP?
   status_code: 400
   message: 'Unauthorized'
 {% endvalidation %}
@@ -206,7 +206,7 @@ Now, remove the required `apikey` from the request entirely:
         require_approval: never
         headers:
           Authorization: Bearer $GITHUB_PAT
-    input: how do i use github mcp
+    input: How do I use GitHub MCP?
   status_code: 401
   message: 'Unauthorized: No API key found in request'
 {% endvalidation %}
