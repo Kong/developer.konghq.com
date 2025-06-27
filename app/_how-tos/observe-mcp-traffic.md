@@ -11,6 +11,8 @@ related_resources:
   - text: Monitor AI LLM metrics
     url: /ai-gateway/monitor-ai-llm-metrics/
 permalink: /mcp/observe-mcp-traffic
+breadcrumbs:
+  - /mcp/
 
 series:
     id: mcp-traffic

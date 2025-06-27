@@ -2,7 +2,7 @@
 title: "{{site.konnect_product_name}} MCP Server tools"
 content_type: reference
 layout: reference
-permalink: /mcp/tools/
+permalink: /mcp/kong-mcp/tools/
 description: This reference provides an overview of tools available in {{site.konnect_product_name}} MCP Server
 
 works_on:

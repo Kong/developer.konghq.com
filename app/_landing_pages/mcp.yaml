@@ -24,8 +24,8 @@ rows:
       - blocks:
           - type: text
             config: |
-              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges. 
-              
+              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
+
               Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and service discovery.
 
       - blocks:
@@ -158,11 +158,11 @@ rows:
             Follow the tutorials below to get started with {{site.konnect_product_name}} MCP Server using GitHub setup or Docker deployment, plus explore available tools.
           ctas:
             - text: Get started with GitHub
-              url: "/mcp/get-started"
+              url: "/mcp/kong-mcp/get-started"
             - text: Get started with Docker
               url: "https://hub.docker.com/r/mcp/kong"
             - text: See MCP server tools
-              url: "/mcp/tools"
+              url: "/mcp/kong-mcp/tools"
 
 
   - header:
