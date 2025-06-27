@@ -42,22 +42,25 @@ tools:
     - deck
 
 prereqs:
+  entities:
+    services:
+        - example-service
   inline:
     - title: OpenAI
       content: |
         This tutorial uses the AI Proxy plugin with OpenAI. You'll need to [create an OpenAI account](https://auth.openai.com/create-account) and [get an API key](https://platform.openai.com/api-keys). Once you have your API key, create an environment variable:
 
         ```sh
-        export OPENAI_KEY='<api-key>'
+        export OPENAI_KEY='YOUR-API-KEY'
         ```
       icon_url: /assets/icons/openai.svg
     - title: Claude account and Claude desktop
       content: |
-        To complete this tutorial, you'll need to have [Claude](https://claude.ai) account and [Claude desktop](https://claude.ai/download).
+        To complete this tutorial, you'll need to have a [Claude](https://claude.ai) account and [Claude desktop](https://claude.ai/download).
       icon_url: /assets/icons/third-party/claude.svg
     - title: Node.js
       content: |
-        To use [Kong MCP Server](https://github.com/Kong/mcp-konnect), you'll need Node.js version `≥20.0`. Run `node --version` in your terminal to check your installed version.
+        To use the [Kong MCP Server](https://github.com/Kong/mcp-konnect), you'll need Node.js 20.0 or later. Run `node --version` in your terminal to check your installed version.
       icon_url: /assets/icons/gateway.svg
 cleanup:
   inline:
@@ -110,21 +113,19 @@ automated_tests: false
 
 To get started with Kong MCP server, first clone the repository and install dependencies.
 
-1. Clone the repository
+1. Clone the repository:
 
     ```bash
     git clone https://github.com/Kong/mcp-konnect.git
     cd mcp-konnect
     ```
-2. Install Dependencies
-   Use `npm` to install the required packages:
+2. Use `npm` to install the required packages:
 
     ```bash
     npm install
     ```
 
-3. Build the Project
-   Compile the MCP server:
+3. Compile the MCP server:
 
     ```bash
     npm run build
@@ -132,16 +133,12 @@ To get started with Kong MCP server, first clone the repository and install depe
 
 ## Configure environment variables
 
-Before running the MCP server, set the required environment variables to connect to your Kong {{site.konnect_product_name}} account.
+Before running the MCP server, set the required environment variables to connect to your {{site.konnect_product_name}} account:
 
 ```bash
-# Required: Your Kong {{site.konnect_product_name}} API key
-export KONNECT_ACCESS_TOKEN=kpat_api_key_here
-
-# Optional: The API region to use (defaults to US)
-# Possible values: US, EU, AU, ME, IN
-export KONNECT_REGION=us
+export KONNECT_REGION='YOUR-REGION'
 ```
+You can see a list of all {{site.konnect_short_name}} regions in the [Geographic regions](/konnect-platform/geos/#control-planes) documentation.
 
 ## Configure Claude Desktop
 
@@ -179,13 +176,13 @@ After saving the `claude_desktop_config.json` file, restart Claude for Desktop. 
 
 
 ## Analyze API traffic using Claude and Kong MCP Server
-
-### Step 1: List All Control Planes
+Now that you've configured Claude Desktop with the {{site.konnect_short_name}} MCP server, you can analyze API traffic.
+### List all Control Planes
 
 {% navtabs "list-all-control-planes" %}
 {% navtab "Prompt" %}
 
-Use this prompt to retrieve all control planes in your Kong {{site.konnect_product_name}} organization:
+Use this prompt to retrieve all control planes in your {{site.konnect_short_name}} organization:
 
 ```text
 List all control planes in my Kong {{site.konnect_product_name}} organization.
@@ -223,10 +220,11 @@ The following is a sample response from Kong MCP Server:
 }
 
 ```
+{:.no-copy-code}
 {% endnavtab %}
 {% endnavtabs %}
 
-### Step 2: List Services in a Control Plane
+### List Services in a Control Plane
 
 {% navtabs "list-all-services-in-control-plane" %}
 {% navtab "Prompt" %}
@@ -234,8 +232,7 @@ The following is a sample response from Kong MCP Server:
 Once you’ve identified a control plane, ask Claude to list its services:
 
 ```text
-
-List all services for control plane [CONTROL_PLANE_NAME or ID].
+List all services for the quickstart Control Plane.
 ```
 {% endnavtab %}
 {% navtab "MCP Server Response" %}
@@ -275,11 +272,12 @@ List all services for control plane [CONTROL_PLANE_NAME or ID].
   ]
 }
 ```
+{:.no-copy-code}
 
 {% endnavtab %}
 {% endnavtabs %}
 
-### Step 3: Query API Traffic for a Service
+### Query API traffic for a Service
 
 To analyze traffic and detect error trends, run a query like this:
 
@@ -287,8 +285,7 @@ To analyze traffic and detect error trends, run a query like this:
 {% navtab "Prompt" %}
 
 ```text
-Prompt:
-Show me all API requests for service [SERVICE_NAME or ID] in the last hour that had 5xx status codes.
+Show me all API requests for the example-service Gateway Service in the last hour that had 5xx status codes.
 ```
 {% endnavtab %}
 {% navtab "Sample response" %}
@@ -332,37 +329,35 @@ Show me all API requests for service [SERVICE_NAME or ID] in the last hour that 
   ]
 }
 ```
+{:.no-copy-code}
 
 {% endnavtab %}
 {% endnavtabs %}
 
-## Troubleshoot consumer issues
+## Troubleshoot Consumer issues
 
-### Step 1: List consumers in a Control Plane
+### List Consumers in a Control Plane
 
 Start by getting the list of consumers for a control plane:
 
 ```text
-Prompt:
-List all consumers for control plane [CONTROL_PLANE_NAME or ID].
+List all Consumers for the quickstart control plane.
 ```
 
-### Step 2: Analyze requests by a specific Consumer
+### Analyze requests by a specific Consumer
 
-To view traffic made by a specific consumer in the last 24 hours:
+To view traffic made by a specific Consumer in the last 24 hours:
 
 ```text
-Prompt:
-Show me all requests made by consumer [CONSUMER_NAME or ID] in the last 24 hours.
+Show me all requests made by the example-consumer Consumer in the last 24 hours.
 ```
 
-### Step 3: Identify common errors for a Consumer
+### Identify common errors for a Consumer
 
-Ask Claude to identify frequent issues experienced by that consumer:
+Ask Claude to identify frequent issues experienced by that Consumer:
 
 ```text
-Prompt:
-What are the most common errors experienced by this consumer?
+What are the most common errors experienced by this Consumer?
 ```
 
 
