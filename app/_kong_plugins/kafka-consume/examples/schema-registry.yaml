@@ -1,0 +1,46 @@
+description: 'Configure the Kafka Consume plugin to use the Confluent Schema Registry for message deserialization.'
+
+title: 'Confluent Schema Registry'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running" 
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+ - "[Schema Registry configured](https://docs.confluent.io/platform/current/schema-registry/index.html)"
+
+variables:
+  host:
+    description: The bootstrap server host.
+    value: $BOOTSTRAP_SERVER_HOST
+  topic:
+    description: The name of the Kafka topic to consume from.
+    value: $KAFKA_TOPIC
+  registry_url:
+    description: "The URL of your Confluent Schema Registry instance. For example, `http://schema-registry:8081`."
+    value: $REGISTRY_URL
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: http-get
+  schema_registry:
+    confluent:
+      url: ${registry_url}
+      authentication:
+        mode: basic
+        basic:
+          username: user
+          password: password
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.11'

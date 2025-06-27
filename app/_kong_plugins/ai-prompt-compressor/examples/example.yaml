@@ -1,0 +1,35 @@
+description: 'Configure the AI Prompt Compressor plugin'
+
+title: 'Configure the AI Prompt Compressor plugin'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  compressor_type: rate
+  compressor_url: http://compress-service:8080
+  keepalive_timeout: 60000
+  log_text_data: false
+  stop_on_error: true
+  timeout: 10000
+  compression_ranges:
+    - min_tokens: 20
+      max_tokens: 100
+      value: 0.8
+    - min_tokens: 100
+      max_tokens: 1000000
+      value: 0.3
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

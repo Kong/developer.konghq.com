@@ -9,6 +9,7 @@ components:
       schema:
         type: string
     PaginationOffset:
+      allowEmptyValue: true
       description: >-
         Offset from which to return the next set of resources. Use the value of
         the 'offset' field from the response of a list operation as input here
@@ -27,6 +28,7 @@ components:
         minimum: 1
         type: integer
     PaginationTagsFilter:
+      allowEmptyValue: true
       description: >-
         A list of tags to filter the list of resources on. Multiple tags can be
         concatenated using ',' to mean AND or using '/' to mean OR.
@@ -39,14 +41,36 @@ components:
     HTTP401Error:
       content:
         application/json:
+          examples:
+            DuplicateApiKey:
+              summary: Duplicate API key found
+              value:
+                message: Duplicate API key found
+                status: 401
+            InvalidAuthCred:
+              summary: Invalid authentication credentials
+              value:
+                message: Unauthorized
+                status: 401
+            NoAPIKey:
+              summary: No API key found
+              value:
+                message: No API key found in request
+                status: 401
           schema:
-            properties:
-              message:
-                example: Unauthorized
-                type: string
-            type: object
-      description: Unauthorized request.
+            $ref: '#/components/schemas/GatewayUnauthorizedError'
+      description: Unauthorized
   schemas:
+    GatewayUnauthorizedError:
+      properties:
+        message:
+          type: string
+        status:
+          type: integer
+      required:
+        - message
+        - status
+      type: object
     HMACAuth:
       additionalProperties: false
       example:
@@ -57,7 +81,6 @@ components:
         username: xerxes
       properties:
         consumer:
-          additionalProperties: false
           nullable: true
           properties:
             id:
@@ -66,7 +89,7 @@ components:
           x-foreign: true
         created_at:
           description: Unix epoch when the resource was created.
-          readOnly: true
+          nullable: true
           type: integer
         id:
           nullable: true
@@ -91,23 +114,25 @@ components:
         Offset is used to paginate through the API. Provide this value to the
         next list operation to fetch the next page
       type: string
-  securitySchemes:
-    adminToken:
-      in: header
-      name: Kong-Admin-Token
-      type: apiKey
+externalDocs:
+  description: HMAC Auth Plugin API Specification
+  url: https://developer.konghq.com
 info:
   contact:
     email: support@konghq.com
     name: Kong Inc
     url: https://konghq.com
   description: >-
-    Hmac Auth API
+    API for managing HMAC Auth credentials for Kong Gateway.
 
+    You can lean more about Kong Gateway at
+    [developer.konghq.com](https://developer.konghq.com).
+
+    Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  title: HMAC Auth
+  title: HMAC Auth Plugin API
   version: 0.0.1
 openapi: 3.0.0
 paths:
@@ -243,8 +268,184 @@ paths:
       summary: Upsert a HMAC-auth credential
       tags:
         - HMAC-auth credentials
-security:
-  - adminToken: []
+  /{workspace}/hmac-auths:
+    get:
+      description: List all HMAC-auth credentials in a workspace
+      operationId: list-hmac-auth-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/HMACAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing HMAC-auth credentials
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all HMAC-auth credentials in a workspace
+      tags:
+        - HMAC-auth credentials
+    post:
+      description: Create a new HMAC-auth credential in a workspace
+      operationId: create-hmac-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuth'
+        description: Description of the new HMAC-auth credential for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully created HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new HMAC-auth credential in a workspace
+      tags:
+        - HMAC-auth credentials
+  /{workspace}/hmac-auths/{HMACAuthId}:
+    delete:
+      description: Delete a HMAC-auth credential in a workspace
+      operationId: delete-hmac-auth-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/HMACAuthId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            Successfully deleted HMAC-auth credential or the resource didn't
+            exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete a HMAC-auth credential in a workspace
+      tags:
+        - HMAC-auth credentials
+    get:
+      description: Get a HMAC-auth credential using ID in a workspace.
+      operationId: get-hmac-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully fetched HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch a HMAC-auth credential in a workspace
+      tags:
+        - HMAC-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/HMACAuthId'
+    patch:
+      description: Update a HMAC-auth credential in a workspace
+      operationId: update-hmac-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuth'
+        description: Fields of the HMAC-auth credential that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully updated HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update a HMAC-auth credential in a workspace
+      tags:
+        - HMAC-auth credentials
+    put:
+      description: Create or Update HMAC-auth credential using ID in a workspace.
+      operationId: upsert-hmac-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuth'
+        description: Description of the HMAC-auth credential
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully upserted HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a HMAC-auth credential in a workspace
+      tags:
+        - HMAC-auth credentials
 servers:
   - description: Default Admin API URL
     url: '{protocol}://{hostname}:{port}{path}'

@@ -9,6 +9,7 @@ components:
       schema:
         type: string
     PaginationOffset:
+      allowEmptyValue: true
       description: >-
         Offset from which to return the next set of resources. Use the value of
         the 'offset' field from the response of a list operation as input here
@@ -27,6 +28,7 @@ components:
         minimum: 1
         type: integer
     PaginationTagsFilter:
+      allowEmptyValue: true
       description: >-
         A list of tags to filter the list of resources on. Multiple tags can be
         concatenated using ',' to mean AND or using '/' to mean OR.
@@ -39,14 +41,36 @@ components:
     HTTP401Error:
       content:
         application/json:
+          examples:
+            DuplicateApiKey:
+              summary: Duplicate API key found
+              value:
+                message: Duplicate API key found
+                status: 401
+            InvalidAuthCred:
+              summary: Invalid authentication credentials
+              value:
+                message: Unauthorized
+                status: 401
+            NoAPIKey:
+              summary: No API key found
+              value:
+                message: No API key found in request
+                status: 401
           schema:
-            properties:
-              message:
-                example: Unauthorized
-                type: string
-            type: object
-      description: Unauthorized request.
+            $ref: '#/components/schemas/GatewayUnauthorizedError'
+      description: Unauthorized
   schemas:
+    GatewayUnauthorizedError:
+      properties:
+        message:
+          type: string
+        status:
+          type: integer
+      required:
+        - message
+        - status
+      type: object
     KeyAuth:
       additionalProperties: false
       example:
@@ -56,7 +80,6 @@ components:
         key: IL1deIyHyQA40WpeLeA1bIUXuvTwlGjo
       properties:
         consumer:
-          additionalProperties: false
           nullable: true
           properties:
             id:
@@ -65,19 +88,22 @@ components:
           x-foreign: true
         created_at:
           description: Unix epoch when the resource was created.
-          readOnly: true
+          nullable: true
           type: integer
         id:
           nullable: true
           type: string
         key:
+          nullable: true
           type: string
         tags:
           items:
             type: string
           type: array
-      required:
-        - key
+        ttl:
+          description: key-auth ttl in seconds
+          nullable: true
+          type: integer
       type: object
     PaginationNextResponse:
       description: URI to the next page (may be null)
@@ -87,11 +113,6 @@ components:
         Offset is used to paginate through the API. Provide this value to the
         next list operation to fetch the next page
       type: string
-  securitySchemes:
-    adminToken:
-      in: header
-      name: Kong-Admin-Token
-      type: apiKey
 externalDocs:
   description: Key Auth Plugin API Specification
   url: https://developer.konghq.com
@@ -101,11 +122,16 @@ info:
     name: Kong Inc
     url: https://konghq.com
   description: >-
-    OpenAPI 3.0 spec for Kong Gateway's Key Auth plugin
+    OpenAPI 3.0 spec for Kong Gateway's Key Auth plugin.
+
+    You can lean more about Kong Gateway at
+    [developer.konghq.com](https://developer.konghq.com).
+
+    Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  title: Key Auth
+  title: Key Auth Plugin API
   version: 0.0.1
 openapi: 3.0.0
 paths:
@@ -147,7 +173,6 @@ paths:
             schema:
               $ref: '#/components/schemas/KeyAuth'
         description: Description of the new API-key for creation
-        required: true
       responses:
         '201':
           content:
@@ -226,7 +251,6 @@ paths:
             schema:
               $ref: '#/components/schemas/KeyAuth'
         description: Description of the API-key
-        required: true
       responses:
         '200':
           content:
@@ -239,8 +263,180 @@ paths:
       summary: Upsert a API-key
       tags:
         - API-keys
-security:
-  - adminToken: []
+  /{workspace}/key-auths:
+    get:
+      description: List all API-keys in a workspace
+      operationId: list-key-auth-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/KeyAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing API-keys
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all API-keys in a workspace
+      tags:
+        - API-keys
+    post:
+      description: Create a new API-key in a workspace
+      operationId: create-key-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuth'
+        description: Description of the new API-key for creation
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully created API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new API-key in a workspace
+      tags:
+        - API-keys
+  /{workspace}/key-auths/{KeyAuthId}:
+    delete:
+      description: Delete an API-key in a workspace
+      operationId: delete-key-auth-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/KeyAuthId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successfully deleted API-key or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete an API-key in a workspace
+      tags:
+        - API-keys
+    get:
+      description: Get an API-key using ID in a workspace.
+      operationId: get-key-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully fetched API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch an API-key in a workspace
+      tags:
+        - API-keys
+    parameters:
+      - $ref: '#/components/parameters/KeyAuthId'
+    patch:
+      description: Update an API-key in a workspace
+      operationId: update-key-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuth'
+        description: Fields of the API-key that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully updated API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update an API-key in a workspace
+      tags:
+        - API-keys
+    put:
+      description: Create or Update API-key using ID in a workspace.
+      operationId: upsert-key-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuth'
+        description: Description of the API-key
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully upserted API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a API-key in a workspace
+      tags:
+        - API-keys
 servers:
   - description: Default Admin API URL
     url: '{protocol}://{hostname}:{port}{path}'

@@ -1,0 +1,9 @@
+{
+  "3.11.0.0": [
+    {
+      "message": "**Beta feature:** Solace Upstream plugin",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

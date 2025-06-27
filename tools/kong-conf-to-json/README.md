@@ -9,7 +9,7 @@ Generate a json representation of kong.conf in `app/_data/kong-conf/index.json` 
 From the root of your clone of the dev site repo:
 
 ```bash
-cd kong-conf-to-json
+cd tools/kong-conf-to-json
 npm ci
 ```
 
@@ -24,7 +24,7 @@ will parse the file and write it to `app/_data/kong-conf/3.9.json`.
 
 ### Index file generation
 
-After generating the fiels for each version in the previous step, the `index.json` file can be generated.
+After generating the fields for each version in the previous step, the `index.json` file can be generated.
 
 `node index-file`
 

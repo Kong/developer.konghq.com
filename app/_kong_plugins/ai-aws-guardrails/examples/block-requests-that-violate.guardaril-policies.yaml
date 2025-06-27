@@ -1,0 +1,41 @@
+description: |
+  Configure the AI AWS Guardrails plugin to block requests or responses that violates guardrails policies predefined on AWS.
+
+title: Block requests or responses that violates guardrails policies
+
+weight: 900
+
+requirements: 
+  - You have an AWS Bedrock Guradrails policy and access to AWS Bedrock Guradrails service.
+  - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+
+variables:
+  guardrails_id:
+    description: The guardrail identifier used in the request to apply the guardrail
+    value: $GUARDRAILS_ID
+  guardrails_version:
+    description: The guardrail version used in the request to apply the guardrail
+    value: $GUARDRAILS_VERSION
+  aws_region:
+    description: The AWS region where the guardrail is deployed
+    value: $AWS_REGION
+  aws_access_key_id:
+    description: The AWS access key ID used to authenticate the request
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    description: The AWS secret access key used to authenticate the request
+    value: $AWS_SECRET_ACCESS_KEY
+
+config:
+  guardrails_id: ${guardrails_id}
+  guardrails_version: ${guardrails_version}
+  aws_region: ${aws_region}
+  aws_access_key_id: ${aws_access_key_id}
+  aws_secret_access_key: ${aws_secret_access_key}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

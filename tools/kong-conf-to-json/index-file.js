@@ -90,7 +90,10 @@ function generateIndexFile() {
       });
       // everything that is in prev AND next goes in
       intersection.forEach((param) => {
-        reference.params[param] = { ...newConfJson.params[param] };
+        reference.params[param] = reference.params[param] = {
+          ...newConfJson.params[param],
+          min_version: reference.params[param].min_version,
+        };
       });
 
       // copy sections

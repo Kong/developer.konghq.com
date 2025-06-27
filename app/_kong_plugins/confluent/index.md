@@ -62,3 +62,7 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 > * Message compression is not supported.
 > * The message format is not customizable.
 > * {{site.base_gateway}} does not support Kafka 4.0.
+
+## Schema registry support {% new_in 3.11 %}
+
+{% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}

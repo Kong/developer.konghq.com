@@ -33,6 +33,31 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your 
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.11.x breaking changes
+
+Review the [changelog](/gateway/changelog/#31100) for all the changes in this release.
+
+### 3.11.0.0
+
+Breaking changes in the 3.11.0.0 release.
+
+#### AI proxy plugins: preserve route type deprecation
+
+The route type `preserve` has been deprecated and will be removed in a future version. To avoid issues, switch to a route type added in version 3.11.0.0 or later.
+* [`route_type` options for AI Proxy](/plugins/ai-proxy/reference/#schema--config-route-type)
+* [`route_type` options for AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/#schema--config-route-type)
+
+### WASM deprecation
+
+Support for the beta WASM module has been removed. To use Datakit, see the [Datakit plugin changes](#datakit-plugin).
+
+### Datakit plugin
+
+The [Datakit plugin](/plugins/datakit/), which previously required WASM to run, is now bundled as a Kong Lua plugin. 
+Starting in 3.11.0.0, you don't need to enable WASM to run Datakit; you can enable it just like any other bundled plugin.
+
+The Datakit plugin no longer supports the `handlebars` node type.
+
 ## 3.10.x breaking changes
 
 Review the [changelog](/gateway/changelog/#31000) for all the changes in this release.
