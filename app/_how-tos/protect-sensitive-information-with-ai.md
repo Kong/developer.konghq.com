@@ -84,6 +84,7 @@ cleanup:
 min_version:
   gateway: '3.10'
 
+automated_tests: false
 ---
 
 ## Start the Kong AI PII Anonymizer service

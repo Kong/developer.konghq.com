@@ -1,8 +1,22 @@
 import fetch from "node-fetch";
 import debug from "debug";
+import https from "https";
+import tough from "tough-cookie";
+import fetchCookie from "fetch-cookie";
+
 import { runtimeEnvironment } from "../runtimes.js";
+import {
+  setEnvVariable,
+  addEnvVariablesFromContainer,
+  executeCommand,
+  getLiveEnv,
+} from "../docker-helper.js";
 
 const log = debug("tests:runner");
+
+// Create cookie jar (in-memory)
+const cookieJars = {};
+const fetchInstances = {};
 
 export class ValidationError extends Error {
   constructor(message, assertions) {
@@ -12,12 +26,13 @@ export class ValidationError extends Error {
   }
 }
 
-function processHeaders(config) {
+async function processHeaders(config, runtimeConfig) {
+  const env = await runtimeEnvironment(runtimeConfig);
   let headers = {};
   if (config.headers) {
     config.headers.forEach((header) => {
       const [key, value] = header.split(":");
-      headers[key] = value;
+      headers[key] = replaceEnvVars(value, env);
     });
   }
   return headers;
@@ -53,18 +68,88 @@ function logAndError(validationName, message, expecations) {
   );
 }
 
+function getSessionFromCookieHeader(header) {
+  const match = header.match(/(session=[^;]+)/);
+  return match ? match[1] : null;
+}
+
+async function fetchWithOptionalJar(url, options = {}, jarName) {
+  if (jarName !== undefined) {
+    if (!(jarName in cookieJars)) {
+      cookieJars[jarName] = new tough.CookieJar();
+      fetchInstances[jarName] = fetchCookie(fetch, cookieJars[jarName]);
+    }
+    const fetchWithJar = fetchInstances[jarName];
+    return fetchWithJar(url, options);
+  }
+  return fetch(url, options);
+}
+
 async function executeRequest(config, runtimeConfig, onResponse) {
-  const headers = processHeaders(config);
-  const options = { method: config.method || "GET", headers };
+  const headers = await processHeaders(config, runtimeConfig);
+  const env = await runtimeEnvironment(runtimeConfig);
+  if (config.user) {
+    const auth = Buffer.from(replaceEnvVars(config.user, env)).toString(
+      "base64"
+    );
+    headers["Authorization"] = `Basic ${auth}`;
+  }
+  const options = {
+    method: config.method || "GET",
+    headers,
+    redirect: "manual",
+  };
 
   if (config.body && options.method === "POST") {
-    const env = await runtimeEnvironment(runtimeConfig);
     options.body = JSON.stringify(replaceEnvVars(config.body, env));
     headers["Content-Type"] = headers["Content-Type"] || "application/json";
   }
 
-  const response = await fetch(config.url, options);
-  const body = await response.json();
+  const agent = new https.Agent({ rejectUnauthorized: false });
+  if (config.insecure) {
+    options["agent"] = agent;
+  }
+
+  const url = replaceEnvVars(config.url, env);
+
+  const response = await fetchWithOptionalJar(
+    url,
+    options,
+    config.cookie_jar || config.cookie
+  );
+  let body = {};
+  if (response.status !== 302) {
+    const text = await response.text();
+    try {
+      body = JSON.parse(text);
+    } catch (e) {
+      body = { message: text };
+    }
+  }
+
+  if (config.extract_headers) {
+    for (const header of config.extract_headers) {
+      if (header.name === "Set-Cookie") {
+        runtimeConfig.env[header.variable] = getSessionFromCookieHeader(
+          response.headers.get(header.name)
+        );
+      } else {
+        runtimeConfig.env[header.variable] = response.headers.get(header.name);
+      }
+    }
+  }
+
+  if (config.extract_body) {
+    for (const field of config.extract_body) {
+      let value = field.name.split(".").reduce((acc, key) => acc?.[key], body);
+
+      if (field.strip_bearer) {
+        value = value.replace(/bearer\s*/i, "");
+      }
+
+      runtimeConfig.env[field.variable] = value;
+    }
+  }
 
   return onResponse(response, body);
 }
@@ -76,6 +161,7 @@ async function validateRequest(validationName, config, runtimeConfig, checks) {
     for (const check of checks) {
       const { assert, message } = check(response, body);
       assertions.push(message);
+
       if (!assert) {
         assertions.push(body);
         logAndError(validationName, message, assertions);
@@ -140,7 +226,67 @@ async function unauthorizedCheck(validationName, config, runtimeConfig) {
   ]);
 }
 
-export async function validate(validation, runtimeConfig) {
+async function envVariables(config, runtimeConfig, container) {
+  for (const [key, value] of Object.entries(config)) {
+    if (key === "KONG_LICENSE_DATA") {
+      continue;
+    }
+    await setEnvVariable(container, key, value);
+  }
+  await addEnvVariablesFromContainer(container, runtimeConfig);
+  return [];
+}
+
+async function controlPlaneRequest(validationName, config, runtimeConfig) {
+  const statusCode =
+    config.status_code !== undefined ? config.status_code : 200;
+  return validateRequest(validationName, config, runtimeConfig, [
+    (response) => ({
+      assert: response.status === statusCode,
+      message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
+    }),
+  ]);
+}
+
+async function customCommand(validationName, config, runtimeConfig, container) {
+  const returnCode = config.expected.return_code;
+  const result = await executeCommand(container, config.command);
+  if (returnCode !== result) {
+    logAndError(
+      validationName,
+      message,
+      `Expected: command to have return code ${returnCode}, got: ${result}`
+    );
+  }
+  return [];
+}
+
+async function trafficGenerator(validationName, config, runtimeConfig) {
+  let assertions = [];
+
+  for (let i = 0; i < config.iterations; i++) {
+    const requestNumber = i + 1;
+    const expectedStatus =
+      config.status_code === undefined ? 200 : config.status_code;
+
+    const result = await validateRequest(
+      validationName,
+      config,
+      runtimeConfig,
+      [
+        (response) => ({
+          assert: response.status === expectedStatus,
+          message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
+        }),
+      ]
+    );
+    assertions.push(...result);
+    log(`     request #${requestNumber}: ✅ .`);
+  }
+  return assertions;
+}
+
+export async function validate(container, validation, runtimeConfig) {
   let result;
   log(`   ${validation.name}`);
 
@@ -161,6 +307,31 @@ export async function validate(validation, runtimeConfig) {
       break;
     case "unauthorized-check":
       result = await unauthorizedCheck(
+        validation.name,
+        validation.config,
+        runtimeConfig
+      );
+      break;
+    case "env-variables":
+      result = await envVariables(validation.config, runtimeConfig, container);
+      break;
+    case "control_plane_request":
+      result = await controlPlaneRequest(
+        validation.name,
+        validation.config,
+        runtimeConfig
+      );
+      break;
+    case "custom-command":
+      result = await customCommand(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container
+      );
+      break;
+    case "traffic-generator":
+      result = await trafficGenerator(
         validation.name,
         validation.config,
         runtimeConfig

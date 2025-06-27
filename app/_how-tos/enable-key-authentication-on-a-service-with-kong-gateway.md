@@ -91,8 +91,10 @@ This request should be successful:
 url: /anything
 headers:
   - 'apikey: hello_world'
+status_code: 200
 {% endvalidation %}
 <!-- vale on -->
+
 This request includes an invalid API key:
 
 <!-- vale off -->
@@ -100,6 +102,6 @@ This request includes an invalid API key:
 url: /anything
 headers:
   - 'apikey: another_key'
-status_code: 400
+status_code: 401
 {% endvalidation %}
 <!-- vale on -->

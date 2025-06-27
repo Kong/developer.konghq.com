@@ -45,25 +45,35 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+automated_tests: false
 ---
 
 ## Generate an RSA key pair
 
 These keys are needed for [disaster recovery](/gateway/keyring/#disaster-recovery). You can generate them using OpenSSL:
-```sh
-openssl genrsa -out private.pem 2048
-openssl rsa -in private.pem -pubout -out public.pem
-```
+
+<!-- vale off -->
+{% validation custom-command %}
+command: |
+  openssl genrsa -out private.pem 2048
+  openssl rsa -in private.pem -pubout -out public.pem
+expected:
+  return_code: 0
+{% endvalidation %}
+<!-- vale on -->
 
 ## Set environment variables
 
 Set the variables needed to start {{site.base_gateway}} with Keyring enabled. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
-```sh
-export KONG_LICENSE_DATA="LICENSE-CONTENTS-GO-HERE"
-export KONG_KEYRING_ENABLED=on
-export KONG_KEYRING_STRATEGY=cluster
-export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat public.pem | base64)
-```
+
+{% env_variables %}
+KONG_LICENSE_DATA: "LICENSE-CONTENTS-GO-HERE"
+KONG_KEYRING_ENABLED: on
+KONG_KEYRING_STRATEGY: cluster
+KONG_KEYRING_RECOVERY_PUBLIC_KEY: "$(cat public.pem | base64 -w 0)"
+{% endenv_variables %}
+
 
 {:.info}
 > **Note:** `KONG_KEYRING_RECOVERY_PUBLIC_KEY` can be:
@@ -74,12 +84,16 @@ export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat public.pem | base64)
 ## Start {{site.base_gateway}}
 
 Create the {{site.base_gateway}} container with the environment variables. In this example, we can use the quickstart:
-```sh
-curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
-    -e KONG_KEYRING_ENABLED \
-    -e KONG_KEYRING_STRATEGY \
-    -e KONG_KEYRING_RECOVERY_PUBLIC_KEY
-```
+
+{% validation custom-command %}
+command: |
+  curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
+      -e KONG_KEYRING_ENABLED \
+      -e KONG_KEYRING_STRATEGY \
+      -e KONG_KEYRING_RECOVERY_PUBLIC_KEY
+expected:
+  return_code: 0
+{% endvalidation %}
 
 ## Generate a key
 

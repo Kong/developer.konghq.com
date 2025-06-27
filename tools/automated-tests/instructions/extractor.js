@@ -61,9 +61,13 @@ async function extractSetup(page) {
   const setups = await page.$$("[data-test-setup]");
 
   for (const elem of setups) {
-    if (await elem.isVisible()) {
+    if (
+      (await elem.isVisible()) ||
+      (await page.evaluate((el) => el.classList.contains("invisible"), elem))
+    ) {
       const instruction = await elem.evaluate((el) => el.dataset.testSetup);
       let key;
+
       try {
         const json = JSON.parse(instruction);
         instructions.push(json);
@@ -134,7 +138,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 
     const platforms = await page.evaluate(() => {
       const dropdown = document.querySelector(
-        "select.deployment-topology-switch"
+        "aside select.deployment-topology-switch"
       );
       if (!dropdown) return [];
 
@@ -142,7 +146,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
     });
 
     for (const platform of platforms) {
-      await page.select("select.deployment-topology-switch", platform);
+      await page.select("aside select.deployment-topology-switch", platform);
 
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
@@ -170,7 +174,8 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 }
 
 export async function generateInstructionFiles(urlsToTest, config) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({});
+
   try {
     await browser
       .defaultBrowserContext()
