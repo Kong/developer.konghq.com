@@ -430,8 +430,8 @@ any field-level connections:
 - name: get-bar
   type: property
   property: kong.ctx.shared.bar
-  # Datakit rejects this connection because it can't validate that it will not
-  # overlap with `get-foo -> response`
+  # Datakit can't validate that this connection will not overlap with
+  # `get-foo -> response`
   output: response.body
 ```
 
