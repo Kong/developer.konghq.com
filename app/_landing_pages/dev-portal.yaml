@@ -27,7 +27,7 @@ rows:
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
           - type: button
             config:
-              text: "Create a Dev Portal in {{site.konnect_short_name}}"
+              text: "Create a Dev Portal in Konnect"
               url: https://cloud.konghq.com/portals/create
       - blocks:
           - type: image
