@@ -68,6 +68,8 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
+  - text: Dedicated Cloud Gateway domain breaking changes
+    url: /dedicated-cloud-gateways/breaking-changes/
 
 tags:
   - dedicated-cloud-gateways
@@ -192,14 +194,14 @@ rows:
     routing: Simple
     alias: No
     health: No
-    value: "`_acme-challenge.9e454bcfec.acme.gateways.konghq.com`"
+    value: "`_acme-challenge.9e454bcfec.acme.gateways.konggateway.com`"
     ttl: 300
   - host: "`example.com`"
     type: CNAME
     routing: Simple
     alias: No
     health: No
-    value: "`9e454bcfec.gateways.konghq.com`"
+    value: "`9e454bcfec.gateways.konggateway.com`"
     ttl: 300
 {% endtable %}
 <!--vale on -->
