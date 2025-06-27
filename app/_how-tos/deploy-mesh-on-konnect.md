@@ -280,7 +280,7 @@ Now that you have you workloads up and running, let's secure them with Mutual TL
 
 ## Introduce zero-trust security
 
-By default the network in the Mesh is not encrypted. We can change this with {{site.mesh_product_name}} by enabling the [Mutual TLS](/docs/{{ page.release }}/policies/mutual-tls/) policy to provision a dynamic Certificate Authority (CA) on the `default` Mesh resource that will automatically assign TLS certificates to our services' dataplane.
+By default the network in the Mesh is not encrypted. We can change this with {{site.mesh_product_name}} by enabling the [Mutual TLS](/mesh/policies/mutual-tls/) policy to provision a dynamic Certificate Authority (CA) on the `default` Mesh resource that will automatically assign TLS certificates to our services' dataplane.
 
 
 We can enable Mutual TLS with a `builtin` CA backend by executing:
