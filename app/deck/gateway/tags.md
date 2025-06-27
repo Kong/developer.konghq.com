@@ -130,4 +130,4 @@ consumers:
 
 This loads all `consumer_groups` with the tag `billing-groups` in to memory and decK can successfully resolve the foreign keys used in `consumers.yaml`.
 
-Default lookup tags can be used on Services, Routes, Consumers and Consumer Groups.
+Default lookup tags can be used on Services, Routes, Partials, Consumers and Consumer Groups.
