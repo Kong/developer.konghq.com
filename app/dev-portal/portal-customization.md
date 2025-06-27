@@ -21,7 +21,7 @@ api_specs:
 works_on:
     - konnect
 
-description: "Change the Dev Portal UI appearance."
+description: "Change the Dev Portal UI appearance and user experience."
 faqs:
   - q: What are the limitations of the Dev Portal Preview feature?
     a: |
@@ -119,4 +119,65 @@ There are three icons above **Preview** that allow you to test adaptive designs 
 ### Generated URL
 
 Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page slugs. The generated URL is shown at the bottom of the preview pane.
+
+## Developer email customization
+
+You can customize both the email domain and content of emails that developers receive for the following events:
+* Welcome (developer sign-up approved)
+* App registration approved
+* App registration rejected
+* App registration revoked
+* Confirm email address
+* Reset password
+* Account access rejected
+* Account access revoked
+
+To configure email customization settings, go to your Dev Portal, click **Portal Editor**, and then click the **Email** icon in the sidebar. 
+
+### Email customization variables
+
+In the customization settings, you can use variables. For example, `{% raw %}{{application_name}}{% endraw %}` will be replaced with the name of the application in the email.
+
+The following table contains the variables you can use when customizing emails:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Variable
+    key: variable
+  - title: Description
+    key: description
+rows:
+  - variable: "<code>&#123;&#123;api_documentation_url&#125;&#125;</code>"
+    description: The documentation URL for the API.
+  - variable: "<code>&#123;&#123;api_name&#125;&#125;</code>"
+    description: The name of the API.
+  - variable: "<code>&#123;&#123;api_version&#125;&#125;</code>"
+    description: The version of the API.
+  - variable: "<code>&#123;&#123;application_name&#125;&#125;</code>"
+    description: The name of the developer's application.
+  - variable: "<code>&#123;&#123;dev_portal_reply_to&#125;&#125;</code>"
+    description: The Dev Portal reply-to email address.
+  - variable: "<code>&#123;&#123;developer_email&#125;&#125;</code>"
+    description: The email address of the developer.
+  - variable: "<code>&#123;&#123;developer_fullname&#125;&#125;</code>"
+    description: The full name of the developer.
+  - variable: "<code>&#123;&#123;developer_status&#125;&#125;</code>"
+    description: The Dev Portal status of a developer. For example, \"approved\", \"pending\", or \"revoked\".
+  - variable: "<code>&#123;&#123;portal_display_name&#125;&#125;</code>"
+    description: The display name of the Dev Portal.
+  - variable: "<code>&#123;&#123;portal_domain&#125;&#125;</code>"
+    description: The URL of the Dev Portal.
+{% endtable %}
+<!--vale on-->
+
+### Customize the email domain
+
+If you want to change the from and reply-to email domains, you can configure a different domain through Dev Portal settings. 
+Navigate to your Dev Portal, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings. 
+
+Once you've added your new domain, you must add the CNAME records to your DNS server. 
+
+{:.info}
+> Certain domain names are restricted. See [Domain name restrictions](/dev-portal/custom-domains/#domain-name-restrictions) for more information.
 
