@@ -5,6 +5,7 @@ sections:
       - path: /dev-portal/
       - path: /dev-portal/**/*
       - path: /dev-portal/analytics/
+      - path: /dev-portal/breaking-changes/
     auto_exclude: true   
   - title: API catalog
     items:

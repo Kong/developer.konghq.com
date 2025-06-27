@@ -92,8 +92,8 @@ See our [blog on incremental config sync](https://konghq.com/blog/product-releas
 You can enable incremental config sync when installing {{site.base_gateway}} in [hybrid mode](/gateway/hybrid-mode/), or when setting up a {{site.konnect_short_name}} Data Plane.
 
 {:.warning}
-> **Caution**: There are some [limitations for custom plugins](#using-incremental-config-sync-with-custom-plugins) and for 
-[rate limiting plugins](#using-incremental-config-sync-with-rate-limiting-plugins) when using incremental config sync. 
+> **Caution**: There are some [limitations for custom plugins](#incremental-config-sync-with-custom-plugins) and for 
+[rate limiting plugins](#incremental-config-sync-with-rate-limiting-plugins) when using incremental config sync. 
 Review and adjust your plugin config before enabling this feature.
 
 During setup, set the following value in your [`kong.conf` files](/gateway/manage-kong-conf/) on both Control Planes and Data Planes:
@@ -107,54 +107,179 @@ Or, if you're running {{site.base_gateway}} in Docker, set the following environ
 export KONG_INCREMENTAL_SYNC=on
 ```
 
-## Limitations
+## Handling special cases
 
-When using incremental config sync feature with plugins, you may encounter the following limitations.
+When using incremental config sync feature with plugins, you may encounter the following limitations, which will require configuration changes.
 
-### Using incremental config sync with custom plugins
+### Incremental config sync with custom plugins that use cache data
 
-When incremental config sync is enabled, the configuration change notification from the Control Plane only triggers an event for changed entities, and doesn't trigger cache updates in Data Plane nodes. 
-This causes outdated and inconsistent configuration for [custom plugins](/gateway/entities/plugin/#custom-plugins).
+When incremental config sync is enabled, the behavior for cached entities changes:
 
-If you are running {{site.base_gateway}} on {{site.konnect_short_name}} or in hybrid mode, you need to adjust your custom plugins to be compatible with incremental config sync.
+* With the standard full sync, the Data Plane emits a `declarative:reconfigure` event when any configuration change occurs. 
+The Data Plane flushes all cached data from `kong.cache` to ensure the router, balancer, and plugins can get the correct updated configuration. 
+* With incremental sync enabled, the Data Plane only emits a fine-grained CRUD event instead of the `declarative:reconfigure` event. 
+This means that if you don't handle the fine grained CRUD event for entities, any custom plugins using cached data will use outdated and inconsistent configuration.
 
-#### Workaround for custom plugins
+If you are running {{site.base_gateway}} on {{site.konnect_short_name}} or in hybrid mode, and have [custom plugins using cache data](/custom-plugins/daos.lua/#cache-custom-entities),
+you need to adjust your custom plugins to be compatible with incremental config sync. If your custom plugin doesn't cache any entities, you don't need to make any changes.
+
+Custom plugins should handle the following [Gateway entities](/gateway/entities/) explicitly:
+* Routes
+* Services
+* Consumers
+* Plugins
+* Certificates
+* CA certificates
+* SNIS
+* Keys
+* Keyring keys
+* Other entities defined by plugins
+
+The following example shows how to adjust your custom plugin to handle entity caching with incremental config sync.
+
+#### Register entity UPDATE events
 
 To ensure your custom plugin configuration is kept up to date, you must add additional code logic to register the CRUD events for the entities the plugin cares about, and invalidate the relevant cache data.
 
-Add the code at the end of the `init_worker` function for the custom plugin.
-For example:
-
+In the custom plugin’s `init_worker()` function, register entities' CRUD events to handle the entity update operations:
 
 ```lua
 function _M.init_worker()
-  -- ...
-  -- ... your original custom code
-  -- add the example code below AFTER any custom plugin code
- 
-  -- Check if worker_events can be registed successfully
+
+  -- create local event variable
+  local worker_events = kong.worker_events
+
+  -- register a callback to update consumers cache
+  worker_events.register(function(data)
+    -- custom cache invalidate logic here
+    -- ...
+    -- custom cache logic ends
+  end, "crud", "consumers")
+
+  -- register a callback to update ca_certificates cache
+  worker_events.register(function(data)
+    -- custom cache invalidate logic here
+    -- ...
+    -- custom cache logic ends
+  end, "crud", "ca_certificates")
+
+end
+```
+
+In the example above, `worker_events.register()` should contain three parameters:
+
+* The first parameter is the invalidation function, in which the plugin should call `kong.cache:invalidate()` to flush the “dirty” cache data. 
+  With that, the plugin can identify the operation (create, update, delete) and figure out which entity is old and which is new.
+  That information is then used to calculate the cache key.
+
+  The `data` input parameter for the function has the following structure:
+  ```lua
+  { 
+    entity = {...}, 
+    old_entity = {...}, 
+    operation = "..."
+  }
+  ```
+* The second parameter must be `crud`, which refers to any change event.
+When the entity changes (any of create, update, or delete), the plugin gets the notification and calls the invalidation function.
+
+* The third parameter is the entity name that the plugin wants to flush the cache for, for example, `services`, `routes`, or `consumers`.
+
+#### Invalidate old cache data
+
+Determine the cache key which associates with the cached item. It should be a fixed string or a formatted string by entity. 
+
+When you have the correct cache key, you need to call `cache:invalidate(cache_key)`. 
+After this call, the item in cache will be cleared:
+
+```lua
+local function username_key(username)
+  return string.format("consumer_username:%s", username)
+end
+
+local entity = data.old_entity or data.entity
+if entity then
+    cache:invalidate(username_key(entity.username))
+end
+```
+
+#### Complete example
+
+The following is a complete example of cache invalidation logic for one plugin, which demonstrates how to invalidate the `custom_id` and `username` for the entity `consumer`:
+
+```lua
+local workspaces = require "kong.workspaces"
+local kong = kong
+local null = ngx.null
+local _M = {}
+
+function _M.consumer_field_cache_key(key, value)
+  return kong.db.consumers:cache_key(key, value, "consumers")
+end
+
+
+function _M.init_worker()
+  -- sanity check
+  if kong.configuration.database == "off" or not (kong.worker_events and kong.worker_events.register) then
   if not (kong.worker_events and kong.worker_events.register) then
     return
   end
 
-  -- Check the deployment mode and incremental sync feature is enabled
+  -- hybrid mode or db-less mode without rpc will not register events (incremental sync disabled)
   if kong.configuration.database == "off" and not kong.sync then
     return
   end
-  
-  -- Do the event registration and force invalidate the corresponding cache
+  -- register the CRUD event for the Consumer entity
   kong.worker_events.register(
     function(data)
-    -- logic to identify what cache need to be invalidated
-    kong.cache:invalidate(CACHE_KEY) -- Your plugin logic to invalidate the cache
-  end, "crud", "ENTITY_NAME") -- Register the events for entity the plugin cares
-  
-  -- Repeat the register events for other ENTITIES
-  
+      workspaces.set_workspace(data.workspace)
+
+      -- define the key calculation function
+      local cache_key = _M.consumer_field_cache_key
+
+
+      -- log the operation info
+      local operation = data.operation
+      log("consumer ", operation, ", invalidating cache")
+
+
+      -- invalidate the cache for old entity
+      local old_entity = data.old_entity
+      if old_entity then
+        if old_entity.custom_id and old_entity.custom_id ~= null and old_entity.custom_id ~= "" then
+          kong.cache:invalidate(cache_key("custom_id", old_entity.custom_id))
+        end
+        if old_entity.username and old_entity.username ~= null and old_entity.username ~= "" then
+          kong.cache:invalidate(cache_key("username", old_entity.username))
+        end
+      end
+
+
+      -- invalidate the cache for new entity just in case 
+      local entity = data.entity
+      if entity then
+        if entity.custom_id and entity.custom_id ~= null and entity.custom_id ~= "" then
+          kong.cache:invalidate(cache_key("custom_id", entity.custom_id))
+        end
+        if entity.username and entity.username ~= null and entity.username ~= "" then
+          kong.cache:invalidate(cache_key("username", entity.username))
+        end
+      end
+    end, "crud", "consumers")
 end
+
+return _M
 ```
 
-### Using incremental config sync with rate limiting plugins
+#### Do I need to change the plugin code again if I disable the feature?
+
+If you update the plugin code to handle the cache data, then want to disable incremental config syn, you don't need to change the plugin code back.
+
+Looking at the [example](#complete-example) in this doc, the first two conditions can detect the on or off state of incremental config sync. 
+When incremental config sync is off, the configuration method goes back to the traditional full sync, where the Data Plane node will flush all the cache data, 
+and the plugin doesn't need to do any specific cache handling.
+
+### Incremental config sync with rate limiting plugins
 
 We don't recommend using the `local` strategy for [rate limiting plugins](/plugins/?terms=rate%2520limiting) with incremental config sync.
 

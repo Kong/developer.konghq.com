@@ -277,6 +277,10 @@ app/_how-tos/collect-metrics-with-prometheus.md:
   - app/_src/gateway/production/monitoring/prometheus.md
 app/_how-tos/collect-metrics-with-datadog-and-prometheus-plugin.md:
   - app/_src/gateway/production/monitoring/datadog.md
+app/_how-tos/collect-metrics-with-statsd.md:
+  - app/_src/gateway/production/monitoring/statsd.md
+app/_how-tos/collect-audit-logs-with-sumologic.md:
+  - app/konnect/org-management/audit-logging/webhook.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -1008,6 +1012,7 @@ app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 app/_how-tos/enable-basic-auth-on-kong-manager.md:
   - app/_src/gateway/kong-manager/auth/basic.md
+  - app/_src/gateway/kong-manager/auth/reset-password.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
@@ -1053,6 +1058,8 @@ app/_landing_pages/konnect-platform/authentication.yaml:
   - app/konnect/org-management/social-identity-login.md
 app/konnect-platform/active-tracing.md:
   - app/konnect/gateway-manager/active-tracing.md
+app/_how-tos/collect-dev-portal-audit-logs-with-sumologic.md:
+  - app/konnect/dev-portal/audit-logging/webhook.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
@@ -1646,13 +1653,15 @@ app/insomnia/environment-variables.md:
   - /insomnia/environment-variables.md
   - /insomnia/global-environments.md
   - /insomnia/secret-environment-variables.md
-app/insomnia/account-management.md:
+app/insomnia/accounts.md:
   - /insomnia/forgot-passphrase.md
   - /insomnia/accounts.md
+  - /insomnia/faq.md
+app/insomnia/organizations.md:
   - /insomnia/organizations.md
   - /insomnia/transfer-ownership-organization.md
+app/insomnia/enterprise-account-management.md:
   - /insomnia/multiple-owners.md
-  - /insomnia/faq.md
   - /insomnia/invite-control.md
 app/insomnia/data-security.md:
   - /insomnia/security-standards.md

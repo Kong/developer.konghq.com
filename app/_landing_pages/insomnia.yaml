@@ -34,40 +34,147 @@ rows:
             config:
               url: /assets/images/insomnia/entry-page.png
               alt_text: Image of the Insomnia UI
-  
-  -
-    columns:
+
+  - columns:
       - blocks:
         - type: card
           config:
-            title: Design
-            description: Design and preview new APIs with OpenAPI
-            icon:  /assets/icons/insomnia/design.svg
+            title: Documents
+            description: Build and iterate on your OpenAPI specs to design your next API.
+            icon:  /assets/icons/file.svg
             cta:
               text: Learn more
-              url: /insomnia/design/
-              align: end
+              url: /insomnia/documents/
       - blocks:
         - type: card
           config:
-            title: Test
-            description: Test APIs and run automated tests seamlessly across collections. 
-            icon: /assets/icons/insomnia/checkbox-active.svg
+            title: Collections
+            description: Use collections to call APIs and run automated tests.
+            icon: /assets/icons/bars.svg
             cta:
               text: Learn more
-              url: /insomnia/test/
-              align: end
-      
+              url: /insomnia/collections/
+      - blocks:
+        - type: card
+          config:
+            title: Mock servers
+            description: Use mock servers to simulate API endpoints when building features.
+            icon: /assets/icons/server.svg
+            cta:
+              text: Learn more
+              url: /insomnia/mock-servers/
+      - blocks:
+        - type: card
+          config:
+            title: Environments
+            description: Use environments to reuse values across requests and collections.
+            icon: /assets/icons/code.svg
+            cta:
+              text: Learn more
+              url: /insomnia/environment-variables/
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Insomnia Enterprise
+            description: Learn about the features available with the Enterprise plan.
+            icon:  /assets/icons/organization.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise/
+      - blocks:
+        - type: card
+          config:
+            title: Manage Insomnia
+            description: Learn how to manage your Insomnia account and security.
+            icon:  /assets/icons/profile.svg
+            cta:
+              text: Learn more
+              url: /inso-cli/
+      - blocks:
+        - type: card
+          config:
+            title: Inso CLI
+            description: Include Inso CLI in your CI/CD pipelines to automate Insomnia tasks.
+            icon:  /assets/icons/terminal.svg
+            cta:
+              text: Learn more
+              url: /inso-cli/
       - blocks:
         - type: card
           config:
             title: Plugins
-            description: Extend Insomnia with powerful plugins
+            description: Extend Insomnia with powerful plugins.
             icon: /assets/icons/plug.svg
             cta:
               text: Learn more
               url: /insomnia/plugins/
-              align: end
+
+  - header:
+      type: h2
+      text: Storage
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Local vault
+            description: Store your Insomnia data locally on your device.
+            icon: /assets/icons/laptop.svg
+            cta:
+              text: Learn more
+              url: /insomnia/storage/#local-vault
+      - blocks:
+        - type: card
+          config:
+            title: Cloud sync
+            description: Store your Insomnia data securely in the cloud.
+            icon: /assets/icons/cloud.svg
+            cta:
+              text: Learn more
+              url: /insomnia/storage/#cloud-sync
+      - blocks:
+        - type: card
+          config:
+            title: Git sync
+            description: Store your Insomnia data on a Git repository.
+            icon: /assets/icons/git.svg
+            cta:
+              text: Learn more
+              url: /insomnia/storage/#git-sync
+
+  - header:
+      type: h2
+      text: Security
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: RBAC
+            description: Use Role-based access control (RBAC) for fine-grain control over who can access which Insomnia resources.
+            icon: /assets/icons/rbac.svg
+            cta:
+              text: Learn more
+              url: /insomnia/rbac/
+      - blocks:
+        - type: card
+          config:
+            title: SSO
+            description: Set up Single Sign-On (SSO) to allow your users to log in using your preferred Identity Provider.
+            icon: /assets/icons/key.svg
+            cta:
+              text: Learn more
+              url: /insomnia/sso/
+      - blocks:
+        - type: card
+          config:
+            title: SCIM
+            description: Set up System for Cross-domain Identity Management (SCIM) provisioning to manage users and teams from your Identity Provider.
+            icon: /assets/icons/domain.svg
+            cta:
+              text: Learn more
+              url: /insomnia/scim/
+
   - header:
       type: h2
       text: "Capabilities"
@@ -83,47 +190,50 @@ rows:
                 - title: Enterprise
                   key: ee
               features:
-                - title: Local storage
+                - title: |
+                    [Local storage](/insomnia/storage/#local-vault)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: API Testing tools
+                - title: |
+                    [API testing](/insomnia/test/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Cloud-hosted mock server
+                - title: |
+                    [Cloud-hosted mock server](/insomnia/mock-servers/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Automated API testing
+                - title: |
+                    [Automated API testing](/inso-cli/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Cloud Sync
+                - title: |
+                    [End-to-End Encryption](/insomnia/end-to-end-encryption/)
                   hobby: true
-                  individual: true
                   pro: true
                   ee: true
-                - title: Git Sync
+                - title: |
+                    [Cloud Sync](/insomnia/storage/#cloud-sync)
+                  hobby: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [Git Sync](/insomnia/storage/#git-sync)
                   hobby: false
                   individual: false
                   pro: true
                   ee: true
-                - title: Text editor key mapping
-                  hobby: true
-                  individual: true
-                  pro: true
-                  ee: true
-                - title: Enterprise SSO (SAML, OIDC)
+                - title: |
+                    [Enterprise SSO (SAML, OIDC)](/insomnia/sso/)
                   hobby: false
                   individual: false
                   pro: false
                   ee: true
-                - title: Enterprise support
+                - title: |
+                    [Enterprise support](/insomnia/enterprise/)
                   hobby: false
                   individual: false
                   pro: false
@@ -133,57 +243,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    See the full feature comparison on our [pricing page &rarr;](https://insomnia.rest/pricing)
-
-  - header:
-      type: h2
-      text: Features
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Storage
-              description: |
-                Insomnia offers various storage options to cater to different user needs and preferences as well as to ensure data compliance requirements. 
-                Understanding these options is crucial for efficient and secure management of your API projects.
-              icon: /assets/icons/data-object.svg
-              cta:
-                text: Learn more about storage
-                url: /insomnia/storage/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: Security
-              description: |
-                Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures.
-              icon: /assets/icons/lock.svg
-              cta:
-                text: Learn about security
-                url: /insomnia/security/
-                align: end
-      - blocks:
-        - type: card
-          config:
-            title: Run in Insomnia
-            description: |
-              Generate a **Run in Insomnia** button to start running requests in a few quick clicks. This button can be added to both HTML and Markdown documents. 
-            icon: /assets/icons/api.svg
-            cta:
-              text: Create button
-              url: https://insomnia.rest/create-run-button
-              align: end
-      - blocks: 
-        - type: card
-          config: 
-            title: AI Runner
-            description: Accelerate and secure GenAI traffic to one or more LLMs
-            icon: /assets/icons/lock.svg
-            cta: 
-              text: Use AI Runner
-              url: https://app.insomnia.rest/ai
-              align: end
-              
+                    For more details about Enterprise capabilities, see [Insomnia Enterprise](/insomnia/enterprise/).
+                    
+                    See the full feature comparison on our [pricing page](https://insomnia.rest/pricing).
 
   - header:
       type: h2

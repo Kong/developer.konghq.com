@@ -6,7 +6,6 @@ content_type: how_to
 products:
     - gateway
     - dev-portal
-beta: true
 automated_tests: false
 works_on:
     - konnect

@@ -8,7 +8,6 @@ products:
 tags:
   - authentication
   - sso
-  - beta
 breadcrumbs:
   - /dev-portal/
 api_specs:
@@ -17,7 +16,6 @@ search_aliases:
   - Portal
   - OpenID Connect
   - SSO
-beta: true
 works_on:
   - konnect
 related_resources:
@@ -64,8 +62,8 @@ To ensure the preview experience in the {{site.konnect_short_name}} Dev Portal E
 * For SAML:
   * Set the primary **Reply URL** (Assertion Consumer Service URL) to:  
     `https://$YOUR_DOMAIN.com/api/v2/developer/authenticate/saml/acs`
-  * Add an additional Reply URL to support preview mode:  
-    `https://$YOUR_SUBDOMAIN.edge.us.portal.konghq.com/api/v2/developer/authenticate/saml/acs`
+  * Add an additional Reply URL to support preview mode:
+     `https://$YOUR_SUBDOMAIN.portal-preview.$GEO.api.konghq.com/api/v2/developer/authenticate/saml/acs`
 * Allow iframe embedding of the IdP's sign-in screen:
   * For example, Okta requires [Trusted Origins](https://help.okta.com/en-us/content/topics/api/trusted-origins-iframe.htm).  
     Add `https://cloud.konghq.com` as a Trusted Origin to allow login in the preview.

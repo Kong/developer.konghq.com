@@ -4,8 +4,6 @@ metadata:
   description: Manage API publishing, developer self-service, and documentation with Konnect Dev Portal.
   products:
     - dev-portal
-  tags:
-    - beta
 
 rows:
 
@@ -25,8 +23,12 @@ rows:
                     It enables developers to browse and search API documentation, try API operations, and manage their own credentials. 
                     The Portal supports both internal and external APIs through flexible deployment options.
 
-                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. 
+                    Dev Portal APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation. 
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
+          - type: button
+            config:
+              text: "Create a Dev Portal in {{site.konnect_short_name}}"
+              url: https://cloud.konghq.com/portals/create
       - blocks:
           - type: image
             config:
@@ -164,6 +166,16 @@ rows:
                 Change the Dev Portal UI appearance.
               cta:
                 url: /dev-portal/portal-customization/
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Email customization
+              description: |
+                Learn how to customize the content and domain for the emails developers receive for Dev Portal events.
+              cta:
+                url: /dev-portal/portal-customization/#developer-email-customization
       - blocks:
           - type: card
             config:

@@ -46,6 +46,15 @@ cleanup:
 faqs:
   - q: If I created a super admin via the Kong Manager Teams tab, how do they log in using basic auth?
     a: They should log in with the credentials they created after accepting the email invitation.
+  - q: How can I reset my password in Kong Manager?
+    a: |
+      To reset a forgotten password in Kong Manager, authentication and RBAC must be enabled with basic authentication, and SMTP must be configured to send emails. If these conditions are met, you can reset you password by clicking **Forget Password** on the login page. You'll be prompted to enter the email address associated with the account. You'll then receive an email with a link to reset your password.
+  - q: How can I change my password in Kong Manager?
+    a: |
+      To change a password in Kong Manager, authentication and RBAC must be enabled with basic authentication, and you must have super admin permissions or read and write access on admins and RBAC. If these conditions are met, you can change a password by clicking you account name and selecting **Profile**. Fill in the fields in the **Reset Password** section to change the password.
+  - q: How can I reset an RBAC token in Kong Manager?
+    a: |
+      To reset a forgotten password in Kong Manager, authentication and RBAC must be enabled, and you must have super admin permissions or read and write access on admins and RBAC. If these conditions are met, you can change a password by clicking you account name and selecting **Profile**. Click **Reset Token** in the **Reset RBAC Token** section.
 ---
 
 ## Set environment variables
