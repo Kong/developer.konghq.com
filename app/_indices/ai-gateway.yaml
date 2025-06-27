@@ -203,10 +203,10 @@ sections:
         url: /mcp/observe-mcp-traffic
       - title: "{{site.konnect_product_name}} MCP Server"
         description: Get started with {{site.konnect_product_name}} MCP Server
-        url: /mcp/get-started/
+        url: /mcp/kong-mcp/get-started/
       - title: "{{site.konnect_product_name}} MCP Server tools"
         description: Check available {{site.konnect_product_name}} MCP Server tools
-        url: /mcp/tools/
+        url: /mcp/kong-mcp/tools/
   - title: AI load balancing
     items:
       - title: Consistent Hashing - AI Proxy Advanced
