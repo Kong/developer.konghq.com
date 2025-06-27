@@ -51,7 +51,7 @@ prereqs:
         docker login docker.cloudsmith.io
         ```
 
-        Docker will then prompt you to enter username and password:
+        Docker will then prompt you to enter a username and password:
 
         ```bash
         Username: kong/ai-pii
