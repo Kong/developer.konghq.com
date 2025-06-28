@@ -1,4 +1,16 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where SSE terminator may not have correct ending characters.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where AI upstream URL trailing would be empty.",

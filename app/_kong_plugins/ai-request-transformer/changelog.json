@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",

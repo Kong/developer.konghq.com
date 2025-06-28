@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where requests with empty `origin` headers would cause empty reply from server.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added an option to skip returning the Access-Control-Allow-Origin response header when requests don't have the Origin header.",

@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Added support for sending messages with dynamic keys to determine partitions.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added support for sending messages to multiple topics with `topics_query_arg`, and enabled topic allowlisting with `allowed_topics`.\n",

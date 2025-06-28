@@ -1,0 +1,9 @@
+{
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where `read_timeout`, `write_timeout`, and `connect_timeout` were set to 0, causing a runtime error.  After this release, any existing upstream-timeout plugin with these fields set to 0 will automatically update them to the default value of 60000.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

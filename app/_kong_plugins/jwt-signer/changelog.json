@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where data planes didn't use the keys passed from the control plane to sign/re-sign.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where the jwt-signer plugin failed to upsert jwks if the jwks contains extra custom fields.\n",

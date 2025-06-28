@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where Kong Gateway was not able to reconfigure the plugin when using DB-less mode.\n",

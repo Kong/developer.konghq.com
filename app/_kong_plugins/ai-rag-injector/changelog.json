@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where 'tools' and 'RAG' decoration did not work for Ollama (llama2) provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where AI upstream URL trailing would be empty.",

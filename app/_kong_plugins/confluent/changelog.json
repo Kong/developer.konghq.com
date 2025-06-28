@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Added support for sending messages with dynamic keys to determine partitions.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added support for message manipulation with the new configuration field `message_by_lua_functions`.\n",
