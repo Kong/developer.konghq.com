@@ -63,6 +63,65 @@ The performance tests cover a number of baseline configurations and common use c
 
 {% navtabs "gateway-version" %}
 
+{% navtab "3.11" %}
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 129752.9
+    p99: 6.25
+    p95: 3.59
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 124649.9
+    p99: 6.45
+    p95: 3.82
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 110305.6
+    p99: 8.33
+    p95: 3.86
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 105691.2
+    p99: 8.49
+    p95: 4.19
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 94593.8
+    p99: 9.79
+    p95: 4.65
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 89093.2
+    p99: 10.25
+    p95: 5.16
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 88764.8
+    p99: 9.88
+    p95: 5.32
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 84192.3
+    p99: 10.39
+    p95: 5.68
+{% endtable %}
+
+{% endnavtab %}
+
 {% navtab "3.10" %}
 
 {% table %}
