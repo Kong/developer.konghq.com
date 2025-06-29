@@ -129,7 +129,7 @@ paths:
       - $ref: '#/components/parameters/DcrProviderId'
     post:
       operationId: verify-dcr-provider
-      summary: Verify DCR provider configuration.
+      summary: Verify DCR provider configuration
       description: 'Verifies if a DCR provider is configured properly. Returns 200 for success, 4xx for failure.'
       responses:
         '200':
