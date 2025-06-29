@@ -13,7 +13,7 @@ info:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
-  version: 0.0.1
+  version: 2.0.0
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -48,6 +48,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ListDataPlaneCertificatesResponse'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
       tags:
         - DP Certificates
     post:
@@ -59,6 +65,14 @@ paths:
       responses:
         '201':
           $ref: '#/components/responses/DataPlaneClientCertificateResponse'
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
       tags:
         - DP Certificates
   '/control-planes/{controlPlaneId}/dp-client-certificates/{certificateId}':
@@ -72,6 +86,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DataPlaneClientCertificateResponse'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
       tags:
         - DP Certificates
     delete:
@@ -81,6 +101,12 @@ paths:
       responses:
         '204':
           description: No Content
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
       tags:
         - DP Certificates
   '/control-planes/{controlPlaneId}/nodes':
@@ -143,7 +169,7 @@ paths:
       - $ref: '#/components/parameters/controlPlaneId'
     get:
       operationId: list-plugin-schemas
-      summary: List custom plugin schemas associated with a control plane
+      summary: List Custom Plugin Schemas
       description: Returns an array of custom plugins schemas associated with a control plane.
       parameters:
         - $ref: '#/components/parameters/PageSize'
@@ -227,6 +253,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/plugin-schemas'
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
         '401':
           $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
         '403':
@@ -2551,7 +2579,6 @@ paths:
       description: Create a new KeySet
       requestBody:
         description: Description of the new KeySet for creation
-        required: false
         content:
           application/json:
             schema:
@@ -2607,7 +2634,6 @@ paths:
       description: Create or Update KeySet using ID or name.
       requestBody:
         description: Description of the KeySet
-        required: true
         content:
           application/json:
             schema:
@@ -6977,6 +7003,44 @@ components:
       required:
         - name
         - prefix
+    KonnectCPLegacyBaseError:
+      description: standard error
+      type: object
+      properties:
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          readOnly: true
+      title: Error
+    KonnectCPLegacyUnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Unauthorized
+    KonnectCPLegacyForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Forbidden
+    KonnectCPLegacyNotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Not Found
+    KonnectCPLegacyBadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
+        - type: object
+          properties:
+            message:
+              example: Bad Request
     BaseError:
       description: standard error
       type: object
@@ -7268,37 +7332,6 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
-    KonnectCPLegacyBaseError:
-      description: standard error
-      type: object
-      properties:
-        message:
-          description: |
-            A short summary of the problem.
-          type: string
-          readOnly: true
-      title: Error
-    KonnectCPLegacyBadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Bad Request
-    KonnectCPLegacyUnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Unauthorized
-    KonnectCPLegacyForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Forbidden
     KonnectCPLegacyConflictError:
       allOf:
         - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
@@ -7306,13 +7339,6 @@ components:
           properties:
             message:
               example: Conflict
-    KonnectCPLegacyNotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Not Found
     CursorMetaPage:
       type: object
       properties:
@@ -7440,6 +7466,18 @@ components:
             rule: required
             reason: This Config Store has 4 secrets. These must be individually removed before deletion or the force=true query param can be used to automatically delete associated entities.”
             source: query
+    KonnectCPLegacyUnauthorizedExample:
+      value:
+        message: Unauthorized
+    KonnectCPLegacyForbiddenExample:
+      value:
+        message: Forbidden
+    KonnectCPLegacyNotFoundExample:
+      value:
+        message: Not Found
+    KonnectCPLegacyBadRequestExample:
+      value:
+        message: Bad Request
     UnauthorizedExample:
       value:
         status: 401
@@ -7458,21 +7496,9 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
-    KonnectCPLegacyBadRequestExample:
-      value:
-        message: Bad Request
-    KonnectCPLegacyUnauthorizedExample:
-      value:
-        message: Unauthorized
-    KonnectCPLegacyForbiddenExample:
-      value:
-        message: Forbidden
     KonnectCPLegacyConflictExample:
       value:
         message: Conflict
-    KonnectCPLegacyNotFoundExample:
-      value:
-        message: Not Found
     UnsupportedMediaTypeExample:
       value:
         status: 415
@@ -7895,6 +7921,42 @@ components:
                 status: 401
           schema:
             $ref: '#/components/schemas/GatewayUnauthorizedError'
+    KonnectCPLegacyUnauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyUnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyUnauthorizedExample'
+    KonnectCPLegacyForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyForbiddenExample'
+    KonnectCPLegacyNotFound:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyNotFoundError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyNotFoundExample'
+    KonnectCPLegacyBadRequest:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyBadRequestError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyBadRequestExample'
     BadRequest:
       description: Bad Request
       content:
@@ -7919,33 +7981,6 @@ components:
           examples:
             UnauthorizedExample:
               $ref: '#/components/examples/ForbiddenExample'
-    KonnectCPLegacyBadRequest:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/KonnectCPLegacyBadRequestError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/KonnectCPLegacyBadRequestExample'
-    KonnectCPLegacyUnauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/KonnectCPLegacyUnauthorizedError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/KonnectCPLegacyUnauthorizedExample'
-    KonnectCPLegacyForbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/KonnectCPLegacyForbiddenError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/KonnectCPLegacyForbiddenExample'
     KonnectCPLegacyConflict:
       description: Forbidden
       content:
@@ -7955,15 +7990,6 @@ components:
           examples:
             UnauthorizedExample:
               $ref: '#/components/examples/KonnectCPLegacyConflictExample'
-    KonnectCPLegacyNotFound:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/KonnectCPLegacyNotFoundError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/KonnectCPLegacyNotFoundExample'
     UnsupportedMediaType:
       description: Unsupported Media Type
       content:
