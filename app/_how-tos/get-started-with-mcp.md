@@ -173,7 +173,7 @@ Now that you've configured Claude Desktop with the {{site.konnect_short_name}} M
 Use this prompt to retrieve all control planes in your {{site.konnect_short_name}} organization:
 
 ```text
-List all control planes in my Kong {{site.konnect_product_name}} organization.
+List all Control Planes in my {{site.konnect_product_name}} organization.
 ```
 {% endnavtab %}
 {% navtab "Sample response" %}
