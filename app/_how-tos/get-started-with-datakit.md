@@ -63,7 +63,6 @@ entities:
     - name: datakit
       service: example-service
       config:
-        debug: true
         nodes:
         - name: CAT_FACT
           type: call
@@ -74,17 +73,17 @@ entities:
         - name: JOIN
           type: jq
           inputs:
-          - cat: CAT_FACT.body
-          - dog: DOG_FACT.body
+            cat: CAT_FACT.body
+            dog: DOG_FACT.body
           jq: |
             {
-              "cat_fact": $cat.fact,
-              "dog_fact": $dog.facts[0]
+              cat_fact: .cat.fact,
+              dog_fact: .dog.facts[0],
             }
         - name: EXIT
           type: exit
           inputs:
-          - body: JOIN
+            body: JOIN
           status: 200
 {% endentity_examples %}
 <!--vale on -->
