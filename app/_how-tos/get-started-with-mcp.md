@@ -85,7 +85,7 @@ faqs:
       * **Check the API region** is correctly specified (`KONNECT_REGION`).
       * **Ensure network access** to the Kong {{site.konnect_product_name}} API is not blocked by a firewall or proxy.
 
-  - q: Why am I seeing authentication errors?
+  - q: "Why am I seeing authentication errors for the {{site.konnect_short_name}} MCP server?"
     a: |
       * **Regenerate your API key** from the Kong {{site.konnect_product_name}} portal if it's expired or revoked.
       * **Confirm environment variables** like `KONNECT_ACCESS_TOKEN` are set and available to the process.
