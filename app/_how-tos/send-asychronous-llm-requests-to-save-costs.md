@@ -1,0 +1,263 @@
+---
+title: Send asynchronous requests to LLMs to save costs
+content_type: how_to
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI Proxy
+    url: /plugins/ai-proxy/
+
+description: Use llm/v1/files and llm/v1/batches route_types to send asychronous batched requests to LLMs.
+
+products:
+  - gateway
+  - ai-gateway
+
+works_on:
+  - on-prem
+  - konnect
+
+min_version:
+  gateway: '3.10'
+
+plugins:
+  - ai-proxy
+
+entities:
+  - service
+  - route
+  - plugin
+
+tags:
+  - ai
+  - openai
+
+tldr:
+  q: How do I send asynchronous batched requests to large language models (LLMs) to reduce costs?
+  a: Upload a batch file in JSONL format to the `/files` route, then create a batch request via the `/batches` route to process multiple LLM queries asynchronously, and finally retrieve the batched responses from the `/files` route.
+
+tools:
+  - deck
+
+prereqs:
+  inline:
+    - title: OpenAI
+      include_content: prereqs/openai
+      icon_url: /assets/icons/openai.svg
+    - title: Batch .jsonl file
+      content: |
+        To complete this tutorial, create a `batch.jsonl` to generate asynchronous batched LLM responses. We use `/v1/chat/completions` because it handles chat-based generation requests, enabling the LLM to produce conversational completions in batch mode.
+
+        Run the following command to create the file:
+
+        ```bash
+        cat <<EOF > batch.jsonl
+        {"custom_id": "prod1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a compelling product description for a stainless steel water bottle suitable for outdoor activities."}], "max_tokens": 60}}
+        {"custom_id": "prod2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a product description for a pair of wireless noise-cancelling headphones with long battery life."}], "max_tokens": 60}}
+        {"custom_id": "prod3", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write an engaging product description for a stylish red leather wallet with multiple compartments."}], "max_tokens": 60}}
+        {"custom_id": "prod4", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a detailed product description for a Bluetooth wireless speaker with waterproof features."}], "max_tokens": 60}}
+        {"custom_id": "prod5", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a concise product description for a compact and durable travel backpack with laptop compartment."}], "max_tokens": 60}}
+        EOF
+        ```
+  entities:
+    services:
+      - files-service
+      - batches-service
+    routes:
+      - files-route
+      - batches-route
+
+cleanup:
+  inline:
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+---
+
+## Configure AI Proxy plugins
+
+Configure two separate AI Proxy plugins: one for the `llm/v1/files` route and another for the `llm/v1/batches` route. Each route type requires its own dedicated service and route to function correctly. In this setup, all requests to the files route are forwarded to `http://localhost:8000/files`, while batch requests go to `http://localhost:8000/batches`.
+
+
+AI Proxy plugin for the `llm/v1/files` route_type:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
+      service: files-service
+      genai_category: text/generation
+      model_name_header: false
+      config:
+        route_type: llm/v1/files
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${openai_api_key}
+        model:
+          provider: openai
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+{% endentity_examples %}
+
+AI Proxy plugin for the `llm/v1/batches` route_type:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
+      service: batches-service
+      genai_category: text/generation
+      model_name_header: false
+      config:
+        route_type: llm/v1/batches
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${openai_api_key}
+        model:
+          provider: openai
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+{% endentity_examples %}
+
+# Upload a .jsonl file for batching
+
+Use the following command to upload your [batching file](./#batch-jsonl-file) to the `/files` route:
+
+```bash
+curl localhost:8000/files -F purpose="batch" -F file="@batch.jsonl"
+```
+
+If the upload succeeds, you will see a JSON response like this:
+
+```json
+{
+  "object": "file",
+  "id": "file-TgJnwX6nHPPvb5W4tW6cTi",
+  "purpose": "batch",
+  "filename": "1.jsonl",
+  "bytes": 1672,
+  "created_at": 1751281528,
+  "expires_at": null,
+  "status": "processed",
+  "status_details": null
+}
+```
+{:.success}
+> **Note:** Copy the file ID from the response. You will need it to create a batch.
+
+## Create a batching request
+
+Send a POST request to the `/batches` route to create a batch using your uploaded file. Make sure to replace the placeholder with your file ID:
+
+```bash
+curl http://localhost:8000/batches \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input_file_id": "YOUR_FILE_ID",
+    "endpoint": "/v1/chat/completions",
+    "completion_window": "24h"
+  }'
+```
+
+You will receive a response similar to:
+
+```json
+{
+  "id": "batch_686270963414819093383a7aeca50792",
+  "object": "batch",
+  "endpoint": "/v1/chat/completions",
+  "errors": null,
+  "input_file_id": "file-TgJnwX6nHPPvb5W4tW6cTi",
+  "completion_window": "24h",
+  "status": "validating",
+  "output_file_id": null,
+  "error_file_id": null,
+  "created_at": 1751281814,
+  "in_progress_at": null,
+  "expires_at": 1751368214,
+  "finalizing_at": null,
+  "completed_at": null,
+  "failed_at": null,
+  "expired_at": null,
+  "cancelling_at": null,
+  "cancelled_at": null,
+  "request_counts": {
+    "total": 0,
+    "completed": 0,
+    "failed": 0
+  },
+  "metadata": null
+}
+```
+{:.success}
+> **Note:** Copy the batch ID from this response to check the batch status later.
+
+# Check batching status
+
+Check the status of your batch by sending a request to:
+
+{% validation request-check %}
+url: /batches/{your_batch_id}
+{% endvalidation %}
+
+A completed batch response looks like this:
+
+```json
+{
+  "id": "batch_6862714e88908190ab9fbb48ad773cbc",
+  "object": "batch",
+  "endpoint": "/v1/chat/completions",
+  "errors": null,
+  "input_file_id": "file-TgJnwX6nHPPvb5W4tW6cTi",
+  "completion_window": "24h",
+  "status": "completed",
+  "output_file_id": "file-N64jgDvWKuaxHjZLJ38nmV",
+  "error_file_id": null,
+  "created_at": 1751281998,
+  "in_progress_at": 1751281999,
+  "expires_at": 1751368398,
+  "finalizing_at": 1751282173,
+  "completed_at": 1751282174,
+  "failed_at": null,
+  "expired_at": null,
+  "cancelling_at": null,
+  "cancelled_at": null,
+  "request_counts": {
+    "total": 5,
+    "completed": 5,
+    "failed": 0
+  },
+  "metadata": null
+}
+```
+{:.success}
+> Copy the `output_file_id` to retrieve your batched responses.
+
+## Retrieve batched responses
+
+Download the batch responses from the `/files` route using the `output_file_id`:
+
+```bash
+curl http://localhost:8000/files/{your_file_id}/content > batched-response.jsonl
+```
+
+This command saves the batched responses to the `batched-response.jsonl` file.
+
+The batched response file contains one JSON object per line, each representing a single batched request's response. This format allows you to process or analyze responses individually or in bulk.
+
+Example content from `batched-response.jsonl`:
+
+```json
+{"id": "batch_req_686271fdfdd88190afc7c1da9a67f59f", "custom_id": "prod1", "response": {"status_code": 200, "request_id": "31043970a729289021c4de02f4d9d4f4", "body": {"id": "chatcmpl-Bo6lqlrGydPEceKXlWmh0gYIGpA4o", "object": "chat.completion", "created": 1751282126, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Elevate Your Hydration Game: The Ultimate Stainless Steel Water Bottle**\n\nIntroducing the **AdventureHydrate Stainless Steel Water Bottle** — your perfect companion for all outdoor adventures! Whether you're hiking rugged trails, camping under the stars, or simply enjoying a day at the beach, this water bottle is designed", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 33, "completion_tokens": 60, "total_tokens": 93, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}
+{"id": "batch_req_686271fe13148190b00f0d8d4a237e0c", "custom_id": "prod2", "response": {"status_code": 200, "request_id": "75e72b39c1e25a076486ad0a56ef9040", "body": {"id": "chatcmpl-Bo6jypac8GcC4dEE91NiERhqbI68M", "object": "chat.completion", "created": 1751282010, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Product Description: NoiseBlock Pro Wireless Noise-Cancelling Headphones**\n\nExperience the ultimate in sound clarity and comfort with the NoiseBlock Pro Wireless Noise-Cancelling Headphones. Designed for audiophiles and casual listeners alike, these state-of-the-art headphones combine advanced noise-cancellation technology with an", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 36, "completion_tokens": 60, "total_tokens": 96, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}
+{"id": "batch_req_686271fe20d48190acc5b34cb9a3dca9", "custom_id": "prod3", "response": {"status_code": 200, "request_id": "4e27db53d730a1404b1f43953f6191e5", "body": {"id": "chatcmpl-Bo6k2pEvK0tTUmjvdQ3H1ysGnCn9d", "object": "chat.completion", "created": 1751282014, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "### Elevate Your Everyday with the Red Luxe Leather Wallet\n\nStep into sophistication with our stunning Red Luxe Leather Wallet, where style meets functionality in perfect harmony. Crafted from premium, supple leather, this wallet boasts a rich, vibrant hue that adds a bold statement to any ensemble. \n\n**Features:**\n", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 32, "completion_tokens": 60, "total_tokens": 92, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_62a23a81ef"}}, "error": null}
+{"id": "batch_req_686271fe2f14819099e646c0c43c364c", "custom_id": "prod4", "response": {"status_code": 200, "request_id": "1c26a143c432ee43e36a7fb302d56a89", "body": {"id": "chatcmpl-Bo6k8mCzyUcgZNWEAEL6LzBdmuaIy", "object": "chat.completion", "created": 1751282020, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Product Description: Wireless Waterproof Bluetooth Speaker**\n\n**Elevate Your Sound Experience Anywhere!**\n\nIntroducing the Ultimate Wireless Waterproof Bluetooth Speaker, designed for the adventurer in you! Whether you're lounging by the pool, trekking in the mountains, or hosting a beach party, this speaker combines impressive audio quality with robust", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 31, "completion_tokens": 60, "total_tokens": 91, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}
+{"id": "batch_req_686271fe3c108190bdd6a64f7231191a", "custom_id": "prod5", "response": {"status_code": 200, "request_id": "3613bb32e5afef94cab0ad41c19ee2dc", "body": {"id": "chatcmpl-Bo6jwAbdiD35WsrppVDcIR15yJQNr", "object": "chat.completion", "created": 1751282008, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "Discover the ultimate travel companion with our Compact and Durable Travel Backpack. Designed for the modern traveler, this sleek backpack features a padded laptop compartment that securely fits devices up to 15.6 inches, ensuring your tech stays safe on the go. Crafted from high-quality, water-resistant materials, it withstands", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 33, "completion_tokens": 60, "total_tokens": 93, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}
+```
+
+
