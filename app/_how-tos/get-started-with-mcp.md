@@ -47,7 +47,7 @@ prereqs:
     services:
         - example-service
     consumers:
-        - example-consumer
+        - single-consumer
 
   inline:
     - title: OpenAI
@@ -77,16 +77,6 @@ cleanup:
 
 min_version:
     gateway: '3.6'
-
-next_steps:
-  - text: Set up load balancing using AI Proxy Advanced plugin
-    url: /plugins/ai-proxy-advanced/
-  - text: Cache traffic using the AI Semantic cache plugin
-    url: /plugins/ai-semantic-cache/
-  - text: Secure traffic with the AI Prompt Guard
-    url: /plugins/ai-prompt-guard/
-  - text: Learn about all the AI plugins
-    url: /plugins/?category=ai
 
 faqs:
   - q: Why am I getting a connection error?
@@ -135,10 +125,9 @@ To get started with Kong MCP server, first clone the repository and install depe
     npm run build
     ```
 
+## Configure Claude desktop
 
-## Configure Claude Desktop
-
-Claude uses a configuration file to register custom MCP servers. You’ll need to **create** or edit this file based on your operating system:
+Claude uses a configuration file to register custom MCP servers. You’ll need to **create** this file based on your operating system:
 
 * **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 * **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
@@ -187,7 +176,7 @@ Use this prompt to retrieve all control planes in your {{site.konnect_short_name
 List all control planes in my Kong {{site.konnect_product_name}} organization.
 ```
 {% endnavtab %}
-{% navtab "MCP Server Response" %}
+{% navtab "Sample response" %}
 
 The following is a sample response from Kong MCP Server:
 
@@ -234,7 +223,7 @@ Once you’ve identified a control plane, ask Claude to list its services:
 List all services for the quickstart Control Plane.
 ```
 {% endnavtab %}
-{% navtab "MCP Server Response" %}
+{% navtab "Sample response" %}
 
 ```json
 {
