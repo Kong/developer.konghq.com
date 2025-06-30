@@ -14,6 +14,7 @@ sections:
         description: Learn how to publish APIs with Dev Portal and control who can see published APIs.
         url: /dev-portal/publishing/
       - path: /how-to/automate-api-catalog/
+      - path: /how-to/automate-api-catalog-with-terraform/
   - title: Application registration
     items:
       - title: Developer sign-up
