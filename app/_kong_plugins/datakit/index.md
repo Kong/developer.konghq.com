@@ -227,9 +227,11 @@ But this configuration will yield an error for `GET_BAR.output`:
   jq: "."
 ```
 
-<!--vale off-->
-> invalid connection ("GET_BAR" -> "FILTER"): conflicts with existing connection ("GET_FOO" -> "FILTER")
-<!--vale on-->
+Error:
+```
+invalid connection ("GET_BAR" -> "FILTER"): conflicts with existing connection ("GET_FOO" -> "FILTER")
+```
+{:.no-copy-code}
 
 The `jq` node is especially flexible, allowing you to craft an ad-hoc input
 object by defining individual input fields in your configuration. Here's an
@@ -383,9 +385,11 @@ This type of connection is not permitted.
   output: service_request.headers
 ```
 
-<!--vale off-->
-> invalid connection ("invalid" -> "service_request.headers"): type mismatch: object -> map
-<!--vale on-->
+Error:
+```
+invalid connection ("invalid" -> "service_request.headers"): type mismatch: object -> map
+```
+{:.no-copy-code}
 
 ##### object -> any
 
@@ -435,9 +439,11 @@ any field-level connections:
   output: response.body
 ```
 
-<!--vale off-->
-> invalid connection ("get-bar" -> "response.body"): conflicts with existing connection ("get-foo" -> "response.body")
-<!--vale on-->
+Error:
+```
+invalid connection ("get-bar" -> "response.body"): conflicts with existing connection ("get-foo" -> "response.body")
+```
+{:.no-copy-code}
 
 ## Node types
 
@@ -655,9 +661,11 @@ response will yield an error:
     body: service_response.body
 ```
 
-<!--vale off-->
-> invalid dependency (node #1 (CALL) -> node service_response): circular dependency
-<!--vale on-->
+Error:
+```
+invalid dependency (node #1 (CALL) -> node service_response): circular dependency
+```
+{:.no-copy-code}
 
 ### `jq` node type
 
@@ -1330,11 +1338,9 @@ client:
 
 You can find the entire error in the {{site.base_gateway}} `error.log` file:
 
-<!--vale off-->
 ```
 > 2025/06/24 10:55:32 [error] 917449#0: *1292 [lua] runtime.lua:406: handler(): node #1 (API) failed with error: "non-2XX response code: 403", client: 127.0.0.1, server: kong, request: "GET / HTTP/1.1", host: "test-010.datakit.test", request_id: "f5e07609d55bd66508c8315b8cf6583a"
 ```
-<!--vale on-->
 
 For quicker feedback during local development and testing, the error can also be
 passed through to the client response by enabling the `debug` option in your
