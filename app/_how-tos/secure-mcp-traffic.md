@@ -8,7 +8,7 @@ related_resources:
     url: /plugins/ai-proxy-advance/
   - text: Key Auth plugin
     url: /plugins/key-auth/
-permalink: /mcp/secure-mcp-traffic
+permalink: /mcp/secure-mcp-traffic/
 breadcrumbs:
   - /mcp/
 
