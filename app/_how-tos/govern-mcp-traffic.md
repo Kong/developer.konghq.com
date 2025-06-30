@@ -431,7 +431,7 @@ Request #6 — Status: 429
 ```
 {:. no-copy-code  }
 
-Our rate limit configuration is allowing 1 requests per 60 seconds, which means that:
+Our rate limit configuration is allowing one request per 60 seconds, which means that:
 
 - Request #1 is allowed (status 200). The first request within the rate limit.
 
