@@ -898,7 +898,7 @@ releases:
 
   - release: "3.11"
     ee-version: "3.11.0.0"
-    label: unreleased
+    latest: true
     distributions:
       - amazonlinux2:
           package: true
