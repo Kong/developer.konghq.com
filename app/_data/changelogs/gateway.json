@@ -15062,9 +15062,15 @@
         "scope": "Plugin"
       },
       {
-        "message": "Blocked plugins to execute retry logic. Also improve testing funtions\n",
+        "message": "Blocked plugins to execute retry logic. Also improve testing functions\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "ai-prompt-compressor",
+          "ai-sanitizer",
+          "ai-semantic-cache",
+          "ai-rag-injector"
+        ]
       },
       {
         "message": "Fixed an issue where the `ai-prompt-decorator` plugin prompt field was too short.\n",
@@ -15266,6 +15272,27 @@
         "message": "Added a configuration option `vault_secrets_lazy_load` to control how vault\nsecrets are loaded. When enabled, plugin options stored as vault secrets are\nloaded only when needed. This can save memory and reduce startup time but may\nincrease latency the first time a secret is accessed or after it expires. The\ndefault value is `off`, preserving the behavior of previous releases.\n",
         "type": "feature",
         "scope": "Configuration"
+      },
+      {
+        "message": "Fixed an issue where some of ai metrics was missed in analytics",
+        "scope": "Plugin",
+        "plugins": [
+          "ai-prompt-compressor",
+          "ai-rag-injector",
+          "ai-semantic-cache",
+          "ai-sanitizer"
+        ],
+        "type": "bugfix"
+      },
+      {
+        "message": "-> Fixed an issue where sometimes the paginated sync incorrectly reports \"history lost\" and fails.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "-> Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
+        "type": "bugfix",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [

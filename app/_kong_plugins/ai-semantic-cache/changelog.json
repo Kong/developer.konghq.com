@@ -9,6 +9,16 @@
       "message": "Fixed an issue where SSE terminator may not have correct ending characters.\n",
       "type": "bugfix",
       "scope": "Plugin"
+    },
+    {
+      "message": "Blocked plugins to execute retry logic. Also improve testing functions\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
     }
   ],
   "3.10.0.0": [

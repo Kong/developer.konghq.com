@@ -1,9 +1,19 @@
 {
   "3.11.0.0": [
     {
+      "message": "Blocked plugins to execute retry logic. Also improve testing functions\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
       "message": "Fixed an issue where 'tools' and 'RAG' decoration did not work for Ollama (llama2) provider.\n",
       "type": "bugfix",
       "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
     }
   ],
   "3.10.0.0": [
