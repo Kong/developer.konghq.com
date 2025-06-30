@@ -295,6 +295,9 @@ rows:
   - conflict: ACL group names across Control Plane Group members
     description: ACL group names are shared across members.
     action: Remove or rename duplicate ACL groups if isolation is needed.
+  - conflict: Shared consumers accross Control Plane Group members
+    description: Different consumers with the same name are being used accross multiple Control Planes in the same Control Plane Group.
+    action: Remove or rename one of the conflicting consumers.
   - conflict: Consumer groups across Control Plane Group members
     description: Consumer group names are shared across members.
     action: Remove or rename duplicates if isolation is needed.
