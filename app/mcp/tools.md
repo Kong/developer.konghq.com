@@ -36,7 +36,9 @@ related_resources:
       url: /ai-gateway/
 ---
 
-Kong’s MCP Server provides a set of API-accessible tools to support analytics, configuration management, and Control Plane administration. These tools help users monitor traffic, query resource metadata, and manage Control Plane hierarchies programmatically.
+Kong’s MCP Server provides a suite of APIs, called MCP tools, for analytics, configuration queries, and Control Plane management. Clients like Claude connect to these APIs through a conversational interface. Instead of writing raw API calls, you describe what you need—such as “show API request trends for the past 24 hours” or “list services in the US-east Control Plane”—and Claude generates the requests and returns structured results.
+
+These tools support filters, flexible time ranges, and detailed queries, giving you precise control over gateway traffic analysis, configuration inventory, and multi-cluster operations. Using Claude, you can troubleshoot issues, audit deployments, and orchestrate Control Planes by simply describing tasks in natural language. See the [get started with Kong MCP guide](/mcp/kong-mcp/get-started/#analyze-api-traffic-using-claude-and-kong-mcp-server) to learn more.
 
 ## Analytics tools
 

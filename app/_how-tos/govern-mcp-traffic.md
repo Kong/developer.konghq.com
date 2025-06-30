@@ -107,6 +107,7 @@ variables:
 
 Now that the AI Proxy Advanced plugin is configured with round-robin load balancing, you can verify that traffic is distributed across both OpenAI models. This script sends 10 test requests to the MCP server Route and prints the model used in each response. If load balancing is working correctly, the output should alternate between `gpt-4` and `gpt-4o` based on their configured weights.
 
+
 ```bash
 for i in {1..10}; do
   echo -n "Request #$i — Model: "
@@ -181,6 +182,11 @@ entities:
 Now you can validate your configuration by testing tool requests and sending requests that should be denied.
 
 ### Allowed tool requests to GitHub MCP Server
+
+{:.warning}
+
+> Replace `YOUR_REPOSITORY_NAME` in the example requests below with your repository path, using the format: `owner-name/repository-name`.
+
 
 {% navtabs "Allowed MCP calls"%}
 {% navtab "Create an issue"%}
@@ -268,6 +274,11 @@ message: The repository YOUR_REPOSITORY_NAME has {n} active branches.
 ### Denied requests
 
 Each input below matches a deny pattern like `.*(backdoor|exfiltrate|CVE-\d{4}-\d+).*`, which should trigger rejection by the AI Prompt Guard plugin. Let me know if you'd like boundary cases or false positives to test.
+
+{:.warning}
+
+> Replace `YOUR_REPOSITORY_NAME` in the example below with your repository path, using the format: `owner-name/repository-name`.
+
 
 {% navtabs "Denied requests" %}
 
