@@ -33,74 +33,18 @@ rows:
             config:
               url: /assets/images/gateway/mcp-architecture.svg
               alt_text: Overview of AI gateway
-      # - blocks:
-      #     - type: mermaid
-      #       config:
-      #         diagram: |
-      #           flowchart LR
-      #             %% MCP Client at the top
-      #             client(((MCP Client)))
-
-      #             %% External systems
-
-      #             server[[MCP Server]]
-      #             upstream([Upstream APIs])
-      #             llm([LLM])
-
-      #             %% Gateway Layer: all proxies inside
-      #             subgraph Gateway_Layer ["AI Gateway"]
-      #                 direction TB
-      #                 proxy_llm[AI proxy]
-      #                 proxy_server[AI proxy]
-      #                 proxy_upstream[AI proxy]
-      #             end
-
-      #             %% Simulated merge point
-      #             merge_point(( #8648; ))
-
-      #             %% Flows
-      #             server -->|Context/tool data| proxy_server --> merge_point
-      #             merge_point --> client
-      #             llm -->|Prompt/tool result| proxy_llm --> merge_point
-      #             upstream -->|Tool call execution| proxy_upstream <--> server
-
-      #             %% Styles
-      #             style proxy_llm stroke-dasharray: 3 3
-      #             style proxy_server stroke-dasharray: 3 3
-      #             style proxy_upstream stroke-dasharray: 3 3
-      #             style Gateway_Layer fill:#ffffff00,stroke-dasharray: 5 5
-
-  # - columns:
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Secure and govern MCP traffic
-  #           description: Learn how you can
-  #           icon: /assets/icons/mcp.svg
-  #           cta:
-  #             url: /mcp/get-started/
-  #             align: end
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Get started
-  #           description: Learn how to run the Kong {{site.konnect_product_name}} MCP Server with Claude.
-  #           icon: /assets/icons/rocket.svg
-  #           cta:
-  #             url: /mcp/get-started/
-  #             align: end
 
   - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                type: h2
-                text: "MCP server options"
-              blocks:
-                - type: text
-                  text: |
-                    You have the option to either use your own MCP server or use Kong's built-in MCP server.
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              type: h2
+              text: "MCP server options"
+            blocks:
+              - type: text
+                text: |
+                  You can expose any MCP server through AI Gateway or use Kong’s built-in MCP server for conversational control over your infrastructure. These options serve different purposes and are not mutually exclusive—you can use both depending on your needs.
   - header:
     columns:
       - blocks:
@@ -112,12 +56,12 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    To expose an MCP server in production, you must secure access, govern usage, optimize cost, and observe behavior. Kong AI Gateway provides the policy framework to do exactly that:
+                    For production environments, you can expose any remote MCP server to AI Gateway. This setup gives AI clients access to internal systems while enforcing strict control at the edge. Use Kong AI Gateway plugins to:
 
-                    - **Secure access** with authentication plugins like OpenID Connect or Key Auth.
-                    - **Govern usage** with rate limiting policies based on tokens or request volume.
-                    - **Optimize cost** by enforcing token-based quotas and blocking overuse at the edge.
-                    - **Observe behavior** with logging and tracing powered by OpenTelemetry.
+                    - **Secure access** with plugins like OpenID Connect or Key Auth.
+                    - **Govern usage** through rate limiting and traffic shaping.
+                    - **Enforce quotas** based on tokens or user-level constraints.
+                    - **Monitor behavior** using logging and distributed tracing with OpenTelemetry.
 
       - blocks:
           - type: structured_text
@@ -128,11 +72,15 @@ rows:
               blocks:
                 - type: text
                   text: |
-                      Want to quickly test MCP workflows with Claude? Kong MCP Server makes it easy to connect AI assistants to {{site.konnect_product_name}}. Use natural language to access key tools like analytics, configuration inspection, and control plane management:
-                      * Query API analytics with customizable filters
-                      * List and inspect services, routes, consumers, and plugins
-                      * Manage control planes and control plane groups
-                      * Integrate with Claude and other MCP-compatible AI assistants
+                    Kong provides a built-in MCP server that connects directly to your Konnect Control Planes. It offers read-only tools for analytics, configuration inspection, and Control Plane metadata—ideal for AI-driven workflows with Claude or other compatible assistants.
+
+                    Use natural language to:
+
+                    - Query API traffic across gateways with filters and time windows.
+                    - List and inspect services, routes, consumers, and plugins.
+                    - Explore Control Plane hierarchies and group relationships.
+                    - Build and test workflows without a production setup.
+
 
   - columns:
     - blocks:
