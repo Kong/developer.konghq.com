@@ -12,7 +12,7 @@ related_resources:
     url: /plugins/ai-rate-limiting-advanced/
 breadcrumbs:
     - /mcp/
-permalink: /mcp/govern-mcp-traffic
+permalink: /mcp/govern-mcp-traffic/
 
 series:
     id: mcp-traffic
