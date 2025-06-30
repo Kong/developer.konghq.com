@@ -689,7 +689,7 @@
   }
 
   .top-nav {
-    @apply absolute lg:static h-dvh lg:h-full w-screen lg:w-full left-0 top-0 bg-secondary lg:bg-transparent flex flex-col lg:flex-row items-center lg:gap-8 transform translate-x-[-120%] lg:translate-x-0;
+    @apply absolute lg:static h-dvh lg:h-full w-screen lg:w-full left-0 top-0 bg-secondary lg:bg-transparent flex flex-col lg:flex-row items-center lg:gap-2 transform translate-x-[-120%] lg:translate-x-0;
   }
 
   .top-nav__controls {
