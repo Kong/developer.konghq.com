@@ -152,7 +152,7 @@ resource "konnect_api_version" "my_api_spec" {
 ```
 
 {:.warning}
-> APIs should have API documents or specs, and can have both. If neither are specified, {{site.konnect_short_name}} can't render documentation.
+> We recommend that APIs have API documents or specs, and APIs can have both. If neither are specified, {{site.konnect_short_name}} can't render documentation.
 
 ## Create and associate an API document 
 
@@ -235,7 +235,9 @@ Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
 
 ## Validate
 
-Fetch the Dev Portal URL from the Terraform state:
+To validate that your API was successfully published, you must navigate to your Dev Portal URL and verify that you can see the API. 
+
+First, fetch the Dev Portal URL from the Terraform state:
 
 ```sh
 PORTAL_URL=$(terraform show -json | jq -r '
@@ -243,6 +245,8 @@ PORTAL_URL=$(terraform show -json | jq -r '
   | select(.address == "konnect_portal.my_portal")
   | .values.default_domain')
 ```
+
+This exports your Dev Portal URL as an environment variable. 
 
 To validate that the API was created and published in your Dev Portal, navigate to your Dev Portal:
 
