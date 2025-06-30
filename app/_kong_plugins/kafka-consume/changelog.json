@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Added WebSocket support to the kafka-consume plugin for consuming Kafka messages.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added the `kafka-consume` plugin, which adds Kafka consumption capabilities to Kong.",

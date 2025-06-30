@@ -1,4 +1,16 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where the rate limiting plugins can't handle decimal numbers when using Redis strategy.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Limited the length of the bucket identifier to prevent using strings longer than 256 characters for cache indexing, which could lead to high memory consumption in high-traffic scenarios.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where the runtime failed due to `sync_rate` not being set if the `strategy` was `local`.\n",
