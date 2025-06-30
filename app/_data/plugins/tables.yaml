@@ -43,3 +43,11 @@ priorities:
   columns:
     - title: Priority
       key: priority
+
+
+deployment_topologies:
+  columns:
+    - title: "on-prem"
+      key: "on_prem"
+    - title: "Konnect"
+      key: "konnect_deployments"

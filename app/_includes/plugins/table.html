@@ -20,17 +20,29 @@
                         </span>
                     </td>
                     {% endif %}
-                    <td>
-                        {% if type == 'referenceable_fields' %}
-                            <ul>
-                            {% for value in row.values %}
-                                <li><code class="text-secondary px-1">{{value}}</code></li>
-                            {% endfor %}
-                            </ul>
-                        {% else %}
-                            <code class="text-secondary px-1">{{row.values[0]}}</code>
-                        {% endif %}
-                    </td>
+                    {% if type == 'deployment_topologies'  %}
+                        {% for column in columns %}
+                            <td>
+                                <ul>
+                                    {% for value in row.values[column.key] %}
+                                    <li><code class="text-secondary px-1">{{value}}</code></li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        {% endfor %}
+                    {% else %}
+                        <td>
+                            {% if type == 'referenceable_fields' %}
+                                <ul>
+                                {% for value in row.values %}
+                                    <li><code class="text-secondary px-1">{{value}}</code></li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <code class="text-secondary px-1">{{row.values[0]}}</code>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
