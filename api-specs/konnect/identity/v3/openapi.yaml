@@ -2881,9 +2881,9 @@ components:
                         type: string
             example:
               data:
-                - group: Service Developers
-                  team_ids:
-                    - af91db4c-6e51-403e-a2bf-33d27ae50c0a
+                - team_id: af91db4c-6e51-403e-a2bf-33d27ae50c0a
+                  groups:
+                    - Service Developers
           examples:
             Example Request Body:
               $ref: '#/components/examples/Patch-Team-Group-Mappings'
