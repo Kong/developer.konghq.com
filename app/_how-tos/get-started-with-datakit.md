@@ -29,12 +29,13 @@ tldr:
 tools:
   - deck
 
+
 prereqs:
-  skip_product: true
-  inline:
-    - title: "{{site.base_gateway}} license"
-      include_content: prereqs/gateway-license
-      icon_url: /assets/icons/gateway.svg
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
 
 cleanup:
   inline:
@@ -50,26 +51,6 @@ related_resources:
     url: /plugins/datakit/
 
 ---
-
-## Create a Service and a Route
-
-To be able to validate the configuration, we need to create a Gateway Service and a Route:
-
-<!--vale off -->
-{% entity_examples %}
-entities:
-  services:
-    - name: example-service
-      url: http://httpbin.konghq.com
-  routes:
-    - name: example-route
-      paths:
-        - /
-      strip_path: true
-      service: 
-        name: example-service
-{% endentity_examples %}
-<!--vale on -->
 
 ## Enable Datakit
 
