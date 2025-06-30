@@ -27,7 +27,7 @@ prereqs:
 
 tldr:
     q: How can I push content from Insomnia to a Git repository?
-    a: Create an empty remote Git repository and an Insomnia project with Git Sync. In the workspace, click the button at the bottom of the left pane and connect the repository, then commit and push your content.
+    a: Create a remote Git repository and an Insomnia project with Git Sync. Select the Git provider and connect to the repository. In the project, click the button at the bottom of the left pane to see the Git Sync menu and push your changes.
 
 related_resources:
   - text: Storage options in Insomnia
