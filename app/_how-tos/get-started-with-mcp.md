@@ -135,14 +135,6 @@ To get started with Kong MCP server, first clone the repository and install depe
     npm run build
     ```
 
-## Configure environment variables
-
-Before running the MCP server, set the required environment variables to connect to your {{site.konnect_product_name}} account:
-
-```bash
-export KONNECT_REGION='YOUR-REGION'
-```
-You can see a list of all {{site.konnect_short_name}} regions in the [Geographic regions](/konnect-platform/geos/#control-planes) documentation.
 
 ## Configure Claude Desktop
 
@@ -162,7 +154,7 @@ Now, add the following configuration to the file:
         "/absolute/path/to/mcp-konnect/build/index.js"
       ],
       "env": {
-        "KONNECT_ACCESS_TOKEN": "kpat_api_key_here",
+        "KONNECT_ACCESS_TOKEN": "YOUR_KONNECT_PAT",
         "KONNECT_REGION": "us"
       }
     }
@@ -171,8 +163,9 @@ Now, add the following configuration to the file:
 ```
 
 {:.warning}
-> Replace `/absolute/path/to/mcp-konnect/build/index.js` with the full path to your local MCP server build.
-> Make sure the `KONNECT_ACCESS_TOKEN` matches the one you set earlier.
+> * Replace `/absolute/path/to/mcp-konnect/build/index.js` with the full path to your local MCP server build.
+> * Make sure the `KONNECT_ACCESS_TOKEN` matches the one you set earlier.
+> * Replace the `KONNECT_REGION` value with your geographic region. You can see a list of all {{site.konnect_short_name}} regions in the [Geographic regions](/konnect-platform/geos/#control-planes) documentation.
 
 ## Restart Claude desktop
 
@@ -291,7 +284,7 @@ To analyze traffic and detect error trends, run a query like this:
 {% navtab "Prompt" %}
 
 ```text
-Show me all API requests for the example-service Gateway Service in the last hour that had 5xx status codes.
+Show me all API requests for the example-service Gateway Service in the quickstart Control Plane in the last hour that had 5xx status codes.
 ```
 {% endnavtab %}
 {% navtab "Sample response" %}
@@ -348,7 +341,7 @@ Show me all API requests for the example-service Gateway Service in the last hou
 Start by getting the list of consumers for a control plane:
 
 ```text
-List all Consumers for the quickstart control plane.
+List all Consumers for the quickstart Control Plane.
 ```
 
 ### Analyze requests by a specific Consumer
