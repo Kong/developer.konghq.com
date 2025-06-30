@@ -79,7 +79,7 @@ min_version:
     gateway: '3.6'
 
 faqs:
-  - q: Why am I getting a connection error?
+  - q: "Why am I getting a connection error for the {{site.konnect_short_name}} MCP server?"
     a: |
       * **Verify your API key** is valid and has the necessary permissions.
       * **Check the API region** is correctly specified (`KONNECT_REGION`).
