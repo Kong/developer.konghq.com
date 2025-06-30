@@ -90,7 +90,7 @@ faqs:
       * **Regenerate your API key** from the Kong {{site.konnect_product_name}} portal if it's expired or revoked.
       * **Confirm environment variables** like `KONNECT_ACCESS_TOKEN` are set and available to the process.
 
-  - q: Why is my data not found?
+  - q: "Why is my data not found when using the {{site.konnect_short_name}} MCP server?"
     a: |
       * **Check resource IDs** used in your request (e.g., control plane or service IDs).
       * **Ensure the resources exist** in the correct control plane and region.
