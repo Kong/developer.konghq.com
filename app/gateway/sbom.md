@@ -41,7 +41,7 @@ columns:
 rows:
   - version: 3.11.0.0
     download: |
-      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.11 SBOM](https://packages.konghq.com/public/gateway-311/raw/versions/3.11.0.0/security-assets.tar.gz)
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.11 SBOM](https://packages.konghq.com/public/gateway-311/raw/names/security-assets/versions/3.11.0.0/security-assets.tar.gz)
   - version: 3.10.0.0
     download: |
       [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block"> Download 3.10 SBOM](https://packages.konghq.com/public/gateway-310/raw/versions/3.10.0.0/security-assets.tar.gz)
