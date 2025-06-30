@@ -10,7 +10,7 @@ related_resources:
     url: /plugins/prometheus/
   - text: Monitor AI LLM metrics
     url: /ai-gateway/monitor-ai-llm-metrics/
-permalink: /mcp/observe-mcp-traffic
+permalink: /mcp/observe-mcp-traffic/
 breadcrumbs:
   - /mcp/
 
