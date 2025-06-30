@@ -433,11 +433,11 @@ Request #6 — Status: 429
 
 Our rate limit configuration is allowing 1 requests per 60 seconds, which means that:
 
-- Request #1 is allowed (status 200) — first request within the rate limit.
+- Request #1 is allowed (status 200). The first request within the rate limit.
 
-- Request #2 gets status 429 (Too Many Requests) — limit is 1 request per 10 seconds, so this second request exceeds it.
+- Request #2 gets status 429 (Too Many Requests). The limit is one request per 10 seconds, so this second request exceeds it.
 
-- Request #3 also gets 429 — still within the same 10-second window, so rate limiting blocks it.
+- Request #3 also gets 429 because it's still within the same 10-second window, so rate limiting blocks it.
 
 - After sleeping 20 seconds (more than the 10-second window), the rate limit resets.
 
