@@ -28,8 +28,7 @@ faqs:
   - q: I'm using Git sync, does Insomnia uphold the branch protections we have in our repository?
     a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
-    a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository.
-  
+    a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 
