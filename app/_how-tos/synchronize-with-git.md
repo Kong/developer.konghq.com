@@ -22,7 +22,7 @@ prereqs:
     inline:
     - title: Git repository
       content: |
-        To synchronize an Insomnia project with Git, you need a Git repository. You cna either use an existing repository with Insomnia content, or an empty repository.
+        To synchronize an Insomnia project with Git, you need a Git repository. You can either use an existing repository with Insomnia content, or an empty repository.
       icon_url: /assets/icons/git.svg
 
 tldr:
