@@ -131,7 +131,7 @@ Next, to start using OIDC auth, either [invite admins manually](/gateway/entitie
 
 When authenticating Kong Manager with OpenID Connect, the session mechanism inside
 the plugin is used to persist the authorization state. 
-Refer to the documentation for parameters prefixed by `config.session_` to learn more.
+Refer to the documentation for parameters prefixed by [`config.session_*](/plugins/openid-connect/reference/#schema--config-session-absolute-timeout)` to learn more.
 
 ### Recommendations to enhance session security
 
