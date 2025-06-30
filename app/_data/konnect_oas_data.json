@@ -66,12 +66,12 @@
     "id": "937dcdd7-4485-47dc-af5f-b805d562552f",
     "title": "Gateway Admin - EE",
     "latestVersion": {
-      "name": "3.10.0.0",
-      "id": "ff624b30-66c7-415d-bf39-fdef6567eac7"
+      "name": "3.11.0.0",
+      "id": "b198aa66-400b-4d3f-ac31-b71b7a924d9c"
     },
     "description": "Kong Gateway (EE) comes with an internal RESTful API for administration purposes.",
     "documentCount": 2,
-    "versionCount": 8,
+    "versionCount": 9,
     "versions": [
       {
         "id": "be79b812-46d5-4cc1-b757-b5270bf4fa60",
@@ -134,6 +134,14 @@
         "created_at": "2025-03-12T17:33:22.445Z",
         "updated_at": "2025-03-27T14:04:59.646Z",
         "name": "3.10.0.0",
+        "deprecated": false,
+        "registration_configs": []
+      },
+      {
+        "id": "b198aa66-400b-4d3f-ac31-b71b7a924d9c",
+        "created_at": "2025-06-30T17:33:36.082Z",
+        "updated_at": "2025-06-30T17:35:16.334Z",
+        "name": "3.11.0.0",
         "deprecated": false,
         "registration_configs": []
       }
@@ -244,6 +252,27 @@
         "id": "5feb007a-348b-486d-8d06-92f615471d22",
         "created_at": "2023-05-08T15:01:55.082Z",
         "updated_at": "2024-10-17T19:10:52.480Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "090a2dcc-506d-4b09-9488-14778dc26fc4",
+    "title": "Kong Identity - Tech preview",
+    "latestVersion": {
+      "name": "v1",
+      "id": "62d001b6-6892-43a3-ad97-346047341169"
+    },
+    "description": null,
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "62d001b6-6892-43a3-ad97-346047341169",
+        "created_at": "2025-06-20T15:40:50.990Z",
+        "updated_at": "2025-06-20T15:51:52.567Z",
         "name": "v1",
         "deprecated": false,
         "registration_configs": []
@@ -483,7 +512,7 @@
       "name": "4.0.0",
       "id": "b9e0b85a-7188-4f80-b7d3-ec91fd5f5b41"
     },
-    "description": "Konnect endpoint for extracting and computing metrics, similar to the data that is used to build graphs in Konnect Advanced Analytics. This endpoint is used to query the Advanced Analytics platform for aggregated metrics down to ten seconds for recent data. Data can be requested to group by any 2 dimensions, up to 3 metrics and any number of filter conditions in 1 query.\n\nThis endpoint is only available for Konnect Advanced Analytics.",
+    "description": "Konnect endpoint for extracting and computing metrics, similar to the data that is used to build graphs in Konnect Advanced Analytics.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
