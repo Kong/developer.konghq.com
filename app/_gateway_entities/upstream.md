@@ -122,9 +122,7 @@ The load balancer supports the following [load balancing algorithms](/gateway/lo
 - `consistent-hashing`
 - `least-connections`
 - `latency`
-{% if_version gte:3.11 %} 
 - `sticky-sessions` {% new_in 3.11 %}
-{% endif_version %}
 
 {:.info}
 > **Note**: If using [health checks](/gateway/traffic-control/health-checks-circuit-breakers/), unhealthy Targets won't be removed from the load balancer, and won't have any impact on the balancer layout when using a hashing algorithm. 
@@ -242,8 +240,6 @@ When choosing this algorithm, consider the following:
 - This option is not suitable for long-lived connections like websockets or server-sent events (SSE).
 
 
-{% if_version gte:3.11 %} 
-
 ### Sticky sessions {% new_in 3.11 %}
 
 Sticky sessions allow {{site.base_gateway}} to route repeat requests from the same client to the same backend Target using a browser-managed cookie.
@@ -299,8 +295,6 @@ rows:
     hashing: "Avoids routing to unhealthy or terminating pods."
 {% endtable %}
 
-
-{% endif_version %}
 ## Schema
 
 {% entity_schema %}
