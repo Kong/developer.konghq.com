@@ -11,6 +11,10 @@ related_resources:
     url: /insomnia/authentication-authorization/
   - text: Configure Azure SAML SSO in Insomnia
     url: /how-to/azure-saml-sso-insomnia/
+  - text: SSO for Insomnia
+    url: /insomnia/sso/
+  - text: Configure SCIM for Insomnia with Okta
+    url: /how-to/configure-scim-for-insomnia-with-okta/
 
 tier: enterprise
 
@@ -26,14 +30,14 @@ tldr:
 
 prereqs:
   inline:
-  - title: Insomnia permissions
-    include_content: prereqs/insomnia-sso
+  - title: Insomnia role
+    include_content: prereqs/insomnia-owner
     icon_url: /assets/icons/insomnia/insomnia.svg
   - title: Okta permissions
     include_content: prereqs/okta-sso
     icon_url: /assets/icons/okta.svg
   - title: Domain permissions
-    include_content: prereqs/sso-domain
+    include_content: prereqs/insomnia-verified-domain
     icon_url: /assets/icons/domain.svg
 ---
 

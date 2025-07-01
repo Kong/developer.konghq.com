@@ -4,8 +4,6 @@ metadata:
   description: Manage API publishing, developer self-service, and documentation with Konnect Dev Portal.
   products:
     - dev-portal
-  tags:
-    - beta
 
 rows:
 
@@ -25,60 +23,17 @@ rows:
                     It enables developers to browse and search API documentation, try API operations, and manage their own credentials. 
                     The Portal supports both internal and external APIs through flexible deployment options.
 
-                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. 
+                    Dev Portal APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation. 
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
+          - type: button
+            config:
+              text: "Create a Dev Portal in {{site.konnect_short_name}}"
+              url: https://cloud.konghq.com/portals/create
       - blocks:
           - type: image
             config:
               url: /assets/images/dev-portal/create-portal.png
               alt_text: "KongAir Dev Portal"
-
-  - header:
-      type: h2
-      text: "Get started"
-
-  - columns:
-      - blocks:
-          - type: card
-            config:
-              title: Create a Dev Portal
-              description: |
-                {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. 
-                You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
-              icon: /assets/icons/dev-portal.svg
-              cta:
-                url: "https://cloud.konghq.com/portals/create"
-      - blocks:
-          - type: card
-            config:
-              title: Add APIs to Dev Portal
-              description: |
-                Dev Portal APIs serve as a repository for your API specifications and documentation. 
-                You can optionally version your APIs and publish them to one or more Portals. 
-                This supports maintaining a central source of truth while offering developer-specific visibility.
-              icon: /assets/icons/api.svg
-              cta:
-                url: "/dev-portal/apis/"
-      - blocks:
-          - type: card
-            config:
-              title: Publish APIs to Dev Portal
-              description: |
-                Learn how to publish APIs with Dev Portal and control who can see published APIs.
-              icon: /assets/icons/book.svg
-              cta:
-                url: "/dev-portal/publishing/"
-      - blocks:
-          - type: card
-            config:
-              title: Allow developers to register apps
-              description: |
-                Configure application registration and role-based access for developers.
-                Grant or revoke access for developers to register applications and acquire credentials.
-              icon: /assets/icons/document-list.svg
-              cta:
-                url: "/dev-portal/application-registration/"
-
 
   - header:
       type: h2
@@ -125,40 +80,63 @@ rows:
   
   - header:
       type: h2
-      text: "Customize Dev Portal"
-  - columns:
+      text: "Get started"
+    columns:
       - blocks:
-          - type: card
-            config:
-              title: Pages and content
-              description: |
-                Customize Dev Portal pages and snippets using Markdown Components (MDC).
-              cta:
-                url: /dev-portal/pages-and-content/
+        - type: card
+          config:
+            title: Create an API catalog
+            description: |
+              Create and publish APIs to Dev Portal. 
+              Dev Portal APIs serve as a repository for your API specifications and documentation.
+            icon: /assets/icons/api.svg
+            ctas:
+              - text: With the {{site.konnect_short_name}} API
+                url: "/how-to/automate-api-catalog/"
+              - text: With Terraform
+                url: "/how-to/automate-api-catalog-with-terraform/"
+              - text: Add APIs
+                url: "/dev-portal/apis/"
+              - text: Publish APIs
+                url: "/dev-portal/publishing/"
       - blocks:
-          - type: card
-            config:
-              title: Custom domains
-              description: |
-                Use a custom URL for Dev Portal.
-              cta:
-                url: /dev-portal/custom-domains/
+        - type: card
+          config:
+            title: Customize Dev Portal
+            description: |
+              Customize Dev Portal pages, domains, and appearance.
+            icon: /assets/icons/edit.svg
+            ctas:
+              - text: Pages and content
+                url: "/dev-portal/pages-and-content/"
+              - text: Custom domains
+                url: "/dev-portal/custom-domains/"
+              - text: Customization settings
+                url: "/dev-portal/publishing/"
+              - text: Email customization
+                url: "/dev-portal/portal-customization/#developer-email-customization"
+              - text: Dev Portal settings
+                url: "/dev-portal/portal-settings/"
       - blocks:
-          - type: card
-            config:
-              title: Customization settings
-              description: |
-                Change the Dev Portal UI appearance.
-              cta:
-                url: /dev-portal/portal-customization/
-      - blocks:
-          - type: card
-            config:
-              title: Dev Portal settings
-              description: |
-                Learn about the settings you can configure for Dev Portal.
-              cta:
-                url: /dev-portal/portal-settings/
+        - type: card
+          config:
+            title: Developer self-service
+            description: |
+              Enable self-service registration flows for developers and applications using authentication strategies and {{site.konnect_short_name}} application auth.
+            icon: /assets/icons/team.svg
+            ctas:
+              - text: Self-service developer and app registration
+                url: "/dev-portal/application-registration/"
+              - text: Developer sign-up
+                url: "/dev-portal/developer-signup/"
+              - text: Developer and application approvals
+                url: "/dev-portal/access-and-approval/"
+              - text: Authentication strategies
+                url: "/dev-portal/auth-strategies/"
+              - text: Dynamic Client Registration
+                url: "/dev-portal/dynamic-client-registration/"
+  
+
   - header:
       type: h2
       text: "Developer authentication and access"
@@ -187,53 +165,6 @@ rows:
                 Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal.
               cta:
                 url: "/dev-portal/team-mapping/"
-  
-  - header:
-      type: h2
-      text: "Application registration"
-  - columns:
-      - blocks:
-          - type: card
-            config:
-              title: Self-service developer and application registration
-              description: |
-                Enable self-service registration flows for developers and applications using authentication strategies and {{site.konnect_short_name}} application auth.
-              cta:
-                url: "/dev-portal/application-registration/"
-      - blocks:
-          - type: card
-            config:
-              title: Developer sign-up
-              description: |
-                Learn how developers can get started with the Dev Portal by registering and creating an application.
-              cta:
-                url: "/dev-portal/developer-signup/"
-      - blocks:
-          - type: card
-            config:
-              title: Developer and application approvals
-              description: |
-                Approve and manage developer registrations and applications for the {{site.konnect_short_name}} Dev Portal.
-              cta:
-                url: "/dev-portal/access-and-approval/"
-  - column_count: 3
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Authentication strategies
-              description: |
-                Learn how to set up authentication strategies for Dev Portal.
-              cta:
-                url: "/dev-portal/auth-strategies/"
-      - blocks:
-          - type: card
-            config:
-              title: Dynamic Client Registration
-              description: |
-                Learn how to dynamically create developer applications in an IdP.
-              cta:
-                url: "/dev-portal/dynamic-client-registration/"
   
   - header:
       type: h2

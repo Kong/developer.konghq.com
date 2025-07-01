@@ -27,7 +27,7 @@ module Jekyll
         def schema # rubocop:disable Metrics/AbcSize
           @schema ||= case @type
                       when 'proto'
-                        JSON.parse(File.read(file_path))
+                        JSON.parse(File.read(file_path))['definitions'][@name]
                       when 'crd'
                         yaml = YAML.load(File.read(file_path))
                         yaml['spec']['versions'][0]['schema']['openAPIV3Schema']

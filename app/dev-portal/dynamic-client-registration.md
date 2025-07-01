@@ -10,6 +10,7 @@ breadcrumbs:
   - /dev-portal/
 tags:
   - dynamic-client-registration
+  - authentication
 
 works_on:
     - konnect

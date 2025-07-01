@@ -5,9 +5,8 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 tags:
-  - beta
+  - dev-portal-documentation
 works_on:
     - konnect
 api_specs:

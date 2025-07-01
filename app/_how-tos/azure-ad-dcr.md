@@ -11,7 +11,6 @@ works_on:
     - konnect
 
 entities: []
-beta: true
 automated_tests: false
 tags:
     - dynamic-client-registration
