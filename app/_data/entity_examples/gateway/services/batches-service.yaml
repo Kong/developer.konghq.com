@@ -1,2 +1,2 @@
-name: example-service
+name: batches-service
 url: http://httpbin.konghq.com/batches

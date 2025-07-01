@@ -79,19 +79,18 @@ cleanup:
 
 ## Configure AI Proxy plugins
 
-Configure two separate AI Proxy plugins: one for the `llm/v1/files` route and another for the `llm/v1/batches` route. Each route type requires its own dedicated service and route to function correctly. In this setup, all requests to the files route are forwarded to `http://localhost:8000/files`, while batch requests go to `http://localhost:8000/batches`.
+Configure two separate AI Proxy plugins: one for the `llm/v1/files` route and another for the `llm/v1/batches` route. Each route type requires its own dedicated service and route to function correctly. In this setup, all requests to the files route are forwarded to `/files` endpoint, while batch requests go to `/batches` endpoint.
 
 
-AI Proxy plugin for the `llm/v1/files` route_type:
+AI Proxy plugin for the `route_type: llm/v1/files` :
 
 {% entity_examples %}
 entities:
   plugins:
     - name: ai-proxy
       service: files-service
-      genai_category: text/generation
-      model_name_header: false
       config:
+        model_name_header: false
         route_type: llm/v1/files
         auth:
           header_name: Authorization
@@ -103,16 +102,15 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-AI Proxy plugin for the `llm/v1/batches` route_type:
+AI Proxy plugin for the `route_type: llm/v1/batches`:
 
 {% entity_examples %}
 entities:
   plugins:
     - name: ai-proxy
       service: batches-service
-      genai_category: text/generation
-      model_name_header: false
       config:
+        model_name_header: false
         route_type: llm/v1/batches
         auth:
           header_name: Authorization
@@ -137,7 +135,7 @@ If the upload succeeds, you will see a JSON response like this:
 ```json
 {
   "object": "file",
-  "id": "file-TgJnwX6nHPPvb5W4tW6cTi",
+  "id": "file-abc123xyz456789lmn0pq",
   "purpose": "batch",
   "filename": "1.jsonl",
   "bytes": 1672,
@@ -152,7 +150,12 @@ If the upload succeeds, you will see a JSON response like this:
 
 ## Create a batching request
 
-Send a POST request to the `/batches` route to create a batch using your uploaded file. Make sure to replace the placeholder with your file ID:
+Send a POST request to the `/batches` route to create a batch using your uploaded file. Make sure to replace `YOUR_FILE_ID` with the ID of your uploaded file from the previous step:
+
+{:.info}
+> The completion window must be set to `24h`, as it's the only value currently supported by the OpenaAI /batches API
+>
+> In this example we use the `/v1/chat/completions` route for batching because we are sending multiple structured chat-style prompts in OpenAI's chat completions format to be processed in bulk.
 
 ```bash
 curl http://localhost:8000/batches \
@@ -168,11 +171,11 @@ You will receive a response similar to:
 
 ```json
 {
-  "id": "batch_686270963414819093383a7aeca50792",
+  "id": "batch_d41d8cd98f00b204e9800998ecf8427e",
   "object": "batch",
   "endpoint": "/v1/chat/completions",
   "errors": null,
-  "input_file_id": "file-TgJnwX6nHPPvb5W4tW6cTi",
+  "input_file_id": "file-TgJnwX6nHPPvb5W4abcdef",
   "completion_window": "24h",
   "status": "validating",
   "output_file_id": null,
@@ -194,29 +197,33 @@ You will receive a response similar to:
   "metadata": null
 }
 ```
+
 {:.success}
-> **Note:** Copy the batch ID from this response to check the batch status later.
+> Copy the batch ID from this response to check the batch status and export it as an environment variable by running the following command in your terminal:
+>```bash
+> export BATCH_ID=YOUR_BATCH_ID
+>```
 
-# Check batching status
+## Check batching status
 
-Check the status of your batch by sending a request to:
+Wait for a moment for the batching request to be completed, then check the status of your batch by sending a request to:
 
 {% validation request-check %}
-url: /batches/{your_batch_id}
+url: /batches/$BATCH_ID
 {% endvalidation %}
 
 A completed batch response looks like this:
 
 ```json
 {
-  "id": "batch_6862714e88908190ab9fbb48ad773cbc",
+  "id": "batch_a1b2c3d4e5f60789abcdef0123456789",
   "object": "batch",
   "endpoint": "/v1/chat/completions",
   "errors": null,
-  "input_file_id": "file-TgJnwX6nHPPvb5W4tW6cTi",
+  "input_file_id": "file-XyZ123abc456Def789Ghij",
   "completion_window": "24h",
   "status": "completed",
-  "output_file_id": "file-N64jgDvWKuaxHjZLJ38nmV",
+  "output_file_id": "file-Lmn987Qrs654Tuv321Wxyz",
   "error_file_id": null,
   "created_at": 1751281998,
   "in_progress_at": 1751281999,
@@ -235,22 +242,26 @@ A completed batch response looks like this:
   "metadata": null
 }
 ```
+
+You can notice The request_counts object shows that all five requests in the batch were successfully completed (`"completed": 5`, `"failed": 0`).
+
 {:.success}
-> Copy the `output_file_id` to retrieve your batched responses.
+> Now, you can Copy the `output_file_id` to retrieve your batched responses and export it as anvironment variable:
+> ```bash
+> export OUTPUT_FILE_ID=YOUR_OUTPUT_FILE_ID
+> ```
 
 ## Retrieve batched responses
 
-Download the batch responses from the `/files` route using the `output_file_id`:
+Now, we can download the batched responses from the `/files` route: https://platform.openai.com/docs/api-reference/files/retrieve-contents
 
 ```bash
-curl http://localhost:8000/files/{your_file_id}/content > batched-response.jsonl
+curl http://localhost:8000/files/$OUTPUT_FILE_ID/content > batched-response.jsonl
 ```
 
 This command saves the batched responses to the `batched-response.jsonl` file.
 
-The batched response file contains one JSON object per line, each representing a single batched request's response. This format allows you to process or analyze responses individually or in bulk.
-
-Example content from `batched-response.jsonl`:
+The batched response file contains one JSON object per line, each representing a single batched request's response. Here is an example content from `batched-response.jsonl`:
 
 ```json
 {"id": "batch_req_686271fdfdd88190afc7c1da9a67f59f", "custom_id": "prod1", "response": {"status_code": 200, "request_id": "31043970a729289021c4de02f4d9d4f4", "body": {"id": "chatcmpl-Bo6lqlrGydPEceKXlWmh0gYIGpA4o", "object": "chat.completion", "created": 1751282126, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Elevate Your Hydration Game: The Ultimate Stainless Steel Water Bottle**\n\nIntroducing the **AdventureHydrate Stainless Steel Water Bottle** — your perfect companion for all outdoor adventures! Whether you're hiking rugged trails, camping under the stars, or simply enjoying a day at the beach, this water bottle is designed", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 33, "completion_tokens": 60, "total_tokens": 93, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}
