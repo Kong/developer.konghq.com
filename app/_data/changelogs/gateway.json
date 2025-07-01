@@ -713,6 +713,11 @@
         "message": "**Vault Auth**: The Vault Auth plugin doesn't clear its cache when incremental sync is turned on. This means that deleted secrets will remain in the cache, and can still be accessed by the plugin.\n",
         "type": "known-issues",
         "scope": "Plugin"
+      },
+      {
+        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -5002,6 +5007,11 @@
         "message": "**prometheus**: Fixed an issue where the metric `data_plane_config_hash` might not work correctly for incremental sync.\n",
         "type": "bugfix",
         "scope": "Plugin"
+      },
+      {
+        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
