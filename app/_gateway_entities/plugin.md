@@ -232,6 +232,12 @@ See the following table for plugins and their compatible protocols:
 
 {% plugin_protocols %}
 
+## Deployment topologies
+
+See the following table for plugins and their deployment topologies:
+
+{% plugin_deployment_topologies %}
+
 ## Schema
 
 {% entity_schema %}

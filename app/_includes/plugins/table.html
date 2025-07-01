@@ -22,7 +22,7 @@
                     {% endif %}
                     {% if type == 'deployment_topologies'  %}
                         {% for column in columns %}
-                            <td>
+                            <td class="align-top">
                                 <ul>
                                     {% for value in row.values[column.key] %}
                                     <li><code class="text-secondary px-1">{{value}}</code></li>
