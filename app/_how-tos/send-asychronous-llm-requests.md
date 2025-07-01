@@ -152,19 +152,18 @@ You will see a JSON response like this:
 ```
 {:.no-copy-code}
 
-{:.success}
-> **Note:** Copy the file ID from the response, you will need it to create a batch. Export it as an environment variable:
->
-> ```bash
->   export FILE_ID=YOUR_FILE_ID
-> ```
+Copy the file ID from the response, you will need it to create a batch. Export it as an environment variable:
+
+```bash
+export FILE_ID=YOUR_FILE_ID
+```
 
 ## Create a batching request
 
 Send a POST request to the `/batches` Route to create a batch using your uploaded file:
 
 {:.info}
-> The completion window must be set to `24h`, as it's the only value currently supported by the OpenAI /batches API
+> The completion window must be set to `24h`, as it's the only value currently supported by the [OpenAI `/batches` API](https://platform.openai.com/docs/api-reference/batch/create).
 >
 > In this example we use the `/v1/chat/completions` route for batching because we are sending multiple structured chat-style prompts in OpenAI's chat completions format to be processed in bulk.
 
@@ -210,12 +209,12 @@ You will receive a response similar to:
 ```
 {:.no-copy-code}
 
-{:.success}
-> Copy the batch ID from this response to check the batch status and export it as an environment variable by running the following command in your terminal:
->
->```bash
-> export BATCH_ID=YOUR_BATCH_ID
->```
+
+Copy the batch ID from this response to check the batch status and export it as an environment variable by running the following command in your terminal:
+
+```bash
+export BATCH_ID=YOUR_BATCH_ID
+```
 
 ## Check batching status
 
@@ -259,14 +258,14 @@ A completed batch response looks like this:
 
 You can notice The `"request_counts"` object shows that all five requests in the batch were successfully completed (`"completed": 5`, `"failed": 0`).
 
-{:.success}
-> Now, you can copy the `output_file_id` to retrieve your batched responses and export it as environment variable:
-> <br/><br/>
-> ```bash
-> export OUTPUT_FILE_ID=YOUR_OUTPUT_FILE_ID
-> ```
->
->  The output file ID will only be available once the batch request has completed. If the status is `"in_progress"`, it won’t be set yet.
+
+Now, you can copy the `output_file_id` to retrieve your batched responses and export it as environment variable:
+
+```bash
+export OUTPUT_FILE_ID=YOUR_OUTPUT_FILE_ID
+```
+
+The output file ID will only be available once the batch request has completed. If the status is `"in_progress"`, it won’t be set yet.
 
 ## Retrieve batched responses
 
