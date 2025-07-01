@@ -156,7 +156,7 @@ Don't assign or unassign admin roles in {{site.base_gateway}} manually, as any c
 
 {:.warning}
 > Important: In v3.6.x, many of the parameters under `admin_gui_auth_conf` changed their behavior. 
-If you had a previous group mapping configuration and upgraded to 3.6 or later, [review the changes](#migrate-oidc-configiuration-from-older-versions) and adjust your configuration accordingly.
+If you had a previous group mapping configuration and upgraded to 3.6 or later, [review the changes](#migrate-oidc-configuration-from-older-versions) and adjust your configuration accordingly.
 
 ### Review important values
 
