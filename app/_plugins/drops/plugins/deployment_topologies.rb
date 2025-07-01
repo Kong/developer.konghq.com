@@ -17,7 +17,24 @@ module Jekyll
         end
 
         def values
-          @values ||= @plugin['plugin'].metadata['topologies']
+          @values ||= begin
+            values = topologies
+            values['notes'] = plugin_metadata['notes']
+            values
+          end
+        end
+
+        private
+
+        def topologies
+          @topologies ||= {
+            'on_prem' => [],
+            'konnect_deployments' => []
+          }.merge(plugin_metadata['topologies'])
+        end
+
+        def plugin_metadata
+          @plugin_metadata ||= @plugin['plugin'].metadata
         end
       end
     end

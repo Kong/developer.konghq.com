@@ -24,9 +24,17 @@
                         {% for column in columns %}
                             <td class="align-top">
                                 <ul>
-                                    {% for value in row.values[column.key] %}
-                                    <li><code class="text-secondary px-1">{{value}}</code></li>
-                                    {% endfor %}
+                                    {% if column.key == 'konnect_deployments' and row.values[column.key] == empty %}
+                                        <li class="list-none">Not supported in Konnect.</li>
+                                    {% else %}
+                                        {% for value in row.values[column.key] %}
+                                        <li>
+                                            <code class="text-secondary px-1">
+                                                {{value}}
+                                            </code>
+                                        </li>
+                                        {% endfor %}
+                                    {% endif %}
                                 </ul>
                             </td>
                         {% endfor %}
