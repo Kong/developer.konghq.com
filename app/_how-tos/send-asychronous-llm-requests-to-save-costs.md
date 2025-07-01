@@ -1,5 +1,5 @@
 ---
-title: Send asynchronous requests to LLMs to save costs
+title: Send asynchronous requests to LLMs
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -7,7 +7,7 @@ related_resources:
   - text: AI Proxy
     url: /plugins/ai-proxy/
 
-description: Use llm/v1/files and llm/v1/batches route_types to send asynchronous batched requests to LLMs.
+description: Reduce costs by using llm/v1/files and llm/v1/batches route_types to send asynchronous batched requests to LLMs.
 
 products:
   - gateway
@@ -35,7 +35,7 @@ tags:
 tldr:
   q: How do I send asynchronous batched requests to large language models (LLMs) to reduce costs?
   a: |
-    Upload a batch file in JSONL format to the `/files` route, then create a batch request via the `/batches` route to process multiple LLM queries asynchronously, and finally retrieve the batched responses from the `/files` route. Batching requests allows you to reduce LLM usage costs by:
+    Upload a batch file in JSONL format to the `/files` Route, then create a batch request via the `/batches` Route to process multiple LLM queries asynchronously, and finally retrieve the batched responses from the `/files` Route. Batching requests allows you to reduce LLM usage costs by:
     - Minimizing per-request overhead
     - Avoiding rate-limit penalties
     - Enabling efficient model usage
@@ -84,7 +84,7 @@ cleanup:
 
 ## Configure AI Proxy plugins
 
-Configure two separate AI Proxy plugins: one for the `llm/v1/files` route and another for the `llm/v1/batches` route. Each route type requires its own dedicated service and route to function correctly. In this setup, all requests to the files route are forwarded to `/files` endpoint, while batch requests go to `/batches` endpoint.
+Configure two separate AI Proxy plugins: one for the `llm/v1/files` Route and another for the `llm/v1/batches` Route. Each Route type requires its own dedicated Gateway Service and Route to function correctly. In this setup, all requests to the files Route are forwarded to `/files` endpoint, while batch requests go to `/batches` endpoint.
 
 
 AI Proxy plugin for the `route_type: llm/v1/files` :
@@ -127,7 +127,7 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-# Upload a .jsonl file for batching
+## Upload a .jsonl file for batching
 
 Use the following command to upload your [batching file](./#batch-jsonl-file) to the `/files` route:
 
@@ -135,7 +135,7 @@ Use the following command to upload your [batching file](./#batch-jsonl-file) to
 curl localhost:8000/files -F purpose="batch" -F file="@batch.jsonl"
 ```
 
-If the upload succeeds, you will see a JSON response like this:
+You will see a JSON response like this:
 
 ```json
 {
@@ -150,6 +150,7 @@ If the upload succeeds, you will see a JSON response like this:
   "status_details": null
 }
 ```
+{:.no-copy-code}
 
 {:.success}
 > **Note:** Copy the file ID from the response, you will need it to create a batch. Export it as an environment variable:
@@ -160,10 +161,10 @@ If the upload succeeds, you will see a JSON response like this:
 
 ## Create a batching request
 
-Send a POST request to the `/batches` route to create a batch using your uploaded file. Make sure to replace `YOUR_FILE_ID` with the ID of your uploaded file from the previous step:
+Send a POST request to the `/batches` Route to create a batch using your uploaded file:
 
 {:.info}
-> The completion window must be set to `24h`, as it's the only value currently supported by the OpenaAI /batches API
+> The completion window must be set to `24h`, as it's the only value currently supported by the OpenAI /batches API
 >
 > In this example we use the `/v1/chat/completions` route for batching because we are sending multiple structured chat-style prompts in OpenAI's chat completions format to be processed in bulk.
 
@@ -207,6 +208,7 @@ You will receive a response similar to:
   "metadata": null
 }
 ```
+{:.no-copy-code}
 
 {:.success}
 > Copy the batch ID from this response to check the batch status and export it as an environment variable by running the following command in your terminal:
@@ -253,6 +255,7 @@ A completed batch response looks like this:
   "metadata": null
 }
 ```
+{:.no-copy-code}
 
 You can notice The `"request_counts"` object shows that all five requests in the batch were successfully completed (`"completed": 5`, `"failed": 0`).
 
@@ -275,7 +278,7 @@ curl http://localhost:8000/files/$OUTPUT_FILE_ID/content > batched-response.json
 
 This command saves the batched responses to the `batched-response.jsonl` file.
 
-The batched response file contains one JSON object per line, each representing a single batched request's response. Here is an example content from `batched-response.jsonl`, it contains the individual completion results for each request we submitted in the batch input file:
+The batched response file contains one JSON object per line, each representing a single batched request's response. Here is an example of content from `batched-response.jsonl` which contains the individual completion results for each request we submitted in the batch input file:
 
 
 ```json
@@ -285,5 +288,5 @@ The batched response file contains one JSON object per line, each representing a
 {"id": "batch_req_686271fe2f14819099e646c0c43c364c", "custom_id": "prod4", "response": {"status_code": 200, "request_id": "1c26a143c432ee43e36a7fb302d56a89", "body": {"id": "chatcmpl-Bo6k8mCzyUcgZNWEAEL6LzBdmuaIy", "object": "chat.completion", "created": 1751282020, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Product Description: Wireless Waterproof Bluetooth Speaker**\n\n**Elevate Your Sound Experience Anywhere!**\n\nIntroducing the Ultimate Wireless Waterproof Bluetooth Speaker, designed for the adventurer in you! Whether you're lounging by the pool, trekking in the mountains, or hosting a beach party, this speaker combines impressive audio quality with robust", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 31, "completion_tokens": 60, "total_tokens": 91, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}
 {"id": "batch_req_686271fe3c108190bdd6a64f7231191a", "custom_id": "prod5", "response": {"status_code": 200, "request_id": "3613bb32e5afef94cab0ad41c19ee2dc", "body": {"id": "chatcmpl-Bo6jwAbdiD35WsrppVDcIR15yJQNr", "object": "chat.completion", "created": 1751282008, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "Discover the ultimate travel companion with our Compact and Durable Travel Backpack. Designed for the modern traveler, this sleek backpack features a padded laptop compartment that securely fits devices up to 15.6 inches, ensuring your tech stays safe on the go. Crafted from high-quality, water-resistant materials, it withstands", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 33, "completion_tokens": 60, "total_tokens": 93, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}
 ```
-
+{:.no-copy-code}
 
