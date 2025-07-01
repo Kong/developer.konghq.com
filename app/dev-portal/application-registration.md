@@ -36,6 +36,8 @@ related_resources:
     url: /how-to/auth0-dcr/
   - text: Configure Dynamic Client Registration with Azure
     url: /how-to/azure-dcr/
+  - text: Enable self-managed OIDC auth with Okta
+    url: /how-to/enable-oidc-auth-for-dev-portal/
 
 ---
 
