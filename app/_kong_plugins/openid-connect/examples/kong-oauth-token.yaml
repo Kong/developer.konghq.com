@@ -5,6 +5,10 @@ description: |
 extended_description: |
   Configure the OpenID Connect plugin to verify the tokens issued by [Kong OAuth 2.0](/plugins/oauth2/) plugin. 
 
+  Here's how Kong OAuth2 authentication works:
+
+  {% include_cached plugins/oidc/diagrams/kong-oauth2.md %}
+
   In this example, the OpenID Connect plugin will only accept a bearer token sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, `cookie`, or any combination of these values.
 
