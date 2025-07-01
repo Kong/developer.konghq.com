@@ -150,6 +150,7 @@ If the upload succeeds, you will see a JSON response like this:
   "status_details": null
 }
 ```
+
 {:.success}
 > **Note:** Copy the file ID from the response. You will need it to create a batch.
 
@@ -251,14 +252,14 @@ A completed batch response looks like this:
 You can notice The request_counts object shows that all five requests in the batch were successfully completed (`"completed": 5`, `"failed": 0`).
 
 {:.success}
-> Now, you can Copy the `output_file_id` to retrieve your batched responses and export it as environment variable:
+> Now, you can copy the `output_file_id` to retrieve your batched responses and export it as environment variable:
 > ```bash
 > export OUTPUT_FILE_ID=YOUR_OUTPUT_FILE_ID
 > ```
 
 ## Retrieve batched responses
 
-Now, we can download the batched responses from the `/files` route: https://platform.openai.com/docs/api-reference/files/retrieve-contents
+Now, we can download the batched responses from the `/files` endpoint by appending `/content` to the file ID URL. For details, see the [OpenAI API documentation](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
 
 ```bash
 curl http://localhost:8000/files/$OUTPUT_FILE_ID/content > batched-response.jsonl
