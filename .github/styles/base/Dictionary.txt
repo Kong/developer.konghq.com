@@ -21,6 +21,7 @@ anonymization
 anonymized
 Anonymizer
 api
+apikey
 APIm
 APIOps
 APIOps
@@ -129,6 +130,7 @@ crds
 created_at
 creationTimestamp
 cronjob
+CrowdStrike
 cryptocurrency
 Curity
 curity
@@ -277,6 +279,7 @@ hashicorp
 Hasura
 hcv
 header_filter
+hello_world
 headmatter
 healthcheck
 healthchecks
@@ -409,6 +412,7 @@ KPI
 KPI
 KPIs
 KPIs
+ksearch
 kubeconfig
 kubectl
 kubelet

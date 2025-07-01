@@ -3,6 +3,8 @@
 require 'uri'
 
 class PruneNextStepsAndRelatedResources # rubocop:disable Style/Documentation
+  include Jekyll::SiteAccessor
+
   def initialize(page_or_doc)
     @page_or_doc = page_or_doc
   end
@@ -29,12 +31,7 @@ class PruneNextStepsAndRelatedResources # rubocop:disable Style/Documentation
   def relative_page_exist?(url)
     url = url.gsub(/\{\{\s*page\.release\s*\}\}/, release)
 
-    # TODO: consider redirects in the future
-    site.data['pages_urls'].include?(URI(url).path)
-  end
-
-  def site
-    @site ||= @page_or_doc.site
+    site.data['pages_urls'].include?(URI(url).path) || redirects.include?(URI(url).path)
   end
 
   def release
@@ -51,6 +48,10 @@ class PruneNextStepsAndRelatedResources # rubocop:disable Style/Documentation
     return if base_path.end_with?('/')
 
     raise ArgumentError, "Relative URL must end with a trailing slash: #{path} on page: #{@page_or_doc.url}"
+  end
+
+  def redirects
+    @redirects ||= site_redirects
   end
 end
 

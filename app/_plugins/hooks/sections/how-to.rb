@@ -20,7 +20,7 @@ module SectionWrapper
     end
 
     def build_wrapper(section_title = '', topology = '')
-      topology = "data-deployment-topology=\"#{topology}\"" if topology
+      topology = "data-deployment-topology=\"#{topology}\"" if !topology.nil? && !topology.empty?
       wrapper = if section_title != ''
                   <<-HTML
           <div #{topology} class="flex flex-col gap-4 border-b border-primary/5 pb-8 accordion-item">

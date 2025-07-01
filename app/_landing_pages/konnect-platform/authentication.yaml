@@ -1,5 +1,5 @@
 metadata:
-  title: "{{site.konnect_short_name}} platform authentication"
+  title: "{{site.konnect_short_name}} platform authentication and authorization"
   content_type: landing_page
   description: |
     Secure your {{site.konnect_saas}} organization by setting up teams and roles,
@@ -15,24 +15,28 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "{{site.konnect_short_name}} authentication"
+      text: "{{site.konnect_short_name}} platform authentication"
       sub_text: |
-        {{site.konnect_saas}} offers multiple options for authentication. You can configure single sign-on with any SAML and OIDC provider or use built-in authentication.
+         Configure single sign-on with any SAML and OIDC provider, use built-in authentication, or manage access tokens for API and CLI access
   - columns:
       - blocks:
         - type: structured_text
           config:
             header:
-              text: "Built-in authentication through {{site.konnect_short_name}}"
+              text: "Built-in UI authentication through {{site.konnect_short_name}}"
             blocks:
               - type: text
                 text: |
-                  The default authentication option in {{site.konnect_saas}} is basic authentication where users can log in with a username and password.
+                  The default authentication option in {{site.konnect_short_name}} is basic authentication, where users can log in with a username and password. Users can also set up passkeys when they log into {{site.konnect_short_name}} using their username and password.
                   
-                  Users can also register for and sign in to Konnect accounts using their social identity from the following providers:
+                  Users can also register for and sign in to {{site.konnect_short_name}} accounts using their social identity from the following providers:
                   * Google
                   * GitHub
                   * Microsoft
+
+                  Multi-Factor Authentication (MFA) is required for all users using built-in authentication or social login. 
+                  Users will be prompted to set up MFA when they log in to {{site.konnect_short_name}} for the first time. 
+                  If you need to reset your MFA, reach out to [Kong Support](https://support.konghq.com).
 
   - header:
       type: h2
@@ -94,14 +98,25 @@ rows:
             icon: /assets/icons/plugins/openid-connect.png
             cta:
               url: "/konnect-platform/sso/#enable-oidc"
+
+  - header:
+      type: h2
+      text: "{{site.konnect_short_name}} API authentication"
+    columns:
       - blocks:
-        - type: card
-          config:
-            title: Team mappings
-            description: |
-              Map teams from your IdP to {{site.konnect_short_name}}.
-              
-            icon: /assets/icons/team.svg
-            cta:
-              url: "/konnect-platform/sso/#team-mapping-configuration"
-        
+          - type: card
+            config:
+              title: Personal access tokens
+              description: |
+                Access the Konnect API and CLIs as your personal user account
+              cta:
+                url: "/konnect-api/#konnect-api-authentication"
+      - blocks:
+          - type: card
+            config:
+              title: System accounts and access tokens
+              description: |
+                Set up service accounts in {{site.konnect_short_name}} for automation and integrations
+              cta:
+                url: "/konnect-api/#system-accounts-and-access-tokens"
+      

@@ -9,7 +9,6 @@ products:
 
 works_on:
     - konnect
-beta: true
 automated_tests: false
 entities: []
 

@@ -14,7 +14,7 @@ products:
 
 related_resources:
   - text: Security at Insomnia
-    url: /insomnia/security/
+    url: /insomnia/manage-insomnia/#security
   - text: SSO
     url: /insomnia/authentication-authorization/#set-up-sso
 
@@ -28,8 +28,7 @@ faqs:
   - q: I'm using Git sync, does Insomnia uphold the branch protections we have in our repository?
     a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
-    a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository.
-  
+    a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 
@@ -152,6 +151,7 @@ Key features:
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.
+* {% new_in 10.2 %} **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
 
 ### Git sync data flow
 

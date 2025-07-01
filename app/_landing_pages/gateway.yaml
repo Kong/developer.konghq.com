@@ -109,6 +109,44 @@ rows:
               url: /gateway/deployment-topologies/
               align: end
   - header:
+      type: h2
+      text: "Core concepts in {{site.base_gateway}}"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{ site.base_gateway }} entities"
+              description: |
+                Entities are the building blocks make up the Kong API Gateway ecosystem.
+                This includes Services, Routes, Consumers, and more.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about {{ site.base_gateway }} entities
+                url: /gateway/entities/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{ site.base_gateway }} configuration"
+              description: |
+                The {{site.base_gateway}} configuration file `kong.conf` can be used to configure
+                individual properties of your {{site.base_gateway}} instance.
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: See all the configuration options
+                url: /gateway/configuration/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Kong Plugin Hub
+              description: Extend your Gateway with powerful plugins
+              icon: /assets/icons/plug.svg
+              cta:
+                text: View all available plugins
+                url: /plugins/
+                align: end
+  - header:
     columns:
       - header:
           type: h2
@@ -227,41 +265,6 @@ rows:
   - header:
       type: h2
       text: Key references
-  - columns:
-      - blocks:
-          - type: card
-            config:
-              title: Kong Plugin Hub
-              description: Extend your Gateway with powerful plugins
-              icon: /assets/icons/plug.svg
-              cta:
-                text: View all available plugins
-                url: /plugins/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: "{{ site.base_gateway }} configuration"
-              description: |
-                The {{site.base_gateway}} configuration file `kong.conf` can be used to configure
-                individual properties of your {{site.base_gateway}} instance.
-              icon: /assets/icons/service-document.svg
-              cta:
-                text: See all the configuration options
-                url: /gateway/configuration/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: "{{ site.base_gateway }} entities"
-              description: |
-                Entities are the building blocks make up the Kong API Gateway ecosystem.
-                This includes Services, Routes, Consumers, and more.
-              icon: /assets/icons/linked-services.svg
-              cta:
-                text: Learn about {{ site.base_gateway }} entities
-                url: /gateway/entities/
-                align: end
   - column_count: 3
     columns:
       - blocks:

@@ -3,6 +3,8 @@ sections:
   - title: Overview
     items:
       - path: /insomnia/
+      - path: /insomnia/manage-insomnia/
+      - path: /insomnia/enterprise/
       - path: /insomnia/collections/
       - path: /insomnia/documents/
       - path: /insomnia/api-specs/
@@ -55,10 +57,16 @@ sections:
           - insomnia
         tags:
           - authentication
+  - title: Enterprise
+    items:
+      - path: /insomnia/enterprise-account-management/
+      - path: /insomnia/enterprise-user-management/
+      - path: /insomnia/sso/
+      - path: /insomnia/scim/
 
   - title: Data security
     items:
-      - path: /insomnia/security/
+      - path: /insomnia/end-to-end-encryption/
       - path: /insomnia/data-security/
       - path: /insomnia/collected-data/
       - path: /insomnia/incident-response/
@@ -66,10 +74,12 @@ sections:
   - title: Reference
     items:
       - path: /inso-cli/
-      - path: /insomnia/account-management/
+      - path: /insomnia/accounts/
       - path: /insomnia/allowlist/
       - path: /insomnia/environment-variables/
+      - path: /insomnia/manage-insomnia/
       - path: /insomnia/sbom/
+      - path: /insomnia/organizations/
       - path: /how-to/synchronize-with-git/
       - path: /insomnia/verify-binary-provenance/
       - path: /insomnia/version-control/

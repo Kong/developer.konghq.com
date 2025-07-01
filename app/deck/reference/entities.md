@@ -51,8 +51,9 @@ features:
     managed: true
   - title: Vaults
     managed: true
-  - title: Keys and Key Sets
-    managed: false
+  - title: |
+      Keys and Key Sets {% new_in 1.48 %}
+    managed: true
   - title: Licenses
     managed: false
   - title: Workspaces <sup>1</sup>

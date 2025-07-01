@@ -350,7 +350,7 @@ paths:
   '/api/v2/applications/{applicationId}/registrations/{registrationId}/granted-scopes':
     get:
       operationId: get-application-registration-granted-scopes
-      summary: Get the granted scopes of an application registration
+      summary: Get App Registration Granted Scopes
       description: |
         Retrieves the granted scopes of a specified product registration directly from the IDP for an application.
         Will return 409 if this feature is not supported by the application.
@@ -1661,7 +1661,7 @@ components:
         - page
       title: PaginatedMeta
     UUID:
-      description: Contains a unique identifier used by the API for this resource.
+      description: Contains a unique identifier used for this resource.
       type: string
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
@@ -1752,11 +1752,7 @@ components:
         - $ref: '#/components/schemas/PortalAuthStrategyKeyAuth'
         - $ref: '#/components/schemas/PortalAuthStrategyClientCredentials'
     Scopes:
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        The granted scopes for the application. Will only be included if supported by the application's auth strategy.
+      description: The granted scopes for the application. Will only be included if supported by the application's auth strategy.
       type: array
       items:
         type: string
