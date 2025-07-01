@@ -5,6 +5,10 @@ description: |
 extended_description: |
   This example configures the OpenID Connect plugin with an authorization code flow.
 
+  Here's how the auth code flow works:
+
+  {% include_cached plugins/oidc/diagrams/auth-code.md %}
+
   For a full example that shows you how to set up the authorization code flow with Keycloak, 
   see [Configure OpenID Connect with the auth code flow](/how-to/configure-oidc-with-auth-code-flow/).
 
