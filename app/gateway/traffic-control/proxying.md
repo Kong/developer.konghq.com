@@ -193,7 +193,7 @@ rows:
   - header: "`Via: kong/x.x.x`"
     description: "`x.x.x` is the {{site.base_gateway}} version in use."
   - header: "`X-Kong-Proxy-Latency: <latency>`"
-    description: "`latency` is the time, in milliseconds, between {{site.base_gateway}} receiving the request from the client and sending the request to your upstream service. {% if_version gte:3.11.x %} In {{site.base_gateway}} 3.11 or later, This value represents the pure Kong internal processing time, excluding external factors such as upstream latency and third-party I/O latencies (e.g., Redis, DNS, HTTP calls, socket calls). {% endif_version %}"
+    description: "`latency` is the time, in milliseconds, between {{site.base_gateway}} receiving the request from the client and sending the request to your upstream service."
   - header: "`X-Kong-Upstream-Latency: <latency>`"
     description: "`latency` is the time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response."
 {% endtable %}
