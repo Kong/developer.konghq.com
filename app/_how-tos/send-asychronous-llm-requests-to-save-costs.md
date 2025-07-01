@@ -34,7 +34,12 @@ tags:
 
 tldr:
   q: How do I send asynchronous batched requests to large language models (LLMs) to reduce costs?
-  a: Upload a batch file in JSONL format to the `/files` route, then create a batch request via the `/batches` route to process multiple LLM queries asynchronously, and finally retrieve the batched responses from the `/files` route.
+  a: |
+    Upload a batch file in JSONL format to the `/files` route, then create a batch request via the `/batches` route to process multiple LLM queries asynchronously, and finally retrieve the batched responses from the `/files` route. Batching requests allows you to reduce LLM usage costs by:
+    - Minimizing per-request overhead
+    - Avoiding rate-limit penalties
+    - Enabling efficient model usage
+    - Reducing wasted retries
 
 tools:
   - deck
