@@ -1,8 +1,8 @@
 ---
-title: Synchronize Insomnia content with Git
+title: Synchronize an Insomnia project with Git
 content_type: how_to
 
-description: Set up Git Sync for your Insomnia workspace.
+description: Create a new Insomnia project and enable Git Sync.
 
 products:
 - insomnia
@@ -15,44 +15,37 @@ tags:
 
 tier: pro
 
+min_version:
+  insomnia: '11.0'
+
 prereqs:
     inline:
     - title: Git repository
       content: |
-        Create an empty remote Git repository.
-      icon_url: /assets/icons/git.svg
-    - title: Insomnia workspace
-      content: |
-        Create a workspace in Insomnia. A workspace can be a [design document](/how-to/create-a-design-document/), a [collection](/insomnia/collections/), a [mock server](/insomnia/mock-servers/), or an [environment](/insomnia/environment-variables/).
+        To synchronize an Insomnia project with Git, you need a Git repository. You can either use an existing repository with Insomnia content, or an empty repository.
       icon_url: /assets/icons/git.svg
 
 tldr:
     q: How can I push content from Insomnia to a Git repository?
-    a: Create an empty remote Git repository and an Insomnia workspace. In the workspace, click the button at the bottom of the left pane and connect the repository, then commit and push your content.
+    a: Create a remote Git repository and an Insomnia project with Git Sync. Select the Git provider and connect to the repository. In the project, click the button at the bottom of the left pane to see the Git Sync menu and push your changes.
+
+related_resources:
+  - text: Storage options in Insomnia
+    url: /insomnia/storage/
+  - text: Version control in Insomnia
+    url: /insomnia/version-control/
 ---
 
-## Select the workspace to synchronize
+## Create a project
 
-{% navtabs "workspace-sync" %}
+In this example, we'll create a new project with [Git Sync](/insomnia/storage/#git-sync), but you can also update an existing [cloud](/insomnia/storage/#cloud-sync) or [local](/insomnia/storage/#local-vault) project to use Git Sync from the project settings.
 
-{% navtab "Cloud Sync project" %}
-1. Click **master** at the bottom of the left pane. 
-2. Click **Switch to Git Repository**.
-{% endnavtab %}
-
-{% navtab "Local Vault project" %}
-1. Click **Not synced** at the bottom of the left pane. 
-2. Click **Connect Repository**.
-{% endnavtab %}
-
-{% endnavtabs %}
-
-## Connect to the repository
-
-Select whether you want to clone the repository from GitHub, GitLab, or Git.
+1. In your Insomnia organization, click the **+** button under **PROJECTS** in the left pane.
+1. Name your project, select **Git Sync**, and click **Create**.
+1. Select whether you want to clone the repository from GitHub, GitLab, or Git:
 
 {% capture sync %}
-1. Click **Sync**.
+1. Click **Clone**.
 {% endcapture %}
 
 {% navtabs "repo" %}
@@ -74,6 +67,11 @@ Select whether you want to clone the repository from GitHub, GitLab, or Git.
 
 {% endnavtabs %}
 
+If your Git repository already contains Insomnia content, you will be prompted to import the content to your project.
+
+{:.info}
+> If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in version 11.0.
+
 ## Create a new branch
 
 Insomnia synchronizes with the repository's default branch, but it's a good practice to make changes on a different branch.
@@ -84,11 +82,10 @@ Insomnia synchronizes with the repository's default branch, but it's a good prac
 
 ## Commit and push the content to your repository
 
-1. Click the name of the branch.
+Once you've created content or made changes to existing content in your project, you can push the changes to your repository:
+
+1. Click the name of the branch at the bottom of the left pane.
 1. Click **Commit**.
 1. Enter a commit message.
-1. Select the content that you want to commit to the repository.
-1. Click **Commit**, then click **Close** once the changes are committed.
-1. Click the name of the branch and click **Push**.
-
-You can see in your repository that Insomnia added a `.insomnia` directory with your content in it.
+1. Stage changes by clicking the **+** button next to the changes that you want to commit to the repository.
+1. Click **Commit** or **Commit and push**.

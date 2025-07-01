@@ -1639,8 +1639,6 @@ app/insomnia/storage.md:
   - /insomnia/git-sync.md
   - /insomnia/insomnia-sync.md
   - /insomnia/scratchpad.md
-app/_how-tos/import-content-from-a-git-repository.md:
-  - /insomnia/git-sync.md
 app/_how-tos/synchronize-with-git.md:
   - /insomnia/git-sync.md
 app/insomnia/version-control.md:

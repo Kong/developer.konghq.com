@@ -2,7 +2,6 @@
 title: GitLab
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -27,6 +26,7 @@ discovery_support: true
 bindable_entities: "Projects"
 ---
 The GitLab integration allows you to associate your Service Catalog service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
+{% include /service-catalog/multi-resource.md %}
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
 

@@ -410,9 +410,9 @@ paths:
   '/cloud-gateways/networks/{networkId}/configuration-references':
     get:
       operationId: list-network-configurations
-      summary: |
+      summary: List Network Configuration References
+      description: |
         Returns a paginated collection of configurations that reference a network.
-      description: List Network Configuration References
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/PageSize'

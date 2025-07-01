@@ -350,7 +350,7 @@ paths:
   '/api/v2/applications/{applicationId}/registrations/{registrationId}/granted-scopes':
     get:
       operationId: get-application-registration-granted-scopes
-      summary: Get the granted scopes of an application registration
+      summary: Get App Registration Granted Scopes
       description: |
         Retrieves the granted scopes of a specified product registration directly from the IDP for an application.
         Will return 409 if this feature is not supported by the application.
