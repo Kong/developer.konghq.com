@@ -6,7 +6,7 @@ metadata:
     - dev-portal
   tags:
     - beta
-  permalink: /dev-portal/dev-portal-customizations
+  permalink: /dev-portal/dev-portal-customizations/
 
 rows:
 
@@ -22,7 +22,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    You can use these capabilities to configure, customize, and manage your Dev Portal site:
+                    The Dev Portal provides features that let you:
                     - Configure layout, navigation, branding, and domain settings.
                     - Build content-rich pages with Markdown Components, nest information, and reuse snippets.
                     - Manage page visibility, publishing workflow, and SEO metadata.
@@ -69,7 +69,7 @@ rows:
               config:
                 title: Dev Portal settings
                 description: |
-                  Make global changes such as naming your portal, setting the display name used for SEO and page titles. You can also configure custom domains and review audit logs specific to your Dev Portal.
+                  Make global changes such as naming your portal, setting the display name used for SEO and page titles. Configure custom domains and review audit logs specific to your Dev Portal.
                 icon: /assets/icons/dev-portal.svg
                 cta:
                   url: /dev-portal/portal-settings/
