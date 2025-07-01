@@ -152,7 +152,11 @@ If the upload succeeds, you will see a JSON response like this:
 ```
 
 {:.success}
-> **Note:** Copy the file ID from the response. You will need it to create a batch.
+> **Note:** Copy the file ID from the response, you will need it to create a batch. Export it as an environment variable:
+>
+> ```bash
+>   export FILE_ID=YOUR_FILE_ID
+> ```
 
 ## Create a batching request
 
@@ -166,11 +170,11 @@ Send a POST request to the `/batches` route to create a batch using your uploade
 ```bash
 curl http://localhost:8000/batches \
   -H "Content-Type: application/json" \
-  -d '{
-    "input_file_id": "YOUR_FILE_ID",
-    "endpoint": "/v1/chat/completions",
-    "completion_window": "24h"
-  }'
+  -d "{
+    \"input_file_id\": \"$FILE_ID\",
+    \"endpoint\": \"/v1/chat/completions\",
+    \"completion_window\": \"24h\"
+  }"
 ```
 
 You will receive a response similar to:
@@ -206,13 +210,14 @@ You will receive a response similar to:
 
 {:.success}
 > Copy the batch ID from this response to check the batch status and export it as an environment variable by running the following command in your terminal:
+>
 >```bash
 > export BATCH_ID=YOUR_BATCH_ID
 >```
 
 ## Check batching status
 
-Wait for a moment for the batching request to be completed, then check the status of your batch by sending a request to:
+Wait for a moment for the batching request to be completed, then check the status of your batch by sending the following request:
 
 {% validation request-check %}
 url: /batches/$BATCH_ID
@@ -249,13 +254,16 @@ A completed batch response looks like this:
 }
 ```
 
-You can notice The request_counts object shows that all five requests in the batch were successfully completed (`"completed": 5`, `"failed": 0`).
+You can notice The `"request_counts"` object shows that all five requests in the batch were successfully completed (`"completed": 5`, `"failed": 0`).
 
 {:.success}
 > Now, you can copy the `output_file_id` to retrieve your batched responses and export it as environment variable:
+> <br/><br/>
 > ```bash
 > export OUTPUT_FILE_ID=YOUR_OUTPUT_FILE_ID
 > ```
+>
+>  The output file ID will only be available once the batch request has completed. If the status is `"in_progress"`, it won’t be set yet.
 
 ## Retrieve batched responses
 
@@ -267,7 +275,7 @@ curl http://localhost:8000/files/$OUTPUT_FILE_ID/content > batched-response.json
 
 This command saves the batched responses to the `batched-response.jsonl` file.
 
-The batched response file contains one JSON object per line, each representing a single batched request's response. Here is an example content from `batched-response.jsonl`:
+The batched response file contains one JSON object per line, each representing a single batched request's response. Here is an example content from `batched-response.jsonl`, it contains the individual completion results for each request we submitted in the batch input file:
 
 
 ```json
