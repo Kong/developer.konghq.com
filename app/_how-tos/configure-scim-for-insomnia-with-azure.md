@@ -48,7 +48,7 @@ prereqs:
 
 ## Configure SCIM in Azure
 
-1. In your [Azure app](#azure-sso), go to **Manage** > **Provisioning** and set **Provisioning Mode** to **Automatic**.
+1. In the [Azure app you created](#azure-sso) in the prerequisites, go to **Manage** > **Provisioning** and set **Provisioning Mode** to **Automatic**.
 1. Configure the Insomnia integration under **Admin Credentials**:
 {% capture provisioning %}
 {% table %}
