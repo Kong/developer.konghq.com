@@ -107,14 +107,14 @@ rows:
               Customize Dev Portal pages, domains, and appearance.
             icon: /assets/icons/edit.svg
             ctas:
+              - text: About Dev Portal customization
+                url: /dev-portal/dev-portal-customizations/
               - text: Pages and content
                 url: "/dev-portal/pages-and-content/"
               - text: Custom domains
                 url: "/dev-portal/custom-domains/"
               - text: Customization settings
-                url: "/dev-portal/publishing/"
-              - text: Email customization
-                url: "/dev-portal/portal-customization/#developer-email-customization"
+                url: "/dev-portal/portal-customization/"
               - text: Dev Portal settings
                 url: "/dev-portal/portal-settings/"
       - blocks:
