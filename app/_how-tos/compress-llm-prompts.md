@@ -225,7 +225,7 @@ Now, you can configure the AI Prompt Compressor plugin to apply compression to t
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-rag-injector
+    - name: ai-prompt-compressor
       config:
         compression_ranges:
           - max_tokens: 100
