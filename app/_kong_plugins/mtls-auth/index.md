@@ -109,9 +109,13 @@ During the mTLS handshake:
 * If the client includes a known SNI in the `ClientHello`, the corresponding CA DN list is sent in the `CertificateRequest`.
 * If the client does not send an SNI or sends an unknown one, {{site.base_gateway}} only sends the CA DN list associated with `*`—and only if a client certificate is being requested.
 
+## Manual mappings between Certificate and Consumer objects
 
-### Troubleshooting
+{% include_cached plugins/manual-consumer-mapping.md name=page.name slug=page.slug %}
 
-When authentication fails, the client does not receive any details about the failure. This is intentional for security reasons—to prevent information leaks that could aid malicious users.
+## Troubleshooting authentication failure
 
-Failure details are logged internally in {{site.base_gateway}} error logs under the `[mtls-auth]` filter.
+When authentication fails, the client doesn't have access to any details that explain the failure. 
+The security reason for this omission is to prevent malicious reconnaissance. 
+
+Instead, the details are recorded inside [{{site.base_gateway}}'s error logs](/gateway/logs/) under the `[mtls-auth]` filter.
