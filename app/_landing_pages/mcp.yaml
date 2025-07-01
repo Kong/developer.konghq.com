@@ -26,7 +26,7 @@ rows:
             config: |
               AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
 
-              Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and service discovery.
+              Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
 
       - blocks:
           - type: image
@@ -56,7 +56,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    For production environments, you can expose any remote MCP server to AI Gateway. This setup gives AI clients access to internal systems while enforcing strict control at the edge. Use Kong AI Gateway plugins to:
+                    For production environments, you can expose any remote MCP server to AI Gateway. This setup gives AI clients access to internal systems while enforcing strict control at the edge.
+                    
+                    Use Kong AI Gateway plugins to:
 
                     - **Secure access** with plugins like OpenID Connect or Key Auth.
                     - **Govern usage** through rate limiting and traffic shaping.
@@ -77,7 +79,7 @@ rows:
                     Use natural language to:
 
                     - Query API traffic across gateways with filters and time windows.
-                    - List and inspect services, routes, consumers, and plugins.
+                    - List and inspect Services, Routes, Consumers, and plugins.
                     - Explore Control Plane hierarchies and group relationships.
                     - Build and test workflows without a production setup.
 
