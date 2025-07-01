@@ -7,7 +7,7 @@ related_resources:
   - text: AI Proxy
     url: /plugins/ai-proxy/
 
-description: Use llm/v1/files and llm/v1/batches route_types to send asychronous batched requests to LLMs.
+description: Use llm/v1/files and llm/v1/batches route_types to send asynchronous batched requests to LLMs.
 
 products:
   - gateway
@@ -251,7 +251,7 @@ A completed batch response looks like this:
 You can notice The request_counts object shows that all five requests in the batch were successfully completed (`"completed": 5`, `"failed": 0`).
 
 {:.success}
-> Now, you can Copy the `output_file_id` to retrieve your batched responses and export it as anvironment variable:
+> Now, you can Copy the `output_file_id` to retrieve your batched responses and export it as environment variable:
 > ```bash
 > export OUTPUT_FILE_ID=YOUR_OUTPUT_FILE_ID
 > ```
@@ -267,6 +267,7 @@ curl http://localhost:8000/files/$OUTPUT_FILE_ID/content > batched-response.json
 This command saves the batched responses to the `batched-response.jsonl` file.
 
 The batched response file contains one JSON object per line, each representing a single batched request's response. Here is an example content from `batched-response.jsonl`:
+
 
 ```json
 {"id": "batch_req_686271fdfdd88190afc7c1da9a67f59f", "custom_id": "prod1", "response": {"status_code": 200, "request_id": "31043970a729289021c4de02f4d9d4f4", "body": {"id": "chatcmpl-Bo6lqlrGydPEceKXlWmh0gYIGpA4o", "object": "chat.completion", "created": 1751282126, "model": "gpt-4o-mini-2024-07-18", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Elevate Your Hydration Game: The Ultimate Stainless Steel Water Bottle**\n\nIntroducing the **AdventureHydrate Stainless Steel Water Bottle** — your perfect companion for all outdoor adventures! Whether you're hiking rugged trails, camping under the stars, or simply enjoying a day at the beach, this water bottle is designed", "refusal": null, "annotations": []}, "logprobs": null, "finish_reason": "length"}], "usage": {"prompt_tokens": 33, "completion_tokens": 60, "total_tokens": 93, "prompt_tokens_details": {"cached_tokens": 0, "audio_tokens": 0}, "completion_tokens_details": {"reasoning_tokens": 0, "audio_tokens": 0, "accepted_prediction_tokens": 0, "rejected_prediction_tokens": 0}}, "service_tier": "default", "system_fingerprint": "fp_34a54ae93c"}}, "error": null}

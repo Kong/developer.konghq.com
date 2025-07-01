@@ -643,6 +643,7 @@ reportingInstance
 requery
 Requeue
 requeue
+request_counts
 RequestResponse
 resourceVersion
 Resty
@@ -659,6 +660,7 @@ rollout
 rollouts
 routable
 route_type
+route_types
 ruleset
 rulesets
 runloop
