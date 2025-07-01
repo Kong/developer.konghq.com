@@ -94,8 +94,9 @@ The most common use case is the [authorization code flow](#authorization-code-fl
 ### Authentication flows and grants
 
 The OIDC plugin supports several types of credentials and grants.
-When this plugin is configured with multiple grants or flows, there is a hardcoded search
-order for the credentials:
+
+You can configure multiple auth grants or flows on the plugin.
+The plugin searches for credentials in the following order of precedence:
 
 1. [Session authentication](#session-authentication-workflow)
 2. [JWT access token authentication](#jwt-access-token-authentication-flow)
@@ -108,6 +109,7 @@ order for the credentials:
 9. [Authorization code flow](#authorization-code-flow) (with client secret or PKCE)
 
 Once it finds a set of credentials, the plugin stops searching, and won't look for any further credential types.
+This precedence order is hardcoded and can't be changed.
 
 Multiple grants may share the same credentials. For example, both the password and client credentials grants can use 
 basic authentication through the `Authorization` header.
