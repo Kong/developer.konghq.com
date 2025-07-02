@@ -1,11 +1,13 @@
 ---
-title: Use AI Semantic prompt guard to govern your LLM traffic
+title: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
 content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
+  - text: AI Semantic Prompt Guard
+    url: /plugins/ai-semantic-prompt-guard/
 
 description: Use the AI Semantic Prompt Guard plugin to enforce topic-level guardrails for LLM traffic, filtering prompts based on meaning.
 
