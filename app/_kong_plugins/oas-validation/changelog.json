@@ -38,6 +38,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.8.1.2": [
+    {
+      "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue where parameter serialization does not behave the same as in the OpenAPI specification",
