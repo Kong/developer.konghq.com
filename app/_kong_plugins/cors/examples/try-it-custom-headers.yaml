@@ -1,0 +1,39 @@
+title: Configure Dev Portal Try it with custom requests
+description: |
+  Configures the CORS plugin to allow developers to use the Try it feature of the Dev Portal spec render when using simple headers.
+extended_description: |
+  Configures the CORS plugin to allow developers to use the Try it feature of the Dev Portal spec render when using simple headers.
+  
+  You must use this configuration if the Routes associated with your API specs use any custom headers.
+
+requirements: 
+- "If the Routes associated with your API specs require custom headers to match, configure one of the following:
+   * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured 
+   * Add a global Route at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified)"
+
+weight: 400
+
+variables:
+  portal_url:
+    description: |
+     The full URL of your Dev Portal, including the protocol. For example: `https://domain.edge.us.portal.konghq.com`
+    value: $PORTAL_URL
+  custom_header:
+    description: |
+     The name of your custom header.
+    value: $CUSTOM_HEADER
+
+config:
+  origins:
+    - ${portal_url}
+  methods:
+    - OPTIONS
+  headers:
+    - ${custom_header}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
