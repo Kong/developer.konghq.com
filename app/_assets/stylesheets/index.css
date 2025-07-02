@@ -689,7 +689,7 @@
   }
 
   .top-nav {
-    @apply absolute lg:static h-dvh lg:h-full w-screen lg:w-full left-0 top-0 bg-secondary lg:bg-transparent flex flex-col lg:flex-row items-center lg:gap-2 transform translate-x-[-120%] lg:translate-x-0;
+    @apply absolute lg:static h-dvh lg:h-full w-screen lg:w-fit left-0 top-0 bg-secondary lg:bg-transparent flex flex-col lg:flex-row items-center lg:gap-5 transform translate-x-[-120%] lg:translate-x-0;
   }
 
   .top-nav__controls {
@@ -733,7 +733,7 @@
   }
 
   .navbar-items {
-    @apply items-center ml-0 list-none flex flex-col flex-grow lg:flex-row gap-7 md:gap-3 xl:gap-8 w-full p-6 lg:p-0;
+    @apply items-center ml-0 list-none flex flex-col flex-grow lg:flex-row gap-7 md:gap-3 xl:gap-5 w-full p-6 lg:p-0;
   }
 
   .navbar-item {
@@ -789,6 +789,10 @@
   .feedback__button--active[value="false"] {
     @apply bg-semantic-red-secondary;
   }
+}
+
+#ask-ai-button {
+  @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;
 }
 
 .ais-InstantSearch {
