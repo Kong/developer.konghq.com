@@ -46,7 +46,7 @@ related_resources:
   - text: AI Prompt Decorator
     url: /plugins/ai-prompt-decorator/
   - text: Control prompt size with the AI Compressor plugin
-    url: /how-to/compress-llm-prompts/unreleased/
+    url: /how-to/compress-llm-prompts/
 
 search_aliases:
   - ai
