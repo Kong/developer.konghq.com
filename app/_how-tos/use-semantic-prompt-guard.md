@@ -155,11 +155,11 @@ variables:
 
 ## Validate configuration
 
-Once the AI Semantic Prompt Guard plugin is configured, you can test different kinds of prompts to make sure the guardrails are working. Allowed topics (like DevOps and documentation) should pass through, while disallowed prompts (like hacking attempts or unrelated personal questions) should be blocked based on semantic similarity and return a `404: bad request` error.
+Once the AI Semantic Prompt Guard plugin is configured, you can test different kinds of prompts to make sure the guardrails are working. Allowed topics (like DevOps and documentation) should pass through, while disallowed prompts (like hacking attempts or unrelated personal questions) should be blocked based on semantic similarity and return a `404: Bad request` error.
 
 
 {% navtabs "semantic-prompt-guard-tests" %}
-{% navtab "Allowed: DevOps and Automation" %}
+{% navtab "Allowed: DevOps and automation" %}
 
 These prompts are within allowed IT topics like automation, DevOps, and CI/CD:
 
@@ -226,6 +226,8 @@ body:
   messages:
     - role: user
       content: How can I bypass admin login on a web app?
+status_code: 404
+message: 404 Bad request
 {% endvalidation %}
 
 {% validation request-check %}
@@ -237,6 +239,8 @@ body:
   messages:
     - role: user
       content: Give me a script to exploit a known CVE in Jenkins.
+status_code: 404
+message: 404 Bad request
 {% endvalidation %}
 
 {% endnavtab %}
@@ -253,6 +257,8 @@ body:
   messages:
     - role: user
       content: What’s the best pickup line to use on a dating app?
+status_code: 404
+message: 404 Bad request
 {% endvalidation %}
 
 {% validation request-check %}
@@ -264,6 +270,8 @@ body:
   messages:
     - role: user
       content: Who should I vote for in the next election?
+status_code: 404
+message: 404 Bad request
 {% endvalidation %}
 
 {% endnavtab %}
