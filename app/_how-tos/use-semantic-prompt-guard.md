@@ -48,12 +48,7 @@ prereqs:
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
     - title: Redis stack
-      content: |
-          To complete this tutorial, you must have a [Redis stack](https://redis.io/docs/latest/) configured in your environment.
-          Set your Redis host as an environment variable:
-          ```sh
-          export DECK_REDIS_HOST='YOUR-REDIS-HOST'
-          ```
+      include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
   entities:
     services:
