@@ -14456,5 +14456,71 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.8.1.2": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped luarocks from 3.11.1 to 3.12.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a new `kong.request.get_raw_forwarded_path()` function for returning non-normalized `forwarded_path`.\n",
+        "type": "feature",
+        "scope": "PDK"
+      },
+      {
+        "message": "Added support for reporting whether `new_dns_client` was enabled in anonymous reports.\n",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a new configuration, `route_match_calculation`, which included bug fixes for the `traditional_compatible` and the `expressions` router flavors.\nThe default value `original` retained the current `3.x` router matching behavior without changes. The value `strict` enforced the router matching behavior with corrected calculation as follows:\n1. The weight (priority point) of a route was incorrectly\n   downgraded.\n2. A route of HTTPS-only protocol with SNIs incorrectly captured\n   requests over HTTP routes.\n3. A route of TLS-only protocol with SNIs incorrectly captured\n   requests over TCP or UDP routes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an `500` error caused by JSON `null` from the request body when parsing bearer tokens or client IDs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenID-Connect**: Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where rate-limiting library could cause deadlock with Postgres.",
+        "type": "bugfix",
+        "scope": "Performance"
+      },
+      {
+        "message": "Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where users encountered duplicate key violation errors on `rbac_role_entities_pkey` while using the `deck sync` command.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**mocking**: Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Rate Limiting Advanced** Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
