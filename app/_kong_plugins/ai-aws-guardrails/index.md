@@ -62,12 +62,12 @@ Before using the AI AWS Guardrails plugin, you must define your guardrail polici
 
 ## Overview
 
-The plugin includes a configurable [`response_buffer_size`](/plugins/ai-aws-guardrails/reference/unreleased/#schema--config-response-buffer-size) parameter. This setting controls how many tokens from the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the plugin will collect 50 tokens from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as tokens stream in.
+The plugin includes a configurable [`response_buffer_size`](/plugins/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many tokens from the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the plugin will collect 50 tokens from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as tokens stream in.
 
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
 
-For response and request inspection, the plugin by default guards input only. You can change this behavior with the [`guarding_mode`](plugins/ai-aws-guardrails/reference/unreleased/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use the [`text_source`](/plugins/ai-aws-guardrails/reference/unreleased/#schema--config-text-source) field. Set it to `concatenate_user_content` to inspect only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
+For response and request inspection, the plugin by default guards input only. You can change this behavior with the [`guarding_mode`](/plugins/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use the [`text_source`](/plugins/ai-aws-guardrails/reference/#schema--config-text-source) field. Set it to `concatenate_user_content` to inspect only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
 
 ## Format
 
