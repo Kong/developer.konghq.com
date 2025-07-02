@@ -36,6 +36,8 @@ related_resources:
     url: /dev-portal/pages-and-content/
   - text: Custom domains
     url: /dev-portal/custom-domains/
+  - text: Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
 Dev Portal UI customization settings can be found on the left sidebar when you select a Dev Portal.
@@ -50,26 +52,26 @@ All menu items have visibility controls, which determine which developers can se
 
 ### Main menu
 
-Main menus are a flat list of links that will be added to the header of every page in your Dev Portal. 
+Main menus are a flat list of links that will be added to the header of every page in your Dev Portal.
 These titles and links will be spaced evenly horizontally.
 
 ### Footer menu sections
 
 Footer menus allow you to create a set of columns with links for global navigation. Select **Footer Sections Menu** from the dropdown list to begin creating your menus.
 
-Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side. 
+Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side.
 We recommend creating your desired footer sections before creating footer menu items.
 
 Footer menu items are links to any URL you prefer, with a title to be displayed. Items must specify a footer menu section.
 
 ### Footer bottom menu
 
-Footer bottom menu is a flat list of links that will be added to the bottom of every page. 
+Footer bottom menu is a flat list of links that will be added to the bottom of every page.
 Footer bottom menus are placed below footer menu sections.
 
 ## SEO customization
 
-To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly. 
+To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly.
 
 ## Portal editor
 
@@ -80,7 +82,7 @@ The Portal Editor provides you with a variety of tools for creating highly custo
 
 ### Appearance
 
-Appearance settings are applied globally to all pages in your Dev Portal. 
+Appearance settings are applied globally to all pages in your Dev Portal.
 You'll find the Appearance icon in the left sidebar of the Portal Editor.
 
 Basic appearance settings quickly create basic styles for your default Portal template:
@@ -108,7 +110,7 @@ For advanced needs, you can also create custom CSS that applies custom styles to
 
 ### Preview panel
 
-The preview will automatically show what your page should look like when developers view your Dev Portal. In the event that it fails to refresh after editing the page, there is a refresh button next to the generated URL at the bottom. 
+The preview will automatically show what your page should look like when developers view your Dev Portal. In the event that it fails to refresh after editing the page, there is a refresh button next to the generated URL at the bottom.
 
 There are three icons above **Preview** that allow you to test adaptive designs in some predefined viewports:
 * Desktop
@@ -131,7 +133,7 @@ You can customize both the email domain and content of emails that developers re
 * Account access rejected
 * Account access revoked
 
-To configure email customization settings, go to your Dev Portal, click **Portal Editor**, and then click the **Email** icon in the sidebar. 
+To configure email customization settings, go to your Dev Portal, click **Portal Editor**, and then click the **Email** icon in the sidebar.
 
 ### Email customization variables
 
@@ -172,10 +174,10 @@ rows:
 
 ### Customize the email domain
 
-If you want to change the from and reply-to email domains, you can configure a different domain through Dev Portal settings. 
-Navigate to your Dev Portal, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings. 
+If you want to change the from and reply-to email domains, you can configure a different domain through Dev Portal settings.
+Navigate to your Dev Portal, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings.
 
-Once you've added your new domain, you must add the CNAME records to your DNS server. 
+Once you've added your new domain, you must add the CNAME records to your DNS server.
 
 {:.info}
 > Certain domain names are restricted. See [Domain name restrictions](/dev-portal/custom-domains/#domain-name-restrictions) for more information.

@@ -62,6 +62,8 @@ related_resources:
     url: /dev-portal/portal-customization/
   - text: Custom domains
     url: /dev-portal/custom-domains/
+  - text: Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
