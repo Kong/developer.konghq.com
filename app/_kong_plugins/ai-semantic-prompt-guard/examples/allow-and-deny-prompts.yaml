@@ -2,14 +2,14 @@ description: Allows messages about a topic as long as they don't contain informa
 
 extended_description: |
   Allows messages about a topic as long as they don't contain information about another topic.
-  For example, only allow questions about cats that aren't related to dogs. 
+  For example, only allow questions about cats that aren't related to dogs.
   Topics on the deny list take precedence over the allowed topics.
 
 title: 'Allow and deny messages'
 
 weight: 900
 
-requirements: 
+requirements:
   - "A [Redis](https://redis.io/docs/latest/) instance"
 
 variables:
@@ -21,7 +21,7 @@ config:
   embeddings:
     auth:
       header_name: Authorization
-      header_value: ${header_value}
+      header_value: Bearer ${header_value}
     model:
       name: text-embedding-3-small
       provider: openai
@@ -38,9 +38,27 @@ config:
   rules:
     match_all_conversation_history: true
     allow_prompts:
-      - "Questions about cats"
+      - Network troubleshooting and diagnostics
+      - Cloud infrastructure management (AWS, Azure, GCP)
+      - Cybersecurity best practices and incident response
+      - DevOps workflows and automation
+      - Programming concepts and language usage
+      - IT policy and compliance guidance
+      - Software development lifecycle and CI/CD
+      - Documentation writing and technical explanation
+      - System administration and configuration
+      - Productivity and collaboration tools usage
     deny_prompts:
-      - "Anything related to dogs"
+      - Hacking techniques or penetration testing without authorization
+      - Bypassing software licensing or digital rights management
+      - Instructions on exploiting vulnerabilities or writing malware
+      - Circumventing security controls or access restrictions
+      - Gathering personal or confidential employee information
+      - Using AI to impersonate or phish others
+      - Social engineering tactics or manipulation techniques
+      - Guidance on violating company IT policies
+      - Content unrelated to work, such as entertainment or dating
+      - Political, religious, or sensitive non-work-related discussions
 
 tools:
   - deck
