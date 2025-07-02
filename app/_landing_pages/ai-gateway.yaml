@@ -1,7 +1,7 @@
 metadata:
   title: "Kong AI Gateway"
   content_type: landing_page
-  description: This page is an introduction to {{site.base_gateway}}.
+  description: This page is an introduction to Kong AI Gateway.
   products:
     - ai-gateway
     - gateway
