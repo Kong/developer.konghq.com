@@ -7,7 +7,8 @@ metadata:
   tags:
     - beta
   permalink: /dev-portal/dev-portal-customizations/
-
+breadcrumbs:
+  - /dev-portal/
 rows:
 
   - header:
@@ -22,7 +23,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The Dev Portal provides features that let you:
+                    You can customize your Dev Portals with the following features:
                     - Configure layout, navigation, branding, and domain settings.
                     - Build content-rich pages with Markdown Components, nest information, and reuse snippets.
                     - Manage page visibility, publishing workflow, and SEO metadata.
@@ -73,3 +74,12 @@ rows:
                 icon: /assets/icons/dev-portal.svg
                 cta:
                   url: /dev-portal/portal-settings/
+        - blocks:
+            - type: card
+              config:
+                title: Dev Portal MDC docs
+                description: |
+                  Create a Dev Portal tailored to your organization with flexible layouts, customizable components, and brand-aligned design elements.
+                icon: /assets/icons/code.svg
+                cta:
+                  url: https://portaldocs.konghq.com/
