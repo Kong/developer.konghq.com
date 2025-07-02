@@ -700,11 +700,11 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 17
               - 16
               - 15
               - 14
               - 13
-              - 12
               - Amazon RDS
               - Amazon Aurora
         - redis:
@@ -877,11 +877,11 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 17
               - 16
               - 15
               - 14
               - 13
-              - 12
               - Amazon RDS
               - Amazon Aurora
         - redis:
@@ -1055,11 +1055,11 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 17
               - 16
               - 15
               - 14
               - 13
-              - 12
               - Amazon RDS
               - Amazon Aurora
         - redis:
