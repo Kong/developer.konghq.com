@@ -14491,7 +14491,7 @@
         "scope": "Performance"
       },
       {
-        "message": "-> Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
+        "message": "Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
         "type": "bugfix",
         "scope": "Core"
       },
