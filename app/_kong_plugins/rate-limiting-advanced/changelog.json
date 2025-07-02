@@ -62,6 +62,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.8.1.2": [
+    {
+      "message": "**Rate Limiting Advanced** Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed a Redis schema issue where `connect_timeout`, `read_timeout`, `send_timeout` were\nreset to `null` if the deprecated `timeout` is `null`.\n",
