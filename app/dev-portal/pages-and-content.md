@@ -32,7 +32,7 @@ faqs:
 
   - q: What is the special behavior of the `home` page?
     a: |
-      The `home` page represents the `/` root path of your Dev Portal. 
+      The `home` page represents the `/` root path of your Dev Portal.
       If it is deleted, you’ll need to recreate it using the [Pages API](/api/konnect/portal-management/#/operations/create-portal-page).
 
   - q: Is there a character limit for custom pages?
@@ -40,7 +40,7 @@ faqs:
       Yes. Custom pages are limited to a maximum of 1,000,000 characters.
   - q: Why aren’t parameterized values appearing in the page Preview?
     a: |
-      The preview may not be able to display parameterized values. When the page is rendered in the Portal, parameters will be resolved. 
+      The preview may not be able to display parameterized values. When the page is rendered in the Portal, parameters will be resolved.
       Depending on the syntax used, the preview may not accurately reflect those values in Page or Snippet views.
 
   - q: Are snippets visible in the Portal by default?
@@ -62,7 +62,7 @@ related_resources:
     url: /dev-portal/portal-customization/
   - text: Custom domains
     url: /dev-portal/custom-domains/
-  - text: Dev Portal customizations
+  - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
@@ -153,7 +153,7 @@ rows:
 
 Dev Portal will use the front matter you set in a page, like the title and description, and render HTML tags.
 
-For example: 
+For example:
 
 ```yaml
 ---
@@ -162,7 +162,7 @@ description: Start building and innovating with our APIs
 ---
 ```
 
-Will render this: 
+Will render this:
 
 ```html
 <title>Home | Developer Portal</title>
@@ -201,9 +201,9 @@ image:
 
 ## Reuse content with snippets
 
-You can reuse content on multiple pages by using snippets. Snippets allow you to store and write content in one location and use that content in multiple pages. You can also use snippets to publish content temporarily, like system outages or special events. 
+You can reuse content on multiple pages by using snippets. Snippets allow you to store and write content in one location and use that content in multiple pages. You can also use snippets to publish content temporarily, like system outages or special events.
 
 Snippets are built using Markdown Components (MDC). See the [dedicated MDC site](https://portaldocs.konghq.com/components/snippet) for more information about Snippet syntax and usage.
 
-To get started creating snippets, navigate to your Dev Portal and click **Portal editor**, then click **Snippets**. 
+To get started creating snippets, navigate to your Dev Portal and click **Portal editor**, then click **Snippets**.
 

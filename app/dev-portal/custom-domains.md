@@ -24,7 +24,7 @@ related_resources:
     url: /dev-portal/pages-and-content/
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
-  - text: Dev Portal customizations
+  - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
 faqs:
   - q: How do I delete a custom domain from a Dev Portal?

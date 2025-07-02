@@ -31,7 +31,7 @@ related_resources:
     url: /dev-portal/security-settings/
   - text: Custom domains
     url: /dev-portal/custom-domains/
-  - text: Dev Portal customizations
+  - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
