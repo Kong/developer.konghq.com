@@ -37,8 +37,8 @@ predefined teams for a standard set of roles, or create custom teams with
 any roles you choose. Invite users and add them to these teams to manage user
 access.
 
-You must be part of the Organization Admin team to manage users, teams, and
-roles.
+You must either be a member of the Organization Admin team, or be assigned the
+Identity Admin role, to manage users, teams, and roles.
 
 {:.info}
 > **Note:** If the Okta integration is [enabled](/konnect-platform/sso/),
