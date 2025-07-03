@@ -1,0 +1,34 @@
+title: 'OpenAI audio transcription route'
+description: 'Configure an audio transcription route using OpenAI’s Whisper model.'
+
+weight: 900
+
+requirements:
+- OpenAI account
+
+config:
+  route_type: audio/v1/audio/transcriptions
+  genai_category: audio/transcription
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
+  model:
+    provider: openai
+    name: whisper-1
+    options:
+      max_tokens: 512
+      temperature: 1.0
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: multimodal-open-ai
