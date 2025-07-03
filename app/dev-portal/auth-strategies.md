@@ -34,6 +34,8 @@ related_resources:
     url: https://openid.net/specs/openid-connect-registration-1_0.html
   - text: Dev Portal developer sign-up
     url: /dev-portal/developer-signup/
+  - text: Enable self-managed OIDC auth with Okta
+    url: /how-to/enable-oidc-auth-for-dev-portal/
 ---
 
 Dev Portal application authentication strategies determine which developers can access which APIs. 
@@ -124,6 +126,8 @@ rows:
 
 
 ### Configure OIDC in Dev Portal
+
+For a step-by-step guide about how to configure OIDC with Okta, see [Enable self-managed OIDC auth with Okta in Dev Portal](/how-to/enable-oidc-auth-for-dev-portal/).
 
 If you don't have an OIDC auth strategy set up, follow these steps to create one:
 
