@@ -67,7 +67,7 @@ Support for text-to-speech, transcription, and translation.
 
 ### Image features {% new_in 3.11 %}
 
-Support for image generation, image editing, and realtime interaction.
+Support for image generation, and image editing interaction.
 
 {% include plugins/ai-proxy/tables/supported-providers-image-ai-proxy.html providers=providers %}
 
