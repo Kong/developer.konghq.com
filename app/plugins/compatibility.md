@@ -8,7 +8,7 @@ products:
 breadcrumbs:
     - /gateway/
 
-description: Plugin compatibility reference with {{site.base_gateway}} and Konnect deployment topologies.
+description: Plugin compatibility reference with {{site.base_gateway}} deployment topologies and Konnect Data Plane hosting options.
 
 related_resources:
   - text: Plugins entity
@@ -24,8 +24,6 @@ works_on:
 ---
 
 
-## Deployment topologies
-
-See the following table for plugins and their deployment topologies:
+See the following table for supported [deployment topologies](/gateway/deployment-topologies/) and [Data Plane hosting options in {{site.konnect_short_name}}](/gateway/topology-hosting-options/) per plugin:
 
 {% plugin_deployment_topologies %}
