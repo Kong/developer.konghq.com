@@ -1,6 +1,5 @@
 title: 'Batch route'
-description: 'Create large batches of API requests for asynchronous processing. The Batch API returns completions within 24 hours at a 50% discount.'
-
+description: 'Create large batches of API requests for asynchronous processing.'
 weight: 900
 
 min_version:
