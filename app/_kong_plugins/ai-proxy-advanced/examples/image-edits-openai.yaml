@@ -10,17 +10,18 @@ requirements:
 - OpenAI account
 
 config:
-  route_type: image/v1/images/edits
   genai_category: image/generation
-  auth:
-    header_name: Authorization
-    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
-  model:
-    provider: openai
-    name: dall-e-2
-    options:
-      max_tokens: 512
-      temperature: 1.0
+  targets:
+    - route_type: image/v1/images/edits
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: dall-e-2
+        options:
+          max_tokens: 512
+          temperature: 1.0
 
 variables:
   key:

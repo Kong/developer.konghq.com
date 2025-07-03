@@ -1,5 +1,5 @@
-title: 'OpenAI image editing route'
-description: 'Configure an image editing route using OpenAI’s DALL·E 2 model.'
+title: 'Batch route'
+description: 'Create large batches of API requests for asynchronous processing. The Batch API returns completions within 24 hours at a 50% discount.'
 
 weight: 900
 
@@ -10,17 +10,13 @@ requirements:
 - OpenAI account
 
 config:
-  route_type: image/v1/images/edits
-  genai_category: image/generation
+  route_type: llm/v1/batches
+  model_name_header: false
   auth:
     header_name: Authorization
     header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
   model:
     provider: openai
-    name: dall-e-2
-    options:
-      max_tokens: 512
-      temperature: 1.0
 
 variables:
   key:
@@ -34,4 +30,4 @@ tools:
   - kic
   - terraform
 
-group: multimodal-open-ai
+group: openai-processing

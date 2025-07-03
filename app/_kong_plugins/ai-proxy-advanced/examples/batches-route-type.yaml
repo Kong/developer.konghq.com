@@ -1,0 +1,34 @@
+title: 'Batch route'
+description: 'Create large batches of API requests for asynchronous processing. The Batch API returns completions within 24 hours at a 50% discount.'
+
+weight: 900
+
+min_version:
+  gateway: '3.11'
+
+requirements:
+- OpenAI account
+
+config:
+  targets:
+    - route_type: llm/v1/batches
+      model_name_header: false
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: openai-processing

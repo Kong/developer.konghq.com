@@ -1,5 +1,5 @@
-title: 'OpenAI image editing route'
-description: 'Configure an image editing route using OpenAI’s DALL·E 2 model.'
+title: 'OpenAI image generation route'
+description: 'Configure an image generation route using OpenAI’s DALL·E 3 model.'
 
 weight: 900
 
@@ -10,14 +10,14 @@ requirements:
 - OpenAI account
 
 config:
-  route_type: image/v1/images/edits
+  route_type: image/v1/images/generations
   genai_category: image/generation
   auth:
     header_name: Authorization
     header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
   model:
     provider: openai
-    name: dall-e-2
+    name: dall-e-3
     options:
       max_tokens: 512
       temperature: 1.0

@@ -10,17 +10,18 @@ requirements:
 - OpenAI account
 
 config:
-  route_type: audio/v1/audio/translations
   genai_category: audio/transcription
-  auth:
-    header_name: Authorization
-    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
-  model:
-    provider: openai
-    name: whisper-1
-    options:
-      max_tokens: 512
-      temperature: 1.0
+  targets:
+    - route_type: audio/v1/audio/translations
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: whisper-1
+        options:
+          max_tokens: 512
+          temperature: 1.0
 
 variables:
   key:

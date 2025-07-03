@@ -3,6 +3,9 @@ description: 'Configure an audio transcription route using OpenAI’s Whisper mo
 
 weight: 900
 
+min_version:
+  gateway: '3.11'
+
 requirements:
 - OpenAI account
 

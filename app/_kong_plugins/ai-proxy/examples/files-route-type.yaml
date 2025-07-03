@@ -1,23 +1,22 @@
-title: 'OpenAI image generation route'
-description: 'Configure an image generation route using OpenAI’s DALL·E 3 model.'
+title: 'Files route'
+description: 'Upload documents via the files route to use with features like Assistants, Fine-tuning, and Batch API.'
 
 weight: 900
+
+min_version:
+  gateway: '3.11'
 
 requirements:
 - OpenAI account
 
 config:
-  route_type: image/v1/images/generations
-  genai_category: image/generation
+  route_type: llm/v1/files
+  model_name_header: false
   auth:
     header_name: Authorization
     header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
   model:
     provider: openai
-    name: dall-e-3
-    options:
-      max_tokens: 512
-      temperature: 1.0
 
 variables:
   key:
@@ -31,4 +30,4 @@ tools:
   - kic
   - terraform
 
-group: multimodal-open-ai
+group: openai-processing
