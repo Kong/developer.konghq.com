@@ -43,7 +43,7 @@ related_resources:
 
 notes: |
   The Canary plugin is not designed for a Kubernetes-native framework,
-  and shouldn't be used with the Kong Ingress Controller. Instead, use the 
+  and shouldn't be used with the {{site.kic_product_name}}. Instead, use the 
   <a href="/kubernetes-ingress-controller/gateway-api/">Gateway API</a> 
   to manage canary deploys.
 ---

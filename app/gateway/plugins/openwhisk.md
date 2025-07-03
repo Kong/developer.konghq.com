@@ -47,7 +47,7 @@ tags:
     - serverless
 
 notes: |
-  Not bundled with Kong Gateway.
+  Not bundled with {{site.base_gateway}}.
   <br><br>
   Installed as a LuaRocks package.
 ---
