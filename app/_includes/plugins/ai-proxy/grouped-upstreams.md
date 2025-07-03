@@ -1,4 +1,19 @@
+{% assign plugin = include.plugin %}
+
 {% navtabs "upstreams" %}
+
+{% if plugin == "AI Proxy" %}
+
+{% navtab "OpenAI" %}
+{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-openai-ai-proxy.html providers=providers %}
+{% endnavtab %}
+
+{% navtab "Azure" %}
+{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-azure-ai-proxy.html providers=providers %}
+{% endnavtab %}
+
+{% elsif plugin == "AI Proxy Advanced" %}
+
 {% navtab "OpenAI" %}
 {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-openai.html providers=providers %}
 {% endnavtab %}
@@ -6,6 +21,8 @@
 {% navtab "Azure" %}
 {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-azure.html providers=providers %}
 {% endnavtab %}
+
+{% endif %}
 
 {% navtab "Mistral" %}
 {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-mistral.html providers=providers %}
