@@ -37,6 +37,10 @@ tags:
 search_aliases:
   - tls-handshake-modifier
   - certificates
+
+notes: | 
+   <b>Serverless Gateways</b>: This plugin is not supported in serverless gateways because the 
+   TLS handshake does not occur at the Kong layer in this setup. 
 ---
 
 The TLS Handshake Modifier plugin allows you to request a client certificate and make it available to other plugins acting on a request. It must be used in conjunction with the [TLS Metadata Headers](/plugins/tls-metadata-headers/) plugin, which is used to detect client certificates in requests.

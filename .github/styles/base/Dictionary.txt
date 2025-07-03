@@ -38,6 +38,7 @@ args
 Arya
 Arya
 arya
+assumeRole
 Atlassian
 auditability
 authtoken

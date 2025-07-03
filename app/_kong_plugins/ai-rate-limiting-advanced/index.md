@@ -39,6 +39,11 @@ categories:
 
 search_aliases:
   - ai-rate-limiting-advanced
+
+notes: |
+  In DB-less, hybrid mode, and Konnect, the <code>cluster</code> config strategy
+  is not supported. Use <code>redis</code> instead. In Serverless gateways only the
+  <code>local</code> config strategy is supported.
 ---
 
 The AI Rate Limiting Advanced plugin provides rate limiting for the providers used by any AI plugins. The
