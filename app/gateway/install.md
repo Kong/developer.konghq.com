@@ -19,12 +19,14 @@ breadcrumbs:
 faqs:
   - q: How do I migrate from {{site.base_gateway}} open source (OSS) to {{site.base_gateway}} Enterprise?
     a: |
-        {:.danger}
-        > **Warning:** This action is irreversible, therefore we strongly recommend to backing up your production data before migrating from {{site.ce_product_name}} to {{site.ee_product_name}}.
+        You can migrate to {{site.base_gateway}} Enterprise using the `kong migrations` CLI commands.
         
-        You can only migrate to a {{site.ee_product_name}} version that supports the same {{site.ce_product_name}} version. For example, if you want to migrate to {{site.ee_product_name}} 3.10, you must upgrade to {{site.ce_product_name}} 3.10 first.
+        {:.danger}
+        > **Warning:** This action is irreversible, therefore we strongly recommend [backing up](/gateway/upgrade/backup-and-restore/) your production data before migrating from {{site.base_gateway}} OSS to {{site.ee_product_name}}.
+        
+        You can only migrate to a {{site.ee_product_name}} version that supports the same OSS version. For example, if you want to migrate to {{site.ee_product_name}} 3.10, you must upgrade to {{site.base_gateway}} OSS 3.10 first.
 
-        1. Download the {{site.ee_product_name}} package and configure it to point to the same data store as your {{site.ce_product_name}} node. The migration command expects the data store to be up to date on any pending migration:
+        1. Download the {{site.ee_product_name}} package and configure it to point to the same data store as your {{site.base_gateway}} OSS node. The migration command expects the data store to be up to date on any pending migration:
            ```sh
            kong migrations up [-c configuration_file]
            kong migrations -f finish [-c configuration_file]
