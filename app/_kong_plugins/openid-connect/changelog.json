@@ -45,6 +45,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.8.1.2": [
+    {
+      "message": "Fixed an `500` error caused by JSON `null` from the request body when parsing bearer tokens or client IDs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed a bug where anonymous consumers may be cached as nil under a certain condition.",

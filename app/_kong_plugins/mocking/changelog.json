@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.8.1.2": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.7.0.0": [
     {
       "message": "Add the `custom_base_path` field to specifiy a custom base path. It will be used with the `deck file namespace` feature",
