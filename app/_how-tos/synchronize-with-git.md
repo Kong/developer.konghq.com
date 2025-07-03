@@ -70,7 +70,7 @@ In this example, we'll create a new project with [Git Sync](/insomnia/storage/#g
 If your Git repository already contains Insomnia content, you will be prompted to import the content to your project.
 
 {:.info}
-> If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in version 11.0.
+> {% new_in 11.2 %} If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in version 11.0.
 
 ## Create a new branch
 

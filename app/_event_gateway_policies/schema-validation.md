@@ -38,7 +38,7 @@ Ensure that all messages produced for a specific topic are validated against a s
 
 ```yaml
 produce_policies:
-  - match: "topic.name == 'xyz'"
+  - match: "kafka.topic.name == \"xyz\""
     policies:
       - policy:
           type: schema_validation
@@ -74,7 +74,7 @@ Because we don't have policy overrides, we also need to exclude topics from the 
 
 ```yaml
 produce_policies:
-  - match: "topic.name == topic-1 || topic.name == topic-2 || topic.name == topic-3"
+  - match: "kafka.topic.name == \"topic-1\" || kafka.topic.name == \"topic-2\" || kafka.topic.name == \"topic-3\""
     policies:
       - policy:
           type: schema_validation
@@ -82,7 +82,7 @@ produce_policies:
             record_value:
               schema_registry_name: my-registry
               failure_action: log
-  - match: "topic.name != topic-1 && topic.name != topic-2 && topic.name != topic-3"
+  - match: "kafka.topic.name != \"topic-1\" && kafka.topic.name != \"topic-2\" && kafka.topic.name != \"topic-3\""
     policies:
       - policy:
           type: schema_validation

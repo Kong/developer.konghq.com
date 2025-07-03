@@ -102,3 +102,10 @@
 
 /dev-portal/custom-pages/   /dev-portal/pages-and-content/
 /dev-portal/snippets/   /dev-portal/pages-and-content/
+/dev-portal/application-registration/   /dev-portal/self-service/
+/dev-portal/access-and-approval/    /dev-portal/self-service/
+
+
+# Gateway LTS
+/archive/dev-portal/ https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/dev-portal/
+/archive/vitals/     https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/analytics/

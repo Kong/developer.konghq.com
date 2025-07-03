@@ -1,4 +1,16 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where the WWW-Authenticate header used an incorrect delimiter, now using a comma as specified by RFC 7235.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "refactored plugin code to be more performant (measured to be at least three times faster).",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
