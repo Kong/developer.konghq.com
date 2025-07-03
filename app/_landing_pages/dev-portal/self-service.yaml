@@ -31,6 +31,16 @@ rows:
                     * **User authentication:** Allows users to access your Dev Portal by logging in. You can further customize what logged in users can see using RBAC.
                     * **Application registration:** Allows developers to use your APIs using credentials and create applications for them.
 
+  - header:
+      type: h2
+      text: "Enable developer self-service"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
                     To enable developer self-service, do the following:
                     1. Enable user authentication by navigating to **Settings > Security** in your Dev Portal.
                        
@@ -123,7 +133,7 @@ rows:
                   If a Service is later unlinked, the authentication strategy is applied to the next linked Service.
   - header:
       type: h3
-      text: "Get started with dynamic client registration"
+      text: "Get started with Dynamic Client Registration"
     columns:
       - blocks:
           - type: card

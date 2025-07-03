@@ -139,7 +139,7 @@ For more information about how to use custom attributes for filtering APIs displ
 
 ## Gateway service link
 
-{{site.konnect_short_name}} APIs support linking to a {{site.konnect_short_name}} Gateway Service to enable Developer self-service and generate credentials or API keys. 
+{{site.konnect_short_name}} APIs support linking to a {{site.konnect_short_name}} Gateway Service to enable Developer self-service and generate credentials or API keys. This is available to Data Planes running {{site.base_gateway}} 3.6 or later.
 This link will install the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin can only be configured from the associated Dev Portal and its published APIs.
 
 {:.info}
