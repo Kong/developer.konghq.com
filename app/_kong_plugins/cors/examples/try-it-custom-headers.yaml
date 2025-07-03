@@ -26,8 +26,6 @@ variables:
 config:
   origins:
     - ${portal_url}
-  methods:
-    - OPTIONS
   headers:
     - ${custom_header}
 

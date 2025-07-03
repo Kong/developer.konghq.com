@@ -148,10 +148,10 @@ columns:
     key: cors
 
 features:
-  - title: Simple request
+  - title: "[Simple request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS#simple_requests)"
     headers: None
     route: No special configuration needed
-    cors: "[Configure CORS with your Dev Portal URL](/plugins/cors/examples/try-it-simple-request/)"
+    cors: No CORS configuration required
   - title: Simple headers
     headers: |
       * `Authorization`
@@ -159,13 +159,16 @@ features:
       * `Accept`
     route: "Add [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) to any associated Routes that use the headers."
     cors: "[Configure CORS with your Dev Portal URL and headers](/plugins/cors/examples/try-it-simple-headers/)"
-  - title: Custom headers
+  - title: Custom headers with a Route at the same path
     headers: Any custom header
     route: |
-      If the Routes associated with your API specs require custom headers to match, configure one of the following:
-      * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured 
-      * Add a global Route at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified)
-    cors: "[Configure CORS with your Dev Portal URL and custom headers](/plugins/cors/examples/try-it-simple-headers/)"
+      Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured.
+    cors: "[Configure CORS with your Dev Portal URL and custom headers](/plugins/cors/examples/try-it-custom-headers/)"
+  - title: Custom headers a global Route
+    headers: Any custom header
+    route: |
+      Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
+    cors: "[Configure CORS with your Dev Portal URL and custom headers](/plugins/cors/examples/try-it-custom-headers/)"
 {% endfeature_table %}
 
 

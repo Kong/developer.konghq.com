@@ -23,8 +23,6 @@ variables:
 config:
   origins:
     - ${portal_url}
-  methods:
-    - OPTIONS
   headers:
     - Authorization
     - Content-Type
