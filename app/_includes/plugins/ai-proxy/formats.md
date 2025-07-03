@@ -14,6 +14,17 @@
 
 The plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-type) should be set based on the target upstream endpoint and model, based on this capability matrix:
 
+{% if plugin == "AI Proxy" %}
+
+{:.warning}
+> The following requirements are enforced by upstream providers:
+>
+> - For **Azure Responses API**, set `config.azure_api_version` to `"preview"`.
+> - For **OpenAI** and **Azure Assistant APIs**, include the header `OpenAI-Beta: assistants=v2`.
+> - For requests with large payloads (e.g., image edits, audio transcription/translation), consider increasing `config.max_request_body_size` to **three times the raw binary size**.
+
+{% elsif plugin == "AI Proxy Advanced" %}
+
 {:.warning}
 > The following requirements are enforced by upstream providers:
 >
@@ -22,6 +33,8 @@ The plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-ty
 > - Only **WebSocket** is supported—**WebRTC is not supported**.
 > - For **OpenAI** and **Azure Assistant APIs**, include the header `OpenAI-Beta: assistants=v2`.
 > - For requests with large payloads (e.g., image edits, audio transcription/translation), consider increasing `config.max_request_body_size` to **three times the raw binary size**.
+
+{% endif %}
 
 {% include plugins/ai-proxy/grouped-upstreams.md %}
 
@@ -157,9 +170,9 @@ Supported in: {% new_in 3.11 %}
 {% endnavtabs %}
 
 
-#### Audio, image and realtime generation inputs
+#### Audio and image generation inputs
 
-The following examples show standardized audio, image and realtime request formats for each supported route. These formats are normalized across providers to help simplify downstream parsing and integration.
+The following examples show standardized audio and image request formats for each supported route. These formats are normalized across providers to help simplify downstream parsing and integration.
 
 {% navtabs "audio-image" %}
 
@@ -231,6 +244,8 @@ curl -s -D >(grep -i x-request-id >&2) \
 
 {% endnavtab %}
 
+{% if plugin == "AI Proxy Advanced" %}
+
 {% navtab "realtime/v1/realtime" %}
 Supported in: {% new_in 3.11 %}
 
@@ -248,6 +263,8 @@ Supported in: {% new_in 3.11 %}
 ```
 
 {% endnavtab %}
+
+{% endif %}
 
 {% endnavtabs %}
 
@@ -449,11 +466,11 @@ Supported in: {% new_in 3.11 %}
 {% endnavtab %}
 {% endnavtabs %}
 
-#### Image, audio and realtime responses
+#### Image, and audio responses
 
-The following examples show standardized response formats returned by supported `audio/`, `image/`, and `/realtime` routes. These formats are normalized across providers to support consistent multimodal output parsing.
+The following examples show standardized response formats returned by supported `audio/` and `image/` routes. These formats are normalized across providers to support consistent multimodal output parsing.
 
-{% navtabs "responses-audio-image-realtime" %}
+{% navtabs "responses-audio-image" %}
 
 {% navtab "llm/v1/audio/file/speech" %}
 
@@ -537,11 +554,16 @@ Supported in: {% new_in 3.11 %}
 ```
 {% endnavtab %}
 
+{% if plugin == "AI Proxy Advanced" %}
+
 {% navtab "realtime/v1/realtime" %}
 ```json
 { "type": "message_fragment", "content": "Rainbows form when light is refracted, reflected, and dispersed in water droplets." }
 ```
 {% endnavtab %}
+
+{% endif %}
+
 {% endnavtabs %}
 
 The request and response formats are loosely modeled after OpenAI’s API. For detailed format specifications, see the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml).
