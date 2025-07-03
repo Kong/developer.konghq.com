@@ -37,6 +37,11 @@ categories:
 search_aliases:
   - app dynamics
   - app-dynamics
+
+notes: | 
+   <b>Dedicated Cloud Gateways</b>: This plugin is not supported in Dedicated or 
+   Serverless Cloud Gateways because it depends on a local agent, and there are 
+   no local nodes in Dedicated or Serverless Cloud Gateways.
 ---
 
 This plugin integrates {{site.base_gateway}} with the [AppDynamics APM platform](https://www.splunk.com/en_us/products/splunk-appdynamics.html) so that

@@ -28,11 +28,15 @@
                                         <li class="list-none">Not supported in Konnect.</li>
                                     {% else %}
                                         {% for value in row.values[column.key] %}
-                                        <li>
-                                            <code class="text-secondary px-1">
-                                                {{value}}
-                                            </code>
-                                        </li>
+                                            {% if column.key == 'notes' %}
+                                            <li class="list-none">{{value | markdownify| liquify}}</li>
+                                            {% else %}
+                                            <li>
+                                                <code class="text-secondary px-1">
+                                                    {{value}}
+                                                </code>
+                                            </li>
+                                            {% endif %}
                                         {% endfor %}
                                     {% endif %}
                                 </ul>

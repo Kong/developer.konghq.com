@@ -40,6 +40,12 @@ related_resources:
     url: /gateway/traffic-control-and-routing/
   - text: Upgrading {{site.base_gateway}}
     url: /gateway/upgrade/
+
+notes: |
+  The Canary plugin is not designed for a Kubernetes-native framework,
+  and shouldn't be used with the Kong Ingress Controller. Instead, use the 
+  <a href="/kubernetes-ingress-controller/gateway-api/">Gateway API</a> 
+  to manage canary deploys.
 ---
 
 The Canary Release plugin helps minimize risk when deploying a new software version by gradually rolling out changes to a limited group of users. 
