@@ -20,15 +20,28 @@ For {{ site.base_gateway }} versions 3.6 or earlier:
 
 For {{ site.base_gateway }} version {% new_in 3.11 %}:
 
+{% if plugin == "AI Proxy" %}
+
 * **Batch, assistants, and files APIs**: Support parallel LLM calls for efficiency. Assistants enable stateful, tool-augmented agents. Files provide persistent document storage for richer context across sessions.
 * **Audio capabilities APIs**: Provide speech-to-text transcription, real-time translation, and text-to-speech synthesis for voice agents, multilingual interfaces, and meeting analysis.
 * **Image generation and editing APIs**: Generate and modify images from text prompts to support multimodal agents with visual input and output.
-* **Realtime streaming**: Stream completions token-by-token for low-latency, interactive experiences and live analytics.
 * **Responses API**: Return response metadata for debugging, evaluation, and response tuning.
-* **Rerank APIs**: Improve relevance in retrieval-augmented generation (RAG) pipelines via contextual reranking.
 * **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
 * **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
 * **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
+
+{% elsif plugin == "AI Proxy Advanced" %}
+
+* **Batch, assistants, and files APIs**: Support parallel LLM calls for efficiency. Assistants enable stateful, tool-augmented agents. Files provide persistent document storage for richer context across sessions.
+* **Audio capabilities APIs**: Provide speech-to-text transcription, real-time translation, and text-to-speech synthesis for voice agents, multilingual interfaces, and meeting analysis.
+* **Image generation and editing APIs**: Generate and modify images from text prompts to support multimodal agents with visual input and output.
+* **Responses API**: Return response metadata for debugging, evaluation, and response tuning.
+* **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
+* **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
+* **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
+* **Realtime streaming**: Stream completions token-by-token for low-latency, interactive experiences and live analytics.
+
+{% endif %}
 
 The following reference tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
 
@@ -50,11 +63,24 @@ Support for text-to-speech, transcription, and translation.
 
 {% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
 
+{% if plugin == "AI Proxy" %}
+
+### Image features {% new_in 3.11 %}
+
+Support for image generation, image editing, and realtime interaction.
+
+{% include plugins/ai-proxy/tables/supported-providers-image-ai-proxy.html providers=providers %}
+
+{% elsif plugin == "AI Proxy Advanced" %}
+
 ### Image and realtime features {% new_in 3.11 %}
 
 Support for image generation, image editing, and realtime interaction.
 
-{% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers %}
+{% include plugins/ai-proxy/tables/supported-providers-image-ai-proxy-advanced.html providers=providers %}
+
+{% endif %}
+
 
 ## How it works
 
