@@ -47,7 +47,7 @@ priorities:
 
 deployment_topologies:
   columns:
-    - title: "self-managed"
+    - title: "Self-managed"
       key: "on_prem"
     - title: "Konnect"
       key: "konnect_deployments"
