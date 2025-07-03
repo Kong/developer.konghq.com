@@ -283,6 +283,7 @@ hello_world
 headmatter
 healthcheck
 healthchecks
+helpdesk
 hostname
 hostnames
 hotfix
