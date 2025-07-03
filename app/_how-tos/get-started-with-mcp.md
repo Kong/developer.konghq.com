@@ -36,8 +36,7 @@ tldr:
     This tutorial will help you get started with MCP by connecting an AI assistant to {{site.konnect_product_name}}.
 
     {:.info}
-    > This quickstart is intended for experimentation with AI-assisted API management. For deploying {{site.konnect_product_name}} in production, refer to the [Install {{site.konnect_product_name}}](/konnect/install/) guide.
-
+    > This quickstart is intended for experimentation with AI-assisted API management. Do not run it as-is in production.
 
 tools:
     - deck
