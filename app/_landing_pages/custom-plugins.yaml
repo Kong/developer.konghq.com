@@ -130,6 +130,8 @@ rows:
           description: |
             {{site.base_gateway}} supports the Go language with the Go PDK, a library that provides Go bindings for {{site.base_gateway}}
           ctas:
+            - text: Writing plugins in Go
+              url: /custom-plugins/go/
             - text: Kong Go PDK
               url: https://pkg.go.dev/github.com/Kong/go-pdk
             - text: Example plugins
@@ -142,6 +144,8 @@ rows:
           description: |
             {{site.base_gateway}} support for Python plugin development is provided by the `kong-python-pdk` library
           ctas:
+            - text: Writing plugins in Python
+              url: /custom-plugins/python/
             - text: Kong Python PDK
               url: https://github.com/Kong/kong-python-pdk
             - text: Example plugins
@@ -154,6 +158,8 @@ rows:
           description: |
             {{site.base_gateway}} support for the JavaScript language is provided by the JavaScript PDK
           ctas:
+            - text: Writing plugins in JavaScript
+              url: /custom-plugins/javascript/
             - text: Kong JavaScript PDK
               url: https://github.com/Kong/kong-js-pdk
             - text: Example plugins
