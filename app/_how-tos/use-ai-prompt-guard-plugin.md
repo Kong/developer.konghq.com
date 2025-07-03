@@ -44,9 +44,9 @@ tools:
 
 prereqs:
   inline:
-    - title: OpenAI
-      include_content: prereqs/openai
-      icon_url: /assets/icons/openai.svg
+    - title: Mistral
+      include_content: prereqs/mistral
+      icon_url: /assets/icons/mistral.svg
   entities:
     services:
       - example-service
@@ -65,7 +65,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-Start by configuring the AI Proxy plugin to route prompts to OpenAI.
+Start by configuring the AI Proxy plugin to route prompts to Mistral AI.
 
 {% entity_examples %}
 entities:
@@ -75,16 +75,16 @@ entities:
         route_type: llm/v1/chat
         auth:
           header_name: Authorization
-          header_value: Bearer ${openai_api_key}
+          header_value: Bearer ${mistral_api_key}
         model:
-          provider: openai
-          name: gpt-4o
+          provider: mistral
+          name: mistral-tiny
           options:
-            max_tokens: 512
-            temperature: 1.0
+            mistral_format: openai
+            upstream_url: https://api.mistral.ai/v1/chat/completions
 variables:
-  openai_api_key:
-    value: $OPENAI_API_KEY
+  mistral_api_key:
+    value: $MISTRAL_API_KEY
 {% endentity_examples %}
 
 ## Configure the AI Prompt Guard plugin
