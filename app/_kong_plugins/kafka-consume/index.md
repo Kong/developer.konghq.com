@@ -65,6 +65,29 @@ Kong also provides Kafka plugins for publishing messages:
 
 {% include /plugins/confluent-kafka-consume/implementation-details.md slug=page.slug %}
 
+
+## WebSocket mode {% new_in 3.11 %}
+
+In `websocket` mode, the plugin maintains a bi-directional WebSocket connection with the client. This allows:
+* Continuous delivery of Kafka messages to the client
+* Optional client acknowledgments (`client-acks`) for each message or batch, enabling `at-least-once` delivery semantics
+* Real-time message flow without the limitations of HTTP polling
+
+To consume messages via WebSocket:
+1. Establish a WebSocket connection to the route where the plugin is enabled and `mode` is set to `websocket`
+1. Optionally, send acknowledgment messages to indicate successful processing
+1. Messages will be streamed as text frames in JSON format
+
+This mode provides parity with HTTP-based consumption, including support for:
+* Message keys
+* Topic filtering
+* Kafka authentication and TLS
+* Auto or manual offset commits
+
 ## Message delivery guarantees
 
 {% include /plugins/confluent-kafka-consume/message-delivery.md %}
+
+## Schema registry support {% new_in 3.11 %}
+
+{% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}

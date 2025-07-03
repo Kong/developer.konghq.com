@@ -1,4 +1,16 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where external consumers could not be used with traditional Kong deployments, such as with KIC.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where region was not permitted to be null for remote identity realms.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",

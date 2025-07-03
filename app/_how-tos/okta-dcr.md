@@ -41,8 +41,8 @@ prereqs:
       include_content: prereqs/okta-sso
       icon_url: /assets/icons/okta.svg
 related_resources:
-  - text: Application registration
-    url: /dev-portal/application-registration/
+  - text: Developer self-service and app registration
+    url: /dev-portal/self-service/
   - text: About Dev Portal Dynamic Client Registration
     url: /dev-portal/dynamic-client-registration/
   - text: About Dev Portal OIDC authentication
@@ -59,10 +59,6 @@ cleanup:
 
 min_version:
     gateway: '3.4'
-
-next_steps:
-  - text: Learn how to manage application registration requests
-    url: /dev-portal/access-and-approval/
 ---
 
 ## Copy the Okta issuer URL

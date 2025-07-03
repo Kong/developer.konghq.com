@@ -16,7 +16,69 @@ components:
       required: true
       schema:
         type: string
+    PaginationOffset:
+      allowEmptyValue: true
+      description: >-
+        Offset from which to return the next set of resources. Use the value of
+        the 'offset' field from the response of a list operation as input here
+        to paginate through all the resources
+      in: query
+      name: offset
+      schema:
+        type: string
+    PaginationSize:
+      description: Number of resources to be returned.
+      in: query
+      name: size
+      schema:
+        default: 100
+        maximum: 1000
+        minimum: 1
+        type: integer
+    PaginationTagsFilter:
+      allowEmptyValue: true
+      description: >-
+        A list of tags to filter the list of resources on. Multiple tags can be
+        concatenated using ',' to mean AND or using '/' to mean OR.
+      example: tag1,tag2
+      in: query
+      name: tags
+      schema:
+        type: string
+  responses:
+    HTTP401Error:
+      content:
+        application/json:
+          examples:
+            DuplicateApiKey:
+              summary: Duplicate API key found
+              value:
+                message: Duplicate API key found
+                status: 401
+            InvalidAuthCred:
+              summary: Invalid authentication credentials
+              value:
+                message: Unauthorized
+                status: 401
+            NoAPIKey:
+              summary: No API key found
+              value:
+                message: No API key found in request
+                status: 401
+          schema:
+            $ref: '#/components/schemas/GatewayUnauthorizedError'
+      description: Unauthorized
   schemas:
+    GatewayUnauthorizedError:
+      properties:
+        message:
+          type: string
+        status:
+          type: integer
+      required:
+        - message
+        - status
+      type: object
     MTLSAuth:
       additionalProperties: false
       example:
@@ -28,14 +90,12 @@ components:
         subject_name: CA_Subject_Name
       properties:
         ca_certificate:
-          additionalProperties: false
           properties:
             id:
               type: string
           type: object
           x-foreign: true
         consumer:
-          additionalProperties: false
           nullable: true
           properties:
             id:
@@ -44,7 +104,7 @@ components:
           x-foreign: true
         created_at:
           description: Unix epoch when the resource was created.
-          readOnly: true
+          nullable: true
           type: integer
         id:
           nullable: true
@@ -67,14 +127,12 @@ components:
         subject_name: CA_Subject_Name
       properties:
         ca_certificate:
-          additionalProperties: false
           properties:
             id:
               type: string
           type: object
           x-foreign: true
         consumer:
-          additionalProperties: false
           nullable: true
           properties:
             id:
@@ -83,7 +141,7 @@ components:
           x-foreign: true
         created_at:
           description: Unix epoch when the resource was created.
-          readOnly: true
+          nullable: true
           type: integer
         id:
           nullable: true
@@ -97,11 +155,14 @@ components:
       required:
         - subject_name
       type: object
-  securitySchemes:
-    adminToken:
-      in: header
-      name: Kong-Admin-Token
-      type: apiKey
+    PaginationNextResponse:
+      description: URI to the next page (may be null)
+      type: string
+    PaginationOffsetResponse:
+      description: >-
+        Offset is used to paginate through the API. Provide this value to the
+        next list operation to fetch the next page
+      type: string
 externalDocs:
   description: MTLS Auth Plugin API Specification
   url: https://developer.konghq.com
@@ -111,15 +172,566 @@ info:
     name: Kong Inc
     url: https://konghq.com
   description: >-
-    MTLS Auth API spec
+    MTLS Auth API spec.
 
+    You can lean more about Kong Gateway at
+    [developer.konghq.com](https://developer.konghq.com).
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  title: Kong Gateway Admin API
+  title: MTLS Auth Plugin API
   version: 0.0.1
 openapi: 3.0.0
 paths:
+  /mtls-auths:
+    get:
+      description: List all MTLS-auth credentials
+      operationId: list-mtls-auth
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/MTLSAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing MTLS-auth credentials
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all MTLS-auth credentials
+      tags:
+        - MTLS-auth credentials
+    post:
+      description: Create a new MTLS-auth credential
+      operationId: create-mtls-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Description of the new MTLS-auth credential for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully created MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new MTLS-auth credential
+      tags:
+        - MTLS-auth credentials
+  /mtls-auths/{MTLSAuthId}:
+    delete:
+      description: Delete a MTLS-auth credential
+      operationId: delete-mtls-auth
+      parameters:
+        - $ref: '#/components/parameters/MTLSAuthId'
+      responses:
+        '204':
+          description: >-
+            Successfully deleted MTLS-auth credential or the resource didn't
+            exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete a MTLS-auth credential
+      tags:
+        - MTLS-auth credentials
+    get:
+      description: Get a MTLS-auth credential using ID.
+      operationId: get-mtls-auth
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully fetched MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch a MTLS-auth credential
+      tags:
+        - MTLS-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/MTLSAuthId'
+    patch:
+      description: Update a MTLS-auth credential
+      operationId: update-mtls-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Fields of the MTLS-auth credential that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully updated MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update a MTLS-auth credential
+      tags:
+        - MTLS-auth credentials
+    put:
+      description: Create or Update MTLS-auth credential using ID.
+      operationId: upsert-mtls-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Description of the MTLS-auth credential
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully upserted MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a MTLS-auth credential
+      tags:
+        - MTLS-auth credentials
+  /{workspace}/consumers/{ConsumerIdForNestedEntities}/mtls-auth:
+    get:
+      description: List all MTLS-auth credentials associated with a Consumer in a workspace
+      operationId: list-mtls-auth-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/MTLSAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing MTLS-auth credentials
+      summary: List all MTLS-auth credentials associated with a Consumer in a workspace
+      tags:
+        - MTLS-auth credentials
+    post:
+      description: >-
+        Create a new MTLS-auth credential associated with a Consumer in a
+        workspace
+      operationId: create-mtls-auth-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuthWithoutParents'
+        description: Description of new MTLS-auth credential for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully created MTLS-auth credential
+      summary: >-
+        Create a new MTLS-auth credential associated with a Consumer in a
+        workspace
+      tags:
+        - MTLS-auth credentials
+  /{workspace}/consumers/{ConsumerIdForNestedEntities}/mtls-auth/{MTLSAuthId}:
+    delete:
+      description: >-
+        Delete a a MTLS-auth credential associated with a Consumer using ID in a
+        workspace.
+      operationId: delete-mtls-auth-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            Successfully deleted MTLS-auth credential or the resource didn't
+            exist
+      summary: >-
+        Delete a a MTLS-auth credential associated with a Consumer in a
+        workspace
+      tags:
+        - MTLS-auth credentials
+    get:
+      description: >-
+        Get a MTLS-auth credential associated with a Consumer using ID in a
+        workspace.
+      operationId: get-mtls-auth-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully fetched MTLS-auth credential
+        '404':
+          description: Resource does not exist
+      summary: Fetch a MTLS-auth credential associated with a Consumer in a workspace
+      tags:
+        - MTLS-auth credentials
+    patch:
+      description: >-
+        Update a a MTLS-auth credential associated with a Consumer using ID in a
+        workspace.
+      operationId: update-mtls-auth-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Fields of the MTLS-auth credential that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully updated MTLS-auth credential
+        '404':
+          description: Resource does not exist
+      summary: >-
+        Update a a MTLS-auth credential associated with a Consumer in a
+        workspace
+      tags:
+        - MTLS-auth credentials
+    put:
+      description: >-
+        Create or Update a MTLS-auth credential associated with a Consumer using
+        ID in a workspace.
+      operationId: upsert-mtls-auth-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuthWithoutParents'
+        description: Description of the MTLS-auth credential
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully upserted MTLS-auth credential
+      summary: Upsert a MTLS-auth credential associated with a Consumer in a workspace
+      tags:
+        - MTLS-auth credentials
+  /{workspace}/mtls-auths:
+    get:
+      description: List all MTLS-auth credentials in a workspace
+      operationId: list-mtls-auth-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/MTLSAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing MTLS-auth credentials
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all MTLS-auth credentials in a workspace
+      tags:
+        - MTLS-auth credentials
+    post:
+      description: Create a new MTLS-auth credential in a workspace
+      operationId: create-mtls-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Description of the new MTLS-auth credential for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully created MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new MTLS-auth credential in a workspace
+      tags:
+        - MTLS-auth credentials
+  /{workspace}/mtls-auths/{MTLSAuthId}:
+    delete:
+      description: Delete a MTLS-auth credential in a workspace
+      operationId: delete-mtls-auth-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            Successfully deleted MTLS-auth credential or the resource didn't
+            exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete a MTLS-auth credential in a workspace
+      tags:
+        - MTLS-auth credentials
+    get:
+      description: Get a MTLS-auth credential using ID in a workspace.
+      operationId: get-mtls-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully fetched MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch a MTLS-auth credential in a workspace
+      tags:
+        - MTLS-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/MTLSAuthId'
+    patch:
+      description: Update a MTLS-auth credential in a workspace
+      operationId: update-mtls-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Fields of the MTLS-auth credential that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully updated MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update a MTLS-auth credential in a workspace
+      tags:
+        - MTLS-auth credentials
+    put:
+      description: Create or Update MTLS-auth credential using ID in a workspace.
+      operationId: upsert-mtls-auth-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Description of the MTLS-auth credential
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully upserted MTLS-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a MTLS-auth credential in a workspace
+      tags:
+        - MTLS-auth credentials
+  /consumers/{ConsumerIdForNestedEntities}/mtls-auth:
+    get:
+      description: List all MTLS-auth credentials associated with a Consumer
+      operationId: list-mtls-auth-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/MTLSAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing MTLS-auth credentials
+      summary: List all MTLS-auth credentials associated with a Consumer
+      tags:
+        - MTLS-auth credentials
+    post:
+      description: Create a new MTLS-auth credential associated with a Consumer
+      operationId: create-mtls-auth-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuthWithoutParents'
+        description: Description of new MTLS-auth credential for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully created MTLS-auth credential
+      summary: Create a new MTLS-auth credential associated with a Consumer
+      tags:
+        - MTLS-auth credentials
   /consumers/{ConsumerIdForNestedEntities}/mtls-auth/{MTLSAuthId}:
     delete:
       description: Delete a a MTLS-auth credential associated with a Consumer using ID.
@@ -203,8 +815,6 @@ paths:
       summary: Upsert a MTLS-auth credential associated with a Consumer
       tags:
         - MTLS-auth credentials
-security:
-  - adminToken: []
 servers:
   - description: Default Admin API URL
     url: '{protocol}://{hostname}:{port}{path}'

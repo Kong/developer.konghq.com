@@ -1,0 +1,18 @@
+<table>
+  <thead>
+    <tr>
+      <th>Provider</th>
+      <th>Image: Generations</th>
+      <th>Image: Edits</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for provider in include.providers %}
+    <tr id="{{ provider.name }}-image-realtime">
+      <td>{{ provider.name }}{% if provider.formats %} ({{ provider.formats }}){% endif %}</td>
+      <td>{{ provider.image.generations.supported | to_check }}</td>
+      <td>{{ provider.image.edits.supported | to_check }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
