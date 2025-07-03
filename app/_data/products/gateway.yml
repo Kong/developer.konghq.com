@@ -898,7 +898,7 @@ releases:
   - release: "3.11"
     ee-version: "3.11.0.0"
     latest: true
-    eol: 2026-07-02
+    eol: 2026-07-03
     distributions:
       - amazonlinux2:
           package: true
@@ -1091,7 +1091,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
-  '3.11.0.0': 2025/07/02
+  '3.11.0.0': 2025/07/03
   '3.10.0.2': 2025/05/20
   '3.10.0.1': 2025/04/15
   '3.10.0.0': 2025/03/27
