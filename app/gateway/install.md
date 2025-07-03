@@ -2,7 +2,7 @@
 title: Install {{site.base_gateway}}
 subtitle: "{{site.base_gateway}} is a low-demand, high-performing API gateway. You can set up {{site.base_gateway}} with Konnect, or install it on various self-managed systems."
 
-description: "{{site.base_gateway}} installation options."
+description: "Install {{site.base_gateway}} on your preferred platform."
 
 products:
     - gateway
