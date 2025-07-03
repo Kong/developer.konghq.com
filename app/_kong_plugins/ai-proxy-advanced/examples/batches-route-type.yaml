@@ -1,5 +1,6 @@
 title: 'Batch route'
-description: 'Create large batches of API requests for asynchronous processing.
+description: 'Create large batches of API requests for asynchronous processing.'
+
 weight: 900
 
 min_version:
