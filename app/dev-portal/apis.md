@@ -27,6 +27,9 @@ related_resources:
     url: /dev-portal/publishing/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
+faqs:
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I see these changes live in Dev Portal?
+    a: If you fetched these changes recently, your browser might be serving the content from a cache. To fix this, you can clear your browser cache. 
 ---
 
 An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/self-service/) for use with specific APIs.

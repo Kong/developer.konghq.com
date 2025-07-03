@@ -89,7 +89,9 @@ prereqs:
     - title: Dev Portal
       include_content: prereqs/api-catalog-terraform
       icon_url: /assets/icons/dev-portal.svg
-
+faqs:
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I see these changes live in Dev Portal?
+    a: If you fetched these changes recently, your browser might be serving the content from a cache. To fix this, you can clear your browser cache. 
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/

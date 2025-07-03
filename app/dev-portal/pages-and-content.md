@@ -54,6 +54,9 @@ faqs:
   - q: Is there a character limit for snippets?
     a: |
       Yes. Snippets are limited to a maximum of 1,000,000 characters.
+  
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I see these changes live in Dev Portal?
+    a: If you fetched these changes recently, your browser might be serving the content from a cache. To fix this, you can clear your browser cache. 
 
 related_resources:
   - text: Dev Portal Markdown components reference

@@ -30,6 +30,8 @@ faqs:
       * `Private` Pages **can** be previewed.
       * `Private` APIs **will not** appear when using the `:apis-list` MDC component.
       * `Private` Menus in headers or footers **will not** be shown.
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I see these changes live in Dev Portal?
+    a: If you fetched these changes recently, your browser might be serving the content from a cache. To fix this, you can clear your browser cache. 
 
 related_resources:
   - text: Pages and content
