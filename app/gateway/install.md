@@ -42,3 +42,5 @@ versioned: true
 ---
 
 {% include install/gateway.html %}
+
+{% include sections/faq.html %}
