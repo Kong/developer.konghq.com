@@ -63,7 +63,7 @@ Kong also provides Kafka plugins for publishing messages:
 
 ## Implementation details
 
-{% include /plugins/confluent-kafka-consume/implementation-details.md %}
+{% include /plugins/confluent-kafka-consume/implementation-details.md slug=page.slug %}
 
 ## Message delivery guarantees
 
