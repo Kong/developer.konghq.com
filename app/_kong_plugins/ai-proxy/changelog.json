@@ -1,4 +1,61 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where large request payload was not logged.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where latency metric was not implemented for streaming responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where SSE terminator may not have correct ending characters.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the response body for observability may be larger than the real one because of the stale data.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "ai-proxy, ai-proxy-advanced: Deprecated the `preserve` route_type. You are encouraged to use new route_types added in version 3.11.x.x and onwards.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where patterns using multiple capture groups (e.g., `$(group1)/$(group2)`) failed to extract expected matches.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where model name did not escape when using AWS Bedrock inference profile.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced would use corrupted plugin config.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy returns 403 using gemini provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Implemented a faster SSE parser.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",

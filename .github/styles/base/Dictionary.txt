@@ -9,6 +9,7 @@ addons
 admin_listen
 admin's
 admin's
+agentic
 Alertmanager
 allow_terminated
 allowlist
@@ -118,6 +119,7 @@ config
 config_hash
 configs
 configurability
+Conjur
 conntrack
 consumer_group
 consumer_id
@@ -218,6 +220,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+exfiltrate
 failover
 fapi
 Fargate
@@ -273,6 +276,7 @@ gzip
 gzipped
 hackathon
 hackathons
+hardcode
 hardcoded
 hardcoding
 hashicorp
@@ -464,6 +468,7 @@ matchers
 max_args
 max_headers
 mbps
+mcp
 md
 mebibytes
 Memcached
@@ -624,6 +629,7 @@ readme
 readonly
 real_ip_header
 real_ip_recursive
+Realtime
 realtime
 reconverge
 redis
@@ -645,6 +651,8 @@ requery
 Requeue
 requeue
 RequestResponse
+Rerank
+reranking
 resourceVersion
 Resty
 Resty
