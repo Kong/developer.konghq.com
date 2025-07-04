@@ -61,7 +61,10 @@ examples_groups:
     text: Other examples
 
 basic_examples: false
-    
+
+notes: |
+  In Serverless gateways only the <code>cookie</code> config session storage is supported.
+
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).

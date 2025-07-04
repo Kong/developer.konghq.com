@@ -18,14 +18,15 @@ works_on:
 min_version:
   gateway: '3.10'
 
-on_prem:
-  - hybrid
-  - db-less
-  - traditional
-konnect_deployments:
-  - hybrid
-  - cloud-gateways
-  - serverless
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 icon: kafka-consume.png
 
@@ -63,7 +64,7 @@ Kong also provides Kafka plugins for publishing messages:
 
 ## Implementation details
 
-{% include /plugins/confluent-kafka-consume/implementation-details.md %}
+{% include /plugins/confluent-kafka-consume/implementation-details.md slug=page.slug %}
 
 
 ## WebSocket mode {% new_in 3.11 %}
