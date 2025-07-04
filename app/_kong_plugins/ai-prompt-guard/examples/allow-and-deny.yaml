@@ -1,22 +1,35 @@
-description: Configure the AI Prompt Guard plugin with a combination of allow and deny rules. 
+description: Use the AI Prompt Guard plugin to allow general IT questions and block prompts related to hacking, phishing, or inappropriate use.
 extended_description: |
-  Configure the plugin with a combination of allow and deny rules. 
-  For requests to pass through in this example, the messages from the callers:
+  This configuration sets up the AI Prompt Guard plugin to semantically filter incoming requests based on pattern matching.
 
-  * Must contain at least one of the product names in the allow list
-  * Must not contain any of the product names in the deny list
+  In this example:
+
+  * Requests are **allowed** if they match common IT-related question formats like "what is", "how do I", or "install".
+  * Requests are **denied** if they contain sensitive or inappropriate terms such as "hack", "phish", "malware", or "cve".
 
 title: 'Allow and deny'
 
 weight: 900
 
-config: 
+config:
   allow_patterns:
-  - ".*(P|p)ears.*"
-  - ".*(P|p)eaches.*"
+    - "(?i).*what is .*"
+    - "(?i).*how do i .*"
+    - "(?i).*install .*"
+    - "(?i).*configure .*"
+    - "(?i).*reset .*"
+    - "(?i).*troubleshoot .*"
   deny_patterns:
-  - ".*(A|a)pples.*"
-  - ".*(O|o)ranges.*"
+    - "(?i).*bypass.*(login|password|auth).*"
+    - "(?i).*hack.*"
+    - "(?i).*phish.*"
+    - "(?i).*malware.*"
+    - "(?i).*cve.*"
+    - "(?i).*exploit.*"
+    - "(?i).*social engineering.*"
+    - "(?i).*pentest.*"
+    - "(?i).*impersonate.*"
+    - "(?i).*dating.*"
 
 tools:
   - deck
