@@ -134,6 +134,47 @@ Once published, the API appears in the selected Portal. If [user authentication]
 
 If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/konnect-platform/teams-and-roles/#teams) to access the API.
 
+## Dev Portal spec renderer
+
+When you upload a spec for your API to Dev Portal, you can enable the **Try it!** feature that will allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. 
+
+To enable the **Try it!** feature, navigate to **ADD PORTAL NAVIGATION PATH HERE** in the {{site.konnect_short_name}} UI. In addition, you also need to enable the CORS plugin for this feature to function. See the following table to help you determine which CORS configuration to use depending on the Route associated with your APIs:
+
+{% feature_table %} 
+item_title: Use case
+columns:
+  - title: Headers used
+    key: headers
+  - title: Route configuration
+    key: route
+  - title: CORS configuration
+    key: cors
+
+features:
+  - title: "[Simple request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS#simple_requests)"
+    headers: None
+    route: No special configuration needed
+    cors: No CORS configuration required
+  - title: Simple headers
+    headers: |
+      * `Authorization`
+      * `Content-Type`
+      * `Accept`
+    route: "Add [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) to any associated Routes that use the headers."
+    cors: "[Configure CORS with your Dev Portal URL and headers](/plugins/cors/examples/try-it-simple-headers/)"
+  - title: Custom headers with a Route at the same path
+    headers: Any custom header
+    route: |
+      Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured.
+    cors: "[Configure CORS with your Dev Portal URL and custom headers](/plugins/cors/examples/try-it-custom-headers/)"
+  - title: Custom headers a global Route
+    headers: Any custom header
+    route: |
+      Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
+    cors: "[Configure CORS with your Dev Portal URL and custom headers](/plugins/cors/examples/try-it-custom-headers/)"
+{% endfeature_table %}
+
+
 ## Filtering published APIs in Dev Portal
 
 You can filter and categorize published APIs on your Dev Portals with custom attributes. By assigning attributes to an API, this allows users to filter APIs in the Dev Portal sidebar. For an API, you can define one or more custom attributes, and each attribute can have one or more values. For example, if you had a Billing API, you could label it with `"visibility": ["Internal"]` and `"platform": ["Web", "Mobile"]`.
