@@ -6,6 +6,10 @@ products:
     - gateway
     - ai-gateway
 
+series:
+  id: hashicorp-vault-llms
+  position: 1
+
 related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
@@ -25,7 +29,6 @@ min_version:
 
 breadcrumbs:
     - /ai-gateway/
-
 
 entities:
   - vault

@@ -1,5 +1,5 @@
 ---
-title: Set up AI Proxy Advanced with OpenAI
+title: Route OpenAI chat traffic using semantic balancing and Vault-stored keys
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -7,7 +7,7 @@ related_resources:
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
 
-description: Configure the AI Proxy Advanced plugin to create a chat route using OpenAI.
+description: Use the AI Proxy Advanced plugin to route chat requests to OpenAI models based on semantic intent, secured with API keys stored in HashiCorp Vault.
 
 products:
   - gateway
@@ -18,12 +18,17 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.6'
+  gateway: '3.8'
+
+series:
+  id: hashicorp-vault-llms
+  position: 2
 
 plugins:
   - ai-proxy-advanced
 
 entities:
+  - vault
   - service
   - route
   - plugin
@@ -33,8 +38,8 @@ tags:
   - openai
 
 tldr:
-  q: How do I use the AI Proxy Advanced plugin with OpenAI?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the OpenAI provider, the gpt-4o model, and your OpenAI API key.
+  q: How do I route OpenAI chat traffic with dynamic credentials from Vault?
+  a: Configure the AI Proxy Advanced plugin to resolve OpenAI API keys dynamically from HashiCorp Vault, then route chat traffic to the most relevant model using semantic balancing based on user intent.
 
 tools:
   - deck
@@ -62,7 +67,10 @@ cleanup:
 
 ## Configure the plugin
 
-We configure the **AI Proxy Advanced** plugin to route chat requests to different LLM providers based on semantic similarity, using secure API keys stored in **HashiCorp Vault**. Secrets for OpenAI and Mistral are referenced securely using the `{vault://...}` syntax. The plugin uses OpenAI’s `text-embedding-3-small` model to embed incoming requests and compares them against target descriptions using **cosine similarity** in a Redis vector database. Based on this similarity, the **semantic balancer** chooses the best-matching target: GPT-3.5 for programming queries, GPT-4o for IT support, and **Mistral Tiny** as the catchall fallback when no close semantic match is found.
+We configure the **AI Proxy Advanced** plugin to route chat requests to different LLM providers based on semantic similarity, using secure API keys stored in **HashiCorp Vault**. Secrets for OpenAI and Mistral are referenced securely using the `{vault://...}` syntax. The plugin uses OpenAI’s `text-embedding-3-small` model to embed incoming requests and compares them against target descriptions using **cosine similarity** in a Redis vector database. Based on this similarity, the **semantic balancer** chooses the best-matching target:
+- **GPT-3.5** for programming queries
+- **GPT-4o** for prompts related to mathematics
+-  **Mistral Tiny** as the catchall fallback when no close semantic match is found.
 
 {% entity_examples %}
 entities:
@@ -161,7 +169,7 @@ headers:
 body:
   messages:
     - role: user
-      content: What does the `map()` function do in Python?
+      content: How can you effectively debug asynchronous code in JavaScript to identify where a Promise or callback might be failing?
 {% endvalidation %}
 
 
@@ -176,7 +184,7 @@ headers:
 body:
   messages:
     - role: user
-      content: What's the derivative of sin(x)?
+      content: What is the derivative of sin(x)?
 {% endvalidation %}
 
 {% validation request-check %}
@@ -186,7 +194,7 @@ headers:
 body:
   messages:
     - role: user
-      content: What's the Fermat's last theorem?
+      content: What is the Fermat last theorem?
 {% endvalidation %}
 
 ### Test fallback questions
@@ -200,7 +208,7 @@ headers:
 body:
   messages:
     - role: user
-      content: What's the capital of Argentina?
+      content: What is the capital of Argentina?
 {% endvalidation %}
 
 {% validation request-check %}
