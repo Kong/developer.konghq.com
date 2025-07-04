@@ -47,11 +47,11 @@ prereqs:
         * The function name, `httpget` in this example.
         * The API key to use to access the function. You can find it in your Function App details in the Azure portal, under **Functions** > **App keys**.
 
-        ```sh
-        export DECK_APP_NAME='YOUR FUNCTION APP NAME'
-        export DECK_FUNCTION_NAME=httpget
-        export DECK_FUNCTION_APP_KEY='YOUR FUNCTION APP API KEY'
-        ```
+        {% env_variables %}
+        DECK_APP_NAME: 'YOUR FUNCTION APP NAME'
+        DECK_FUNCTION_NAME: 'httpget'
+        DECK_FUNCTION_APP_KEY: 'YOUR FUNCTION APP API KEY'
+        {% endenv_variables %}
       icon_url: /assets/icons/azure.svg 
 
 cleanup:
@@ -62,6 +62,8 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Enable the Azure Functions plugin
