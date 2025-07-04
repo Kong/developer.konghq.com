@@ -53,6 +53,8 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: AI Semantic Cache plugin
     url: /plugins/ai-semantic-cache/
+  - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
+    url: /how-to/use-semantic-prompt-guard/
 ---
 
 The AI Semantic Prompt Guard plugin enhances the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
