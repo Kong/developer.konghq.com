@@ -118,6 +118,8 @@ rows:
           description: |
             {{site.base_gateway}} provides a broad plugin development environment including an SDK, database abstractions, migrations
           ctas:
+            - text: Writing plugins in Lua
+              url: /custom-plugins/reference/
             - text: Kong Lua PDK
               url: "/gateway/pdk/reference/"
             - text: Plugin template

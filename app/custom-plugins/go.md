@@ -35,7 +35,10 @@ related_resources:
     url: https://github.com/Kong/go-pdk
 ---
 
-{{site.base_gateway}} supports the Go language with the [Go PDK](https://pkg.go.dev/github.com/Kong/go-pdk), a library that provides Go bindings for {{site.base_gateway}}.
+{{site.base_gateway}} supports Go plugin development through the [Go PDK](https://pkg.go.dev/github.com/Kong/go-pdk) library,
+which provides Go bindings for {{site.base_gateway}}.
+
+## Development
 
 To write a {{site.base_gateway}} plugin in Go, you need to:
 
@@ -157,7 +160,7 @@ const Priority = 1
 
 {{site.base_gateway}} executes plugins from highest priority to lowest.
 
-## Example configuration
+## Loading the plugin into {{site.base_gateway}}
 
 To load plugins using the `kong.conf` [configuration file](/gateway/configuration/), you have to map existing {{site.base_gateway}} properties to aspects of your plugin.
 Here are two examples of loading plugins within `kong.conf`:

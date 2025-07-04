@@ -35,8 +35,8 @@ related_resources:
     url: https://github.com/Kong/kong-python-pdk
 ---
 
-{{site.base_gateway}} supports Python plugin development through the [kong-python-pdk](https://github.com/Kong/kong-python-pdk) library.
-The library provides a plugin server and Kong-specific functions to interface with {{site.base_gateway}}.
+{{site.base_gateway}} supports Python plugin development through the [Kong Python PDK](https://github.com/Kong/kong-python-pdk).
+The `kong-python-pdk` library provides a plugin server and Kong-specific functions to interface with {{site.base_gateway}}.
 
 ## Installation
 
@@ -67,7 +67,11 @@ class Plugin(object):
 See the [Python PDK repository](https://github.com/Kong/kong-python-pdk/tree/master/examples) for examples of plugins built with Python
 and an [API reference](https://kong.github.io/kong-python-pdk/py-modindex.html).
 
-## Phase handlers
+## Configuration
+
+Configuration reference for the Python PDK.
+
+### Phase handlers
 
 You can implement custom logic to be executed at various [phases](/custom-plugins/handler.lua/) of the request processing lifecycle. 
 For example, to execute custom code during the access phase, define a function named `access`:
@@ -133,7 +137,7 @@ class Plugin(object):
         example_access_phase(kong)
 ```
 
-## Embedded server
+### Embedded server
 
 To use the embedded server, use the following code:
 
@@ -145,7 +149,15 @@ if __name__ == "__main__":
 
 The first argument to `start_dedicated_server` defines the plugin name and must be unique.
 
-## Example configuration
+## Concurrency model
+
+The Python plugin server and the embedded server support concurrency. 
+By default, the server starts in multi-threading mode.
+
+* If your workload is IO intensive, you can use the [Gevent](http://www.gevent.org/) model by passing the `-g` flag to `start_cmd` in `kong.conf`.
+* If your workload is CPU intensive, consider the multi-processing model by passing the `-m` flag to `start_cmd` in `kong.conf`.
+
+## Loading the plugin into {{site.base_gateway}}
 
 To load plugins using the `kong.conf` [configuration file](/gateway/configuration/), you have to map existing {{site.base_gateway}} properties to aspects of your plugin.
 Here are some examples of loading plugins within `kong.conf`:
@@ -173,11 +185,3 @@ If you want to open verbose logging, pass the `-v` argument to the `start` comma
 ```
 pluginserver_my_plugin_start_cmd = /path/to/my-plugin.py -v
 ```
-
-## Concurrency model
-
-The Python plugin server and the embedded server support concurrency. 
-By default, the server starts in multi-threading mode.
-
-* If your workload is IO intensive, you can use the [Gevent](http://www.gevent.org/) model by passing the `-g` flag to `start_cmd` in `kong.conf`.
-* If your workload is CPU intensive, consider the multi-processing model by passing the `-m` flag to `start_cmd` in `kong.conf`.

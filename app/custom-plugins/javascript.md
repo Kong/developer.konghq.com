@@ -35,8 +35,8 @@ related_resources:
     url: https://github.com/Kong/kong-js-pdk
 ---
 
-{{site.base_gateway}} support for the JavaScript language is provided by the [JavaScript PDK](https://github.com/Kong/kong-js-pdk).
-The library provides a plugin server that provides a runtime for JavaScript bindings for {{site.base_gateway}}.
+{{site.base_gateway}} supports JavaScript plugin development through the [JavaScript PDK](https://github.com/Kong/kong-js-pdk).
+The `kong-js-pdk` library provides a plugin server that provides a runtime for JavaScript bindings for {{site.base_gateway}}.
 
 TypeScript is also supported in the following ways:
 
@@ -73,7 +73,11 @@ module.exports = {
 
 See the [JavaScript PDK repository](https://github.com/Kong/kong-js-pdk/tree/master/examples) for examples of plugins built with JavaScript.
 
-## Phase handlers
+## Configuration
+
+Configuration reference for the JavaScript PDK.
+
+### Phase handlers
 
 You can implement custom logic to be executed at various [phases](/custom-plugins/handler.lua/) in the request processing lifecycle. 
 For example, to execute custom JavaScript code in the access phase, define a function named `access`:
@@ -100,7 +104,7 @@ You can implement custom logic during the following phases using the same functi
 
 The presence of the `response` handler automatically enables the buffered proxy mode.
 
-## PDK functions
+### PDK functions
 
 Kong interacts with the PDK through network-based inter-rocess communication.
 Each function returns a [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) instance. 
@@ -136,7 +140,7 @@ class KongPlugin {
 }
 ```
 
-## Plugin dependencies
+### Plugin dependencies
 
 When using the plugin server, plugins are allowed to have extra dependencies, as long as the
 directory that holds plugin source code also includes a `node_modules` directory.
@@ -169,7 +173,7 @@ Then, import `kong-pdk` in your TypeScript file:
 import kong from "kong-pdk/kong";
 ````
 
-### Testing
+#### Testing
 
 The JavaScript PDK provides a mock framework to test plugin code using [`jest`](https://jestjs.io/).
 
@@ -201,7 +205,7 @@ npm test
 
 See the [JavaScript PDK repo](https://github.com/Kong/kong-js-pdk/tree/master/examples) for examples of writing tests with `jest`.
 
-## Example configuration
+## Loading the plugin into {{site.base_gateway}}
 
 Prepare the system by installing the required dependencies. 
 
