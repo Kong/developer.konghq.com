@@ -27,8 +27,9 @@ export async function fetchImage(docker, imageName, runtime, log) {
         {
           context: dockerContext,
           src: ["Dockerfile"],
+          platform: "linux/arm64",
         },
-        { t: imageName },
+        { t: imageName, platform: "linux/arm64" },
         function (error, stream) {
           if (error) {
             return reject(error);
@@ -37,7 +38,10 @@ export async function fetchImage(docker, imageName, runtime, log) {
           docker.modem.followProgress(
             stream,
             (err, res) => (err ? reject(err) : resolve(res)),
-            (event) => debugLog(event.stream?.trim())
+            (event) =>
+              event.status
+                ? debugLog(event.status.trim())
+                : debugLog(event.stream?.trim())
           );
         }
       );
