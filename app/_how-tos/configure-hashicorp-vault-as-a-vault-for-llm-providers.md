@@ -23,6 +23,10 @@ works_on:
 min_version:
   gateway: '3.4'
 
+breadcrumbs:
+    - /ai-gateway/
+
+
 entities:
   - vault
 
@@ -30,8 +34,7 @@ tags:
     - secrets-management
     - security
     - hashicorp-vault
-search_aliases:
-  - Hashicorp Vault
+
 tldr:
   q: How can I access HashiCorp Vault secrets in {{site.base_gateway}}?
   a: |
@@ -51,6 +54,7 @@ prereqs:
     - title: Mistral
       include_content: prereqs/mistral
       icon_url: /assets/icons/mistral.svg
+
 cleanup:
   inline:
     - title: Clean up HashiCorp Vault
