@@ -45,12 +45,12 @@ prereqs:
         > If you're running Conjur in Docker, change the proxy ports in `docker-compose.yml` to `"9443:443"`. Make sure the {{site.base_gateway}} and Conjur containers are using the same Docker network. If they aren't, you can run `docker network connect kong-quickstart-net conjur_server` to connect the Conjur compose stack to the {{site.base_gateway}} quickstart network.
         
         Export the Conjur environment variables:
-        ```sh
-        export DECK_CONJUR_ENDPOINT_URL='http://conjur_server:80'
-        export DECK_CONJUR_ACCOUNT='myConjurAccount'
-        export DECK_CONJUR_LOGIN='host/BotApp/myDemoApp'
-        export DECK_CONJUR_API_KEY='YOUR-API-KEY'
-        ```
+        {% env_variables %}
+        DECK_CONJUR_ENDPOINT_URL: 'http://conjur_server:80'
+        DECK_CONJUR_ACCOUNT: 'myConjurAccount'
+        DECK_CONJUR_LOGIN: 'host/BotApp/myDemoApp'
+        DECK_CONJUR_API_KEY: 'YOUR-API-KEY'
+        {% endenv_variables%}
         These environment variables use values from the Conjur Docker quickstart. If you are running Conjur in a different environment, modify them as needed.
 
         You can find your API key listed under `myConjurAccount:host:BotApp/myDemoApp` in the `my_app_data` file.
@@ -80,6 +80,8 @@ faqs:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+
+automated_tests: false
 ---
 
 ## Create a Vault entity for HashiCorp Vault 
