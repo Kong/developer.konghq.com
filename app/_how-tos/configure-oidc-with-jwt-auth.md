@@ -116,13 +116,20 @@ In this example:
 
 Check that you can recover the token by sending a request to the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+extract_body:
+  - name: 'headers.Authorization'
+    variable: TOKEN
+    strip_bearer: true
 {% endvalidation %}
+<!-- vale on -->
+
 
 You'll see an `Authorization` header with your access token in the response.
 
@@ -137,11 +144,13 @@ export TOKEN='YOUR_TOKEN_WITHOUT_BEARER_PREFIX'
 
 Now, validate the setup by accessing the `example-route` Route and passing the bearer token in the query string:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything?access_token=$TOKEN
 method: GET
 status_code: 200
 display_headers: true
 {% endvalidation %}
+<!-- vale on -->
 
 {% include_cached plugins/oidc/cache.md %}

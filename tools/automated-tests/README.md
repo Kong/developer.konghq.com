@@ -71,6 +71,8 @@ Expected failures do not fail the build.
 
 ### How to run them
 
+Make sure you export your kong license as an env variable, i.e. `export KONG_LICENSE_DATA=...`
+
 From the root of the repo run:
 
 1. `cd tools/automated-tests`

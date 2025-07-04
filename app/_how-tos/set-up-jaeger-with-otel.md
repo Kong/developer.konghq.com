@@ -140,6 +140,7 @@ faqs:
 
       See the [OpenTelemetry Collector documentation](https://opentelemetry.io/docs/collector/configuration/) for more information. Now you can enable the OTEL plugin. 
 
+automated_tests: false
 ---
 
 ## Enable the OTEL plugin

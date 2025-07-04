@@ -44,6 +44,8 @@ related_resources:
 
 tags:
 - docker
+
+automated_tests: false
 ---
 
 

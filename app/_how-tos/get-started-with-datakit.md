@@ -8,6 +8,8 @@ products:
 works_on:
     - on-prem
 
+wasm: true
+
 plugins:
   - datakit
 
@@ -92,12 +94,14 @@ entities:
 
 Access the Service using the `/anything` path:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
 status_code: 200
 display_headers: true
 {% endvalidation %}
+<!-- vale on -->
 
 You should get a `200` response with a random fact from each fact generator called in the config:
 

@@ -91,9 +91,10 @@ The [OAuth2 plugin](/plugins/oauth2/) adds an OAuth 2.0 authentication layer to 
 
 First, you'll need a key to provision the plugin. Generate a UUID and export it to an environment variable:
 
-```
-export DECK_PROVISION_KEY=$(uuidgen)
-```
+{% env_variables %}
+DECK_PROVISION_KEY: $(uuidgen)
+{% endenv_variables %}
+
 
 Apply the OAuth2 plugin to the `example-route` Route you created in the [prerequisites](#prerequisites):
 
@@ -155,12 +156,25 @@ In this example:
 
 Retrieve the token from the OAuth token endpoint:
 
-```sh
-curl -X POST --insecure https://localhost:8443/anything/oauth2/token \
-  --data "client_id=client" \
-  --data "client_secret=secret" \
-  --data "grant_type=client_credentials"
-```
+<!-- vale off -->
+{% validation request-check %}
+insecure: true
+method: POST
+url: /anything/oauth2/token
+on_prem_url: https://localhost:8443
+headers:
+  - "Content-Type: application/json"
+body:
+  client_id: client
+  client_secret: secret
+  grant_type: client_credentials
+extract_body:
+  - name: 'access_token'
+    variable: ACCESS_TOKEN
+status_code: 200
+{% endvalidation%}
+<!-- vale on -->
+
 
 You should see an `access-token` in the response.
 
@@ -174,6 +188,7 @@ export ACCESS_TOKEN='YOUR_ACCESS_TOKEN'
 
 Now, validate the setup by accessing the `example-route` Route and passing the bearer token you received from the Kong OAuth plugin:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
@@ -182,5 +197,7 @@ display_headers: true
 headers:
   - "Authorization: Bearer $ACCESS_TOKEN"
 {% endvalidation %}
+<!-- vale on -->
+
 
 {% include_cached plugins/oidc/cache.md %}

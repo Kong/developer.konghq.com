@@ -59,6 +59,8 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Create a Consumer
@@ -94,6 +96,7 @@ body:
   port: 8200
   vault_token: root
   kv: v2
+status_code: 201
 {% endcontrol_plane_request %}
 <!--vale on-->
 
@@ -127,6 +130,7 @@ url: /vault-auth/kong-auth/credentials/alex
 method: POST
 headers:
     - 'Accept: application/json'
+status_code: 201
 {% endcontrol_plane_request %}
 <!--vale on-->
 

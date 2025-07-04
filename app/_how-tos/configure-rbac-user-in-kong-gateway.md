@@ -34,18 +34,16 @@ faqs:
   - q: When accessing a restricted resource with an RBAC user via the Admin API, why do I get `Invalid RBAC credentials` instead of a permissions error?
     a: If you see an `Invalid RBAC credentials` error, this means that the user token you provided is incorrect or doesn't exist. Check your credentials and try again.
 
-prereqs:
-  skip_product: true
-  inline:
-    - title: Start {{site.base_gateway}} with RBAC
-      include_content: prereqs/enable-rbac
-      icon_url: /assets/icons/gateway.svg
+rbac: true
 
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+min_version:
+  gateway: '3.4'
 ---
 
 ## Create an RBAC user
@@ -57,13 +55,14 @@ Create an [RBAC](/gateway/entities/rbac/) user by sending a `POST` request to th
 
 <!-- vale off -->
 {% control_plane_request %}
-  url: /rbac/users
-  method: POST
-  body:
-      name: alex
-      user_token: alex-token
-  headers:
-      - 'Kong-Admin-Token:kong'
+url: /rbac/users
+method: POST
+body:
+    name: alex
+    user_token: alex-token
+headers:
+    - 'Kong-Admin-Token:kong'
+status_code: 201
 {% endcontrol_plane_request %}
 <!-- vale on -->
 
@@ -81,6 +80,7 @@ headers:
   - 'Kong-Admin-Token:kong'
 body:
   name: dev
+status_code: 201
 {% endcontrol_plane_request %}
 
 Then, assign endpoint permissions to the role, allowing access **only** to the `/services` endpoint:
@@ -95,6 +95,7 @@ body:
   workspace: default
   actions: 
     - '*'
+status_code: 201
 {% endcontrol_plane_request %}
 
 ## Assign role to user
@@ -108,6 +109,7 @@ headers:
   - 'Kong-Admin-Token:kong'
 body:
   roles: dev
+status_code: 201
 {% endcontrol_plane_request %}
 
 ## Validate 
@@ -120,6 +122,7 @@ url: /routes
 headers:
   - "Kong-Admin-Token:alex-token"
 display_headers: true
+status_code: 403
 {% endcontrol_plane_request %}
 
 If RBAC was enabled correctly, this request returns the following error message:
@@ -139,6 +142,7 @@ body:
   host: httpbin.konghq.com
 headers:
   - "Kong-Admin-Token:alex-token"
+status_code: 201
 {% endcontrol_plane_request %}
 
-This time, the request succeeds with a `200` and creates a new Service.
+This time, the request succeeds with a `201` and creates a new Service.
