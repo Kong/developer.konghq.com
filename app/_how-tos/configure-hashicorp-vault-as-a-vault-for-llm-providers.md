@@ -45,7 +45,12 @@ prereqs:
     - title: HashiCorp Vault
       include_content: prereqs/hashicorp
       icon_url: /assets/icons/hashicorp.svg
-
+    - title: OpenAI
+      include_content: prereqs/openai
+      icon_url: /assets/icons/openai.svg
+    - title: Mistral
+      include_content: prereqs/mistral
+      icon_url: /assets/icons/mistral.svg
 cleanup:
   inline:
     - title: Clean up HashiCorp Vault
