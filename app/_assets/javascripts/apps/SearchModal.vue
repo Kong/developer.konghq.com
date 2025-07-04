@@ -1,5 +1,5 @@
 <template>
-  <button aria-label="Search" class="cursor-pointer flex gap-4 items-center justify-between w-fit border rounded-md border-brand py-1 px-2 text-terciary" @click="openModal">
+  <button aria-label="Search" class="cursor-pointer flex gap-4 items-center justify-between w-fit border rounded-md border-brand py-[7px] px-3 text-secondary bg-secondary border-b border-primary/5 leading-4" @click="openModal">
     <span class="flex items-center gap-2 flex-shrink-0">
       <span class="flex">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
