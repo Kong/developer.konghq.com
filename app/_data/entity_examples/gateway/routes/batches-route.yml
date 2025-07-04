@@ -1,0 +1,5 @@
+name: batches-route
+paths:
+  - /batches
+service:
+  name: batches-service
