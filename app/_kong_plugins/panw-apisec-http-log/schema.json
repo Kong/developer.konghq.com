@@ -1,0 +1,184 @@
+{
+    "entity_checks": [],
+    "fields": [
+        {
+            "protocols": {
+                "required": true,
+                "elements": {
+                    "type": "string",
+                    "one_of": [
+                        "http",
+                        "https"
+                    ]
+                },
+                "default": [
+                    "http",
+                    "https"
+                ],
+                "len_min": 1,
+                "type": "set"
+            }
+        },
+        {
+            "config": {
+                "required": true,
+                "fields": [
+                    {
+                        "http_endpoint": {
+                            "required": true,
+                            "description": "The Cortex collector's endpoint URL",
+                            "referenceable": true,
+                            "match": "^(https?://[%w_-]+%.[%w_.-]+)",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "cortex_api_key": {
+                            "type": "string",
+                            "required": true,
+                            "encrypted": true,
+                            "description": "The collector Authorization key provided by the Cortex platform"
+                        }
+                    },
+                    {
+                        "cloud_provider": {
+                            "type": "string",
+                            "required": true,
+                            "one_of": [
+                                "AWS",
+                                "Azure",
+                                "GCP",
+                                "On-prem"
+                            ],
+                            "description": "The cloud provider where Kong API Gateway is installed"
+                        }
+                    },
+                    {
+                        "cloud_context": {
+                            "required": true,
+                            "type": "string",
+                            "description": "The cloud context - AWS Account ID, GCP Project ID, Azure Subscription or an appropriate value for on-prem"
+                        }
+                    },
+                    {
+                        "cloud_region": {
+                            "required": true,
+                            "type": "string",
+                            "description": "The cloud region (e.g \"us-east-1\")"
+                        }
+                    },
+                    {
+                        "max_body_size": {
+                            "description": "The maximum body size to mirror in bytes (e.g. \"1024\" is 1KB). Any bytes beyond this size will be omitted from the request and response bodies. Must be <= 4194304 and <= the value of Kong's nginx_http_client_body_buffer_size setting.",
+                            "required": false,
+                            "type": "integer",
+                            "default": 8192
+                        }
+                    },
+                    {
+                        "timeout": {
+                            "type": "number",
+                            "default": 10000,
+                            "description": "An optional timeout in milliseconds when sending data to Cortex."
+                        }
+                    },
+                    {
+                        "keepalive": {
+                            "type": "number",
+                            "default": 60000,
+                            "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed."
+                        }
+                    },
+                    {
+                        "queue": {
+                            "required": true,
+                            "fields": [
+                                {
+                                    "max_batch_size": {
+                                        "between": [
+                                            1,
+                                            1000000
+                                        ],
+                                        "default": 1,
+                                        "type": "integer",
+                                        "description": "Maximum number of entries that can be processed at a time."
+                                    }
+                                },
+                                {
+                                    "max_coalescing_delay": {
+                                        "between": [
+                                            0,
+                                            3600
+                                        ],
+                                        "default": 1,
+                                        "type": "number",
+                                        "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler."
+                                    }
+                                },
+                                {
+                                    "max_entries": {
+                                        "between": [
+                                            1,
+                                            1000000
+                                        ],
+                                        "default": 10000,
+                                        "type": "integer",
+                                        "description": "Maximum number of entries that can be waiting on the queue."
+                                    }
+                                },
+                                {
+                                    "max_bytes": {
+                                        "type": "integer",
+                                        "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+                                    }
+                                },
+                                {
+                                    "max_retry_time": {
+                                        "default": 60,
+                                        "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+                                        "type": "number"
+                                    }
+                                },
+                                {
+                                    "initial_retry_delay": {
+                                        "between": [
+                                            0.001,
+                                            1000000
+                                        ],
+                                        "default": 0.01,
+                                        "type": "number",
+                                        "description": "Time in seconds before the initial retry is made for a failing batch."
+                                    }
+                                },
+                                {
+                                    "max_retry_delay": {
+                                        "between": [
+                                            0.001,
+                                            1000000
+                                        ],
+                                        "default": 60,
+                                        "type": "number",
+                                        "description": "Maximum time in seconds between retries, caps exponential backoff."
+                                    }
+                                },
+                                {
+                                    "concurrency_limit": {
+                                        "default": 1,
+                                        "one_of": [
+                                            -1,
+                                            1
+                                        ],
+                                        "type": "integer",
+                                        "description": "The number of queue delivery timers. -1 indicates unlimited."
+                                    }
+                                }
+                            ],
+                            "type": "record"
+                        }
+                    }
+                ],
+                "type": "record"
+            }
+        }
+    ]
+}
