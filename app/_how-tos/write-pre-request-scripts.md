@@ -3,6 +3,8 @@ title: Write a pre-request script to add an environment variable in Insomnia
 content_type: how_to
 description: Write a pre-request script to dynamically set a variable in a request.
 related_resources:
+  - text: Scripts in Insomnia
+    url: /insomnia/scripts/
   - text: Automate tests in Insomnia
     url:  /how-to/automate-tests/
   - text: Chain requests in Insomnia

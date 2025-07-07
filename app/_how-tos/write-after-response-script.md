@@ -3,6 +3,8 @@ title: Write an after-response script to test a response in Insomnia
 content_type: how_to
 description: Write an after-response script to check that the response body contains the expected value.
 related_resources:
+  - text: Scripts in Insomnia
+    url: /insomnia/scripts/
   - text: Automate tests in Insomnia
     url:  /how-to/automate-tests/
   - text: Chain requests in Insomnia
