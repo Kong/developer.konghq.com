@@ -1,0 +1,38 @@
+title: 'OpenAI image editing route'
+description: 'Configure an image editing route using OpenAI’s DALL·E 2 model.'
+
+weight: 900
+
+min_version:
+  gateway: '3.11'
+
+requirements:
+- OpenAI account
+
+config:
+  genai_category: image/generation
+  targets:
+    - route_type: image/v1/images/edits
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: dall-e-2
+        options:
+          max_tokens: 512
+          temperature: 1.0
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: multimodal-open-ai

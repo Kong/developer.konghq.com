@@ -18,8 +18,8 @@ description: |
 related_resources:
   - text: "{{site.konnect_short_name}} Analytics"
     url: /advanced-analytics/
-  - text: Self-service developer and application registration
-    url: /dev-portal/application-registration/
+  - text: Developer self-service and app registration
+    url: /dev-portal/self-service/
 ---
 
 ## Contextual developer application analytics

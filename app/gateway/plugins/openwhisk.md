@@ -45,6 +45,11 @@ min_version:
 
 tags:
     - serverless
+
+notes: |
+  Not bundled with {{site.base_gateway}}.
+  <br><br>
+  Installed as a LuaRocks package.
 ---
 
 This plugin invokes [OpenWhisk Actions](https://github.com/apache/openwhisk/blob/master/docs/actions.md).

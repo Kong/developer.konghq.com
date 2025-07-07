@@ -52,6 +52,14 @@ categories:
 
 search_aliases:
   - rate-limiting
+
+notes: |
+  In Konnect, DB-less, and hybrid modes, the <code>cluster</code> config policy
+  is not supported.
+  <br><br>
+  For DB-less mode, use one of <code>redis</code> or <code>local</code>;
+  for Konnect and hybrid mode, use <code>redis</code>, or <code>local</code> for data
+  planes only. In Serverless gateways only the <code>local</code> config policy is supported.
 ---
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
