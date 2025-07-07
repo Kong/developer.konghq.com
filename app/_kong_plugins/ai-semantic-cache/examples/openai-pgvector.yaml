@@ -1,6 +1,6 @@
-title: 'Set up with OpenAI and Redis'
+title: 'Set up with OpenAI and PGVector'
 
-description: 'Enable AI Semantic Caching with OpenAI embeddings API and a Redis vector database. Configuring Kong to use OpenAI as upstream or configure AI Proxy or AI Proxy Adavnced plugin is required.'
+description: 'Enable AI Semantic Caching with OpenAI embeddings API and a PGVector database. Configuring Kong to use OpenAI as upstream or configure AI Proxy or AI Proxy Adavnced plugin is required.'
 
 weight: 900
 
@@ -23,11 +23,13 @@ config:
   vectordb:
     dimensions: 3072
     distance_metric: cosine
-    strategy: redis
+    strategy: pgvector
     threshold: 0.1
-    redis:
-      host: redis-stack.redis.svc.cluster.local
-      port: 6379
+    pgvector:
+      host: pgvector.pgvector.svc.cluster.local
+      port: 5432
+      database: kong
+      user: kong
 
 tools:
   - deck

@@ -1,6 +1,6 @@
-title: 'Set up with Mistral'
+title: 'Set up with Mistral and Redis'
 
-description: 'Enable AI Semantic Caching with Mistral as your LLM and a Redis vector database.'
+description: 'Enable AI Semantic Caching with Mistral embeddings API and a Redis vector database. Configuring Kong to use Mistral as upstream or configure AI Proxy or AI Proxy Adavnced plugin is required.'
 
 weight: 900
 
