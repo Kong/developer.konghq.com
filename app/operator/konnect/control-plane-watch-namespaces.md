@@ -18,7 +18,7 @@ related_resources:
 ---
 
 By default, {{ site.kgo_product_name }}'s `ControlPlane` watches all namespaces.
-This provides a convenient out-of-the-box experience but may not suit all production environments, especially those where multiple teams share the same cluster or in multitenant setups.
+This provides a convenient out-of-the-box experience but may not suit all production environments, especially those where multiple teams share the same cluster or in multi-tenant setups.
 
 To limit the namespaces watched by `ControlPlane`, you can set the `watchNamespaces` field in the `ControlPlane`'s `spec`.
 
