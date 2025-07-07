@@ -19,7 +19,6 @@ works_on:
   - on-prem
   - konnect
 
-
 ---
 
 {{ site.kic_product_name }} provides an interface to configure {{ site.base_gateway }} entities using Kubernetes Custom Resource Definitions (CRDs).
