@@ -151,7 +151,7 @@ After-response scripts allow you to execute tasks after a response is received. 
 * Store certain parts of the response into environment variables
 * Send other requests based on the data received
 
-### After-response examples
+### After-response script examples
 
 The following sections provide after-response script examples you can use.
 
