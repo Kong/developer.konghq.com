@@ -39,7 +39,7 @@ tags:
 
 tldr:
   q: How do I route OpenAI chat traffic with dynamic credentials from Vault?
-  a: Configure the AI Proxy Advanced plugin to resolve OpenAI API keys dynamically from HashiCorp Vault, then route chat traffic to the most relevant model using semantic balancing based on user intent.
+  a: Configure the AI Proxy Advanced plugin to resolve OpenAI API keys dynamically from HashiCorp Vault, then route chat traffic to the most relevant model using semantic balancing based on user input.
 
 tools:
   - deck
@@ -67,10 +67,10 @@ cleanup:
 
 ## Configure the plugin
 
-We configure the **AI Proxy Advanced** plugin to route chat requests to different LLM providers based on semantic similarity, using secure API keys stored in **HashiCorp Vault**. Secrets for OpenAI and Mistral are referenced securely using the `{vault://...}` syntax. The plugin uses OpenAI’s `text-embedding-3-small` model to embed incoming requests and compares them against target descriptions using **cosine similarity** in a Redis vector database. Based on this similarity, the **semantic balancer** chooses the best-matching target:
-- **GPT-3.5** for programming queries
-- **GPT-4o** for prompts related to mathematics
--  **Mistral Tiny** as the catchall fallback when no close semantic match is found.
+We configure the **AI Proxy Advanced** plugin to route chat requests to different LLM providers based on semantic similarity, using secure API keys stored in **HashiCorp Vault**. Secrets for OpenAI and Mistral are referenced securely using the `{vault://...}` syntax. The plugin uses OpenAI’s `text-embedding-3-small` model to embed incoming requests and compares them against target descriptions in a Redis vector database. Based on this similarity, the **semantic balancer** chooses the best-matching target:
+- **GPT-3.5** for programming queries.
+- **GPT-4o** for prompts related to mathematics.
+-  **Mistral tiny** as the catchall fallback when no close semantic match is found.
 
 {% entity_examples %}
 entities:
@@ -96,9 +96,6 @@ entities:
         algorithm: semantic
       targets:
       - route_type: llm/v1/chat
-        logging:
-          log_payloads: true
-          log_statistics: true
         auth:
           header_name: Authorization
           header_value: "{vault://hashicorp-vault/openai/key}"
@@ -112,9 +109,6 @@ entities:
             output_cost: 2.0
         description: "programming, coding, software development, Python, JavaScript, APIs, debugging"
       - route_type: llm/v1/chat
-        logging:
-          log_payloads: true
-          log_statistics: true
         auth:
           header_name: Authorization
           header_value: "{vault://hashicorp-vault/openai/key}"
@@ -146,7 +140,7 @@ variables:
 
 ## Validate configuration
 
-You can test the plugin’s semantic routing logic by sending prompts that align with the intent of each configured target. The plugin uses dynamic authentication to inject the appropriate API key from HashiCorp Vault based on the selected model. Responses should include the correct `"model"` value, confirming that the request was both routed and authenticated as expected.
+You can test the plugin’s semantic routing logic by sending prompts that align with the intent of each configured target. The AI Proxy Advanced uses dynamic authentication to inject the appropriate API key from HashiCorp Vault based on the selected model. Responses should include the correct `"model"` value, confirming that the request was both routed and authenticated as expected.
 
 ### Test programming-related questions
 
@@ -159,7 +153,7 @@ headers:
 body:
   messages:
     - role: user
-      content: How do I build a REST API using Flask?
+      content: How can I build a REST API using Flask?
 {% endvalidation %}
 
 {% validation request-check %}
@@ -194,7 +188,7 @@ headers:
 body:
   messages:
     - role: user
-      content: What is the Fermat last theorem?
+      content: Explain me Gödel`s incompleteness theorem.
 {% endvalidation %}
 
 ### Test fallback questions
@@ -218,6 +212,6 @@ headers:
 body:
   messages:
     - role: user
-      content: Tell me a fun fact about dolphins
+      content: Who was Edward Gibbon and what he is famous for
 {% endvalidation %}
 
