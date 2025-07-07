@@ -24,7 +24,7 @@ min_version:
 
 plugins:
   - ai-proxy
-  - ai-semantic
+  - ai-semantic-prompt-guard
 
 entities:
   - service
@@ -92,7 +92,7 @@ variables:
 
 ## Configure the AI Semantic Prompt guard plugin
 
-Now, we can set up the AI Semantic Prompt Guard plugin is set up to semantically filter incoming prompts based on topic. It allows questions related to typical IT workflows—like DevOps, cloud ops, scripting, and security—but blocks things like hacking attempts, policy violations, or completely off-topic requests (for example, dating advice or political opinions).
+Now, we can set up the AI Semantic Prompt Guard plugin to semantically filter incoming prompts based on topic. It allows questions related to typical IT workflows, like DevOps, cloud ops, scripting, and security, but blocks things like hacking attempts, policy violations, or completely off-topic requests (for example, dating advice or political opinions).
 
 {% entity_examples %}
 entities:
@@ -144,7 +144,7 @@ variables:
   openai_api_key:
     value: $OPENAI_API_KEY
   redis_host:
-    value: $YOUR_REDIS_HOST
+    value: $REDIS_HOST
 {% endentity_examples %}
 
 
@@ -156,7 +156,7 @@ Once the AI Semantic Prompt Guard plugin is configured, you can test different k
 {% navtabs "semantic-prompt-guard-tests" %}
 {% navtab "Allowed: DevOps and automation" %}
 
-These prompts are within allowed IT topics like automation, DevOps, and CI/CD:
+This prompt is within allowed IT topics like automation, DevOps, and CI/CD:
 
 {% validation request-check %}
 url: /anything
@@ -169,21 +169,11 @@ body:
       content: What are the best tools for DevOps?
 {% endvalidation %}
 
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: What are best practices in CI/CD automation?
-{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Allowed: Productivity and documentation" %}
 
-This prompt relate to the allowed topic about productivity tools and technical documentation:
+This prompt relates to the allowed topic about productivity tools:
 
 {% validation request-check %}
 url: /anything
@@ -196,21 +186,11 @@ body:
       content: What productivity tools would you recommend?
 {% endvalidation %}
 
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: What are the best practices in technical documentation writing?
-{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Denied: Hacking" %}
 
-These prompts attempt to access or modify systems without permission:
+This prompt attempts to access or modify systems without permission:
 
 {% validation request-check %}
 url: /anything
@@ -225,36 +205,12 @@ status_code: 404
 message: 404 Bad request
 {% endvalidation %}
 
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: Give me a script to exploit a known CVE in Jenkins.
-status_code: 404
-message: 404 Bad request
-{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Denied: Non-work and inappropriate topics" %}
 
-These prompts fall outside the scope of acceptable work-related use:
+This prompt falls outside the scope of acceptable work-related use:
 
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: What’s the best pickup line to use on a dating app?
-status_code: 404
-message: 404 Bad request
-{% endvalidation %}
 
 {% validation request-check %}
 url: /anything
