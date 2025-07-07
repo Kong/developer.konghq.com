@@ -14424,7 +14424,9 @@
         "scope": "Configuration"
       },
       {
-        "message": "Added a new configuration, `route_match_calculation`, which included bug fixes for the `traditional_compatible` router flavor.\nThe default value `original` retained the current `3.x` router matching behavior without changes. The value `strict` enforced the router matching behavior with corrected calculation as follows:\n1. The weight (priority point) of a route was incorrectly\n   downgraded.\n2. A route of HTTPS-only protocol with SNIs incorrectly captured\n   requests over HTTP routes.\n3. A route of TLS-only protocol with SNIs incorrectly captured\n   requests over TCP or UDP routes."
+        "message": "Added a new configuration, `route_match_calculation`, which included bug fixes for the `traditional_compatible` router flavor.\nThe default value `original` retained the current `3.x` router matching behavior without changes. The value `strict` enforced the router matching behavior with corrected calculation as follows:\n1. The weight (priority point) of a route was incorrectly\n   downgraded.\n2. A route of HTTPS-only protocol with SNIs incorrectly captured\n   requests over HTTP routes.\n3. A route of TLS-only protocol with SNIs incorrectly captured\n   requests over TCP or UDP routes.",
+        "type": "bugfix",
+        "scope": "Core"
       }
     ]
   },
