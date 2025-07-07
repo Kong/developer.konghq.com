@@ -218,7 +218,7 @@ Scripts exported from Postman should also work when imported into Insomnia.
 There are some differences to be aware about:
 
 * Top level awaits are allowed
-* Global environment `insomnia.globals` and iteration data `insomnia.iterationData` are not supported yet
+* Global environment `insomnia.globals` is not supported yet
 * `CollectionVariables` is mapped to `baseEnvironment` in Insomnia
 * Deprecated Postman interfaces, such as `postman.setEnvironmentVariable`, are not supported yet
 
@@ -226,7 +226,7 @@ If you notice any incompatibility issues, please report these by creating a [new
 
 ## Accessing folder-level environment variables
 
-In Insomnia, requests can be grouped within folders. These folders can influence request behavior in various ways, such as overriding collection-level environment variables and defining headers.
+In Insomnia, requests can be grouped within folders. These folders can influence request behavior in various ways, such as overriding environment variables and defining headers.
 
 Insomnia provides functions that allow pre-request and after-response scripts to access the current requests' parent folder.
 
@@ -247,7 +247,7 @@ const myFolder = insomnia.parentFolders.get("FOLDER NAME");
 
 ### Manipulate folder-level variables
 
-You can use the `environment` methods to manipulate folder-level variables in the same way as for the [collection-level variables](#manipulate-variables). You just need to replace `insomnia` with the folder variable. For example:
+You can use the `environment` methods to manipulate folder-level variables in the same way as for [environment variables](#manipulate-variables). You just need to replace `insomnia` with the folder variable. For example:
 
 ```js
 const myFolder = insomnia.parentFolders.get("MyFolder");
