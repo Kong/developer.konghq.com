@@ -29,10 +29,6 @@ icon: /assets/icons/graph.svg
 This policy is used to decrypt messages that were previously encrypted using the referenced key. 
 Use this policy to enforce standards for decryption across {{site.event_gateway}} clients.
 
-## Schema
-
-{% entity_schema %}
-
 ## Example configuration
 
 Example configurations for the Decrypt policy.
@@ -86,3 +82,7 @@ policies:
        - type: keys
        - type: values
 ```
+
+## Schema
+
+{% entity_schema %}
