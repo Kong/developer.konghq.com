@@ -10,4 +10,3 @@ To complete this tutorial, make sure you have the following:
 
 {:.info}
 >If you're testing locally with Docker, use `host.docker.internal` as the host value.
-

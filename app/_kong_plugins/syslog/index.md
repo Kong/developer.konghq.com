@@ -39,6 +39,11 @@ faqs:
        * If the Syslog receiver is using the older [RFC3164](https://tools.ietf.org/html/rfc3164#section-4.1) standard, the max size will be 1024 octets.
        * If the Syslog receiver is using the modern [RFC 5424](https://tools.ietf.org/html/rfc5424#section-6.1) standard, the minimum max size is 480 octets, and the recommended max size is 2048 octets. 
        Transport receivers may receive messages larger than 2048 octets, but could truncate or discard it if not supported by the implementation.
+
+notes: | 
+   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or 
+   Serverless Cloud Gateways because it depends on a local agent, and there are no local nodes 
+   in Dedicated or Serverless Cloud Gateways.
 ---
 
 Log request and response data to Syslog.

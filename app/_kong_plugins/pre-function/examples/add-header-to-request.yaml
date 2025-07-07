@@ -1,0 +1,26 @@
+description: |
+  Use Lua code to check for the existence of a header in a request, and if that header exists, add a new header with the same value.
+extended_description: |
+  Use Lua code to check for the existence of a header in a request, and if that header exists, add a new header with the same value.
+
+  In this example, we want to check if requests contain a `Request-Id` header. If it's present, we want to add a header named `New-Request-Id` with the same value.
+  
+title: 'Add a header to a request based on another header'
+
+weight: 900
+
+config:
+  access:
+  - |- 
+    local existing_request_id = kong.request.get_header("Request-Id")
+
+    if(existing_request_id ~= nil) then
+      kong.service.request.set_header("New-Request-Id", existing_request_id)
+    end
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

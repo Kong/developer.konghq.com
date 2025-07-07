@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "A warning message was added during schema validation on those plugins that contain a function name that does not comply with AWS Lambda's FunctionName pattern.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue that occurred when `is_proxy_integration` was enabled, where Kong's response could behave incorrectly when the response was changed after the execution of the AWS Lambda plugin. The Content-Length header in the lambda function response is now ignored by the AWS Lambda plugin.\n",

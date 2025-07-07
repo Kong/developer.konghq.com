@@ -1,4 +1,21 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Added support for Kafka 4.0.\n**kafka-upstream**: Added support for Kafka 4.0.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for sending messages with dynamic keys to determine partitions.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for Schema Registry integration with Confluent Schema Registry for AVRO and JSON schemas.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",

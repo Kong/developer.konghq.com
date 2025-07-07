@@ -1,4 +1,31 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Added support for validating `multipart/form-data` requests.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin raises \"path not found error\" when include_base_path is set to true and the server url is \"/\".\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where query parameters with explode=false couldn't be validated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved performance for OpenAPI 3.1.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added support for the `discriminator` keyword in OpenAPI specs.",
@@ -34,6 +61,13 @@
     },
     {
       "message": "Fixed an issue where the spec could not be located if the `Content-Type` in the request/response body included parameters (e.g., `application/json; charset=utf8`), while the openapi specification defined in `api_spec` did not include parameters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.2": [
+    {
+      "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
       "type": "bugfix",
       "scope": "Plugin"
     }

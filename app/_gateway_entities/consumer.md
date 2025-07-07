@@ -12,7 +12,7 @@ tags:
   - authentication
   - authorization
 
-description: A Consumer typically refers to an entity that consumes or uses the APIs managed by {{site.base_gateway}}.
+description: A Consumer is an entity that identifies an external client that consumes or uses the APIs managed by {{site.base_gateway}}.
 
 related_resources:
   - text: Authentication in {{site.base_gateway}}
@@ -91,8 +91,8 @@ works_on:
 
 ## What is a Consumer?
 
-A Consumer is an entity that consumes or uses the APIs managed by {{site.base_gateway}}.
-Consumers can be applications, services, or users who interact with your APIs.
+A Consumer is an entity that identifies an external client that consumes or uses the APIs managed by {{site.base_gateway}}.
+Consumers can represent applications, services, or users who interact with your APIs.
 Since they are not always human, {{site.base_gateway}} calls them Consumers, because they "consume" the service.
 {{site.base_gateway}} allows you to define and manage Consumers, apply access control policies, and monitor their API usage.
 

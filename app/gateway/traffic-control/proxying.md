@@ -181,7 +181,7 @@ See the [Nginx directives reference](/gateway/nginx-directives/) for more detail
 {{site.base_gateway}} receives the response from the upstream service and sends it back to the downstream client in a streaming fashion. 
 At this point, {{site.base_gateway}} executes subsequent plugins added to the Route or Service that implement a hook in the `header_filter` phase.
 
-Once the `header_filter` phase of all registered plugins has been executed,{% if_version gte: 3.11.x %} if the `latency_token` option {% new_in 3.11 %} is enabled,{% endif_version %} the following headers are added by {{site.base_gateway}} and the full set of headers is sent to the client:
+Once the `header_filter` phase of all registered plugins has been executed and the `latency_token` option {% new_in 3.11 %} is enabled, the following headers are added by {{site.base_gateway}} and the full set of headers is sent to the client:
 
 {% table %}
 columns:
@@ -193,7 +193,7 @@ rows:
   - header: "`Via: kong/x.x.x`"
     description: "`x.x.x` is the {{site.base_gateway}} version in use."
   - header: "`X-Kong-Proxy-Latency: <latency>`"
-    description: "`latency` is the time, in milliseconds, between {{site.base_gateway}} receiving the request from the client and sending the request to your upstream service. {% if_version gte:3.11.x %} In {{site.base_gateway}} 3.11 or later, This value represents the pure Kong internal processing time, excluding external factors such as upstream latency and third-party I/O latencies (e.g., Redis, DNS, HTTP calls, socket calls). {% endif_version %}"
+    description: "`latency` is the time, in milliseconds, between {{site.base_gateway}} receiving the request from the client and sending the request to your upstream service."
   - header: "`X-Kong-Upstream-Latency: <latency>`"
     description: "`latency` is the time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response."
 {% endtable %}
@@ -208,9 +208,8 @@ Once the headers are sent to the client, {{site.base_gateway}} starts executing 
 This hook may be called multiple times, due to the streaming nature of Nginx. 
 Each chunk of the upstream response that is successfully processed by such `body_filter` hooks is sent back to the client.
 
-{% if_version gte:3.11.x %}
-You can also use `advanced_latency_tokens` {% new_in 3.11 %} to expose more detailed timing headers, such as total latency, third-party latency, and client latency. For more information, see the [Kong configuration reference](/gateway/configuration/#advanced_latency_tokens).
-{% endif_version %}
+You can also use `advanced_latency_tokens` {% new_in 3.11 %} to expose more detailed timing headers, such as total latency, third-party latency, and client latency. 
+For more information, see the [Kong configuration reference](/gateway/configuration/#advanced_latency_tokens).
 
 ## Proxy WebSocket traffic
 

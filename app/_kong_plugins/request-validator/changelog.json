@@ -1,4 +1,16 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Added support for specifying JSON schema draft versions.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where multipart/form-data content type was rejected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where requests get rejected when defining an object parameter with form style and exploded.",

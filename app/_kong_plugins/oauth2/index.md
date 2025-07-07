@@ -36,6 +36,11 @@ related_resources:
     url: /how-to/configure-oidc-with-kong-oauth2/
   - text: "{{site.base_gateway}} authentication"
     url: /gateway/authentication/
+
+notes: |
+  This plugin can't be used in Konnect, hybrid, or DB-less modes. It needs to
+  generate and delete tokens, and commit those changes to a database on the
+  same node.
 ---
 
 Add an [OAuth 2.0](https://oauth.net/2/) authentication layer with one of the following grant flows:

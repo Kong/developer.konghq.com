@@ -37,7 +37,8 @@ module Jekyll
 
         def generate_canonicals!
           @references.each do |base_url, pages|
-            candidate = pages.max_by { |p| Gem::Version.new(p.data['release']) }
+            candidate = pages.reject { |p| p.data['release'].label? }
+                             .max_by { |p| Gem::Version.new(p.data['release'].number) }
             canonical_page = find_or_create_canonical_for(candidate)
             @canonicals[base_url] = canonical_page
           end

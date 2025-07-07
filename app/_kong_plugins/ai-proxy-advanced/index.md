@@ -59,9 +59,25 @@ examples_groups:
     text: OpenAI use cases
   - slug: load-balancing
     text: Load balancing use cases
+  - slug: multimodal-open-ai
+    text: Multimodal route types for OpenAI
+  - slug: openai-processing
+    text: File, batch, and realtime routes
+
+faqs:
+  - q: Can I authenticate to Azure AI with Azure Identity?
+    a: |
+      Yes, if {{site.base_gateway}} is running on Azure, AI Proxy Advanced can detect the designated Managed Identity or User-Assigned Identity of that Azure Compute resource, and use it accordingly.
+      In your AI Proxy Advanced configuration, set the following parameters:
+      * [`config.auth.azure_use_managed_identity`](./reference/#schema--config-targets-auth-azure-use-managed-identity) to `true` to use an Azure-Assigned Managed Identity.
+      * [`config.targets.auth.azure_use_managed_identity`](./reference/#schema--config-targets-auth-azure-use-managed-identity) to `true` and an [`config.targets.auth.azure_client_id`](./reference/#schema--config-targets-auth-azure-client-id) to use a User-Assigned Identity.
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
+
+## Request and response formats
+
+{% include plugins/ai-proxy/formats.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
 
 ## Load balancing
 
