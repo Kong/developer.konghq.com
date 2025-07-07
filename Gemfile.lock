@@ -166,6 +166,7 @@ DEPENDENCIES
   jekyll-vite
   kramdown-parser-gfm
   liquid-c
+  mini_portile2 (~> 2.8)
   nokogiri
   pry
   puma
