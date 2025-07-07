@@ -30,7 +30,8 @@ faqs:
   - q: Do I need to change anything in {{site.konnect_short_name}} for the Dedicated Cloud Gateways domain migration?
     a: No. All changes are DNS or infrastructure-related. The {{site.konnect_short_name}} UI will automatically reflect domain mappings.
   - q: What if I use a custom domain with a Kong-managed certificate?
-    a: Contact Kong Support. This path is currently unsupported for seamless migration.
+    a: |
+      Contact [Kong Support](https://support.konghq.com). This path is currently unsupported for seamless migration.
 ---
 
 The Dedicated Cloud Gateways domain structure is changing from `konghq.com` to `konggateway.com`. Kong is making this change to align with {{site.base_gateway}} runtimes. 
@@ -60,6 +61,6 @@ rows:
   - setting: "ACME challenge records"
     action: "Update `_acme-challenge` DNS records accordingly."
   - setting: "Kong-managed certificates for custom domains"
-    action: "Contact your Kong Support to migrate."
+    action: "Contact [Kong Support](https://support.konghq.com) to migrate."
 {% endtable %}
 <!--vale on-->
