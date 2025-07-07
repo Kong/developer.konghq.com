@@ -27,24 +27,15 @@ prereqs:
       icon_url: /assets/icons/pagerduty.svg
 ---
 
-## Authorize the PagerDuty integration
+## Install and authorize the PagerDuty integration
 
-1. In {{site.konnect_short_name}}, go to **{{site.konnect_catalog}} > Integrations**.
-2. Click **PagerDuty**, then **Install PagerDuty**.
-3. Click **Authorize**.
+Before you can ingest resources from PagerDuty, you must first install and authorize the PagerDuty integration.
 
-When prompted by PagerDuty, grant access to {{site.konnect_short_name}} with both **Read** and **Write** scopes.
-
-Once authorized, PagerDuty services will be discoverable in the UI.
-
-
-## Initialize a Pagerduty resource
-
-Create a placeholder resource using the Datadog integration instance. The resource will be hydrated automatically by the integration.
+First, install the PagerDuty integration:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/integration-instances/{integrationInstanceId}/resources
+url: /v1/service-catalog/integration-instances
 method: POST
 status_code: 201
 region: us
@@ -52,64 +43,116 @@ headers:
   - 'Accept: application/json'
   - 'Content-Type: application/json'
 body:
-  type: Pagerduty???
+  integration_name: pagerduty
+  name: pagerduty
+  display_name: PagerDuty
   config:
-    id: ???
+    service_region: false
 {% endkonnect_api_request %}
 <!--vale on-->
 
-* Replace `{integrationInstanceId}` with the ID of your Datadog integration instance.
-* The `type` value must match the Datadog-defined resource type.
-* The `config` object must include the identifying metadata for the resource (e.g., `monitor_id`).
+Export the ID of your PagerDuty integration:
 
-## Confirm the Pagerduty resource
+```sh
+export PAGERDUTY_INTEGRATION_ID='YOUR-INTEGRATION-ID'
+```
 
-After initialization, you can fetch the resource by ID and confirm the `attributes` field is no longer null:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/resources/{resourceId}
-method: GET
-status_code: 200
-region: us
-headers:
-  - 'Accept: application/json'
-{% endkonnect_api_request %}
-<!--vale on-->
-
-## Map the resource to a service
-
-Once the resource is activated, map it to an existing service in the Service Catalog.
+Next, authorize the PagerDuty integration with your PagerDuty API key:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/resource-mappings
+url: /v1/service-catalog/integration-instances/$PAGERDUTY_INTEGRATION_ID/auth-credential
 method: POST
 status_code: 201
-region: global
+region: us
 headers:
-  - 'Accept: application/json'
+  - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: my-service-name
-  resource:
-    integration_instance: Pagerduty???
-    type: Pagerduty??
-    config:
-      monitor_id: 112233
+  type: multi_key_auth
+  config:
+    headers:
+      - name: authorization
+        key: $PAGERDUTY_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
 
-* You can also use the resource's `id` directly instead of providing the config again.
+Once authorized, resources from your PagerDuty account will be discoverable in the UI.
 
+## Create a service in Service Catalog
 
-### Validate the mapping
-
-To confirm that the Datadog monitor is now mapped to the intended service, list the service’s mapped resources:
+Create a service that you'll map to your PagerDuty resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/services/{serviceId}/resources
+url: /v1/service-catalog/services
+method: POST
+status_code: 201
+region: us
+headers:
+  - 'Accept: application/json, application/problem+json'
+  - 'Content-Type: application/json'
+body:
+  name: billing
+  display_name: Billing Service
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the service ID:
+
+```sh
+export PAGERDUTY_SERVICE_ID='YOUR-SERVICE-ID'
+```
+
+## List PagerDuty resources
+
+Before you can map your PagerDuty resources to a service in Service Catalog, you first need to find the resources that are pulled in from PagerDuty:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=pagerduty
+method: GET
+region: us
+status_code: 200
+headers:
+  - 'Accept: application/json, application/problem+json'
+  - 'Content-Type: application/json'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the resource ID you want to map to the service:
+
+```sh
+export PAGERDUTY_RESOURCE_ID='YOUR-RESOURCE-ID'
+```
+
+## Map resources to a service
+
+Now, you can map the PagerDuty resource to the service:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/resource-mappings
+method: POST
+status_code: 201
+region: us
+headers:
+  - 'Accept: application/json, application/problem+json'
+  - 'Content-Type: application/json'
+body:
+  service: datadog
+  resource: $PAGERDUTY_RESOURCE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+
+## Validate the mapping
+
+To confirm that the PagerDuty resource is now mapped to the intended service, list the service’s mapped resources:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/services/$PAGERDUTY_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global
@@ -117,4 +160,3 @@ headers:
   - 'Accept: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
-

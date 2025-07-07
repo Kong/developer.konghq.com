@@ -21,17 +21,25 @@ prereqs:
   inline:
     - title: Datadog API access
       content: |
-        You'll need [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/) and must select your Datadog region to authenticate the integration.
+        You'll need [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/) and must select your Datadog region to authenticate the integration. Your Datadog region must be in a format similar to `US_5`.
+
+        Additionally, you'll need a Datadog monitor or dashboard to ingest in {{site.konnect_short_name}} as resources.
+
+        Export your Datadog authentication credentials:
 
         ```sh
-        export DATADOG_API_KEY=''
-        export DATADOG_APPLICATION_KEY=''
-        export DATADOG_REGION=''
+        export DATADOG_API_KEY='YOUR-API-KEY'
+        export DATADOG_APPLICATION_KEY='YOUR-APP-KEY'
+        export DATADOG_REGION='YOUR-REGION'
         ```
       icon_url: /assets/icons/datadog.png
 ---
 
-## Authorize the Datadog integration
+## Install and authorize the Datadog integration
+
+Before you can ingest resources from Datadog, you must first install and authorize the Datadog integration.
+
+First, install the Datadog integration:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -51,9 +59,13 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+Export the ID of your Datadog integration:
+
 ```sh
-export DATADOG_INTEGRATION_ID=''
+export DATADOG_INTEGRATION_ID='YOUR-INTEGRATION-ID'
 ```
+
+Next, authorize the Datadog integration with your Datadog API key and application key:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -75,9 +87,11 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Once authorized, monitors and dashboards from your Datadog account will be discoverable in the UI.
+Once authorized, monitor and dashboard resources from your Datadog account will be discoverable in the UI.
 
-## Create a service
+## Create a service in Service Catalog
+
+Create a service that you'll map to your Datadog resources:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -89,17 +103,42 @@ headers:
   - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  name: datadog
-  display_name: Datadog
+  name: billing
+  display_name: Billing Service
 {% endkonnect_api_request %}
 <!--vale on-->
 
+Export the service ID:
 
 ```sh
-export DATADOG_SERVICE_ID=''
+export DATADOG_SERVICE_ID='YOUR-SERVICE-ID'
+```
+
+## List Datadog resources
+
+Before you can map your Datadog resources to a service in Service Catalog, you first need to find the resources that are pulled in from Datadog:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=datadog
+method: GET
+region: us
+status_code: 200
+headers:
+  - 'Accept: application/json, application/problem+json'
+  - 'Content-Type: application/json'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the resource ID you want to map to the service:
+
+```sh
+export DATADOG_RESOURCE_ID='YOUR-RESOURCE-ID'
 ```
 
 ## Map resources to a service
+
+Now, you can map the Datadog resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -112,16 +151,14 @@ headers:
   - 'Content-Type: application/json'
 body:
   service: datadog
-  resource:
-    integration_instance: 
-    type:
-    config:
+  resource: $DATADOG_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
-### Validate the mapping
 
-To confirm that the Datadog monitor is now mapped to the intended service, list the service’s mapped resources:
+## Validate the mapping
+
+To confirm that the Datadog resource is now mapped to the intended service, list the service’s mapped resources:
 
 <!--vale off-->
 {% konnect_api_request %}

@@ -38,78 +38,80 @@ prereqs:
 Slack will prompt you to grant read and write permissions to {{site.konnect_short_name}}. Only Slack administrators can authorize the integration.
 
 
-## Initialize a slack resource
+## Create a service in Service Catalog
 
-Create a placeholder resource using the Datadog integration instance. The resource will be hydrated automatically by the integration.
+Create a service that you'll map to your Slack resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/integration-instances/{integrationInstanceId}/resources
+url: /v1/service-catalog/services
 method: POST
 status_code: 201
 region: us
 headers:
-  - 'Accept: application/json'
+  - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  type: slack???
-  config:
-    id: ???
+  name: billing
+  display_name: Billing Service
 {% endkonnect_api_request %}
 <!--vale on-->
 
-* Replace `{integrationInstanceId}` with the ID of your Datadog integration instance.
-* The `type` value must match the Datadog-defined resource type.
-* The `config` object must include the identifying metadata for the resource (e.g., `monitor_id`).
+Export the service ID:
 
-## Confirm the slack resource
+```sh
+export SLACK_SERVICE_ID='YOUR-SERVICE-ID'
+```
 
-After initialization, you can fetch the resource by ID and confirm the `attributes` field is no longer null:
+## List Slack resources
+
+Before you can map your Slack resources to a service in Service Catalog, you first need to find the resources that are pulled in from Slack:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/resources/{resourceId}
+url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=slack
 method: GET
-status_code: 200
 region: us
+status_code: 200
 headers:
-  - 'Accept: application/json'
+  - 'Accept: application/json, application/problem+json'
+  - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Map the resource to a service
+Export the resource ID you want to map to the service:
 
-Once the resource is activated, map it to an existing service in the Service Catalog.
+```sh
+export SLACK_RESOURCE_ID='YOUR-RESOURCE-ID'
+```
+
+## Map resources to a service
+
+Now, you can map the Slack resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/resource-mappings
+url: /v1/service-catalog/resource-mappings
 method: POST
 status_code: 201
-region: global
+region: us
 headers:
-  - 'Accept: application/json'
+  - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: my-service-name
-  resource:
-    integration_instance: slack???
-    type: slack??
-    config:
-      monitor_id: 112233
+  service: datadog
+  resource: $SLACK_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
-* You can also use the resource's `id` directly instead of providing the config again.
 
+## Validate the mapping
 
-### Validate the mapping
-
-To confirm that the Datadog monitor is now mapped to the intended service, list the service’s mapped resources:
+To confirm that the Slack resource is now mapped to the intended service, list the service’s mapped resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/services/{serviceId}/resources
+url: /v1/service-catalog/services/$SLACK_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global
@@ -117,4 +119,3 @@ headers:
   - 'Accept: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
-
