@@ -183,32 +183,32 @@ insomnia.test('Check the ID', () => {
 ## External libraries
 
 The `require()` method grants access to the built-in library modules within the scripts. Here are the available libraries:
-* ajv
-* atob
-* btoa
-* chai
-* cheerio
-* crypto-js
-* csv-parse
-* lodash
-* moment
-* postman-collection
-* tv4
-* uuid
-* xml2js
+* `ajv`
+* `atob`
+* `btoa`
+* `chai`
+* `cheerio`
+* `crypto-js`
+* `csv-parse`
+* `lodash`
+* `moment`
+* `postman-collection`
+* `tv4`
+* `uuid`
+* `xml2js`
 
 The following NodeJS modules are also available:
-* assert
-* buffer
-* events
-* path
-* querystring
-* punycode
-* stream
-* string-decoder
-* timers
-* url
-* util
+* `assert`
+* `buffer`
+* `events`
+* `path`
+* `querystring`
+* `punycode`
+* `stream`
+* `string-decoder`
+* `timers`
+* `url`
+* `util`
 
 
 ## Migrating scripts from Postman
