@@ -52,10 +52,16 @@ prereqs:
       include_content: prereqs/hashicorp
       icon_url: /assets/icons/hashicorp.svg
     - title: OpenAI
-      include_content: prereqs/openai
+      content: |
+        This tutorial uses OpenAI:
+          1. [Create an OpenAI account](https://auth.openai.com/create-account).
+          1. [Get an API key](https://platform.openai.com/api-keys).
       icon_url: /assets/icons/openai.svg
     - title: Mistral
-      include_content: prereqs/mistral
+      content: |
+        This tutorial uses OpenAI:
+          1. [Create a Mistral account](https://mistral.ai/signup).
+          1. [Get your API key](https://mistral.ai/account/api-keys).
       icon_url: /assets/icons/mistral.svg
 
 cleanup:
@@ -79,7 +85,7 @@ Write an Openai secret to HashiCorp Vault:
 vault kv put secret/openai key="OPENAI_API_KEY"
 ```
 
-Next, write a Mistal secret to HashiCorp Vault:
+Next, write a Mistral secret to HashiCorp Vault:
 
 ```
 vault kv put secret/mistral key="MISTRAL_API_KEY"
