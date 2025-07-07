@@ -22,85 +22,102 @@ prereqs:
     - title: Datadog API access
       content: |
         You'll need [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/) and must select your Datadog region to authenticate the integration.
+
+        ```sh
+        export DATADOG_API_KEY=''
+        export DATADOG_APPLICATION_KEY=''
+        export DATADOG_REGION=''
+        ```
       icon_url: /assets/icons/datadog.png
 ---
 
 ## Authorize the Datadog integration
 
-1. In {{site.konnect_short_name}}, go to **Service Catalog > Integrations**.
-2. Click **Datadog**, then **Install Datadog**.
-3. Select your Datadog region.
-4. Enter your [Datadog API key and application key](https://docs.datadoghq.com/account_management/api-app-keys/).
-5. Click **Authorize** to complete the connection.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/integration-instances
+method: POST
+status_code: 201
+region: us
+headers:
+  - 'Accept: application/json'
+  - 'Content-Type: application/json'
+body:
+  integration_name: datadog
+  name: datadog
+  config:
+    datadog_region: $DATADOG_REGION
+    datadog_webhook_name: konnect-service-catalog
+{% endkonnect_api_request %}
+<!--vale on-->
+
+```sh
+export DATADOG_INTEGRATION_ID=''
+```
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/integration-instances/$DATADOG_INTEGRATION_ID/auth-credential
+method: POST
+status_code: 201
+region: us
+headers:
+  - 'Accept: application/json, application/problem+json'
+  - 'Content-Type: application/json'
+body:
+  type: multi_key_auth
+  config:
+    headers:
+      - name: DD-API-KEY
+        key: $DATADOG_API_KEY
+      - name: DD-APPLICATION-KEY
+        key: $DATADOG_APPLICATION_KEY
+{% endkonnect_api_request %}
+<!--vale on-->
 
 Once authorized, monitors and dashboards from your Datadog account will be discoverable in the UI.
 
-To import a resource discovered by the Datadog integration and map it to a service, use the following steps.
-
-## Initialize a Datadog resource
-
-Create a placeholder resource using the Datadog integration instance. The resource will be hydrated automatically by the integration.
+## Create a service
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/integration-instances/{integrationInstanceId}/resources
+url: /v1/service-catalog/services
 method: POST
 status_code: 201
 region: us
 headers:
-  - 'Accept: application/json'
+  - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  type: datadog???
-  config:
-    id: ???
+  name: datadog
+  display_name: Datadog
 {% endkonnect_api_request %}
 <!--vale on-->
 
-* Replace `{integrationInstanceId}` with the ID of your Datadog integration instance.
-* The `type` value must match the Datadog-defined resource type.
-* The `config` object must include the identifying metadata for the resource (e.g., `monitor_id`).
 
-## Confirm the Datadog resource
+```sh
+export DATADOG_SERVICE_ID=''
+```
 
-After initialization, you can fetch the resource by ID and confirm the `attributes` field is no longer null:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/resources/{resourceId}
-method: GET
-status_code: 200
-region: us
-headers:
-  - 'Accept: application/json'
-{% endkonnect_api_request %}
-<!--vale on-->
-
-## Map the resource to a service
-
-Once the resource is activated, map it to an existing service in the Service Catalog.
+## Map resources to a service
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/resource-mappings
+url: /v1/service-catalog/resource-mappings
 method: POST
 status_code: 201
-region: global
+region: us
 headers:
-  - 'Accept: application/json'
+  - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: my-service-name
+  service: datadog
   resource:
-    integration_instance: datadog-prod
-    type: datadog_monitor
+    integration_instance: 
+    type:
     config:
-      monitor_id: 112233
 {% endkonnect_api_request %}
 <!--vale on-->
-
-* You can also use the resource's `id` directly instead of providing the config again.
-
 
 ### Validate the mapping
 
@@ -108,7 +125,7 @@ To confirm that the Datadog monitor is now mapped to the intended service, list 
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/services/{serviceId}/resources
+url: /v1/service-catalog/services/$DATADOG_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global
