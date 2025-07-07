@@ -29,9 +29,9 @@ Pre-request scripts allow you to execute tasks before a request is sent. They ca
 * Manipulate the contents of the request
 * Send other requests to get the data you need before running the request
 
-### Pre-request examples
+### Pre-request script examples
 
-Here are some examples of pre-request scripts:
+The following sections provide pre-request script examples you can use.
 
 #### Manipulate variables
 
@@ -153,7 +153,7 @@ After-response scripts allow you to execute tasks after a response is received. 
 
 ### After-response examples
 
-Here are some examples of after-response scripts:
+The following sections provide after-response script examples you can use.
 
 #### Set environment variables
 
@@ -242,7 +242,7 @@ const myFolder = insomnia.parentFolders.get("FOLDER NAME");
 ```
 
 * It accepts either a folder name or a folder ID. You can also use `insomnia.parentFolders.getById` or `insomnia.parentFolders.getByName` to explicitly accept a folder ID or folder name.
-* It searches for the folder from the bottommost parent folder to the top. If multiple parent folders share the same name, it returns the first one found.
+* It searches for the folder from the bottom parent folder to the top. If multiple parent folders share the same name, it returns the first one found.
 * If no matching folder is found, it returns undefined.
 
 ### Manipulate folder-level variables

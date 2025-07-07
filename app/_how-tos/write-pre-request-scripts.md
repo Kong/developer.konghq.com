@@ -40,7 +40,7 @@ prereqs:
 In this example, we'll configure a pre-request script that sets a variable in the request:
 
 1. In Insomnia, navigate to the "Flight Service 0.1.0" document.
-1. Click the **Collection** tab.
+1. Click the **Collection** tab in the sidebar.
 1. In the sidebar of your collection, select the **Get a specific flight by flight number** request.
 1. Click the **Scripts** tab on the request.
 1. Insomnia provides example pre-request scripts. From the **Pre-request** tab, click **Variable Snippets** at the bottom of the pane and select **Set an environment variable**.

@@ -34,7 +34,7 @@ prereqs:
 In this example, we'll configure an after-response script that checks the value of a JSON field in a response:
 
 1. In Insomnia, navigate to the "Flight Service 0.1.0" document.
-1. Click the **Collection** tab.
+1. Click the **Collection** tab in the sidebar.
 1. In the sidebar of your collection, select the **Get KongAir planned flights** request.
 1. Open **Scripts** > **After-response**.
 1. In the bottom pane, click **Response Handling** > **Get body as JSON**. This will add code that creates a `jsonBody` variable that we can use to check the content of the response body.
