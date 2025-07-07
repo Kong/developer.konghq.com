@@ -1,41 +1,24 @@
 ---
-title: "{{site.kic_product_name}} configuration options"
-short_title: Configuration options
-
-description: |
-  Learn about the various settings and configurations of the controller can be tweaked using CLI flags.
-
-breadcrumbs:
-  - /kubernetes-ingress-controller/
-  - index: kubernetes-ingress-controller
-    section: Reference
-
-content_type: reference
-layout: reference
-
-products:
-  - kic
-
-works_on:
-  - on-prem
-  - konnect
+title: CLI Arguments
 ---
 
-Configuration options allow you to customize the behavior of {{ site.kic_product_name }} to meet your needs. 
+Learn about the various settings and configurations of the controller can be tweaked
+using CLI flags.
 
-The default configuration will work for most users. These options are provided for advanced users.
+## Environment variables
 
-## Using environment variables
+Each flag defined in the table below can also be configured using
+an environment variable. The name of the environment variable is `CONTROLLER_`
+string followed by the name of flag in uppercase.
 
-Each flag defined in the following table can also be configured using an environment variable. The name of the environment variable is `CONTROLLER_` string followed by the name of flag in uppercase.
-
-For example, `--ingress-class` can be configured using the following environment variable:
+For example, `--ingress-class` can be configured using the following
+environment variable:
 
 ```
 CONTROLLER_INGRESS_CLASS=kong-foobar
 ```
 
-We recommend configuring all settings through environment variables
+It is recommended that all the configuration is done through environment variables
 and not CLI flags.
 
 <!-- vale off -->
@@ -44,309 +27,107 @@ and not CLI flags.
 
 ## Flags
 
-{% table %}
-columns:
-  - title: Flag
-    key: flag
-  - title: Type
-    key: type
-  - title: Description
-    key: description
-  - title: Default
-    key: default
-rows:
-  - flag: '`--admission-webhook-cert`'
-    type: '`string`'
-    description: Admission server PEM certificate value. Mutually exclusive with --admission-webhook-cert-file.
-    default: ""
-  - flag: '`--admission-webhook-cert-file`'
-    type: '`string`'
-    description: Admission server PEM certificate file path. If both this and the cert value is unset, defaults to /admission-webhook/tls.crt. Mutually exclusive with --admission-webhook-cert.
-    default: ""
-  - flag: '`--admission-webhook-key`'
-    type: '`string`'
-    description: Admission server PEM private key value. Mutually exclusive with --admission-webhook-key-file.
-    default: ""
-  - flag: '`--admission-webhook-key-file`'
-    type: '`string`'
-    description: Admission server PEM private key file path. If both this and the key value is unset, defaults to /admission-webhook/tls.key. Mutually exclusive with --admission-webhook-key.
-    default: ""
-  - flag: '`--admission-webhook-listen`'
-    type: '`string`'
-    description: The address to start admission controller on (ip:port). Setting it to 'off' disables the admission controller.
-    default: '`off`'
-  - flag: '`--anonymous-reports`'
-    type: '`bool`'
-    description: Send anonymized usage data to help improve Kong.
-    default: '`true`'
-  - flag: '`--apiserver-burst`'
-    type: '`int`'
-    description: The Kubernetes API RateLimiter maximum burst queries per second.
-    default: '`300`'
-  - flag: '`--apiserver-host`'
-    type: '`string`'
-    description: The Kubernetes API server URL. If not set, the controller will use cluster config discovery.
-    default: ""
-  - flag: '`--apiserver-qps`'
-    type: '`int`'
-    description: The Kubernetes API RateLimiter maximum queries per second.
-    default: '`100`'
-  - flag: '`--cache-sync-timeout`'
-    type: '`duration`'
-    description: The time limit set to wait for syncing controllers' caches. Set to 0 to use default from controller-runtime.
-    default: '`2m0s`'
-  - flag: '`--cluster-domain`'
-    type: '`string`'
-    description: The cluster domain. This is used e.g. in generating addresses for upstream services.
-    default: ""
-  - flag: '`--configmap-label-selector`'
-    type: '`string`'
-    description: Limits the configmaps ingested to those having this label set to "true".
-    default: '`konghq.com/configmap`'
-  - flag: '`--dump-config`'
-    type: '`bool`'
-    description: Enable config dumps via web interface host:10256/debug/config.
-    default: '`false`'
-  - flag: '`--dump-sensitive-config`'
-    type: '`bool`'
-    description: Include credentials and TLS secrets in configs exposed with --dump-config flag.
-    default: '`false`'
-  - flag: '`--election-id`'
-    type: '`string`'
-    description: Election id to use for status update.
-    default: '`5b374a9e.konghq.com`'
-  - flag: '`--election-namespace`'
-    type: '`string`'
-    description: Leader election namespace to use when running outside a cluster.
-    default: ""
-  - flag: '`--emit-kubernetes-events`'
-    type: '`bool`'
-    description: Emit Kubernetes events for successful configuration applies, translation failures and configuration apply failures on managed objects.
-    default: '`true`'
-  - flag: '`--enable-controller-gwapi-gateway`'
-    type: '`bool`'
-    description: Enable the Gateway API Gateway controller.
-    default: '`true`'
-  - flag: '`--enable-controller-gwapi-grpcroute`'
-    type: '`bool`'
-    description: Enable the Gateway API GRPCRoute controller.
-    default: '`true`'
-  - flag: '`--enable-controller-gwapi-httproute`'
-    type: '`bool`'
-    description: Enable the Gateway API HTTPRoute controller.
-    default: '`true`'
-  - flag: '`--enable-controller-gwapi-reference-grant`'
-    type: '`bool`'
-    description: Enable the Gateway API ReferenceGrant controller.
-    default: '`true`'
-  - flag: '`--enable-controller-ingress-class-networkingv1`'
-    type: '`bool`'
-    description: Enable the networking.k8s.io/v1 IngressClass controller.
-    default: '`true`'
-  - flag: '`--enable-controller-ingress-class-parameters`'
-    type: '`bool`'
-    description: Enable the IngressClassParameters controller.
-    default: '`true`'
-  - flag: '`--enable-controller-ingress-networkingv1`'
-    type: '`bool`'
-    description: Enable the networking.k8s.io/v1 Ingress controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kong-custom-entity`'
-    type: '`bool`'
-    description: Enable the KongCustomEntity controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kong-license`'
-    type: '`bool`'
-    description: Enable the KongLicense controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kong-service-facade`'
-    type: '`bool`'
-    description: Enable the KongServiceFacade controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kong-upstream-policy`'
-    type: '`bool`'
-    description: Enable the KongUpstreamPolicy controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kong-vault`'
-    type: '`bool`'
-    description: Enable the KongVault controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kongclusterplugin`'
-    type: '`bool`'
-    description: Enable the KongClusterPlugin controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kongconsumer`'
-    type: '`bool`'
-    description: Enable the KongConsumer controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kongingress`'
-    type: '`bool`'
-    description: Enable the KongIngress controller.
-    default: '`true`'
-  - flag: '`--enable-controller-kongplugin`'
-    type: '`bool`'
-    description: Enable the KongPlugin controller.
-    default: '`true`'
-  - flag: '`--enable-controller-service`'
-    type: '`bool`'
-    description: Enable the Service controller.
-    default: '`true`'
-  - flag: '`--enable-controller-tcpingress`'
-    type: '`bool`'
-    description: Enable the TCPIngress controller.
-    default: '`true`'
-  - flag: '`--enable-controller-udpingress`'
-    type: '`bool`'
-    description: Enable the UDPIngress controller.
-    default: '`true`'
-  - flag: '`--enable-reverse-sync`'
-    type: '`bool`'
-    description: Send configuration to Kong even if the configuration checksum has not changed since previous update.
-    default: '`false`'
-  - flag: '`--feature-gates`'
-    type: '`list of string=bool`'
-    description: 'A set of comma separated key=value pairs that describe feature gates for alpha/beta/experimental features. See the Feature Gates documentation for information and available options: https://github.com/Kong/kubernetes-ingress-controller/blob/main/FEATURE_GATES.md.'
-    default: ""
-  - flag: '`--gateway-api-controller-name`'
-    type: '`string`'
-    description: The controller name to match on Gateway API resources.
-    default: '`konghq.com/kic-gateway-controller`'
-  - flag: '`--gateway-discovery-dns-strategy`'
-    type: '`string`'
-    description: 'Strategy used for resolving Gateway data plane addresses when the Gateway status address is a DNS name. Options are: "RoundRobin", "IPv4Only", "IPv6Only". Defaults to RoundRobin.'
-    default: '`RoundRobin`'
-  - flag: '`--gateway-tls-secret-label-selector`'
-    type: '`string`'
-    description: The label selector used to match TLS secrets for Gateways. If empty, all secrets are considered.
-    default: ""
-  - flag: '`--health-probe-bind-address`'
-    type: '`string`'
-    description: The address the probe endpoint binds to.
-    default: '`:8081`'
-  - flag: '`--kong-admin-ca-cert-file`'
-    type: '`string`'
-    description: Path to a CA certificate used to verify Kong Admin API TLS certificate.
-    default: ""
-  - flag: '`--kong-admin-filter-tag`'
-    type: '`string`'
-    description: A tag to filter Admin API resources with.
-    default: ""
-  - flag: '`--kong-admin-host`'
-    type: '`string`'
-    description: Kong Admin API server host address.
-    default: ""
-  - flag: '`--kong-admin-tls-client-cert-file`'
-    type: '`string`'
-    description: Path to a client certificate file for mTLS with Kong Admin API.
-    default: ""
-  - flag: '`--kong-admin-tls-client-key-file`'
-    type: '`string`'
-    description: Path to a client key file for mTLS with Kong Admin API.
-    default: ""
-  - flag: '`--kong-admin-token`'
-    type: '`string`'
-    description: Kong Admin API authentication token (if Admin API requires authentication).
-    default: ""
-  - flag: '`--kong-admin-url`'
-    type: '`string`'
-    description: Full URL to the Kong Admin API.
-    default: ""
-  - flag: '`--kong-admin-headers`'
-    type: '`map[string][]string`'
-    description: Headers to add to Admin API requests, e.g. key1=value1,key2=value2a;value2b.
-    default: ""
-  - flag: '`--kong-proxy-url`'
-    type: '`string`'
-    description: The Kong proxy URL that the controller uses to check proxy health.
-    default: ""
-  - flag: '`--kong-workspace`'
-    type: '`string`'
-    description: Kong Enterprise workspace to use.
-    default: ""
-  - flag: '`--konnect-runtime-group-id`'
-    type: '`string`'
-    description: The ID of the Konnect runtime group to manage.
-    default: ""
-  - flag: '`--konnect-pat`'
-    type: '`string`'
-    description: Personal Access Token for authenticating with Konnect.
-    default: ""
-  - flag: '`--konnect-api-svc-addr`'
-    type: '`string`'
-    description: Address of the Konnect control plane API (advanced).
-    default: ""
-  - flag: '`--konnect-runtime-addr`'
-    type: '`string`'
-    description: The address of the Konnect runtime.
-    default: ""
-  - flag: '`--konnect-sync-timeout`'
-    type: '`duration`'
-    description: The timeout for Konnect sync requests.
-    default: '`10s`'
-  - flag: '`--konnect-refresh-interval`'
-    type: '`duration`'
-    description: Interval to refresh Konnect session and runtime configuration.
-    default: '`1m`'
-  - flag: '`--leader-election`'
-    type: '`bool`'
-    description: Enable leader election for controller manager. Enabling this will ensure there is only one active controller manager.
-    default: '`true`'
-  - flag: '`--log-format`'
-    type: '`string`'
-    description: 'Log format. One of: `text`, `json`.'
-    default: '`text`'
-  - flag: '`--log-level`'
-    type: '`string`'
-    description: 'Minimum logging level. One of: `trace`, `debug`, `info`, `warn`, `error`.'
-    default: '`info`'
-  - flag: '`--metrics-bind-address`'
-    type: '`string`'
-    description: The address the metric endpoint binds to.
-    default: '`:8080`'
-  - flag: '`--profiling`'
-    type: '`bool`'
-    description: Enable profiling via web interface host:10256/debug/pprof/.
-    default: '`false`'
-  - flag: '`--publish-service`'
-    type: '`string`'
-    description: The Service to use for publishing ingress status.
-    default: ""
-  - flag: '`--status-listen`'
-    type: '`string`'
-    description: The address the debug endpoint listens on (ip:port).
-    default: '`0.0.0.0:10256`'
-  - flag: '`--status-sync-interval`'
-    type: '`duration`'
-    description: The interval for syncing status updates.
-    default: '`30s`'
-  - flag: '`--tls-min-version`'
-    type: '`string`'
-    description: 'The minimum TLS version supported. One of: `TLSv1.0`, `TLSv1.1`, `TLSv1.2`, `TLSv1.3`.'
-    default: '`TLSv1.2`'
-  - flag: '`--update-status`'
-    type: '`bool`'
-    description: Enables updating the status of Ingress resources.
-    default: '`true`'
-  - flag: '`--username-password-secret-name`'
-    type: '`string`'
-    description: Secret name containing Kong Admin API credentials (username/password).
-    default: ""
-  - flag: '`--username-password-secret-namespace`'
-    type: '`string`'
-    description: Namespace of the secret containing Kong Admin API credentials.
-    default: ""
-  - flag: '`--version`'
-    type: '`bool`'
-    description: Show version and exit.
-    default: '`false`'
-  - flag: '`--v`'
-    type: '`int`'
-    description: Set the verbosity level for logs. Higher means more output (klog-style).
-    default: '`0`'
-  - flag: '`--watch-namespace`'
-    type: '`string`'
-    description: Restrict the controller to only watch resources in a specific namespace.
-    default: ""
-{% endtable %}
+| Flag | Type | Description | Default |
+| ---- | ---- | ----------- | ------- |
+| `--admission-webhook-cert` | `string` | Admission server PEM certificate value. Mutually exclusive with --admission-webhook-cert-file. |  |
+| `--admission-webhook-cert-file` | `string` | Admission server PEM certificate file path. If both this and the cert value is unset, defaults to /admission-webhook/tls.crt. Mutually exclusive with --admission-webhook-cert. |  |
+| `--admission-webhook-key` | `string` | Admission server PEM private key value. Mutually exclusive with --admission-webhook-key-file. |  |
+| `--admission-webhook-key-file` | `string` | Admission server PEM private key file path. If both this and the key value is unset, defaults to /admission-webhook/tls.key. Mutually exclusive with --admission-webhook-key. |  |
+| `--admission-webhook-listen` | `string` | The address to start admission controller on (ip:port). Setting it to 'off' disables the admission controller. | `off` |
+| `--anonymous-reports` | `bool` | Send anonymized usage data to help improve Kong. | `true` |
+| `--apiserver-burst` | `int` | The Kubernetes API RateLimiter maximum burst queries per second. | `300` |
+| `--apiserver-host` | `string` | The Kubernetes API server URL. If not set, the controller will use cluster config discovery. |  |
+| `--apiserver-qps` | `int` | The Kubernetes API RateLimiter maximum queries per second. | `100` |
+| `--cache-sync-timeout` | `duration` | The time limit set to wait for syncing controllers' caches. Set to 0 to use default from controller-runtime. | `2m0s` |
+| `--cluster-domain` | `string` | The cluster domain. This is used e.g. in generating addresses for upstream services. |  |
+| `--combined-services-from-different-httproutes` | `bool` | Combine rules from different HTTPRoutes that are sharing the same combination of backends to one Kong service to reduce total number of Kong services. | `false` |
+| `--configmap-label-selector` | `string` | Limits the configmaps ingested to those having this label set to "true". | `konghq.com/configmap` |
+| `--dump-config` | `bool` | Enable config dumps via web interface host:10256/debug/config. | `false` |
+| `--dump-sensitive-config` | `bool` | Include credentials and TLS secrets in configs exposed with --dump-config flag. | `false` |
+| `--election-id` | `string` | Election id to use for status update. | `5b374a9e.konghq.com` |
+| `--election-namespace` | `string` | Leader election namespace to use when running outside a cluster. |  |
+| `--emit-kubernetes-events` | `bool` | Emit Kubernetes events for successful configuration applies, translation failures and configuration apply failures on managed objects. | `true` |
+| `--enable-controller-gwapi-gateway` | `bool` | Enable the Gateway API Gateway controller. | `true` |
+| `--enable-controller-gwapi-grpcroute` | `bool` | Enable the Gateway API GRPCRoute controller. | `true` |
+| `--enable-controller-gwapi-httproute` | `bool` | Enable the Gateway API HTTPRoute controller. | `true` |
+| `--enable-controller-gwapi-reference-grant` | `bool` | Enable the Gateway API ReferenceGrant controller. | `true` |
+| `--enable-controller-ingress-class-networkingv1` | `bool` | Enable the networking.k8s.io/v1 IngressClass controller. | `true` |
+| `--enable-controller-ingress-class-parameters` | `bool` | Enable the IngressClassParameters controller. | `true` |
+| `--enable-controller-ingress-networkingv1` | `bool` | Enable the networking.k8s.io/v1 Ingress controller. | `true` |
+| `--enable-controller-kong-custom-entity` | `bool` | Enable the KongCustomEntity controller. | `true` |
+| `--enable-controller-kong-license` | `bool` | Enable the KongLicense controller. | `true` |
+| `--enable-controller-kong-service-facade` | `bool` | Enable the KongServiceFacade controller. | `true` |
+| `--enable-controller-kong-upstream-policy` | `bool` | Enable the KongUpstreamPolicy controller. | `true` |
+| `--enable-controller-kong-vault` | `bool` | Enable the KongVault controller. | `true` |
+| `--enable-controller-kongclusterplugin` | `bool` | Enable the KongClusterPlugin controller. | `true` |
+| `--enable-controller-kongconsumer` | `bool` | Enable the KongConsumer controller. | `true` |
+| `--enable-controller-kongingress` | `bool` | Enable the KongIngress controller. | `true` |
+| `--enable-controller-kongplugin` | `bool` | Enable the KongPlugin controller. | `true` |
+| `--enable-controller-service` | `bool` | Enable the Service controller. | `true` |
+| `--enable-controller-tcpingress` | `bool` | Enable the TCPIngress controller. | `true` |
+| `--enable-controller-udpingress` | `bool` | Enable the UDPIngress controller. | `true` |
+| `--enable-drain-support` | `bool` | Include terminating endpoints in Kong upstreams with weight=0 for graceful connection draining. | `false` |
+| `--enable-reverse-sync` | `bool` | Send configuration to Kong even if the configuration checksum has not changed since previous update. | `false` |
+| `--feature-gates` | `list of string=bool` | A set of comma separated key=value pairs that describe feature gates for alpha/beta/experimental features. See the Feature Gates documentation for information and available options: https://github.com/Kong/kubernetes-ingress-controller/blob/main/FEATURE_GATES.md. |  |
+| `--gateway-api-controller-name` | `string` | The controller name to match on Gateway API resources. | `konghq.com/kic-gateway-controller` |
+| `--gateway-discovery-readiness-check-interval` | `duration` | Interval of readiness checks on gateway admin API clients for discovery. | `10s` |
+| `--gateway-discovery-readiness-check-timeout` | `duration` | Timeout of readiness checks on gateway admin clients. | `5s` |
+| `--gateway-to-reconcile` | `namespaced-name` | Gateway namespaced name in "namespace/name" format. Makes KIC reconcile only the specified Gateway. |  |
+| `--health-probe-bind-address` | `string` | The address the probe endpoint binds to. | `:10254` |
+| `--ingress-class` | `string` | Name of the ingress class to route through this controller. | `kong` |
+| `--init-cache-sync-duration` | `duration` | The initial delay to wait for Kubernetes object caches to be synced before the initial configuration. | `5s` |
+| `--kong-admin-ca-cert` | `string` | PEM-encoded CA certificate to verify Kong's Admin TLS certificate. Mutually exclusive with --kong-admin-ca-cert-file. |  |
+| `--kong-admin-ca-cert-file` | `string` | Path to PEM-encoded CA certificate file to verify Kong's Admin TLS certificate. Mutually exclusive with --kong-admin-ca-cert. |  |
+| `--kong-admin-concurrency` | `int` | Max number of concurrent requests sent to Kong's Admin API. | `10` |
+| `--kong-admin-filter-tag` | `strings` | Tag(s) in comma-separated format (or specify this flag multiple times). They are used to manage and filter entities in Kong. This setting will be silently ignored if the Kong instance has no tags support. | `[managed-by-ingress-controller]` |
+| `--kong-admin-header` | `strings` | Header(s) (key:value) in comma-separated format (or specify this flag multiple times) to add to every Admin API call. | `[]` |
+| `--kong-admin-init-retries` | `uint` | Number of attempts that will be made initially on controller startup to connect to the Kong Admin API. | `60` |
+| `--kong-admin-init-retry-delay` | `duration` | The time delay between every attempt (on controller startup) to connect to the Kong Admin API. | `1s` |
+| `--kong-admin-svc` | `namespaced-name` | Kong Admin API Service namespaced name in "namespace/name" format, to use for Kong Gateway service discovery. |  |
+| `--kong-admin-svc-port-names` | `strings` | Name(s) of ports on Kong Admin API service in comma-separated format (or specify this flag multiple times) to take into account when doing gateway discovery. | `[admin-tls,kong-admin-tls]` |
+| `--kong-admin-tls-client-cert` | `string` | Mutual TLS (mTLS) client certificate for authentication. Mutually exclusive with --kong-admin-tls-client-cert-file. |  |
+| `--kong-admin-tls-client-cert-file` | `string` | Mutual TLS (mTLS) client certificate file for authentication. Mutually exclusive with --kong-admin-tls-client-cert. |  |
+| `--kong-admin-tls-client-key` | `string` | Mutual TLS (mTLS) client key for authentication. Mutually exclusive with --kong-admin-tls-client-key-file. |  |
+| `--kong-admin-tls-client-key-file` | `string` | Mutual TLS (mTLS) client key file for authentication. Mutually exclusive with --kong-admin-tls-client-key. |  |
+| `--kong-admin-tls-server-name` | `string` | SNI name to use to verify the certificate presented by Kong in TLS. |  |
+| `--kong-admin-tls-skip-verify` | `bool` | Disable verification of TLS certificate of Kong's Admin endpoint. | `false` |
+| `--kong-admin-token` | `string` | The Kong Enterprise RBAC token used by the controller. Mutually exclusive with --kong-admin-token-file. |  |
+| `--kong-admin-token-file` | `string` | Path to the Kong Enterprise RBAC token file used by the controller. Mutually exclusive with --kong-admin-token. |  |
+| `--kong-admin-url` | `strings` | Kong Admin URL(s) in comma-separated format (or specify this flag multiple times) to connect to in the format "protocol://address:port". | `[http://localhost:8001]` |
+| `--kong-workspace` | `string` | Kong Enterprise workspace to configure. Leave this empty if not using Kong workspaces. |  |
+| `--konnect-address` | `string` | Base address of Konnect API. | `https://us.kic.api.konghq.com` |
+| `--konnect-control-plane-id` | `string` | An ID of a control plane that is to be synchronized with data plane configuration. |  |
+| `--konnect-disable-consumers-sync` | `bool` | Disable synchronization of consumers with Konnect. | `false` |
+| `--konnect-initial-license-polling-period` | `duration` | Polling period to be used before the first license is retrieved. | `1m0s` |
+| `--konnect-license-polling-period` | `duration` | Polling period to be used after the first license is retrieved. | `12h0m0s` |
+| `--konnect-license-storage-enabled` | `bool` | Store licenses fetched from Konnect to Secrets locally to use them later when connection to Konnect is broken. Only effective when --konnect-licensing-enabled is true. | `true` |
+| `--konnect-licensing-enabled` | `bool` | Retrieve licenses from Konnect if available. Overrides licenses provided via the environment. | `false` |
+| `--konnect-refresh-node-period` | `duration` | Period of uploading status of KIC and controlled Kong instances. | `1m0s` |
+| `--konnect-sync-enabled` | `bool` | Enable synchronization of data plane configuration with a Konnect control plane. | `false` |
+| `--konnect-tls-client-cert` | `string` | Konnect TLS client certificate. |  |
+| `--konnect-tls-client-cert-file` | `string` | Konnect TLS client certificate file path. |  |
+| `--konnect-tls-client-key` | `string` | Konnect TLS client key. |  |
+| `--konnect-tls-client-key-file` | `string` | Konnect TLS client key file path. |  |
+| `--konnect-upload-config-period` | `duration` | Period of uploading Kong configuration. | `30s` |
+| `--kubeconfig` | `string` | Path to the kubeconfig file. |  |
+| `--log-format` | `string` | Format of logs of the controller. Allowed values are text and json. | `text` |
+| `--log-level` | `string` | Level of logging for the controller. Allowed values are trace, debug, info, and error. | `info` |
+| `--metrics-access-filter` | `string` | Specifies the filter access function to be used for accessing the metrics endpoint (possible values: off, rbac). | `"off"` |
+| `--metrics-bind-address` | `string` | The address the metric endpoint binds to. | `:10255` |
+| `--profiling` | `bool` | Enable profiling via web interface host:10256/debug/pprof/. | `false` |
+| `--proxy-sync-seconds` | `float` | Define the rate (in seconds) in which configuration updates will be applied to the Kong Admin API. | `3` |
+| `--proxy-timeout-seconds` | `float` | Sets the timeout (in seconds) for all requests to Kong's Admin API. | `30` |
+| `--publish-service` | `namespaced-name` | Service fronting Ingress resources in "namespace/name" format. The controller will update Ingress status information with this Service's endpoints. |  |
+| `--publish-service-udp` | `namespaced-name` | Service fronting UDP routing resources in "namespace/name" format. The controller will update UDP route status information with this Service's endpoints. If omitted, the same Service will be used for both TCP and UDP routes. |  |
+| `--publish-status-address` | `strings` | Addresses in comma-separated format (or specify this flag multiple times), for use in lieu of "publish-service" when that Service lacks useful address information (for example, in bare-metal environments). | `[]` |
+| `--publish-status-address-udp` | `strings` | Addresses in comma-separated format (or specify this flag multiple times), for use in lieu of "publish-service-udp" when that Service lacks useful address information (for example, in bare-metal environments). | `[]` |
+| `--secret-label-selector` | `string` | Limits the secrets ingested to those having this label set to "true". If not specified, all secrets are ingested. |  |
+| `--skip-ca-certificates` | `bool` | Disable syncing CA certificate syncing (for use with multi-workspace environments). | `false` |
+| `--sync-period` | `duration` | Determine the minimum frequency at which watched resources are reconciled. Set to 0 to use default from controller-runtime. | `10h0m0s` |
+| `--term-delay` | `duration` | The time delay to sleep before SIGTERM or SIGINT will shut down the ingress controller. | `0s` |
+| `--update-status` | `bool` | Indicates if the ingress controller should update the status of resources (e.g. IP/Hostname for v1.Ingress, etc.). | `true` |
+| `--update-status-queue-buffer-size` | `int` | Buffer size of the underlying channels used to update the status of resources. | `8192` |
+| `--use-last-valid-config-for-fallback` | `bool` | When recovering from config push failures, use the last valid configuration cache to backfill broken objects. It can only be used with the FallbackConfiguration feature gate enabled. | `false` |
+| `--watch-namespace` | `strings` | Namespace(s) in comma-separated format (or specify this flag multiple times) to watch for Kubernetes resources. Defaults to all namespaces. | `[]` |
 
 <!-- vale on -->
