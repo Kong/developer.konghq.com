@@ -1,7 +1,7 @@
 
 {% assign page_title = page.example.title %}
 {% if page_title == empty %}{% assign page_title = 'EMPTY TITLE' %}{% endif %}
-{%- capture title -%}{{ page_title | liquify }}{% if page.min_version %}{% new_in page.min_version.gateway %}{% endif %}{%- endcapture -%}
+{%- capture title -%}{{ page_title | liquify }}{% if page.min_version != empty %}{% new_in page.min_version.gateway %}{% endif %}{%- endcapture -%}
 
 ## {{title}}
 

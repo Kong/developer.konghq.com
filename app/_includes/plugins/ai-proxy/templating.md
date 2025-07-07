@@ -32,9 +32,6 @@ rows:
   - action: "[Proxy multiple models deployed in the same Azure instance](./examples/sdk-multiple-providers/)"
     description: |
       Configure one route to proxy multiple models deployed in the same Azure instance.
-  - action: "[Use unsupported models with OpenAI-compatible SDKs](./examples/sdk-unsupported-model/)"
-    description: |
-      Proxy models that are not officially supported, like Whisper-2, through an OpenAI-compatible interface using preserve routing.
 {% endtable %}
 <!--vale on-->
 

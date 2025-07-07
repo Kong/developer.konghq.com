@@ -29,7 +29,7 @@ rows:
   - action: "[Use one chat route with dynamic Azure OpenAI deployments](./examples/sdk-azure-one-route/)"
     description: |
       Configure a dynamic route to target multiple Azure OpenAI model deployments.
-  - action: "[Use unsupported models with OpenAI-compatible SDKs](./examples/sdk-unsupported-model/)"
+  - action: "[Use unsupported models with OpenAI-compatible SDKs](./examples/sdk-multiple-azure-deployments/)"
     description: |
       Proxy models that are not officially supported, like Whisper-2, through an OpenAI-compatible interface using preserve routing.
 {% endtable %}

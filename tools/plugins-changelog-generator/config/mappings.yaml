@@ -55,6 +55,7 @@ ai-prompt-decorator:
   - AI plugins
 ai-azure-content-safety:
   - AI pluginss
+  - AI Azure Content Safety
 
 
 basic-auth:
@@ -79,3 +80,4 @@ saml:
   - Authentication plugins
 vault-auth:
   - Authentication plugins
+

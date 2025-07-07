@@ -178,6 +178,10 @@
 
   code {
     font-family: "JetBrains Mono", system-ui, sans-serif;
+    /* The font we use for codeblocks includes a ligature that renders things like
+      != as ≠, this property disables all ligatures.
+    */
+    font-variant-ligatures: none;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -881,4 +885,9 @@
 
 .select-popover.popover .popover-container {
   @apply border-none py-0 !important;
+}
+
+/* How-to lists */
+ol:has(code) {
+  @apply flex flex-col gap-4;
 }

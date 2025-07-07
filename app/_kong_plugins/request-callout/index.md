@@ -20,14 +20,15 @@ works_on:
 min_version:
    gateway: '3.10'
 
-on_prem:
-  - hybrid
-  - db-less
-  - traditional
-konnect_deployments:
-  - hybrid
-  - cloud-gateways
-  - serverless
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 icon: request-callout.png
 

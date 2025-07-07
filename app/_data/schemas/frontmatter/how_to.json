@@ -7,6 +7,7 @@
   ],
   "properties": {
     "tldr": {
+      "nullable": true,
       "type": "object",
       "properties": {
         "q": {

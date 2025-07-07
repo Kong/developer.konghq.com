@@ -18,14 +18,15 @@ products:
 # min_version:
 #     gateway: '3.4'
 
-# on_prem:
-#   - hybrid
-#   - db-less
-#   - traditional
-# konnect_deployments:
-#   - hybrid
-#   - cloud-gateways
-#   - serverless
+# topologies:
+#   on_prem:
+#     - hybrid
+#     - db-less
+#     - traditional
+#   konnect_deployments:
+#     - hybrid
+#     - cloud-gateways
+#     - serverless
 
 # third_party: true
 # premium_partner: true

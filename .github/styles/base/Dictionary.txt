@@ -9,6 +9,7 @@ addons
 admin_listen
 admin's
 admin's
+agentic
 Alertmanager
 allow_terminated
 allowlist
@@ -21,6 +22,7 @@ anonymization
 anonymized
 Anonymizer
 api
+apikey
 APIm
 APIOps
 APIOps
@@ -36,6 +38,7 @@ args
 Arya
 Arya
 arya
+assumeRole
 Atlassian
 auditability
 authtoken
@@ -117,6 +120,7 @@ config
 config_hash
 configs
 configurability
+Conjur
 conntrack
 consumer_group
 consumer_id
@@ -129,6 +133,7 @@ crds
 created_at
 creationTimestamp
 cronjob
+CrowdStrike
 cryptocurrency
 Curity
 curity
@@ -216,6 +221,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+exfiltrate
 failover
 fapi
 Fargate
@@ -271,15 +277,18 @@ gzip
 gzipped
 hackathon
 hackathons
+hardcode
 hardcoded
 hardcoding
 hashicorp
 Hasura
 hcv
 header_filter
+hello_world
 headmatter
 healthcheck
 healthchecks
+helpdesk
 hostname
 hostnames
 hotfix
@@ -409,6 +418,7 @@ KPI
 KPI
 KPIs
 KPIs
+ksearch
 kubeconfig
 kubectl
 kubelet
@@ -460,6 +470,7 @@ matchers
 max_args
 max_headers
 mbps
+mcp
 md
 mebibytes
 Memcached
@@ -620,6 +631,8 @@ readme
 readonly
 real_ip_header
 real_ip_recursive
+Realtime
+realtime
 reconverge
 redis
 reentrant
@@ -639,7 +652,10 @@ reportingInstance
 requery
 Requeue
 requeue
+request_counts
 RequestResponse
+Rerank
+reranking
 resourceVersion
 Resty
 Resty
@@ -655,6 +671,7 @@ rollout
 rollouts
 routable
 route_type
+route_types
 ruleset
 rulesets
 runloop

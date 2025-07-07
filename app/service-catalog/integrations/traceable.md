@@ -1,5 +1,5 @@
 ---
-title: Traceable Integration
+title: Traceable
 content_type: reference
 layout: reference
 

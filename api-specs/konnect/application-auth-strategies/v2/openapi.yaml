@@ -129,7 +129,7 @@ paths:
       - $ref: '#/components/parameters/DcrProviderId'
     post:
       operationId: verify-dcr-provider
-      summary: Verify DCR provider configuration.
+      summary: Verify DCR provider configuration
       description: 'Verifies if a DCR provider is configured properly. Returns 200 for success, 4xx for failure.'
       responses:
         '200':
@@ -1114,8 +1114,6 @@ components:
             type: string
             maxLength: 64
           maxItems: 10
-        labels:
-          $ref: '#/components/schemas/Labels'
       additionalProperties: true
       required:
         - issuer
@@ -1425,7 +1423,7 @@ components:
       type: string
       maxLength: 256
     UUID:
-      description: Contains a unique identifier used by the API for this resource.
+      description: Contains a unique identifier used for this resource.
       type: string
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7

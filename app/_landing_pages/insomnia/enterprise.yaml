@@ -1,0 +1,99 @@
+metadata:
+  title: Insomnia Enterprise
+  description: Learn more about the features available in the Insomnia Enterprise plan.
+  content_type: landing_page
+  breadcrumbs:
+    - /insomnia/
+  tags:
+    - security
+  products:
+    - insomnia
+rows:
+  - header:
+      type: h1
+      text: "Insomnia Enterprise"     
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The Enterprise plan for Insomnia provides advanced options for user management and security.
+                    You can configure Insomnia's end-to-end-encryption (E2EE), storage control, and strong access governance rules on the Enterprise plan.
+
+                    To compare plans, see the [pricing page](https://insomnia.rest/pricing).
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: SSO
+            description: Set up Single Sign-On (SSO) for your enterprise account.
+            icon: /assets/icons/key.svg
+            cta:
+              text: Learn more
+              url: /insomnia/sso/
+      - blocks:
+        - type: card
+          config:
+            title: SCIM
+            description: Set up System for Cross-domain Identity Management (SCIM) provisioning for your enterprise account.
+            icon: /assets/icons/domain.svg
+            cta:
+              text: Learn more
+              url: /insomnia/scim/
+      - blocks:
+        - type: card
+          config:
+            title: Storage control
+            description: Define the storage options allowed for your organizations.
+            icon: /assets/icons/database.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-account-management/#manage-storage
+      - blocks:
+        - type: card
+          config:
+            title: Vault integrations
+            description: Integrate with your AWS, GCP, Azure, and HashiCorp vaults.
+            icon: /assets/icons/lock.svg
+            cta:
+              text: Learn more
+              url: /insomnia/external-vault/                  
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Teams
+            description: Organize your Enterprise users into teams.
+            icon: /assets/icons/team.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-user-management/#teams
+      - blocks:
+        - type: card
+          config:
+            title: Co-owners
+            description: Invite users to be co-owners of your account.
+            icon: /assets/icons/profile.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-account-management/#add-co-owners
+      - blocks:
+        - type: card
+          config:
+            title: Domains
+            description: Use domains to manage Enterprise users.
+            icon: /assets/icons/domain.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-account-management/#add-domains
+      - blocks:
+        - type: card
+          config:
+            title: Reports
+            description: Get reports on active and inactive users.
+            icon: /assets/icons/analytics.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-user-management/#user-activity-reports

@@ -55,10 +55,12 @@ To use the plugin, you need to do the following:
    > <br/><br/>
    > You should always fill out `key`, `algorithm`, and `secret`. If you use any `RS`, `ES`, or `PS` algorithm, use a dummy value for `secret`. In {{site.base_gateway}} 3.6 or earlier, you use the `RS256` or `ES256` algorithm instead.
 1. Sign your JWT following [RFC 7519](https://tools.ietf.org/html/rfc7519) standards.
-1. Enable the JWT plugin.
+1. Enable the JWT plugin; see the [plugin configuration examples](/plugins/jwt/examples/).
 1. The JWT can now be included in a request to {{site.base_gateway}}. {{site.base_gateway}} *only* proxies requests that include a valid signature, provided they don't include an invalid verified claim (optionally configured with [`config.claims_to_verify`](/plugins/jwt/reference/#schema--config-claims-to-verify)).
 
-For an end-to-end tutorial on this, see [Authenticate Consumers with JWT](/how-to/authenticate-consumers-jwt/).
+For more detail, see:
+* End-to-end tutorial for [Authenticating Consumers with JWT](/how-to/authenticate-consumers-jwt/)
+* All [JWT plugin configuration examples](/plugins/jwt/examples/)
 
 ## Craft a JWT with public/private keys (RS256 or ES256)
 

@@ -23,14 +23,14 @@ related_resources:
     url: /service-catalog/
 discovery_support: true
 discovery_default: true
-bindable_entities: "Service"
+bindable_entities: "Mesh Service"
 ---
 
-The {{site.konnect_short_name}} Mesh integration allows users gain visibility into how their service is deployed across meshes and zones, determine whether their deployment is healthy, and - if used in conjunction with other built-in integrations - to identify links between their mesh services and other {{site.konnect_short_name}} resources.
+The {{site.konnect_short_name}} Mesh integration allows users gain visibility into how their service is deployed across meshes and zones, determine whether their deployment is healthy, and (if used in conjunction with other built-in integrations) to identify links between their mesh services and other {{site.konnect_short_name}} resources.
 
 ## Authorize the Mesh Manager integration
 
-The Mesh Manager integration is built directly into Service Catalog. No additional authorization is required. As new Gateway Services are created in Mesh Manager, they are automatically discovered by Service Catalog and surfaced as Resources.
+The Mesh Manager integration is built directly into Service Catalog. No additional authorization is required. As new Mesh Services are created in Mesh Manager, they are automatically discovered by Service Catalog and surfaced as Resources.
 
 
 
@@ -45,8 +45,8 @@ columns:
   - title: Description
     key: description
 rows:
-  - entity: "Gateway Service"
-    description: "A Mesh Service (Service + Global Control Plane) with the Zone dimension included"
+  - entity: "Mesh Service"
+    description: "A Mesh Service (Service and Global Control Plane) with the Zone dimension included"
 {% endtable %}
 
 

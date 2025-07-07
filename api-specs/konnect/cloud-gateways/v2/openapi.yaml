@@ -410,9 +410,9 @@ paths:
   '/cloud-gateways/networks/{networkId}/configuration-references':
     get:
       operationId: list-network-configurations
-      summary: |
+      summary: List Network Configuration References
+      description: |
         Returns a paginated collection of configurations that reference a network.
-      description: List Network Configuration References
       parameters:
         - $ref: '#/components/parameters/NetworkId'
         - $ref: '#/components/parameters/PageSize'
@@ -1200,12 +1200,6 @@ components:
         - region
         - cloud_gateway_network_id
       title: Configuration Data-Plane Group Config Item
-    ConfigurationDataPlaneGroupConfigs:
-      description: 'Object that describes where data-planes will be deployed to, along with how many instances.'
-      type: array
-      items:
-        $ref: '#/components/schemas/ConfigurationDataPlaneGroupConfig'
-      title: Configuration Data-Plane Group Configs
     ConfigurationDataPlaneGroup:
       description: Object that describes the set of data-plane groups currently pointed to this configuration.
       type: object
@@ -1302,7 +1296,11 @@ components:
         api_access:
           $ref: '#/components/schemas/ApiAccess'
         dataplane_group_config:
-          $ref: '#/components/schemas/ConfigurationDataPlaneGroupConfigs'
+          description: 'Object that describes where data-planes will be deployed to, along with how many instances.'
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationDataPlaneGroupConfig'
+          title: Configuration Data-Plane Group Configs
         dataplane_groups:
           description: |
             List of data-plane groups that describe where data-planes will be deployed to, along with how many

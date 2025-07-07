@@ -5,9 +5,8 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 tags:
-  - beta
+  - dev-portal-customization
 
 breadcrumbs:
   - /dev-portal/
@@ -32,6 +31,8 @@ related_resources:
     url: /dev-portal/security-settings/
   - text: Custom domains
     url: /dev-portal/custom-domains/
+  - text: About Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
 The Dev Portal Setting page allows you to make global changes to your Dev Portal.

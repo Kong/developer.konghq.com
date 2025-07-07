@@ -20,6 +20,7 @@ module Jekyll
           set_prerequisites!(page)
           set_next_prev!(page)
           set_cleanup!(page)
+          set_breadcrumbs!(page)
         end
 
         @site.documents.each do |page|
@@ -27,6 +28,7 @@ module Jekyll
           set_prerequisites!(page)
           set_next_prev!(page)
           set_cleanup!(page)
+          set_breadcrumbs!(page)
         end
       end
 
@@ -50,9 +52,9 @@ module Jekyll
 
         return unless previous_page
 
-        series_meta = @site.data['series'][page.data['series']['id']]
+        @series_meta = @site.data['series'][page.data['series']['id']]
 
-        unless series_meta
+        unless @series_meta
           raise "Could not read series meta from app/_data/series.yml with key #{page.data['series']['id']}"
         end
 
@@ -61,7 +63,7 @@ module Jekyll
           'position' => 'before',
           'title' => 'Series Prerequisites',
           'content' => <<~HEREDOC.strip
-            This page is part of the [**#{series_meta['title']}**](#{series_meta['url']}) series.
+            This page is part of the [**#{@series_meta['title']}**](#{@series_meta['url']}) series.
 
             Complete the previous page, [**#{previous_page.data['title']}**](#{previous_page.url}) before completing this page.
           HEREDOC
@@ -86,6 +88,16 @@ module Jekyll
         return unless page.data['series']
 
         page.data['cleanup'] = nil
+      end
+
+      def set_breadcrumbs!(page)
+        return unless page.data['series']
+        return unless @series_meta['breadcrumb_title']
+
+        page.data['breadcrumbs'] << {
+          'title' => @series_meta['breadcrumb_title'],
+          'url' => page.data['series']['items'].first.url
+        }
       end
 
       def add_series_item(id, page)
