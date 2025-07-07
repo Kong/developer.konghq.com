@@ -126,11 +126,11 @@ rows:
             icon: /assets/icons/team.svg
             ctas:
               - text: Self-service developer and app registration
-                url: "/dev-portal/application-registration/"
+                url: "/dev-portal/self-service/"
               - text: Developer sign-up
                 url: "/dev-portal/developer-signup/"
               - text: Developer and application approvals
-                url: "/dev-portal/access-and-approval/"
+                url: "/dev-portal/self-service/#developer-and-application-approvals"
               - text: Authentication strategies
                 url: "/dev-portal/auth-strategies/"
               - text: Dynamic Client Registration

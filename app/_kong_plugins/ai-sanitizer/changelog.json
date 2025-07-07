@@ -1,4 +1,16 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Blocked plugins to execute retry logic. Also improve testing functions\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added a new plugin that can sanitize the PII information in requests before the requests are proxied by the AI Proxy or AI Proxy Advanced plugin.\n",

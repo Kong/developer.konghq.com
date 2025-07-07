@@ -38,6 +38,10 @@ tags:
 search_aliases:
   - tls-metadata-headers
   - certificates
+
+notes: | 
+   <b>Serverless Gateways</b>: This plugin is not supported in serverless gateways because the 
+   TLS handshake does not occur at the Kong layer in this setup. 
 ---
 
 The TLS Metadata Header plugin detects client certificates in requests, extracts the TLS metadata (such as the URL-encoded client certificate), and injects this metadata into HTTP headers. It does not validate client certificates.

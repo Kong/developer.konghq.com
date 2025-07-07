@@ -1,4 +1,61 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Marked the `auth_password` as an `encrypted` field.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now logs the request URL, response code, and request latency (in milliseconds).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now sends a custom User-Agent header if one isn't provided. The default value is `kong/<kong_version>/request-callout`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fix issue where a callout response would not be available to response `by_lua` code",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where caching options modified via `by_lua` would apply to all subsequent callouts.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where callouts with the same name would be accepted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Query parameters specified via `callout.request.query` will now correctly replace those in the callout URL.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where values in `custom` would not accept explicit null values for removal of fields",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where callout and upstream request body customizations were not performed when an empty request body was provided; now, an empty JSON body is used and content-type JSON is added to the request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where callout plugin failed with timeout when `callouts.request.body.custom` is null and `callouts.request.headers.forward` is true.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the client request body is forwarded to upstream when `upstream.body.forward` is false.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added the `request-callout` plugin, which provides complex request augmentation and internal authentication.\n",
