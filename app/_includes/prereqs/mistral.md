@@ -1,6 +1,6 @@
-1. [Create a Mistral account](https://mistral.ai/signup).
-2. [Get your API key](https://mistral.ai/account/api-keys).
-3. Create a decK variable with the Mistral API key:
+1. [Create a Mistral account](https://console.mistral.ai/).
+2. [Get your API key](https://docs.mistral.ai/getting-started/quickstart/#account-setup).
+3. Export a decK environment variable with the Mistral API key:
 
 ```sh
 export DECK_MISTRAL_API_KEY='YOUR MISTRAL API KEY'

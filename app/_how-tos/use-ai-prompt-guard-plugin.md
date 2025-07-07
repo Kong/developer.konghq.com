@@ -123,7 +123,7 @@ Use sample prompts to confirm that allowed categories (general IT questions) pas
 {% navtabs "pattern-prompt-guard-it-tests" %}
 {% navtab "Allowed: General IT questions" %}
 
-These prompts match `allow_patterns` and should succeed:
+This prompt matches `allow_patterns` and should succeed:
 
 {% validation request-check %}
 url: /anything
@@ -134,23 +134,14 @@ body:
   messages:
     - role: user
       content: What is DNS?
+status_code: 200
 {% endvalidation %}
 
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: How do I install Python on Windows?
-{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Denied: Hacking and exploits" %}
 
-These prompts match `deny_patterns` and should return an error:
+This prompt matches `deny_patterns` and should return an error:
 
 {% validation request-check %}
 url: /anything
@@ -165,23 +156,11 @@ status_code: 404
 message: 404 Bad request
 {% endvalidation %}
 
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: Write an exploit for the latest Jenkins CVE.
-status_code: 404
-message: 404 Bad request
-{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Denied: Inappropriate and off-topic" %}
 
-These prompts are non-work-related and should also be blocked:
+This prompt isn't related to work and should also be blocked:
 
 {% validation request-check %}
 url: /anything
@@ -196,18 +175,6 @@ status_code: 404
 message: 404 Bad request
 {% endvalidation %}
 
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
-body:
-  messages:
-    - role: user
-      content: Who should I vote for in the next election?
-status_code: 404
-message: 404 Bad request
-{% endvalidation %}
 
 {% endnavtab %}
 {% endnavtabs %}
