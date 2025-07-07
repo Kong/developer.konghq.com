@@ -79,17 +79,19 @@ cleanup:
 
 ## Create secrets in HashiCorp Vault
 
-Write an Openai secret to HashiCorp Vault. Replace the placeholder with your actual OpenAI API key and run:
+Replace the placeholder with your actual OpenAI API key and run:
 
-```
+```bash
 vault kv put secret/openai key="YOUR_OPENAI_API_KEY"
 ```
 
-Next, Replace the placeholder with your actual Mistral API key and run to write a secret to HashiCorp Vault:
+Next, replace the placeholder with your actual Mistral API key and run:
 
-```
+```bash
 vault kv put secret/mistral key="YOUR_MISTRAL_API_KEY"
 ```
+
+Both secrets will be stored under their respective paths (`secret/openai` and `secret/mistral`) in the key field.
 
 ## Create decK environment variables
 
