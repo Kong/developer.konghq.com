@@ -31,7 +31,7 @@ releases:
             graviton: true
           docker: true
           docker_support:
-          eol: June 2025
+          eol: June 2026
       - amazonlinux2023:
           package: true
           package_support:
@@ -729,6 +729,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: June 2026
       - amazonlinux2023:
           package: true
           package_support:
