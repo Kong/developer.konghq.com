@@ -53,6 +53,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where SSE terminator may not have correct ending characters.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.1": [
     {
       "message": "Fixed issue of SSE body may have extra trailing in some cases.\n",
