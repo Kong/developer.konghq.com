@@ -129,7 +129,7 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
 
 export async function extractInstructionsFromURL(uri, config, browser) {
   const url = new URL(uri);
-
+  let timeout = 0;
   const page = await browser.newPage();
 
   try {
@@ -165,6 +165,17 @@ export async function extractInstructionsFromURL(uri, config, browser) {
       console.log(
         `  Instructions extracted successfully to ${instructionsFile}`
       );
+
+      // On some machines, we need to wait before extracting the instructions
+      if (process.env.AUTOMATED_TESTS_EXTRACTION_TIMEOUT) {
+        timeout = parseInt(process.env.AUTOMATED_TESTS_EXTRACTION_TIMEOUT, 10);
+      }
+      const promise = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, timeout);
+      });
+      await promise;
     }
   } catch (error) {
     console.error("There was an error extracting the instructions:", error);
