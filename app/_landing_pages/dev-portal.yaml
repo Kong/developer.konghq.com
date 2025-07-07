@@ -19,11 +19,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services. 
-                    It enables developers to browse and search API documentation, try API operations, and manage their own credentials. 
+                    The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services.
+                    It enables developers to browse and search API documentation, try API operations, and manage their own credentials.
                     The Portal supports both internal and external APIs through flexible deployment options.
 
-                    Dev Portal APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation. 
+                    Dev Portal APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation.
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
           - type: button
             config:
@@ -46,7 +46,7 @@ rows:
               - type: text
                 text: |
                   <img src="/assets/icons/lock.svg" style="display:inline"/> **Internal Dev Portal**
-                  
+
                   Designed for internal developer enablement and productivity.
                   * Private visibility with authentication enabled
                   * Publish internal-only APIs
@@ -59,7 +59,7 @@ rows:
               - type: text
                 text: |
                   <img src="/assets/icons/team.svg" style="display:inline"/> **Partner Dev Portal**
-                  
+
                   Ideal for exposing APIs to trusted external developers.
                   * Private or public visibility with auth enabled
                   * Self-service registration and API key provisioning
@@ -72,12 +72,12 @@ rows:
               - type: text
                 text: |
                   <img src="/assets/icons/world.svg" style="display:inline"/> **Public Dev Portal**
-                  
+
                   Open your APIs to the broader developer community.
                   * Public visibility without authentication
                   * Publish APIs suited to general audiences
                   * Build custom landing pages and SEO-optimized docs
-  
+
   - header:
       type: h2
       text: "Get started"
@@ -87,7 +87,7 @@ rows:
           config:
             title: Create an API catalog
             description: |
-              Create and publish APIs to Dev Portal. 
+              Create and publish APIs to Dev Portal.
               Dev Portal APIs serve as a repository for your API specifications and documentation.
             icon: /assets/icons/api.svg
             ctas:
@@ -107,14 +107,14 @@ rows:
               Customize Dev Portal pages, domains, and appearance.
             icon: /assets/icons/edit.svg
             ctas:
+              - text: About Dev Portal customization
+                url: /dev-portal/customizations/dev-portal-customizations/
               - text: Pages and content
                 url: "/dev-portal/pages-and-content/"
               - text: Custom domains
                 url: "/dev-portal/custom-domains/"
               - text: Customization settings
-                url: "/dev-portal/publishing/"
-              - text: Email customization
-                url: "/dev-portal/portal-customization/#developer-email-customization"
+                url: "/dev-portal/portal-customization/"
               - text: Dev Portal settings
                 url: "/dev-portal/portal-settings/"
       - blocks:
@@ -135,7 +135,7 @@ rows:
                 url: "/dev-portal/auth-strategies/"
               - text: Dynamic Client Registration
                 url: "/dev-portal/dynamic-client-registration/"
-  
+
 
   - header:
       type: h2
@@ -165,7 +165,7 @@ rows:
                 Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal.
               cta:
                 url: "/dev-portal/team-mapping/"
-  
+
   - header:
       type: h2
       text: "Dev Portal analytics"
@@ -176,6 +176,6 @@ rows:
             blocks:
               - type: text
                 text: |
-                  In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals. 
+                  In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals.
 
                   For more information, see [Dev Portal analytics](/dev-portal/analytics/).
