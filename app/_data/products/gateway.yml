@@ -718,7 +718,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.10"
-    ee-version: "3.10.0.2"
+    ee-version: "3.10.0.3"
     lts: true
     eol: 2028-03-31
     distributions:
@@ -1092,6 +1092,7 @@ marketplaces:
 
 release_dates:
   '3.11.0.0': 2025/07/03
+  '3.10.0.3': 2025/07/07
   '3.10.0.2': 2025/05/20
   '3.10.0.1': 2025/04/15
   '3.10.0.0': 2025/03/27

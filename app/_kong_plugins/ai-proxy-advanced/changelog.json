@@ -105,6 +105,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where the stale semantic key vector may not be refreshed after the plugin config is updated.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Added support for streaming responses to the AI Proxy Advanced plugin.\n",
