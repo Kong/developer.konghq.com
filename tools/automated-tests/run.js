@@ -43,6 +43,10 @@ export async function loadConfig() {
     } else {
       files = await instructionFileFromConfig(testsConfig);
     }
+    if (!process.env.KONG_LICENSE_DATA) {
+      console.error("Missing env variable KONG_LICENSE_DATA");
+      process.exit(1);
+    }
     const filesByRuntime = await groupInstructionFilesByRuntime(files);
 
     for (const [runtime, instructionFiles] of Object.entries(filesByRuntime)) {
