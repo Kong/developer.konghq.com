@@ -68,7 +68,7 @@ produce_policies:
 Let's say you want to migrate topics that don't have schemas and eventually ensure that every topic has a schema.
 
 For example, assume that you have three topics without schemas: `topic-1`, `topic-2`, and `topic-3`.
-Start by setting `failure_action` to `mark`, so that each invalid record is enriched with `kong/sverr` header with value of a client ID.
+Start by setting `failure_action` to `mark`, so that each invalid record is enriched with a `kong/sverr` header, which provides a client ID value.
 
 Because we don't have policy overrides, we also need to exclude topics from the general rule. 
 
@@ -93,6 +93,7 @@ produce_policies:
 ```
 
 Now let's say that after some time, you migrated `topic-1`.
-You can inspect `kong_knep_kafka_schema_validation_failed_count{topic=topic-1}` metric to verify that clients do not produce invalid records.
-If there are still invalid records, consume them from the topic looking for `kong/sverr` header to identify a client that violates the schema.
+You can inspect the `kong_knep_kafka_schema_validation_failed_count{topic=topic-1}` metric to verify that clients don't produce invalid records.
+
+If there are still invalid records, consume them from the topic looking for the `kong/sverr` header to identify a client that violates the schema.
 If there are no invalid records, you can now remove `topic-1` from both expressions.
