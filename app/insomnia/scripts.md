@@ -230,7 +230,7 @@ In Insomnia, requests can be grouped within folders. These folders can influence
 
 Insomnia provides functions that allow pre-request and after-response scripts to access the current requests' parent folder.
 
-{:.note}
+{:.info}
 > You can only access a folder from a script if the corresponding request is in that folder.
 
 ### Get folder information
