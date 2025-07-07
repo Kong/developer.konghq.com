@@ -65,7 +65,7 @@ rows:
                 icon: /assets/icons/cog.svg
                 cta:
                   url: /dev-portal/portal-customization/
-  - column_count: 2
+  - column_count: 3
     columns:
         - blocks:
             - type: card
