@@ -39,6 +39,10 @@ related_resources:
     url: /how-to/enable-key-authentication-on-a-service-with-kong-gateway/
   - text: "{{site.base_gateway}} authentication"
     url: /gateway/authentication/
+
+notes: |
+  The time-to-live (ttl) does not work in Konnect or hybrid mode. This setting
+  determines the length of time a credential remains valid.
 ---
 
 The Key Authentication plugin lets you add API key authentication to a [Gateway Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/).

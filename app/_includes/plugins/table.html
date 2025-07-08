@@ -1,4 +1,4 @@
-<div class="max-h-[50vh] overflow-y-auto rounded-lg">
+<div class="{% unless type == 'deployment_topologies' %}max-h-[50vh]{% endunless %} overflow-y-auto rounded-lg">
     <table class="table__sticky">
         <thead>
             <tr>
@@ -20,17 +20,41 @@
                         </span>
                     </td>
                     {% endif %}
-                    <td>
-                        {% if type == 'referenceable_fields' %}
-                            <ul>
-                            {% for value in row.values %}
-                                <li><code class="text-secondary px-1">{{value}}</code></li>
-                            {% endfor %}
-                            </ul>
-                        {% else %}
-                            <code class="text-secondary px-1">{{row.values[0]}}</code>
-                        {% endif %}
-                    </td>
+                    {% if type == 'deployment_topologies'  %}
+                        {% for column in columns %}
+                            <td class="align-top">
+                                <ul>
+                                    {% if column.key == 'konnect_deployments' and row.values[column.key] == empty %}
+                                        <li class="list-none">Not supported in Konnect.</li>
+                                    {% else %}
+                                        {% for value in row.values[column.key] %}
+                                            {% if column.key == 'notes' %}
+                                            <li class="list-none">{{value | markdownify| liquify}}</li>
+                                            {% else %}
+                                            <li>
+                                                <code class="text-secondary px-1">
+                                                    {{value}}
+                                                </code>
+                                            </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </td>
+                        {% endfor %}
+                    {% else %}
+                        <td>
+                            {% if type == 'referenceable_fields' %}
+                                <ul>
+                                {% for value in row.values %}
+                                    <li><code class="text-secondary px-1">{{value}}</code></li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <code class="text-secondary px-1">{{row.values[0]}}</code>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>

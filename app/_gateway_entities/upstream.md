@@ -46,6 +46,29 @@ api_specs:
 works_on:
   - on-prem
   - konnect
+faqs:
+  - q: With the `sticky-sessions` algorithm does the cookie expire?
+    a: No, they are session cookies and expire with the client session.
+
+  - q: Where is the`sticky-sessions` cookie stored?
+    a: |
+      On the client. {{site.base_gateway}} does not store cookie values server-side. 
+      The browser (or user agent) is responsible for storing and submitting the cookie automatically.
+
+  - q: What happens if the sticky target is removed?
+    a: A new Target is selected and a new cookie is generated.
+
+  - q: What happens if two upstreams use the same cookie name and path?
+    a: |
+      If the upstreams share the same Target, the client will continue routing to it.
+      Otherwise, the cookie will be overwritten and routing will begin to a new Target.
+
+  - q: How does `sticky-sessions` differ from consistent hashing?
+    a: |
+      Sticky sessions use a client-side cookie to maintain affinity with a specific Target,
+      ensuring consistent routing even if Targets change. Consistent hashing relies on hash inputs
+      (like IP or header values) and can re-balance if Targets are added or removed, without guaranteeing session stickiness.
+
 ---
 
 ## What is an Upstream?
@@ -99,6 +122,7 @@ The load balancer supports the following [load balancing algorithms](/gateway/lo
 - `consistent-hashing`
 - `least-connections`
 - `latency`
+- `sticky-sessions` {% new_in 3.11 %}
 
 {:.info}
 > **Note**: If using [health checks](/gateway/traffic-control/health-checks-circuit-breakers/), unhealthy Targets won't be removed from the load balancer, and won't have any impact on the balancer layout when using a hashing algorithm. 
@@ -214,6 +238,62 @@ When choosing this algorithm, consider the following:
   However, the latency going up means the small server is likely suffering from resource starvation. 
   In this case, the algorithm will keep the small server in a constant state of resource starvation, which is most likely not efficient.
 - This option is not suitable for long-lived connections like websockets or server-sent events (SSE).
+
+
+### Sticky sessions {% new_in 3.11 %}
+
+Sticky sessions allow {{site.base_gateway}} to route repeat requests from the same client to the same backend Target using a browser-managed cookie.
+
+When a request is proxied through an Upstream using the `sticky-sessions` algorithm, {{site.base_gateway}} sets a cookie on the response (via the `Set-Cookie` header). On subsequent requests, if the cookie is still valid and the original Target is available, traffic is routed to that same Target.
+
+This mechanism is useful for session persistence, graceful shutdowns, and applications requiring connection affinity.
+
+When choosing this algorithm, consider the following:
+
+- Provides session persistence via browser-managed cookies.
+- Continues routing traffic to pods that are shutting down or in a `NotReady` state until they are removed entirely.
+- Ideal for applications requiring sticky behavior even as Targets drain or terminate.
+- May cause uneven load if some clients maintain long sessions tied to specific Targets.
+
+The cookie settings can be customized per Upstream:
+
+```json
+{
+  "name": "sticky",
+  "algorithm": "sticky-sessions",
+  "hash_on": "none",
+  "hash_fallback": "none",
+  "sticky_sessions_cookie": "gruber",
+  "sticky_sessions_cookie_path": "/"
+}
+```
+
+#### Sticky sessions vs consistent hashing
+
+The following table describes how sticky sessions differ from consistent hashing:
+
+{% table %}
+columns:
+  - title: Feature
+    key: feature
+  - title: Sticky sessions
+    key: sticky
+  - title: Consistent hashing
+    key: hashing
+rows:
+  - feature: "Session Affinity"
+    sticky: "Enforced via cookie."
+    hashing: "Dependent on hash input (e.g. IP or header). No persistence if Targets change"
+  - feature: "Target Removal Handling"
+    sticky: "Picks a new Target if the original is removed."
+    hashing: "Minimally adjusts based on available Targets."
+  - feature: "Load Distribution"
+    sticky: "May be uneven with long-lived sessions."
+    hashing: "Designed for even distribution."
+  - feature: "Pod Draining Support"
+    sticky: "Continues routing to NotReady or terminating pods."
+    hashing: "Avoids routing to unhealthy or terminating pods."
+{% endtable %}
 
 ## Schema
 
