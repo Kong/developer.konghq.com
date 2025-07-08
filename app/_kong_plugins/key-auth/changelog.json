@@ -18,6 +18,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where external consumers could not be used with traditional Kong deployments, such as with KIC.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed to retain order of query arguments when hiding the credentials.",
