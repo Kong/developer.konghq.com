@@ -1,8 +1,7 @@
 ---
-title: Import and map SwaggerHub entities
+title: Import and map SwaggerHub resources in Service Catalog
 content_type: how_to
 description: Learn how to connect SwaggerHub API versions to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
-permalink: /service-catalog/import-map-swaggerhub-entities
 products:
   - service-catalog
   - gateway
@@ -23,11 +22,13 @@ prereqs:
   inline:
     - title: SwaggerHub API key
       content: |
-        You must have a [SwaggerHub API key](https://swagger.io/docs/specification/v3_0/authentication/api-keys/) to authenticate your SwaggerHub account with {{site.konnect_short_name}}. Export it as an environment variable:
+        You must have a [SwaggerHub API key](https://app.swaggerhub.com/settings/apiKey) to authenticate your SwaggerHub account with {{site.konnect_short_name}}. Export it as an environment variable:
 
         ```sh
         export SWAGGERHUB_API_KEY='YOUR-API-KEY'
         ```
+
+        Additionally, you'll need an [API version](https://support.smartbear.com/swaggerhub/docs/en/manage-apis/versioning.html?sbsearch=API%20Versions0) in SwaggerHub to pull into {{site.konnect_short_name}} as a resource.
 ---
 
 ## Install and authorize the SwaggerHub integration
@@ -49,7 +50,7 @@ body:
   integration_name: swaggerhub
   name: swaggerhub
   display_name: SwaggerHub
-  config:
+  config: {}
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -142,7 +143,7 @@ headers:
   - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: datadog
+  service: billing
   resource: $SWAGGERHUB_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->

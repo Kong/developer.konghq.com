@@ -22,6 +22,10 @@ description: The GitLab integration allows you to associate your Service Catalog
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
+  - text: Import and map self-managed GitLab resources in Service Catalog
+    url: /how-to/install-and-map-gitlab-resources/
+  - text: Import and map SaaS GitLab resources in Service Catalog
+    url: /how-to/install-and-map-gitlab-saas-resources/
 discovery_support: true
 bindable_entities: "Projects"
 ---
@@ -29,6 +33,10 @@ The GitLab integration allows you to associate your Service Catalog service to o
 {% include /service-catalog/multi-resource.md %}
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
+
+For a complete tutorial using the {{site.konnect_short_name}} API, see the following:
+* [Import and map self-managed GitLab resources in Service Catalog](/how-to/install-and-map-gitlab-resources/)
+* [Import and map SaaS GitLab resources in Service Catalog](/how-to/install-and-map-gitlab-saas-resources/)
 
 ## Prerequisites
 

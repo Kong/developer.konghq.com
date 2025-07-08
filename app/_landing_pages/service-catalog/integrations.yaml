@@ -45,68 +45,94 @@ rows:
     column_count: 3
     columns:
       - blocks:
-          - type: card
-            config:
-              title: PagerDuty
-              description: Alert service teams via PagerDuty alerts and provide information on current open incidents.
-              icon: /assets/icons/third-party/pagerduty.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/pagerduty/
+        - type: card
+          config:
+            title: PagerDuty
+            description: Alert service teams via PagerDuty alerts and provide information on current open incidents.
+            icon: /assets/icons/third-party/pagerduty.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/pagerduty/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-pagerduty-resources/"
       - blocks:
-          - type: card
-            config:
-              title: GitHub
-              description: Associate a service to one or more GitHub repositories.
-              icon: /assets/icons/third-party/github.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/github/
+        - type: card
+          config:
+            title: GitHub
+            description: Associate a service to one or more GitHub repositories.
+            icon: /assets/icons/third-party/github.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/github/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-github-resources/"
       - blocks:
-          - type: card
-            config:
-              title: Traceable.io
-              description: Manage and secure services that Traceable discovers by analyzing API traffic.
-              icon: /assets/icons/third-party/traceable.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/traceable/
+        - type: card
+          config:
+            title: Traceable
+            description: Manage and secure services that Traceable discovers by analyzing API traffic.
+            icon: /assets/icons/third-party/traceable.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/traceable/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-traceable-resources/"
       - blocks:
-          - type: card
-            config:
-              title: GitLab
-              description: Associate a Service Catalog Service to one or more GitLab projects
-              icon: /assets/icons/third-party/gitlab.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/gitlab
+        - type: card
+          config:
+            title: GitLab (self-managed)
+            description: Associate a Service Catalog Service to one or more GitLab projects
+            icon: /assets/icons/third-party/gitlab.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/gitlab/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-gitlab-resources/"
       - blocks:
-          - type: card
-            config:
-              title: SwaggerHub
-              description: Expand Service Catalog functionality with SwaggerHub to visualize OpenAPI specs.
-              icon: /assets/icons/third-party/swaggerhub.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/swaggerhub/
+        - type: card
+          config:
+            title: GitLab (SaaS)
+            description: Associate a Service Catalog Service to one or more GitLab projects
+            icon: /assets/icons/third-party/gitlab.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/gitlab/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-gitlab-saas-resources/"
       - blocks:
-          - type: card
-            config:
-              title: Datadog
-              description: View the performance and health of your services by ingesting Datadog monitors and dashboards.
-              icon: /assets/icons/third-party/datadog.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/datadog/
+        - type: card
+          config:
+            title: SwaggerHub
+            description: Expand Service Catalog functionality with SwaggerHub to visualize OpenAPI specs.
+            icon: /assets/icons/third-party/swaggerhub.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/swaggerhub/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-swaggerhub-resources/"
       - blocks:
-          - type: card
-            config:
-              title: Slack
-              description: Expand Konnect Service Catalog functionality with features from Slack.
-              icon: /assets/icons/third-party/slack.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/slack/
+        - type: card
+          config:
+            title: Datadog
+            description: View the performance and health of your services by ingesting Datadog monitors and dashboards.
+            icon: /assets/icons/third-party/datadog.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/datadog/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-datadog-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: Slack
+            description: Expand Konnect Service Catalog functionality with features from Slack.
+            icon: /assets/icons/third-party/slack.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/slack/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-slack-resources/"
+  
   - header:
       type: h2
       text: "Built-in Integrations"

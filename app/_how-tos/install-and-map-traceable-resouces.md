@@ -1,8 +1,7 @@
 ---
-title: Import and map Traceable entities
+title: Import and map Traceable resources in Service Catalog
 content_type: how_to
 description: Learn how to connect Traceable services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
-permalink: /service-catalog/import-map-traceable-entities
 products:
   - service-catalog
   - gateway
@@ -25,7 +24,12 @@ prereqs:
   inline:
     - title: Traceable access
       content: |
-        You must have an active Traceable account and valid API access to connect Traceable services to your {{site.konnect_catalog}} service.
+        You must have an active [Traceable account](https://www.traceable.ai/) and valid API access to connect Traceable services to your {{site.konnect_catalog}} service. You also need a [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends) you can pull into {{site.konnect_short_name}}.
+        
+        Export your Traceable API key:
+        ```sh
+        export TRACEABLE_API_KEY='YOUR-TRACEABLE-API-KEY'
+        ```
       icon_url: /assets/icons/traceable.svg
 ---
 
@@ -112,7 +116,7 @@ Before you can map your Traceable resources to a service in Service Catalog, you
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=swaggerhub
+url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=traceable
 method: GET
 region: us
 status_code: 200
@@ -142,7 +146,7 @@ headers:
   - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: datadog
+  service: billing
   resource: $TRACEABLE_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->

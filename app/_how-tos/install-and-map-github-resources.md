@@ -1,8 +1,7 @@
 ---
-title: Install and map GitHub entities
+title: Install and map GitHub resources in Service Catalog
 content_type: how_to
 description: Learn how to connect a GitHub repository to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
-permalink: /service-catalog/integration//install-map-github-entities
 products:
   - service-catalog
   - gateway
@@ -25,61 +24,18 @@ prereqs:
       content: |
         You must have sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App.
 
-        You can grant access to either all repositories or selected repositories during the authorization process. The {{site.konnect_short_name}} app can be managed in your GitHub account under **Applications > GitHub Apps**.
+        You need a repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. The {{site.konnect_short_name}} app can be managed in your GitHub account under **Applications > GitHub Apps**.
       icon_url: /assets/icons/github.svg
 ---
 
 ## Install and authorize the GitHub integration
 
-Before you can ingest resources from GitHub, you must first install and authorize the GitHub integration.
+1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+2. Click **GitHub**, then click **Add GitHub Instance**.
+3. Authorize the GitHub integration. This will take you to GitHub, where you can grant {{site.konnect_short_name}} access to either **All Repositories** or **Select repositories**. 
+1. Enter `github` as your instance name.
 
-First, install the GitHub integration:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/service-catalog/integration-instances
-method: POST
-status_code: 201
-region: us
-headers:
-  - 'Accept: application/json'
-  - 'Content-Type: application/json'
-body:
-  integration_name: github
-  name: github
-  config:
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Export the ID of your GitHub integration:
-
-```sh
-export GITHUB_INTEGRATION_ID='YOUR-INTEGRATION-ID'
-```
-
-Next, authorize the GitHub integration with your GitHub API key and application key:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/service-catalog/integration-instances/$GITHUB_INTEGRATION_ID/auth-credential
-method: POST
-status_code: 201
-region: us
-headers:
-  - 'Accept: application/json, application/problem+json'
-  - 'Content-Type: application/json'
-body:
-  type: multi_key_auth
-  config:
-    headers:
-      - name: DD-API-KEY
-        key: $GITHUB_API_KEY
-      - name: DD-APPLICATION-KEY
-        key: $GITHUB_APPLICATION_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Once authorized, monitor and dashboard resources from your GitHub account will be discoverable in the UI.
+The {{site.konnect_short_name}} application can be managed from GitHub as a [GitHub Application](https://docs.github.com/en/apps/using-github-apps/authorizing-github-apps).
 
 ## Create a service in Service Catalog
 
@@ -112,7 +68,7 @@ Before you can map your GitHub resources to a service in Service Catalog, you fi
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=datadog
+url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=github
 method: GET
 region: us
 status_code: 200
@@ -142,7 +98,7 @@ headers:
   - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: datadog
+  service: billing
   resource: $GITHUB_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->

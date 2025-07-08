@@ -1,8 +1,7 @@
 ---
-title: Import and map PagerDuty entities
+title: Import and map PagerDuty resources in Service Catalog
 content_type: how_to
 description: Learn how to connect PagerDuty services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
-permalink: /service-catalog/import-map-pagerduty-entities
 products:
   - service-catalog
   - gateway
@@ -23,59 +22,16 @@ prereqs:
   inline:
     - title: PagerDuty access
       content: |
-        You must grant both **Read** and **Write** scopes to {{site.konnect_short_name}} when authorizing the PagerDuty integration.
+        You need a [PagerDuty account](https://app.pagerduty.com/) with a PagerDuty service you want to pull in to {{site.konnect_short_name}}.
       icon_url: /assets/icons/pagerduty.svg
 ---
 
-## Install and authorize the PagerDuty integration
+## Authenticate the PagerDuty integration
 
-Before you can ingest resources from PagerDuty, you must first install and authorize the PagerDuty integration.
-
-First, install the PagerDuty integration:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/service-catalog/integration-instances
-method: POST
-status_code: 201
-region: us
-headers:
-  - 'Accept: application/json'
-  - 'Content-Type: application/json'
-body:
-  integration_name: pagerduty
-  name: pagerduty
-  display_name: PagerDuty
-  config:
-    service_region: false
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Export the ID of your PagerDuty integration:
-
-```sh
-export PAGERDUTY_INTEGRATION_ID='YOUR-INTEGRATION-ID'
-```
-
-Next, authorize the PagerDuty integration with your PagerDuty API key:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/service-catalog/integration-instances/$PAGERDUTY_INTEGRATION_ID/auth-credential
-method: POST
-status_code: 201
-region: us
-headers:
-  - 'Accept: application/json, application/problem+json'
-  - 'Content-Type: application/json'
-body:
-  type: multi_key_auth
-  config:
-    headers:
-      - name: authorization
-        key: $PAGERDUTY_API_KEY
-{% endkonnect_api_request %}
-<!--vale on-->
+1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+2. Click **PagerDuty**, and then click **Add PagerDuty Instance**.
+3. Configure the region, grant authorization, and name the instance. 
+   PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. **Both Read and Write scopes are required.**
 
 Once authorized, resources from your PagerDuty account will be discoverable in the UI.
 
@@ -140,7 +96,7 @@ headers:
   - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: datadog
+  service: billing
   resource: $PAGERDUTY_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->

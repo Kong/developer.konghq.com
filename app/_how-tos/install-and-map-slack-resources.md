@@ -1,8 +1,7 @@
 ---
-title: Import and map Slack entities
+title: Import and map Slack resources in Service Catalog
 content_type: how_to
 description: Learn how to connect Slack channels to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
-permalink: /service-catalog/import-map-slack-entities
 products:
   - service-catalog
   - gateway
@@ -31,11 +30,11 @@ prereqs:
 
 ## Authorize the Slack integration
 
-1. In {{site.konnect_short_name}}, go to **{{site.konnect_catalog}} > Integrations**.
-2. Click **Slack**, then **Install Slack**.
-3. Click **Authorize**.
+1. From the **Service Catalog** in {{site.konnect_short_name}}, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
+2. Click **Slack**, then click **Add Slack instance**.
+3. Name your integration `slack` and authorize the Slack instance. Slack will prompt you to grant read and write permissions to {{site.konnect_short_name}}. Only Slack administrators can authorize the integration.
 
-Slack will prompt you to grant read and write permissions to {{site.konnect_short_name}}. Only Slack administrators can authorize the integration.
+Once authorized, resources from your Slack account will be discoverable in the UI.
 
 
 ## Create a service in Service Catalog
@@ -99,7 +98,7 @@ headers:
   - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: datadog
+  service: billing
   resource: $SLACK_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->

@@ -1,8 +1,7 @@
 ---
-title: Install and map Datadog resources
+title: Install and map Datadog resources in Service Catalog
 content_type: how_to
 description: Learn how to connect Datadog monitors and dashboards to your Service Catalog service in {{site.konnect_short_name}}.
-permalink: /service-catalog/integration/install-map-datadog-entities/
 products:
   - service-catalog
   - gateway
@@ -32,7 +31,7 @@ prereqs:
         export DATADOG_APPLICATION_KEY='YOUR-APP-KEY'
         export DATADOG_REGION='YOUR-REGION'
         ```
-      icon_url: /assets/icons/datadog.png
+      icon_url: /assets/icons/datadog.svg
 ---
 
 ## Install and authorize the Datadog integration

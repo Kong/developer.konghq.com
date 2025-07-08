@@ -1,8 +1,7 @@
 ---
-title: Install and map GitLab entities
+title: Install and map self-hosted GitLab resources in Service Catalog
 content_type: how_to
 description: Learn how to connect a GitLab project to your Service Catalog service in {{site.konnect_short_name}}.
-permalink: /service-catalog/integration/install-map-gitlab-entities
 products:
   - service-catalog
   - gateway
@@ -23,42 +22,79 @@ prereqs:
   inline:
     - title: GitLab access
       content: |
-        You must have the **Owner** role in the GitLab group to authorize the integration. Only [GitLab.com subscriptions](https://docs.gitlab.com/ee/subscriptions/gitlab_com/) are currently supported.
+        You must have the **Owner** role in the GitLab group to authorize the integration. If you're using a self-hosted GitLab instance, it must be accessible from the public internet or is otherwise reachable by {{site.konnect_short_name}}.
 
-        If you're using a self-hosted GitLab instance, it must be accessible from the public internet or is otherwise reachable by {{site.konnect_short_name}}.
+        1. [Create a group-owned application](https://docs.gitlab.com/integrations/oauth_provider/) in your GitLab instance.
+           - Set the redirect URI to:  
+          `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integration/gitlab`
+           - Ensure the app has the `api` scope.
+
+        1. Export your self-hosted GitLab variables:
+           ```sh
+           export GITLAB_BASE_URL='YOUR-BASE-URL'
+           export GITLAB_APP_ID='YOUR-APP_ID
+           export GITLAB_APP_SECRET='YOUR-APP_SECRET
+           export GITLAB_TOKEN_ENDPOINT='YOUR-TOKEN_ENDPOINT'
+           export GITLAB_AUTH_ENDPOINT='YOUR-AUTH_ENDPOINT'
+           ```
+           They should be in the following format:
+           * **Base URL**: `https://$GITLAB_HOST/api/v4`
+           * **Token Endpoint**: `https://$GITLAB_HOST/oauth/token`
+           * **Authorization Endpoint**: `https://$GITLAB_HOST/oauth/authorize`
       icon_url: /assets/icons/gitlab.svg
 ---
 
-## Authorize the GitLab integration
+## Authorize the Self-managed GitLab integration
 
-Choose one of the following authorization flows depending on whether you use GitLab SaaS or self-managed GitLab:
+Before you can ingest resources from GitLab, you must first install and authorize the GitLab integration.
 
-{% navtabs "Authorization" %}
-{% navtab "SaaS" %}
-### SaaS GitLab
+First, install the GitLab integration:
 
-1. In {{site.konnect_short_name}}, go to **{{site.konnect_catalog}} > Integrations**.
-2. Click **GitLab**, then **Install GitLab**.
-3. Click **Authorize** to connect your GitLab account.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/integration-instances
+method: POST
+status_code: 201
+region: us
+headers:
+  - 'Accept: application/json'
+  - 'Content-Type: application/json'
+body:
+  integration_name: gitlab
+  name: gitlab-self-managed
+  display_name: GitLab
+  config:
+    base_url: $GITLAB_BASE_URL
+{% endkonnect_api_request %}
+<!--vale on-->
 
-{% endnavtab %}
-{% navtab "Self-managed" %}
-### Self-managed GitLab
+Export the ID of your GitLab integration:
 
-1. [Create a group-owned application](https://docs.gitlab.com/integrations/oauth_provider/) in your GitLab instance.
-   - Set the redirect URI to:  
-     `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integration/gitlab`
-   - Ensure the app has the `api` scope.
-2. In {{site.konnect_short_name}}, go to the [GitLab integration config page](https://cloud.konghq.com/service-catalog/integrations/gitlab/configuration).
-3. Fill in the following fields using values from your GitLab OAuth app:
-   - **GitLab API Base URL**: e.g., `https://gitlab.example.com/api/v4`
-   - **Application ID**
-   - **Application Secret**
-   - **Token Endpoint**: `https://$GITLAB_HOST/oauth/token`
-   - **Authorization Endpoint**: `https://$GITLAB_HOST/oauth/authorize`
-4. Click **Authorize** to complete the connection.
-{% endnavtab %}
-{% endnavtabs %}
+```sh
+export GITLAB_INTEGRATION_ID='YOUR-INTEGRATION-ID'
+```
+
+Next, authorize the GitLab integration with your GitLab API key:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/service-catalog/integration-instances/$GITLAB_INTEGRATION_ID/auth-config
+method: PUT
+status_code: 201
+region: us
+headers:
+  - 'Accept: application/json, application/problem+json'
+  - 'Content-Type: application/json'
+body:
+  type: oauth
+  client_id: $GITLAB_APP_ID
+  client_secret: $GITLAB_APP_SECRET
+  authorization_endpoint: $GITLAB_AUTH_ENDPOINT
+  token_endpoint: $GITLAB_TOKEN_ENDPOINT
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Once authorized, resources from your GitLab account will be discoverable in the UI.
 
 ## Create a service in Service Catalog
 
@@ -121,7 +157,7 @@ headers:
   - 'Accept: application/json, application/problem+json'
   - 'Content-Type: application/json'
 body:
-  service: datadog
+  service: billing
   resource: $GITLAB_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
