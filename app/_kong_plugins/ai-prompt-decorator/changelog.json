@@ -23,6 +23,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where the plugin would miss the model, temperature, and other user-defined fields.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "allow AI plugin to read request from buffered file",

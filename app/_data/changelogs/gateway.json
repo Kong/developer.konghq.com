@@ -718,6 +718,11 @@
         "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
         "type": "known-issues",
         "scope": "Core"
+      },
+      {
+        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies. \nVersions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -5010,6 +5015,11 @@
       },
       {
         "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
+        "type": "known-issues",
+        "scope": "Core"
+      },
+      {
+        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies. \nVersions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
         "type": "known-issues",
         "scope": "Core"
       }
@@ -14415,9 +14425,11 @@
       },
       {
         "message": "Added a new configuration, `route_match_calculation`, which included bug fixes for the `traditional_compatible` router flavor.\nThe default value `original` retained the current `3.x` router matching behavior without changes. The value `strict` enforced the router matching behavior with corrected calculation as follows:\n1. The weight (priority point) of a route was incorrectly\n   downgraded.\n2. A route of HTTPS-only protocol with SNIs incorrectly captured\n   requests over HTTP routes.\n3. A route of TLS-only protocol with SNIs incorrectly captured\n   requests over TCP or UDP routes.",
+        "type": "bugfix",
+        "scope": "Core"
       }
     ]
-  }, 
+  },
   "3.11.0.0": {
     "kong": [
       {
@@ -15425,6 +15437,203 @@
         "message": "**Rate Limiting Advanced** Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
         "type": "bugfix",
         "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.10.0.3": {
+    "kong": [
+      {
+        "message": "**ai-proxy**: Fixed an issue where large request payload was not logged.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where SSE terminator may not have correct ending characters.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where the response body for observability may be larger than the real one because of the stale data.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped luarocks from 3.11.1 to 3.12.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added support for reporting whether `new_dns_client` and `incremental_sync` were enabled in anonymous reports.\n",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a new configuration, `route_match_calculation`, which included bug fixes for the `traditional_compatible` and the `expressions` router flavors.\nThe default value `original` retained the current `3.x` router matching behavior without changes. The value `strict` enforced the router matching behavior with corrected calculation as follows:\n1. The weight (priority point) of a route was incorrectly\n   downgraded.\n2. A route of HTTPS-only protocol with SNIs incorrectly captured\n   requests over HTTP routes.\n3. A route of TLS-only protocol with SNIs incorrectly captured\n   requests over TCP or UDP routes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where some of ai metrics was missed in analytics",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**prometheus**: Fixed an issue where AI latency histogram might miss some calculation.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where patterns using multiple capture groups (e.g., `$(group1)/$(group2)`) failed to extract expected matches.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where events mechanism of clustering might be initialized repeatedly.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the incremental sync might not generate correct deltas\nfor non-default workspaces.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the RPC framework might handle connections incorrectly on the data plane.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**key-auth**: Fixed an issue where external consumers could not be used with traditional Kong deployments, such as with KIC.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "-> Fixed an issue where sometimes the paginated sync incorrectly reports \"history lost\" and fails.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where new custom plugin creation during a full sync with incremental enabled would cause inconsistency. It now fails and reinitiating the sync in such case.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Pgvector index failed when using special characters in the name.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the IAM Authentication for RDS failed due to token not being refreshed under certain conditions.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where RPC calls miss the retry mechanism in the clustering system for resilience against transient network issues.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where SSE terminator may not have correct ending characters.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where error logs were excessive when changing routes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where dataplane nodes sometimes did not recover from sync failures, leading to recursive retries and failures.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "-> Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where updating an entity in a non-default workspace during incremental sync\nmay not have been applied correctly.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the send request time was incorrectly calculated, now it should be more accurate.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Plugins**: Fixed unable to use Titan Text Embeddings models.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-decorator**: Fixed an issue where the plugin would miss the model, temperature, and other user-defined fields.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where the stale semantic key vector may not be refreshed after the plugin config is updated.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where AI Proxy returns 403 using gemini provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ollama**: Fixed an issue where 'tools' and 'RAG' decoration did not work for Ollama (llama2) provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the CLI command `kong runner` crashes if using off strategy.\n",
+        "type": "bugfix",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "Fixed an issue where the control plane might not send RPC calls to the data plane correctly in some corner cases.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where users encountered duplicate key violation errors on `rbac_role_entities_pkey` while using the `deck sync` command.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**mocking**: Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the admin API might not fetch the workspace correctly during batch updates.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped page size for cluster sync to improve performance of full syncs.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Improved RPC message queue responsiveness.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where LMDB operation failures during incremental sync were not reported.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
       }
     ],
     "kong-manager-ee": []

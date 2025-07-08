@@ -24,10 +24,6 @@ icon: /assets/icons/graph.svg
 
 This policy is used to set or remove record headers.
 
-## Schema
-
-{% entity_schema %}
-
 ## Example configuration
 
 Example configurations for the Modify Headers policy.
@@ -49,3 +45,7 @@ policies:
         - key: example-header2
           value: example
 ```
+
+## Schema
+
+{% entity_schema %}

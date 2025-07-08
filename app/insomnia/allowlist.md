@@ -76,7 +76,7 @@ Allowlisting these domains ensures uninterrupted access to all functionalities o
 In version 10.1 and later, Insomnia automatically detects the operating system proxy settings. However, you can still customize proxy settings from **Preferences** > **Proxy**.
 
 {:.warning}
-> **Important**: Proxy server settings apply to all traffic going through the Insomnia application, and cannot be restricted to entities such as Collections and individual requests.
+> **Important**: Proxy server settings apply to all traffic going through the Insomnia application, and cannot be restricted to entities such as collections and individual requests.
 
 Here's an example usage of HTTP or HTTPS proxy:
 
