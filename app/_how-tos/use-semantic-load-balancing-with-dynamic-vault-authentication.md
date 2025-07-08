@@ -70,7 +70,7 @@ cleanup:
 We configure the **AI Proxy Advanced** plugin to route chat requests to different LLM providers based on semantic similarity, using secure API keys stored in **HashiCorp Vault**. Secrets for OpenAI and Mistral are referenced securely using the `{vault://...}` syntax. The plugin uses OpenAI’s `text-embedding-3-small` model to embed incoming requests and compares them against target descriptions in a Redis vector database. Based on this similarity, the **semantic balancer** chooses the best-matching target:
 - **GPT-3.5** for programming queries.
 - **GPT-4o** for prompts related to mathematics.
--  **Mistral tiny** as the catchall fallback when no close semantic match is found.
+- **Mistral tiny** as the catchall fallback when no close semantic match is found.
 
 {% entity_examples %}
 entities:
@@ -144,7 +144,7 @@ You can test the plugin’s semantic routing logic by sending prompts that align
 
 ### Test programming-related questions
 
-These prompts are routed to **OpenAI GPT-3.5-Turbo**, selected for its strong performance on technical and programming-related tasks. The response should include `"model": "gpt-3.5-turbo"`.
+These prompts are routed to **OpenAI GPT-3.5-Turbo**, since it performs well on technical and programming-related tasks. The responses should include `"model": "gpt-3.5-turbo"`.
 
 {% validation request-check %}
 url: /anything
@@ -155,6 +155,8 @@ body:
     - role: user
       content: How can I build a REST API using Flask?
 {% endvalidation %}
+
+You can also try a question regarding debugging JavaScript code:
 
 {% validation request-check %}
 url: /anything
@@ -169,7 +171,7 @@ body:
 
 ### Test math-related questions
 
-These prompts should match the **OpenAI GPT-4o** target, which is designated for mathematics topics like algebra and calculus. The response should include `"model": "gpt-4o"`.
+These prompts should match the **OpenAI GPT-4o** target, which is designated for mathematics topic areas like algebra and calculus. The responses should include `"model": "gpt-4o"`.
 
 {% validation request-check %}
 url: /anything
@@ -180,6 +182,8 @@ body:
     - role: user
       content: What is the derivative of sin(x)?
 {% endvalidation %}
+
+You can also try asking a question related to theorems:
 
 {% validation request-check %}
 url: /anything
@@ -193,7 +197,7 @@ body:
 
 ### Test fallback questions
 
-These general-purpose or unmatched prompts are routed to **Mistral Tiny**, acting as the fallback target. The response should include `"model": "mistral-tiny"`.
+These general-purpose or unmatched prompts are routed to **Mistral Tiny**, acting as the fallback target. The responses should include `"model": "mistral-tiny"`.
 
 {% validation request-check %}
 url: /anything
@@ -204,6 +208,8 @@ body:
     - role: user
       content: What is the capital of Argentina?
 {% endvalidation %}
+
+YOu can also try another general question:
 
 {% validation request-check %}
 url: /anything

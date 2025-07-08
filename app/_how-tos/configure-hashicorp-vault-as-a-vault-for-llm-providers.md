@@ -41,7 +41,7 @@ tags:
 tldr:
   q: How can I access HashiCorp Vault secrets in {{site.base_gateway}}?
   a: |
-    Write secrets like `vault kv put secret/openai key="OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Use the `{vault://...}` syntax in plugin fields to dynamically authenticate to LLM providers such as OpenAI and Mistral.
+    Write secrets like `vault kv put secret/openai key="OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Next Use the `{vault://...}` syntax in plugin fields to [dynamically authenticate to LLM providers](/how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/) such as OpenAI and Mistral.
 
 tools:
     - deck
@@ -60,8 +60,8 @@ prereqs:
     - title: Mistral
       content: |
         This tutorial uses OpenAI:
-          1. [Create a Mistral account](https://mistral.ai/signup).
-          1. [Get your API key](https://mistral.ai/account/api-keys).
+          1. [Create a Mistral account](https://auth.mistral.ai/ui/).
+          1. [Get your API key](https://console.mistral.ai/api-keys).
       icon_url: /assets/icons/mistral.svg
 
 cleanup:
@@ -105,7 +105,6 @@ Because we are running HashiCorp Vault in dev mode, we are using `root` for our 
 export DECK_HCV_HOST=host.docker.internal
 export DECK_HCV_TOKEN='root'
 ```
-
 
 ## Create a Vault entity for HashiCorp Vault
 
