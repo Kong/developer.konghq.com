@@ -146,6 +146,7 @@ You can test the plugin’s semantic routing logic by sending prompts that align
 
 These prompts are routed to **OpenAI GPT-3.5-Turbo**, since it performs well on technical and programming-related tasks. The responses should include `"model": "gpt-3.5-turbo"`.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -155,9 +156,11 @@ body:
     - role: user
       content: How can I build a REST API using Flask?
 {% endvalidation %}
+<!-- vale on -->
 
 You can also try a question regarding debugging JavaScript code:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -167,12 +170,13 @@ body:
     - role: user
       content: How can you effectively debug asynchronous code in JavaScript to identify where a Promise or callback might be failing?
 {% endvalidation %}
-
+<!-- vale on -->
 
 ### Test math-related questions
 
 These prompts should match the **OpenAI GPT-4o** target, which is designated for mathematics topic areas like algebra and calculus. The responses should include `"model": "gpt-4o"`.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -182,9 +186,11 @@ body:
     - role: user
       content: What is the derivative of sin(x)?
 {% endvalidation %}
+<!-- vale on -->
 
 You can also try asking a question related to theorems:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -194,11 +200,13 @@ body:
     - role: user
       content: Explain me Gödel`s incompleteness theorem.
 {% endvalidation %}
+<!-- vale on -->
 
 ### Test fallback questions
 
 These general-purpose or unmatched prompts are routed to **Mistral Tiny**, acting as the fallback target. The responses should include `"model": "mistral-tiny"`.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -206,11 +214,13 @@ headers:
 body:
   messages:
     - role: user
-      content: What is the capital of Argentina?
+      content: What is Wulfila Bible?
 {% endvalidation %}
+<!-- vale on -->
 
-YOu can also try another general question:
+You can also try another general question:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -218,6 +228,6 @@ headers:
 body:
   messages:
     - role: user
-      content: Who was Edward Gibbon and what he is famous for
+      content: Who was Edward Gibbon and what he is famous for?
 {% endvalidation %}
-
+<!-- vale on -->
