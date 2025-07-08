@@ -25,6 +25,12 @@ related_resources:
 tags:
   - compatibility
 
+faqs:
+  - q: Why is my KIC instance read-only in {{site.konnect_short_name}}?
+    a: |
+      Because Kubernetes resources are the source of truth for configuring {{ site.base_gateway }} in Kubernetes, the KIC instance configuration in {{site.konnect_short_name}} is marked as read-only. This prevents configuration drift in {{ site.base_gateway }} caused by changes made outside the Ingress or Kubernetes Gateway API.
+
+      For example, if a Route is created via the Kubernetes Gateway API and then modified in {{site.base_gateway}}, those changes wouldn't be reflected in the CRD and would conflict with the desired state defined in the CRD.
 ---
 
 

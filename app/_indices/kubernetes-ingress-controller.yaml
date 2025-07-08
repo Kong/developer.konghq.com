@@ -106,7 +106,6 @@ sections:
       - path: /kubernetes-ingress-controller/faq/upgrading-gateway/
       - path: /kubernetes-ingress-controller/faq/upgrading-ingress-controller/
       - path: /kubernetes-ingress-controller/faq/custom-entities/
-      - path: /kubernetes-ingress-controller/faq/konnect-ro/
   - title: Hidden How-Tos
     hidden: true
     items:
