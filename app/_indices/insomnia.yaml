@@ -25,6 +25,7 @@ sections:
     items:
       - path: /insomnia/test/
       - path: /insomnia/mock-servers/
+      - path: /insomnia/scripts/
       - path: /how-to/write-content-type-tests/
       - path: /how-to/write-data-type-tests/
       - path: /how-to/write-headers-in-response-tests/

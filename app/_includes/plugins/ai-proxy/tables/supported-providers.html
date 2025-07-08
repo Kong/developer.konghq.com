@@ -2,10 +2,8 @@
     <thead>
       <tr>
         <th>Provider</th>
-        <th>Chat</th>
-        <th>Completions</th>
-        <th>Chat streaming</th>
-        <th>Completions streaming</th>
+        <th>Chat Completions</th>
+        <th>Chat Completions streaming</th>
         <th>Embeddings</th>
       </tr>
     </thead>
@@ -14,9 +12,7 @@
       <tr id="{{ provider.name }}">
         <td>{{ provider.name }}{% if provider.formats %} ({{ provider.formats }}){% endif %}</td>
         <td>{{ provider.chat.supported | to_check }}</td>
-        <td>{{ provider.completions.supported | to_check }}</td>
         <td>{{ provider.chat.streaming | to_check }}</td>
-        <td>{{ provider.completions.streaming | to_check }}</td>
         <td>{{ provider.embeddings.supported | to_check }}</td>
       </tr>
       {% endfor %}
