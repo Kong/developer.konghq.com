@@ -37,6 +37,32 @@ You must update Dev Portal domain names everywhere they are referenced, includin
 * [Custom domain](/dev-portal/custom-domains/) migration.  
   All beta customers will receive emails with guidance on migrating custom domains. 
 
+## Migrate your custom domain
+
+### Migration timeline
+
+* **Now**: The new DNS zone is already available.  
+* **Until October 1, 2025**: Both the current and new DNS zones will remain active.  
+* **After October 1, 2025**: The old DNS zone will be deactivated. Custom domains that haven't been migrated will stop working.
+* **Custom domains only**: This process applies only if you're using a custom domain that has not been migrated yet.
+
+### Migration steps
+
+1. **Lower your DNS TTL**  
+   Before starting the migration, we recommend reducing the TTL (Time To Live) of your existing DNS records (e.g., to 300 seconds).  
+   This ensures that DNS changes propagate quickly.
+
+2. **Start the migration in your portal**  
+   In your Developer Portal:
+   * Navigate to **Portal Settings → Domain Settings**
+   * Locate your custom domain in the table
+   * Click on the **three-dot menu ("⋮")** at the end of the row
+   * Select **“Migrate”**
+
+3. **Update your DNS records**  
+   You'll be provided with a new **CNAME target** (e.g., `081754c63259.us.kongportals.tech`).  
+   Update your DNS provider's configuration to point your custom domain to this new target.
+
 ## API specifications deprecated in favor of API versions
 
 The [API specification endpoint](/api/konnect/api-builder/v3/#/operations/create-api-spec) is being deprecated on October 1, 2025 in favor of the [API versions endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version). 
