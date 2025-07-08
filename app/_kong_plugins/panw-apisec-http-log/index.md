@@ -12,12 +12,12 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 min_version:
     gateway: '3.4'
 
 third_party: true
-source_code_url: ''
 support_url: 'https://support.paloaltonetworks.com/Support/Index'
 
 icon: panw-apisec-http-log.png

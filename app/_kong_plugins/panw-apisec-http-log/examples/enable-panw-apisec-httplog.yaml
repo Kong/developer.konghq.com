@@ -37,3 +37,5 @@ tools:
   - deck
   - admin-api
   - kic
+  - konnect-api
+  - terraform
