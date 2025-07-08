@@ -1,6 +1,6 @@
-title: 'Set up with OpenAI'
+title: 'Set up with OpenAI and Redis'
 
-description: 'Enable AI Semantic Caching with OpenAI as your LLM and a Redis vector database.'
+description: 'Enable AI Semantic Caching with OpenAI embeddings API and a Redis vector database. Configuring Kong to use OpenAI as upstream or configure AI Proxy or AI Proxy Adavnced plugin is required.'
 
 weight: 900
 
