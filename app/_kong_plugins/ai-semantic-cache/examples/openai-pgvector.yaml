@@ -1,9 +1,12 @@
 title: 'Set up with OpenAI and PGVector'
 
-description: 'Enable AI Semantic Caching with OpenAI embeddings API and a PGVector database. Configuring Kong to use OpenAI as upstream or configure AI Proxy or AI Proxy Adavnced plugin is required.'
+description: 'Enable AI Semantic Caching with OpenAI embeddings API and a PGVector database.'
 
 weight: 900
-
+requirements:
+  - "The [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin is enabled"
+  - An OpenAI account
+  - A PostgreSQL server with the [PGVector](https://github.com/pgvector/pgvector) extension installed
 
 variables:
   header_value:

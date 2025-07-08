@@ -18,7 +18,7 @@ For {{ site.base_gateway }} versions 3.6 or earlier:
 
 * **Chat Completions APIs**: Multi-turn conversations with system/user/assistant roles.
 
-* **Completions API**: Generates free-form text from a prompt. This endpoint has been marked as legacy by OpenAI and is not recommended for new applications.
+* **Completions API**: Generates free-form text from a prompt. **OpenAI has marked this endpoint as legacy and recommends using the Chat Completions API for new applications.**
 
 For {{ site.base_gateway }} version {% new_in 3.11 %}:
 
@@ -53,7 +53,7 @@ Support for chat, completions, and embeddings.
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
 
-Using following providers are supported by the legacy Completions API:
+The following providers are supported by the legacy Completions API:
 * OpenAI
 * Azure OpenAI
 * Cohere
