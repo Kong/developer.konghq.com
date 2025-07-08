@@ -27,5 +27,5 @@ As Kubernetes resources are considered the "source of truth" for configuring the
 
 This reduces the chances that two different people or teams change the Gateway configuration as this would cause configuration drift from the Ingress or Kubernetes Gateway API.  
 
-For example, if a Route is created in the Kubernetes Gateway API, and is then modified in the Kong Gateway, the Gateway changes would not be reflected in the CRD, and would go against the desired state defined in the CRD.
+For example, if a Route is created in the Kubernetes Gateway API, and is then modified in the {{site.base_gateway}}, the Gateway changes would not be reflected in the CRD, and would go against the desired state defined in the CRD.
 
