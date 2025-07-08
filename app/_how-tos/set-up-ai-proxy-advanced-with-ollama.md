@@ -7,7 +7,7 @@ related_resources:
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
 
-description: Configure the AI Proxy Advanced plugin to create a chat route using Ollama.
+description: Configure the AI Proxy Advanced plugin to create a chat route using Ollama. For a complete tutorial on this example, see [Set up AI Proxy Advanced with Ollama](/how-to/set-up-ai-proxy-advanced-with-ollama/)
 
 products:
   - gateway
@@ -31,6 +31,7 @@ entities:
 tags:
   - ai
   - openai
+  - llama
 
 tldr:
   q: How do I use the AI Proxy Advanced plugin with Ollama?
