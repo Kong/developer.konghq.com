@@ -30,11 +30,11 @@ entities:
 
 tags:
   - ai
-  - openai
+  - ollama
 
 tldr:
   q: How do I use the AI Proxy plugin with Ollama?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the Ollama provider, and the llama2 model.
+  a: Create a Gateway Service and a Route, then enable the AI Proxy  plugin and configure it with the Ollama provider, and the llama2 model.
 
 tools:
   - deck
@@ -76,14 +76,12 @@ entities:
           name: llama2
           options:
             llama2_format: ollama
-            upstream_url: ${ollama_upstream_url}
+            upstream_url: ${ollama_upstream_url}/api/chat
 variables:
   ollama_upstream_url:
     value: $OLLAMA_UPSTREAM_URL
 {% endentity_examples %}
 
-{:.info}
-> If you're running {{site.base_gateway}} locally in a Docker container, set `upstream_url` to `http://host.docker.internal:11434/api/chat`
 
 ## Validate
 

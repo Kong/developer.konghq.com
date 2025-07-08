@@ -80,11 +80,9 @@ entities:
                     upstream_url: ${ollama_upstream_url}/api/chat
 variables:
   ollama_upstream_url:
-    value: $ANTHROPIC_API_KEY
+    value: $OLLAMA_UPSTREAM_URL
 {% endentity_examples %}
 
-{:.info}
-> If you're running {{site.base_gateway}} locally in a Docker container, set `upstream_url` to `http://host.docker.internal:11434/api/chat`
 
 ## Validate
 

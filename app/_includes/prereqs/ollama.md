@@ -2,15 +2,27 @@ To complete this tutorial, make sure you have Ollama installed and running local
 
 1. Visit the [Ollama download page](https://ollama.com/download) and download the installer for your operating system. Follow the installation instructions for your platform.
 
-2. After installation, open your terminal and run:
-
+1. Start Ollama:
    ```sh
-   ollama run <model-name>
+   ollama start
    ```
 
-   Replace `<model-name>` with the model you want to run, such as `llama2` or `llama3`.
+2. After installation, open a new terminal window and run:
 
-3. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance. By default, Ollama runs at `localhost:11434`. You can verify this by running:
+   ```sh
+   ollama run llama2
+   ```
+
+   You can replace `llama2` with the model you want to run, such as `llama3`.
+
+3. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance. 
+
+   ```sh
+   export DECK_OLLAMA_UPSTREAM_URL='http://localhost:11434'
+   ```
+
+
+   By default, Ollama runs at `localhost:11434`. You can verify this by running:
 
    ```sh
    lsof -i :11434
@@ -30,3 +42,6 @@ To complete this tutorial, make sure you have Ollama installed and running local
    ```
 
    - Then look for the `ollama` process in the output and note the port number it’s listening on.
+   
+   {:.info}
+   > If you're running {{site.base_gateway}} locally in a Docker container, export your upstream URL as `http://host.docker.internal:11434`
