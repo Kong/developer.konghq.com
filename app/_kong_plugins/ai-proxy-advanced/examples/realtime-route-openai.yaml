@@ -7,9 +7,9 @@ requirements:
 - OpenAI account
 
 config:
+  genai_category: realtime/generation
   targets:
     - route_type: realtime/v1/realtime
-      genai_category: realtime/generation
       auth:
         header_name: Authorization
         header_value: Bearer ${key}
