@@ -6,7 +6,7 @@ extended_description: |
   For example, only allow questions about DevOps that aren't related to exploiting vulnerabilities.
   Topics on the deny list take precedence over the allowed topics.
 
-  For a detailed walkthrough check [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-semantic-prompt-guard/).
+  For a detailed walkthrough check [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
 
 title: 'Allow and deny messages'
 

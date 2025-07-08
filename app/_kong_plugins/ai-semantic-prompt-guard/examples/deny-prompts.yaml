@@ -3,7 +3,7 @@ description: Only deny messages about a specific topic. For example, only deny m
 extended_description:
   Only deny messages about a specific topic. For example, only deny messages about exploiting vulnerabilities.
 
-  For a detailed walkthrough check [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-semantic-prompt-guard/).
+  For a detailed walkthrough check [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
 
 title: 'Only deny messages about a specific topic.'
 
