@@ -74,7 +74,7 @@ helm repo update
 
 The default values file installs {{ site.kic_product_name }} in [Gateway Discovery](#) mode with a DB-less {{ site.base_gateway }}. This is the recommended deployment topology.
 
-Run `helm upgrade --install` to install {{ site.kic_product_name }}:
+Run the following command to install {{ site.kic_product_name }}:
 
 {: data-deployment-topology="konnect" }
 ```bash
