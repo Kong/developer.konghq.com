@@ -121,7 +121,7 @@ The `node_id` parameter is planned to be removed in 4.x.
 
 This release adds support for the Hugging Face provider.
 
-To import the decK configuration files that are exported from 3.9 series to earlier versions, use the following script to transform it so that the configuration file can be compatible with the latest version:
+To import the decK configuration files that are exported from the 3.9.x series to earlier versions of {{site.base_gateway}}, use the following script to transform it so that the configuration file can be compatible with the latest version:
 
 ```
 yq -i '(
