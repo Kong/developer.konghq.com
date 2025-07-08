@@ -18,26 +18,25 @@ products:
 works_on:
   - on-prem
   - konnect
-related_resources:
-  - text: Feature gates
-    url: /kubernetes-ingress-controller/reference/feature-gates/
 ---
 
 {{ site.kic_product_name }} can consolidate rules from multiple `HTTPRoute` resources that target the same backend services into a single {{ site.base_gateway }} service.
 
 ## Enable the feature
 
-Use the `CombinedServicesFromDifferentHTTPRoutes` feature gate to enable this functionality:
+Use the `--combined-services-from-different-httproutes` CLI flag to enable this functionality, or enable via Helm: 
 
-```bash
-kubectl set env -n kong deployment/kong-controller \
-  CONTROLLER_FEATURE_GATES="CombinedServicesFromDifferentHTTPRoutes=true" \
-  -c ingress-controller
+```yaml
+ingressController:
+  enabled: true
+  installCRDs: true
+  env:
+    # this will inject CONTROLLER_COMBINED_SERVICES_FROM_DIFFERENT_HTTPROUTES="true"
+    controller_combined_services_from_different_httproutes: "true"
+    
 ```
 
-You can refer to the [feature gate reference](/kubernetes-ingress-controller/reference/feature-gates/) to learn more.
-
-## How does `CombinedServicesFromDifferentHTTPRoutes` work?
+## How does Combined Services From Different HTTPRoutes work?
 
 Any rules with same combination of backend services (combination of namespace, name, port, and weight in `backendRefs` of rules) in all `HTTPRoute`s within the same namespace are translated to one {{site.base_gateway}} Service.
 
