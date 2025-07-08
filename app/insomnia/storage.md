@@ -110,7 +110,7 @@ Key use case features:
 * **Remote access:** Access your projects from anywhere with an internet connection.
 
 {:.info}
-> When you create project with Cloud sync in an organization, the project is automatically available to all users in the organization.
+> When you create a project with Cloud sync in an organization, the project is automatically available to all users in the organization.
 
 ### Cloud sync data flow
 
