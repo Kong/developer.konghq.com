@@ -11,7 +11,7 @@ weight: 900
 
 requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service."
-  - "A [Redis](https://redis.io/docs/latest/) instance"
+  - "A [Redis](https://redis.io/docs/latest/) instance."
   -  Port `6379`, or your custom Redis port is open and reachable from Kong.
 
 variables:
