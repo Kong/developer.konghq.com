@@ -5,11 +5,11 @@ content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
-permalink: /event-gateway/get-started/topic-filtering/
+permalink: /event-gateway/get-started/auth-mediation/
 
 series:
   id: event-gateway-get-started
-  position: 4
+  position: 5
 
 beta: true
 

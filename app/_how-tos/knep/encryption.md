@@ -9,7 +9,7 @@ permalink: /event-gateway/get-started/encryption/
 
 series:
   id: event-gateway-get-started
-  position: 5
+  position: 4
 
 beta: true
 
@@ -69,7 +69,7 @@ faqs:
 When using key encryption, be aware of the following:
 * The encryption key is stored in plain text in the configuration file
 * In production environments, use secure key management solutions
-* The example uses network_mode: host for simplicity; adjust for production
+* The example uses `network_mode: host` for simplicity; adjust for production
 * Messages are encrypted at rest in Kafka
 * Only consumers through the proxy can decrypt messages
 
