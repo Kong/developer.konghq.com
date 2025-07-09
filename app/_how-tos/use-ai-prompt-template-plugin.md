@@ -41,9 +41,9 @@ tools:
 
 prereqs:
   inline:
-    - title: OpenAI
-      include_content: prereqs/openai
-      icon_url: /assets/icons/openai.svg
+    - title: Mistral
+      include_content: prereqs/mistral
+      icon_url: /assets/icons/mistral.svg
   entities:
     services:
       - example-service
@@ -63,7 +63,6 @@ cleanup:
 ## Configure the AI Proxy plugin
 
 
-
 {% entity_examples %}
 entities:
   plugins:
@@ -72,20 +71,101 @@ entities:
         route_type: llm/v1/chat
         auth:
           header_name: Authorization
-          header_value: Bearer ${openai_api_key}
+          header_value: Bearer ${key}
         model:
-          provider: openai
-          name: gpt-4o
+          provider: mistral
+          name: mistral-small-2506
           options:
-            max_tokens: 512
-            temperature: 1.0
+            mistral_format: openai
+            upstream_url: https://api.mistral.ai/v1/chat/completions
+
 variables:
-  openai_api_key:
-    value: $OPENAI_API_KEY
+  key:
+    value: $MISTRAL_API_KEY
+    description: The API key to use to connect to Mistral.
 {% endentity_examples %}
+
 
 ## Configure the AI Prompt Template plugin
 
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-prompt-template
+      config:
+        templates:
+          - name: summarizer
+            template: |-
+              {
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "You summarize long texts into concise bullet points."
+                    },
+                    {
+                      "role": "user",
+                      "content": "Summarize the following text:\n\n{{text}}"
+                    }
+                  ]
+              }
+          - name: code-explainer
+            template: |-
+              {
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "You are a helpful assistant who explains code to beginners."
+                    },
+                    {
+                      "role": "user",
+                      "content": "Explain what the following code does:\n\n{{code}}"
+                    }
+                  ]
+              }
+          - name: email-drafter
+            template: |-
+              {
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "You write professional emails based on user input."
+                    },
+                    {
+                      "role": "user",
+                      "content": "Draft an email about {{topic}} to {{recipient}}."
+                    }
+                  ]
+              }
+          - name: product-describer
+            template: |-
+              {
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "You write engaging product descriptions."
+                    },
+                    {
+                      "role": "user",
+                      "content": "Describe the product: {{product_name}}, which has the following features: {{features}}."
+                    }
+                  ]
+              }
+          - name: qna
+            template: |-
+              {
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "You answer questions clearly and accurately."
+                    },
+                    {
+                      "role": "user",
+                      "content": "Answer the following question:\n\n{{question}}"
+                    }
+                  ]
+              }
+{% endentity_examples %}
 
 
 ## Validate your configuration
