@@ -6,8 +6,15 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
+  - text: AI Prompt Teamplate
+    url: /plugins/ai-prompt-template/
 
-description: Configure the
+description: |
+  Configure the AI Proxy plugin to route requests to a model provider like Mistral, then define reusable templates with the AI Prompt Template plugin to enforce consistent prompt formatting for tasks like summarization, code explanation, and Q&A.
+
+tldr:
+  q: How do I use prompt templates with AI Gateway?
+  a: Configure the AI Proxy plugin to route traffic, then use the AI Prompt Template plugin to define and enforce reusable prompt formats.
 
 products:
   - gateway
@@ -31,10 +38,6 @@ entities:
 tags:
   - ai
   - openai
-
-tldr:
-  q: How do I use
-  a: Create
 
 tools:
   - deck
@@ -62,6 +65,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
+Start by configuring the AI Proxy plugin to route prompts to Mistral AI.
 
 {% entity_examples %}
 entities:
@@ -88,12 +92,35 @@ variables:
 
 ## Configure the AI Prompt Template plugin
 
+Now, we can configure the AI Prompt Template plugin with predefined, reusable prompt templates for common tasks. The plugin will automatically [block all untemplated requests](/how-to/use-ai-prompt-template-plugin/#denied-prompts) via `allow_untemplated_requests: false` setting.
+
+This configuration defines five prompt templates:
+
+{% table %}
+columns:
+  - title: Template name
+    key: name
+  - title: Description
+    key: description
+rows:
+  - name: summarizer
+    description: Summarizes long text into concise bullet points.
+  - name: code-explainer
+    description: Explains source code in beginner-friendly terms.
+  - name: email-drafter
+    description: Drafts professional emails based on topic and recipient.
+  - name: product-describer
+    description: Generates marketing descriptions from product details and features.
+  - name: qna
+    description: Answers user questions clearly and factually.
+{% endtable %}
 
 {% entity_examples %}
 entities:
   plugins:
     - name: ai-prompt-template
       config:
+        allow_untemplated_requests: false
         templates:
           - name: summarizer
             template: |-
@@ -105,7 +132,7 @@ entities:
                     },
                     {
                       "role": "user",
-                      "content": "Summarize the following text:\n\n{{text}}"
+                      "content": "Summarize the following text: {% raw %}{{text}}{% endraw %}"
                     }
                   ]
               }
@@ -119,7 +146,7 @@ entities:
                     },
                     {
                       "role": "user",
-                      "content": "Explain what the following code does:\n\n{{code}}"
+                      "content": "Explain what the following code does: {% raw %}{{code}}{% endraw %}"
                     }
                   ]
               }
@@ -133,7 +160,7 @@ entities:
                     },
                     {
                       "role": "user",
-                      "content": "Draft an email about {{topic}} to {{recipient}}."
+                      "content": "Draft an email about {% raw %}{{topic}}{% endraw %} to {% raw %}{{recipient}}{% endraw %}."
                     }
                   ]
               }
@@ -147,7 +174,7 @@ entities:
                     },
                     {
                       "role": "user",
-                      "content": "Describe the product: {{product_name}}, which has the following features: {{features}}."
+                      "content": "Describe the product: {% raw %}{{product_name}{% endraw %}, which has the following features: {% raw %}{{features}}{% endraw %}."
                     }
                   ]
               }
@@ -161,11 +188,114 @@ entities:
                     },
                     {
                       "role": "user",
-                      "content": "Answer the following question:\n\n{{question}}"
+                      "content": "Answer the following question: {% raw %}{{question}}{% endraw %}"
                     }
                   ]
               }
 {% endentity_examples %}
 
 
-## Validate your configuration
+## Validate configuration
+
+### Allowed prompts
+
+{% navtabs "template-requests-it-tests" %}
+
+{% navtab "Summarizer" %}
+This request uses the `summarizer` template:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+body:
+  messages: "{template://summarizer}"
+  properties:
+    text: "Of all human sciences the most useful and most imperfect appears to me to be that of mankind: and I will venture to say, the single inscription on the Temple of Delphi contained a precept more difficult and more important than is to be found in all the huge volumes that moralists have ever written. I consider the subject of the following discourse as one of the most interesting questions philosophy can propose, and unhappily for us, one of the most thorny that philosophers can have to solve. For how shall we know the source of inequality between men, if we do not begin by knowing mankind? And how shall man hope to see himself as nature made him, across all the changes which the succession of place and time must have produced in his original constitution? How can he distinguish what is fundamental in his nature from the changes and additions which his circumstances and the advances he has made have introduced to modify his primitive condition? Like the statue of Glaucus, which was so disfigured by time, seas and tempests, that it looked more like a wild beast than a god, the human soul, altered in society by a thousand causes perpetually recurring, by the acquisition of a multitude of truths and errors, by the changes happening to the constitution of the body, and by the continual jarring of the passions, has, so to speak, changed in appearance, so as to be hardly recognisable. Instead of a being, acting constantly from fixed and invariable principles, instead of that celestial and majestic simplicity, impressed on it by its divine Author, we find in it only the frightful contrast of passion mistaking itself for reason, and of understanding grown delirious."
+status_code: 200
+{% endvalidation %}
+
+
+{% endnavtab %}
+
+{% navtab "Code explainer" %}
+This request uses the `code-explainer` template:.
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+body:
+  messages: "{template://code-explainer}"
+  properties:
+    code: "def add(a, b):\n    return a + b"
+status_code: 200
+{% endvalidation %}
+{% endnavtab %}
+
+{% navtab "Email drafter" %}
+
+This request uses the `email-drafter` template:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+body:
+  messages: "{template://email-drafter}"
+  properties:
+    topic: "weekly team update"
+    recipient: "the engineering team"
+status_code: 200
+{% endvalidation %}
+{% endnavtab %}
+
+{% navtab "Product describer" %}
+
+This request describes a product using the `product-describer` template:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+body:
+  messages: "{template://product-describer}"
+  properties:
+    product_name: "SuperSonic Vacuum X5"
+    features: "cordless design, HEPA filter, 60-minute battery life, lightweight build"
+status_code: 200
+{% endvalidation %}
+{% endnavtab %}
+
+{% navtab "Q&A" %}
+This requests uses the `qna` template:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+body:
+  messages: "{template://qna}"
+  properties:
+    question: "What is life?"
+status_code: 200
+{% endvalidation %}
+{% endnavtab %}
+
+{% endnavtabs %}
+
+### Denied prompts
+
+All requests that don't use any of the configured templates will be automatically blocked by the plugin. For example
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: user
+      content: What is Pythagorean theorem?
+status_code: 400
+message: this LLM route only supports templated requests
+{% endvalidation %}
