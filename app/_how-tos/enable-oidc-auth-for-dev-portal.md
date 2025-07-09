@@ -75,8 +75,6 @@ cleanup:
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 
-min_version:
-    gateway: '3.4'
 
 faqs:
   - q: My published API is private in Dev Portal, how do I allow developers to see it?
@@ -223,6 +221,8 @@ Now, validate the setup by accessing the `example-route` Route and passing the u
 First, encode your credentials and export them:
 ```sh
 echo -n "$OKTA_CLIENT_ID:$OKTA_CLIENT_SECRET" | base64
+```
+```sh
 export ENCODED_CREDENTIALS='YOUR-ENCODED-CREDENTIALS'
 ```
 
