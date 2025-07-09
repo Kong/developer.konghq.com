@@ -1,7 +1,6 @@
 
 
 1. [Create an API](/api/konnect/api-builder/v3/#/operations/create-api) using the `/v3/apis` endpoint:
-
 <!--vale off-->
 {% capture create-api %}
 {% control_plane_request %}
@@ -16,18 +15,16 @@ body:
     name: MyAPI
     attributes: {"env":["development"],"domains":["web","mobile"]}
 {% endcontrol_plane_request %}
+<!--vale on-->
+Export the ID of your API from the response:
+```sh
+export API_ID='YOUR-API-ID'
+```
 {% endcapture %}
 
 {{ create-api | indent: 3 }}
-<!--vale on-->
 
-   Export the ID of your API from the response:
-
-   ```sh
-   export API_ID='YOUR-API-ID'
-   ```
 1. First, send a request to the `/v2/control-planes` endpoint to [get the ID of the `quickstart` Control Plane](/api/konnect/control-planes/v2/#/operations/list-control-planes):
-
 <!--vale off-->
 {% capture list-cp %}
 {% control_plane_request %}
@@ -39,19 +36,16 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 {% endcontrol_plane_request %}
+<!--vale on-->
+Export your Control Plane ID:
+```sh
+export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
+```
 {% endcapture %}
 
 {{ list-cp | indent: 3 }}
-<!--vale on-->
-
-   Export your Control Plane ID:
-
-   ```sh
-   export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
-   ```
 
 1. Next, [list Services](/api/konnect/control-planes-config/v2/#/operations/list-service) by using the `/v2/control-planes/{controlPlaneId}/core-entities/services` endpoint:
-
 <!--vale off-->
 {% capture list-services %}
 {% control_plane_request %}
@@ -63,19 +57,16 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 {% endcontrol_plane_request %}
+<!--vale on-->
+Export the ID of the `example-service`:
+```sh
+export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
+```
 {% endcapture %}
 
 {{ list-services | indent: 3 }}
-<!--vale on-->
-
-   Export the ID of the `example-service`:
-
-   ```sh
-   export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
-   ```
 
 1. [Associate the API with a Service](/api/konnect/api-builder/v3/#/operations/create-api-implementation) using the `/v3/apis/{apiId}/implementations` endpoint:
-
 <!--vale off-->
 {% capture associate-service %}
 {% control_plane_request %}
@@ -97,7 +88,6 @@ body:
 <!--vale on-->
 
 1. Now you can [publish the API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
-
 <!--vale off-->
 {% capture publish %}
 {% control_plane_request %}

@@ -45,6 +45,10 @@ prereqs:
     - title: Configure a Dev Portal
       include_content: prereqs/dev-portal-configure
       icon_url: /assets/icons/dev-portal.svg
+    - title: Register a Dev Portal developer account
+      content: |
+        [Register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in). For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations. 
+      icon_url: /assets/icons/dev-portal.svg
     - title: Publish an API
       include_content: prereqs/publish-api
       icon_url: /assets/icons/dev-portal.svg
@@ -68,6 +72,10 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+faqs:
+  - q: My published API is private in Dev Portal, how do I allow developers to see it?
+    a: If an API is published as private, you must enable Dev Portal RBAC and [developers must sign in](/dev-portal/developer-signup/) to see APIs.
 
 next_steps:
   - text: Learn how to manage application registration requests
@@ -187,17 +195,18 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
+This request will also publish the API to the specified Dev Portal.
+
 ## Create an app in Dev Portal
 
-Navigate to your Dev Portal:
+To use your Okta OIDC credentials to authenticate with an app, you must first create an app in Dev Portal with the [test developer account you created previously](/how-to/enable-oidc-auth-for-dev-portal/#create-a-dev-portal-developer-account).
 
-```sh
-open https://$PORTAL_URL/apis
-```
-
-You should see `MyAPI` in the list of APIs. If an API is published as private, you must enable Dev Portal RBAC and [developers must sign in](/dev-portal/developer-signup/) to see APIs. To register an app with the API, do the following:
-
-1. Click **View APIs**.
+1. Navigate to your Dev Portal and log in with the test developer account:
+   ```sh
+   open https://$PORTAL_URL/apis
+   ```
+   You should see `MyAPI` in the list of APIs.
+1. To register an app with the API, click **View APIs**.
 1. Click **Use this API**.
 1. In the pop-up dialog, enter a name for the app and your client ID for your Okta application.
 1. Click **Save**.

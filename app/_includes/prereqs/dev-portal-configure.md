@@ -58,5 +58,3 @@ body:
 
 {{ pages | indent: 3 }}
    <!--vale on-->
-1. [Register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in).
-   For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations. 
