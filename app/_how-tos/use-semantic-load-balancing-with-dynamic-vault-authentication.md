@@ -39,7 +39,7 @@ tags:
 
 tldr:
   q: How do I route OpenAI chat traffic with dynamic credentials from Vault?
-  a: Configure the [AI Proxy Advanced plugin](/link/to/plugin/) to resolve OpenAI API keys dynamically from HashiCorp Vault, then route chat traffic to the most relevant model using semantic balancing based on user input.
+  a: Configure the [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) to resolve OpenAI API keys dynamically from HashiCorp Vault, then route chat traffic to the most relevant model using semantic balancing based on user input.
 
 tools:
   - deck
