@@ -41,7 +41,7 @@ tags:
 tldr:
   q: How can I access HashiCorp Vault secrets in {{site.base_gateway}}?
   a: |
-    Write secrets like `vault kv put secret/openai key="OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Next Use the `{vault://...}` syntax in plugin fields to [dynamically authenticate to LLM providers](/how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/) such as OpenAI and Mistral.
+    Store secrets using `vault kv put secret/openai key="OPENAI_API_KEY"` to HashiCorp Vault. Then configure a Vault entity in {{site.base_gateway}} with the host, token, and mount path. Inside the Gateway container, run `kong vault get {vault://hashicorp-vault/openai/key}` to confirm access. Next Use the `{vault://...}` syntax in a plugin field to [dynamically authenticate to LLM providers](/how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/) such as OpenAI and Mistral.
 
 tools:
     - deck
@@ -97,7 +97,7 @@ Both secrets will be stored under their respective paths (`secret/openai` and `s
 
 We'll use decK environment variables for the `host` and `token` in the {{site.base_gateway}} Vault configuration. This is because these values typically vary between environments.
 
-In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault is using. This is because if you used the quick-start script {{site.base_gateway}} is running in a container and uses a different `localhost`.
+In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault uses by default. This is because if you used the quick-start script {{site.base_gateway}} is running in a Docker container and uses a different `localhost`.
 
 Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value.
 
@@ -133,7 +133,7 @@ variables:
 
 ## Validate
 
-Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
+Since {{site.konnect_short_name}} Data Plane container names can vary, set your container name as an environment variable:
 {: data-deployment-topology="konnect" }
 ```sh
 export KONNECT_DP_CONTAINER='your-dp-container-name'

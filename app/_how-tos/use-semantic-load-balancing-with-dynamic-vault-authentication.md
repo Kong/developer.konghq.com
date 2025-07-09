@@ -39,7 +39,7 @@ tags:
 
 tldr:
   q: How do I route OpenAI chat traffic with dynamic credentials from Vault?
-  a: Configure the AI Proxy Advanced plugin to resolve OpenAI API keys dynamically from HashiCorp Vault, then route chat traffic to the most relevant model using semantic balancing based on user input.
+  a: Configure the [AI Proxy Advanced plugin](/link/to/plugin/) to resolve OpenAI API keys dynamically from HashiCorp Vault, then route chat traffic to the most relevant model using semantic balancing based on user input.
 
 tools:
   - deck
@@ -142,7 +142,7 @@ variables:
 
 You can test the plugin’s semantic routing logic by sending prompts that align with the intent of each configured target. The AI Proxy Advanced uses dynamic authentication to inject the appropriate API key from HashiCorp Vault based on the selected model. Responses should include the correct `"model"` value, confirming that the request was both routed and authenticated as expected.
 
-### Test programming-related questions
+### Programming questions
 
 These prompts are routed to **OpenAI GPT-3.5-Turbo**, since it performs well on technical and programming-related tasks. The responses should include `"model": "gpt-3.5-turbo"`.
 
@@ -172,9 +172,9 @@ body:
 {% endvalidation %}
 <!-- vale on -->
 
-### Test math-related questions
+### Math questions
 
-These prompts should match the **OpenAI GPT-4o** target, which is designated for mathematics topic areas like algebra and calculus. The responses should include `"model": "gpt-4o"`.
+These prompts should match the **OpenAI GPT-4o** target, which is designated for mathematics topics like algebra and calculus. The responses should include `"model": "gpt-4o"`.
 
 <!-- vale off -->
 {% validation request-check %}
