@@ -8,9 +8,8 @@ products:
     - dev-portal
 api_specs:
   - konnect/portal-management
-beta: true
 tags:
-  - beta
+  - custom-domain
 search_aliases:
   - Portal
 works_on:
@@ -24,20 +23,17 @@ related_resources:
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: Dev Portal settings
-    url: /dev-porta/portal-settings/
+    url: /dev-portal/portal-settings/
+  - text: About Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
 faqs:
-  - q: What is the difference between Beta and previous Dev Portal URLs?
-    a: |
-      Beta Dev Portals include `edge` before the region in the default URL (for example, `example.edge.us.portal.konghq.com`), 
-      whereas previous Dev Portals don't.
-
   - q: How do I delete a custom domain from a Dev Portal?
     a: |
       To delete a custom domain, go to your Dev Portal, click **Settings**, then click the trash/delete icon next to the domain entry.
 
   - q: What should I do if my custom Dev Portal domain shows an SSL error?
     a: |
-      After DNS verification, {{site.konnect_short_name}} will attempt to auto-generate an SSL certificate. 
+      After DNS verification, {{site.konnect_short_name}} will attempt to auto-generate an SSL certificate.
       This process may take several hours. If you try to access the custom domain before the certificate is ready, you may see an SSL error.
 
       If the process takes more than 24 hours, check that your DNS record has propagated correctly.
@@ -51,14 +47,14 @@ faqs:
 
       The output should show something like:
       ```
-      portal.example.com. 172 IN CNAME example.edge.us.portal.konghq.com.
+      portal.example.com. 172 IN CNAME example.us.kongportals.com.
       ```
 
       This confirms that your custom domain points to the expected default domain.
 ---
 
 Every Dev Portal instance has an auto-generated default URL. You can also manage custom URLs within {{site.konnect_short_name}}.
-This gives users the ability to access the Dev Portal from either the default URL, for example `https://example.edge.us.portal.konghq.com`, or a custom URL like `portal.example.com`.
+This gives users the ability to access the Dev Portal from either the default URL, for example `https://example.{geo}.kongportals.com`, or a custom URL like `portal.example.com`.
 
 To add a custom URL to Dev Portal, you need:
 
@@ -82,10 +78,10 @@ columns:
 rows:
   - type: CNAME
     name: portal
-    value: "`https://$YOUR_PORTAL_URL.edge.us.portal.konghq.com`"
+    value: "`https://$YOUR_PORTAL_URL.$GEO.kongportals.com`"
 {% endtable %}
 
-If your domain has specific CAA DNS records that list authorized certificate authorities/issuers, you'll also need to create a new CAA DNS record to permit [Google Trust Services](https://pki.goog/faq/#caa) as an issuer. 
+If your domain has specific CAA DNS records that list authorized certificate authorities/issuers, you'll also need to create a new CAA DNS record to permit [Google Trust Services](https://pki.goog/faq/#caa) as an issuer.
 If your domain doesn't currently have any CAA DNS records, it means all issuers are implicitly allowed, and there's no need for a new CAA DNS record in that case.
 
 ## Update Dev Portal URL settings {#update-portal}

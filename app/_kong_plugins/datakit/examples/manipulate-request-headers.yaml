@@ -1,0 +1,51 @@
+description: |
+  Use the Datakit plugin to dynamically adjust request headers before passing them to a third-party service.
+
+extended_description: |
+  Use the Datakit plugin to dynamically adjust request headers before passing them to a third-party service.
+
+  This example contains the following nodes:
+  1. The node `HEADERS` sets some additional headers to add to the API call.
+  2. The node `MERGE_HEADERS` creates a new header map, prefixing each request header with `X-Request-` and merging in the static headers from `HEADERS`.
+  3. The node `API` sends the updated request headers to an external API.
+  4. The node `EXIT` sends a response to the client with the API headers and body.
+  
+title: Manipulate request headers
+weight: 900
+
+config:
+  nodes:
+  - name: HEADERS
+    type: static
+    values:
+      X-API-Header-One: foo
+      X-API-Header-Two: bar
+
+  - name: MERGE_HEADERS
+    type: jq
+    inputs:
+      static: HEADERS
+      request: request.headers
+    jq: |
+      .static * (.request | with_entries(.key = "X-Request-" + .key))
+
+  - name: API
+    type: call
+    url: https://example.com/
+    inputs:
+      headers: MERGE_HEADERS
+
+  - name: EXIT
+    type: exit
+    input: API
+    status: 200
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.11'

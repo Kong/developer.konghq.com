@@ -8,9 +8,9 @@ products:
 
 breadcrumbs: 
   - /dev-portal/
-beta: true
 tags:
-  - beta
+  - dynamic-client-registration
+  - authentication
 
 works_on:
     - konnect
@@ -20,8 +20,8 @@ search_aliases:
 description: | 
     Describes supported DCR identity providers and supported DCR authentication methods. 
 related_resources:
-  - text: Application registration
-    url: /dev-portal/application-registration/
+  - text: Developer self-service and app registration
+    url: /dev-portal/self-service/
   - text: Configure Dynamic Client Registration with Okta
     url: /how-to/okta-dcr/
   - text: Configure Dynamic Client Registration with Curity

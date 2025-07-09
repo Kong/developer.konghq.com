@@ -26,7 +26,7 @@ module Jekyll
       end
 
       def url
-        "https://#{configuration['region']}.api.konghq.com#{@yaml['url']}"
+        "https://#{self['region']}.api.konghq.com#{@yaml['url']}"
       end
 
       def headers

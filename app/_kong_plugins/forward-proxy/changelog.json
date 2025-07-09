@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Marked the `auth_password` in the `forward_proxy` plugin as an `encrypted` field.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where the `upstream_status` field was empty in logs when using the `forward-proxy` plugin.\n",

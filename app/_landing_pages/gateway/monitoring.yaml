@@ -75,6 +75,8 @@ rows:
                 url: "/plugins/prometheus/"
               - text: Collect metrics with {{site.base_gateway}}
                 url: "/how-to/collect-metrics-with-prometheus/"
+              - text: Collect metrics with Datadog
+                url: /how-to/collect-metrics-with-datadog-and-prometheus-plugin/
               - text: Monitor metrics with KIC
                 url: "/kubernetes-ingress-controller/observability/prometheus-grafana/"
       - blocks:
@@ -100,6 +102,8 @@ rows:
             ctas:
               - text: StatsD plugin
                 url: "/plugins/statsd/"
+              - text: Collect metrics with StatsD
+                url: "/how-to/collect-metrics-with-statsd/"
       - blocks:
         - type: card
           config:
@@ -161,5 +165,17 @@ rows:
             cta:
               text: Explore analytics
               url: /advanced-analytics/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Tracing
+            description: |
+              {{site.base_gateway}} has OpenTelemetry tracing capabilities. 
+              You can use plugins to collect traces.
+            icon: /assets/icons/codeblock.svg
+            cta:
+              text: See reference
+              url: /gateway/tracing/
               align: end
             

@@ -55,6 +55,9 @@ faqs:
   - q: Can I hide the `X-Cache-Key` header in the response when using the Proxy Cache Advanced plugin? 
     a: |
       You can remove the `X-Cache-Key` header from the response by applying a serverless [Post-Function plugin](/plugins/post-function/) in the `header_filter` phase.
+
+notes: |
+  In Serverless gateways only the <code>memory</code> config strategy is supported.
 ---
 
 The Proxy Cache Advanced plugin provides a reverse proxy cache implementation for {{site.base_gateway}}. 

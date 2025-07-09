@@ -19,6 +19,7 @@ related_resources:
 
 
 tools:
+  - deck
   - admin-api
   - konnect-api
 

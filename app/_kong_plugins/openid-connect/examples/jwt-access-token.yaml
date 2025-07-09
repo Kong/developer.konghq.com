@@ -4,6 +4,10 @@ description: |
 extended_description: |
   Configure the OpenID Connect plugin with JWT access token authentication.
 
+  Here's how JWT access token auth works:
+
+  {% include_cached plugins/oidc/diagrams/jwt-access-token.md %}
+
   In this example, the plugin will only accept a bearer token sent in a query string, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `header`, or any combination of these values.
   

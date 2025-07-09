@@ -25,5 +25,13 @@
             {%- assign include_os_path = "install/gateway/linux/binaries/" | append: include.os | append: ".html" -%}
             {% include {{include_os_path}} distro=distro release=page.release os=include.os %}
         </div>
+        
+        {% if include.os == "ubuntu" or include.os == "rhel" %}
+        <blockquote class="warning">
+          <span>
+            For FIPS-compliant environments, you must also <a href="/gateway/fips-support/#configure-fips" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">enable <code>fips = on</code> in your Kong configuration file</a>.
+          </span>
+        </blockquote>
+        {% endif %}
     </div>
 </div>

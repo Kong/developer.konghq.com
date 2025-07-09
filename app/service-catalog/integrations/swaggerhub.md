@@ -2,7 +2,6 @@
 title: SwaggerHub
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -27,16 +26,18 @@ bindable_entities: "SwaggerHub API version"
 ---
 
 The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
+{% include /service-catalog/multi-resource.md %}
 
 ## Prerequisites
 
 You need a [SwaggerHub API key](https://swagger.io/docs/specification/v3_0/authentication/api-keys/) to authenticate your SwaggerHub account with {{site.konnect_short_name}}.
 
+
 ## Authenticate the SwaggerHub integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
-2. Select **SwaggerHub**, then **Install SwaggerHub**.
-3. Select **Authorize**. 
+2. Select **Add SwaggerHub Instance**.
+3. Add your Swaggerhub API key and name the instance.
 
 This will take you to SwaggerHub, where you can use your SwaggerHub API key to grant {{site.konnect_short_name}} access to your account.
 

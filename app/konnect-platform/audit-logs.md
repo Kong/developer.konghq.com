@@ -20,6 +20,8 @@ search_aliases:
 
 description: "Review logs for system events in {{site.konnect_short_name}}."
 related_resources:
+  - text: "Collect {{site.konnect_short_name}} audit logs with SumoLogic"
+    url: /how-to/collect-audit-logs-with-sumologic/
   - text: "Dedicated Cloud Gateways"
     url: /dedicated-cloud-gateways/
   - text: "{{site.konnect_short_name}} Data Plane logs"
@@ -30,6 +32,17 @@ related_resources:
     url: /gateway/audit-logs/
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
+
+faqs:
+  - q: How can I verify {{site.konnect_short_name}} audit log signatures
+    a: |
+      {{site.konnect_short_name}} and Dev Portal use an [ED25519 signature](https://ed25519.cr.yp.to/) on the audit logs they produce. You can verify the signature in your audit logs to confirm that it's from {{site.konnect_short_name}} instead of a bad actor.
+
+      To do that:
+      1. Retrieve the public key from the [audit log JWKS endpoint](/api/konnect/audit-logs/v2/#/operations/get-audit-log-jwks). The public key is stored in the `x` field.
+      1. Get an audit log from {{site.konnect_short_name}} and remove the `sig` value. Make sure to save the signature, you'll need it in the next step.
+      1. Decode the Base64-encoded signature and private key.
+      1. Use your preferred tool (for example, [OpenSSL](https://www.openssl.org/)) to verify the ED25519 signature by using the signature-less audit log entry together with the decoded signature and public key.
 ---
 
 
@@ -123,7 +136,7 @@ rows:
 
 ## Log formats
 
-{{site.konnect_short_name}} delivers log events in [ArcSight CEF Format](https://docs.centrify.com/Content/IntegrationContent/SIEM/arcsight-cef/arcsight-cef-format.htm) or JSON. You may specify which format to use in the audit log webhook endpoints.
+{{site.konnect_short_name}} delivers log events in [ArcSight CEF Format](https://docs.centrify.com/Content/IntegrationContent/SIEM/arcsight-cef/arcsight-cef-format.htm) , JSON, or CrowdStrike Parsing Standard (CPS). You may specify which format to use in the audit log webhook endpoints.
 
 Webhook calls include a batch of events. Each event is formatted in either CEF or JSON and separated by a newline. The `Content-Type` is `text/plain`.
 

@@ -29,7 +29,7 @@ module Jekyll
     end
 
     def process
-      @resource['icon'] = "/assets/icons/#{determine_icon}.svg"
+      @resource['icon'] ||= "/assets/icons/#{determine_icon}.svg"
       @resource
     end
 
@@ -51,10 +51,23 @@ module Jekyll
 
     def icon_for_content_type
       url = URI.parse(@resource['url']).path
-      page = site.pages.detect { |p| p.url == url }
-      page ||= site.documents.detect { |d| d.url == url }
+      final_url = resolve_final_path(url, site_redirects)
+      page = site.pages.detect { |p| p.url == final_url }
+      page ||= site.documents.detect { |d| d.url == final_url }
 
       CONTENT_TYPE_ICON_MAP.fetch(page.data['content_type'], 'service-document')
+    end
+
+    def resolve_final_path(url, redirects)
+      visited = Set.new
+
+      while redirects.key?(url)
+        return nil if visited.include?(url)
+        visited.add(url)
+        url = redirects[url]
+      end
+
+      url
     end
   end
 end

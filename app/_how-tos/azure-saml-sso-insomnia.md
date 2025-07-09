@@ -9,8 +9,12 @@ products:
 related_resources:
   - text: Authentication & Authorization in Insomnia
     url: /insomnia/authentication-authorization/
-  - text: Configure Okta SAML SSO in Insomnia
-    url: /how-to/okta-saml-sso-insomnia/
+  - text: Configure Azure SAML SSO in Insomnia
+    url: /how-to/azure-saml-sso-insomnia/
+  - text: SSO for Insomnia
+    url: /insomnia/sso/
+  - text: Configure SCIM for Insomnia with Azure
+    url: /how-to/configure-scim-for-insomnia-with-azure/
 
 tier: enterprise
 breadcrumbs:
@@ -27,15 +31,16 @@ tldr:
 
 prereqs:
   inline:
-  - title: Insomnia permissions
-    include_content: prereqs/insomnia-sso
+  - title: Insomnia role
+    include_content: prereqs/insomnia-owner
     icon_url: /assets/icons/insomnia/insomnia.svg
   - title: Azure permissions
     include_content: prereqs/azure-sso
     icon_url: /assets/icons/azure.svg
   - title: Domain permissions
-    include_content: prereqs/sso-domain
+    include_content: prereqs/insomnia-verified-domain
     icon_url: /assets/icons/domain.svg
+
 ---
 
 ## Create the SSO connection in Insomnia
@@ -81,15 +86,17 @@ rows:
 {% capture table2 %}
 {% table %}
 columns:
-  - title: You need...
-    key: need
-  - title: Use the following plugin policy strategies...
-    key: strategy
+  - title: Azure setting
+    key: setting
+  - title: Value
+    key: value
 rows:
-  - need: "A high level of accuracy in critical transactions. An example is a transaction with financial consequences."
-    strategy: "`cluster` or `redis`"
-  - need: "Protect backend services from overloading caused by specific users or attacks. High accuracy is not as relevant."
-    strategy: "`local`"
+  - setting: "Name"
+    value: "email"
+  - setting: "Source"
+    value: "Attribute"
+  - setting: "Source attribute"
+    value: "user.email"
 {% endtable %}
 {% endcapture %}
 

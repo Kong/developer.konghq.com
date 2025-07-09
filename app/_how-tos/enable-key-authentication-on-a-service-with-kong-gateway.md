@@ -86,19 +86,22 @@ After configuring the Key Authentication plugin, you can verify that it was conf
 
 This request should be successful:
 
-This request includes an invalid API key and should return a `400` response:
-
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
-  - 'apikey:hello_world'
-status_code: 400
+  - 'apikey: hello_world'
+status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 
-If you send the wrong API key, the request will fail:
+This request includes an invalid API key:
 
+<!-- vale off -->
 {% validation unauthorized-check %}
 url: /anything
 headers:
-  - 'apikey:another_key'
+  - 'apikey: another_key'
+status_code: 401
 {% endvalidation %}
+<!-- vale on -->

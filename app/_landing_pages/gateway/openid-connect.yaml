@@ -276,6 +276,17 @@ rows:
                 text: See all tested identity providers 
                 url: /plugins/openid-connect/#supported-identity-providers
                 align: end
+      - blocks:
+          - type: card
+            config:
+              title: OpenID Connect in Kong Manager
+              description: |
+                Configure Kong Manager with OpenID Connect authentication and group mapping.
+              icon: /assets/icons/login.svg
+              cta:
+                text: See the Kong Manager OIDC reference
+                url: /gateway/kong-manager/openid-connect/
+                align: end
 
   - header:
       type: h2

@@ -1,1 +1,1 @@
-If you created a new Collection and want to delete it, navigate to the collection, click it's name in the sidebar on the right, and then select **Delete**. 
+If you created a new collection and want to delete it, navigate to the collection, click it's name in the sidebar on the right, and then select **Delete**. 

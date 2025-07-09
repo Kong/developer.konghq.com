@@ -5,9 +5,7 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 tags:
-  - beta
   - publish-apis
 works_on:
     - konnect
@@ -25,11 +23,11 @@ related_resources:
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
   - text: Dev Portal security settings
-    url: /dev-portal/security/
+    url: /dev-portal/security-settings/
 ---
 
 Publishing an API makes it available to one or more Dev Portals. 
-With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/access-and-approval/) settings, you can publish an API securely to the appropriate audience.
+With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/self-service/) settings, you can publish an API securely to the appropriate audience.
 
 Make sure you have [created APIs](/dev-portal/apis/) before attempting to publish to them your Dev Portals.
 

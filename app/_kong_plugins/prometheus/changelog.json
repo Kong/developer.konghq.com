@@ -1,4 +1,26 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "added `consumer` label for ai metrics and added metrics for ai-rag-injector plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI latency histogram might miss some calculation.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where the control plane failed to expose the `db_entities_total` metric.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the metric `data_plane_config_hash` might not work correctly for incremental sync.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added gauge to expose connectivity state to the control plane.\n",
@@ -16,6 +38,13 @@
       "message": "Fixed an issue where the metric `data_plane_config_hash` might not work correctly for incremental sync.\n",
       "type": "bugfix",
       "scope": "Plugin"
+    }
+  ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where AI latency histogram might miss some calculation.",
+      "scope": "Plugin",
+      "type": "bugfix"
     }
   ],
   "3.9.0.0": [

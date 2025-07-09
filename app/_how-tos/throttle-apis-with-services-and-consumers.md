@@ -136,13 +136,12 @@ To test that the Service Protection plugin correctly applies rate limits to the 
 
 First, run the following command to test the rate limiting as the `jsmith` Consumer:
 
-{% validation rate-limit-check %}
+{% validation traffic-generator %}
 iterations: 6
 url: '/anything'
 headers:
   - 'apikey:jsmith-key'
 status_code: 200
-message: OK
 {% endvalidation %}
 
 This doesn't exceed the rate limit per Consumer or per Service.

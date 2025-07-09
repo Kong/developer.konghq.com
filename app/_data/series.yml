@@ -13,3 +13,13 @@ operator-get-started-hybrid:
 operator-get-started-kic:
   title: Deploy {{ site.kic_product_name }} with {{ site.operator_product_name }}
   url: /operator/dataplanes/get-started/kic/install/
+gateway-k8s-on-prem-install:
+  title: Install {{ site.base_gateway }} on-prem on Kubernetes
+  breadcrumb_title: On-Prem Kubernetes
+  url: /gateway/install/kubernetes/on-prem/
+mcp-traffic:
+  title: Secure, govern and observe MCP traffic with Kong AI Gateway
+  url: /mcp/secure-mcp-traffic
+hashicorp-vault-llms:
+  title: Configure dynamic authentication to LLM providers
+  url: /how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/

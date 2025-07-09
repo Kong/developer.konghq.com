@@ -58,37 +58,43 @@ rows:
 
                   You can configure Kong Manager settings (like URL and path) and customization (like header and footer colors) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains, see [multiple domains](/gateway/kong-manager/configuration/#multiple-domains).
   
-  # - columns:
-  #     - blocks:
-  #       - type: structured_text
-  #         config:
-  #           header:
-  #             text: "Kong Manager authentication"
-  #           blocks:
-  #             - type: text
-  #               text: |
-  #                 Kong Manager comes packaged with several authentication methods.
-  # - columns:
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Enable OIDC for Kong Manager
-  #           description: |
-  #             {{site.base_gateway}} offers the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect Identity Provider.
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Kong Manager authentication"
+            blocks:
+              - type: text
+                text: |
+                  Kong Manager comes packaged with several authentication methods.
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: OIDC for Kong Manager 
+            description: |
+              {{site.base_gateway}} offers the ability to bind authentication for Kong Manager admins to an organization's OpenID Connect identity provider.
               
-  #           icon: /assets/icons/plugins/openid-connect.png
-  #           cta:
-  #             url: "/how-to/enable-oidc-for-kong-manager/"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Enable Basic Auth for Kong Manager
-  #           description: |
-  #             Configure basic authentication for Kong Manager.
+            icon: /assets/icons/plugins/openid-connect.png
+            ctas:
+              - text: Enable OIDC auth for Kong Manager
+                url: "/gateway/kong-manager/openid-connect/#enable-openid-connect-for-kong-manager"
+              - text: Set up authenticated group mapping with OIDC
+                url: "/gateway/kong-manager/openid-connect/#oidc-authenticated-group-mapping"
+
+      - blocks:
+        - type: card
+          config:
+            title: Basic Auth for Kong Manager
+            description: |
+              Configure basic authentication for Kong Manager.
               
-  #           icon: /assets/icons/plugins/basic-auth.png
-  #           cta:
-  #             url: "/how-to/enable-basic-auth-on-kong-manager/"
+            icon: /assets/icons/plugins/basic-auth.png
+            ctas:
+              - text: Enable basic auth for Kong Manager
+                url: "/how-to/enable-basic-auth-on-kong-manager/"
   #     - blocks:
   #       - type: card
   #         config:

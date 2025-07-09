@@ -1,4 +1,11 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where the degraphql handle type Boolean was not being assigned correctly in the degraphql router.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",
