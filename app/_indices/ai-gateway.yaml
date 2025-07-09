@@ -78,6 +78,9 @@ sections:
         url: /mcp/kong-mcp/tools/
   - title: AI load balancing
     items:
+      - title: Load balancing with AI Proxy Advanced
+        description: Overview of load balancing and retry and fallback strategies in the AI Proxy Advanced plugin.
+        url: /ai-gateway/load-balancing/
       - title: Consistent Hashing - AI Proxy Advanced
         description: Set up consistent hashing for load balancing.
         url: /plugins/ai-proxy-advanced/examples/consistent-hashing/
