@@ -4,75 +4,68 @@ First, we need to create a `docker-compose.yaml` file. This file will define the
 
 ```shell
 cat <<EOF > docker-compose.yaml
+version: '3'
 services:
-  broker:
-    image: apache/kafka:latest
-    container_name: broker
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: kafka
+    ports:
+      - "9092:19092"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9094
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,EXTERNAL://localhost:9094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY: 0
-      KAFKA_NUM_PARTITIONS: 3
-      KAFKA_CONTROLLER_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
-    ports:
-      - "9092:9092"
-      - "9094:9094"
-    healthcheck:
-      test: kafka-topics.sh --bootstrap-server broker:9092 --list
-      interval: 10s
-      timeout: 10s
-      retries: 5
+      KAFKA_LISTENERS: INTERNAL://kafka:9092,CONTROLLER://kafka:9093,EXTERNAL://0.0.0.0:19092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CLUSTER_ID: 'abcdefghijklmnopqrstuv'
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:latest
-    container_name: schema-registry
-    depends_on:
-      - broker
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker:9092
-      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-    healthcheck:
-      test: curl -f http://localhost:8081/subjects
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
+      image: confluentinc/cp-schema-registry:latest
+      container_name: schema-registry
+      depends_on:
+        - kafka
+      ports:
+        - "8081:8081"
+      environment:
+        SCHEMA_REGISTRY_HOST_NAME: schema-registry
+        SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:9092
+        SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      healthcheck:
+        test: curl -f http://localhost:8081/subjects
+        interval: 10s
+        timeout: 5s
+        retries: 5
+  
   knep:
     image: kong/kong-native-event-proxy:latest
     container_name: knep
-    depends_on:
-      - broker
     ports:
-      - "9192-9292:9192-9292"
       - "8080:8080"
+      - "19092:19092"
     env_file: "knep.env"
     environment:
+      KONNECT_API_TOKEN: ${KONNECT_TOKEN}
+      KONNECT_API_HOSTNAME: us.api.konghq.com
+      KONNECT_CONTROL_PLANE_ID: ${KONNECT_CONTROL_PLANE_ID}
       KNEP__RUNTIME__DRAIN_DURATION: 1s # makes shutdown quicker, not recommended to be set like this in production 
+      # KNEP__OBSERVABILITY__LOG_FLAGS: "info,knep=debug" # Uncomment for debug logging
     healthcheck:
       test: curl -f http://localhost:8080/health/probes/liveness
       interval: 10s
       timeout: 5s
       retries: 5
-
+  
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     environment:
       # First cluster configuration (direct Kafka connection)
       KAFKA_CLUSTERS_0_NAME: "direct-kafka-cluster"
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "broker:9092"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: "http://schema-registry:8081"
 
       # Second cluster configuration (KNEP proxy connection)
