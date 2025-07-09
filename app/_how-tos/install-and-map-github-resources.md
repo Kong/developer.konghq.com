@@ -22,9 +22,12 @@ prereqs:
   inline:
     - title: GitHub access
       content: |
-        You must have sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App.
-
-        You need a repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. The {{site.konnect_short_name}} app can be managed in your GitHub account under **Applications > GitHub Apps**.
+        To integrate GitHub with Service Catalog, you need the following:
+        * Sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App
+        * A GitHub organization
+        * A repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. 
+        
+        The {{site.konnect_short_name}} app can be managed in your GitHub account under **Applications > GitHub Apps**.
       icon_url: /assets/icons/github.svg
 ---
 

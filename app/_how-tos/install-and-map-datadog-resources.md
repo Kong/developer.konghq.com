@@ -14,8 +14,8 @@ related_resources:
   - text: Datadog reference
     url: /service-catalog/integrations/datadog/
 tldr:
-  q: How do I connect Datadog monitors and dashboards to my Service Catalog service?
-  a: Install the Datadog integration in {{site.konnect_short_name}}, authorize it using your API and app keys, and link Datadog resources to your Service Catalog service.
+  q: How do I view Datadog monitors and dashboards in Service Catalog?
+  a: Install the Datadog integration in {{site.konnect_short_name}} and authorize it using your API and app keys. Create a Service Catalog service and associate it with your Datadog resources to display metadata and enable event tracking.
 prereqs:
   inline:
     - title: Datadog API access

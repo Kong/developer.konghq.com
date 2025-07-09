@@ -18,8 +18,8 @@ related_resources:
   - text: Traceable reference
     url: /service-catalog/integrations/traceable/
 tldr:
-  q: How do I connect Traceable services to my {{site.konnect_catalog}} service?
-  a: Install the Traceable integration in {{site.konnect_short_name}}, authorize it, and link Traceable services to your {{site.konnect_catalog}} service to improve visibility.
+  q: How do I view Traceable services in Service Catalog?
+  a: Install the Traceable integration in {{site.konnect_short_name}} and authorize it with your Traceable API key. Create a Service Catalog service and associate it with your Traceable services to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: Traceable access

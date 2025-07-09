@@ -16,8 +16,8 @@ related_resources:
   - text: PagerDuty reference
     url: /service-catalog/integrations/pagerduty/
 tldr:
-  q: How do I connect PagerDuty services to my {{site.konnect_catalog}} service?
-  a: Install the PagerDuty integration in {{site.konnect_short_name}}, authorize it with both read and write scopes, and link PagerDuty services to your {{site.konnect_catalog}} service to display incident and on-call information.
+  q: How do I view PagerDuty services in Service Catalog?
+  a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a Service Catalog service and associate it with your PagerDuty services to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: PagerDuty access

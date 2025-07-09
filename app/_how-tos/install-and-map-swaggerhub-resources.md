@@ -16,8 +16,8 @@ related_resources:
   - text: SwaggerHub reference
     url: /service-catalog/integrations/swaggerhub/
 tldr:
-  q: How do I connect SwaggerHub API specs to my {{site.konnect_catalog}} service?
-  a: Install the SwaggerHub integration in {{site.konnect_short_name}}, authorize using your SwaggerHub API key, and link API versions to your service.
+  q: How do I view SwaggerHub API specs in Service Catalog?
+  a: Install the SwaggerHub integration in {{site.konnect_short_name}} and authorize using your SwaggerHub API key. Create a Service Catalog service and associate it with your SwaggerHub API versions to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: SwaggerHub API key

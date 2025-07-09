@@ -80,24 +80,15 @@ rows:
       - blocks:
         - type: card
           config:
-            title: GitLab (self-managed)
+            title: GitLab
             description: Associate a Service Catalog Service to one or more GitLab projects
             icon: /assets/icons/third-party/gitlab.svg
             ctas:
               - text: Reference
                 url: "/service-catalog/integrations/gitlab/"
-              - text: Tutorial
+              - text: Self-managed tutorial
                 url: "/how-to/install-and-map-gitlab-resources/"
-      - blocks:
-        - type: card
-          config:
-            title: GitLab (SaaS)
-            description: Associate a Service Catalog Service to one or more GitLab projects
-            icon: /assets/icons/third-party/gitlab.svg
-            ctas:
-              - text: Reference
-                url: "/service-catalog/integrations/gitlab/"
-              - text: Tutorial
+              - text: SaaS tutorial
                 url: "/how-to/install-and-map-gitlab-saas-resources/"
       - blocks:
         - type: card

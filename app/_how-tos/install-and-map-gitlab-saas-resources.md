@@ -16,8 +16,8 @@ related_resources:
   - text: GitLab reference
     url: /service-catalog/integrations/gitlab/
 tldr:
-  q: How do I connect a SaaS GitLab project to my {{site.konnect_catalog}} service?
-  a: Authorize the SaaS GitLab integration in {{site.konnect_short_name}}, then link your project to display metadata and enable event tracking.
+  q: How do I view a SaaS GitLab project in Service Catalog?
+  a: Install and authorize the SaaS GitLab integration in the {{site.konnect_short_name}} UI. Create a Service Catalog service and associate it with your GitLab project to display metadata and enable event tracking.
 prereqs:
   inline:
     - title: SaaS GitLab access

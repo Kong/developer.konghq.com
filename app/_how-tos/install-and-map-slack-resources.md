@@ -18,8 +18,8 @@ related_resources:
   - text: Slack reference
     url: /service-catalog/integrations/slack/
 tldr:
-  q: How do I connect a Slack channel to my {{site.konnect_catalog}} service?
-  a: Install the Slack integration in {{site.konnect_short_name}}, authorize it using Slack admin credentials, and map a Slack channel to the service to improve visibility and ownership.
+  q: How do I view a Slack channel in Service Catalog?
+  a: Install the Slack integration in {{site.konnect_short_name}} and authorize it using Slack admin credentials. Create a Service Catalog service and associate it with your Slack channel to improve visibility and ownership.
 prereqs:
   inline:
     - title: Slack admin access
