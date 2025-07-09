@@ -55,11 +55,21 @@ related_resources:
     url: /plugins/ai-semantic-cache/
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
+
+faqs:
+  - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
+    a: Yes, the AI Semantic Prompt Guard plugin supports multilingual input—depending on the capabilities of the configured [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The plugin sends raw UTF-8 text to the embedding provider supported by AI Gateway (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional plugin configuration.
+
+next_steps:
+  - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
+    url: /how-to/use-ai-semantic-prompt-guard-plugin/
+  - text: Use AI Prompt Guard plugin to govern your LLM traffic
+    url: /how-to/use-ai-prompt-guard-plugin/
 ---
 
-The AI Semantic Prompt Guard plugin enhances the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
+The AI Semantic Prompt Guard plugin extends the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
 
-You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using {{site.base_gateway}}.
+You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using Kong AI Gateway.
 
 ## How it works
 
