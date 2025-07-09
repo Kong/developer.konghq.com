@@ -38,6 +38,8 @@ prereqs:
             ```sh
             export USER_TOKEN=my-admin-token
             ```
+
+automated_tests: false
 ---
 
 
@@ -49,14 +51,15 @@ In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and per
 <!-- vale off -->
 {% capture request1 %}
 {% control_plane_request %}
-  url: /rbac/users
-  method: POST
-  body:
-      name: super-admin
-      user_token: $USER_TOKEN
-  headers:
-      - 'Accept: application/json'
-      - 'Content-Type: application/json'
+url: /rbac/users
+method: POST
+body:
+    name: super-admin
+    user_token: $USER_TOKEN
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+status_code: 201
 {% endcontrol_plane_request %}
 {% endcapture %}
 
@@ -64,11 +67,11 @@ In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and per
 <!-- vale on -->
     
 
-2. Validate the user was created correctly by sending a `GET` request to the [`/rbac/users/{name_or_id}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint:  
+1. Validate the user was created correctly by sending a `GET` request to the [`/rbac/users/{name_or_id}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint:  
 
 {% capture request2 %}
 {% control_plane_request %}
-  url: /rbac/users/super-admin/roles
+url: /rbac/users/super-admin/roles
 {% endcontrol_plane_request %}
 {% endcapture %}
 {{request2 | indent: 3}}
@@ -119,7 +122,8 @@ You can validate that RBAC is enabled by attempting to access the user list with
 <!-- vale off -->
 
 {% control_plane_request %}
-  url: /rbac/users/
+url: /rbac/users/
+status_code: 401
 {% endcontrol_plane_request %}
 
 <!-- vale on -->
@@ -134,7 +138,7 @@ If RBAC was enabled correctly, this request will return:
 
 Passing the same request with the `user-token` will return a `200` and the list of {{site.base_gateway}} users.
 {% control_plane_request %}
-  url: /rbac/users
-  headers:
-    - "Kong-Admin-Token: $USER_TOKEN"
+url: /rbac/users
+headers:
+  - "Kong-Admin-Token: $USER_TOKEN"
 {% endcontrol_plane_request %}

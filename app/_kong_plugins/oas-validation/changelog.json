@@ -55,6 +55,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.9.1.2": [
+    {
+      "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the error message was omitted if `notify_only_request_body_validation_failure` or `notify_only_response_body_validation_failure` was set to `false`.",

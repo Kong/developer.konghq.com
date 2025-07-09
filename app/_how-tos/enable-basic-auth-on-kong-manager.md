@@ -55,6 +55,8 @@ faqs:
   - q: How can I reset an RBAC token in Kong Manager?
     a: |
       To reset a forgotten password in Kong Manager, authentication and RBAC must be enabled, and you must have super admin permissions or read and write access on admins and RBAC. If these conditions are met, you can change a password by clicking you account name and selecting **Profile**. Click **Reset Token** in the **Reset RBAC Token** section.
+
+automated_tests: false
 ---
 
 ## Set environment variables
