@@ -24,7 +24,7 @@ prereqs:
       content: |
         You must have the **Owner** role in the GitLab group to authorize the integration. If you're using a self-hosted GitLab instance, it must be accessible from the public internet or is otherwise reachable by {{site.konnect_short_name}}.
 
-        1. [Create a group-owned application](https://docs.gitlab.com/integrations/oauth_provider/) in your GitLab instance.
+        1. [Create a group-owned application](https://docs.gitlab.com/integration/oauth_provider/#create-a-group-owned-application) in your GitLab instance.
            * Set the redirect URI to:  
           `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integrations/gitlab`
            * Ensure the app has the `api` scope.
