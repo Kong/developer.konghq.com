@@ -155,14 +155,14 @@ features:
   - title: Requests with any headers
     headers: Any header
     route: "Add [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) to any associated Routes that use the headers."
-    cors: "[Enable "Try it" in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
+    cors: "[Enable Try it in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
   - title: Routes configured with a header to match
     headers: Any header that is required by the request
     route: |
       Do one of the following:
       * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured.
       * Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
-    cors: "[Enable "Try it" in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
+    cors: "[Enable Try it in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
 
 
