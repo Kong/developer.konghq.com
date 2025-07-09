@@ -15,16 +15,17 @@ requirements:
 
 config:
   genai_category: text/embeddings
-  route_type: llm/v1/embeddings
-  auth:
-    header_name: Authorization
-    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
-  model:
-    provider: openai
-    name: text-embedding-3-large
-    options:
-      max_tokens: 512
-      temperature: 1.0
+  targets:
+    - route_type: llm/v1/embeddings
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
+      model:
+        provider: openai
+        name: text-embedding-3-large
+        options:
+          max_tokens: 512
+          temperature: 1.0
 
 tools:
   - deck
