@@ -47,7 +47,12 @@ prereqs:
       icon_url: /assets/icons/dev-portal.svg
     - title: Register a Dev Portal developer account
       content: |
-        [Register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in). For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations. 
+        Register a test developer account with your Dev Portal by navigating to your Dev Portal and clicking **Sign up**:
+        ```sh
+        open https://$PORTAL_URL/
+        ```
+        
+        For the purpose of this tutorial, we've set our Dev Portal to automatically approve developer registrations. 
       icon_url: /assets/icons/dev-portal.svg
     - title: Publish an API
       include_content: prereqs/publish-api
@@ -203,7 +208,7 @@ To use your Okta OIDC credentials to authenticate with an app, you must first cr
 
 1. Navigate to your Dev Portal and log in with the test developer account:
    ```sh
-   open https://$PORTAL_URL/apis
+   open https://$PORTAL_URL
    ```
    You should see `MyAPI` in the list of APIs.
 1. To register an app with the API, click **View APIs**.

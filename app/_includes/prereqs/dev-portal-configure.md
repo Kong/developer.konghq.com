@@ -41,7 +41,7 @@ headers:
     - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     title: My Page
-    slug: /apis
+    slug: /
     description: A custom page about developer portals
     visibility: public
     status: published
