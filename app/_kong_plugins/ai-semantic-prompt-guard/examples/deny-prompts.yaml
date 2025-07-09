@@ -3,7 +3,7 @@ description: Only deny messages about a specific topic. For example, only deny m
 extended_description: |
   Only deny messages about a specific topic. For example, only deny messages about exploiting vulnerabilities.
 
-  For a detailed walkthrough check [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
+  For a detailed walkthrough, see [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
 
 title: 'Only deny messages about a specific topic.'
 
@@ -12,7 +12,7 @@ weight: 900
 requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service."
   - "A [Redis](https://redis.io/docs/latest/) instance."
-  -  Port `6379`, or your custom Redis port is open and reachable from Kong.
+  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
 
 variables:
   header_value:

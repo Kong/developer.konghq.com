@@ -9,6 +9,9 @@ variables:
   header_value:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
 
 config:
   embeddings:
@@ -26,7 +29,7 @@ config:
     strategy: redis
     threshold: 0.1
     redis:
-      host: localhost
+      host: ${redis_host}
       port: 6379
 
 tools:

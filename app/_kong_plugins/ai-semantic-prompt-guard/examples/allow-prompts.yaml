@@ -3,7 +3,7 @@ description: Only allow messages about a specific topic. For example, only allow
 extended_description: |
   Only allow messages about a specific topic. For example, only allow messages about DevOps.
 
-  For a detailed walkthrough check [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
+  For a detailed walkthrough, see [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
 
 title: 'Only allow messages about a specific topic.'
 
