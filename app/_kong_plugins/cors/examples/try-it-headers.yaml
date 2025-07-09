@@ -8,8 +8,8 @@ extended_description: |
 requirements: 
 - "If the Routes associated with your API specs use any headers, add [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) to any Routes that use the headers."
 - "If the Routes associated with your API specs require custom headers to match (the request has to be made with the specified header, otherwise the request will be a 404), configure one of the following:
-   * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured 
-   * Add a global Route at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified)"
+  * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured 
+  * Add a global Route at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified)"
 
 weight: 400
 
