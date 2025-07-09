@@ -88,6 +88,8 @@ faqs:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+
+automated_tests: false
 ---
 
 ## Create a secret in HashiCorp Vault
@@ -105,10 +107,10 @@ In this tutorial, we're using `host.docker.internal` as our host instead of the 
 
 Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value. 
 
-```
-export DECK_HCV_HOST=host.docker.internal
-export DECK_HCV_TOKEN='root'
-```
+{% env_variables %}
+DECK_HCV_HOST: host.docker.internal
+DECK_HCV_TOKEN: root
+{% endenv_variables %}
 
 
 ## Create a Vault entity for HashiCorp Vault 

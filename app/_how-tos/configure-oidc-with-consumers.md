@@ -152,7 +152,7 @@ Now, your configured Consumer can access the `example-route` Route by using thei
 {% validation request-check %}
 url: /anything
 method: GET
-status_code: 403
+status_code: 200
 user: "alex:doe"
 display_headers: true
 {% endvalidation %}

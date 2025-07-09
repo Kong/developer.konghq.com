@@ -61,6 +61,8 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+automated_tests: false
 ---
 
 

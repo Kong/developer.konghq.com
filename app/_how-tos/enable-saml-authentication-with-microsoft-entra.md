@@ -67,11 +67,11 @@ prereqs:
             * **Login URL** 
             * **Certificate (Base64)** 
 
-            ```sh
-            export DECK_IDENTIFIER=<SAML application identifier>
-            export DECK_LOGIN_URL=<SAML login URL>
-            export DECK_CERTIFICATE=<certificate contents>
-            ```
+            {% env_variables %}
+            DECK_IDENTIFIER: SAML-application-identifier
+            DECK_LOGIN_URL: SAML-login-URL
+            DECK_CERTIFICATE: certificate-contents
+            {% endenv_variables %}
 
         {:.warning}
         > Do not include the `BEGIN CERTIFICATE` and `END CERTIFICATE` lines in the certificate variable. Add only the certificate contents.
@@ -85,6 +85,8 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Create an anonymous Consumer

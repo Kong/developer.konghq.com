@@ -1,0 +1,41 @@
+description: Enable the Palo Alto Networks API Security plugin.
+title: 'Enable Palo Alto Networks API Security'
+
+weight: 900
+
+requirements:
+  - "The Palo Alto Networks API Security plugin is [installed](/plugins/panw-apisec-http-log/#install-the-palo-alto-networks-api-security-plugin)."
+  - "The Palo Alto Networks API Security collector is [configured](https://docs-cortex.paloaltonetworks.com/r/Cortex-CLOUD/Cortex-Cloud-Runtime-Security-Documentation/Ingest-Kong?tocId=9b7Q1OcnzkkC41gRI008uQ) and you have an endpoint to send traffic to."
+
+variables:
+  endpoint:
+    value: $YOUR_ENDPOINT
+    description: |
+      The full URL of the Palo Alto Networks API Security collector endpoint that was created in your Cortex environment. 
+      This is where the plugin will send the traffic data to.
+  key:
+    value: $API_KEY
+    description: "The API key used for authenticating requests sent from the plugin to the collector."
+  provider:
+    value: $CLOUD_PROVIDER
+    description: "The environment (one of AWS, GCP, Azure, or On-prem) where your {{site.base_gateway}} is hosted."
+  context:
+    value: $CLOUD_CONTEXT
+    description: "The AWS Account ID, GCP Project ID, Azure Subscription, or an appropriate value for on-prem."
+  region:
+    value: $CLOUD_REGION
+    description: "The cloud region where your {{site.base_gateway}} is hosted."
+  
+config:
+  http_endpoint: ${endpoint}
+  cortex_api_key: ${key}
+  cloud_provider: ${provider}
+  cloud_context: ${context}
+  cloud_region: ${region}
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - konnect-api
+  - terraform

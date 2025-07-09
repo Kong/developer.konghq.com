@@ -112,6 +112,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.9.1.2": [
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced would use corrupted plugin config.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Added support for streaming responses to the AI Proxy Advanced plugin.\n",
