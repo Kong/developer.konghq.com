@@ -131,7 +131,7 @@ Once published, the API appears in the selected Portal. If [user authentication]
 
 If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/dev-portal/access-and-approval/) to access the API.
 
-## Dev Portal spec renderer
+## Allow developers to try requests from the Dev Portal spec renderer
 
 When you upload a spec for your API to Dev Portal, you can enable the **Try it!** feature that will allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. 
 
@@ -152,23 +152,17 @@ features:
     headers: None
     route: No special configuration needed
     cors: No CORS configuration required
-  - title: Simple headers
-    headers: |
-      * `Authorization`
-      * `Content-Type`
-      * `Accept`
+  - title: Requests with any headers
+    headers: Any header
     route: "Add [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) to any associated Routes that use the headers."
-    cors: "[Configure CORS with your Dev Portal URL and headers](/plugins/cors/examples/try-it-simple-headers/)"
-  - title: Custom headers with a Route at the same path
-    headers: Any custom header
+    cors: "[Enable "Try it" in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
+  - title: Routes configured with a header to match
+    headers: Any header that is required by the request
     route: |
-      Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured.
-    cors: "[Configure CORS with your Dev Portal URL and custom headers](/plugins/cors/examples/try-it-custom-headers/)"
-  - title: Custom headers a global Route
-    headers: Any custom header
-    route: |
-      Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
-    cors: "[Configure CORS with your Dev Portal URL and custom headers](/plugins/cors/examples/try-it-custom-headers/)"
+      Do one of the following:
+      * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured.
+      * Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
+    cors: "[Enable "Try it" in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
 
 
