@@ -73,7 +73,7 @@ faqs:
       Troubleshoot your setup by doing the following:
       * Verify that your Kafka broker is healthy
       * Check if you're using the correct `kafkactl` context
-      * Ensure that th proxy is properly connected to the backend cluster
+      * Ensure that the proxy is properly connected to the backend cluster
 ---
 
 ## Create a Control Plane in {{site.konnect_short_name}}
