@@ -31,6 +31,7 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 * **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
 * **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
 * **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
+* **Rerank API**: Improve relevance of retrieved documents and results in RAG pipelines for [Cohere and Bedrock](./#supported-native-llm-formats). Send any list of candidates to be re-ordered based on prompt context to boost final LLM response quality through better grounding.
 
 {% elsif plugin == "AI Proxy Advanced" %}
 
@@ -41,7 +42,9 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 * **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
 * **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
 * **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
+* **Rerank API**: Improve relevance of retrieved documents and results in RAG pipelines for [Cohere and Bedrock](./#supported-native-llm-formats). Send any list of candidates to be re-ordered based on prompt context to boost final LLM response quality through better grounding.
 * **Realtime streaming**: Stream completions token-by-token for low-latency, interactive experiences and live analytics.
+
 
 {% endif %}
 
