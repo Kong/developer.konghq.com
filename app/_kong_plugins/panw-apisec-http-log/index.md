@@ -34,15 +34,15 @@ related_resources:
     url: https://docs-cortex.paloaltonetworks.com/r/Cortex-CLOUD/Cortex-Cloud-Runtime-Security-Documentation/Ingest-Kong?tocId=9b7Q1OcnzkkC41gRI008uQ
 ---
 
-Enhance your API security by integrating your {{site.base_gateway}} with Cortex API Security. 
-This is achieved using a dedicated HTTP Log plugin (`panw-apisec-http-log`) designed for Kong. 
-This plugin enables seamless ingestion of API traffic data from your {{site.base_gateway}} directly into Cortex API Security.
+Reinforce your API security by integrating your {{site.base_gateway}} with Cortex API Security. 
+You can achieve this by using a dedicated HTTP Log plugin (`panw-apisec-http-log`) designed for Kong. 
+This plugin simplifies ingestion of API traffic data from your {{site.base_gateway}} directly into Cortex API Security.
 
-By leveraging this integration, you can apply comprehensive security measures, including:
+Using this integration, you can apply comprehensive security measures, including:
 * OWASP Top 10 threat detection
 * Bot protection
 * Access control enforcement
-* and more
+* And more
 
 ## How the Palo Alto Networks API Security plugin works
 
@@ -57,7 +57,11 @@ For each transaction, the plugin collects relevant data, such as:
 
 This collected data is then sent to a designated Palo Alto Networks API Security collector endpoint. 
 
-The plugin doesn't modify the request and response in any way.
+Requests and responses are forwarded as-is without any modifications.
+
+{:.info}
+> This plugin supports global, service, and route scopes—including combinations of services and routes.
+> Consumer-level configuration is not supported.
 
 ## Install the Palo Alto Networks API Security plugin
 
@@ -74,8 +78,7 @@ The file includes the `handler.lua`, `utils.lua`, and `schema.lua` files that ma
 {% navtabs "install" %}
 {% navtab "Docker" %}
 
-Add the plugin to your {{site.base_gateway}} instance by mounting the plugin directory, 
-adding it to the Lua package path variable, and adding the plugin name to the `plugins` field when starting the container:
+Add the plugin to your {{site.base_gateway}} instance by mounting the plugin directory, updating the Lua package path, and including the plugin name in the `plugins` field when starting the container:
 
 ```sh
 -v ".plugin_directory/kong:/tmp/custom_plugins/kong" \
@@ -123,6 +126,6 @@ By default, this value is 8192 bytes (8 KB).
 {% endnavtabs %}
 
 {:.info}
-> If you are using the [{{site.kic_product_name}}](/kubernetes-ingress-controller/), the installation is slightly different. 
+> If you are using the [{{site.kic_product_name}}](/kubernetes-ingress-controller/), the installation differs from a standard setup.
 > Review the [custom plugin docs for the {{site.kic_product_name}}](/kubernetes-ingress-controller/custom-plugins/).
 
