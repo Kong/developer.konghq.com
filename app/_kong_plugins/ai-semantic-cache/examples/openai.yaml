@@ -9,12 +9,15 @@ variables:
   header_value:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
 
-config: 
+config:
   embeddings:
     auth:
       header_name: Authorization
-      header_value: ${header_value}
+      header_value: Bearer ${header_value}
     model:
       provider: openai
       name: text-embedding-3-large
@@ -26,7 +29,7 @@ config:
     strategy: redis
     threshold: 0.1
     redis:
-      host: redis-stack.redis.svc.cluster.local
+      host: ${redis_host}
       port: 6379
 
 tools:
