@@ -6,7 +6,7 @@ This tutorial requires an identity provider (IdP). If you don't have one, you ca
     For example, you can use the Keycloak Docker image:
 
     ```
-    docker run -p 8080:8080 \
+    docker run -p 127.0.0.1:8080:8080 \
       -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
       -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
       quay.io/keycloak/keycloak start-dev
@@ -50,8 +50,9 @@ In this guide, we're going to use an example user named `alex` with the password
 #### Export to environment variables
 Export your client secret, client ID, and issuer URL to environment variables so that you can pass them more securely.
 For example:
-```
-export DECK_ISSUER=http://host.docker.internal:8080/realms/master
-export DECK_CLIENT_ID=kong
-export DECK_CLIENT_SECRET=UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
-```
+
+{% env_variables %}
+DECK_ISSUER: http://host.docker.internal:8080/realms/master
+DECK_CLIENT_ID: kong
+DECK_CLIENT_SECRET: UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
+{% endenv_variables %}

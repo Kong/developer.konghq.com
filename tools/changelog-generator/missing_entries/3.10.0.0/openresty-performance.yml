@@ -1,0 +1,6 @@
+message: |
+  A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. 
+  This issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies. 
+  Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.
+type: "known-issues"
+scope: "Core"

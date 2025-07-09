@@ -24,6 +24,7 @@ module Jekyll
 
           if entry.is_a?(Hash)
             next build_breadcrumbs_from_index_page(entry) unless entry['index'].nil?
+            next build_breadcrumbs_from_static(entry) unless entry['url'].nil?
 
             raise ArgumentError,
                   "On #{@page.relative_path}, the breadcrumb entry `#{entry}` is invalid. #{entry.to_json}"
@@ -47,6 +48,12 @@ module Jekyll
         title = breadcrumb.data['short_title'] if breadcrumb.data['short_title']
 
         { 'url' => normalized_url, 'title' => title }
+      end
+
+      def build_breadcrumbs_from_static(entry)
+        # We return it as-is for now, but we may process it in the future
+        # so I've added a method
+        entry
       end
 
       def build_breadcrumbs_from_index_page(entry)

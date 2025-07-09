@@ -3,19 +3,24 @@ sections:
   - title: Overview
     items:
       - path: /dev-portal/
+      - path: /dev-portal/**/*
+      - path: /dev-portal/analytics/
+      - path: /dev-portal/breaking-changes/
+    auto_exclude: true
+  - title: API catalog
+    items:
       - path: /dev-portal/apis/
       - title: Publish APIs
         description: Learn how to publish APIs with Dev Portal and control who can see published APIs.
         url: /dev-portal/publishing/
-      - path: /dev-portal/**/*
-      - path: /dev-portal/analytics/
-    auto_exclude: true   
+      - path: /how-to/automate-api-catalog/
+      - path: /how-to/automate-api-catalog-with-terraform/
   - title: Application registration
     items:
       - title: Developer sign-up
         description: Register for the Dev Portal and create an application.
         url: /dev-portal/developer-signup/
-      - path: /dev-portal/application-registration/
+      - path: /dev-portal/self-service/
       - path: /dev-portal/auth-strategies/
       - path: /dev-portal/dynamic-client-registration/
       - path: /how-to/okta-dcr/
@@ -24,13 +29,14 @@ sections:
       - path: /how-to/auth0-dcr/
   - title: Customize
     items:
+      - path: /dev-portal/customizations/dev-portal-customizations/
       - path: /dev-portal/pages-and-content/
       - path: /dev-portal/custom-domains/
       - path: /dev-portal/customization-settings/
       - path: /dev-portal/portal-customization/
   - title: Access and approvals
     items:
-      - path: /dev-portal/access-and-approval/
       - path: /dev-portal/team-mapping/
       - path: /dev-portal/sso/
       - path: /dev-portal/security-settings/
+      - path: /dev-portal/self-service/

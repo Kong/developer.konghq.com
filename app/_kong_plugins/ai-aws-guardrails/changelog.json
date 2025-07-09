@@ -1,0 +1,14 @@
+{
+  "3.11.0.0": [
+    {
+      "message": "Added a new AI plugin that can protect requests and responses to/from AI LLM.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    },
+    {
+      "message": "Fixed an issue where the plugin did not support inspecting responses in non-stream mode.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

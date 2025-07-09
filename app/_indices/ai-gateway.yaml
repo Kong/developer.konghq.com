@@ -116,6 +116,8 @@ sections:
       - path: /plugins/ai-response-transformer/
       - path: /plugins/ai-semantic-prompt-guard/
       - path: /plugins/ai-sanitizer/
+      - path: /plugins/ai-prompt-compressor/
+      - path: /plugins/ai-aws-guardrails/
   - title: Plugin configuration reference
     items:
       - path: /plugins/ai-prompt-decorator/reference/**/*
@@ -129,6 +131,8 @@ sections:
       - path: /plugins/ai-response-transformer/reference/**/*
       - path: /plugins/ai-semantic-prompt-guard/reference/**/*
       - path: /plugins/ai-sanitizer/reference/**/*
+      - path: /plugins/ai-prompt-compressor/reference/**/*
+      - path: /plugins/ai-aws-guardrails/reference/**/*
   - title: Plugin configuration examples
     items:
       - path: /plugins/ai-prompt-decorator/examples/**/*
@@ -142,6 +146,8 @@ sections:
       - path: /plugins/ai-response-transformer/examples/**/*
       - path: /plugins/ai-semantic-prompt-guard/examples/**/*
       - path: /plugins/ai-sanitizer/examples/**/*
+      - path: /plugins/ai-prompt-compressor/**/*
+      - path: /plugins/ai-aws-guardrails/**/*
   - title: Plugin changelogs
     items:
       - title: AI Prompt Decorator Changelog
@@ -177,6 +183,30 @@ sections:
       - title: AI Sanitizer Changelog
         description: See the latest updates and improvements for the AI Sanitizer plugin.
         url: /plugins/ai-sanitizer/changelog/
+      - title: AI Prompt Compressor Changelog
+        description: See the latest updates and improvements for the AI Prompt Compressor plugin.
+        url: /plugins/ai-prompt-compressor/changelog/
+      - title: AI AWS Guardrails Changelog
+        description: See the latest updates and improvements for the AI AWS Guardrails plugin.
+        url: /plugins/ai-aws-guardrails/changelog/
+  - title: MCP traffic gateway
+    items:
+      - path: /mcp/
+      - title: Secure MCP traffic
+        description: Secure GitHub MCP Server traffic with Kong Gateway and Kong AI Gateway
+        url: /mcp/secure-mcp-traffic/
+      - title: Govern MCP traffic
+        description: Use Kong AI Gateway to govern GitHub MCP traffic
+        url: /mcp/govern-mcp-traffic
+      - title: Observe MCP traffic
+        description: Observe GitHub MCP traffic with Kong AI Gateway
+        url: /mcp/observe-mcp-traffic
+      - title: "{{site.konnect_product_name}} MCP Server"
+        description: Get started with {{site.konnect_product_name}} MCP Server
+        url: /mcp/kong-mcp/get-started/
+      - title: "{{site.konnect_product_name}} MCP Server tools"
+        description: Check available {{site.konnect_product_name}} MCP Server tools
+        url: /mcp/kong-mcp/tools/
   - title: AI load balancing
     items:
       - title: Consistent Hashing - AI Proxy Advanced

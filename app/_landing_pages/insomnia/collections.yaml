@@ -122,11 +122,29 @@ rows:
       - blocks:
         - type: card
           config:
+            title: Scripts reference
+            description: Learn how to write pre-request and after-response scripts. 
+            cta:
+              text: Learn more
+              url: /insomnia/scripts/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: Write pre-request scripts to add dynamic behavior
-            description: Use pre-request scripts on a Collection in Insomnia to carry out pre-processing such as setting variable values, parameters, headers, and body data for requests.
+            description: Use pre-request scripts on a collection in Insomnia to carry out pre-processing such as setting variable values, parameters, headers, and body data for requests.
             cta:
               text: Learn more
               url: /how-to/write-pre-request-scripts/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Write after-response scripts to validate responses
+            description: Use after-response scripts on a collection in Insomnia to run tests such as validating values in responses.
+            cta:
+              text: Learn more
+              url: /how-to/write-after-response-script/
               align: end
   - header:
       text: "Frequently asked questions"

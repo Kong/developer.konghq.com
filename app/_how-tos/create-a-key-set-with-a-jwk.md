@@ -65,13 +65,14 @@ cleanup:
 ## Create a Key Set
 Using the Admin API, create a Key Set to hold JSON Web keys:
 {% control_plane_request %}
-  url: /key-sets
-  method: POST
-  headers:
-      - 'Accept: application/json'
-      - 'Content-Type: application/json'
-  body:
-      name: my-key-set
+url: /key-sets
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+body:
+    name: my-key-set
+status_code: 201
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with details about the new Key Set. For example:
@@ -92,18 +93,19 @@ You will get a `201 Created` response with details about the new Key Set. For ex
 Create a Key and use either the `set.id` from the response in the previous step, or the `set.name` parameter to add it to the Key Set:
 
 {% control_plane_request %}
-  url: /keys
-  method: POST
-  headers:
-      - 'Accept: application/json'
-      - 'Content-Type: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-  body:
-      name: my-key
-      kid: my-key
-      set:
-        name: my-key-set
-      jwk: "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"use\":\"enc\",\"kid\":\"my-key\",\"alg\":\"RSA1_5\",\"n\":\"n_03K8g2O_rarMBqBpbDKtRzrKede24g8UQ8Jc_x4-vsBnCFJw_xUcy-j4Ub9hYQZtyBZ5bWuEWC1crsorFgDbzoO1fF237XtCUCb0G6a8-3fbeSQZGwglK_vIy8-pHzZnOC2kgHp-rrNo9xZHnaOkrqqW4CI8izDuxboi_BlGqiNjKqGimj6fCPkiIEFlIrAtQCM9bUJDXv_iIs9blv9StqrfWnwxPIeIuoeruY_eC76twMweH5JHEAx_7BJdTdOXo9lrwmoUYwLAPp9w4E9Dc1lW1gQXh8aK4UUaJcsTjEztPtKsPHkQGSuP5WxM5uNH9Jo3-4wwuoA6BDxBS4sw\"}"
+url: /keys
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+body:
+    name: my-key
+    kid: my-key
+    set:
+      name: my-key-set
+    jwk: "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"use\":\"enc\",\"kid\":\"my-key\",\"alg\":\"RSA1_5\",\"n\":\"n_03K8g2O_rarMBqBpbDKtRzrKede24g8UQ8Jc_x4-vsBnCFJw_xUcy-j4Ub9hYQZtyBZ5bWuEWC1crsorFgDbzoO1fF237XtCUCb0G6a8-3fbeSQZGwglK_vIy8-pHzZnOC2kgHp-rrNo9xZHnaOkrqqW4CI8izDuxboi_BlGqiNjKqGimj6fCPkiIEFlIrAtQCM9bUJDXv_iIs9blv9StqrfWnwxPIeIuoeruY_eC76twMweH5JHEAx_7BJdTdOXo9lrwmoUYwLAPp9w4E9Dc1lW1gQXh8aK4UUaJcsTjEztPtKsPHkQGSuP5WxM5uNH9Jo3-4wwuoA6BDxBS4sw\"}"
+status_code: 201
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with details about the new Key, including the Key Set ID. For example:

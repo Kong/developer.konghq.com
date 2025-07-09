@@ -181,7 +181,7 @@ See the [Nginx directives reference](/gateway/nginx-directives/) for more detail
 {{site.base_gateway}} receives the response from the upstream service and sends it back to the downstream client in a streaming fashion. 
 At this point, {{site.base_gateway}} executes subsequent plugins added to the Route or Service that implement a hook in the `header_filter` phase.
 
-Once the `header_filter` phase of all registered plugins has been executed, the following headers are added by {{site.base_gateway}} and the full set of headers is sent to the client:
+Once the `header_filter` phase of all registered plugins has been executed and the `latency_token` option {% new_in 3.11 %} is enabled, the following headers are added by {{site.base_gateway}} and the full set of headers is sent to the client:
 
 {% table %}
 columns:
@@ -198,10 +198,18 @@ rows:
     description: "`latency` is the time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response."
 {% endtable %}
 
+{:.warning}
+> **Important:** These latency headers are reported during the `header_filter` phase, which may occur before the full response body has been processed.
+<br><br>
+> In scenarios where body processing takes significant time, the latency values in these headers might not reflect the complete duration of the request lifecycle. For more accurate and comprehensive latency data, consider using [Active Tracing in {{site.konnect_short_name}}](/konnect-platform/active-tracing/), the [Analytics feature in {{site.konnect_short_name}}](/advanced-analytics/), a metrics plugin like [Prometheus](/plugins/prometheus/), or a [logging plugin](/plugins/?category=logging). 
+
 Once the headers are sent to the client, {{site.base_gateway}} starts executing plugins for the Route or Service that implement the
 `body_filter` hook. 
 This hook may be called multiple times, due to the streaming nature of Nginx. 
 Each chunk of the upstream response that is successfully processed by such `body_filter` hooks is sent back to the client.
+
+You can also use `advanced_latency_tokens` {% new_in 3.11 %} to expose more detailed timing headers, such as total latency, third-party latency, and client latency. 
+For more information, see the [Kong configuration reference](/gateway/configuration/#advanced_latency_tokens).
 
 ## Proxy WebSocket traffic
 

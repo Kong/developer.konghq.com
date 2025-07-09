@@ -31,25 +31,25 @@
   dev_site_url: '/dev-portal/'
   status: "?"
 - docs_url: "/konnect/dev-portal/applications/application-overview/"
-  dev_site_url: '/dev-portal/application-registration/'
+  dev_site_url: '/dev-portal/self-service/'
   status: migrated
 - docs_url: "/gateway/3.4.x/kong-enterprise/dev-portal/applications/auth-provider-strategy/"
   dev_site_url: '/dev-portal/'
   status: "?"
 - docs_url: "/dev-portal/app-reg/auth-strategies/oidc/dcr/auth0/"
-  dev_site_url: '/dev-portal/'
-  status: "?"
+  dev_site_url: '/how-to/auth0-dcr/'
+  status: migrated
 - docs_url: "/konnect/dev-portal/applications/dynamic-client-registration/auth0/"
-  dev_site_url: '/dev-portal/auth-strategies/'
+  dev_site_url: '/how-to/auth0-dcr/'
   status: migrated
 - docs_url: "/gateway/3.4.x/kong-enterprise/dev-portal/authentication/azure-oidc-config/"
   dev_site_url: '/dev-portal/'
   status: "?"
 - docs_url: "/dev-portal/app-reg/auth-strategies/oidc/dcr/azure/"
-  dev_site_url: '/dev-portal/auth-strategies/'
-  status: "?"
+  dev_site_url: '/how-to/azure-ad-dcr/'
+  status: migrated
 - docs_url: "/konnect/dev-portal/applications/dynamic-client-registration/azure/"
-  dev_site_url: '/dev-portal/auth-strategies/'
+  dev_site_url: '/how-to/azure-ad-dcr/'
   status: migrated
 - docs_url: "/konnect/gateway-manager/backup-restore/"
   dev_site_url: '/gateway/upgrade/backup-and-restore/'
@@ -85,11 +85,11 @@
   dev_site_url: '/dev-portal/'
   status: migrated
 - docs_url: "/konnect/dev-portal/applications/dynamic-client-registration/curity/"
-  dev_site_url: '/dev-portal/auth-strategies/'
+  dev_site_url: '/how-to/curity-dcr/'
   status: migrated
 - docs_url: "/dev-portal/app-reg/auth-strategies/oidc/dcr/curity/"
-  dev_site_url: '/dev-portal/auth-strategies/'
-  status: "?"
+  dev_site_url: '/how-to/curity-dcr/'
+  status: migrated
 - docs_url: "/konnect/dev-portal/customization/custom-dns/"
   dev_site_url: '/dev-portal/custom-domains/'
   status: migrated
@@ -115,7 +115,7 @@
   dev_site_url: '/dev-portal/'
   status: "?"
 - docs_url: "/konnect/dev-portal/applications/enable-app-reg/"
-  dev_site_url: '/dev-portal/application-registration/'
+  dev_site_url: '/dev-portal/self-service/'
   status: migrated
 - docs_url: "/gateway/3.4.x/kong-enterprise/dev-portal/applications/enable-application-registration/"
   dev_site_url: '/dev-portal/'
@@ -277,10 +277,10 @@
   dev_site_url: '/dev-portal/auth-strategies/'
   status: migrated
 - docs_url: "/dev-portal/app-reg/auth-strategies/oidc/dcr/okta/"
-  dev_site_url: '/dev-portal/auth-strategies/'
-  status: "?"
+  dev_site_url: '/how-to/okta-dcr/'
+  status: migrated
 - docs_url: "/konnect/dev-portal/applications/dynamic-client-registration/okta/"
-  dev_site_url: '/dev-portal/auth-strategies/'
+  dev_site_url: '/how-to/okta-dcr/'
   status: migrated
 - docs_url: "/gateway/2.8.x/install-and-run/openshift/"
   dev_site_url: '/gateway/install/'
@@ -325,7 +325,7 @@
   dev_site_url: '/api/gateway/admin-ee/'
   status: "?"
 - docs_url: "/konnect/dev-portal/register-and-create-app/"
-  dev_site_url: '/dev-portal/application-registration/'
+  dev_site_url: '/dev-portal/self-service/'
   status: migrated
 - docs_url: "/konnect/dev-portal/audit-logging/replay-job/"
   dev_site_url: '/dev-portal/'

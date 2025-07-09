@@ -80,11 +80,13 @@ class HowTo {
   }
 
   toggleTopology(topology) {
-    this.prerequisites
-      .querySelectorAll("[data-deployment-topology]")
-      .forEach((item) => {
-        this.toggleItem(item, topology);
-      });
+    if (this.prerequisites) {
+      this.prerequisites
+        .querySelectorAll("[data-deployment-topology]")
+        .forEach((item) => {
+          this.toggleItem(item, topology);
+        });
+    }
 
     document
       .querySelectorAll(
@@ -103,7 +105,10 @@ class HowTo {
     }
 
     const event = new Event("accordion:update", { bubbles: true });
-    this.prerequisites.dispatchEvent(event);
+
+    if (this.prerequisites) {
+      this.prerequisites.dispatchEvent(event);
+    }
 
     if (this.cleanup) {
       this.cleanup.dispatchEvent(event);

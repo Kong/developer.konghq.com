@@ -1,7 +1,35 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where random delays were out of range.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.2": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.2": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -47,6 +75,13 @@
   "3.4.3.1": [
     {
       "message": "Fix the issue that path parameter cannot match non-ascii characters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.19": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
