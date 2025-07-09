@@ -23,3 +23,6 @@ mcp-traffic:
 hashicorp-vault-llms:
   title: Configure dynamic authentication to LLM providers
   url: /how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/
+event-gateway-get-started:
+  title: Get started with {{site.event_gateway}}
+  url: /event-gateway/get-started/

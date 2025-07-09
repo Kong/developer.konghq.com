@@ -1,10 +1,15 @@
 ---
 title: Get started with {{site.event_gateway}}
+short_title: Install {{site.event_gateway_short}}
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
 permalink: /event-gateway/get-started/
+
+series:
+  id: event-gateway-get-started
+  position: 1
 
 beta: true
 
@@ -17,6 +22,7 @@ works_on:
 tags:
     - get-started
     - event-gateway
+    - kafka
 
 description: Use this tutorial to get started with {{site.event_gateway}}.
 
@@ -43,6 +49,9 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up {{site.event_gateway}} resources
+      include_content: cleanup/products/event-gateway
+      icon_url: /assets/icons/event.svg    
 
 automated_tests: false
 related_resources:
@@ -50,6 +59,21 @@ related_resources:
     url: /api/event-gateway/knep/
   - text: Event Gateway
     url: /event-gateway/
+
+faqs:
+  - q: | 
+      I'm getting the error `Connection refused` when trying to access my Kafka cluster through {{site.event_gateway_short}}.
+    a: |
+      Check the following:
+      * Verify all services are running with `docker ps`
+      * Check if ports are available (in this how-to guide, we use 9192 for the proxy, 9092 for Kafka)
+      * Ensure that all `KONNECT` environment variables are set correctly
+  - q: When I run `list topics`, topics aren't visible.
+    a: |
+      Troubleshoot your setup by doing the following:
+      * Verify that your Kafka broker is healthy
+      * Check if you're using the correct `kafkactl` context
+      * Ensure that th proxy is properly connected to the backend cluster
 ---
 
 ## Create a Control Plane in {{site.konnect_short_name}}
@@ -75,33 +99,32 @@ This is expected, as we haven't configured the Control Plane yet. We'll do this 
 
 ## Configure {{site.event_gateway}} control plane with a passthrough cluster 
 
-Let's create the configuration file for the Control Plane. This file will define the backend cluster and the virtual cluster:
+Create the configuration file for the Control Plane. This file will define the backend cluster and the virtual cluster:
 
 ```shell
 cat <<EOF > knep-config.yaml
-virtual_clusters:
-- name: demo
-  backend_cluster_name: kafka-1
-  route_by:
-      type: port
-      port:
-        min_broker_id: 1
-  authentication: # don't set any authentication for now 
-  - type: anonymous
-    mediation:
-        type: anonymous
 backend_clusters:
-- name: kafka-1 
-  bootstrap_servers:
-  - broker:9092 
+  - name: kafka-localhost
+    bootstrap_servers:
+      - kafka:9092
+
 listeners:
   port:
     - listen_address: 0.0.0.0
-      advertised_host: knep
-      listen_port_start: 9193
-    - listen_address: 0.0.0.0
+      listen_port_start: 19092
       advertised_host: localhost
-      listen_port_start: 9192
+
+virtual_clusters:
+  - name: team-a
+    backend_cluster_name: kafka-localhost
+    route_by:
+      type: port
+      port:
+        min_broker_id: 1
+    authentication:
+      - type: anonymous
+        mediation:
+          type: anonymous
 EOF
 ```
 
@@ -117,55 +140,64 @@ body_cmd: "$(jq -Rs '{config: .}' < knep-config.yaml)"
 <!--vale on-->
 
 
-## Check the cluster works
+## Validate the cluster
 
-Now let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. 
+Let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. 
 You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
 
 You can also use the `kafkactl` command to check the cluster. First, let's set up the `kafkactl` config file:
 ```shell
 cat <<EOF > kafkactl.yaml
 contexts:
-    direct:
-        brokers:
-            - localhost:9092
-    knep:
-        brokers:
-            - localhost:9192
-current-context: knep
+  direct:
+    brokers:
+      - localhost:9092
+  backend:
+    brokers:
+      - localhost:9092
+  knep:
+    brokers:
+      - localhost:19092
+  secured:
+    brokers:
+      - localhost:29092
+  team-a:
+    brokers:
+      - localhost:19092
+  team-b:
+    brokers:
+      - localhost:29092
+current-context: default
 EOF
 ```
 
-Now let's check the Kafka cluster directly:
+Let's check the Kafka cluster directly:
 ```shell
-kafkactl -C kafkactl.yaml --context direct list topics
+kafkactl config use-context direct
+kafkactl create topic a-first-topic b-second-topic b-third-topic fourth-topic
+kafkactl produce a-first-topic --value="Hello World"
 ```
 
-You should see the topics listed there:
+You should see the following response:
 ```shell
-TOPIC                  PARTITIONS     REPLICATION FACTOR
-__consumer_offsets     50             1
-_schemas               1              1
-```
-{:.no-copy-code}
-
-Now let's check the same command but through {{site.event_gateway_short}}:
-```shell
-kafkactl -C kafkactl.yaml --context knep list topics
-```
-
-You should see a similar output:
-```shell
-TOPIC                  PARTITIONS     REPLICATION FACTOR
-__consumer_offsets     50             1
-_schemas               1              1
+message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
 
+Now let's check the Kafka cluster through the {{site.event_gateway_short}} proxy.
+By passing the `virtual` context, `kafkactl` will connect to Kafka through the proxy port `19092`:
 
-<!-- 
+```shell
+kafkactl -C kafkactl.yaml --context virtual list topics
+```
 
-## Add prefix to the cluster 
-
-TODO!
- -->
+You should see a list of the topics you just created:
+```shell
+TOPIC              PARTITIONS     REPLICATION FACTOR
+_schemas           1              1
+a-first-topic      1              1
+b-second-topic     1              1
+b-third-topic      1              1
+fourth-topic       1              1
+```
+{:.no-copy-code}
