@@ -1,4 +1,4 @@
-,name: Scheduled Broken Links Checker
+name: Scheduled Broken Links Checker
 on:
   workflow_dispatch:
   schedule:
