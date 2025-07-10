@@ -76,7 +76,7 @@ faqs:
   - q: Is it possible to avoid using a token from a cache that is almost expired?
     a: |
       Yes. You'll need to adjust the following settings:
-      * Access token lifetime, configured in the IdP
+      * Access token lifetime, configured in the IdP.
       * Max time-to-live for the OIDC plugin cache, configured using [`config.cache_ttl_max`](/plugins/openid-connect/reference/#schema--config-cache-ttl-max) and with [`config.cache_tokens`](/plugins/openid-connect/reference/#schema--config-cache-tokens) set to `true`.
 
       Set the max TTL on the Kong side based on the lifetime of the access token in the IdP. 
