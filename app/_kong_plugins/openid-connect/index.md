@@ -63,8 +63,45 @@ examples_groups:
 basic_examples: false
 
 notes: |
-  In Serverless gateways only the <code>cookie</code> config session storage is supported.
+  In Serverless gateways, only the `cookie` config session storage is supported.
 
+
+faqs:
+  - q: Why does the OIDC plugin not use cached tokens with the client credentials grant, and instead connects to the IdP on every request?
+    a: |
+      Token caching doesn't work if both `client_credentials` and `password` are set as auth methods in the [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods) parameter, and credentials are sent using the `Authorization: Basic` header. 
+      
+      In this scenario, either authentication method could match, but the plugin prioritises the password grant, based on its [order of precedence](#authentication-flows-and-grants).
+      To resolve this caching issue, make sure you only have the `client_credentials` method enabled.
+  - q: Is it possible to avoid using a token from a cache that is almost expired?
+    a: |
+      Yes. You'll need to adjust the following settings:
+      * Access token lifetime, configured in the IdP
+      * Max time-to-live for the OIDC plugin cache, configured using [`config.cache_ttl_max`](/plugins/openid-connect/reference/#schema--config-cache-ttl-max) and with [`config.cache_tokens`](/plugins/openid-connect/reference/#schema--config-cache-tokens) set to `true`.
+
+      Set the max TTL on the Kong side based on the lifetime of the access token in the IdP. 
+      
+      For example, if the access token lifetime is 180 seconds and you want to get a new token 15 seconds before the access token expires,
+      you would set `config.cache_ttl_max=165`.
+  - q: Can one OIDC plugin support JWT token validation for multiple IdPs?
+    a: |
+      Yes, but since the OIDC plugin only accepts one issuer URL, this requires some extra configuration.
+
+      You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option, with the following considerations:
+
+      * Since the plugin only accepts a single issuer, any `iss` claim verification will fail for tokens that come from a different IdP than the one that was used in the issuer configuration option. Add all issuers as they appear in the `iss` claims of your tokens to the [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) setting.
+      * If you make any changes to the `extra_jwks_uris` value, you have to clear the second level DB cache for the change to become effective.
+      See [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache).
+
+      See the [Extra JWKs](/plugins/openid-connect/examples/extra-jwks/) configuration example for more detail.
+  - q: How do I enable the Proof Key for Code Exchange (PKCE) extension to the authorization code flow in the OIDC plugin?
+    a: |
+      The OIDC plugin supports PKCE out of the box, so you don't need to configure anything. 
+      When [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods) is set to `authorization_code`, the plugin sends the required `code_challenge` parameter automatically with the authorization code flow request. 
+      
+      If the IdP connected to the plugin enforces PKCE, it will be used during the authorization code flow. 
+      If the IdP doesn't support or enforce PCKE, it won't be used.
+ 
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).
@@ -257,9 +294,20 @@ The pair can be any of:
 4. [`config.roles_claim`](/plugins/openid-connect/reference/#schema--config-roles-claim) and 
 [`config.roles_required`](/plugins/openid-connect/reference/#schema--config-roles-required)
 
-For example, the first configuration option, `config.groups_claim`, points to a source, from which the value is retrieved and checked against the value of the second configuration option, `config.groups_required`.
+In each parameter pair, the `*_claim` parameter points to a source, and the `*_required` parameter defines a set of claims values to check against.
+
+Claims-based auth adheres to the following rules:
+* You can validate a maximum of 4 claims at the same time
+* You can [traverse an array or object for the claim name](#claim-type)
+* You can validate multiple values of the same claim [using `OR` and `AND` logic](#claim-requirements)
 
 Both the claim type and the required claim content take an array of string elements.
+
+Set up claims-based auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/claims-based-auth/)
+* [Claims-based auth tutorial with Keycloak](/how-to/configure-oidc-with-claims-based-auth/)
+
+##### Claim type
 
 For the claim type (for example, `config.groups_claim`), the array is a list of JSON objects listed in nested order. 
 The plugin uses the order of the items in the array to look up data in a JSON payload.
@@ -293,7 +341,9 @@ config:
   - groups
 ```
 
-On the other hand, the `config.*_required` parameters are arrays that allow logical `AND`/`OR` types of checks:
+##### Claim requirements
+
+The `config.*_required` parameters (for example, `config.groups_required`) are arrays that allow logical `AND`/`OR` types of checks:
 
 * `AND`: Space-separated values
 
@@ -303,6 +353,12 @@ On the other hand, the `config.*_required` parameters are arrays that allow logi
   config:
     groups_required:
     - employee marketing
+  ```
+
+  In an Admin API request, it would look like this:
+
+  ```sh
+  --data 'config.scopes_required=employee marketing'
   ```
 
 * `OR`: Values in separate array indices
@@ -316,9 +372,11 @@ On the other hand, the `config.*_required` parameters are arrays that allow logi
     - marketing
   ```
 
-Set up claims-based auth:
-* [Plugin configuration example](/plugins/openid-connect/examples/claims-based-auth/)
-* [Claims-based auth tutorial with Keycloak](/how-to/configure-oidc-with-claims-based-auth/)
+  In an Admin API request, it would look like this:
+  ```sh
+  --data 'config.scopes_required=employee' \
+  --data 'config.scopes_required=marketing'
+  ```
 
 #### ACL plugin authorization
 
