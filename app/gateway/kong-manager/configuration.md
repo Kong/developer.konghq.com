@@ -34,10 +34,10 @@ related_resources:
     url: /gateway/kong-manager/
   - text: Enable Basic Auth for Kong Manager
     url: /how-to/enable-basic-auth-on-kong-manager/
-  # - text: Enable OIDC for Kong Manager
-  #   url: /how-to/enable-oidc-for-kong-manager/
-  # - text: Set up authenticated group mapping in Kong Manager with OIDC
-  #   url: /how-to/oidc-authenticated-group-mapping/
+  - text: Enable OIDC for Kong Manager
+    url: /how-to/enable-oidc-for-kong-manager/
+  - text: Set up authenticated group mapping in Kong Manager with OIDC
+    url: /how-to/oidc-authenticated-group-mapping/
   # - text: Configure LDAP with Kong Manager
   #   url: /how-to/configure-ldap-with-kong-manager/
 tags:
@@ -133,7 +133,7 @@ config:
 > **Important:** When Kong Manager authentication is enabled, [RBAC](/gateway/entities/rbac/) must be enabled to enforce authorization rules. Otherwise, anyone who can log in
 to Kong Manager can perform any operation available on the Admin API.
 
-### TLS Certificates
+### TLS certificates
 
 By default, if Kong Manager’s URL is accessed over HTTPS _without_ a certificate issued by a CA, it will
 receive a self-signed certificate that modern web browsers will not trust. This prevents the application
@@ -218,4 +218,27 @@ config:
 
 ## Session management
 
-The Session configuration is secure by default, which may require alteration if using HTTP or different domains for the Admin API and Kong Manager. The encrypted session data may be stored either in {{site.base_gateway}} or the cookie itself. For more information on the Session plugin, review the [plugin documentation](/plugins/session/)
+The Session configuration is secure by default, which may require alteration if using HTTP or different domains for the Admin API and Kong Manager. The encrypted session data may be stored either in {{site.base_gateway}} or the cookie itself. For more information on the Session plugin, review the [plugin documentation](/plugins/session/).
+
+## Configure Kong Manager to send email
+
+The following workflows in Kong Manager use email to communicate with the user:
+* A super admin inviting other [admins](/gateway/entities/admin/) to register in Kong Manager
+* An admin or user resetting their password using the "Forgot Password" link on the Kong Manager login page
+
+To configure emails for Kong Manager, set up SMTP using the [general SMTP configuration settings](/gateway/configuration/#general-smtp-configuration-section).
+You can then adjust the following parameters in `kong.conf` to customize your emails:
+
+{% kong_config_table %}
+config:
+  - name: admin_emails_from
+  - name: admin_emails_reply_to
+  - name: admin_invitation_expiry
+{% endkong_config_table %}
+
+If running {{site.base_gateway}} in hybrid mode, the admin SMTP settings must be applied on the Control Plane.
+
+{:.warning}
+> {{site.base_gateway}} doesn't check the validity of email addresses set in the configuration. 
+If the SMTP settings are configured incorrectly (for example, pointing to a non-existent email address), Kong Manager will _not_ display an error message.
+
