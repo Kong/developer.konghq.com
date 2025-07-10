@@ -229,12 +229,14 @@ The following workflows in Kong Manager use email to communicate with the user:
 To configure emails for Kong Manager, set up SMTP using the [general SMTP configuration settings](/gateway/configuration/#general-smtp-configuration-section).
 You can then adjust the following parameters in `kong.conf` to customize your emails:
 
+<!--vale off-->
 {% kong_config_table %}
 config:
   - name: admin_emails_from
   - name: admin_emails_reply_to
   - name: admin_invitation_expiry
 {% endkong_config_table %}
+<!--vale on-->
 
 If running {{site.base_gateway}} in hybrid mode, the admin SMTP settings must be applied on the Control Plane.
 
