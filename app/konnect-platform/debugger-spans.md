@@ -1,6 +1,6 @@
 ---
 title: Debugger spans
-description: 'Spans represent a single unit of trace in {{site.base_gateway}} this doc contains all of the spans available.'
+description: 'Spans represent a single unit of trace in {{site.base_gateway}} this page contains all available spans.'
 breadcrumbs:
   - /konnect/
 content_type: reference
@@ -27,7 +27,8 @@ related_resources:
 
 ## Spans
 
-The following spans are available.
+The following spans are available in the {{site.konnect_short_name}} Debugger
+
 <!--vale off-->
 ### kong
 
@@ -84,7 +85,7 @@ rows:
   - name: "`proxy.kong.upstream_id`"
     description: Resolved Upstream ID
   - name: "`proxy.kong.upstream_status_code`"
-    description: status code returned by upstream
+    description: status code returned by Upstream
   - name: "`http.response.status_code`"
     description: Status code sent back by Kong
   - name: "`proxy.kong.latency.upstream`"
@@ -195,7 +196,7 @@ rows:
 
 ### kong.router
 
-A span capturing the execution of the Kong router.
+A span capturing the execution of the {{site.base_gateway}} router.
 
 This span has the following attributes:
 {% table %}
@@ -266,7 +267,7 @@ rows:
 
 ### kong.upstream.find_upstream
 A span capturing the attempt to verify a specific upstream. 
-Kong attempts to open a TCP connection (if not KeepAlive cache is found), do a TLS handshake and send down the HTTP headers. 
+Kong attempts to open a TCP connection (if not `KeepAlive` cache is found), do a TLS handshake and send down the HTTP headers. 
 If all of this succeeds, the upstream is healthy and Kong will finish sending the full request and wait for a response. 
 If any of the step fails, Kong will switch to the next target and try again.
 
@@ -288,7 +289,7 @@ rows:
   - name: "`try_count`"
     description: The number of attempts Kong has made to find a healthy upstream
   - name: "`keepalive`"
-    description: Is this a KeepAlive connection?
+    description: Checks if it is a `KeepAlive` connection.
 {% endtable %}
 <!--vale on-->
 
@@ -333,4 +334,3 @@ A span capturing the execution of a plugin configured to run in the `body_filter
 
 This span has the following attributes:
 {{instance_id}}
-
