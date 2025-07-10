@@ -204,6 +204,7 @@ entities:
 {% navtab "Summarizer" %}
 This request uses the `summarizer` template:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -214,13 +215,14 @@ body:
     text: "Of all human sciences the most useful and most imperfect appears to me to be that of mankind: and I will venture to say, the single inscription on the Temple of Delphi contained a precept more difficult and more important than is to be found in all the huge volumes that moralists have ever written. I consider the subject of the following discourse as one of the most interesting questions philosophy can propose, and unhappily for us, one of the most thorny that philosophers can have to solve. For how shall we know the source of inequality between men, if we do not begin by knowing mankind? And how shall man hope to see himself as nature made him, across all the changes which the succession of place and time must have produced in his original constitution? How can he distinguish what is fundamental in his nature from the changes and additions which his circumstances and the advances he has made have introduced to modify his primitive condition? Like the statue of Glaucus, which was so disfigured by time, seas and tempests, that it looked more like a wild beast than a god, the human soul, altered in society by a thousand causes perpetually recurring, by the acquisition of a multitude of truths and errors, by the changes happening to the constitution of the body, and by the continual jarring of the passions, has, so to speak, changed in appearance, so as to be hardly recognisable. Instead of a being, acting constantly from fixed and invariable principles, instead of that celestial and majestic simplicity, impressed on it by its divine Author, we find in it only the frightful contrast of passion mistaking itself for reason, and of understanding grown delirious."
 status_code: 200
 {% endvalidation %}
-
+<!-- vale on -->
 
 {% endnavtab %}
 
 {% navtab "Code explainer" %}
 This request uses the `code-explainer` template:.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -231,12 +233,14 @@ body:
     code: "def add(a, b):\n    return a + b"
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Email drafter" %}
 
 This request uses the `email-drafter` template:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -248,12 +252,14 @@ body:
     recipient: "the engineering team"
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Product describer" %}
 
 This request describes a product using the `product-describer` template:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -265,11 +271,13 @@ body:
     features: "cordless design, HEPA filter, 60-minute battery life, lightweight build"
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% navtab "Q&A" %}
 This requests uses the `qna` template:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -280,14 +288,16 @@ body:
     question: "What is life?"
 status_code: 200
 {% endvalidation %}
+<!-- vale on -->
 {% endnavtab %}
 
 {% endnavtabs %}
 
 ### Denied prompts
 
-All requests that don't use any of the configured templates will be automatically blocked by the plugin. For example
+All requests that don't use any of the configured templates will be automatically blocked by the plugin. For example:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -299,3 +309,4 @@ body:
 status_code: 400
 message: this LLM route only supports templated requests
 {% endvalidation %}
+<!-- vale on -->
