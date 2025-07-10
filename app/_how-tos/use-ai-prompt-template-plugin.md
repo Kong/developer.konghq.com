@@ -6,7 +6,7 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
-  - text: AI Prompt Teamplate
+  - text: AI Prompt Template
     url: /plugins/ai-prompt-template/
 
 description: |
