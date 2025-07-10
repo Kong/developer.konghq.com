@@ -20,7 +20,7 @@ tags:
   - tech-preview
 related_resources:
   - text: Debugger spans
-    url: /konnect-platform/debugger-active-tracing-spans/
+    url: /konnect-platform/debugger-spans/
 ---
 
 {{site.konnect_short_name}} provides a connected debugging experience and real-time visibility into API traffic. Logs offer a detailed record of system events, while tracing tracks the flow of requests through Kong. Together, **Logs & Traces** provide key data that empower you to:

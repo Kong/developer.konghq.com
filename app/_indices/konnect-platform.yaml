@@ -38,5 +38,5 @@ sections:
   - title: Debugger
     items: 
       - path: /konnect-platform/debugger/
-      - path: /konnect-platform/debugger-active-tracing-spans/
+      - path: /konnect-platform/debugger-spans/
 
