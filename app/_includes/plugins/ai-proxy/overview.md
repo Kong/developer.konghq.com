@@ -54,7 +54,7 @@ The following reference tables detail feature availability across supported LLM 
 
 Support for chat, completions, and embeddings.
 
-{% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
+{% include plugins/ai-proxy/tables/supported-providers-text.html providers=providers %}
 
 The following providers are supported by the legacy Completions API:
 * OpenAI
@@ -69,7 +69,7 @@ The following providers are supported by the legacy Completions API:
 
 Support for function calling, tool use, and batch processing.
 
-{% include plugins/ai-proxy/tables/supported-providers-2.html providers=providers %}
+{% include plugins/ai-proxy/tables/supported-providers-processing.html providers=providers %}
 
 ### Audio features {% new_in 3.11 %}
 
