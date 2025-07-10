@@ -1721,6 +1721,8 @@ Package v1alpha1 contains API Schema definitions for the operator v1alpha1 API g
 - [DataPlaneMetricsExtension](#dataplanemetricsextension)
 - [KongPluginInstallation](#kongplugininstallation)
 - [KonnectExtension](#konnectextension)
+- [WatchNamespaceGrant](#watchnamespacegrant)
+
 ### AIGateway
 
 
@@ -1827,7 +1829,20 @@ deployment spec gets customized to include the konnect-related configuration.
 | `spec` _[KonnectExtensionSpec](#konnectextensionspec)_ | Spec is the specification of the KonnectExtension resource. |
 | `status` _[KonnectExtensionStatus](#konnectextensionstatus)_ | Status is the status of the KonnectExtension resource. |
 
+### WatchNamespaceGrant
 
+
+WatchNamespaceGrant is a grant that allows a trusted namespace to watch
+resources in the namespace this grant exists in.
+
+Grant permission to watch a designated namespace.
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `gateway-operator.konghq.com/v1alpha1`
+| `kind` _string_ | `WatchNamespaceGrant`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[WatchNamespaceGrantSpec](#watchnamespacegrantspec)_ | Spec is the desired state of the WatchNamespaceGrant. |
 
 ### Types
 
@@ -2246,6 +2261,31 @@ ServiceSelectorEntry holds the name of a service to match.
 
 _Appears in:_
 - [ServiceSelector](#serviceselector)
+
+#### WatchNamespaceGrantFrom
+
+WatchNamespaceGrantFrom describes trusted namespaces.
+
+| Field | Description |
+| --- | --- |
+| `group` _string_ | Group is the group of the referent. |
+| `kind` _string_ | Kind is the kind of the referent. |
+| `namespace` _string_ | Namespace is the namespace of the referent. |
+
+
+_Appears in:_
+- [WatchNamespaceGrantSpec](#watchnamespacegrantspec)
+
+#### WatchNamespaceGrantSpec
+
+WatchNamespaceGrantSpec defines the desired state of an WatchNamespaceGrant.
+
+| Field | Description |
+| --- | --- |
+| `from` _[WatchNamespaceGrantFrom](#watchnamespacegrantfrom) array_ | From describes the trusted namespaces and kinds that can reference the namespace this grant exists in. |
+
+_Appears in:_
+- [WatchNamespaceGrant](#watchnamespacegrant)
 
 
 ## gateway-operator.konghq.com/v1beta1
