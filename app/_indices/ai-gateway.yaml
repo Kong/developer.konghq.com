@@ -11,6 +11,9 @@ sections:
       - title: AI Gateway Capabilities
         description: Learn about the core capabilities of AI Gateway.
         url: /ai-gateway/#ai-gateway-capabilities
+      - title: AI providers
+        description: Learn about the various providers supported by AI Gateway.
+        url: /ai-gateway/ai-providers/
       - title: AI Usage Governance
         description: Understand how to manage and govern AI usage effectively.
         url: /ai-gateway/#ai-usage-governance
@@ -38,9 +41,6 @@ sections:
       - title: Advanced Analytics
         description: Access advanced analytics features in AI Gateway.
         url: /advanced-analytics/
-  - title: AI providers
-    items:
-      - path: /ai-gateway/ai-providers/**
   - title: AI Gateway plugins
     items:
       - path: /plugins/?category=ai
