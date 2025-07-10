@@ -15336,13 +15336,18 @@
         "type": "bugfix"
       },
       {
-        "message": "-> Fixed an issue where sometimes the paginated sync incorrectly reports \"history lost\" and fails.",
+        "message": "Fixed an issue where sometimes the paginated sync incorrectly reports \"history lost\" and fails.",
         "type": "bugfix",
         "scope": "Clustering"
       },
       {
-        "message": "-> Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
+        "message": "Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
         "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "If the AI Gateway has been enabled for more than a week, upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue.\n\nA fix will be provided in 3.11.0.1.\n\nSee [breaking changes in 3.11](/gateway/breaking-changes/#known-issues-in-3-11-0-0) for a temporary workaround.",
+        "type": "known-issues",
         "scope": "Core"
       }
     ],
