@@ -135,25 +135,31 @@ rows:
               title: Gateway Manager
               description: "Map Gateway Services from {{site.konnect_short_name}} Gateway Manager to visualize services across multiple Control Planes."
               icon: /assets/icons/gateway.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/gateway-manager/
+              ctas:
+                - text: Reference
+                  url: "/service-catalog/integrations/gateway-manager/"
+                - text: Tutorial
+                  url: "/how-to/map-gateway-manager-resources/"
       - blocks:
           - type: card
             config:
               title: "{{site.konnect_short_name}} Analytics"
               description: View real-time, highly contextual analytics to gain insight into API health, performance, and usage.
               icon: /assets/icons/analytics.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/konnect-analytics/
+              ctas:
+                - text: Reference
+                  url: "/service-catalog/integrations/konnect-analytics/"
+                - text: Tutorial
+                  url: "/how-to/map-analytics-resources/"
       - blocks:
           - type: card
             config:
               title: Mesh Manager
               description: "Map Mesh Services from {{site.konnect_short_name}} Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones."
               icon: /assets/icons/mesh.svg
-              cta:
-                text: Learn more
-                url: /service-catalog/integrations/mesh-manager/
+              ctas:
+                - text: Reference
+                  url: "/service-catalog/integrations/mesh-manager/"
+                - text: Tutorial
+                  url: "/how-to/map-mesh-manager-resources/"
       

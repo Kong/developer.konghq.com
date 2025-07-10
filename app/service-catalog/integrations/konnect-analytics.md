@@ -19,6 +19,8 @@ works_on:
 description: Connect reports from {{site.konnect_short_name}} Analytics
 
 related_resources:
+  - text: "Map {{site.konnect_short_name}} Analytics in Service Catalog"
+    url: /how-to/map-analytics-resources/
   - text: "Service Catalog"
     url: /service-catalog/
 discovery_support: true

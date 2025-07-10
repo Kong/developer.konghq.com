@@ -19,13 +19,15 @@ works_on:
 description: The Gateway Manager integration is built directly into Service Catalog, so no additional authorization is needed.
 
 related_resources:
+  - text: Map Gateway Manager resources in Service Catalog
+    url: /how-to/map-gateway-manager-resources/
   - text: "Service Catalog"
     url: /service-catalog/
 discovery_support: true
 bindable_entities: "Gateway Service"
 ---
 
-This integration allows you to associate your Service Catalog service to one or more Gateway Services registered in {{site.konnect_short_name}}t’s Gateway Manager application.
+This integration allows you to associate your Service Catalog service to one or more Gateway Services registered in {{site.konnect_short_name}}’s Gateway Manager application.
 
 ## Authorize the Gateway Manager integration
 
