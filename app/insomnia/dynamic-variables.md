@@ -8,7 +8,7 @@ layout: reference
 breadcrumbs: 
   - /insomnia/
 search_aliases:
-  - iterationdata
+  - iteration data
   - transient variables
 products:
   - insomnia
