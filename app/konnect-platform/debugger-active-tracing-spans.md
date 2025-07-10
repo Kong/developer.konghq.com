@@ -1,5 +1,5 @@
 ---
-title: "Debugger spans"
+title: Debugger spans
 description: "Spans represent a single unit of trace in {{site.base_gateway}} this doc contains all of the spans available."
 breadcrumbs:
   - /konnect/
