@@ -1,12 +1,13 @@
 ---
-title: "Logs and traces"
-description: "Active tracing enables Control Plane administrators to initiate targeted deep tracing sessions in specific Data Plane nodes."
+title: "{{site.konnect_short_name}} Debugger"
+description: "The Debugger enables Control Plane administrators to initiate targeted deep tracing sessions in specific Data Plane nodes."
 breadcrumbs:
   - /konnect/
 content_type: reference
 layout: reference
 search_aliases: 
   - active tracing
+  - debugger
 products:
     - konnect-platform
 works_on:
@@ -18,8 +19,8 @@ tags:
   - tracing
   - tech-preview
 related_resources:
-  - text: Active tracing spans
-    url: /konnect-platform/active-tracing-spans/
+  - text: Debugger spans
+    url: /konnect-platform/debugger-active-tracing-spans/
 ---
 
 {{site.konnect_short_name}} provides a connected debugging experience and real-time visibility into API traffic. Logs offer a detailed record of system events, while tracing tracks the flow of requests through Kong. Together, **Logs & Traces** provide key data that empower you to:
@@ -31,11 +32,11 @@ related_resources:
 1. **Optimize performance**
    - Use insights to improve system reliability and efficiency.
 
-Logs and traces offer deep visibility into API traffic and serve as powerful observability tools. Under normal conditions, they add negligible latency. However, under heavy load, active tracing may impact the throughput of Data Planes being traced.
+Logs and traces offer deep visibility into API traffic and serve as powerful observability tools. Under normal conditions, they add negligible latency. However, under heavy load, the Debugger may impact the throughput of Data Planes being traced.
 
 ## Traces
 
-Control Plane administrators can initiate targeted deep tracing sessions on specific Data Plane nodes. During an active tracing session, the selected Data Plane generates detailed, OpenTelemetry-compatible traces for all requests that match the defined sampling criteria. Spans are captured for the full request and response lifecycle.
+Control Plane administrators can initiate targeted deep tracing sessions on specific Data Plane nodes. During a Debugger session, the selected Data Plane generates detailed, OpenTelemetry-compatible traces for all requests that match the defined sampling criteria. Spans are captured for the full request and response lifecycle.
 
 These traces are visualized directly in {{site.konnect_short_name}}’s built-in span viewer—no additional instrumentation or telemetry tools are required.
 
@@ -48,7 +49,7 @@ These traces are visualized directly in {{site.konnect_short_name}}’s built-in
 Tracing follows OpenTelemetry naming conventions for spans and attributes wherever possible, ensuring consistency and interoperability.
 
 
-{{site.konnect_product_name}}'s active tracing provides exclusive, in-depth insights that are not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
+{{site.konnect_product_name}}'s Debugger provides exclusive, in-depth insights that are not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
 
 
 ## Logs
@@ -99,7 +100,7 @@ When CMEK is enabled, {{site.konnect_product_name}} uses your key to encrypt pay
 
 ## Reading traces in {{site.konnect_short_name}} trace viewer
 
-Traces from an active tracing session can be viewed in {{site.konnect_short_name}}'s built-in trace viewer. The viewer includes:
+Traces from a Debugger session can be viewed in {{site.konnect_short_name}}'s built-in trace viewer. The viewer includes:
 
 * Summary view
 * Trace view
@@ -128,7 +129,7 @@ Use the trace view to troubleshoot specific issues and improve performance.
 
 ## Get started with tracing
 
-Active tracing requires the following Data Plane version and environment variables in `kong.conf`:
+Tracing with the Debugger requires the following Data Plane version and environment variables in `kong.conf`:
 
 * Version: 3.9.1 or later
 * Environment variables:
@@ -136,18 +137,18 @@ Active tracing requires the following Data Plane version and environment variabl
   * `KONG_ACTIVE_TRACING=on`
 
 {:.info}
-> Active tracing is currently supported on:
+> The {{site.konnect_short_name}} debugger is currently supported on:
 >
-> * Konnect Self-Managed Hybrid Gateways  
-> * Konnect Dedicated Cloud Gateways  
-> * Konnect Serverless Gateways  
+> * {{site.konnect_short_name}} Self-Managed Hybrid Gateways  
+> * {{site.konnect_short_name}} Dedicated Cloud Gateways  
+> * {{site.konnect_short_name}} Serverless Gateways  
 >
 > It is not supported on {{site.kic_product_name}} or {{site.event_gateway}} Gateways.
 
 ### Start a trace session
 
 1. In **Gateway Manager**, select the Control Plane that contains the Data Plane to be traced.
-2. In the left navigation menu, click **Active Tracing**.
+2. In the left navigation menu, click **Debugger**.
 3. Click **New tracing session**.
 4. Define the sampling criteria and click **Start Session**.
 

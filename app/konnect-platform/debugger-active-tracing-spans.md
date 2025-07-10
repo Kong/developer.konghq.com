@@ -1,5 +1,5 @@
 ---
-title: "Active tracing spans"
+title: "Debugger spans"
 description: "Spans represent a single unit of trace in {{site.base_gateway}} this doc contains all of the spans available."
 breadcrumbs:
   - /konnect/
@@ -7,6 +7,7 @@ content_type: reference
 layout: reference
 search_aliases: 
   - active tracing
+  - debugger
 products:
     - konnect-platform
 works_on:
@@ -18,8 +19,8 @@ tags:
   - tracing
   - tech-preview
 related_resources:
-  - text: Active tracing
-    url: /konnect-platform/active-tracing/
+  - text: {{site.konnect_short_name}} Debugger
+    url: /konnect-platform/Debugger/
 ---
 
 

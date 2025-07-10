@@ -35,4 +35,8 @@ sections:
       - title: Access logs
         description: Access logs include information about create, update, and delete requests to the Konnect API.
         url: /konnect-platform/audit-logs/#access-logs
+  - title: Debugger
+    items: 
+      - path: /konnect-platform/debugger/
+      - path: /konnect-platform/debugger-active-tracing-spans/
 
