@@ -11,7 +11,7 @@ works_on:
 automated_tests: false
 entities: []
 tldr:
-  q: How do I map Analtyics resources to Service Catalog Services
+  q: How do I map Analytics resources to Service Catalog Services
   a: Create a Service Catalog service and associate it with the Analytics integration.
 prereqs:
   entities:
