@@ -73,7 +73,9 @@ columns:
 rows:
   - issue: AI Gateway license migration
     description: |
-      If the AI Gateway has been enabled for more than a week, upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. 
+      If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week, 
+      upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect {{site.konnect_short_name}} deployments.
+      <br><br>
       A fix will be provided in 3.11.0.1.
       <br><br>
       As a temporary workaround, do the following:
