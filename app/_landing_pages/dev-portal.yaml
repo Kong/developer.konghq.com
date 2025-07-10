@@ -19,6 +19,16 @@ rows:
               blocks:
                 - type: text
                   text: |
+                    {:.warning}
+                    > **Review domain breaking changes for Dev Portal v3 and migrate to the new domain before October 1, 2025.** [Review breaking changes](/dev-portal/breaking-changes/)
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
                     The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services.
                     It enables developers to browse and search API documentation, try API operations, and manage their own credentials.
                     The Portal supports both internal and external APIs through flexible deployment options.
