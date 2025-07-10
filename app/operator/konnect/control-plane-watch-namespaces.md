@@ -1,6 +1,6 @@
 ---
 title: "Limiting namespaces watched by ControlPlane"
-description: "Learn how to limit the namespaces that `ControlPlane` watches."
+description: "Learn how to limit the namespaces that ControlPlane watches."
 content_type: reference
 layout: reference
 products:
@@ -36,14 +36,14 @@ The `spec.watchNamespaces.type` field accepts three values to control this behav
 > **Note:** Setting this field in `ControlPlane` will configure the `CONTROLLER_WATCH_NAMESPACE` environment variable in the managed {{ site.kic_product_name }}.
 > If you manually set the `CONTROLLER_WATCH_NAMESPACE` environment variable through `podTemplateSpec`, it will **override** this configuration.
 
+The `all` and `own` types don't require any further changes or additional resources. The `list` type requires further configuration.
+
 ## Specify a list of namespaces to watch
 
-`all` and `own` types are self-explanatory and do not require any further changes
-or additional resources.
 
 The `list` type requires two additional steps:
 
-1. You must specify the namespaces to watch in the `spec.watchNamespaces.list` field.
+1. Specify the namespaces to watch in the `spec.watchNamespaces.list` field.
    ```yaml
    spec:
      watchNamespaces:
@@ -52,7 +52,7 @@ The `list` type requires two additional steps:
         - namespace-a
         - namespace-b
    ```
-1. You must create a `WatchNamespaceGrant` resource in each of the specified namespaces. This resource grants the `ControlPlane` permission to watch resources in the specified namespace. It can be defined as:
+1. Create a `WatchNamespaceGrant` resource in each of the specified namespaces. This resource grants the `ControlPlane` permission to watch resources in the specified namespace. It can be defined as:
    
    ```yaml
    apiVersion: gateway-operator.konghq.com/v1alpha1
@@ -67,4 +67,4 @@ The `list` type requires two additional steps:
        namespace: control-plane-namespace
    ```
 
-For more information on the `WatchNamespaceGrant` CRD, see the [CRD reference](/operator/reference/custom-resources#watchnamespacegrant).
+For more information on the `WatchNamespaceGrant` CRD, see the [CRD reference](/operator/reference/custom-resources/#watchnamespacegrant).
