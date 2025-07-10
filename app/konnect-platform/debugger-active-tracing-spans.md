@@ -1,6 +1,6 @@
 ---
 title: Debugger spans
-description: "Spans represent a single unit of trace in {{site.base_gateway}} this doc contains all of the spans available."
+description: 'Spans represent a single unit of trace in {{site.base_gateway}} this doc contains all of the spans available.'
 breadcrumbs:
   - /konnect/
 content_type: reference
@@ -19,7 +19,7 @@ tags:
   - tracing
   - tech-preview
 related_resources:
-  - text: {{site.konnect_short_name}} Debugger
+  - text: The {{site.konnect_short_name}} Debugger
     url: /konnect-platform/Debugger/
 ---
 
