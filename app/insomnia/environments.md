@@ -22,6 +22,8 @@ related_resources:
     url: /insomnia/scripts/
   - text: Dynamic variables
     url: /insomnia/dynamic-variables/
+  - test: Template tags
+    url: /insomnia/template-tags/
 ---
 
 An environment is a JSON object containing key-value pairs of the data you want to reference. There are different levels of environments that can be used in requests and scripts:

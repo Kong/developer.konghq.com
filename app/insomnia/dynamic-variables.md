@@ -22,6 +22,8 @@ related_resources:
     url: /insomnia/scripts/
   - text: Environments
     url: /insomnia/environments/
+  - test: Template tags
+    url: /insomnia/template-tags/
 ---
 
 Besides [environments](/insomnia/environments/), there are two other ways to define variables in Insomnia:
