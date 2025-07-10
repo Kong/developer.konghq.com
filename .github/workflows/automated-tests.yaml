@@ -14,11 +14,10 @@ env:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     strategy:
       matrix:
         gateway:
-          - '3.9'
+          - '3.11'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,11 +25,12 @@ jobs:
 
       # Configure Ruby to build Jekyll site
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@84684c07c1965536eb4802c8daf1a77968df0cb1 # v1
         with:
           ruby-version: .ruby-version
+
       - name: Ruby gem cache
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         with:
           path: ${{ github.workspace }}/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -42,11 +42,11 @@ jobs:
         run: bundle install --jobs 4 --retry 3
 
       # Configure Node to build assets
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Cache node modules
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         env:
           cache-name: cache-node-modules
         with:
@@ -57,7 +57,6 @@ jobs:
 
       - name: npm install
         run: npm ci
-
       - name: Run site
         run: |
           npx netlify dev & npx wait-on http://localhost:8888
