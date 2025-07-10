@@ -50,13 +50,13 @@ module Jekyll
           item.data['series']['position'] == page.data['series']['position'] - 1
         end
 
-        return unless previous_page
-
         @series_meta = @site.data['series'][page.data['series']['id']]
 
         unless @series_meta
           raise "Could not read series meta from app/_data/series.yml with key #{page.data['series']['id']}"
         end
+
+        return unless previous_page
 
         page.data['prereqs']['inline'] ||= []
         page.data['prereqs']['inline'] << {
