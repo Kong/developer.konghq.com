@@ -35,9 +35,9 @@ related_resources:
   - text: Enable Basic Auth for Kong Manager
     url: /how-to/enable-basic-auth-on-kong-manager/
   - text: Enable OIDC for Kong Manager
-    url: /how-to/enable-oidc-for-kong-manager/
+    url: /gateway/kong-manager/openid-connect/
   - text: Set up authenticated group mapping in Kong Manager with OIDC
-    url: /how-to/oidc-authenticated-group-mapping/
+    url: /gateway/kong-manager/openid-connect/#oidc-authenticated-group-mapping
   # - text: Configure LDAP with Kong Manager
   #   url: /how-to/configure-ldap-with-kong-manager/
 tags:
