@@ -32,7 +32,7 @@ ingressController:
   installCRDs: true
   env:
     # this will inject CONTROLLER_COMBINED_SERVICES_FROM_DIFFERENT_HTTPROUTES="true"
-    controller_combined_services_from_different_httproutes: "true"
+    combined_services_from_different_httproutes: "true"
     
 ```
 
