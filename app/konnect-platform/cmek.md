@@ -32,7 +32,7 @@ works_on:
 CMEK currently applies to:
 
 * Payloads captured through [the {{site.konnect_short_name}} Debugger](/konnect-platform/debugger/)
-* Request logs stored in tracing workflows
+* Request logs stored in Debugger workflows
 
 The steps required are: 
 
