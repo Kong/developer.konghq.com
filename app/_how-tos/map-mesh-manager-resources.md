@@ -1,7 +1,7 @@
 ---
-title: Map Gateway Manager resources in Service Catalog
+title: Map Mesh Manager services in Service Catalog
 content_type: how_to
-description: Learn how to map Gateway Services from {{site.konnect_short_name}} Gateway Manager in Service Catalog to visualize services across multiple Control Planes.
+description: Learn how to map Mesh Manager resources in Service Catalog to gain visibility into how the service is deployed across meshes and zones.
 products:
   - gateway
   - service-catalog
@@ -10,15 +10,17 @@ works_on:
 automated_tests: false
 entities: []
 tldr:
-  q: How do I map Gateway Services in Service Catalog?
-  a: Create a Service Catalog service and associate it with your Gateway Manager resources to visualize Services across multiple Control Planes.
+  q: How do I map Mesh Manager services in Service Catalog?
+  a: Create a Service Catalog service and associate it with your Mesh Manager resources to visualize meshes.
 prereqs:
-  entities:
-    services:
-        - example-service
+  inline:
+    - title: "Mesh Manager services"
+      content: |
+        You'll need a [Mesh Manager service](https://cloud.konghq.com/mesh-manager) to ingest in Service Catalog as resources.
+      icon_url: /assets/icons/mesh.svg
 related_resources:
-  - text: Gateway Manager integration
-    url: /service-catalog/integrations/gateway-manager/
+  - text: "Mesh Manager integration"
+    url: /service-catalog/integrations/mesh-manager/
   - text: Service Catalog
     url: /service-catalog/
   - text: Service Catalog integrations
@@ -27,9 +29,9 @@ related_resources:
 
 ## Create a service in Service Catalog
 
-In this tutorial, you'll map Gateway Services from Gateway Manager to a service in Service Catalog. Because the Gateway Manager integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
+In this tutorial, you'll map services from Mesh Manager to a service in Service Catalog. Because the Mesh Manager integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
 
-Create a service that you'll map to your Gateway Manager resources:
+Create a service that you'll map to your Mesh Manager resources:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -52,13 +54,13 @@ Export the Service Catalog service ID:
 export SERVICE_ID='YOUR-SERVICE-ID'
 ```
 
-## List Gateway Manager resources
+## List Mesh Manager resources
 
-Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in from Gateway Manager:
+Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in from Mesh Manager:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=gateway-manager
+url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=mesh-manager
 method: GET
 region: us
 status_code: 200
@@ -71,12 +73,12 @@ headers:
 Export the resource ID you want to map to the service:
 
 ```sh
-export GATEWAY_MANAGER_RESOURCE_ID='YOUR-RESOURCE-ID'
+export MESH_RESOURCE_ID='YOUR-RESOURCE-ID'
 ```
 
 ## Map resources to a Service Catalog service
 
-Now, you can map the Gateway Manager resource to the service:
+Now, you can map the Mesh Manager resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -89,14 +91,13 @@ headers:
   - 'Content-Type: application/json'
 body:
   service: $SERVICE_ID
-  resource: $ANALYTICS_RESOURCE_ID
+  resource: $MESH_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
-
 ## Validate the mapping
 
-To confirm that the Gateway Manager resource is now mapped to the intended service, list the service’s mapped resources:
+To confirm that the Mesh Manager resource is now mapped to the intended service, list the service’s mapped resources:
 
 <!--vale off-->
 {% konnect_api_request %}
