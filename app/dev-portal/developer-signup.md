@@ -21,8 +21,8 @@ api_specs:
 description: 'Learn how developers can get started with the Dev Portal by registering and creating an application.'
 
 related_resources:
-  - text: Application registration
-    url: /dev-portal/application-registration/
+  - text: Developer self-service and app registration
+    url: /dev-portal/self-service/
   - text: Authentication strategies
     url: /dev-portal/authentication-strategies/
 ---

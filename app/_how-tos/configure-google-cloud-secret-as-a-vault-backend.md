@@ -85,6 +85,8 @@ next_steps:
     url: /gateway/entities/vault/
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
     url: /how-to/rotate-secrets-in-google-cloud-secret/
+
+automated_tests: false
 ---
 
 ## Configure Secret Manager as a vault with the Vault entity

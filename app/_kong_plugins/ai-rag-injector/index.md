@@ -77,7 +77,7 @@ faqs:
     a: Cosine similarity is the best [distance metric](/plugins/ai-rag-injector/reference/#schema--config-vectordb-distance-metric) for text. Use Euclidean only for coordinate-based data.
 
   - q: Where should I inject RAG context in the prompt?
-    a: | 
+    a: |
       It depends on your priorities:
       * `system` offers strong guidance, but carries higher prompt injection risk
       * `user` is safer for untrusted content
@@ -122,6 +122,7 @@ The **AI RAG Injector** plugin automates the retrieval and injection of contextu
 * **Improved security:** Vector DB access is limited to the AI Gateway, eliminating the need to expose it to individual dev teams or AI agents.
 * **Enables RAG in restricted environments:** Supports RAG even where direct access to the vector database is not possible, such as external-facing or isolated services.
 * **Developer productivity:** Developers can focus on building AI features without needing to manage embeddings, similarity search, or context handling.
+* {% new_in 3.11 %} **Save LLM costs:** When using the AI RAG Injector plugin with the AI Prompt Compressor, you can wrap specific prompt parts in `<LLMLINGUA>` tags within your template to target only those sections for compression, preserving the rest of the prompt unchanged.
 
 {% include plugins/ai-plugins-note.md %}
 

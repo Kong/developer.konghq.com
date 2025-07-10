@@ -68,11 +68,15 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
+  - text: Dedicated Cloud Gateway domain breaking changes
+    url: /dedicated-cloud-gateways/breaking-changes/
 
 tags:
   - dedicated-cloud-gateways
 ---
 
+{:.warning}
+> **Dedicated Cloud Gateways domain breaking changes:** [Review domain breaking changes](/dedicated-cloud-gateways/breaking-changes/) for Dedicated Cloud Gateways and migrate to the new domain before September 30, 2025.
 
 ## How do Dedicated Cloud Gateways work?
 
@@ -192,14 +196,14 @@ rows:
     routing: Simple
     alias: No
     health: No
-    value: "`_acme-challenge.9e454bcfec.acme.gateways.konghq.com`"
+    value: "`_acme-challenge.9e454bcfec.acme.gateways.konggateway.com`"
     ttl: 300
   - host: "`example.com`"
     type: CNAME
     routing: Simple
     alias: No
     health: No
-    value: "`9e454bcfec.gateways.konghq.com`"
+    value: "`9e454bcfec.gateways.konggateway.com`"
     ttl: 300
 {% endtable %}
 <!--vale on -->

@@ -25,14 +25,16 @@ related_resources:
     url: /how-to/automate-api-catalog/
   - text: Publishing
     url: /dev-portal/publishing/
-  - text: Application registration
-    url: /dev-portal/application-registration/
+  - text: Developer self-service and app registration
+    url: /dev-portal/self-service/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from Dev Portal, but I'm getting a `401`. How do I fix it?
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
+    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
 ---
 
-An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/access-and-approval/) for use with specific APIs.
+An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/self-service/) for use with specific APIs.
 
 As an API Producer, you [publish an OpenAPI or AsyncAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
 
@@ -132,7 +134,7 @@ Publishing an API in the Dev Portal involves several steps:
 
 Once published, the API appears in the selected Portal. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API.
 
-If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/dev-portal/access-and-approval/) to access the API.
+If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/konnect-platform/teams-and-roles/#teams) to access the API.
 
 ## Allow developers to try requests from the Dev Portal spec renderer
 
@@ -177,7 +179,7 @@ For more information about how to use custom attributes for filtering APIs displ
 
 ## Gateway service link
 
-{{site.konnect_short_name}} APIs support linking to a {{site.konnect_short_name}} Gateway Service to enable Developer self-service and generate credentials or API keys. 
+{{site.konnect_short_name}} APIs support linking to a {{site.konnect_short_name}} Gateway Service to enable Developer self-service and generate credentials or API keys. This is available to Data Planes running {{site.base_gateway}} 3.6 or later.
 This link will install the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin can only be configured from the associated Dev Portal and its published APIs.
 
 {:.info}
@@ -189,4 +191,4 @@ This link will install the {{site.konnect_short_name}} Application Auth (KAA) pl
 1. Select the appropriate Control Plane and Gateway Service
 1. Click **Submit**
 
-If you want the Gateway Service to restrict access to the API, [configure developer & application registration for your Dev Portal](/dev-portal/application-registration/).
+If you want the Gateway Service to restrict access to the API, [configure developer & application registration for your Dev Portal](/dev-portal/self-service/).

@@ -28,10 +28,6 @@ related_resources:
 
 This policy can be used to encrypt portions of Kafka records.
 
-## Schema
-
-{% entity_schema %}
-
 ## Example configuration
 
 Example configurations for the Encrypt policy.
@@ -87,3 +83,7 @@ policies:
        - type: values
          id: "static://user-chosen-id"
 ```
+
+## Schema
+
+{% entity_schema %}

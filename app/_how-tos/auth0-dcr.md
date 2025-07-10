@@ -50,8 +50,8 @@ cleanup:
 min_version:
     gateway: '3.4'
 related_resources:
-  - text: Application registration
-    url: /dev-portal/application-registration/
+  - text: Developer self-service and app registration
+    url: /dev-portal/self-service/
   - text: About Dev Portal Dynamic Client Registration
     url: /dev-portal/dynamic-client-registration/
   - text: About Dev Portal OIDC authentication
@@ -60,10 +60,6 @@ related_resources:
     url: /dev-portal/auth-strategies/
   - text: Dev Portal developer sign-up
     url: /dev-portal/developer-signup/
-
-next_steps:
-  - text: Learn how to manage application registration requests
-    url: /dev-portal/access-and-approval/
 ---
 
 ## Configure access to the Auth0 Management API

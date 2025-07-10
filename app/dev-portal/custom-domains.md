@@ -23,7 +23,9 @@ related_resources:
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: Dev Portal settings
-    url: /dev-porta/portal-settings/
+    url: /dev-portal/portal-settings/
+  - text: About Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
 faqs:
   - q: How do I delete a custom domain from a Dev Portal?
     a: |
@@ -31,7 +33,7 @@ faqs:
 
   - q: What should I do if my custom Dev Portal domain shows an SSL error?
     a: |
-      After DNS verification, {{site.konnect_short_name}} will attempt to auto-generate an SSL certificate. 
+      After DNS verification, {{site.konnect_short_name}} will attempt to auto-generate an SSL certificate.
       This process may take several hours. If you try to access the custom domain before the certificate is ready, you may see an SSL error.
 
       If the process takes more than 24 hours, check that your DNS record has propagated correctly.
@@ -49,7 +51,12 @@ faqs:
       ```
 
       This confirms that your custom domain points to the expected default domain.
+
+      Ensure that the DNS records are public as it will not work with private DNS records.
 ---
+
+{:.warning}
+> **Dev Portal v3 domain breaking changes:** [Review custom domain breaking changes](/dev-portal/breaking-changes/#migrate-your-custom-domain) for Dev Portal v3 and migrate to the new domain before October 1, 2025.
 
 Every Dev Portal instance has an auto-generated default URL. You can also manage custom URLs within {{site.konnect_short_name}}.
 This gives users the ability to access the Dev Portal from either the default URL, for example `https://example.{geo}.kongportals.com`, or a custom URL like `portal.example.com`.
@@ -62,7 +69,7 @@ To add a custom URL to Dev Portal, you need:
 
 ## Configure DNS
 
-In your DNS configuration, create a CNAME record for the domain you want to use using the automatically generated Dev Portal URL.
+In your DNS configuration, create a CNAME record for the domain you want to use using the automatically generated Dev Portal URL. This CNAME record must be public.
 The record will look like this:
 
 {% table %}

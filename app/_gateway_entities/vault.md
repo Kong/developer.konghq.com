@@ -214,6 +214,12 @@ features:
     oss: false
     enterprise: true
     supports_konnect: true
+  - title: |
+      CyberArk Conjur {% new_in 3.11 %}
+    url: /how-to/configure-cyberark-as-a-vault-backend/
+    oss: false
+    enterprise: true
+    supports_konnect: true
 {% endfeature_table %}
 
 ## How do I reference secrets stored in a Vault?
@@ -295,14 +301,19 @@ columns:
     key: description
 rows:
   - parameter: "`vaults.config.prefix`"
-    field-name: |
-      config-prefix (Kong Manager)  
-      Environment variable prefix ({{site.konnect_short_name}})
+    field-name: Environment Variable Prefix
     description: The prefix for the environment variable that the value will be stored in.
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
+    field-name: "Base64 Decode"
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
 {% navtab "AWS" %}
+For a complete tutorial on how to set up AWS as a Vault entity, see the following:
+* [Set up AWS with {{ site.base_gateway }}](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)
+* [Set up AWS with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/aws/)
 
 <!--vale off-->
 {% table %}
@@ -342,6 +353,10 @@ rows:
   - parameter: "`vaults.config.resurrect_ttl`"
     field-name: "Resurrect TTL"
     description: The duration (in seconds) for which expired secrets will continue to be used if the vault is unreachable or the secret is deleted. After this time, Kong stops retrying. The default is 1e8 seconds (~3 years) to ensure resilience during unexpected issues.
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
+    field-name: "Base64 Decode"
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 
@@ -391,10 +406,17 @@ rows:
     field-name: "Resurrect TTL"
     description: |
       Duration (in seconds) that secrets remain usable after expiration (`config.ttl` limit). Useful when the vault is unreachable or a secret is deleted. Kong retries refreshing the secret for this duration. Afterward, it stops. The default is 1e8 seconds (~3 years) to ensure resiliency during issues.
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
+    field-name: "Base64 Decode"
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Google" %}
+For a complete tutorial on how to set up Google Cloud as a Vault entity, see the following:
+* [Set up Google Cloud with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
+* [Set up Google Cloud with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
 
 <!--vale off-->
 {% table %}
@@ -422,10 +444,17 @@ rows:
     field-name: "Resurrect TTL"
     description: |
       Time (in seconds) that secrets remain in use after expiration (`config.ttl` ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for `resurrect_ttl` seconds before giving up. The default is 1e8 seconds (~3 years) to support uninterrupted service during outages.
+  - parameter: |
+      `vaults.config.base64_decode` {% new_in 3.11 %}
+    field-name: "Base64 Decode"
+    description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
 {% navtab "HashiCorp" %}
+For a complete tutorial on how to set up HashiCorp Vault as a Vault entity, see the following:
+* [Set up HashiCorp Vault with {{ site.base_gateway }}](/how-to/configure-hashicorp-vault-as-a-vault-backend/)
+* [Set up HashiCorp Vault with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/hashicorp/)
 
 <!--vale off-->
 {% table %}
@@ -438,36 +467,24 @@ columns:
     key: description
 rows:
   - parameter: "`vaults.config.protocol`"
-    field-name: |
-      config-protocol (Kong Manager)  
-      Protocol ({{site.konnect_short_name}})
+    field-name: Protocol
     description: |
       The protocol to connect with. Accepts one of `http` or `https`.
   - parameter: "`vaults.config.host`"
-    field-name: |
-      config-host (Kong Manager)  
-      Host ({{site.konnect_short_name}})
+    field-name: Host
     description: The hostname of your HashiCorp vault.
   - parameter: "`vaults.config.port`"
-    field-name: |
-      config-port (Kong Manager)  
-      Port ({{site.konnect_short_name}})
+    field-name: Port
     description: The port number of your HashiCorp vault.
   - parameter: "`vaults.config.mount`"
-    field-name: |
-      config-mount (Kong Manager)  
-      Mount ({{site.konnect_short_name}})
+    field-name: Mount
     description: The mount point.
   - parameter: "`vaults.config.kv`"
-    field-name: |
-      config-kv (Kong Manager)  
-      Kv ({{site.konnect_short_name}})
+    field-name: Kv
     description: |
       The secrets engine version. Accepts `v1` or `v2`.
   - parameter: "`vaults.config.token`"
-    field-name: |
-      config-token (Kong Manager)  
-      Token ({{site.konnect_short_name}})
+    field-name: Token
     description: A token string.
   - parameter: "`vaults.config.ttl`"
     field-name: "TTL"
@@ -483,50 +500,120 @@ rows:
       Time (in seconds) that secrets remain in use after expiration (`config.ttl` is over). Useful if the vault is unreachable or a secret is deleted. Kong continues retrying for `resurrect_ttl` seconds, then stops. Default is 1e8 seconds (~3 years).
   - parameter: |
       `vaults.config.namespace` {% new_in 3.1 %}
-    field-name: "namespace"
+    field-name: "Namespace"
     description: Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully.
   - parameter: |
       `vaults.config.auth_method` {% new_in 3.1 %}
-    field-name: "auth-method"
+    field-name: Authentication Method
     description: |
       Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, or `approle`.
   - parameter: |
       `vaults.config.kube_role` {% new_in 3.1 %}
-    field-name: "kube-role"
+    field-name: Kubernetes Role
     description: |
       Role assigned to the Kubernetes service account. Only used when `keyring_vault_auth_method` is set to `kubernetes`.
   - parameter: |
       `vaults.config.kube_api_token_file` {% new_in 3.1 %}
-    field-name: "kube-api-token-file"
+    field-name: Kubernetes API Token File
     description: |
       Path to the Kubernetes service account token file. Defaults to `/run/secrets/kubernetes.io/serviceaccount/token` if unspecified.
   - parameter: |
       `vaults.config.kube_auth_path` {% new_in 3.4 %}
-    field-name: "kube-auth-path"
+    field-name: Kubernetes Auth Path
     description: |
       Path for enabling the Kubernetes auth method. Defaults to `kubernetes`. Single leading/trailing slashes are trimmed.
   - parameter: |
       `vaults.config.approle_auth_path` {% new_in 3.4 %}
-    field-name: "approle_auth_path"
+    field-name: App Role Auth Path
     description: |
       Path for enabling the AppRole auth method. Defaults to `AppRole`. Single leading/trailing slashes are trimmed.
   - parameter: |
       `vaults.config.approle_role_id` {% new_in 3.4 %}
-    field-name: "approle_role_id"
+    field-name: App Role Role ID
     description: Specifies the AppRole role ID in HashiCorp Vault.
   - parameter: |
       `vaults.config.approle_secret_id` {% new_in 3.4 %}
-    field-name: "approle_secret_id"
+    field-name: App Role Secret ID
     description: Defines the AppRole's secret ID in HashiCorp Vault.
   - parameter: |
       `vaults.config.approle_secret_id_file` {% new_in 3.4 %}
-    field-name: "approle_secret_id_file"
+    field-name: App Role Secret ID File
     description: Path to a file containing the AppRole secret ID.
   - parameter: |
       `vaults.config.approle_response_wrapping` {% new_in 3.4 %}
-    field-name: "approle_response_wrapping"
+    field-name: App Role Response Wrapping
     description: |
       Whether the secret ID is a response-wrapping token. Defaults to `false`. When `true`, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes.
+  - parameter: |
+      `vaults.config.cert_auth_cert_key` {% new_in 3.11 %}
+    field-name: Cert Key
+    description: |
+      The key file for the client certificate.
+  - parameter: |
+      `vaults.config.cert_auth_cert` {% new_in 3.11 %}
+    field-name: Cert
+    description: |
+      The client certificate file.
+  - parameter: |
+      `vaults.config.cert_auth_role_name` {% new_in 3.11 %}
+    field-name: Role Name
+    description: |
+      The trusted certificate role name.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Conjur" %}
+
+See a tutorial about how to [set up CyberArk Conjur as a Vault in {{site.base_gateway}}](/how-to/configure-cyberark-as-a-vault-backend/).
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Field name
+    key: field-name
+  - title: Description
+    key: description
+rows:
+  - parameter: |
+      `vaults.config.endpoint_url` {% new_in 3.11 %}
+    field-name: "Endpoint URL"
+    description: |
+      The CyberArk Conjur backend URL to connect with. Accepts `http` or `https` protocols.
+  - parameter: |
+      `vaults.config.auth_method` {% new_in 3.11 %}
+    field-name: "Authentication method"
+    description: "Defines the authentication mechanism for connecting to the CyberArk Conjur Vault service. Accepted value: `api_key`."
+  - parameter: |
+      `vaults.config.account` {% new_in 3.11 %}
+    field-name: "Account"
+    description: The Conjur organization account name.
+  - parameter: |
+      `vaults.config.login` {% new_in 3.11 %}
+    field-name: "Login"
+    description: The login name of the workload identity.
+  - parameter: |
+      `vaults.config.api_key` {% new_in 3.11 %}
+    field-name: "API Key"
+    description: The API key of the workload identity.
+  - parameter: |
+      `vaults.config.ttl` {% new_in 3.11 %}
+    field-name: "TTL"
+    description: Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use at least 60 seconds.
+  - parameter: |
+      `vaults.config.neg_ttl` {% new_in 3.11 %}
+    field-name: "Negative TTL"
+    description: |
+      Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. 
+      Kong retries after `neg_ttl` expires.
+  - parameter: |
+      `vaults.config.resurrect_ttl` {% new_in 3.11 %}
+    field-name: "Resurrect TTL"
+    description: |
+      Duration (in seconds) that secrets remain usable after expiration (`config.ttl` is over). 
+      Useful when the vault is unreachable or a secret is deleted but not yet replaced. 
+      Kong continues retrying for `resurrect_ttl` seconds, then stops. The default is 1e8 seconds (~3 years).
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}

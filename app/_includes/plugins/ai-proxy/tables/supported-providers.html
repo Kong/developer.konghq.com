@@ -1,40 +1,20 @@
 <table>
     <thead>
-        <tr>
+      <tr>
         <th>Provider</th>
-        <th>Chat</th>
-        <th>Completion</th>
-        <th>Chat streaming</th>
-        <th>Completions streaming</th>
-        <th>Minimum {{ site.base_gateway }} version</th>
-        </tr>
+        <th>Chat Completions</th>
+        <th>Chat Completions streaming</th>
+        <th>Embeddings</th>
+      </tr>
     </thead>
     <tbody>
-        {% for provider in include.providers %}
-        {% assign chat = provider.chat.supported %}
-        {% assign completions = provider.completions.supported %}
-        {% assign chat_streaming = provider.chat.streaming %}
-        {% assign completions_streaming = provider.completions.streaming %}
-        <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}
-                {% if provider.formats %}
-                    ({{ provider.formats }})
-                {% endif %}
-            </td>
-            <td>{{ chat | to_check }}</td>
-            <td>{{ completions | to_check }}</td>
-            <td>{{ chat_streaming | to_check }}</td>
-            <td>{{ completions_streaming | to_check  }}</td>
-            <td>
-                {% if provider.min_version < page.min_version.gateway %}
-                    {{ page.min_version.gateway }}
-                {% else %}
-                    {{ provider.min_version }}
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+      {% for provider in include.providers %}
+      <tr id="{{ provider.name }}">
+        <td>{{ provider.name }}{% if provider.formats %} ({{ provider.formats }}){% endif %}</td>
+        <td>{{ provider.chat.supported | to_check }}</td>
+        <td>{{ provider.chat.streaming | to_check }}</td>
+        <td>{{ provider.embeddings.supported | to_check }}</td>
+      </tr>
+      {% endfor %}
     </tbody>
-</table>
-
-
+  </table>

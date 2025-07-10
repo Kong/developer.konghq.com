@@ -39,3 +39,6 @@ dynatrace:
 
 imperva:
   name: Imperva
+
+palo-alto-networks:
+  name: Palo Alto Networks

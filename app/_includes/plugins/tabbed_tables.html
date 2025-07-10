@@ -5,7 +5,7 @@
 {% navtab {{table[0]}} %}
 {% assign columns = table[1].columns %}
 {% assign rows = table[1].rows %}
-{% if type == 'referenceable_fields' or type == 'priorities' %}
+{% if type == 'referenceable_fields' or type == 'priorities' or type == 'deployment_topologies' %}
 {% include plugins/table.html columns=columns rows=rows type=type %}
 {% else %}
 <div class="max-h-[50vh] overflow-y-auto rounded-lg">
