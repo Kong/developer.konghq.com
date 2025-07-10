@@ -21,6 +21,10 @@ related_resources:
     url: /insomnia/environments/
   - text: Dynamic variables
     url: /insomnia/dynamic-variables/
+  - text: Plugins
+    url: /insomnia/plugins/
+  - text: Plugin reference
+    url: /insomnia/plugin-reference/
 ---
 
 A template tag is a type of variable that you can use to reference or transform values. You can reuse an element from a request or a response, get the current timestamp, encode a value, or prompt the user for an input value.

@@ -20,8 +20,12 @@ search_aliases:
   - Insomnia plugins
   - Insomnia custom plugins
 related_resources:
+  - text: Plugins
+    url: /insomnia/plugins/
   - text: Insomnia Plugin Hub
     url: https://insomnia.rest/plugins
+  - text: Template tags
+    url: /insomnia/template-tags/
 faqs:
   - q: I'm having issues with a third-party plugin. What should I do?
     a: |
@@ -45,6 +49,10 @@ Insomnia uses the following app, store, and utility helpers:
 - `context.store`: Provides persistent plugin-specific storage, useful for caching or configuration
 - `context.data`: Supports import and export of Insomnia data in various formats (e.g., raw, HAR, Insomnia JSON/YAML)
 - `context.network`: Enables sending arbitrary network requests, useful for chaining calls or external integrations
+
+## Template tags overview
+
+[Template tags](/insomnia/template-tags/) in Insomnia act as operations rather than static values. They are often used to transform strings, generate UUIDs or random values, and insert timestamps. Template tags can be inserted anywhere environment variables are supported by pressing `Ctrl+Space`.
 
 ## Built-in and custom tags
 
