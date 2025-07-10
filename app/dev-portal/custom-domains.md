@@ -51,6 +51,8 @@ faqs:
       ```
 
       This confirms that your custom domain points to the expected default domain.
+
+      Ensure that the DNS records are public as it will not work with private DNS records.
 ---
 
 Every Dev Portal instance has an auto-generated default URL. You can also manage custom URLs within {{site.konnect_short_name}}.
@@ -64,7 +66,7 @@ To add a custom URL to Dev Portal, you need:
 
 ## Configure DNS
 
-In your DNS configuration, create a CNAME record for the domain you want to use using the automatically generated Dev Portal URL.
+In your DNS configuration, create a CNAME record for the domain you want to use using the automatically generated Dev Portal URL. This CNAME record must be public.
 The record will look like this:
 
 {% table %}
