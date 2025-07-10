@@ -11,8 +11,8 @@ works_on:
 automated_tests: false
 entities: []
 tldr:
-  q: How do I map Gateway Services using the Gateway Manager Service Catalog integration
-  a: Install the Datadog integration in {{site.konnect_short_name}}, authorize it using your API and app keys, and link Datadog resources to your Service Catalog service.
+  q: How do I map Gateway Services using the Gateway Manager Service Catalog
+  a: Create a Service Catalog service and associate it with the Gateway Manager integration.
 prereqs:
   entities:
     services:
@@ -29,7 +29,7 @@ related_resources:
 
 ## Create a service in Service Catalog
 
-Create a service to map to your resources
+Create a service to map to your resources:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -52,19 +52,14 @@ Export the Service Catalog service ID:
 export SERVICE_ID='YOUR-SERVICE-ID'
 ```
 
-## List resources
-
-Before you can map a Gateway Manager Service to a Service Catalog service, you have to obtain the UUID for the Gateway Manager Service: 
-
-
 
 ## List resources
 
-Before you can map a resource to Gateway Manager, you need to obtain the `id` of the resource from [Analytics](/service-catalog/integrations/konnect-analytics/):
+Before you can map a resource to Gateway Manager, you need to obtain the `id` of the resource:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=analytics
+url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=gateway-manager
 method: GET
 region: us
 status_code: 200
@@ -77,7 +72,7 @@ headers:
 Export the resource ID you want to map to the service:
 
 ```sh
-export ANALYTICS_RESOURCE_ID='YOUR-RESOURCE-ID'
+export GATEWAY_RESOURCE_ID='YOUR-RESOURCE-ID'
 ```
 
 ## Map resources to a service
@@ -95,7 +90,7 @@ headers:
   - 'Content-Type: application/json'
 body:
   service: $SERVICE_ID
-  resource: $ANALYTICS_RESOURCE_ID
+  resource: $GATEWAY_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
