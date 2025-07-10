@@ -20,6 +20,8 @@ related_resources:
     url: /insomnia/collections/
   - text: Scripts
     url: /insomnia/scripts/
+  - text: Dynamic variables
+    url: /insomnia/dynamic-variables/
 ---
 
 An environment is a JSON object containing key-value pairs of the data you want to reference. There are different levels of environments that can be used in requests and scripts:
@@ -31,6 +33,8 @@ An environment is a JSON object containing key-value pairs of the data you want 
 Global and collection environments contain:
 * A base environment, commonly used for default values that do not vary across environments
 * Optional sub-environments, commonly used for environment-specific values (production, staging, development) or user-specific configurations. Sub-environments can be marked as private. In this case they are not be synced or exported, and require a vault key to be accessed.
+
+You can also define variables dynamically in the Collection Runner and in pre-request and after-response [scripts](/insomnia/scripts/). For more details, see [Dynamic variables](/insomnia/dynamic-variables/).
 
 ## Referencing environment variables
 
