@@ -96,6 +96,7 @@ Now, we can configure the AI Prompt Template plugin with predefined, reusable pr
 
 This configuration defines five prompt templates:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Template name
@@ -114,6 +115,7 @@ rows:
   - name: qna
     description: Answers user questions clearly and factually.
 {% endtable %}
+<!-- vale on -->
 
 {% entity_examples %}
 entities:
