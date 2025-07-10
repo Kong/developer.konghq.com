@@ -14430,6 +14430,22 @@
       }
     ]
   },
+   "3.4.3.20": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped luarocks from 3.11.1 to 3.12.1. This fixes the error `main function has more than 65536 constants`, which was preventing rocks from being published or installed.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: Fixed an `500` error caused by receiving a JSON `null` from the request body when parsing bearer tokens or client IDs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
   "3.11.0.0": {
     "kong": [
       {
