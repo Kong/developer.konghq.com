@@ -78,7 +78,7 @@ entities:
           header_value: Bearer ${key}
         model:
           provider: mistral
-          name: mistral-small-2506
+          name: mistral-tiny
           options:
             mistral_format: openai
             upstream_url: https://api.mistral.ai/v1/chat/completions
