@@ -29,7 +29,7 @@ related_resources:
     url: /dev-portal/application-registration/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from Dev Portal, but I'm getting a `401`. How do I fix it?
-    a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you need to include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
+    a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
 ---
 
 An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/access-and-approval/) for use with specific APIs.
@@ -138,7 +138,7 @@ If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must b
 
 When you upload a spec for your API to Dev Portal, you can use the **Try it!** feature to allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. 
 
-The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). You also need to enable the CORS plugin for this feature to function. See the following table to help you determine which CORS configuration to use depending on the Route associated with your APIs:
+The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). You must also enable the CORS plugin for this feature to work. Use the table below to determine the appropriate CORS configuration based on the Routes associated with your APIs:
 
 {% feature_table %} 
 item_title: Use case
