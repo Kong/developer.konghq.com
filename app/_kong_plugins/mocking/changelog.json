@@ -13,6 +13,20 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.2": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.1.2": [
     {
       "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",

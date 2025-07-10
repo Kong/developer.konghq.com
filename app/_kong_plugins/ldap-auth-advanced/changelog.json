@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.9.1.2": [
+    {
+      "message": "Fixed an issue where binary string was truncated at the first null character.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.1.1": [
     {
       "message": "Fixed an issue where binary string was truncated at the first null character.\n",

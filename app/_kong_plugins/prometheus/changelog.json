@@ -40,6 +40,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where AI latency histogram might miss some calculation.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Bumped KONG_LATENCY_BUCKETS bucket's maximal capacity to 6000",

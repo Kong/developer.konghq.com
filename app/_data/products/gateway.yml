@@ -31,7 +31,7 @@ releases:
             graviton: true
           docker: true
           docker_support:
-          eol: June 2025
+          eol: June 2026
       - amazonlinux2023:
           package: true
           package_support:
@@ -540,7 +540,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.9"
-    ee-version: "3.9.1.1"
+    ee-version: "3.9.1.2"
     ce-version: "3.9.1"
     eol: 2025-12-30
     distributions:
@@ -718,7 +718,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.10"
-    ee-version: "3.10.0.2"
+    ee-version: "3.10.0.3"
     lts: true
     eol: 2028-03-31
     distributions:
@@ -729,6 +729,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: June 2026
       - amazonlinux2023:
           package: true
           package_support:
@@ -1092,9 +1093,11 @@ marketplaces:
 
 release_dates:
   '3.11.0.0': 2025/07/03
+  '3.10.0.3': 2025/07/06
   '3.10.0.2': 2025/05/20
   '3.10.0.1': 2025/04/15
   '3.10.0.0': 2025/03/27
+  '3.9.1.2': 2025/07/07
   '3.9.1.1': 2025/03/20
   '3.9.1.0': 2025/03/11
   '3.9.0.1': 2025/01/28

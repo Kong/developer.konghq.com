@@ -6,7 +6,9 @@
 
 {{ page.description | liquify }}
 
-{{ plugin }} plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
+{{ plugin }} plugin accepts requests in one of a few defined and standardized OpenAI formats, translates them to the configured target format, and then transforms the response back into a standard format.
+
+{% new_in 3.10 %} To use {{ plugin }} with non-OpenAI format without conversion, see [section below](./#supported-native-llm-formats) for more details.
 
 ## Overview of capabilities
 
@@ -14,9 +16,9 @@
 
 For {{ site.base_gateway }} versions 3.6 or earlier:
 
-* **Chat APIs**: Multi-turn conversations with system/user/assistant roles.
+* **Chat Completions APIs**: Multi-turn conversations with system/user/assistant roles.
 
-* **Completions API**: Generates free-form text from a prompt.
+* **Completions API**: Generates free-form text from a prompt. **OpenAI has marked this endpoint as legacy and recommends using the Chat Completions API for new applications.**
 
 For {{ site.base_gateway }} version {% new_in 3.11 %}:
 
@@ -29,6 +31,7 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 * **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
 * **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
 * **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
+* **Rerank API**: Improve relevance of retrieved documents and results in RAG pipelines for [Cohere and Bedrock](./#supported-native-llm-formats). Send any list of candidates to be re-ordered based on prompt context to boost final LLM response quality through better grounding.
 
 {% elsif plugin == "AI Proxy Advanced" %}
 
@@ -39,7 +42,9 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 * **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
 * **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
 * **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
+* **Rerank API**: Improve relevance of retrieved documents and results in RAG pipelines for [Cohere and Bedrock](./#supported-native-llm-formats). Send any list of candidates to be re-ordered based on prompt context to boost final LLM response quality through better grounding.
 * **Realtime streaming**: Stream completions token-by-token for low-latency, interactive experiences and live analytics.
+
 
 {% endif %}
 
@@ -50,6 +55,15 @@ The following reference tables detail feature availability across supported LLM 
 Support for chat, completions, and embeddings.
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
+
+The following providers are supported by the legacy Completions API:
+* OpenAI
+* Azure OpenAI
+* Cohere
+* Llama2
+* Amazon Bedrock
+* Gemini
+* Hugging Face
 
 ### Advanced text generation {% new_in 3.11 %}
 
