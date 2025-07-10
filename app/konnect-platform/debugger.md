@@ -1,6 +1,6 @@
 ---
 title: "{{site.konnect_short_name}} Debugger"
-description: "The Debugger enables Control Plane administrators to initiate targeted deep tracing sessions in specific Data Plane nodes."
+description: "The Debugger enables Control Plane administrators to initiate targeted deep session traces in specific Data Plane nodes."
 breadcrumbs:
   - /konnect/
 content_type: reference
@@ -23,7 +23,7 @@ related_resources:
     url: /konnect-platform/debugger-spans/
 ---
 
-{{site.konnect_short_name}} provides a connected debugging experience and real-time visibility into API traffic. Logs offer a detailed record of system events, while tracing tracks the flow of requests through Kong. Together, **Logs & Traces** provide key data that empower you to:
+{{site.konnect_short_name}} provides a connected debugging experience and real-time visibility into API traffic allowing you to: 
 
 1. **Monitor system behavior**
    - Understand how your system performs in real time.
@@ -32,11 +32,11 @@ related_resources:
 1. **Optimize performance**
    - Use insights to improve system reliability and efficiency.
 
-Logs and traces offer deep visibility into API traffic and serve as powerful observability tools. Under normal conditions, they add negligible latency. However, under heavy load, the Debugger may impact the throughput of Data Planes being traced.
+{{site.konnect_short_name}} Debugger offer deep visibility into API traffic and serve as powerful observability tools. Under normal conditions, they add negligible latency. However, under heavy load, the Debugger may impact the throughput of Data Planes being traced.
 
 ## Traces
 
-Control Plane administrators can initiate targeted deep tracing sessions on specific Data Plane nodes. During a Debugger session, the selected Data Plane generates detailed, OpenTelemetry-compatible traces for all requests that match the defined sampling criteria. Spans are captured for the full request and response lifecycle.
+Control Plane administrators can initiate targeted deep session traces on specific Data Plane nodes. During a Debugger session, the selected Data Plane generates detailed, OpenTelemetry-compatible traces for all requests that match the defined sampling criteria. Spans are captured for the full request and response summary.
 
 These traces are visualized directly in {{site.konnect_short_name}}’s built-in span viewer—no additional instrumentation or telemetry tools are required.
 
@@ -44,7 +44,7 @@ These traces are visualized directly in {{site.konnect_short_name}}’s built-in
 * Refined traces can be captured for requests matching specific sampling criteria
 * Sampling criteria can be defined using simple expression language, for example: `http.method == GET`
 * Trace sessions are retained for up to 7 days
-* Traces are viewable in the built-in trace viewer in {{site.konnect_short_name}}
+* Traces are viewable in the built-in span viewer in {{site.konnect_short_name}}
 
 Tracing follows OpenTelemetry naming conventions for spans and attributes wherever possible, ensuring consistency and interoperability.
 
@@ -54,13 +54,13 @@ Tracing follows OpenTelemetry naming conventions for spans and attributes wherev
 
 ## Logs
 
-For deeper insights, tracing sessions can include log capture. When starting a session, administrators can enable this option to collect detailed {{site.base_gateway}} logs for its duration. These logs are automatically correlated with trace data using `trace_id` and `span_id`, offering a comprehensive view of all logs generated during a specific trace or span.
+For deeper insights, session traces can include log capture. When starting a session, administrators can enable this option to collect detailed {{site.base_gateway}} logs for its duration. These logs are automatically correlated with trace data using `trace_id` and `span_id`, offering a comprehensive view of all logs generated during a specific trace or span.
 
 ## Payload capture
 
 When troubleshooting, it's important to access the full context of each request Kong processes. Capturing request and response headers—and optionally the body—can help identify issues and pinpoint failures.
 
-Payload capture works alongside tracing. For each trace, the corresponding headers and bodies can be collected to provide full visibility into the request lifecycle.
+Payload capture works alongside tracing. For each trace, the corresponding headers and bodies can be collected to provide full visibility into the request summary.
 
 Tracing in {{site.konnect_short_name}} follows OpenTelemetry naming conventions for spans and attributes wherever possible, ensuring interoperability and consistency.
 
@@ -78,9 +78,7 @@ The sanitizer performs two main functions:
 For example: A number such as `4242-4242-4242-4242` is redacted to `*******************`
 
 
-
-
-### Logs tab in the trace viewer
+### Logs tab in the span viewer
 
 The logs tab provides a drill-down view of all logs generated during a specific trace. Spans within the trace are correlated using `trace_id` and `span_id`. You can filter logs by type, source, or span. Logs are displayed in reverse chronological order.
 
@@ -98,14 +96,14 @@ When CMEK is enabled, {{site.konnect_product_name}} uses your key to encrypt pay
 {:.info}
 > The ability to capture payloads is an opt-in feature. It requires agreement to the Advanced Feature Addendum. Contact your organization admin to enable this feature.
 
-## Reading traces in {{site.konnect_short_name}} trace viewer
+## Reading traces
 
-Traces from a Debugger session can be viewed in {{site.konnect_short_name}}'s built-in trace viewer. The viewer includes:
+Traces from a Debugger session can be viewed in {{site.konnect_short_name}}'s built-in log viewer. The viewer includes:
 
 * Summary view
-* Trace view
+* span view
 
-Use the summary view for high-level insights, and the trace view for deeper analysis.
+Use the summary view for high-level insights, and the span view for deeper analysis.
 
 ### Summary view
 
@@ -117,15 +115,15 @@ The summary view presents the full API request-response flow at a glance. It inc
 
 Use this view to understand request flow, identify performance bottlenecks, and fine-tune your configuration.
 
-### Trace view
+### Spans view
 
-The trace view provides detailed visibility into {{site.base_gateway}}’s internal behavior. It breaks down traces into spans, helping you inspect:
+The spans view provides detailed visibility into {{site.base_gateway}}’s internal behavior. It breaks down traces into spans, helping you inspect:
 
 * Internal processes and phases
 * Plugin execution and latency
 * Request and response flow
 
-Use the trace view to troubleshoot specific issues and improve performance.
+Use the spans view to troubleshoot specific issues and improve performance.
 
 ## Get started with tracing
 
@@ -152,7 +150,7 @@ Tracing with the Debugger requires the following Data Plane version and environm
 3. Click **New tracing session**.
 4. Define the sampling criteria and click **Start Session**.
 
-Once the session starts, traces will be captured. Click a trace to view it in the trace viewer.
+Once the session starts, traces will be captured. Click a trace to view it in the spans viewer.
 
 Each session runs for 5 minutes or until 200 traces are collected, whichever comes first. Sessions are retained for up to 7 days.
 
