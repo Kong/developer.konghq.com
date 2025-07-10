@@ -36,7 +36,7 @@ The plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-ty
 
 {% endif %}
 
-{% include plugins/ai-proxy/grouped-upstreams.md %}
+{% include plugins/ai-proxy/grouped-upstreams-test.md %}
 
 The following upstream URL patterns are used:
 
