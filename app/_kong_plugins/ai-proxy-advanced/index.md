@@ -62,7 +62,7 @@ examples_groups:
   - slug: multimodal-open-ai
     text: Multimodal route types for OpenAI
   - slug: openai-processing
-    text: File, batch, and realtime routes
+    text: File, batch, embeddings and realtime routes
 
 faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?

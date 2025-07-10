@@ -9,6 +9,8 @@ import {
   cleanupRuntime,
   resetRuntime,
   getRuntimeConfig,
+  afterAll,
+  beforeAll,
 } from "./runtimes.js";
 import { stopContainer, removeContainer } from "./docker-helper.js";
 import {
@@ -34,12 +36,16 @@ export async function loadConfig() {
   let results = [];
   let files = [];
   const args = minimist(process.argv.slice(2));
+  const testsConfig = await loadConfig();
   try {
-    const testsConfig = await loadConfig();
     if (args.files) {
       files = Array.isArray(args.files) ? args.files : [args.files];
     } else {
       files = await instructionFileFromConfig(testsConfig);
+    }
+    if (!process.env.KONG_LICENSE_DATA) {
+      console.error("Missing env variable KONG_LICENSE_DATA");
+      process.exit(1);
     }
     const filesByRuntime = await groupInstructionFilesByRuntime(files);
 
@@ -52,6 +58,8 @@ export async function loadConfig() {
       console.log(`Running ${runtime} tests...`);
 
       container = await setupRuntime(runtimeConfig, docker);
+
+      await beforeAll(testsConfig, container);
 
       for (const instructionFile of instructionFiles) {
         await resetRuntime(runtimeConfig, container);
@@ -66,6 +74,7 @@ export async function loadConfig() {
 
       await cleanupRuntime(runtimeConfig, container);
     }
+    await afterAll(testsConfig, container);
     await stopContainer(container);
     await removeContainer(container);
   } catch (error) {
@@ -73,6 +82,7 @@ export async function loadConfig() {
       console.error(error);
     }
 
+    await afterAll(testsConfig, container);
     await stopContainer(container);
     await removeContainer(container);
 

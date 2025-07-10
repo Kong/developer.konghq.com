@@ -85,6 +85,7 @@ Let's test that the code will terminate the request when no header is passed:
 url: '/anything'
 status_code: 401
 display_headers: true
+message: Invalid Credentials
 {% endvalidation %}
 
 You should get a `401` status code with the message `Invalid Credentials`.

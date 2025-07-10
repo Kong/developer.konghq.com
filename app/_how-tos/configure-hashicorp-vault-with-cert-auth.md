@@ -169,6 +169,8 @@ faqs:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+
+automated_tests: false
 ---
 
 ## Configure HashiCorp Vault

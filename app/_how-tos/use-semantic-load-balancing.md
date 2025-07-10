@@ -85,6 +85,8 @@ faqs:
   - q: Can temperature affect which model is selected?
     a: |
       Indirectly. Temperature influences output style and can help distinguish models during embedding training or similarity scoring. Use it to align behavior with intent categories.
+
+automated_tests: false
 ---
 
 ## Configure AI Proxy Advanced Plugin

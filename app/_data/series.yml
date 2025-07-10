@@ -20,3 +20,6 @@ gateway-k8s-on-prem-install:
 mcp-traffic:
   title: Secure, govern and observe MCP traffic with Kong AI Gateway
   url: /mcp/secure-mcp-traffic
+hashicorp-vault-llms:
+  title: Configure dynamic authentication to LLM providers
+  url: /how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/
