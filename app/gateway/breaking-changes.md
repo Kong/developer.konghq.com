@@ -58,6 +58,49 @@ Starting in 3.11.0.0, you don't need to enable WASM to run Datakit; you can enab
 
 The Datakit plugin no longer supports the `handlebars` node type.
 
+#### Known issues in 3.11.0.0
+
+The following is a list of known issues in 3.11.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: AI Gateway license migration
+    description: |
+      If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week, 
+      upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect {{site.konnect_short_name}} deployments.
+      <br><br>
+      A fix will be provided in 3.11.0.1.
+      <br><br>
+      As a temporary workaround, do the following:
+      <br><br>
+      1. On your {{site.base_gateway}} machine or in its container, create a file named `reset_license_llm_data.lua` with the following contents:
+         <br><br>
+         ```lua
+         local connector = kong.db.connector
+         local query = [[
+           TRUNCATE TABLE "public"."license_llm_data";
+         ]]
+
+         local res = connector:query(query)
+         print(require("pl.pretty").write({res}))
+         ```
+      2. Run the following CLI command to clean up the LLM usage data stored in the database:
+          <br><br>
+         ```sh
+         kong runner reset_license_llm_data.lua
+         ```
+      3. Run `kong migrations up`.
+      4. Run `kong migrations finish`.
+    status: Not fixed
+{% endtable %}
+
 ## 3.10.x breaking changes
 
 Review the [changelog](/gateway/changelog/#31000) for all the changes in this release.
@@ -308,7 +351,7 @@ configuration field to construct the request path when requesting the Azure API.
 * [**SAML**](/plugins/saml) (`saml`)
   * Adjusted the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other Consumer-based plugins.
 
-#### Known issues
+#### Known issues in 3.6.0.0
 
 The following is a list of known issues in 3.6.x that may be fixed in a future release.
 
@@ -492,7 +535,7 @@ This affects the following plugins:
 
 The `/consumer_groups/:id/overrides` endpoint has been deprecated. While this endpoint will still function, we strongly recommend transitioning to the new and improved method for managing Consumer Groups, as documented in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/) guide.
 
-#### Known issues
+#### Known issues in 3.4.0.0
 
 The following is a list of known issues in 3.4.x that may be fixed in a future release.
 
