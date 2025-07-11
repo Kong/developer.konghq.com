@@ -161,7 +161,7 @@ Using `kafkactl`, test the topic filtering.
 
    In the output, you should only see `first-topic`, without the `a-` prefix:
 
-   ```
+   ```sh
    TOPIC            PARTITIONS     REPLICATION FACTOR
    first-topic      1              1
    ```
@@ -180,13 +180,14 @@ Using `kafkactl`, test the topic filtering.
    kafkactl -C kafkactl.yaml --context direct get topics
    ```
 
-   In the output, you should see both topics with their prefixes:
+   In the output, you should see all topics with their prefixes:
 
    ```
    TOPIC              PARTITIONS     REPLICATION FACTOR
    _schemas           1              1
    a-first-topic      1              1
    b-second-topic     1              1
+   my-test-topic      1              1
    ```
    {:.no-copy-code}
 
