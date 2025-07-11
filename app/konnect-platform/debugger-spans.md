@@ -25,10 +25,9 @@ related_resources:
 ---
 
 
-## Spans
 
-The following spans are available in the {{site.konnect_short_name}} Debugger
-
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/konnect-platform/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
+The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
 <!--vale off-->
 ### kong
 
@@ -267,9 +266,9 @@ rows:
 
 ### kong.upstream.find_upstream
 A span capturing the attempt to verify a specific upstream. 
-Kong attempts to open a TCP connection (if not `KeepAlive` cache is found), do a TLS handshake and send down the HTTP headers. 
+{{site.base_gateway}} attempts to open a TCP connection (if not `KeepAlive` cache is found), do a TLS handshake and send down the HTTP headers. 
 If all of this succeeds, the upstream is healthy and Kong will finish sending the full request and wait for a response. 
-If any of the step fails, Kong will switch to the next target and try again.
+If any of the step fails, {{site.base_gateway}} will switch to the next target and try again.
 
 This span has the following attributes:
 <!--vale off-->

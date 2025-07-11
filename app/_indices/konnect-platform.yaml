@@ -39,4 +39,5 @@ sections:
     items: 
       - path: /konnect-platform/debugger/
       - path: /konnect-platform/debugger-spans/
+      - path: /konnect-platform/cmek/
 
