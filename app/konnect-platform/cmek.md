@@ -39,22 +39,22 @@ CMEK currently applies to:
 To this you must 
 
 1. [Create a **symmetric encryption key** in AWS KMS.](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html)
-1. Provide the **key ARN** to [{{site.konnect_short_name}}](cloud.konghq.com/global/organization/settings/encryption-keys/)
+1. Provide the **key ARN** to [{{site.konnect_short_name}}](https://cloud.konghq.com/global/organization/settings/encryption-keys/)
 
 ### User responsibilities
 
 When you configure CMEK, you are responsible for the following:
 
 * **Key rotation**: 
-  * AWS KMS takes care of key rotation automatically. The ARN must stay constant.
+  * AWS KMS takes care of key rotation automatically. 
   * Manual rotation with a new ARN requires updating the key in {{site.konnect_short_name}}. If the key's ARN changes, data encrypted with the previous key cannot be decrypted in {{site.konnect_short_name}}.
 * **Key revocation**: 
   * Revoking or deleting your key in AWS KMS renders associated data permanently unreadable.
 * **Performance impact**: 
   * KMS-based decryption may introduce latency during access operations.
 * **Feature limitations**: 
-  * Encrypted fields cannot be used in full-text search, filtering, or analytics
-  * Alerting features cannot inspect encrypted content
+  * Encrypted fields cannot be used in full-text search, filtering, or analytics.
+  * Alerting features cannot inspect encrypted content.
 
 
 ## Managing keys
@@ -64,7 +64,8 @@ See the following sections for information about how to manage CMEK keys.
 ### Key Rotation
 
 * Rotating keys within AWS KMS (without changing the ARN) is supported automatically.
-* If you change the ARN, you must update the key in {{site.konnect_short_name}} manually. Data encrypted with the previous key cannot be decrypted and will be lost.
+* If you change the ARN, you must update the key in {{site.konnect_short_name}} manually. 
+  * Data encrypted with the previous key cannot be decrypted and will be lost.
 
 ### Key revocation
 
@@ -81,7 +82,7 @@ To configure CMEK, you need:
 
 ### Setup Workflow
 
-1. Go to **Organization > Settings > Encryption Keys** in {{site.konnect_short_name}}.
+1. Go to [**Encryption Keys**](https://cloud.konghq.com/global/organization/settings/encryption-keys/) in {{site.konnect_short_name}}.
 1. Click **Link key**.
-1. Enter the **Key ARN**, **name**, and an optional **description**.
-1. Click **Connect** to activate CMEK.
+1. Enter the **Name**, **Amazon Resource Name**, **description**, and **Region**. 
+1. Click **Connect**. 

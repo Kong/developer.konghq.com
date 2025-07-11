@@ -155,7 +155,7 @@ To enable tracing with the Debugger, you need:
 
 Once the session starts, traces will be captured. Click a trace to view it in the spans viewer.
 
-Each session runs for 5 minutes or until 200 traces are collected, whichever comes first. Sessions are retained for up to 7 days.
+Each session can be configured to run for an amount of time between 10 seconds and 30 minutes. Sessions are retained for up to 7 days.
 
 ### Sampling rules
 

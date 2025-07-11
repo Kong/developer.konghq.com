@@ -63,6 +63,10 @@ rows:
     description: HTTP request method
   - name: "`http.request.body.size`"
     description: Request content length or equivalent in bytes
+  - name: "`proxy.kong.request.id`"
+    description: Unique id for each request
+  - name: "`proxy.kong.request.time`"
+    description: 	request time as measured by Nginx ($request_time)
   - name: "`http.request.size`"
     description: Request body size and request headers size in bytes
   - name: "`http.response.body.size`"
@@ -96,15 +100,15 @@ rows:
   - name: "`proxy.kong.latency.net_io_timings`"
     description: Array containing `ip`, `connect_time`, and `rw_time`. I/o outside of the request context is not considered.
   - name: "`proxy.kong.client_KA`"
-    description: Whether the downstream used a KeepAlive connection
+    description: Whether the downstream used a KeepAlive connection.
   - name: "`tls.resumed`"
-    description: Whether the TLS session reused
+    description: Whether the TLS session resumed.
   - name: "`tls.client.subject`"
-    description: x509 client DN (if mTLS)
+    description: x509 client DN (if mTLS).
   - name: "`tls.server.subject`"
-    description: x509 DN for cert Kong presented
+    description: x509 DN for cert Kong presented.
   - name: "`tls.cipher`"
-    description: Negotiated cipher
+    description: Negotiated cipher.
 {% endtable %}
 <!--vale on-->
 ### kong.phase.certificate
@@ -131,6 +135,8 @@ rows:
 
 {{instance_id}}
 
+## kong.tls_handshake
+A span that captures the execution of the TLS handshake between the client and Kong. This span includes any I/O operations involved in the handshake, which may be prolonged due to slow client behavior.
 
 ### kong.read_client_http_headers
 A span capturing the time taken to read HTTP headers from the client. 
@@ -270,6 +276,13 @@ A span capturing the attempt to verify a specific upstream.
 If all of this succeeds, the upstream is healthy and Kong will finish sending the full request and wait for a response. 
 If any of the step fails, {{site.base_gateway}} will switch to the next target and try again.
 
+The last of these spans (or the only one, if the first attempt succeeds) ends as soon as the connection is established, 
+ensuring that the total time captured by the parent `kong.upstream.selection` span always reflects only the time 
+spent *connecting* to the selected upstream.
+
+Depending on how the [`proxy_next_upstream`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_next_upstream) directive is configured, earlier (failed) tries may involve additional I/O. 
+For example, if retries are triggered based on the upstream’s status code or header validity, those attempts will include sending the request and reading the response status line and headers which is enough for Kong to determine whether to retry.
+
 This span has the following attributes:
 <!--vale off-->
 {% table %}
@@ -293,12 +306,13 @@ rows:
 <!--vale on-->
 
 ### kong.send_request_to_upstream
-A span capturing the time taken to finish writing the http request to upstream.
+A span capturing the time taken to write the http request to the upstream.
 This span can be used to identify network delays between Kong and an upstream.
 
 ### kong.read_headers_from_upstream
 A span capturing the time taken for the upstream to generate the response headers. 
 This span can be used to identify slowness in response generation from upstreams.
+If there is a delay after the request is sent but before the upstream starts responding, that **time to first byte** is also included in this span.
 
 ### kong.read_body_from_upstream
 A span capturing the time taken for the upstream to generate the response body. 
@@ -333,3 +347,6 @@ A span capturing the execution of a plugin configured to run in the `body_filter
 
 This span has the following attributes:
 {{instance_id}}
+
+### kong.wait_for_client_read
+A span that measures the time Kong spends finishing the response write to the client. This duration may be extended for slow-reading clients, resulting in a longer span.
