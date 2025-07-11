@@ -61,7 +61,7 @@ Secret environment variables allow you to store sensitive data locally in encryp
 
 Insomnia does not persist the vault key automatically. If you lose your vault key, you can reset it, but all stored secrets will be permanently deleted for security reasons.
 
-## Managing secrets
+### Managing secrets
 
 To store secrets:
 
@@ -69,7 +69,7 @@ To store secrets:
 1. Create a new private sub-environment within any global environment.
 1. Add your secret variable in the private sub-private environment and set its type to `Secret`.
 
-## Using secrets in scripts
+### Using secrets in scripts
 
 By default, secret variables are not exposed to scripts. To enable access:
 
