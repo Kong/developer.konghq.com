@@ -44,15 +44,6 @@ prereqs:
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl). You'll need it to interact with Kafka clusters. 
 
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Clean up {{site.event_gateway}} resources
-      include_content: cleanup/products/event-gateway
-      icon_url: /assets/icons/event.svg    
-
 automated_tests: false
 related_resources:
   - text: "{{site.event_gateway_short}} configuration schema"
@@ -128,17 +119,9 @@ virtual_clusters:
 EOF
 ```
 
-Send a basic config to the Control Plane using the `/declarative-config` endpoint:
+## Update the control plane and data plane
 
-<!--vale off-->
-{% konnect_api_request %}
-url: "/v2/control-planes/$KONNECT_CONTROL_PLANE_ID/declarative-config"
-status_code: 201
-method: PUT
-body_cmd: "$(jq -Rs '{config: .}' < knep-config.yaml)"
-{% endkonnect_api_request %}
-<!--vale on-->
-
+{% include_cached /knep/update.md %}
 
 ## Validate the cluster
 
@@ -147,7 +130,7 @@ You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster liste
 
 You can also use the `kafkactl` command to check the cluster. First, let's set up the `kafkactl` config file:
 ```shell
-cat <<EOF > kafkactl.yaml
+cat <<EOF > ~/.kafkactl/config.yml
 contexts:
   direct:
     brokers:
@@ -167,28 +150,32 @@ contexts:
   team-b:
     brokers:
       - localhost:29092
-current-context: default
+current-context: direct
 EOF
 ```
 
 Let's check the Kafka cluster directly:
 ```shell
-kafkactl config use-context direct
 kafkactl create topic a-first-topic b-second-topic b-third-topic fourth-topic
 kafkactl produce a-first-topic --value="Hello World"
 ```
+By default, it'll use the `direct` context, which is this case is a direct connection to our Kafka cluster.
 
 You should see the following response:
 ```shell
+topic created: a-first-topic
+topic created: b-second-topic
+topic created: b-third-topic
+topic created: fourth-topic
 message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
 
 Now let's check the Kafka cluster through the {{site.event_gateway_short}} proxy.
-By passing the `virtual` context, `kafkactl` will connect to Kafka through the proxy port `19092`:
+By passing the `knep` context, `kafkactl` will connect to Kafka through the proxy port `19092`:
 
 ```shell
-kafkactl -C kafkactl.yaml --context virtual list topics
+kafkactl -C kafkactl.yaml --context knep list topics
 ```
 
 You should see a list of the topics you just created:
@@ -201,3 +188,5 @@ b-third-topic      1              1
 fourth-topic       1              1
 ```
 {:.no-copy-code}
+
+You now have a Kafka cluster running with a {{site.event_gateway_short}} proxy in front. 

@@ -43,6 +43,9 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up {{site.event_gateway}} resources
+      include_content: cleanup/products/event-gateway
+      icon_url: /assets/icons/event.svg    
 
 automated_tests: false
 related_resources:
@@ -55,8 +58,8 @@ faqs:
   - q: Why are topics not appearing with a prefix?
     a: |
       Troubleshoot your configuration by checking the following:
-      * Verify the proxy configuration is loaded correctly
-      * Ensure that you're connecting through the correct proxy port (19092 for team-a, 29092 for team-b)
+      * Verify the proxy configuration is loaded correctly by checking the logs (`docker compose logs knep`), or looking at your data plane errors in {{site.konnect_short_name}}
+      * Ensure that you're connecting through the correct proxy port (in this guide, 19092 for team-a, 29092 for team-b)
       * Check that the topic filter rules are correctly configured
   - q: Why can't I access the original topic names through Kafka after configuring a prefix?
     a: |
@@ -87,7 +90,16 @@ Topic filtering is ideal for:
 Create a config file to define topic name aliases:
 
 ```yaml
-cat <<EOF > knep-topic-filtering.yaml
+cat <<EOF > knep-config.yaml
+backend_clusters:
+  - bootstrap_servers:
+      - kafka:9092
+    name: kafka-localhost
+listeners:
+  port:
+    - advertised_host: localhost
+      listen_address: 0.0.0.0
+      listen_port_start: 19092
 virtual_clusters:
   - name: team-a
     backend_cluster_name: kafka-localhost
@@ -127,16 +139,9 @@ In this configuration file, we use:
 * Original topic names preserved in the client view
 * Transparent prefix handling for clients
 
-Update the Control Plane using the `/declarative-config` endpoint:
+## Update the control plane and data plane
 
-<!--vale off-->
-{% konnect_api_request %}
-url: "/v2/control-planes/$KONNECT_CONTROL_PLANE_ID/declarative-config"
-status_code: 201
-method: PUT
-body_cmd: "$(jq -Rs '{config: .}' < knep-topic-filtering.yaml)"
-{% endkonnect_api_request %}
-<!--vale on-->
+{% include_cached /knep/update.md %}
 
 ## Validate topic filtering
 
@@ -145,32 +150,43 @@ Using `kafkactl`, test the topic filtering.
 1. Create topics directly in Kafka:
 
    ```sh
-   kafkactl config use-context direct
-   kafkactl create topic a-first-topic b-second-topic b-third-topic fourth-topic
+   kafkactl -C kafkactl.yaml --context direct create topic a-first-topic b-second-topic
    ```
 
-1. Access team-a topics through the proxy:
+1. Access topics through the proxy using the `team-a` context:
 
    ```sh
-   kafkactl config use-context team-a
-   kafkactl get topics
+   kafkactl -C kafkactl.yaml --context team-a get topics
    ```
 
-   In the output, you should only see `first-topic`, without the `a-` prefix.
+   In the output, you should only see `first-topic`, without the `a-` prefix:
+
+   ```
+   TOPIC            PARTITIONS     REPLICATION FACTOR
+   first-topic      1              1
+   ```
+   {:.no-copy-code}
 
 1. Create and consume message in the topic `first-topic`:
 
    ```sh
-   kafkactl produce first-topic --value="Hello from Team A"
-   kafkactl consume first-topic -b -e
+   kafkactl -C kafkactl.yaml --context team-a produce first-topic --value="Hello from Team A"
+   kafkactl -C kafkactl.yaml --context team-a consume first-topic -b -e
    ```
 
-You can check the same for team-b.
+1. Now, lets verify the actual topic names in Kafka:
 
-Now, lets verify the actual topic names in Kafka:
-```
-kafkactl config use-context direct
-kafkactl get topics
-```
+   ```sh
+   kafkactl -C kafkactl.yaml --context direct get topics
+   ```
 
-In the output, you should see all topics with their prefixes: `a-first-topic`, `b-second-topic`, and so on.
+   In the output, you should see both topics with their prefixes:
+
+   ```
+   TOPIC              PARTITIONS     REPLICATION FACTOR
+   _schemas           1              1
+   a-first-topic      1              1
+   b-second-topic     1              1
+   ```
+   {:.no-copy-code}
+

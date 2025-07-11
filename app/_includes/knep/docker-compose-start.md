@@ -4,7 +4,6 @@ First, we need to create a `docker-compose.yaml` file. This file will define the
 
 ```shell
 cat <<EOF > docker-compose.yaml
-version: '3'
 services:
   kafka:
     image: apache/kafka:3.9.0

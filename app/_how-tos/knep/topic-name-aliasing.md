@@ -38,12 +38,6 @@ tools:
 prereqs:
   skip_product: true
 
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-
 automated_tests: false
 related_resources:
   - text: "{{site.event_gateway_short}} configuration schema"
@@ -57,8 +51,8 @@ faqs:
   - q: Why are my topic names not transforming?
     a: |
       If your topic names aren't transforming, troubleshoot your setup by doing the following:
-      * Verify the proxy configuration is loaded correctly
-      * Ensure you're connecting through the proxy port (in this guide, port 9192)
+      * Verify the proxy configuration is loaded correctly by checking the logs (`docker compose logs knep`), or looking at your data plane errors in {{site.konnect_short_name}}
+      * Ensure you're connecting through the proxy port (in this guide, port 19092)
       * Check if the topic name matches exactly. Topic names are case-sensitive.
   - q: Why am I getting unexpected topic names?
     a: |
@@ -83,52 +77,32 @@ Topic aliasing is useful for:
 Create a config file to define topic name aliases:
 
 ```yaml
-cat <<EOF > knep-topic-aliases.yaml
+cat <<EOF > knep-config.yaml
+backend_clusters:
+  - bootstrap_servers:
+      - kafka:9092
+    name: kafka-localhost
+listeners:
+  port:
+    - advertised_host: localhost
+      listen_address: 0.0.0.0
+      listen_port_start: 19092
 virtual_clusters:
-  - name: proxy
-    backend_cluster_name: kafka-localhost
-    route_by:
-      type: port
-      port:
-        listen_start: 19092
-        min_broker_id: 1
-    authentication:
-      - type: anonymous
-        mediation:
+  - authentication:
+      - mediation:
           type: anonymous
+        type: anonymous
+    backend_cluster_name: kafka-localhost
+    name: team-a
+    route_by:
+      port:
+        min_broker_id: 1
+      type: port
     topic_rewrite:
       type: cel
       cel:
-        virtual_to_backend_expression: >
-          {
-            "Jonathan":"Jon",
-            "Katherine":"Kate",
-            "William":"Will",
-            "Elizabeth":"Liz"
-          }.has(topic.name) ? 
-          {
-            "Jonathan":"Jon",
-            "Katherine":"Kate",
-            "William":"Will",
-            "Elizabeth":"Liz"
-          }[topic.name] : topic.name
-        backend_to_virtual_expression: >
-          {
-            "Jon":"Jonathan",
-            "Kate":"Katherine",
-            "Will":"William",
-            "Liz":"Elizabeth"
-          }.has(topic.name) ? 
-          {
-            "Jon":"Jonathan",
-            "Kate":"Katherine",
-            "Will":"William",
-            "Liz":"Elizabeth"
-          }[topic.name] : topic.name
-backend_clusters:
-  - name: kafka-localhost
-    bootstrap_servers:
-      - localhost:9092
+        virtual_to_backend_expression: 'topic.name == "Jonathan" ? "Jon" : topic.name'
+        backend_to_virtual_expression: 'topic.name == "Jon" ? "Jonathan" : topic.name'
 EOF
 ```
 In this configuration file, we use:
@@ -137,33 +111,28 @@ In this configuration file, we use:
 * Fallback to original name if no mapping exists
 * Transparent transformation for clients
 
-Update the Control Plane using the `/declarative-config` endpoint:
+## Update the control plane and data plane
 
-<!--vale off-->
-{% konnect_api_request %}
-url: "/v2/control-planes/$KONNECT_CONTROL_PLANE_ID/declarative-config"
-status_code: 201
-method: PUT
-body_cmd: "$(jq -Rs '{config: .}' < knep-topic-aliases.yaml)"
-{% endkonnect_api_request %}
-<!--vale on-->
+{% include_cached /knep/update.md %}
 
 ## Validate topic name aliasing
 
 Using `kafkactl`, test the topic aliasing.
 
-First, create and use topics with full names:
+First, create a topic through the proxy using the full name `Jonathan`:
 
 ```sh
-kafkactl config use-context virtual
-kafkactl create topic Jonathan
-kafkactl produce Jonathan --value="Hello World"
-kafkactl consume Jonathan
+kafkactl -C kafkactl.yaml --context knep create topic Jonathan
+```
+
+Check the topic in `knep`:
+
+```sh
+kafkactl -C kafkactl.yaml --context knep list topics
 ```
 
 Then, verify the actual topic name in Kafka:
 ```sh
-kafkactl config use-context direct
-kafkactl list topics
+kafkactl -C kafkactl.yaml --context direct list topics
 ```
 If aliasing is working, you should see `Jon` instead of `Jonathan` in the output.
