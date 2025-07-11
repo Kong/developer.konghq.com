@@ -26,7 +26,7 @@ faqs:
 ## Benefits of CMEK
 
 * **Regulatory compliance** with standards such as HIPAA, GDPR, and PCI-DSS
-* **Exclusive decryption access** {{site.base_gateway}} cannot access unencrypted data without your key
+* **Exclusive decryption access** Encrypted data can't be accessed without a key.
 * **Instant revocation** removing the key from AWS KMS makes encrypted data in {{site.konnect_short_name}} unreadable
 
 ## CMEK scope in {{site.konnect_short_name}}
@@ -36,12 +36,10 @@ CMEK currently applies to:
 * Payloads captured through [the {{site.konnect_short_name}} Debugger](/konnect-platform/debugger/)
 * Request logs stored in Debugger workflows
 
-The steps required are: 
+To this you must 
 
-1. Create a **symmetric encryption key** in AWS KMS.
-1. Provide the **key ARN** to {{site.konnect_short_name}} through the UI.
-1. {{site.konnect_short_name}} encrypts specified data using the key during write operations.
-1. Decryption occurs via AWS KMS at read time, contingent on key availability.
+1. [Create a **symmetric encryption key** in AWS KMS.](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html)
+1. Provide the **key ARN** to [{{site.konnect_short_name}}](cloud.konghq.com/global/organization/settings/encryption-keys/)
 
 ### User responsibilities
 
