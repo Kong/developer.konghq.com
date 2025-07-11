@@ -1,7 +1,7 @@
 ---
 title: Kong Manager with LDAP
 
-description: Bind authentication for Kong Manager admins to an organization’s service directory, and set up autheticated group mapping.
+description: Bind authentication for Kong Manager admins to an organization’s service directory, and set up authenticated group mapping.
 content_type: reference
 layout: reference
 products:
@@ -82,7 +82,7 @@ For more information about the values, see the [RBAC](/gateway/entities/rbac/) r
 
 Enable RBAC and LDAP auth for Kong Manager by updating your `kong.conf` file with the following configuration.
 Replace any values with your own as needed. 
-At minimum, set a session secret in `admin_gui_session_conf` and replace replace all values marked with `YOUR-` with literal values from your service directory:
+At minimum, set a session secret in `admin_gui_session_conf` and replace all values marked with `YOUR-` with literal values from your service directory:
 
 ```
 enforce_rbac = on
@@ -120,7 +120,7 @@ kong restart
 {% endnavtab %}
 {% endnavtabs %}
 
-Next, to start using LDAP auth, either [invite admins manually](/gateway/entities/admin/) or set up [authenticated group mapping](#ldap-authenticated-group-mapping).
+Next, to start using LDAP auth, set up [authenticated group mapping](#ldap-authenticated-group-mapping).
 
 ### Recommendations to enhance session security
 
@@ -139,7 +139,7 @@ Using Kong’s [LDAP Auth Advanced plugin](/plugins/ldap-auth-advanced/), you ca
 
 Here's how service directory mapping works in {{site.base_gateway}}:
 
-* Roles are created in Kong Gateway using the Admin API or Kong Manager.
+* Roles are created in {{site.base_gateway}} using the Admin API or Kong Manager.
 * Groups are created and roles are associated with the groups.
 * When users log in to Kong Manager, they get permissions based on the groups they belong to.
 
@@ -149,9 +149,16 @@ The mapping removes the task of manually managing access in {{site.base_gateway}
 If an admin’s group changes in the directory, their Kong admin account’s associated role also changes in {{site.base_gateway}} the next time they log in to Kong Manager. 
 Don't assign or unassign admin roles in {{site.base_gateway}} manually, as any changes will be overwritten by the directory during the next login.
 
-### Set up authenticated group mapping
+### Service directory mapping workflows
 
-The following examples show you how to set up LDAP authenticated group mapping for Kong Manager.
+The following examples show you how to set up LDAP authenticated group mapping for Kong Manager, then create admins in Kong Manager and map them to service directory groups.
+
+Alternatively, you could also choose one of the following workflows:
+* Start {{site.base_gateway}} with RBAC turned off, map a group to the Super Admin role, and then create an admin to correspond to a user belonging to that group. 
+This approach ensures that the Super Admin's privileges are entirely tied to the directory group, whereas bootstrapping a Super Admin only uses the directory for authentication.
+* Create all admin accounts for matching directory users first and ensure that their existing groups map to appropriate roles before enforcing RBAC.
+
+### Set up authenticated group mapping
 
 Review [supported configuration options](#supported-configuration-options) to customize the configuration stored in `admin_gui_auth_conf` and `admin_gui_session_conf`.
 
@@ -296,7 +303,7 @@ properties to the file.
     ```
    Review the [supported configuration options](#supported-configuration-options) to customize any configuration.
 
-1. Restart {{site.base_gateway}} to apply the file.
+1. Restart {{site.base_gateway}} to apply the file:
 
     ```sh
     kong restart -c /path/to/kong.conf
@@ -334,15 +341,21 @@ The groups in the service directory are then automatically matched to the associ
 
 #### User-admin mapping
 
-To map a service directory user to a Kong admin, map the admin's username to the `name` value corresponding to the attribute configured in `admin_gui_auth_conf`. 
-See [Admins](/gateway/entities/admin/) for more information on creating admins in Kong Manager.
-
-If you already have admins in Kong Manager with assigned roles and want to use group mapping instead, you have to remove all of their roles first.
+To map a service directory user to a {{site.base_gateway}} admin, map the admin's username or custom ID to the DN value corresponding to the attribute configured in `admin_gui_auth_conf`.
+If you already have admins in Kong Manager with assigned roles and want to use LDAP group mapping instead, remove all of their roles first.
 The service directory will serve as the system of record for user privileges. 
 
-We recommend pairing the [bootstrapped Super Admin](/how-to/create-a-super-admin/) with a directory user as the first Super Admin.
-The example shows an attribute configured with a unique identifier (UID), and the directory user you want to make the Super Admin has a distinguished name (DN) entry of `UID=example-user`:
+For example, let's assume that:
+* LDAP config on Kong side: 
+  * `consumer_by` is set to `username`
+  * `group_member_attribute` is `UID`
+* Service directory user: `UID=example-user`
 
+In this case, you would match the Kong admin's username attribute to the UID in the service directory, which is `example-user`.
+
+We recommend pairing the [bootstrapped Super Admin](/how-to/create-a-super-admin/) with a directory user as the first Super Admin. Using our example values, that would look like this:
+
+<!--vale off-->
 {% control_plane_request %}
 url: admins/kong_admin
 method: PATCH
@@ -350,17 +363,16 @@ headers:
   - 'Content-Type: application/json'
   - 'Kong-Admin-Token: $RBAC_TOKEN'
 body:
-  username: example_user
+  username: example-user
 {% endcontrol_plane_request %}
+<!--vale on-->
 
-This user will be able to log in, but until you map a group belonging to `example-user` to a role, the user will only use the directory for authentication. 
-Once you map the Super Admin role to a group that `example-user` is in, then you can delete the Super Admin role from the `example-user` admin. 
-The group you pick needs to be “super” in your directory, otherwise as other admins log in with a generic group, for example the “employee” group, they will also become Super Admins.
+After creating this admin, map the `super-admin` role to a group that `example-user` is in on the LDAP directory side, 
+then delete the `super-admin` role from the `example-user` admin on the {{site.base_gateway}} side.
+The group you pick needs to have "super" privileges in your service directory, otherwise as other admins log in with a generic group, they will also become Super Admins.
 
 {:.warning}
-> **Important**: If you delete the Super Admin role from your only admin, and have not yet mapped the Super Admin role to a group that admin belongs to, then you will not be able to log in to Kong Manager.
+> **Important**: If you delete the Super Admin role from your only admin, and have not yet mapped the Super Admin role to a group that admin belongs to, 
+then you won't be able to log in to Kong Manager.
 
-Alternative workflows:
-* Start Kong with RBAC turned off, map a group to the Super Admin role, and then create an admin to correspond to a user belonging to that group. 
-Doing so ensures that the Super Admin's privileges are entirely tied to the directory group, whereas bootstrapping a Super Admin only uses the directory for authentication.
-* Create all admin accounts for matching directory users and ensure that their existing groups map to appropriate roles before enforcing RBAC.
+See [Admins](/gateway/entities/admin/) for more information on creating admins in Kong Manager.

@@ -1,7 +1,7 @@
 ---
 title: Kong Manager with OpenID Connect
 
-description: Bind authentication for Kong Manager admins to an organization’s OpenID Connect identity provider, and set up autheticated group mapping.
+description: Bind authentication for Kong Manager admins to an organization’s OpenID Connect identity provider, and set up authenticated group mapping.
 content_type: reference
 layout: reference
 products:
