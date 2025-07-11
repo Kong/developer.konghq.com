@@ -8,11 +8,11 @@ components:
             required: true
             schema:
                 type: string
-        AdminIdOrUsername:
-            description: ID or username of the Admin to lookup
+        AdminId:
+            description: ID of the Admin to lookup
             example: ""
             in: path
-            name: AdminIdOrUsername
+            name: AdminId
             required: true
             schema:
                 type: string
@@ -87,11 +87,11 @@ components:
             required: true
             schema:
                 type: string
-        GroupIdOrId:
-            description: ID or id of the Group to lookup
+        GroupId:
+            description: ID of the Group to lookup
             example: ""
             in: path
-            name: GroupIdOrId
+            name: GroupId
             required: true
             schema:
                 type: string
@@ -12660,12 +12660,12 @@ paths:
             summary: Invite an Admin
             tags:
                 - Admins
-    /admins/{AdminIdOrUsername}:
+    /admins/{AdminId}:
         delete:
             description: Delete a Admin
             operationId: delete-admin
             parameters:
-                - $ref: '#/components/parameters/AdminIdOrUsername'
+                - $ref: '#/components/parameters/AdminId'
             responses:
                 "204":
                     description: Successfully deleted Admin or the resource didn't exist
@@ -12675,7 +12675,7 @@ paths:
             tags:
                 - Admins
         get:
-            description: Get a Admin using ID or username.
+            description: Get a Admin using ID.
             operationId: get-admin
             responses:
                 "200":
@@ -12692,7 +12692,7 @@ paths:
             tags:
                 - Admins
         parameters:
-            - $ref: '#/components/parameters/AdminIdOrUsername'
+            - $ref: '#/components/parameters/AdminId'
         patch:
             description: Update a Admin
             operationId: update-admin
@@ -12718,7 +12718,7 @@ paths:
             tags:
                 - Admins
         put:
-            description: Create or Update Admin using ID or username.
+            description: Create or Update Admin using ID.
             operationId: upsert-admin
             requestBody:
                 content:
@@ -15700,12 +15700,12 @@ paths:
             summary: Create a new group
             tags:
                 - Groups
-    /groups/{GroupIdOrId}:
+    /groups/{GroupId}:
         delete:
             description: Delete a Group
             operationId: delete-group
             parameters:
-                - $ref: '#/components/parameters/GroupIdOrId'
+                - $ref: '#/components/parameters/GroupId'
             responses:
                 "204":
                     description: Successfully deleted Group or the resource didn't exist
@@ -15715,7 +15715,7 @@ paths:
             tags:
                 - Groups
         get:
-            description: Get a Group using ID or id.
+            description: Get a Group using ID.
             operationId: get-group
             responses:
                 "200":
@@ -15732,7 +15732,7 @@ paths:
             tags:
                 - Groups
         parameters:
-            - $ref: '#/components/parameters/GroupIdOrId'
+            - $ref: '#/components/parameters/GroupId'
         patch:
             description: Update a Group
             operationId: update-group
@@ -15758,7 +15758,7 @@ paths:
             tags:
                 - Groups
         put:
-            description: Create or Update Group using ID or id.
+            description: Create or Update Group using ID.
             operationId: upsert-group
             requestBody:
                 content:
