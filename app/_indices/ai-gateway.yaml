@@ -11,6 +11,9 @@ sections:
       - title: AI Gateway Capabilities
         description: Learn about the core capabilities of AI Gateway.
         url: /ai-gateway/#ai-gateway-capabilities
+      - title: AI providers
+        description: Learn about the various providers supported by AI Gateway.
+        url: /ai-gateway/ai-providers/
       - title: AI Usage Governance
         description: Understand how to manage and govern AI usage effectively.
         url: /ai-gateway/#ai-usage-governance
@@ -38,69 +41,6 @@ sections:
       - title: Advanced Analytics
         description: Access advanced analytics features in AI Gateway.
         url: /advanced-analytics/
-  - title: AI providers
-    items:
-      - path: /ai-gateway/ai-providers/**
-      - title: Anthropic Chat Route - AI Proxy Advanced
-        description: Set up Anthropic chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/anthropic-chat-route/
-      - title: Azure AI with Managed Identity - AI Proxy Advanced
-        description: Connect Azure AI services using Managed Identity through the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy/examples/azure-ai-with-managed-identity/
-      - title: Azure Chat Route - AI Proxy Advanced
-        description: Configure Azure chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/azure-chat-route/
-      - title: Bedrock Chat Route - AI Proxy Advanced
-        description: Set up Bedrock chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/bedrock-chat-route/
-      - title: Cohere Chat Route - AI Proxy Advanced
-        description: Integrate Cohere chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/cohere-chat-route/
-      - title: Gemini Chat Route - AI Proxy Advanced
-        description: Configure Gemini chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/gemini-chat-route/
-      - title: Hugging Face Chat Route - AI Proxy Advanced
-        description: Set up Hugging Face chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/huggingface-chat-route/
-      - title: Llama 2 Chat Route - AI Proxy Advanced
-        description: Integrate Llama 2 chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/llama2-chat-route/
-      - title: Mistral Chat Route - AI Proxy Advanced
-        description: Set up Mistral chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/mistral-chat-route/
-      - title: OpenAI Chat Route - AI Proxy Advanced
-        description: Configure OpenAI chat routing with the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/openai-chat-route/
-      - title: Anthropic Chat Route - AI Proxy
-        description: Set up Anthropic chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/anthropic-chat-route/
-      - title: Azure AI with Managed Identity - AI Proxy
-        description: Connect Azure AI services using Managed Identity through the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/azure-ai-with-managed-identity/
-      - title: Azure Chat Route - AI Proxy
-        description: Configure Azure chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/azure-chat-route/
-      - title: Bedrock Chat Route - AI Proxy
-        description: Set up Bedrock chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/bedrock-chat-route/
-      - title: Cohere Chat Route - AI Proxy
-        description: Integrate Cohere chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/cohere-chat-route/
-      - title: Gemini Chat Route - AI Proxy
-        description: Configure Gemini chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/gemini-chat-route/
-      - title: Hugging Face Chat Route - AI Proxy
-        description: Set up Hugging Face chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/huggingface-chat-route/
-      - title: Llama 2 Chat Route - AI Proxy
-        description: Integrate Llama 2 chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/llama2-chat-route/
-      - title: Mistral Chat Route - AI Proxy
-        description: Set up Mistral chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/mistral-chat-route/
-      - title: OpenAI Chat Route - AI Proxy
-        description: Configure OpenAI chat routing with the AI Proxy plugin.
-        url: /plugins/ai-proxy/examples/openai-chat-route/
   - title: AI Gateway plugins
     items:
       - path: /plugins/?category=ai
@@ -118,77 +58,6 @@ sections:
       - path: /plugins/ai-sanitizer/
       - path: /plugins/ai-prompt-compressor/
       - path: /plugins/ai-aws-guardrails/
-  - title: Plugin configuration reference
-    items:
-      - path: /plugins/ai-prompt-decorator/reference/**/*
-      - path: /plugins/ai-prompt-guard/reference/**/*
-      - path: /plugins/ai-prompt-template/reference/**/*
-      - path: /plugins/ai-proxy/reference/**/*
-      - path: /plugins/ai-proxy-advanced/reference/**/*
-      - path: /plugins/ai-rag-injector/reference/**/*
-      - path: /plugins/ai-rate-limiting-advanced/reference/**/*
-      - path: /plugins/ai-request-transformer/reference/**/*
-      - path: /plugins/ai-response-transformer/reference/**/*
-      - path: /plugins/ai-semantic-prompt-guard/reference/**/*
-      - path: /plugins/ai-sanitizer/reference/**/*
-      - path: /plugins/ai-prompt-compressor/reference/**/*
-      - path: /plugins/ai-aws-guardrails/reference/**/*
-  - title: Plugin configuration examples
-    items:
-      - path: /plugins/ai-prompt-decorator/examples/**/*
-      - path: /plugins/ai-prompt-guard/examples/**/*
-      - path: /plugins/ai-prompt-template/examples/**/*
-      - path: /plugins/ai-proxy/examples/**/*
-      - path: /plugins/ai-proxy-advanced/examples/**/*
-      - path: /plugins/ai-rag-injector/examples/**/*
-      - path: /plugins/ai-rate-limiting-advanced/examples/**/*
-      - path: /plugins/ai-request-transformer/examples/**/*
-      - path: /plugins/ai-response-transformer/examples/**/*
-      - path: /plugins/ai-semantic-prompt-guard/examples/**/*
-      - path: /plugins/ai-sanitizer/examples/**/*
-      - path: /plugins/ai-prompt-compressor/**/*
-      - path: /plugins/ai-aws-guardrails/**/*
-  - title: Plugin changelogs
-    items:
-      - title: AI Prompt Decorator Changelog
-        description: See the latest updates and improvements for the AI Prompt Decorator plugin.
-        url: /plugins/ai-prompt-decorator/changelog/
-      - title: AI Prompt Guard Changelog
-        description: See the latest updates and improvements for the AI Prompt Guard plugin.
-        url: /plugins/ai-prompt-guard/changelog/
-      - title: AI Prompt Template Changelog
-        description: See the latest updates and improvements for the AI Prompt Template plugin.
-        url: /plugins/ai-prompt-template/changelog/
-      - title: AI Proxy Changelog
-        description: See the latest updates and improvements for the AI Proxy plugin.
-        url: /plugins/ai-proxy/changelog/
-      - title: AI Proxy Advanced Changelog
-        description: See the latest updates and improvements for the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/changelog/
-      - title: AI RAG Injector Changelog
-        description: See the latest updates and improvements for the AI RAG Injector plugin.
-        url: /plugins/ai-rag-injector/changelog/
-      - title: AI Rate Limiting Advanced Changelog
-        description: See the latest updates and improvements for the AI Rate Limiting Advanced plugin.
-        url: /plugins/ai-rate-limiting-advanced/changelog/
-      - title: AI Request Transformer Changelog
-        description: See the latest updates and improvements for the AI Request Transformer plugin.
-        url: /plugins/ai-request-transformer/changelog/
-      - title: AI Response Transformer Changelog
-        description: See the latest updates and improvements for the AI Response Transformer plugin.
-        url: /plugins/ai-response-transformer/changelog/
-      - title: AI Semantic Prompt Guard Changelog
-        description: See the latest updates and improvements for the AI Semantic Prompt Guard plugin.
-        url: /plugins/ai-semantic-prompt-guard/changelog/
-      - title: AI Sanitizer Changelog
-        description: See the latest updates and improvements for the AI Sanitizer plugin.
-        url: /plugins/ai-sanitizer/changelog/
-      - title: AI Prompt Compressor Changelog
-        description: See the latest updates and improvements for the AI Prompt Compressor plugin.
-        url: /plugins/ai-prompt-compressor/changelog/
-      - title: AI AWS Guardrails Changelog
-        description: See the latest updates and improvements for the AI AWS Guardrails plugin.
-        url: /plugins/ai-aws-guardrails/changelog/
   - title: MCP traffic gateway
     items:
       - path: /mcp/
@@ -209,6 +78,9 @@ sections:
         url: /mcp/kong-mcp/tools/
   - title: AI load balancing
     items:
+      - title: Load balancing with AI Proxy Advanced
+        description: Overview of load balancing and retry and fallback strategies in the AI Proxy Advanced plugin.
+        url: /ai-gateway/load-balancing/
       - title: Consistent Hashing - AI Proxy Advanced
         description: Set up consistent hashing for load balancing.
         url: /plugins/ai-proxy-advanced/examples/consistent-hashing/
