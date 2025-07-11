@@ -20,11 +20,11 @@ rows:
             config:
               blocks:
                 - type: text
-                  text: | 
+                  text: |
                     The core of [AI Gateway](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
-      
+
                 - type: unordered_list
-                  items: 
+                  items:
                     - Client applications are shielded from AI provider API specifics, promoting code reusability
                     - Centralized AI provider credential management
                     - The AI Gateway gives developers and organizations a central point of governance and observability over AI data and usage
@@ -108,9 +108,9 @@ rows:
             config:
               blocks:
                 - type: text
-                  text: | 
-                    The following providers are supported by the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins. 
-                    Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types. 
+                  text: |
+                    The following providers are supported by the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins.
+                    Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types.
                     See the plugins documentation for more details.
   - header:
       type: h3
@@ -146,7 +146,7 @@ rows:
               plugins:
                 - ai-proxy
                 - ai-proxy-advanced
-              tags: 
+              tags:
                 - openai
               quantity: 3
               allow_empty: true
@@ -185,7 +185,7 @@ rows:
   #             plugins:
   #               - ai-proxy
   #               - ai-proxy-advanced
-  #             tags: 
+  #             tags:
   #               - azure-ai
   #             quantity: 3
   #             allow_empty: true
@@ -224,7 +224,7 @@ rows:
   #             plugins:
   #               - ai-proxy
   #               - ai-proxy-advanced
-  #             tags: 
+  #             tags:
   #               - bedrock
   #             quantity: 3
   #             allow_empty: true
@@ -263,7 +263,7 @@ rows:
   #             plugins:
   #               - ai-proxy
   #               - ai-proxy-advanced
-  #             tags: 
+  #             tags:
   #               - gemini
   #             quantity: 3
   #             allow_empty: true
@@ -302,7 +302,7 @@ rows:
               plugins:
                 - ai-proxy
                 - ai-proxy-advanced
-              tags: 
+              tags:
                 - anthropic
               quantity: 3
               allow_empty: true
@@ -341,7 +341,7 @@ rows:
   #             plugins:
   #               - ai-proxy
   #               - ai-proxy-advanced
-  #             tags: 
+  #             tags:
   #               - cohere
   #             quantity: 3
   #             allow_empty: true
@@ -380,7 +380,7 @@ rows:
   #             plugins:
   #               - ai-proxy
   #               - ai-proxy-advanced
-  #             tags: 
+  #             tags:
   #               - hugging-face
   #             quantity: 3
   #             allow_empty: true
@@ -409,20 +409,20 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/llama2-chat-route/
               align: end
               text: Configuration example
-  # - header:
-  #     type: h4
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             plugins:
-  #               - ai-proxy
-  #               - ai-proxy-advanced
-  #             tags: 
-  #               - llama
-  #             quantity: 3
-  #             allow_empty: true
+  - header:
+      type: h4
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags:
+                - llama
+              quantity: 3
+              allow_empty: true
 
   - header:
       type: h3
@@ -458,7 +458,7 @@ rows:
   #             plugins:
   #               - ai-proxy
   #               - ai-proxy-advanced
-  #             tags: 
+  #             tags:
   #               - mistral
   #             quantity: 3
   #             allow_empty: true
