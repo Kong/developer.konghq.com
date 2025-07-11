@@ -6,7 +6,7 @@ title: Block requests or responses that violates guardrails policies
 weight: 900
 
 requirements: 
-  - You have an AWS Bedrock Guradrails policy and access to AWS Bedrock Guradrails service.
+  - You have an AWS Bedrock Guardrails policy and access to AWS Bedrock Guardrails service.
   - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
 
 variables:
