@@ -206,10 +206,10 @@ data:
 If using dynamic ordering, manually test all configurations, and handle this feature with care. 
 There are a number of considerations that can affect your environment:
 
-* **Consumer scoping**: If you have [Consumer-scoped plugins](#scoping-plugins) anywhere in your Workspace or Control Plane, you can't use dynamic plugin ordering.
+* **Consumer and Consumer Group scoping**: If you have [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or Control Plane, you can't use dynamic plugin ordering. 
 
   Consumer mapping and dynamic plugin ordering both run in the `access` phase, but the order of the  plugins must be determined after Consumer mapping has happened.
-  {{site.base_gateway}} can't reliably change the order of the plugins in relation to mapped Consumers.
+  {{site.base_gateway}} can't reliably change the order of the plugins in relation to mapped Consumers or Consumer Groups.
 
 * **Cascading deletes**: Detecting if a plugin has a dependency to a deleted plugin isn't supported, so handle your configuration with care.
 
