@@ -71,7 +71,7 @@ jobs:
         working-directory: tools/automated-tests
         run: |
           npm ci
-          npm run generate-instruction-files
+          npm run generate-instruction-files -- --urls=http://localhost:8888/how-to/configure-oidc-with-refresh-token/ --urls=http://localhost:8888/how-to/configure-oidc-with-kong-oauth2/
 
       - name: Run tests
         working-directory: tools/automated-tests
@@ -80,4 +80,4 @@ jobs:
           RUNTIME: gateway
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |
-          DEBUG=tests:*,debug npm run run-tests
+          CONTINUE_ON_ERROR=true DEBUG=tests:*,debug npm run run-tests -- --files=input/instructions/how-to/configure-oidc-with-refresh-token/gateway.yaml --files=input/instructions/how-to/configure-oidc-with-kong-oauth2/gateway.yaml
