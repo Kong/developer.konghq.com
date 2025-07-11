@@ -71,7 +71,7 @@ rows:
             icon: /assets/icons/code.svg
             cta:
               text: Learn more
-              url: /insomnia/environment-variables/
+              url: /insomnia/environments/
 
   - columns:
       - blocks:

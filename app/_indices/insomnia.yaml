@@ -77,7 +77,7 @@ sections:
       - path: /inso-cli/
       - path: /insomnia/accounts/
       - path: /insomnia/allowlist/
-      - path: /insomnia/environment-variables/
+      - path: /insomnia/environments/
       - path: /insomnia/manage-insomnia/
       - path: /insomnia/sbom/
       - path: /insomnia/organizations/

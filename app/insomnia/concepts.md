@@ -42,9 +42,14 @@ For more details, see [Use the Collection Runner](/how-to/use-the-collection-run
 ## Template tag
 A template tag is a type of variable that you can use to reference or transform values. You can reuse an element from a request or a response, get the current timestamp, encode a value, prompt the user for an input value, etc.
 
+For more details, see [Template tags](/insomnia/template-tags/).
 
 ## Pre-request script
 A pre-request script is a feature in a collection that allows you to define actions to perform before running a request. For example, you can set a variable, add a query parameter, remove a header, etc. Once you send the request, the pre-request script runs before the request is actually sent. The results of the script are displayed in the console.
 
+For more details, see [Pre-request scripts](/insomnia/scripts/#pre-request-scripts).
+
 ## After-response script
 An after-response script is a feature in a collection that allows you to define actions to perform after receiving the response to a request. For example, you can get the response body, check for data types, clear a variable, etc. The results of the script are displayed in the console.
+
+For more details, see [After-response scripts](/insomnia/scripts/#after-response-scripts).

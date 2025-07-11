@@ -144,7 +144,7 @@ WebSocket messages can be sent in JSON or raw formats, and received messages app
 
 ## Environment variables and limitations
 
-Insomnia 2022.6 adds support for [environment variables](/insomnia/environment-variables/) and Nunjucks template tags in WebSocket URLs and message bodies.
+Insomnia 2022.6 adds support for [environment variables](/insomnia/environments/) and Nunjucks template tags in WebSocket URLs and message bodies.
 
 Limitations include:
 
