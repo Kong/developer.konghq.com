@@ -156,17 +156,14 @@ EOF
 
 Let's check the Kafka cluster directly:
 ```shell
-kafkactl create topic a-first-topic b-second-topic b-third-topic fourth-topic
-kafkactl produce a-first-topic --value="Hello World"
+kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
+kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"
 ```
-By default, it'll use the `direct` context, which is this case is a direct connection to our Kafka cluster.
+It'll use the `direct` context, which is this case is a direct connection to our Kafka cluster.
 
 You should see the following response:
 ```shell
-topic created: a-first-topic
-topic created: b-second-topic
-topic created: b-third-topic
-topic created: fourth-topic
+topic created: my-test-topic
 message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
@@ -182,10 +179,7 @@ You should see a list of the topics you just created:
 ```shell
 TOPIC              PARTITIONS     REPLICATION FACTOR
 _schemas           1              1
-a-first-topic      1              1
-b-second-topic     1              1
-b-third-topic      1              1
-fourth-topic       1              1
+my-test-topic      1              1
 ```
 {:.no-copy-code}
 
