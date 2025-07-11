@@ -185,8 +185,9 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 }
 
 export async function generateInstructionFiles(urlsToTest, config) {
-  const browser = await puppeteer.launch({});
-
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   try {
     await browser
       .defaultBrowserContext()
