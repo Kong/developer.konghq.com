@@ -80,4 +80,4 @@ jobs:
           RUNTIME: gateway
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |
-          CONTINUE_ON_ERROR=true DEBUG=tests:*,debug npm run run-tests -- --files=input/instructions/how-to/configure-oidc-with-kong-oauth2/gateway.yaml --files=input/instructions/how-to/configure-oidc-with-kong-oauth2/gateway.yaml --files=input/instructions/how-to/configure-oidc-with-refresh-token/gateway.yaml --files=input/instructions/how-to/configure-oidc-with-refresh-token/gateway.yaml
+          CONTINUE_ON_ERROR=true DEBUG=tests:*,debug npm run run-tests -- --files=input/instructions/how-to/configure-oidc-with-refresh-token/gateway.yaml --files=input/instructions/how-to/configure-oidc-with-refresh-token/gateway.yaml
