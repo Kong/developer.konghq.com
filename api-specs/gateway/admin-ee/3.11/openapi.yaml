@@ -8,6 +8,14 @@ components:
             required: true
             schema:
                 type: string
+        AdminIdOrUsername:
+            description: ID or username of the Admin to lookup
+            example: ""
+            in: path
+            name: AdminIdOrUsername
+            required: true
+            schema:
+                type: string
         BasicAuthId:
             description: ID of the Basic-auth credential to lookup
             example: 80db1b58-ca7c-4d21-b92a-64eb07725872
@@ -76,6 +84,14 @@ components:
             example: ""
             in: path
             name: Degraphql_routeIdOrName
+            required: true
+            schema:
+                type: string
+        GroupIdOrId:
+            description: ID or id of the Group to lookup
+            example: ""
+            in: path
+            name: GroupIdOrId
             required: true
             schema:
                 type: string
@@ -3298,6 +3314,67 @@ components:
             required:
                 - group
             type: object
+        Admin:
+            additionalProperties: false
+            example:
+                consumer: 8d90c6f4-12b4-4f86-9f56-7a8b8d4e9c1a
+                created_at: 1.706598432e+09
+                custom_id: custom-123
+                email: admin@example.com
+                id: 3f1c2a59-4b7d-4e96-bd7f-6a5b5f6c1e22
+                rbac_token_enabled: true
+                rbac_user: 26e7cb9f-9fcd-40de-a4d7-5f6c89d1e8a3
+                status: active
+                updated_at: 1.706684832e+09
+                username: admin_user
+                username_lower: admin_user
+            properties:
+                consumer:
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                custom_id:
+                    nullable: true
+                    type: string
+                email:
+                    nullable: true
+                    type: string
+                id:
+                    nullable: true
+                    type: string
+                rbac_token_enabled:
+                    default: true
+                    nullable: true
+                    type: boolean
+                rbac_user:
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                status:
+                    default: 4
+                    nullable: true
+                    type: integer
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+                username:
+                    nullable: true
+                    type: string
+                username_lower:
+                    nullable: true
+                    type: string
+            type: object
         BasicAuth:
             additionalProperties: false
             example:
@@ -3647,6 +3724,34 @@ components:
             required:
                 - message
                 - status
+            type: object
+        Group:
+            additionalProperties: false
+            example:
+                comment: This is an example comment for the group.
+                created_at: 1.706598432e+09
+                id: d4e7f2c9-8a7b-4e89-b3a1-9c3d6f1e5b92
+                name: example-group
+                updated_at: 1.706684832e+09
+            properties:
+                comment:
+                    nullable: true
+                    type: string
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                id:
+                    nullable: true
+                    type: string
+                name:
+                    type: string
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+            required:
+                - name
             type: object
         HMACAuth:
             additionalProperties: false
@@ -4608,6 +4713,72 @@ components:
                     type: integer
             required:
                 - name
+            type: object
+        RbacUser:
+            properties:
+                comment:
+                    description: Any comments associated with the user.
+                    type: string
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    type: integer
+                enabled:
+                    description: Whether or not the user has RBAC enabled.
+                    type: boolean
+                id:
+                    format: uuid
+                    type: string
+                name:
+                    description: The name of the user.
+                    type: string
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    type: integer
+                user_token:
+                    description: The RBAC user token.
+                    format: password
+                    type: string
+                user_token_ident:
+                    description: The user token identifier.
+                    type: string
+            required:
+                - name
+                - enabled
+            type: object
+        RbacUserGroup:
+            properties:
+                group:
+                    description: The group assigned to the user.
+                    format: uuid
+                    type: string
+                user:
+                    description: The RBAC user associated with the group.
+                    format: uuid
+                    type: string
+            required:
+                - user
+                - group
+            type: object
+        RbacUserRole:
+            properties:
+                role:
+                    description: The RBAC role assigned to the user.
+                    format: uuid
+                    type: string
+                role_source:
+                    default: local
+                    description: The origin of the RBAC user role.
+                    enum:
+                        - local
+                        - idp
+                    type: string
+                user:
+                    description: The RBAC user associated with the role.
+                    format: uuid
+                    type: string
+            required:
+                - user
+                - role
             type: object
         Route:
             oneOf:
@@ -9427,7 +9598,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the new KeySet for creation
-                required: true
             responses:
                 "201":
                     content:
@@ -9537,7 +9707,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the KeySet
-                required: true
             responses:
                 "200":
                     content:
@@ -12489,6 +12658,85 @@ paths:
                 "409":
                     description: Conflict
             summary: Invite an Admin
+            tags:
+                - Admins
+    /admins/{AdminIdOrUsername}:
+        delete:
+            description: Delete a Admin
+            operationId: delete-admin
+            parameters:
+                - $ref: '#/components/parameters/AdminIdOrUsername'
+            responses:
+                "204":
+                    description: Successfully deleted Admin or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a Admin
+            tags:
+                - Admins
+        get:
+            description: Get a Admin using ID or username.
+            operationId: get-admin
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                    description: Successfully fetched Admin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Fetch a Admin
+            tags:
+                - Admins
+        parameters:
+            - $ref: '#/components/parameters/AdminIdOrUsername'
+        patch:
+            description: Update a Admin
+            operationId: update-admin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Admin'
+                description: Fields of the Admin that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                    description: Successfully updated Admin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a Admin
+            tags:
+                - Admins
+        put:
+            description: Create or Update Admin using ID or username.
+            operationId: upsert-admin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Admin'
+                description: Description of the Admin
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                    description: Successfully upserted Admin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a Admin
             tags:
                 - Admins
     /admins/{nameOrId}:
@@ -15452,6 +15700,85 @@ paths:
             summary: Create a new group
             tags:
                 - Groups
+    /groups/{GroupIdOrId}:
+        delete:
+            description: Delete a Group
+            operationId: delete-group
+            parameters:
+                - $ref: '#/components/parameters/GroupIdOrId'
+            responses:
+                "204":
+                    description: Successfully deleted Group or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a Group
+            tags:
+                - Groups
+        get:
+            description: Get a Group using ID or id.
+            operationId: get-group
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Group'
+                    description: Successfully fetched Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Fetch a Group
+            tags:
+                - Groups
+        parameters:
+            - $ref: '#/components/parameters/GroupIdOrId'
+        patch:
+            description: Update a Group
+            operationId: update-group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Group'
+                description: Fields of the Group that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Group'
+                    description: Successfully updated Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a Group
+            tags:
+                - Groups
+        put:
+            description: Create or Update Group using ID or id.
+            operationId: upsert-group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Group'
+                description: Description of the Group
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Group'
+                    description: Successfully upserted Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a Group
+            tags:
+                - Groups
     /groups/{GroupIdOrName}/roles:
         delete:
             description: Delete a group's roles.
@@ -15968,7 +16295,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the new KeySet for creation
-                required: true
             responses:
                 "201":
                     content:
@@ -16047,7 +16373,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the KeySet
-                required: true
             responses:
                 "200":
                     content:
@@ -19170,6 +19495,7 @@ servers:
 tags:
     - name: ACLs
     - name: API-keys
+    - name: Admins
     - description: Admin routes
       name: Admins
     - description: |-
@@ -19221,6 +19547,7 @@ tags:
         Event hooks do not work with Konnect yet.
         <br><br>
       name: Event-hooks
+    - name: Groups
     - description: Group routes
       name: Groups
     - name: HMAC-auth credentials
@@ -19294,7 +19621,11 @@ tags:
         <br><br>
         To disable a target, post a new one with `weight=0`, or use the `DELETE` method to accomplish the same.
       name: Targets
-    - description: "The upstream object represents a virtual hostname and can be used to load balance incoming requests over multiple services (targets). \n<br><br>\nAn upstream also includes a [health checker](https://developer.konghq.com/gateway/traffic-control/health-checks-circuit-breakers/), which can enable and disable targets based on their ability or inability to serve requests. \nThe configuration for the health checker is stored in the upstream object, and applies to all of its targets."
+    - description: |-
+        The upstream object represents a virtual hostname and can be used to load balance incoming requests over multiple services (targets).
+        <br><br>
+        An upstream also includes a [health checker](https://developer.konghq.com/gateway/traffic-control/health-checks-circuit-breakers/), which can enable and disable targets based on their ability or inability to serve requests.
+        The configuration for the health checker is stored in the upstream object, and applies to all of its targets.
       name: Upstreams
     - description: |
         Vault objects are used to configure different vault connectors for [managing secrets](https://developer.konghq.com/gateway/secrets-management/).
