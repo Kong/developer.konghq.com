@@ -17,11 +17,15 @@ related_resources:
     url: /plugins/traceable/
   - text: Slack reference
     url: /service-catalog/integrations/slack/
+automated_tests: false
 tldr:
   q: How do I view a Slack channel in Service Catalog?
   a: Install the Slack integration in {{site.konnect_short_name}} and authorize it using Slack admin credentials. Create a Service Catalog service and associate it with your Slack channel to improve visibility and ownership.
 prereqs:
   inline:
+    - title: "{{site.konnect_short_name}} roles"
+      include_content: prereqs/service-catalog-integration-role
+      icon_url: /assets/icons/kogo-white.svg
     - title: Slack admin access
       content: |
         You must be a Slack admin to authorize the integration. Both **read** and **write** scopes are required by {{site.konnect_short_name}} to complete the connection.
@@ -43,7 +47,7 @@ Create a service that you'll map to your Slack resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services
+url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
@@ -68,7 +72,7 @@ Before you can map your Slack resources to a service in Service Catalog, you fir
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=slack
+url: /v1/resources?filter%5Bintegration.name%5D=slack
 method: GET
 region: us
 status_code: 200
@@ -90,7 +94,7 @@ Now, you can map the Slack resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resource-mappings
+url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
@@ -110,7 +114,7 @@ To confirm that the Slack resource is now mapped to the intended service, list t
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services/$SLACK_SERVICE_ID/resources
+url: /v1/catalog-services/$SLACK_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global

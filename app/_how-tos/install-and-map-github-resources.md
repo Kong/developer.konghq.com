@@ -15,11 +15,15 @@ related_resources:
     url: /service-catalog/
   - text: GitHub reference
     url: /service-catalog/integrations/github/
+automated_tests: false
 tldr:
   q: How do I connect a GitHub repository to my {{site.konnect_catalog}} service?
   a: Install the GitHub integration in {{site.konnect_short_name}} and authorize access to one or more repositories, then link a repository to your {{site.konnect_catalog}} service to display metadata and enable event tracking.
 prereqs:
   inline:
+    - title: "{{site.konnect_short_name}} roles"
+      include_content: prereqs/service-catalog-integration-role
+      icon_url: /assets/icons/kogo-white.svg
     - title: GitHub access
       content: |
         To integrate GitHub with Service Catalog, you need the following:
@@ -46,7 +50,7 @@ Create a service that you'll map to your GitHub resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services
+url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
@@ -71,7 +75,7 @@ Before you can map your GitHub resources to a service in Service Catalog, you fi
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=github
+url: /v1/resources?filter%5Bintegration.name%5D=github
 method: GET
 region: us
 status_code: 200
@@ -93,7 +97,7 @@ Now, you can map the GitHub resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resource-mappings
+url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
@@ -113,7 +117,7 @@ To confirm that the GitHub resource is now mapped to the intended service, list 
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services/$GITHUB_SERVICE_ID/resources
+url: /v1/catalog-services/$GITHUB_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global

@@ -15,11 +15,15 @@ related_resources:
     url: /service-catalog/
   - text: GitLab reference
     url: /service-catalog/integrations/gitlab/
+automated_tests: false
 tldr:
   q: How do I view a SaaS GitLab project in Service Catalog?
   a: Install and authorize the SaaS GitLab integration in the {{site.konnect_short_name}} UI. Create a Service Catalog service and associate it with your GitLab project to display metadata and enable event tracking.
 prereqs:
   inline:
+    - title: "{{site.konnect_short_name}} roles"
+      include_content: prereqs/service-catalog-integration-role
+      icon_url: /assets/icons/kogo-white.svg
     - title: SaaS GitLab access
       content: |
         You must have a [GitLab.com subscriptions](https://docs.gitlab.com/ee/subscriptions/gitlab_com/) and the **Owner** role in the GitLab group to authorize the integration. You need a project in GitLab that you want to pull in to {{site.konnect_short_name}}.
@@ -38,7 +42,7 @@ Create a service that you'll map to your GitLab resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services
+url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
@@ -63,7 +67,7 @@ Before you can map your GitLab resources to a service in Service Catalog, you fi
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=gitlab
+url: /v1/resources?filter%5Bintegration.name%5D=gitlab
 method: GET
 region: us
 status_code: 200
@@ -85,7 +89,7 @@ Now, you can map the GitLab resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resource-mappings
+url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
@@ -105,7 +109,7 @@ To confirm that the GitLab resource is now mapped to the intended service, list 
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services/$GITLAB_SERVICE_ID/resources
+url: /v1/catalog-services/$GITLAB_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global

@@ -15,11 +15,15 @@ related_resources:
     url: /service-catalog/
   - text: PagerDuty reference
     url: /service-catalog/integrations/pagerduty/
+automated_tests: false
 tldr:
   q: How do I view PagerDuty services in Service Catalog?
   a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a Service Catalog service and associate it with your PagerDuty services to display metadata and enable event tracking. 
 prereqs:
   inline:
+    - title: "{{site.konnect_short_name}} roles"
+      include_content: prereqs/service-catalog-integration-role
+      icon_url: /assets/icons/kogo-white.svg
     - title: PagerDuty access
       content: |
         You need a [PagerDuty account](https://app.pagerduty.com/) with a PagerDuty service you want to pull in to {{site.konnect_short_name}}.
@@ -41,7 +45,7 @@ Create a service that you'll map to your PagerDuty resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services
+url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
@@ -66,7 +70,7 @@ Before you can map your PagerDuty resources to a service in Service Catalog, you
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=pagerduty
+url: /v1/resources?filter%5Bintegration.name%5D=pagerduty
 method: GET
 region: us
 status_code: 200
@@ -88,7 +92,7 @@ Now, you can map the PagerDuty resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resource-mappings
+url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
@@ -108,7 +112,7 @@ To confirm that the PagerDuty resource is now mapped to the intended service, li
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services/$PAGERDUTY_SERVICE_ID/resources
+url: /v1/catalog-services/$PAGERDUTY_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global

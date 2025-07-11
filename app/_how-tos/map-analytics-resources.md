@@ -1,5 +1,5 @@
 ---
-title: Map {{site.konnect_short_name}} Analytics in Service Catalog
+title: Map {{site.konnect_short_name}} Analytics reports in Service Catalog
 content_type: how_to
 description: Learn how to map {{site.konnect_short_name}} Analytics resources in Service Catalog to visualize Analytics Reports.
 products:
@@ -7,7 +7,6 @@ products:
   - service-catalog
 works_on:
   - konnect
-automated_tests: false
 entities: []
 tldr:
   q: How do I map {{site.konnect_short_name}} Analytics reports in Service Catalog?
@@ -35,7 +34,7 @@ Create a service that you'll map to your {{site.konnect_short_name}} Analytics r
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services
+url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
@@ -60,7 +59,7 @@ Before you can map a resource to Service Catalog, you first need to find the res
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=analytics
+url: /v1/resources?filter%5Bintegration.name%5D=analytics
 method: GET
 region: us
 status_code: 200
@@ -82,7 +81,7 @@ Now, you can map the {{site.konnect_short_name}} Analytics resource to the servi
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resource-mappings
+url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
@@ -101,7 +100,7 @@ To confirm that the {{site.konnect_short_name}} Analytics resource is now mapped
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services/$SERVICE_ID/resources
+url: /v1/catalog-services/$SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global

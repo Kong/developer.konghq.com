@@ -17,11 +17,15 @@ related_resources:
     url: /plugins/traceable/
   - text: Traceable reference
     url: /service-catalog/integrations/traceable/
+automated_tests: false
 tldr:
   q: How do I view Traceable services in Service Catalog?
   a: Install the Traceable integration in {{site.konnect_short_name}} and authorize it with your Traceable API key. Create a Service Catalog service and associate it with your Traceable services to display metadata and enable event tracking. 
 prereqs:
   inline:
+    - title: "{{site.konnect_short_name}} roles"
+      include_content: prereqs/service-catalog-integration-role
+      icon_url: /assets/icons/kogo-white.svg
     - title: Traceable access
       content: |
         You must have an active [Traceable account](https://www.traceable.ai/) and valid API access to connect Traceable services to your {{site.konnect_catalog}} service. You also need a [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends) you can pull into {{site.konnect_short_name}}.
@@ -41,7 +45,7 @@ First, install the Traceable integration:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/integration-instances
+url: /v1/integration-instances
 method: POST
 status_code: 201
 region: us
@@ -67,7 +71,7 @@ Next, authorize the Traceable integration with your Traceable API key:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/integration-instances/$TRACEABLE_INTEGRATION_ID/auth-credential
+url: /v1/integration-instances/$TRACEABLE_INTEGRATION_ID/auth-credential
 method: POST
 status_code: 201
 region: us
@@ -91,7 +95,7 @@ Create a service that you'll map to your Traceable resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services
+url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
@@ -116,7 +120,7 @@ Before you can map your Traceable resources to a service in Service Catalog, you
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=traceable
+url: /v1/resources?filter%5Bintegration.name%5D=traceable
 method: GET
 region: us
 status_code: 200
@@ -138,7 +142,7 @@ Now, you can map the Traceable resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resource-mappings
+url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
@@ -158,7 +162,7 @@ To confirm that the Traceable resource is now mapped to the intended service, li
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services/$TRACEABLE_SERVICE_ID/resources
+url: /v1/catalog-services/$TRACEABLE_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global

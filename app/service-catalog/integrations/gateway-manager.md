@@ -19,7 +19,7 @@ works_on:
 description: The Gateway Manager integration is built directly into Service Catalog, so no additional authorization is needed.
 
 related_resources:
-  - text: Map Gateway Manager resources in Service Catalog
+  - text: Map Gateway Manager Services in Service Catalog
     url: /how-to/map-gateway-manager-resources/
   - text: "Service Catalog"
     url: /service-catalog/

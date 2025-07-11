@@ -1,0 +1,1 @@
+You need the [Integration Admin role](/konnect-platform/teams-and-roles/#service-catalog) in {{site.konnect_short_name}} to install and authorize Service Catalog integrations.

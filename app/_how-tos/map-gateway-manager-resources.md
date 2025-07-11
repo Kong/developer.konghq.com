@@ -1,5 +1,5 @@
 ---
-title: Map Gateway Manager resources in Service Catalog
+title: Map Gateway Manager Services in Service Catalog
 content_type: how_to
 description: Learn how to map Gateway Services from {{site.konnect_short_name}} Gateway Manager in Service Catalog to visualize services across multiple Control Planes.
 products:
@@ -7,8 +7,8 @@ products:
   - service-catalog
 works_on:
   - konnect
-automated_tests: false
-entities: []
+entities: 
+  - service
 tldr:
   q: How do I map Gateway Services in Service Catalog?
   a: Create a Service Catalog service and associate it with your Gateway Manager resources to visualize Services across multiple Control Planes.
@@ -33,7 +33,7 @@ Create a service that you'll map to your Gateway Manager resources:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services
+url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
@@ -58,7 +58,7 @@ Before you can map a resource to Service Catalog, you first need to find the res
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resources?filter%5Bintegration.name%5D=gateway-manager
+url: /v1/resources?filter%5Bintegration.name%5D=gateway-manager
 method: GET
 region: us
 status_code: 200
@@ -80,7 +80,7 @@ Now, you can map the Gateway Manager resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/resource-mappings
+url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
@@ -100,7 +100,7 @@ To confirm that the Gateway Manager resource is now mapped to the intended servi
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/service-catalog/services/$SERVICE_ID/resources
+url: /v1/catalog-services/$SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global
