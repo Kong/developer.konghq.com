@@ -21,6 +21,8 @@ description: The PagerDuty integration allows you to provide a way to alert on i
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
+  - text: Import and map PagerDuty resources in Service Catalog
+    url: /how-to/install-and-map-pagerduty-resources/
 discovery_support: true
 bindable_entities: "PagerDuty Service"
 ---
@@ -30,13 +32,13 @@ The PagerDuty integration allows you to provide a way to alert the service team 
 
 For each linked PagerDuty service, a summary will be provided on the Service Catalog service's details page, showing current unresolved incidents and the current on-call user.
 
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map PagerDuty resources in Service Catalog](/how-to/install-and-map-pagerduty-resources/).
+
 ## Authenticate the PagerDuty integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Service Catalog** in {{site.konnect_short_name}}, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Select **Add PagerDuty Instance**
-3. Configure the **Region**, add **authorization**, and name the instance. 
-
-PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. **Both Read and Write scopes are required.**
+3. Configure the **Region**, add **authorization**, and name the instance `pagerduty`. PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. Both Read and Write scopes are required.
 
 ## Resources
 

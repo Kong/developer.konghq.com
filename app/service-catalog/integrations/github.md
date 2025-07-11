@@ -22,6 +22,8 @@ description: The GitHub integration allows you to associate your Service Catalog
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
+  - text: Import and map GitHub resources in Service Catalog
+    url: /how-to/install-and-map-github-resources/
 discovery_support: true
 bindable_entities: "Repositories"
 ---
@@ -30,6 +32,9 @@ The GitHub integration allows you to associate your Service Catalog service to o
 
 For each linked repository, the UI can show a **Repository Summary** with simple data pulled from the GitHub API, such as the number of open issues, open pull requests, most recently closed pull requests, languages, and more.
 {% include /service-catalog/multi-resource.md %}
+
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map GitHub resources in Service Catalog](/how-to/install-and-map-github-resources/).
+
 ## Authorize the GitHub integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 

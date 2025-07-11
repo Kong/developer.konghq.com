@@ -24,12 +24,16 @@ related_resources:
     url: /service-catalog/
   - text: Traceable plugin
     url: /plugins/traceable/
+  - text: Import and map Traceable resources in Service Catalog
+    url: /how-to/install-and-map-traceable-resources/
 discovery_support: true
 bindable_entities: "Traceable Service"
 ---
 
 The Traceable integration lets you connect Traceable Services directly to your Service Catalog services.
 {% include /service-catalog/multi-resource.md %}
+
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Traceable resources in Service Catalog](/how-to/install-and-map-traceable-resources/).
 
 ## Authenticate the Traceable integration
 

@@ -22,6 +22,10 @@ description: The GitLab integration allows you to associate your Service Catalog
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
+  - text: Import and map self-managed GitLab resources in Service Catalog
+    url: /how-to/install-and-map-gitlab-resources/
+  - text: Import and map SaaS GitLab resources in Service Catalog
+    url: /how-to/install-and-map-gitlab-saas-resources/
 discovery_support: true
 bindable_entities: "Projects"
 ---
@@ -29,6 +33,10 @@ The GitLab integration allows you to associate your Service Catalog service to o
 {% include /service-catalog/multi-resource.md %}
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
+
+For a complete tutorial using the {{site.konnect_short_name}} API, see the following:
+* [Import and map self-managed GitLab resources in Service Catalog](/how-to/install-and-map-gitlab-resources/)
+* [Import and map SaaS GitLab resources in Service Catalog](/how-to/install-and-map-gitlab-saas-resources/)
 
 ## Prerequisites
 
@@ -41,7 +49,7 @@ For each linked project, the UI can show a **Project Summary** with simple data 
 {% navtab "Self-Managed" %}
 To use the GitLab integration in a self-hosted environment:
 
-1. [Create a group-owned application](https://docs.gitlab.com/integrations/oauth_provider/) in your GitLab instance. This is required to enable OAuth access for your organization.
+1. [Create a group-owned application](https://docs.gitlab.com/integration/oauth_provider/#create-a-group-owned-application) in your GitLab instance. This is required to enable OAuth access for your organization.
    * Set the redirect URI in GitLab to `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integration/gitlab`
    * Make sure the application has the `api` scope.
 1. In the {{site.konnect_short_name}} UI, navigate to the [GitLab integration](https://cloud.konghq.com/service-catalog/integrations/gitlab/configuration)
