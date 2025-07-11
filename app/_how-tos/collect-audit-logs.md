@@ -1,5 +1,5 @@
 ---
-title: "Collect {{site.konnect_short_name}} audit logs with SumoLogic"
+title: "Collect {{site.konnect_short_name}} audit logs"
 description: "Learn how to configure you SIEM provider to collect {{site.konnect_short_name}} logs and configure a {{site.konnect_short_name}} audit log webhook."
 content_type: how_to
 related_resources:
@@ -22,9 +22,11 @@ tags:
     - audit-logging
 
 tldr:
-    q: How do I send {{site.konnect_short_name}} audit logs to a SIEM provider like SumoLogic?
+    q: How do I send {{site.konnect_short_name}} audit logs to a SIEM provider?
     a: |
-        Create an HTTPS data collection endpoint and access key in SumoLogic and save their values. Configure the audit log webhook endpoint (`/v2/audit-log-webhook`) in {{site.konnect_short_name}} with the SumoLogic endpoint (`endpoint`), the access key (`authorization`), and set `log_format: cef` and `enabled: true`. 
+        Create an HTTPS data collection endpoint and access key in your SIEM provider and save their values. Configure the audit log webhook endpoint (`/v2/audit-log-webhook`) in {{site.konnect_short_name}} with the provider endpoint (`endpoint`), the access key (`authorization`), and set `log_format: cef` and `enabled: true`. 
+
+        This tutorial uses SumoLogic, but you can apply the same steps to your provider.
 
 prereqs:
   inline:

@@ -5,7 +5,8 @@ metadata:
     About the {{site.konnect_short_name}} SaaS API platform
   tags:
     - konnect
-
+  products:
+    - konnect-platform
     
 rows:
   - header:

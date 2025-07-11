@@ -1,12 +1,12 @@
 ---
-title: "Collect Dev Portal audit logs with SumoLogic"
+title: "Collect Dev Portal audit logs"
 description: "Learn how to configure your SIEM provider to collect {{site.konnect_short_name}} Dev Portal logs and configure a Dev Portal audit log webhook."
 content_type: how_to
 related_resources:
   - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
-  - text: Collect Konnect audit logs with SumoLogic
-    url: /how-to/collect-audit-logs-with-sumologic/
+  - text: Collect Konnect audit logs
+    url: /how-to/collect-audit-logs/
   - text: About Dev Portal
     url: /dev-portal/
 automated_tests: false
@@ -23,10 +23,11 @@ tags:
     - audit-logging
 
 tldr:
-    q: How do I send Dev Portal audit logs to a SIEM provider like SumoLogic?
+    q: How do I send Dev Portal audit logs to a SIEM provider?
     a: |
-        Create an HTTPS data collection endpoint and access key in SumoLogic and save their values. Configure an [audit log destination](/api/konnect/audit-logs/v2/#/operations/create-audit-log-destination) in {{site.konnect_short_name}} with the SumoLogic endpoint (`endpoint`), the access key (`authorization`), and set the log format `log_format: cef`. Then create the webhook for your Dev Portal with the [`/portals/{portalId}/audit-log-webhook`](/api/konnect/portal-management/v3/#/operations/update-portal-audit-log-webhook).
+        Create an HTTPS data collection endpoint and access key in the provider and save their values. Configure an [audit log destination](/api/konnect/audit-logs/v2/#/operations/create-audit-log-destination) in {{site.konnect_short_name}} with the SIEM endpoint (`endpoint`), the access key (`authorization`), and set the log format `log_format: cef`. Then create the webhook for your Dev Portal with the [`/portals/{portalId}/audit-log-webhook`](/api/konnect/portal-management/v3/#/operations/update-portal-audit-log-webhook).
 
+        This tutorial uses SumoLogic, but you can apply the same steps to your provider.
 prereqs:
   inline:
     - title: Dev Portal
