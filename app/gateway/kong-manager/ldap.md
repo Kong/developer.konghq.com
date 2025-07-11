@@ -197,7 +197,7 @@ Review [supported configuration options](#supported-configuration-options) to cu
     kubectl create secret generic kong-ldap-conf --from-file=admin_gui_auth_conf -n kong
     ```
 
-1. Create a configuration file the Session plugin and save it as `admin_gui_session_conf`. Adjust your own values as needed:
+1. Create a configuration file for the Session plugin and save it as `admin_gui_session_conf`. Adjust your own values as needed:
 
     ```json
     {"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}
