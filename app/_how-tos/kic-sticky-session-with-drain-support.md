@@ -8,7 +8,7 @@ breadcrumbs:
   - index: kubernetes-ingress-controller
     section: Guides
 
-content_type: guide
+content_type: how_to
 layout: guide
 
 products:
