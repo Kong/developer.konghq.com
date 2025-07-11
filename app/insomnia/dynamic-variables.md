@@ -22,7 +22,7 @@ related_resources:
     url: /insomnia/scripts/
   - text: Environments
     url: /insomnia/environments/
-  - test: Template tags
+  - text: Template tags
     url: /insomnia/template-tags/
 ---
 

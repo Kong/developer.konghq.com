@@ -22,7 +22,7 @@ related_resources:
     url: /insomnia/scripts/
   - text: Dynamic variables
     url: /insomnia/dynamic-variables/
-  - test: Template tags
+  - text: Template tags
     url: /insomnia/template-tags/
 ---
 
