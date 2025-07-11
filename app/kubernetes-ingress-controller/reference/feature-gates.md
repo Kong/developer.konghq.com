@@ -102,7 +102,7 @@ rows:
     default: '`false`'
     stage: Alpha
     since: 3.4.0
-    until: TBD
+    until: 3.5.0
 {% endtable %}
 
 * The **since** and **until** columns refer to [KIC Releases](https://github.com/Kong/kubernetes-ingress-controller/releases).
