@@ -1,5 +1,5 @@
 ---
-title: Use the AI Prompt Template plugin
+title: Provide AI prompt templates for end users with the AI Prompt Template plugin and Mistral
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -92,7 +92,9 @@ variables:
 
 ## Configure the AI Prompt Template plugin
 
-Now, we can configure the AI Prompt Template plugin with predefined, reusable prompt templates for common tasks. The plugin will automatically [block all untemplated requests](/how-to/use-ai-prompt-template-plugin/#denied-prompts) via `allow_untemplated_requests: false` setting.
+Now, we can configure the AI Prompt Template plugin with predefined, reusable prompt templates for common tasks. This allows users to fill in the blanks with variable placeholders (`{{variable}}`).
+
+The plugin will automatically [block all untemplated requests](/how-to/use-ai-prompt-template-plugin/#denied-prompts) via `allow_untemplated_requests: false` setting.
 
 This configuration defines five prompt templates:
 
@@ -116,6 +118,8 @@ rows:
     description: Answers user questions clearly and factually.
 {% endtable %}
 <!-- vale on -->
+
+Configure the AI Prompt Template plugin:
 
 {% entity_examples %}
 entities:
@@ -199,6 +203,7 @@ entities:
 
 ## Validate configuration
 
+Now, you can validate that the AI Prompt Template plugin configuration is correct by sending allowed and denied prompts.
 ### Allowed prompts
 
 {% navtabs "template-requests-it-tests" %}
