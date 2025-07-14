@@ -3,7 +3,7 @@ title: "Custom Dashboards reference"
 content_type: reference
 layout: reference
 description: |
-    Custom Dashboards allow you to create dashboards for your specific usescases
+    Custom Dashboards allow you to create dashboards for your specific use cases.
 breadcrumbs:
   - /advanced-analytics/
 products:
@@ -33,14 +33,14 @@ You can add new tiles to any custom dashboard by selecting **New Tile** from the
 
 The following types of tables are available: 
 
-* Timeseries line
-* Timeseries bar
+* Time series line
+* Time series bar
 * Horizontal bar
 * Vertical bar
 * Donut
 * Single Value
 
-Each tile type is customizeable from the **Edit tile** view. You can select from a series of [filters](#filters), and modify the lines and time series. For more information on creating custom dashboards, review the [custom dashboard](/how-to/create-custom-dashboards/) documentation.
+Each tile type is customizable from the **Edit tile** view. You can select from a series of [filters](#filters), and modify the lines and time series. For more information on creating custom dashboards, review the [custom dashboard](/how-to/create-custom-dashboards/) documentation.
 
 ## Filters
 
