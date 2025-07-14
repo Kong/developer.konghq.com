@@ -14,7 +14,7 @@ sections:
     items:
       - path: /dev-portal/
       - path: /service-catalog/
-      - path: /analytics/
+      - path: /advanced-analytics/
       - path: /ai-manager/
       - path: /gateway-manager/
       - path: /mesh-manager/
