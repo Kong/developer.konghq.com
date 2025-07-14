@@ -84,4 +84,6 @@ rows:
 
 ## Role-based access
 
-Administrators can limit visibility of dashboards using role-based access control (RBAC). This enables safe delegation of dashboard views to specific teams without exposing sensitive or unnecessary data.
+Administrators can limit visibility of dashboards using role-based access control (RBAC). This enables safe delegation of dashboard views to specific teams without exposing sensitive or unnecessary data. You can manage a user's roles by navigating to [**Organization**](https://cloud.konghq.com/organization/) > **Users** in {{site.konnect_short_name}} and clicking the **Role Assignments** tab for a user.
+
+For more information review the [teams and roles](/konnect-platform/teams-and-roles/) documentation.
