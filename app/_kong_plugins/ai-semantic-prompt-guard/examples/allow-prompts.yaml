@@ -1,22 +1,32 @@
-description: Only allows messages about a specific topic. For example, only allow messages about cats.
+description: Only allow messages about a specific topic. For example, only allow messages about DevOps
 
-title: 'Only allow messages related to a topic'
+extended_description: |
+  Only allow messages about a specific topic. For example, only allow messages about DevOps.
+
+  For a detailed walkthrough, see [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
+
+title: 'Only allow messages about a specific topic.'
 
 weight: 900
 
-requirements: 
-  - "A [Redis](https://redis.io/docs/latest/) instance"
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service."
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
 
 variables:
   header_value:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
 
-config: 
+config:
   embeddings:
     auth:
       header_name: Authorization
-      header_value: ${header_value}
+      header_value: Bearer ${header_value}
     model:
       name: text-embedding-3-small
       provider: openai
@@ -28,12 +38,21 @@ config:
     threshold: 0.5
     dimensions: 1024
     redis:
-      host: localhost
+      host: ${redis_host}
       port: 6379
   rules:
     match_all_conversation_history: true
     allow_prompts:
-      - "Questions about cats"
+      - Network troubleshooting and diagnostics
+      - Cloud infrastructure management (AWS, Azure, GCP)
+      - Cybersecurity best practices and incident response
+      - DevOps workflows and automation
+      - Programming concepts and language usage
+      - IT policy and compliance guidance
+      - Software development lifecycle and CI/CD
+      - Documentation writing and technical explanation
+      - System administration and configuration
+      - Productivity and collaboration tools usage
 
 tools:
   - deck

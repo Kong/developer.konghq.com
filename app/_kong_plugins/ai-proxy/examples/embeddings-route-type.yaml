@@ -1,0 +1,41 @@
+title: 'Files Embeddings Route'
+
+description: |
+  Access the embeddings endpoint to generate text embeddings using OpenAI’s
+  text-embedding-3-large model. Use this route for embedding-based semantic search,
+  similarity, or other vector-based AI features.
+
+weight: 900
+
+min_version:
+  gateway: '3.11'
+
+requirements:
+- OpenAI account
+
+config:
+  genai_category: text/embeddings
+  route_type: llm/v1/embeddings
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
+  model:
+    provider: openai
+    name: text-embedding-3-large
+    options:
+      max_tokens: 512
+      temperature: 1.0
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: openai-processing
