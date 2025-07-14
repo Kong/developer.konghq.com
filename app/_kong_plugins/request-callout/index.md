@@ -123,7 +123,7 @@ using the [`config.upstream.headers.custom`](./reference/#schema--config-upstrea
 The Request Callout plugin supports caching of callout requests. Globally, the 
 behavior is configured via the [`config.cache`](/plugins/request-callout/reference/#schema--config-cache) setting.
 
-### Cache Key
+### Cache key
 
 The callout cache key is the SHA-256 of the following proxy request and callout 
 request components:
