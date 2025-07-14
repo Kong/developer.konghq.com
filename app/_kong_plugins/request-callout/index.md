@@ -117,3 +117,32 @@ headers such as `Content-Type` and `Host`.
 
 If you need to forward only a subset of headers, you can reinsert a custom list of headers 
 using the [`config.upstream.headers.custom`](./reference/#schema--config-upstream-headers-custom) configuration parameter.
+
+## Caching
+
+The Request Callout plugin supports caching of callout requests; globally, the 
+behavior is configured via the `cache` setting.
+
+### Cache Key
+
+The callout cache key is the SHA-256 of the following proxy request and callout 
+request components:
+- Proxy Request:
+  * Route ID
+  * Plugin ID
+  * Consumer ID (if a consumed is set)
+  * Consumer groups (if at least one consumer group exists)
+- Callout Request:
+  * Callout name
+  * HTTP method
+  * Callout URL
+  * Callout query params (sorted by key name)
+  * Callout headers (sorted by header name)
+  * Callout request body (sorted by key name, if a key-value format like JSON is 
+    used)
+
+Note that only callout request query and headers are part of the cache key; 
+incoming proxy request headers and query params are not. If callout headers and 
+query params have a `forward` flag set, then incoming request headers and query 
+params are forwarded in the callout requets, causing them to be part of the 
+cache key.
