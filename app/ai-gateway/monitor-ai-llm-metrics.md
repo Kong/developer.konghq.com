@@ -116,7 +116,7 @@ ai_llm_provider_latency{ai_provider="provider1",ai_model="model1",cache_status="
 > **Note:** If you don't use any cache plugins, then `cache_status`, `vector_db`,
 `embeddings_provider`, and `embeddings_model` values will be empty.
 >
-> To expose the `ai_llm_cost_total` metric, you must define `model.options.input_cost` `model.options.output_cost` parameters. See [AI Proxy](/plugins/ai-proxy/reference/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/) configuration reference for more details.
+> To expose the `ai_llm_cost_total` metric, you must define `model.options.input_cost` `model.options.output_cost` parameters. See [AI Proxy](/plugins/ai-proxy/reference/#schema--config-model-options-input-cost) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/#schema--config-targets-model-options-input-cost) configuration reference for more details.
 
 ## Accessing the metrics
 
