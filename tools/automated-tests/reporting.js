@@ -5,7 +5,7 @@ const expectedFailures = yaml.load(
   await fs.readFile("./config/expected_failures.yaml", "utf-8")
 );
 
-function isFailureExpected(result) {
+export function isFailureExpected(result) {
   const expectedFailure = expectedFailures[result.file];
   return expectedFailure && expectedFailure === result.assertions[0];
 }
