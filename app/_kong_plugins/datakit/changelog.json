@@ -1,7 +1,7 @@
 {
   "3.11.0.0": [
     {
-      "message": "**datakit**: Added new datakit plugin",
+      "message": "Added new datakit plugin",
       "type": "feature",
       "scope": "Plugin"
     }
