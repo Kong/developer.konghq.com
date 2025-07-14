@@ -141,8 +141,8 @@ request components:
   * Callout request body (sorted by key name, if a key-value format like JSON is 
     used)
 
-Note that only callout request query and headers are part of the cache key; 
-incoming proxy request headers and query params are not. If callout headers and 
-query params have a `forward` flag set, then incoming request headers and query 
-params are forwarded in the callout requets, causing them to be part of the 
+{:.info}
+> By default, only callout request query and headers are part of the cache key, 
+and incoming proxy request headers and query params are not.
+If callout headers and query params have a `forward` flag set, then incoming request headers and query params are forwarded in the callout requests, causing them to be part of the 
 cache key.
