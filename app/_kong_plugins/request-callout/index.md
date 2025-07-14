@@ -127,12 +127,12 @@ behavior is configured via the [`config.cache`](/plugins/request-callout/referen
 
 The callout cache key is the SHA-256 of the following proxy request and callout 
 request components:
-- Proxy Request:
+- Proxy request:
   * Route ID
   * Plugin ID
-  * Consumer ID (if a consumed is set)
-  * Consumer groups (if at least one consumer group exists)
-- Callout Request:
+  * Consumer ID (if a Consumer is set)
+  * Consumer Groups (if at least one Consumer Group exists)
+- Callout request:
   * Callout name
   * HTTP method
   * Callout URL
