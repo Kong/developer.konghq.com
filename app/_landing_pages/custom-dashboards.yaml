@@ -49,7 +49,7 @@ rows:
               description: Learn how to create and manage custom dashboards in {{site.konnect_short_name}}.
               icon: /assets/icons/rocket.svg
               cta:
-                url: /advanced-analytics/custom-dashboards-reference/
+                url: /how-to/create-custom-dashboards/
                 align: end
       - blocks:
           - type: card
@@ -63,11 +63,11 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Role-based access
+              title: Reference
               description: Learn how to use the Viewer role and other RBAC options for dashboard access.
               icon: /assets/icons/lock.svg
               cta:
-                url: /konnect/analytics/custom-dashboards/#rbac-access
+                url: /advanced-analytics/custom-dashboards-reference/
                 align: end
 
   - header:
