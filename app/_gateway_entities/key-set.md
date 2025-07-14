@@ -29,7 +29,7 @@ api_specs:
 
 schema:
   api: gateway/admin-ee
-  path: /schemas/Key-set
+  path: /schemas/KeySet
 
 works_on:
   - on-prem

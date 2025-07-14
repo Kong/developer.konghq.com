@@ -1,0 +1,55 @@
+title: Token validation for multiple IdPs
+description: |
+  Configure the OpenID Connect plugin to validate JWTs issued by multiple IdPs.
+extended_description: |
+  You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option, with the following considerations:
+
+  * Since the plugin only accepts a single issuer, any `iss` claim verification will fail for tokens that come from a different IdP than the one that was used in the issuer configuration option. Add all issuers as they appear in the `iss` claims of your tokens to the [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) setting.
+  * If you make any changes to the `extra_jwks_uris` value, you have to clear the second level DB cache for the change to become effective.
+  See [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache).
+
+  This example shows how to configure two different `extra_jwks_uris` to support token validation for two different IdPs.
+
+weight: 698
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  auth_methods:
+    - bearer
+  extra_jwks_uris:
+    - example-host1/auth/realms/other/protocol/openid-connect/certs
+    - example-host2/oauth2/some-id/v1/keys
+  issuers_allowed:
+    - issuer-url-for-example-host1
+    - issuer-url-for-example-host2
+  verify_signature: true
+  verify_claims: false
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: other

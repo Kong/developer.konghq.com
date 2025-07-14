@@ -57,6 +57,14 @@ tldr:
   q: How do I use a client ID and client secret to authenticate directly with my identity provider?
   a: Using the OpenID Connect plugin, set up the [client credentials grant flow](/plugins/openid-connect/#client-credentials-grant-workflow) to connect to an identity provider (IdP) by passing a client ID and client secret in a header.
 
+faqs:
+  - q: Why does the OIDC plugin not use cached tokens with the client credentials grant, and instead connects to the IdP on every request?
+    a: |
+      Token caching doesn't work if both `client_credentials` and `password` are set as auth methods in the `config.auth_methods` parameter, and credentials are sent using the `Authorization: Basic` header. 
+      
+      In this scenario, either authentication method could match, but the plugin prioritises the password grant.
+      To resolve this caching issue, make sure you only have the `client_credentials` method enabled.
+
 cleanup:
   inline:
     - title: Clean up Konnect environment
