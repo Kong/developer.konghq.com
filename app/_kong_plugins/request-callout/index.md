@@ -121,7 +121,7 @@ using the [`config.upstream.headers.custom`](./reference/#schema--config-upstrea
 ## Caching
 
 The Request Callout plugin supports caching of callout requests. Globally, the 
-behavior is configured via the `cache` setting.
+behavior is configured via the [`config.cache`](/plugins/request-callout/reference/#schema--config-cache) setting.
 
 ### Cache Key
 
