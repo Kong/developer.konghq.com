@@ -895,3 +895,7 @@
 ol:has(code) {
   @apply flex flex-col gap-4;
 }
+
+.ot-floating-button__open > svg {
+  @apply justify-self-center;
+}
