@@ -115,13 +115,13 @@ rows:
       The round-robin algorithm distributes requests across models based on their respective weights. For example, if your models `gpt-4`, `gpt-4o-mini`, and `gpt-3` have weights of `70`, `25`, and `5` respectively, they’ll receive approximately 70%, 25%, and 5% of the traffic in turn. Requests are distributed proportionally, independent of usage or latency metrics.
   - algorithm: "[Semantic](/plugins/ai-proxy-advanced/examples/semantic/)"
     description: |
-      The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case. This feature enhances the flexibility and efficiency of model selection, especially when dealing with a diverse range of AI providers and models.
+      The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case.
 {% endtable %}
 <!--vale on-->
 
 ## Retry and fallback
 
-The load balancer has customizable retries and timeouts for requests, and can redirect a request to a different model in case of failure. This allows you to have a fallback in case one of your targets is unavailable.
+The [load balancer](/ai-gateway/load-balancing/) has customizable retries and timeouts for requests, and can redirect a request to a different model in case of failure. This allows you to have a fallback in case one of your targets is unavailable.
 
 For versions {% new_in 3.10 %} this plugin supports fallback across targets with any supported formats.
 For versions earlier than 3.10, fallback is not supported across targets with different formats. You can still use multiple providers, but only if the formats are compatible.
@@ -134,9 +134,6 @@ For example, load balancers with the following target combinations are supported
 > Some errors, such as client errors, result in a failure and don't failover to another target.<br/><br/> {% new_in 3.10 %} To configure failover in addition to network errors, set [`config.balancer.failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria) to include:
 > * Additional HTTP error codes, like `http_429` or `http_502`
 > * The `non_idempotent` setting, as most AI services accept POST requests
-
-## Request and response formats
-{% include plugins/ai-proxy/formats.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
 
 ## Templating {% new_in 3.7 %}
 

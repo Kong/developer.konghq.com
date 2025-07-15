@@ -45,7 +45,6 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 * **Rerank API**: Improve relevance of retrieved documents and results in RAG pipelines for [Cohere and Bedrock](./#supported-native-llm-formats). Send any list of candidates to be re-ordered based on prompt context to boost final LLM response quality through better grounding.
 * **Realtime streaming**: Stream completions token-by-token for low-latency, interactive experiences and live analytics.
 
-
 {% endif %}
 
 The following reference tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
@@ -56,14 +55,15 @@ Support for chat, completions, and embeddings.
 
 {% include plugins/ai-proxy/tables/supported-providers-text.html providers=providers %}
 
-The following providers are supported by the legacy Completions API:
-* OpenAI
-* Azure OpenAI
-* Cohere
-* Llama2
-* Amazon Bedrock
-* Gemini
-* Hugging Face
+{:.neutral .no-icon}
+> The following providers are supported by the legacy Completions API:
+> * OpenAI
+> * Azure OpenAI
+> * Cohere
+> * Llama2
+> * Amazon Bedrock
+> * Gemini
+> * Hugging Face
 
 ### Advanced text generation {% new_in 3.11 %}
 
