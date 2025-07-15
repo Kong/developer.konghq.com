@@ -2,11 +2,9 @@
 title: Customer-Managed Encryption Keys (CMEK)
 content_type: reference
 layout: reference
-description: 'Use Customer-Managed Encryption Keys (CMEK) in {{site.konnect_short_name}} to encrypt sensitive data using keys from your AWS Key Management Service (KMS) account.'
+description: 'Use Customer-Managed Encryption Keys (CMEK) in {{site.konnect_short_name}} to encrypt pre-determined sets of sensitive data using keys from your AWS Key Management Service (KMS) account.'
 breadcrumbs:
   - /konnect/
-
-
 products:
     - konnect-platform
 tags:
@@ -17,11 +15,14 @@ works_on:
   - konnect
 faqs:
   - q: Can I use automation to configure CMEK in {{site.konnect_short_name}}?
-    a: No, CMEK can currently only be configured via the {{site.konnect_short_name}} UI. Once CMEK is configured, {{site.konnect_short_name}} data that is encrypted using CMEK will be visible from the {{site.konnect_short_name}} APIs, decK, and Terraform after decryption.
+    a: Yes, customers will be able to use the {{site.konnect_short_name}} UI, API, and [Terraform](/terraform/) to configure CMEK.
+  - q: Can I bring in symmetric keys from other key management services?
+    a: No. CMEK currently only supports AWS Key Management Service (KMS).
+
 ---
 
+{{site.konnect_short_name}} supports **Customer-Managed Encryption Keys (CMEK)**, allowing you to use your own symmetric key stored in **AWS Key Management Service (KMS)** to encrypt a pre-determined set of sensitive data. This feature enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
 
-{{site.konnect_short_name}} supports **Customer-Managed Encryption Keys (CMEK)**, allowing you to use your own symmetric key stored in **AWS Key Management Service (KMS)** to encrypt sensitive data. This feature enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
 
 ## Benefits of CMEK
 
@@ -36,12 +37,25 @@ CMEK currently applies to:
 * Payloads captured through [the {{site.konnect_short_name}} Debugger](/konnect-platform/debugger/)
 * Request logs stored in Debugger workflows
 
-To this you must 
+To use CMEK, you must
 
 1. [Create a **symmetric encryption key** in AWS KMS.](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html)
 1. Provide the **key ARN** to [{{site.konnect_short_name}}](https://cloud.konghq.com/global/organization/settings/encryption-keys/)
 
-### User responsibilities
+## Configure CMEK
+
+To configure CMEK, you need:
+* A **symmetric key** in AWS KMS
+* **Org Admin** role in {{site.konnect_short_name}}
+
+### Setup Workflow
+
+1. Go to [**Encryption Keys**](https://cloud.konghq.com/global/organization/settings/encryption-keys/) in {{site.konnect_short_name}}.
+1. Click **Link key**.
+1. Enter the **Name**, **Amazon Resource Name**, **description**, and **Region**. 
+1. Click **Connect**. 
+
+## User responsibilities
 
 When you configure CMEK, you are responsible for the following:
 
@@ -53,8 +67,10 @@ When you configure CMEK, you are responsible for the following:
 * **Performance impact**: 
   * KMS-based decryption may introduce latency during access operations.
 * **Feature limitations**: 
-  * Encrypted fields cannot be used in full-text search, filtering, or analytics.
-  * Alerting features cannot inspect encrypted content.
+  * CMEK encrypted fields cannot be used in full-text search, filtering, or analytics.
+  * Alerting features cannot inspect CMEK encrypted content.
+* **Cost**: 
+  * Any costs incurred in AWS KMS.
 
 
 ## Managing keys
@@ -74,15 +90,3 @@ The following happens if the AWS KMS key is revoked:
 * {{site.konnect_short_name}} will display decryption errors when this occurs.
 
 
-## Configure CMEK
-
-To configure CMEK, you need:
-* A **symmetric key** in AWS KMS
-* **Org Admin** role in {{site.konnect_short_name}}
-
-### Setup Workflow
-
-1. Go to [**Encryption Keys**](https://cloud.konghq.com/global/organization/settings/encryption-keys/) in {{site.konnect_short_name}}.
-1. Click **Link key**.
-1. Enter the **Name**, **Amazon Resource Name**, **description**, and **Region**. 
-1. Click **Connect**. 

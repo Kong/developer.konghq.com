@@ -105,7 +105,7 @@ Once a session starts, the selected data plane node generates detailed, debug-le
 
 Traces are viewable directly in {{site.konnect_short_name}}’s built-in span viewer. No additional instrumentation or telemetry tools are required.
 
-### Caputred traces
+### Captured traces
 
 Captured traces include:
 
