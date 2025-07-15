@@ -21,7 +21,7 @@ tags:
   - debugger
 related_resources:
   - text: Debugger spans
-    url: /konnect-platform/debugger-spans/
+    url: /gateway/debugger-spans/
   - text: Configure CMEK in {{site.konnect_short_name}}
     url: /konnect-platform/cmek/
   - text: "{{site.base_gateway}} tracing reference"
@@ -110,7 +110,7 @@ Captured traces include:
 
 Tracing follows OpenTelemetry naming conventions for spans and attributes wherever possible, ensuring consistency and interoperability.
 
-For details on the structure and attributes of traces and spans, see the [Debugger spans reference](/konnect-platform/debugger-spans/).
+For details on the structure and attributes of traces and spans, see the [Debugger spans reference](/gateway/debugger-spans/).
 
 
 ## Viewing session details
