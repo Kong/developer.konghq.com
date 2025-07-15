@@ -4,6 +4,8 @@ content_type: how_to
 description: Learn how to configure OpenID Connect with the authorization code flow in Okta.
 
 related_resources:
+  - text: Configure OpenID Connect with the authorization code flow
+    url: /how-to/configure-oidc-with-auth-code-flow/
   - text: OpenID Connect in {{site.base_gateway}}
     url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
@@ -44,8 +46,28 @@ prereqs:
       - example-route
   inline:
     - title: Okta
-      include_content: prereqs/okta-sso
+      content: |
+        You need an admin account for [Okta](https://login.okta.com/). You also need an [Okta user](https://help.okta.com/en-us/content/topics/users-groups-profiles/usgp-add-users.htm) that you can use to test the OIDC auth code flow. 
       icon_url: /assets/icons/okta.svg
+    - title: Ngrok
+      content: |
+        In this tutorial, we use [ngrok](https://ngrok.com/) to expose a local URL to the internet for local testing and development purposes. This isn't a requirement for the plugin itself.
+
+        1. [Install ngrok](https://ngrok.com/docs/getting-started/#step-1-install).
+        1. [Sign up for an ngrok account](https://dashboard.ngrok.com/) and find your [ngrok authtoken](https://dashboard.ngrok.com/get-started/your-authtoken). 
+        1. Install the authtoken and connect the ngrok agent to your account:
+        ```
+        ngrok config add-authtoken $TOKEN
+        ```
+        1. Run ngrok:
+        ```
+        ngrok http localhost:8000
+        ```
+        1. In a new terminal window, export your forwarding URL as a decK environment variable appended with the `/anything` path you'll use to log in:
+        ```sh
+        export DECK_NGROK_HOST='YOUR-FORWARDING-URL/anything'
+        ```
+      icon_url: /assets/icons/ngrok.png
 
 tags:
   - authentication
@@ -53,10 +75,12 @@ tags:
   - okta
 search_aliases:
   - oidc
+  - openid connect
 
 tldr:
   q: How do I use an authorization code to open a session with Okta, letting users log in through a browser?
-  a: Using the OpenID Connect plugin, set up the [auth code flow](/plugins/openid-connect/#authorization-code-flow) to connect to an identity provider (IdP) through a browser, and use session authentication to store open sessions. You can do this by specifying `authorization_code` and `session` in the `config.auth_methods` plugin settings.
+  a: |
+    Using the OpenID Connect plugin, set up the [auth code flow](/plugins/openid-connect/#authorization-code-flow) to connect to an identity provider (IdP) through a browser. You must specify your Okta app client ID, client secret, and issuer URL (for example: `https://domain.okta.com/oauth2/a36f045h4597`) in the OIDC plugin configuration. In addition, you must configure any `scopes` from Okta as well as your redirect URI in the plugin configuration.
 
 faqs:
   - q: How do I enable the Proof Key for Code Exchange (PKCE) extension to the authorization code flow in the OIDC plugin?
@@ -66,6 +90,13 @@ faqs:
       
       If the IdP connected to the plugin enforces PKCE, it will be used during the authorization code flow. 
       If the IdP doesn't support or enforce PCKE, it won't be used.
+  - q: How do I use custom scopes with the OIDC authorization code flow in Okta?
+    a: |
+      In Okta, make sure you you add the custom claim to your authorization server scopes, claims, access policy, and access policy rules. Then, add your custom scope to `config.scope_claim` and to `config.scopes` in the OIDC plugin configuration.  
+  - q: How do I fix the `"Cannot request 'openid' scopes` error when I try to set up OIDC auth with Okta?
+    a: |
+      You can't use the `openid` scope when using the `client_credentials` grant type with Okta.
+      The way to fix this is to create a custom scope inside Okta and update the OpenID Connect plugin to reflect this change by adding it to `scope_claim` and `scopes`. 
  
 cleanup:
   inline:
@@ -78,61 +109,46 @@ cleanup:
 
 ---
 
-### Configure Okta
+## Create an application in Okta
 
-1. [Register](https://developer.okta.com/docs/guides/add-an-external-idp/openidconnect/register-app-in-okta/) the application you are using Kong to proxy.
-1. From the left menu, select **Applications**, then **Create App Integration**.
-1. Select the application type:
-
-    1. Under **Sign-in method**, select **OIDC - OpenID Connect**.
-    1. Under **Application Type**, select **Web Application**.
-
-1. Select **Next**. Configure the application:
-    1. Create a unique name for your application.
-    1. Under **Grant Type**, select **Authorization Code**.
-    1. In both the **Sign-in redirect URIs** and
-    **Sign-out redirect URIs** fields, enter a location handled by your Route
-    in {{site.base_gateway}}.
-
-        For this example, you can enter `http://localhost:8000/anything`.
-    1. In the Assignments section, for **Controlled access**, select **Limit access to selected groups**. This preferred access level sets the permissions for
-    Okta admins. 
-    {:.warning }
-    > Do not select **Allow everyone in your organization to access** otherwise the **access token** won't be verified against Okta.
-    1. **Directory > People** and create a person:
-        Name: Alex
-        Last Name: Doe
-        Email: Email of choice
-        Select **I will set password**.
-        Password: `BlueGorilla92!`
-        Deselect **User must change password on first login**.
-    1. Assign app to person: **Applications > Applications**, click your app, **Assignments** tab. from the **Assign** dropdown menu, select **Assign to People**. Assign to Alex Doe.
+1. In Okta, navigate to **Applications > Applications** in the sidebar.
+1. Click **Create App Integration**.
+1. Select **OIDC - OpenID Connect**.
+1. Select **Web Application**.
+1. Click **Authorization Code** for the grant type.
+1. In both the **Sign-in redirect URIs** and **Sign-out redirect URIs** fields, enter a location handled by your Route in {{site.base_gateway}}. In this tutorial, it will be your Ngrok host followed by `/anything`. For example: `https://a36f045h4597.ngrok-free.app/anything`
+1. In the Assignments section, for **Controlled access**, select **Skip group assignment for now**. We will assign the app to the [test Okta user](#okta) you created in the prerequisites next.
+   Save your configuration.
+   {:.warning }
+   > Do not select **Allow everyone in your organization to access** otherwise the access token won't be verified against Okta.
 1. Export the client ID and client secret of your Okta app:
    ```sh
    export DECK_OKTA_CLIENT_ID='YOUR-OKTA-APP-CLIENT-ID'
    export DECK_OKTA_CLIENT_SECRET='YOUR-OKTA-APP-CLIENT-SECRET'
    ```
+1. In the Assignment tab, assign your app to your Okta test user.
 
-1. Add an Authorization Server. From the left sidebar, go to **Security > API > Authorization Server** and create a server named **Kong API Management** with an audience and description. Click **Save**.
-1. Export your issuer URL as an environment variable:
+## Create an authorization server and access policy
+
+1. Using your Okta credentials, log in to the Okta portal and click **Security > API** in the sidebar.
+1. Create a server named **Kong API Management** with an audience and description.
+1. Copy the issuer URL for your authorization server, strip the `/.well-known/oauth-authorization-server`, and export it as an environment variable:
    ```sh
    export DECK_ISSUER_URL='YOUR-ISSUER-URL'
    ```
-   It should be formatted like `https://$DOMAIN.okta.com/oauth2/$AUTH-SERVER-ID`. 
-4. Click the **Scopes** tab, and click **Add Scope**.
-
-1. Add a scope called `scp`. 
+   It should be formatted like `https://domain.okta.com/oauth2/a36f045h4597`. 
 
 1. On the Access Policy tab, create a new access policy and assign your Okta application you just created.
 
 1. Add a new rule and configure the following settings:
    * **Grant type:** Authorization Code
-   * **Scopes requested:** `scp` 
+   * **User is:** Any user assigned the app
+   * **Scopes requested:** Any scopes
+
 
 ## Enable the OpenID Connect plugin with the auth code flow
 
-Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
-set up an instance of the OpenID Connect plugin with the auth code flow and session authentication.
+Set up an instance of the OpenID Connect plugin with the auth code flow and session authentication for Okta.
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
@@ -148,9 +164,7 @@ entities:
         client_secret:
         - ${client-secret}
         redirect_uri:
-        - http://host.docker.internal:8000/anything
-        scopes_claim:
-        - scp
+        - ${redirect-uri}
         scopes:
         - openid
         - email
@@ -166,17 +180,14 @@ variables:
     value: $OKTA_CLIENT_ID
   client-secret:
     value: $OKTA_CLIENT_SECRET
+  redirect-uri:
+    value: $NGROK_HOST
 {% endentity_examples %}
 
 In this example:
-* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Specifies that the plugin should use session auth and the authorization code flow.
+* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, Okta).
+* `auth_methods`: Specifies that the plugin should use the authorization code flow.
 * `response_mode`: Set to `form_post` so that authorization codes won’t get logged to access logs.
-* `preserve_query_args`: Preserves the original request query arguments through the authorization code flow redirection.
-* `login_action`: Redirects the client to the original request URL after the authorization code flow. This turns the POST request into a GET request, and the browser address bar is updated with the original request query arguments.
-* `login_tokens`: Configures the plugin so that tokens aren't included in the browser address bar.
-* `authorization_endpoint`: Sets a custom endpoint for authorization, overriding the endpoint returned by discovery through the IdP. 
-We need this setting because we're running the example through Docker, otherwise the discovery endpoint will try to access an internal Docker host.
 
 ## Validate authorization code login
 
@@ -184,18 +195,7 @@ Access the Route you configured in the [prerequisites](#prerequisites) with some
 In a new browser tab, navigate to the following:
 
 ```sh
-http://localhost:8000/anything?hello=world
+open $DECK_NGROK_HOST
 ```
 
-The browser should be redirected to the Keycloak login page. 
-
-Let's check what happens if you access the same URL using cURL:
-
-{% validation request-check %}
-url: /anything?hello=world
-method: GET
-status_code: 302
-display_headers: true
-{% endvalidation %}
-
-You should see a `302` response with the session access token in the response, and a `Location` header that shows where the request is being redirected to.
+The browser should be redirected to the Okta login page. You should be able to successfully log in with your Okta user account.
