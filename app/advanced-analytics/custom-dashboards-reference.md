@@ -23,7 +23,7 @@ related_resources:
     url: /dev-portal/analytics/
 ---
 
-Custom Dashboards provide a flexible way to build, organize, and manage analytical views that are tailored to your organization’s needs. This functionality is available in[{{site.konnect_short_name}} Analytics](https://cloud.konghq.com/us/analytics/summary).
+Custom Dashboards provide a flexible way to build, organize, and manage analytical views that are tailored to your organization’s needs. This functionality is available in [{{site.konnect_short_name}} Analytics](https://cloud.konghq.com/us/analytics/summary).
 
 With [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), you can create custom dashboards either from scratch or from a [template](#templates), and modify them from {{site.konnect_short_name}}.
 
@@ -33,8 +33,8 @@ You can add new tiles to any custom dashboard by selecting **New Tile** from the
 
 The following types of tables are available: 
 
-* Time series line
-* Time series bar
+* Timeseries line
+* Timeseries bar
 * Horizontal bar
 * Vertical bar
 * Donut
