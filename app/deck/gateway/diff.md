@@ -71,3 +71,7 @@ Summary:
 {:.no-copy-code}
 
 If the live system has changed without a corresponding change to the state file, `deck gateway diff` will highlight the change and it can be reverted by running `deck gateway sync`.
+
+## Command Usage
+
+{% include_cached deck/help/gateway/diff.md %}

@@ -37,3 +37,7 @@ For example:
 ```bash
 deck gateway validate --online-entities-list Plugins kong.yaml
 ```
+
+## Command Usage
+
+{% include_cached deck/help/gateway/validate.md %}

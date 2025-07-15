@@ -39,3 +39,7 @@ deck gateway ping \
   --konnect-addr https://us.api.konghq.com \
   --konnect-control-plane-name default
 ```
+
+## Command Usage
+
+{% include_cached deck/help/gateway/ping.md %}

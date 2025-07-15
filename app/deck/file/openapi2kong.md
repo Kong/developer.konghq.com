@@ -163,3 +163,7 @@ rows:
         * `x-kong-security-[...] Plugin configurations`
 {% endtable %}
 <!--vale on-->
+
+## Command Usage
+
+{% include_cached deck/help/file/openapi2kong.md %}

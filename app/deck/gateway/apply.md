@@ -32,3 +32,7 @@ services:
 ```
 
 We recommend using [`deck gateway dump`](/deck/gateway/dump/) to back up the complete configuration to a file once you have finished iterating on your configuration. This file can then be used with [`deck gateway sync`](/deck/gateway/sync/).
+
+## Command Usage
+
+{% include_cached deck/help/gateway/apply.md %}

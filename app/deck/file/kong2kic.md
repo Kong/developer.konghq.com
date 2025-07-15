@@ -737,3 +737,7 @@ metadata:
 
 {% endnavtab %}
 {% endnavtabs %}
+
+## Command Usage
+
+{% include_cached deck/help/file/kong2kic.md %}
