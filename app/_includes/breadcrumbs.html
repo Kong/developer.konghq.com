@@ -1,5 +1,5 @@
 {% if include.breadcrumbs %}
-<div class="flex gap-1 justify-start text-xs items-center xl:basis-3/4 {% if include.sticky %} md:sticky md:top-20 {% endif %}">
+<div class="flex gap-1 justify-start text-xs items-center xl:basis-3/4 flex-wrap {% if include.sticky %} md:sticky md:top-20 {% endif %}">
   <a class="text-terciary" href="/">Home</a>
   <span>/</span>
   {% for breadcrumb in include.breadcrumbs %}

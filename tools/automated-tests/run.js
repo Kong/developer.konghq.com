@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import yaml from "js-yaml";
 import Dockerode from "dockerode";
 import minimist from "minimist";
-import { logResult, logResults } from "./reporting.js";
+import { logResult, logResults, isFailureExpected } from "./reporting.js";
 import { ExitOnFailure, runInstructionsFile } from "./instructions/runner.js";
 import {
   setupRuntime,
@@ -91,9 +91,12 @@ export async function loadConfig() {
   }
   await logResults(results);
 
-  if (results.filter((r) => r.status === "failed").length > 0) {
+  const failedTests = results.filter(
+    (r) => r.status === "failed" && !isFailureExpected(r)
+  );
+  if (failedTests.length > 0) {
     process.exit(1);
   } else {
-    return 0;
+    process.exit(0);
   }
 })();
