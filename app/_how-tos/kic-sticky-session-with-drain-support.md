@@ -8,6 +8,8 @@ breadcrumbs:
   - index: kubernetes-ingress-controller
     section: Guides
 
+permalink: /kubernetes-ingress-controller/sticky-sessions-with-drain-support/
+
 content_type: how_to
 layout: guide
 
