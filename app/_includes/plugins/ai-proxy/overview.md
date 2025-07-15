@@ -25,6 +25,7 @@ For {{ site.base_gateway }} versions 3.6 or earlier:
 
 For {{ site.base_gateway }} version {% new_in 3.11 %}:
 
+<!-- vale off -->
 {% if plugin == "AI Proxy" %}
 
 {% feature_table %}
@@ -162,14 +163,15 @@ features:
       * [`/text-generation`](./#supported-native-llm-formats)<br>
 
   - title: "Rerank"
-    description: Improves relevance in RAG pipelines by reordering documents based on context.
+    description: Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
     openai_compatible: false
     examples: |
       * [`/rerank`](./#supported-native-llm-formats)<br>
 {% endfeature_table %}
 
-
 {% endif %}
+
+<!-- vale on -->
 
 ### Core text generation
 
