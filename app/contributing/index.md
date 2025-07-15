@@ -158,6 +158,76 @@ formats:
 {% endnavtab %}
 {% endnavtabs %}
 
+### Control plane requests
+
+Use this block when you are writing a how to for both {{site.base_gateway}} and {{site.konnect_short_name}} and you want to send a request via the control plane.
+
+{% navtabs "control plane request" %}
+{% navtab "Code example" %}
+<!--vale off-->
+```
+{% raw %}{% control_plane_request %}
+url: /keyring/generate
+method: POST
+headers:
+  - 'Accept: application/json'
+{% endcontrol_plane_request %}{% endraw %}
+```
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "Rendered output" %}
+<!--vale off-->
+{% control_plane_request %}
+url: /keyring/generate
+method: POST
+headers:
+  - 'Accept: application/json'
+{% endcontrol_plane_request %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
+
+### {{site.konnect_short_name}} API requests
+
+Use this block when you are writing a how to for only {{site.konnect_short_name}} and you want to send a request via the {{site.konnect_short_name}} API.
+
+{% navtabs "API request" %}
+{% navtab "Code example" %}
+<!--vale off-->
+```
+{% raw %}{% konnect_api_request %}
+url: /v3/apis
+status_code: 201
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+body:
+    name: MyAPI
+    attributes: {"env":["development"],"domains":["web","mobile"]}
+{% endkonnect_api_request %}{% endraw %}
+```
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "Rendered output" %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis
+status_code: 201
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+body:
+    name: MyAPI
+    attributes: {"env":["development"],"domains":["web","mobile"]}
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
+
 ### Tables
 All tables should use the `table` block and be written in `yaml`. 
 
