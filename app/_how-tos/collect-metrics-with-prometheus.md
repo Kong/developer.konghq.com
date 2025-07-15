@@ -87,29 +87,27 @@ entities:
 
 ## Configure Prometheus
 
-Create a `prometheus.yml` file:
-
-```sh
-touch prometheus.yml
-```
-
-Now, add the following to the `prometheus.yml` file to configure Prometheus to scrape {{site.base_gateway}} metrics:
+Create a `prometheus.yml` to configure Prometheus to scrape {{site.base_gateway}} metrics:
 
 ```yaml
+cat <<EOF > prometheus.yml
 scrape_configs:
  - job_name: 'kong'
    scrape_interval: 5s
    static_configs:
      - targets: ['kong-quickstart-gateway:8001']
+EOF
 ```
 {: data-deployment-topology="on-prem" }
 
 ```yaml
+cat <<EOF > prometheus.yml
 scrape_configs:
  - job_name: 'kong'
    scrape_interval: 5s
    static_configs:
      - targets: ['kong-quickstart-gateway:8100']
+EOF
 ```
 {: data-deployment-topology="konnect" }
 
