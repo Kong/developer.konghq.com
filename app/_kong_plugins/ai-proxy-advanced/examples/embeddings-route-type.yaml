@@ -1,4 +1,4 @@
-title: 'Embeddings route'
+title: 'OpenAI embeddings route type'
 
 description: >
   Access the embeddings endpoint to generate text embeddings using OpenAI’s
