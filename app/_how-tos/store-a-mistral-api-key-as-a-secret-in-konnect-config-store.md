@@ -86,17 +86,16 @@ next_steps:
 Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/) by sending a `POST` request to the `/config-stores` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: my-config-store
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Export your Config Store ID as an environment variable so you can use it later:
@@ -130,18 +129,17 @@ In this tutorial, you'll be storing the Mistral API key you set previously and u
 Store your Mistral key as a secret by sending a `POST` request to the `/secrets` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     key: mistral-key
     value: Bearer $MISTRAL_API_KEY
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Reference your stored Mistral API key

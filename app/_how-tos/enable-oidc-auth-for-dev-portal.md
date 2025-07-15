@@ -149,14 +149,13 @@ Because we're using the `client_credentials` auth method, you must create a cust
 [Configure Okta OIDC application authentication](/api/konnect/application-auth-strategies/v2/#/operations/create-app-auth-strategy) using the `/v2/application-auth-strategies` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/application-auth-strategies
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: Okta OIDC
     display_name: Okta OIDC
@@ -170,7 +169,7 @@ body:
             - client_credentials
             scopes: 
             - api.access
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Export the ID of the Okta OIDC auth strategy:
@@ -184,18 +183,17 @@ export AUTH_STRATEGY_ID='YOUR-AUTH-STRATEGY-ID'
 Now that the application auth strategy is configured, you can [apply it to an API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/apis/$API_ID/publications/$PORTAL_ID
 status_code: 201
 method: PUT
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     auth_strategy_ids: 
     - $AUTH_STRATEGY_ID
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 This request will also publish the API to the specified Dev Portal.

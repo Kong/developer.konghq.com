@@ -63,18 +63,17 @@ In this tutorial, you'll automate your API catalog by creating an API along with
 First, [create an API](/api/konnect/api-builder/v3/#/operations/create-api) using the `/v3/apis` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/apis
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: MyAPI
     attributes: {"env":["development"],"domains":["web","mobile"]}
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Export the ID of your API from the response:
@@ -88,19 +87,18 @@ export API_ID='YOUR-API-ID'
 [Create and associate a spec and version](/api/konnect/api-builder/v3/#/operations/create-api-version) with your API using the `/v3/apis/{apiId}/versions` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/apis/$API_ID/versions
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     version: 1.0.0
     spec:
         content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 {:.warning}
@@ -113,20 +111,19 @@ An [API document](/dev-portal/apis/#documentation) is Markdown documentation for
 [Create and associate an API document](/api/konnect/api-builder/v3/#/operations/create-api-document) using the `/v3/apis/{apiId}/documents` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/apis/$API_ID/documents
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     slug: api-document
     status: published
     title: API Document
     content: '# API Document Header'
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Associate the API with a Gateway Service
@@ -138,15 +135,14 @@ Before you can associate the API with the Service, you need the Control Plane ID
 First, send a request to the `/v2/control-planes` endpoint to [get the ID of the `quickstart` Control Plane](/api/konnect/control-planes/v2/#/operations/list-control-planes):
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
 status_code: 201
 method: GET
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Export your Control Plane ID:
@@ -158,15 +154,14 @@ export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
 Next, [list Services](/api/konnect/control-planes-config/v2/#/operations/list-service) by using the `/v2/control-planes/{controlPlaneId}/core-entities/services` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services
 status_code: 201
 method: GET
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Export the ID of the `example-service`:
@@ -178,19 +173,18 @@ export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
 [Associate the API with a Service](/api/konnect/api-builder/v3/#/operations/create-api-implementation) using the `/v3/apis/{apiId}/implementations` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/apis/$API_ID/implementations
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     service:
         control_plane_id: $CONTROL_PLANE_ID
         id: $SERVICE_ID
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Publish the API to Dev Portal
@@ -198,15 +192,14 @@ body:
 Now you can [publish the API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/apis/$API_ID/publications/$PORTAL_ID
 status_code: 201
 method: PUT
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Validate

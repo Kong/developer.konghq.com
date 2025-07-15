@@ -60,18 +60,17 @@ Centrally-managed Consumers are assigned to realms instead of Control Planes. Re
 Use the [`/realms` endpoint](/api/konnect/consumers/#/operations/create-realm) to create a realm and associate it with allowed Control Planes:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/realms
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: prod
     allowed_control_planes: [$KONNECT_CONTROL_PLANE_ID]
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Export the ID of the realm from the response:
@@ -85,17 +84,16 @@ export DECK_REALM_ID={realm-id}
 Use the [create a Consumer](/api/konnect/consumers/#/operations/create-consumer) endpoint to create a centrally-managed Consumer:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/realms/$DECK_REALM_ID/consumers
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     username: Ariel
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 
@@ -109,17 +107,16 @@ export CONSUMER_ID={consumer-id}
 Centrally-managed Consumers require a key for authentication. Configure authentication keys for Consumers using the [create a key](/api/konnect/consumers/#/operations/create-consumer-key) endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v1/realms/$DECK_REALM_ID/consumers/$CONSUMER_ID/keys
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     type: new
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->  
 
 Export the Consumer key from the `secret` field in the response:

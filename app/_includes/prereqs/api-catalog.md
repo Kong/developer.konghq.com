@@ -3,14 +3,13 @@ For this tutorial, you’ll need a Dev Portal pre-configured. These settings are
 1. [Create a Dev Portal](/api/konnect/portal-management/v3/#/operations/create-portal):
    <!--vale off-->
 {% capture portal %}
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/portals
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: MyDevPortal
     authentication_enabled: false
@@ -18,7 +17,7 @@ body:
     auto_approve_developers: false
     default_api_visibility: public
     default_page_visibility: public
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 {% endcapture %}
 
 {{ portal | indent: 3 }}
@@ -31,14 +30,13 @@ body:
 1. [Create a page in your Dev Portal](/api/konnect/portal-management/v3/#/operations/create-portal-page) so published APIs will display:
 <!--vale off-->
 {% capture pages %}
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v3/portals/$PORTAL_ID/pages
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     title: My Page
     slug: /apis
@@ -53,7 +51,7 @@ body:
      persist-page-number: true
      cta-text: "View APIs"
      ---
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 {% endcapture %}
 
 {{ pages | indent: 3 }}

@@ -26,7 +26,7 @@ export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
 
 Create a Control Plane for Dedicated Cloud Gateways:
 
-    {% control_plane_request %}
+    {% konnect_api_request %}
     url: /v2/control-planes
     status_code: 201
     method: POST
@@ -42,7 +42,7 @@ Create a Control Plane for Dedicated Cloud Gateways:
         - host: example.com
           port: 443
           protocol: https
-    {% endcontrol_plane_request %}
+    {% endkonnect_api_request %}
 
 From the response body, export the `control_plane_id`:
 
@@ -68,7 +68,7 @@ export NETWORK_ID='YOUR_NETWORK_ID'
     
 Use the following endpoint to provision a Dedicated Cloud Gateway Data Plane:
 
-    {% control_plane_request %}
+    {% konnect_api_request %}
     url: /v2/cloud-gateways/configurations
     status_code: 201
     method: PUT
@@ -86,5 +86,5 @@ Use the following endpoint to provision a Dedicated Cloud Gateway Data Plane:
           autoscale:
             kind: autopilot
             base_rps: 100
-    {% endcontrol_plane_request %}
+    {% endkonnect_api_request %}
 -->

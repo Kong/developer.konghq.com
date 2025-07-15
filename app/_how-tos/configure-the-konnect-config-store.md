@@ -63,17 +63,16 @@ next_steps:
 Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/) by sending a `POST` request to the `/config-stores` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: my-config-store
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Export the Config Store ID in the response body as an environment variable so you can use it later:
@@ -108,18 +107,17 @@ By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it
 Store your secret by sending a `POST` request to the `/secrets` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     key: secret-key
     value: my-secret-value
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 ## Validate
@@ -127,15 +125,14 @@ body:
 You can validate that your secret was stored correctly by sending a `GET` request to the `/secrets` endpoint:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: GET
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 If your secret was successfully stored in {{site.konnect_short_name}}, the endpoint should return a `201` status code and your `secret-key` key in the output.
