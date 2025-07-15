@@ -58,7 +58,7 @@ rows:
               description: Automate dashboard creation and updates with the API.
               icon: /assets/icons/terminal.svg
               cta:
-                url: /api/konnect/control-planes-analytics/
+                url: /api/konnect/cloud-gateways/
                 align: end
       - blocks:
           - type: card

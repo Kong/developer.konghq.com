@@ -46,7 +46,7 @@ Select **Quick summary dashboard**. This will create a dashboard template.
 ## Customize 
 
 The dashboards template comes with pre-configured tiles that are monitoring your services by default.
-You can configure by adding a new [chart](/analytics/#charts) or an existing [report](/analytics/#reports).
+You can configure by adding a new chart or an existing report.
 To add a new time series line, select **New Tile** and enter the following information: 
 * **Name**: A name for the chart
 * **Time range**: Use Dashboard time

@@ -84,7 +84,7 @@ rows:
               icon: /assets/icons/bars.svg
               cta:
                 text: See Custom Dashboards
-                url: /advanced-analytics/custom-dashboards/
+                url: /custom-dashboards/
       - blocks:
           - type: card
             config:
