@@ -259,6 +259,27 @@
     ]
   },
   {
+    "id": "090a2dcc-506d-4b09-9488-14778dc26fc4",
+    "title": "Kong Identity - Tech preview",
+    "latestVersion": {
+      "name": "v1",
+      "id": "62d001b6-6892-43a3-ad97-346047341169"
+    },
+    "description": null,
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "62d001b6-6892-43a3-ad97-346047341169",
+        "created_at": "2025-06-20T15:40:50.990Z",
+        "updated_at": "2025-06-20T15:51:52.567Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "f8ebf955-6f09-40f6-b020-1feb80b4a773",
     "title": "Kong Native Event Proxy (Beta)",
     "latestVersion": {
@@ -358,6 +379,27 @@
         "created_at": "2023-01-18T22:01:21.688Z",
         "updated_at": "2024-10-17T19:10:43.647Z",
         "name": "v2",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "6f558eef-bc41-466b-9a2b-eb0cf409a6f3",
+    "title": "Konnect CMEK",
+    "latestVersion": {
+      "name": "v1",
+      "id": "3cebbe84-28ff-4c7b-a31f-d855975a14bd"
+    },
+    "description": "Customer Managed Encryption Keys",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "3cebbe84-28ff-4c7b-a31f-d855975a14bd",
+        "created_at": "2025-07-15T20:24:00.808Z",
+        "updated_at": "2025-07-15T20:24:44.159Z",
+        "name": "v1",
         "deprecated": false,
         "registration_configs": []
       }
