@@ -1,5 +1,4 @@
-
-title: 'Responses chat route with OpenAI'
+title: 'Responses route type'
 description: "Use the Responses API to fetch metadata about past OpenAI requests for debugging and analysis."
 
 weight: 900
@@ -8,16 +7,17 @@ requirements:
 - OpenAI account
 
 config:
-  route_type: llm/v1/responses
-  auth:
-    header_name: Authorization
-    header_value: Bearer ${key}
-  model:
-    provider: openai
-    name: gpt-4
-    options:
-      max_tokens: 512
-      temperature: 1.0
+  targets:
+    - route_type: llm/v1/responses
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: gpt-4o
+        options:
+          max_tokens: 512
+          temperature: 1.0
 
 variables:
   key:

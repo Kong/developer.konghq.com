@@ -28,7 +28,7 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 <!-- vale off -->
 {% if plugin == "AI Proxy" %}
 
-{% feature_table %}
+{% feature_table %}x`
 item_title: API Capability
 columns:
   - title: Description
@@ -57,7 +57,7 @@ features:
     openai_compatible: true
     examples: |
       * [`llm/v1/batch`](./examples/batches-route-type/)<br>
-      * [`llm/v1/files`](/examples/files-route-type/)<br>
+      * [`llm/v1/files`](./examples/files-route-type/)<br>
       * [Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
 
   - title: "Audio"

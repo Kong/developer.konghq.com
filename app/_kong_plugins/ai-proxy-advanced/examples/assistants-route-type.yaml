@@ -1,23 +1,23 @@
-title: 'Batches route type'
-description: 'Create large batches of API requests for asynchronous processing.'
+title: 'Assistants chat route with OpenAI'
+description: "Use the Assistants API to create a persistent, tool-augmented agent backed by GPT-4."
 
 weight: 900
-
-min_version:
-  gateway: '3.11'
 
 requirements:
 - OpenAI account
 
 config:
   targets:
-    - route_type: llm/v1/batches
-      model_name_header: false
+    - route_type: llm/v1/assistants
       auth:
         header_name: Authorization
         header_value: Bearer ${key}
       model:
         provider: openai
+        name: gpt-4o
+        options:
+          max_tokens: 512
+          temperature: 1.0
 
 variables:
   key:
