@@ -14,7 +14,7 @@ works_on:
     - konnect
 tags:
   - tracing
-  - debug
+  - debugger
 related_resources:
   - text: The {{site.konnect_short_name}} Debugger
     url: /gateway-manager/Debugger/

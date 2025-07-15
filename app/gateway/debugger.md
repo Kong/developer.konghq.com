@@ -18,6 +18,7 @@ faqs:
     a: Under normal conditions, the Debugger adds negligible latency. However, under heavy load, the Debugger may impact the throughput of data planes being traced.
 tags:
   - tracing
+  - debugger
 related_resources:
   - text: Debugger spans
     url: /konnect-platform/debugger-spans/
