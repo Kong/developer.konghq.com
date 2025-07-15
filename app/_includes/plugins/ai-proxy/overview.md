@@ -35,7 +35,7 @@ columns:
     key: description
   - title: Examples
     key: examples
-  - title: OpenAI-Compatible
+  - title: OpenAI-compatible
     key: openai_compatible
 
 features:
@@ -51,7 +51,7 @@ features:
     examples: |
       * [`llm/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`llm/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route_type](/mcp/secure-mcp-traffic/)<br>
+      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
@@ -112,7 +112,7 @@ features:
     description: Offers unified text-to-vector embedding with support for multiple providers and analytics.
     openai_compatible: true
     examples: |
-      * [`/v1/embeddings`](./examples/embeddings-route-type/)<br>
+      * [`/v1/embeddings`](./examples/embeddings-route-type/)
 
   - title: "Assistants and responses"
     description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
@@ -120,7 +120,7 @@ features:
     examples: |
       * [`/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route_type](/mcp/secure-mcp-traffic/)<br>
+      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
