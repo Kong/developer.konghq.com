@@ -1,7 +1,7 @@
 ---
 title: Configuring Sticky Sessions with Drain Support
 description: |
-  Learn how to implement sticky sessions with graceful draining of terminating pods using {{site.kic_product_name}}.
+  Learn how to implement sticky sessions with graceful draining of terminating Pods using {{site.kic_product_name}}.
   
 breadcrumbs:
   - /kubernetes-ingress-controller/
