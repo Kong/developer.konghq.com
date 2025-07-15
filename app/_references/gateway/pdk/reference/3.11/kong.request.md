@@ -800,22 +800,3 @@ end
 ```
 
 
-
-## kong.request.get_id()
-
-Returns the unique request ID for the current request.
- The request ID is automatically generated for each request processed by Kong
- and can be used for tracking and debugging purposes.
- This ID remains the same throughout the entire request lifecycle.
-
-
-**Phases**
-
-* rewrite, access, header_filter, response, body_filter, log, admin_api
-
-**Returns**
-
-* `string`:  The unique request ID.
-
-
-

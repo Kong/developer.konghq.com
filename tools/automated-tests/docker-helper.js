@@ -27,9 +27,8 @@ export async function fetchImage(docker, imageName, runtime, log) {
         {
           context: dockerContext,
           src: ["Dockerfile"],
-          platform: "linux/arm64",
         },
-        { t: imageName, platform: "linux/arm64" },
+        { t: imageName },
         function (error, stream) {
           if (error) {
             return reject(error);

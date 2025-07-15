@@ -1,0 +1,39 @@
+title: Enable "Try it" in Dev Portal for requests with any header
+description: |
+  Configures the CORS plugin to support sending requests with any headers from the Dev Portal spec renderer.
+extended_description: |
+  Configures the CORS plugin to support sending requests with any headers from the Dev Portal spec renderer.
+  You must use this configuration if the Routes associated with your API specs include any headers, standard or custom.
+
+requirements: 
+- "If the Routes associated with your API specs use any headers, add [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) to any Routes that use the headers."
+- |
+  If the Routes associated with your API specs require custom headers to match (the request has to be made with the specified header, otherwise the request will be a 404), configure one of the following:
+
+    * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured 
+    * Add a global Route at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured. You don't need to specify any path.
+
+weight: 400
+
+variables:
+  portal_url:
+    description: |
+     The full URL of your Dev Portal, including the protocol. For example: `https://domain.us.kongportals.com`
+    value: $PORTAL_URL
+  header:
+    description: |
+     The name of your header.
+    value: $HEADER
+
+config:
+  origins:
+    - ${portal_url}
+  headers:
+    - ${header}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
