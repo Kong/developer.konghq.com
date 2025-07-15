@@ -98,6 +98,10 @@ rows:
             * The PAT has a maximum duration of 12 months.
             * There is a limit of 10 personal access tokens per user.
             * Unused tokens are deleted and revoked after 12 months of inactivity.
+
+            Org Admins can revoke personal access tokens for users that have left their organization by using the UI or the API. Users can see the status of their personal access tokens (active, revoked or expired) in their personal access token page under their account.
+
+            If your organization does not allow the use of personal access tokens, org admins can disable the use of personal access tokens by navigating to Organization -> Settings -> General.
       - header:
           type: h3
           text: "System accounts and access tokens"
