@@ -28,7 +28,7 @@ For {{ site.base_gateway }} version {% new_in 3.11 %}:
 <!-- vale off -->
 {% if plugin == "AI Proxy" %}
 
-{% feature_table %}x`
+{% feature_table %}
 item_title: API Capability
 columns:
   - title: Description
@@ -51,6 +51,7 @@ features:
     examples: |
       * [`llm/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`llm/v1/responses`](./examples/responses-route-type/)<br>
+      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route_type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
@@ -119,7 +120,7 @@ features:
     examples: |
       * [`/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure MCP Server traffic using `/responses` API](/mcp/secure-mcp-traffic/)
+      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route_type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
