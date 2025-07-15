@@ -36,6 +36,6 @@ deck file convert --input-file kong2x.yaml --from kong-gateway-2.x --to kong-gat
   - Prefix any paths that look like a regular expression with a `~`
   - Generate default values for missing `namespace` fields in any Rate Limiting Advanced plugins
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/file/convert.md %}

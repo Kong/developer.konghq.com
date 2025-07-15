@@ -181,6 +181,6 @@ rules:
         match: "^https$"
 ```
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/file/lint.md %}

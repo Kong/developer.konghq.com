@@ -45,6 +45,6 @@ The merge algorithm works in the following way:
 
 `deck file merge` does not perform any validations.
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/file/merge.md %}

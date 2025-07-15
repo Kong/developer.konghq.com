@@ -63,6 +63,6 @@ deck gateway sync services.yaml consumers.yaml
 deck gateway sync directory/*.yaml
 ```
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/gateway/sync.md %}

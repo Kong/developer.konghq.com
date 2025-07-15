@@ -64,6 +64,6 @@ This creates multiple files in the current directory. Each file is named the sam
 deck gateway dump --all-workspaces
 ```
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/gateway/dump.md %}

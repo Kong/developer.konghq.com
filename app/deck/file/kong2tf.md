@@ -865,6 +865,6 @@ resource "konnect_gateway_vault" "env" {
 {% endnavtab %}
 {% endnavtabs %}
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/file/kong2tf.md %}

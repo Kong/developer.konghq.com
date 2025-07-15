@@ -38,6 +38,6 @@ For example:
 deck gateway validate --online-entities-list Plugins kong.yaml
 ```
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/gateway/validate.md %}

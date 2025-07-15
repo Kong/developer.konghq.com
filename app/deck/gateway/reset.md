@@ -28,6 +28,6 @@ The `deck gateway reset` command deletes all entities in the target control plan
 {:.danger}
 > **The reset command is destructive and cannot be undone.**
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/gateway/reset.md %}

@@ -164,6 +164,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/file/openapi2kong.md %}

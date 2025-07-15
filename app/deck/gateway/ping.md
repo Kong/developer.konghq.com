@@ -40,6 +40,6 @@ deck gateway ping \
   --konnect-control-plane-name default
 ```
 
-## Command Usage
+## Command usage
 
 {% include_cached deck/help/gateway/ping.md %}
