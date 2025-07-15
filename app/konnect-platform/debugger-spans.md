@@ -12,12 +12,8 @@ products:
     - konnect-platform
 works_on:
     - konnect
-
-tech_preview: true
-
 tags:
   - tracing
-  - tech-preview
   - debug
 related_resources:
   - text: The {{site.konnect_short_name}} Debugger
