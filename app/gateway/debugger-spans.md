@@ -62,7 +62,7 @@ rows:
   - name: "`proxy.kong.request.id`"
     description: Unique id for each request
   - name: "`proxy.kong.request.time`"
-    description: 	request time as measured by Nginx ($request_time)
+    description: Request time as measured by Nginx ($request_time)
   - name: "`http.request.size`"
     description: Request body size and request headers size in bytes
   - name: "`http.response.body.size`"

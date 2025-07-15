@@ -43,6 +43,7 @@ related_resources:
 To begin using the Debugger, ensure the following requirements are met:
 
 * Your data plane nodes are running {{site.base_gateway}} version 3.9.1 or later.
+* Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't currently supported.
 * For version 3.9.x only: set the following environment variables in `kong.conf`:
   * `KONG_CLUSTER_RPC=on`
   * `KONG_ACTIVE_TRACING=on`
@@ -50,14 +51,6 @@ To begin using the Debugger, ensure the following requirements are met:
 {:.info}
 > From version 3.10 and later, these environment variables are enabled by default and no manual configuration is required.
 
-{:.info}
-> The {{site.konnect_short_name}} Debugger is currently supported on:
->
-> * {{site.konnect_short_name}} Self-Managed Hybrid Gateways  
-> * {{site.konnect_short_name}} Dedicated Cloud Gateways  
-> * {{site.konnect_short_name}} Serverless Gateways  
->
-> It is not supported on {{site.kic_product_name}} or {{site.event_gateway}} Gateways.
 
 1. In [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), select the control plane that contains the data plane to be traced.
 2. In the left navigation menu, click **Debugger**.
@@ -98,7 +91,7 @@ Sampling rules can be defined in two ways:
   * **None:** Capture all requests.
   * **Route:** Capture requests to a specific Route.
   * **Gateway service:** Capture requests to a specific Gateway service.
-* **Advanced sampling rules:** Use expressions to match on attributes such as latency, headers, status codes, route ID, service ID, and more.  
+* **Advanced sampling rules:** Use expressions to match on attributes such as latency, headers, status codes, Route ID, Service ID, and more.  
   For example: `http.response.status_code == 503`
 
 
@@ -113,7 +106,7 @@ Captured traces include:
 * Request and response summary
 * Spans for each internal Kong phase
 * Plugin execution and duration
-* Logs correlated to each trace and span ([learn more](#logs))
+* [Logs](#logs) correlated to each trace and span 
 
 Tracing follows OpenTelemetry naming conventions for spans and attributes wherever possible, ensuring consistency and interoperability.
 
@@ -156,6 +149,10 @@ Use the spans view to troubleshoot specific issues and improve performance.
 
 Logs offer deeper insight into what happened during a request. While traces and spans help you pinpoint **where** an issue occurred, logs help explain **what** occurred.
 
+You can use the logs view to:
+* Investigate specific errors and debug messages in the context of a trace.
+* Troubleshoot issues and investigate trace-level events in detail.
+
 When starting a session, administrators can enable log capture to collect Gateway logs for the duration of the session. These logs are scoped to the session and only include error logs produced by {{site.base_gateway}} during that time.
 
 Captured logs are automatically associated with specific spans and are viewable in the **Logs** tab of the trace panel. You can filter logs by log level and span to narrow down the output.
@@ -165,10 +162,6 @@ Captured logs are automatically associated with specific spans and are viewable 
 
 {{site.konnect_product_name}} encrypts all ingested logs. For added privacy and control, you can [enable customer-managed encryption keys (CMEK)](/konnect-platform/cmek/).
 
-Use the logs view to investigate specific errors and debug messages in the context of a trace.
-
-
-Use the logs view to troubleshoot issues and investigate trace-level events in detail.
 
 
 ## Data security with customer-managed encryption keys (CMEK)

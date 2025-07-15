@@ -15,7 +15,7 @@ works_on:
   - konnect
 faqs:
   - q: Can I use automation to configure CMEK in {{site.konnect_short_name}}?
-    a: Yes, customers will be able to use the {{site.konnect_short_name}} UI, API, and [Terraform](/terraform/) to configure CMEK.
+    a: Yes, you can use the {{site.konnect_short_name}} UI, API, and [Terraform](/terraform/) to configure CMEK.
   - q: Can I bring in symmetric keys from other key management services?
     a: No. CMEK currently only supports AWS Key Management Service (KMS).
 
@@ -34,7 +34,7 @@ faqs:
 
 CMEK currently applies to:
 
-* Payloads captured through [the {{site.konnect_short_name}} Debugger](/gateway-manager/debugger/)
+* Payloads captured through [the {{site.konnect_short_name}} Debugger](/gateway/debugger/)
 * Request logs stored in Debugger workflows
 
 To use CMEK, you must
@@ -42,7 +42,7 @@ To use CMEK, you must
 1. [Create a **symmetric encryption key** in AWS KMS.](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html)
 1. Provide the **key ARN** to [{{site.konnect_short_name}}](https://cloud.konghq.com/global/organization/settings/encryption-keys/)
 
-## Configure CMEK
+## Configure CMEK in {{site.konnect_short_name}}
 
 To configure CMEK, you need:
 * A **symmetric key** in AWS KMS
