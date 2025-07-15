@@ -34,7 +34,7 @@ faqs:
 
 CMEK currently applies to:
 
-* Payloads captured through [the {{site.konnect_short_name}} Debugger](/konnect-platform/debugger/)
+* Payloads captured through [the {{site.konnect_short_name}} Debugger](/gateway-manager/debugger/)
 * Request logs stored in Debugger workflows
 
 To use CMEK, you must

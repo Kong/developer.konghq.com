@@ -2,7 +2,7 @@
 title: "Collecting {{site.konnect_short_name}} traces with Debugger"
 description: "The Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes."
 breadcrumbs:
-  - /konnect/
+  - /gateway-manager/
 content_type: reference
 layout: reference
 search_aliases: 

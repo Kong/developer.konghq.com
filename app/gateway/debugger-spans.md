@@ -2,7 +2,7 @@
 title: Debugger spans
 description: 'Spans represent a single unit of trace in {{site.base_gateway}} this page contains all available spans.'
 breadcrumbs:
-  - /konnect/
+  - /gateway-manager/
 content_type: reference
 layout: reference
 search_aliases: 
@@ -17,12 +17,12 @@ tags:
   - debug
 related_resources:
   - text: The {{site.konnect_short_name}} Debugger
-    url: /konnect-platform/Debugger/
+    url: /gateway-manager/Debugger/
 ---
 
 
 
-When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/konnect-platform/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/gateway-manager/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
 The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
 <!--vale off-->
 ### kong
