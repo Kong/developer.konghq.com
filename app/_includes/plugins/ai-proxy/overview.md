@@ -96,6 +96,7 @@ features:
 {% elsif plugin == "AI Proxy Advanced" %}
 
 {% feature_table %}
+item_title: API capability
 columns:
   - title: Description
     key: description
