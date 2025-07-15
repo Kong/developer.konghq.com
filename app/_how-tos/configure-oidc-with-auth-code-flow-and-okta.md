@@ -92,7 +92,7 @@ faqs:
       If the IdP doesn't support or enforce PCKE, it won't be used.
   - q: How do I use custom scopes with the OIDC authorization code flow in Okta?
     a: |
-      In Okta, make sure you you add the custom claim to your authorization server scopes, claims, access policy, and access policy rules. Then, add your custom scope to `config.scope_claim` and to `config.scopes` in the OIDC plugin configuration.  
+      In Okta, make sure you add the custom claim to your authorization server scopes, claims, access policy, and access policy rules. Then, add your custom scope to `config.scope_claim` and to `config.scopes` in the OIDC plugin configuration.  
   - q: How do I fix the `"Cannot request 'openid' scopes` error when I try to set up OIDC auth with Okta?
     a: |
       You can't use the `openid` scope when using the `client_credentials` grant type with Okta.
