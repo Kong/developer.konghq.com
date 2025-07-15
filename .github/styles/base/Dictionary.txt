@@ -787,6 +787,7 @@ text_splitters
 tfvars
 timeframe
 timeframes
+timeseries
 tlds
 tls
 TLSRoute
