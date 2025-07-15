@@ -1,3 +1,7 @@
+## How-to renames
+/how-to/collect-dev-portal-audit-logs-with-sumologic/ /how-to/collect-dev-portal-audit-logs/
+/how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
+
 # Mesh redirects
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/

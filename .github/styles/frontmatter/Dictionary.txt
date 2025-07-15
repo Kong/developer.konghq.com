@@ -28,3 +28,5 @@ act_as_plugin
 control_plane
 konnectextension
 kongplugininstallation
+CACertificate
+KeySet

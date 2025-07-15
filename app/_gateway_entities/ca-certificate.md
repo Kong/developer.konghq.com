@@ -39,7 +39,7 @@ api_specs:
     - konnect/control-planes-config
 schema:
     api: gateway/admin-ee
-    path: /schemas/CA-Certificate
+    path: /schemas/CACertificate
 
 works_on:
   - on-prem
