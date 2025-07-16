@@ -58,7 +58,7 @@ If you define the same environment variable across different levels of environme
 
 ## Environment variables in scripts
 
-You can use pre-request and after-response [scripts](/insomnia/scripts/) to set, unset, or modify environment variables. To ensure compatibility with Postman variables, there are multiple functions to interact with different variables:
+You can use pre-request and after-response [scripts](/insomnia/scripts/) to set, unset, or modify environment variables. To ensure compatibility with Postman variables, there are multiple functions to interact with different environment types:
 
 {% table %}
 columns:
