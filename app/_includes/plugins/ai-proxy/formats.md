@@ -87,46 +87,48 @@ The request and response formats are loosely modeled after OpenAI’s API. For d
 
 ## Supported native LLM formats
 
-{% navtabs "llm_format_providers" %}
+When [`config.llm_format`](./reference/#schema--config-llm-format) is set to a native format, only the corresponding provider is supported with its specific APIs as listed below.
 
-{% navtab "Gemini native format" %}
-
-When [`config.llm_format`](./reference/#schema--config-llm-format) is set to `gemini`, only the Gemini provider is supported. The following Gemini APIs are available:
-
-* `/generateContent`
-* `/streamGenerateContent`
-{% endnavtab %}
-
-{% navtab "Bedrock native format" %}
-
-When `llm_format` is set to `bedrock`, only the Bedrock provider is supported. Supported Bedrock APIs include:
-
-* `/converse`
-* `/converse-stream`
-* `/retrieveAndGenerate`
-* `/retrieveAndGenerateStream`
-* `/rerank`
-{% endnavtab %}
-
-{% navtab "Cohere native format" %}
-When [`config.llm_format`](./reference/#schema--config-llm-format) is set to `cohere`, only the Cohere provider is supported. Available Cohere APIs are:
-
-* `/v1/rerank`
-* `/v2/rerank`
-{% endnavtab %}
-
-{% navtab "Hugging Face native format" %}
-When `llm_format` is set to `"huggingface"`, only the Hugging Face provider is supported. The following Hugging Face APIs are supported:
-
-* `/generate`
-* `/generate_stream`
-
-{% endnavtab %}
-
-{% endnavtabs %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: LLM format
+    key: llm_format
+  - title: Provider
+    key: provider
+  - title: Supported APIs
+    key: apis
+rows:
+  - llm_format: "`gemini`"
+    provider: Gemini
+    apis: |
+      - `/generateContent`
+      - `/streamGenerateContent`
+  - llm_format: "`bedrock`"
+    provider: Bedrock
+    apis: |
+      - `/converse`
+      - `/converse-stream`
+      - `/retrieveAndGenerate`
+      - `/retrieveAndGenerateStream`
+      - `/rerank`
+  - llm_format: "`cohere`"
+    provider: Cohere
+    apis: |
+      - `/v1/rerank`
+      - `/v2/rerank`
+  - llm_format: "`huggingface`"
+    provider: Hugging Face
+    apis: |
+      - `/generate`
+      - `/generate_stream`
+{% endtable %}
+<!-- vale on -->
 
 ### Caveats and limitations
+
 The following sections detail the provider and statistic logging limitations.
+
 #### Provider-specific limitations
 
 * **Anthropic**: Does not support `llm/v1/completions` or `llm/v1/embeddings`.

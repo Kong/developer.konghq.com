@@ -12,9 +12,9 @@
 
 ## Overview of capabilities
 
-{{ plugin }} plugin supports capabilities across batch processing, multimodal embeddings, agents, audio, image, streaming, and more, spanning multiple providers:
+{{ plugin }} plugin supports capabilities across batch processing, multimodal embeddings, agents, audio, image, streaming, and more, spanning multiple providers.
 
-For {{ site.base_gateway }} versions 3.6 or earlier:
+**For {{ site.base_gateway }} versions 3.6 or earlier:**
 
 * **Chat Completions APIs**: Multi-turn conversations with system/user/assistant roles.
 
@@ -23,13 +23,13 @@ For {{ site.base_gateway }} versions 3.6 or earlier:
   {:.warning}
   > OpenAI has marked this endpoint as [legacy](https://platform.openai.com/docs/api-reference/completions) and recommends using the [Chat Completions API](https://platform.openai.com/docs/guides/text?api-mode=responses) for developing new applications.
 
-For {{ site.base_gateway }} version {% new_in 3.11 %}:
+**For {{ site.base_gateway }} version {% new_in 3.11 %}:**
 
 <!-- vale off -->
 {% if plugin == "AI Proxy" %}
 
 {% feature_table %}
-item_title: API Capability
+item_title: API capability
 columns:
   - title: Description
     key: description
