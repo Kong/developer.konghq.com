@@ -80,7 +80,8 @@ rows:
     env: Selected global sub-environment or global base environment
     postman: "`pm.globals`"
   - functions: "`insomnia.vault`"
-    env: Selected private global sub-environment
+    env: |
+      [Secret variables](#secret-environment-variables) in selected private global sub-environment
     postman: "`pm.vault`"
   - functions: |
       * `insomnia.baseEnvironment`
@@ -110,7 +111,8 @@ rows:
     postman: "`pm.variables`"
 {% endtable %}
 
-<!-- Screenshot to illustrate selected env -->
+{:.info}
+> In private global sub-environments, `insomnia.vault` can only be used to reference secret variables. Text and JSON variables must be referenced with `insomnia.globals` or `insomnia.variables.globalVars`.
 
 ## Secret environment variables
 
