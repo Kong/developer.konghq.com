@@ -7,7 +7,7 @@ Supported in: {% new_in 3.11 %}
 {
   "messages": [
     { "role": "system", "content": "You are a helpful assistant." },
-    { "role": "user", "content": "Explain how rainbows form." }
+    { "role": "user", "content": "Explain the concept of quantum superposition." }
   ]
 }
 ```
