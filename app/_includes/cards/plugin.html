@@ -27,8 +27,12 @@
             </p>
         </div>
 
-        {% if plugin.premium_partner or plugin.third_party %}
+        {% if plugin.premium_partner or plugin.third_party or plugin.tier %}
             <div class="flex flex-wrap gap-2">
+                {%- if plugin.tier -%}
+                {%- assign text = site.data.products.gateway.tiers[plugin.tier].text -%}
+                {%- include badge.html text=text  -%}
+                {%- endif -%}
                 {%- if plugin.premium_partner -%}
                 {%- include badges/premium_partner.html -%}
                 {%- endif -%}
