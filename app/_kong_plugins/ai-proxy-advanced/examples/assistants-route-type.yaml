@@ -1,4 +1,4 @@
-title: 'Assistants chat route with OpenAI'
+title: 'Assistants chat route'
 description: "Use the Assistants API to create a persistent, tool-augmented agent backed by GPT-4."
 
 weight: 900

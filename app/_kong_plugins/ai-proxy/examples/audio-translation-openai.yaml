@@ -1,4 +1,4 @@
-title: 'OpenAI audio translation route'
+title: 'Audio translation route'
 description: 'Set up an audio speech translation route using OpenAI’s text-to-speech model.'
 
 weight: 900
