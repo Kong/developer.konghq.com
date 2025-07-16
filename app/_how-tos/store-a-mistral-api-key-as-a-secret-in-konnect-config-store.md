@@ -90,9 +90,6 @@ Before you can configure a {{site.konnect_short_name}} Vault, you must first cre
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: my-config-store
 {% endkonnect_api_request %}
@@ -133,9 +130,6 @@ Store your Mistral key as a secret by sending a `POST` request to the `/secrets`
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     key: mistral-key
     value: Bearer $MISTRAL_API_KEY

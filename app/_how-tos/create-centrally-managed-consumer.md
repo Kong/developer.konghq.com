@@ -64,9 +64,6 @@ Use the [`/realms` endpoint](/api/konnect/consumers/#/operations/create-realm) t
 url: /v1/realms
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: prod
     allowed_control_planes: [$KONNECT_CONTROL_PLANE_ID]
@@ -88,9 +85,6 @@ Use the [create a Consumer](/api/konnect/consumers/#/operations/create-consumer)
 url: /v1/realms/$DECK_REALM_ID/consumers
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     username: Ariel
 {% endkonnect_api_request %}
@@ -111,9 +105,6 @@ Centrally-managed Consumers require a key for authentication. Configure authenti
 url: /v1/realms/$DECK_REALM_ID/consumers/$CONSUMER_ID/keys
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     type: new
 {% endkonnect_api_request %}

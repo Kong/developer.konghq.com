@@ -30,9 +30,6 @@ Create a Control Plane for Dedicated Cloud Gateways:
     url: /v2/control-planes
     status_code: 201
     method: POST
-    headers:
-      - 'Authorization: Bearer $KONNECT_TOKEN'
-      - 'Content-Type: application/json'
     body:
       name: cloud-gateway-control-plane
       description: A test control plane for Dedicated Cloud Gateways.
@@ -72,9 +69,6 @@ Use the following endpoint to provision a Dedicated Cloud Gateway Data Plane:
     url: /v2/cloud-gateways/configurations
     status_code: 201
     method: PUT
-    headers:
-      - 'Authorization: Bearer $KONNECT_TOKEN'
-      - 'Content-Type: application/json'
     body:
       control_plane_id: $CONTROL_PLANE_ID
       version: "3.6"

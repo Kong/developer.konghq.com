@@ -153,9 +153,6 @@ Because we're using the `client_credentials` auth method, you must create a cust
 url: /v2/application-auth-strategies
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: Okta OIDC
     display_name: Okta OIDC
@@ -187,9 +184,6 @@ Now that the application auth strategy is configured, you can [apply it to an AP
 url: /v3/apis/$API_ID/publications/$PORTAL_ID
 status_code: 201
 method: PUT
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     auth_strategy_ids: 
     - $AUTH_STRATEGY_ID

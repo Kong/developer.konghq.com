@@ -200,9 +200,6 @@ Use this block when you are writing a how to for only {{site.konnect_short_name}
 url: /v3/apis
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: MyAPI
     attributes: {"env":["development"],"domains":["web","mobile"]}
@@ -217,9 +214,6 @@ body:
 url: /v3/apis
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: MyAPI
     attributes: {"env":["development"],"domains":["web","mobile"]}

@@ -7,9 +7,6 @@ For this tutorial, you’ll need a Dev Portal pre-configured. These settings are
 url: /v3/portals
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: MyDevPortal
     authentication_enabled: false
@@ -34,9 +31,6 @@ body:
 url: /v3/portals/$PORTAL_ID/pages
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     title: My Page
     slug: /apis

@@ -67,9 +67,6 @@ First, [create an API](/api/konnect/api-builder/v3/#/operations/create-api) usin
 url: /v3/apis
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: MyAPI
     attributes: {"env":["development"],"domains":["web","mobile"]}
@@ -91,9 +88,6 @@ export API_ID='YOUR-API-ID'
 url: /v3/apis/$API_ID/versions
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     version: 1.0.0
     spec:
@@ -115,9 +109,6 @@ An [API document](/dev-portal/apis/#documentation) is Markdown documentation for
 url: /v3/apis/$API_ID/documents
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     slug: api-document
     status: published
@@ -139,9 +130,6 @@ First, send a request to the `/v2/control-planes` endpoint to [get the ID of the
 url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
 status_code: 201
 method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -158,9 +146,6 @@ Next, [list Services](/api/konnect/control-planes-config/v2/#/operations/list-se
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services
 status_code: 201
 method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -177,9 +162,6 @@ export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
 url: /v3/apis/$API_ID/implementations
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     service:
         control_plane_id: $CONTROL_PLANE_ID
@@ -196,9 +178,6 @@ Now you can [publish the API](/api/konnect/api-builder/v3/#/operations/publish-a
 url: /v3/apis/$API_ID/publications/$PORTAL_ID
 status_code: 201
 method: PUT
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 

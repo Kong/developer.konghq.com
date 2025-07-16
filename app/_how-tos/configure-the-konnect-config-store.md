@@ -67,9 +67,6 @@ Before you can configure a {{site.konnect_short_name}} Vault, you must first cre
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: my-config-store
 {% endkonnect_api_request %}
@@ -111,9 +108,6 @@ Store your secret by sending a `POST` request to the `/secrets` endpoint:
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     key: secret-key
     value: my-secret-value
@@ -129,9 +123,6 @@ You can validate that your secret was stored correctly by sending a `GET` reques
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 

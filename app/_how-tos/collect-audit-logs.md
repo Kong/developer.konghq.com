@@ -57,9 +57,6 @@ Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api
 url: /v2/audit-log-webhook
 status_code: 201
 method: PATCH
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     endpoint: $SIEM_ENDPOINT
     enabled: true
@@ -85,9 +82,6 @@ To validate that the webhook is configured correctly, send an API request using 
 url: /v2/control-planes
 status_code: 201
 method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 

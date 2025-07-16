@@ -7,9 +7,6 @@
 url: /v3/apis
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     name: MyAPI
     attributes: {"env":["development"],"domains":["web","mobile"]}
@@ -30,9 +27,6 @@ export API_ID='YOUR-API-ID'
 url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
 status_code: 201
 method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 Export your Control Plane ID:
@@ -50,9 +44,6 @@ export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services
 status_code: 201
 method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 Export the ID of the `example-service`:
@@ -70,9 +61,6 @@ export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
 url: /v3/apis/$API_ID/implementations
 status_code: 201
 method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     service:
         control_plane_id: $CONTROL_PLANE_ID
@@ -90,9 +78,6 @@ body:
 url: /v3/apis/$API_ID/publications/$PORTAL_ID
 status_code: 201
 method: PUT
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 {% endcapture %}
 

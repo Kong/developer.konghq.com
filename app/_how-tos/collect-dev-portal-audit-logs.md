@@ -85,9 +85,6 @@ Create a webhook by sending a `PATCH` request to the [`/portals/{portalId}/audit
 url: /v3/portals/$PORTAL_ID/audit-log-webhook
 status_code: 201
 method: PATCH
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
 body:
     audit_log_destination_id: $DESTINATION_ID
     enabled: true
