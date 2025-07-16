@@ -4356,7 +4356,7 @@ info:
     OpenAPI 3.0 spec for Kong Gateway's Enterprise Admin API.
 
     You can learn more about Kong Gateway at [docs.konghq.com](https://developer.konghq.com/)
-    .Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
+    Give Kong a star on the[Kong/kong](https://github.com/kong/kong) repository.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
