@@ -182,8 +182,8 @@ Support for chat, completions, and embeddings:
 
 {% include plugins/ai-proxy/tables/supported-providers-text.html providers=providers %}
 
-{:.neutral .no-icon}
-> The following providers are supported by the legacy Completions API:
+{:.neutral}
+> The following providers are supported by the legacy [Completions API](https://platform.openai.com/docs/api-reference/completions):
 > * OpenAI
 > * Azure OpenAI
 > * Cohere
