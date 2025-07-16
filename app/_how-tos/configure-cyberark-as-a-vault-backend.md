@@ -84,7 +84,7 @@ next_steps:
 automated_tests: false
 ---
 
-## Create a Vault entity for HashiCorp Vault 
+## Create a Vault entity for CyberArk Conjur Vault 
 
 Using decK, create a [Vault](/gateway/entities/vault/) entity with the required parameters for CyberArk Conjur:
 

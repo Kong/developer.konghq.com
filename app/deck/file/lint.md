@@ -180,3 +180,7 @@ rules:
       functionOptions:
         match: "^https$"
 ```
+
+## Command usage
+
+{% include_cached deck/help/file/lint.md %}
