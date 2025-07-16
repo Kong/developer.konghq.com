@@ -3,7 +3,7 @@ title: 'XML Threat Protection'
 name: 'XML Threat Protection'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Apply structural and size checks on XML payloads'
 

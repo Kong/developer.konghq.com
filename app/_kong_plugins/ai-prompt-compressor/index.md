@@ -4,7 +4,7 @@ name: 'AI Prompt Compressor'
 
 content_type: plugin
 ai_gateway_enterprise: true
-
+tier: enterprise
 publisher: kong-inc
 description: Compress prompts before they are sent to LLMs to reduce costs, and improve latency
 

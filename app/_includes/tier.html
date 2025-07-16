@@ -1,6 +1,9 @@
+{% unless page.plugin? %}
 {% if include.products and include.products.size > 1 %}
 {% raise "tier.html include called with a tier and more than one product." %}
 {% endif %}
+{% endunless %}
+
 {% assign product = include.products.first %}
 {% assign tier = site.data.products[product].tiers[include.tier] %}
 {% unless tier %}

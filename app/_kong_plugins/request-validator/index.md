@@ -3,7 +3,7 @@ title: 'Request Validator'
 name: 'Request Validator'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Validates requests before they reach the upstream service'
 

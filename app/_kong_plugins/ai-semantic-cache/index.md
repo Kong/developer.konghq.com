@@ -5,7 +5,7 @@ name: 'AI Semantic Cache'
 content_type: plugin
 
 ai_gateway_enterprise: true
-
+tier: enterprise
 publisher: kong-inc
 description: 'Enhance performance for AI providers by caching LLM responses semantically'
 

@@ -3,7 +3,7 @@ title: 'Upstream OAuth'
 name: 'Upstream OAuth'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Configure {{site.base_gateway}} to obtain an OAuth2 token to consume an upstream API'
 

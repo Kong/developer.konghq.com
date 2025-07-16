@@ -3,7 +3,7 @@ title: 'AI RAG Injector'
 name: 'AI RAG Injector'
 
 ai_gateway_enterprise: true
-
+tier: enterprise
 content_type: plugin
 
 publisher: kong-inc

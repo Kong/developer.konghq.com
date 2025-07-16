@@ -3,7 +3,7 @@ title: 'AI Azure Content Safety'
 name: 'AI Azure Content Safety'
 
 ai_gateway_enterprise: true
-
+tier: enterprise
 content_type: plugin
 
 publisher: kong-inc
