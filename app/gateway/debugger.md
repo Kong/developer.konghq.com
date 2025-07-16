@@ -53,26 +53,22 @@ The debugger helps capture OpenTelemetry-compatible traces for all requests matc
 To ensure consistency and interoperability, tracing adheres to OpenTelemetry naming conventions for spans and attributes, wherever possible.
 
 ### Logs
-For deeper insights, logs can be captured along with traces. When initiating a debug session, administrators can choose to capture logs. Detailed Kong Gateway logs are captured for the duration of the session. These logs are then correlated with traces using trace_id and span_id providing a comprehensive and drill-down view of logs generated during specific trace or span.
+For deeper insights, logs can be captured along with traces. When initiating a debug session, administrators can choose to capture logs. Detailed {{site.base_gateway}} logs are captured for the duration of the session. These logs are then correlated with traces using `trace_id` and `span_id` providing a comprehensive and drill-down view of logs generated during specific trace or span.
 
 ## Reading traces and logs 
-Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary** , **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spana and logs view help you to dive deeper.
+Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary** , **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper.
 
 ### Summary view
-Summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical latency metrics and a transaction map. The lifecycle map includes the different phases of Kong Gateway and the plugins executed by Kong Gateway on both the request and the response along with the times spent in each phase. Use the summary view to quickly understand the end-to-end API flow, identify performance bottlenecks, and optimize your API strategy.
+Summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical latency metrics and a transaction map. The lifecycle map includes the different phases of {{site.base_gateway}} and the plugins executed by {{site.base_gateway}} on both the request and the response along with the times spent in each phase. Use the summary view to quickly understand the end-to-end API flow, identify performance bottlenecks, and optimize your API strategy.
 
 ### Spans view
-The span view gives you unparalleled visibility into Kong Gateway’s internal workings. This detailed view breaks down into individual spans, providing a comprehensive understanding of:
+The span view gives you unparalleled visibility into {{site.base_gateway}}’s internal workings. This detailed view breaks down into individual spans, providing a comprehensive understanding of:
 
-* Kong Gateway’s internal processes and phases
+* {{site.base_gateway}}’s internal processes and phases
 * Plugin execution and performance
 * Request and response handling
 
 Use the span view to troubleshoot issues, optimize performance, and refine your configuration.
-
-### Logs
-
-A drill-down view of all the logs generated during specific trace are shown in the logs tab. All the spans in the trace are correlated using trace_id and span_id. The logs can be filtered on type, source or span. Logs are displayed in reverse chronological order. All the logs that are ingested are encrypted by default. You can further ensure complete privacy and control by using customer-managed encryption keys (CMEK).
 
 Use the logs view to quickly troubleshoot and pinpoint issues.
 
