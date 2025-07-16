@@ -6,9 +6,9 @@ Supported in: {% new_in 3.11 %}
 
 ```json
 {
-    "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
-    "name": "Math Tutor",
-    "tools": [{"type": "code_interpreter"}],
-    "model": "gpt-4o"
-  }
+  "instructions": "You are a frontend mentor. When asked a question, write and explain JavaScript code to help the user understand key concepts.",
+  "name": "Frontend Mentor",
+  "tools": [{"type": "code_interpreter"}],
+  "model": "gpt-4o"
+}
 ```

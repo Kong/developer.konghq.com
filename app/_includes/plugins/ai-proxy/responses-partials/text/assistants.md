@@ -3,13 +3,13 @@ Supported in: {% new_in 3.11 %}
 
 ```json
 {
-  "id": "asst_abc123",
+  "id": "asst_def456",
   "object": "assistant",
   "created_at": 1698984975,
-  "name": "Math Tutor",
+  "name": "Frontend Mentor",
   "description": null,
   "model": "gpt-4o",
-  "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
+  "instructions": "You are a frontend mentor. When asked a question, write and explain JavaScript code to help the user understand key concepts.",
   "tools": [
     {
       "type": "code_interpreter"

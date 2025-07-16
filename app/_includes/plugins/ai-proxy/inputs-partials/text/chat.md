@@ -7,7 +7,7 @@
         },
         {
             "role": "user",
-            "content": "What is the theory of relativity?"
+            "content": "What is the Boltzmann equation?"
         }
     ]
 }
@@ -24,13 +24,13 @@
         },
         {
             "role": "user",
-            "content": "What is the theory of relativity?"
+            "content": "What is the Boltzmann equation?"
         }
     ],
-      "guardrailConfig": {
-              "guardrailIdentifier":"<guardrail_identifier>",
-              "guardrailVersion":"1",
-              "trace":"enabled"
-          }
+    "guardrailConfig": {
+        "guardrailIdentifier": "<guardrail_identifier>",
+        "guardrailVersion": "1",
+        "trace": "enabled"
+    }
 }
 ```

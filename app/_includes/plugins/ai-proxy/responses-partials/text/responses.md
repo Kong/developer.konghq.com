@@ -21,7 +21,7 @@ Supported in: {% new_in 3.11 %}
       "content": [
         {
           "type": "output_text",
-          "text": "In a peaceful grove beneath a silver moon, a unicorn named Lumina discovered a hidden pool that reflected the stars. As she dipped her horn into the water, the pool began to shimmer, revealing a pathway to a magical realm of endless night skies. Filled with wonder, Lumina whispered a wish for all who dream to find their own hidden magic, and as she glanced back, her hoofprints sparkled like stardust.",
+          "text": "HTTP/1.1 uses a single connection per request-response cycle, leading to inefficiencies, especially with multiple resources. In contrast, HTTP/2 supports multiplexing, allowing multiple streams over one connection, which reduces latency. HTTP/2 also introduces binary framing and header compression for improved performance.",
           "annotations": []
         }
       ]
@@ -49,11 +49,11 @@ Supported in: {% new_in 3.11 %}
     "input_tokens_details": {
       "cached_tokens": 0
     },
-    "output_tokens": 87,
+    "output_tokens": 60,
     "output_tokens_details": {
       "reasoning_tokens": 0
     },
-    "total_tokens": 123
+    "total_tokens": 96
   },
   "user": null,
   "metadata": {}
