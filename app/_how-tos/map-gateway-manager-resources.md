@@ -5,6 +5,8 @@ description: Learn how to map Gateway Services from {{site.konnect_short_name}} 
 products:
   - gateway
   - service-catalog
+tools:
+  - deck
 works_on:
   - konnect
 entities: 
@@ -80,7 +82,7 @@ status_code: 201
 region: us
 body:
   service: $SERVICE_ID
-  resource: $ANALYTICS_RESOURCE_ID
+  resource: $GATEWAY_MANAGER_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 

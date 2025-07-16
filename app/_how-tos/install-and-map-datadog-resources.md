@@ -52,6 +52,7 @@ region: us
 body:
   integration_name: datadog
   name: datadog
+  display_name: Datadog
   config:
     datadog_region: $DATADOG_REGION
     datadog_webhook_name: konnect-service-catalog
@@ -120,6 +121,9 @@ status_code: 200
 {% endkonnect_api_request %}
 <!--vale on-->
 
+{:.info}
+> You might need to manually sync your Datadog integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the Datadog integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.
+
 Export the resource ID you want to map to the service:
 
 ```sh
@@ -137,7 +141,7 @@ method: POST
 status_code: 201
 region: us
 body:
-  service: datadog
+  service: billing
   resource: $DATADOG_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->

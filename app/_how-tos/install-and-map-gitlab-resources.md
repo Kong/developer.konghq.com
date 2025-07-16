@@ -15,6 +15,8 @@ related_resources:
     url: /service-catalog/
   - text: GitLab reference
     url: /service-catalog/integrations/gitlab/
+  - text: Install and map SaaS GitLab resources in Service Catalog
+    url: /how-to/install-and-map-gitlab-saas-resources/
 automated_tests: false
 tldr:
   q: How do I view a self-hosted GitLab project in Service Catalog?
@@ -89,6 +91,9 @@ region: us
 status_code: 200
 {% endkonnect_api_request %}
 <!--vale on-->
+
+{:.info}
+> You might need to manually sync your GitLab integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the GitLab integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.
 
 Export the resource ID you want to map to the service:
 

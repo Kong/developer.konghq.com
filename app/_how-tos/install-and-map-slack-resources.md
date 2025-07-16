@@ -76,6 +76,9 @@ status_code: 200
 {% endkonnect_api_request %}
 <!--vale on-->
 
+{:.info}
+> You might need to manually sync your Slack integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the Slack integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.
+
 Export the resource ID you want to map to the service:
 
 ```sh
