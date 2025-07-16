@@ -76,3 +76,7 @@ patches:
 ```
 
 To apply the above file, run `deck file patch -s ./config.yaml patch1.yaml patch2.yaml`. Multiple patch files can be provided at once.
+
+## Command usage
+
+{% include_cached deck/help/file/patch.md %}

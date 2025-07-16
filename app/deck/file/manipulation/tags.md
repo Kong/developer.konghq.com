@@ -48,6 +48,10 @@ To add tags to specific entities only, provide the `--selector` flag. The provid
 
 You can add multiple tags at once by providing them as additional arguments, for example: `team-one another-tag and-another`.
 
+### Command usage
+
+{% include_cached deck/help/file/add-tags.md %}
+
 ## remove-tags
 
 The opposite of `add-tags`, `remove-tags` allows you delete tags from your configuration file. It will remove the provided tag only by default:
@@ -70,6 +74,10 @@ deck file remove-tags -s ./config.yaml \
   --keep-only env-prod team-one
 ```
 
+### Command usage
+
+{% include_cached deck/help/file/remove-tags.md %}
+
 ## list-tags
 
 The `list-tags` command outputs all tags found in the file. Any tag that is applied to at least one entity is returned.
@@ -77,3 +85,7 @@ The `list-tags` command outputs all tags found in the file. Any tag that is appl
 ```bash
 deck file list-tags -s ./config.yaml
 ```
+
+### Command usage
+
+{% include_cached deck/help/file/list-tags.md %}

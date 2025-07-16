@@ -69,3 +69,7 @@ patches:
 ```
 
 For more information, see the [deck file patch](/deck/file/manipulation/patch/) documentation.
+
+## Command usage
+
+{% include_cached deck/help/file/add-plugins.md %}
