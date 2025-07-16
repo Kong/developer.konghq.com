@@ -92,19 +92,17 @@ resource "konnect_gateway_custom_plugin" "demo_functionality_global" {
 The table below shows the most commonly used configuration options. For a complete list, run `deck file kong2kic --help`.
 
 <!--vale off-->
-
 {% table %}
 columns:
-
-- title: Flag
-  key: flag
-- title: Description
-  key: description
-  rows:
-- flag: "`--generate-imports-for-control-plane-id`"
-  description: "Generate Terraform import statements for the Control Plane ID."
-- flag: "`--ignore-credential-changes`"
-description: "Enable flag to add a `lifecycle` block to each consumer credential that ignores any changes from local to remote state."
+  - title: Flag
+    key: flag
+  - title: Description
+    key: description
+rows:
+  - flag: "`--generate-imports-for-control-plane-id`"
+    description: "Generate Terraform import statements for the Control Plane ID."
+  - flag: "`--ignore-credential-changes`"
+    description: "Enable flag to add a `lifecycle` block to each consumer credential that ignores any changes from local to remote state."
 {% endtable %}
 <!--vale on-->
 
