@@ -38,9 +38,6 @@ url: /v1/catalog-services
 method: POST
 status_code: 201
 region: us
-headers:
-  - 'Accept: application/json, application/problem+json'
-  - 'Content-Type: application/json'
 body:
   name: billing
   display_name: Billing Service
@@ -63,9 +60,6 @@ url: /v1/resources?filter%5Bintegration.name%5D=analytics
 method: GET
 region: us
 status_code: 200
-headers:
-  - 'Accept: application/json, application/problem+json'
-  - 'Content-Type: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -85,9 +79,6 @@ url: /v1/resource-mappings
 method: POST
 status_code: 201
 region: us
-headers:
-  - 'Accept: application/json, application/problem+json'
-  - 'Content-Type: application/json'
 body:
   service: $SERVICE_ID
   resource: $ANALYTICS_RESOURCE_ID
@@ -104,7 +95,5 @@ url: /v1/catalog-services/$SERVICE_ID/resources
 method: GET
 status_code: 200
 region: global
-headers:
-  - 'Accept: application/json'
 {% endkonnect_api_request %}
 <!--vale on-->
