@@ -34,8 +34,8 @@ An environment is a JSON object containing key-value pairs of the data you want 
 * Folder environments, which can be accessed by all requests in a folder
 
 Global and collection environments contain:
-* A base environment, commonly used for default values that do not vary across environments
-* Optional sub-environments, commonly used for environment-specific values (production, staging, development) or user-specific configurations. Sub-environments can be marked as private. In this case they are not be synced or exported, and require a [vault key](#managing-secrets) to be accessed.
+* A base environment, commonly used for default values that don't vary across environments
+* Optional sub-environments, commonly used for environment-specific values (production, staging, development) or user-specific configurations. Sub-environments can be marked as private. In this case, they aren't synced or exported, and require a [vault key](#managing-secrets) to be accessed.
 
 You can also define variables dynamically in the Collection Runner and in pre-request and after-response [scripts](/insomnia/scripts/). For more details, see [Dynamic variables](/insomnia/dynamic-variables/).
 
@@ -109,9 +109,9 @@ rows:
     postman: N/A
   - functions: "`insomnia.variables`"
     env: |
-      * New variables will be created as temporary local variables
+      New variables will be created as temporary local variables
 
-      * When referencing existing variables, Insomnia can look for values in all environment types, in this order:
+      When referencing existing variables, Insomnia can look for values in all environment types, in this order:
         1. Temporary local variables
         1. Iteration data variables
         1. Folder environment
