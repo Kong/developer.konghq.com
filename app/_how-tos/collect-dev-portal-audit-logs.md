@@ -80,15 +80,16 @@ export DESTINATION_ID='YOUR DESTINATION ID'
 
 Create a webhook by sending a `PATCH` request to the [`/portals/{portalId}/audit-log-webhook`](/api/konnect/portal-management/v3/#/operations/update-portal-audit-log-webhook) endpoint with the audit log destination:
 
-```sh
-curl -i -X PATCH https://us.api.konghq.com/v3/portals/$PORTAL_ID/audit-log-webhook \
- --header "Content-Type: application/json" \
- --header "Authorization: Bearer $KONNECT_TOKEN" \
- --json '{
-     "audit_log_destination_id": "'$DESTINATION_ID'",
-     "enabled": true
- }'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$PORTAL_ID/audit-log-webhook
+status_code: 201
+method: PATCH
+body:
+    audit_log_destination_id: $DESTINATION_ID
+    enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
 
 Webhooks are triggered via an HTTPS request using the following retry rules:
 
