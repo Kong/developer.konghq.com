@@ -37,3 +37,7 @@ deck file render kong1.yml kong2.yml
 ```
 
 The `deck file render` command validates the configuration against a schema, and warns if any duplicate entities are detected.
+
+## Command usage
+
+{% include_cached deck/help/file/render.md %}

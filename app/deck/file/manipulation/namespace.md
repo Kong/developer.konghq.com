@@ -67,3 +67,7 @@ If you need to ensure that the API only listens on the hostname provided, you ca
 ```bash
 deck file namespace --host service1.api.example.com --clear-hosts
 ```
+
+## Command usage
+
+{% include_cached deck/help/file/namespace.md %}
