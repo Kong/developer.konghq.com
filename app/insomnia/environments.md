@@ -103,16 +103,29 @@ rows:
     env: |
       [Iteration data variables](/insomnia/dynamic-variables/#iteration-data)
     postman: "`pm.iterationData`"
-  - functions: |
-      * `insomnia.variables`
-      * `insomnia.variables.localVars`
+  - functions: "`insomnia.variables.localVars`"
     env: |
       [Temporary local variables](/insomnia/dynamic-variables/#local-variables)
+    postman: N/A
+  - functions: "`insomnia.variables`"
+    env: |
+      * New variables will be created as temporary local variables
+
+      * When referencing existing variables, Insomnia can look for values in all environment types, in this order:
+        1. Temporary local variables
+        1. Iteration data variables
+        1. Folder environment
+        1. Selected collection sub-environment
+        1. Collection base environment
+        1. Selected global sub-environment
+        1. Global base environment
     postman: "`pm.variables`"
 {% endtable %}
 
 {:.info}
-> In private global sub-environments, `insomnia.vault` can only be used to reference secret variables. Text and JSON variables must be referenced with `insomnia.globals` or `insomnia.variables.globalVars`.
+> **Notes**
+> * In private global sub-environments, `insomnia.vault` can only be used to reference secret variables. Text and JSON variables must be referenced with `insomnia.globals` or `insomnia.variables.globalVars`.
+> * If you haven't selected a global environment in your collection, you can still set global variables in scripts but these will be temporary and will not be saved anywhere. You can only reference them in the current script.
 
 ## Secret environment variables
 
