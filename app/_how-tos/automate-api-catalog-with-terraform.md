@@ -92,6 +92,8 @@ prereqs:
 faqs:
   - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
     a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+  - q: How do I allow developers to use multiple versions of an API in the Dev Portal?
+    a: You can use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of the same API. Developers can then select the version of the API they want to use in the Dev Portal spec renderer.
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
