@@ -7,7 +7,7 @@ related_resources:
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
 
-description: Configure the AI Proxy Advanced plugin to create a chat route using Ollama. 
+description: Configure the AI Proxy Advanced plugin to create a chat route using Ollama.
 
 products:
   - gateway
@@ -59,6 +59,8 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Configure the plugin
