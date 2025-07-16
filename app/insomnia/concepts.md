@@ -73,4 +73,4 @@ A member is an individual who collaborates on shared workspaces like projects or
 A co-owner is a user who shares full administrative control of an account, including billing, account settings, members, organizations, and projects. As a co-owner, you can perform all the same actions as the primary owner. Co-ownership ensures continuity by allowing multiple users to manage critical account functions.
 
 ## Billing-only
-A billing-only user is a user who manages account billing information, however they don't have access to management for projects, members, and organizations. As a billing-only user, you cannot create organizations or modify API resources. This role is typically assigned in Team plans to delegate payment responsibilities without granting administrative access.
+A billing-only user is a user who manages account billing information, however they don't have access to management for projects, members, and organizations. As a billing-only user, you cannot create organizations or modify API resources. This role is typically assigned to delegate payment responsibilities without granting administrative access.
