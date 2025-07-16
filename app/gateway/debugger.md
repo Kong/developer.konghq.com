@@ -69,7 +69,7 @@ The span view gives you unparalleled visibility into {{site.base_gateway}}’s i
 * Request and response handling
 
 Use the span view to troubleshoot issues, optimize performance, and refine your configuration.
-Logs View
+### Logs View
 A drill-down view of all the logs generated during specific debug session are shown in the logs tab. All the spans in the trace are correlated using `trace_id` and `span_id`. The logs can be filtered on log level and spans. Logs are displayed in reverse chronological order. {{site.konnect_short_name}} encrypts all the logs that are ingested. You can further ensure complete privacy and control by using customer-managed encryption keys (CMEK).
 Use the logs view to quickly troubleshoot and pinpoint issues.
 
