@@ -87,7 +87,7 @@ entities:
 
 ## Configure Prometheus
 
-Create a `prometheus.yml` to configure Prometheus to scrape {{site.base_gateway}} metrics:
+Create a `prometheus.yml` file to configure Prometheus to scrape {{site.base_gateway}} metrics:
 
 ```yaml
 cat <<EOF > prometheus.yml
@@ -124,7 +124,7 @@ Prometheus will begin to scrape metrics data from {{site.base_gateway}}.
 
 ## Validate
 
-You can validate that the plugin is collecting metrics by generating traffic to the example service. 
+You can validate that the plugin is collecting metrics by generating traffic to the example Service. 
 
 Run the following in the same terminal:
 
