@@ -18,7 +18,7 @@ To complete this tutorial, make sure you have Ollama installed and running local
 3. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance. 
 
    ```sh
-   export DECK_OLLAMA_UPSTREAM_URL='http://localhost:11434'
+   export DECK_OLLAMA_UPSTREAM_URL='http://localhost:11434/api/chat'
    ```
 
 
