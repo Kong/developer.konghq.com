@@ -56,6 +56,62 @@ If you define the same environment variable across different levels of environme
 1. Selected global sub-environment
 1. Global base environment
 
+## Environment variables in scripts
+
+You can use pre-request and after-response [scripts](/insomnia/scripts/) to set, unset, or modify environment variables. To ensure compatibility with Postman variables, there are multiple functions to interact with different variables:
+
+{% table %}
+columns:
+  - title: Insomnia functions
+    key: functions
+  - title: Environment type
+    key: env
+  - title: Postman function
+    key: postman
+rows:
+  - functions: |
+      * `insomnia.baseGlobals`
+      * `insomnia.variables.baseGlobalVars`
+    env: Global base environment
+    postman: N/A
+  - functions: |
+      * `insomnia.globals`
+      * `insomnia.variables.globalVars`
+    env: Selected global sub-environment or global base environment
+    postman: "`pm.globals`"
+  - functions: "`insomnia.vault`"
+    env: Selected private global sub-environment
+    postman: "`pm.vault`"
+  - functions: |
+      * `insomnia.baseEnvironment`
+      * `insomnia.CollectionVariables`
+      * `insomnia.variables.collectionVars`
+    env: Collection base environment
+    postman: "`pm.collectionVariables`"
+  - functions: |
+      * `insomnia.environment`
+      * `insomnia.variables.environmentVars`
+    env: Selected collection sub-environment, or collection base environment if no sub-environment is selected
+    postman: "`pm.environment`"
+  - functions: "`insomnia.parentFolders.getEnvironments`"
+    env: Folder environment
+    postman: N/A
+  - functions: |
+      * `insomnia.iterationData`
+      * `insomnia.variables.iterationDataVars`
+    env: |
+      [Iteration data variables](/insomnia/dynamic-variables/#iteration-data)
+    postman: "`pm.iterationData`"
+  - functions: |
+      * `insomnia.variables`
+      * `insomnia.variables.localVars`
+    env: |
+      [Temporary local variables](/insomnia/dynamic-variables/#local-variables)
+    postman: "`pm.variables`"
+{% endtable %}
+
+<!-- Screenshot to illustrate selected env -->
+
 ## Secret environment variables
 
 Secret environment variables allow you to store sensitive data locally in encrypted form. These variables are masked by default, are not stored in plain text, and are only accessible within the vault namespace (for example, `vault.foo` for a variable named `foo`).
