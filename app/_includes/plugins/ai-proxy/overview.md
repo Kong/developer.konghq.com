@@ -204,23 +204,11 @@ Support for text-to-speech, transcription, and translation:
 
 {% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
 
-{% if plugin == "AI Proxy" %}
-
 ### Image features {% new_in 3.11 %}
 
-Support for image generation, and image editing interaction:
+Support for image generation, image editing{% if plugin == "AI Proxy Advanced" %}, and realtime streaming{% endif %} interaction:
 
-{% include plugins/ai-proxy/tables/supported-providers-image-ai-proxy.html providers=providers %}
-
-{% elsif plugin == "AI Proxy Advanced" %}
-
-### Image and realtime features {% new_in 3.11 %}
-
-Support for image generation, image editing, and realtime streaming:
-
-{% include plugins/ai-proxy/tables/supported-providers-image-ai-proxy-advanced.html providers=providers %}
-
-{% endif %}
+{% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers plugin=plugin %}
 
 ## How it works
 
