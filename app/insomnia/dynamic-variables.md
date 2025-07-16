@@ -26,13 +26,15 @@ related_resources:
     url: /insomnia/template-tags/
 ---
 
-Besides [environments](/insomnia/environments/), there are two other ways to define variables in Insomnia:
-* Iteration variables, which are used in the Collection Runner to change a variable value on each iteration.
-* Local variables, which are temporary variables defined in a pre-request or after-response script for each request.
+You can use variables in Insomnia to specify values in your requests, such as URLs, query parameters, headers, request bodies, authentication configuration, or scripts. Besides [environments](/insomnia/environments/), there are two other ways to define variables in Insomnia:
+* Iteration variables, which are used in the [Collection Runner](/how-to/use-the-collection-runner/) to change a variable value on each iteration
+* Local variables, which are temporary variables defined in a pre-request or after-response script for each request
 
 ## Iteration data
 
-When you open the Collection Runner on your collection, you can see an **Upload Data** button. This allows you to upload a file containing variable values for each iteration. You can upload either a SCV or JSON file. Here's an example of the expected structure:
+When you open the Collection Runner on your collection, you'll see an **Upload Data** button. This allows you to upload a file containing variable values for each iteration. You can upload either a SCV or JSON file. 
+
+Here's an example of the expected structure:
 
 {% navtabs "data" %}
 {% navtab "JSON" %}

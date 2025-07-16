@@ -50,7 +50,7 @@ Available template tag functions include:
 
 If you want to extend the template tag functionality, you can do so by developing a custom template tag as an [Insomnia plugin](/insomnia/plugin-reference/). Once you’ve added your custom plugin to your Insomnia application, the template tag will show up exactly as if it were a native Insomnia tag.
 
-Here's the schema to use to create custom template tags:
+Here's the schema to create custom template tags:
 
 ```js
 interface TemplateTag {

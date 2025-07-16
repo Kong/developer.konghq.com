@@ -10,6 +10,7 @@ breadcrumbs:
 search_aliases:
   - env variables
   - insomnia secrets
+  - env var
 products:
   - insomnia
 
@@ -28,13 +29,13 @@ related_resources:
 
 An environment is a JSON object containing key-value pairs of the data you want to reference. There are different levels of environments that can be used in requests and scripts:
 
-* Global environments, which can be accessed by all collections in a project.
-* Collection environments, which can be accessed by all requests in a collection.
-* Folder environments, which can be accessed by all requests in a folder.
+* Global environments, which can be accessed by all collections in a project
+* Collection environments, which can be accessed by all requests in a collection
+* Folder environments, which can be accessed by all requests in a folder
 
 Global and collection environments contain:
 * A base environment, commonly used for default values that do not vary across environments
-* Optional sub-environments, commonly used for environment-specific values (production, staging, development) or user-specific configurations. Sub-environments can be marked as private. In this case they are not be synced or exported, and require a vault key to be accessed.
+* Optional sub-environments, commonly used for environment-specific values (production, staging, development) or user-specific configurations. Sub-environments can be marked as private. In this case they are not be synced or exported, and require a [vault key](#managing-secrets) to be accessed.
 
 You can also define variables dynamically in the Collection Runner and in pre-request and after-response [scripts](/insomnia/scripts/). For more details, see [Dynamic variables](/insomnia/dynamic-variables/).
 
@@ -65,7 +66,9 @@ Insomnia does not persist the vault key automatically. If you lose your vault ke
 
 To store secrets:
 
-1. Generate a vault key from the **Preferences** page.
+1. Generate a vault key in Insomnia:
+   1. Navigate to the **Preferences** settings page at the bottom left in the Insomnia sidebar.
+   1. On the General tab, scroll to the Security section and click **Generate Vault Key**.
 1. Create a new private sub-environment within any global environment.
 1. Add your secret variable in the private sub-private environment and set its type to `Secret`.
 
@@ -73,8 +76,8 @@ To store secrets:
 
 By default, secret variables are not exposed to scripts. To enable access:
 
-1. Navigate to **Preferences** > **General** > **Security**.
-1. Enable the **Enable vault in scripts** setting.
+1. Navigate to the **Preferences** settings page at the bottom left in the Insomnia sidebar.
+1. In the **General** tab, scroll to the **Security** section and click the **Enable vault in scripts** checkbox.
 
 Once enabled, you can access secrets in scripts using:
 
