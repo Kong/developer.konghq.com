@@ -14,6 +14,9 @@ tiers:
   enterprise:
     text: Enterprise only
     url: /gateway/
+  ai_gateway_enterprise:
+    text: AI License Required
+    url: /ai-gateway/
 
 deployment_topologies:
   - slug: on-prem

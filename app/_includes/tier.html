@@ -14,7 +14,7 @@
 {% endunless %}
 
 {% if include.url %}
-{% include badge.html url=tier.url text=tier.text %}
+{% include badge.html url=tier.url text=tier.text css_class=include.tier %}
 {% else %}
-{% include badge.html text=tier.text %}
+{% include badge.html text=tier.text css_class=include.tier %}
 {% endif %}

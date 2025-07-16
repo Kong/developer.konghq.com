@@ -2,8 +2,7 @@
 title: 'AI AWS Guardrails'
 name: 'AI AWS Guardrails'
 
-ai_gateway_enterprise: true
-tier: enterprise
+tier: ai_gateway_enterprise
 content_type: plugin
 
 publisher: kong-inc

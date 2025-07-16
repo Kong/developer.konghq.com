@@ -4,8 +4,7 @@ name: 'AI Sanitizer'
 
 content_type: plugin
 
-ai_gateway_enterprise: true
-tier: enterprise
+tier: ai_gateway_enterprise
 publisher: kong-inc
 description: Protect sensitive information in client request bodies before they reach upstream services
 
