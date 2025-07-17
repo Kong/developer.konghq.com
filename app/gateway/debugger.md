@@ -38,6 +38,8 @@ related_resources:
 
 ## Capture traces and logs
 
+{{site.konnect_short_name}} Debugger allows you to capture traces and logs. 
+
 ### Traces
 Traces provide a visual representation of the request and response lifecycle, offering a comprehensive overview of Kong's request processing pipeline. 
 
@@ -56,7 +58,7 @@ To ensure consistency and interoperability, tracing adheres to OpenTelemetry nam
 For deeper insights, logs can be captured along with traces. When initiating a debug session, administrators can choose to capture logs. Detailed {{site.base_gateway}} logs are captured for the duration of the session. These logs are then correlated with traces using `trace_id` and `span_id` providing a comprehensive and drill-down view of logs generated during specific trace or span.
 
 ## Reading traces and logs 
-Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary** , **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper.
+Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary**, **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper.
 
 ### Summary view
 Summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical latency metrics and a transaction map. The lifecycle map includes the different phases of {{site.base_gateway}} and the plugins executed by {{site.base_gateway}} on both the request and the response along with the times spent in each phase. Use the summary view to quickly understand the end-to-end API flow, identify performance bottlenecks, and optimize your API strategy.
@@ -74,7 +76,7 @@ A drill-down view of all the logs generated during specific debug session are sh
 Use the logs view to quickly troubleshoot and pinpoint issues.
 
 ## Data Security with Customer-Managed Encryption Keys (CMEK)
-By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data.The instructions to create and manage CMEK keys are explained in this section [/konnect-platform/cmek/]
+By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data. For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
 
 ## Start your first debug session
 
