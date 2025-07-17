@@ -26,6 +26,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.1": [
+    {
+      "message": "Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added support for allowing multiple rate limits for the same providers.\n",

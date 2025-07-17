@@ -14430,7 +14430,7 @@
       }
     ]
   },
-   "3.4.3.20": {
+  "3.4.3.20": {
     "kong": [],
     "kong-ee": [
       {
@@ -15748,5 +15748,60 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.11.0.1": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped luarocks from 3.11.1 to 3.12.2. This fixes the error `main function has more than 65536 constants`, which was preventing rocks from being published or installed.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**lua-resty-lmdb**: updated to version 1.6.1.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**llm**: Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+        "scope": "Plugin",
+        "type": "bugfix",
+        "plugins": [
+          "ai-proxy",
+          "ai-proxy-advanced",
+          "ai-azure-content-safety",
+          "ai-prompt-decorator",
+          "ai-prompt-guard",
+          "ai-prompt-template",
+          "ai-rag-injector",
+          "ai-rate-limiting-advanced",
+          "ai-request-transformer",
+          "ai-response-transformer",
+          "ai-sanitizer",
+          "ai-semantic-cache",
+          "ai-semantic-prompt-guard"
+        ]
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where `untrusted_lua_sandbox_requires` option was not respected.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where SSE terminator may not have correct ending characters.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where the vault picker was missing in the Request Callout plugin.",
+        "type": "bugfix",
+        "githubs": [
+          3967
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }
