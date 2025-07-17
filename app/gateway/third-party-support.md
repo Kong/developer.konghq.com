@@ -46,6 +46,11 @@ Other supported third-party tools:
 * For identity providers supported by the OpenID Connect plugin, see the [OIDC plugin's documentation](/plugins/openid-connect/#supported-identity-providers).
 * For supported AI providers, see the [AI Gateway providers documentation](/ai-gateway/ai-providers/).
 
+{:.info}
+> **Note:** Kong only tests compatibility against these tools and dependencies.
+> Kong **does not** maintain or own any of the third party tools listed here.
+> Likewise, Kong does not maintain or own any of the supported AI providers and identity providers.
+
 ## Third-party tools
 
 Kong supports the following third-party tools for each given {{site.base_gateway}} release version.
