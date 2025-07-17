@@ -12,17 +12,12 @@ servers:
     description: Kong Admin API
 
 paths:
-  /consumers/{ConsumerUsernameOrId}/header-cert-auth:
+  /consumers/{consumerUsernameOrId}/header-cert-auth:
     get:
       summary: List Header Cert Auth credentials for a consumer
       tags: [Header Cert Auth]
       parameters:
-        - name: ConsumerUsernameOrId
-          example: example-consumer
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/consumerUsernameOrId'
       responses:
         '200':
           description: List of credentials
@@ -39,12 +34,7 @@ paths:
       summary: Create a Header Cert Auth credential for a Consumer
       tags: [Header Cert Auth]
       parameters:
-        - name: ConsumerUsernameOrId
-          example: example-consumer
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/consumerUsernameOrId'
       requestBody:
         required: true
         content:
@@ -59,23 +49,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/HeaderCertAuthCredential'
 
-  /consumers/{ConsumerUsernameOrId}/header-cert-auth/{HeaderCertAuthCredentials}:
+  /consumers/{consumerUsernameOrId}/header-cert-auth/{headerCertAuthCredentials}:
     get:
       summary: Retrieve a Header Cert Auth credential
       tags: [Header Cert Auth]
       parameters:
-        - name: ConsumerUsernameOrId
-          example: example-consumer
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: HeaderCertAuthCredentials
-          example: 84175eaa-c795-483e-8a4a-3d57132003e8
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/consumerUsernameOrId'
+        - $ref: '#/components/parameters/headerCertAuthCredentials'
       responses:
         '200':
           description: Credential found
@@ -89,18 +69,8 @@ paths:
       summary: Replace a Header Cert Auth credential
       tags: [Header Cert Auth]
       parameters:
-        - name: ConsumerUsernameOrId
-          example: example-consumer
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: HeaderCertAuthCredentials
-          example: 84175eaa-c795-483e-8a4a-3d57132003e8
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/consumerUsernameOrId'
+        - $ref: '#/components/parameters/headerCertAuthCredentials'
       requestBody:
         required: true
         content:
@@ -114,18 +84,8 @@ paths:
       summary: Update a Header Cert Auth credential
       tags: [Header Cert Auth]
       parameters:
-        - name: ConsumerUsernameOrId
-          example: example-consumer
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: HeaderCertAuthCredentials
-          example: 84175eaa-c795-483e-8a4a-3d57132003e8
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/consumerUsernameOrId'
+        - $ref: '#/components/parameters/headerCertAuthCredentials'
       requestBody:
         required: true
         content:
@@ -139,18 +99,8 @@ paths:
       summary: Delete a Header Cert Auth credential
       tags: [Header Cert Auth]
       parameters:
-        - name: ConsumerUsernameOrId
-          example: example-consumer
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: HeaderCertAuthCredentials
-          example: 84175eaa-c795-483e-8a4a-3d57132003e8
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/consumerUsernameOrId'
+        - $ref: '#/components/parameters/headerCertAuthCredentials'
       responses:
         '204':
           description: Credential deleted
@@ -172,17 +122,13 @@ paths:
                     items:
                       $ref: '#/components/schemas/HeaderCertAuthCredential'
 
-  /header-cert-auths/{HeaderCertAuthCredentials}/consumer:
+  /header-cert-auths/{headerCertAuthCredentials}/consumer:
     get:
       summary: Get the consumer associated with a Header Cert Auth credential
       tags: [Header Cert Auth]
       parameters:
-        - name: HeaderCertAuthCredentials
-          example: 84175eaa-c795-483e-8a4a-3d57132003e8
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/consumerUsernameOrId'
+        - $ref: '#/components/parameters/headerCertAuthCredentials'
       responses:
         '200':
           description: Consumer associated with the credential
@@ -191,13 +137,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/Consumer'
 components:
+  parameters:
+    consumerUsernameOrId:
+      name: consumerUsernameOrId
+      in: path
+      required: true
+      schema:
+        type: string
+      example: example-consumer
+      description: The username or ID of the consumer.
+
+    headerCertAuthCredentials:
+      name: headerCertAuthCredentials
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 84175eaa-c795-483e-8a4a-3d57132003e8
+      description: UUID of the Header Cert Auth credential.
   schemas:
     HeaderCertAuthCredential:
       type: object
       required: [subject_name]
       properties:
         id:
-          description: UUID of the Consumer mapping. Required if adding mapping using declarative configuration, otherwise generated automatically by Kong's Admin API."
+          description: UUID of the Consumer mapping. Required if adding mapping using declarative configuration, otherwise generated automatically by Kong's Admin API.
           type: string
           example: 84175eaa-c795-483e-8a4a-3d57132003e8
         subject_name:
@@ -260,4 +225,3 @@ components:
           description: The unique username of the Consumer. You must send either this field or `custom_id` with the request.
           nullable: true
           type: string
-      type: object
