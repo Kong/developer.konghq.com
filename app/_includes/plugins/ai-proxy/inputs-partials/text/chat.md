@@ -28,7 +28,7 @@
         }
     ],
     "guardrailConfig": {
-        "guardrailIdentifier": "<guardrail_identifier>",
+        "guardrailIdentifier": "$GUARDRAIL-IDENTIFIER",
         "guardrailVersion": "1",
         "trace": "enabled"
     }

@@ -14,7 +14,7 @@
 
 {{ plugin }} plugin supports capabilities across batch processing, multimodal embeddings, agents, audio, image, streaming, and more, spanning multiple providers.
 
-**For {{ site.base_gateway }} versions 3.6 or earlier:**
+For {{ site.base_gateway }} versions 3.6 or earlier:
 
 * **Chat Completions APIs**: Multi-turn conversations with system/user/assistant roles.
 
@@ -23,7 +23,7 @@
   {:.warning}
   > OpenAI has marked this endpoint as [legacy](https://platform.openai.com/docs/api-reference/completions) and recommends using the [Chat Completions API](https://platform.openai.com/docs/guides/text?api-mode=responses) for developing new applications.
 
-**For {{ site.base_gateway }} version {% new_in 3.11 %}:**
+See the following table for capabilities supported in {{ site.base_gateway }} version {% new_in 3.11 %} or later:
 
 <!-- vale off -->
 {% if plugin == "AI Proxy" %}
@@ -59,7 +59,7 @@ features:
     examples: |
       * [`llm/v1/batch`](./examples/batches-route-type/)<br>
       * [`llm/v1/files`](./examples/files-route-type/)<br>
-      * [Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
+      * [`llm/v1/batches` Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
 
   - title: "Audio"
     description: Enables speech-to-text, text-to-speech, and real-time translation for voice agents and multilingual UIs.
@@ -128,7 +128,7 @@ features:
     examples: |
       * [`/v1/batch`](./examples/batches-route-type/)<br>
       * [`/v1/files`](./examples/files-route-type/)<br>
-      * [Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
+      * [`llm/v1/batches` Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
 
   - title: "Audio"
     description: Enables speech-to-text, text-to-speech, and real-time translation for voice agents and multilingual UIs.
@@ -145,7 +145,7 @@ features:
       * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
 
   - title: "Realtime streaming"
-    description: "Stream completions token-by-token for low-latency, interactive experiences and live analytics."
+    description: "Stream completions token-by-token for low-latency, interactive experiences, and live analytics."
     openai_compatible: true
     examples: |
       * [`/v1/realtime`](./examples/realtime-route-openai/)<br>
