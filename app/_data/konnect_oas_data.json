@@ -575,5 +575,26 @@
         "registration_configs": []
       }
     ]
+  },
+  {
+    "id": "edd35dd6-f6cc-48cc-be60-02c99918b7d8",
+    "title": "Service Catalog",
+    "latestVersion": {
+      "name": "v1",
+      "id": "b5eca960-87b6-47cf-930d-a9d06a40eae1"
+    },
+    "description": null,
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "b5eca960-87b6-47cf-930d-a9d06a40eae1",
+        "created_at": "2025-06-18T12:56:13.007Z",
+        "updated_at": "2025-07-17T15:08:28.173Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
   }
 ]
