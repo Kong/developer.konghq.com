@@ -190,6 +190,7 @@ Using `kafkactl`, test the topic filtering.
 
    ```
    TOPIC              PARTITIONS     REPLICATION FACTOR
+   Jon                      1              1
    _schemas           1              1
    a-first-topic      1              1
    b-second-topic     1              1

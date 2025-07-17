@@ -29,7 +29,7 @@ description: Use this tutorial to get started with {{site.event_gateway}}.
 tldr: 
   q: How can I get started with {{site.event_gateway}}?
   a: | 
-    Get started with {{site.event_gateway}} ({{site.event_gateway_short}}) by setting up a {{site.konnect_short_name}} Control Plane and a Kafka cluster, then configuring the Control Plane using the `/declarative_config` endpoint of the Control Plane Config API.
+    Get started with {{site.event_gateway}} ({{site.event_gateway_short}}) by setting up a {{site.konnect_short_name}} control plane and a Kafka cluster, then configuring the control plane using the `/declarative_config` endpoint of the Control Plane Config API.
 
 tools:
     - konnect-api
