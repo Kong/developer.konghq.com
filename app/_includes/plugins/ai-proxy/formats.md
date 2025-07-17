@@ -12,9 +12,31 @@
 {% assign providers = site.data.plugins.ai-proxy.providers %}
 
 
-The plugin's [`{{ route_type }}`](./reference/#{{ route_type_slug }}) should be set based on the target upstream endpoint and model, based on this capability matrix:
+The plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-type) should be set based on the target upstream endpoint and model, based on this capability matrix:
 
-{% include plugins/ai-proxy/tables/upstream-paths.html providers=providers %}
+{% if plugin == "AI Proxy" %}
+
+{:.warning}
+> The following requirements are enforced by upstream providers:
+>
+> - For **Azure Responses API**, set `config.azure_api_version` to `"preview"`.
+> - For **OpenAI** and **Azure Assistant APIs**, include the header `OpenAI-Beta: assistants=v2`.
+> - For requests with large payloads (e.g., image edits, audio transcription/translation), consider increasing `config.max_request_body_size` to **three times the raw binary size**.
+
+{% elsif plugin == "AI Proxy Advanced" %}
+
+{:.warning}
+> The following requirements are enforced by upstream providers:
+>
+> - For **Azure Responses API**, set `config.azure_api_version` to `"preview"`.
+> - For **OpenAI** and **Azure Realtime APIs**, include the header `OpenAI-Beta: realtime=v1`.
+> - Only **WebSocket** is supported—**WebRTC is not supported**.
+> - For **OpenAI** and **Azure Assistant APIs**, include the header `OpenAI-Beta: assistants=v2`.
+> - For requests with large payloads (e.g., image edits, audio transcription/translation), consider increasing `config.max_request_body_size` to **three times the raw binary size**.
+
+{% endif %}
+
+{% include plugins/ai-proxy/grouped-upstreams.md %}
 
 The following upstream URL patterns are used:
 
@@ -23,7 +45,7 @@ The following upstream URL patterns are used:
 {:.warning}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
 > For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](./reference/#{{ upstream_url_slug }}) plugin option.<br/><br/>
-> {% new_in 3.10 %} If you are using each provider's native SDK, {{site.base_gateway}} allows you to transparently proxy the request without any transformation and return the response unmodified. This can be done by setting [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`, such as `gemini` or `bedrock`.
+> {% new_in 3.10 %} If you are using each provider's native SDK, {{site.base_gateway}} allows you to transparently proxy the request without any transformation and return the response unmodified. This can be done by setting [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`, such as `gemini` or `bedrock`. See the [section below](./#supported-native-llm-formats) for more details.
 > <br><br>
 > In this mode, {{site.base_gateway}} will still provide useful analytics, logging, and cost calculation.
 
@@ -33,112 +55,88 @@ The following upstream URL patterns are used:
 
 {% new_in 3.10 %} By default, {{site.base_gateway}} uses the OpenAI format, but you can customize this using [`config.llm_format`](./reference/#schema--config-llm-format). If `llm_format` is not set to `openai`, the plugin will not transform the request when sending it upstream and will leave it as-is.
 
-The Kong AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples:
+The {{site.base_gateway}} AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples.
 
-{% navtabs "ai-proxy-route-type" %}
-{% navtab "llm/v1/chat" %}
-```json
-{
-    "messages": [
-        {
-            "role": "system",
-            "content": "You are a scientist."
-        },
-        {
-            "role": "user",
-            "content": "What is the theory of relativity?"
-        }
-    ]
-}
-```
+#### Text generation inputs
 
-{% new_in 3.9 %}With Amazon Bedrock, you can include your [guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) configuration in the request:
-```json
-{
-    "messages": [
-        {
-            "role": "system",
-            "content": "You are a scientist."
-        },
-        {
-            "role": "user",
-            "content": "What is the theory of relativity?"
-        }
-    ],
-      "guardrailConfig": {
-              "guardrailIdentifier":"<guardrail_identifier>",
-              "guardrailVersion":"1",
-              "trace":"enabled"
-          }
-}
-```
+The following examples show standardized text-based request formats for each supported `llm/v1/*` route. These formats are normalized across providers to help simplify downstream parsing and integration.
 
-{% endnavtab %}
+{% include plugins/ai-proxy/text-inputs.md %}
 
-{% navtab "llm/v1/completions" %}
-```json
-{
-    "prompt": "You are a scientist. What is the theory of relativity?"
-}
-```
-{% endnavtab %}
-{% endnavtabs %}
+#### Audio and image generation inputs
+
+The following examples show standardized audio and image request formats for each supported route. These formats are normalized across providers to help simplify downstream parsing and integration.
+
+{% include plugins/ai-proxy/image-audio-inputs.md %}
 
 ### Response formats
 
 Conversely, the response formats are also transformed to a standard format across all providers:
 
-{% navtabs "ai-proxy-route-type" %}
-{% navtab "llm/v1/chat" %}
-```json
-{
-    "choices": [
-        {
-            "finish_reason": "stop",
-            "index": 0,
-            "message": {
-                "content": "The theory of relativity is a...",
-                "role": "assistant"
-            }
-        }
-    ],
-    "created": 1707769597,
-    "id": "chatcmpl-ID",
-    "model": "gpt-4-0613",
-    "object": "chat.completion",
-    "usage": {
-        "completion_tokens": 5,
-        "prompt_tokens": 26,
-        "total_tokens": 31
-    }
-}
-```
-{% endnavtab %}
+#### Text-based responses
 
-{% navtab "llm/v1/completions" %}
+{% include plugins/ai-proxy/text-responses.md %}
 
-```json
-{
-    "choices": [
-        {
-            "finish_reason": "stop",
-            "index": 0,
-            "text": "The theory of relativity is a..."
-        }
-    ],
-    "created": 1707769597,
-    "id": "cmpl-ID",
-    "model": "gpt-3.5-turbo-instruct",
-    "object": "text_completion",
-    "usage": {
-        "completion_tokens": 10,
-        "prompt_tokens": 7,
-        "total_tokens": 17
-    }
-}
-```
-{% endnavtab %}
-{% endnavtabs %}
+#### Image, and audio responses
 
-The request and response formats are loosely based on OpenAI.
-See the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml) for more detail on the supported formats.
+The following examples show standardized response formats returned by supported `audio/` and `image/` routes. These formats are normalized across providers to support consistent multimodal output parsing.
+
+{% include plugins/ai-proxy/image-audio-responses.md %}
+
+The request and response formats are loosely modeled after OpenAI’s API. For detailed format specifications, see the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml).
+
+## Supported native LLM formats
+
+When [`config.llm_format`](./reference/#schema--config-llm-format) is set to a native format, only the corresponding provider is supported with its specific APIs as listed below.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: LLM format
+    key: llm_format
+  - title: Provider
+    key: provider
+  - title: Supported APIs
+    key: apis
+rows:
+  - llm_format: "`gemini`"
+    provider: Gemini
+    apis: |
+      - `/generateContent`
+      - `/streamGenerateContent`
+  - llm_format: "`bedrock`"
+    provider: Bedrock
+    apis: |
+      - `/converse`
+      - `/converse-stream`
+      - `/retrieveAndGenerate`
+      - `/retrieveAndGenerateStream`
+      - `/rerank`
+  - llm_format: "`cohere`"
+    provider: Cohere
+    apis: |
+      - `/v1/rerank`
+      - `/v2/rerank`
+  - llm_format: "`huggingface`"
+    provider: Hugging Face
+    apis: |
+      - `/generate`
+      - `/generate_stream`
+{% endtable %}
+<!-- vale on -->
+
+### Caveats and limitations
+
+The following sections detail the provider and statistic logging limitations.
+
+#### Provider-specific limitations
+
+* **Anthropic**: Does not support `llm/v1/completions` or `llm/v1/embeddings`.
+* **Llama2**: Raw format lacks support for `llm/v1/embeddings`.
+* **Bedrock** and **Gemini**: Only support `auth.allow_override = false`.
+
+#### Statistics logging limitations
+
+* **Anthropic**: No statistics logging for `llm/v1/completions`.
+* **OpenAI** and **Azure**: No statistics logging for assistants, batch, or audio APIs.
+* **Bedrock**: No statistics logging for image generation or editing APIs.

@@ -8,6 +8,8 @@ products:
 related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
+  - text: Configure HashiCorp Vault as a vault backend with certificate authentication
+    url: /how-to/configure-hashicorp-vault-with-cert-auth/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
   - text: Configure Hashicorp Vault with {{ site.kic_product_name }}
@@ -74,6 +76,7 @@ faqs:
         and {{site.base_gateway}} will call the unwrap API `/v1/sys/wrapping/unwrap` to unwrap the response wrapping token to fetch 
         the real secret ID. {{site.base_gateway}} will use the AppRole role ID and secret ID to call the login API for the AppRole auth path
         on the HashiCorp Vault server and retrieve a client token.
+      - {% new_in 3.11 %} If you're using the `cert` auth method, {{site.base_gateway}} uses a client certificate and private key to retrieve a client token. The certificate must be previously configured in HashiCorp vault as a trusted certificate. Alternatively, the issuing CA certificate can be set as a trusted CA. The trusted certificate role name is configured by the field `config.cert_auth_role_name`. If one isn't provided, HashiCorp vault attempts to authenticate against all configured trusted certificates or trusted CAs. The certificate is configured with `config.cert_auth_cert` and the key with `cert_auth_cert_key`.
       
       By calling the login API, {{site.base_gateway}} will retrieve a client token and then use it in the next step as the value of `X-Vault-Token` header to retrieve a secret.
 
@@ -85,6 +88,8 @@ faqs:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+
+automated_tests: false
 ---
 
 ## Create a secret in HashiCorp Vault
@@ -102,10 +107,10 @@ In this tutorial, we're using `host.docker.internal` as our host instead of the 
 
 Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value. 
 
-```
-export DECK_HCV_HOST=host.docker.internal
-export DECK_HCV_TOKEN='root'
-```
+{% env_variables %}
+DECK_HCV_HOST: host.docker.internal
+DECK_HCV_TOKEN: root
+{% endenv_variables %}
 
 
 ## Create a Vault entity for HashiCorp Vault 

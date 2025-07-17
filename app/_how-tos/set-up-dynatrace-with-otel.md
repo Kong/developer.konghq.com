@@ -154,6 +154,7 @@ faqs:
     a: This error is because you need to add the [Dynatrace API token as an Authorization header](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/getting-started/otlp-export#authentication-export-to-activegate) when you configure the OpenTelemetry plugin. 
 
 
+automated_tests: false
 ---
 
 ## Enable the OTEL plugin

@@ -37,8 +37,8 @@ tldr:
     routing requests and responses. {{site.base_gateway}} implements your API traffic policies 
     by using a flexible, low-code, plugin-based approach. 
     <br><br>
-    This tutorial will help you get started with {{site.base_gateway}} by setting up a local installation
-    and walking through some common API management tasks. 
+    This tutorial will help you get started with {{site.base_gateway}} by setting up either a {{site.konnect_short_name}} hybrid deployment or 
+    self-managed local installation and walking through some common API management tasks. 
 
     {:.info}
     > **Note:**

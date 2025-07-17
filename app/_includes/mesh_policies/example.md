@@ -5,7 +5,11 @@
 
 ## {{title}}
 
-{{ page.example.description | liquify | markdoownify }}
+{% if page.example.extended_description %}
+{{ page.example.extended_description | liquify | markdownify }}
+{% else %}
+{{ page.example.description | liquify | markdownify }}
+{% endif %}
 
 {% unless page.example.requirements == empty %}
 

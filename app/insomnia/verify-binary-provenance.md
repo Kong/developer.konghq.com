@@ -14,7 +14,7 @@ breadcrumbs:
 
 related_resources:
   - text: Insomnia security
-    url: /insomnia/security/
+    url: /insomnia/manage-insomnia/#security
 
 ---
 

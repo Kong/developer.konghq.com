@@ -69,7 +69,7 @@ sections:
       - path: /mesh/gateway-listeners/
       - path: /mesh/gateway-routes/
 
-  - title: Deletegated Gateways
+  - title: Delegated Gateways
     items:
       - path: /mesh/ingress-gateway-delegated/
       - path: /mesh/using-mesh/managing-ingress-traffic/delegated

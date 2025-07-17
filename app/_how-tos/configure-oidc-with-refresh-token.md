@@ -67,6 +67,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin with refresh tokens
@@ -118,13 +119,18 @@ In this example:
 
 Check that you can recover the refresh token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+extract_body:
+  - name: 'headers.Refresh-Token'
+    variable: 'REFRESH_TOKEN'
 {% endvalidation %}
+<!-- vale on -->
 
 You should see a `Refresh-Token` header in the response.
 
@@ -138,6 +144,7 @@ export REFRESH_TOKEN='{your-refresh-token}'
 
 Now, validate the setup by accessing the `example-route` Route and passing the refresh token in a `Refresh-Token` header:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
@@ -146,11 +153,13 @@ display_headers: true
 headers:
   - "Refresh-Token: $REFRESH_TOKEN"
 {% endvalidation %}
+<!-- vale on -->
 
 {% include_cached plugins/oidc/cache.md %}
 
 Alternatively, you can use jq to pass the credentials and retrieve the most recent refresh token every time:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
@@ -160,4 +169,6 @@ headers:
   - |
     Refresh-Token:$(curl --user alex:doe http://localhost:8000/anything \
             | jq -r '.headers."Refresh-Token"')
+skip: true
 {% endvalidation %}
+<!-- vale on -->

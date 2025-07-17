@@ -14,7 +14,7 @@ products:
 
 related_resources:
   - text: Security at Insomnia
-    url: /insomnia/security/
+    url: /insomnia/manage-insomnia/#security
   - text: SSO
     url: /insomnia/authentication-authorization/#set-up-sso
 
@@ -28,8 +28,7 @@ faqs:
   - q: I'm using Git sync, does Insomnia uphold the branch protections we have in our repository?
     a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
-    a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository.
-  
+    a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 
@@ -76,7 +75,6 @@ Key features:
 * **No cloud interaction:** No data is sent to or stored in the cloud.
 * **Security:** Enhanced security as data remains within your local environment.
 * **Work offline:** Access and work on your projects without needing an internet connection.
-* **Collaborate:** With local vault, you still have the option to use [Git sync](#git-sync).
 
 You can create a local vault project when you create a new project in Insomnia and select the **Local vault** option.
 
@@ -110,6 +108,9 @@ Key use case features:
 * **Real-time synchronization:** Keeps your projects up-to-date across all devices.
 * **Collaboration:** Share and collaborate on projects with team members.
 * **Remote access:** Access your projects from anywhere with an internet connection.
+
+{:.info}
+> When you create a project with Cloud sync in an organization, the project is automatically available to all users in the organization.
 
 ### Cloud sync data flow
 
@@ -152,6 +153,10 @@ Key features:
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.
+* {% new_in 10.2 %} **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
+
+{:.info}
+> When you create a project with Git sync in an organization, it's only available to you.  The project name, its metadata, and the corresponding Git URL are not shared with other users in the organization. To collaborate on a Git sync project, each user must create a project and connect to the Git repository. This allows you to control who can access the project within the organization.
 
 ### Git sync data flow
 

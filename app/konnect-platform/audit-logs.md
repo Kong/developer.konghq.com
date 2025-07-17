@@ -20,6 +20,8 @@ search_aliases:
 
 description: "Review logs for system events in {{site.konnect_short_name}}."
 related_resources:
+  - text: "Collect {{site.konnect_short_name}} audit logs"
+    url: /how-to/collect-audit-logs/
   - text: "Dedicated Cloud Gateways"
     url: /dedicated-cloud-gateways/
   - text: "{{site.konnect_short_name}} Data Plane logs"
@@ -52,6 +54,9 @@ Audit logging provides the following benefits:
 * **Debugging**: Audit logs can help determine the root causes of efficiency or performance issues.
 * **Risk management**: Prevent issues or catch them early.
 
+Learn how to collect audit logs:
+* [Collect audit logs for {{site.konnect_short_name}}](/how-to/collect-audit-logs/)
+* [Collect audit logs for Dev Portal](/how-to/collect-dev-portal-audit-logs/)
 
 ## Configure audit logging
 
@@ -134,7 +139,7 @@ rows:
 
 ## Log formats
 
-{{site.konnect_short_name}} delivers log events in [ArcSight CEF Format](https://docs.centrify.com/Content/IntegrationContent/SIEM/arcsight-cef/arcsight-cef-format.htm) or JSON. You may specify which format to use in the audit log webhook endpoints.
+{{site.konnect_short_name}} delivers log events in [ArcSight CEF Format](https://docs.centrify.com/Content/IntegrationContent/SIEM/arcsight-cef/arcsight-cef-format.htm) , JSON, or CrowdStrike Parsing Standard (CPS). You may specify which format to use in the audit log webhook endpoints.
 
 Webhook calls include a batch of events. Each event is formatted in either CEF or JSON and separated by a newline. The `Content-Type` is `text/plain`.
 

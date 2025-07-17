@@ -1,0 +1,34 @@
+title: 'Files route type'
+description: 'Upload documents via the files route to use with OpenAI features like Assistants or and Batch API.'
+
+weight: 900
+
+min_version:
+  gateway: '3.11'
+
+requirements:
+- OpenAI account
+
+config:
+  model_name_header: false
+  targets:
+    - route_type: llm/v1/files
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: openai-processing

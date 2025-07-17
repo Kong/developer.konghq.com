@@ -1,3 +1,13 @@
+# API spec links (delete when fixed)
+/gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
+/gateway/latest/plan-and-deploy/security/secrets-management/reference-format /gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault
+/gateway/:version/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
+/gateway/:version/plan-and-deploy/security/secrets-management/reference-format /gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault
+
+## How-to renames
+/how-to/collect-dev-portal-audit-logs-with-sumologic/ /how-to/collect-dev-portal-audit-logs/
+/how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
+
 # Mesh redirects
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
@@ -63,9 +73,9 @@
 /docs/:version/*    /mesh/:splat
 
 # Mesh don't migrate ever
-/mesh/reference/http-api       /mesh/
+/mesh/reference/http-api       /mesh/kubernetes-gateway-api/
+/mesh/networking/non-mesh-traffic/  /mesh/policies/meshtrafficpermission/
 /mesh/production/cp-deployment/single-zone /mesh/
-/mesh/networking/non-mesh-traffic /mesh/
 /mesh/production/cp-deployment/multi-zone   /mesh/
 /mesh/production/cp-deployment/single-zone /mesh/
 /mesh/production/cp-deployment/stand-alone    /mesh/
@@ -101,3 +111,11 @@
 
 /dev-portal/custom-pages/   /dev-portal/pages-and-content/
 /dev-portal/snippets/   /dev-portal/pages-and-content/
+/dev-portal/application-registration/   /dev-portal/self-service/
+/dev-portal/access-and-approval/    /dev-portal/self-service/
+
+
+# Gateway LTS
+/archive/dev-portal/ https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/dev-portal/
+/archive/vitals/     https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/analytics/
+

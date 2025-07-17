@@ -40,7 +40,7 @@ Error: 1 errors occurred:
 ```
 {:.no-copy-code}
 
-`deck file validate` also checks for foreign relationships and alerts in cases of broken relationships or missing links. 
+`deck file validate` also checks for foreign relationships and alerts in cases of broken relationships or missing links.
 For example, you might see the following response:
 
 ```sh
@@ -49,3 +49,7 @@ Error: building state: route demo-route for plugin rate-limiting: entity not fou
 {:.no-copy-code}
 
 No communication takes places between decK and Kong during the execution of this command. This process is faster than online validation, but may catch fewer errors. For online validation, see [`deck gateway validate`](/deck/gateway/validate/).
+
+## Command usage
+
+{% include_cached deck/help/file/validate.md %}

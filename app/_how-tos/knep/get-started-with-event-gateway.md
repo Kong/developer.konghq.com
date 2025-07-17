@@ -98,7 +98,7 @@ listeners:
   port:
     - listen_address: 0.0.0.0
       advertised_host: knep
-      listen_port_start: 9092
+      listen_port_start: 9193
     - listen_address: 0.0.0.0
       advertised_host: localhost
       listen_port_start: 9192

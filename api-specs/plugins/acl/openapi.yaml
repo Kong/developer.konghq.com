@@ -1,233 +1,801 @@
-openapi: 3.0.2
-info:
-  title: ACL Plugin API
-  version: 1.0.0
-  description: API for managing ACL in Kong Gateway
-  contact:
-    name: Kong Inc
-    url: https://konghq.com
-    email: docs@konghq.com
-servers:
-  - url: http://localhost:8001
-    description: Kong Admin API
-
-paths:
-  /acls:
-      get:
-          description: List all ACLs
-          operationId: list-acl
-          parameters:
-              - $ref: '#/components/parameters/PaginationSize'
-              - $ref: '#/components/parameters/PaginationOffset'
-              - $ref: '#/components/parameters/PaginationTagsFilter'
-          responses:
-              "200":
-                  content:
-                      application/json:
-                          schema:
-                              properties:
-                                  data:
-                                      items:
-                                          $ref: '#/components/schemas/ACL'
-                                      type: array
-                              type: object
-                  description: A successful response listing ACLs
-              '400':
-                description: Invalid request
-          summary: List all ACLs
-          tags:
-              - ACLs
-      post:
-          description: Create a new ACL
-          operationId: create-acl
-          requestBody:
-              content:
-                  application/json:
-                      schema:
-                          $ref: '#/components/schemas/ACL'
-              description: Description of the new ACL for creation
-              required: true
-          responses:
-              "201":
-                  content:
-                      application/json:
-                          schema:
-                              $ref: '#/components/schemas/ACL'
-                  description: Successfully created ACL
-              '400':
-                description: Invalid request
-          summary: Create a new ACL
-          tags:
-              - ACLs
-  /acls/{ACLId}:
-      delete:
-          description: Delete an ACL
-          operationId: delete-acl
-          parameters:
-              - $ref: '#/components/parameters/ACLId'
-          responses:
-              "204":
-                  description: Successfully deleted ACL or the resource didn't exist
-              '400':
-                description: Invalid request
-          summary: Delete an ACL
-          tags:
-              - ACLs
-      get:
-          description: Get an ACL using ID.
-          operationId: get-acl
-          responses:
-              "200":
-                  content:
-                      application/json:
-                          schema:
-                              $ref: '#/components/schemas/ACL'
-                  description: Successfully fetched ACL
-              '400':
-                description: Invalid request
-              "404":
-                  description: Resource does not exist
-          summary: Fetch an ACL
-          tags:
-              - ACLs
-      parameters:
-          - $ref: '#/components/parameters/ACLId'
-      patch:
-          description: Update an ACL
-          operationId: update-acl
-          requestBody:
-              content:
-                  application/json:
-                      schema:
-                          $ref: '#/components/schemas/ACL'
-              description: Fields of the ACL that need to be updated
-              required: true
-          responses:
-              "200":
-                  content:
-                      application/json:
-                          schema:
-                              $ref: '#/components/schemas/ACL'
-                  description: Successfully updated ACL
-              '400':
-                description: Invalid request
-              "404":
-                  description: Resource does not exist
-          summary: Update an ACL
-          tags:
-              - ACLs
-      put:
-          description: Create or Update ACL using ID.
-          operationId: upsert-acl
-          requestBody:
-              content:
-                  application/json:
-                      schema:
-                          $ref: '#/components/schemas/ACL'
-              description: Description of the ACL
-              required: true
-          responses:
-              "200":
-                  content:
-                      application/json:
-                          schema:
-                              $ref: '#/components/schemas/ACL'
-                  description: Successfully upserted ACL
-          summary: Upsert a ACL
-          tags:
-              - ACLs
 components:
-  schemas:
-      ACL:
-          additionalProperties: false
-          example:
-              consumer:
-                  id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
-              group: foo
-              id: b1f34145-0343-41a4-9602-4c69dec2f269
-          properties:
-              consumer:
-                  additionalProperties: false
-                  nullable: true
-                  properties:
-                      id:
-                          type: string
-                  type: object
-                  x-foreign: true
-              created_at:
-                  description: Unix epoch when the resource was created.
-                  readOnly: true
-                  type: integer
-              group:
-                  type: string
-              id:
-                  nullable: true
-                  type: string
-              tags:
-                  items:
-                      type: string
-                  type: array
-          required:
-              - group
-          type: object
-      ACLWithoutParents:
-          additionalProperties: false
-          example:
-              group: foo
-              id: b1f34145-0343-41a4-9602-4c69dec2f269
-          properties:
-              consumer:
-                  additionalProperties: false
-                  nullable: true
-                  properties:
-                      id:
-                          type: string
-                  type: object
-                  x-foreign: true
-              created_at:
-                  description: Unix epoch when the resource was created.
-                  readOnly: true
-                  type: integer
-              group:
-                  type: string
-              id:
-                  nullable: true
-                  type: string
-              tags:
-                  items:
-                      type: string
-                  type: array
-          required:
-              - group
-          type: object
   parameters:
     ACLId:
-            description: ID of the ACL to lookup
-            example: f28acbfa-c866-4587-b688-0208ac24df21
-            in: path
-            name: ACLId
-            required: true
-            schema:
-                type: string
+      description: ID of the ACL to lookup
+      example: f28acbfa-c866-4587-b688-0208ac24df21
+      in: path
+      name: ACLId
+      required: true
+      schema:
+        type: string
+    ConsumerIdForNestedEntities:
+      description: Consumer ID for nested entities
+      example: f28acbfa-c866-4587-b688-0208ac24df21
+      in: path
+      name: ConsumerIdForNestedEntities
+      required: true
+      schema:
+        type: string
     PaginationOffset:
-            description: Offset from which to return the next set of resources. Use the value of the 'offset' field from the response of a list operation as input here to paginate through all the resources
-            in: query
-            name: offset
-            schema:
-                type: string
+      allowEmptyValue: true
+      description: >-
+        Offset from which to return the next set of resources. Use the value of
+        the 'offset' field from the response of a list operation as input here
+        to paginate through all the resources
+      in: query
+      name: offset
+      schema:
+        type: string
     PaginationSize:
-        description: Number of resources to be returned.
-        in: query
-        name: size
-        schema:
-            default: 100
-            maximum: 1000
-            minimum: 1
-            type: integer
+      description: Number of resources to be returned.
+      in: query
+      name: size
+      schema:
+        default: 100
+        maximum: 1000
+        minimum: 1
+        type: integer
     PaginationTagsFilter:
-        description: A list of tags to filter the list of resources on. Multiple tags can be concatenated using ',' to mean AND or using '/' to mean OR.
-        example: tag1,tag2
-        in: query
-        name: tags
-        schema:
+      allowEmptyValue: true
+      description: >-
+        A list of tags to filter the list of resources on. Multiple tags can be
+        concatenated using ',' to mean AND or using '/' to mean OR.
+      example: tag1,tag2
+      in: query
+      name: tags
+      schema:
+        type: string
+  responses:
+    HTTP401Error:
+      content:
+        application/json:
+          examples:
+            DuplicateApiKey:
+              summary: Duplicate API key found
+              value:
+                message: Duplicate API key found
+                status: 401
+            InvalidAuthCred:
+              summary: Invalid authentication credentials
+              value:
+                message: Unauthorized
+                status: 401
+            NoAPIKey:
+              summary: No API key found
+              value:
+                message: No API key found in request
+                status: 401
+          schema:
+            $ref: '#/components/schemas/GatewayUnauthorizedError'
+      description: Unauthorized
+  schemas:
+    ACL:
+      additionalProperties: false
+      example:
+        consumer:
+          id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
+        group: foo
+        id: b1f34145-0343-41a4-9602-4c69dec2f269
+      properties:
+        consumer:
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          nullable: true
+          type: integer
+        group:
+          type: string
+        id:
+          nullable: true
+          type: string
+        tags:
+          items:
             type: string
+          type: array
+      required:
+        - group
+      type: object
+    ACLWithoutParents:
+      additionalProperties: false
+      example:
+        group: foo
+        id: b1f34145-0343-41a4-9602-4c69dec2f269
+      properties:
+        consumer:
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          nullable: true
+          type: integer
+        group:
+          type: string
+        id:
+          nullable: true
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      required:
+        - group
+      type: object
+    GatewayUnauthorizedError:
+      properties:
+        message:
+          type: string
+        status:
+          type: integer
+      required:
+        - message
+        - status
+      type: object
+    PaginationNextResponse:
+      description: URI to the next page (may be null)
+      type: string
+    PaginationOffsetResponse:
+      description: >-
+        Offset is used to paginate through the API. Provide this value to the
+        next list operation to fetch the next page
+      type: string
+externalDocs:
+  description: ACL Plugin API Specification
+  url: https://developer.konghq.com
+info:
+  contact:
+    email: support@konghq.com
+    name: Kong Inc
+    url: https://konghq.com
+  description: >-
+    API for managing ACLs in Kong Gateway.
+
+    You can lean more about Kong Gateway at
+    [developer.konghq.com](https://developer.konghq.com).
+
+    Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: ACL Plugin API
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /acls:
+    get:
+      description: List all ACLs
+      operationId: list-acl
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/ACL'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing ACLs
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all ACLs
+      tags:
+        - ACLs
+    post:
+      description: Create a new ACL
+      operationId: create-acl
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Description of the new ACL for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully created ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new ACL
+      tags:
+        - ACLs
+  /acls/{ACLId}:
+    delete:
+      description: Delete an ACL
+      operationId: delete-acl
+      parameters:
+        - $ref: '#/components/parameters/ACLId'
+      responses:
+        '204':
+          description: Successfully deleted ACL or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete an ACL
+      tags:
+        - ACLs
+    get:
+      description: Get an ACL using ID.
+      operationId: get-acl
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully fetched ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch an ACL
+      tags:
+        - ACLs
+    parameters:
+      - $ref: '#/components/parameters/ACLId'
+    patch:
+      description: Update an ACL
+      operationId: update-acl
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Fields of the ACL that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully updated ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update an ACL
+      tags:
+        - ACLs
+    put:
+      description: Create or Update ACL using ID.
+      operationId: upsert-acl
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Description of the ACL
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully upserted ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a ACL
+      tags:
+        - ACLs
+  /{workspace}/acls:
+    get:
+      description: List all ACLs in a workspace
+      operationId: list-acl-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/ACL'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing ACLs
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all ACLs in a workspace
+      tags:
+        - ACLs
+    post:
+      description: Create a new ACL in a workspace
+      operationId: create-acl-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Description of the new ACL for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully created ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new ACL in a workspace
+      tags:
+        - ACLs
+  /{workspace}/acls/{ACLId}:
+    delete:
+      description: Delete an ACL in a workspace
+      operationId: delete-acl-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ACLId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successfully deleted ACL or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete an ACL in a workspace
+      tags:
+        - ACLs
+    get:
+      description: Get an ACL using ID in a workspace.
+      operationId: get-acl-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully fetched ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch an ACL in a workspace
+      tags:
+        - ACLs
+    parameters:
+      - $ref: '#/components/parameters/ACLId'
+    patch:
+      description: Update an ACL in a workspace
+      operationId: update-acl-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Fields of the ACL that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully updated ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update an ACL in a workspace
+      tags:
+        - ACLs
+    put:
+      description: Create or Update ACL using ID in a workspace.
+      operationId: upsert-acl-in-workspace
+      parameters:
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Description of the ACL
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully upserted ACL
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a ACL in a workspace
+      tags:
+        - ACLs
+  /{workspace}/consumers/{ConsumerIdForNestedEntities}/acls:
+    get:
+      description: List all ACLs associated with a Consumer in a workspace
+      operationId: list-acl-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/ACL'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing ACLs
+      summary: List all ACLs associated with a Consumer in a workspace
+      tags:
+        - ACLs
+    post:
+      description: Create a new ACL associated with a Consumer in a workspace
+      operationId: create-acl-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACLWithoutParents'
+        description: Description of new ACL for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully created ACL
+      summary: Create a new ACL associated with a Consumer in a workspace
+      tags:
+        - ACLs
+  /{workspace}/consumers/{ConsumerIdForNestedEntities}/acls/{ACLId}:
+    delete:
+      description: Delete a an ACL associated with a Consumer using ID in a workspace.
+      operationId: delete-acl-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successfully deleted ACL or the resource didn't exist
+      summary: Delete a an ACL associated with a Consumer in a workspace
+      tags:
+        - ACLs
+    get:
+      description: Get an ACL associated with a Consumer using ID in a workspace.
+      operationId: get-acl-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully fetched ACL
+        '404':
+          description: Resource does not exist
+      summary: Fetch an ACL associated with a Consumer in a workspace
+      tags:
+        - ACLs
+    patch:
+      description: Update a an ACL associated with a Consumer using ID in a workspace.
+      operationId: update-acl-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Fields of the ACL that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully updated ACL
+        '404':
+          description: Resource does not exist
+      summary: Update a an ACL associated with a Consumer in a workspace
+      tags:
+        - ACLs
+    put:
+      description: >-
+        Create or Update an ACL associated with a Consumer using ID in a
+        workspace.
+      operationId: upsert-acl-with-consumer-in-workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+        - description: Name or ID of workspace
+          example: team-a
+          in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACLWithoutParents'
+        description: Description of the ACL
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully upserted ACL
+      summary: Upsert an ACL associated with a Consumer in a workspace
+      tags:
+        - ACLs
+  /consumers/{ConsumerIdForNestedEntities}/acls:
+    get:
+      description: List all ACLs associated with a Consumer
+      operationId: list-acl-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/ACL'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing ACLs
+      summary: List all ACLs associated with a Consumer
+      tags:
+        - ACLs
+    post:
+      description: Create a new ACL associated with a Consumer
+      operationId: create-acl-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACLWithoutParents'
+        description: Description of new ACL for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully created ACL
+      summary: Create a new ACL associated with a Consumer
+      tags:
+        - ACLs
+  /consumers/{ConsumerIdForNestedEntities}/acls/{ACLId}:
+    delete:
+      description: Delete a an ACL associated with a Consumer using ID.
+      operationId: delete-acl-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+      responses:
+        '204':
+          description: Successfully deleted ACL or the resource didn't exist
+      summary: Delete a an ACL associated with a Consumer
+      tags:
+        - ACLs
+    get:
+      description: Get an ACL associated with a Consumer using ID.
+      operationId: get-acl-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully fetched ACL
+        '404':
+          description: Resource does not exist
+      summary: Fetch an ACL associated with a Consumer
+      tags:
+        - ACLs
+    patch:
+      description: Update a an ACL associated with a Consumer using ID.
+      operationId: update-acl-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACL'
+        description: Fields of the ACL that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully updated ACL
+        '404':
+          description: Resource does not exist
+      summary: Update a an ACL associated with a Consumer
+      tags:
+        - ACLs
+    put:
+      description: Create or Update an ACL associated with a Consumer using ID.
+      operationId: upsert-acl-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACLWithoutParents'
+        description: Description of the ACL
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+          description: Successfully upserted ACL
+      summary: Upsert an ACL associated with a Consumer
+      tags:
+        - ACLs
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+tags:
+  - name: ACLs
+

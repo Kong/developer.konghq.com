@@ -40,6 +40,12 @@ related_resources:
     url: /gateway/traffic-control-and-routing/
   - text: Upgrading {{site.base_gateway}}
     url: /gateway/upgrade/
+
+notes: |
+  The Canary plugin is not designed for a Kubernetes-native framework,
+  and shouldn't be used with the {{site.kic_product_name}}. Instead, use the 
+  <a href="/kubernetes-ingress-controller/gateway-api/">Gateway API</a> 
+  to manage canary deploys.
 ---
 
 The Canary Release plugin helps minimize risk when deploying a new software version by gradually rolling out changes to a limited group of users. 
@@ -77,14 +83,18 @@ rows:
 
 ### Determining where to route a request
 
-The Canary Release plugin decides how to route requests to the canary based on a hash attribute ([`config.hash`](/plugins/canary/reference/#schema--config-hash)) and a given number of buckets ([`config.steps`](/plugins/canary/reference/#schema--config-steps)).
-Each of these buckets can be routed to primary upstream service A or secondary upstream service B.
+The Canary Release plugin decides how to route requests to the canary based on a hash attribute ([`config.hash`](/plugins/canary/reference/#schema--config-hash)) and a given number of buckets ([`config.steps`](/plugins/canary/reference/#schema--config-steps)). Each of these buckets can be routed to primary upstream service A or secondary upstream service B.
 
-For example, if you set `config.steps` to 100 steps and [`config.percentage`](/plugins/canary/reference/#schema--config-percentage) to 10%, the Canary Release plugin creates 100 buckets.
-10 buckets will be routed to B while the other 90 will remain routed to A.
+The behavior of `steps` depends on your canary deployment type:
+* **Percentage-based canary**: Steps create buckets for traffic distribution. 
+For example, if you set `config.steps` to 100 and [`config.percentage`](/plugins/canary/reference/#schema--config-percentage) to 10%, the plugin creates 100 buckets and routes 10 buckets to the canary, while the remaining 90 route to the primary service.
+* **Time-based canary**: Steps determine the number of increments used to gradually shift from 0% to 100% traffic over time.
+For example, in a 10-hour time based canary:
+   * If `config.steps` is set to 10, you will have 10 increments of 10% each, with 1 increment per hour.
+   * If `config.steps` is set to 100, you will have 100 increments of 1% each, with 10 increments per hour.
 
 The `config.hash` parameter determines which requests end up in a specific bucket, based on their `consumer`, `ip`, or `header`.
-For example, if the plugin is configured to hash on Consumer, then each Consumer will consistently end up in the same bucket. 
+For example, if the plugin is configured to hash on Consumer, then each Consumer will consistently end up in the same bucket or increment. 
 The effect is that once a Consumer's bucket switches to upstream service B, it will then always go to B. 
 The same applies to hashing on IP or header.
 

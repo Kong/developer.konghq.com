@@ -23,6 +23,7 @@ module Jekyll
               'examples' => @plugin.examples,
               'basic_examples' => @plugin.basic_examples,
               'examples_by_group' => @plugin.examples_by_group,
+              'min_version' => example.min_version,
               'content_type' => 'plugin_example',
               'example_title' => example_config['title'],
               'description' => example_config['description']

@@ -61,9 +61,13 @@ async function extractSetup(page) {
   const setups = await page.$$("[data-test-setup]");
 
   for (const elem of setups) {
-    if (await elem.isVisible()) {
+    if (
+      (await elem.isVisible()) ||
+      (await page.evaluate((el) => el.classList.contains("invisible"), elem))
+    ) {
       const instruction = await elem.evaluate((el) => el.dataset.testSetup);
       let key;
+
       try {
         const json = JSON.parse(instruction);
         instructions.push(json);
@@ -125,7 +129,7 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
 
 export async function extractInstructionsFromURL(uri, config, browser) {
   const url = new URL(uri);
-
+  let timeout = 0;
   const page = await browser.newPage();
 
   try {
@@ -134,7 +138,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 
     const platforms = await page.evaluate(() => {
       const dropdown = document.querySelector(
-        "select.deployment-topology-switch"
+        "aside select.deployment-topology-switch"
       );
       if (!dropdown) return [];
 
@@ -142,7 +146,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
     });
 
     for (const platform of platforms) {
-      await page.select("select.deployment-topology-switch", platform);
+      await page.select("aside select.deployment-topology-switch", platform);
 
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
@@ -161,6 +165,17 @@ export async function extractInstructionsFromURL(uri, config, browser) {
       console.log(
         `  Instructions extracted successfully to ${instructionsFile}`
       );
+
+      // On some machines, we need to wait before extracting the instructions
+      if (process.env.AUTOMATED_TESTS_EXTRACTION_TIMEOUT) {
+        timeout = parseInt(process.env.AUTOMATED_TESTS_EXTRACTION_TIMEOUT, 10);
+      }
+      const promise = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, timeout);
+      });
+      await promise;
     }
   } catch (error) {
     console.error("There was an error extracting the instructions:", error);
@@ -170,7 +185,9 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 }
 
 export async function generateInstructionFiles(urlsToTest, config) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   try {
     await browser
       .defaultBrowserContext()

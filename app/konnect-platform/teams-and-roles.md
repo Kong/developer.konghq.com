@@ -29,6 +29,8 @@ faqs:
       A role defines predefined access to a particular resource or instances of a resource type. For example, API product roles can be scoped to a specific API product or all API products, while Control Plane roles can be scoped to a specific Control Plane or all Control Planes.
   - q: Can predefined teams in {{site.konnect_short_name}} be modified or deleted?
     a: No, predefined teams have fixed role sets that cannot be modified or deleted.
+  - q: I have the `API Products Publisher` role for the API product I want to publish, why don't I see any classic Dev Portals that I can publish to?
+    a: To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
 ---
 
 To help secure and govern your environment, {{site.konnect_short_name}} provides
@@ -37,8 +39,8 @@ predefined teams for a standard set of roles, or create custom teams with
 any roles you choose. Invite users and add them to these teams to manage user
 access.
 
-You must be part of the Organization Admin team to manage users, teams, and
-roles.
+You must either be a member of the Organization Admin team, or be assigned the
+Identity Admin role, to manage users, teams, and roles.
 
 {:.info}
 > **Note:** If the Okta integration is [enabled](/konnect-platform/sso/),

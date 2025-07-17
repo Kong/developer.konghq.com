@@ -70,36 +70,43 @@ rows:
                   Kong Manager comes packaged with several authentication methods.
   - column_count: 3
     columns:
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Enable OIDC for Kong Manager
-  #           description: |
-  #             {{site.base_gateway}} offers the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect Identity Provider.
-              
-  #           icon: /assets/icons/plugins/openid-connect.png
-  #           cta:
-  #             url: "/how-to/enable-oidc-for-kong-manager/"
       - blocks:
         - type: card
           config:
-            title: Enable Basic Auth for Kong Manager
+            title: Basic auth for Kong Manager
             description: |
               Configure basic authentication for Kong Manager.
               
             icon: /assets/icons/plugins/basic-auth.png
-            cta:
-              url: "/how-to/enable-basic-auth-on-kong-manager/"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Configure LDAP with Kong Manager
-  #           description: |
-  #             {{site.base_gateway}} offers the ability to bind authentication for Kong Manager Admins to your Active Directory.
+            ctas:
+              - text: Enable basic auth for Kong Manager
+                url: "/how-to/enable-basic-auth-on-kong-manager/"
+      - blocks:
+        - type: card
+          config:
+            title: OIDC for Kong Manager 
+            description: |
+              {{site.base_gateway}} offers the ability to bind authentication for Kong Manager admins to an organization's OpenID Connect identity provider.
               
-  #           icon: /assets/icons/plugins/ldap-auth.png
-  #           cta:
-  #             url: "/how-to/configure-ldap-with-kong-manager/"
+            icon: /assets/icons/plugins/openid-connect.png
+            ctas:
+              - text: Enable OIDC auth for Kong Manager
+                url: "/gateway/kong-manager/openid-connect/#enable-openid-connect-for-kong-manager"
+              - text: Set up authenticated group mapping with OIDC
+                url: "/gateway/kong-manager/openid-connect/#oidc-authenticated-group-mapping"
+      - blocks:
+        - type: card
+          config:
+            title: Configure LDAP with Kong Manager
+            description: |
+              {{site.base_gateway}} offers the ability to bind authentication for Kong Manager Admins to your Active Directory.
+              
+            icon: /assets/icons/plugins/ldap-auth.png
+            ctas:
+              - text: Enable LDAP auth for Kong Manager
+                url: "/gateway/kong-manager/ldap/#enable-ldap-for-kong-manager"
+              - text: Set up authenticated group mapping with LDAP
+                url: "/gateway/kong-manager/ldap/#ldap-authenticated-group-mapping"
   #     - blocks:
   #       - type: card
   #         config:

@@ -4,6 +4,10 @@ description: |
 extended_description: |
   Configure the OpenID Connect plugin with introspection authentication.
 
+  Here's how introspection auth works:
+
+  {% include_cached plugins/oidc/diagrams/introspection.md %}
+
   In this example, the plugin will only accept a bearer token sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, or any combination of these values.
   

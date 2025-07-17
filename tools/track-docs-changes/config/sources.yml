@@ -275,6 +275,12 @@ app/_how-tos/configure-rbac-user-in-kong-gateway.md:
   - app/_src/gateway/kong-manager/auth/rbac/add-user.md
 app/_how-tos/collect-metrics-with-prometheus.md:
   - app/_src/gateway/production/monitoring/prometheus.md
+app/_how-tos/collect-metrics-with-datadog-and-prometheus-plugin.md:
+  - app/_src/gateway/production/monitoring/datadog.md
+app/_how-tos/collect-metrics-with-statsd.md:
+  - app/_src/gateway/production/monitoring/statsd.md
+app/_how-tos/collect-audit-logs-with-sumologic.md:
+  - app/konnect/org-management/audit-logging/webhook.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -1006,6 +1012,7 @@ app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 app/_how-tos/enable-basic-auth-on-kong-manager.md:
   - app/_src/gateway/kong-manager/auth/basic.md
+  - app/_src/gateway/kong-manager/auth/reset-password.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
@@ -1051,6 +1058,8 @@ app/_landing_pages/konnect-platform/authentication.yaml:
   - app/konnect/org-management/social-identity-login.md
 app/konnect-platform/active-tracing.md:
   - app/konnect/gateway-manager/active-tracing.md
+app/_how-tos/collect-dev-portal-audit-logs-with-sumologic.md:
+  - app/konnect/dev-portal/audit-logging/webhook.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
@@ -1510,7 +1519,7 @@ app/dev-portal/auth-strategies.md:
   - app/dev-portal/app-reg/auth-strategies/oidc/index.md
   - app/dev-portal/app-reg/auth-strategies/key-auth/index.md
 
-app/dev-portal/access-and-approval.md:
+app/dev-portal/self-service.yaml:
   - app/dev-portal/access-and-approvals/teams.md
   - app/dev-portal/access-and-approvals/index.md
   - app/konnect/dev-portal/access-and-approval/manage-teams.md
@@ -1630,8 +1639,6 @@ app/insomnia/storage.md:
   - /insomnia/git-sync.md
   - /insomnia/insomnia-sync.md
   - /insomnia/scratchpad.md
-app/_how-tos/import-content-from-a-git-repository.md:
-  - /insomnia/git-sync.md
 app/_how-tos/synchronize-with-git.md:
   - /insomnia/git-sync.md
 app/insomnia/version-control.md:
@@ -1639,18 +1646,20 @@ app/insomnia/version-control.md:
   - /insomnia/insomnia-sync.md
 app/_how-tos/use-the-collection-runner.md:
   - /insomnia/collection-runner.md
-app/insomnia/environment-variables.md:
+app/insomnia/environments.md:
   - /insomnia/folder-level-settings.md
   - /insomnia/environment-variables.md
   - /insomnia/global-environments.md
   - /insomnia/secret-environment-variables.md
-app/insomnia/account-management.md:
+app/insomnia/accounts.md:
   - /insomnia/forgot-passphrase.md
   - /insomnia/accounts.md
+  - /insomnia/faq.md
+app/insomnia/organizations.md:
   - /insomnia/organizations.md
   - /insomnia/transfer-ownership-organization.md
+app/insomnia/enterprise-account-management.md:
   - /insomnia/multiple-owners.md
-  - /insomnia/faq.md
   - /insomnia/invite-control.md
 app/insomnia/data-security.md:
   - /insomnia/security-standards.md

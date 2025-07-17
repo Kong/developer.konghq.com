@@ -1,0 +1,37 @@
+title: 'Text-to-Speech (TTS) route'
+description: 'Set up an audio speech synthesis route using OpenAI’s text-to-speech model.'
+
+weight: 900
+
+min_version:
+  gateway: '3.11'
+
+requirements:
+- OpenAI account
+
+config:
+  route_type: audio/v1/audio/speech
+  genai_category: audio/speech
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
+  model:
+    provider: openai
+    name: tts-1
+    options:
+      max_tokens: 512
+      temperature: 1.0
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: multimodal-open-ai
