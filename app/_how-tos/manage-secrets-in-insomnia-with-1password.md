@@ -52,7 +52,7 @@ Go to the [Insomnia Plugin Hub](https://insomnia.rest/plugins/insomnia-plugin-op
 
 ## Configure the plugin
 
-The 1Password plugin is configured through a JSON [environment variable](/insomnia/environment-variables/). This environment variable can be defined with any environment type. In this example, we'll configure it in a global base environment.
+The 1Password plugin is configured through a JSON [environment variable](/insomnia/environments/). This environment variable can be defined with any environment type. In this example, we'll configure it in a global base environment.
 
 1. In your project, create a new environment.
 1. In the base environment, add the following content, with the correct path and account name:
