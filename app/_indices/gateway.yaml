@@ -226,6 +226,8 @@ sections:
         tags:
           - analytics
           - monitoring
+          - debugger
+          - tracing
       - title: Analytics and monitoring plugins
         description: Gateway plugins for monitoring your deployments.
         url: /plugins/?category=analytics-and-monitoring
