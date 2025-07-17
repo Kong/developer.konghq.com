@@ -1,0 +1,33 @@
+description: Configure the plugin to send a request to a different URL based on a header value.
+
+extended_description: |
+  Configure the plugin to send a request to a different URL based on a header value.
+
+  In this example, we're expecting the client to provide a `x-custom-url` header with a value to append to the specified URL.
+  This can be accomplished with the use of a dynamic string that reads the request header and sets the URL.
+
+  {:.warning}
+  > If the dynamic URL string evaluates to an invalid URL, a `500 Internal Server Error`
+  > response will be returned, along with an error log message.
+
+title: Dynamically change the request URL via dynamic URL expression
+
+weight: 900
+
+variables: 
+  url:
+    description: The API endpoint to use to request a token.
+    value: $API_URL
+
+config:
+  callouts:
+  - name: call
+    request:
+      url: $(kong.request.get_header('x-custom-url'))
+      method: GET
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
