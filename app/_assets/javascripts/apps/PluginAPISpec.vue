@@ -28,4 +28,8 @@ const currentPathDOC = ref(window.location.hash.substring(1));
 :deep(.spec-renderer-toc) {
   @apply bg-transparent !important;
 }
+
+:deep(.variable-container input) {
+  @apply bg-secondary;
+}
 </style>

@@ -3715,6 +3715,123 @@ components:
                 - uri
                 - query
             type: object
+        Event-hooks:
+            description: Event Hooks schema
+            example:
+                data:
+                    - config:
+                        body: null
+                        body_format: true
+                        headers:
+                            content-type: application/json
+                        headers_format: false
+                        method: POST
+                        payload:
+                            text: payload_text
+                        payload_format: true
+                        secret: null
+                        ssl_verify: false
+                        url: https://hooks.slack.com/services/foo/bar/baz
+                      created_at: 1.627588552e+09
+                      event: admins
+                      handler: webhook-custom
+                      id: 937df175-3db2-4e6d-8aa1-d95c94a76089
+                      on_change: null
+                      snooze: null
+                      source: crud
+                    - config:
+                        headers: {}
+                        secret: null
+                        ssl_verify: false
+                        url: https://webhook.site/a1b2c3-d4e5-g6h7-i8j9-k1l2m3n4o5p6
+                      created_at: 1.627581575e+09
+                      event: consumers
+                      handler: webhook
+                      id: c57340ab-9fed-40fd-bb7e-1cef8d37c2df
+                      on_change: null
+                      snooze: null
+                      source: crud
+                    - config:
+                        functions:
+                            - |
+                              return function (data, event, source, pid)
+                                local user = data.entity.username
+                                error("Event hook on consumer " .. user .. "")
+                              end
+                      created_at: 1.627595513e+09
+                      event: consumers
+                      handler: lambda
+                      id: c9fdd58d-5416-4d3a-9467-51e5cfe4ca0e
+                      on_change: null
+                      snooze: null
+                      source: crud
+                next: null
+            properties:
+                data:
+                    description: List of event hooks
+                    items:
+                        properties:
+                            config:
+                                description: Configuration for the event hook
+                                properties:
+                                    body:
+                                        nullable: true
+                                        type: string
+                                    body_format:
+                                        type: boolean
+                                    functions:
+                                        items:
+                                            type: string
+                                        nullable: true
+                                        type: array
+                                    headers:
+                                        nullable: true
+                                        properties:
+                                            content-type:
+                                                type: string
+                                        type: object
+                                    headers_format:
+                                        type: boolean
+                                    method:
+                                        type: string
+                                    payload:
+                                        nullable: true
+                                        properties:
+                                            text:
+                                                type: string
+                                        type: object
+                                    payload_format:
+                                        type: boolean
+                                    secret:
+                                        nullable: true
+                                        type: string
+                                    ssl_verify:
+                                        type: boolean
+                                    url:
+                                        type: string
+                                type: object
+                            created_at:
+                                type: integer
+                            event:
+                                type: string
+                            handler:
+                                type: string
+                            id:
+                                type: string
+                            on_change:
+                                nullable: true
+                                type: string
+                            snooze:
+                                nullable: true
+                                type: integer
+                            source:
+                                type: string
+                        type: object
+                    type: array
+                next:
+                    nullable: true
+                    type: string
+            type: object
         GatewayUnauthorizedError:
             properties:
                 message:
@@ -5845,8 +5962,8 @@ info:
     description: |-
         OpenAPI 3.0 spec for Kong Gateway's Admin API.
 
-        You can lean more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com)
-        .Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
+        You can learn more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com).
+        Give Kong a star at the [Kong/kong](https://github.com/kong/kong) repository.
     license:
         name: Apache 2.0
         url: https://www.apache.org/licenses/LICENSE-2.0.html
