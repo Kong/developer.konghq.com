@@ -65,8 +65,8 @@ faqs:
   - q: Why can't I access the original topic names through Kafka after configuring a prefix?
     a: |
       After you configure a prefix, you can't directly access the topics using the original names. 
-      * When accessing topics through Kafka, use prefixed names.
-      * When accessing topics through the {{site.event_gateway_short}} proxy, use prefixed names.
+      * When accessing topics directly through Kafka, use prefixed names (for example, `a-first-topic`).
+      * When accessing topics through the {{site.event_gateway_short}} proxy, use unprefixed names (for example, `first-topic`).
   - q: Why are certain topics not visible to a team?
     a: |
       Each team can only see topics with their respective prefix. For example:
