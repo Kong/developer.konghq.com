@@ -85,19 +85,17 @@ Embedding models work by converting text into high-dimensional floating-point ar
 
 Dimensionality determines how many numerical features represent each piece of content—similar to how a detailed profile might have dimensions for age, interests, location, and preferences. Higher dimensions create more detailed "fingerprints" that capture nuanced relationships, with smaller distances between vectors indicating stronger conceptual similarity and larger distances showing weaker associations.
 
-For example, this request to the OpenAI embeddings API via Kong AI Gateway:
+For example, this request to the OpenAI [/embeddings API](/plugins/ai-proxy/examples/embeddings-route-type/) via Kong AI Gateway:
 
-```bash
-curl http://localhost:8000/anything \
-  -H "Content-Type: application/json" \
-  -d '{
+```json
+{
     "input": "Tell me, Muse, of the man of many ways, who was driven far journeys, after he had sacked Troy’s sacred citadel.",
     "model": "text-embedding-3-large",
     "dimensions": 20
-  }'
+}
 ```
 
-Returns the following response:
+Creates the following embedding:
 
 ```json
 {
@@ -210,16 +208,16 @@ The two graphs below illustrate a key difference between cosine similarity and E
 columns:
   - title: Similarity Metric
     key: metric
-  - title: Recommended Use Cases
+  - title: Recommended use cases
     key: use_cases
 rows:
-  - metric: "Cosine Similarity"
+  - metric: "Cosine similarity"
     use_cases: |
       - Find semantically similar news articles regardless of length
       - Recommend products to users with similar taste profiles
       - Identify documents with overlapping topics in large corpora
       - Compare diverse text embeddings (for example, Microsoft vs. Apple)
-  - metric: "Euclidean Distance"
+  - metric: "Euclidean distance"
     use_cases: |
       - Find images with similar color distributions and intensity
       - Detect anomalies in sensor readings where magnitude matters
