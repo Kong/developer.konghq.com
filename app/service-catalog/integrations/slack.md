@@ -20,10 +20,12 @@ works_on:
 description: The Slack integration allows you to see Slack communication channels that are relevant to a Service Catalog service.
 
 related_resources:
-  - text: "Service Catalog"
+  - text: Service Catalog
     url: /service-catalog/
-  - text: Traceable plugin
-    url: /plugins/traceable/
+  - text: Integrations
+    url: /service-catalog/integrations/
+  - text: Import and map Slack resources in Service Catalog
+    url: /how-to/install-and-map-slack-resources/
 discovery_support: true
 discovery_default: true
 bindable_entities: "Slack Channel"
@@ -33,6 +35,8 @@ mechanism: "pull/ingestion model"
 
 The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a Service Catalog service.
 {% include /service-catalog/multi-resource.md %}
+
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Slack resources in Service Catalog](/how-to/install-and-map-slack-resources/).
 
 ## Prerequisites
 
