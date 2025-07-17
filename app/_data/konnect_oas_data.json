@@ -578,12 +578,12 @@
   },
   {
     "id": "edd35dd6-f6cc-48cc-be60-02c99918b7d8",
-    "title": "Service Catalog",
+    "title": "Konnect Service Catalog",
     "latestVersion": {
       "name": "v1",
       "id": "b5eca960-87b6-47cf-930d-a9d06a40eae1"
     },
-    "description": null,
+    "description": "The Service Catalog API.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
