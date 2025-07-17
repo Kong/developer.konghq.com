@@ -49,4 +49,12 @@ Run the following to test the `Flights Service 0.1.0` document in the `OpenAPI e
 inso run test "Flights Service 0.1.0" --env "OpenAPI env api.kong-air.com"
 ```
 
-You should get a report saying which tests were conducted and that the one test you set up passed.
+You should get a report saying which tests were conducted and that the one test you set up passed. For example:
+
+```sh
+  New Suite
+    ✔ Returns 200 (1576ms)
+
+
+  1 passing (2s)
+```
