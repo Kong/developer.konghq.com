@@ -20,7 +20,9 @@ tags:
 
 plugins:
   - ai-proxy-advanced
-
+  - ai-semantic-cache
+  - ai-rag-injector
+  - ai-semantic-prompt-guard
 
 min_version:
   gateway: '3.10'
@@ -165,7 +167,9 @@ rows:
 
 ### Cosine and Euclidean similarity
 
-Kong AI Gateway supports both **cosine similarity** and **Euclidean distance** for vector comparisons, allowing you to choose the method best suited for your use case.
+Kong AI Gateway supports both **cosine similarity** and **Euclidean distance** for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using `config.vectordb.distance_metric` setting in the respective plugin.
+
+### Cosine similarity
 
 **Cosine similarity**—as the name suggests—measures the angle between vectors, ignoring their magnitude. It is well-suited for **semantic matching**, particularly in text-based scenarios. OpenAI recommends cosine similarity for use with the `text-embedding-3-large` model.
 
@@ -178,6 +182,8 @@ Kong AI Gateway supports both **cosine similarity** and **Euclidean distance** f
 
 Cosine tends to perform well across both **low and high dimensional spaces**, especially in **high-diversity datasets**—for example, when comparing texts about Microsoft, Apple, and Google—because it captures vector orientation rather than size.
 
+#### Euclidean distance
+
 **Euclidean distance** measures the straight-line (L2) distance between vectors and is sensitive to **magnitude**. It works better when comparing objects across **broad thematic categories**, such as Technology, Fruit, or Musical Instruments, and in domains where **absolute distance** is important.
 
 <figure>
@@ -188,9 +194,9 @@ Cosine tends to perform well across both **low and high dimensional spaces**, es
 </figure>
 
 {:.success}
->Use **cosine** for nuanced semantic similarity (for example, document comparison, text clustering), especially when content length varies or dataset diversity is high.
+> Use `cosine` for nuanced semantic similarity (for example, document comparison, text clustering), especially when content length varies or dataset diversity is high.
 >
-> Use **Euclidean** when **magnitude** matters (for example, images, sensor data) or you're working with **dense, well-aligned feature sets**.
+> Use `euclidean` when magnitude matters (for example, images, sensor data) or you're working with dense, well-aligned feature sets.
 
 ### Cosine similarity versus Euclidean distance
 
