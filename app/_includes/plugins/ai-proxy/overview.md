@@ -35,7 +35,7 @@ columns:
     key: description
   - title: Examples
     key: examples
-  - title: OpenAI-compatible
+  - title: OpenAI format
     key: openai_compatible
 
 features:
@@ -104,7 +104,7 @@ columns:
     key: description
   - title: Examples
     key: examples
-  - title: OpenAI-compatible
+  - title: OpenAI format
     key: openai_compatible
 
 features:
