@@ -44,11 +44,10 @@ Vector embeddings power a range of LLM workflows, including semantic search, doc
 
 In Kong’s AI Gateway, several plugins leverage embedding-based similarity:
 
-* **AI Semantic Cache** indexes previous prompts and responses as embeddings. On each request, it searches for semantically similar inputs and serves cached responses when possible to reduce redundant LLM calls.
-* **RAG Injector** retrieves semantically relevant chunks from a vector database. It embeds the prompt, performs a similarity search, and injects the results into the prompt to enable retrieval-augmented generation.
-* **AI Semantic Prompt Guard** compares incoming prompts against allow/deny lists using embedding similarity to detect and block misuse patterns.
-* **AI Prompt Compressor** uses similarity-based techniques to identify and retain only the most relevant context from prior messages.
-* **AI Proxy Advanced** supports semantic routing by selecting upstream targets based on prompt similarity.
+* [AI Proxy Advanced](/plugins/ai-semantic-prompt-guard/) load balancer supports semantic routing by selecting upstream targets based on prompt similarity.
+* [AI Semantic Cache](/plugins/ai-semantic-cache/) indexes previous prompts and responses as embeddings. On each request, it searches for semantically similar inputs and serves cached responses when possible to reduce redundant LLM calls.
+* [AI RAG Injector](/plugins/ai-rag-injector/) retrieves semantically relevant chunks from a vector database. It embeds the prompt, performs a similarity search, and injects the results into the prompt to enable retrieval-augmented generation.
+* [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/) compares incoming prompts against allow/deny lists using embedding similarity to detect and block misuse patterns.
 
 ### What is compared for similarity?
 
@@ -60,16 +59,16 @@ Each plugin applies similarity search slightly differently depending on its goal
 columns:
   - title: Plugin
     key: plugin
-  - title: Compared Embeddings
+  - title: Compared embeddings
     key: comparison
 rows:
   - plugin: "AI Proxy Advanced"
     comparison: "Prompt vs. `description` field of each upstream target"
-  - plugin: "Semantic Prompt Guard"
+  - plugin: "AI Semantic Prompt Guard"
     comparison: "Prompt vs. allowlist and denylist prompts"
-  - plugin: "Semantic Cache"
+  - plugin: "AI Semantic Cache"
     comparison: "Prompt vs. cached prompt keys"
-  - plugin: "RAG Injector"
+  - plugin: "AI RAG Injector"
     comparison: "Prompt vs. vectorized document chunks"
 {% endtable %}
 
@@ -225,4 +224,4 @@ rows:
 {% endtable %}
 
 
-<!-- MISSING SECTIONS ON THRESHOLDS AND CAVEATS -->
+<!-- MISSING SECTIONS ON THRESHOLDS AND CAVEATS; ADD A SECTION ON SUPPORTED VECTOR DATABASES -->
