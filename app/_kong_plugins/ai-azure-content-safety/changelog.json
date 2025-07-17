@@ -11,6 +11,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.1": [
+    {
+      "message": "Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.7.0.0": [
     {
       "message": "Adds a new plugin that allows the Kong administrator to enforce \nthat all AI-Proxy requests must be introspected with the Azure Content Safety service.\n\nThe plugin enables configurable thresholds for the different moderation categories, \nand reports audit results into the Kong log serializer for reporting purposes.\n",
