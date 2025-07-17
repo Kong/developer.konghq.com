@@ -24,6 +24,9 @@ related_resources:
     url: /dev-portal/portal-settings/
   - text: Dev Portal security settings
     url: /dev-portal/security-settings/
+faqs:
+  - q: How do I allow developers to use multiple versions of an API in the Dev Portal?
+    a: You can use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of the same API. Developers can then select the version of the API they want to use in the Dev Portal spec renderer.
 ---
 
 Publishing an API makes it available to one or more Dev Portals. 
