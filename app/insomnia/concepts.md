@@ -48,29 +48,29 @@ A pre-request script is a feature in a collection that allows you to define acti
 ## After-response script
 An after-response script is a feature in a collection that allows you to define actions to perform after receiving the response to a request. For example, you can get the response body, check for data types, clear a variable, etc. The results of the script are displayed in the console.
 
-## User
-A user is an individual who uses Insomnia to design, test, debug, and document APIs. As a user, you can design requests, mock services, run tests, and choose between local, Git, or cloud storage. As a user, you can work independently or collaborate in shared projects and tools.
-
-## Admin
-An admin is a team member or an organization owner in an Enterprise plan who controls organization-level access. As an admin, you configure SSO and SCIM, control storage settings, and enforce RBAC policies. Admins manage access and configuration at scale, however they cannot manage individual projects directly.
-
-## Team
-A team is a group of users who collaborate on shared Insomnia projects. As an admin, you can use teams to share API resources and apply RBAC rules to control collaborator permissions, and simplify access management across multiple users.
-
-## Project
-A project is a workspace that contains API collections, specifications, environments, and tests. You can store projects locally, sync with Insomnia Cloud, or connect them to Git repositories. Projects help you organize and share API workflows efficiently.
-
-## Organization
-An organization is a container for projects, teams, and access management. You can use organizations to centralize control across teams and assets by inviting collaborators, assigning RBAC roles, and configuring SSO.
-
-## Owner
-An owner is a user who holds full administrative control over an organization. As an owner, you can manage billing, invite members, configure settings, and assign additional owners. Ownership ensures consistent management and governance.
-
-## Member
-A member is an individual who collaborates on shared workspaces like projects or organizations based on their assigned roles. As a member, you can view or edit API assets depending on your RBAC permissions. You cannot manage the organization or access Enterprise-level settings.
-
-## Co-owner
-A co-owner is a user who shares full administrative control of an account, including billing, account settings, members, organizations, and projects. As a co-owner, you can perform all the same actions as the primary owner. Co-ownership ensures continuity by allowing multiple users to manage critical account functions.
-
-## Billing-only
-A billing-only user is a user who manages account billing information, however they don't have access to management for projects, members, and organizations. As a billing-only user, you cannot create organizations or modify API resources. This role is typically assigned to delegate payment responsibilities without granting administrative access.
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+rows:
+  - role: User
+    description: An individual who uses Insomnia to design, test, debug, and document APIs. Users can design requests, mock services, run tests, and choose between local, Git, or cloud storage. They can work independently or collaborate in shared projects and tools.
+  - role: Admin
+    description: A team member or organization owner on an Enterprise plan who controls organization-level access. Admins configure SSO and SCIM, control storage settings, and enforce RBAC policies. They manage access and configuration at scale but cannot manage individual projects directly.
+  - role: Team
+    description: A Group of users who collaborate on shared Insomnia projects. Admins use teams to share API resources, apply RBAC rules to control permissions, and simplify access management.
+  - role: Project
+    description: A Workspace that contains API collections, specifications, environments, and tests. Projects can be stored locally, synced with Insomnia Cloud, or connected to Git repositories. They help organize and share API workflows.
+  - role: Organization
+    description: A container for projects, teams, and access management. Organizations centralize control by allowing collaborators to be invited, RBAC roles to be assigned, and SSO to be configured.
+  - role: Owner
+    description: A user with full administrative control over an organization. Owners manage billing, invite members, configure settings, and assign additional owners to ensure consistent management and governance.
+  - role: Member
+    description: An individual who collaborates on shared workspaces based on assigned roles. Members can view or edit API assets according to RBAC permissions but cannot manage the organization or access Enterprise-level settings.
+  - role: Co-owner
+    description: A user who shares full administrative control of an account. Co-owners can manage billing, settings, members, organizations, and projects, ensuring continuity in account management.
+  - role: Billing-only
+    description: A user who manages billing information but does not have access to manage projects, members, or organizations. Typically used to delegate payment responsibilities without granting administrative access.
+{% endtable %}
