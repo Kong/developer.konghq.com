@@ -85,7 +85,7 @@ faqs:
 
       - Use the **Gemini SDK**:
 
-        1. Set [`llm_format`](/reference/#schema--config-llm-format) to `gemini`.
+        1. Set [`llm_format`](./reference/#schema--config-llm-format) to `gemini`.
         1. Use the Gemini provider.
         1. Configure parameters like [`temperature`](./reference/#schema--config-targets-model-options-temperature), [`top_p`](./reference/#schema--config-targets-model-options-top-p), and [`top_k`](./reference/#schema--config-targets-model-options-top-k) on the client side:
             ```python
@@ -101,7 +101,7 @@ faqs:
             ```
 
       - Use the **OpenAI SDK** with the Gemini provider:
-        1. Set [`llm_format`](/reference/#schema--config-llm-format) to `openai`.
+        1. Set [`llm_format`](./reference/#schema--config-llm-format) to `openai`.
         1. You can configure parameters in one of three ways:
           - Configure them in the plugin only.
           - Configure them in the client only.
