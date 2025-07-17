@@ -14,7 +14,7 @@ tags:
 works_on:
     - konnect
 description: | 
-    placeholder
+    Learn how to view contextual developer and Dev Portal analytics.
 related_resources:
   - text: "{{site.konnect_short_name}} Analytics"
     url: /advanced-analytics/
