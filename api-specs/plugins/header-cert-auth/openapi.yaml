@@ -18,6 +18,7 @@ paths:
       tags: [Header Cert Auth]
       parameters:
         - name: ConsumerUsernameOrId
+          example: example-consumer
           in: path
           required: true
           schema:
@@ -35,10 +36,11 @@ paths:
                     items:
                       $ref: '#/components/schemas/HeaderCertAuthCredential'
     post:
-      summary: Create a Header Cert Auth credential for a consumer
+      summary: Create a Header Cert Auth credential for a Consumer
       tags: [Header Cert Auth]
       parameters:
         - name: ConsumerUsernameOrId
+          example: example-consumer
           in: path
           required: true
           schema:
@@ -48,7 +50,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HeaderCertAuthCredentialRequest'
+              $ref: '#/components/schemas/HeaderCertAuthCredential'
       responses:
         '201':
           description: Credential created
@@ -63,11 +65,13 @@ paths:
       tags: [Header Cert Auth]
       parameters:
         - name: ConsumerUsernameOrId
+          example: example-consumer
           in: path
           required: true
           schema:
             type: string
         - name: HeaderCertAuthCredentials
+          example: 84175eaa-c795-483e-8a4a-3d57132003e8
           in: path
           required: true
           schema:
@@ -86,11 +90,13 @@ paths:
       tags: [Header Cert Auth]
       parameters:
         - name: ConsumerUsernameOrId
+          example: example-consumer
           in: path
           required: true
           schema:
             type: string
         - name: HeaderCertAuthCredentials
+          example: 84175eaa-c795-483e-8a4a-3d57132003e8
           in: path
           required: true
           schema:
@@ -100,7 +106,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HeaderCertAuthCredentialRequest'
+              $ref: '#/components/schemas/HeaderCertAuthCredential'
       responses:
         '200':
           description: Credential replaced
@@ -109,11 +115,13 @@ paths:
       tags: [Header Cert Auth]
       parameters:
         - name: ConsumerUsernameOrId
+          example: example-consumer
           in: path
           required: true
           schema:
             type: string
         - name: HeaderCertAuthCredentials
+          example: 84175eaa-c795-483e-8a4a-3d57132003e8
           in: path
           required: true
           schema:
@@ -123,7 +131,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/HeaderCertAuthCredential'
       responses:
         '200':
           description: Credential updated
@@ -132,11 +140,13 @@ paths:
       tags: [Header Cert Auth]
       parameters:
         - name: ConsumerUsernameOrId
+          example: example-consumer
           in: path
           required: true
           schema:
             type: string
         - name: HeaderCertAuthCredentials
+          example: 84175eaa-c795-483e-8a4a-3d57132003e8
           in: path
           required: true
           schema:
@@ -168,6 +178,7 @@ paths:
       tags: [Header Cert Auth]
       parameters:
         - name: HeaderCertAuthCredentials
+          example: 84175eaa-c795-483e-8a4a-3d57132003e8
           in: path
           required: true
           schema:
@@ -179,32 +190,74 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Consumer'
-
 components:
   schemas:
     HeaderCertAuthCredential:
       type: object
+      required: [subject_name]
       properties:
         id:
+          description: UUID of the Consumer mapping. Required if adding mapping using declarative configuration, otherwise generated automatically by Kong's Admin API."
           type: string
-        key:
+          example: 84175eaa-c795-483e-8a4a-3d57132003e8
+        subject_name:
+          description: "The Subject Alternative Name (SAN) or Common Name (CN) that should be mapped to `consumer` (in order of lookup)."
           type: string
+          example: CA_Subject_Name
         consumer:
           type: object
           properties:
             id:
               type: string
-    HeaderCertAuthCredentialRequest:
-      type: object
-      required: [key]
-      properties:
-        key:
-          type: string
+              example: a6f1f9db-737b-4a0b-8e87-21cda32fc857
+        ca_certificate:
+           description: |
+             The provided CA UUID or full CA Certificate has to be verifiable by the issuing certificate authority for the mapping to succeed. 
+             This is to help distinguish multiple certificates with the same subject name that are issued under different CAs.
+           type: object
+           properties:
+            id:
+              type: string
+              example: 50132e7d-a652-4a58-9f40-3722e9bd6afb
+        tags:
+          description: An optional set of strings associated with the credential for grouping and filtering.
+          items:
+              type: string
+          type: array
+        created_at:
+          description: Unix epoch when the resource was created.
+          nullable: true
+          type: integer
 
     Consumer:
       type: object
+      description: The Consumer object represents a consumer - or a user - of a Service. You can either rely on Kong as the primary datastore, or you can map the consumer list with your database to keep consistency between Kong and your existing primary datastore.
+      example:
+          id: 8a388226-80e8-4027-a486-25e4f7db5d21
+          username: example-consumer
       properties:
+        created_at:
+          description: Unix epoch when the resource was created.
+          nullable: true
+          type: integer
+        custom_id:
+          description: Field for storing an existing unique ID for the Consumer - useful for mapping Kong with users in your existing database. You must send either this field or `username` with the request.
+          nullable: true
+          type: string
         id:
+          nullable: true
           type: string
+        tags:
+          description: An optional set of strings associated with the Consumer for grouping and filtering.
+          items:
+              type: string
+          type: array
+        updated_at:
+          description: Unix epoch when the resource was last updated.
+          nullable: true
+          type: integer
         username:
+          description: The unique username of the Consumer. You must send either this field or `custom_id` with the request.
+          nullable: true
           type: string
+      type: object

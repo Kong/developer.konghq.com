@@ -21,18 +21,7 @@ You can create a Consumer mapping with either of the following:
         subject_name: test@example.com
     ```
 {% elsif include.slug == "header-cert-auth" %}
-You can create a Consumer mapping with either of the following:
-  * The [`/consumers/{consumer}/header-cert-auth` Admin API endpoint](/plugins/header-cert-auth/api/)
-  * [decK](/gateway/entities/consumer/#set-up-a-consumer) by specifying `header_cert_auth_credentials` in the configuration like the following:
-
-    ```yaml
-    consumers:
-    - custom_id: my-consumer
-      username: example-consumer
-      header_cert_auth_credentials:
-      - id: bda09448-3b10-4da7-a83b-2a8ba6021f0c
-        subject_name: test@example.com
-    ```
+You can create a Consumer mapping using the [`/consumers/{consumer}/header-cert-auth` Admin API endpoint](/plugins/header-cert-auth/api/).
 {% endif %}
 
 The following table describes how Consumer mapping parameters work for the {{include.name}} plugin:
