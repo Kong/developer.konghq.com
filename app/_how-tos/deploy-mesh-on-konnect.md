@@ -78,7 +78,7 @@ kuma:
   ```
 
 {% tip %}
-`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prequisites section.
+`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prerequisites section.
 {% endtip %}
 
 Install {{site.mesh_product_name}}:
