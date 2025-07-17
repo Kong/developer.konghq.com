@@ -1,24 +1,20 @@
-title: 'Audio transcription route'
-description: 'Configure an audio transcription route using the Whisper model.'
+title: 'Responses route type'
+description: "Use the Responses API to fetch metadata about past OpenAI requests for debugging and analysis."
 
 weight: 900
 
 requirements:
 - OpenAI account
 
-min_version:
-  gateway: '3.11'
-
 config:
-  genai_category: audio/transcription
   targets:
-    - route_type: audio/v1/audio/transcriptions
+    - route_type: llm/v1/responses
       auth:
         header_name: Authorization
         header_value: Bearer ${key}
       model:
         provider: openai
-        name: whisper-1
+        name: gpt-4o
         options:
           max_tokens: 512
           temperature: 1.0
@@ -35,4 +31,4 @@ tools:
   - kic
   - terraform
 
-group: multimodal-open-ai
+group: openai-processing

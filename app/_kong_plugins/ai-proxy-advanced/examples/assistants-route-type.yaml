@@ -1,24 +1,21 @@
-title: 'Audio transcription route'
-description: 'Configure an audio transcription route using the Whisper model.'
+title: 'Assistants chat route'
+description: "Use the Assistants API to create a persistent, tool-augmented agent backed by GPT-4."
 
 weight: 900
 
 requirements:
 - OpenAI account
 
-min_version:
-  gateway: '3.11'
-
 config:
-  genai_category: audio/transcription
+  model_name_header: false
   targets:
-    - route_type: audio/v1/audio/transcriptions
+    - route_type: llm/v1/assistants
       auth:
         header_name: Authorization
         header_value: Bearer ${key}
       model:
         provider: openai
-        name: whisper-1
+        name: gpt-4o
         options:
           max_tokens: 512
           temperature: 1.0
@@ -35,4 +32,4 @@ tools:
   - kic
   - terraform
 
-group: multimodal-open-ai
+group: openai-processing
