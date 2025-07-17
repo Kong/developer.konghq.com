@@ -30,7 +30,8 @@ description: Configure {{site.event_gateway}} to automatically filter topic name
 tldr: 
   q: How can I set up topic filtering with {{site.event_gateway}}?
   a: | 
-    This example demonstrates how to configure {{site.event_gateway}} to automatically filter topic names using prefixes.
+    Configure {{site.event_gateway}} to automatically filter topic names using prefixes.
+    In this how-to guide, we apply specific prefixes to team-based contexts by configuring a `topic_rewrite` with custom prefixes for each team. 
 
 tools:
     - konnect-api
@@ -55,9 +56,9 @@ related_resources:
     url: /event-gateway/
 
 faqs:
-  - q: Why are topics not appearing with a prefix?
+  - q: Why am I not seeing a prefix in front of my Kafka topics?
     a: |
-      Troubleshoot your configuration by checking the following:
+      If you configured a prefix but aren't seeing one, troubleshoot your configuration by checking the following:
       * Verify the proxy configuration is loaded correctly by checking the logs (`docker compose logs knep`), or looking at your data plane errors in {{site.konnect_short_name}}
       * Ensure that you're connecting through the correct proxy port (in this guide, 19092 for team-a, 29092 for team-b)
       * Check that the topic filter rules are correctly configured
@@ -75,19 +76,23 @@ faqs:
       Topics without the correct prefix (like `fourth-topic`) won't be visible through either proxy.
 ---
 
-## Benefits of topic filtering
+Topic filtering lets you automatically prefix and filter topics based on virtual clusters. 
+With filter prefixes, you can limit Kafka topics by team, purpose, or any other category.
 
-Topic filtering is ideal for:
-
+Topic filtering is useful for:
 * Multi-tenant environments
 * Topic namespace isolation
 * Environment segregation
 * Service mesh patterns
 
+In this guide, you'll configure topic filtering by team, where each team can only see topics that match their assigned prefix.
+The actual Kafka cluster stores all topics with their prefixed names.
 
 ## Configure topic name aliasing
 
-Create a config file to define topic name aliases:
+Create a config file to define topic name aliases.
+
+This config uses the `topic_rewrite` parameter with a `prefix` option, in this case adding custom prefixes for `team-a` and `team-b`:
 
 ```yaml
 cat <<EOF > knep-config.yaml
@@ -132,12 +137,13 @@ virtual_clusters:
         value: b-
 EOF
 ```
+
 In this configuration file, we use:
-* Two virtual clusters with different prefixes: `a-` for Team-a and `b-` for Team-b
-* Team-a accessible on port 9192, team-b on port 9193
-* All topics accessed through each proxy will be prefixed accordingly
-* Original topic names preserved in the client view
-* Transparent prefix handling for clients
+* Two virtual clusters with different prefixes: `a-` for `team-a` and `b-` for `team-b`
+* Team-a is accessible on port 9192, team-b on port 9193
+* All topics accessed through each proxy will be prefixed based on their team assignments
+* Original topic names are preserved in the client view
+* This provides transparent prefix handling for clients
 
 ## Update the control plane and data plane
 

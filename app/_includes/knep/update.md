@@ -1,4 +1,4 @@
-Update the control plane using the `/declarative-config` endpoint:
+Update the Control Plane using the `/declarative-config` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -13,3 +13,4 @@ Restart your data plane to apply the configuration:
 ```sh
 docker restart knep
 ```
+This might take a few seconds.

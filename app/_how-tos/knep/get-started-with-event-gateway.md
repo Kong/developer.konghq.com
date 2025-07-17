@@ -29,7 +29,7 @@ description: Use this tutorial to get started with {{site.event_gateway}}.
 tldr: 
   q: How can I get started with {{site.event_gateway}}?
   a: | 
-    Get started with {{site.event_gateway}} by setting up a {{site.konnect_short_name}} Control Plane and a Kafka cluster, then configuring the Control Plane using the `/declarative_config` endpoint of the Control Plane Config API.
+    Get started with {{site.event_gateway}} ({{site.event_gateway_short}}) by setting up a {{site.konnect_short_name}} Control Plane and a Kafka cluster, then configuring the Control Plane using the `/declarative_config` endpoint of the Control Plane Config API.
 
 tools:
     - konnect-api
@@ -42,7 +42,7 @@ prereqs:
 
     - title: Install kafkactl
       content: |
-        Install [kafkactl](https://github.com/deviceinsight/kafkactl). You'll need it to interact with Kafka clusters. 
+        Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
 
 automated_tests: false
 related_resources:
@@ -66,6 +66,15 @@ faqs:
       * Check if you're using the correct `kafkactl` context
       * Ensure that the proxy is properly connected to the backend cluster
 ---
+
+{{site.event_gateway}} lets you configure virtual clusters, which act as a proxy interface between the client and the Kafka cluster.
+With virtual clusters, you can:
+* Apply transformations, filtering, and custom policies
+* Route messages based on specific rules to different Kafka clusters
+* Apply auth mediation and message encryption
+and much more.
+
+Now, let's configure a proxy and test your first virtual cluster setup.
 
 ## Create a Control Plane in {{site.konnect_short_name}}
 
@@ -123,14 +132,11 @@ EOF
 
 {% include_cached /knep/update.md %}
 
-## Validate the cluster
+## Configure the cluster
 
-Let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. 
-You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
-
-You can also use the `kafkactl` command to check the cluster. First, let's set up the `kafkactl` config file:
+Set up the `kafkactl` config file:
 ```shell
-cat <<EOF > ~/.kafkactl/config.yml
+cat <<EOF > kafkactl.yaml
 contexts:
   direct:
     brokers:
@@ -153,8 +159,16 @@ contexts:
 current-context: direct
 EOF
 ```
+This file defines several configuration profiles. We're going to switch between these profiles as we test different features.
 
+## Validate the cluster
+
+Let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. 
+You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
+
+You can also use the `kafkactl` command to check the cluster. 
 Let's check the Kafka cluster directly:
+
 ```shell
 kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
 kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"

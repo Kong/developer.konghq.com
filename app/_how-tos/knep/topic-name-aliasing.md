@@ -26,11 +26,11 @@ tags:
 
 description: Configure {{site.event_gateway}} to perform topic name aliasing using Common Expression Language (CEL) expressions.
 
-
 tldr: 
   q: How can I set up topic name aliasing with {{site.event_gateway}}?
   a: | 
-    This example demonstrates how to configure {{site.event_gateway}} to perform topic name aliasing using Common Expression Language (CEL) expressions.
+    Configure {{site.event_gateway}} to perform topic name aliasing using Common Expression Language (CEL) expressions. 
+    To set up aliases, you'll need to configure a `topic_rewrite` directive with bidirectional name rewrites: `virtual_to_backend_expression` and `backend_to_virtual_expression`.
 
 tools:
     - konnect-api
@@ -63,18 +63,24 @@ faqs:
 
 ---
 
-## Benefits of topic aliasing
+Topic name aliasing lets you to create bidirectional name mappings between virtual topic names 
+(what clients see) and backend topic names (what actually exists in Kafka).
 
-Topic aliasing is useful for:
-
+Topic name aliasing is useful for:
 * Standardizing topic naming conventions
 * Supporting legacy topic names
 * Providing friendly names for clients
 * Maintaining backward compatibility
 
+In this guide, you'll configure a client-facing alias for a topic and a fallback topic name.
+
 ## Configure topic name aliasing
 
-Create a config file to define topic name aliases:
+Create a config file to define topic name aliases. 
+
+This config uses the `topic_rewrite` parameter with the following options:
+* `virtual_to_backend_expression`: Transforms client-facing names to Kafka topic names (`Jonathan` to `Jon`)
+* `backend_to_virtual_expression`: Transforms Kafka topic names into to client-facing names (`Jon` to `Jonathan`)
 
 ```yaml
 cat <<EOF > knep-config.yaml
