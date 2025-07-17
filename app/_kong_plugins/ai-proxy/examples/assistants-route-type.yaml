@@ -8,6 +8,7 @@ requirements:
 - OpenAI account
 
 config:
+  model_name_header: false
   route_type: llm/v1/assistants
   auth:
     header_name: Authorization
