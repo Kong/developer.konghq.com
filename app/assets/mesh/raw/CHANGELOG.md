@@ -13,6 +13,16 @@
 * fix(dynconfig): change the direct response body size dynamically (backport of #13853) [#13897](https://github.com/kumahq/kuma/pull/13897) @kumahq
 
 
+## 2.10.3
+> Released on 2025/07/15
+
+* chore(deps): bump kumahq/kuma from 2.10.2 to 2.10.3 [#8007](https://github.com/Kong/kong-mesh/pull/8007) [#8032](https://github.com/Kong/kong-mesh/pull/8032) [#8042](https://github.com/Kong/kong-mesh/pull/8042) @kong-mesh
+
+### Includes [kumahq/kuma@2.10.3](https://github.com/kumahq/kuma/releases/tag/2.10.3) changelog
+
+* chore(deps): security update [#13901](https://github.com/kumahq/kuma/pull/13901) @kumahq
+
+
 ## 2.9.6
 > Released on 2025/07/03
 

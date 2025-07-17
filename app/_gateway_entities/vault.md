@@ -454,6 +454,7 @@ rows:
 {% navtab "HashiCorp" %}
 For a complete tutorial on how to set up HashiCorp Vault as a Vault entity, see the following:
 * [Set up HashiCorp Vault with {{ site.base_gateway }}](/how-to/configure-hashicorp-vault-as-a-vault-backend/)
+* [Set up HashiCorp Vault with {{ site.base_gateway }} and certificate authentication](/how-to/configure-hashicorp-vault-with-cert-auth/)
 * [Set up HashiCorp Vault with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/hashicorp/)
 
 <!--vale off-->

@@ -1,7 +1,7 @@
 ---
 title: Kong Manager with OpenID Connect
 
-description: Strengthen security in Kong Manager by setting a Content Security Policy (CSP).
+description: Bind authentication for Kong Manager admins to an organization’s OpenID Connect identity provider, and set up authenticated group mapping.
 content_type: reference
 layout: reference
 products:
@@ -29,6 +29,8 @@ search_aliases:
 related_resources:
   - text: Kong Manager
     url: /gateway/kong-manager/
+  - text: OpenID Connect plugin reference
+    url: /plugins/openid-connect/reference/
 ---
 
 {{site.base_gateway}} provides the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect identity provider.
@@ -123,6 +125,10 @@ Once this is done, restart the {{site.base_gateway}} container to apply the chan
 ```sh
 docker restart kong-quickstart-gateway
 ```
+Or if not running in Docker:
+```
+kong restart
+```
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -209,7 +215,7 @@ The following examples show you how to set up OpenID Connect authenticated group
 
 Review [supported configuration options](#supported-configuration-options) to customize the configuration stored in `admin_gui_auth_conf`.
 
-{% navtabs "enable-oidc" %}
+{% navtabs "enable-oidc-mapping" %}
 {% navtab "Kubernetes with Helm" %}
 1. Create a configuration file for the OIDC plugin and save it as
 `admin_gui_auth_conf`. Adjust your own values as needed:
@@ -246,7 +252,6 @@ following parameters:
     rbac:
       enabled: true
       admin_gui_auth: openid-connect
-      session_conf_secret: kong-session-conf   
       admin_gui_auth_conf_secret: kong-idp-conf
     ```
 

@@ -8,6 +8,14 @@ components:
             required: true
             schema:
                 type: string
+        AdminId:
+            description: ID of the Admin to lookup
+            example: ""
+            in: path
+            name: AdminId
+            required: true
+            schema:
+                type: string
         BasicAuthId:
             description: ID of the Basic-auth credential to lookup
             example: 80db1b58-ca7c-4d21-b92a-64eb07725872
@@ -76,6 +84,14 @@ components:
             example: ""
             in: path
             name: Degraphql_routeIdOrName
+            required: true
+            schema:
+                type: string
+        GroupId:
+            description: ID of the Group to lookup
+            example: ""
+            in: path
+            name: GroupId
             required: true
             schema:
                 type: string
@@ -3298,6 +3314,67 @@ components:
             required:
                 - group
             type: object
+        Admin:
+            additionalProperties: false
+            example:
+                consumer: 8d90c6f4-12b4-4f86-9f56-7a8b8d4e9c1a
+                created_at: 1.706598432e+09
+                custom_id: custom-123
+                email: admin@example.com
+                id: 3f1c2a59-4b7d-4e96-bd7f-6a5b5f6c1e22
+                rbac_token_enabled: true
+                rbac_user: 26e7cb9f-9fcd-40de-a4d7-5f6c89d1e8a3
+                status: active
+                updated_at: 1.706684832e+09
+                username: admin_user
+                username_lower: admin_user
+            properties:
+                consumer:
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                custom_id:
+                    nullable: true
+                    type: string
+                email:
+                    nullable: true
+                    type: string
+                id:
+                    nullable: true
+                    type: string
+                rbac_token_enabled:
+                    default: true
+                    nullable: true
+                    type: boolean
+                rbac_user:
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                status:
+                    default: 4
+                    nullable: true
+                    type: integer
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+                username:
+                    nullable: true
+                    type: string
+                username_lower:
+                    nullable: true
+                    type: string
+            type: object
         BasicAuth:
             additionalProperties: false
             example:
@@ -3638,6 +3715,123 @@ components:
                 - uri
                 - query
             type: object
+        Event-hooks:
+            description: Event Hooks schema
+            example:
+                data:
+                    - config:
+                        body: null
+                        body_format: true
+                        headers:
+                            content-type: application/json
+                        headers_format: false
+                        method: POST
+                        payload:
+                            text: payload_text
+                        payload_format: true
+                        secret: null
+                        ssl_verify: false
+                        url: https://hooks.slack.com/services/foo/bar/baz
+                      created_at: 1.627588552e+09
+                      event: admins
+                      handler: webhook-custom
+                      id: 937df175-3db2-4e6d-8aa1-d95c94a76089
+                      on_change: null
+                      snooze: null
+                      source: crud
+                    - config:
+                        headers: {}
+                        secret: null
+                        ssl_verify: false
+                        url: https://webhook.site/a1b2c3-d4e5-g6h7-i8j9-k1l2m3n4o5p6
+                      created_at: 1.627581575e+09
+                      event: consumers
+                      handler: webhook
+                      id: c57340ab-9fed-40fd-bb7e-1cef8d37c2df
+                      on_change: null
+                      snooze: null
+                      source: crud
+                    - config:
+                        functions:
+                            - |
+                              return function (data, event, source, pid)
+                                local user = data.entity.username
+                                error("Event hook on consumer " .. user .. "")
+                              end
+                      created_at: 1.627595513e+09
+                      event: consumers
+                      handler: lambda
+                      id: c9fdd58d-5416-4d3a-9467-51e5cfe4ca0e
+                      on_change: null
+                      snooze: null
+                      source: crud
+                next: null
+            properties:
+                data:
+                    description: List of event hooks
+                    items:
+                        properties:
+                            config:
+                                description: Configuration for the event hook
+                                properties:
+                                    body:
+                                        nullable: true
+                                        type: string
+                                    body_format:
+                                        type: boolean
+                                    functions:
+                                        items:
+                                            type: string
+                                        nullable: true
+                                        type: array
+                                    headers:
+                                        nullable: true
+                                        properties:
+                                            content-type:
+                                                type: string
+                                        type: object
+                                    headers_format:
+                                        type: boolean
+                                    method:
+                                        type: string
+                                    payload:
+                                        nullable: true
+                                        properties:
+                                            text:
+                                                type: string
+                                        type: object
+                                    payload_format:
+                                        type: boolean
+                                    secret:
+                                        nullable: true
+                                        type: string
+                                    ssl_verify:
+                                        type: boolean
+                                    url:
+                                        type: string
+                                type: object
+                            created_at:
+                                type: integer
+                            event:
+                                type: string
+                            handler:
+                                type: string
+                            id:
+                                type: string
+                            on_change:
+                                nullable: true
+                                type: string
+                            snooze:
+                                nullable: true
+                                type: integer
+                            source:
+                                type: string
+                        type: object
+                    type: array
+                next:
+                    nullable: true
+                    type: string
+            type: object
         GatewayUnauthorizedError:
             properties:
                 message:
@@ -3647,6 +3841,34 @@ components:
             required:
                 - message
                 - status
+            type: object
+        Group:
+            additionalProperties: false
+            example:
+                comment: This is an example comment for the group.
+                created_at: 1.706598432e+09
+                id: d4e7f2c9-8a7b-4e89-b3a1-9c3d6f1e5b92
+                name: example-group
+                updated_at: 1.706684832e+09
+            properties:
+                comment:
+                    nullable: true
+                    type: string
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                id:
+                    nullable: true
+                    type: string
+                name:
+                    type: string
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+            required:
+                - name
             type: object
         HMACAuth:
             additionalProperties: false
@@ -4285,7 +4507,7 @@ components:
             type: object
         Plugin:
             additionalProperties: false
-            description: A Plugin entity represents a plugin configuration that will be executed during the HTTP request/response lifecycle. It is how you can add functionalities to Services that run behind Kong, like Authentication or Rate Limiting for example. You can find more information about how to install and what values each plugin takes by visiting the [Kong Hub](https://docs.konghq.com/hub/). When adding a Plugin Configuration to a Service, every request made by a client to that Service will run said Plugin. If a Plugin needs to be tuned to different values for some specific Consumers, you can do so by creating a separate plugin instance that specifies both the Service and the Consumer, through the `service` and `consumer` fields.
+            description: A Plugin entity represents a plugin configuration that will be executed during the HTTP request/response lifecycle. It is how you can add functionalities to Services that run behind Kong, like Authentication or Rate Limiting for example. You can find more information about how to install and what values each plugin takes by visiting the [Kong Hub](https://developer.konghq.com/plugins/). When adding a Plugin Configuration to a Service, every request made by a client to that Service will run said Plugin. If a Plugin needs to be tuned to different values for some specific Consumers, you can do so by creating a separate plugin instance that specifies both the Service and the Consumer, through the `service` and `consumer` fields.
             example:
                 config:
                     anonymous: null
@@ -4314,7 +4536,7 @@ components:
             properties:
                 config:
                     additionalProperties: true
-                    description: The configuration properties for the Plugin which can be found on the plugins documentation page in the [Kong Hub](https://docs.konghq.com/hub/).
+                    description: The configuration properties for the Plugin which can be found on the plugins documentation page in the [Kong Hub](https://developer.konghq.com/plugins/).
                     nullable: true
                     type: object
                 consumer:
@@ -4464,7 +4686,7 @@ components:
             type: object
         PluginWithoutParents:
             additionalProperties: false
-            description: A Plugin entity represents a plugin configuration that will be executed during the HTTP request/response lifecycle. It is how you can add functionalities to Services that run behind Kong, like Authentication or Rate Limiting for example. You can find more information about how to install and what values each plugin takes by visiting the [Kong Hub](https://docs.konghq.com/hub/). When adding a Plugin Configuration to a Service, every request made by a client to that Service will run said Plugin. If a Plugin needs to be tuned to different values for some specific Consumers, you can do so by creating a separate plugin instance that specifies both the Service and the Consumer, through the `service` and `consumer` fields.
+            description: A Plugin entity represents a plugin configuration that will be executed during the HTTP request/response lifecycle. It is how you can add functionalities to Services that run behind Kong, like Authentication or Rate Limiting for example. You can find more information about how to install and what values each plugin takes by visiting the [Kong Hub](https://developer.konghq.com/plugins/). When adding a Plugin Configuration to a Service, every request made by a client to that Service will run said Plugin. If a Plugin needs to be tuned to different values for some specific Consumers, you can do so by creating a separate plugin instance that specifies both the Service and the Consumer, through the `service` and `consumer` fields.
             example:
                 config:
                     anonymous: null
@@ -4493,7 +4715,7 @@ components:
             properties:
                 config:
                     additionalProperties: true
-                    description: The configuration properties for the Plugin which can be found on the plugins documentation page in the [Kong Hub](https://docs.konghq.com/hub/).
+                    description: The configuration properties for the Plugin which can be found on the plugins documentation page in the [Kong Hub](https://developer.konghq.com/plugins/).
                     nullable: true
                     type: object
                 consumer:
@@ -4608,6 +4830,72 @@ components:
                     type: integer
             required:
                 - name
+            type: object
+        RbacUser:
+            properties:
+                comment:
+                    description: Any comments associated with the user.
+                    type: string
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    type: integer
+                enabled:
+                    description: Whether or not the user has RBAC enabled.
+                    type: boolean
+                id:
+                    format: uuid
+                    type: string
+                name:
+                    description: The name of the user.
+                    type: string
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    type: integer
+                user_token:
+                    description: The RBAC user token.
+                    format: password
+                    type: string
+                user_token_ident:
+                    description: The user token identifier.
+                    type: string
+            required:
+                - name
+                - enabled
+            type: object
+        RbacUserGroup:
+            properties:
+                group:
+                    description: The group assigned to the user.
+                    format: uuid
+                    type: string
+                user:
+                    description: The RBAC user associated with the group.
+                    format: uuid
+                    type: string
+            required:
+                - user
+                - group
+            type: object
+        RbacUserRole:
+            properties:
+                role:
+                    description: The RBAC role assigned to the user.
+                    format: uuid
+                    type: string
+                role_source:
+                    default: local
+                    description: The origin of the RBAC user role.
+                    enum:
+                        - local
+                        - idp
+                    type: string
+                user:
+                    description: The RBAC user associated with the role.
+                    format: uuid
+                    type: string
+            required:
+                - user
+                - role
             type: object
         Route:
             oneOf:
@@ -5674,8 +5962,8 @@ info:
     description: |-
         OpenAPI 3.0 spec for Kong Gateway's Admin API.
 
-        You can lean more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com)
-        .Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
+        You can learn more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com).
+        Give Kong a star at the [Kong/kong](https://github.com/kong/kong) repository.
     license:
         name: Apache 2.0
         url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -9427,7 +9715,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the new KeySet for creation
-                required: true
             responses:
                 "201":
                     content:
@@ -9537,7 +9824,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the KeySet
-                required: true
             responses:
                 "200":
                     content:
@@ -12489,6 +12775,85 @@ paths:
                 "409":
                     description: Conflict
             summary: Invite an Admin
+            tags:
+                - Admins
+    /admins/{AdminId}:
+        delete:
+            description: Delete a Admin
+            operationId: delete-admin
+            parameters:
+                - $ref: '#/components/parameters/AdminId'
+            responses:
+                "204":
+                    description: Successfully deleted Admin or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a Admin
+            tags:
+                - Admins
+        get:
+            description: Get a Admin using ID.
+            operationId: get-admin
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                    description: Successfully fetched Admin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Fetch a Admin
+            tags:
+                - Admins
+        parameters:
+            - $ref: '#/components/parameters/AdminId'
+        patch:
+            description: Update a Admin
+            operationId: update-admin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Admin'
+                description: Fields of the Admin that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                    description: Successfully updated Admin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a Admin
+            tags:
+                - Admins
+        put:
+            description: Create or Update Admin using ID.
+            operationId: upsert-admin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Admin'
+                description: Description of the Admin
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                    description: Successfully upserted Admin
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a Admin
             tags:
                 - Admins
     /admins/{nameOrId}:
@@ -15452,6 +15817,85 @@ paths:
             summary: Create a new group
             tags:
                 - Groups
+    /groups/{GroupId}:
+        delete:
+            description: Delete a Group
+            operationId: delete-group
+            parameters:
+                - $ref: '#/components/parameters/GroupId'
+            responses:
+                "204":
+                    description: Successfully deleted Group or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a Group
+            tags:
+                - Groups
+        get:
+            description: Get a Group using ID.
+            operationId: get-group
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Group'
+                    description: Successfully fetched Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Fetch a Group
+            tags:
+                - Groups
+        parameters:
+            - $ref: '#/components/parameters/GroupId'
+        patch:
+            description: Update a Group
+            operationId: update-group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Group'
+                description: Fields of the Group that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Group'
+                    description: Successfully updated Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a Group
+            tags:
+                - Groups
+        put:
+            description: Create or Update Group using ID.
+            operationId: upsert-group
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Group'
+                description: Description of the Group
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Group'
+                    description: Successfully upserted Group
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a Group
+            tags:
+                - Groups
     /groups/{GroupIdOrName}/roles:
         delete:
             description: Delete a group's roles.
@@ -15968,7 +16412,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the new KeySet for creation
-                required: true
             responses:
                 "201":
                     content:
@@ -16047,7 +16490,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/KeySet'
                 description: Description of the KeySet
-                required: true
             responses:
                 "200":
                     content:
@@ -19170,6 +19612,7 @@ servers:
 tags:
     - name: ACLs
     - name: API-keys
+    - name: Admins
     - description: Admin routes
       name: Admins
     - description: |-
@@ -19221,6 +19664,7 @@ tags:
         Event hooks do not work with Konnect yet.
         <br><br>
       name: Event-hooks
+    - name: Groups
     - description: Group routes
       name: Groups
     - name: HMAC-auth credentials
@@ -19294,7 +19738,11 @@ tags:
         <br><br>
         To disable a target, post a new one with `weight=0`, or use the `DELETE` method to accomplish the same.
       name: Targets
-    - description: "The upstream object represents a virtual hostname and can be used to load balance incoming requests over multiple services (targets). \n<br><br>\nAn upstream also includes a [health checker](https://developer.konghq.com/gateway/traffic-control/health-checks-circuit-breakers/), which can enable and disable targets based on their ability or inability to serve requests. \nThe configuration for the health checker is stored in the upstream object, and applies to all of its targets."
+    - description: |-
+        The upstream object represents a virtual hostname and can be used to load balance incoming requests over multiple services (targets).
+        <br><br>
+        An upstream also includes a [health checker](https://developer.konghq.com/gateway/traffic-control/health-checks-circuit-breakers/), which can enable and disable targets based on their ability or inability to serve requests.
+        The configuration for the health checker is stored in the upstream object, and applies to all of its targets.
       name: Upstreams
     - description: |
         Vault objects are used to configure different vault connectors for [managing secrets](https://developer.konghq.com/gateway/secrets-management/).
