@@ -4,9 +4,10 @@ content_type: how_to
 description: Learn how to connect Datadog monitors and dashboards to your Service Catalog service in {{site.konnect_short_name}}.
 products:
   - service-catalog
-  - gateway
 works_on:
   - konnect
+tools:
+  - konnect-api
 automated_tests: false
 related_resources:
   - text: Service Catalog
@@ -158,7 +159,7 @@ To confirm that the Datadog resource is now mapped to the intended service, list
 url: /v1/catalog-services/$DATADOG_SERVICE_ID/resources
 method: GET
 status_code: 200
-region: global
+region: us
 headers:
   - 'Accept: application/json'
 {% endkonnect_api_request %}

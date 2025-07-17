@@ -3,7 +3,6 @@ title: Map Mesh Manager services in Service Catalog
 content_type: how_to
 description: Learn how to map Mesh Manager resources in Service Catalog to gain visibility into how the service is deployed across meshes and zones.
 products:
-  - gateway
   - service-catalog
 works_on:
   - konnect

@@ -3,7 +3,6 @@ title: Map {{site.konnect_short_name}} Analytics reports in Service Catalog
 content_type: how_to
 description: Learn how to map {{site.konnect_short_name}} Analytics resources in Service Catalog to visualize Analytics Reports.
 products:
-  - gateway
   - service-catalog
 works_on:
   - konnect

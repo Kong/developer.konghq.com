@@ -4,9 +4,10 @@ content_type: how_to
 description: Learn how to connect a SaaS GitLab project to your Service Catalog service in {{site.konnect_short_name}}.
 products:
   - service-catalog
-  - gateway
 works_on:
   - konnect
+tools:
+  - konnect-api
 tags:
   - integrations
   - gitlab
@@ -110,6 +111,6 @@ To confirm that the GitLab resource is now mapped to the intended service, list 
 url: /v1/catalog-services/$GITLAB_SERVICE_ID/resources
 method: GET
 status_code: 200
-region: global
+region: us
 {% endkonnect_api_request %}
 <!--vale on-->

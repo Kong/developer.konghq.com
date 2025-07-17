@@ -4,9 +4,10 @@ content_type: how_to
 description: Learn how to connect a GitHub repository to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
   - service-catalog
-  - gateway
 works_on:
   - konnect
+tools:
+  - konnect-api
 tags:
   - integrations
   - github
@@ -116,6 +117,6 @@ To confirm that the GitHub resource is now mapped to the intended service, list 
 url: /v1/catalog-services/$GITHUB_SERVICE_ID/resources
 method: GET
 status_code: 200
-region: global
+region: us
 {% endkonnect_api_request %}
 <!--vale on-->

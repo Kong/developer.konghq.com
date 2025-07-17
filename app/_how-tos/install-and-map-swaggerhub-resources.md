@@ -4,9 +4,10 @@ content_type: how_to
 description: Learn how to connect SwaggerHub API versions to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
   - service-catalog
-  - gateway
 works_on:
   - konnect
+tools:
+  - konnect-api
 tags:
   - integrations
   - swaggerhub
@@ -152,6 +153,6 @@ To confirm that the SwaggerHub resource is now mapped to the intended service, l
 url: /v1/catalog-services/$SWAGGERHUB_SERVICE_ID/resources
 method: GET
 status_code: 200
-region: global
+region: us
 {% endkonnect_api_request %}
 <!--vale on-->

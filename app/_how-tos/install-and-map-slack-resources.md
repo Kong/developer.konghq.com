@@ -4,9 +4,10 @@ content_type: how_to
 description: Learn how to connect Slack channels to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
   - service-catalog
-  - gateway
 works_on:
   - konnect
+tools:
+  - konnect-api
 tags:
   - integrations
   - slack
@@ -31,7 +32,7 @@ prereqs:
     - title: Slack admin access
       content: |
         You must be a Slack admin to authorize the integration. Both **read** and **write** scopes are required by {{site.konnect_short_name}} to complete the connection.
-      icon_url: /assets/icons/slack.svg
+      icon_url: /assets/icons/third-party/slack.svg
 ---
 
 ## Authorize the Slack integration
@@ -113,6 +114,6 @@ To confirm that the Slack resource is now mapped to the intended service, list t
 url: /v1/catalog-services/$SLACK_SERVICE_ID/resources
 method: GET
 status_code: 200
-region: global
+region: us
 {% endkonnect_api_request %}
 <!--vale on-->
