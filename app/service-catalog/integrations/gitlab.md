@@ -20,8 +20,10 @@ works_on:
 description: The GitLab integration allows you to associate your Service Catalog Service to one or more GitLab projects
 
 related_resources:
-  - text: "Service Catalog"
+  - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+    url: /service-catalog/integrations/
   - text: Import and map self-managed GitLab resources in Service Catalog
     url: /how-to/install-and-map-gitlab-resources/
   - text: Import and map SaaS GitLab resources in Service Catalog
@@ -50,7 +52,7 @@ For a complete tutorial using the {{site.konnect_short_name}} API, see the follo
 To use the GitLab integration in a self-hosted environment:
 
 1. [Create a group-owned application](https://docs.gitlab.com/integration/oauth_provider/#create-a-group-owned-application) in your GitLab instance. This is required to enable OAuth access for your organization.
-   * Set the redirect URI in GitLab to `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integration/gitlab`
+   * Set the redirect URI in GitLab to `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integrations/gitlab`
    * Make sure the application has the `api` scope.
 1. In the {{site.konnect_short_name}} UI, navigate to the [GitLab integration](https://cloud.konghq.com/service-catalog/integrations/gitlab/configuration)
 1. In the **GitLab API Base URL** field, enter the full URL to your GitLab API, ending in `/api/v4`.  

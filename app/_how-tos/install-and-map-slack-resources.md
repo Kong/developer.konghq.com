@@ -11,8 +11,10 @@ tags:
   - integrations
   - slack
 related_resources:
-  - text: Catalog
+  - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+    url: /service-catalog/integrations/
   - text: Traceable plugin
     url: /plugins/traceable/
   - text: Slack reference

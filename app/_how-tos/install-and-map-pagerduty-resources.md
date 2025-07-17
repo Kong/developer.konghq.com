@@ -11,8 +11,10 @@ tags:
   - integrations
   - pagerduty
 related_resources:
-  - text: Catalog
+  - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+    url: /service-catalog/integrations/
   - text: PagerDuty reference
     url: /service-catalog/integrations/pagerduty/
 automated_tests: false

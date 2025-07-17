@@ -11,8 +11,10 @@ tags:
   - integrations
   - github
 related_resources:
-  - text: Catalog
+  - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+    url: /service-catalog/integrations/
   - text: GitHub reference
     url: /service-catalog/integrations/github/
 automated_tests: false

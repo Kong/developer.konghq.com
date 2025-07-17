@@ -20,8 +20,10 @@ works_on:
 description: The Slack integration allows you to see Slack communication channels that are relevant to a Service Catalog service.
 
 related_resources:
-  - text: "Service Catalog"
+  - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+    url: /service-catalog/integrations/
   - text: Import and map Slack resources in Service Catalog
     url: /how-to/install-and-map-slack-resources/
 discovery_support: true

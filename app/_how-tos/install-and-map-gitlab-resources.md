@@ -11,8 +11,10 @@ tags:
   - integrations
   - gitlab
 related_resources:
-  - text: Catalog
+  - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+    url: /service-catalog/integrations/
   - text: GitLab reference
     url: /service-catalog/integrations/gitlab/
   - text: Install and map SaaS GitLab resources in Service Catalog

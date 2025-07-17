@@ -11,6 +11,8 @@ automated_tests: false
 related_resources:
   - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+     url: /service-catalog/integrations/
   - text: Datadog reference
     url: /service-catalog/integrations/datadog/
 tldr:

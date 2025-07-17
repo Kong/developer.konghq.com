@@ -11,8 +11,10 @@ tags:
   - integrations
   - swaggerhub
 related_resources:
-  - text: Catalog
+  - text: Service Catalog
     url: /service-catalog/
+  - text: Integrations
+    url: /service-catalog/integrations/
   - text: SwaggerHub reference
     url: /service-catalog/integrations/swaggerhub/
 automated_tests: false
