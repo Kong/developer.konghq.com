@@ -13,16 +13,13 @@ products:
   - mesh
 
 tldr:
-  q: How do I install {{site.mesh_product_name}} with a Konnect managed Control plane
-  a: Install {{site.mesh_product_name}} on your environment and let Kong take care of the Control plane.
+  q: How do I install {{site.mesh_product_name}} with a {{site.konnect_short_name}} managed Control plane
+  a: Install {{site.mesh_product_name}} on your environment and let {{site.konnect_short_name}} take care of the Control plane.
 
 prereqs:
   inline:
-    - title: Create a {{site.mesh_product_name}} Control Plane
-      content: |
-        You will need a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
-
-        After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy your data plane.
+    - title: "Create a {{site.mesh_product_name}} control plane"
+      include_content: prereqs/mesh
 
 ---
 
@@ -32,7 +29,7 @@ prereqs:
 {% navtabs "kubernetes" %}
 {% navtab "Kubernetes" %}
 
-Install {{site.mesh_product_name}} Control Plane with Helm:
+Install {{site.mesh_product_name}} control plane with Helm:
 
 ```sh
 kubectl create namespace kong-mesh-system
@@ -40,7 +37,7 @@ helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
 helm repo update
 ```
 
-Setup Control plane token:
+Create the control plane token:
 
 ```sh
 echo "
@@ -51,25 +48,27 @@ echo "
     namespace: kong-mesh-system
   type: Opaque
   data:
-    token: CONTROL_PLANE_TOKEN
+    token: $CONTROL_PLANE_TOKEN
 " | kubectl apply -f -
 ```
 {% tip %}
-The CONTROL_PLANE_TOKEN will be created automatically in Konnect
+
+The `CONTROL_PLANE_TOKEN` will be created automatically in {{site.konnect_short_name}}
+
 {% endtip %}
 
-Create Helm values file:
+Create the Helm values file:
 
 ```yaml
 kuma:
   controlPlane:
     mode: zone
     zone: zone3
-    kdsGlobalAddress: CONTROL_PLANE_URL
+    kdsGlobalAddress: $CONTROL_PLANE_URL
     konnect:
-      cpId: CONTROL_PLANE_ID
+      cpId: $CONTROL_PLANE_ID
     secrets:
-      - Env: KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_INLINE
+      - Env: $KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_INLINE
         Secret: cp-token
         Key: token
   ingress:
@@ -79,7 +78,7 @@ kuma:
   ```
 
 {% tip %}
-CONTROL_PLANE_ID and CONTROL_PLANE_URL will be created automatically in Konnect
+`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prequisites section.
 {% endtip %}
 
 Install {{site.mesh_product_name}}:
@@ -116,13 +115,13 @@ experimental:
 ```
 
 {% tip %}
-CONTROL_PLANE_ID and CONTROL_PLANE_URL will be created automatically in Konnect
+`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prequisites section.
 {% endtip %}
 
 Download {{site.mesh_product_name}} and connect to the zone:
 
 ```sh
-curl -L https://docs.konghq.com/mesh/installer.sh | sh - \
+curl -L http://developer.konghq.com/mesh/installer.sh | sh - \
   && KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_PATH=~/kuma-cp/cpTokenFile kong-mesh-*/bin/kuma-cp run --config-file config.yaml
 ```
 
@@ -260,9 +259,9 @@ kuma-dp run \
 {% endnavtab %}
 {% endnavtabs %}
 
-{% tip %}
-When using the Konnect managed Control Plane, all changes to the Mesh must be applied using ```kumactl```.  You can configure ```kumactl``` connectivity by clicking on Actions from the Mesh overview in [Konnect Mesh Manager](https://cloud.konghq.com/us/mesh-manager).
-{% endtip %}
+{:.note}
+When using the {{site.konnect_short_name}} managed Control Plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}} Mesh Manager](https://cloud.konghq.com/us/mesh-manager).
+
 
 ## Forward ports
 
@@ -272,20 +271,21 @@ Port-forward the service to the namespace on port `5000`:
 kubectl port-forward svc/demo-app -n kuma-demo 5000:5000
 ```
 
-## Run
+## Validate
 
-Navigate to 127.0.0.1:5000 and increment the counter.
+Navigate to `127.0.0.1:5000` in your web browser and increment the counter.
 
-Now that you have you workloads up and running, let's secure them with Mutual TLS!
+Now that you have you workloads up and running, we can secure them with Mutual TLS.
 
 ## Introduce zero-trust security
 
-By default the network in the Mesh is not encrypted. We can change this with {{site.mesh_product_name}} by enabling the [Mutual TLS](/mesh/policies/mutual-tls/) policy to provision a dynamic Certificate Authority (CA) on the `default` Mesh resource that will automatically assign TLS certificates to our services' dataplane.
+By default, service-to-service traffic in the mesh is not encrypted. You can change this in {{site.mesh_product_name}} by enabling the [Mutual TLS](/mesh/policies/mutual-tls/) (mTLS) policy, which provisions a dynamic Certificate Authority (CA) on the `default` Mesh. This CA automatically issues TLS certificates to all dataplanes.
 
+To enable mTLS using a built-in CA:
 
-We can enable Mutual TLS with a `builtin` CA backend by executing:
 {% warning %}
-Do not enable Mutual TLS on an environment with existing workloads without creating a TrafficPermission policy to allow service to service communication 
+Do not enable mTLS in an environment with existing workloads until you define a `MeshTrafficPermission` policy. 
+Without it, service-to-service communication will be blocked.
 {% endwarning %}
 
 ```sh
@@ -295,13 +295,13 @@ name: default
 mtls:
   enabledBackend: ca-1
   backends:
-  - name: ca-1
-    type: builtin
+    - name: ca-1
+      type: builtin
 EOF
 ```
 
+After enabling mTLS, service communication will be denied by default. To restore connectivity, apply a fully permissive [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy:
 
-When Mutual TLS is enabled, you will notice traffic between services is no longer allowed.  Let's enable a fully permissive [Traffic Permission](/mesh/policies/meshtrafficpermission/):
 ```sh
 cat <<EOF | kumactl apply -f -
 type: MeshTrafficPermission
@@ -309,11 +309,9 @@ name: allow-all
 mesh: default
 spec:
   from:
-  - targetRef:
-      kind: Mesh
-    default:
-      action: Allow
+    - targetRef:
+        kind: Mesh
+      default:
+        action: Allow
 EOF
 ```
-
-
