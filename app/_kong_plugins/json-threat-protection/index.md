@@ -3,7 +3,7 @@ title: 'JSON Threat Protection'
 name: 'JSON Threat Protection'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Apply size checks on JSON payload and minimize risk of content-level attacks'
 

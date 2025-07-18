@@ -3,7 +3,7 @@ title: 'Kafka Log'
 name: 'Kafka Log'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Publish logs to a Kafka topic'
 

@@ -3,7 +3,7 @@ title: 'JWE Decrypt'
 name: 'JWE Decrypt'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Decrypt a JWE token in a request'
 

@@ -6,7 +6,7 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Route requests based on specified request headers'
-
+tier: enterprise
 
 products:
     - gateway

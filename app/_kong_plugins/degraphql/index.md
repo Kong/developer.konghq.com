@@ -3,7 +3,7 @@ title: 'DeGraphQL'
 name: 'DeGraphQL'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform a GraphQL upstream into a REST API'
 

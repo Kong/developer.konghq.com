@@ -543,6 +543,10 @@
     @apply bg-semantic-green-secondary;
   }
 
+  .badge.ai_gateway_enterprise {
+    @apply bg-semantic-teal-secondary;
+  }
+
   .badge.new-in {
     @apply align-middle;
   }

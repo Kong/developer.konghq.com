@@ -3,7 +3,7 @@ title: 'Proxy Caching Advanced'
 name: 'Proxy Caching Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Cache and serve commonly requested responses in Kong, in-memory or using Redis'
 

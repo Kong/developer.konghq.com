@@ -3,7 +3,7 @@ title: 'AppDynamics'
 name: 'AppDynamics'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Integrate {{site.base_gateway}} with the AppDynamics APM Platform'
 

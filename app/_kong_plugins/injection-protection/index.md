@@ -3,7 +3,7 @@ title: 'Injection Protection'
 name: 'Injection Protection'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Detect and block injection attacks using regular expressions'
 

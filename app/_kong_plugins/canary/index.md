@@ -3,7 +3,7 @@ title: 'Canary Release'
 name: 'Canary Release'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Slowly roll out software changes to a subset of users'
 

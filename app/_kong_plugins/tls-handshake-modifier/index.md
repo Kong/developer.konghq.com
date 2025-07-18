@@ -3,7 +3,7 @@ title: 'TLS Handshake Modifier'
 name: 'TLS Handshake Modifier'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Requests a client to present its client certificate'
 

@@ -3,7 +3,7 @@ title: 'Confluent'
 name: 'Confluent'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform requests into Kafka messages in a Confluent Kafka topic.'
 

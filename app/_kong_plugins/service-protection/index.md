@@ -3,6 +3,7 @@ title: 'Service Protection'
 name: 'Service Protection'
 
 content_type: plugin
+tier: enterprise
 
 related_resources:
   - text: Rate Limiting with {{site.base_gateway}}

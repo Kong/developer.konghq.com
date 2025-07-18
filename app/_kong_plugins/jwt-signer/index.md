@@ -3,7 +3,7 @@ title: 'JWT Signer'
 name: 'JWT Signer'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Verify and sign one or two tokens in a request'
 

@@ -3,7 +3,6 @@ title: 'Zipkin'
 name: 'Zipkin'
 
 content_type: plugin
-
 publisher: kong-inc
 description: 'Propagate Zipkin spans and report tracing data to a Zipkin server'
 

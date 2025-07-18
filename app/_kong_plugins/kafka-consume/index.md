@@ -3,7 +3,7 @@ title: 'Kafka Consume'
 name: 'Kafka Consume'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Consume messages from Kafka topics and make them available through HTTP endpoints'
 

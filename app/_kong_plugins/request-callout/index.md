@@ -8,7 +8,7 @@ tags:
 
 publisher: kong-inc
 description: 'Insert arbitrary API calls before proxying a request to the upstream service.'
-
+tier: enterprise
 
 products:
     - gateway

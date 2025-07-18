@@ -3,7 +3,7 @@ title: 'Vault Authentication'
 name: 'Vault Authentication'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Add Vault authentication to your Services or Routes'
 

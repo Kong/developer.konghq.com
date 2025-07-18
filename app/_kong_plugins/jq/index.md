@@ -6,7 +6,7 @@ tags:
   - transformations
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform JSON objects included in API requests or responses using jq programs'
 

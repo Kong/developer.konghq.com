@@ -3,7 +3,7 @@ title: 'OpenID Connect'
 name: 'OpenID Connect'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Integrate {{site.base_gateway}} with a third-party OpenID Connect provider'
 

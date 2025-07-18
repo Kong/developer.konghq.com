@@ -3,7 +3,7 @@ title: 'Upstream Timeout'
 name: 'Upstream Timeout'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Set custom timeouts on connections to upstream services to override Gateway Service-level timeouts.'
 

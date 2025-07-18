@@ -3,7 +3,7 @@ title: 'Route Transformer Advanced'
 name: 'Route Transformer Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform routing by changing the upstream server, port, or path'
 

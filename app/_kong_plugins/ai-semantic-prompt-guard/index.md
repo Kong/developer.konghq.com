@@ -4,8 +4,7 @@ name: 'AI Semantic Prompt Guard'
 
 content_type: plugin
 
-ai_gateway_enterprise: true
-
+tier: ai_gateway_enterprise
 publisher: kong-inc
 description: 'Semantically and intelligently create allow and deny lists of topics that can be requested across every LLM.'
 
