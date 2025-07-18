@@ -1,0 +1,872 @@
+openapi: 3.0.3
+info:
+  title: Konnect CMEK and Blob APIs
+  version: 0.0.1
+servers:
+  - url: https://us.api.konghq.com/v0
+    description: United-States Production region
+  - url: https://eu.api.konghq.com/v0
+    description: Europe Production region
+  - url: https://au.api.konghq.com/v0
+    description: Australia Production region
+  - url: https://me.api.konghq.com/v0
+    description: Middle-East Production region
+  - url: https://in.api.konghq.com/v0
+    description: India Production region
+paths:
+  /blobs/{blobId}:
+    parameters:
+      - $ref: '#/components/parameters/blobId'
+    get:
+      operationId: get-blob
+      summary: Get a raw blob
+      description: Get a raw decrypted blob
+      responses:
+        '200':
+          description: >-
+            The response includes the raw blob data and the original
+            Content-Type request header from the PUT request
+          content:
+            '*':
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Blobs
+    put:
+      operationId: put-blob
+      summary: Store a raw blob
+      description: Store a raw blob of data
+      parameters:
+        - name: X-Konnect-Expires-In
+          in: header
+          description: Retention time (TTL) of the blob in seconds
+          required: false
+          schema:
+            description: 3 days
+            type: integer
+            default: 259200
+        - $ref: '#/components/parameters/xKonnectCMEKId'
+      requestBody:
+        description: Raw blob data
+        required: true
+        content:
+          '*':
+            schema:
+              type: string
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Blobs
+  /materials/encryption:
+    post:
+      operationId: create-encryption-material
+      summary: Create encryption material
+      description: Create encryption material for in-app encryption
+      parameters:
+        - $ref: '#/components/parameters/xKonnectCMEKId'
+      responses:
+        '201':
+          $ref: '#/components/responses/EncryptionMaterial'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Envelope Encryption
+  /materials/decryption:
+    post:
+      operationId: create-decryption-material
+      summary: Create decryption material
+      description: Create decryption material for in-app decryption
+      requestBody:
+        $ref: '#/components/requestBodies/DecryptionMaterialRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/DecryptionMaterial'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Envelope Encryption
+  /cmeks:
+    get:
+      operationId: list-cmeks
+      summary: List CMEKs
+      description: List customer managed encryption keys
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/PageBefore'
+        - name: filter
+          in: query
+          description: Filter CMEKs returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/StringFieldFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/CMEKCollection'
+      tags:
+        - CMEK
+  /cmeks/{cmekId}:
+    parameters:
+      - $ref: '#/components/parameters/cmekId'
+    get:
+      operationId: get-cmek
+      summary: Get a CMEK
+      description: Get a customer managed encryption key
+      responses:
+        '200':
+          $ref: '#/components/responses/CMEK'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - CMEK
+    put:
+      operationId: put-cmek
+      summary: Replace a CMEK
+      description: Replace a customer managed encryption key
+      requestBody:
+        $ref: '#/components/requestBodies/PutCMEKBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/CMEK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - CMEK
+    delete:
+      operationId: delete-cmek
+      summary: Delete a CMEK
+      description: Delete a customer managed encryption key
+      responses:
+        '204':
+          description: Success
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - CMEK
+components:
+  parameters:
+    PageAfter:
+      name: page[after]
+      description: >-
+        Request the next page of data, starting with the item after this
+        parameter.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    PageBefore:
+      name: page[before]
+      description: >-
+        Request the next page of data, starting with the item before this
+        parameter.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    PageSize:
+      name: page[size]
+      description: >-
+        The maximum number of items to include per page. The last page of a
+        collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
+    blobId:
+      name: blobId
+      in: path
+      required: true
+      description: Id of the Blob
+      schema:
+        type: string
+        example: 680ed2c45c18562ab4448d54c6f962ff:reqres
+    cmekId:
+      name: cmekId
+      in: path
+      required: true
+      description: Id of the CMEK
+      schema:
+        type: string
+        example: default
+        default: default
+        enum:
+          - default
+    xKonnectCMEKId:
+      name: X-Konnect-CMEK-Id
+      in: header
+      description: The CMEK ID to use for encryption and decryption
+      required: false
+      schema:
+        type: string
+        default: default
+  schemas:
+    CMEK:
+      type: object
+      properties:
+        id:
+          type: string
+        key_arn:
+          description: The ARN of the KMS key to use for encryption
+          type: string
+          example: >-
+            arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - key_arn
+        - name
+        - created_at
+        - updated_at
+    ListCMEKs:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CMEK'
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+      required:
+        - data
+        - meta
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: >
+            The HTTP status code of the error. Useful when passing the response
+
+            body to child properties in a frontend UI. Must be returned as an
+            integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: >
+            A human readable explanation specific to this occurence of the
+            problem.
+
+            This field may contain request/entity data to help the user
+            understand
+
+            what went wrong. Enclose variable values in square brackets. Should
+            be
+
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: https://httpstatuses.com/401
+            instance:
+              example: kong:trace:1234567890
+            detail:
+              example: Invalid credentials
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: https://httpstatuses.com/403
+            instance:
+              example: kong:trace:1234567890
+            detail:
+              example: Forbidden
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: https://httpstatuses.com/404
+            instance:
+              example: kong:trace:1234567890
+            detail:
+              example: Not found
+    InvalidRules:
+      description: invalid parameters rules
+      type: string
+      enum:
+        - required
+        - is_array
+        - is_base64
+        - is_boolean
+        - is_date_time
+        - is_integer
+        - is_null
+        - is_number
+        - is_object
+        - is_string
+        - is_uuid
+        - is_fqdn
+        - is_arn
+        - unknown_property
+        - missing_reference
+        - is_label
+        - matches_regex
+        - invalid
+        - is_supported_network_availability_zone_list
+        - is_supported_network_cidr_block
+        - is_supported_provider_region
+      nullable: true
+      readOnly: true
+    InvalidParameterStandard:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          $ref: '#/components/schemas/InvalidRules'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+    InvalidParameterMinimumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_length
+            - min_digits
+            - min_lowercase
+            - min_uppercase
+            - min_symbols
+            - min_items
+            - min
+          nullable: false
+          readOnly: true
+        minimum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must have at least 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_length
+            - max_items
+            - max
+          nullable: false
+          readOnly: true
+        maximum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must not have more than 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
+    InvalidParameterChoiceItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - enum
+          nullable: false
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        choices:
+          type: array
+          items: {}
+          minItems: 1
+          nullable: false
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - choices
+    InvalidParameterDependentItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - dependent_fields
+          nullable: true
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        dependents:
+          type: array
+          items: {}
+          nullable: true
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - rule
+        - reason
+        - dependents
+    InvalidParameters:
+      description: invalid parameters
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/InvalidParameterStandard'
+          - $ref: '#/components/schemas/InvalidParameterMinimumLength'
+          - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterChoiceItem'
+          - $ref: '#/components/schemas/InvalidParameterDependentItem'
+      minItems: 1
+      nullable: false
+      uniqueItems: true
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - invalid_parameters
+          properties:
+            invalid_parameters:
+              $ref: '#/components/schemas/InvalidParameters'
+    StringFieldEqualsFilter:
+      description: Filter a string value by exact match.
+      type: string
+      title: StringFieldEqualsFilter
+    StringFieldContainsFilter:
+      description: Filter a string value field by partial contains.
+      type: object
+      properties:
+        contains:
+          type: string
+      required:
+        - contains
+      title: StringFieldContainsFilter
+    StringFieldFilter:
+      description: Filter a string value field either by exact match or partial contains.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+      title: StringFieldFilter
+    CreatedAt:
+      description: An ISO-8601 timestamp representation of entity creation date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    UpdatedAt:
+      description: An ISO-8601 timestamp representation of entity update date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
+  examples:
+    CMEKCollection:
+      value:
+        data:
+          - id: default
+            name: My KMS Key
+            description: My Key Description
+            key_arn: >-
+              arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+          - id: alt-key
+            name: Alternative KMS Key
+            description: My Other Key
+            key_arn: >-
+              arn:aws:kms:us-east-1:123456789012:key/62ab5b30-aa25-4903-be45-b6c696f75fe9
+            created_at: '2024-02-20T09:29:14.52Z'
+            updated_at: '2024-02-21T09:29:14.52Z'
+        meta:
+          page:
+            next: >-
+              /v0/cmeks?page%5Bafter%5D=f11CXlAMGEVFB0AEQw19QhNYMV5CCkFYSltZUFgPSBJHFwwWFg%3D%3D&page%5Bsize%5=1
+            previous: >-
+              /v0/cmeks?page%5Bbefore%5D=dl8UWVYPEUZFA0sHQw19EUVYMV5BDhcISl1WWVgNQRBBS1gSFw%3D%3D&page%5Bsize%5D=1
+            size: 10
+    CMEK:
+      value:
+        id: default
+        name: My KMS Key
+        description: My Key Description
+        key_arn: >-
+          arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-21T09:29:14.52Z'
+    PutCMEKBody:
+      value:
+        name: My KMS Key
+        description: My Key Description
+        key_arn: >-
+          arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: kong:trace:8347343766220159418
+        detail: Unauthorized
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: kong:trace:2723154947768991354
+        detail: You do not have permission to perform this action
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: kong:trace:6816496025408232265
+        detail: Not Found
+  requestBodies:
+    DecryptionMaterialRequest:
+      description: Request body schema to retrieve decryption material
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              encrypted_data_key:
+                description: >-
+                  The encrypted data key used for encryption, base64 encoded.
+                  This key is used to retrieve the plaintext data key for
+                  decryption.
+                type: string
+                example: ZW5jcnlwdGlvbi1rZXk=
+            required:
+              - encrypted_data_key
+    PutCMEKBody:
+      description: Request body schema for putting a CMEK.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              key_arn:
+                description: The ARN of the KMS key to use for encryption
+                type: string
+                example: >-
+                  arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+              name:
+                type: string
+                minLength: 1
+              description:
+                type: string
+            required:
+              - key_arn
+              - name
+          examples:
+            Put CMEK Body:
+              $ref: '#/components/examples/PutCMEKBody'
+  responses:
+    EncryptionMaterial:
+      description: Response for encryption material
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              encrypted_data_key:
+                description: >-
+                  The encrypted data key used for encryption, base64 encoded.
+                  This key is used to retrieve the plaintext data key for
+                  decryption and should be stored along with the encrypted data.
+                type: string
+                example: ZW5jcnlwdGlvbi1rZXk=
+              plaintext_data_key:
+                description: >-
+                  The plaintext data key used for encryption, base64 encoded.
+                  This key is used to encrypt the data key and should be thrown
+                  away after use.
+                type: string
+                example: ZGVjcnlwdGlvbi1tYXRlcmlhbA==
+            required:
+              - encrypted_data_key
+              - plaintext_data_key
+    DecryptionMaterial:
+      description: Response for decryption material
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              plaintext_data_key:
+                description: The plaintext data key to use for decryption, base64 encoded.
+                type: string
+                example: ZGVjcnlwdGlvbi1tYXRlcmlhbA==
+            required:
+              - plaintext_data_key
+    CMEKCollection:
+      description: Response for CMEK listing
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListCMEKs'
+          examples:
+            CMEK Collection:
+              $ref: '#/components/examples/CMEKCollection'
+    CMEK:
+      description: Response for CMEK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CMEK'
+          examples:
+            CMEK:
+              $ref: '#/components/examples/CMEK'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: >
+        The personal access token is meant to be used as an alternative to
+        basic-auth when accessing Konnect via APIs.
+
+        You can generate a Personal Access Token (PAT) from the [personal access
+        token page](https://cloud.konghq.com/global/account/tokens/) in the
+        Konnect dashboard.
+
+        The PAT token must be passed in the header of a request, for example:
+
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header
+        'Authorization: Bearer kpat_xgfT...'`
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: >
+        The system account access token is meant for automations and
+        integrations that are not directly associated with a human identity.
+
+        You can generate a system account Access Token by creating a system
+        account and then obtaining a system account access token for that
+        account.
+
+        The access token must be passed in the header of a request, for example:
+
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header
+        'Authorization: Bearer spat_i2Ej...'`
+tags:
+  - name: CMEK
+    description: Customer Managed Encryption Keys
+  - name: Blobs
+    description: Encrypted data blobs
+  - name: Envelope Encryption
+    description: Envelope encryption material
+security:
+  - personalAccessToken: []
+  - systemAccountAccessToken: []
