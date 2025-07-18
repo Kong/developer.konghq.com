@@ -20,7 +20,7 @@ tldr:
   a: |
     ```bash
     helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
-      --set image.tag=1.5 \
+      --set image.tag={{ site.data.operator_latest.release }} \
       --set kubernetes-configuration-crds.enabled=true \
       --set env.ENABLE_CONTROLLER_KONNECT=true
     ```
@@ -64,7 +64,7 @@ Use Helm to install the {{site.operator_product_name}} with {{ site.konnect_shor
 
 ```sh
 helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
-  --set image.tag=1.5 \
+  --set image.tag={{ site.data.operator_latest.release }} \
   --set kubernetes-configuration-crds.enabled=true \
   --set env.ENABLE_CONTROLLER_KONNECT=true
 ```
