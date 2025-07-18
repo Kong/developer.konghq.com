@@ -15,6 +15,7 @@ sections:
   - title: "Kafka Native Event Proxy (KNEP)"
     items:
       - path: /event-gateway/get-started/
+      - path: /event-gateway/get-started/*/**
       - path: /event-gateway/policies/
       - title: KNEP OpenAPI specification
         description: Configuration schema for the Kong Native Event Proxy

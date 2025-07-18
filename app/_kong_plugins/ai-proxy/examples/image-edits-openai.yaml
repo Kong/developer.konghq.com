@@ -1,4 +1,4 @@
-title: 'OpenAI image editing route'
+title: 'Image editing route'
 description: 'Configure an image editing route using OpenAI’s DALL·E 2 model.'
 
 weight: 900

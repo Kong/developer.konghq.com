@@ -12,89 +12,203 @@
 
 ## Overview of capabilities
 
-{{ plugin }} plugin supports capabilities across batch processing, multimodal embeddings, agents, audio, image, streaming, and more, spanning multiple providers:
+{{ plugin }} plugin supports capabilities across batch processing, multimodal embeddings, agents, audio, image, streaming, and more, spanning multiple providers.
 
 For {{ site.base_gateway }} versions 3.6 or earlier:
 
 * **Chat Completions APIs**: Multi-turn conversations with system/user/assistant roles.
 
-* **Completions API**: Generates free-form text from a prompt. **OpenAI has marked this endpoint as legacy and recommends using the Chat Completions API for new applications.**
+* **Completions API**: Generates free-form text from a prompt.
 
-For {{ site.base_gateway }} version {% new_in 3.11 %}:
+  {:.warning}
+  > OpenAI has marked this endpoint as [legacy](https://platform.openai.com/docs/api-reference/completions) and recommends using the [Chat Completions API](https://platform.openai.com/docs/guides/text?api-mode=responses) for developing new applications.
 
+See the following table for capabilities supported in {{ site.base_gateway }} version {% new_in 3.11 %} or later:
+
+<!-- vale off -->
 {% if plugin == "AI Proxy" %}
 
-* **Batch, assistants, and files APIs**: Support parallel LLM calls for efficiency. Assistants enable stateful, tool-augmented agents. Files provide persistent document storage for richer context across sessions.
-* **Audio capabilities APIs**: Provide speech-to-text transcription, real-time translation, and text-to-speech synthesis for voice agents, multilingual interfaces, and meeting analysis.
-* **Image generation and editing APIs**: Generate and modify images from text prompts to support multimodal agents with visual input and output.
-* **Responses API**: Return response metadata for debugging, evaluation, and response tuning.
-* **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
-* **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
-* **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
-* **Rerank API**: Improve relevance of retrieved documents and results in RAG pipelines for [Cohere and Bedrock](./#supported-native-llm-formats). Send any list of candidates to be re-ordered based on prompt context to boost final LLM response quality through better grounding.
+{% feature_table %}
+item_title: API capability
+columns:
+  - title: Description
+    key: description
+  - title: Examples
+    key: examples
+  - title: OpenAI format
+    key: openai_compatible
+
+features:
+  - title: "Embeddings"
+    description: Offers unified text-to-vector embedding with support for multiple providers and analytics.
+    openai_compatible: true
+    examples: |
+      * [`llm/v1/embeddings`](./examples/embeddings-route-type/)<br>
+
+  - title: "Assistants and responses"
+    description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
+    openai_compatible: true
+    examples: |
+      * [`llm/v1/assistants`](./examples/assistants-route-type/)<br>
+      * [`llm/v1/responses`](./examples/responses-route-type/)<br>
+      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
+
+  - title: "Batch and files"
+    description: Supports parallel LLM requests and file upload for long documents and structured input.
+    openai_compatible: true
+    examples: |
+      * [`llm/v1/batch`](./examples/batches-route-type/)<br>
+      * [`llm/v1/files`](./examples/files-route-type/)<br>
+      * [`llm/v1/batches` Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
+
+  - title: "Audio"
+    description: Enables speech-to-text, text-to-speech, and real-time translation for voice agents and multilingual UIs.
+    openai_compatible: true
+    examples: |
+      * [`/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
+      * [`/v1/audio/speech`](./examples/audio-speech-openai/)<br>
+
+  - title: "Image generation and editing"
+    description: Generates or modifies images from text prompts for multimodal agent input/output.
+    openai_compatible: true
+    examples: |
+      * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
+      * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
+
+  - title: "AWS Bedrock agent APIs"
+    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+    openai_compatible: false
+    examples: |
+      * [`/converse`](./#supported-native-llm-formats)<br>
+      * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
+
+  - title: "Hugging Face text generation"
+    description: Provides text generation and streaming using open-source Hugging Face models.
+    openai_compatible: false
+    examples: |
+      * [`/text-generation`](./#supported-native-llm-formats)<br>
+
+  - title: "Rerank"
+    description: Improves relevance in RAG pipelines by reordering documents based on context.
+    openai_compatible: false
+    examples: |
+      * [`/rerank`](./#supported-native-llm-formats)<br>
+{% endfeature_table %}
 
 {% elsif plugin == "AI Proxy Advanced" %}
 
-* **Batch, assistants, and files APIs**: Support parallel LLM calls for efficiency. Assistants enable stateful, tool-augmented agents. Files provide persistent document storage for richer context across sessions.
-* **Audio capabilities APIs**: Provide speech-to-text transcription, real-time translation, and text-to-speech synthesis for voice agents, multilingual interfaces, and meeting analysis.
-* **Image generation and editing APIs**: Generate and modify images from text prompts to support multimodal agents with visual input and output.
-* **Responses API**: Return response metadata for debugging, evaluation, and response tuning.
-* **AWS Bedrock agent APIs**: Support advanced orchestration and real-time RAG with `Converse`, `ConverseStream`, `RetrieveAndGenerate`, and `RetrieveAndGenerateStream`.
-* **Hugging Face text generation**: Enable text generation and streaming using open-source Hugging Face models.
-* **Embeddings API**: Provide unified text-to-vector embedding generation with multi-vendor support and analytics.
-* **Rerank API**: Improve relevance of retrieved documents and results in RAG pipelines for [Cohere and Bedrock](./#supported-native-llm-formats). Send any list of candidates to be re-ordered based on prompt context to boost final LLM response quality through better grounding.
-* **Realtime streaming**: Stream completions token-by-token for low-latency, interactive experiences and live analytics.
+{% feature_table %}
+item_title: API capability
+columns:
+  - title: Description
+    key: description
+  - title: Examples
+    key: examples
+  - title: OpenAI format
+    key: openai_compatible
 
+features:
+  - title: "Embeddings"
+    description: Offers unified text-to-vector embedding with support for multiple providers and analytics.
+    openai_compatible: true
+    examples: |
+      * [`/v1/embeddings`](./examples/embeddings-route-type/)
+
+  - title: "Assistants and responses"
+    description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
+    openai_compatible: true
+    examples: |
+      * [`/v1/assistants`](./examples/assistants-route-type/)<br>
+      * [`/v1/responses`](./examples/responses-route-type/)<br>
+      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
+
+  - title: "Batch and files"
+    description: Supports parallel LLM requests and file upload for long documents and structured input.
+    openai_compatible: true
+    examples: |
+      * [`/v1/batch`](./examples/batches-route-type/)<br>
+      * [`/v1/files`](./examples/files-route-type/)<br>
+      * [`llm/v1/batches` Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
+
+  - title: "Audio"
+    description: Enables speech-to-text, text-to-speech, and real-time translation for voice agents and multilingual UIs.
+    openai_compatible: true
+    examples: |
+      * [`/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
+      * [`/v1/audio/speech`](./examples/audio-speech-openai/)<br>
+
+  - title: "Image generation and editing"
+    description: Generates or modifies images from text prompts for multimodal agent input/output.
+    openai_compatible: true
+    examples: |
+      * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
+      * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
+
+  - title: "Realtime streaming"
+    description: "Stream completions token-by-token for low-latency, interactive experiences, and live analytics."
+    openai_compatible: true
+    examples: |
+      * [`/v1/realtime`](./examples/realtime-route-openai/)<br>
+
+  - title: "AWS Bedrock agent APIs"
+    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+    openai_compatible: false
+    examples: |
+      * [`/converse`](./#supported-native-llm-formats)<br>
+      * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
+
+  - title: "Hugging Face text generation"
+    description: Provides text generation and streaming using open-source Hugging Face models.
+    openai_compatible: false
+    examples: |
+      * [`/text-generation`](./#supported-native-llm-formats)<br>
+
+  - title: "Rerank"
+    description: Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+    openai_compatible: false
+    examples: |
+      * [`/rerank`](./#supported-native-llm-formats)<br>
+{% endfeature_table %}
 
 {% endif %}
 
-The following reference tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
+<!-- vale on -->
 
 ### Core text generation
 
-Support for chat, completions, and embeddings.
+The following reference tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
 
-{% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}
+Support for chat, completions, and embeddings:
 
-The following providers are supported by the legacy Completions API:
-* OpenAI
-* Azure OpenAI
-* Cohere
-* Llama2
-* Amazon Bedrock
-* Gemini
-* Hugging Face
+{% include plugins/ai-proxy/tables/supported-providers-text.html providers=providers %}
+
+{:.neutral}
+> The following providers are supported by the legacy [Completions API](https://platform.openai.com/docs/api-reference/completions):
+> * OpenAI
+> * Azure OpenAI
+> * Cohere
+> * Llama2
+> * Amazon Bedrock
+> * Gemini
+> * Hugging Face
 
 ### Advanced text generation {% new_in 3.11 %}
 
-Support for function calling, tool use, and batch processing.
+Support for function calling, tool use, and batch processing:
 
-{% include plugins/ai-proxy/tables/supported-providers-2.html providers=providers %}
+{% include plugins/ai-proxy/tables/supported-providers-processing.html providers=providers %}
 
 ### Audio features {% new_in 3.11 %}
 
-Support for text-to-speech, transcription, and translation.
+Support for text-to-speech, transcription, and translation:
 
 {% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
 
-{% if plugin == "AI Proxy" %}
-
 ### Image features {% new_in 3.11 %}
 
-Support for image generation, and image editing interaction.
+Support for image generation, image editing{% if plugin == "AI Proxy Advanced" %}, and realtime streaming{% endif %} interaction:
 
-{% include plugins/ai-proxy/tables/supported-providers-image-ai-proxy.html providers=providers %}
-
-{% elsif plugin == "AI Proxy Advanced" %}
-
-### Image and realtime features {% new_in 3.11 %}
-
-Support for image generation, image editing, and realtime interaction.
-
-{% include plugins/ai-proxy/tables/supported-providers-image-ai-proxy-advanced.html providers=providers %}
-
-{% endif %}
-
+{% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers plugin=plugin %}
 
 ## How it works
 

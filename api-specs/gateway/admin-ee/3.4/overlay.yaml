@@ -399,7 +399,7 @@ actions:
     description: 'List all Workspaces
 
 
-      For workspace use cases and configuration examples, see [Workspace examples](https://docs.konghq.com/gateway/3.2.x/kong-enterprise/workspaces/).'
+      For workspace use cases and configuration examples, see [Workspace examples](https://developer.konghq.com/gateway/entities/workspace/).'
 - target: $.paths["/workspaces/{workspace_id_or_name}"].delete
   update:
     description: Delete a Workspace
@@ -668,7 +668,7 @@ actions:
 
 
       Use consumer groups to manage custom rate limiting configuration for subsets
-      of consumers. For more information read the [consumer group examples documentation](https://docs.konghq.com/gateway/3.2.x/kong-enterprise/consumer-groups/).
+      of consumers. For more information read the [consumer group examples documentation](https://developer.konghq.com/gateway/entities/consumer-group/).
 
       '
 - target: $.paths["/consumer_groups/{group_name_or_id}"].get
@@ -756,4 +756,4 @@ actions:
     description: Kong Gateway provides a mechanism to store sensitive data fields,
       such as consumer secrets, in an encrypted format within the database.This provides
       for encryption-at-rest security controls in a Kong cluster. For more information
-      review the [keyring and data encryption documentation](https://docs.konghq.com/gateway/latest/kong-enterprise/db-encryption/#getting-started).
+      review the [keyring and data encryption documentation](https://developer.konghq.com/gateway/keyring/).

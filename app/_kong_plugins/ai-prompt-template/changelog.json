@@ -11,6 +11,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.1": [
+    {
+      "message": "Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "allow AI plugin to read request from buffered file",
