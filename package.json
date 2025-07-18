@@ -9,7 +9,7 @@
     "netlify-cli": "^22.0.0",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "vite": "^5.4.16",
+    "vite": "^7.0.0",
     "vite-plugin-ruby": "^5.0.0",
     "vite-svg-loader": "^5.1.0",
     "wait-on": "^8.0.1"
