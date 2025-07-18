@@ -13,6 +13,8 @@ extended_description: |
   * **Pseudo-Consumer mapping**: For plugins that typically require Consumers, the OIDC plugin can provide a Consumer ID based on the value of a claim without mapping to an actual Consumer. 
   Setting `credential_claim` to a claim in your plugin configuration extracts the value of that claim and uses it where {{site.base_gateway}} would normally use a Consumer ID. 
   Similarly, setting `authenticated_groups_claim` extracts that claim's value and uses it as a group for the [ACL plugin](/plugins/acl/).
+
+  For a full tutorial with this example, see [Configure OpenID Connect with the authorization code flow and Okta](/how-to/configure-oidc-with-auth-code-flow-and-okta/).
   
 
 weight: 795

@@ -90,7 +90,9 @@ rows:
                     <br><br>
                     [Workflow diagram &rarr;](/plugins/openid-connect/#authorization-code-flow)
                   example: "[Authorization Code flow example](/plugins/openid-connect/examples/authorization-code/)"
-                  howto: "[OpenID Connect and Keycloak with the auth code flow](/how-to/configure-oidc-with-auth-code-flow/)"
+                  howto: |
+                    * [OpenID Connect and Keycloak with the auth code flow](/how-to/configure-oidc-with-auth-code-flow/)<br> 
+                    * [Configure OpenID Connect with the authorization code flow and Okta](/how-to/configure-oidc-with-auth-code-flow-and-okta/)
                 - auth: Session authentication
                   description: |
                     The OpenID Connect plugin can issue a session cookie for session authentication, which you can retrieve using any other supported flow or grant.

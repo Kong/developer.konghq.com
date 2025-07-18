@@ -271,6 +271,7 @@ If it's not included, the PKCE `code_challenge` query parameter won't be sent.
 Set up the auth code flow:
 * [Plugin configuration example](/plugins/openid-connect/examples/authorization-code/)
 * [Authorization code tutorial with Keycloak](/how-to/configure-oidc-with-auth-code-flow/)
+* [Configure OpenID Connect with the authorization code flow and Okta](/how-to/configure-oidc-with-auth-code-flow-and-okta/)
 
 ### Authorization
 
