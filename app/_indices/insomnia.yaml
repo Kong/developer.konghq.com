@@ -71,6 +71,7 @@ sections:
       - path: /insomnia/data-security/
       - path: /insomnia/collected-data/
       - path: /insomnia/incident-response/
+      - path: /how-to/manage-secrets-in-insomnia-with-1password/
 
   - title: Reference
     items:
