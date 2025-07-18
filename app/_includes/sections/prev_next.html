@@ -3,7 +3,7 @@
     {% if page.navigation.prev %}
     {% assign title = page.navigation.prev.title %}
     {% if page.navigation.prev.short_title %}{% assign title = page.navigation.prev.short_title %}{% endif %}
-    <a href="{{ page.navigation.prev.url }}" class="flex flex-col gap-1 p-3 w-1/3 mr-auto rounded-md hover:bg-secondary  hover:no-underline">
+    <a href="{{ page.navigation.prev.url }}" class="flex flex-col gap-1 p-3 w-1/3 mr-auto rounded-md bg-secondary hover:bg-hover-component/100 hover:no-underline">
         <span class="flex gap-1 px-1 text-xs text-secondary">&larr; Previous</span>
         <span class="text-primary font-semibold">{{page.series.position | minus: 1}}. {{ title | liquify }}</span>
     </a>
@@ -12,7 +12,7 @@
     {% if page.navigation.next %}
     {% assign title = page.navigation.next.title %}
     {% if page.navigation.next.short_title %}{% assign title = page.navigation.next.short_title %}{% endif %}
-    <a href="{{ page.navigation.next.url }}" class="flex flex-col gap-1 p-3 w-1/3 ml-auto rounded-md items-end hover:bg-secondary  hover:no-underline">
+    <a href="{{ page.navigation.next.url }}" class="flex flex-col gap-1 p-3 w-1/3 ml-auto rounded-md items-end bg-secondary hover:bg-hover-component/100 hover:no-underline">
         <span class="flex gap-1 px-1 text-xs text-secondary">Next &rarr;</span>
         <span class="text-primary font-semibold">{{page.series.position | plus: 1}}. {{ title | liquify }}</span>
     </a>
