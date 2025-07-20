@@ -3,7 +3,7 @@ title: 'Mutual TLS Authentication'
 name: 'Mutual TLS Authentication'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Secure routes and services with client certificate and mutual TLS authentication'
 

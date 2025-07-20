@@ -3,7 +3,7 @@ title: 'Header Cert Authentication'
 name: 'Header Cert Authentication'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Authenticate clients with mTLS certificates passed in headers by a WAF or load balancer'
 

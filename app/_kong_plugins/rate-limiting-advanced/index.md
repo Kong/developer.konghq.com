@@ -3,6 +3,7 @@ title: Rate Limiting Advanced
 
 name: Rate Limiting Advanced
 publisher: kong-inc
+tier: enterprise
 content_type: plugin
 description: Enhanced rate limiting capabilities such as sliding window support, Redis Sentinel support, and increased performance
 tags:

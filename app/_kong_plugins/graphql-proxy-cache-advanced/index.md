@@ -3,7 +3,7 @@ title: 'GraphQL Proxy Caching Advanced'
 name: 'GraphQL Proxy Caching Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Cache and serve commonly requested responses in {{site.base_gateway}}'
 

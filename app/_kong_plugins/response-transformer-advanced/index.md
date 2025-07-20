@@ -3,7 +3,7 @@ title: 'Response Transformer Advanced'
 name: 'Response Transformer Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Modify the upstream response before returning it to the client, with greater customization capabilities'
 

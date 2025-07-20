@@ -4,7 +4,7 @@ title: AI Rate Limiting Advanced
 name: AI Rate Limiting Advanced
 publisher: kong-inc
 
-ai_gateway_enterprise: true
+tier: ai_gateway_enterprise
 
 products:
     - gateway
