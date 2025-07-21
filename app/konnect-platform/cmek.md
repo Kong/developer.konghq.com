@@ -46,6 +46,27 @@ CMEK currently applies to:
 To use CMEK, you must
 
 1. [Create a **symmetric encryption key** in AWS KMS.](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html)
+    1. KMS Key Creation - Provision a new multi-region symmetric key in your AWS account using "Key Managed Service (KMS)". They key should be in the AWS region you intend to use in Konnect. A multu-region key is recommened to replicate the key in multiple regions, which can be usedyl for disaster recovery or compliance purposes. 
+    2. Ensure the following access policy statement is included in your key policy to allow cc-konnect role (Konnect) to use your key
+        ```
+{
+  "Effect": "Allow",
+  "Principal": {
+    "AWS": "arn:aws:iam::333402130851:role/cc-konnect"
+  },
+  "Action": [
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:ReEncrypt*",
+    "kms:GetKeyRotationStatus",
+    "kms:GenerateDataKey*",
+    "kms:DescribeKey"
+  ],
+  "Resource": "*"
+}
+```
+    3. Ensure the multi-region key is replicated to all AWS regions that make up a Konnect region. You can find the mapping of AWS regions to Konnect here: <<Insert geo region mapping docs here>> 
+
 1. Provide the **key ARN** to [{{site.konnect_short_name}}](https://cloud.konghq.com/global/organization/settings/encryption-keys/)
 
 ## Configure CMEK in {{site.konnect_short_name}}
