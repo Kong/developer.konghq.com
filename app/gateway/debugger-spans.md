@@ -1,115 +1,29 @@
 ---
-title: "Active tracing in {{site.konnect_short_name}}"
-
-description: "Active tracing enables Control Plane administrators to initiate targeted deep tracing sessions in specific Data Plane nodes."
+title: Debugger spans
+description: 'Spans represent a single unit of trace in {{site.base_gateway}} this page contains all available spans.'
 breadcrumbs:
-  - /konnect/
+  - /gateway-manager/
 content_type: reference
 layout: reference
 search_aliases: 
   - active tracing
+  - debugger
 products:
     - konnect-platform
 works_on:
     - konnect
-
-tech_preview: true
-
 tags:
   - tracing
-  - tech-preview
+  - debugger
+related_resources:
+  - text: The {{site.konnect_short_name}} Debugger
+    url: /gateway/debugger/
 ---
 
-Active tracing enables Control Plane administrators to initiate targeted "deep tracing" sessions in specific Data Plane nodes. During an active tracing session, the selected Data Plane generates detailed, OpenTelemetry-compatible traces for all requests matching the sampling criteria. The detailed spans are captured for the entire request/response lifecycle. These traces can be visualized with {{site.konnect_short_name}}'s built-in span viewer with no additional instrumentation or telemetry tools.
 
-{{site.konnect_product_name}}'s active tracing capability offers exclusive, in-depth insights that cannot be replicated by third-party telemetry tools. The detailed traces generated during live active tracing session are unique to Kong and provide unparalleled visibility into system performance. 
 
-Active tracing adheres to OpenTelemetry naming conventions for spans and attributes, wherever possible, ensuring consistency and interoperability.
-
-## Key highlights
-
-- Traces can be generated for a Service or per Route
-- Refined traces can be generated for all requests matching a sampling criteria
-- Sampling criteria can be defined with simple expressions language, for example: `http.method == GET`
-- Trace sessions are retained for up to 7 days
-- Traces can be visualized in {{site.konnect_short_name}}'s built in trace viewer 
-
-Although active tracing is designed as a debug and troubleshooting tool, it can unlock in-depth insights into the API traffic and serve as a monitoring and observability tool. 
-Under normal conditions, active tracing adds negligible latency. However, under heavy loads, it may affect the throughput.
-
-## Reading traces in {{site.konnect_short_name}} trace viewer
-
-Traces captured in an active tracing session can be visualized in {{site.konnect_short_name}}'s built-in trace viewer. The trace viewer displays a **Summary** view and a **Trace** view. You can gain instant insights with the summary view while the trace view will help you dive deeper.
-
-### Summary view  
-
-The summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical metrics and a transaction map. The transaction map includes the plugins executed by {{site.base_gateway}} on both the request and the response along with the times spent in each phase. Use the summary view to quickly understand the end-to-end API flow, identify performance bottlenecks, and optimize your API strategy. 
-
-### Trace view
-
-The trace view gives you unparalleled visibility into {{site.base_gateway}}'s internal workings. 
-This detailed view breaks down into individual spans, providing a comprehensive understanding of:
-- {{site.base_gateway}}'s internal processes and phases
-- Plugin execution and performance
-- Request and response handling
-
-Use the trace view to troubleshoot issues, optimize performance, and refine your configuration.
-
-## Get started with tracing
-
-Active tracing requires the following Data Plane version and environment variables in `kong.conf`:
-
-- **Version:** 3.9.1 or above
-- **Environment variables:**
-  - `KONG_CLUSTER_RPC=on`
-  - `KONG_ACTIVE_TRACING=on`
-
-{:.info}
-> **Note:**
-> Active tracing is currently limited to:
-- Konnect Self-Managed Hybrid Gateways
-- Konnect Dedicated Cloud Gateways
-- Konnect Serverless Gateways
-> <br><br>
-> Active tracing is not supported on {{site.kic_product_name}} and {{site.event_gateway}} Gateways at this time.
-
-### Start a trace session
-
-1. Navigate to **Gateway Manager**.
-2. Select a **Control Plane** which has the Data Plane to be traced.
-3. Click on **Active Tracing** in left navigation menu.
-4. Click **New tracing session**, define the criteria and, click **Start Session**.
-
-Once started, traces will begin to be captured. Click on a trace to visualize it in the trace viewer.
-
-The default session duration is 5 minutes or 200 traces per session. Note the sessions are retained for up to 7 days.
-
-### Sampling rules
-
-To capture only the relevant API traffic, use sampling rules. Sampling rules filter and refine the requests to be matched. The matching requests are then traced and captured in the session. There are two options. 
-* **Basic sampling rules**: Allow filtering on Routes and Services.
-* **Advanced sampling rules**: Specify the desired criteria using expressions. For example, to capture traces for all requests matching 503 response code, specify the following rule:
-  ```
-  http.response.status_code==503
-  ```
-
-### Known issues in tech preview
-
-Here is a list of known issues in the tech preview:
-
-- **Incorrect span orders**: When spans have very short duration few spans may be displayed in wrong order.
-- **Incorrect handling of certain error conditions**: Traces may be broken when there are certain error conditions. For example, when DNS name resolution fails.
-- **Missing spans during high traffic volumes**: When no sampling rule is enabled during a high traffic volume scenario, some traces could be missing spans.
-
-## Sample trace
-
-A sample trace is shown below. By inspecting the spans, it's clear that the bulk of the latency occurs in the pre-function plugin during the access phase.
-
-![Active-Tracing Spans](/assets/images/konnect/active-tracing-spans.png)
-
-## Spans
-
-The following spans are available.
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/gateway/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
+The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
 <!--vale off-->
 ### kong
 
@@ -145,16 +59,18 @@ rows:
     description: HTTP request method
   - name: "`http.request.body.size`"
     description: Request content length or equivalent in bytes
+  - name: "`proxy.kong.request.id`"
+    description: Unique id for each request
+  - name: "`proxy.kong.request.time`"
+    description: Request time as measured by Nginx ($request_time)
   - name: "`http.request.size`"
     description: Request body size and request headers size in bytes
   - name: "`http.response.body.size`"
     description: Response content length or equivalent in bytes
   - name: "`http.response.size`"
     description: Response body size and response headers size in bytes
-  - name: "`proxy.kong.request.id`"
+  - name: "`kong.request.id`"
     description: Unique ID for each request
-  - name: "`proxy.kong.request.time`"
-    description: "Request time as measured by Nginx (`$request_time`)"
   - name: "`url.scheme`"
     description: Protocol identifier
   - name: "`network.protocol.version`"
@@ -168,7 +84,7 @@ rows:
   - name: "`proxy.kong.upstream_id`"
     description: Resolved Upstream ID
   - name: "`proxy.kong.upstream_status_code`"
-    description: status code returned by upstream
+    description: status code returned by Upstream
   - name: "`http.response.status_code`"
     description: Status code sent back by Kong
   - name: "`proxy.kong.latency.upstream`"
@@ -180,15 +96,15 @@ rows:
   - name: "`proxy.kong.latency.net_io_timings`"
     description: Array containing `ip`, `connect_time`, and `rw_time`. I/o outside of the request context is not considered.
   - name: "`proxy.kong.client_KA`"
-    description: Whether the downstream used a KeepAlive connection
+    description: Whether the downstream used a KeepAlive connection.
   - name: "`tls.resumed`"
-    description: Whether the TLS session reused
+    description: Whether the TLS session resumed.
   - name: "`tls.client.subject`"
-    description: x509 client DN (if mTLS)
+    description: x509 client DN (if mTLS).
   - name: "`tls.server.subject`"
-    description: x509 DN for cert Kong presented
+    description: x509 DN for cert Kong presented.
   - name: "`tls.cipher`"
-    description: Negotiated cipher
+    description: Negotiated cipher.
 {% endtable %}
 <!--vale on-->
 ### kong.phase.certificate
@@ -215,10 +131,8 @@ rows:
 
 {{instance_id}}
 
-### kong.tls_handshake
-
-A span that captures the execution of the TLS handshake between the client and Kong.
-This span includes any I/O operations involved in the handshake, which may be prolonged due to slow client behavior.
+## kong.tls_handshake
+A span that captures the execution of the TLS handshake between the client and Kong. This span includes any I/O operations involved in the handshake, which may be prolonged due to slow client behavior.
 
 ### kong.read_client_http_headers
 A span capturing the time taken to read HTTP headers from the client. 
@@ -283,7 +197,7 @@ rows:
 
 ### kong.router
 
-A span capturing the execution of the Kong router.
+A span capturing the execution of the {{site.base_gateway}} router.
 
 This span has the following attributes:
 {% table %}
@@ -354,9 +268,9 @@ rows:
 
 ### kong.upstream.find_upstream
 A span capturing the attempt to verify a specific upstream. 
-Kong attempts to open a TCP connection (if not KeepAlive cache is found), do a TLS handshake, and send down the HTTP headers. 
+{{site.base_gateway}} attempts to open a TCP connection (if not `KeepAlive` cache is found), do a TLS handshake and send down the HTTP headers. 
 If all of this succeeds, the upstream is healthy and Kong will finish sending the full request and wait for a response. 
-If any of the steps fail, Kong will switch to the next target and try again.
+If any of the step fails, {{site.base_gateway}} will switch to the next target and try again.
 
 The last of these spans (or the only one, if the first attempt succeeds) ends as soon as the connection is established, 
 ensuring that the total time captured by the parent `kong.upstream.selection` span always reflects only the time 
@@ -383,18 +297,18 @@ rows:
   - name: "`try_count`"
     description: The number of attempts Kong has made to find a healthy upstream
   - name: "`keepalive`"
-    description: Is this a KeepAlive connection?
+    description: Checks if it is a `KeepAlive` connection.
 {% endtable %}
 <!--vale on-->
 
 ### kong.send_request_to_upstream
-A span capturing the time taken to write the http request (headers and body) to upstream.
+A span capturing the time taken to write the http request to the upstream.
 This span can be used to identify network delays between Kong and an upstream.
 
 ### kong.read_headers_from_upstream
 A span capturing the time taken for the upstream to generate the response headers. 
 This span can be used to identify slowness in response generation from upstreams.
-If there is a delay after the request is sent but before the upstream starts responding, that *time to first byte* is also included in this span.
+If there is a delay after the request is sent but before the upstream starts responding, that **time to first byte** is also included in this span.
 
 ### kong.read_body_from_upstream
 A span capturing the time taken for the upstream to generate the response body. 
@@ -431,5 +345,4 @@ This span has the following attributes:
 {{instance_id}}
 
 ### kong.wait_for_client_read
-A span that measures the time Kong spends finishing the response write to the client. 
-This duration may be extended for slow-reading clients, resulting in a longer span.
+A span that measures the time Kong spends finishing the response write to the client. This duration may be extended for slow-reading clients, resulting in a longer span.
