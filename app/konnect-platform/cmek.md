@@ -18,7 +18,13 @@ faqs:
     a: Yes, you can use the {{site.konnect_short_name}} UI, API, and [Terraform](/terraform/) to configure CMEK.
   - q: Can I bring in symmetric keys from other key management services?
     a: No. CMEK currently only supports AWS Key Management Service (KMS).
-
+related_resources:
+  - text: {{site.konnect_short_name}} Debugger
+    url: /gateway/debugger/
+  - text: Debugger spans
+    url: /gateway/debugger-spans/
+  - text: "{{site.base_gateway}} tracing reference"
+    url: /gateway/tracing/
 ---
 
 {{site.konnect_short_name}} supports **Customer-Managed Encryption Keys (CMEK)**, allowing you to use your own symmetric key stored in **AWS Key Management Service (KMS)** to encrypt a pre-determined set of sensitive data. This feature enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
