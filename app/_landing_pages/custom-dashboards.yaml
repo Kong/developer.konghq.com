@@ -55,34 +55,34 @@ rows:
           - type: card
             config:
               title: API access
-              description: Automate dashboard creation and updates with the API.
+              description: Automate dashboard creation and updates with Terraform
               icon: /assets/icons/terminal.svg
               cta:
-                url: /api/konnect/cloud-gateways/
+                url:  /how-to/automate-dashboard-creation-terraform/
                 align: end
       - blocks:
           - type: card
             config:
               title: Reference
-              description: Learn how to use the Viewer role and other RBAC options for dashboard access.
+              description: Use preset-filters to scope dashboards.
               icon: /assets/icons/lock.svg
               cta:
-                url: /advanced-analytics/custom-dashboards-reference/
+                url: /how-to/use-preset-filters-scope-dashboards/
                 align: end
 
   - header:
       type: h2
-      text: 'Frequently Asked Questions'
+      text: 'FAQs'
   - columns:
       - blocks:
           - type: faqs
             config:
               - q: Who can create and manage custom dashboards?
                 a: |
-                  Only users with the Analytics Admin role can create and manage custom dashboards in {{site.konnect_short_name}}.
+                  The Org Admin and Analytics Admin role can create and manage custom dashboards in {{site.konnect_short_name}}.
               - q: How can I give my team read-only access to dashboards?
                 a: |
-                  Assign them the Viewer role. They will be able to view dashboards shared with their group but not create or edit them.
+                  [Assign the Viewer role](/advanced-analytics/custom-dashboards-reference/#Role-based-access). They will be able to view dashboards shared with their group but not create or edit them.
               - q: Can I automate dashboard creation?
                 a: |
                   Yes. You can use the API to create dashboards from reusable definitions.
@@ -92,3 +92,6 @@ rows:
               - q: Can I download dashboards as PDF?
                 a: |
                   PDF export is not yet available in GA, but may be considered in a future release.
+              - q: Can I upload my own template?
+                a: |
+                  Uploading your own template is not yet available, but may be considered in a future release.

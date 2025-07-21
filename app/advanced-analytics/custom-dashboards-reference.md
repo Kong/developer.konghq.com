@@ -29,6 +29,9 @@ With [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), you can cre
 
 ## Templates
 
+Templates are best-practice templates created by Kong, that can be used as a starting point when creating analytics views and dashboards.
+
+
 {% table %}
 columns:
   - title: Template
@@ -43,6 +46,8 @@ rows:
   - type: Shared services dashboard
     description: Health and performance of services managed inside your Konnect organization. This dashboard focuses on golden signals such as latency, error rates, and throughput, alongside detailed breakdowns of 4xx and 5xx responses, failed authentications, and rate limit hits. It provides a clear picture of how your services are behaving including which consumers and routes are most active or error-prone.
 {% endtable %}
+
+Learn how to create a [custom dashboard from a template](/how-to/create-custom-dashboards/)
 
 ## Tiles
 
@@ -82,11 +87,17 @@ Preset filters appear as badges at the top of the dashboard. Viewers with "Viewe
 ![Example of a preset filter](/assets/images/analytics/admin.png)
 >_**Figure 1:** An example of a preset filter_
 
+For more information, review [Use preset-filters to scope dashboards](/how-to/use-preset-filters-scope-dashboards/)
+
 ## Role-based access
 
 Organization Admins can control who is allowed to **view** a custom dashboard. This is currently the only available permission level—there are no editor or owner roles beyond the original dashboard creator.
 
 To manage dashboard visibility, Organization Admins can assign roles to users through [**Organization**](https://cloud.konghq.com/organization/) > **Users** in {{site.konnect_short_name}}, using the **Role Assignments** tab. Only users with the appropriate roles will be able to access dashboards that are restricted to specific teams or audiences.
+
+### Pre-defined roles
+
+{% include_cached konnect/analytics-roles.md %}
 
 For more details, see the [teams and roles](/konnect-platform/teams-and-roles/) documentation.
 

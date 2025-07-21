@@ -22,9 +22,9 @@ prereqs:
 related_resources:
   - text: Custom Dashboards
     url: /advanced-analytics/custom-dashboards/
-faqs:
-  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
-    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+next_steps:
+  - text: Use preset-filters to scope dashboards
+    url: /how-to/preset-filters-scope-dashboards/
 ---
 
 ## Create a Dashboard

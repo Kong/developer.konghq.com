@@ -134,6 +134,11 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 
 {{site.konnect_short_name}} provides the following predefined roles.
 
+#### Analytics
+
+{% include_cached konnect/analytics-roles.md %}
+
+
 #### API Products
 
 The following describes the predefined roles for API Products:
