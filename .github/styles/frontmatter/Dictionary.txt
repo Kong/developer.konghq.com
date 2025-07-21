@@ -1,3 +1,4 @@
+ai_gateway_enterprise
 graphql
 hmac
 how_to
@@ -28,3 +29,5 @@ act_as_plugin
 control_plane
 konnectextension
 kongplugininstallation
+CACertificate
+KeySet

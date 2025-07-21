@@ -13,6 +13,7 @@ class Hub {
     this.deploymentTopologies = this.filters.querySelectorAll(
       'input[name="deployment-topology"]'
     );
+    this.tiers = this.filters.querySelectorAll('input[name="tier"]');
     this.categories = this.filters.querySelectorAll('input[name="category"]');
     this.support = this.filters.querySelectorAll('input[name="support"]');
     this.trustedContent = this.filters.querySelectorAll(
@@ -23,6 +24,7 @@ class Hub {
     this.categoryValues = [];
     this.supportValues = [];
     this.trustedContentValues = [];
+    this.tierValues = [];
 
     this.typingTimer;
     this.typeInterval = 400;
@@ -37,6 +39,7 @@ class Hub {
       ...this.categories,
       ...this.support,
       ...this.trustedContent,
+      ...this.tiers,
     ];
     checkboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", () => this.onChange());
@@ -78,6 +81,7 @@ class Hub {
 
   onChange() {
     this.deploymentValues = this.getValues(this.deploymentTopologies);
+    this.tierValues = this.getValues(this.tiers);
     this.categoryValues = this.getValues(this.categories);
     this.supportValues = this.getValues(this.support);
     this.trustedContentValues = this.getValues(this.trustedContent);
@@ -125,6 +129,8 @@ class Hub {
         "trustedContent"
       );
 
+      const matchesTier = this.matchesFilter(plugin, this.tiers, "tier");
+
       const matchesText = this.matchesQuery(plugin);
 
       const showPlugin =
@@ -132,6 +138,7 @@ class Hub {
         matchesCategory &&
         matchesSupport &&
         matchesTrustedContent &&
+        matchesTier &&
         matchesText;
 
       plugin.classList.toggle("hidden", !showPlugin);
@@ -212,6 +219,11 @@ class Hub {
       );
     }
 
+    params.delete("tier");
+    if (this.tierValues.length > 0) {
+      this.tierValues.forEach((value) => params.append("tier", value));
+    }
+
     if (this.textInput.value) {
       params.set("terms", encodeURIComponent(this.textInput.value));
     } else {
@@ -248,6 +260,11 @@ class Hub {
       checkbox.checked = trustedContentValues.includes(checkbox.value);
     });
 
+    const tierValues = params.getAll("tier") || [];
+    this.tiers.forEach((checkbox) => {
+      checkbox.checked = tierValues.includes(checkbox.value);
+    });
+
     const termsValue = params.get("terms") || "";
     this.textInput.value = decodeURIComponent(termsValue);
 
@@ -256,6 +273,7 @@ class Hub {
       categoryValues.length ||
       supportValues.length ||
       trustedContentValues.length ||
+      tierValues.length ||
       termsValue
     ) {
       this.onChange();

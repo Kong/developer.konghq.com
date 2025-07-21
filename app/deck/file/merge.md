@@ -38,9 +38,13 @@ deck file merge one.yaml two.yaml -o complete.yaml
 
 ## Merge algorithm
 
-The merge algorithm works in the following way: 
+The merge algorithm works in the following way:
 
 - Top level arrays are concatenated
 - Top level scalar values take the value from the last file passed as an argument
 
 `deck file merge` does not perform any validations.
+
+## Command usage
+
+{% include_cached deck/help/file/merge.md %}

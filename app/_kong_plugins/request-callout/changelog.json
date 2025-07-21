@@ -56,6 +56,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.1": [
+    {
+      "message": "Fixed an issue where `untrusted_lua_sandbox_requires` option was not respected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added the `request-callout` plugin, which provides complex request augmentation and internal authentication.\n",

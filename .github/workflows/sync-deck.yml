@@ -1,0 +1,36 @@
+name: Sync Deck
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  repository_dispatch:
+    types: [PLUGINS_UPDATED]
+
+permissions:
+  contents: read
+
+jobs:
+  deck-versions:
+    name: Fetch Deck Versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+      - uses: Kong/setup-deck@v1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Fetch OAS Data
+        run: |
+          cd tools/deck-versions
+          npm ci
+          node extract-help.js
+          node fetch-versions.js
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
+        with:
+          title: Sync Deck Releases
+          commit-message: Sync Deck Releases
+          labels: skip-changelog,review:general
+          token: ${{ secrets.PAT }}

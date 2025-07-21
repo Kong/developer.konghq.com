@@ -10,6 +10,14 @@ topologies:
     - cloud-gateways
     - serverless
 
+tiers:
+  enterprise:
+    text: Enterprise only
+    url: /gateway/
+  ai_gateway_enterprise:
+    text: AI License Required
+    url: /ai-gateway/
+
 deployment_topologies:
   - slug: on-prem
     text: on-prem
@@ -18,7 +26,7 @@ deployment_topologies:
 
 releases:
   - release: "3.4"
-    ee-version: "3.4.3.19"
+    ee-version: "3.4.3.20"
     ce-version: "3.4.2"
     eol: 2026-08-31
     lts: true
@@ -897,7 +905,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.11"
-    ee-version: "3.11.0.0"
+    ee-version: "3.11.0.1"
     latest: true
     eol: 2026-07-03
     distributions:
@@ -1092,6 +1100,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.11.0.1': 2025/07/16
   '3.11.0.0': 2025/07/03
   '3.10.0.3': 2025/07/06
   '3.10.0.2': 2025/05/20

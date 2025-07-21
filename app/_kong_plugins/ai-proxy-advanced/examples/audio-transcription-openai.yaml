@@ -1,4 +1,4 @@
-title: 'OpenAI audio transcription route'
+title: 'Audio transcription route'
 description: 'Configure an audio transcription route using the Whisper model.'
 
 weight: 900

@@ -3,55 +3,76 @@
 {% navtabs "upstreams" %}
 
 {% if plugin == "AI Proxy" %}
-
 {% navtab "OpenAI" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-openai-ai-proxy.html providers=providers %}
+{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="OpenAI"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% navtab "Azure" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-azure-ai-proxy.html providers=providers %}
+{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Azure"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% elsif plugin == "AI Proxy Advanced" %}
-
 {% navtab "OpenAI" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-openai.html providers=providers %}
+{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="OpenAI"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% navtab "Azure" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-azure.html providers=providers %}
+{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Azure"
+    plugin=plugin %}
 {% endnavtab %}
-
 {% endif %}
 
 {% navtab "Mistral" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-mistral.html providers=providers %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Mistral"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% navtab "Amazon Bedrock" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-bedrock.html providers=providers %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Amazon Bedrock"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% navtab "Llama2" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-llama2.html providers=providers %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Llama2"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% navtab "Anthropic" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-anthropic.html providers=providers %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Anthropic"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% navtab "Cohere" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-cohere.html providers=providers %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Cohere"
+    plugin=plugin %}
 {% endnavtab %}
 
 {% navtab "Hugging Face" %}
-{% include plugins/ai-proxy/tables/upstream-paths/upstream-paths-huggingface.html providers=providers %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Hugging Face"
+    plugin=plugin %}
 {% endnavtab %}
+
 {% endnavtabs %}
-
-{% if plugin == "AI Proxy Advanced" %}
-
-{:.warning}
-> To use the `realtime/v1/realtime` route, users must configure the [`protocols`](/plugins/ai-proxy-advanced/reference/#schema--protocols) to `ws` and/or `wss` on both the service and on the route where the plugin is associated.
-
-{% endif %}

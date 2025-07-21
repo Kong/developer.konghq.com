@@ -27,7 +27,7 @@ tools:
     - admin-api
 schema:
     api: gateway/admin-ee
-    path: /schemas/Event-Hooks
+    path: /schemas/Event-hooks
 
 api_specs:
     - gateway/admin-ee

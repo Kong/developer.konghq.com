@@ -1,4 +1,4 @@
-title: 'Files route'
+title: 'Files route type'
 description: 'Upload documents via the files route to use with OpenAI features like Assistants or and Batch API.'
 
 weight: 900

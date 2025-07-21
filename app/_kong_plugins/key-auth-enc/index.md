@@ -3,7 +3,7 @@ title: 'Key Authentication - Encrypted'
 name: 'Key Authentication - Encrypted'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Add key authentication to your services'
 

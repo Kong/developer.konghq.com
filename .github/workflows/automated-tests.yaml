@@ -1,0 +1,88 @@
+name: Scheduled Automated Tests
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 15 * * *'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
+
+env:
+  VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gateway:
+          - '3.11'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          submodules: 'recursive'
+
+      # Configure Ruby to build Jekyll site
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@84684c07c1965536eb4802c8daf1a77968df0cb1 # v1
+        with:
+          ruby-version: .ruby-version
+
+      - name: Ruby gem cache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        with:
+          path: ${{ github.workspace }}/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Bundle Setup
+        run: bundle config path ${{ github.workspace }}/vendor/bundle
+      - name: Bundle Install
+        run: bundle install --jobs 4 --retry 3
+
+      # Configure Node to build assets
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Cache node modules
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: npm install
+        run: npm ci
+      - name: Run site
+        run: |
+          npx netlify dev & npx wait-on http://localhost:8888
+
+      - name: Download Kong License
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      - name: Generate instruction files
+        working-directory: tools/automated-tests
+        run: |
+          npm ci
+          npm run generate-instruction-files
+
+      - name: Run tests
+        working-directory: tools/automated-tests
+        env:
+          KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
+          RUNTIME: gateway
+          GATEWAY_VERSION: ${{ matrix.gateway }}
+        run: |
+          DEBUG=tests:*,debug npm run run-tests

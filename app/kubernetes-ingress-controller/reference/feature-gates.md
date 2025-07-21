@@ -98,11 +98,6 @@ rows:
     stage: GA
     since: 3.4.0
     until: TBD
-  - feature: CombinedServicesFromDifferentHTTPRoutes
-    default: '`false`'
-    stage: Alpha
-    since: 3.4.0
-    until: TBD
 {% endtable %}
 
 * The **since** and **until** columns refer to [KIC Releases](https://github.com/Kong/kubernetes-ingress-controller/releases).
@@ -122,15 +117,6 @@ private keys in `Certificate` entities and `Consumer` entities' credentials.
 > **Warning:** `KongPlugin`'s and `KongClusterPlugin`'s `config` fields are not sanitized. If you have sensitive information
 > in your `KongPlugin`'s `config` field, it will be sent to Konnect as is. To avoid this, use the
 > [KongVault](/kubernetes-ingress-controller/reference/custom-resources/#kongvault) resource.
-
-### CombinedServicesFromDifferentHTTPRoutes
-
-The `CombinedServicesFromDifferentHTTPRoutes` feature enables translating `HTTPRoute` rules
-with the same set of backends (combination of namespace, name, port, and weight) from different `HTTPRoute`s in the same namespace
-into a single {{site.base_gateway}} Service. Enabling the feature gate can reduce the number of translated {{site.base_gateway}} Services.
-
-The names of {{site.base_gateway}} Services will change if the feature gate is enabled.
-You can refer to the [`HTTRoutes` reference page](/kubernetes-ingress-controller/faq/combining-httproutes/) for further details.
 
 
 ## Using feature gates

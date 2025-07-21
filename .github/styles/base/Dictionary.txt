@@ -552,6 +552,7 @@ okta
 Okta
 Okta's
 Okta's
+ollama
 Ollama
 onboard
 onboarding
@@ -853,10 +854,12 @@ unvetted
 unversioned
 unwanted
 updated_at
+unprefixed
 upsert
 upstream
 upstream_payload
 upstream_status
+upstream_url
 upstream's
 upstreams
 upvalue
@@ -891,6 +894,7 @@ Wallarm
 Wallarm
 Wasm
 Wasm
+watchNamespaces
 WebAssembly
 WebAssembly
 webpages
