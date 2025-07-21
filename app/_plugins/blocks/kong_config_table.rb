@@ -36,10 +36,12 @@ module Jekyll
 
       release = releases(site).detect { |r| r['release'] == page['release'].number }
 
-      if release.key?('label')
+      if release && release.key?('label')
         latest_release(site)
-      else
+      elsif release
         release['release']
+      else
+        latest_release(site)
       end
     end
 
