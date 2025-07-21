@@ -54,7 +54,7 @@ Go to the [Insomnia Plugin Hub](https://insomnia.rest/plugins/insomnia-plugin-op
 
 The 1Password plugin is configured through a JSON [environment variable](/insomnia/environments/). This environment variable can be defined with any environment type. In this example, we'll configure it in a global base environment.
 
-1. In your project, click the **+** button and click **Environment** to create a new global environment.
+1. In your project, click **+ Create** and click **Environment** to create a new global environment.
 1. In the base environment disable **Table View** and add the following content, with the correct path and [1Password sign-in address](https://support.1password.com/change-sign-in-address/#change-your-sign-in-address-on-1passwordcom):
    ```json
    {
