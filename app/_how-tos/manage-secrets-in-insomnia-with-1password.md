@@ -19,7 +19,7 @@ tags:
 
 tldr:
     q: How can I integrate 1Password with Insomnia for secrets management?
-    a: Install 1Password CLI, then in Insomnia, in **Preferences** > **Plugins**, allow elevated access to plugins and install the [Insomnia 1Password plugin](https://insomnia.rest/plugins/insomnia-plugin-op). Configure the plugin with the `__op_plugin` environment variable, and use the 1Password [template tag](/insomnia/template-tags/) to fetch a secret.
+    a: Install the 1Password CLI. In Insomnia, navigate to **Preferences** > **Plugins**, allow elevated access to plugins, and install the [Insomnia 1Password plugin](https://insomnia.rest/plugins/insomnia-plugin-op). Configure the plugin with the `__op_plugin` environment variable, and use the 1Password [template tag](/insomnia/template-tags/) to fetch a secret.
 
 prereqs:
   inline:
@@ -44,7 +44,7 @@ faqs:
 
 ## Enable elevated access for plugins
 
-The 1Password plugin needs to make system-level calls to the local 1Password CLI. To allow it to do this, go to **Preferences** > **Plugins** and select the **Allow elevated access for plugins** checkbox.
+The 1Password plugin needs to make system-level calls to the local 1Password CLI. To enable this, in Insomnia, navigate to **Preferences** > **Plugins** and select the **Allow elevated access for plugins** checkbox.
 
 ## Install the 1Password plugin
 
