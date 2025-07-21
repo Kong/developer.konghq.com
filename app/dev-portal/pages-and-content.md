@@ -64,7 +64,6 @@ faqs:
       You can create a child page by specifying the `parent_page_id` in the request body of the []`/portals/{portalId}/pages` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-page):
       ```json
       {
-        "id": "8f9fd312-a987-4628-b4c5-bb4f4fddd5f7",
         "slug": "/contact",
         "title": "Contact us",
         "content": "Contact our company",

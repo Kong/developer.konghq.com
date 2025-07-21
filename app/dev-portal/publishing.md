@@ -21,7 +21,7 @@ description: "Learn how to publish APIs with Dev Portal and control who can see 
 
 faqs:
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
-    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When new (v3) Dev Portal was released, API Products was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have a classic (v2) Dev Portal. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
+    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, API Products was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
 
 related_resources:
   - text: Dev Portal settings
