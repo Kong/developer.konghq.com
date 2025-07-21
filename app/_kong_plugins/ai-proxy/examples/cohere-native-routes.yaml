@@ -8,7 +8,7 @@ extended_description: |
   - `/v1/rerank`
   - `/v2/rerank`
 
-  Set `llm_format: cohere` to enable compatibility with these APIs. Use default values for `genai_category` and `route_type` parameters (`text/generation` and `llm/v1/chat`).  The `model` field is required by the plugin schema but is not used when calling native Cohere APIs. You may use a placeholder value.
+  Set `llm_format: cohere` to enable compatibility with these APIs. Use default values for `genai_category` and `route_type` parameters (`text/generation` and `llm/v1/chat`).
 
 weight: 900
 
