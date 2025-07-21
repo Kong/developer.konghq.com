@@ -53,10 +53,9 @@ In Kong’s AI Gateway, several plugins leverage embedding-based similarity:
 
 ### What is compared for similarity?
 
-Each plugin applies similarity search slightly differently depending on its goal:
+Each plugin applies similarity search slightly differently depending on its goal. These comparisons determine the plugin’s behavior—whether it routes, blocks, reuses, or enriches a prompt—based on meaning rather than syntax:
 
 <!-- vale off -->
-
 {% table %}
 columns:
   - title: Plugin
@@ -73,11 +72,8 @@ rows:
   - plugin: "AI RAG Injector"
     comparison: "Prompt vs. vectorized document chunks"
 {% endtable %}
-
-
 <!-- vale on -->
 
-These comparisons determine the plugin’s behavior—whether it routes, blocks, reuses, or enriches a prompt—based on meaning rather than syntax.
 
 
 ## Dimensionality
@@ -137,7 +133,10 @@ Creates the following embedding:
 }
 ```
 
-The `embedding` array contains 40 floating-point numbers—each one representing a dimension in the vector space. For simplicity, this example uses a reduced dimensionality of 20, though production models typically use `1536` or more.
+The `embedding` array contains 20 floating-point numbers—each one representing a dimension in the vector space.
+
+{:.info}
+> For simplicity, this example uses a reduced dimensionality of 20, though production models typically use `1536` or more.
 
 ### Practical considerations
 
@@ -169,9 +168,9 @@ rows:
 
 Kong AI Gateway supports both **cosine similarity** and **Euclidean distance** for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using `config.vectordb.distance_metric` setting in the respective plugin.
 
-### Cosine similarity
+#### Cosine similarity
 
-**Cosine similarity**—as the name suggests—measures the angle between vectors, ignoring their magnitude. It is well-suited for **semantic matching**, particularly in text-based scenarios. OpenAI recommends cosine similarity for use with the `text-embedding-3-large` model.
+**Cosine similarity**—as the name suggests—measures the angle between vectors, ignoring their magnitude. It is well-suited for semantic matching, particularly in text-based scenarios. OpenAI recommends cosine similarity for use with the `text-embedding-3-large` model.
 
 <figure>
     <img src="/assets/images/ai-gateway/cosine-similarity.svg" style="display: block; margin: 0 auto;" />
@@ -180,11 +179,11 @@ Kong AI Gateway supports both **cosine similarity** and **Euclidean distance** f
     </figcaption>
 </figure>
 
-Cosine tends to perform well across both **low and high dimensional spaces**, especially in **high-diversity datasets**—for example, when comparing texts about Microsoft, Apple, and Google—because it captures vector orientation rather than size.
+Cosine tends to perform well across both low and high dimensional space, especially in high-diversity datasets—for example, when comparing texts about Microsoft, Apple, and Google—because it captures vector orientation rather than size.
 
 #### Euclidean distance
 
-**Euclidean distance** measures the straight-line (L2) distance between vectors and is sensitive to **magnitude**. It works better when comparing objects across **broad thematic categories**, such as Technology, Fruit, or Musical Instruments, and in domains where **absolute distance** is important.
+**Euclidean distance** measures the straight-line (L2) distance between vectors and is sensitive to magnitude. It works better when comparing objects across broad thematic categories, such as Technology, Fruit, or Musical Instruments, and in domains where absolute distance is important.
 
 <figure>
     <img src="/assets/images/ai-gateway/euclidean-distance.svg" style="display: block; margin: 0 auto;" />
@@ -198,7 +197,7 @@ Cosine tends to perform well across both **low and high dimensional spaces**, es
 >
 > Use `euclidean` when magnitude matters (for example, images, sensor data) or you're working with dense, well-aligned feature sets.
 
-### Cosine similarity versus Euclidean distance
+### Differences between `cosine` and `euclidean`
 
 The two graphs below illustrate a key difference between cosine similarity and Euclidean distance: **two vectors can have the same angle** (and thus the same cosine similarity, represented as `γ` below) **while their Euclidean distances may differ significantly**. This happens because cosine similarity measures only the direction of vectors, ignoring their length or magnitude, whereas Euclidean distance reflects the actual straight-line distance between points in space.
 
@@ -209,6 +208,7 @@ The two graphs below illustrate a key difference between cosine similarity and E
     </figcaption>
 </figure>
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Similarity Metric
@@ -228,6 +228,51 @@ rows:
       - Detect anomalies in sensor readings where magnitude matters
       - Compare aligned image patches using raw pixel embeddings
 {% endtable %}
+<!-- vale on -->
+
+## Similarity threshold
+
+The `vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine—such as Redis or PGVector—and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
+
+{:.info}
+> In Kong's AI semantic plugins, this threshold is **not** post-processed or filtered by the plugin itself. The plugin sends it directly to the vector database, which uses it to determine matching documents based on the configured **distance metric**.
 
 
-<!-- MISSING SECTIONS ON THRESHOLDS AND CAVEATS; ADD A SECTION ON SUPPORTED VECTOR DATABASES -->
+ - With **cosine similarity** (commonly used in Redis and other vector engines), the threshold represents the **maximum allowed distance** from a perfect similarity score of 1.0. A threshold of `0` means only exact matches will qualify. Increasing the threshold (e.g., to `0.4`) allows for less similar matches to be included. In this case, **lower values mean stricter matching**, and **higher values mean broader matching**.
+
+- For **Euclidean distance (L2)**, the threshold defines the **maximum distance** between vectors in the embedding space. A value of `0` returns only vectors that are identical to the query. Larger thresholds (e.g., `0.6`) include more varied and distant matches. Just like with cosine distance, **lower values enforce tighter similarity**, while **higher values allow looser matches**.
+
+The optimal threshold depends on the selected distance metric, the embedding model's dimensionality, and the variation in your data. Tuning may be required for best results.
+
+### Threshold sensitivity and cache hit effectiveness
+
+The closer your similarity threshold is to `0`, the more likely you are to get **cache misses** when using plugins like **AI Semantic Cache**. This is because a lower threshold makes the similarity filter more strict—only embeddings that are nearly identical to the query will qualify as a match. In practice, this means even small variations in phrasing, structure, or context can cause the system to miss otherwise semantically similar entries and fall back to calling the LLM again.
+
+This happens because vector embeddings are not perfectly robust to minor semantic shifts—especially for short or ambiguous prompts. Lowering the threshold narrows the match window, so you're effectively demanding a near-exact match in a complex vector space, which is rare unless the input is repeated verbatim.
+
+The chart below illustrates this effect: as the similarity threshold increases (for example, becomes more permissive), the cache hit rate typically rises. This reflects the broader acceptance of matches in the embedding space, which helps reduce redundant LLM calls—at the cost of some semantic looseness.
+
+<figure>
+    <img src="/assets/images/ai-gateway/cache-hit-rate.svg" style="display: block; margin: 0 auto;" />
+    <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; font-size: 12px;">
+        Figure 4: Example.
+    </figcaption>
+</figure>
+
+That said, **this is generally true but not absolute**. If you're working in a very narrow domain where inputs are highly repetitive or templated (e.g., support FAQs), a low threshold might still yield good cache hit rates. Conversely, in open-ended chat or creative domains, a stricter threshold will almost always increase cache misses due to natural language variability.
+
+### Limitations
+
+While embedding-based similarity is efficient and effective for many use cases, it has important limitations. Embeddings typically do not capture **subtle semantic changes** or handle **long context** as well as LLMs.
+
+For example, the prompts:
+
+* `Summarize this article.`
+* `Summarize this article. Tell me more.`
+
+may be considered semantically equivalent by a vector similarity search, even though the latter asks for additional detail.
+
+To address these edge cases, some approaches use a **smaller LLM model** to compare two texts side by side, enabling deeper semantic comparison. In the future, Kong AI Gateway may offer extensions to existing plugins that optionally use this LLM-based comparison mode alongside embedding similarity.
+
+
+<!-- ADD A SECTION ON SUPPORTED VECTOR DATABASES -->
