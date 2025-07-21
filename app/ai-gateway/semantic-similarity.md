@@ -32,6 +32,8 @@ related_resources:
     url: /ai-gateway/
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
+  - text: Semantic processing and vector similarity search with Kong and Redis
+    url: https://konghq.com/blog/engineering/semantic-processing-and-vector-similarity-search-with-kong-and-redis
 ---
 
 In large language tasks, applications that interact with language models rely on semantic search—not by exact word matches, but by similarity in meaning. This is achieved using vector embeddings, which represent pieces of text as points in a high-dimensional space.
@@ -238,9 +240,9 @@ The `vectordb.threshold` parameter controls how strictly the vector database eva
 > In Kong's AI semantic plugins, this threshold is **not** post-processed or filtered by the plugin itself. The plugin sends it directly to the vector database, which uses it to determine matching documents based on the configured **distance metric**.
 
 
- - With **cosine similarity** (commonly used in Redis and other vector engines), the threshold represents the **maximum allowed distance** from a perfect similarity score of 1.0. A threshold of `0` means only exact matches will qualify. Increasing the threshold (e.g., to `0.4`) allows for less similar matches to be included. In this case, **lower values mean stricter matching**, and **higher values mean broader matching**.
+ - With **cosine similarity** (commonly used in Redis and other vector engines), the threshold represents the **maximum allowed distance** from a perfect similarity score of 1.0. A threshold of `0` means only exact matches will qualify. Increasing the threshold (for example, to `0.4`) allows for less similar matches to be included. In this case, **lower values mean stricter matching**, and **higher values mean broader matching**.
 
-- For **Euclidean distance (L2)**, the threshold defines the **maximum distance** between vectors in the embedding space. A value of `0` returns only vectors that are identical to the query. Larger thresholds (e.g., `0.6`) include more varied and distant matches. Just like with cosine distance, **lower values enforce tighter similarity**, while **higher values allow looser matches**.
+- For **Euclidean distance (L2)**, the threshold defines the **maximum distance** between vectors in the embedding space. A value of `0` returns only vectors that are identical to the query. Larger thresholds (for example, `0.6`) include more varied and distant matches. Just like with cosine distance, **lower values enforce tighter similarity**, while **higher values allow looser matches**.
 
 The optimal threshold depends on the selected distance metric, the embedding model's dimensionality, and the variation in your data. Tuning may be required for best results.
 
@@ -259,7 +261,7 @@ The chart below illustrates this effect: as the similarity threshold increases (
     </figcaption>
 </figure>
 
-That said, **this is generally true but not absolute**. If you're working in a very narrow domain where inputs are highly repetitive or templated (e.g., support FAQs), a low threshold might still yield good cache hit rates. Conversely, in open-ended chat or creative domains, a stricter threshold will almost always increase cache misses due to natural language variability.
+That said, **this is generally true but not absolute**. If you're working in a very narrow domain where inputs are highly repetitive or templated (for example, support FAQs), a low threshold might still yield good cache hit rates. Conversely, in open-ended chat or creative domains, a stricter threshold will almost always increase cache misses due to natural language variability.
 
 ### Limitations
 
