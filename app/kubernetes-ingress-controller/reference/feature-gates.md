@@ -131,7 +131,7 @@ into a single {{site.base_gateway}} Service. Enabling the feature gate can reduc
 The names of {{site.base_gateway}} Services will change if the feature gate is enabled.
 You can refer to the [`HTTRoutes` reference page](/kubernetes-ingress-controller/faq/combining-httproutes/) for further details.
 
-{:.note}
+{:.info}
 > **Note:** Since 3.5.0 this functionality is controlled via a CLI flag: `--combined-services-from-different-httproutes`.
 
 ## Using feature gates
