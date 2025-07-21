@@ -183,8 +183,10 @@ Use the following table to help you determine if you should use centrally-manage
 columns:
   - title: "Centrally-managed Consumers"
     key: central
+    center: true
   - title: Control Plane scoped Consumer
     key: cp_consumer
+    center: true
 
 features:
   - title: "Share Consumer identity in more than one Control Plane"
