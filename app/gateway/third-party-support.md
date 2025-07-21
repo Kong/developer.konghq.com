@@ -48,8 +48,8 @@ Other supported third-party tools:
 
 {:.info}
 > **Note:** Kong only tests compatibility against these tools and dependencies.
-> Kong **does not** maintain or own any of the third party tools listed here.
-> Likewise, Kong does not maintain or own any of the supported AI providers and identity providers.
+> Kong **does not** maintain, own, or provide user support for any of the third-party tools listed here,
+> or for any AI providers and identity providers.
 
 ## Third-party tools
 
