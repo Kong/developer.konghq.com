@@ -1,4 +1,4 @@
-title: 'OpenAI Text-to-Speech (TTS) route'
+title: 'Text-to-Speech (TTS) route'
 description: 'Set up an audio speech synthesis route using OpenAI’s text-to-speech model.'
 
 weight: 900

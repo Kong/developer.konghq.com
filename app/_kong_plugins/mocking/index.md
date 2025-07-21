@@ -3,7 +3,7 @@ title: 'Mocking'
 name: 'Mocking'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Provide mock endpoints to test your APIs against your Services'
 

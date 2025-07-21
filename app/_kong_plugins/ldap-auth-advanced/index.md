@@ -3,7 +3,7 @@ title: 'LDAP Authentication Advanced'
 name: 'LDAP Authentication Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Secure Kong with username and password protection, use LDAP search and service directory mapping'
 

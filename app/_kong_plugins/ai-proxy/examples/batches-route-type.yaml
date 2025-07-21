@@ -1,4 +1,4 @@
-title: 'Batch route'
+title: 'Batches route type'
 description: 'Create large batches of API requests for asynchronous processing.'
 weight: 900
 

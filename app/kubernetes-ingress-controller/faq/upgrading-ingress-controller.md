@@ -13,7 +13,7 @@ breadcrumbs:
 products:
   - kic
 
-search_aliases: 
+search_aliases:
   - upgrade kic
 works_on:
   - on-prem
@@ -30,7 +30,7 @@ related_resources:
 
 ## Prerequisites
 
-1.  Ensure that you installed {{ site.kic_product_name }} 3.0 or above, using [Helm](https://github.com/Kong/charts/).
+1. Ensure that you installed {{ site.kic_product_name }} 3.0 or above, using [Helm](https://github.com/Kong/charts/).
 
 1. Fetch the latest version of the Kong Helm chart using `helm repo update`.
 

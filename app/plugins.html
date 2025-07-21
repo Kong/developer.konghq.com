@@ -86,6 +86,17 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                 </div>
               </div>
               <div class="flex flex-col gap-3">
+                <div class="text-sm text-brand font-semibold">Tier</div>
+                <div class="flex flex-col gap-3">
+                  {% for tier in site.data.products.gateway.tiers %}
+                  {% assign tier_value = tier[0] %}
+                  {% assign tier_text = tier[1].text %}
+                  {% include checkbox.html value=tier_value name="tier"
+                  label=tier_text %}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="flex flex-col gap-3">
                 <div class="text-sm text-brand font-semibold">Deployment Platforms</div>
                 <div class="flex flex-col gap-3">
                   {% for deployment_topology in site.data.products.gateway.deployment_topologies %}

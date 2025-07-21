@@ -53,20 +53,16 @@ Now that you have an external endpoint and authorization credentials, you can se
 Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/audit-logs/v2/#/operations/update-audit-log-webhook) endpoint with the connection details for your SIEM vendor:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/audit-log-webhook
 status_code: 201
 method: PATCH
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     endpoint: $SIEM_ENDPOINT
     enabled: true
     authorization: "Bearer $SIEM_TOKEN"
     log_format: cef
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 Webhooks are triggered via an HTTPS request using the following retry rules:
@@ -82,15 +78,11 @@ A retry is performed on a connection error, server error (`500` HTTP status code
 To validate that the webhook is configured correctly, send an API request using the {{site.konnect_short_name}} API:
 
 <!--vale off-->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/control-planes
 status_code: 201
 method: GET
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 <!--vale on-->
 
 This should trigger a log in SumoLogic. Sometimes it can take a minute to populate the logs.
