@@ -176,10 +176,31 @@ Centralized Consumer management provides the following benefits:
 
 Centrally managed Consumers exist outside of Control Planes, so they can be used across Control Planes.
 
-You can use centally managed consumers under the following scenarios:
-* Consumer identity needs to be shared in more than one control plane
-* Consumer uses key authentication strategy
-* Plugins do not need to be applied scoped to the consumer directly. Plugins can be scoped to consumer groups.
+Use the following table to help you determine if you should use centrally-managed Consumers or Consumers scoped to Control Planes:
+
+<!--vale off-->
+{% feature_table %} 
+columns:
+  - title: "Centrally-managed Consumers"
+    key: central
+  - title: Control Plane scoped Consumer
+    key: cp_consumer
+
+features:
+  - title: "Share Consumer identity in more than one Control Plane"
+    central: true
+    cp_consumer: false
+  - title: "Supported authentication strategies"
+    central: Key auth
+    cp_consumer: All
+  - title: "Scope plugins directly to Consumer"
+    central: false
+    cp_consumer: true
+  - title: "Scope plugins to Consumer Groups"
+    central: true
+    cp_consumer: true
+{% endfeature_table %}
+<!--vale on-->
 
 You can manage Consumers centrally using the [{{site.konnect_short_name}} Consumers API](/api/konnect/consumers/v1/). 
 Only Org Admins and Control Plane Admins have CRUD permissions for these Consumers. 
