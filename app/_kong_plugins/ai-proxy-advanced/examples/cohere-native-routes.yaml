@@ -1,0 +1,45 @@
+title: 'Native Cohere API route'
+description: 'Use the Cohere SDK with native APIs through AI Proxy.'
+extended_description: |
+  Configure a route that uses native Cohere APIs with the Cohere SDK.
+
+  Supported native Cohere APIs include:
+
+  - `/v1/rerank`
+  - `/v2/rerank`
+
+  Set `llm_format: cohere` to enable compatibility with these APIs. Use default values for `genai_category` and `route_type` parameters (`text/generation` and `llm/v1/chat`).
+
+weight: 900
+
+requirements:
+  - Cohere account with API key
+
+config:
+  genai_category: text/generation
+  llm_format: cohere
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: gpt-4
+        options:
+          max_tokens: 512
+          temperature: 1.0
+
+variables:
+  key:
+    value: $COHERE_API_KEY
+    description: The API key to use to connect to Cohere.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: native-routes
