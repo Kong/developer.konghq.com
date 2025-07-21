@@ -119,4 +119,4 @@ http.response.status_code==503
 
 A sample trace is shown below. By inspecting the spans, you can see that the bulk of the latency occurs in the pre-function plugin during the access phase.
 
-![Active-Tracing Spans](/assets/images/konnect/active-tracing-spans.png)
+![Debugger Spans](/assets/images/konnect/debugger-spans.png)
