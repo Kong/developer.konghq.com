@@ -133,7 +133,7 @@ These deprecated resources will be removed in a future version. We recommend mig
 
 {{ site.kic_product_name }} 3.5 introduces several new features:
 
-* **Combined HTTP Routes (GA):** Now generally available, this feature allows consolidation of multiple `HTTPRoute` resources into a single Kong Gateway service. Enable with the `--combined-services-from-different-httproutes` flag.
+* **Combined HTTP Routes (GA):** Now generally available, this feature allows consolidation of multiple `HTTPRoute` resources into a single {{site.base_gateway}} service. Enable with the `--combined-services-from-different-httproutes` flag.
 * **Connection Draining:** Ensures graceful handling of client connections to terminating pods. Enable with the `--enable-drain-support` flag.
 
 ## Upgrade {{ site.kic_product_name }}
