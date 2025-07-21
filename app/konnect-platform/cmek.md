@@ -19,7 +19,7 @@ faqs:
   - q: Can I bring in symmetric keys from other key management services?
     a: No. CMEK currently only supports AWS Key Management Service (KMS).
 related_resources:
-  - text: {{site.konnect_short_name}} Debugger
+  - text: "{{site.konnect_short_name}} Debugger"
     url: /gateway/debugger/
   - text: Debugger spans
     url: /gateway/debugger-spans/
