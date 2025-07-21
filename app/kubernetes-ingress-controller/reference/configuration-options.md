@@ -21,7 +21,7 @@ works_on:
   - konnect
 ---
 
-Configuration options allow you to customize the behavior of {{ site.kic_product_name }} to meet your needs. 
+Configuration options allow you to customize the behavior of {{ site.kic_product_name }} to meet your needs.
 
 The default configuration will work for most users. These options are provided for advanced users.
 
@@ -214,7 +214,7 @@ rows:
     default: '`false`'
   - flag: '`--feature-gates`'
     type: '`list of string=bool`'
-    description: A set of comma separated key=value pairs that describe feature gates for alpha/beta/experimental features. See the Feature Gates documentation for information and available options: https://github.com/Kong/kubernetes-ingress-controller/blob/main/FEATURE_GATES.md.
+    description: "A set of comma separated key=value pairs that describe feature gates for alpha/beta/experimental features. See the Feature Gates documentation for information and available options: https://github.com/Kong/kubernetes-ingress-controller/blob/main/FEATURE_GATES.md."
     default: ""
   - flag: '`--gateway-api-controller-name`'
     type: '`string`'
@@ -390,7 +390,7 @@ rows:
     default: '`info`'
   - flag: '`--metrics-access-filter`'
     type: '`string`'
-    description: Specifies the filter access function to be used for accessing the metrics endpoint (possible values: off, rbac).
+    description: "Specifies the filter access function to be used for accessing the metrics endpoint (possible values: off, rbac)."
     default: '`"off"`'
   - flag: '`--metrics-bind-address`'
     type: '`string`'
