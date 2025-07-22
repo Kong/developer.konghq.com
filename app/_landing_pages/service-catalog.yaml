@@ -7,8 +7,6 @@ metadata:
   tags:
     - service-catalog
     - governance
-  breadcrumbs:
-    - /service-catalog/
 
 rows:
   - header:
