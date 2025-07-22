@@ -5,6 +5,8 @@ description: Learn how to create a realm and authenticate a centrally-managed Co
 
 content_type: how_to
 related_resources:
+  - text: About centrally-managed Consumers
+    url: /gateway/entities/consumer/#centrally-managed-consumers
   - text: Authentication
     url: /gateway/authentication/
 
@@ -32,6 +34,13 @@ tags:
 tldr:
     q: How do I centrally manage Consumers in {{site.konnect_short_name}}?
     a: Centrally-managed Consumers exist outside of a Control Plane. To create one, you must first create a realm using the {{site.konnect_short_name}} API as well as a Consumer associated with the realm. Then, create a key for the centrally-managed Consumer that they can use for authentication. Enable the Key Authentication plugin, configuring `identity_realms`. Centrally-managed Consumers can then authenticate via key auth with their key.
+faqs:
+  - q: When should I use centrally-managed Consumers instead of Consumers scoped to control planes?
+    a: |
+      You should use centrally-managed Consumers in the following scenarios:
+      * You want to share the Consumer identity in more than one control plane
+      * The Consumer uses the key authentication strategy
+      * You don't need to scope plugins to Consumers directly, they can be scoped to Consumer Groups instead.
 
 prereqs:
   entities:

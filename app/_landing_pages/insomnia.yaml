@@ -270,3 +270,15 @@ rows:
                 - insomnia
               quantity: 5
               allow_empty: true
+
+
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Where can I find the Insomnia changelog?
+              a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
+            

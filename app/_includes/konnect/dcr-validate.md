@@ -9,7 +9,7 @@ Now that DCR is configured, you can create an application with Dynamic Client Re
 4. After the application is created, the Client ID and Client Secret will be displayed.  
    Make sure to store these values, as they will only be shown once.
 
-5. After the application is created, it will appear your IdP. From your Okta organization, select **Applications** from the sidebar. You will see the application created in the Dev Portal, along with its corresponding Client ID.
+5. After the application is created, it will appear your IdP. From your IdP organization, select **Applications** from the sidebar. You will see the application created in the Dev Portal, along with its corresponding Client ID.
 
 For developers to authorize requests, they must attach the client ID and secret pair obtained previously in the header. They can do this by using any API product, such as [Insomnia](https://insomnia.rest/), or directly using the command line:
 
