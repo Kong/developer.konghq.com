@@ -3,6 +3,8 @@ title: 'Deploy {{site.mesh_product_name}} using Terraform and Konnect'
 description: 'Learn how to provision a Global Control Plane, Mesh, and Kubernetes zone for {{site.mesh_product_name}} using Terraform and Konnect.'
 content_type: reference
 layout: reference
+breadcrumbs:
+  - /mesh/
 products:
   - mesh
 works_on: 

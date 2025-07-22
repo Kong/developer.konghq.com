@@ -3,7 +3,8 @@ metadata:
   content_type: landing_page
   products:
     - service-catalog
-  breadcrumb: /service-catalog/
+  breadcrumbs:
+    - /service-catalog/
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
     - integrations
