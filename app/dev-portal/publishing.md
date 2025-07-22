@@ -19,10 +19,6 @@ breadcrumbs:
 
 description: "Learn how to publish APIs with Dev Portal and control who can see published APIs."
 
-faqs:
-  - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
-    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
-
 related_resources:
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
@@ -36,6 +32,8 @@ faqs:
       There are two exceptions when the underlying implementation should match the selected version:
       * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
+  - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
+    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
 ---
 
 Publishing an API makes it available to one or more Dev Portals. 
