@@ -6,7 +6,6 @@
    :control-address-bar="true"
    :current-path="currentPathDOC || '/'"
    :hide-insomnia-try-it="true"
-   :hide-try-it="true"
    :spec="specText"
    />
 </template>

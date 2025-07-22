@@ -170,6 +170,12 @@ Transfer-Encoding: chunked
 Connection: keep-alive
 Access-Control-Allow-Origin: *
 
+# HELP kong_control_plane_connected Kong connected to control plane, 0 is unconnected
+# TYPE kong_control_plane_connected gauge
+kong_control_plane_connected{instance="localhost:8100", job="kong"}	
+# HELP kong_data_plane_cluster_cert_expiry_timestamp Unix timestamp of Data Plane's cluster_cert expiry time
+# TYPE kong_data_plane_cluster_cert_expiry_timestamp gauge
+kong_data_plane_cluster_cert_expiry_timestamp 2068058801
 # HELP kong_bandwidth_bytes Total bandwidth (ingress/egress) throughput in bytes
 # TYPE kong_bandwidth_bytes counter
 kong_bandwidth_bytes{service="google",route="google.route-1",direction="egress",consumer=""} 264

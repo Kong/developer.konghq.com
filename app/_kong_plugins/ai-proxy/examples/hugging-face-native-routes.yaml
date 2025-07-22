@@ -1,0 +1,41 @@
+title: 'Native Hugging Face API route'
+description: 'Use the Hugging Face SDK with native APIs through AI Proxy.'
+extended_description: |
+  Configure a route that uses native Hugging Face APIs with the Hugging Face SDK. This example uses the `HuggingFaceTB/SmolVLM-Base` model.
+
+  Supported native Hugging Face APIs include:
+
+  - `/generate`
+  - `/generate_stream`
+
+  Set `llm_format: huggingface` to enable compatibility with these APIs. Use default values for `genai_category` and `route_type` parameters (`text/generation` and `llm/v1/chat`).
+
+weight: 900
+
+requirements:
+  - Hugging Face account
+
+config:
+  route_type: llm/v1/chat
+  genai_category: text/generation
+  llm_format: huggingface
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${token}
+  model:
+    provider: huggingface
+    name: HuggingFaceTB/SmolVLM-Base
+
+variables:
+  token:
+    value: $HUGGINGFACE_TOKEN
+    description: The token to use to connect to Hugging Face.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: native-routes

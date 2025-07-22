@@ -3,7 +3,7 @@ title: 'Kafka Upstream'
 name: 'Kafka Upstream'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform requests into Kafka messages in a Kafka topic.'
 

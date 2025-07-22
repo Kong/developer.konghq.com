@@ -2,8 +2,7 @@
 title: 'AI Proxy Advanced'
 name: 'AI Proxy Advanced'
 
-ai_gateway_enterprise: true
-
+tier: ai_gateway_enterprise
 content_type: plugin
 
 publisher: kong-inc
@@ -62,7 +61,9 @@ examples_groups:
   - slug: multimodal-open-ai
     text: Multimodal route types for OpenAI
   - slug: openai-processing
-    text: File, batch, embeddings and realtime routes
+    text: Other OpenAI processing routes
+  - slug: native-routes
+    text: Native routes
 
 faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?
@@ -71,6 +72,46 @@ faqs:
       In your AI Proxy Advanced configuration, set the following parameters:
       * [`config.auth.azure_use_managed_identity`](./reference/#schema--config-targets-auth-azure-use-managed-identity) to `true` to use an Azure-Assigned Managed Identity.
       * [`config.targets.auth.azure_use_managed_identity`](./reference/#schema--config-targets-auth-azure-use-managed-identity) to `true` and an [`config.targets.auth.azure_client_id`](./reference/#schema--config-targets-auth-azure-client-id) to use a User-Assigned Identity.
+  - q: Can I override `config.model.name` by specifying a different model name in the request?
+    a: |
+      No. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
+  - q: |
+      Can I override `temperature`, `top_p`, and `top_k` from the request?
+    a: |
+      Yes. The values for [`temperature`](./reference/#schema--config-targets-model-options-temperature), [`top_p`](./reference/#schema--config-targets-model-options-top-p), and [`top_k`](./reference/#schema--config-targets-model-options-top-k) in the request take precedence over those set in `config.targets.model.options`.
+
+  - q: How can I set model generation parameters when calling Gemini?
+    a: |
+      You have several options, depending on the SDK and configuration:
+
+      - Use the **Gemini SDK**:
+
+        1. Set [`llm_format`](./reference/#schema--config-llm-format) to `gemini`.
+        1. Use the Gemini provider.
+        1. Configure parameters like [`temperature`](./reference/#schema--config-targets-model-options-temperature), [`top_p`](./reference/#schema--config-targets-model-options-top-p), and [`top_k`](./reference/#schema--config-targets-model-options-top-k) on the client side:
+            ```python
+            model = genai.GenerativeModel(
+                'gemini-1.5-flash',
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.7,
+                    top_p=0.9,
+                    top_k=40,
+                    max_output_tokens=1024
+                )
+            )
+            ```
+
+      - Use the **OpenAI SDK** with the Gemini provider:
+        1. Set [`llm_format`](./reference/#schema--config-llm-format) to `openai`.
+        1. You can configure parameters in one of three ways:
+          - Configure them in the plugin only.
+          - Configure them in the client only.
+          - Configure them in both—the client-side values will override plugin config.
+
+  - q: Can I override authentication values from the request?
+    a: |
+      Yes, but only if [`config.targets.auth.allow_override`](./reference/#schema--config-targets-auth-allow-override) is set to `true` in the plugin configuration.
+      When enabled, this allows request-level auth parameters (such as API keys or bearer tokens) to override the static values defined in the plugin.
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
@@ -115,13 +156,13 @@ rows:
       The round-robin algorithm distributes requests across models based on their respective weights. For example, if your models `gpt-4`, `gpt-4o-mini`, and `gpt-3` have weights of `70`, `25`, and `5` respectively, they’ll receive approximately 70%, 25%, and 5% of the traffic in turn. Requests are distributed proportionally, independent of usage or latency metrics.
   - algorithm: "[Semantic](/plugins/ai-proxy-advanced/examples/semantic/)"
     description: |
-      The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case. This feature enhances the flexibility and efficiency of model selection, especially when dealing with a diverse range of AI providers and models.
+      The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case.
 {% endtable %}
 <!--vale on-->
 
 ## Retry and fallback
 
-The load balancer has customizable retries and timeouts for requests, and can redirect a request to a different model in case of failure. This allows you to have a fallback in case one of your targets is unavailable.
+The [load balancer](/ai-gateway/load-balancing/) has customizable retries and timeouts for requests, and can redirect a request to a different model in case of failure. This allows you to have a fallback in case one of your targets is unavailable.
 
 For versions {% new_in 3.10 %} this plugin supports fallback across targets with any supported formats.
 For versions earlier than 3.10, fallback is not supported across targets with different formats. You can still use multiple providers, but only if the formats are compatible.
@@ -134,9 +175,6 @@ For example, load balancers with the following target combinations are supported
 > Some errors, such as client errors, result in a failure and don't failover to another target.<br/><br/> {% new_in 3.10 %} To configure failover in addition to network errors, set [`config.balancer.failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria) to include:
 > * Additional HTTP error codes, like `http_429` or `http_502`
 > * The `non_idempotent` setting, as most AI services accept POST requests
-
-## Request and response formats
-{% include plugins/ai-proxy/formats.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
 
 ## Templating {% new_in 3.7 %}
 

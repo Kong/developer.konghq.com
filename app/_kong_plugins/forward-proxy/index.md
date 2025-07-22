@@ -3,7 +3,7 @@ title: 'Forward Proxy Advanced'
 name: 'Forward Proxy Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Allows {{site.base_gateway}} to connect to intermediary transparent HTTP proxies'
 

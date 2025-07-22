@@ -19,6 +19,8 @@ related_resources:
     url: /how-to/write-pre-request-scripts/
   - text: Write an after-response script to test a response in Insomnia
     url: /how-to/write-after-response-script/
+  - text: Environments
+    url: /insomnia/environments/
 ---
 
 ## Pre-request scripts
@@ -37,14 +39,16 @@ The following sections provide pre-request script examples you can use.
 
 The `insomnia` object serves as a handler for interacting with various types of variables. It offers a range of methods tailored for accessing the base environment and the active environment.
 
+For more details, see [Environment variables in scripts](/insomnia/environments/#environment-variables-in-scripts).
+
 ```js
-// set a variable in environment
+// set a variable in the selected collection environment
 insomnia.environment.set("env", "env value");
-// set a variable in base environment
+// set a variable in the collection base environment
 insomnia.baseEnvironment.set("baseEnv", "base env value");
-// set a variable in variables
+// set a temporary local variable
 insomnia.variables.set("var", "var value");
-// collectionVariables operations are applied to the base environment
+// set a variable in the collection base environment
 insomnia.collectionVariables.set("collectionEnv", "collection variable value");
 
 // get values from different scopes

@@ -76,9 +76,7 @@ rows:
       If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week, 
       upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect {{site.konnect_short_name}} deployments.
       <br><br>
-      A fix will be provided in 3.11.0.1.
-      <br><br>
-      As a temporary workaround, do the following:
+      We recommend upgrading to 3.11.0.1 to fix this issue. If needed, you can use the following temporary workaround:
       <br><br>
       1. On your {{site.base_gateway}} machine or in its container, create a file named `reset_license_llm_data.lua` with the following contents:
          <br><br>
@@ -98,7 +96,7 @@ rows:
          ```
       3. Run `kong migrations up`.
       4. Run `kong migrations finish`.
-    status: Not fixed
+    status: Fixed in 3.11.0.1
 {% endtable %}
 
 ## 3.10.x breaking changes
