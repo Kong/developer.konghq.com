@@ -96,15 +96,15 @@ rows:
   - metric: "Response Latency"
     category: "Latency"
     description: |
-      The amount of time, in milliseconds, that it takes to process an API request. Users can select between average (avg) or different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from request received until response returned.
+      The time, in milliseconds, it takes to process an API request from start to finish. Users can choose from average (avg) or specific percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that 99 out of 100 requests were completed in under 10 ms from the time the request was received to when the response was sent.
   - metric: "Upstream Latency"
     category: "Latency"
     description: |
-      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from sending the request to the upstream service until the response returned.
+      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile latency of 10 milliseconds means that 99 out of 100 requests took less than 10 ms from the moment the request was sent to the upstream service to when the first byte of the response was received.
   - metric: "Kong latency"
     category: "Latency"
     description: |
-      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from the time the {{site.base_gateway}} received the request up to when it sends it back to the upstream service.
+      The time, in milliseconds, spent within {{site.base_gateway}} processing a request, excluding upstream response time. Users can choose from different percentiles (p99, p95, and p50). For example, a 99th percentile Kong latency of 10 milliseconds means that 99 out of 100 requests spent less than 10 ms being processed within {{site.base_gateway}} before reaching the upstream service.
   - metric: "Request Size"
     category: "Size"
     description: |
