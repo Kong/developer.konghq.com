@@ -77,16 +77,6 @@ slsa-verifier verify-artifact \
    $BINARY_FILES
 ```
 
-Here's the same example using sample values instead of placeholders:
-
-```sh
-slsa-verifier verify-artifact \
-   --print-provenance \
-   --provenance-path 'insomnia-provenance.intoto.jsonl' \
-   --source-uri 'github.com/Kong/insomnia' \
-   Insomnia.Core-11.3.0.{snap,tar.gz,zip,rpm,dmg,deb,AppImage,exe}
-```
-
 The command will print "Verified SLSA provenance" if successful:
 
 ```sh
@@ -106,15 +96,4 @@ slsa-verifier verify-artifact \
    --source-uri 'github.com/Kong/$REPO' \
    --build-workflow-input 'version=$VERSION' \
    $BINARY_FILES
-```
-
-Here's the same example using sample values instead of placeholders:
-
-```sh
-slsa-verifier verify-artifact \
-   --print-provenance \
-   --provenance-path 'insomnia-provenance.intoto.jsonl' \
-   --source-uri 'github.com/Kong/insomnia' \
-   --build-workflow-input 'version=11.3.0' \
-   Insomnia.Core-11.3.0.{snap,tar.gz,zip,rpm,dmg,deb,AppImage,exe}
 ```
