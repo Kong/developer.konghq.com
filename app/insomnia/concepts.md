@@ -34,8 +34,6 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: User
-    description: A user is an individual who uses Insomnia to design, test, debug, and document APIs. Users can design requests, mock services, run tests, and choose between local, Git, or cloud storage. They can work independently or collaborate in shared projects and tools.
   - role: Admin
     description: An admin is a team member who manages organization-level settings. Admins manage organization membership and settings like storage limits and invite policies. This role is assigned at the organization level.
   - role: Owner
