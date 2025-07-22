@@ -1,0 +1,43 @@
+title: 'Native Gemini API route'
+description: 'Use the Gemini SDK with native Gemini APIs through AI Proxy Advanced.'
+extended_description: |
+  Configure a route that uses native Gemini APIs with the Gemini SDK. This example uses the `gemini-1.5-flash` model.
+
+  Supported native Gemini APIs include:
+
+  - `/generateContent`
+  - `/streamGenerateContent`
+
+  Set `llm_format: gemini` to enable compatibility with these APIs. Use default values for `genai_category` and `route_type` parameters (`text/generation` and `llm/v1/chat`).
+
+weight: 900
+
+requirements:
+  - Google Cloud account with access to Gemini APIs
+
+config:
+  genai_category: text/generation
+  llm_format: gemini
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        param_name: key
+        param_value: ${key}
+        param_location: query
+      model:
+        provider: gemini
+        name: gemini-1.5-flash
+
+variables:
+  key:
+    value: $GEMINI_API_KEY
+    description: The API key to use to connect to Gemini.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: native-routes

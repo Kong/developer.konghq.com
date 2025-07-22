@@ -61,6 +61,8 @@ examples_groups:
     text: Multimodal route types for OpenAI
   - slug: openai-processing
     text: Other OpenAI processing routes
+  - slug: native-routes
+    text: Native routes
 
 faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?

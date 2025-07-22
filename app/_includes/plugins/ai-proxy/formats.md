@@ -99,12 +99,12 @@ columns:
   - title: Supported APIs
     key: apis
 rows:
-  - llm_format: "`gemini`"
+  - llm_format: "[`gemini`](./examples/gemini-native-routes/)"
     provider: Gemini
     apis: |
       - `/generateContent`
       - `/streamGenerateContent`
-  - llm_format: "`bedrock`"
+  - llm_format: "[`bedrock`](./examples/bedrock-native-routes/)"
     provider: Bedrock
     apis: |
       - `/converse`
@@ -112,12 +112,12 @@ rows:
       - `/retrieveAndGenerate`
       - `/retrieveAndGenerateStream`
       - `/rerank`
-  - llm_format: "`cohere`"
+  - llm_format: "[`cohere`](./examples/cohere-native-routes/)"
     provider: Cohere
     apis: |
       - `/v1/rerank`
       - `/v2/rerank`
-  - llm_format: "`huggingface`"
+  - llm_format: "[`huggingface`](./examples/hugging-face-native-routes/)"
     provider: Hugging Face
     apis: |
       - `/generate`
