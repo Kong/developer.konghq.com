@@ -18,7 +18,7 @@ tags:
 description: Kong provides a software bill of materials (SBOM) for Inso CLI.
 
 related_resources:
-  - text: "Insomnia collected data"
+  - text: Insomnia collected data
     url: /insomnia/collected-data/
   - text: Kong vulnerability patching process
     url: /gateway/vulnerabilities/
