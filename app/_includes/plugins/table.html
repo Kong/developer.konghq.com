@@ -17,6 +17,7 @@
                     <td class="flex flex-col items-baseline">
                         <span class="block text-primary">
                             <a href="{{row.url}}">{{ row.title | liquify | markdown }}</a>
+                            <br>(<i>{{ row.slug }}</i>)
                         </span>
                     </td>
                     {% endif %}
