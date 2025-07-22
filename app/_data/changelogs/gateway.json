@@ -723,6 +723,11 @@
         "message": "When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), Kong Gateway can't apply configuration deltas to the stream subsystem. \nThis issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).\nAs a workaround for this issue, set `incremental_sync=off` when using stream proxying.\n",
         "type": "known-issues",
         "scope": "Core"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -1428,6 +1433,11 @@
         "message": "Added a feature to allow updating the `belong_workspace` field of an admin via the Admin API and Kong Manager.",
         "type": "feature",
         "scope": "Admin API"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -2467,6 +2477,11 @@
         "message": "Returns a detailed error message when failed to cascade delete a workspace caused by admins associated.",
         "type": "bugfix",
         "scope": "Admin API"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -3331,6 +3346,11 @@
       {
         "message": "When authenticating Kong Manager with IDPs (e.g., OIDC, LDAP), the source of an RBAC role will be stored in its `role_source` field, which enables the existing roles with a source of `idp` to be removed upon new logins after IDP role mapping has changed. This also allows users to change a role's source between `local` and `idp` via the Admin API manually.",
         "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
         "scope": "Core"
       }
     ],
@@ -4253,6 +4273,11 @@
           "acme",
           "jwe-decrypt"
         ]
+      },
+      {
+        "message": "The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -15364,6 +15389,11 @@
           "ai-semantic-cache",
           "ai-semantic-prompt-guard"
         ]
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
