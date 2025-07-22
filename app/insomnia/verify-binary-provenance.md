@@ -59,7 +59,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 For both examples, you need to:
 
 * Ensure `slsa-verifier` is installed.
-* [Download Insomnia core application binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the file pattern `Insomnia.Core-11.3.0.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`
+* [Download Insomnia core application binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the file pattern `Insomnia.Core-$VERSION.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`
 * [Download Insomnia binary provenance attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the pattern `insomnia-provenance.intoto.jsonl`
 
 {:.warning}
