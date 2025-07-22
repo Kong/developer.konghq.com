@@ -7,8 +7,6 @@ metadata:
   tags:
     - control-plane
     - data-plane
-  breadcrumbs:
-    - /mesh/
 
 rows:
   - header:
