@@ -1,7 +1,7 @@
 ---
 title: Inso CLI on Docker
 
-description: 
+description: "Inso CLI is available as a Docker image."
 
 content_type: reference
 layout: reference
