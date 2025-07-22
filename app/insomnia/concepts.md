@@ -18,15 +18,14 @@ tldr:
 
 ---
 ## User
-A user is any individual who uses Insomnia, either as a scratch pad user that works locally without signing in, or as a signed-in user with cloud/Git sync. Users design, test, debug, and document APIs by creating requests, mocking services, and running tests. They can choose where to store data; locally, in Git, or in the cloud. They can work independently or collaborate in shared projects and tools. 
+A user is any individual who uses Insomnia, either as a scratch pad user that works locally without signing in, or as a signed-in user with cloud/Git sync. Users design, test, debug, and document APIs by creating requests, mocking services, and running tests. They can choose where to store data; locally, in Git, or in the cloud.
+
+### Collaborator
+A collaborator is a user who is invited to join and work on shared organizations in Insomnia. Collaborators participate in workflows by viewing or editing API assets, and contributing to tests and mocks based on their organization level roles. Pro and Enterprise plans let you invite unlimited collaborators and manage their access through role based access control (RBAC), which enables secure and scalable team collaboration.
 
 ### User roles
 User roles are permissions assigned at the account or organization level that define what individuals can do in Insomnia. These roles include account wide abilities such as managing billing or performing account administration and organization specific permissions such as editing API assets or managing invites.
 
-### Collaborator
-A collaborator is a user who is invited to join and work on shared projects or organizations in Insomnia. Collaborators participate in workflows by viewing or editing API assets, and contributing to tests and mocks based on their organization level roles. Pro and Enterprise plans let you invite unlimited collaborators and manage their access through role based access control (RBAC), which enables secure and scalable team collaboration.
-
-## Roles
 {% table %}
 columns:
   - title: Role
@@ -34,10 +33,10 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: Admin
-    description: An admin is a team member who manages organization-level settings. Admins manage organization membership and settings like storage limits and invite policies. This role is assigned at the organization level.
   - role: Owner
     description: An owner is a user with full administrative control over an organization. Owners can delete the organization, manage membership, configure organization settings like storage limits and invite policies, and assign additional owners to ensure consistent management and governance. This role is assigned at the organization level.
+  - role: Admin
+    description: An admin is a team member who manages organization-level settings. Admins manage organization membership and settings like storage limits and invite policies. This role is assigned at the organization level.
   - role: Member
     description: An individual who collaborates on shared workspaces based on assigned roles. Members can view or edit API assets according to RBAC permissions but cannot manage the organization or access Enterprise-level settings. This role is assigned at the organization level.
   - role: Co-owner
