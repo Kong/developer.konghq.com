@@ -1,0 +1,53 @@
+title: 'Native Amazon Bedrock API route'
+description: 'Use the AWS SDK with native Amazon Bedrock APIs through AI Proxy Advanced.'
+extended_description: |
+  Configure a route that uses native Amazon Bedrock APIs with the AWS SDK. This example uses the Meta Llama 3 70B Instruct model in the US East 1 AWS region.
+
+  Supported native Bedrock APIs include:
+
+  - `/converse`
+  - `/converse-stream`
+  - `/retrieveAndGenerate`
+  - `/retrieveAndGenerateStream`
+  - `/rerank`
+
+  Set `llm_format: bedrock` to enable compatibility with these APIs. Use default values for `genai_category` and `route_type` parameters (`text/generation` and `llm/v1/chat`).
+
+weight: 900
+
+requirements:
+  - AWS account with access to Bedrock
+
+config:
+  route_type: llm/v1/chat
+  genai_category: text/generation
+  llm_format: bedrock
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        allow_override: false
+        aws_access_key_id: ${key}
+        aws_secret_access_key: ${secret}
+      model:
+        provider: bedrock
+        name: meta.llama3-70b-instruct-v1:0
+        options:
+          bedrock:
+            aws_region: us-east-1
+
+variables:
+  key:
+    value: $AWS_ACCESS_KEY_ID
+    description: The AWS access key ID to use to connect to Bedrock.
+  secret:
+    value: $AWS_SECRET_ACCESS_KEY
+    description: The AWS secret access key to use to connect to Bedrock.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: native-routes
