@@ -15,9 +15,11 @@ breadcrumbs:
 related_resources:
   - text: Insomnia security
     url: /insomnia/manage-insomnia/#security
+  - text: Verify signatures for signed Inso CLI Docker images
+    url: /inso-cli/verify-docker-image-signature/
 ---
 
-Kong produces build provenance for Inso CLI binary artifacts, which can be verified using `cosign` / `slsa-verifier`.
+Kong produces build provenance for Inso CLI binary artifacts, which can be verified using `cosign` or `slsa-verifier`.
 
 This guide provides steps to verify build provenance for signed Inso CLI binary artifacts in two different ways:
 
@@ -78,16 +80,6 @@ slsa-verifier verify-artifact \
    $BINARY_FILES
 ```
 
-Here's the same example using sample values instead of placeholders:
-
-```sh
-slsa-verifier verify-artifact \
-   --print-provenance \
-   --provenance-path 'inso-provenance.intoto.jsonl' \
-   --source-uri 'github.com/Kong/insomnia' \
-   inso-*-11.3.0.{zip,tar.xz,pkg}
-```
-
 The command will print "Verified SLSA provenance" if successful:
 
 ```sh
@@ -107,15 +99,4 @@ slsa-verifier verify-artifact \
    --source-uri 'github.com/Kong/$REPO' \
    --build-workflow-input 'version=$VERSION' \
    $BINARY_FILES
-```
-
-Here's the same example using sample values instead of placeholders:
-
-```sh
-slsa-verifier verify-artifact \
-   --print-provenance \
-   --provenance-path 'inso-provenance.intoto.jsonl' \
-   --source-uri 'github.com/Kong/insomnia' \
-   --build-workflow-input 'version=11.3.0' \
-   inso-*-11.3.0.{zip,tar.xz,pkg}
 ```

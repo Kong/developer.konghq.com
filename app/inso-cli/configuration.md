@@ -18,6 +18,8 @@ breadcrumbs:
 related_resources:
   - text: Inso CLI
     url: /inso-cli/
+  - text: Continuous Integration with Inso CLI
+    url: /inso-cli/continuous-integration/
 ---
 
 Inso CLI can be configured with a configuration file, allowing you to specify options and scripts. For example, when running in a CI environment, you may choose to specify the steps as scripts in a configuration file, so that the same commands can be run both locally and in CI.
