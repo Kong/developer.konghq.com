@@ -24,8 +24,8 @@ config:
         header_name: Authorization
         header_value: Bearer ${key}
       model:
-        provider: openai
-        name: gpt-4
+        provider: cohere
+        name: command-a-03-2025
         options:
           max_tokens: 512
           temperature: 1.0
