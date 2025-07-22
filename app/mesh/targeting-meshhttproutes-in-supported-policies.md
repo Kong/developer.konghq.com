@@ -7,6 +7,8 @@ products:
   - mesh
 works_on:
   - konnect
+breadcrumbs:
+  - /mesh/
 ---
 
 Use `MeshHTTPRoute` as a target in supported policies like `MeshTimeout`, `MeshAccessLog`, and `MeshRetry` to apply fine-grained traffic control to specific HTTP methods and paths instead of entire services.
