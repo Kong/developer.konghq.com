@@ -24,9 +24,9 @@ tags:
   - konnect-crd
  
 tldr:
-  q: How do I reference an existing Hybrid mode Control Plane in {{ site.konnect_short_name }}?
+  q: How do I reference an existing Hybrid mode Control Plane in {{ site.konnect_short_name }} from other CRDs?
   a: |
-    Create a `KonnectGatewayControlPlane` object with `spec.source: Mirror` and add {{ site.konnect_short_name }} authentication.
+    Using {{ site.operator_product_name }}, create a `KonnectGatewayControlPlane` object with `spec.source: Mirror` and add {{ site.konnect_short_name }} authentication.
 
 prereqs:
   operator:
@@ -38,7 +38,7 @@ prereqs:
         Set the `KONNECT_CONTROL_PLANE_ID` variable to the ID of the control plane that you want to reference:
 
         ```bash
-        export KONNECT_CONTROL_PLANE_ID='YOUR CONTROL PLANE ID"
+        export KONNECT_CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
         ```
       icon_url: /assets/icons/self-hosted.svg
 
