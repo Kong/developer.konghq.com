@@ -14,7 +14,7 @@
         <tr>
             {% for column in include.columns %}
                 {% assign v = row[column.key] %}
-                <td{% if v == true or v == false %}{% endif %}>
+                <td{% if v == true or v == false %}{% endif %} style="vertical-align: top">
                 {% if v == true %}
                     {% include icon_true.html %}
                 {% elsif v == false %}
