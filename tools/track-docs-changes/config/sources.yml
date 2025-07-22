@@ -1752,8 +1752,6 @@ app/_how-tos/azure-saml-sso-insomnia.md:
   - /insomnia/enterprise-configure-azure-saml.md
 app/_how-tos/okta-saml-sso-insomnia.md:
   - /insomnia/enterprise-configure-okta-saml.md
-app/_how-tos/create-transit-gateway-with-operator-and-aws.md:
-  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-transit-gateway.md
 
 
 ## Terraform
