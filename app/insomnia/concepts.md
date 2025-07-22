@@ -74,7 +74,7 @@ columns:
 rows:
   - tool: Design Document
     description: "A design document is a workspace that contains tools to design an API specification. You can write and edit a spec, generate a collection from the spec to send requests, and create test suites to run different types of tests against your API or API spec. For more details, see [Documents](/insomnia/documents/)."
-  - tool: requestion collection
+  - tool: Request collection
     description: "A request collection is a workspace for sending requests. You can create new requests or import requests from an API spec, clipboard, or even from a Postman collection. Requests can be customized with environment variables, template tags, pre-request and after-response scripts. Requests can be run individually or as a series of requests to run together. For more details, see [Collections](/insomnia/collections/)."
   - tool: Mock server
     description: "A mock server is a self-hosted or cloud-hosted way to simulate an API endpoint. You can create a mock server and define endpoints manually, or generate them from existing responses. You can customize the response code, body, and headers. For more details, see [Mock servers](/insomnia/mock-servers/)."
