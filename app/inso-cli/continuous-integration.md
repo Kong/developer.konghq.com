@@ -21,8 +21,6 @@ breadcrumbs:
 related_resources:
   - text: Inso CLI
     url: /inso-cli/
-  - text: Inso CLI reference
-    url: /inso-cli/reference/
 ---
 
 Inso CLI is designed to run in a Continuous Integration (CI) environment. It disables prompts and provides exit codes to pass or fail the CI workflow.

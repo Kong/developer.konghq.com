@@ -23,10 +23,6 @@ related_resources:
     url: /inso-cli/
   - text: kong/inso on Docker Hub
     url: https://hub.docker.com/r/kong/inso
-  - text: Verify signatures for signed Inso CLI Docker images
-    url: /inso-cli/verify-docker-image-signature/
-  - text: Verifying build provenance for signed Inso CLI Docker images
-    url: /inso-cli/verify-docker-image-provenance/
 ---
 
 ## Pull `kong/inso`
