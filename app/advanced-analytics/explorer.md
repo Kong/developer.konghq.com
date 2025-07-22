@@ -104,7 +104,7 @@ rows:
   - metric: "Kong latency"
     category: "Latency"
     description: |
-      The time, in milliseconds, spent within {{site.base_gateway}} processing a request, excluding upstream response time. Users can choose from different percentiles (p99, p95, and p50). For example, a 99th percentile Kong latency of 10 milliseconds means that 99 out of 100 requests spent less than 10 ms being processed within {{site.base_gateway}} before reaching the upstream service.
+      The time, in milliseconds, spent within {{site.base_gateway}} processing a request, excluding upstream response time. Users can choose from different percentiles (p99, p95, and p50). For example, a 99th percentile Kong latency of 10 milliseconds means that 99 out of 100 requests took less than 10 ms to be processed in {{site.base_gateway}} before reaching the upstream service.
   - metric: "Request Size"
     category: "Size"
     description: |
