@@ -8,7 +8,7 @@ tags:
 
 publisher: kong-inc
 description: 'Insert arbitrary API calls before proxying a request to the upstream service.'
-
+tier: enterprise
 
 products:
     - gateway
@@ -87,10 +87,11 @@ Lua expressions don't carry side effects.
 Shortcuts can produce unintended side effects and modify callout and upstream requests.
 
 Both request and response callout objects may contain a `by_lua` field:
-* `request.by_lua` runs before the callout request is performed and is useful to 
-further customize aspects of the request.
-* `response.by_lua` runs after a response is obtained, and is useful to
-customize aspects of the response such as caching.
+* `request.by_lua` runs before the callout request is performed or the cache is queried
+and is useful to further customize aspects of the request.
+* `response.by_lua` runs after a response is obtained from the service and 
+before it is stored in the cache and is useful to customize aspects of the
+response.
 
 The upstream object may also contain a `by_lua` field for Lua code 
 that runs before the upstream request runs. This is useful to further customize 

@@ -17,7 +17,7 @@
      --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.body_cmd %} \
      --json "{{ include.body_cmd }}"{% endif %}{% if include.jq %} | jq -r '{{ include.jq | strip }}'{% endif %}{% if include.capture -%}
 ){% endif -%}
-{% if count > 1 %}done{% endif %}
+{% if count > 1 %}; done{% endif %}
 ```
 
 {% if include.message %}
