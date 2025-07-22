@@ -15,6 +15,9 @@ breadcrumbs:
 related_resources:
   - text: "Create a Control Plane with KGO"
     url: /operator/konnect/crd/control-planes/hybrid/
+
+min_version:
+  operator: '3.5'
 ---
 
 By default, {{ site.kgo_product_name }}'s `ControlPlane` watches all namespaces.
