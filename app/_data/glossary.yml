@@ -34,7 +34,9 @@ definitions:
       A plugin developed, maintained, and supported by Kong. 
       Unless otherwise noted in the plugin's description on the Kong Plugin Hub, all Kong-supported plugins are bundled with their relevant Kong Gateway install packages, and are available in Konnect.
     url: |
-      [Kong Plugin Hub](/plugins/)
+      [Plugins bundled in self-managed Kong Gateway](/plugins/?deployment-topology=on-prem&support=kong-inc)
+      <br><br>
+      [Plugins bundled in Konnect](/plugins/?deployment-topology=konnect&support=kong-inc)
   - term: Permissions
     description: |
       A permission is a policy representing the ability to create, read, update, or delete an Admin API entity defined by endpoints.
@@ -46,6 +48,9 @@ definitions:
       Insomnia plugins can be used to extend the functionality of Insomnia with advanced features and customizable themes.
     url: |
       [Insomnia plugins](/insomnia/plugins/)
+  - term: Kong Gateway Community Edition
+    description: |
+      A deprecated term for Kong Gateway Open-Source (OSS).
   - term: Kong Gateway plugin
     description: |
       Kong Gateway plugins provide advanced functionality and extend the use of Kong Gateway, allowing you to add new features to your gateway. 
