@@ -60,9 +60,9 @@ rows:
   - role: Admin
     description: A team member or organization owner on an Enterprise plan who controls organization-level access. Admins configure SSO and SCIM, control storage settings, and enforce RBAC policies. They manage access and configuration at scale but cannot manage individual projects directly.
   - role: Team
-    description: A Group of users who collaborate on shared Insomnia projects. Admins use teams to share API resources, apply RBAC rules to control permissions, and simplify access management.
+    description: A group of users who collaborate on shared Insomnia projects. Admins use teams to share API resources, apply RBAC rules to control permissions, and simplify access management.
   - role: Project
-    description: A Workspace that contains API collections, specifications, environments, and tests. Projects can be stored locally, synced with Insomnia Cloud, or connected to Git repositories. They help organize and share API workflows.
+    description: A workspace that contains API collections, specifications, environments, and tests. Projects can be stored locally, synced with Insomnia Cloud, or connected to Git repositories. They help organize and share API workflows.
   - role: Organization
     description: A container for projects, teams, and access management. Organizations centralize control by allowing collaborators to be invited, RBAC roles to be assigned, and SSO to be configured.
   - role: Owner
