@@ -32,15 +32,32 @@ related_resources:
     url: /ai-gateway/
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
+  - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
+    url: /how-to/use-ai-semantic-prompt-guard-plugin/
+  - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
+    url: /how-to/use-ai-rag-injector-plugin/
+  - text: Control prompt size with the AI Compressor plugin
+    url: /how-to/compress-llm-prompts/
   - text: Semantic processing and vector similarity search with Kong and Redis
     url: https://konghq.com/blog/engineering/semantic-processing-and-vector-similarity-search-with-kong-and-redis
+  - text: Vector embeddings
+    url: https://redis.io/glossary/vector-embeddings/
+    icon: /assets/icons/redis.svg
+  - text: Vector databases 101
+    url: https://redis.io/blog/vector-databases-101/
+    icon: /assets/icons/redis.svg
 ---
 
 In large language tasks, applications that interact with language models rely on semantic search—not by exact word matches, but by similarity in meaning. This is achieved using vector embeddings, which represent pieces of text as points in a high-dimensional space.
 
 These embeddings enable the concept of semantic similarity, where the “distance” between vectors reflects how closely related two pieces of text are. Similarity can be measured using techniques like cosine similarity or Euclidean distance, forming the quantitative basis for comparing meaning.
 
-<img src="/assets/images/ai-gateway/vectors.svg" style="display: block; margin: 0 auto; padding-top: 10px; padding-bottom: 10px;" />
+<figure>
+    <img src="/assets/images/ai-gateway/vectors.svg" style="display: block; margin: 0 auto; padding-top: 10px; padding-bottom: 10px;" />
+    <figcaption style="text-align: center; font-style: italic; font-size: 12px;">
+        Figure 1: A simplified representation of vector text embeddings in a three-dimensional space.
+    </figcaption>
+</figure>
 
 Vector embeddings power a range of LLM workflows, including semantic search, document clustering, recommendation systems, anomaly detection, content similarity analysis, and classification via auto-labeling.
 
@@ -48,10 +65,22 @@ Vector embeddings power a range of LLM workflows, including semantic search, doc
 
 In Kong’s AI Gateway, several plugins leverage embedding-based similarity:
 
-* [AI Proxy Advanced](/plugins/ai-semantic-prompt-guard/)  performs semantic routing by embedding each upstream’s description at config time and storing the results in a selected vector database. At runtime, it embeds the prompt and queries Redis to route requests to the most semantically appropriate upstream.
-* [AI Semantic Cache](/plugins/ai-semantic-cache/) indexes previous prompts and responses as embeddings. On each request, it searches for semantically similar inputs and serves cached responses when possible to reduce redundant LLM calls.
-* [AI RAG Injector](/plugins/ai-rag-injector/) retrieves semantically relevant chunks from a vector database. It embeds the prompt, performs a similarity search, and injects the results into the prompt to enable retrieval-augmented generation.
-* [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/) compares incoming prompts against allow/deny lists using embedding similarity to detect and block misuse patterns.
+{% table %}
+columns:
+  - title: Plugin
+    key: plugin
+  - title: Description
+    key: description
+rows:
+  - plugin: "[AI Proxy Advanced](/plugins/ai-semantic-prompt-guard/)"
+    description: Performs semantic routing by embedding each upstream’s description at config time and storing the results in a selected vector database. At runtime, it embeds the prompt and queries Redis to route requests to the most semantically appropriate upstream.
+  - plugin: "[AI Semantic Cache](/plugins/ai-semantic-cache/)"
+    description: Indexes previous prompts and responses as embeddings. On each request, it searches for semantically similar inputs and serves cached responses when possible to reduce redundant LLM calls.
+  - plugin: "[AI RAG Injector](/plugins/ai-rag-injector/)"
+    description: Retrieves semantically relevant chunks from a vector database. It embeds the prompt, performs a similarity search, and injects the results into the prompt to enable retrieval-augmented generation.
+  - plugin: "[AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)"
+    description: Compares incoming prompts against allow/deny lists using embedding similarity to detect and block misuse patterns.
+{% endtable %}
 
 ### Vector databases
 
@@ -190,7 +219,7 @@ Kong AI Gateway supports both **cosine similarity** and **Euclidean distance** f
 <figure>
     <img src="/assets/images/ai-gateway/cosine-similarity.svg" style="display: block; margin: 0 auto;" />
     <figcaption style="text-align: center; font-style: italic; font-size: 12px;">
-        Figure 1: Visualization of cosine similarity as the angle between vector directions.
+        Figure 2: Visualization of cosine similarity as the angle between vector directions.
     </figcaption>
 </figure>
 
@@ -203,7 +232,7 @@ Cosine tends to perform well across both low and high dimensional space, especia
 <figure>
     <img src="/assets/images/ai-gateway/euclidean-distance.svg" style="display: block; margin: 0 auto;" />
     <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; font-size: 12px;">
-        Figure 2: Visualization of Euclidean distance between vector points.
+        Figure 3: Visualization of Euclidean distance between vector points.
     </figcaption>
 </figure>
 
@@ -219,7 +248,7 @@ The two graphs below illustrate a key difference between cosine similarity and E
 <figure>
     <img src="/assets/images/ai-gateway/cosine-euclidean.svg" style="display: block; margin: 0 auto;" />
     <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; font-size: 12px;">
-        Figure 3: Two vectors with equal cosine similarity (γ) but different Euclidean distances.
+        Figure 4: Two vectors with equal cosine similarity (γ) but different Euclidean distances.
     </figcaption>
 </figure>
 
@@ -269,7 +298,7 @@ The chart below illustrates this effect: as the similarity threshold increase (f
 <figure>
     <img src="/assets/images/ai-gateway/cache-hit-rate.svg" style="display: block; margin: 0 auto;" width="60%"/>
     <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; font-size: 12px;">
-        Figure 4: As the similarity threshold decreases (becomes more permissive), cache hit rate increases—illustrating the trade-off between strict semantic matching and LLM efficiency.
+        Figure 5: As the similarity threshold decreases (becomes more permissive), cache hit rate increases—illustrating the trade-off between strict semantic matching and LLM efficiency.
     </figcaption>
 </figure>
 
