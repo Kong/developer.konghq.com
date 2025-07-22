@@ -1,0 +1,35 @@
+
+title: 'Assistants chat route'
+description: "Use the Assistants API to create a persistent, tool-augmented agent backed by GPT-4."
+
+weight: 900
+
+requirements:
+- OpenAI account
+
+config:
+  model_name_header: false
+  route_type: llm/v1/assistants
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${key}
+  model:
+    provider: openai
+    name: gpt-4
+    options:
+      max_tokens: 512
+      temperature: 1.0
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: openai-processing

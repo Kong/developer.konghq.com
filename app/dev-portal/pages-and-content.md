@@ -57,6 +57,23 @@ faqs:
   
   - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
     a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+  - q: How do I add an external link to my Dev Portal main menu or footer?
+    a: You can add external links to your main menu or footer by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Customization** in the sidebar. From the **Menu** tab, you can select the menu you want to customize and add the external link by clicking **Add menu item** and configuring the link to **Open in a new tab**. You can also send a PATCH request to the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization) to add an external link using the {{site.konnect_short_name}} API by setting the `external` property to `true`.
+  - q: How do I add a child page to a parent page using the {{site.konnect_short_name}} Portal Management API?
+    a: |
+      You can create a child page by specifying the `parent_page_id` in the request body of the []`/portals/{portalId}/pages` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-page):
+      ```json
+      {
+        "slug": "/contact",
+        "title": "Contact us",
+        "content": "Contact our company",
+        "visibility": "public",
+        "status": "published",
+        "parent_page_id": "5bc355be-3e92-4b54-88f9-d7c21b0bdba9"
+      }
+      ```
+
+      The full path of the child page is the slug of the parent page with the slug of the child page. For example, if the parent slug is `/about` and the child slug is `/contact`, the full path to the child page is `/about/contact`.
 
 related_resources:
   - text: Dev Portal Markdown components reference

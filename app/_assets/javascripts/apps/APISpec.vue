@@ -193,4 +193,8 @@ const openSlideoutToc = async () => {
 :deep(.overview-server-list button.tertiary) {
   @apply !border !border-brand !text-primary;
 }
+
+:deep(.variable-container input) {
+  @apply bg-secondary;
+}
 </style>

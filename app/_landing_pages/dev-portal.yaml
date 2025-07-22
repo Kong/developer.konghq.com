@@ -189,3 +189,13 @@ rows:
                   In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals.
 
                   For more information, see [Dev Portal analytics](/dev-portal/analytics/).
+  
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: How do I view Dev Portal documentation for {{site.base_gateway}} 3.4?
+              a: Contact your account manager for {{site.base_gateway}} 3.4 documentation.

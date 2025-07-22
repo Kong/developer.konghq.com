@@ -1,4 +1,4 @@
-title: 'Batch route'
+title: 'Batches route type'
 description: 'Create large batches of API requests for asynchronous processing.'
 
 weight: 900
@@ -10,9 +10,9 @@ requirements:
 - OpenAI account
 
 config:
+  model_name_header: false
   targets:
     - route_type: llm/v1/batches
-      model_name_header: false
       auth:
         header_name: Authorization
         header_value: Bearer ${key}

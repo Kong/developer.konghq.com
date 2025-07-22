@@ -3,7 +3,7 @@ title: 'Exit Transformer'
 name: 'Exit Transformer'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Customize Kong exit responses sent downstream'
 
