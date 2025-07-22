@@ -138,7 +138,7 @@ cleanup:
    ```
    It should be formatted like `https://domain.okta.com/oauth2/a36f045h4597`. 
 
-1. On the Access Policy tab, create a new access policy and assign your Okta application you just created.
+1. On the Access Policy tab, create a new access policy and assign the Okta application you just created.
 
 1. Add a new rule and configure the following settings:
    * **Grant type:** Authorization Code
@@ -148,7 +148,7 @@ cleanup:
 
 ## Enable the OpenID Connect plugin with the auth code flow
 
-Set up an instance of the OpenID Connect plugin with the auth code flow and session authentication for Okta.
+Set up an instance of the [OpenID Connect plugin](/plugins/openid-connect/) with the auth code flow and session authentication for Okta.
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
@@ -187,11 +187,11 @@ variables:
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, Okta).
 * `auth_methods`: Specifies that the plugin should use the authorization code flow.
-* `response_mode`: Set to `form_post` so that authorization codes won’t get logged to access logs.
+* `response_mode`: Set to `form_post` so that authorization codes don’t get logged to access logs.
 
 ## Validate authorization code login
 
-Access the Route you configured in the [prerequisites](#prerequisites) with some query arguments. 
+Access the Route you configured in the [prerequisites](#prerequisites).
 In a new browser tab, navigate to the following:
 
 ```sh
