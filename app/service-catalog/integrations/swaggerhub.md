@@ -21,12 +21,16 @@ description: The SwaggerHub integration lets you connect SwaggerHub API specs di
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
+  - text: Import and map SwaggerHub resources in Service Catalog
+    url: /how-to/install-and-map-swaggerhub-resources/
 discovery_support: true
 bindable_entities: "SwaggerHub API version"
 ---
 
 The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
 {% include /service-catalog/multi-resource.md %}
+
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map SwaggerHub resources in Service Catalog](/how-to/install-and-map-swaggerhub-resources/).
 
 ## Prerequisites
 
