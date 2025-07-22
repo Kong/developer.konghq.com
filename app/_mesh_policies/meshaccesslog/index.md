@@ -1,10 +1,10 @@
 ---
-title: MeshAccessLog
+title: Mesh Access Log
 name: MeshAccessLogs
 products:
     - mesh
 
-description: 'With the MeshAccessLog policy you can easily set up access logs on every data plane proxy in a mesh.'
+description: 'Set up access logs on every data plane proxy in a mesh.'
 content_type: plugin
 icon: meshaccesslog.png
 ---

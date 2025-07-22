@@ -1,9 +1,9 @@
 ---
-title: MeshCircuitBreaker
+title: Mesh Circuit Breaker
 name: MeshCircuitBreakers
 products:
     - mesh
-description: 'This policy will look for errors in the live traffic being exchanged between our data plane proxies. It will mark a data'
+description: 'Look for errors in the live traffic between data plane proxies and mark a as unhealthy if conditions are met.'
 content_type: plugin
 type: policy
 icon: meshcircuitbreaker.png
