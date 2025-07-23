@@ -1,6 +1,6 @@
 ---
-title: Automate dashboard creation with Terraform
-description: Learn how to create a custom dashboard in {{site.konnect_short_name}} Analytics with Terraform
+title: Manage analytics dashboards with Terraform
+description: Learn how to manage a dashboard in {{site.konnect_short_name}} Analytics with Terraform
 content_type: how_to
 automated_tests: false
 products:
@@ -14,7 +14,9 @@ tools:
 tags:
     - custom-dashboards
 
-
+series:
+  id: custom-dashboards
+  position: 2
 tldr:
   q: How do I automate dashboard creation using Terraform?
   a: |
@@ -36,169 +38,49 @@ prereqs:
     - title: "{{site.konnect_product_name}}"
       include_content: prereqs/products/konnect-terraform
       icon_url: /assets/icons/gateway.svg
+    - title: Roles and permissions
+      content: |
+        This guide requires belonging to the [Analytics admin](/konnect-platform/teams-and-roles/) team.
 related_resources:
   - text: Custom Dashboards
     url: /advanced-analytics/custom-dashboards/
 ---
 
 
-## Create an API
+## Get the dashboard ID
 
-In this tutorial, you'll automate your API catalog by creating an API along with a document and spec, associating it with a Gateway Service, and finally publishing it to a Dev Portal. 
+Managing dashboards with Terraform requires the dashboard ID of the target dashboard: 
 
-First, create an API:
+1. Get the dashboard ID from the {{site.konnect_short_name}} URL of your dashboard. It appears at the end of the URL when viewing the dashboard:
+   ```
+   https://cloud.konghq.com/us/analytics/dashboards/$DASHBOARD_ID
+   ```
 
-```hcl
-echo '
-resource "konnect_api" "my_api" {
-  provider = konnect-beta
-  description = "...my_description..."
-  labels = {
-    key = "value"
-  }
-  name         = "MyAPI"
-}
-' >> main.tf
-```
+## Import the dashboard
 
-## Create and associate an API spec and version
-
-[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf) with your API:
+Import the dashboard into Terraform by creating an `import.tf` file:
 
 ```hcl
 echo '
-resource "konnect_api_version" "my_api_spec" {
-  provider = konnect-beta
-  api_id = konnect_api.my_api.id
-  spec = {
-    content = <<JSON
-      {
-        "openapi": "3.0.3",
-        "info": {
-          "title": "Example API",
-          "version": "1.0.0"
-        },
-        "paths": {
-          "/example": {
-            "get": {
-              "summary": "Example endpoint",
-              "responses": {
-                "200": {
-                  "description": "Successful response"
-                }
-              }
-            }
-          }
-        }
-      }
-      JSON
-  }
-  version = "1.0.0"
+import {
+  provider = "konnect-beta"
+  to = konnect_dashboard.service_dashboard_template
+  id = 0810eb60-1290-4428-8b3a-d74ca6182c3d
 }
-' >> main.tf
+' >> import.tf
 ```
 
-{:.warning}
-> We recommend that APIs have API documents or specs, and APIs can have both. If neither are specified, {{site.konnect_short_name}} can't render documentation.
+## Generate the Terraform configuration: 
 
-## Create and associate an API document 
-
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf).
-
-Create and associate an API document:
-
-```hcl
-echo '
-resource "konnect_api_document" "my_apidocument" {
-  provider = konnect-beta
-  api_id  = konnect_api.my_api.id
-  content = "# API Document Header"
-  slug               = "api-document"
-  status             = "published"
-  title              = "API Document"
-}
-' >> main.tf
-```
-
-## Associate the API with a Gateway Service
-
-[Gateway Services](/gateway/entities/service/) represent the upstream services in your system. By associating a Service with an API, this allows developers to generate credentials or API keys for your API. 
-
-Associate the API with a Service:
-
-```hcl
-echo '
-resource "konnect_api_implementation" "my_api_implementation" {
-  provider = konnect-beta
-  api_id = konnect_api.my_api.id
-  service = {
-    control_plane_id = konnect_gateway_control_plane.my_cp.id
-    id               = konnect_gateway_service.httpbin.id
-  }
-  depends_on = [
-    konnect_api.my_api,
-    konnect_api_version.my_api_spec,
-    konnect_gateway_control_plane.my_cp,
-    konnect_gateway_service.httpbin
-  ]
-}
-' >> main.tf
-```
-
-## Publish the API to Dev Portal
-
-Now you can publish the API to a Dev Portal:
-
-```hcl
-echo '
-resource "konnect_api_publication" "my_apipublication" {
-  provider = konnect-beta
-  api_id = konnect_api.my_api.id
-  portal_id                  = konnect_portal.my_portal.id
-  visibility                 = "public"
-
-  depends_on = [
-    konnect_api_implementation.my_api_implementation,
-    konnect_api_document.my_apidocument
-  ]
-}
-' >> main.tf
-```
-
-## Create the resources
-
-Create all of the defined resources using Terraform:
-
-```bash
-terraform apply -auto-approve
-```
-
-You will see five resources created:
-
-```text
-Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
-```
-{:.no-copy-code}
-
-## Validate
-
-To validate that your API was successfully published, you must navigate to your Dev Portal URL and verify that you can see the API. 
-
-First, fetch the Dev Portal URL from the Terraform state:
+Generate the Terraform configuration from the imported resource:
 
 ```sh
-PORTAL_URL=$(terraform show -json | jq -r '
-  .values.root_module.resources[]
-  | select(.address == "konnect_portal.my_portal")
-  | .values.default_domain')
+terraform plan -generate-config-out=create_dashboard.tf
 ```
 
-This exports your Dev Portal URL as an environment variable. 
+## Validate 
 
-To validate that the API was created and published in your Dev Portal, navigate to your Dev Portal:
 
-```sh
-open https://$PORTAL_URL/apis
-```
+???
 
-You should see `MyAPI` in the list of APIs. If an API is published as private, you must enable Dev Portal RBAC and [developers must sign in](/dev-portal/developer-signup/) to see APIs.
+Now, you can commit the file to your GitHub repo and ensure it’s included in your CI/CD pipeline. 

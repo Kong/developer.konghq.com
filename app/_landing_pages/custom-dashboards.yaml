@@ -64,10 +64,10 @@ rows:
           - type: card
             config:
               title: Reference
-              description: Use preset-filters to scope dashboards.
+              description: Custom dashboard reference
               icon: /assets/icons/lock.svg
               cta:
-                url: /how-to/use-preset-filters-scope-dashboards/
+                url: (/advanced-analytics/custom-dashboards-reference/
                 align: end
 
   - header:

@@ -23,3 +23,7 @@ mcp-traffic:
 hashicorp-vault-llms:
   title: Configure dynamic authentication to LLM providers
   url: /how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/
+
+custom-dashboards:
+  title: Create custom dashboards with {{site.konnect_short_name}} analytics
+  url: /how-to/create-custom-dashboards/

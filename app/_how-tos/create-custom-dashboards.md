@@ -1,5 +1,5 @@
 ---
-title: Create an Analytics Custom Dashboard from a template
+title: Create a custom dashboard
 description: Learn how to create a custom dashboard in {{site.konnect_short_name}} Analytics
 content_type: how_to
 automated_tests: false
@@ -12,64 +12,57 @@ tools:
     - konnect-api
 tags:
     - custom-dashboards
-
+series:
+  id: custom-dashboards
+  position: 1
 tldr:
     q: How do I create a Custom Dashboard in {{site.konnect_short_name}}
-    a: Navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), select **Create from Template**. 
+    a: Navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), select **Create from Template** and apply filters.
 
 prereqs:
   skip_product: true
+  inline: 
+    - title: Roles and permissions
+      content: |
+        This guide requires belonging to the [Analytics admin](/konnect-platform/teams-and-roles/) team. 
 related_resources:
   - text: Custom Dashboards
     url: /advanced-analytics/custom-dashboards/
-next_steps:
-  - text: Use preset-filters to scope dashboards
-    url: /how-to/preset-filters-scope-dashboards/
+  - text: Custom dashboards reference
+    url: /advanced-analytics/custom-dashboards-reference/
 ---
 
-## Create a Dashboard
+## Create a dashboard
 
-From {{site.konnect_short_name}}, navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section.
-From here you will be able to create a dashboard from either a template or from scratch. 
+You can create custom dashboards either from scratch or from a [template](/advanced-analytics/custom-dashboards-reference/#templates). 
+
+To create a new custom dashboard, follow these steps: 
+
+1. Log into your {{site.konnect_short_name}} account and navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section.
+
+1. Select **Create dashboard** > **Create from Template**.
+
+1. Select **Quick summary dashboard**, then **Use template**.
 
 
-## Select a template
+This creates a new template with pre-configured tiles.
 
-The three types of templates available are: 
+## Add a filter
 
-* Quick summary dashboard: Provides a high-level overview of key metrics and performance insights. 
-* AI Gateway dashboard: Monitors [AI Gateway](/ai-gateway/) performance, traffic, latency, and errors. 
-* Shared services dashboard: Centralizes shared service monitoring. 
+Filters help users narrow down the data shown in charts without modifying individual tiles. You can add a filter so that the data shown in the dashboard is scoped to only one control plane: 
 
-Select **Quick summary dashboard**. This will create a dashboard template.
+1. From the dashboard, select **Add filter** to bring up the configuration options.
 
-## Customize 
+1. Configure a filter on the desired control plane
+  * Filter by: `Control Plane`
+  * Operator: `In`
+  * Value: `default` 
+1. Select **Make this a preset for all viewers** and click **Apply**. 
 
-The dashboards template comes with pre-configured tiles that are monitoring your services by default.
-You can configure by adding a new chart or an existing report.
-To add a new time series line, select **New Tile** and enter the following information: 
-* **Name**: A name for the chart
-* **Time range**: Use Dashboard time
+This applies the filter to the dashboard anyone that views this dashboard will be viewing it scoped to the filter you created.
 
-Then configure the tile with the following options: 
 
-{% table %}
-columns:
-  - title: Option
-    key: option
-  - title: Value
-    key: value
-rows:
-  - option: From
-    value: API Usage
-  - option: Show
-    value: Time series line
-  - option: With
-    value: Request Count
-  - option: Per
-    value: 30 minutes
-  - option: By
-    value: API
-{% endtable %}
+## Validate
 
-Click **Save** to see your tile from the dashboard. 
+You can verify that the dashboard filter was applied correctly from the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section of {{site.konnect_short_name}}. Now the dashboard will display a **Preset filters** tag, with your **Control plane in (default)** filter.
+
