@@ -4,6 +4,8 @@ content_type: how_to
 description: Learn how to configure OpenID Connect with the authorization code flow in Keycloak.
 
 related_resources:
+  - text: Configure OpenID Connect with the authorization code flow and Okta
+    url: /how-to/configure-oidc-with-auth-code-flow-and-okta/
   - text: OpenID Connect in {{site.base_gateway}}
     url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}

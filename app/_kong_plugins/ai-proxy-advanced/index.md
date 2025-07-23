@@ -112,6 +112,27 @@ faqs:
     a: |
       Yes, but only if [`config.targets.auth.allow_override`](./reference/#schema--config-targets-auth-allow-override) is set to `true` in the plugin configuration.
       When enabled, this allows request-level auth parameters (such as API keys or bearer tokens) to override the static values defined in the plugin.
+
+  - q: What algorithm does `ai-proxy-advanced` use for selecting the lowest latency target?
+    a: |
+      It uses Kong’s built-in load balancing mechanism with the EWMA (Exponentially Weighted Moving Average) algorithm to dynamically route traffic to the backend with the lowest observed latency.
+
+  - q: What is the duration of the learning phase with AI Proxy Advanced?
+    a: |
+      There’s no fixed time window. EWMA continuously updates with every response, giving more weight to recent observations. Older latencies decay over time, but still contribute in smaller proportions.
+
+  - q: How does AI Proxy Advanced distribute traffic once a faster model is identified?
+    a: |
+      The fastest model gets a majority of traffic, but Kong never sends 100% to a single target unless it's the only one available. In practice, the dominant target may receive ~90–99% of traffic, depending on how much better its EWMA score is.
+
+  - q: Does the system continue testing other targets when the AI Proxy Advanced plugin identifies the fastest model?
+    a: |
+      Yes. EWMA ensures all targets continue to receive a small amount of traffic. This ongoing probing lets the system adapt if a previously slower model becomes faster later.
+
+  - q: What’s the approximate percentage of traffic sent to non-dominant targets with AI Proxy Advanced?
+    a: |
+      While exact percentages vary with latency gaps, less performant targets typically get between 0.1%–5% of traffic, just enough to keep updating their EWMA score for comparison.
+
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
