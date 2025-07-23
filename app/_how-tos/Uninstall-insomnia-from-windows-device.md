@@ -18,7 +18,7 @@ min_version:
   Insomnia: '11.3.0'
 
 tldr:
-  q: How do I uninstall Insomnia on a Windows device?
+  q: How do I uninstall Insomnia from a Windows device?
   a: Follow the following steps to successfully uninstall Insomnia from a Windows device.
 ---
 
