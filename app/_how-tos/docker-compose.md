@@ -40,7 +40,7 @@ cleanup:
 faqs:
   - q: Can I run {{site.base_gateway}} in read-only mode?
     a: |
-      Yes, you can run {{site.base_gateway}} Docker container in read-only mode by setting `database` to `off` and passing a configuration file when starting the container.
+      Yes, you can run a {{site.base_gateway}} Docker container in read-only mode by setting `database` to `off` and passing a configuration file when starting the container.
       See [Running {{site.base_gateway}} in read-only mode using Docker Compose](/gateway/install/docker-read-only/) for more information.
 ---
 
