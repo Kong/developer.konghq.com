@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.22
+  version: 3.0.23
   description: The management API for Portals
   contact:
     name: Kong
@@ -5155,6 +5155,12 @@ components:
             show_schemas:
               type: boolean
               default: true
+            hide_internal:
+              type: boolean
+              default: false
+            hide_deprecated:
+              type: boolean
+              default: false
         robots:
           type: string
           nullable: true
