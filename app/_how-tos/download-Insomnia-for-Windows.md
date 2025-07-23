@@ -23,7 +23,8 @@ tldr:
 
 ---
 
-{:.warning} #Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
+> Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
+{:.warning}
 
 To download Insomnia onto a Windows device, complete the following steps:
 
