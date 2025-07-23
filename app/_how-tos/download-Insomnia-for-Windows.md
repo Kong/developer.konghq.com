@@ -36,13 +36,13 @@ To download Insomnia onto a Windows device, complete the following steps:
 ## Download the installer
 1. Go to the [Insomnia Downloads page](https://insomnia.rest/download).
 2. Select **Download for Windows**.
-3. When the download is complete, locate the file named: **Insomnia.Core-nsis-<version>.exe**.
+3. When the download is complete, locate the file named: **Insomnia.Core-nsis-\<version\>.exe**.
 
 > The filename follows the format `Insomnia.Core-nsis-<version>.exe`. The actual version number, for example, `11.3.0` changes as updates are released. Always download the latest version from the [Insomnia Downloads page](https://insomnia.rest/download).
 {:.info}
 
 ## Run the installer
-1. From your downloads folder, select the **Insomnia.Core-nsis-<version>.exe** file.
+1. From your downloads folder, select the **Insomnia.Core-nsis-\<version\>.exe** file.
 2. Select **Yes**.
 
 ## Follow the setup wizard
