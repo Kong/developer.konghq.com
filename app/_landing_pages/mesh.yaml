@@ -94,7 +94,7 @@ rows:
               icon: /assets/icons/plug.svg
               cta:
                 text: See the quickstart 
-                url: /mesh/deploy-mesh-on-kubernetes
+                url: /mesh/deploy-mesh-self-managed
 
   - header:
       type: h2

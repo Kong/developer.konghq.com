@@ -1,5 +1,5 @@
 ---
-title: Deploy Mesh Managed Control Plane
+title: Deploy Konnect Managed Control Plane
 description: "Learn how to install Mesh on an existing Kubernetes cluster, and deploy the {{site.mesh_product_name}} demo application."
 content_type: how_to
 permalink: /mesh/deploy-mesh-on-konnect/
