@@ -1,9 +1,9 @@
 ---
-title: Run {{site.base_gateway}} in Hybrid Mode
+title: Run {{site.base_gateway}} in Hybrid mode
 content_type: how_to
 permalink: /gateway/install/hybrid/
 
-description: Configure separate Control Plane and Data Plane nodes using Hybrid Mode and mTLS
+description: Configure separate Control Plane and Data Plane nodes using Hybrid mode and mTLS
 
 breadcrumbs:
   - /gateway/
@@ -17,7 +17,7 @@ works_on:
 tags:
   - install
 tldr:
-  q: How do I run {{ site.base_gateway }} in Hybrid Mode?
+  q: How do I run {{ site.base_gateway }} in Hybrid mode?
   a: |
     Deploy {{ site.base_gateway }} twice, once with `role=control_plane` and once with `role=data_plane`.
 
@@ -33,16 +33,16 @@ prereqs:
     - title: Install {{site.base_gateway}}
       content: |
         {:.warning}
-        > {{ site.base_gateway }} must be installed on both the Control Plane machine <u>and</u> the Data Plane machine before following this how-to
+        > {{ site.base_gateway }} must be installed on both the Control Plane machine <u>and</u> the Data Plane machine before following this how-to.
          
-        To find instructions for your operating system see the [install {{site.base_gateway}}](/gateway/install/#linux) page.
+        To find instructions for your operating system, see the [install {{site.base_gateway}}](/gateway/install/#linux) page.
     - title: Install PostgreSQL
       content: |
-        {{ site.base_gateway }} requires a database to run in Hybrid mode. For this how-to, please install Postgres on the same node as your Control Plane.
+        {{ site.base_gateway }} requires a database to run in Hybrid mode. For this how-to, install PostgreSQL on the same node as your Control Plane.
         
         To bootstrap your database, follow the [configure a datastore how-to](/how-to/configure-datastore/).
 
-        If you already have a database set up, set the following variables:
+        After setting up a database, set the following variables:
 
         ```bash
         export KONG_DATABASE=postgres
@@ -54,7 +54,7 @@ prereqs:
         ```
 
 faqs:
-  - q: My Data Plane says "no Route matched with those values"
+  - q: My Data Plane says "no Route matched with those values".
     a: |
       Wait 20 seconds then try again. If it continues to return this message, run `curl localhost:8001/clustering/data-planes` on the Control Plane node and check if the Data Plane is listed.
 ---
@@ -63,6 +63,7 @@ This how-to explains how to run {{ site.base_gateway }} on-prem in [hybrid mode]
 
 {% include install/konnect-cta.html%}
 
+If you prefer not to use {{ site.konnect_short_name }}, move on to the next step.
 ## Create clustering certificates
 
 {{ site.base_gateway }} uses mTLS to secure the control plane/data plane communication when running in hybrid mode.
@@ -80,9 +81,9 @@ sudo chown -R root:root /etc/kong/certs
 
 ## Deploy Kong as a Control Plane
 
-Your Control Plane is the {{ site.base_gateway }} instance that manages configuration. Each Data Plane connects to the Control Plane using the certificates generated above to fetch it's configuration.
+Your Control Plane is the {{ site.base_gateway }} instance that manages configuration. Each Data Plane connects to the Control Plane using the certificates generated in the previous step to fetch its configuration.
 
-To configure a {{ site.base_gateway }} instance as a Control Plane, run the following command to configure the `kong.conf`
+To configure a {{ site.base_gateway }} instance as a Control Plane, run the following command on your Control Plane machine to configure the `kong.conf` file:
 
 ```bash
 echo "
@@ -115,7 +116,7 @@ sudo kong restart
 
 ## Create an example Service and Route
 
-Send the following `curl` requests on the Control Plane machine to configure a test Service and Route that is used later to confirm that the Data Plane is configured correctly:
+Send the following `curl` requests on the Control Plane machine to configure a test Service and Route:
 
 ```bash
 curl -i -X POST http://localhost:8001/services/ \
@@ -137,22 +138,27 @@ curl -i -X POST http://localhost:8001/services/example-service/routes/ \
     }'
 ```
 
+After configuring both machines, we'll use these entities to confirm that the Data Plane is configured correctly.
+
 ## Deploy Kong as a Data Plane
 
 Your Data Plane uses the same certificates that were provided to the Control Plane to identify itself to the Control Plane. This is known as _pinned certificate_ authentication.
 
-Copy the certificates from the Control Plane node in to `/etc/kong/certs` on the Data Plane node.
+Copy the certificates from the Control Plane node into `/etc/kong/certs` on the Data Plane node.
 
 {:.warning}
 > The Data Plane will not be able to connect to the Control Plane unless the certificates are identical on both machines.
 
-In order to connect to the Control Plane, we need to provide it's address to the Data Plane. Replace `1.2.3.4` below with the IP address of your Control Plane:
+To connect to the Control Plane, we need to provide its address to the Data Plane. Replace `1.2.3.4` below with the IP address of your Control Plane, and run this command on your Data Plane machine:
 
 ```bash
 export CONTROL_PLANE_IP="1.2.3.4"
 ```
 
-Finally, configure {{ site.base_gateway }} to run as a `data_plane` using the following configuration. It contains a `role`, details on how to connect to the Control Plane and which certificates to use to authenticate:
+Finally, configure {{ site.base_gateway }} to run as a `data_plane` using the following configuration. 
+It contains a `role`, details on how to connect to the Control Plane, and which certificates to use for authentication.
+
+Update `kong.conf` on your Data Plane:
 
 ```bash
 echo "
@@ -171,7 +177,7 @@ cluster_cert_key = /etc/kong/certs/tls.key
 " | sudo tee /etc/kong/kong.conf
 ```
 
-Start your Data Plane to connect it to the Control Plane.
+Start your Data Plane to connect it to the Control Plane:
 
 ```bash
 sudo kong start
@@ -179,9 +185,9 @@ sudo kong start
 
 ## Test your deployment
 
-At this point you have deployed and configured a Control Plane and attached a Data Plane to it. To make sure that the connection is working, run the following command on your _Data Plane_ node:
+At this point, you have deployed and configured a Control Plane and attached a Data Plane to it. To make sure that the connection is working, run the following command on your _Data Plane_ node:
 
-```
+```sh
 curl http://localhost:8000/mock/anything
 ```
 
