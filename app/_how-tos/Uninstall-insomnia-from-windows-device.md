@@ -17,11 +17,14 @@ breadcrumbs:
 min_version:
   Insomnia: '11.3.0'
 
+prereqs:
+  skip_product: true
+
 tldr:
   q: How do I uninstall Insomnia from a Windows device?
-  a: Follow these steps to successfully uninstall Insomnia from a Windows device.
+  a: Complete the steps to successfully uninstall Insomnia from a Windows device.
 ---
-> Before you uninstall, you must close any open Insomnia windows. The NSIS installer cannot remove files that are actively in use, which can cause an incomplete uninstallation.
+> Before you uninstall, you must close any open Insomnia windows.  Files that are actively in use cannot be removed, which can cause an incomplete uninstallation.
 {:.warning}
 
 If you want to remove Insomnia from your Windows device, complete the following steps:

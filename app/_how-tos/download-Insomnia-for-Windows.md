@@ -17,11 +17,16 @@ breadcrumbs:
 min_version:
   Insomnia: '11.3.0'
 
+prereqs:
+  skip_product: true
+
 tldr:
   q: How do I download Insomnia on a Windows device?
-  a: Download Insomnia version 11.3.0  to utilize the Windows NSIS installer which now lets you choose the installation directory of your preference.
+  a: Learn how to download Insomnia.
 
 ---
+
+From version 11.3.0, Insomnia for Windows now uses the Nullsoft Scriptable Install System (NSIS) installer. This update gives you more control over your setup by allowing you to choose the installation directory that best suits your system. Install Insomnia using the NSIS installer on a Windows device. To install and run Insomnia on Windows, your system must be Windows 10 or later.
 
 > Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
 {:.warning}
@@ -29,9 +34,9 @@ tldr:
 To download Insomnia onto a Windows device, complete the following steps:
 
 ## Download the installer
-1. Go to the [Insomnia Downloads page](/insomnia.rest/download).
+1. Go to the [Insomnia Downloads page](https://insomnia.rest/download).
 2. Select **Download for Windows**.
-3. When the download is complete, locate the file named: **Insomnia.Core-nsis-11.3.0.exe**
+3. When the download is complete, locate the file named: **Insomnia.Core-nsis-11.3.0.exe**.
 
 ## Run the installer
 1. From your downloads folder, select the **Insomnia.Core-nsis-11.3.0.exe** file.
