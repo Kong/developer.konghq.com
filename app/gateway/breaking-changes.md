@@ -108,6 +108,16 @@ rows:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
     status: Not fixed
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
 {% endtable %}
 
 ## 3.10.x breaking changes
@@ -180,6 +190,16 @@ rows:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
     status: Not fixed
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
 {% endtable %}
 
 ## 3.9.x breaking changes
@@ -213,6 +233,32 @@ yq -i '(
 ) |= "requestPrompt"
 ' config.yaml
 ```
+
+#### Known issues in 3.9.0.0
+
+The following is a list of known issues in 3.9.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
+
 
 ## 3.8.x breaking changes
 
@@ -269,6 +315,30 @@ These fields are converted automatically when you run `kong migrations up`. Also
 
 Forked custom plugins aren't automatically migrated. For more information about how to migrate custom plugins, see [Custom plugins that used shared Redis config](#custom-plugins-that-used-shared-redis-config).
 
+#### Known issues in 3.8.0.0
+
+The following is a list of known issues in 3.8.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
 
 ## 3.7.x breaking changes
 
@@ -308,6 +378,30 @@ entity when using the AppRole authentication method.
 [**AI Proxy**](/plugins/ai-proxy/) (`ai-proxy`): To support the new messages API of `Anthropic`, the upstream
 path of the `anthropic` setting for the `llm/v1/chat` Route type has changed from `/v1/complete` to `/v1/messages`.
 
+#### Known issues in 3.7.0.0
+
+The following is a list of known issues in 3.7.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
 
 ## 3.6.x breaking changes
 
@@ -428,6 +522,16 @@ rows:
       *Issue fixed in 3.6.1.1*:
       <br><br>
       Reverted the hard-coded limitation of the `ngx.read_body()` API in OpenResty upstreams’ new versions when downstream connections are in HTTP/2 or HTTP/3 stream modes.
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
 {% endtable %}
 
 ## 3.5.x breaking changes
