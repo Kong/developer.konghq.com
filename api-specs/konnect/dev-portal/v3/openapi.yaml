@@ -3549,6 +3549,12 @@ components:
             show_schemas:
               type: boolean
               default: true
+            hide_internal:
+              type: boolean
+              default: false
+            hide_deprecated:
+              type: boolean
+              default: false
         robots:
           type: string
           nullable: true
