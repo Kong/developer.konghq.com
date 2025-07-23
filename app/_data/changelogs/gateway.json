@@ -715,17 +715,17 @@
         "scope": "Plugin"
       },
       {
-        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
-        "type": "known-issues",
-        "scope": "Core"
-      },
-      {
         "message": "When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), Kong Gateway can't apply configuration deltas to the stream subsystem. \nThis issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).\nAs a workaround for this issue, set `incremental_sync=off` when using stream proxying.\n",
         "type": "known-issues",
         "scope": "Core"
       },
       {
         "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
+      },
+      {
+        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies. \nVersions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
         "type": "known-issues",
         "scope": "Core"
       }
@@ -5039,7 +5039,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
+        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies. \nVersions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
         "type": "known-issues",
         "scope": "Core"
       }
@@ -15356,17 +15356,12 @@
         "type": "bugfix"
       },
       {
-        "message": "Fixed an issue where sometimes the paginated sync incorrectly reports \"history lost\" and fails.",
-        "type": "bugfix",
-        "scope": "Clustering"
-      },
-      {
-        "message": "Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
-        "type": "bugfix",
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
         "scope": "Core"
       },
       {
-        "message": "If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed Kong Gateway deployment for more than a week, upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect Konnect deployments.\n\nA fix will be provided in 3.11.0.1.\n\nSee [breaking changes in 3.11](/gateway/breaking-changes/#known-issues-in-3-11-0-0) for a temporary workaround.",
+        "message": "If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed Kong Gateway deployment for more than a week, upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue.\nThis does not affect Konnect deployments. A fix will be provided in 3.11.0.1.\n\nSee [breaking changes in 3.11](/gateway/breaking-changes/#known-issues-in-3-11-0-0) for a temporary workaround.\n",
         "type": "known-issues",
         "scope": "Plugin",
         "plugins": [
@@ -15384,11 +15379,6 @@
           "ai-semantic-cache",
           "ai-semantic-prompt-guard"
         ]
-      },
-      {
-        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
-        "type": "known-issues",
-        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
