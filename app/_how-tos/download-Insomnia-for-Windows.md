@@ -24,11 +24,11 @@ tldr:
 prereqs:
   inline:
     - title: Windows 10 or later
-      include_content: windows-10-or-later.md
+      include_content: windows-10-or-later
     - title: Administrator privileges
-      include_content: administrator-privileges.md
+      include_content: administrator-privileges
     - title: Insomnia v11.3 or later
-      include_content: insomnia-v11-3-or-later.md
+      include_content: insomnia-v11-3-or-later
 ---
 
 ## Install Insomnia on Windows
