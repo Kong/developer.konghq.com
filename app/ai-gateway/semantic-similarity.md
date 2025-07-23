@@ -73,7 +73,7 @@ columns:
     key: description
 rows:
   - plugin: "[AI Proxy Advanced](/plugins/ai-semantic-prompt-guard/)"
-    description: Performs semantic routing by embedding each upstream’s description at config time and storing the results in a selected vector database. At runtime, it embeds the prompt and queries Redis to route requests to the most semantically appropriate upstream.
+    description: Performs semantic routing by embedding each upstream’s description at config time and storing the results in a selected vector database. At runtime, it embeds the prompt and queries vector database to route requests to the most semantically appropriate upstream.
   - plugin: "[AI Semantic Cache](/plugins/ai-semantic-cache/)"
     description: Indexes previous prompts and responses as embeddings. On each request, it searches for semantically similar inputs and serves cached responses when possible to reduce redundant LLM calls.
   - plugin: "[AI RAG Injector](/plugins/ai-rag-injector/)"
