@@ -11,6 +11,8 @@ related_resources:
     url: /gateway/install/
   - text: Build a custom Docker image
     url: /how-to/build-custom-docker-image/
+  - text: Install {{site.base_gateway}} in read-only mode
+    url: /gateway/install/docker-read-only/
 products:
   - gateway
 
