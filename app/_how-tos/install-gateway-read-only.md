@@ -42,6 +42,10 @@ cleanup:
 
 ## Create a `kong.yml` configuration file
 
+For read-only mode, you need to run {{site.base_gateway}} as a DB-less deployment - that is, without a database.
+This means that you can't use the Admin API or decK to configure the Gateway instance. 
+Intead, you have to pass a declarative configuration file to {{site.base_gateway}} while starting the instance.
+
 Create a directory for your Kong configuration:
 
 ```sh
