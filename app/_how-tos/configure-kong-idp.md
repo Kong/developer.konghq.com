@@ -1,5 +1,5 @@
 ---
-title: Get started with Kong IDP
+title: Get started with {{site.konnect_short_name}} Identity
 content_type: how_to
 breadcrumbs:
   - /kong-identity/
@@ -9,7 +9,7 @@ permalink: /kong-identity/get-started/
 tech_preview: true
 
 products:
-    - konnect-platform
+    - gateway
 works_on:
   - konnect
 tags:
@@ -22,16 +22,21 @@ tldr:
     Get started with Kong Identity by setting up an Authorization Server, Claims, Scopes and clients, then configuring the OpenID Connect plugin in a {{site.konnect_short_name}} Control Plane using the APIs.
 
 tools:
-    - konnect-api
+    # - konnect-api
+    - deck
   
 prereqs:
-  skip_product: true
   inline: 
     - title: "{{site.konnect_short_name}} Labs"
       content: |
         {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. Kong Identity can be opted in through {{site.konnect_short_name}} Labs. 
         You can view [Labs](https://cloud.konghq.com/global/labs/) in {{site.konnect_short_name}} 
       icon_url: /assets/icons/world.svg
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
 
 
 automated_tests: false
@@ -56,23 +61,28 @@ headers:
 body:
   name: "Appointments Dev"
   audience: "http://myhttpbin.dev"
-  description: "auth server for Appointment's dev environment"
+  description: "auth server for Appointment dev environment"
 {% endkonnect_api_request %}
+
+Export the auth server ID and issuer URL:
+```sh
+export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
+export ISSUER_URL='YOUR-ISSUER-URL'
+```
 
 
 ## Configure the auth server with scopes and custom claims 
-Advanced settings also enable dynamic custom claims. Claim ID and Scope ID are generated as part of the response. Scope names are unique per auth server. Claims are not unique
-
+Advanced settings also enable dynamic custom claims. Claim ID and Scope ID are generated as part of the response. Scope names are unique per auth server. Claims are not unique.
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/auth-servers/$auth-server-ID/scopes 
+url: /v1/auth-servers/$AUTH_SERVER_ID/scopes 
 status_code: 200
 method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: "openid"
+  name: "Scope"
   description: "Scope Description"
   default: false
   include_in_metadata: false
@@ -80,20 +90,28 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+Export your scope ID:
+```sh
+export SCOPE_ID='YOUR-SCOPE-ID'
+```
+
+Configure your claim:
+
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/auth-servers/$auth-server-ID/claims 
+url: /v1/auth-servers/$AUTH_SERVER_ID/claims 
 status_code: 200
 method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: "Claim"
-  value: "Claim Value"
-  include_in_token": true
-  "include_in_all_scopes": false
-  "include_in_scopes": ["scope123", "scope456"]
-  "enabled": true
+  name: Claim
+  value: Claim Value
+  include_in_token: true
+  include_in_all_scopes: false
+  include_in_scopes: 
+  - $SCOPE_ID
+  enabled: true
 
 {% endkonnect_api_request %}
 <!--vale on-->
@@ -105,7 +123,7 @@ Client is the machine to machine credential. Client has a “grant type” that 
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/auth-servers/1234/clients
+url: /v1/auth-servers/$AUTH_SERVER_ID/clients
 status_code: 201
 method: POST
 headers:
@@ -116,7 +134,7 @@ body:
     - client_credentials
   allow_all_scopes: false
   allow_scopes:
-    - $scope-id
+    - $SCOPE_ID
   redirect_uris:
     - https://client.com/callback
   login_uri: https://client.com/login
@@ -128,26 +146,77 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+Export your client secret and client ID:
+```sh
+export CLIENT_SECRET='YOUR-CLIENT-SECRET'
+export CLIENT_ID='YOUR-CLIENT-ID'
+```
+
 ## Apply OpenID Connect plugin to a Control plane using Kong Identity as the IdP
 You can use the OIDC plugin to use Kong Identity as the identity provider for your GW services. Apply an OIDC plugin to the control plane at a Global scope. This plugin can be applied at a Service level as well. Add the issuer generated in the auth server in the OIDC Issuer field. 
+
+First, get the ID of the `quickstart` control plane you configured in the prerequisites:
+
+curl -X GET "https://us.api.konghq.com/v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart" \
+     -H "Authorization: Bearer $KONNECT_TOKEN"
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
+status_code: 201
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the control plane ID:
+```sh
+export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
+```
+
+Enable the OIDC plugin globally:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins/
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: openid-connect
+  config:
+    issuer: $ISSUER_URL
+    client_id: 
+    - $CLIENT_ID
+    client_secret:
+    - $CLIENT_SECRET
+    client_auth:
+    - client_secret_post
+    auth_methods:
+    - client_credentials
+    audience:
+    - http://myhttpbin.dev
+    client_credentials_param_type:
+    - header
+{% endkonnect_api_request %}
+<!--vale on-->
+
+In this example:
+* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, {{site.konnect_short_name}} Identity). 
+* `auth_methods`: Specifies that the plugin should use client credentials (client ID and secret) for authentication.
+* `client_credentials_param_type`: Restricts client credential lookup to request headers only.
 
 ## Generate a token for the client
 Generate a token for the client by making a call to the issuer URL. Use this generated token to access the GW service.
 
 <!--vale off-->
-{% konnect_api_request %}
-url: $issuer-url-from-auth-server
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/x-www-form-urlencoded'
-body:
-  grant_types = client_credentials
-  client_id = $generated-client-ID
-  client_secret = $generated-client-secret
-  scope = $scope-name
-  
-{% endkonnect_api_request %}
+```sh
+curl -X POST "$ISSUER_URL/oauth/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=$CLIENT_ID" \
+  -d "client_secret=$CLIENT_SECRET" \
+  -d "scope=Scope"
+```
 <!--vale on-->
 
 ## Access the Gateway service using the token 
