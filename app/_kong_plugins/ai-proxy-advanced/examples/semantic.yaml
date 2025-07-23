@@ -13,11 +13,15 @@ extended_description: |
   * If the request is about IT support, it will be routed to the `gpt-4o` model.
   * All other requests, which don’t match the above categories, will be handled by the `gpt-4o-mini` model, serving as a catch-all for general queries.
 
+  {:.info}
+  > If you use the `text-embedding-ada-002` as your embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 weight: 107
 
 requirements:
   - An OpenAI account
-  - A Redis instance running
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  - "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
 
 config:
   embeddings:

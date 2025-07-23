@@ -1,9 +1,20 @@
 title: 'Set up with OpenAI and Redis'
 
-description: 'Enable AI Semantic Caching with OpenAI embeddings API and a Redis vector database. Configuring Kong to use OpenAI as upstream or configure AI Proxy or AI Proxy Adavnced plugin is required.'
+description: 'Enable AI Semantic Caching with OpenAI embeddings API and a Redis vector database.'
+
+extended_description: |
+  Enable AI Semantic Caching with OpenAI embeddings API and a Redis vector database.
+
+  {:.info}
+  > If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 
 weight: 900
-
+requirements:
+  - "The [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin is enabled"
+  - An OpenAI account
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
 
 variables:
   header_value:
