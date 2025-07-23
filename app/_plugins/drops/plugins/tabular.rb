@@ -46,6 +46,10 @@ module Jekyll
           @url ||= @plugin.data['overview_url']
         end
 
+        def slug
+          @slug ||= @plugin.data['slug']
+        end
+
         def [](key)
           key = key.to_s
           if respond_to?(key)
