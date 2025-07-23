@@ -108,9 +108,9 @@ rows:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
     status: Not fixed
-  - issue: Brotli module missing from ARM64 Kong Gateway Docker images
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
-      The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
       * Amazon Linux 2
@@ -190,9 +190,9 @@ rows:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
     status: Not fixed
-  - issue: Brotli module missing from ARM64 Kong Gateway Docker images
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
-      The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
       * Amazon Linux 2
@@ -247,9 +247,9 @@ columns:
   - title: Status
     key: status
 rows:
-  - issue: Brotli module missing from ARM64 Kong Gateway Docker images
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
-      The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
       * Amazon Linux 2
@@ -328,9 +328,9 @@ columns:
   - title: Status
     key: status
 rows:
-  - issue: Brotli module missing from ARM64 Kong Gateway Docker images
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
-      The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
       * Amazon Linux 2
@@ -391,9 +391,9 @@ columns:
   - title: Status
     key: status
 rows:
-  - issue: Brotli module missing from ARM64 Kong Gateway Docker images
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
-      The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
       * Amazon Linux 2
@@ -522,9 +522,9 @@ rows:
       *Issue fixed in 3.6.1.1*:
       <br><br>
       Reverted the hard-coded limitation of the `ngx.read_body()` API in OpenResty upstreams’ new versions when downstream connections are in HTTP/2 or HTTP/3 stream modes.
-  - issue: Brotli module missing from ARM64 Kong Gateway Docker images
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
-      The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
       * Amazon Linux 2
