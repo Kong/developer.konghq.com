@@ -24,16 +24,16 @@ tldr:
 prereqs:
   inline:
     - title: Windows 10 or later
-      include_content:
+      include_content: Windows 10 or later
     - title: Administrator privileges
-      include_content:
+      include_content: Administrator privileges
     - title: Insomnia v11.3 or later
-      include_content:   
+      include_content: Insomnia v11.3 or later
 ---
 
 ## Install Insomnia on Windows
 
-{:.warning} # Before you install, close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
+{:.warning} # Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
 
 To download Insomnia onto a Windows device, complete the following steps:
 
