@@ -47,11 +47,11 @@ The route type `preserve` has been deprecated and will be removed in a future ve
 * [`route_type` options for AI Proxy](/plugins/ai-proxy/reference/#schema--config-route-type)
 * [`route_type` options for AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/#schema--config-route-type)
 
-### WASM deprecation
+#### WASM deprecation
 
 Support for the beta WASM module has been removed. To use Datakit, see the [Datakit plugin changes](#datakit-plugin).
 
-### Datakit plugin
+#### Datakit plugin
 
 The [Datakit plugin](/plugins/datakit/), which previously required WASM to run, is now bundled as a Kong Lua plugin.
 Starting in 3.11.0.0, you don't need to enable WASM to run Datakit; you can enable it just like any other bundled plugin.
@@ -97,6 +97,17 @@ rows:
       3. Run `kong migrations up`.
       4. Run `kong migrations finish`.
     status: Fixed in 3.11.0.1
+  - issue: Incremental config sync doesn't work in stream mode
+    description: |
+      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      <br><br>
+      The HTTP subsystem is not affected.
+      <br><br>
+      **Workaround**: 
+      * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
+    status: Not fixed
 {% endtable %}
 
 ## 3.10.x breaking changes
@@ -144,6 +155,32 @@ While the `+` character represents the correct encoding of space in query string
 #### Free mode
 
 Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
+
+#### Known issues in 3.10.0.0
+
+The following is a list of known issues in 3.10.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Incremental config sync doesn't work in stream mode
+    description: |
+      When running in incremental sync mode ([`incremental_sync=on](/gateway/configuration/#incremental-sync)`), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      <br><br>
+      The HTTP subsystem is not affected.
+      <br><br>
+      **Workaround**: 
+      * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
+    status: Not fixed
+{% endtable %}
 
 ## 3.9.x breaking changes
 
