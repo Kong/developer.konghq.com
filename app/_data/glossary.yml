@@ -51,6 +51,8 @@ definitions:
   - term: Kong Gateway Community Edition
     description: |
       A deprecated term for Kong Gateway Open-Source (OSS).
+    url: |
+      N/A
   - term: Kong Gateway plugin
     description: |
       Kong Gateway plugins provide advanced functionality and extend the use of Kong Gateway, allowing you to add new features to your gateway. 
