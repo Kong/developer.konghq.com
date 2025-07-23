@@ -19,11 +19,11 @@ min_version:
 
 tldr:
   q: How do I download Insomnia on a Windows device?
-  a: Use a Windows NSIS installer to choose the installation directory of your preference.
+  a: Download Insomnia version 11.3.0  to utilize the Windows NSIS installer which now lets you choose the installation directory of your preference.
 
 ---
 
-{:.warning} # Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
+{:.warning} #Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
 
 To download Insomnia onto a Windows device, complete the following steps:
 
@@ -41,18 +41,3 @@ To download Insomnia onto a Windows device, complete the following steps:
 2. In the **Destination Folder** box, enter the install location of the Insomnia file.
 3. Select **Install**.
 4. Select **Finish**.
-
-# Uninstall Insomnia from Windows
-
-{:.warning} # Before you uninstall, you must close any open Insomnia windows. The NSIS installer cannot remove files that are actively in use, which can cause an incomplete uninstallation.
-
-If you want to remove Insomnia from your Windows device, complete the following steps:
-
-## Open installed apps
-1. On your Windows device, go to **Settings > Apps > Installed apps**.
-2. Locate Insomnia in the list of installed applications.
-
-## Start uninstallation
-1. From the Insomnia application, select the **ellipsis (⋯)**.
-2. Select **Uninstall**.
-3. Select **Finish**.
