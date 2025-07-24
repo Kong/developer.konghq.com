@@ -42,7 +42,6 @@ faqs:
       1. Click **Finish**.
 ---
 
-From version 11.3.0, Insomnia for Windows now uses the Nullsoft Scriptable Install System (NSIS) installer. This update gives you more control over your setup by allowing you to choose the installation directory that best suits your system. Install Insomnia using the NSIS installer on a Windows device. To install and run Insomnia on Windows, your system must be Windows 10 or later.
 
 > Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
 {:.warning}
