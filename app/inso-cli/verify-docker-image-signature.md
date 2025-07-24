@@ -33,7 +33,7 @@ This guide provides steps to verify signatures for signed Inso CLI Docker contai
 
 For the minimal example, you only need Docker image details, a GitHub repo name, and a GitHub workflow filename.
 
-For the complete example, you need the same details as the minimal example, as well as any of the optional annotations you wish to verify:
+For the complete example, you need the same details as the minimal example, as well as any of the optional annotations you want to verify:
 
 {% table %}
 columns:
@@ -64,7 +64,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 For both examples, you need to:
 
-* Ensure `cosign` is installed.
+* Ensure [`cosign` is installed](https://docs.sigstore.dev/cosign/system_config/installation/).
 
 * Collect the necessary image details.
 

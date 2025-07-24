@@ -24,7 +24,7 @@ related_resources:
 
 Inso CLI can be configured with a configuration file, allowing you to specify options and scripts. For example, when running in a CI environment, you may choose to specify the steps as scripts in a configuration file, so that the same commands can be run both locally and in CI.
 
-Inso CLI uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) for configuration file management, meaning any of the following items found in the working tree are automatically used:
+Inso CLI uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) for configuration file management. This automatically uses any of the following items from the working tree:
 
 * `inso` property in `package.json`
 * `.insorc` file in JSON or YAML format
@@ -47,11 +47,13 @@ Any options specified in this file will apply to all scripts and manual commands
 {:.info}
 > Only [global options](/inso-cli/reference/#global-flags) can be set in the configuration file.
 
-## Scripts
+## Inso CLI scripts
 
-Scripts can have any name, and can be nested. Scripts must be prefixed with `inso`.
+Scripts in the Inso CLI configuration file can have any name, and can be nested. Scripts must be prefixed with `inso`.
 
-## Example
+## Inso CLI configuration example
+
+The following example shows how you can format your Inso CLI configuration file with options and scripts:
 
 ```yaml
 # .insorc.yaml

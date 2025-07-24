@@ -27,7 +27,7 @@ related_resources:
 
 Inso CLI is designed to run in a Continuous Integration (CI) environment. It disables prompts and provides exit codes to pass or fail the CI workflow.
 
-You can use [Setup Inso](https://github.com/marketplace/actions/setup-inso) to perform Inso CLI tasks in your GitHub Actions.
+You can use the [Setup Inso](https://github.com/marketplace/actions/setup-inso) GitHub Action to perform Inso CLI tasks in your repository's GitHub Actions.
 
 ## GitHub Action example
 
@@ -37,6 +37,8 @@ The following sample GitHub Actions performs the following tasks:
 2. Downloads [Setup Inso](https://github.com/marketplace/actions/setup-inso)
 3. Runs linting
 4. Runs unit tests
+
+Here's the example Inso CLI GitHub Action:
 
 ```yaml
 name: Test

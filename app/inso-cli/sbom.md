@@ -28,7 +28,7 @@ A software bill of materials (SBOM) is an inventory of all software components (
 
 Kong provides SBOMs for both Inso CLI binaries and Docker container images.
 
-## Download SBOM
+## Download Inso CLI SBOMs
 
 1. Navigate to Insomnia [GitHub Releases](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.inso&channel=stable)
 

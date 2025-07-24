@@ -121,7 +121,7 @@ rows:
                         - output.yaml
                     
                 - text: |
-                    "Run a script defined in the [configuration file](/inso-cli/configuration/)"
+                    Run a script defined in the [configuration file](/inso-cli/configuration/)
                   action:
                     type: command
                     config:

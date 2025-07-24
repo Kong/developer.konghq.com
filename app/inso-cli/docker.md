@@ -42,7 +42,7 @@ All available tags can be found on Inso CLI's [Docker Hub page](https://hub.dock
 
 ## Run Inso CLI commands
 
-To run Inso CLI commands in the `kong/inso` container, mount the specs folder on your host machine to a `/var/temp` folder in the container. See the following examples:
+To run Inso CLI commands in the `kong/inso` container, mount the specs folder on your host machine to a `/var/temp` folder in the container. See the following sections for examples.
 
 ### Git sync repo
 

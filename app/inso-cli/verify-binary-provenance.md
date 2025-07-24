@@ -59,11 +59,11 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 For both examples, you need to:
 
-* Ensure `slsa-verifier` is installed.
+* Ensure [`slsa-verifier` is installed](https://github.com/slsa-framework/slsa-verifier?tab=readme-ov-file#installation).
 
-* [Download Inso CLI binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.inso&channel=stable) with file pattern `inso-*.{pkg,tar.xz,zip}`
+* [Download Inso CLI binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.inso&channel=stable) with the file pattern `inso-*.{pkg,tar.xz,zip}`
 
-* [Download Inso CLI binary provenance attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.inso&channel=stable) with pattern `inso-provenance.intoto.jsonl`
+* [Download Inso CLI binary provenance attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.inso&channel=stable) with the pattern `inso-provenance.intoto.jsonl`
 
 {:.warning}
 > The GitHub owner is case-sensitive (`Kong/insomnia` vs `kong/insomnia`).

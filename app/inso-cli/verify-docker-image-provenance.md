@@ -36,7 +36,7 @@ For the minimal example, you only need a Docker manifest digest and a GitHub rep
 {:.warning}
 > The Docker manifest digest is required for build provenance verification. The manifest digest can be different from the platform-specific image digest for a specific distribution.
 
-For the complete example, you need the same details as the minimal example, as well as any of the optional annotations you wish to verify:
+For the complete example, you need the same details as the minimal example, as well as any of the optional annotations you want to verify:
 
 {% table %}
 columns:
@@ -70,7 +70,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 For both examples, you need to:
 
-* Ensure `cosign` or `slsa-verifier` is installed.
+* Ensure [`cosign`](https://docs.sigstore.dev/cosign/system_config/installation/) or [`slsa-verifier` is installed](https://github.com/slsa-framework/slsa-verifier?tab=readme-ov-file#installation).
 
 * Ensure `regctl` is installed.
 
@@ -106,7 +106,7 @@ slsa-verifier verify-image \
    --source-uri 'github.com/Kong/$REPO'
 ```
 
-The command will print "Verified SLSA provenance" if successful:
+The command will print "Verified SLSA provenance" if it's successful:
 
 ```sh
 ...
