@@ -46,7 +46,7 @@ You receive a license file when you sign up for a {{site.ee_product_name}} subsc
 1. The contents of the environmental variable `KONG_LICENSE_DATA`.
 2. The default location `/etc/kong/license.json`.
 3. The contents of the file defined by the `KONG_LICENSE_PATH` environment variable.
-4. A License directly deployed with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses).
+4. A License directly deployed with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-licenses).
 
 Each node independently checks for the license file when the {{site.base_gateway}} process starts. Network connectivity isn't required for license validation.
 
