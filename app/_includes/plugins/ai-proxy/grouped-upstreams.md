@@ -8,6 +8,10 @@
     providers=providers
     provider_name="OpenAI"
     plugin=plugin %}
+
+{:.info}
+> **[1]**: If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 {% endnavtab %}
 
 {% navtab "Azure" %}
@@ -15,6 +19,10 @@
     providers=providers
     provider_name="Azure"
     plugin=plugin %}
+
+{:.info}
+> **[1]**: If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 {% endnavtab %}
 
 {% elsif plugin == "AI Proxy Advanced" %}
@@ -23,6 +31,10 @@
     providers=providers
     provider_name="OpenAI"
     plugin=plugin %}
+
+{:.info}
+> **[1]**: If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 {% endnavtab %}
 
 {% navtab "Azure" %}
@@ -30,6 +42,10 @@
     providers=providers
     provider_name="Azure"
     plugin=plugin %}
+
+{:.info}
+> **[1]**: If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 {% endnavtab %}
 {% endif %}
 
