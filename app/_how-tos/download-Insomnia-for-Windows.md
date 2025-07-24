@@ -51,8 +51,6 @@ Before you install, close any open Insomnia windows. The NSIS installer can't up
 2. Click **Download for Windows**.
 3. When the download is complete, find the `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
 
-> The filename follows the format `Insomnia.Core-nsis-<version>.exe`. The actual version number, for example, `11.3.0` changes as updates are released. Always download the latest version from the [Insomnia Downloads page](https://insomnia.rest/download).
-{:.info}
 
 ## Run the installer
 1. From your downloads folder, select the **Insomnia.Core-nsis-\<version\>.exe** file.
