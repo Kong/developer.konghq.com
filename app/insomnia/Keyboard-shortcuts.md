@@ -116,6 +116,7 @@ rows:
       `Alt + Shift + U`
     action: "Show variable source and value"
     description: Reveal where a variable is defined and its resolved value at runtime.
+{% endtable %}
 
 ## Edit and build requests
 Use these shortcuts to help you construct HTTP requests faster by giving you quick access to the request method, URL field, code generation tools, and beautification features.
@@ -148,6 +149,7 @@ rows:
       `Ctrl + K`
     action: "Edit cookies"
     description: Open the cookie editor for the active domain associated with the request.
+{% endtable %}
 
 ## Creating, duplicating, and managing requests
 Use these shortcuts to help you create, delete, duplicate, and organize your requests into folders.
@@ -180,6 +182,7 @@ rows:
       `Ctrl + Shift + P`
     action: "Pin or unpin request"
     description: Pin or unpin a request for quick access in the UI.
+{% endtable %}
 
 ## Workspace maintenance
 Use this shortcut to keep your workspace clean and efficient as you wrap up tasks or shift focus.
@@ -196,3 +199,4 @@ rows:
       `Ctrl + W`
     action: "Close tab"
     description: Close the currently open request tab.
+{% endtable %}    
