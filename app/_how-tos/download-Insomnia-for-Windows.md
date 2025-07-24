@@ -45,7 +45,9 @@ faqs:
 
 
 ## Download the installer
-1. Go to the [Insomnia Downloads page](https://insomnia.rest/download).
+Before you install, close any open Insomnia windows. The NSIS installer can't update files that are actively in use.
+
+1. Go to the [Insomnia downloads page](https://insomnia.rest/download).
 2. Select **Download for Windows**.
 3. When the download is complete, locate the file named: **Insomnia.Core-nsis-\<version\>.exe**.
 
