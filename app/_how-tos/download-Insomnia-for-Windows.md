@@ -54,7 +54,7 @@ Before you install, close any open Insomnia windows. The NSIS installer can't up
 
 ## Run the installer
 1. From your downloads folder, select the **Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe** file.
-2. Select **Yes**.
+2. Click **Yes** to run the installer.
 
 ## Follow the setup wizard
 1. Select your preference for the distribution of software, and then select **Next >**.
