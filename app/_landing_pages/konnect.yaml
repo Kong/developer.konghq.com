@@ -13,7 +13,7 @@ rows:
       type: h1
       text: "{{site.konnect_short_name}}"
       sub_text: |
-        The SaaS API platform
+        The unified API platform
   
   - columns:
       - blocks:
