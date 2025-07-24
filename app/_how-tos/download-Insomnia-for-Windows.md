@@ -17,7 +17,7 @@ breadcrumbs:
   - /insomnia/
 
 min_version:
-  Insomnia: '11.3.0'
+  insomnia: '11.3.0'
 
 prereqs:
   skip_product: true
