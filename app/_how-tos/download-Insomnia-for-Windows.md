@@ -1,5 +1,5 @@
 ---
-title: Download Insomnia on a Windows device
+title: Download Insomnia on a Windows
 
 content_type: how_to
 
