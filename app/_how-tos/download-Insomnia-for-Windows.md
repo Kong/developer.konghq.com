@@ -29,7 +29,7 @@ prereqs:
 
 tldr:
   q: How do I download Insomnia on a Windows device?
-  a: Learn how to download Insomnia.
+  a: From the [Insomnia downloads page](https://insomnia.rest/download), download Insomnia for Windows. Then, run the `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
 
 ---
 
