@@ -21,6 +21,11 @@ min_version:
 
 prereqs:
   skip_product: true
+  inline:
+    - title: "Windows"
+      content: |
+        To install and run Insomnia on Windows, you need Windows 10 or later.
+      icon_url: /assets/icons/third-party/windows.svg
 
 tldr:
   q: How do I download Insomnia on a Windows device?
