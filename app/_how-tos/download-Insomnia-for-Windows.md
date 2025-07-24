@@ -60,7 +60,7 @@ Before you install, close any open Insomnia windows. The NSIS installer can't up
 
 Once you've run the installer, you can use the Insomnia setup wizard to complete the installation.
 
-1. Select your preference for the distribution of software, and then select **Next >**.
+1. Select your preference for the distribution of software, and then select **Next**.
 2. In the **Destination Folder** box, enter the install location of the Insomnia file.
 3. Select **Install**.
 4. Select **Finish**.
