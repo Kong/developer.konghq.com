@@ -2925,6 +2925,8 @@ components:
               updated_at:
                 $ref: '#/components/schemas/UpdatedAt'
             additionalProperties: false
+            required:
+              - spec
             title: API Version
           examples:
             CreateApiVersionRequestExampleJson:
