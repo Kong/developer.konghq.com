@@ -24,8 +24,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} unifies API runtimes like {{site.base_gateway}}, {{site.mesh_product_name}}, AI Gateway, {{site.kic_product_name}}, and more—under a single, centralized management plane, giving you consistent visibility and control across your entire API ecosystem.
-                    It uniquely combines a control plane, managed by Kong and hosted in the cloud, with the versatility of managing the Data Plane on your terms—either self-managed or through Kong, within your preferred network environment. 
+                    {{site.konnect_short_name}} unifies and manages APIs, LLMs, events, and microservices with a single, centralized management plane, giving you consistent visibility and control across your entire API ecosystem.
+                    It uniquely combines a control plane, managed by Kong and hosted in the cloud, with the versatility of managing the data plane on your terms—either self-managed or through Kong, within your preferred network environment.
+
 
                     {{site.konnect_short_name}} can help you with the following use cases:
 
