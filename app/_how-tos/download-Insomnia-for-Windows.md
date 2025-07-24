@@ -9,7 +9,9 @@ products:
 description: Learn how to install Insomnia on a Windows device.
 
 tags:
-- insomnia
+  - insomnia
+  - install
+  - windows
 
 breadcrumbs:
   - /insomnia/
