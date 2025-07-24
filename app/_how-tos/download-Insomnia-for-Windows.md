@@ -43,10 +43,6 @@ faqs:
 ---
 
 
-> Before you install, you must close any open Insomnia windows. The NSIS installer cannot update files that are actively in use, which can cause an incomplete installation.
-{:.warning}
-
-To download Insomnia onto a Windows device, complete the following steps:
 
 ## Download the installer
 1. Go to the [Insomnia Downloads page](https://insomnia.rest/download).
