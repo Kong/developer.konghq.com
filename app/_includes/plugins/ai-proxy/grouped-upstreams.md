@@ -8,10 +8,11 @@
     providers=providers
     provider_name="OpenAI"
     plugin=plugin %}
-{% endnavtab %}
 
 {:.info}
 > **[1]**: If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
+{% endnavtab %}
 
 {% navtab "Azure" %}
 {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
