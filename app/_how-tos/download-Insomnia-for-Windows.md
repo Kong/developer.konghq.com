@@ -6,7 +6,7 @@ content_type: how_to
 products:
 - insomnia
 
-description: Learn how to successfully complete the process of installing Insomnia onto a Windows device.
+description: Learn how to install Insomnia on a Windows device.
 
 tags:
 - insomnia
