@@ -25,6 +25,13 @@ spec:
       name: konnect-api-auth
 {% endkonnect_crd %}
 <!-- vale on -->
+
+{:.warning}
+> It can take some time for the network to finish initializing. Make sure the network is **ready** before moving on to the next step. You can got to the [{{site.konnect_short_name}} **Networks** page](https://cloud.konghq.com/global/networks/) or use the following command to check the network state:
+> ```
+> curl -s -H 'Content-Type: application/json' -H "Authorization: Bearer $KONNECT_TOKEN" -XGET https://global.api.konghq.com/v2/cloud-gateways/networks| jq
+> ```
+
 {% endcapture %}
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/kubernetes.svg' %}
