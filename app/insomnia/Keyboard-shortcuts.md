@@ -16,10 +16,6 @@ search_aliases:
   - Keyboard shortcuts
 description: Refer to this page to find useful keyboard shortcuts to use in the Insomnia desktop application.
 
-related_resources:
-  - text: ""
-    url: 
-
 ---
 Insomnia offers a wide range of keyboard shortcuts that help you navigate faster, write requests efficiently, and switch contexts with minimal friction. Users can also craft complex HTTP requests or manage multiple environments, by mastering the shortcuts.
 
