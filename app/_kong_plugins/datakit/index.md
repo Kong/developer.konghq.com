@@ -3,7 +3,7 @@ title: 'Datakit'
 name: 'Datakit'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: Datakit is a workflow engine for working with external APIs
 products:

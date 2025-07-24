@@ -48,7 +48,7 @@ releases:
     releaseDate: "2024-10-22"
     eol: "2025-10-22"
     branch: release-2.9
-  - version: 2.10.2
+  - version: 2.10.3
     release: "2.10"
     releaseDate: "2025-03-20"
     eol: "2026-03-20"

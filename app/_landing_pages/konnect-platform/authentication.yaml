@@ -11,7 +11,8 @@ metadata:
     - authentication
   products:
     - konnect-platform
-  breadcrumb: /konnect/
+  breadcrumbs: 
+    - /konnect/
 rows:
   - header:
       type: h1

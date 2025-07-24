@@ -715,7 +715,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
+        "message": "When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), Kong Gateway can't apply configuration deltas to the stream subsystem. \nThis issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).\nAs a workaround for this issue, set `incremental_sync=off` when using stream proxying.\n",
+        "type": "known-issues",
+        "scope": "Core"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
         "type": "known-issues",
         "scope": "Core"
       },
@@ -1428,6 +1433,11 @@
         "message": "Added a feature to allow updating the `belong_workspace` field of an admin via the Admin API and Kong Manager.",
         "type": "feature",
         "scope": "Admin API"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -2467,6 +2477,11 @@
         "message": "Returns a detailed error message when failed to cascade delete a workspace caused by admins associated.",
         "type": "bugfix",
         "scope": "Admin API"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -3331,6 +3346,11 @@
       {
         "message": "When authenticating Kong Manager with IDPs (e.g., OIDC, LDAP), the source of an RBAC role will be stored in its `role_source` field, which enables the existing roles with a source of `idp` to be removed upon new logins after IDP role mapping has changed. This also allows users to change a role's source between `local` and `idp` via the Admin API manually.",
         "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
         "scope": "Core"
       }
     ],
@@ -4253,6 +4273,11 @@
           "acme",
           "jwe-decrypt"
         ]
+      },
+      {
+        "message": "The Brotli module is missing from all the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -5012,11 +5037,6 @@
         "message": "**prometheus**: Fixed an issue where the metric `data_plane_config_hash` might not work correctly for incremental sync.\n",
         "type": "bugfix",
         "scope": "Plugin"
-      },
-      {
-        "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies.\n Versions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
-        "type": "known-issues",
-        "scope": "Core"
       },
       {
         "message": "A bug originating from the underlying OpenResty platform affects connection pooling in certain circumstances. \nThis issue impacts transaction handling and negatively impacts performance, resulting in reduced request rates and increased latencies. \nVersions 3.10.0.0 and 3.10.0.1 are both affected. To resolve this regression, please upgrade to Kong Gateway 3.10.0.2 or later.\n",
@@ -14430,7 +14450,7 @@
       }
     ]
   },
-   "3.4.3.20": {
+  "3.4.3.20": {
     "kong": [],
     "kong-ee": [
       {
@@ -15336,17 +15356,12 @@
         "type": "bugfix"
       },
       {
-        "message": "Fixed an issue where sometimes the paginated sync incorrectly reports \"history lost\" and fails.",
-        "type": "bugfix",
-        "scope": "Clustering"
-      },
-      {
-        "message": "Fixed an issue where newly spawned workers used outdated router data because the `init` phase was skipped.",
-        "type": "bugfix",
+        "message": "The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:\n* RHEL 9\n* Debian 12\n* Amazon Linux 2\n* Amazon Linux 2023\n",
+        "type": "known-issues",
         "scope": "Core"
       },
       {
-        "message": "If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed Kong Gateway deployment for more than a week, upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect Konnect deployments.\n\nA fix will be provided in 3.11.0.1.\n\nSee [breaking changes in 3.11](/gateway/breaking-changes/#known-issues-in-3-11-0-0) for a temporary workaround.",
+        "message": "If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed Kong Gateway deployment for more than a week, upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue.\nThis does not affect Konnect deployments. A fix will be provided in 3.11.0.1.\n\nSee [breaking changes in 3.11](/gateway/breaking-changes/#known-issues-in-3-11-0-0) for a temporary workaround.\n",
         "type": "known-issues",
         "scope": "Plugin",
         "plugins": [
@@ -15748,5 +15763,60 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.11.0.1": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped luarocks from 3.11.1 to 3.12.2. This fixes the error `main function has more than 65536 constants`, which was preventing rocks from being published or installed.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**lua-resty-lmdb**: updated to version 1.6.1.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**llm**: Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+        "scope": "Plugin",
+        "type": "bugfix",
+        "plugins": [
+          "ai-proxy",
+          "ai-proxy-advanced",
+          "ai-azure-content-safety",
+          "ai-prompt-decorator",
+          "ai-prompt-guard",
+          "ai-prompt-template",
+          "ai-rag-injector",
+          "ai-rate-limiting-advanced",
+          "ai-request-transformer",
+          "ai-response-transformer",
+          "ai-sanitizer",
+          "ai-semantic-cache",
+          "ai-semantic-prompt-guard"
+        ]
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where `untrusted_lua_sandbox_requires` option was not respected.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where SSE terminator may not have correct ending characters.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where the vault picker was missing in the Request Callout plugin.",
+        "type": "bugfix",
+        "githubs": [
+          3967
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }

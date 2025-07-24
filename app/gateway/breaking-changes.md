@@ -47,11 +47,11 @@ The route type `preserve` has been deprecated and will be removed in a future ve
 * [`route_type` options for AI Proxy](/plugins/ai-proxy/reference/#schema--config-route-type)
 * [`route_type` options for AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/#schema--config-route-type)
 
-### WASM deprecation
+#### WASM deprecation
 
 Support for the beta WASM module has been removed. To use Datakit, see the [Datakit plugin changes](#datakit-plugin).
 
-### Datakit plugin
+#### Datakit plugin
 
 The [Datakit plugin](/plugins/datakit/), which previously required WASM to run, is now bundled as a Kong Lua plugin.
 Starting in 3.11.0.0, you don't need to enable WASM to run Datakit; you can enable it just like any other bundled plugin.
@@ -76,9 +76,7 @@ rows:
       If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week, 
       upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect {{site.konnect_short_name}} deployments.
       <br><br>
-      A fix will be provided in 3.11.0.1.
-      <br><br>
-      As a temporary workaround, do the following:
+      We recommend upgrading to 3.11.0.1 to fix this issue. If needed, you can use the following temporary workaround:
       <br><br>
       1. On your {{site.base_gateway}} machine or in its container, create a file named `reset_license_llm_data.lua` with the following contents:
          <br><br>
@@ -98,6 +96,27 @@ rows:
          ```
       3. Run `kong migrations up`.
       4. Run `kong migrations finish`.
+    status: Fixed in 3.11.0.1
+  - issue: Incremental config sync doesn't work in stream mode
+    description: |
+      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      <br><br>
+      The HTTP subsystem is not affected.
+      <br><br>
+      **Workaround**: 
+      * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
+    status: Not fixed
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
     status: Not fixed
 {% endtable %}
 
@@ -147,6 +166,42 @@ While the `+` character represents the correct encoding of space in query string
 
 Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
 
+#### Known issues in 3.10.0.0
+
+The following is a list of known issues in 3.10.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Incremental config sync doesn't work in stream mode
+    description: |
+      When running in incremental sync mode ([`incremental_sync=on](/gateway/configuration/#incremental-sync)`), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      <br><br>
+      The HTTP subsystem is not affected.
+      <br><br>
+      **Workaround**: 
+      * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
+    status: Not fixed
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
+
 ## 3.9.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3900) for all the changes in this release.
@@ -178,6 +233,32 @@ yq -i '(
 ) |= "requestPrompt"
 ' config.yaml
 ```
+
+#### Known issues in 3.9.0.0
+
+The following is a list of known issues in 3.9.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
+
 
 ## 3.8.x breaking changes
 
@@ -234,6 +315,30 @@ These fields are converted automatically when you run `kong migrations up`. Also
 
 Forked custom plugins aren't automatically migrated. For more information about how to migrate custom plugins, see [Custom plugins that used shared Redis config](#custom-plugins-that-used-shared-redis-config).
 
+#### Known issues in 3.8.0.0
+
+The following is a list of known issues in 3.8.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
 
 ## 3.7.x breaking changes
 
@@ -273,6 +378,30 @@ entity when using the AppRole authentication method.
 [**AI Proxy**](/plugins/ai-proxy/) (`ai-proxy`): To support the new messages API of `Anthropic`, the upstream
 path of the `anthropic` setting for the `llm/v1/chat` Route type has changed from `/v1/complete` to `/v1/messages`.
 
+#### Known issues in 3.7.0.0
+
+The following is a list of known issues in 3.7.x that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
 
 ## 3.6.x breaking changes
 
@@ -393,6 +522,16 @@ rows:
       *Issue fixed in 3.6.1.1*:
       <br><br>
       Reverted the hard-coded limitation of the `ngx.read_body()` API in OpenResty upstreams’ new versions when downstream connections are in HTTP/2 or HTTP/3 stream modes.
+  - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
+    description: |
+      The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
+      * RHEL 9
+      * Debian 12
+      * Amazon Linux 2
+      * Amazon Linux 2023
+
+      There is no workaround for this issue.
+    status: Not fixed
 {% endtable %}
 
 ## 3.5.x breaking changes

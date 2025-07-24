@@ -3,7 +3,7 @@ title: 'Confluent Consume'
 name: 'Confluent Consume'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Consume messages from Confluent Cloud Kafka topics and make them available through HTTP endpoints'
 

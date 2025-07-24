@@ -7,8 +7,8 @@ info:
   description: |-
     OpenAPI 3.0 spec for Kong Gateway's Admin API.
 
-    You can lean more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com)
-    .Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
+    You can learn more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com).
+    Give Kong a star at the [Kong/kong](https://github.com/kong/kong) repository.
   license:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
@@ -3387,6 +3387,48 @@ paths:
                 $ref: '#/components/schemas/Plugin'
       tags:
         - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/schemas/{entityName}/validate':
+    parameters:
+      - name: entityName
+        in: path
+        description: The name of the entity
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: validate-entity-schema
+      summary: Validate entity schema
+      description: Validate schema for an entity
+      requestBody:
+        description: Request body of a Koko entity to validate against its schema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/ValidateEntityResponse'
+      tags:
+        - Schemas
+  '/control-planes/{controlPlaneId}/core-entities/schemas/partials/{partialType}':
+    get:
+      operationId: fetch-partial-schema
+      summary: Fetch partial schema
+      description: Get the schema for a partial
+      responses:
+        '200':
+          $ref: '#/components/responses/GetPartialSchemaResponse'
+      tags:
+        - Schemas
+    parameters:
+      - name: partialType
+        in: path
+        description: The type of a partial
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/controlPlaneId'
   '/control-planes/{controlPlaneId}/core-entities/schemas/plugins/{pluginName}':
     get:
       operationId: fetch-plugin-schema
@@ -4676,6 +4718,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
       example:
         consumer:
           id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
@@ -4707,6 +4750,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
       example:
         group: foo
         id: b1f34145-0343-41a4-9602-4c69dec2f269
@@ -4736,6 +4780,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         username:
           type: string
       example:
@@ -4771,6 +4816,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         username:
           type: string
       example:
@@ -4804,6 +4850,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -4857,6 +4904,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -4895,6 +4943,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -4926,6 +4975,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -4958,6 +5008,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -5053,6 +5104,9 @@ components:
       required:
         - uri
         - query
+    EntityBody:
+      type: object
+      additionalProperties: true
     GatewayUnauthorizedError:
       type: object
       properties:
@@ -5087,6 +5141,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         username:
           type: string
       example:
@@ -5122,6 +5177,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         username:
           type: string
       example:
@@ -5144,13 +5200,23 @@ components:
             - RS256
             - RS384
             - RS512
-            - ES256
-            - ES384
-            - ES512
             - PS256
             - PS384
             - PS512
+            - ES256
+            - ES384
+            - ES512
+            - ESP256
+            - ESP384
+            - ESP512
+            - ESB256
+            - ESB320
+            - ESB384
+            - ESB512
+            - ES256K
             - EdDSA
+            - Ed25519
+            - Ed448
           nullable: true
         consumer:
           type: object
@@ -5179,6 +5245,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
       example:
         algorithm: HS256
         consumer:
@@ -5200,13 +5267,23 @@ components:
             - RS256
             - RS384
             - RS512
-            - ES256
-            - ES384
-            - ES512
             - PS256
             - PS384
             - PS512
+            - ES256
+            - ES384
+            - ES512
+            - ESP256
+            - ESP384
+            - ESP512
+            - ESB256
+            - ESB320
+            - ESB384
+            - ESB512
+            - ES256K
             - EdDSA
+            - Ed25519
+            - Ed448
           nullable: true
         consumer:
           type: object
@@ -5235,6 +5312,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
       example:
         algorithm: HS256
         id: 75695322-e8a0-4109-aed4-5416b0308d85
@@ -5285,6 +5363,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -5329,6 +5408,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         ttl:
           description: key-auth ttl in seconds
           type: integer
@@ -5363,6 +5443,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         ttl:
           description: key-auth ttl in seconds
           type: integer
@@ -5388,6 +5469,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -5442,6 +5524,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -5491,6 +5574,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
       example:
         ca_certificate:
           id: b2f34145-0343-41a4-9602-4c69dec2f260
@@ -5530,6 +5614,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
       example:
         ca_certificate:
           id: b2f34145-0343-41a4-9602-4c69dec2f260
@@ -5590,34 +5675,43 @@ components:
               description: Database to use for the Redis connection when using the `redis` strategy
               type: integer
               default: 0
+              nullable: true
             host:
               description: Redis host.
               type: string
+              nullable: true
             password:
               description: 'Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.'
               type: string
+              nullable: true
             port:
               description: Redis port.
               type: integer
               default: 6379
+              nullable: true
             server_name:
               description: Server name for SSL verification.
               type: string
+              nullable: true
             ssl:
               description: 'If set to true, uses SSL to connect to Redis.'
               type: boolean
               default: false
+              nullable: true
             ssl_verify:
               description: 'If set to true, verifies the validity of the server SSL certificate.'
               type: boolean
               default: false
+              nullable: true
             timeout:
               description: Connection timeout.
               type: integer
-              default: 1000
+              default: 2000
+              nullable: true
             username:
               description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. Requires Redis v6.0.0+.'
               type: string
+              nullable: true
         created_at:
           description: Unix epoch when the resource was created.
           type: integer
@@ -5632,6 +5726,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         type:
           type: string
           enum:
@@ -5660,8 +5755,8 @@ components:
             keepalive_pool_size: 256
             password: password
             port: 6379
-            read_timeout: 1000
-            send_timeout: 1000
+            read_timeout: 2000
+            send_timeout: 2000
             sentinel_nodes:
               - host: sentinel1.redis.server
                 port: 26379
@@ -5674,6 +5769,7 @@ components:
               description: Maximum retry attempts for redirection.
               type: integer
               default: 5
+              nullable: true
             cluster_nodes:
               description: Cluster addresses for Redis connections using the `redis` strategy.
               type: array
@@ -5686,47 +5782,59 @@ components:
                     description: Cluster node port.
                     type: integer
                 type: object
+              nullable: true
             connect_timeout:
               description: Connect timeout.
               type: integer
-              default: 1000
+              default: 2000
+              nullable: true
             connection_is_proxied:
               description: 'If the connection to Redis is proxied, e.g., Envoy.'
               type: boolean
               default: false
+              nullable: true
             database:
               description: Database index.
               type: integer
               default: 0
+              nullable: true
             host:
               description: Redis host.
               type: string
               default: 127.0.0.1
+              nullable: true
             keepalive_backlog:
               description: Limits the total number of opened connections for a pool.
               type: integer
+              nullable: true
             keepalive_pool_size:
               description: Size limit for cosocket connection pool per worker process.
               type: integer
               default: 256
+              nullable: true
             password:
               description: 'Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.'
               type: string
+              nullable: true
             port:
               description: The port is only used when the host is set.
               type: integer
               default: 6379
+              nullable: true
             read_timeout:
               description: Read timeout.
               type: integer
-              default: 1000
+              default: 2000
+              nullable: true
             send_timeout:
               description: Send timeout.
               type: integer
-              default: 1000
+              default: 2000
+              nullable: true
             sentinel_master:
               description: Sentinel master to use for Redis connections. Defining this implies using Redis Sentinel.
               type: string
+              nullable: true
             sentinel_nodes:
               description: Sentinel addresses for Redis connections using the `redis` strategy. Array must have at least 1 element.
               type: array
@@ -5739,29 +5847,37 @@ components:
                     description: Sentinel node port.
                     type: integer
                 type: object
+              nullable: true
             sentinel_password:
               description: Sentinel password to authenticate with a Redis Sentinel instance.
               type: string
+              nullable: true
             sentinel_role:
               description: 'Sentinel role to use for Redis connections when `redis` strategy is used, implies using Redis Sentinel.'
               type: string
+              nullable: true
             sentinel_username:
               description: Sentinel username to authenticate with a Redis Sentinel instance. Requires Redis v6.2.0+.
               type: string
+              nullable: true
             server_name:
               description: Server name for SSL verification.
               type: string
+              nullable: true
             ssl:
               description: 'If set to true, uses SSL to connect to Redis.'
               type: boolean
               default: false
+              nullable: true
             ssl_verify:
               description: 'If set to true, verifies the validity of the server SSL certificate.'
               type: boolean
               default: false
+              nullable: true
             username:
               description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. Requires Redis v6.0.0+.'
               type: string
+              nullable: true
         created_at:
           description: Unix epoch when the resource was created.
           type: integer
@@ -5776,6 +5892,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         type:
           type: string
           enum:
@@ -5903,6 +6020,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -6050,6 +6168,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -6181,6 +6300,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -6332,6 +6452,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -6378,6 +6499,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -6417,6 +6539,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -6509,6 +6632,19 @@ components:
           type: array
           items:
             type: string
+          nullable: true
+        tls_sans:
+          type: object
+          nullable: true
+          properties:
+            dnsnames:
+              type: array
+              items:
+                type: string
+            uris:
+              type: array
+              items:
+                type: string
         tls_verify:
           description: 'Whether to enable verification of upstream server TLS certificate. If set to `null`, then the Nginx default is respected.'
           type: boolean
@@ -6556,6 +6692,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         target:
           description: 'The target address (ip or hostname) and port. If the hostname resolves to an SRV record, the `port` value will be overridden by the value from the DNS record.'
           type: string
@@ -6599,6 +6736,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         target:
           description: 'The target address (ip or hostname) and port. If the hostname resolves to an SRV record, the `port` value will be overridden by the value from the DNS record.'
           type: string
@@ -6637,6 +6775,7 @@ components:
             - least-connections
             - round-robin
             - latency
+            - sticky-sessions
           nullable: true
         client_certificate:
           description: 'If set, the certificate to be used as client certificate while TLS handshaking to the upstream server.'
@@ -6869,11 +7008,19 @@ components:
           type: integer
           default: 10000
           nullable: true
+        sticky_sessions_cookie:
+          type: string
+          nullable: true
+        sticky_sessions_cookie_path:
+          type: string
+          default: /
+          nullable: true
         tags:
           description: An optional set of strings associated with the Upstream for grouping and filtering.
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -6985,6 +7132,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -7887,6 +8035,18 @@ components:
           examples:
             NotFoundExample:
               $ref: '#/components/examples/NotFoundExample'
+    GetPartialSchemaResponse:
+      description: The schema for a partial
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              fields:
+                type: array
+                items:
+                  additionalProperties: true
+                  type: object
     GetPluginSchemaResponse:
       description: The schema for the plugin
       content:
@@ -7921,6 +8081,15 @@ components:
                 status: 401
           schema:
             $ref: '#/components/schemas/GatewayUnauthorizedError'
+    ValidateEntityResponse:
+      description: Validation result of the request against a schema
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     KonnectCPLegacyUnauthorized:
       description: Unauthorized
       content:
@@ -8104,9 +8273,9 @@ tags:
       To disable a target, post a new one with `weight=0`, or use the `DELETE` method to accomplish the same.
     name: Targets
   - description: |-
-      The upstream object represents a virtual hostname and can be used to load balance incoming requests over multiple services (targets). 
+      The upstream object represents a virtual hostname and can be used to load balance incoming requests over multiple services (targets).
       <br><br>
-      An upstream also includes a [health checker](https://developer.konghq.com/gateway/traffic-control/health-checks-circuit-breakers/), which can enable and disable targets based on their ability or inability to serve requests. 
+      An upstream also includes a [health checker](https://developer.konghq.com/gateway/traffic-control/health-checks-circuit-breakers/), which can enable and disable targets based on their ability or inability to serve requests.
       The configuration for the health checker is stored in the upstream object, and applies to all of its targets.
     name: Upstreams
   - description: |

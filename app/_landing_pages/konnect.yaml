@@ -5,14 +5,15 @@ metadata:
     About the {{site.konnect_short_name}} SaaS API platform
   tags:
     - konnect
-
+  products:
+    - konnect-platform
     
 rows:
   - header:
       type: h1
       text: "{{site.konnect_short_name}}"
       sub_text: |
-        The SaaS API platform
+        The unified API platform
   
   - columns:
       - blocks:
@@ -140,6 +141,17 @@ rows:
             cta:
               text: Add Rate Limiting with {{ site.base_gateway }}
               url: "/gateway/rate-limiting/"
+      - blocks: 
+        - type: card
+          config: 
+            title: Customer-Managed Encryption Keys (CMEK)
+            description: | 
+              Customer-Managed Encryption Keys (CMEK) enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
+            icon: /assets/icons/lock.svg
+            cta: 
+              text: View the reference
+              url: "/konnect-platform/cmek/"
+              
   
   - columns:
       - blocks:

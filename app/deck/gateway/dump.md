@@ -63,3 +63,7 @@ This creates multiple files in the current directory. Each file is named the sam
 ```bash
 deck gateway dump --all-workspaces
 ```
+
+## Command usage
+
+{% include_cached deck/help/gateway/dump.md %}

@@ -3,7 +3,7 @@ title: 'OAuth 2.0 Introspection'
 name: 'OAuth 2.0 Introspection'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Integrate {{site.base_gateway}} with a third-party OAuth 2.0 Authorization Server'
 

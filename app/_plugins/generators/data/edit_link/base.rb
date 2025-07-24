@@ -19,6 +19,7 @@ module Jekyll
 
         def edit_link
           return if @page.data['content_type'] == 'policy'
+          return if @page.data['plugin?'] && @page.data['reference?']
 
           if @page.data['source_url']
             @page.data['source_url'].gsub('/tree/', '/edit/')

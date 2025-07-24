@@ -19,6 +19,8 @@ works_on:
 description: Map Mesh Services from {{site.konnet_short_name}} Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones.
 
 related_resources:
+  - text: Map Mesh Manager services in Service Catalog
+    url: /how-to/map-mesh-manager-resources/
   - text: "Service Catalog"
     url: /service-catalog/
 discovery_support: true

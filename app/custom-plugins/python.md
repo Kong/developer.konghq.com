@@ -169,7 +169,7 @@ pluginserver_my_plugin_start_cmd = /path/to/my-plugin.py
 pluginserver_my_plugin_query_cmd = /path/to/my-plugin.py --dump
 pluginserver_other_one_socket = /usr/local/kong/other-one.socket
 pluginserver_other_one_start_cmd = /path/to/other-one.py
-pluginserver_other_one_query_cmd = /path/to/other-one.py -dump
+pluginserver_other_one_query_cmd = /path/to/other-one.py --dump
 ```
 
 The socket and start command settings coincide with their defaults and can be omitted:

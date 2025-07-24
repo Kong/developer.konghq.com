@@ -22,7 +22,7 @@ providers:
       streaming: false
       upstream_path: '/v1/embeddings'
       route_type: 'llm/v1/embeddings'
-      model_example: 'text-embedding-ada-002'
+      model_example: 'text-embedding-ada-002<sup>1</sup>'
       min_version: '3.11'
     files:
       supported: true
@@ -143,7 +143,7 @@ providers:
       streaming: false
       upstream_path: '/openai/deployments/{deployment_name}/embeddings'
       route_type: 'llm/v1/embeddings'
-      model_example: 'text-embedding-ada-002'
+      model_example: 'text-embedding-ada-002<sup>1</sup>'
       min_version: '3.11'
     files:
       supported: true
