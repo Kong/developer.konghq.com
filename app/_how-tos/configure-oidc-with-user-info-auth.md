@@ -66,6 +66,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin with user info auth
@@ -115,13 +116,19 @@ In this example:
 
 Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
 status_code: 200
 user: "alex:doe"
 display_headers: true
+extract_body:
+  - name: 'headers.Authorization'
+    variable: TOKEN
 {% endvalidation %}
+<!-- vale on -->
+
 
 You'll see an `Authorization` header in the response. 
 
@@ -135,6 +142,7 @@ export TOKEN='YOUR_BEARER_TOKEN'
 
 Now, validate the setup by accessing the `example-route` Route and passing the token you retrieved through user info:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
@@ -143,5 +151,6 @@ display_headers: true
 headers:
   - "Authorization: $TOKEN"
 {% endvalidation %}
+<!-- vale on -->
 
 {% include_cached plugins/oidc/cache.md %}

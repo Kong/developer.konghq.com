@@ -3,7 +3,7 @@ title: 'Upstream OAuth'
 name: 'Upstream OAuth'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Configure {{site.base_gateway}} to obtain an OAuth2 token to consume an upstream API'
 
@@ -42,6 +42,8 @@ search_aliases:
 related_resources:
   - text: Configure the Upstream OAuth plugin with {{site.konnect_short_name}} Identity
     url: /how-to/configure-konnect-identity-upstream-oauth/
+notes: |
+  In Serverless gateways only the <code>memory</code> cache strategy is supported.
 ---
 
 The Upstream OAuth plugin allows {{site.base_gateway}} to support OAuth flows between {{site.base_gateway}} and the upstream API.

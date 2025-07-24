@@ -3,7 +3,7 @@ title: 'Key Authentication - Encrypted'
 name: 'Key Authentication - Encrypted'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Add key authentication to your services'
 
@@ -39,6 +39,15 @@ search_aliases:
   - key auth advanced
   - key authentication advanced
   - key-auth-enc
+
+
+notes: |
+  This plugin is not available in Konnect, and has limitations in hybrid mode:
+  - Konnect automatically encrypts key authentication credentials at rest, so 
+  encryption via this plugin is not necessary. 
+  Use the regular [Key Auth](/plugins/key-auth/) plugin instead.
+  - The time-to-live (ttl) does not work in hybrid mode. This setting
+  determines the length of time a credential remains valid.
 ---
 
 The Key Authentication Encrypted plugin adds encrypted API key authentication to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/).  

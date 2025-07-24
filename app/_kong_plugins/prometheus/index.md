@@ -47,6 +47,11 @@ categories:
 faqs:
   - q: If I have multiple Data Plane nodes with the Prometheus plugin enabled, does the metrics data reflect the status of a single node or the aggregated status across all nodes?
     a: Metrics data is reported per-node (each Data Plane) per-subsystem (HTTP or TCP).
+
+notes: | 
+   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or 
+   Serverless Cloud Gateways because it depends on the Admin API and the Status API, which aren't 
+   accessible in that setup.
 ---
 
 Expose metrics related to {{site.base_gateway}} and proxied upstream services in 
@@ -165,6 +170,12 @@ Transfer-Encoding: chunked
 Connection: keep-alive
 Access-Control-Allow-Origin: *
 
+# HELP kong_control_plane_connected Kong connected to control plane, 0 is unconnected
+# TYPE kong_control_plane_connected gauge
+kong_control_plane_connected{instance="localhost:8100", job="kong"}	
+# HELP kong_data_plane_cluster_cert_expiry_timestamp Unix timestamp of Data Plane's cluster_cert expiry time
+# TYPE kong_data_plane_cluster_cert_expiry_timestamp gauge
+kong_data_plane_cluster_cert_expiry_timestamp 2068058801
 # HELP kong_bandwidth_bytes Total bandwidth (ingress/egress) throughput in bytes
 # TYPE kong_bandwidth_bytes counter
 kong_bandwidth_bytes{service="google",route="google.route-1",direction="egress",consumer=""} 264

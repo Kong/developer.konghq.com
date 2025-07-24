@@ -3,7 +3,7 @@ title: 'Kafka Upstream'
 name: 'Kafka Upstream'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform requests into Kafka messages in a Kafka topic.'
 
@@ -59,6 +59,10 @@ When encoding request bodies, several things happen:
 * If the `content-type` is not `text/plain`, `text/html`, `application/xml`, `text/xml`, or `application/soap+xml`,
   then the body will be base64-encoded to ensure that the message can be sent as JSON. In such a case,
   the message has an extra attribute called `body_base64` set to `true`.
+
+## Schema registry support {% new_in 3.11 %}
+
+{% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
 
 ## Known issues and limitations
 

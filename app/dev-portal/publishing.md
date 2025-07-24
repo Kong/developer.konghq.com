@@ -5,9 +5,7 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 tags:
-  - beta
   - publish-apis
 works_on:
     - konnect
@@ -21,6 +19,10 @@ breadcrumbs:
 
 description: "Learn how to publish APIs with Dev Portal and control who can see published APIs."
 
+faqs:
+  - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
+    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
+
 related_resources:
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
@@ -29,7 +31,7 @@ related_resources:
 ---
 
 Publishing an API makes it available to one or more Dev Portals. 
-With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/access-and-approval/) settings, you can publish an API securely to the appropriate audience.
+With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/self-service/) settings, you can publish an API securely to the appropriate audience.
 
 Make sure you have [created APIs](/dev-portal/apis/) before attempting to publish to them your Dev Portals.
 

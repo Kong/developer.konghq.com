@@ -1,8 +1,7 @@
 ---
-title: Traceable Integration
+title: Traceable
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - service-catalog
@@ -25,17 +24,22 @@ related_resources:
     url: /service-catalog/
   - text: Traceable plugin
     url: /plugins/traceable/
+  - text: Import and map Traceable resources in Service Catalog
+    url: /how-to/install-and-map-traceable-resources/
 discovery_support: true
 bindable_entities: "Traceable Service"
 ---
 
 The Traceable integration lets you connect Traceable Services directly to your Service Catalog services.
+{% include /service-catalog/multi-resource.md %}
+
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Traceable resources in Service Catalog](/how-to/install-and-map-traceable-resources/).
 
 ## Authenticate the Traceable integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
-2. Select **Traceable**, then **Install Traceable**.
-3. Select **Authorize**. 
+2. Select **Add Traceable Instance**.
+3. Configure the instance, add authorization and name the instance. 
 
 ## Resources
 

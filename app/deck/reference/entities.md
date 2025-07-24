@@ -20,9 +20,10 @@ related_resources:
     url: /gateway/entities/
 ---
 
-decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities.
+decK can manage entity configuration for {{site.base_gateway}}, including all core proxy entities.
+It does not manage {{site.base_gateway}} configuration parameters in [`kong.conf`](/gateway/configuration/), or content and configuration for the Dev Portal.
 
-It does not manage {{site.base_gateway}} configuration parameters in `kong.conf`, or content and configuration for the Dev Portal.
+decK supports the following entities:
 
 {% feature_table %}
 item_title: Entity
@@ -51,8 +52,9 @@ features:
     managed: true
   - title: Vaults
     managed: true
-  - title: Keys and Key Sets
-    managed: false
+  - title: |
+      Keys and Key Sets {% new_in 1.48 %}
+    managed: true
   - title: Licenses
     managed: false
   - title: Workspaces <sup>1</sup>
@@ -80,3 +82,4 @@ However, decK can't delete workspaces, and it can't update multiple workspaces s
 See [Manage multiple workspaces](/deck/gateway/workspaces/) for more information.
 
 While decK can manage a majority of {{site.base_gateway}}'s configuration, we recommend [additional arrangements](/gateway/upgrade/backup-and-restore/) for deployment, backup, and restoring unmanaged entities for a more comprehensive approach.
+

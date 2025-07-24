@@ -10,10 +10,12 @@ sections:
       - path: /plugins/kafka-upstream/
       - path: /plugins/confluent/
       - path: /plugins/confluent-consume/
+      - path: /plugins/solace-upstream/
     auto_exclude: true
   - title: "Kafka Native Event Proxy (KNEP)"
     items:
       - path: /event-gateway/get-started/
+      - path: /event-gateway/get-started/*/**
       - path: /event-gateway/policies/
       - title: KNEP OpenAPI specification
         description: Configuration schema for the Kong Native Event Proxy
@@ -21,4 +23,3 @@ sections:
   - title: "KNEP Policies"
     items:
       - path: /event-gateway/policies/*/**
-

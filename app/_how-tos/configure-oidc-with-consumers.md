@@ -78,6 +78,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin
@@ -152,7 +153,7 @@ Now, your configured Consumer can access the `example-route` Route by using thei
 {% validation request-check %}
 url: /anything
 method: GET
-status_code: 403
+status_code: 200
 user: "alex:doe"
 display_headers: true
 {% endvalidation %}

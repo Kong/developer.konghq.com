@@ -51,7 +51,7 @@ rows:
 
                     Sending and storing cookies is enabled by default, but can be customized per request in the request settings dialog.
 
-                    Use [Request Template Tags](/insomnia/requests/) to reference cookie values in headers, bodies, or query parameters of other requests.
+                    Use [template tags](/insomnia/template-tags/) to reference cookie values in headers, bodies, or query parameters of other requests.
   - header:
       type: h2
       text: "Features"
@@ -86,6 +86,16 @@ rows:
               text: Learn more
               url: /how-to/use-the-collection-runner/
               align: end  
+      - blocks:
+        - type: card
+          config:
+            title: Use pre-request and after-response scripts
+            description: Use scripts to manipulate requests, modify environments, and test responses. 
+            icon: /assets/icons/insomnia/icon-multiple-light-02.svg
+            cta:
+              text: Learn more
+              url: /insomnia/scripts/
+              align: end
   
   - header:
       type: h2

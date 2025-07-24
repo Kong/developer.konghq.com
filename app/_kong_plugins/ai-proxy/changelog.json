@@ -1,4 +1,73 @@
 {
+  "3.11.0.0": [
+    {
+      "message": "Fixed an issue where large request payload was not logged.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where latency metric was not implemented for streaming responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where SSE terminator may not have correct ending characters.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the response body for observability may be larger than the real one because of the stale data.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "ai-proxy, ai-proxy-advanced: Deprecated the `preserve` route_type. You are encouraged to use new route_types added in version 3.11.x.x and onwards.",
+      "type": "deprecation",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some of ai metrics was missed in analytics",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where patterns using multiple capture groups (e.g., `$(group1)/$(group2)`) failed to extract expected matches.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where model name did not escape when using AWS Bedrock inference profile.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced would use corrupted plugin config.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy returns 403 using gemini provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Implemented a faster SSE parser.",
+      "type": "performance",
+      "scope": "Plugin"
+    },
+    {
+      "message": "If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed Kong Gateway deployment for more than a week, upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect Konnect deployments.\n\nA fix will be provided in 3.11.0.1.\n\nSee [breaking changes in 3.11](/gateway/breaking-changes/#known-issues-in-3-11-0-0) for a temporary workaround.",
+      "type": "known-issues",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.1": [
+    {
+      "message": "Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
@@ -83,6 +152,33 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.3": [
+    {
+      "message": "Fixed an issue where large request payload was not logged.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where SSE terminator may not have correct ending characters.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the response body for observability may be larger than the real one because of the stale data.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where patterns using multiple capture groups (e.g., `$(group1)/$(group2)`) failed to extract expected matches.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy returns 403 using gemini provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.1": [
     {
       "message": "Fixed issue of template not being resolved correctly and supported nested fields.\n",
@@ -108,6 +204,13 @@
     },
     {
       "message": "Fixed tool calls not working in streaming mode for Bedrock and Gemini providers.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.2": [
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced would use corrupted plugin config.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

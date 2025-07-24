@@ -3,6 +3,7 @@ title: 'Service Protection'
 name: 'Service Protection'
 
 content_type: plugin
+tier: enterprise
 
 related_resources:
   - text: Rate Limiting with {{site.base_gateway}}
@@ -48,6 +49,10 @@ faqs:
     a: Yes. You can rate limit a Gateway Service with the Service Protection plugin, then rate limit Routes, Consumers, or Consumer Groups with the other rate limiting plugins. We don’t recommend using multiple rate limiting plugins on the same **Service only**. We recommend applying Service Protection on the Service, and Rate Limiting (or Rate Limiting Advanced) on the Service/Consumer pair, for more granular rate limits.
   - q: When would I use the Service Protection plugin with other rate limiting plugins?
     a: You should use the Service Protection plugin to rate limit your Services and use the other rate limiting plugins to limit other entities, like Consumers or Routes, or to apply global rate limits. 
+
+notes: |
+  This plugin doesn't support cluster policies. 
+  If you want to use this plugin in hybrid mode or in Konnect, use Redis for storage.
 ---
 
 Set absolute maximum rate limits for Gateway Services using the Service Protection plugin. 

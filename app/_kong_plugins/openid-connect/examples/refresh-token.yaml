@@ -5,6 +5,10 @@ description: |
 extended_description: |
   Configure the OpenID Connect plugin to use the refresh token grant.
 
+  Here's how refresh token grant auth works:
+
+  {% include_cached plugins/oidc/diagrams/refresh-token.md %}
+
   In this example, the OpenID Connect plugin will only accept refresh tokens sent in a header, 
   but you can also set the `refresh_token_param_type` parameter to `body`, `query`, or any combination of these values.
 

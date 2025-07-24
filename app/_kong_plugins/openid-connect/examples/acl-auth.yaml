@@ -50,4 +50,4 @@ tools:
   - kic
   - terraform
 
-group: authentication
+group: authorization

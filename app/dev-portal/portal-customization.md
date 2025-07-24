@@ -5,9 +5,8 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 tags:
-  - beta
+  - dev-portal-customization
 
 breadcrumbs:
   - /dev-portal/
@@ -21,7 +20,7 @@ api_specs:
 works_on:
     - konnect
 
-description: "Change the Dev Portal UI appearance."
+description: "Change the Dev Portal UI appearance and user experience."
 faqs:
   - q: What are the limitations of the Dev Portal Preview feature?
     a: |
@@ -31,19 +30,27 @@ faqs:
       * `Private` Pages **can** be previewed.
       * `Private` APIs **will not** appear when using the `:apis-list` MDC component.
       * `Private` Menus in headers or footers **will not** be shown.
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
+    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+  - q: How do I add an external link to my Dev Portal main menu or footer?
+    a: You can add external links to your main menu or footer by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Customization** in the sidebar. From the **Menu** tab, you can select the menu you want to customize and add the external link by clicking **Add menu item**. You can also send a PATCH request to the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization) to add an external link using the {{site.konnect_short_name}} API.
 
 related_resources:
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: Custom domains
     url: /dev-portal/custom-domains/
+  - text: About Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
 Dev Portal UI customization settings can be found on the left sidebar when you select a Dev Portal.
 
 ## Menu customization
 
-You can customize several options for Dev Portal menus.
+You can customize several options for Dev Portal menus. To customize menus in the {{site.konnect_short_name}} UI, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Customization** in the sidebar. From the **Menu** tab, you can select the menu you want to customize and click **Add menu item**.
+
+You can also add external links to all Dev Portal menu items either using the {{site.konnect_short_name}} UI or the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization).
 
 ### Visibility
 
@@ -51,26 +58,26 @@ All menu items have visibility controls, which determine which developers can se
 
 ### Main menu
 
-Main menus are a flat list of links that will be added to the header of every page in your Dev Portal. 
+Main menus are a flat list of links that will be added to the header of every page in your Dev Portal.
 These titles and links will be spaced evenly horizontally.
 
 ### Footer menu sections
 
 Footer menus allow you to create a set of columns with links for global navigation. Select **Footer Sections Menu** from the dropdown list to begin creating your menus.
 
-Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side. 
+Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side.
 We recommend creating your desired footer sections before creating footer menu items.
 
 Footer menu items are links to any URL you prefer, with a title to be displayed. Items must specify a footer menu section.
 
 ### Footer bottom menu
 
-Footer bottom menu is a flat list of links that will be added to the bottom of every page. 
+Footer bottom menu is a flat list of links that will be added to the bottom of every page.
 Footer bottom menus are placed below footer menu sections.
 
 ## SEO customization
 
-To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly. 
+To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly.
 
 ## Portal editor
 
@@ -81,7 +88,7 @@ The Portal Editor provides you with a variety of tools for creating highly custo
 
 ### Appearance
 
-Appearance settings are applied globally to all pages in your Dev Portal. 
+Appearance settings are applied globally to all pages in your Dev Portal.
 You'll find the Appearance icon in the left sidebar of the Portal Editor.
 
 Basic appearance settings quickly create basic styles for your default Portal template:
@@ -109,7 +116,7 @@ For advanced needs, you can also create custom CSS that applies custom styles to
 
 ### Preview panel
 
-The preview will automatically show what your page should look like when developers view your Dev Portal. In the event that it fails to refresh after editing the page, there is a refresh button next to the generated URL at the bottom. 
+The preview will automatically show what your page should look like when developers view your Dev Portal. In the event that it fails to refresh after editing the page, there is a refresh button next to the generated URL at the bottom.
 
 There are three icons above **Preview** that allow you to test adaptive designs in some predefined viewports:
 * Desktop
@@ -119,4 +126,65 @@ There are three icons above **Preview** that allow you to test adaptive designs 
 ### Generated URL
 
 Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page slugs. The generated URL is shown at the bottom of the preview pane.
+
+## Developer email customization
+
+You can customize both the email domain and content of emails that developers receive for the following events:
+* Welcome (developer sign-up approved)
+* App registration approved
+* App registration rejected
+* App registration revoked
+* Confirm email address
+* Reset password
+* Account access rejected
+* Account access revoked
+
+To configure email customization settings, go to your Dev Portal, click **Portal Editor**, and then click the **Email** icon in the sidebar.
+
+### Email customization variables
+
+In the customization settings, you can use variables. For example, `{% raw %}{{application_name}}{% endraw %}` will be replaced with the name of the application in the email.
+
+The following table contains the variables you can use when customizing emails:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Variable
+    key: variable
+  - title: Description
+    key: description
+rows:
+  - variable: "<code>&#123;&#123;api_documentation_url&#125;&#125;</code>"
+    description: The documentation URL for the API.
+  - variable: "<code>&#123;&#123;api_name&#125;&#125;</code>"
+    description: The name of the API.
+  - variable: "<code>&#123;&#123;api_version&#125;&#125;</code>"
+    description: The version of the API.
+  - variable: "<code>&#123;&#123;application_name&#125;&#125;</code>"
+    description: The name of the developer's application.
+  - variable: "<code>&#123;&#123;dev_portal_reply_to&#125;&#125;</code>"
+    description: The Dev Portal reply-to email address.
+  - variable: "<code>&#123;&#123;developer_email&#125;&#125;</code>"
+    description: The email address of the developer.
+  - variable: "<code>&#123;&#123;developer_fullname&#125;&#125;</code>"
+    description: The full name of the developer.
+  - variable: "<code>&#123;&#123;developer_status&#125;&#125;</code>"
+    description: The Dev Portal status of a developer. For example, \"approved\", \"pending\", or \"revoked\".
+  - variable: "<code>&#123;&#123;portal_display_name&#125;&#125;</code>"
+    description: The display name of the Dev Portal.
+  - variable: "<code>&#123;&#123;portal_domain&#125;&#125;</code>"
+    description: The URL of the Dev Portal.
+{% endtable %}
+<!--vale on-->
+
+### Customize the email domain
+
+If you want to change the from and reply-to email domains, you can configure a different domain through Dev Portal settings.
+Navigate to your Dev Portal, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings.
+
+Once you've added your new domain, you must add the CNAME records to your DNS server.
+
+{:.info}
+> Certain domain names are restricted. See [Domain name restrictions](/dev-portal/custom-domains/#domain-name-restrictions) for more information.
 

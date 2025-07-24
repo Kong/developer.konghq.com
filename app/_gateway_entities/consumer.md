@@ -12,7 +12,7 @@ tags:
   - authentication
   - authorization
 
-description: A Consumer typically refers to an entity that consumes or uses the APIs managed by {{site.base_gateway}}.
+description: A Consumer is an entity that identifies an external client that consumes or uses the APIs managed by {{site.base_gateway}}.
 
 related_resources:
   - text: Authentication in {{site.base_gateway}}
@@ -91,8 +91,8 @@ works_on:
 
 ## What is a Consumer?
 
-A Consumer is an entity that consumes or uses the APIs managed by {{site.base_gateway}}.
-Consumers can be applications, services, or users who interact with your APIs.
+A Consumer is an entity that identifies an external client that consumes or uses the APIs managed by {{site.base_gateway}}.
+Consumers can represent applications, services, or users who interact with your APIs.
 Since they are not always human, {{site.base_gateway}} calls them Consumers, because they "consume" the service.
 {{site.base_gateway}} allows you to define and manage Consumers, apply access control policies, and monitor their API usage.
 
@@ -175,6 +175,34 @@ Centralized Consumer management provides the following benefits:
 * **Reduce configuration sync issues between the Control Plane and the Data Planes**: Consumers that are managed centrally aren't part of the configuration that is pushed down from the Control Plane to the Data Planes, so it reduces config size and latency. 
 
 Centrally managed Consumers exist outside of Control Planes, so they can be used across Control Planes.
+
+Use the following table to help you determine if you should use centrally-managed Consumers or Consumers scoped to Control Planes:
+
+<!--vale off-->
+{% feature_table %} 
+columns:
+  - title: "Centrally-managed Consumers"
+    key: central
+    center: true
+  - title: Control Plane scoped Consumer
+    key: cp_consumer
+    center: true
+
+features:
+  - title: "Share Consumer identity in more than one Control Plane"
+    central: true
+    cp_consumer: false
+  - title: "Supported authentication strategies"
+    central: Key auth
+    cp_consumer: All
+  - title: "Scope plugins directly to Consumer"
+    central: false
+    cp_consumer: true
+  - title: "Scope plugins to Consumer Groups"
+    central: true
+    cp_consumer: true
+{% endfeature_table %}
+<!--vale on-->
 
 You can manage Consumers centrally using the [{{site.konnect_short_name}} Consumers API](/api/konnect/consumers/v1/). 
 Only Org Admins and Control Plane Admins have CRUD permissions for these Consumers. 

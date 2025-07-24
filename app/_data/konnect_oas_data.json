@@ -66,12 +66,12 @@
     "id": "937dcdd7-4485-47dc-af5f-b805d562552f",
     "title": "Gateway Admin - EE",
     "latestVersion": {
-      "name": "3.10.0.0",
-      "id": "ff624b30-66c7-415d-bf39-fdef6567eac7"
+      "name": "3.11.0.0",
+      "id": "b198aa66-400b-4d3f-ac31-b71b7a924d9c"
     },
     "description": "Kong Gateway (EE) comes with an internal RESTful API for administration purposes.",
     "documentCount": 2,
-    "versionCount": 8,
+    "versionCount": 9,
     "versions": [
       {
         "id": "be79b812-46d5-4cc1-b757-b5270bf4fa60",
@@ -134,6 +134,14 @@
         "created_at": "2025-03-12T17:33:22.445Z",
         "updated_at": "2025-03-27T14:04:59.646Z",
         "name": "3.10.0.0",
+        "deprecated": false,
+        "registration_configs": []
+      },
+      {
+        "id": "b198aa66-400b-4d3f-ac31-b71b7a924d9c",
+        "created_at": "2025-06-30T17:33:36.082Z",
+        "updated_at": "2025-06-30T17:35:16.334Z",
+        "name": "3.11.0.0",
         "deprecated": false,
         "registration_configs": []
       }
@@ -377,6 +385,27 @@
     ]
   },
   {
+    "id": "6f558eef-bc41-466b-9a2b-eb0cf409a6f3",
+    "title": "Konnect CMEK",
+    "latestVersion": {
+      "name": "v1",
+      "id": "3cebbe84-28ff-4c7b-a31f-d855975a14bd"
+    },
+    "description": "Customer Managed Encryption Keys",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "3cebbe84-28ff-4c7b-a31f-d855975a14bd",
+        "created_at": "2025-07-15T20:24:00.808Z",
+        "updated_at": "2025-07-15T20:24:44.159Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "98e74b12-7b86-429f-9255-d4a33e40f13b",
     "title": "Konnect Control Planes",
     "latestVersion": {
@@ -583,6 +612,27 @@
         "id": "c0b23b3d-0e01-4045-98d8-0846c346e6e3",
         "created_at": "2024-05-02T16:10:01.020Z",
         "updated_at": "2024-11-26T16:20:27.227Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "edd35dd6-f6cc-48cc-be60-02c99918b7d8",
+    "title": "Konnect Service Catalog",
+    "latestVersion": {
+      "name": "v1",
+      "id": "b5eca960-87b6-47cf-930d-a9d06a40eae1"
+    },
+    "description": "The Service Catalog API.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "b5eca960-87b6-47cf-930d-a9d06a40eae1",
+        "created_at": "2025-06-18T12:56:13.007Z",
+        "updated_at": "2025-07-17T15:08:28.173Z",
         "name": "v1",
         "deprecated": false,
         "registration_configs": []

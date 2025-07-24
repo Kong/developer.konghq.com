@@ -4,8 +4,7 @@ name: 'AI Sanitizer'
 
 content_type: plugin
 
-ai_gateway_enterprise: true
-
+tier: ai_gateway_enterprise
 publisher: kong-inc
 description: Protect sensitive information in client request bodies before they reach upstream services
 
@@ -21,14 +20,15 @@ works_on:
 min_version:
     gateway: '3.10'
 
-on_prem:
-  - hybrid
-  - db-less
-  - traditional
-konnect_deployments:
-  - hybrid
-  - cloud-gateways
-  - serverless
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 icon: ai-sanitizer.png
 
@@ -36,6 +36,8 @@ categories:
     - ai
 tags:
   - ai
+
+
 
 related_resources:
   - text: Use AI to protect sensitive information in requests

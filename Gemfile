@@ -8,6 +8,11 @@ gem 'rouge', '~> 4.3'
 gem 'jekyll-vite'
 gem 'activesupport'
 gem 'nokogiri'
+gem 'csv'
+
+# XXX: bundler isn't installing mini_portile as a dependency of nokogiri
+# installing it manually fixes the issue
+gem 'mini_portile2', '~> 2.8'
 
 group :development do
   gem 'pry'

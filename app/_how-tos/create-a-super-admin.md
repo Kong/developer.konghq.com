@@ -27,12 +27,14 @@ prereqs:
             * `KONG_ADMIN_TOKEN`: The `kong_password` variable set when configuring {{site.base_gateway}}
             * `ADMIN_NAME`: The name of the RBAC user that will be associated with the Super Admin Role.
             * `USER_TOKEN`: The authentication token to be presented to the Admin API.
-            For example: 
-            ```sh
-            export KONG_ADMIN_TOKEN=kong
-            export ADMIN_NAME=tim
-            export USER_TOKEN=my-admin-token
-            ```
+            For example:
+
+            {% env_variables %}
+            KONG_ADMIN_TOKEN: kong
+            ADMIN_NAME: tim
+            USER_TOKEN: my-admin-token
+            {% endenv_variables %}
+
         icon_url: /assets/icons/file.svg
 
 min_version:
@@ -64,15 +66,16 @@ related_resources:
 <!-- vale off -->
 {% capture request %}
 {% control_plane_request %}
-  url: /rbac/users
-  method: POST
-  headers:
-      - 'Accept: application/json'
-      - 'Content-Type: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-  body:
-      name: $ADMIN_NAME
-      user_token: $USER_TOKEN
+url: /rbac/users
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+body:
+    name: $ADMIN_NAME
+    user_token: $USER_TOKEN
+status_code: 201
 {% endcontrol_plane_request %}
 {% endcapture %}
 
@@ -83,15 +86,15 @@ related_resources:
 
 {% capture request2 %}
 {% control_plane_request %}
-  url: /rbac/users/$ADMIN_NAME/roles
-  method: POST
-  headers:
-      - 'Accept: application/json'
-      - 'Content-Type: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-  body:
-      roles: super-admin
-
+url: /rbac/users/$ADMIN_NAME/roles
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+body:
+    roles: super-admin
+status_code: 201
 {% endcontrol_plane_request %}
 {% endcapture %}
 
@@ -104,9 +107,10 @@ related_resources:
 You can validate that the `super-admin` role was correctly assigned to the RBAC user using the [`/rbac/users/{user}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint: 
 
 {% control_plane_request %}
-  url: /rbac/users/$ADMIN_NAME/roles
-  headers:
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+url: /rbac/users/$ADMIN_NAME/roles
+headers:
+    - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+status_code: 200
 {% endcontrol_plane_request %}
 If this was configured correctly the response body will look like this: 
 

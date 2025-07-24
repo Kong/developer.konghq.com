@@ -3,6 +3,7 @@ title: GraphQL Rate Limiting Advanced
 
 name: GraphQL Rate Limiting Advanced
 publisher: kong-inc
+tier: enterprise
 content_type: plugin
 description: Provides rate limiting for GraphQL queries
 tags:
@@ -44,6 +45,10 @@ related_resources:
     url: /plugins/graphql-proxy-cache-advanced/
   - text: Governing GraphQL APIs with {{site.base_gateway}}
     url: https://konghq.com/blog/engineering/governing-graphql-apis-with-kong-gateway
+
+notes: |
+  In DB-less, hybrid mode, and Konnect, the <code>cluster</code> config strategy
+  is not supported. Use <code>redis</code> instead.
 ---
 
 The GraphQL Rate Limiting Advanced plugin provides rate limiting for [GraphQL queries](https://graphql.org/learn/queries/).

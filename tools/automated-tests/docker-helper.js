@@ -13,6 +13,11 @@ export async function fetchImage(docker, imageName, runtime, log) {
     log(`Image '${imageName}' already exists.`);
     return;
   } catch (err) {
+    if (err.statusCode !== 404) {
+      log(`Unexpected error while fetching image: ${err.message}`);
+      throw err;
+    }
+
     log(`Image '${imageName}' not found, building it...`);
 
     return new Promise((resolve, reject) => {
@@ -29,15 +34,14 @@ export async function fetchImage(docker, imageName, runtime, log) {
             return reject(error);
           }
 
-          docker.modem.followProgress(stream, onFinished, onProgress);
-
-          function onFinished(err, output) {
-            if (err) {
-              return reject(err);
-            }
-            return resolve(output);
-          }
-          function onProgress(event) {}
+          docker.modem.followProgress(
+            stream,
+            (err, res) => (err ? reject(err) : resolve(res)),
+            (event) =>
+              event.status
+                ? debugLog(event.status.trim())
+                : debugLog(event.stream?.trim())
+          );
         }
       );
     });
@@ -48,7 +52,11 @@ export async function executeCommand(container, cmd) {
   return new Promise(async (resolve, reject) => {
     try {
       const execCommand = await container.exec({
-        Cmd: ["bash", "-c", cmd],
+        Cmd: [
+          "bash",
+          "-c",
+          `touch /env-vars.sh && source /env-vars.sh && ${cmd}`,
+        ],
         AttachStdout: true,
         AttachStderr: true,
       });
@@ -93,7 +101,7 @@ export async function executeCommand(container, cmd) {
       const execInfo = await execCommand.inspect();
 
       if (execInfo.ExitCode === 0) {
-        resolve();
+        resolve(execInfo.ExitCode);
       } else {
         const message = `
         Failed to run command ${cmd}
@@ -116,5 +124,73 @@ export async function stopContainer(container) {
 export async function removeContainer(container) {
   if (container) {
     await container.remove();
+  }
+}
+
+export async function setEnvVariable(container, name, value) {
+  const writeEnvVar = await container.exec({
+    Cmd: ["bash", "-c", `echo "export ${name}=${value}" >> /env-vars.sh`],
+    AttachStdout: true,
+    AttachStderr: true,
+  });
+
+  const result = await new Promise((resolve, reject) => {
+    writeEnvVar.start((err, stream) => {
+      if (err) return reject(err);
+
+      container.modem.demuxStream(stream, process.stdout, process.stderr);
+      stream.on("end", resolve);
+      stream.on("error", reject);
+      stream.resume(); // Drain output
+    });
+  });
+  return;
+}
+
+export async function getLiveEnv(container) {
+  const readEnvVar = await container.exec({
+    Cmd: ["bash", "-c", "source /env-vars.sh && env"],
+    AttachStdout: true,
+    AttachStderr: true,
+  });
+
+  const output = await new Promise((resolve, reject) => {
+    readEnvVar.start((err, stream) => {
+      if (err) return reject(err);
+
+      let stdout = "";
+      let stderr = "";
+
+      container.modem.demuxStream(
+        stream,
+        {
+          write: (chunk) => {
+            stdout += chunk.toString();
+          },
+        },
+        {
+          write: (chunk) => {
+            stderr += chunk.toString();
+          },
+        }
+      );
+
+      stream.on("end", () => {
+        if (stderr) return reject(new Error(stderr));
+        resolve(stdout.trim());
+      });
+
+      stream.on("error", reject);
+    });
+  });
+  return output;
+}
+
+export async function addEnvVariablesFromContainer(container, runtimeConfig) {
+  const envVars = await getLiveEnv(container);
+
+  for (const envVar of envVars.split("\n")) {
+    const [name, value] = envVar.split("=");
+    runtimeConfig.env[name] = value;
   }
 }

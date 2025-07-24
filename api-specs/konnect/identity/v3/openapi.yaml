@@ -1339,106 +1339,11 @@ components:
         type: integer
         example: 10
   schemas:
-    IdentityProviderEnabled:
-      description: |
-        Indicates whether the identity provider is enabled.
-        Only one identity provider can be active at a time, such as SAML or OIDC.
-      type: boolean
-      example: true
-      default: false
-      title: Identity Provider Enabled Property
-    IdentityProviderType:
-      description: Specifies the type of identity provider.
-      type: string
-      example: oidc
-      enum:
-        - oidc
-        - saml
     IdentityProviderLoginPath:
       description: The path used for initiating login requests with the identity provider.
       type: string
       example: myapp
       title: Identity Provider Login Path Property
-    OIDCIdentityProviderIssuer:
-      description: The issuer URI of the identity provider. This is the URL where the provider's metadata can be obtained.
-      type: string
-      format: uri
-      example: 'https://konghq.okta.com/oauth2/default'
-      title: OIDC Identity Provider Issuer Property
-    OIDCIdentityProviderClientId:
-      description: The client ID assigned to your application by the identity provider.
-      type: string
-      example: YOUR_CLIENT_ID
-      title: OIDC Identity Provider Login Client Id Property
-    OIDCIdentityProviderClientSecret:
-      description: The Client Secret assigned to your application by the identity provider.
-      type: string
-      example: YOUR_CLIENT_SECRET
-      title: OIDC Identity Provider Login Client Secret Property
-    OIDCIdentityProviderScopes:
-      description: The scopes requested by your application when authenticating with the identity provider.
-      type: array
-      items:
-        type: string
-      default:
-        - email
-        - openid
-        - profile
-      title: OIDC Identity Provider Scopes Property
-    OIDCIdentityProviderClaimMappings:
-      description: |
-        Defines the mappings between OpenID Connect (OIDC) claims and local claims used by your application for
-        authentication.
-      type: object
-      properties:
-        name:
-          description: The claim mapping for the user's name.
-          type: string
-          example: name
-          default: name
-        email:
-          description: The claim mapping for the user's email address.
-          type: string
-          example: email
-          default: email
-        groups:
-          description: The claim mapping for the user's group membership information.
-          type: string
-          example: groups
-          default: groups
-      title: OIDC Claim Mappings
-    SAMLIdentityProviderMetadataURL:
-      description: The identity provider's metadata URL where the identity provider's metadata can be obtained.
-      type: string
-      format: uri
-      example: 'https://mocksaml.com/api/saml/metadata'
-      title: SAML Identity Provider Metadata URL
-    SAMLIdentityProviderMetadata:
-      description: |
-        The identity provider's SAML metadata. If the identity provider supports a metadata URL, you can use the `idp_metadata_url` field instead.
-      type: string
-      example: |
-        <?xml version="1.0" encoding="UTF-8"?>
-        <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
-          <!-- SAML metadata content here -->
-        </EntityDescriptor>
-      title: SAML Identity Provider Metadata
-    CreateIdentityProvider:
-      description: The identity provider that contains configuration data for creating an authentication integration.
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/IdentityProviderType'
-        login_path:
-          $ref: '#/components/schemas/IdentityProviderLoginPath'
-        enabled:
-          $ref: '#/components/schemas/schemas-IdentityProviderEnabled'
-        config:
-          type: object
-          oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
     UpdateIdentityProvider:
       description: The identity provider that contains configuration data for updating an authentication integration.
       type: object
@@ -1453,64 +1358,6 @@ components:
             - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
-    IdentityProvider:
-      description: The identity provider that contains configuration data for authentication integration.
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/UUID'
-        type:
-          $ref: '#/components/schemas/IdentityProviderType'
-        enabled:
-          $ref: '#/components/schemas/IdentityProviderEnabled'
-        login_path:
-          $ref: '#/components/schemas/IdentityProviderLoginPath'
-        config:
-          type: object
-          oneOf:
-            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      title: Identity Provider
-    OIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
-    ConfigureOIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        client_secret:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
     SAMLIdentityProviderConfig:
       description: The identity provider that contains configuration data for the SAML authentication integration.
       type: object
@@ -2184,6 +2031,123 @@ components:
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
       readOnly: true
+    IdentityProviderType:
+      description: Specifies the type of identity provider.
+      type: string
+      example: oidc
+      enum:
+        - oidc
+        - saml
+    schemas-IdentityProviderEnabled:
+      description: |
+        Indicates whether the identity provider is enabled. 
+        Only one identity provider can be active at a time, such as SAML or OIDC.
+      type: boolean
+      example: true
+      default: false
+      title: Identity Provider Enabled Property
+    OIDCIdentityProviderIssuer:
+      description: The issuer URI of the identity provider. This is the URL where the provider's metadata can be obtained.
+      type: string
+      format: uri
+      example: 'https://konghq.okta.com/oauth2/default'
+      title: OIDC Identity Provider Issuer Property
+    OIDCIdentityProviderClientId:
+      description: The client ID assigned to your application by the identity provider.
+      type: string
+      example: YOUR_CLIENT_ID
+      title: OIDC Identity Provider Login Client Id Property
+    OIDCIdentityProviderScopes:
+      description: The scopes requested by your application when authenticating with the identity provider.
+      type: array
+      items:
+        type: string
+      default:
+        - email
+        - openid
+        - profile
+      title: OIDC Identity Provider Scopes Property
+    schemas-OIDCIdentityProviderClaimMappings:
+      description: |
+        Defines the mappings between OpenID Connect (OIDC) claims and local claims used by your application for 
+        authentication.
+      type: object
+      properties:
+        name:
+          description: The claim mapping for the user's name.
+          type: string
+          example: name
+          default: name
+        email:
+          description: The claim mapping for the user's email address.
+          type: string
+          example: email
+          default: email
+        groups:
+          description: The claim mapping for the user's group membership information.
+          type: string
+          example: groups
+          default: groups
+      title: OIDC Claim Mappings
+    schemas-OIDCIdentityProviderConfig:
+      description: The identity provider that contains configuration data for the OIDC authentication integration.
+      type: object
+      properties:
+        issuer_url:
+          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
+        client_id:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
+        scopes:
+          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
+        claim_mappings:
+          $ref: '#/components/schemas/schemas-OIDCIdentityProviderClaimMappings'
+      additionalProperties: false
+      required:
+        - issuer_url
+        - client_id
+      title: OIDC Identity Provider Config
+    SAMLIdentityProviderMetadataURL:
+      description: The identity provider's metadata URL where the identity provider's metadata can be obtained.
+      type: string
+      format: uri
+      example: 'https://mocksaml.com/api/saml/metadata'
+      title: SAML Identity Provider Metadata URL
+    SAMLIdentityProviderMetadata:
+      description: |
+        The identity provider's SAML metadata. If the identity provider supports a metadata URL, you can use the `idp_metadata_url` field instead.
+      type: string
+      example: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+          <!-- SAML metadata content here -->
+        </EntityDescriptor>
+      title: SAML Identity Provider Metadata
+    schemas-SAMLIdentityProviderConfig:
+      description: The identity provider that contains configuration data for the SAML authentication integration.
+      type: object
+      properties:
+        idp_metadata_url:
+          $ref: '#/components/schemas/SAMLIdentityProviderMetadataURL'
+        idp_metadata_xml:
+          $ref: '#/components/schemas/SAMLIdentityProviderMetadata'
+        sp_metadata_url:
+          type: string
+          format: path
+          example: /api/v2/developer/authenticate/saml/metadata
+          readOnly: true
+        sp_entity_id:
+          description: The entity ID of the service provider (SP).
+          type: string
+          example: 'https://cloud.konghq.com/sp/00000000-0000-0000-0000-000000000000'
+          readOnly: true
+        callback_url:
+          description: The path URL where the SAML identity provider sends authentication responses after successful login attempts.
+          type: string
+          format: path
+          example: /api/v2/developer/authenticate/saml/acs
+          readOnly: true
+      additionalProperties: false
+      title: SAML Identity Provider Config
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
@@ -2196,6 +2160,26 @@ components:
       format: date-time
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
+    schemas-IdentityProvider:
+      description: The identity provider that contains configuration data for authentication integration.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        type:
+          $ref: '#/components/schemas/IdentityProviderType'
+        enabled:
+          $ref: '#/components/schemas/schemas-IdentityProviderEnabled'
+        config:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/schemas-OIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/schemas-SAMLIdentityProviderConfig'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      title: Identity Provider
     ForbiddenError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -2211,14 +2195,44 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
-    schemas-IdentityProviderEnabled:
-      description: |
-        Indicates whether the identity provider is enabled. 
-        Only one identity provider can be active at a time, such as SAML or OIDC.
-      type: boolean
-      example: true
-      default: false
-      title: Identity Provider Enabled Property
+    OIDCIdentityProviderClientSecret:
+      description: The Client Secret assigned to your application by the identity provider.
+      type: string
+      example: YOUR_CLIENT_SECRET
+      title: OIDC Identity Provider Login Client Secret Property
+    ConfigureOIDCIdentityProviderConfig:
+      description: The identity provider that contains configuration data for the OIDC authentication integration.
+      type: object
+      properties:
+        issuer_url:
+          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
+        client_id:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
+        client_secret:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
+        scopes:
+          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
+        claim_mappings:
+          $ref: '#/components/schemas/schemas-OIDCIdentityProviderClaimMappings'
+      additionalProperties: false
+      required:
+        - issuer_url
+        - client_id
+      title: OIDC Identity Provider Config
+    schemas-CreateIdentityProvider:
+      description: The identity provider that contains configuration data for creating an authentication integration.
+      type: object
+      properties:
+        enabled:
+          $ref: '#/components/schemas/schemas-IdentityProviderEnabled'
+        type:
+          $ref: '#/components/schemas/IdentityProviderType'
+        config:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/schemas-SAMLIdentityProviderConfig'
+      title: Identity Provider
     StringFieldContainsFilter:
       description: Filter a string value field by partial contains.
       type: object
@@ -2582,121 +2596,6 @@ components:
         basic_auth_enabled: true
         idp_mapping_enabled: false
         konnect_mapping_enabled: true
-    OIDCIdentityProvider:
-      value:
-        id: 66da2d42-469d-48cd-9ff3-0db135dd82d8
-        type: oidc
-        enabled: false
-        login_path: the-oidc-konnect-org
-        config:
-          issuer_url: 'https://konghq.okta.com/oauth2/default'
-          client_id: 0oaqhb43ckTZ02j1F357
-          scopes:
-            - openid
-            - email
-            - profile
-          claim_mappings:
-            email: email
-            name: name
-            groups: groups
-        created_at: '2022-02-07T17:46:57.52Z'
-        updated_at: '2022-02-07T17:46:57.52Z'
-    SAMLIdentityProvider:
-      value:
-        id: a2c3156d-ebb1-432b-b2f1-edcc5f133c60
-        type: saml
-        enabled: true
-        login_path: the-saml-konnect-org
-        config:
-          idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
-          sp_entity_id: 'https://cloud.konghq.com/sp/00000000-0000-0000-0000-000000000000'
-          sp_metadata_url: 'https://cloud.konghq.com/v2/authenticate/the-saml-konnect-org/saml/metadata'
-          login_url: 'https://cloud.konghq.com/login/the-saml-konnect-org'
-          callback_url: 'https://cloud.konghq.com/v2/authenticate/the-saml-konnect-org/saml/acs'
-        created_at: '2022-02-07T17:46:57.52Z'
-        updated_at: '2022-02-07T17:46:57.52Z'
-    SAMLIdentityProviderWithMetadata:
-      value:
-        id: a2c3156d-ebb1-432b-b2f1-edcc5f133c60
-        type: saml
-        enabled: true
-        login_path: the-saml-konnect-org
-        config:
-          idp_metadata_xml: |
-            <?xml version="1.0" encoding="UTF-8"?>
-            <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
-            <!-- SAML metadata content here -->
-            </EntityDescriptor>
-          sp_entity_id: 'https://cloud.konghq.com/sp/00000000-0000-0000-0000-000000000000'
-          sp_metadata_url: 'https://cloud.konghq.com/v2/authenticate/the-saml-konnect-org/saml/metadata'
-          login_url: 'https://cloud.konghq.com/login/the-saml-konnect-org'
-          callback_url: 'https://cloud.konghq.com/v2/authenticate/the-saml-konnect-org/saml/acs'
-        created_at: '2022-02-07T17:46:57.52Z'
-        updated_at: '2022-02-07T17:46:57.52Z'
-    IdentityProviders:
-      value:
-        - id: a2c3156d-ebb1-432b-b2f1-edcc5f133c60
-          type: saml
-          enabled: true
-          login_path: the-saml-konnect-org
-          config:
-            idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
-            sp_entity_id: 'https://cloud.konghq.com/sp/00000000-0000-0000-0000-000000000000'
-            sp_metadata_url: 'https://cloud.konghq.com/v2/authenticate/the-saml-konnect-org/saml/metadata'
-            login_url: 'https://cloud.konghq.com/login/the-saml-konnect-org'
-            callback_url: 'https://cloud.konghq.com/v2/authenticate/the-saml-konnect-org/saml/acs'
-          created_at: '2022-02-07T17:46:57.52Z'
-          updated_at: '2022-02-07T17:46:57.52Z'
-        - id: 66da2d42-469d-48cd-9ff3-0db135dd82d8
-          type: oidc
-          enabled: false
-          login_path: the-oidc-konnect-org
-          config:
-            issuer_url: 'https://konghq.okta.com/oauth2/default'
-            client_id: 0oaqhb43ckTZ02j1F357
-            scopes:
-              - openid
-              - email
-              - profile
-            claim_mappings:
-              email: email
-              name: name
-              groups: groups
-          created_at: '2022-02-07T17:46:57.52Z'
-          updated_at: '2022-02-07T17:46:57.52Z'
-    CreateOIDCIdentityProvider:
-      value:
-        type: oidc
-        login_path: the-oidc-konnect-org
-        enabled: true
-        config:
-          issuer_url: 'https://konghq.okta.com/oauth2/default'
-          client_id: 0oaqhb43ckTZ02j1F357
-          client_secret: BbqwI8xP9E4evOK
-          scopes:
-            - openid
-            - email
-            - profile
-          claim_mappings:
-            email: email
-            name: name
-            groups: groups
-    CreateSAMLIdentityProviderWithMetadataURL:
-      value:
-        type: saml
-        login_path: the-saml-konnect-org
-        config:
-          idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
-    CreateSAMLIdentityProviderWithMetadata:
-      value:
-        type: saml
-        login_path: the-saml-konnect-org
-        config:
-          idp_metadata_xml: |
-            <?xml version="1.0" encoding="UTF-8"?>
-            <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
-            <!-- SAML metadata content here -->
-            </EntityDescriptor>
     UpdateOIDCIdentityProvider:
       value:
         enabled: true
@@ -2722,6 +2621,109 @@ components:
     UpdateIdentityProviderLoginPath:
       value:
         login_path: the-konnect-org
+    examples-IdentityProviders:
+      value:
+        - id: a2c3156d-ebb1-432b-b2f1-edcc5f133c60
+          type: saml
+          enabled: true
+          config:
+            idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
+            sp_entity_id: 'https://cloud.konghq.com/sp/00000000-0000-0000-0000-000000000000'
+            sp_metadata_url: /api/v2/developer/authenticate/saml/metadata
+            callback_url: /api/v2/developer/authenticate/saml/acs
+          created_at: '2022-02-07T17:46:57.52Z'
+          updated_at: '2022-02-07T17:46:57.52Z'
+        - id: 66da2d42-469d-48cd-9ff3-0db135dd82d8
+          type: oidc
+          enabled: false
+          config:
+            issuer_url: 'https://konghq.okta.com/oauth2/default'
+            client_id: 0oaqhb43ckTZ02j1F357
+            scopes:
+              - openid
+              - email
+              - profile
+            claim_mappings:
+              email: email
+              name: name
+              groups: groups
+          created_at: '2022-02-07T17:46:57.52Z'
+          updated_at: '2022-02-07T17:46:57.52Z'
+    examples-CreateOIDCIdentityProvider:
+      value:
+        type: oidc
+        config:
+          issuer_url: 'https://konghq.okta.com/oauth2/default'
+          client_id: 0oaqhb43ckTZ02j1F357
+          client_secret: BbqwI8xP9E4evOK
+          scopes:
+            - openid
+            - email
+            - profile
+          claim_mappings:
+            email: email
+            name: name
+            groups: groups
+    examples-CreateSAMLIdentityProviderWithMetadataURL:
+      value:
+        type: saml
+        config:
+          idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
+    examples-CreateSAMLIdentityProviderWithMetadata:
+      value:
+        type: saml
+        config:
+          idp_metadata_xml: |
+            <?xml version="1.0" encoding="UTF-8"?>
+            <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+            <!-- SAML metadata content here -->
+            </EntityDescriptor>
+    examples-OIDCIdentityProvider:
+      value:
+        id: 66da2d42-469d-48cd-9ff3-0db135dd82d8
+        type: oidc
+        enabled: false
+        config:
+          issuer_url: 'https://konghq.okta.com/oauth2/default'
+          client_id: 0oaqhb43ckTZ02j1F357
+          scopes:
+            - openid
+            - email
+            - profile
+          claim_mappings:
+            email: email
+            name: name
+            groups: groups
+        created_at: '2022-02-07T17:46:57.52Z'
+        updated_at: '2022-02-07T17:46:57.52Z'
+    examples-SAMLIdentityProvider:
+      value:
+        id: a2c3156d-ebb1-432b-b2f1-edcc5f133c60
+        type: saml
+        enabled: true
+        config:
+          idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
+          sp_entity_id: 'https://cloud.konghq.com/sp/00000000-0000-0000-0000-000000000000'
+          sp_metadata_url: /api/v2/developer/authenticate/saml/metadata
+          callback_url: /api/v2/developer/authenticate/saml/acs
+        created_at: '2022-02-07T17:46:57.52Z'
+        updated_at: '2022-02-07T17:46:57.52Z'
+    examples-SAMLIdentityProviderWithMetadata:
+      value:
+        id: a2c3156d-ebb1-432b-b2f1-edcc5f133c60
+        type: saml
+        enabled: true
+        config:
+          idp_metadata_xml: |
+            <?xml version="1.0" encoding="UTF-8"?>
+            <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+            <!-- SAML metadata content here -->
+            </EntityDescriptor>
+          sp_entity_id: 'https://cloud.konghq.com/sp/00000000-0000-0000-0000-000000000000'
+          sp_metadata_url: /api/v2/developer/authenticate/saml/metadata
+          callback_url: /api/v2/developer/authenticate/saml/acs
+        created_at: '2022-02-07T17:46:57.52Z'
+        updated_at: '2022-02-07T17:46:57.52Z'
   requestBodies:
     UpdateImpersonationSettingsRequest:
       content:
@@ -2879,9 +2881,9 @@ components:
                         type: string
             example:
               data:
-                - group: Service Developers
-                  team_ids:
-                    - af91db4c-6e51-403e-a2bf-33d27ae50c0a
+                - team_id: af91db4c-6e51-403e-a2bf-33d27ae50c0a
+                  groups:
+                    - Service Developers
           examples:
             Example Request Body:
               $ref: '#/components/examples/Patch-Team-Group-Mappings'
@@ -3141,21 +3143,6 @@ components:
                     example: custom-group-claim
                     default: groups
       description: The request schema for the update IdP configuration request.
-    CreateIdentityProviderRequest:
-      description: |
-        An object representing the configuration for creating a new identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateIdentityProvider'
-          examples:
-            OIDC Identity Provider Request:
-              $ref: '#/components/examples/CreateOIDCIdentityProvider'
-            SAML Identity Provider Request With MetadataURL:
-              $ref: '#/components/examples/CreateSAMLIdentityProviderWithMetadataURL'
-            SAML Identity Provider Request With Metadata:
-              $ref: '#/components/examples/CreateSAMLIdentityProviderWithMetadata'
     UpdateIdentityProviderRequest:
       description: |
         An object representing the configuration for updating an identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
@@ -3171,6 +3158,21 @@ components:
               $ref: '#/components/examples/UpdateSAMLIdentityProvider'
             Update Identity Provider Login Path:
               $ref: '#/components/examples/UpdateIdentityProviderLoginPath'
+    CreateIdentityProviderRequest:
+      description: |
+        An object representing the configuration for creating a new identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/schemas-CreateIdentityProvider'
+          examples:
+            OIDC Identity Provider Request:
+              $ref: '#/components/examples/examples-CreateOIDCIdentityProvider'
+            SAML Identity Provider Request With MetadataURL:
+              $ref: '#/components/examples/examples-CreateSAMLIdentityProviderWithMetadataURL'
+            SAML Identity Provider Request With Metadata:
+              $ref: '#/components/examples/examples-CreateSAMLIdentityProviderWithMetadata'
   responses:
     GetImpersonationSettingsResponse:
       description: Response for Get Impersonation Settings endpoint
@@ -3630,6 +3632,7 @@ components:
                             enum:
                               - Consumer Admin
                           description:
+                            description: This role grants full write access to administer Consumers. Can configure plugins and view plugin partials for Consumers they have access to. Cannot create or modify global plugins or plugins outside their scope.
                             type: string
                             example: This role grants full write access to administer consumers.
                             enum:
@@ -3678,6 +3681,7 @@ components:
                             enum:
                               - Gateway Service Admin
                           description:
+                            description: This role grants full write access to administer Gateway Services. Can configure plugins and view plugin partials for Services they have access to. Cannot create or modify global plugins or plugins outside their scope.
                             type: string
                             example: This role grants full write access to administer gateway services.
                             enum:
@@ -3694,6 +3698,7 @@ components:
                             enum:
                               - Plugin Admin
                           description:
+                            description: 'Can configure plugins at any scope (global, Service, Route, or Consumer) within a Control Plane Group. Also has write access to plugin partials.'
                             type: string
                             example: This role grants full write access to administer plugins.
                             enum:
@@ -3710,6 +3715,7 @@ components:
                             enum:
                               - Route Admin
                           description:
+                            description: This role grants full write access to administer Routes. Can configure plugins and view plugin partials for Routes they have access to. Cannot create or modify global plugins or plugins outside their scope.
                             type: string
                             example: This role grants full write access to administer routes.
                             enum:
@@ -3758,6 +3764,7 @@ components:
                             enum:
                               - Viewer
                           description:
+                            description: This role grants read-only access to all the configurations of a Control Plane Group and corresponding Data Plane nodes. Includes read-only access to plugin partials within accessible scopes.
                             type: string
                             example: This role grants read only access to all entities within a control plane.
                             enum:
@@ -4348,20 +4355,12 @@ components:
                 updated_at: '2023-01-23T17:22:52.150Z'
                 state: active
                 retention_period_days: 90
-    IdentityProvider:
-      description: |
-        An identity provider configuration. This response represents the configuration of a specific identity provider, which can be either OIDC or SAML.
+    IdPConfiguration:
+      description: A get action response of the IdP configuration.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/IdentityProvider'
-          examples:
-            OIDC Identity Provider:
-              $ref: '#/components/examples/OIDCIdentityProvider'
-            SAML Identity Provider With Meta Data URL:
-              $ref: '#/components/examples/SAMLIdentityProvider'
-            SAML Identity Provider With Meta Data:
-              $ref: '#/components/examples/SAMLIdentityProviderWithMetadata'
+            $ref: '#/components/schemas/IdP'
     IdentityProviders:
       description: |
         A collection of identity providers. This response contains a collection of identity providers, which may  include both OIDC and SAML identity providers.
@@ -4370,17 +4369,25 @@ components:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/IdentityProvider'
+              $ref: '#/components/schemas/schemas-IdentityProvider'
             title: Identity Provider Collection Response
           examples:
             Identity Provider Collection:
-              $ref: '#/components/examples/IdentityProviders'
-    IdPConfiguration:
-      description: A get action response of the IdP configuration.
+              $ref: '#/components/examples/examples-IdentityProviders'
+    IdentityProvider:
+      description: |
+        An identity provider configuration. This response represents the configuration of a specific identity provider, which can be either OIDC or SAML.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/IdP'
+            $ref: '#/components/schemas/schemas-IdentityProvider'
+          examples:
+            OIDC Identity Provider:
+              $ref: '#/components/examples/examples-OIDCIdentityProvider'
+            SAML Identity Provider With Meta Data URL:
+              $ref: '#/components/examples/examples-SAMLIdentityProvider'
+            SAML Identity Provider With Meta Data:
+              $ref: '#/components/examples/examples-SAMLIdentityProviderWithMetadata'
     Conflict:
       description: Conflict
       content:

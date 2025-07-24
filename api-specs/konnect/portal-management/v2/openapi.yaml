@@ -1614,7 +1614,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/schemas-UUID'
+        $ref: '#/components/schemas/UUID'
     RegistrationId:
       name: registrationId
       in: path
@@ -2572,7 +2572,7 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/schemas-UUID'
+          $ref: '#/components/schemas/UUID'
         publish_status:
           $ref: '#/components/schemas/PortalProductVersionPublishStatus'
         product_version_id:
@@ -4990,14 +4990,8 @@ components:
           gt: '2022-03-30T07:20:50Z'
         datetime_field_6:
           gte: '2022-03-30T07:20:50Z'
-    schemas-UUID:
-      description: Contains a unique identifier used by the API for this resource.
-      type: string
-      format: uuid
-      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
-      readOnly: true
     UUID_RW:
-      description: Contains a unique identifier used by the API for this resource.
+      description: Contains a unique identifier used for this resource.
       type: string
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7

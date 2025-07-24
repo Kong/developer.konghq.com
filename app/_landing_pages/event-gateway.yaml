@@ -8,6 +8,7 @@ metadata:
     - konnect
   tags:
     - kafka
+    - solace
     - events
   
 rows:
@@ -16,15 +17,34 @@ rows:
       text: "Event Gateway"
       sub_text: "A protocol-native Gateway built for governance, security, and cost-efficient use of Kafka"
 
-  - columns:
-      - blocks:
+
+  - column_count: 3
+    columns:
+      - col_span: 1
+        blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing {{ site.event_gateway }}"
+              blocks:
+                - type: text
+                  text: |
+                    The event gateway is composed of two core branches: 
+                    * Protocol mediation using the {{site.base_gateway}}
+                    * Native event processing using the {{site.event_gateway}}
+
+
+                    
+      - col_span: 2
+        blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
-                  text: | 
-                    The event gateway is composed of two core branches: protocol mediation using the {{site.base_gateway}} and
-                    native event processing using the {{site.event_gateway}}.
+                  text: |
+                    <img src="/assets/images/event-gateway/event-gateway-light.svg" alt="Diagram of how {{ site.base_gateway }} works" class="flex dark:hidden">
+                    <img src="/assets/images/event-gateway/event-gateway-dark.svg" alt="Diagram of how {{ site.base_gateway }} works" class="hidden dark:flex">
+                    
   - columns:
       - blocks:
           - type: structured_text
@@ -62,6 +82,7 @@ rows:
   - header:
       type: h2
       text: Protocol mediation plugins
+    column_count: 3
     columns:
       - blocks:       
         - type: plugin
@@ -79,6 +100,10 @@ rows:
         - type: plugin
           config:
             slug: confluent-consume
+      - blocks:
+        - type: plugin
+          config:
+            slug: solace-upstream
   - header:
       type: h2
       text: Get started with {{site.event_gateway_short}} (Beta)
@@ -132,6 +157,9 @@ rows:
               a: |
                 The {{site.event_gateway_short}} Data Planes are self-managed and deployed by you, the user. 
                 The {{site.event_gateway_short}} Control Plane is part of the {{site.konnect_product_name}} platform.
+            
+            - q: Does {{site.event_gateway_short}} run on-prem?
+              a: No, {{site.event_gateway_short}} is only available through Gateway Manager on the {{site.konnect_product_name}} platform.
             
             - q: How can I get access to the {{site.event_gateway}}?
               a: |

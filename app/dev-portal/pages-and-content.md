@@ -5,9 +5,8 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 tags:
-  - beta
+  - dev-portal-documentation
 works_on:
     - konnect
 api_specs:
@@ -33,7 +32,7 @@ faqs:
 
   - q: What is the special behavior of the `home` page?
     a: |
-      The `home` page represents the `/` root path of your Dev Portal. 
+      The `home` page represents the `/` root path of your Dev Portal.
       If it is deleted, you’ll need to recreate it using the [Pages API](/api/konnect/portal-management/#/operations/create-portal-page).
 
   - q: Is there a character limit for custom pages?
@@ -41,7 +40,7 @@ faqs:
       Yes. Custom pages are limited to a maximum of 1,000,000 characters.
   - q: Why aren’t parameterized values appearing in the page Preview?
     a: |
-      The preview may not be able to display parameterized values. When the page is rendered in the Portal, parameters will be resolved. 
+      The preview may not be able to display parameterized values. When the page is rendered in the Portal, parameters will be resolved.
       Depending on the syntax used, the preview may not accurately reflect those values in Page or Snippet views.
 
   - q: Are snippets visible in the Portal by default?
@@ -55,6 +54,26 @@ faqs:
   - q: Is there a character limit for snippets?
     a: |
       Yes. Snippets are limited to a maximum of 1,000,000 characters.
+  
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
+    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+  - q: How do I add an external link to my Dev Portal main menu or footer?
+    a: You can add external links to your main menu or footer by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Customization** in the sidebar. From the **Menu** tab, you can select the menu you want to customize and add the external link by clicking **Add menu item** and configuring the link to **Open in a new tab**. You can also send a PATCH request to the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization) to add an external link using the {{site.konnect_short_name}} API by setting the `external` property to `true`.
+  - q: How do I add a child page to a parent page using the {{site.konnect_short_name}} Portal Management API?
+    a: |
+      You can create a child page by specifying the `parent_page_id` in the request body of the []`/portals/{portalId}/pages` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-page):
+      ```json
+      {
+        "slug": "/contact",
+        "title": "Contact us",
+        "content": "Contact our company",
+        "visibility": "public",
+        "status": "published",
+        "parent_page_id": "5bc355be-3e92-4b54-88f9-d7c21b0bdba9"
+      }
+      ```
+
+      The full path of the child page is the slug of the parent page with the slug of the child page. For example, if the parent slug is `/about` and the child slug is `/contact`, the full path to the child page is `/about/contact`.
 
 related_resources:
   - text: Dev Portal Markdown components reference
@@ -63,6 +82,8 @@ related_resources:
     url: /dev-portal/portal-customization/
   - text: Custom domains
     url: /dev-portal/custom-domains/
+  - text: About Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
@@ -152,7 +173,7 @@ rows:
 
 Dev Portal will use the front matter you set in a page, like the title and description, and render HTML tags.
 
-For example: 
+For example:
 
 ```yaml
 ---
@@ -161,7 +182,7 @@ description: Start building and innovating with our APIs
 ---
 ```
 
-Will render this: 
+Will render this:
 
 ```html
 <title>Home | Developer Portal</title>
@@ -200,9 +221,9 @@ image:
 
 ## Reuse content with snippets
 
-You can reuse content on multiple pages by using snippets. Snippets allow you to store and write content in one location and use that content in multiple pages. You can also use snippets to publish content temporarily, like system outages or special events. 
+You can reuse content on multiple pages by using snippets. Snippets allow you to store and write content in one location and use that content in multiple pages. You can also use snippets to publish content temporarily, like system outages or special events.
 
 Snippets are built using Markdown Components (MDC). See the [dedicated MDC site](https://portaldocs.konghq.com/components/snippet) for more information about Snippet syntax and usage.
 
-To get started creating snippets, navigate to your Dev Portal and click **Portal editor**, then click **Snippets**. 
+To get started creating snippets, navigate to your Dev Portal and click **Portal editor**, then click **Snippets**.
 

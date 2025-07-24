@@ -4,6 +4,8 @@ content_type: how_to
 description: Learn how to configure OpenID Connect with the authorization code flow in Keycloak.
 
 related_resources:
+  - text: Configure OpenID Connect with the authorization code flow and Okta
+    url: /how-to/configure-oidc-with-auth-code-flow-and-okta/
   - text: OpenID Connect in {{site.base_gateway}}
     url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
@@ -57,6 +59,15 @@ tldr:
   q: How do I use an authorization code to open a session with my identity provider, letting users log in through a browser?
   a: Using the OpenID Connect plugin, set up the [auth code flow](/plugins/openid-connect/#authorization-code-flow) to connect to an identity provider (IdP) through a browser, and use session authentication to store open sessions. You can do this by specifying `authorization_code` and `session` in the `config.auth_methods` plugin settings.
 
+faqs:
+  - q: How do I enable the Proof Key for Code Exchange (PKCE) extension to the authorization code flow in the OIDC plugin?
+    a: |
+      The OIDC plugin supports PKCE out of the box, so you don't need to configure anything. 
+      When [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods) is set to `authorization_code`, the plugin sends the required `code_challenge` parameter automatically with the authorization code flow request. 
+      
+      If the IdP connected to the plugin enforces PKCE, it will be used during the authorization code flow. 
+      If the IdP doesn't support or enforce PCKE, it won't be used.
+ 
 cleanup:
   inline:
     - title: Clean up Konnect environment

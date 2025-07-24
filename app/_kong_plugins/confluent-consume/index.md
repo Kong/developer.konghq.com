@@ -3,7 +3,7 @@ title: 'Confluent Consume'
 name: 'Confluent Consume'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Consume messages from Confluent Cloud Kafka topics and make them available through HTTP endpoints'
 
@@ -18,14 +18,15 @@ works_on:
 min_version:
     gateway: '3.10'
 
-on_prem:
-  - hybrid
-  - db-less
-  - traditional
-konnect_deployments:
-  - hybrid
-  - cloud-gateways
-  - serverless
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 tags:
   - confluent
@@ -67,3 +68,7 @@ Kong also provides a [plugin for publishing messages to Confluent Cloud](/plugin
 ## Message delivery guarantees
 
 {% include /plugins/confluent-kafka-consume/message-delivery.md %}
+
+## Schema registry support {% new_in 3.11 %}
+
+{% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}

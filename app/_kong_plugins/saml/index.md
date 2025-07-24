@@ -3,7 +3,7 @@ title: 'SAML'
 name: 'SAML'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Provides SAML v2.0 authentication and authorization between a service provider (Kong) and an identity provider (IdP)'
 
@@ -45,6 +45,9 @@ related_resources:
     url: /how-to/enable-saml-authentication-with-microsoft-entra/
   - text: "{{site.base_gateway}} authentication"
     url: /gateway/authentication/
+
+notes: |
+  In Serverless gateways only the <code>cookie</code> config session storage is supported.
 ---
 
 This plugin provides Security Assertion Markup Language (SAML) v2.0 authentication and authorization between {{site.base_gateway}} and an identity provider.

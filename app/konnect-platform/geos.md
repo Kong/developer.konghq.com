@@ -40,7 +40,7 @@ The following objects are geo-specific:
 * [Routes](/gateway/entities/route/)
 * [Consumers](/gateway/entities/consumer/)
 * [API products](/api/konnect/api-products/)
-* [Application registration](/dev-portal/application-registration/)
+* [Application registration](/dev-portal/self-service/#application-authentication-strategies)
 * [Dev portals](/dev-portal/)
 * [Service meshes and mesh zones](/mesh-manager/)
 * [Custom teams and roles](/konnect-platform/teams-and-roles/)
@@ -54,3 +54,11 @@ The following objects are geo-specific:
 {{site.konnect_short_name}} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) support the following geos:
 
 {% include_cached /sections/dcg-regions.md %}
+
+### Customer-Managed Encryption Keys (CMEK) region mapping
+
+{{site.konnect_short_name}} supports [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/), allowing you to use your own symmetric key stored in AWS Key Management Service (KMS) to encrypt a pre-determined set of sensitive data. 
+
+A CMEK must be replicated to all AWS regions that make up a {{site.konnect_short_name}} region.
+
+{% include_cached /konnect/cmek-region-mapping.md %}

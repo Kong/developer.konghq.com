@@ -4,6 +4,10 @@ description: |
 extended_description: |
   Configure the OpenID Connect plugin for [Demonstrating Proof-of-Possession](/plugins/openid-connect/#demonstrating-proof-of-possession-dpop) by using the `proof_of_possession_dpop` configuration option. 
   
+  Here's how DPoP works:
+  
+  {% include_cached plugins/oidc/diagrams/dpop.md %}
+  
   This method binds the access token to a JSON Web Key (JWK) provided by the client.
 
 weight: 820

@@ -3,6 +3,7 @@ title: Rate Limiting Advanced
 
 name: Rate Limiting Advanced
 publisher: kong-inc
+tier: enterprise
 content_type: plugin
 description: Enhanced rate limiting capabilities such as sliding window support, Redis Sentinel support, and increased performance
 tags:
@@ -43,6 +44,13 @@ categories:
 search_aliases:
   - rate-limiting-advanced
 
+notes: |
+  In Konnect, DB-less, and hybrid modes, the <code>cluster</code> config strategy
+  is not supported.
+  <br><br>
+  For DB-less mode, use one of <code>redis</code> or <code>local</code>;
+  for Konnect and hybrid mode, use <code>redis</code>, or <code>local</code> for data
+  planes only. In Serverless gateways only the <code>local</code> config strategy is supported.
 ---
 
 Rate limit how many HTTP requests can be made in a given time frame using multiple rate limits and window sizes, and applying sliding windows.

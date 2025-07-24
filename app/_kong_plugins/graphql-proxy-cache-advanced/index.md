@@ -3,7 +3,7 @@ title: 'GraphQL Proxy Caching Advanced'
 name: 'GraphQL Proxy Caching Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Cache and serve commonly requested responses in {{site.base_gateway}}'
 
@@ -44,6 +44,11 @@ related_resources:
     url: /plugins/graphql-rate-limiting-advanced/
   - text: DeGraphQL plugin
     url: /plugins/degraphql/
+
+notes: | 
+  This plugin's API doesn't work in hybrid mode, as it targets data that only exists on data planes, 
+  and data planes can't use Kong's Admin API. In Serverless gateways only the <code>memory</code> config 
+  strategy is supported.
 ---
 
 The GrapQL Proxy Cache Advanced plugin provides a reverse GraphQL proxy cache implementation for {{site.base_gateway}}. 

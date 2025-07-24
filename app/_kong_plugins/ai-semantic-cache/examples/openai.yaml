@@ -1,20 +1,34 @@
-title: 'Set up with OpenAI'
+title: 'Set up with OpenAI and Redis'
 
-description: 'Enable AI Semantic Caching with OpenAI as your LLM and a Redis vector database.'
+description: 'Enable AI Semantic Caching with OpenAI embeddings API and a Redis vector database.'
+
+extended_description: |
+  Enable AI Semantic Caching with OpenAI embeddings API and a Redis vector database.
+
+  {:.info}
+  > If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 
 weight: 900
-
+requirements:
+  - "The [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin is enabled"
+  - An OpenAI account
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
 
 variables:
   header_value:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
 
-config: 
+config:
   embeddings:
     auth:
       header_name: Authorization
-      header_value: ${header_value}
+      header_value: Bearer ${header_value}
     model:
       provider: openai
       name: text-embedding-3-large
@@ -26,7 +40,7 @@ config:
     strategy: redis
     threshold: 0.1
     redis:
-      host: redis-stack.redis.svc.cluster.local
+      host: ${redis_host}
       port: 6379
 
 tools:

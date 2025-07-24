@@ -74,7 +74,7 @@ When activated, the template restricts LLM usage to the predefined templates. Th
 When calling a template, replace the content of `messages` (`llm/v1/chat`) or `prompt` (`llm/v1/completions`) with a template reference, using the following format:
 ```json
 {
-  "message": "{template://sample-template}",
+  "messages": "{template://sample-template}",
   "properties": {
     "thing": "gravity"
   }

@@ -3,7 +3,7 @@ title: 'OpenID Connect'
 name: 'OpenID Connect'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Integrate {{site.base_gateway}} with a third-party OpenID Connect provider'
 
@@ -61,7 +61,47 @@ examples_groups:
     text: Other examples
 
 basic_examples: false
-    
+
+notes: |
+  In Serverless gateways, only the `cookie` config session storage is supported.
+
+
+faqs:
+  - q: Why does the OIDC plugin not use cached tokens with the client credentials grant, and instead connects to the IdP on every request?
+    a: |
+      Token caching doesn't work if both `client_credentials` and `password` are set as auth methods in the [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods) parameter, and credentials are sent using the `Authorization: Basic` header. 
+      
+      In this scenario, either authentication method could match, but the plugin prioritises the password grant, based on its [order of precedence](#authentication-flows-and-grants).
+      To resolve this caching issue, make sure you only have the `client_credentials` method enabled.
+  - q: Is it possible to avoid using a token from a cache that is almost expired?
+    a: |
+      Yes. You'll need to adjust the following settings:
+      * Access token lifetime, configured in the IdP.
+      * Max time-to-live for the OIDC plugin cache, configured using [`config.cache_ttl_max`](/plugins/openid-connect/reference/#schema--config-cache-ttl-max) and with [`config.cache_tokens`](/plugins/openid-connect/reference/#schema--config-cache-tokens) set to `true`.
+
+      Set the max TTL on the Kong side based on the lifetime of the access token in the IdP. 
+      
+      For example, if the access token lifetime is 180 seconds and you want to get a new token 15 seconds before the access token expires,
+      you would set `config.cache_ttl_max=165`.
+  - q: Can one OIDC plugin support JWT token validation for multiple IdPs?
+    a: |
+      Yes, but since the OIDC plugin only accepts one issuer URL, this requires some extra configuration.
+
+      You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option, with the following considerations:
+
+      * Since the plugin only accepts a single issuer, any `iss` claim verification will fail for tokens that come from a different IdP than the one that was used in the issuer configuration option. Add all issuers as they appear in the `iss` claims of your tokens to the [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) setting.
+      * If you make any changes to the `extra_jwks_uris` value, you have to clear the second level DB cache for the change to become effective.
+      See [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache).
+
+      See the [Extra JWKs](/plugins/openid-connect/examples/extra-jwks/) configuration example for more detail.
+  - q: How do I enable the Proof Key for Code Exchange (PKCE) extension to the authorization code flow in the OIDC plugin?
+    a: |
+      The OIDC plugin supports PKCE out of the box, so you don't need to configure anything. 
+      When [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods) is set to `authorization_code`, the plugin sends the required `code_challenge` parameter automatically with the authorization code flow request. 
+      
+      If the IdP connected to the plugin enforces PKCE, it will be used during the authorization code flow. 
+      If the IdP doesn't support or enforce PCKE, it won't be used.
+ 
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).
@@ -94,8 +134,9 @@ The most common use case is the [authorization code flow](#authorization-code-fl
 ### Authentication flows and grants
 
 The OIDC plugin supports several types of credentials and grants.
-When this plugin is configured with multiple grants or flows, there is a hardcoded search
-order for the credentials:
+
+You can configure multiple auth grants or flows on the plugin.
+The plugin searches for credentials in the following order of precedence:
 
 1. [Session authentication](#session-authentication-workflow)
 2. [JWT access token authentication](#jwt-access-token-authentication-flow)
@@ -108,110 +149,47 @@ order for the credentials:
 9. [Authorization code flow](#authorization-code-flow) (with client secret or PKCE)
 
 Once it finds a set of credentials, the plugin stops searching, and won't look for any further credential types.
+This precedence order is hardcoded and can't be changed.
 
 Multiple grants may share the same credentials. For example, both the password and client credentials grants can use 
 basic authentication through the `Authorization` header.
 
-#### Authorization code flow
+#### Session authentication workflow
 
-The authorization code flow is the three-legged OAuth/OpenID Connect flow.
-The sequence diagram below describes the participants and their interactions
-for this usage scenario, including the use of session cookies:
+The OpenID Connect plugin can issue a session cookie that can be used for further session authentication. 
+To make OpenID Connect issue a session cookie, you need to first authenticate with one of the other grants or flows that this plugin supports. 
+For example, the [authorization code flow](#authorization-code-flow) demonstrates session authentication when it uses the redirect login action.
 
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant idp as IdP <br>(e.g. Keycloak)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: HTTP request
-    kong->>client: Redirect mobile app to IDP 
-    deactivate kong
-    activate idp
-    client->>idp: Request access and authentication<br>with client parameter
-    Note left of idp: /auth<br>response_type=code,<br>scope=openid
-    idp->>client: Login (ask for consent)
-    client->>idp: /auth with user credentials (grant consent)
-    idp->>client: Return authorization code and redirect
-    Note left of idp: short-lived authcode
-    activate kong
-    client->>kong: HTTP redirect with authorization code
-    deactivate client
-    kong->>kong: Verify authorization code flow
-    kong->>idp: Request ID token, access token, and refresh token
-    Note left of idp: /token<br>client_id:client_secret<br>authcode
-    idp->>idp: Authenticate client (Kong)<br>and validate authcode
-    idp->>kong: Returns tokens
-    Note left of idp: ID token, access token, and refresh token
-    deactivate idp
-    kong->>kong: Validate tokens
-    Note right of kong: Cryptographic<br>signature validation,<br>expiry check<br>(OIDC Standard JWT validation)
-    activate client
-    kong->>client: Redirect with session cookie<br>having session ID (SID)
-    Note left of kong: sid: cryptorandom bytes <br>(128 bits)<br>& HMAC protected
-    client->>kong: Authenticated request with session cookie
-    deactivate client
-    kong->>kong: Verify session cookie
-    Note right of kong: Retrieve encrypted tokens<br>from session store (redis)
-    activate httpbin
-    kong->>httpbin: Backend service request with tokens
-    Note right of idp: Access token and ID token
-    httpbin->>kong: Backend service response
-    deactivate httpbin
-    activate client
-    kong->>client: HTTP response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+The session authentication portion of the flow works like this:
 
-{:.info}
-> If using PKCE, the identity provider *must* contain the `code_challenge_methods_supported` object 
-in the `/.well-known/openid-configuration` issuer discovery endpoint response, as required by 
-[RFC 8414](https://www.rfc-editor.org/rfc/rfc8414.html).
-If it's not included, the PKCE `code_challenge` query parameter won't be sent.
+{% include_cached plugins/oidc/diagrams/session.md %}
 
-#### Client credentials grant workflow
+Set up session auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/session-auth/)
+* [Session auth tutorial with Keycloak](/how-to/configure-oidc-with-session-auth/)
 
-The client credentials grant is very similar to the [password grant](#password-grant-workflow).
-The most important difference is that the plugin itself doesn't try to authenticate, and instead 
-forwards the credentials passed by the client to the identity server's token endpoint.
+#### JWT access token authentication flow
 
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant idp as IdP <br>(e.g. Keycloak)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with<br>basic authentication
-    deactivate client
-    kong->>kong: load basic<br>authentication credentials
-    activate idp
-    kong->>idp: IdP/token<br>with client credentials
-    deactivate kong
-    idp->>idp: authenticate client
-    activate kong
-    idp->>kong: return tokens
-    deactivate idp
-    kong->>kong: verify tokens
-    activate httpbin
-    kong->>httpbin: request with access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods)). 
+Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry). 
+The client may receive the token directly from the identity provider or by other means.
+
+{% include_cached plugins/oidc/diagrams/jwt-access-token.md %}
+
+Set up JWT access token auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/jwt-access-token/)
+* [JWT access token auth tutorial with Keycloak](/how-to/configure-oidc-with-jwt-auth/)
+
+#### Kong OAuth token authentication flow
+
+The OpenID Connect plugin can verify the tokens issued by the [OAuth 2.0 plugin](/plugins/oauth2/).
+This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow):
+
+{% include_cached plugins/oidc/diagrams/kong-oauth2.md %}
+
+Set up Kong OAuth2 token auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/kong-oauth-token/)
+* [Kong OAuth token tutorial with Keycloak](/how-to/configure-oidc-with-kong-oauth2/)
 
 #### Introspection authentication flow
 
@@ -220,97 +198,23 @@ the introspection authentication relies on a bearer token that the client has al
 The difference between introspection and stateless JWT authentication is that the plugin needs to call the introspection endpoint of the identity provider to find out whether the token is valid and active. 
 This makes it possible to issue opaque tokens to the clients.
 
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant idp as IdP <br>(e.g. Keycloak)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with access token
-    deactivate client
-    kong->>kong: load access token
-    activate idp
-    kong->>idp: IdP/introspect with <br/>client credentials and access token
-    deactivate kong
-    idp->>idp: authenticate client <br/>and introspect access token
-    activate kong
-    idp->>kong: return introspection response
-    deactivate idp
-    kong->>kong: verify introspection response
-    activate httpbin
-    kong->>httpbin: request with <br/>access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+{% include_cached plugins/oidc/diagrams/introspection.md %}
 
-#### JWT access token authentication flow
+Set up introspection auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/introspection-auth/)
+* [Introspection auth tutorial with Keycloak](/how-to/configure-oidc-with-introspection/)
 
-For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods)). 
-Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry). 
-The client may receive the token directly from the identity provider or by other means.
+#### User info authentication flow
 
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with<br>access token
-    deactivate client
-    kong->>kong: load access token
-    kong->>kong: verify signature
-    kong->>kong: verify claims
-    activate httpbin
-    kong->>httpbin: request with<br>access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+The user info authentication uses OpenID Connect standard user info endpoint to verify the access token.
+In most cases, you would use [introspection authentication](#introspection-authentication-flow) instead of user info, as introspection is meant for retrieving information from the token itself, whereas the user info endpoint is meant for retrieving information about the user to whom the token was given. 
+The flow is almost identical to introspection authentication:
 
-#### Kong OAuth token authentication flow
+{% include_cached plugins/oidc/diagrams/user-info.md %}
 
-The OpenID Connect plugin can verify the tokens issued by the [OAuth 2.0 plugin](/plugins/oauth2/).
-This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow):
-
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with<br>access token
-    deactivate client
-    kong->>kong: load access token
-    kong->>kong: verify kong<br>oauth token
-    activate httpbin
-    kong->>httpbin: request with<br>access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+Set up user info auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/user-info-auth/)
+* [User info auth tutorial with Keycloak](/how-to/configure-oidc-with-user-info-auth/)
 
 #### Refresh token grant workflow
 
@@ -321,144 +225,53 @@ The mismatch is likely when the OpenID Connect plugin is configured to use one c
 The grant itself is very similar to the [password grant](#password-grant-workflow) and
 the [client credentials grant](#client-credentials-grant-workflow):
 
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant idp as IdP <br>(e.g. Keycloak)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with<br>refresh token
-    deactivate client
-    kong->>kong: load refresh token
-    activate idp
-    kong->>idp: IdP/token with<br>client credentials and<br>refresh token
-    deactivate kong
-    idp->>idp: authenticate client and<br>verify refresh token
-    activate kong
-    idp->>kong: return tokens
-    deactivate idp
-    kong->>kong: verify tokens
-    activate httpbin
-    kong->>httpbin: request with access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+{% include_cached plugins/oidc/diagrams/refresh-token.md %}
 
-#### Session authentication workflow
-
-The OpenID Connect plugin can issue a session cookie that can be used for further session authentication. 
-To make OpenID Connect issue a session cookie, you need to first authenticate with one of the other grants or flows that this plugin supports. 
-For example, the [authorization code flow](#authorization-code-flow) demonstrates session authentication when it uses the redirect login action.
-
-The session authentication portion of the flow works like this:
-
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with<br>session cookie
-    deactivate client
-    kong->>kong: load session cookie
-    kong->>kong: verify session
-    activate httpbin
-    kong->>httpbin: request with<br>access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
-
-#### User info authentication flow
-
-The user info authentication uses OpenID Connect standard user info endpoint to verify the access token.
-In most cases, you would use [introspection authentication](#introspection-authentication-flow) instead of user info, as introspection is meant for retrieving information from the token itself, whereas the user info endpoint is meant for retrieving information about the user to whom the token was given. 
-The flow is almost identical to introspection authentication:
-
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant idp as IdP <br>(e.g. Keycloak)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with<br>access token
-    deactivate client
-    kong->>kong: load access token
-    activate idp
-    kong->>idp: IdP/userinfo<br>with client credentials<br>and access token
-    deactivate kong
-    idp->>idp: authenticate client and<br>verify token
-    activate kong
-    idp->>kong: return user info <br>response
-    deactivate idp
-    kong->>kong: verify response<br>status code (200)
-    activate httpbin
-    kong->>httpbin: request with access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+Set up refresh token auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/refresh-token/)
+* [Refresh token auth tutorial with Keycloak](/how-to/configure-oidc-with-refresh-token/)
 
 #### Password grant workflow
 
 Password grant is a **legacy** authentication grant. 
 This is a less secure way of authenticating end users than the authorization code flow, because, for example, the passwords are shared with third parties.
 
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
-    participant idp as IdP <br>(e.g. Keycloak)
-    participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
-    activate client
-    activate kong
-    client->>kong: Service with<br>basic authentication
-    deactivate client
-    kong->>kong: load <br>basic authentication<br>credentials
-    activate idp
-    kong->>idp: IdP/token with<br>client credentials and<br>password grant
-    deactivate kong
-    idp->>idp: authenticate client and<br>verify password grant
-    activate kong
-    idp->>kong: return tokens
-    deactivate idp
-    kong->>kong: verify tokens
-    activate httpbin
-    kong->>httpbin: request with access token
-    httpbin->>kong: response
-    deactivate httpbin
-    activate client
-    kong->>client: response
-    deactivate kong
-    deactivate client
-{% endmermaid %}
-<!--vale on-->
+{% include_cached plugins/oidc/diagrams/password.md %}
+
+Set up password grant auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/password/)
+* [Password grant tutorial with Keycloak](/how-to/configure-oidc-with-password-grant/)
+
+#### Client credentials grant workflow
+
+The client credentials grant is very similar to the [password grant](#password-grant-workflow).
+The most important difference is that the plugin itself doesn't try to authenticate, and instead 
+forwards the credentials passed by the client to the identity server's token endpoint.
+
+{% include_cached plugins/oidc/diagrams/client-credentials.md %}
+
+Set up client credentials grant auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/client-credentials/)
+* [Client credentials grant tutorial with Keycloak](/how-to/configure-oidc-with-client-credentials/)
+
+#### Authorization code flow
+
+The authorization code flow is the three-legged OAuth/OpenID Connect flow.
+The sequence diagram below describes the participants and their interactions
+for this usage scenario, including the use of session cookies:
+
+{% include_cached plugins/oidc/diagrams/auth-code.md %}
+
+{:.info}
+> If using PKCE, the identity provider *must* contain the `code_challenge_methods_supported` object 
+in the `/.well-known/openid-configuration` issuer discovery endpoint response, as required by 
+[RFC 8414](https://www.rfc-editor.org/rfc/rfc8414.html).
+If it's not included, the PKCE `code_challenge` query parameter won't be sent.
+
+Set up the auth code flow:
+* [Plugin configuration example](/plugins/openid-connect/examples/authorization-code/)
+* [Authorization code tutorial with Keycloak](/how-to/configure-oidc-with-auth-code-flow/)
+* [Configure OpenID Connect with the authorization code flow and Okta](/how-to/configure-oidc-with-auth-code-flow-and-okta/)
 
 ### Authorization
 
@@ -482,9 +295,20 @@ The pair can be any of:
 4. [`config.roles_claim`](/plugins/openid-connect/reference/#schema--config-roles-claim) and 
 [`config.roles_required`](/plugins/openid-connect/reference/#schema--config-roles-required)
 
-For example, the first configuration option, `config.groups_claim`, points to a source, from which the value is retrieved and checked against the value of the second configuration option, `config.groups_required`.
+In each parameter pair, the `*_claim` parameter points to a source, and the `*_required` parameter defines a set of claims values to check against.
+
+Claims-based auth adheres to the following rules:
+* You can validate a maximum of 4 claims at the same time
+* You can [traverse an array or object for the claim name](#claim-type)
+* You can validate multiple values of the same claim [using `OR` and `AND` logic](#claim-requirements)
 
 Both the claim type and the required claim content take an array of string elements.
+
+Set up claims-based auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/claims-based-auth/)
+* [Claims-based auth tutorial with Keycloak](/how-to/configure-oidc-with-claims-based-auth/)
+
+##### Claim type
 
 For the claim type (for example, `config.groups_claim`), the array is a list of JSON objects listed in nested order. 
 The plugin uses the order of the items in the array to look up data in a JSON payload.
@@ -518,7 +342,9 @@ config:
   - groups
 ```
 
-On the other hand, the `config.*_required` parameters are arrays that allow logical `AND`/`OR` types of checks:
+##### Claim requirements
+
+The `config.*_required` parameters (for example, `config.groups_required`) are arrays that allow logical `AND`/`OR` types of checks:
 
 * `AND`: Space-separated values
 
@@ -528,6 +354,12 @@ On the other hand, the `config.*_required` parameters are arrays that allow logi
   config:
     groups_required:
     - employee marketing
+  ```
+
+  In an Admin API request, it would look like this:
+
+  ```sh
+  --data 'config.scopes_required=employee marketing'
   ```
 
 * `OR`: Values in separate array indices
@@ -541,17 +373,31 @@ On the other hand, the `config.*_required` parameters are arrays that allow logi
     - marketing
   ```
 
+  In an Admin API request, it would look like this:
+  ```sh
+  --data 'config.scopes_required=employee' \
+  --data 'config.scopes_required=marketing'
+  ```
+
 #### ACL plugin authorization
 
 The OpenID Connect plugin can be integrated with the [ACL plugin](/plugins/acl/), which provides access control functionality in the form of allow and deny lists.
 
 You can also pair ACL-based authorization with {{site.base_gateway}} Consumer authorization.
 
+Set up ACL auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/acl-auth/)
+* [Session auth tutorial with Keycloak](/how-to/configure-oidc-with-acl-auth/)
+
 #### Consumer authorization
 
 You can use {{site.base_gateway}} [Consumers](/gateway/entities/consumer/) for authorization and dynamically map claim values to Consumers. 
 This means that we restrict the access to only those that do have a matching Consumer. 
 Consumers can have ACL groups attached to them and be further authorized with the [ACL plugin](/plugins/acl/).
+
+Set up Consumer auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/consumer-auth/)
+* [Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
 
 ### Client authentication
 
@@ -666,36 +512,7 @@ See the [cert-bound configuration example](/plugins/openid-connect/examples/cert
 
 Demonstrating Proof-of-Possession (DPoP) is an alternative technique to the [mutual TLS certificate-bound access tokens](#mutual-tls-client-authentication). Unlike its alternative, which binds the token to the mTLS client certificate, it binds the token to a JSON Web Key (JWK) provided by the client.
 
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>({{site.base_gateway}})
-    participant upstream as Upstream <br>(backend service,<br> e.g. httpbin)
-    participant idp as Authentication Server <br>(e.g. Keycloak)
-    activate client
-    client->>client: generate key pair
-    client->>idp: POST /oauth2/token<br>DPoP:$PROOF
-    deactivate client
-    activate idp
-    idp-->>client: DPoP bound access token ($AT)
-    activate client
-    deactivate idp
-    client->>kong: GET https://example.com/resource<br>Authorization: DPoP $AT<br>DPoP: $PROOF
-    activate kong
-    deactivate client
-    kong->>kong: validate $AT and $PROOF
-    kong->>upstream: proxied request <br> GET https://example.com/resource<br>Authorization: Bearer $AT
-    deactivate kong
-    activate upstream
-    upstream-->>kong: upstream response
-    deactivate upstream
-    activate kong
-    kong-->>client: response
-    deactivate kong
-{% endmermaid %}
-<!--vale on-->
+{% include_cached plugins/oidc/diagrams/dpop.md %}
 
 You can use the Demonstrating Proof-of-Possession option without mTLS, and even with plain HTTP, although HTTPS is recommended for enhanced security.
 

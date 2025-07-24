@@ -1,13 +1,14 @@
 ---
 title: Get started with Datakit
 content_type: how_to
-tech_preview: true
 description: Learn how to configure the Datakit plugin.
 products:
     - gateway
 
 works_on:
     - on-prem
+
+wasm: true
 
 plugins:
   - datakit
@@ -20,24 +21,23 @@ entities:
 tags:
   - get-started
   - transformations
-  - tech-preview
 
 tldr: 
   q: What is Datakit, and how can I get started with it?
   a: |
     Datakit is a {{site.base_gateway}} plugin that allows you to interact with third-party APIs.
-    To enable it, start {{site.base_gateway}} with `wasm = on`. 
-    Then, you can configure the plugin to combine responses from two third-party API calls and return directly to the client.
+    In this guide, learn how to configure the plugin to combine responses from two third-party API calls and return directly to the client.
 
 tools:
   - deck
 
+
 prereqs:
-  skip_product: true
-  inline:
-    - title: "{{site.base_gateway}} license"
-      include_content: prereqs/gateway-license
-      icon_url: /assets/icons/gateway.svg
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
 
 cleanup:
   inline:
@@ -46,42 +46,13 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 min_version:
-    gateway: '3.9'
+    gateway: '3.11'
 
 related_resources:
   - text: Datakit plugin
     url: /plugins/datakit/
+
 ---
-
-## Start {{site.base_gateway}} with the WASM engine
-
-Start the {{site.base_gateway}} container with the `KONG_WASM` variable:
-
-```sh
-curl -Ls https://get.konghq.com/quickstart | bash -s -- \
-   -e KONG_LICENSE_DATA \
-   -e KONG_WASM=on
-```
-
-## Create a Service and a Route
-
-To be able to validate the configuration, we need to create a Gateway Service and a Route:
-
-<!--vale off -->
-{% entity_examples %}
-entities:
-  services:
-    - name: example-service
-      url: http://httpbin.konghq.com
-  routes:
-    - name: example-route
-      paths:
-        - /
-      strip_path: true
-      service: 
-        name: example-service
-{% endentity_examples %}
-<!--vale on -->
 
 ## Enable Datakit
 
@@ -94,7 +65,6 @@ entities:
     - name: datakit
       service: example-service
       config:
-        debug: true
         nodes:
         - name: CAT_FACT
           type: call
@@ -105,17 +75,17 @@ entities:
         - name: JOIN
           type: jq
           inputs:
-          - cat: CAT_FACT.body
-          - dog: DOG_FACT.body
+            cat: CAT_FACT.body
+            dog: DOG_FACT.body
           jq: |
             {
-              "cat_fact": $cat.fact,
-              "dog_fact": $dog.facts[0]
+              cat_fact: .cat.fact,
+              dog_fact: .dog.facts[0],
             }
         - name: EXIT
           type: exit
           inputs:
-          - body: JOIN
+            body: JOIN
           status: 200
 {% endentity_examples %}
 <!--vale on -->
@@ -124,12 +94,14 @@ entities:
 
 Access the Service using the `/anything` path:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 method: GET
 status_code: 200
 display_headers: true
 {% endvalidation %}
+<!-- vale on -->
 
 You should get a `200` response with a random fact from each fact generator called in the config:
 

@@ -35,7 +35,6 @@ Feature gates enable contributors to add and manage new (and potentially experim
 Upstream [Kubernetes](https://kubernetes.io) includes [feature gates](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/), which enable or disable features with flags and track the maturity of a feature using [feature stages](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/#feature-stages).
 The same definitions of `feature gates` and `feature stages` from upstream Kubernetes are used to define KIC's list of features.
 
-
 ## Available feature gates
 
 The following feature gates are available:
@@ -102,7 +101,7 @@ rows:
     default: '`false`'
     stage: Alpha
     since: 3.4.0
-    until: TBD
+    until: 3.5.0
 {% endtable %}
 
 * The **since** and **until** columns refer to [KIC Releases](https://github.com/Kong/kubernetes-ingress-controller/releases).
@@ -132,6 +131,8 @@ into a single {{site.base_gateway}} Service. Enabling the feature gate can reduc
 The names of {{site.base_gateway}} Services will change if the feature gate is enabled.
 You can refer to the [`HTTRoutes` reference page](/kubernetes-ingress-controller/faq/combining-httproutes/) for further details.
 
+{:.info}
+> **Note:** Since 3.5.0 this functionality is controlled via a CLI flag: `--combined-services-from-different-httproutes`.
 
 ## Using feature gates
 
