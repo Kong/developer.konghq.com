@@ -62,5 +62,5 @@ Once you've run the installer, you can use the Insomnia setup wizard to complete
 
 1. Select your preference for the distribution of software, and then select **Next**.
 2. In the **Destination Folder** field, enter the install location of the Insomnia file.
-3. Select **Install**.
-4. Select **Finish**.
+3. Click **Install**.
+4. Click **Finish**.
