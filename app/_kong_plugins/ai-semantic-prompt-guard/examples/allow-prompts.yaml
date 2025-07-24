@@ -8,7 +8,7 @@ extended_description: |
   {:.info}
   > If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
 
-title: 'Only allow messages about a specific topic.'
+title: 'Only allow messages about a specific topic'
 
 weight: 900
 
