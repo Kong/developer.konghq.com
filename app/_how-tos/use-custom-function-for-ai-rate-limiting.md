@@ -1,5 +1,5 @@
 ---
-title: Enforce AI rate limits in with a custom function
+title: Enforce AI rate limits with a custom function
 content_type: how_to
 related_resources:
   - text: AI Gateway
