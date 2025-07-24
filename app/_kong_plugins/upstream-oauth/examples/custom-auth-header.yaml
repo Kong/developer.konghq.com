@@ -1,5 +1,5 @@
 description: 'Configure the Upstream OAuth plugin with a custom header to use when sending the access token (obtained from the IdP) to the upstream service.'
-
+extended_description: 'Configure the Upstream OAuth plugin with a custom header to use when sending the access token (obtained from the IdP) to the upstream service. For a complete tutorial, see [Configure the Upstream OAuth plugin with {{site.konnect_short_name}} Identity](/how-to/configure-konnect-identity-upstream-oauth/).'
 title: 'Use a custom access token header'
 
 weight: 900

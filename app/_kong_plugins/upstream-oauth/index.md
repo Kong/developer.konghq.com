@@ -39,6 +39,9 @@ search_aliases:
   - upstream-oauth
   - upstream authentication
   - oauth2
+related_resources:
+  - text: Configure the Upstream OAuth plugin with {{site.konnect_short_name}} Identity
+    url: /how-to/configure-konnect-identity-upstream-oauth/
 ---
 
 The Upstream OAuth plugin allows {{site.base_gateway}} to support OAuth flows between {{site.base_gateway}} and the upstream API.
