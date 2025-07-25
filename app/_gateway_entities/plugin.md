@@ -228,7 +228,10 @@ Plugins support different protocols.
 
 ### Supported protocols by plugin
 
-See the following table for plugins and their compatible protocols:
+Each plugin supports a specific set of protocols. By default, all protocols supported by a plugin are enabled.
+You can adjust the plugin’s configuration to disable support for specific protocols, if needed.
+
+See the following table for plugins and their compatible (default) protocols:
 
 {% plugin_protocols %}
 
