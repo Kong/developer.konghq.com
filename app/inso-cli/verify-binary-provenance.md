@@ -1,7 +1,7 @@
 ---
-title: Verifying build provenance for signed Insomnia binaries
+title: Verifying build provenance for signed Inso CLI binaries
 
-description: Kong produces build provenance for Insomnia application binary artifacts, which can be verified.
+description: Kong produces build provenance for Inso CLI binary artifacts, which can be verified.
 
 content_type: reference
 layout: reference
@@ -10,17 +10,18 @@ products:
     - insomnia
 
 breadcrumbs:
-  - /insomnia/
+  - /inso-cli/
 
 related_resources:
   - text: Insomnia security
     url: /insomnia/manage-insomnia/#security
-
+  - text: Verify signatures for signed Inso CLI Docker images
+    url: /inso-cli/verify-docker-image-signature/
 ---
 
-Kong produces build provenance for Insomnia application binary artifacts, which can be verified using `cosign` / `slsa-verifier`.
+Kong produces build provenance for Inso CLI binary artifacts, which can be verified using `cosign` or `slsa-verifier`.
 
-This guide provides steps to verify build provenance for signed Insomnia application binary artifacts in two different ways:
+This guide provides steps to verify build provenance for signed Inso CLI binary artifacts in two different ways:
 
 * A minimal example, used to verify an binary artifacts without leveraging any annotations
 * A complete example, leveraging optional annotations for increased trust
@@ -45,8 +46,8 @@ rows:
     description: Artifact version to download
     example: "`11.3.0`"
   - shorthand: "`BINARY_FILES`"
-    description: Single space separated Insomnia binary files
-    example: "`Insomnia.Core-11.3.0.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`"
+    description: Single space separated Inso CLI binary files
+    example: "`inso-*-$VERSION.{pkg,tar.xz,zip}`"
   - shorthand: "`PROVENANCE_FILE`"
     description: Binary provenance file
     example: "`inso-provenance.intoto.jsonl`"
@@ -58,9 +59,11 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 For both examples, you need to:
 
-* Ensure `slsa-verifier` is installed.
-* [Download Insomnia core application binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the file pattern `Insomnia.Core-$VERSION.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`
-* [Download Insomnia binary provenance attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the pattern `insomnia-provenance.intoto.jsonl`
+* Ensure [`slsa-verifier` is installed](https://github.com/slsa-framework/slsa-verifier?tab=readme-ov-file#installation).
+
+* [Download Inso CLI binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.inso&channel=stable) with the file pattern `inso-*.{pkg,tar.xz,zip}`
+
+* [Download Inso CLI binary provenance attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.inso&channel=stable) with the pattern `inso-provenance.intoto.jsonl`
 
 {:.warning}
 > The GitHub owner is case-sensitive (`Kong/insomnia` vs `kong/insomnia`).
