@@ -90,13 +90,55 @@ body:
 {% navtabs "configure-gcp-konnect" %}
 {% navtab "Cloud Gateways API" %}
 
-Run the following command in the GCP console, replacing any placeholders with values specific to your Dedicated Cloud Gateway instance:
+In {{site.konnect_short_name}}, you need to retrieve two pieces of data: the provider account ID and the VPC ID.
+
+First, make a GET request to `/provider-accounts`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/provider-accounts
+status_code: 201
+region: global
+method: GET
+headers:
+  - 'Accept: application/json'
+  - 'Content-Type: application/json'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Save the `provider_account_id` from the output:
+
+```
+export PROVIDER_ACCOUNT_ID='your-provider-account-id'
+```
+
+Next, make a GET request to the `networks` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/networks
+status_code: 201
+region: global
+method: GET
+headers:
+  - 'Accept: application/json'
+  - 'Content-Type: application/json'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Save the `provider_metadata.vpc_id` from the output:
+
+```
+export PROVIDER_VPC_ID='your-provider-vpc-id'
+```
+
+Run the following command in the GCP console:
 
 ```sh
 gcloud compute networks peerings create $GCP_VPC_PEERING_NAME \
   --network=$GCP_VPC_NAME \
-  --peer-project=? \
-  --peer-network=? \
+  --peer-project=$PROVIDER_ACCOUNT_ID \
+  --peer-network=$PROVIDER_VPC_ID \
   --stack-type=IPV4_ONLY \
   --import-custom-routes \
   --export-custom-routes \
@@ -107,7 +149,23 @@ gcloud compute networks peerings create $GCP_VPC_PEERING_NAME \
 {% endnavtab %}
 {% navtab "Konnect UI" %}
 
-Copy the generated command and run it in the GCP console.
+{{site.konnect_short_name}} generates a command with all of your required values filled in.
+Copy the generated command and run it in the GCP console. 
+
+The command will look something like this:
+
+```sh
+gcloud compute networks peerings create $GCP_VPC_PEERING_NAME \
+  --network=$GCP_VPC_NAME \
+  --peer-project=$PROVIDER_ACCOUNT_ID \
+  --peer-network=$PROVIDER_VPC_ID \
+  --stack-type=IPV4_ONLY \
+  --import-custom-routes \
+  --export-custom-routes \
+  --import-subnet-routes-with-public-ip \
+  --export-subnet-routes-with-public-ip \
+  --project=$GCP_PROJECT_ID
+```
 
 {% endnavtab %}
 {% endnavtabs %}

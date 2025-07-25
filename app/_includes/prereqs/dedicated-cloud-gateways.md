@@ -9,7 +9,6 @@ If you don't have a Konnect account, you can get started quickly with our [onboa
 2. Set these values as environment variables:
     ```sh
     export KONNECT_TOKEN='YOUR KONNECT TOKEN'
-    export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
     export KONNECT_NETWORK_ID='KONNECT NETWORK ID'
     ```
 
