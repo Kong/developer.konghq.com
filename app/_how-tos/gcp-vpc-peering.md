@@ -1,6 +1,6 @@
 ---
 title: Set up a GCP VPC peering connection
-description: 'Use the {{site.konnect_short_name}} Cloud Gateways API or the Konnect UI to create a VPC peering connection with your GCP VPC.'
+description: 'Use the {{site.konnect_short_name}} Cloud Gateways API or the  {{site.konnect_short_name}} UI to create a VPC peering connection with your GCP VPC.'
 content_type: how_to
 permalink: /dedicated-cloud-gateways/gcp-vpc-peering/
 breadcrumbs:
@@ -28,7 +28,7 @@ prereqs:
 
     - title: "GCP credentials and VPC"
       content: |
-        Set up a GCP account with the following permissions:
+        Set up a GCP account with the [Compute Network Admin role](https://cloud.google.com/iam/docs/understanding-roles#compute.networkAdmin) (`roles/compute.networkAdmin`) or the following [custom permissions](https://cloud.google.com/iam/docs/custom-roles-permissions-support):
         * `compute.networks.addPeering`
         * `compute.networks.updatePeering`
         * `compute.networks.removePeering`
@@ -42,9 +42,9 @@ prereqs:
 
 Export the following values as environment variables, setting your own custom values:
 ```sh
-$GCP_VPC_PEERING_NAME='gcp vpc peering'
-$GCP_PROJECT_ID='my-gcp-vpc-project'
-$GCP_VPC_NAME='my-gcp-vpc-name'
+export GCP_VPC_PEERING_NAME='gcp vpc peering'
+export GCP_PROJECT_ID='my-gcp-vpc-project'
+export GCP_VPC_NAME='my-gcp-vpc-name'
 ```
 Where:
 * **VPC Peering Name**: A unique name to identify this VPC peering connection.
@@ -74,7 +74,7 @@ body:
 {% endnavtab %}
 {% navtab "Konnect UI" %}
 
-1. From your Dedicated Cloud Gateway, open **Networks** from the side menu.
+1. From your Dedicated Cloud Gateway, open **Networks**.
 1. Choose a network, open its action menu, and select **Configure Private Networking**.
 1. Add a new VPC peering connection by filling out all of the required fields:
   * **VPC Peering Name**: A unique name to identify this VPC peering connection.
@@ -92,7 +92,7 @@ body:
 
 In {{site.konnect_short_name}}, you need to retrieve two pieces of data: the provider account ID and the VPC ID.
 
-First, make a GET request to the {{site.konnect_short_name}} Cloud Gateways API at `/provider-accounts`:
+First, make a GET request to the {{site.konnect_short_name}} Cloud Gateways API using the `/provider-accounts` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -132,7 +132,7 @@ Save the `provider_metadata.vpc_id` from the output:
 export PROVIDER_VPC_ID='your-provider-vpc-id'
 ```
 
-Switch to GCP and run the following command in the GCP console:
+In the GCP console, run the following command:
 
 ```sh
 gcloud compute networks peerings create $GCP_VPC_PEERING_NAME \
@@ -149,7 +149,7 @@ gcloud compute networks peerings create $GCP_VPC_PEERING_NAME \
 {% endnavtab %}
 {% navtab "Konnect UI" %}
 
-{{site.konnect_short_name}} generates a command with all of your required values filled in.
+{{site.konnect_short_name}} generates a command with all of the required values populated.
 Copy the generated command and run it in the GCP console. 
 
 The command will look something like this:
