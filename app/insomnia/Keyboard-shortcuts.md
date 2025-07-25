@@ -19,7 +19,10 @@ related_resources:
   - text: Environments
     url: /insomnia/environments/
 ---
-Insomnia offers a wide range of keyboard shortcuts that help you navigate faster, write requests efficiently, and switch contexts with minimal friction. Users can also craft complex HTTP requests or manage multiple environments, by mastering the shortcuts.
+Insomnia offers a wide range of keyboard shortcuts that help you navigate faster, write requests efficiently, and switch contexts with minimal friction. Using keyboard shortcuts, you can do the following:
+* Edit, build, and execute complex HTTP requests
+* Manage multiple environments
+* Navigate through the Insomnia UI
 
 To locate the keyboard shortcut list inside the Insomnia application:
 - From the **Insomnia** desktop application, select **Preferences**, and then select **Keyboard**.
