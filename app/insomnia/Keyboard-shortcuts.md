@@ -189,7 +189,7 @@ rows:
 {% endtable %}
 
 ## Workspace maintenance
-Use this shortcut to keep your workspace clean and efficient as you wrap up tasks or shift focus.
+Use this shortcut to keep your workspace clean as you wrap up tasks or shift focus.
 {% table %}
 columns:
   - title: Shortcuts
