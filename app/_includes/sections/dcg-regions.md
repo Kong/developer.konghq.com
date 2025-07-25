@@ -39,8 +39,8 @@
 
 * North America:
     * South Carolina (`us-east1`)
-    * Iowa (us-central1)
-    * Oregon (us-west1)
+    * Iowa (`us-central1`)
+    * Oregon (`us-west1`)
     * Montreal (`northamerica-northeast1`)
 * Europe:
     * Belgium (`europe-west1`)
