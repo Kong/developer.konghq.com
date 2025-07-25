@@ -14,7 +14,7 @@ headers:
 body:
   name: "Appointments Dev"
   audience: "http://myhttpbin.dev"
-  description: "auth server for Appointment dev environment"
+  description: "Auth server for the Appointment dev environment"
 {% endkonnect_api_request %}
 
 Export the auth server ID and issuer URL:
@@ -71,7 +71,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You can also configure dynamic custom claims with [dynamic claim templating](/konnect-identity/#dynamic-claim-templates) to generate claims during runtime.
+You can also configure dynamic custom claims with [dynamic claim templating](/kong-identity/#dynamic-claim-templates) to generate claims during runtime.
 
 ## Create a client in the auth server
 

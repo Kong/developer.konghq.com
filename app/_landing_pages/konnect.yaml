@@ -104,7 +104,7 @@ rows:
                     * Issue and validate access tokens
                     * Integrate secure authentication into your {{site.base_gateway}} APIs
                     
-                    [Start using Kong Identity](/konnect-identity/)
+                    [Start using Kong Identity](/kong-identity/)
 
 
   - header:
