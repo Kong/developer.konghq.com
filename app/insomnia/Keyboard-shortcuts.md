@@ -82,7 +82,7 @@ rows:
   - shortcut: |
       `Ctrl + '`
     action: "Focus response"
-    description: Move focus to the response pane.
+    description: Select the content in the response pane.
   - shortcut: |
       `Ctrl + Shift + I`
     action: "Focus graphQL explorer filter"
