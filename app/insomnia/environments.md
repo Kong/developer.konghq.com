@@ -25,6 +25,8 @@ related_resources:
     url: /insomnia/dynamic-variables/
   - text: Template tags
     url: /insomnia/template-tags/
+  - text: Keyboard Shortcuts
+    url: /insomnia/keyboard-shortcuts/  
 ---
 
 An environment is a JSON object containing key-value pairs of the data you want to reference. There are different levels of environments that can be used in requests and scripts:
