@@ -51,7 +51,7 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: 
-              url: https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_campaign=gateway-konnect&utm_content=top-nav
+              url: https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_campaign=gateway-konnect
               align: end
       - blocks:
         - type: card
