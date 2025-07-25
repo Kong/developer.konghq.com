@@ -33,7 +33,7 @@
     * Ireland (`northeurope`)
     * France (`francecentral`)
 * Asia Pacific:
-    * Australia East (australiaeast)    
+    * Australia East (`australiaeast`)    
 
 #### Google
 
@@ -44,11 +44,11 @@
     * Montreal (`northamerica-northeast1`)
 * Europe:
     * Belgium (`europe-west1`)
-    * London (europe-west2)
-    * Frankfurt (europe-west3)
+    * London (`europe-west2`)
+    * Frankfurt (`europe-west3`)
 * Asia Pacific:
     * Tokyo (`asia-northeast1`)
-    * Singapore (asia-southeast1)
-    * Mumbai (asia-south1)
-    * Sydney (australia-southeast1)
+    * Singapore (`asia-southeast1`)
+    * Mumbai (`asia-south1`)
+    * Sydney (`australia-southeast1`)
     
