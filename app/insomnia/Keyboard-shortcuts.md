@@ -39,7 +39,8 @@ columns:
     key: description    
 rows:
   - shortcut: |
-      `Ctrl + Shift + ,`
+      Windows: `Ctrl + Shift + ,`
+      Mac: `⇧ ⌘ ,`
     action: "Show document / collection settings"
     description: Open settings for the current document or collection.
   - shortcut: |
