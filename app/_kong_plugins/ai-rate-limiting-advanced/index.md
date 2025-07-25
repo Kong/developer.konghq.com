@@ -44,6 +44,13 @@ notes: |
   In DB-less, hybrid mode, and Konnect, the <code>cluster</code> config strategy
   is not supported. Use <code>redis</code> instead. In Serverless gateways only the
   <code>local</code> config strategy is supported.
+
+related_resources:
+  - text: Enforce AI rate limits in with a custom function
+    url: /how-to/use-custom-function-for-ai-rate-limiting/
+  - text: Use Kong AI Gateway to govern GitHub MCP traffic
+    url: /mcp/govern-mcp-traffic/
+
 ---
 
 The AI Rate Limiting Advanced plugin provides rate limiting for the providers used by any AI plugins. The
