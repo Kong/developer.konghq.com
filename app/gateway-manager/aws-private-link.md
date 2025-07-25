@@ -56,7 +56,7 @@ Before creating a PrivateLink connection, ensure that you have a VPC, subnets, a
    * The security group allows inbound TCP traffic on port 443.
    * Private DNS is enabled in the additional settings.
 1. Create the endpoint and wait until the status is available. We recommend waiting 10 minutes before using the endpoint.
-1. After your PrivateLink endpoint is available, update your Data Plane configuration in the [`kong.conf` file](/gateway/manage-kong-conf/) to connect to the {{site.konnect_short_name}} Control Plane using the private DNS name for your region.
+1. After your PrivateLink endpoint is available, update your Data Plane configuration in the [`kong.conf` file](/gateway/manage-kong-conf/) to connect to the {{site.konnect_short_name}} Control Plane using the private DNS name for your region. You can find your cluster prefix in the control_plane_edpoint (e.g. https://<CLUSTER_PREFIX>.cp0.konghq.com) in the API response to get your control plane [`https://developer.konghq.com/api/konnect/control-planes/v2/#/operations/get-control-plane`]. 
 
    Here's an example `kong.conf` configuration for the US region:
 
