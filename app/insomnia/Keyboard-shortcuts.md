@@ -140,7 +140,7 @@ rows:
   - shortcut: |
       `Ctrl + L`
     action: "Focus URL"
-    description: Move focus to the request URL field.
+    description: Selects the request URL field.
   - shortcut: |
       `Ctrl + Shift + G`
     action: "Generate code"
