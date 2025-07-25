@@ -74,7 +74,7 @@ body:
 {% endnavtab %}
 {% navtab "Konnect UI" %}
 
-1. Navigate to **Gateway Manager**, select your Dedicated Cloud Gateway, then open **Networks** from the side menu.
+1. From your Dedicated Cloud Gateway, open **Networks** from the side menu.
 1. Choose a network, open its action menu, and select **Configure Private Networking**.
 1. Add a new VPC peering connection by filling out all of the required fields:
   * **VPC Peering Name**: A unique name to identify this VPC peering connection.
