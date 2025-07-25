@@ -172,7 +172,7 @@ rows:
     description: Create a new HTTP request in the current workspace.
   - shortcut: |
       `Ctrl + D`
-    action: "Dulicate request"
+    action: "Duplicate request"
     description: Duplicate the currently selected request.
   - shortcut: |
       `Ctrl + Shift + Backspace`
