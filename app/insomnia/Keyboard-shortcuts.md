@@ -58,7 +58,7 @@ rows:
   - shortcut: |
       `Ctrl + P`
     action: "Quick search"
-    description: Open the quick switcher to search requests, and environments.
+    description: Open the quick switcher to search requests and environments.
   - shortcut: |
       `Ctrl + Shift + R`
     action: "Reload plugins"
