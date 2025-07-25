@@ -50,16 +50,15 @@ related_resources:
     url: /ai-gateway/semantic-similarity/
 ---
 
-The AI Semantic Cache plugin stores user responses to an LLM in a vector database based on semantic meaning. When a similar query is made, it uses these embeddings to retrieve relevant cached responses efficiently.
+The AI Semantic Cache plugin stores user requests to an LLM in a vector database based on semantic meaning. When a similar query is made, it uses these embeddings to retrieve relevant cached requests efficiently.
 
 ## What is semantic caching?
 
-Semantic caching enhances data retrieval efficiency by focusing on the meaning or context of queries rather than just exact matches. It stores responses based on the underlying intent and semantic similarities between different queries and can then retrieve those cached queries when a similar request is made.
+Semantic caching enhances data retrieval efficiency by focusing on the meaning or context of queries rather than just exact matches. It stores requests based on the underlying intent and semantic similarities between different queries and can then retrieve those cached queries when a similar request is made.
 
-When a new request is made, the system can retrieve and reuse previously cached responses if they are contextually relevant, even if the phrasing is different. This method reduces redundant processing, speeds up response times, and ensures that answers are more relevant to the user’s intent, ultimately improving overall system performance and user experience.
+When a new request is made, the system can retrieve and reuse previously cached requests if they are contextually relevant, even if the phrasing is different. This method reduces redundant processing, speeds up response times, and ensures that answers are more relevant to the user’s intent, ultimately improving overall system performance and user experience.
 
 For example, if a user asks, "how to integrate our API with a mobile app" and later asks, "what are the steps for connecting our API to a smartphone application?", the system understands that both questions are asking for the same information. It can then retrieve and reuse previously cached responses, even if the wording is different. This approach reduces processing time and speeds up responses.
-
 
 The AI Semantic Cache plugin may not be ideal if the following are true:
 
