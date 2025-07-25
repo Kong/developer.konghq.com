@@ -26,7 +26,6 @@ Insomnia offers a wide range of keyboard shortcuts that help you navigate faster
 
 You can view and manage your keyboard shortcut bindings in Insomnia by navigating to *Preferences** at the bottom left of the sidebar, and then clicking the **Keyboard** tab.
 
-Improve your workflow with the following shortcuts:
 
 ## Navigation and UI controls
 Use these shortcuts help you quickly move around the Insomnia interface, toggle panels, and access essential settings.
