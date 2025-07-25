@@ -1,5 +1,5 @@
 ---
-title: Download Insomnia on a Windows
+title: Download Insomnia on Windows
 
 content_type: how_to
 
@@ -40,6 +40,11 @@ faqs:
       1. Find Insomnia in the list of installed applications and select the ellipsis (⋯).
       1. Click **Uninstall**.
       1. Click **Finish**.
+next_steps:
+  - text: Get started with documents
+    url: /insomnia/documents/
+  - text: Get started with collections
+    url: /insomnia/collections/
 ---
 
 
@@ -53,7 +58,7 @@ Before you install, close any open Insomnia windows. The NSIS installer can't up
 
 
 ## Run the installer
-1. From your downloads folder, select the **Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe** file.
+1. From your downloads folder, select the `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
 2. Click **Yes** to run the installer.
 
 ## Follow the setup wizard
