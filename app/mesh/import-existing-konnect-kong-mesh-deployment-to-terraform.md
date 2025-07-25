@@ -3,7 +3,7 @@ title: '{{site.konnect_short_name}} {{site.mesh_product_name}} deployment to Ter
 description: 'This guide explains how to import an existing {{site.konnect_short_name}} {{site.mesh_product_name}} deployment into Terraform.'
 content_type: reference
 layout: reference
-breadcrumb: 
+breadcrumbs: 
  - /mesh/
 products:
   - mesh

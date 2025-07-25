@@ -3632,6 +3632,7 @@ components:
                             enum:
                               - Consumer Admin
                           description:
+                            description: This role grants full write access to administer Consumers. Can configure plugins and view plugin partials for Consumers they have access to. Cannot create or modify global plugins or plugins outside their scope.
                             type: string
                             example: This role grants full write access to administer consumers.
                             enum:
@@ -3680,6 +3681,7 @@ components:
                             enum:
                               - Gateway Service Admin
                           description:
+                            description: This role grants full write access to administer Gateway Services. Can configure plugins and view plugin partials for Services they have access to. Cannot create or modify global plugins or plugins outside their scope.
                             type: string
                             example: This role grants full write access to administer gateway services.
                             enum:
@@ -3696,6 +3698,7 @@ components:
                             enum:
                               - Plugin Admin
                           description:
+                            description: 'Can configure plugins at any scope (global, Service, Route, or Consumer) within a Control Plane Group. Also has write access to plugin partials.'
                             type: string
                             example: This role grants full write access to administer plugins.
                             enum:
@@ -3712,6 +3715,7 @@ components:
                             enum:
                               - Route Admin
                           description:
+                            description: This role grants full write access to administer Routes. Can configure plugins and view plugin partials for Routes they have access to. Cannot create or modify global plugins or plugins outside their scope.
                             type: string
                             example: This role grants full write access to administer routes.
                             enum:
@@ -3760,6 +3764,7 @@ components:
                             enum:
                               - Viewer
                           description:
+                            description: This role grants read-only access to all the configurations of a Control Plane Group and corresponding Data Plane nodes. Includes read-only access to plugin partials within accessible scopes.
                             type: string
                             example: This role grants read only access to all entities within a control plane.
                             enum:

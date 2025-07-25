@@ -1,0 +1,4216 @@
+openapi: 3.0.3
+info:
+  title: Konnect Service Catalog
+  version: 1.3.0
+  description: The platform API for Konnect Service Catalog.
+  contact:
+    name: Kong
+    url: 'https://konghq.com'
+servers:
+  - url: 'https://us.api.konghq.com/v1'
+    description: United-States Production region
+  - url: 'https://eu.api.konghq.com/v1'
+    description: Europe Production region
+  - url: 'https://au.api.konghq.com/v1'
+    description: Australia Production region
+  - url: 'https://me.api.konghq.com/v1'
+    description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v1'
+    description: India Production region
+paths:
+  /catalog-services:
+    post:
+      operationId: create-catalog-service
+      summary: Create Service
+      description: Creates a service.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCatalogServiceRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CatalogServiceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Catalog Services
+    get:
+      operationId: list-catalog-services
+      summary: List Services
+      description: Returns a paginated collection of services.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CatalogServiceFilter'
+        - $ref: '#/components/parameters/CatalogServiceSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogServicesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Catalog Services
+  '/catalog-services/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the service.
+        required: true
+        schema:
+          type: string
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+    get:
+      operationId: fetch-catalog-service
+      summary: Fetch Service
+      description: Fetches a service.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogServiceResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Services
+    patch:
+      operationId: update-catalog-service
+      summary: Update Service
+      description: Updates a service.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCatalogServiceRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogServiceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog Services
+    delete:
+      operationId: delete-catalog-service
+      summary: Delete Service
+      description: Deletes a service.
+      responses:
+        '204':
+          description: Service was deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Services
+  /integrations:
+    get:
+      operationId: list-catalog-integrations
+      summary: List Integrations
+      description: |
+        Returns a paginated collection of all catalog integrations available to connect.
+        Each integration represents a built-in connector that extends the platform's capabilities;
+        enabling discovery, resource management, event ingestion, and more.
+        Integrations expose metadata that describes how they authenticate, what configuration they
+        require, and how they interact with catalog entities like Resources and Services.
+
+        Currently, integrations are platform-defined and cannot be extend or registered by customers.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CatalogIntegrationFilter'
+        - $ref: '#/components/parameters/CatalogIntegrationSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogIntegrationsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Catalog Integrations
+  /integration-instances:
+    post:
+      operationId: create-integration-instance
+      summary: Create Integration Instance
+      description: Creates an integration instance.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateIntegrationInstanceRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/IntegrationInstanceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Integration Instances
+    get:
+      operationId: list-integration-instances
+      summary: List Integration Instances
+      description: Returns a paginated collection of integration instances.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/IntegrationInstanceFilter'
+        - $ref: '#/components/parameters/IntegrationInstanceSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListIntegrationInstancesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Integration Instances
+  '/integration-instances/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the integration instance.
+        required: true
+        schema:
+          type: string
+          example: 3f51fa25-310a-421d-bd1a-007f859021a3
+    get:
+      operationId: fetch-integration-instance
+      summary: Fetch Integration Instance
+      description: Fetches a integration instance.
+      responses:
+        '200':
+          $ref: '#/components/responses/IntegrationInstanceResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Integration Instances
+    patch:
+      operationId: update-integration-instance
+      summary: Update Integration Instance
+      description: Updates an integration instance.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateIntegrationInstanceRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/IntegrationInstanceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Integration Instances
+    delete:
+      operationId: delete-integration-instance
+      summary: Delete Integration Instance
+      description: Deletes an integration instance.
+      responses:
+        '204':
+          description: Integration Instance was deleted successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Integration Instances
+  '/integration-instances/{id}/auth-credential':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the integration instance.
+        required: true
+        schema:
+          type: string
+          example: 3f51fa25-310a-421d-bd1a-007f859021a3
+    post:
+      operationId: create-integration-instance-auth-credential
+      summary: Create Integration Instance Auth Credential
+      description: |
+        Creates an auth credential scoped to the given integration instance.
+        Auth credentials are singleton resources that have a 1-to-1 relationship with
+        an integration instance.
+
+        An attempt to create subsequent auth credentials for an instance will result in a 409 response.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateIntegrationInstanceAuthCredentialRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/IntegrationInstanceAuthCredentialResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Integration Instance Auth Credentials
+    get:
+      operationId: get-integration-instance-auth-credential
+      summary: Get Integration Instance Auth Credential
+      description: Fetches the auth credential scoped to the given integration instance.
+      responses:
+        '200':
+          $ref: '#/components/responses/IntegrationInstanceAuthCredentialResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Integration Instance Auth Credentials
+    delete:
+      operationId: delete-integration-instance-auth-credential
+      summary: Delete Integration Instance Auth Credential
+      description: Deletes the auth credential scoped to the given integration instance.
+      responses:
+        '204':
+          description: Integration Instance Auth Credential was deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Integration Instance Auth Credentials
+  '/integration-instances/{id}/auth-config':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the integration instance.
+        required: true
+        schema:
+          type: string
+          example: 3f51fa25-310a-421d-bd1a-007f859021a3
+    get:
+      operationId: get-integration-instance-auth-config
+      summary: Get Integration Instance Auth Config
+      description: Fetches auth config scoped to the given integration instance.
+      responses:
+        '200':
+          $ref: '#/components/responses/IntegrationInstanceAuthConfigResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Integration Instance Auth Config
+    put:
+      operationId: upsert-integration-instance-auth-config
+      summary: Upsert Integration Instance Auth Config
+      description: Upserts auth config scoped to the given integration instance.
+      requestBody:
+        $ref: '#/components/requestBodies/UpsertIntegrationInstanceAuthConfigRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/IntegrationInstanceAuthConfigResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Integration Instance Auth Config
+    delete:
+      operationId: delete-integration-instance-auth-config
+      summary: Delete Integration Instance Auth Config
+      description: Deletes the auth config scoped to the given integration instance.
+      responses:
+        '204':
+          description: Integration Instance Auth Config was deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Integration Instance Auth Config
+  /resources:
+    get:
+      operationId: list-resources
+      summary: List Resources
+      description: Returns a paginated collection of resources.
+      parameters:
+        - $ref: '#/components/parameters/CursorPageQuery'
+        - $ref: '#/components/parameters/CatalogResourceFilter'
+        - $ref: '#/components/parameters/CatalogResourceSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogResourcesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Catalog Resources
+  '/resources/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the resource.
+        required: true
+        schema:
+          type: string
+          example: AflTNLY0tTQhv2my
+    get:
+      operationId: fetch-resource
+      summary: Fetch Resource
+      description: Fetches a resource by ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogResourceResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Resources
+  '/integration-instances/{integrationInstanceId}/resources/{resourceId}':
+    parameters:
+      - name: integrationInstanceId
+        in: path
+        description: The `id` of the integration instance.
+        required: true
+        schema:
+          type: string
+          example: 3f51fa25-310a-421d-bd1a-007f859021a3
+      - name: resourceId
+        in: path
+        description: The `id` of the resource.
+        required: true
+        schema:
+          type: string
+          example: AflTNLY0tTQhv2my
+    patch:
+      operationId: update-resource
+      summary: Update Resource
+      description: Updates a resource.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCatalogResourceRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogResourceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Resources
+  '/resources/{id}/catalog-services':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the resource.
+        required: true
+        schema:
+          type: string
+          example: AflTNLY0tTQhv2my
+    get:
+      operationId: list-catalog-resource-services
+      summary: List Resource Services
+      description: Returns a paginated collection of services the given resource is mapped to.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CatalogServiceFilter'
+        - $ref: '#/components/parameters/CatalogServiceSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogServicesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Resource Services
+  /resource-mappings:
+    post:
+      operationId: create-resource-mapping
+      summary: Create Resource Mapping
+      description: Creates a mapping between a catalog resource and service.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCatalogResourceMappingRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CatalogResourceMappingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog Resource Mappings
+    get:
+      operationId: list-resource-mappings
+      summary: List Resource Mappings
+      description: Returns a paginated collection of catalog resource mappings.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CatalogResourceMappingFilter'
+        - $ref: '#/components/parameters/CatalogResourceMappingSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogResourceMappingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Catalog Resource Mappings
+  '/resource-mappings/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the resource mapping.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: d277faad-ed4e-4c56-a0fb-acce065dee34
+    get:
+      operationId: fetch-resource-mapping
+      summary: Fetch Resource Mapping
+      description: Fetches a resource mapping by ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogResourceMappingResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Resource Mappings
+    delete:
+      operationId: delete-resource-mapping
+      summary: Delete Resource Mapping
+      description: Removes an existing mapping between a catalog resource and service.
+      responses:
+        '204':
+          description: Resource Mapping was deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Resource Mappings
+  '/catalog-services/{id}/resources':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the service.
+        required: true
+        schema:
+          type: string
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+    get:
+      operationId: list-catalog-service-resources
+      summary: List Service Resources
+      description: Returns a paginated collection of resources mapped to a service.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CatalogResourceRefFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogServiceResourcesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Service Resources
+components:
+  parameters:
+    CatalogIntegrationFilter:
+      name: filter
+      description: Filters a collection of integrations.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/CatalogIntegrationFilterParameters'
+    CatalogIntegrationSort:
+      name: sort
+      description: |
+        Sorts a collection of integrations. Supported sort attributes are:
+          - `display_name`
+          - `name`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    CatalogResourceFilter:
+      name: filter
+      description: Filters a collection of resources.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/CatalogResourceFilterParameters'
+    CatalogResourceMappingFilter:
+      name: filter
+      description: Filters a collection of resource mappings.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/CatalogResourceMappingFilterParameters'
+    CatalogResourceMappingSort:
+      name: sort
+      description: |
+        Sorts a collection of resource mappings. Supported sort attributes are:
+          - `created_at`
+
+        Default sort is `created_at` in descending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    CatalogResourceRefFilter:
+      name: filter
+      description: Filters a collection of resources.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/CatalogResourceRefFilterParameters'
+    CatalogResourceSort:
+      name: sort
+      description: |
+        Sorts a collection of resources. Supported sort attributes are:
+          - `created_at`
+          - `updated_at`
+
+        Default sort is `created_at` in descending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    CatalogServiceFilter:
+      name: filter
+      description: Filters a collection of services.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/CatalogServiceFilterParameters'
+    CatalogServiceSort:
+      name: sort
+      description: |
+        Sorts a collection of services. Supported sort attributes are:
+          - `display_name`
+          - `name`
+          - `created_at`
+          - `updated_at`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    CursorPageQuery:
+      name: page
+      description: Determines which page of the collection to retrieve.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/CursorPageParameters'
+    IntegrationInstanceFilter:
+      name: filter
+      description: Filters a collection of integration instances.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/IntegrationInstanceFilterParameters'
+    IntegrationInstanceSort:
+      name: sort
+      description: |
+        Sorts a collection of integration instances. Supported sort attributes are:
+          - `display_name`
+          - `name`
+          - `created_at`
+          - `updated_at`
+          - `integration.display_name`
+
+        Default sort is `integration.display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    PageNumber:
+      name: 'page[number]'
+      description: Determines which page of the entities to retrieve.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 1
+    PageSize:
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
+  schemas:
+    CreateCatalogService:
+      type: object
+      properties:
+        name:
+          description: |
+            The machine name of the Service that uniquely identifies it within the catalog.
+          type: string
+          example: user-svc
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the Service.
+          type: string
+          example: User Service
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the Service.
+          type: string
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        custom_fields:
+          $ref: '#/components/schemas/CustomFields'
+      additionalProperties: false
+      required:
+        - name
+        - display_name
+    UpdateCatalogService:
+      type: object
+      properties:
+        name:
+          description: |
+            The machine name of the Service that uniquely identifies it within the catalog.
+          type: string
+          example: user-svc
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the Service.
+          type: string
+          example: User Service
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the Service.
+          type: string
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+        custom_fields:
+          $ref: '#/components/schemas/CustomFields'
+      additionalProperties: false
+    CatalogServiceFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        custom_fields:
+          description: |
+            Filter by custom fields using dot-notation to specify the custom field.
+            Filter operators are dictated by the custom field type. For example:
+              - `filter[custom_fields.owner]`
+              - `filter[custom_fields.owner][neq]=kong`
+              - `filter[custom_fields.dashboard.link][contains]=https`
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+            - $ref: '#/components/schemas/BooleanFieldFilter'
+            - $ref: '#/components/schemas/NumericFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+    CatalogService:
+      description: The service object contains information about a Service Catalog service.
+      type: object
+      properties:
+        id:
+          description: The service ID.
+          type: string
+          format: uuid
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+          readOnly: true
+        name:
+          description: |
+            The machine name of the Service that uniquely identifies it within the catalog.
+          type: string
+          example: user-svc
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the Service.
+          type: string
+          example: User Service
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the Service.
+          type: string
+          maxLength: 2048
+          nullable: true
+        custom_fields:
+          $ref: '#/components/schemas/CustomFields'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - custom_fields
+        - labels
+        - created_at
+        - updated_at
+      title: CatalogService
+    CatalogIntegrationFilterParameters:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+    CatalogIntegration:
+      type: object
+      properties:
+        name:
+          description: The machine name of the integration that uniquely identifies it within the catalog.
+          type: string
+          example: gateway-manager
+          readOnly: true
+        display_name:
+          description: The display name of the integration.
+          type: string
+          example: Gateway Manager
+          readOnly: true
+        description:
+          description: The description of the integration.
+          type: string
+          readOnly: true
+        built_in:
+          description: |
+            Denotes whether the integration is built-in to the catalog.
+            Built-in integrations are always connected and available by default.
+          type: boolean
+          example: true
+          readOnly: true
+        version:
+          description: The integration version.
+          type: string
+          example: v1
+          readOnly: true
+        authorization:
+          $ref: '#/components/schemas/CatalogIntegrationAuthorization'
+        config_schema:
+          $ref: '#/components/schemas/CatalogIntegrationConfigSchema'
+        resource_types:
+          $ref: '#/components/schemas/CatalogIntegrationResourceTypes'
+        discovery:
+          $ref: '#/components/schemas/CatalogIntegrationDiscovery'
+        api_spec_provider:
+          $ref: '#/components/schemas/CatalogIntegrationApiSpecProvider'
+        events:
+          $ref: '#/components/schemas/CatalogIntegrationEvents'
+      required:
+        - built_in
+        - name
+        - display_name
+        - version
+        - authorization
+        - config_schema
+        - resource_types
+        - discovery
+        - api_spec_provider
+        - events
+    CatalogIntegrationAuthorization:
+      description: Defines the authorization strategy for an integration.
+      anyOf:
+        - type: object
+          nullable: true
+        - $ref: '#/components/schemas/OAuth'
+        - $ref: '#/components/schemas/MultiKeyAuth'
+        - $ref: '#/components/schemas/GitHubAppInstallationAuth'
+      title: CatalogIntegrationAuthorization
+    OAuth:
+      description: |
+        Defines the OAuth 2.0 authorization strategy used by an integration.
+        This schema provides all necessary information for the platform to initiate
+        and manage OAuth-based authorization flows on behalf of customers.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - oauth
+        overridable_config:
+          description: |
+            A list of field names from the `config` object (e.g., `client_id`, `authorization_endpoint`, etc)
+            that can be overridden on a per-customer basis. When a field is listed here, the catalog allows
+            customer-defined values to take precedence over the default configuration provided by the integration.
+            This supports flexible deployment models, including both SaaS-based and self-hosted OAuth authorization flows.
+          type: array
+          items:
+            type: string
+            enum:
+              - client_id
+              - client_secret
+              - authorization_endpoint
+              - token_endpoint
+        config:
+          type: object
+          properties:
+            grant_type:
+              description: |
+                The OAuth 2.0 grant type used for authorization (e.g., `authorization_code`).
+                Determines the flow the integration uses to request access tokens.
+              type: string
+              enum:
+                - authorization_code
+            client_id:
+              description: The OAuth client identifier registered with the integration provider.
+              type: string
+              example: d745213a-b7e8-4998-abe3-41f164001970
+            authorization_endpoint:
+              type: object
+              properties:
+                url:
+                  description: The URL where users are redirected to authorize access.
+                  type: string
+                  format: uri
+                  example: 'https://identity.service.com/oauth/authorize'
+              required:
+                - url
+            token_endpoint:
+              type: object
+              properties:
+                url:
+                  description: The URL used to retrieve access tokens.
+                  type: string
+                  format: uri
+                  example: 'https://identity.service.com/oauth/token'
+              required:
+                - url
+            scope:
+              description: |
+                A list of permission scopes requested by the integration. 
+                Defines what level of access the token will grant.
+              type: array
+              items:
+                type: string
+              example:
+                - read
+                - write
+            rolling_refresh_exp_seconds:
+              description: |
+                Number of seconds before the refresh token grant can no longer be used to mint
+                a new access token. Once expired clients must re-authenticate to restart the
+                window interval.
+              type: number
+              example: 15780000
+              nullable: true
+          required:
+            - grant_type
+            - client_id
+            - authorization_endpoint
+            - token_endpoint
+            - scope
+            - rolling_refresh_exp_seconds
+      required:
+        - type
+        - config
+    MultiKeyAuth:
+      description: |
+        Defines an authentication strategy based on one or more API keys passed via HTTP headers. 
+        This strategy supports integrations that require custom headers for credential-based access, 
+        allowing flexibility across providers with different authentication header requirements.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - multi_key_auth
+        config:
+          type: object
+          properties:
+            headers:
+              description: |
+                A list of header definitions used to transmit API credentials to the integration's external API. 
+                Each header represents a unique key required by the provider.
+              type: array
+              items:
+                type: object
+                title: KeyAuthHeader
+                required:
+                  - name
+                  - display_name
+                  - description
+                properties:
+                  name:
+                    description: The exact name of the HTTP request header where the credential should be inserted.
+                    type: string
+                    example: X-API-Key
+                  display_name:
+                    description: 'An optional user-friendly label for the key, used in UI forms to guide users.'
+                    type: string
+                    example: API Key
+                    nullable: true
+                  description:
+                    description: An optional brief explanation of the purpose or usage of the key.
+                    type: string
+                    nullable: true
+              minItems: 1
+          required:
+            - headers
+      required:
+        - type
+        - config
+    GitHubAppInstallationAuth:
+      description: |
+        Defines the GitHub App authorization strategy used by the GitHub integration.
+        This strategy enables secure access to GitHub APIs using app installation tokens.
+        It supports both API-based interactions and real-time event delivery via GitHub webhooks.
+        Unlike standard OAuth flows, this strategy leverages GitHub's custom app installation flow
+        and token lifecycle, making it ideal for deep, organization-level GitHub integration.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - github_app_installation
+        config:
+          type: object
+          properties:
+            app_install_url:
+              type: object
+              additionalProperties: false
+              properties:
+                url:
+                  description: |
+                    The URL where customers are directed to install the GitHub App into their
+                    GitHub organization.
+                  type: string
+                  format: uri
+                  example: 'https://global.api.konghq.com/service-catalog-integrations/github/app/install'
+              required:
+                - url
+            app_manage_url:
+              type: object
+              additionalProperties: false
+              properties:
+                url:
+                  description: 'The GitHub App management page URL where users can view, configure, or uninstall the app after installation.'
+                  type: string
+                  format: uri
+                  example: 'https://global.api.konghq.com/service-catalog-integrations/github/app/manage'
+              required:
+                - url
+            authorize_app_installation_endpoint:
+              type: object
+              additionalProperties: false
+              properties:
+                url:
+                  description: |
+                    The endpoint used to link a completed GitHub App installation with a customer account in the catalog.
+                    This step finalizes the integration by exchanging metadata from the GitHub installation event.
+                  type: string
+                  format: uri
+                  example: 'https://global.api.konghq.com/service-catalog-integrations/github/app/authorize-installation'
+              required:
+                - url
+            pending_app_installs_endpoint:
+              type: object
+              additionalProperties: false
+              properties:
+                url:
+                  description: |
+                    The endpoint used to return a list of in-progress or unlinked GitHub App installations awaiting user confirmation.
+                  type: string
+                  format: uri
+                  example: 'https://global.api.konghq.com/service-catalog-integrations/github/app/pending-installs'
+              required:
+                - url
+          required:
+            - app_install_url
+            - app_manage_url
+            - authorize_app_installation_endpoint
+            - pending_app_installs_endpoint
+      required:
+        - type
+        - config
+    CatalogIntegrationConfigSchema:
+      description: Defines the configuration schema for the integration.
+      example:
+        base_url:
+          type: string
+          display_name: Base URL
+          description: The customer-specific API URL
+          required: true
+      additionalProperties:
+        anyOf:
+          - type: object
+            nullable: true
+          - $ref: '#/components/schemas/StringConfigFieldSchema'
+          - $ref: '#/components/schemas/EnumConfigFieldSchema'
+          - $ref: '#/components/schemas/BooleanConfigFieldSchema'
+    StringConfigFieldSchema:
+      description: Defines a string value integration config field.
+      type: object
+      properties:
+        display_name:
+          description: user-friendly name of the configuration field.
+          type: string
+        description:
+          description: Optional brief description of the configuration field.
+          type: string
+        required:
+          description: Denotes whether the config field is a required value.
+          type: boolean
+          default: false
+        mutable_condition:
+          $ref: '#/components/schemas/MutableCondition'
+        type:
+          description: The field type of the config value.
+          type: string
+          enum:
+            - string
+        default:
+          description: The default value for the config field.
+          type: string
+      required:
+        - type
+      title: StringConfigFieldSchema
+    EnumConfigFieldSchema:
+      description: Defines an enum value integration config field.
+      type: object
+      properties:
+        display_name:
+          description: user-friendly name of the configuration field.
+          type: string
+        description:
+          description: Optional brief description of the configuration field.
+          type: string
+        required:
+          description: Denotes whether the config field is a required value.
+          type: boolean
+          default: false
+        mutable_condition:
+          $ref: '#/components/schemas/MutableCondition'
+        type:
+          description: The field type of config value.
+          type: string
+          enum:
+            - enum
+        choices:
+          description: List of enumerated choices that can be selected as the config field value.
+          type: array
+          items:
+            type: object
+            required:
+              - value
+              - display_name
+            properties:
+              value:
+                description: The value represented by this option.
+                type: string
+              display_name:
+                description: user-friendly name of the option.
+                type: string
+              description:
+                description: Optional brief description of the option.
+                type: string
+        default:
+          description: |
+            The default value for the config field.
+            Must reference the value of an option listed in `choices`.
+          type: string
+      required:
+        - type
+        - choices
+      title: EnumConfigFieldSchema
+    BooleanConfigFieldSchema:
+      description: Defines a boolean value integration config field.
+      type: object
+      properties:
+        display_name:
+          description: user-friendly name of the configuration field.
+          type: string
+        description:
+          description: Optional brief description of the configuration field.
+          type: string
+        required:
+          description: Denotes whether the config field is a required value.
+          type: boolean
+          default: false
+        mutable_condition:
+          $ref: '#/components/schemas/MutableCondition'
+        type:
+          description: The field type of the config value.
+          type: string
+          enum:
+            - boolean
+        default:
+          description: The default value for the config field.
+          type: boolean
+      required:
+        - type
+      title: BooleanConfigFieldSchema
+    MutableCondition:
+      description: |
+        Defines the condition under which this configuration field is allowed to be modified.
+        When specified, the platform will restrict updates to this field unless the integration
+        meets the given condition.
+
+        For example, setting `mutable_condition: unauthorized` means the field can only be 
+        changed while the integration is in an unauthorized state.
+      type: string
+      enum:
+        - unauthorized
+    CatalogIntegrationResourceTypes:
+      description: |
+        Defines the resource types that the integration manages within the catalog.
+
+        This schema is a key-value object where:
+          - Keys are globally unique, machine-readable identifiers for each resource type.
+          - Values are objects describing metadata about the resource type.
+
+        This declaration enables the platform to understand the structure, identity, and behavior of resources discovered by the integration.
+        By registering resource types, integrations communicate the kinds of entities they will ingest and maintain, 
+        allowing the catalog to enforce consistency, validation, and visibility across all integrations.
+      type: object
+      example:
+        gateway_svc:
+          display_name: Gateway Service
+          schema:
+            type: simple
+            definition:
+              control_plane_id: string
+              gatway_service_id: string
+        analytics_dashboard:
+          display_name: Dashboard
+          schema:
+            type: simple
+            definition:
+              dashboard_id: string
+      additionalProperties:
+        type: object
+        title: ResourceType
+        required:
+          - schema
+        properties:
+          display_name:
+            description: The user-friendly resource type name.
+            type: string
+          schema:
+            $ref: '#/components/schemas/SimpleSchema'
+    CatalogIntegrationDiscovery:
+      description: |
+        Defines how the integration participates in Discovery.
+        Discovery enables integrations to automatically ingest and update resources in the catalog.
+      type: object
+      properties:
+        resource_integration_data_examples:
+          description: |
+            A map of example resource `integration_data` payloads by resource type.
+
+              - Keys are the machine-readable, globally unique names of resource types registered by this integration.
+              - Values are example `integration_data` payloads.
+          type: object
+          example:
+            gateway_service:
+              control_plane:
+                id: 00000000-0000-0000-0000-000000000000
+                name: dev-ext
+                labels:
+                  env: development
+              gateway_service:
+                id: 11111111-1111-1111-1111-111111111111
+                name: gateway-service
+                host: konghq.com
+                path: /example
+                type: service
+                port: 443
+                protocol: https
+                enabled: true
+          additionalProperties:
+            type: object
+            additionalProperties: true
+            description: An example `integration_data` payload for the given resource type.
+      nullable: true
+      required:
+        - resource_integration_data_examples
+    CatalogIntegrationApiSpecProvider:
+      description: |
+        Defines how an integration behaves as a source provider of Catalog Service API specs.
+        API specs are entities that can be attached to Catalog Services.
+        When an integration implements this capability, it can act as a source type for API spec contents.
+        In this role, the integration becomes the source of truth for the spec.
+        When a spec is attached to a Catalog Service using this source type, the platform relies on the external system to provide and update the spec data.
+        A null value indicates the given integration does not act as a source provider of API specs.
+      type: object
+      properties:
+        name:
+          description: |
+            The globally unique name of the API spec provider that identifies it within the catalog.
+            Corresponds to the API spec provider `type` when creating API specs.
+          type: string
+          example: konnect_api
+        display_name:
+          description: A user-friendly name for the API spec provider.
+          type: string
+          example: Konnect API
+        description:
+          description: An brief description of the API spec provider.
+          type: string
+        config_schema:
+          description: Defines the shape of the API spec provider config.
+          type: object
+          example:
+            type: simple
+            definition:
+              api_id: string
+          properties:
+            type:
+              type: string
+              enum:
+                - simple
+            definition:
+              type: object
+              additionalProperties:
+                type: string
+                enum:
+                  - string
+                  - number
+                  - boolean
+          required:
+            - type
+            - definition
+        resource_type:
+          description: |
+            When non-null, denotes that the API spec provider is bound to the given Resource type.
+            This means that API specs are auto-created when a Resource of the given type is mapped to a service.
+            Furthermore, it couples the lifecycle of the API Spec with the given Resource mapping.
+            When the given Resource is removed, the API spec will be deleted.
+          type: string
+          nullable: true
+      nullable: true
+      required:
+        - name
+        - display_name
+        - description
+        - config_schema
+        - resource_type
+    CatalogIntegrationEvents:
+      description: |
+        Defines the event types across all resource types belonging to the integration that will be ingested into the catalog.
+
+          - Keys are the machine-readable, globally unique names of resource types registered by this integration.
+          - Values are a map of event type definitions.
+      type: object
+      example:
+        gateway_svc:
+          plugin_added:
+            display_name: Plugin Added
+            description: Event triggered when a new plugin is added to a gateway service.
+            events_feed:
+              enabled: true
+      additionalProperties:
+        $ref: '#/components/schemas/IntegrationResourceEvents'
+      nullable: true
+    IntegrationResourceEvents:
+      description: |
+        Defines the event types for a given resource type belonging to the integration that will be ingested in the catalog.
+
+          - Keys are the machine-readable, globally unique names of resource types registered by this integration.
+          - Values are the event type definition.
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/IntegrationResourceEvent'
+    IntegrationResourceEvent:
+      description: Defines a registered event type for a given resource.
+      type: object
+      properties:
+        display_name:
+          description: User-friendly display name for the event type.
+          type: string
+        description:
+          description: 'Optional, brief description of the integration event type.'
+          type: string
+          nullable: true
+        events_feed:
+          type: object
+          properties:
+            enabled:
+              description: Whether this event type is returned by default in the Events API.
+              type: boolean
+          required:
+            - enabled
+      required:
+        - display_name
+        - description
+        - events_feed
+    CreateIntegrationInstance:
+      type: object
+      properties:
+        integration_name:
+          description: The type of integration instance to create.
+          type: string
+          example: aws-lambda
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        name:
+          description: |
+            The machine name of the integration instance that uniquely identifies it within the catalog.
+          type: string
+          example: aws-lambda-prod
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the integration instance.
+          type: string
+          example: AWS (prod)
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the integration instance.
+          type: string
+          maxLength: 2048
+          nullable: true
+        config:
+          $ref: '#/components/schemas/IntegrationInstanceConfig'
+      additionalProperties: false
+      required:
+        - integration_name
+        - name
+        - display_name
+        - config
+    UpdateIntegrationInstance:
+      type: object
+      properties:
+        name:
+          description: |
+            The machine name of the integration instance that uniquely identifies it within the catalog.
+          type: string
+          example: aws-lambda-prod
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the integration instance.
+          type: string
+          example: AWS (prod)
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the integration instance.
+          type: string
+          maxLength: 2048
+          nullable: true
+        config:
+          $ref: '#/components/schemas/IntegrationInstanceConfig'
+      additionalProperties: false
+    IntegrationInstanceFilterParameters:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        integration.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        integration.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        authorized:
+          $ref: '#/components/schemas/BooleanFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+    IntegrationInstance:
+      description: Information about an integration instance.
+      type: object
+      properties:
+        id:
+          description: The integration instance ID.
+          type: string
+          format: uuid
+          example: 3f51fa25-310a-421d-bd1a-007f859021a3
+          readOnly: true
+        name:
+          description: |
+            The machine name of the integration instance that uniquely identifies it within the catalog.
+          type: string
+          example: aws-lambda-prod
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the integration instance.
+          type: string
+          example: AWS (prod)
+          maxLength: 120
+          minLength: 1
+        description:
+          description: The description of the integration instance.
+          type: string
+          maxLength: 2048
+          nullable: true
+        integration:
+          $ref: '#/components/schemas/IntegrationRefWithoutInstance'
+        authorized:
+          description: Denotes whether the integration instance has been authorized within the catalog.
+          type: boolean
+          example: true
+          readOnly: true
+        config:
+          $ref: '#/components/schemas/IntegrationInstanceConfig'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - integration
+        - authorized
+        - config
+        - created_at
+        - updated_at
+    IntegrationInstanceConfig:
+      description: |
+        JSON object representing configuration specific to the integration instance.
+        The expected schema depends on the integration type and is dynamically registered at runtime.
+      type: object
+      example:
+        account_region: eu
+      default: {}
+      additionalProperties: true
+    CreateIntegrationInstanceAuthCredential:
+      oneOf:
+        - $ref: '#/components/schemas/CreateOAuthCredential'
+        - $ref: '#/components/schemas/CreateGitHubAppInstallationCredential'
+        - $ref: '#/components/schemas/CreateMultiKeyAuthCredential'
+      title: CreateIntegrationInstanceAuthCredential
+    IntegrationInstanceAuthCredential:
+      description: Object containing metadata for an integration instance auth credential.
+      oneOf:
+        - $ref: '#/components/schemas/OAuthCredential'
+        - $ref: '#/components/schemas/GitHubAppInstallationCredential'
+        - $ref: '#/components/schemas/MultiKeyAuthCredential'
+      title: IntegrationInstanceAuthCredential
+    CreateOAuthCredential:
+      description: Payload used to create an `OAuth` credential for an integration instance.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - oauth
+        config:
+          type: object
+          additionalProperties: false
+          properties:
+            grant_type:
+              description: 'The OAuth 2.0 grant type used for authorization (e.g., `authorization_code`).'
+              type: string
+              enum:
+                - authorization_code
+            code:
+              description: The authorization code used to exchange for an access token with the identity server.
+              type: string
+              example: Yzk5ZDczMzRlNDEwY
+            redirect_uri:
+              description: |
+                The redirect URI submitted to the authorization server during the authentication request 
+                to retrieve the authorization code.
+              type: string
+              format: uri
+              example: 'https://cloud.konghq.com/us/service-catalog/integrations/pagerduty/oauth'
+          required:
+            - grant_type
+            - code
+            - redirect_uri
+          title: CreateOAuthCredentialConfig
+      additionalProperties: false
+      required:
+        - type
+        - config
+    CreateGitHubAppInstallationCredential:
+      description: Payload used to create an `GitHub App Installation` credential for an integration instance.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - github_app_installation
+        config:
+          type: object
+          additionalProperties: false
+          properties:
+            installation_id:
+              description: The GitHub App installation ID.
+              type: string
+              example: '46952218'
+            code:
+              description: The authorization code used to exchange for a GitHub user-scoped access token.
+              type: string
+              example: Yzk5ZDczMzRlNDEwY
+            app_installed_by:
+              description: The GitHub user who installed the app
+              type: string
+          required:
+            - installation_id
+            - code
+          title: CreateGitHubAppInstallationCredentialConfig
+      additionalProperties: false
+      required:
+        - type
+        - config
+    CreateMultiKeyAuthCredential:
+      description: Payload used to create an `Multi Key` credential for an integration instance.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - multi_key_auth
+        config:
+          type: object
+          additionalProperties: false
+          properties:
+            headers:
+              description: |
+                A list of header key/value pairs used to transmit API credentials to the integration's external API.
+                Header names are defined by the integration within its `Multi Key` authorization strategy definition.
+              type: array
+              items:
+                type: object
+                required:
+                  - name
+                  - key
+                properties:
+                  name:
+                    description: Name of the request header
+                    type: string
+                  key:
+                    description: The key used to populate the request header
+                    type: string
+              example:
+                - name: x-api-key
+                  key: 9f2a3b4c8d6e7f00112233445566778899aabbccddeeff001122334455667788
+          required:
+            - headers
+          title: CreateMultiKeyAuthCredentialConfig
+      additionalProperties: false
+      required:
+        - type
+        - config
+    OAuthCredential:
+      description: Represents a credential scoped to an integration instance that supports the `OAuth` authorization strategy.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        integration_instance:
+          $ref: '#/components/schemas/IntegrationInstanceRef'
+        missing_permissions:
+          description: List of detected missing permissions required to enable the full functionality of the given integration instance.
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingPermission'
+        tainted:
+          description: Indicates that the credential is no longer valid and must be replaced with a new valid credential.
+          type: boolean
+          example: false
+        expires_at:
+          description: |
+            Timestamp denoting when the when the credential will expire in RFC-3339 format with a "T" character separating date from time within the field value.
+            When expired, the credential must be replaced with a new valid credential to re-enable full functionality for the given integration instance.
+
+            A `null` value indicates no known expiration time.
+          type: string
+          format: date-time
+          example: '2025-04-01T07:20:50Z'
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        type:
+          type: string
+          enum:
+            - oauth
+      required:
+        - id
+        - integration_instance
+        - missing_permissions
+        - tainted
+        - expires_at
+        - created_at
+        - type
+      title: OAuthCredential
+    GitHubAppInstallationCredential:
+      description: Represents a credential scoped to an integration instance that supports the `GitHub App Installation` authorization strategy.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        integration_instance:
+          $ref: '#/components/schemas/IntegrationInstanceRef'
+        missing_permissions:
+          description: List of detected missing permissions required to enable the full functionality of the given integration instance.
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingPermission'
+        tainted:
+          description: Indicates that the credential is no longer valid and must be replaced with a new valid credential.
+          type: boolean
+          example: false
+        expires_at:
+          description: |
+            Timestamp denoting when the when the credential will expire in RFC-3339 format with a "T" character separating date from time within the field value.
+            When expired, the credential must be replaced with a new valid credential to re-enable full functionality for the given integration instance.
+
+            A `null` value indicates no known expiration time.
+          type: string
+          format: date-time
+          example: '2025-04-01T07:20:50Z'
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        type:
+          type: string
+          enum:
+            - github_app_installation
+        config:
+          type: object
+          properties:
+            installation_id:
+              description: The GitHub App installation ID
+              type: string
+            app_installed_by:
+              description: The GitHub user who installed the app.
+              type: string
+              nullable: true
+          required:
+            - installation_id
+            - app_installed_by
+          title: GitHubAppInstallationCredentialConfig
+      required:
+        - id
+        - integration_instance
+        - missing_permissions
+        - tainted
+        - expires_at
+        - created_at
+        - type
+        - config
+      title: GitHubAppInstallationCredential
+    MultiKeyAuthCredential:
+      description: Represents a credential scoped to an integration instance that supports the `Multi Key` authorization strategy.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        integration_instance:
+          $ref: '#/components/schemas/IntegrationInstanceRef'
+        missing_permissions:
+          description: List of detected missing permissions required to enable the full functionality of the given integration instance.
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingPermission'
+        tainted:
+          description: Indicates that the credential is no longer valid and must be replaced with a new valid credential.
+          type: boolean
+          example: false
+        expires_at:
+          description: |
+            Timestamp denoting when the when the credential will expire in RFC-3339 format with a "T" character separating date from time within the field value.
+            When expired, the credential must be replaced with a new valid credential to re-enable full functionality for the given integration instance.
+
+            A `null` value indicates no known expiration time.
+          type: string
+          format: date-time
+          example: '2025-04-01T07:20:50Z'
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        type:
+          type: string
+          enum:
+            - multi_key_auth
+      required:
+        - id
+        - integration_instance
+        - missing_permissions
+        - tainted
+        - expires_at
+        - created_at
+        - type
+      title: MultiKeyAuthCredential
+    MissingPermission:
+      type: object
+      properties:
+        scopes:
+          type: array
+          items:
+            type: string
+            nullable: true
+          example:
+            - 'incident:read'
+        message:
+          description: |
+            Describes the degraded experience of the integration instance due to the missing permission.
+            May also include a message on how to resolve the missing permission.
+          type: string
+      required:
+        - scopes
+        - message
+    UpsertIntegrationInstanceAuthConfig:
+      oneOf:
+        - $ref: '#/components/schemas/UpsertOAuthAuthConfig'
+      title: UpsertIntegrationInstanceAuthConfig
+    IntegrationInstanceAuthConfig:
+      oneOf:
+        - $ref: '#/components/schemas/OAuthAuthConfig'
+      title: IntegrationInstanceAuthConfig
+    UpsertOAuthAuthConfig:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - oauth
+        client_id:
+          description: The OAuth client identifier.
+          type: string
+          example: d745213a-b7e8-4998-abe3-41f164001970
+        client_secret:
+          description: The OAuth client secret.
+          type: string
+          example: s3cr3t4p1cl13ntt0k3n1234567890abcdef
+        authorization_endpoint:
+          description: The URL where users are redirected to authorize access.
+          type: string
+          format: uri
+          example: 'https://identity.service.com/oauth/authorize'
+        token_endpoint:
+          description: The URL used to retrieve access tokens.
+          type: string
+          format: uri
+          example: 'https://identity.service.com/oauth/token'
+      additionalProperties: false
+      required:
+        - type
+        - client_id
+        - client_secret
+        - authorization_endpoint
+        - token_endpoint
+    OAuthAuthConfig:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - oauth
+        client_id:
+          description: The OAuth client identifier.
+          type: string
+          example: d745213a-b7e8-4998-abe3-41f164001970
+        authorization_endpoint:
+          description: The URL where users are redirected to authorize access.
+          type: string
+          format: uri
+          example: 'https://identity.service.com/oauth/authorize'
+        token_endpoint:
+          description: The URL used to retrieve access tokens.
+          type: string
+          format: uri
+          example: 'https://identity.service.com/oauth/token'
+      required:
+        - type
+        - client_id
+        - authorization_endpoint
+        - token_endpoint
+    UpdateCatalogResource:
+      type: object
+      properties:
+        archived:
+          description: |
+            Whether or not to archive the resource.
+            When a resource is archived, all catalog service mappings will be removed.
+          type: boolean
+          example: false
+      additionalProperties: false
+    CatalogResourceFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/StringFieldFilterExact'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        integration.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        integration.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        integration.instance.id:
+          oneOf:
+            - $ref: '#/components/schemas/UuidFieldFilter'
+        integration.instance.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        integration.instance.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        type:
+          $ref: '#/components/schemas/StringFieldFilterExact'
+        config:
+          oneOf:
+            - $ref: '#/components/schemas/CatalogResourceConfigFieldFilter'
+        integration_data:
+          oneOf:
+            - $ref: '#/components/schemas/CatalogResourceIntegrationDataFieldFilter'
+        archived:
+          $ref: '#/components/schemas/BooleanFieldFilter'
+        service_associations:
+          $ref: '#/components/schemas/NumericFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+    CatalogResourceRefFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/StringFieldFilterExact'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        integration.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        integration.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        integration.instance.id:
+          oneOf:
+            - $ref: '#/components/schemas/UuidFieldFilter'
+        integration.instance.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        integration.instance.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        type:
+          $ref: '#/components/schemas/StringFieldFilterExact'
+        config:
+          oneOf:
+            - $ref: '#/components/schemas/CatalogResourceConfigFieldFilter'
+        integration_data:
+          oneOf:
+            - $ref: '#/components/schemas/CatalogResourceIntegrationDataFieldFilter'
+        service_associations:
+          $ref: '#/components/schemas/NumericFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+    CatalogResourceConfigFieldFilter:
+      description: |
+        Filters on the resource's `config` field. Filters must use dot-notation to identify
+        the property that will be used to filter the results. For example:
+          - `filter[config.control_plane_id]`
+          - `filter[config.gateway_service_id][neq]=cedbd134-fc5c-4d44-9e38-ccd2a0c6e0ae`
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: CatalogResourceConfigFieldFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+        example-3:
+          contains: some-value
+        example-4:
+          ocontains: 'some-potential,value'
+        example-5:
+          oeq: 'some-potential,value'
+        example-6:
+          neq: not-this-value
+    CatalogResourceIntegrationDataFieldFilter:
+      description: |
+        Filters on the resource's `integration_data` field. Filters must use dot-notation to identify
+        the property that will be used to filter the results. For example:
+          - `filter[integration_data.control_plane.id]=760562c3-fedd-43e4-b742-fc1663fef188`
+          - `filter[integration_data.gateway_service.name][contains]=legacy`
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: CatalogResourceIntegrationDataFieldFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+        example-3:
+          contains: some-value
+        example-4:
+          ocontains: 'some-potential,value'
+        example-5:
+          oeq: 'some-potential,value'
+        example-6:
+          neq: not-this-value
+    CatalogResource:
+      description: Information about a catalog resource.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/CatalogResourceId'
+        name:
+          description: |
+            The name of the resource.
+            Will be `null` when the resource has not yet been hydrated by the integration.
+          type: string
+          maxLength: 255
+          minLength: 1
+          nullable: true
+        integration:
+          $ref: '#/components/schemas/IntegrationRef'
+        type:
+          $ref: '#/components/schemas/CatalogResourceType'
+        config:
+          $ref: '#/components/schemas/CatalogResourceConfig'
+        integration_data:
+          description: |
+            JSON object containing schemaless integration data of the resource.
+            This field is always populated by the system backing the integration.
+            When `null`, the resource has been manually initialized via API but has
+            yet to be hydrated by the integration.
+          type: object
+          additionalProperties: true
+          nullable: true
+          readOnly: true
+        archived:
+          description: Whether or not the resource has been archived.
+          type: boolean
+          example: false
+        service_associations:
+          description: The number of catalog services this resource is mapped to.
+          type: number
+          example: 2
+          minimum: 0
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - integration
+        - type
+        - config
+        - integration_data
+        - archived
+        - service_associations
+        - created_at
+        - updated_at
+    CatalogResourceId:
+      description: The resource ID.
+      type: string
+      format: base64url
+      example: 4UdXnoaDYYJsH_Ir
+      maxLength: 16
+      minLength: 16
+    CatalogResourceConfig:
+      description: |
+        JSON object representing the properties used to identify the resource in the third-party system.
+        The schema depends on the resource type and is dynamically registered at runtime.
+      type: object
+      example:
+        control_plane_id: ccadfb0a-56cd-4f74-955d-aec1d87157c8
+        gateway_service_id: 94896d05-0c4d-45eb-aae3-de754885dd58
+      additionalProperties: true
+    CatalogResourceType:
+      description: |
+        The resource type. Available resource types are compiled from the integrations installed within the catalog.
+      type: string
+      example: gateway_svc
+      maxLength: 120
+      minLength: 1
+    CreateCatalogResourceMapping:
+      type: object
+      properties:
+        service:
+          description: The `id` or `name` of the service to map the resource to.
+          type: string
+          example: user-svc
+        resource:
+          oneOf:
+            - $ref: '#/components/schemas/CatalogResourceId'
+            - type: object
+              title: CreateCatalogResourceMappingResourceByConfig
+              additionalProperties: false
+              required:
+                - integration_instance
+                - type
+                - config
+              properties:
+                integration_instance:
+                  description: The `id` or `name` of the integration instance the resource belongs to.
+                  type: string
+                  example: aws-lambda-prod
+                type:
+                  $ref: '#/components/schemas/CatalogResourceType'
+                config:
+                  $ref: '#/components/schemas/CatalogResourceConfig'
+      additionalProperties: false
+      required:
+        - service
+        - resource
+    CatalogResourceMappingFilterParameters:
+      type: object
+      properties:
+        resource.id:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilterExact'
+        resource.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        resource.type:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        resource.config:
+          oneOf:
+            - $ref: '#/components/schemas/CatalogResourceConfigFieldFilter'
+        resource.integration.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        resource.integration.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        resource.integration.instance.id:
+          oneOf:
+            - $ref: '#/components/schemas/UuidFieldFilter'
+        resource.integration.instance.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        resource.integration.instance.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        service.id:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilterExact'
+        service.name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        service.display_name:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+    CatalogResourceMapping:
+      description: Describes a mapping between a catalog resource and a service.
+      type: object
+      properties:
+        id:
+          description: The resource mapping ID.
+          type: string
+          format: uuid
+          example: d277faad-ed4e-4c56-a0fb-acce065dee34
+        resource:
+          $ref: '#/components/schemas/CatalogResourceRef'
+        service:
+          $ref: '#/components/schemas/CatalogServiceRef'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+      required:
+        - id
+        - resource
+        - service
+        - created_at
+    CustomFields:
+      description: |
+        Map of customizable, catalog-defined fields providing information about a service.
+      type: object
+      example:
+        owner: John Appleseed
+        dashboard:
+          name: On-Call Dashboard
+          link: 'https://my-dashboard-svc.io/dashboards/1'
+      additionalProperties:
+        anyOf:
+          - $ref: '#/components/schemas/TextCustomField'
+          - $ref: '#/components/schemas/NumericCustomField'
+          - $ref: '#/components/schemas/BooleanCustomField'
+          - $ref: '#/components/schemas/UrlCustomField'
+    TextCustomField:
+      type: string
+      nullable: true
+    NumericCustomField:
+      type: number
+      nullable: true
+    BooleanCustomField:
+      type: boolean
+      nullable: true
+    UrlCustomField:
+      type: object
+      properties:
+        name:
+          description: The human-readable name of the URL link.
+          type: string
+          example: On-Call Dashboard
+        link:
+          description: The href value of the URL link.
+          type: string
+          format: uri-reference
+          example: 'https://my-dashboard-svc.io/dashboards/1'
+      nullable: true
+      required:
+        - name
+        - link
+    SimpleSchema:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - simple
+        definition:
+          type: object
+          additionalProperties:
+            type: string
+            enum:
+              - string
+              - number
+              - boolean
+      required:
+        - type
+        - definition
+    CatalogServiceRef:
+      description: Short-hand descriptor of a catalog service.
+      type: object
+      properties:
+        id:
+          description: The service ID.
+          type: string
+          format: uuid
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        name:
+          description: |
+            The machine name of the service that uniquely identifies it within the catalog.
+          type: string
+          example: user-svc
+        display_name:
+          description: The display name of the service.
+          type: string
+          example: User Service
+      required:
+        - id
+        - name
+        - display_name
+    IntegrationRef:
+      description: Short-hand descriptor of an integration installed within the catalog.
+      type: object
+      properties:
+        name:
+          type: string
+          example: gateway-manager
+        display_name:
+          type: string
+          example: gateway-manager
+        instance:
+          $ref: '#/components/schemas/IntegrationInstanceRef'
+      required:
+        - name
+        - display_name
+        - instance
+    IntegrationRefWithoutInstance:
+      description: Short-hand descriptor of an integration that omits instance metadata.
+      type: object
+      properties:
+        name:
+          type: string
+          example: gateway-manager
+        display_name:
+          type: string
+          example: gateway-manager
+      required:
+        - name
+        - display_name
+    IntegrationInstanceRef:
+      description: Short-hand descriptor of an integration instance.
+      type: object
+      properties:
+        id:
+          description: The integration instance ID.
+          type: string
+          format: uuid
+          example: 772b9caf-ddbc-4f4f-8aa4-8dfbbe420351
+        name:
+          description: |
+            The machine name of the integration instance that uniquely identifies it within the catalog.
+          type: string
+          example: aws-lambda-prod
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the integration instance.
+          type: string
+          example: AWS (prod)
+      required:
+        - id
+        - name
+        - display_name
+    CatalogResourceRef:
+      description: Short-hand descriptor of a catalog resource.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/CatalogResourceId'
+        name:
+          description: The name of the resource.
+          type: string
+          nullable: true
+        integration:
+          $ref: '#/components/schemas/IntegrationRef'
+        type:
+          $ref: '#/components/schemas/CatalogResourceType'
+        config:
+          $ref: '#/components/schemas/CatalogResourceConfig'
+      required:
+        - id
+        - name
+        - type
+        - config
+        - integration
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    StringFieldOEQFilter:
+      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+      type: object
+      properties:
+        oeq:
+          type: string
+      additionalProperties: false
+      required:
+        - oeq
+      title: StringFieldOEQFilter
+      x-examples:
+        example-1:
+          oeq: 'some-value,some-other-value'
+    StringFieldNEQFilter:
+      description: Filters on the given string field value by exact match inequality.
+      type: object
+      properties:
+        neq:
+          type: string
+      additionalProperties: false
+      required:
+        - neq
+      title: StringFieldNEQFilter
+      x-examples:
+        example-1:
+          neq: not-this-value
+    UuidFieldFilter:
+      description: Filters on the given UUID field value by exact match.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: UuidFieldFilter
+      x-examples:
+        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+        example-2:
+          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+        example-3:
+          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+        example-4:
+          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+    StringFieldContainsFilter:
+      description: Filters on the given string field value by fuzzy match.
+      type: object
+      properties:
+        contains:
+          type: string
+      additionalProperties: false
+      required:
+        - contains
+      title: StringFieldContainsFilter
+      x-examples:
+        example-1:
+          contains: some-value
+    StringFieldOContainsFilter:
+      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
+      type: object
+      properties:
+        ocontains:
+          type: string
+      additionalProperties: false
+      required:
+        - ocontains
+      title: StringFieldOContainsFilter
+      x-examples:
+        example-1:
+          ocontains: 'this-value,or-that-value'
+    StringFieldFilter:
+      description: Filters on the given string field value by either exact or fuzzy match.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: StringFieldFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+        example-3:
+          contains: some-value
+        example-4:
+          ocontains: 'some-potential,value'
+        example-5:
+          oeq: 'some-potential,value'
+        example-6:
+          neq: not-this-value
+    BooleanFieldFilter:
+      description: Filter by a boolean value (true/false).
+      type: boolean
+      title: BooleanFieldFilter
+      x-examples:
+        example-1: true
+    NumericFieldFilter:
+      description: Filter by a numeric value.
+      oneOf:
+        - type: number
+          description: Value strictly equals the given numeric value.
+          example: 21
+        - type: object
+          title: NumericFieldEqualsFilter
+          additionalProperties: false
+          properties:
+            eq:
+              description: Value strictly equals the given numeric value.
+              type: number
+              example: 3.14
+          required:
+            - eq
+        - type: object
+          title: NumericFieldLTFilter
+          additionalProperties: false
+          properties:
+            lt:
+              description: Value is less than the given numeric value.
+              type: number
+              example: 10
+          required:
+            - lt
+        - type: object
+          title: NumericFieldLTEFilter
+          additionalProperties: false
+          properties:
+            lte:
+              description: Value is less than or equal to the given numeric value.
+              type: number
+              example: 10
+          required:
+            - lte
+        - type: object
+          title: NumericFieldGTFilter
+          additionalProperties: false
+          properties:
+            gt:
+              description: Value is greater than the given numeric value.
+              type: number
+              example: 1.85
+          required:
+            - gt
+        - type: object
+          title: NumericFieldGTEFilter
+          additionalProperties: false
+          properties:
+            gte:
+              description: Value is greater than or equal to the given numeric value.
+              type: number
+              example: 1.85
+          required:
+            - gte
+      x-examples:
+        numeric_field_1: 11
+        numeric_field_2:
+          eq: 11
+        numeric_field_3:
+          lt: 15.85
+        numeric_field_4:
+          lte: 15.85
+        numeric_field_5:
+          gt: 3.14
+        numeric_field_6:
+          gte: 3.14
+    LabelsFieldFilter:
+      allOf:
+        - title: LabelsFieldFilter
+          description: |
+            Filters on the resource's `labels` field. Filters must use dot-notation to identify
+            the label key that will be used to filter the results. For example:
+              - `filter[labels.owner]`
+              - `filter[labels.owner][neq]=kong`
+              - `filter[labels.env]=dev`
+              - `filter[labels.env][ocontains]=dev,test`
+        - $ref: '#/components/schemas/StringFieldFilter'
+    DateTimeFieldFilter:
+      description: Filters on the given datetime (RFC-3339) field value.
+      oneOf:
+        - type: string
+          title: DateTimeFieldImplicitEqualsFilter
+          format: date-time
+          description: Value strictly equals given RFC-3339 formatted timestamp in UTC
+          example: '2022-03-30T07:20:50Z'
+        - type: object
+          title: DateTimeFieldEqualsFilter
+          additionalProperties: false
+          properties:
+            eq:
+              description: Value strictly equals given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - eq
+        - type: object
+          title: DateTimeFieldLTFilter
+          additionalProperties: false
+          properties:
+            lt:
+              description: Value is less than the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - lt
+        - type: object
+          title: DateTimeFieldLTEFilter
+          additionalProperties: false
+          properties:
+            lte:
+              description: Value is less than or equal to the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - lte
+        - type: object
+          title: DateTimeFieldGTFilter
+          additionalProperties: false
+          properties:
+            lt:
+              description: Value is greater than the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - gt
+        - type: object
+          title: DateTimeFieldGTEFilter
+          additionalProperties: false
+          properties:
+            lte:
+              description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - gte
+      title: DateTimeFieldFilter
+      x-examples:
+        datetime_field_1: '2022-03-30T07:20:50Z'
+        datetime_field_2:
+          eq: '2022-03-30T07:20:50Z'
+        datetime_field_3:
+          lt: '2022-03-30T07:20:50Z'
+        datetime_field_4:
+          lte: '2022-03-30T07:20:50Z'
+        datetime_field_5:
+          gt: '2022-03-30T07:20:50Z'
+        datetime_field_6:
+          gte: '2022-03-30T07:20:50Z'
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    PageMeta:
+      description: Contains pagination query parameters and the total number of objects returned.
+      type: object
+      properties:
+        number:
+          type: number
+          example: 1
+        size:
+          type: number
+          example: 10
+        total:
+          type: number
+          example: 100
+      required:
+        - number
+        - size
+        - total
+    PaginatedMeta:
+      description: returns the pagination information
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMeta'
+      required:
+        - page
+      title: PaginatedMeta
+    Labels:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 50
+      title: Labels
+    CreatedAt:
+      description: An ISO-8601 timestamp representation of entity creation date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    UpdatedAt:
+      description: An ISO-8601 timestamp representation of entity update date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    InvalidRules:
+      description: invalid parameters rules
+      type: string
+      enum:
+        - required
+        - is_array
+        - is_base64
+        - is_boolean
+        - is_date_time
+        - is_integer
+        - is_null
+        - is_number
+        - is_object
+        - is_string
+        - is_uuid
+        - is_fqdn
+        - is_arn
+        - unknown_property
+        - missing_reference
+        - is_label
+        - matches_regex
+        - invalid
+        - is_supported_network_availability_zone_list
+        - is_supported_network_cidr_block
+        - is_supported_provider_region
+      nullable: true
+      readOnly: true
+    InvalidParameterStandard:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          $ref: '#/components/schemas/InvalidRules'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+    InvalidParameterMinimumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_length
+            - min_digits
+            - min_lowercase
+            - min_uppercase
+            - min_symbols
+            - min_items
+            - min
+          nullable: false
+          readOnly: true
+        minimum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must have at least 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_length
+            - max_items
+            - max
+          nullable: false
+          readOnly: true
+        maximum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must not have more than 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
+    InvalidParameterChoiceItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - enum
+          nullable: false
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        choices:
+          type: array
+          items: {}
+          minItems: 1
+          nullable: false
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - choices
+    InvalidParameterDependentItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - dependent_fields
+          nullable: true
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        dependents:
+          type: array
+          items: {}
+          nullable: true
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - rule
+        - reason
+        - dependents
+    InvalidParameters:
+      description: invalid parameters
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/InvalidParameterStandard'
+          - $ref: '#/components/schemas/InvalidParameterMinimumLength'
+          - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterChoiceItem'
+          - $ref: '#/components/schemas/InvalidParameterDependentItem'
+      minItems: 1
+      nullable: false
+      uniqueItems: true
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - invalid_parameters
+          properties:
+            invalid_parameters:
+              $ref: '#/components/schemas/InvalidParameters'
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: 'https://httpstatuses.com/401'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Invalid credentials
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: 'https://httpstatuses.com/403'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Forbidden
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
+    LabelsUpdate:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Labels are intended to store **INTERNAL** metadata.
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+        nullable: true
+      maxProperties: 50
+      nullable: true
+      writeOnly: true
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
+    CursorPageParameters:
+      type: object
+      properties:
+        size:
+          description: The number of items included per page.
+          type: integer
+          example: 10
+        after:
+          description: Cursor param specifying the page (i.e. the next page) of data returned.
+          type: string
+          example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+        before:
+          description: Cursor param specifying the page (i.e. the previous page) of data returned.
+          type: string
+          example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    StringFieldFilterExact:
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: StringFieldFilterExact
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+        example-3:
+          oeq: 'some-potential,value'
+        example-4:
+          neq: not-this-value
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
+  examples:
+    SampleServiceCreatePayload:
+      value:
+        name: sample-service
+        display_name: Sample Service
+        description: This is a sample service
+        custom_fields:
+          owner: John Appleseed
+          cost_center: Research and Development
+          product_manager: Jane
+          jira_project:
+            name: Sample Jira Project
+            link: 'https://my-company.atlassian.net/jira/software/c/projects/SAMPLE'
+          dashboard:
+            name: Sample Dashboard
+            link: 'https://my-company.dashboards.com/sample-dashboard'
+          git_repo:
+            name: Sample Project
+            link: 'https://github.com/MyCompany/SampleProject'
+          slack_channel:
+            name: My Company Channel
+            link: 'https://my-company.slack.com/archives/C000AAAAAAA'
+        labels:
+          env: test
+    SampleServicePatchDescriptionPayload:
+      value:
+        description: This is a sample service
+    SampleServiceResponse:
+      value:
+        id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        name: sample-service
+        display_name: Sample Service
+        description: This is a sample service
+        custom_fields:
+          owner: John Appleseed
+          cost_center: Research and Development
+          product_manager: Jane
+          jira_project:
+            name: Sample Jira Project
+            link: 'https://my-company.atlassian.net/jira/software/c/projects/SAMPLE'
+          dashboard:
+            name: Sample Dashboard
+            link: 'https://my-company.dashboards.com/sample-dashboard'
+          git_repo:
+            name: Sample Project
+            link: 'https://github.com/MyCompany/SampleProject'
+          slack_channel:
+            name: My Company Channel
+            link: 'https://my-company.slack.com/archives/C000AAAAAAA'
+        labels:
+          env: test
+        created_at: '2022-11-04T20:10:06.927Z'
+        updated_at: '2022-11-04T20:10:06.927Z'
+    SampleServiceListResponse:
+      value:
+        data:
+          - id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            name: sample-service
+            display_name: Sample Service
+            description: This is a sample service
+            custom_fields:
+              owner: John Appleseed
+              cost_center: Research and Development
+              product_manager: Jane
+              jira_project:
+                name: Sample Jira Project
+                link: 'https://my-company.atlassian.net/jira/software/c/projects/SAMPLE'
+              dashboard:
+                name: Sample Dashboard
+                link: 'https://my-company.dashboards.com/sample-dashboard'
+              git_repo:
+                name: Sample Project
+                link: 'https://github.com/MyCompany/SampleProject'
+              slack_channel:
+                name: My Company Channel
+                link: 'https://my-company.slack.com/archives/C000AAAAAAA'
+            labels:
+              env: test
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            total: 1
+            size: 100
+            number: 1
+    BuiltInIntegrationsListResponse:
+      value:
+        data:
+          - name: gateway-manager
+            display_name: Gateway Manager
+            description: Map Gateway Services from Konnect Gateway Manager to visualize services across multiple control planes.
+            built_in: true
+            version: v1
+            authorization: null
+            config_schema: {}
+            resource_types:
+              gateway_svc:
+                display_name: Gateway Service
+                schema:
+                  type: simple
+                  definition:
+                    control_plane_id: string
+                    gateway_service_id: string
+            discovery:
+              resource_integration_data_examples:
+                gateway_svc:
+                  control_plane:
+                    id: 00000000-0000-0000-0000-000000000000
+                    name: control-plane-name
+                    labels:
+                      env: development
+                  gateway_service:
+                    id: 11111111-1111-1111-1111-111111111111
+                    host: konghq.com
+                    name: gateway-service
+                    path: /example
+                    port: 443
+                    tags:
+                      - 'env:development'
+                    type: service
+                    enabled: true
+                    protocol: https
+                    cluster_id: 22222222-2222-2222-2222-222222222222
+                    created_at: 1577854800
+                    updated_at: 1577854800
+              ingestion:
+                transport:
+                  type: kafka
+                scheduler_opt_out: false
+            api_spec_provider: null
+            events:
+              gateway_svc:
+                plugin.added:
+                  display_name: Plugin Added
+                  description: Plugin affecting a gateway service has been added.
+                  events_feed:
+                    enabled: true
+                plugin.removed:
+                  display_name: Plugin Removed
+                  description: Plugin affecting a gateway service has been removed.
+                  events_feed:
+                    enabled: true
+                plugin.updated:
+                  display_name: Plugin Updated
+                  description: Plugin affecting a gateway service has been updated.
+                  events_feed:
+                    enabled: true
+          - name: analytics
+            display_name: Konnect Analytics
+            description: Map Reports from Konnect Analytics to monitor the performance and health of your Konnect entities.
+            built_in: true
+            version: v1
+            authorization: null
+            config_schema: {}
+            resource_types:
+              report:
+                display_name: Report
+                schema:
+                  type: simple
+                  definition:
+                    report_id: string
+            discovery:
+              resource_integration_data_examples:
+                report:
+                  id: 312b3c02-8bcc-4945-a4a0-0bed2a55febb
+                  name: API Responses by Status Code
+                  created_at: '2024-01-01T17:00:00.000Z'
+                  created_by: 47b4b910-8c0b-4c20-a5e7-723d45aecbc9
+                  updated_at: '2024-04-15T17:00:00.000Z'
+                  description: API responses by status code
+            api_spec_provider: null
+            events: null
+          - name: mesh-manager
+            display_name: Mesh Manager
+            description: Map Mesh Services from Konnect Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones.
+            built_in: true
+            version: v1
+            authorization: null
+            config_schema: {}
+            resource_types:
+              service_insight:
+                display_name: Mesh Service Insight
+                schema:
+                  type: simple
+                  definition:
+                    mesh_name: string
+                    mesh_service_name: string
+                    global_control_plane_id: string
+            discovery:
+              resource_integration_data_examples:
+                service_insight:
+                  global_control_plane:
+                    id: 00000000-0000-0000-0000-000000000000
+                    name: control-plane-name
+                    labels:
+                      env: development
+                  mesh_service_insight:
+                    mesh: default
+                    name: service_insight_name
+                    zones:
+                      - zone1
+                      - zone2
+                    status: online
+                    dataplanes:
+                      total: 2
+                      online: 1
+                      offline: 1
+            api_spec_provider: null
+            events: null
+        meta:
+          page:
+            total: 3
+            size: 100
+            number: 1
+    SampleInstanceCreateTraceablePayload:
+      value:
+        integration_name: traceable
+        name: traceable
+        display_name: Traceable
+        description: Secure and manage services identified by Traceable through API traffic analysis across your application landscape.
+        config:
+          include_inactive: false
+    SampleInstanceCreateSlackPayload:
+      value:
+        integration_name: slack
+        name: slack
+        display_name: Slack
+        description: Expand Konnect Service Catalog functionality with features from Slack.
+        config: {}
+    SampleInstanceCreatePagerDutyPayload:
+      value:
+        integration_name: pagerduty
+        name: pagerduty
+        display_name: PagerDuty
+        description: 'Visualize incidents, responsible teams, and on-call engineers through PagerDuty services.'
+        config:
+          service_region: us
+    SampleInstanceCreateGitlabPayload:
+      value:
+        integration_name: gitlab
+        name: gitlab-self-managed
+        display_name: GitLab (Self Managed)
+        description: 'Expand Service Catalog functionality with GitLab to view your repository''s recent merge requests, contributors, and programming languages.'
+        config:
+          base_url: 'https://gitlab.my-company.com/api/v4'
+    SampleInstanceCreateGithubPayload:
+      value:
+        integration_name: github
+        name: github
+        display_name: Github
+        description: 'Sync with GitHub to view repository details, including recent pull requests, contributors, and programming languages.'
+        config: {}
+    SampleInstanceCreateDatadogPayload:
+      value:
+        integration_name: datadog
+        name: datadog
+        display_name: Datadog
+        description: Gain visibility into your infrastructure with Datadog dashboards and monitors that are relevant to your services.
+        config:
+          datadog_region: US_1
+          datadog_webhook_name: konnect-service-catalog
+    SampleInstanceCreateSwaggerHubPayload:
+      value:
+        integration_name: swaggerhub
+        name: swaggerhub-internal
+        display_name: SwaggerHub (Internal)
+        description: Swaggerhub account which hosts internal APIs only.
+        config: {}
+    SampleInstanceUpdateSwaggerHubPayload:
+      value:
+        name: swaggerhub-internal
+        display_name: SwaggerHub (Internal)
+        description: Swaggerhub account which hosts internal APIs only.
+        config: {}
+    SampleInstanceSwaggerHubResponse:
+      value:
+        id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
+        integration:
+          name: swaggerhub
+          display_name: SwaggerHub
+        name: swaggerhub-internal
+        display_name: SwaggerHub (Internal)
+        description: Swaggerhub account which hosts internal APIs only.
+        config: {}
+        authorized: false
+        created_at: '2022-11-04T20:10:06.927Z'
+        updated_at: '2022-11-04T20:10:06.927Z'
+    SampleListInstancesResponse:
+      value:
+        data:
+          - id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
+            integration:
+              name: swaggerhub
+              display_name: SwaggerHub
+            name: swaggerhub-internal
+            display_name: SwaggerHub (Internal)
+            description: Swaggerhub account which hosts internal APIs only.
+            authorized: false
+            config: {}
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+          - id: da715411-0393-4dc7-b711-33250e7658f3
+            integration:
+              name: gateway-manager
+              display_name: Gateway Manager
+            name: gateway-manager
+            display_name: Gateway Manager
+            description: Map Gateway Services from Konnect Gateway Manager to visualize services across multiple control planes.
+            authorized: true
+            config: {}
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+          - id: 5581996c-c350-4092-8c71-53f73677ea39
+            integration:
+              name: analytics
+              display_name: Konnect Analytics
+            name: analytics
+            display_name: Konnect Analytics
+            description: Map Reports from Konnect Analytics to monitor the performance and health of your Konnect entities.
+            authorized: true
+            config: {}
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+          - id: c48f3903-c27b-4ffb-aed7-422a911452de
+            integration:
+              name: mesh-manager
+              display_name: Mesh Manager
+            name: mesh-manager
+            display_name: Mesh Manager
+            description: Map Mesh Services from Konnect Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones.
+            authorized: true
+            config: {}
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            total: 4
+            size: 100
+            number: 1
+    SampleCreateTraceableMultiKeyAuthPayload:
+      value:
+        type: multi_key_auth
+        config:
+          headers:
+            - name: authorization
+              key: platform-api-token
+    SampleCreateDatadogMultiKeyAuthPayload:
+      value:
+        type: multi_key_auth
+        config:
+          headers:
+            - name: DD-API-KEY
+              key: datadaog-api-key
+            - name: DD-APPLICATION-KEY
+              key: datadaog-application-key
+    SampleCreateSwaggerHubMultiKeyAuthPayload:
+      value:
+        type: multi_key_auth
+        config:
+          headers:
+            - name: authorization
+              key: swaggerhub-api-key
+    SampleCreateSwaggerHubMultiKeyAuthResponse:
+      value:
+        id: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        type: multi_key_auth
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2022-11-04T20:10:06.927Z'
+        integration_instance:
+          id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
+          name: swaggerhub-internal
+          display_name: SwaggerHub (Internal)
+    GitLabSelfManagedAuthConfigPayload:
+      value:
+        type: oauth
+        client_id: 767b05381bc6a4bbffb4473e06bec7ecf009d0c16afb7214acda33026b6af089
+        client_secret: gloas-0bf0372129935e5f7cecbaba259336617c8fe9243f3adb0d6562775ebac21086
+        authorization_endpoint: 'http://gitlab.my-company.com/oauth/authorize'
+        token_endpoint: 'http://gitlab.my-company.com/oauth/token'
+    GitLabSelfManagedAuthConfigResponse:
+      value:
+        type: oauth
+        client_id: 767b05381bc6a4bbffb4473e06bec7ecf009d0c16afb7214acda33026b6af089
+        authorization_endpoint: 'http://gitlab.my-company.com/oauth/authorize'
+        token_endpoint: 'http://gitlab.my-company.com/oauth/token'
+    ResourceInitializeResponse:
+      value:
+        id: 1Kff05PZlexINWmG
+        name: null
+        integration:
+          name: gateway-manager
+          display_name: Gateway Manager
+          instance:
+            id: da715411-0393-4dc7-b711-33250e7658f3
+            name: gateway-manager
+            display_name: Gateway Manager
+        type: gateway_svc
+        config:
+          control_plane_id: ea270fcd-afb4-4209-a3d0-d4151364816d
+          gateway_service_id: f84b2edb-aef7-4486-af7d-8829a428e94c
+        integration_data: null
+        archived: false
+        service_associations: 0
+        created_at: '2022-11-04T20:10:06.927Z'
+        updated_at: '2022-11-04T20:10:06.927Z'
+    ResourceFetchGwsResponse:
+      value:
+        id: rQIGLHo1vhgy5VYb
+        name: my-gateway-service
+        integration:
+          name: gateway-manager
+          display_name: Gateway Manager
+          instance:
+            id: da715411-0393-4dc7-b711-33250e7658f3
+            name: gateway-manager
+            display_name: Gateway Manager
+        type: gateway_svc
+        config:
+          control_plane_id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+          gateway_service_id: dbba7bb2-eded-4668-b662-b8bb57684baf
+        integration_data:
+          control_plane:
+            id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+            name: serverless-default
+            config:
+              auth_type: pinned_client_certs
+              proxy_urls: []
+              cluster_type: CLUSTER_TYPE_SERVERLESS
+              cloud_gateway: false
+              telemetry_endpoint: 'https://26e2775daa.us.tp0.my-company.com'
+              control_plane_endpoint: 'https://26e2775daa.us.cp0.my-company.com'
+            labels: {}
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            description: This is your serverless gateway control plane. It is the easiest way to get started with the Konnect Gateway.
+          gateway_service:
+            id: dbba7bb2-eded-4668-b662-b8bb57684baf
+            url: ''
+            host: cloud.my-company.com
+            name: my-gateway-service
+            path: /us/gateway-manager/028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e/gateway-services/create
+            port: 443
+            tags: []
+            enabled: true
+            retries: 5
+            protocol: https
+            created_at: 1751465789148
+            tls_verify: null
+            updated_at: null
+            read_timeout: 60000
+            write_timeout: 60000
+            connect_timeout: 60000
+            tls_verify_depth: null
+        archived: false
+        service_associations: 0
+        created_at: '2022-11-04T20:10:06.927Z'
+        updated_at: '2022-11-04T20:10:06.927Z'
+    ResourcesListResponse:
+      value:
+        data:
+          - id: rQIGLHo1vhgy5VYb
+            name: my-gateway-service
+            integration:
+              name: gateway-manager
+              display_name: Gateway Manager
+              instance:
+                id: da715411-0393-4dc7-b711-33250e7658f3
+                name: gateway-manager
+                display_name: Gateway Manager
+            type: gateway_svc
+            config:
+              control_plane_id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+              gateway_service_id: dbba7bb2-eded-4668-b662-b8bb57684baf
+            integration_data:
+              control_plane:
+                id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+                name: serverless-default
+                config:
+                  auth_type: pinned_client_certs
+                  proxy_urls: []
+                  cluster_type: CLUSTER_TYPE_SERVERLESS
+                  cloud_gateway: false
+                  telemetry_endpoint: 'https://26e2775daa.us.tp0.my-company.com'
+                  control_plane_endpoint: 'https://26e2775daa.us.cp0.my-company.com'
+                labels: {}
+                created_at: '2022-11-04T20:10:06.927Z'
+                updated_at: '2022-11-04T20:10:06.927Z'
+                description: This is your serverless gateway control plane. It is the easiest way to get started with the Konnect Gateway.
+              gateway_service:
+                id: dbba7bb2-eded-4668-b662-b8bb57684baf
+                url: ''
+                host: cloud.my-company.com
+                name: my-gateway-service
+                path: /us/gateway-manager/028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e/gateway-services/create
+                port: 443
+                tags: []
+                enabled: true
+                retries: 5
+                protocol: https
+                created_at: 1751465789148
+                tls_verify: null
+                updated_at: null
+                read_timeout: 60000
+                write_timeout: 60000
+                connect_timeout: 60000
+                tls_verify_depth: null
+            archived: false
+            service_associations: 0
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+          - id: 99cNJnEmixifUUpt
+            name: Sample API 1.0.0
+            integration:
+              name: swaggerhub
+              display_name: SwaggerHub
+              instance:
+                id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
+                name: swaggerhub-internal
+                display_name: SwaggerHub (Internal)
+            binding: swaggerhub_api_version
+            type: swaggerhub_api_version
+            config:
+              api: Sample
+              owner: api-owner
+              version: 1.0.0
+            integration_data:
+              name: Sample
+              tags: []
+              owner: api-owner
+              version: 1.0.0
+              properties:
+                url: 'https://api.swaggerhub.com/apis/api-owner/Sample/1.0.0'
+                X-Private: 'false'
+                X-Version: 1.0.0
+                X-CreateBy: ''
+                X-Modified: '2025-04-28T20:57:03Z'
+                X-Versions: 1.0.0
+                X-Published: 'false'
+                X-OASVersion: 3.0.0
+                X-Notifications: 'true'
+              description: The API for a sample project
+            archived: false
+            service_associations: 0
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            size: 2
+            next: '/servicehub/v1/resources?page[size]=2&page[after]=CChwKiIxLSBscUg9KisFRwtOBVVBQ1pTPh8kIhVWHGwmFkA1ERxaLlMuRSEDf3sBcBRmfmJ6ZmZyEH98UGpsdFQEQBhiDW9DC10qTyYuAhhCbHhRWjIRHFo3QCZVNgN_e1IzRXF_cDoqODQhbHFIbzl8M34tYBJrQCkCA2Y7DWUaKQ'
+            previous: null
+            first: '/servicehub/v1/resources?page[size]=2'
+    ResourceArchivePayload:
+      value:
+        archived: true
+    CreateMappingByResourceIDPayload:
+      value:
+        service: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        resource: rQIGLHo1vhgy5VYb
+    CreateMappingByResourceConfigPayload:
+      value:
+        service: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        resource:
+          integration_instance: da715411-0393-4dc7-b711-33250e7658f3
+          type: gateway_svc
+          config:
+            control_plane_id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+            gateway_service_id: dbba7bb2-eded-4668-b662-b8bb57684baf
+    ResourceMappingResponse:
+      value:
+        id: b1460dbc-1490-42ae-b9cf-b2fe479ebde5
+        resource:
+          id: rQIGLHo1vhgy5VYb
+          name: my-gateway-service
+          type: gateway_svc
+          integration:
+            name: gateway-manager
+            display_name: Gateway Manager
+            instance:
+              id: da715411-0393-4dc7-b711-33250e7658f3
+              name: gateway-manager
+              display_name: Gateway Manager
+          config:
+            control_plane_id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+            gateway_service_id: dbba7bb2-eded-4668-b662-b8bb57684baf
+        service:
+          id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+          name: sample-service
+          display_name: Sample Service
+        created_at: '2022-11-04T20:10:06.927Z'
+    ResourceMappingListResponse:
+      value:
+        data:
+          - id: b1460dbc-1490-42ae-b9cf-b2fe479ebde5
+            resource:
+              id: rQIGLHo1vhgy5VYb
+              name: my-gateway-service
+              type: gateway_svc
+              integration:
+                name: gateway-manager
+                display_name: Gateway Manager
+                instance:
+                  id: da715411-0393-4dc7-b711-33250e7658f3
+                  name: gateway-manager
+                  display_name: Gateway Manager
+              config:
+                control_plane_id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+                gateway_service_id: dbba7bb2-eded-4668-b662-b8bb57684baf
+            service:
+              id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+              name: sample-service
+              display_name: Sample Service
+            created_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            total: 1
+            size: 100
+            number: 1
+    ServiceResourcesResponse:
+      value:
+        data:
+          - id: rQIGLHo1vhgy5VYb
+            name: my-gateway-service
+            integration:
+              name: gateway-manager
+              display_name: Gateway Manager
+              instance:
+                id: da715411-0393-4dc7-b711-33250e7658f3
+                name: gateway-manager
+                display_name: Gateway Manager
+            type: gateway_svc
+            config:
+              control_plane_id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+              gateway_service_id: dbba7bb2-eded-4668-b662-b8bb57684baf
+            integration_data:
+              control_plane:
+                id: 028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e
+                name: serverless-default
+                config:
+                  auth_type: pinned_client_certs
+                  proxy_urls: []
+                  cluster_type: CLUSTER_TYPE_SERVERLESS
+                  cloud_gateway: false
+                  telemetry_endpoint: 'https://26e2775daa.us.tp0.my-company.com'
+                  control_plane_endpoint: 'https://26e2775daa.us.cp0.my-company.com'
+                labels: {}
+                created_at: '2022-11-04T20:10:06.927Z'
+                updated_at: '2022-11-04T20:10:06.927Z'
+                description: This is your serverless gateway control plane. It is the easiest way to get started with the Konnect Gateway.
+              gateway_service:
+                id: dbba7bb2-eded-4668-b662-b8bb57684baf
+                url: ''
+                host: cloud.my-company.com
+                name: my-gateway-service
+                path: /us/gateway-manager/028bcd27-e0f7-46bd-ad9f-e7a6dd7d5a8e/gateway-services/create
+                port: 443
+                tags: []
+                enabled: true
+                retries: 5
+                protocol: https
+                created_at: 1751465789148
+                tls_verify: null
+                updated_at: null
+                read_timeout: 60000
+                write_timeout: 60000
+                connect_timeout: 60000
+                tls_verify_depth: null
+            archived: false
+            service_associations: 0
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            number: 1
+            size: 100
+            total: 1
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: Unauthorized
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+  requestBodies:
+    CreateCatalogServiceRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCatalogService'
+          examples:
+            Service:
+              $ref: '#/components/examples/SampleServiceCreatePayload'
+    UpdateCatalogServiceRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCatalogService'
+          examples:
+            Service:
+              $ref: '#/components/examples/SampleServicePatchDescriptionPayload'
+    CreateIntegrationInstanceRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateIntegrationInstance'
+          examples:
+            SwaggerHub:
+              $ref: '#/components/examples/SampleInstanceCreateSwaggerHubPayload'
+            Datadog:
+              $ref: '#/components/examples/SampleInstanceCreateDatadogPayload'
+            Github:
+              $ref: '#/components/examples/SampleInstanceCreateGithubPayload'
+            Gitlab:
+              $ref: '#/components/examples/SampleInstanceCreateGitlabPayload'
+            PagerDuty:
+              $ref: '#/components/examples/SampleInstanceCreatePagerDutyPayload'
+            Slack:
+              $ref: '#/components/examples/SampleInstanceCreateSlackPayload'
+            Traceable:
+              $ref: '#/components/examples/SampleInstanceCreateTraceablePayload'
+    UpdateIntegrationInstanceRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateIntegrationInstance'
+          examples:
+            SwaggerHub:
+              $ref: '#/components/examples/SampleInstanceUpdateSwaggerHubPayload'
+    CreateIntegrationInstanceAuthCredentialRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateIntegrationInstanceAuthCredential'
+          examples:
+            SwaggerHub:
+              $ref: '#/components/examples/SampleCreateSwaggerHubMultiKeyAuthPayload'
+            Datadog:
+              $ref: '#/components/examples/SampleCreateDatadogMultiKeyAuthPayload'
+            Traceable:
+              $ref: '#/components/examples/SampleCreateTraceableMultiKeyAuthPayload'
+    UpsertIntegrationInstanceAuthConfigRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpsertIntegrationInstanceAuthConfig'
+          examples:
+            GitLab Self Managed:
+              $ref: '#/components/examples/GitLabSelfManagedAuthConfigPayload'
+    UpdateCatalogResourceRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCatalogResource'
+          examples:
+            Unarchive:
+              $ref: '#/components/examples/ResourceArchivePayload'
+    CreateCatalogResourceMappingRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCatalogResourceMapping'
+          examples:
+            Resource ID:
+              $ref: '#/components/examples/CreateMappingByResourceIDPayload'
+            Resource Config:
+              $ref: '#/components/examples/CreateMappingByResourceConfigPayload'
+  responses:
+    CatalogServiceResponse:
+      description: A response containing a single service object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogService'
+          examples:
+            Service:
+              $ref: '#/components/examples/SampleServiceResponse'
+    ListCatalogServicesResponse:
+      description: A paginated list response for a collection of services.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogService'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Services:
+              $ref: '#/components/examples/SampleServiceListResponse'
+    ListCatalogIntegrationsResponse:
+      description: A paginated list response for a collection of integrations.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogIntegration'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Built-In Integrations:
+              $ref: '#/components/examples/BuiltInIntegrationsListResponse'
+    IntegrationInstanceResponse:
+      description: A response containing a single integration instance object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IntegrationInstance'
+          examples:
+            SwaggerHub:
+              $ref: '#/components/examples/SampleInstanceSwaggerHubResponse'
+    ListIntegrationInstancesResponse:
+      description: A paginated list response for a collection of integration instances.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IntegrationInstance'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Integration Instances:
+              $ref: '#/components/examples/SampleListInstancesResponse'
+    CatalogResourceMappingResponse:
+      description: A response containing a single catalog resource mapping.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogResourceMapping'
+          examples:
+            Resource Mapping:
+              $ref: '#/components/examples/ResourceMappingResponse'
+    ListCatalogResourceMappingsResponse:
+      description: A paginated list response for a collection of catalog resource mappings.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogResourceMapping'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Resource Mappings:
+              $ref: '#/components/examples/ResourceMappingListResponse'
+    IntegrationInstanceAuthCredentialResponse:
+      description: A response containing an integration instance auth credential.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IntegrationInstanceAuthCredential'
+          examples:
+            SwaggerHub:
+              $ref: '#/components/examples/SampleCreateSwaggerHubMultiKeyAuthResponse'
+    IntegrationInstanceAuthConfigResponse:
+      description: A response containing integration instance auth config.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IntegrationInstanceAuthConfig'
+          examples:
+            GitLab Self Managed:
+              $ref: '#/components/examples/GitLabSelfManagedAuthConfigResponse'
+    ListCatalogResourcesResponse:
+      description: A paginated list response for a collection of resources.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/CursorMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogResource'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Resources:
+              $ref: '#/components/examples/ResourcesListResponse'
+    ListCatalogServiceResourcesResponse:
+      description: A paginated list response for a collection of resources mapped to a service.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogResource'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Service Resources:
+              $ref: '#/components/examples/ServiceResourcesResponse'
+    CatalogResourceResponse:
+      description: A response containing a single resource object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogResource'
+          examples:
+            Resource:
+              $ref: '#/components/examples/ResourceFetchGwsResponse'
+            Initialized Resource:
+              $ref: '#/components/examples/ResourceInitializeResponse'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+  securitySchemes:
+    konnectAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
+        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
+        The PAT token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
+        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+        The access token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
+tags:
+  - name: Catalog Services
+    description: |
+      Create and maintain a centralized catalog of all services running in your organization.
+      Add custom fields and map resources from across your organization to provide a 360-degree overview of your services.
+
+      Custom fields allow you to surface key information such as:
+      - `Owner`: The person or team responsible for the service
+      - `Product Manager`: The person assigned to guide the service's direction for customer success
+      - `Jira Project`: The Jira project which represents past, present and future work for the service
+
+      Resources are discovered from the integrations you use within your organization to create, operate and manage your services.
+      Mapping the resources relevant to your service will provide a rich view of the service's communication channels, dependencies and more.
+      Types of resources which you can map to a service include:
+      - `Code Repositories:` The software project(s) that make up the service
+      - `Monitors and Dashboards:` Tools providing visibility into the health and performance of the service
+      - `Communication Channels`: Virtual spaces where questions and concerns can be raised about the service
+      - `Incident Management Resources`: Alerts setup within your incident management platform to notify individuals regarding issues with the service
+  - name: Catalog Integrations
+    description: |
+      Integrations are applications, either Konnect-internal or external, which extend the functionality of the Service Catalog.
+      Install and authorize an integration to discover the resources across your organization which support your services.
+      Map relevant resources to your services to provide a rich view of cataloged services.
+      To set up and view a list of all the integrations we support please view our [documentation](https://developer.konghq.com/service-catalog/integrations/).
+  - name: Integration Instances
+    description: |
+      An integration instance represents a specific account of the integration which contains the resources used to manage and support your services.
+      Some integrations provide configuration options to customize how it should behave once authorized (see the integration's manifest for details).
+      Konnect-internal integrations are built-in and do not need to be installed.
+
+      Once an integration instance is created, authorize the instance to allow the Service Catalog to discover its resources.
+      Note that deleting an integration instance is a **destructive** operation.
+      When an integration instance is deleted, all its resources and mappings will be deleted from the service catalog.
+      In cases where the integration instance's credentials need to be updated, you may re-authorize the instance to retain all currently discovered resources and mappings.
+      To set up and view a list of all the integrations we support, please view our [documentation](https://developer.konghq.com/service-catalog/integrations/).
+  - name: Integration Instance Auth Credentials
+    description: |
+      Represents the credentials use to authorize an integration instance.
+      You will want to configure the integration instance settings and authorization configuration before authorizing the instance.
+      This will inform the authorization process on how to reach and authorize the account.
+      Once the integration instance is authorized, the system will automatically discover all the relevant resources from the account.
+      The integration instance's auth credentials can be removed or updated while retaining all resources which have already been discovered.
+  - name: Integration Instance Auth Config
+    description: |
+      A integration instance may need to be provided with an auth config before authorizing the instance.
+      Typically an auth config will be required when authorizing against a integration which is hosted within your organization.
+      The integration instance's auth config will inform how the Service Catalog will authorize the integration instance.
+      Note that updating the auth config for an instance which is already authorized will **remove the existing credential**, requiring you to re-authorize the instance.
+  - name: Catalog Resources
+    description: |
+      Resources are entities discovered from integration instances and are intended to be mapped to the relevant services in the catalog.
+      Once a resource has been mapped to a service, a rich view of this resource will be displayed when viewing your service.
+
+      Any resources which you would like to ignore and hide can be archived.
+      Note that archiving a resource will **remove** any mappings it has to services in the catalog.
+
+      You can create Resources using only the properties required to identify the resource in the third-party system.
+      Additional data will be hydrated if the integration that the Resource is linked to has been provided with authentication credentials.
+      Resources which have not yet been hydrated may still be mapped to a Catalog Service.
+  - name: Catalog Resource Mappings
+    description: |
+      Resource mappings represent the link between a resource and a service.
+      Once a resource is mapped to a service, a rich view of the resource will be presented on the service page.
+      A resource may be mapped to multiple services, but it cannot be mapped to the same service twice.
+      If a resource mapped to a service is later archived, the resource mapping will be deleted.
+  - name: Catalog Service Resources
+    description: |
+      Represents all the resources mapped to a specific service.
+  - name: Catalog Resource Services
+    description: |
+      Represents all the services mapped to a specific resource.
+security:
+  - konnectAccessToken: []
+  - personalAccessToken: []
+  - systemAccountAccessToken: []

@@ -28,11 +28,11 @@ description: This guide walks you through setting up the AI Proxy and AI Proxy A
 
 ## What is request streaming?
 
-In an LLM (Large Language Model) inference request, {{site.base_gateway}} uses the upstream provider's REST API to generate the next chat message from the caller. 
+In an LLM (Large Language Model) inference request, {{site.base_gateway}} uses the upstream provider's REST API to generate the next chat message from the caller.
 Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.base_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the `max_tokens`, other request parameters, and the complexity of the request sent to the LLM model.
 
 To avoid making the user wait for their chat response with a loading animation, most models can stream each word (or sets of words and tokens) back to the client. This allows the chat response to be rendered in real time.
-	
+
 For example, a client could set up their streaming request using the OpenAI Python SDK like this:
 
 ```python
@@ -49,9 +49,9 @@ stream = client.chat.completions.create(
     stream=True,
 )
 
-print('>')
 for chunk in stream:
-    print(chunk.choices[0].delta.content or "", end="", flush=True)
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
 The client won't have to wait for the entire response. Instead, tokens will appear as they come in.
@@ -64,11 +64,11 @@ In streaming mode, a client can set `"stream": true` in their request, and the L
 In a standard LLM transaction, requests proxied directly to the LLM look like this:
 
 {% mermaid %}
-sequenceDiagram    
+sequenceDiagram
   actor Client
   participant {{site.base_gateway}}
   Note right of {{site.base_gateway}}: AI Proxy Advanced plugin
-  Client->>+{{site.base_gateway}}: 
+  Client->>+{{site.base_gateway}}:
   destroy {{site.base_gateway}}
   {{site.base_gateway}}->>+Cloud LLM: Sends proxy request information
   Cloud LLM->>+Client: Sends chunk to client
@@ -79,7 +79,7 @@ When streaming is requested, requests proxied directly to the LLM look like this
 {% mermaid %}
 flowchart LR
   A(client)
-  B({{site.base_gateway}} Gateway with 
+  B({{site.base_gateway}} Gateway with
   AI Proxy Advanced plugin)
   C(Cloud LLM)
   D[[transform frame]]
@@ -111,13 +111,13 @@ end
   style main color:#fff,stroke:#fff
 {% endmermaid %}
 
-The streaming framework captures each event, sends the chunk back to the client, and then exits early. 
+The streaming framework captures each event, sends the chunk back to the client, and then exits early.
 
 It also estimates tokens for LLM services that decided to not stream back the token use counts when the message is completed.
 
 ## Streaming limitations
 
-Keep the following limitations in mind when you configure streaming for the AI Gateway plugin: 
+Keep the following limitations in mind when you configure streaming for the AI Gateway plugin:
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
 * You can't use the [Response Transformer plugin](/plugins/response-transformer/) or any other response phase plugin when streaming is configured.
@@ -152,7 +152,7 @@ columns:
 rows:
   - value: "`allow`"
     effect: |
-      Allows the caller to optionally specify a streaming response in their request (default is not-stream). 
+      Allows the caller to optionally specify a streaming response in their request (default is not-stream).
   - value: "`deny`"
     effect: |
       Prevents the caller from setting `stream=true` in their request.
