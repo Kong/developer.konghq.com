@@ -8,7 +8,6 @@ breadcrumbs:
 products:
   - insomnia
 
-
 search_aliases: 
   - Tips
   - Keyboard shortcuts
@@ -24,11 +23,11 @@ Insomnia offers a wide range of keyboard shortcuts that help you navigate faster
 * Manage multiple environments
 * Navigate through the Insomnia UI
 
-You can view and manage your keyboard shortcut bindings in Insomnia by navigating to *Preferences** at the bottom left of the sidebar, and then clicking the **Keyboard** tab.
+You can view and manage your keyboard shortcut bindings in Insomnia by navigating to **Preferences** at the bottom left of the sidebar, and then clicking the **Keyboard** tab.
 
 
 ## Navigation and UI controls
-Use these shortcuts help you quickly move around the Insomnia interface, toggle panels, and access essential settings.
+Use these shortcuts to help you quickly move around the Insomnia interface, toggle panels, and access essential settings.
 {% table %}
 columns:
   - title: Shortcuts
