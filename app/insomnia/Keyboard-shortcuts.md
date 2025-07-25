@@ -136,7 +136,7 @@ rows:
   - shortcut: |
       `Ctrl + Shift + L`
     action: "Change HTTP method"
-    description: Focus and activates the HTTP method dropdown.
+    description: Selects the HTTP method dropdown.
   - shortcut: |
       `Ctrl + L`
     action: "Focus URL"
