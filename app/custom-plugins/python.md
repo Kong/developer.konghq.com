@@ -164,12 +164,16 @@ Here are some examples of loading plugins within `kong.conf`:
 
 ```
 pluginserver_names = my-plugin,other-one
+
 pluginserver_my_plugin_socket = /usr/local/kong/my-plugin.socket
 pluginserver_my_plugin_start_cmd = /path/to/my-plugin.py
 pluginserver_my_plugin_query_cmd = /path/to/my-plugin.py --dump
+
 pluginserver_other_one_socket = /usr/local/kong/other-one.socket
 pluginserver_other_one_start_cmd = /path/to/other-one.py
 pluginserver_other_one_query_cmd = /path/to/other-one.py --dump
+
+plugins = bundled,my-plugin,other-one
 ```
 
 The socket and start command settings coincide with their defaults and can be omitted:
@@ -178,6 +182,7 @@ The socket and start command settings coincide with their defaults and can be om
 pluginserver_names = my-plugin,other-one
 pluginserver_my_plugin_query_cmd = /path/to/my-plugin --dump
 pluginserver_other_one_query_cmd = /path/to/other-one --dump
+plugins = bundled,my-plugin,other-one
 ```
 
 If you want to open verbose logging, pass the `-v` argument to the `start` command line:

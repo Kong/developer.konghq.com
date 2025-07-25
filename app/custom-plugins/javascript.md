@@ -225,14 +225,25 @@ npm install
 ````
 
 To load plugins using the `kong.conf` [configuration file](/gateway/configuration/), you have to map existing {{site.base_gateway}} properties to aspects of your plugin. 
-Here is an example of loading a plugin within `kong.conf`:
 
-````
-pluginserver_names = js
+Here is an example of loading two plugins within `kong.conf`:
 
-pluginserver_js_start_cmd = /usr/local/bin/kong-js-pluginserver -v --plugins-directory /usr/local/kong/js-plugins
-pluginserver_js_query_cmd = /usr/local/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins --dump-all-plugins
+```
+pluginserver_names = my-plugin,other-one
 
-pluginserver_js_socket = /usr/local/kong/js_pluginserver.sock
-````
+pluginserver_my_plugin_socket = /usr/local/kong/my-plugin_pluginserver.sock
+pluginserver_my_plugin_start_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/my-plugin --sock-name my-plugin_pluginserver.sock
+pluginserver_my_plugin_query_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/my-plugin --dump-all-plugins
 
+pluginserver_other_one_socket = /usr/local/kong/other-one_pluginserver.sock
+pluginserver_other_one_start_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/other-one --sock-name other-one_pluginserver.sock
+pluginserver_other_one_query_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/other-one --dump-all-plugins
+
+plugins = bundled,my-plugin,other-one
+```
+
+If you want to open verbose logging, pass the `-v` argument to the `start` command line:
+
+```
+pluginserver_my_plugin_start_cmd = /usr/bin/kong-js-pluginserver -v --plugins-directory /usr/local/kong/js-plugins/my-plugin --sock-name my-plugin_pluginserver.sock
+```
