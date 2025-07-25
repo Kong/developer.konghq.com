@@ -107,7 +107,7 @@ rows:
   - shortcut: |
       `Ctrl + Shift + Enter`
     action: "Send request (with options)"
-    description: Send request with additional options such as repeating or adding a delay.
+    description: Send request with additional options, such as repeating or adding a delay.
   - shortcut: |
       `Ctrl + E`
     action: "Show environment editor"
