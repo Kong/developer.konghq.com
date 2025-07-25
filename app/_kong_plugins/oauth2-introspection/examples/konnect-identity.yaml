@@ -1,0 +1,27 @@
+description: Configure the plugin to use a Kong Identity auth server's introspection endpoint to validate an access token.
+extended_description: Configure the plugin to use a Kong Identity auth server's introspection endpoint to validate an access token. For a complete tutorial, see [Configure the OAuth 2.0 Introspection plugin with Kong Identity](/how-to/configure-kong-identity-oauth-introspection/).
+title: "Kong Identity"
+
+weight: 900
+
+config:
+  introspection_url: ${url}
+  authorization_value: ${authorization}
+  consumer_by: client_id
+  custom_claims_forward: 
+  - ${claim}
+
+variables:
+  authorization:
+    value: $AUTHORIZATION_HEADER_VALUE
+    description: "The value to set for the `Authorization` header to access the introspection endpoint. For Kong Identity, it will be a basic auth header with your Base64-encoded client ID and secret: `Basic $ENCODED_CREDENTIALS`."
+  url:
+    value: $INTROSPECTION_URL
+    description: The full URL to the introspection endpoint. For Kong Identity, it will look like `https://a93xltvowjk8m1qe.us.identity.konghq.com/auth/introspect`
+  claim:
+    value: $CLAIM_NAME
+    description: The name of your claim in the Kong Identity auth server.
+
+tools:
+  - konnect-api
+  - terraform

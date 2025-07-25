@@ -84,6 +84,30 @@ rows:
                   The individual nodes can be running either on-premise, in cloud-hosted environments, or fully managed by {{site.konnect_short_name}}.
 
   - header:
+      type: h2
+      text: "Kong Identity"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: Secure and authorize access with Kong Identity
+              blocks:
+                - type: text
+                  text: |
+                    Kong Identity enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}. 
+                    It implements OAuth 2.0 with OpenID Connect and supports plugins like OpenID Connect, OAuth 2.0 Introspection, and Upstream OAuth. 
+
+                    You can use Kong Identity to:
+                    
+                    * Create authorization servers per region
+                    * Issue and validate access tokens
+                    * Integrate secure authentication into your {{site.base_gateway}} APIs
+                    
+                    [Start using Kong Identity](/kong-identity/)
+
+
+  - header:
       type: h3
       text: "Supported Data Plane hosting options"
     columns:

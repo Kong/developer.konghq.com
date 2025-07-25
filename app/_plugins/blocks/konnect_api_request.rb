@@ -16,10 +16,11 @@ module Jekyll
 
       contents = super
 
-      unless @page.fetch('works_on', []).include?('konnect')
+      unless @page.fetch('works_on', []).any? { |w| ['konnect', 'konnect-platform'].include?(w) }
         raise ArgumentError,
-              'Page does not contain works_on: konnect, but uses {% konnect_api_request %}'
+              'Page does not contain works_on: konnect or konnect-platform, but uses {% konnect_api_request %}'
       end
+      
 
       config = YAML.load(contents)
       drop = Drops::KonnectApiRequest.new(yaml: config)
