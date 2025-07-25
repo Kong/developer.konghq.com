@@ -217,7 +217,7 @@ The following NodeJS modules are also available:
 
 ## Migrating scripts from Postman
 
-Scripts exported from Postman should also work when imported into Insomnia.
+Scripts exported from both Postman v2.0 and Postman v2.1 should also work when imported into Insomnia.
 
 There are some differences to be aware about:
 
