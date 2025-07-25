@@ -106,7 +106,7 @@ rows:
     description: Send the currently active request.
   - shortcut: |
       `Ctrl + Shift + Enter`
-    action: "Send request (Options)"
+    action: "Send request (with options)"
     description: Send request with additional options such as repeating or adding a delay.
   - shortcut: |
       `Ctrl + E`
