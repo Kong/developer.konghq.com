@@ -1,0 +1,86 @@
+---
+title: Manage analytics dashboards with Terraform
+description: Learn how to manage a dashboard in {{site.konnect_short_name}} Analytics with Terraform
+content_type: how_to
+automated_tests: false
+products:
+    - konnect-platform
+    - advanced-analytics
+works_on:
+    - konnect
+tools:
+    - konnect-api
+    - terraform
+tags:
+    - custom-dashboards
+
+series:
+  id: custom-dashboards
+  position: 2
+tldr:
+  q: How do I automate dashboard creation using Terraform?
+  a: |
+    Create the following resources using Terraform:
+
+    * `konnect_api`
+    * `konnect_api_document`
+    * `konnect_api_version`
+    * `konnect_api_implementation`
+    * `konnect_api_publication`
+
+
+prereqs:
+  skip_product: true
+  inline:
+    - title: Terraform
+      include_content: prereqs/terraform
+      icon_url: /assets/icons/terraform.svg
+    - title: "{{site.konnect_product_name}}"
+      include_content: prereqs/products/konnect-terraform
+      icon_url: /assets/icons/gateway.svg
+    - title: Roles and permissions
+      content: |
+        This guide requires belonging to the [Analytics admin](/konnect-platform/teams-and-roles/) team.
+related_resources:
+  - text: Custom Dashboards
+    url: /advanced-analytics/custom-dashboards/
+---
+
+
+## Get the dashboard ID
+
+Managing dashboards with Terraform requires the dashboard ID of the target dashboard: 
+
+1. Get the dashboard ID from the {{site.konnect_short_name}} URL of your dashboard. It appears at the end of the URL when viewing the dashboard:
+   ```
+   https://cloud.konghq.com/us/analytics/dashboards/$DASHBOARD_ID
+   ```
+
+## Import the dashboard
+
+Import the dashboard into Terraform by creating an `import.tf` file:
+
+```hcl
+echo '
+import {
+  provider = "konnect-beta"
+  to = konnect_dashboard.service_dashboard_template
+  id = 0810eb60-1290-4428-8b3a-d74ca6182c3d
+}
+' >> import.tf
+```
+
+## Generate the Terraform configuration: 
+
+Generate the Terraform configuration from the imported resource:
+
+```sh
+terraform plan -generate-config-out=create_dashboard.tf
+```
+
+## Validate 
+
+
+???
+
+Now, you can commit the file to your GitHub repo and ensure it’s included in your CI/CD pipeline. 
