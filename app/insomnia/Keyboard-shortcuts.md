@@ -41,7 +41,7 @@ rows:
   - shortcut: |
       Windows: `Ctrl + Shift + ,`
       Mac: `⇧ ⌘ ,`
-    action: "Show document / collection settings"
+    action: "Show document/collection settings"
     description: Open settings for the current document or collection.
   - shortcut: |
       `Ctrl + Alt + Shift + ,`
