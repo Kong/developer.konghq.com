@@ -92,7 +92,7 @@ body:
 
 In {{site.konnect_short_name}}, you need to retrieve two pieces of data: the provider account ID and the VPC ID.
 
-First, make a GET request to `/provider-accounts`:
+First, make a GET request to the {{site.konnect_short_name}} Cloud Gateways API at `/provider-accounts`:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -112,7 +112,7 @@ Save the `provider_account_id` from the output:
 export PROVIDER_ACCOUNT_ID='your-provider-account-id'
 ```
 
-Next, make a GET request to the `networks` endpoint:
+Next, make a GET request to the `/networks` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -132,7 +132,7 @@ Save the `provider_metadata.vpc_id` from the output:
 export PROVIDER_VPC_ID='your-provider-vpc-id'
 ```
 
-Run the following command in the GCP console:
+Switch to GCP and run the following command in the GCP console:
 
 ```sh
 gcloud compute networks peerings create $GCP_VPC_PEERING_NAME \
