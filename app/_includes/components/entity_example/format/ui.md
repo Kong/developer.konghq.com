@@ -79,7 +79,7 @@ The following creates a new SNI with basic configuration:
     ```
     {{ include.presenter.data['name'] }}
     ```
-4. In the **SSL Certificate ID** field, enter the ID for an existing Certificate:
+4. In the **SSL Certificate ID** field, select or enter the ID for an existing Certificate:
     ```
     {{ include.presenter.data['certificate']['id'] }}
     ```
