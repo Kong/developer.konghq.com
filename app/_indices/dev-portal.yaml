@@ -6,6 +6,7 @@ sections:
       - path: /dev-portal/**/*
       - path: /dev-portal/analytics/
       - path: /dev-portal/breaking-changes/
+      - path: /dev-portal/v2-migration/
     auto_exclude: true
   - title: API catalog
     items:

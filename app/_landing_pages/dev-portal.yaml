@@ -190,6 +190,35 @@ rows:
 
                   For more information, see [Dev Portal analytics](/dev-portal/analytics/).
   
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Migrate from classic Dev Portal (v2)"
+            blocks:
+              - type: text
+                text: |
+                  With the GA release of the new Dev Portal (v3) in June 2025, you can migrate from classic Dev Portals (v2) to the new Dev Portal. 
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Migration guide
+              description: |
+                Learn how to migrate from the classic Dev Portal (v2) to the new Dev Portal (v3).
+              cta:
+                url: "/dev-portal/v2-migration/"
+      - blocks:
+          - type: card
+            config:
+              title: Dev Portal breaking changes
+              description: |
+                Review breaking changes from Dev Portal v3 beta to GA.
+              cta:
+                url: "/dev-portal/breaking-changes/"
+
   - header:
       text: "Frequently asked questions"
       type: h2
