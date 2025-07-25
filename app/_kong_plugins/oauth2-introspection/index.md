@@ -42,8 +42,8 @@ related_resources:
     url: /gateway/authentication/
   - text: OAuth 2.0 Authentication plugin
     url: /plugins/oauth2/reference/
-  - text: Configure the OAuth 2.0 Introspection plugin with {{site.konnect_short_name}} Identity
-    url: /how-to/configure-konnect-identity-oauth-introspection/
+  - text: Configure the OAuth 2.0 Introspection plugin with Kong Identity
+    url: /how-to/configure-kong-identity-oauth-introspection/
 ---
 
 You can validate access tokens sent by developers using a third-party OAuth 2.0

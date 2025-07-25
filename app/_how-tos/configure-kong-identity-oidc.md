@@ -1,8 +1,8 @@
 ---
-title: Configure the OIDC plugin with {{site.konnect_short_name}} Identity
+title: Configure the OIDC plugin with Kong Identity
 content_type: how_to
 breadcrumbs:
-  - /konnect-identity/
+  - /kong-identity/
 
 tech_preview: true
 entities:
@@ -17,12 +17,12 @@ works_on:
   - konnect
 tags:
     - authentication
-description: Learn how to configure {{site.konnect_short_name}} Identity with OIDC.
+description: Learn how to configure Kong Identity with OIDC.
 
 tldr: 
-  q: How do I configure {{site.konnect_short_name}} Identity with OIDC?
+  q: How do I configure Kong Identity with OIDC?
   a: | 
-    Create a {{site.konnect_short_name}} Identity auth server, scope, claim, and client. Configure the OIDC plugin with your issuer URL, client ID, and client secret. Generate a client token by sending a GET request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to the Gateway Service.
+    Create a Kong Identity auth server, scope, claim, and client. Configure the OIDC plugin with your issuer URL, client ID, and client secret. Generate a client token by sending a POST request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to the Gateway Service.
 
 tools:
     # - konnect-api
@@ -32,7 +32,7 @@ prereqs:
   inline: 
     - title: "{{site.konnect_short_name}} Labs"
       content: |
-        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. {{site.konnect_short_name}} Identity can be opted in through {{site.konnect_short_name}} Labs. 
+        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. Kong Identity can be opted in through {{site.konnect_short_name}} Labs. 
         You can view [Labs](https://cloud.konghq.com/global/labs/) in {{site.konnect_short_name}} 
       icon_url: /assets/icons/world.svg
   entities:
@@ -42,31 +42,33 @@ prereqs:
       - example-route
 
 faqs:
-  - q: How do I use {{site.konnect_short_name}} Identity with Consumer-scoped plugins and OIDC auth?
+  - q: How do I use Kong Identity with Consumer-scoped plugins and OIDC auth?
     a: |
       For Consumer-scoped plugins, do the following:
       - Create a Consumer per client in the respective control plane.
       - You don't need to migrate the client credential to a Consumer credential.
       - The OIDC plugin will map clients to Consumers using claims with the `consumer_claim` field.
       - Apply the Consumer-scoped plugin to the Consumer entity in the control plane.
-
+  - q: Can I retrieve my client’s secret again?
+    a: |
+      No, the secret is only shared once when the client is created. Store it securely.
 automated_tests: false
 related_resources:
-  - text: "{{site.konnect_short_name}} Identity"
-    url: /konnect-identity/
+  - text: "Kong Identity"
+    url: /kong-identity/
   - text: Dynamic claim templating
-    url: /konnect-identity/#dynamic-claim-templates
-  - text: Configure the OAuth 2.0 Introspection plugin with {{site.konnect_short_name}} Identity
-    url: /how-to/configure-konnect-identity-oauth-introspection/
-  - text: Configure the Upstream OAuth plugin with {{site.konnect_short_name}} Identity
-    url: /how-to/configure-konnect-identity-upstream-oauth/
+    url: /kong-identity/#dynamic-claim-templates
+  - text: Configure the OAuth 2.0 Introspection plugin with Kong Identity
+    url: /how-to/configure-kong-identity-oauth-introspection/
+  - text: Configure the Upstream OAuth plugin with Kong Identity
+    url: /how-to/configure-kong-identity-upstream-oauth/
 ---
 
 {% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
 
 ## Configure the OIDC plugin
 
-You can configure the [OIDC plugin](/plugins/openid-connect/) to use {{site.konnect_short_name}} Identity as the identity provider for your Gateway Services. In this example, you'll apply the plugin to the control plane globally, but you can alternatively apply it to the Gateway Service.
+You can configure the [OIDC plugin](/plugins/openid-connect/) to use Kong Identity as the identity provider for your Gateway Services. In this example, you'll apply the plugin to the control plane globally, but you can alternatively apply it to the Gateway Service.
 
 First, get the ID of the `quickstart` control plane you configured in the prerequisites:
 
@@ -111,11 +113,11 @@ body:
 <!--vale on-->
 
 In this example:
-* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, {{site.konnect_short_name}} Identity). 
+* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, Kong Identity). 
 * `auth_methods`: Specifies that the plugin should use client credentials (client ID and secret) for authentication.
 * `client_credentials_param_type`: Restricts client credential lookup to request headers only.
 
 {% include /how-tos/steps/konnect-identity-generate-token.md %}
 
 ## Access the Gateway service using the token 
-Access the Gateway Service using the short-lived token generated by the authorization server from {{site.konnect_short_name}} Identity.
+Access the Gateway Service using the short-lived token generated by the authorization server from Kong Identity.

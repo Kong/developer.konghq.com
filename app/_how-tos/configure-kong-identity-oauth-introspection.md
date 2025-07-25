@@ -1,8 +1,8 @@
 ---
-title: Configure the OAuth 2.0 Introspection plugin with {{site.konnect_short_name}} Identity
+title: Configure the OAuth 2.0 Introspection plugin with Kong Identity
 content_type: how_to
 breadcrumbs:
-  - /konnect-identity/
+  - /kong-identity/
 
 tech_preview: true
 entities:
@@ -17,12 +17,12 @@ works_on:
   - konnect
 tags:
     - authentication
-description: Learn how to configure {{site.konnect_short_name}} Identity with OAuth 2.0 Introspection.
+description: Learn how to configure Kong Identity with OAuth 2.0 Introspection.
 
 tldr: 
-  q: How do I configure {{site.konnect_short_name}} Identity with OAuth 2.0 Introspection?
+  q: How do I configure Kong Identity with OAuth 2.0 Introspection?
   a: | 
-    Create a {{site.konnect_short_name}} Identity auth server, scope, claim, and client. Use the Base64-encoded client ID and client secret for `config.authorization_value` in the OAuth 2.0 Introspection plugin configuration as well as your auth server introspection endpoint. Generate a client token by sending a GET request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to the Gateway Service.
+    Create a Kong Identity auth server, scope, claim, and client. Use the Base64-encoded client ID and client secret for `config.authorization_value` in the OAuth 2.0 Introspection plugin configuration as well as your auth server introspection endpoint. Generate a client token by sending a POST request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to the Gateway Service.
 
 tools:
     # - konnect-api
@@ -32,7 +32,7 @@ prereqs:
   inline: 
     - title: "{{site.konnect_short_name}} Labs"
       content: |
-        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. {{site.konnect_short_name}} Identity can be opted in through {{site.konnect_short_name}} Labs. 
+        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. Kong Identity can be opted in through {{site.konnect_short_name}} Labs. 
         You can view [Labs](https://cloud.konghq.com/global/labs/) in {{site.konnect_short_name}} 
       icon_url: /assets/icons/world.svg
   entities:
@@ -40,25 +40,28 @@ prereqs:
       - example-service
     routes:
       - example-route
-
+faqs:
+  - q: Can I retrieve my client’s secret again?
+    a: |
+      No, the secret is only shared once when the client is created. Store it securely.
 
 automated_tests: false
 related_resources:
-  - text: "{{site.konnect_short_name}} Identity"
-    url: /konnect-identity/
+  - text: "Kong Identity"
+    url: /kong-identity/
   - text: Dynamic claim templating
-    url: /konnect-identity/#dynamic-claim-templates
-  - text: Configure the OIDC plugin with {{site.konnect_short_name}} Identity
-    url: /how-to/configure-konnect-identity-oidc/
-  - text: Configure the Upstream OAuth plugin with {{site.konnect_short_name}} Identity
-    url: /how-to/configure-konnect-identity-upstream-oauth/
+    url: /kong-identity/#dynamic-claim-templates
+  - text: Configure the OIDC plugin with Kong Identity
+    url: /how-to/configure-kong-identity-oidc/
+  - text: Configure the Upstream OAuth plugin with Kong Identity
+    url: /how-to/configure-kong-identity-upstream-oauth/
 ---
 
 {% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
 
 ## Encode your client credentials
 
-When you configure the OAuth 2.0 Introspection plugin with {{site.konnect_short_name}} Identity, you must pass the `client_id` and `client_secret` as a Base64-encoded Basic Auth string (`Basic MG9hNWl...`) in the `config.authorization_value` field.
+When you configure the OAuth 2.0 Introspection plugin with Kong Identity, you must pass the `client_id` and `client_secret` as a Base64-encoded Basic Auth string (`Basic MG9hNWl...`) in the `config.authorization_value` field.
 
 Base64-encode your client ID and client secret:
 ```sh
@@ -72,7 +75,7 @@ export ENCODED_CREDENTIALS='YOUR-ENCODED-CREDENTIALS'
 
 ## Configure the OAuth 2.0 Introspection plugin
 
-You can configure the [OAuth 2.0 Introspection plugin](/plugins/oauth2-introspection/) to use {{site.konnect_short_name}} Identity as the identity provider for your Gateway Services. In this example, you'll apply the plugin to the control plane globally, but you can alternatively apply it to the Gateway Service.
+You can configure the [OAuth 2.0 Introspection plugin](/plugins/oauth2-introspection/) to use Kong Identity as the identity provider for your Gateway Services. In this example, you'll apply the plugin to the control plane globally, but you can alternatively apply it to the Gateway Service.
 
 First, get the ID of the `quickstart` control plane you configured in the [prerequisites](#kong-konnect):
 
@@ -111,7 +114,7 @@ body:
 {% include /how-tos/steps/konnect-identity-generate-token.md %}
 
 ## Access the Gateway Service using the token 
-Access the Gateway Service using the short-lived token generated by the authorization server from {{site.konnect_short_name}} Identity:
+Access the Gateway Service using the short-lived token generated by the authorization server from Kong Identity:
 
 {% validation request-check %}
 url: /anything

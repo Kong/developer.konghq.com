@@ -57,7 +57,7 @@ sections:
         url: /konnect-platform/audit-logs/#access-logs
   - title: Konnect IDP
     items: 
-      - path: /konnect-platform//konnect-identity/
-      - path: /how-to/configure-konnect-identity-oauth-introspection/
-      - path: /how-to/configure-konnect-identity-upstream-oauth/
-      - path: /how-to/configure-konnect-identity-oidc/
+      - path: /konnect-platform/kong-identity/
+      - path: /how-to/configure-kong-identity-oauth-introspection/
+      - path: /how-to/configure-kong-identity-upstream-oauth/
+      - path: /how-to/configure-kong-identity-oidc/

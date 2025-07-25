@@ -1,6 +1,6 @@
-## Create an auth server in {{site.konnect_short_name}} Identity
+## Create an auth server in Kong Identity
 
-Before you can configure the authentication plugin, you must first create an auth server in {{site.konnect_short_name}} Identity. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+Before you can configure the authentication plugin, you must first create an auth server in Kong Identity. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
 
 Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 
@@ -35,8 +35,8 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: "Scope"
-  description: "Scope Description"
+  name: "my-scope"
+  description: "Scope to test Kong Identity"
   default: false
   include_in_metadata: false
   enabled: true
@@ -60,8 +60,8 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: Claim
-  value: Claim Value
+  name: "test-claim"
+  value: test
   include_in_token: true
   include_in_all_scopes: false
   include_in_scopes: 
@@ -93,9 +93,6 @@ body:
   allow_all_scopes: false
   allow_scopes:
     - $SCOPE_ID
-  redirect_uris:
-    - https://client.com/callback
-  login_uri: https://client.com/login
   access_token_duration: 3600
   id_token_duration: 3600
   response_types:
