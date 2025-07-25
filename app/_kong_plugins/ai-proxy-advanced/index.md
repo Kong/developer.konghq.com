@@ -52,6 +52,8 @@ related_resources:
     url: /ai-gateway/ai-providers/
   - text: AI Proxy
     url: /plugins/ai-proxy/
+  - text: Embedding-based similarity matching in Kong AI gateway plugins
+    url: /ai-gateway/semantic-similarity/
 
 examples_groups:
   - slug: open-ai
