@@ -35,7 +35,7 @@ related_resources:
 > **API Products are only available with classic Dev Portals (v2)** <br>
 > The new Dev Portal (v3) provides a more modern approach to API creation and publishing. See [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/) for a complete tutorial about how to create and publish APIs in v3 Dev Portal.
 
-API Products bundles and manages multiple Gatway Services. Each API product consists of at least one API product version, and each API product version is connected to a Gateway Service. You can document your Services and publish API products to a classic Dev Portal (v2) for consumption.
+API Products bundles and manages multiple Gateway Services. Each API product consists of at least one API product version, and each API product version is connected to a Gateway Service. You can document your Services and publish API products to a classic Dev Portal (v2) for consumption.
 
 ## API product dashboard
 
