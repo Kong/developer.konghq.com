@@ -1,5 +1,5 @@
 ---
-title: "Keyboard shortcuts for Insomnia application"
+title: "Keyboard shortcuts for Insomnia"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -8,14 +8,16 @@ breadcrumbs:
 products:
   - insomnia
 
-works_on:
-  - insomnia
 
 search_aliases: 
   - Tips
   - Keyboard shortcuts
-description: Refer to this page to find useful keyboard shortcuts to use in the Insomnia desktop application.
-
+description: Learn about keyboard shortcuts you can use in the Insomnia desktop application.
+related_resources:
+  - text: Requests in Insomnia
+    url: /insomnia/requests/
+  - text: Environments
+    url: /insomnia/environments/
 ---
 Insomnia offers a wide range of keyboard shortcuts that help you navigate faster, write requests efficiently, and switch contexts with minimal friction. Users can also craft complex HTTP requests or manage multiple environments, by mastering the shortcuts.
 
