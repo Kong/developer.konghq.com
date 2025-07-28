@@ -131,83 +131,41 @@ variables:
 Now, you can test the rate limiting configuration.
 
 * The **first request** sends a `x-prompt-count` of `100000`, which is within the configured token limits and should receive a `200 OK` response.
-* The **second request**, sent shortly after with a `x-prompt-count` of `950000`, exceeds the allowed token quota and is expected to return a `429 Too Many Requests` response.
-
-{: data-deployment-topology="on-prem" }
-
-```json
-curl -i "http://localhost:8000/anything" \
-  --header "Content-Type: application/json" \
-  --header "x-prompt-count: 100000" \
-  --data '{
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are an IT specialist."
-      },
-      {
-        "role": "user",
-        "content": "Tell me about Google?"
-      }
-    ]
-  }'
-
-sleep 2
-
-curl -i "http://localhost:8000/anything" \
-  --header "Content-Type: application/json" \
-  --header "x-prompt-count: 950000" \
-  --data '{
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are an IT specialist."
-      },
-      {
-        "role": "user",
-        "content": "Tell me about Amazon?"
-      }
-    ]
-  }'
-
-```
-
-{: data-deployment-topology="konnect" }
+* The **second request**, sent shortly after with a `x-prompt-count` of `950000`, exceeds the allowed token quota and is expected to return a `429` response.
 
 
-```json
-curl -i "$KONNECT_PROXY_URL/anything" \
-  --header "Content-Type: application/json" \
-  --header "x-prompt-count: 100000" \
-  --data '{
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are an IT specialist."
-      },
-      {
-        "role": "user",
-        "content": "Tell me about Google?"
-      }
-    ]
-  }'
+<!--vale off-->
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'x-prompt-count: 100000'
+body:
+  messages:
+    - role: system
+      content: You are an IT specialist.
+    - role: user
+      content: Tell me about Google?
+status_code: 200
+message: 'OK'
+{% endvalidation %}
+<!--vale on-->
 
-sleep 2
+Now, you can test the rate limiting function by sending the following request:
 
-curl -i "$KONNECT_PROXY_URL/anything" \
-  --header "Content-Type: application/json" \
-  --header "x-prompt-count: 950000" \
-  --data '{
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are an IT specialist."
-      },
-      {
-        "role": "user",
-        "content": "Tell me about Amazon?"
-      }
-    ]
-  }'
-
-```
+<!--vale off-->
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'x-prompt-count: 950000'
+body:
+  messages:
+    - role: system
+      content: You are an IT specialist.
+    - role: user
+      content: Tell me about Google?
+status_code: 429
+message: 'Rate limit exceeded for provider: cohere'
+{% endvalidation %}
+<!--vale on-->
