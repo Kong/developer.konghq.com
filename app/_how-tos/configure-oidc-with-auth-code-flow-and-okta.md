@@ -64,9 +64,9 @@ prereqs:
         ngrok http localhost:8000
         ```
         1. In a new terminal window, export your forwarding URL as a decK environment variable appended with the `/anything` path you'll use to log in:
-        ```sh
-        export DECK_NGROK_HOST='YOUR-FORWARDING-URL/anything'
-        ```
+        {% env_variables %}
+        DECK_NGROK_HOST: YOUR-FORWARDING-URL/anything
+        {% endenv_variables %}
       icon_url: /assets/icons/ngrok.png
 
 tags:
@@ -107,6 +107,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+automated_tests: false
 ---
 
 ## Create an application in Okta
@@ -122,10 +123,15 @@ cleanup:
    {:.warning }
    > Do not select **Allow everyone in your organization to access** otherwise the access token won't be verified against Okta.
 1. Export the client ID and client secret of your Okta app:
-   ```sh
-   export DECK_OKTA_CLIENT_ID='YOUR-OKTA-APP-CLIENT-ID'
-   export DECK_OKTA_CLIENT_SECRET='YOUR-OKTA-APP-CLIENT-SECRET'
-   ```
+
+{% capture okta_vars %}
+{% env_variables %}
+DECK_OKTA_CLIENT_ID: 'YOUR-OKTA-APP-CLIENT-ID'
+DECK_OKTA_CLIENT_SECRET: 'YOUR-OKTA-APP-CLIENT-SECRET'
+{% endenv_variables %}
+{% endcapture %}
+{{ okta_vars | indent: 3}}
+
 1. In the Assignment tab, assign your app to your Okta test user.
 
 ## Create an authorization server and access policy
@@ -133,9 +139,14 @@ cleanup:
 1. Using your Okta credentials, log in to the Okta portal and click **Security > API** in the sidebar.
 1. Create a server named **Kong API Management** with an audience and description.
 1. Copy the issuer URL for your authorization server, strip the `/.well-known/oauth-authorization-server`, and export it as an environment variable:
-   ```sh
-   export DECK_ISSUER_URL='YOUR-ISSUER-URL'
-   ```
+
+{% capture issuer %}
+{% env_variables %}
+DECK_ISSUER_URL: YOUR-ISSUER-URL
+{% endenv_variables %}
+{% endcapture %}
+{{ issuer | indent: 3 }}
+
    It should be formatted like `https://domain.okta.com/oauth2/a36f045h4597`. 
 
 1. On the Access Policy tab, create a new access policy and assign the Okta application you just created.
