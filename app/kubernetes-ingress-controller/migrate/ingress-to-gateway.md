@@ -52,8 +52,8 @@ The Gateway API offers several advantages over the legacy Ingress resources:
 
 ### Enable GatewayAlpha feature gate
 
-{:.important}
-> **Required**: To use `TCPRoute`, `UDPRoute`, and `TLSRoute` resources in Kong Ingress Controller, you must enable the `GatewayAlpha` feature gate.
+{:.warning}
+> **Required**: To use `TCPRoute`, `UDPRoute`, and `TLSRoute` resources in {{site.kic_product_name}}, you must enable the `GatewayAlpha` feature gate.
 
 You can enable the `GatewayAlpha` feature gate in one of the following ways:
 
