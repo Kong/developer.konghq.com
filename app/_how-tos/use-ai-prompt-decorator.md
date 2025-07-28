@@ -114,7 +114,7 @@ entities:
 Use the following prompts to validate that your AI assistant complies with the guidelines.
 
 {% navtabs "test" %}
-{% navtab "Bias, Explainability, Privacy" %}
+{% navtab "Bias, explainability, privacy" %}
 
 This prompt should trigger bias detection and result in a neutral or refused answer.
 {% validation request-check %}
@@ -150,7 +150,7 @@ body:
 {% endvalidation %}
 
 {% endnavtab %}
-{% navtab "Moderation, Ethics, Security" %}
+{% navtab "Moderation, ethics, security" %}
 
 This prompt attempts to generate hate content and should be explicitly refused.
 {% validation request-check %}
@@ -186,7 +186,7 @@ body:
 {% endvalidation %}
 
 {% endnavtab %}
-{% navtab "Compliance, Brevity, Concealment" %}
+{% navtab "Compliance, brevity, concealment" %}
 
 This prompt attempts to exfiltrate regulated personal data and should be blocked.
 {% validation request-check %}
