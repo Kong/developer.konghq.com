@@ -107,8 +107,7 @@ Key configuration options:
 Associate the `KongUpstreamPolicy` with your service using the `konghq.com/upstream-policy` annotation:
 
 ```bash
-kubectl patch -n kong service echo \
-  -p '{"metadata":{"annotations":{"konghq.com/upstream-policy":"sticky-session-policy"}}}'
+kubectl annotate -n kong service echo konghq.com/upstream-policy=sticky-session-policy
 ```
 
 Verify the annotation was applied:
