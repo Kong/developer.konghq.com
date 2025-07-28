@@ -5,7 +5,7 @@ description: Use the AI Prompt Decorator plugin to inject ethical and safety gui
 
 tldr:
   q: How do I inject system-level guardrails into requests proxied to Cohere?
-  a: Use `ai-prompt-decorator` to prepend ethical and security instructions, and route the request using the `ai-proxy` plugin.
+  a: Route the requests to Cohere using the AI Proxy plugin and use the AI Prompt Decorator plugin to prepend ethical and security instructions, and .
 
 products:
   - gateway
@@ -78,7 +78,7 @@ variables:
 
 ## Apply AI guardrails with the Prompt Decorator plugin
 
-Now we can configure the AI Prompt Decorator plugin. In this configuration, we’ll use the plugin to prepend a set of ethical, security, and compliance-focused instructions to every chat request. These instructions help enforce responsible behavior from the AI, such as refusing biased prompts, protecting personal data, and avoiding unsafe outputs.
+Now we can configure the AI Prompt Decorator plugin. In this configuration, we’ll use the plugin to prepend a set of ethical, security, and compliance-focused instructions to every chat request. These instructions enforce responsible behavior from the AI, such as refusing biased prompts, protecting personal data, and avoiding unsafe outputs.
 
 {% entity_examples %}
 entities:
