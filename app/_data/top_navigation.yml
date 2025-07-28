@@ -90,13 +90,13 @@ platform:
           product: service-catalog
 
 how_tos:
-    - text: Kong Gateway
+    - text: API Gateway
       icon: /_assets/icons/products/gateway.svg
       url: /how-to/?products=gateway
       product: gateway
     - text: AI Gateway
       icon: /_assets/icons/products/ai-gateway.svg
-      url: /ai-gateway/
+      url: /how-to/?products=ai-gateway
       product: ai-gateway
     - text: Event Gateway
       icon: /_assets/icons/products/event-gateway.svg
@@ -110,7 +110,7 @@ how_tos:
       icon: /_assets/icons/products/kic.svg
       url: /how-to/?products=kic
       product: kic
-    - text: Kong Operator
+    - text: Kubernetes Operator
       icon: /_assets/icons/products/operator.svg
       url: /how-to/?products=operator
       product: kic
