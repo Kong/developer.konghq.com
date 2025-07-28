@@ -1,7 +1,7 @@
 ---
 title: Insomnia terminology
 
-description: This page defines terms and concepts related to Insomnia.
+description: This page defines terminology and concepts related to Insomnia.
 
 breadcrumbs: 
   - /insomnia/
