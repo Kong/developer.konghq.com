@@ -178,16 +178,14 @@
                 </span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="navbar-item__menu gap-6 grid-cols-1" role="menu">
+              <ul class="navbar-item__menu gap-6 grid-cols-2" role="menu">
                 {% for how_to in site.data.top_navigation.how_tos %}
                 <li class="flex">
                   {% include header/item.html url=how_to.url product=how_to.product text=how_to.text icon=how_to.icon %}
                 </li>
                 {% endfor %}
-                <li class="flex">
-                  <a href="/how-to/" class="flex gap-2 items-center w-full">
-                    <span class="text-base lg:text-sm text-brand">View all &rarr;</span>
-                  </a>
+                <li class="flex gap-4" style="grid-column: 1 / span 2;">
+                  <a class="text-base lg:text-sm text-brand w-full" href="/how-to/">View all &rarr;</a>
                 </li>
               </ul>
             </li>
