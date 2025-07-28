@@ -40,6 +40,3 @@ sections:
       - path: /dev-portal/sso/
       - path: /dev-portal/security-settings/
       - path: /dev-portal/self-service/
-  - title: Classic Dev Portal (v2)
-    items:
-      - path: /api-products/
