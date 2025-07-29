@@ -11,13 +11,13 @@ products:
 
 breadcrumbs:
   - /inso-cli/
-  - /inso-cli/docker/
+  - /how-to/run-inso-cli-on-docker/
 
 related_resources:
   - text: Insomnia security
     url: /insomnia/manage-insomnia/#security
-  - text: Inso CLI on Docker
-    url: /inso-cli/docker/
+  - text: Run Inso CLI on Docker
+    url: /how-to/run-inso-cli-on-docker/
   - text: kong/inso on Docker Hub
     url: https://hub.docker.com/r/kong/inso
   - text: Verifying build provenance for signed Inso CLI docker images

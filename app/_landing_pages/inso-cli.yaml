@@ -40,7 +40,7 @@ rows:
                    ```sh
                    docker pull kong/inso:latest
                    ```
-                1. Mount your specs folder to the `/var/temp folder` in the container. For more details, see [Inso CLI on Docker](/inso-cli/docker/).
+                1. Mount your specs folder to the `/var/temp folder` in the container. For more details, see [Run Inso CLI on Docker](/how-to/run-inso-cli-on-docker/).
 
   - header:
     columns:

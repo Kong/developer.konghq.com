@@ -79,7 +79,7 @@ sections:
       - path: /inso-cli/reference/
       - path: /inso-cli/configuration/
       - path: /inso-cli/continuous-integration/
-      - path: /inso-cli/docker/
+      - path: /how-to/run-inso-cli-on-docker/
       - path: /inso-cli/sbom/
       - path: /inso-cli/verify-binary-provenance/
       - path: /inso-cli/verify-docker-image-provenance/
