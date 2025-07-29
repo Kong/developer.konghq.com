@@ -26,13 +26,11 @@ tags:
 ## User
 A user is any individual who uses Insomnia, either as a scratch pad user that works locally without signing in, or as a signed-in user with cloud/Git sync. Users design, test, debug, and document APIs by creating requests, mocking services, and running tests. They can choose where to store data; locally, in Git, or in the cloud. They can work independently or collaborate in shared projects and tools. 
 
+### Collaborator
+A collaborator is a user who is invited to join and work in shared organizations in Insomnia. Collaborators participate in workflows by viewing or editing API assets, and contributing to tests and mocks based on their organization level roles. Pro and Enterprise plans let you invite unlimited collaborators and manage their access through role based access control (RBAC), which enables secure and scalable team collaboration.
+
 ### User roles
 User roles are permissions assigned at the account or organization level that define what individuals can do in Insomnia. These roles include account wide abilities such as managing billing or performing account administration and organization specific permissions such as editing API assets or managing invites.
-
-### Collaborator
-A collaborator is a user who is invited to join and work on shared projects or organizations in Insomnia. Collaborators participate in workflows by viewing or editing API assets, and contributing to tests and mocks based on their organization level roles. Pro and Enterprise plans let you invite unlimited collaborators and manage their access through role based access control (RBAC), which enables secure and scalable team collaboration.
-
-## Roles
 
 To understand the different terms used in Insomnia that are related to roles, use the following table:
 
