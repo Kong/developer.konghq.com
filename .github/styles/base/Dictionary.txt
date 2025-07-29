@@ -462,6 +462,7 @@ Lua's
 Lua's
 Luarocks
 Luarocks
+Luhn
 M_Account
 M_Link
 M_Resource
@@ -551,6 +552,7 @@ okta
 Okta
 Okta's
 Okta's
+ollama
 Ollama
 onboard
 onboarding
@@ -852,10 +854,12 @@ unvetted
 unversioned
 unwanted
 updated_at
+unprefixed
 upsert
 upstream
 upstream_payload
 upstream_status
+upstream_url
 upstream's
 upstreams
 upvalue

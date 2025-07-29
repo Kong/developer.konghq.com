@@ -11,6 +11,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.1": [
+    {
+      "message": "Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where Kong Gateway was not able to reconfigure the plugin when using DB-less mode.\n",

@@ -1,6 +1,6 @@
 ---
-title: Install {{ site.operator_product_name }}
-description: "Learn how to install {{ site.operator_product_name }}."
+title: Install {{ site.operator_product_name }} in {{ site.konnect_short_name }} hybrid mode
+description: "Learn how to install {{ site.operator_product_name }} in Konnect hybrid mode using Helm"
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/install/
@@ -29,8 +29,8 @@ min_version:
 entities: []
 
 tldr:
-  q: How do I install {{ site.operator_product_name }}?
-  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }}.
+  q: How do I install {{ site.operator_product_name }} in {{ site.konnect_short_name }} hybrid mode?
+  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }} in {{ site.konnect_short_name }}.
 
 prereqs:
   show_works_on: false

@@ -56,18 +56,35 @@ Before creating a PrivateLink connection, ensure that you have a VPC, subnets, a
    * The security group allows inbound TCP traffic on port 443.
    * Private DNS is enabled in the additional settings.
 1. Create the endpoint and wait until the status is available. We recommend waiting 10 minutes before using the endpoint.
-1. After your PrivateLink endpoint is available, update your Data Plane configuration in the [`kong.conf` file](/gateway/manage-kong-conf/) to connect to the {{site.konnect_short_name}} Control Plane using the private DNS name for your region.
+1. After your PrivateLink endpoint is available, update your Data Plane configuration in the [`kong.conf` file](/gateway/manage-kong-conf/) to connect to the {{site.konnect_short_name}} Control Plane using the private DNS name for your region. 
+   
+   Locate your cluster prefix by making an API request to the Control Planes API:
 
-   Here's an example `kong.conf` configuration for the US region:
+{% capture prefix %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes
+status_code: 201
+region: global
+method: GET
+headers:
+  - 'Accept: application/json'
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
 
+{{ prefix | indent }}
+
+   In the response, look for `control_plane_endpoint`. Your cluster prefix is the first portion of the endpoint: `https://CLUSTER_PREFIX.cp0.konghq.com`.
+
+   Using the cluster prefix value from the response, put together a `kong.conf` configuration for the your region. For example, for the US region:
+ 
    ```sh
    cluster_control_plane = us.svc.konghq.com/cp/$CLUSTER_PREFIX
    cluster_server_name = us.svc.konghq.com
    cluster_telemetry_endpoint = us.svc.konghq.com:443/tp/$CLUSTER_PREFIX
    cluster_telemetry_server_name = us.svc.konghq.com
    ```
-
-
 
 ## Regional PrivateLink service names
 

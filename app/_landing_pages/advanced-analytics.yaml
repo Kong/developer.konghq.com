@@ -6,7 +6,8 @@ metadata:
   description: Gain real-time insights into API health, performance, and usage with Konnect Advanced Analytics.
   tags:
     - analytics
-  breadcrumb: /advanced-analytics/
+  breadcrumbs:
+    - /advanced-analytics/
 rows:
   - header:
       type: h1

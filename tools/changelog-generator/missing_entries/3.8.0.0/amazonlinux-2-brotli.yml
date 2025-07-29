@@ -1,0 +1,8 @@
+message: |
+  The Brotli module is missing from all of the following ARM64 Kong Gateway Docker images:
+  * RHEL 9
+  * Debian 12
+  * Amazon Linux 2
+  * Amazon Linux 2023
+type: "known-issues"
+scope: "Core"

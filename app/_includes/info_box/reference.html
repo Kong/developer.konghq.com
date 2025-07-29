@@ -19,6 +19,10 @@
 </div>
 {% endif %}
 
+{% if page.min_version %}
+{% include info_box/sections/min_version.html min_version=page.min_version %}
+{% endif %}
+
 {% if page.works_on %}
 {% include_cached info_box/sections/works_on.html works_on=page.works_on %}
 {% endif %}

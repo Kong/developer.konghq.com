@@ -158,6 +158,9 @@ rows:
                 The {{site.event_gateway_short}} Data Planes are self-managed and deployed by you, the user. 
                 The {{site.event_gateway_short}} Control Plane is part of the {{site.konnect_product_name}} platform.
             
+            - q: Does {{site.event_gateway_short}} run on-prem?
+              a: No, {{site.event_gateway_short}} is only available through Gateway Manager on the {{site.konnect_product_name}} platform.
+            
             - q: How can I get access to the {{site.event_gateway}}?
               a: |
                If you're an existing Kong customer or prospect, please fill out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.

@@ -6,7 +6,7 @@ layout: reference
 products:
   - mesh
 breadcrumbs:
-  - mesh/
+  - /mesh/
 tags:
   - sbom
   - security

@@ -1,6 +1,9 @@
+{% unless page.plugin? %}
 {% if include.products and include.products.size > 1 %}
 {% raise "tier.html include called with a tier and more than one product." %}
 {% endif %}
+{% endunless %}
+
 {% assign product = include.products.first %}
 {% assign tier = site.data.products[product].tiers[include.tier] %}
 {% unless tier %}
@@ -11,7 +14,7 @@
 {% endunless %}
 
 {% if include.url %}
-{% include badge.html url=tier.url text=tier.text %}
+{% include badge.html url=tier.url text=tier.text css_class=include.tier %}
 {% else %}
-{% include badge.html text=tier.text %}
+{% include badge.html text=tier.text css_class=include.tier %}
 {% endif %}

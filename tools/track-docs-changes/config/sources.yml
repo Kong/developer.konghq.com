@@ -1646,7 +1646,7 @@ app/insomnia/version-control.md:
   - /insomnia/insomnia-sync.md
 app/_how-tos/use-the-collection-runner.md:
   - /insomnia/collection-runner.md
-app/insomnia/environment-variables.md:
+app/insomnia/environments.md:
   - /insomnia/folder-level-settings.md
   - /insomnia/environment-variables.md
   - /insomnia/global-environments.md

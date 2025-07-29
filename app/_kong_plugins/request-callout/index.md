@@ -8,7 +8,7 @@ tags:
 
 publisher: kong-inc
 description: 'Insert arbitrary API calls before proxying a request to the upstream service.'
-
+tier: enterprise
 
 products:
     - gateway
@@ -82,15 +82,20 @@ uses for Lua expressions.
 In `custom` values, callouts can be referenced via the shorthand `callouts.CALLOUT_NAME`
 instead of the full `kong.ngx.shared.callouts.CALLOUT_NAME`. 
 Lua expressions don't carry side effects.
+If the `custom` value is a raw string, make sure the string doesn't start with `#` or `$`,
+as the backend interpreter will read anything following these characters as a Lua expression.
+If you need to include a `#` or `$` character, change the value to `$("$|#RAW STRING")`.
+For example, `#1234!` is not a valid `custom` value. To make it valid, pass the value as `$("#1234!")`.
 
 `by_lua` fields work in a similar way, but they don't support shortcuts.
 Shortcuts can produce unintended side effects and modify callout and upstream requests.
 
 Both request and response callout objects may contain a `by_lua` field:
-* `request.by_lua` runs before the callout request is performed and is useful to 
-further customize aspects of the request.
-* `response.by_lua` runs after a response is obtained, and is useful to
-customize aspects of the response such as caching.
+* `request.by_lua` runs before the callout request is performed or the cache is queried
+and is useful to further customize aspects of the request.
+* `response.by_lua` runs after a response is obtained from the service and 
+before it is stored in the cache and is useful to customize aspects of the
+response.
 
 The upstream object may also contain a `by_lua` field for Lua code 
 that runs before the upstream request runs. This is useful to further customize 
@@ -117,3 +122,32 @@ headers such as `Content-Type` and `Host`.
 
 If you need to forward only a subset of headers, you can reinsert a custom list of headers 
 using the [`config.upstream.headers.custom`](./reference/#schema--config-upstream-headers-custom) configuration parameter.
+
+## Caching
+
+The Request Callout plugin supports caching of callout requests. Globally, the 
+behavior is configured via the [`config.cache`](/plugins/request-callout/reference/#schema--config-cache) setting.
+
+### Cache key
+
+The callout cache key is the SHA-256 of the following proxy request and callout 
+request components:
+- Proxy request:
+  * Route ID
+  * Plugin ID
+  * Consumer ID (if a Consumer is set)
+  * Consumer Groups (if at least one Consumer Group exists)
+- Callout request:
+  * Callout name
+  * HTTP method
+  * Callout URL
+  * Callout query params (sorted by key name)
+  * Callout headers (sorted by header name)
+  * Callout request body (sorted by key name, if a key-value format like JSON is 
+    used)
+
+{:.info}
+> By default, only callout request query and headers are part of the cache key, 
+and incoming proxy request headers and query params are not.
+If callout headers and query params have a `forward` flag set, then incoming request headers and query params are forwarded in the callout requests, causing them to be part of the 
+cache key.

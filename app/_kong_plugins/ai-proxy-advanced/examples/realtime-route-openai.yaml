@@ -1,4 +1,4 @@
-title: 'OpenAI realtime generation route'
+title: 'Realtime generation route'
 description: 'Configure a realtime generation route for streaming responses using OpenAI model.'
 
 weight: 900
