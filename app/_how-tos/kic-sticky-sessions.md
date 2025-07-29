@@ -56,7 +56,7 @@ Sticky sessions, also known as session affinity, ensure that requests from the s
 - **Graceful shutdowns**: Allowing existing connections to complete before terminating pods
 - **Connection affinity**: Applications that benefit from maintaining state between requests
 
-{{site.base_gateway}} supports sticky sessions through the `sticky-sessions` load balancing algorithm, which uses browser-managed cookies to maintain session affinity.
+{% new_in 3.11 %} {{site.base_gateway}} supports sticky sessions through the `sticky-sessions` load balancing algorithm, which uses browser-managed cookies to maintain session affinity.
 
 ## Deploy additional echo replicas
 
