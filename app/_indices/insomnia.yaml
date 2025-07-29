@@ -72,10 +72,21 @@ sections:
       - path: /insomnia/collected-data/
       - path: /insomnia/incident-response/
       - path: /how-to/manage-secrets-in-insomnia-with-1password/
+  
+  - title: Inso CLI
+    items:
+      - path: /inso-cli/
+      - path: /inso-cli/reference/
+      - path: /inso-cli/configuration/
+      - path: /inso-cli/continuous-integration/
+      - path: /how-to/run-inso-cli-on-docker/
+      - path: /inso-cli/sbom/
+      - path: /inso-cli/verify-binary-provenance/
+      - path: /inso-cli/verify-docker-image-provenance/
+      - path: /inso-cli/verify-docker-image-signature/
 
   - title: Reference
     items:
-      - path: /inso-cli/
       - path: /insomnia/accounts/
       - path: /insomnia/allowlist/
       - path: /insomnia/dynamic-variables/
