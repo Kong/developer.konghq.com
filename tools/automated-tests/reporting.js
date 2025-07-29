@@ -87,12 +87,20 @@ function processAssertions(assertions) {
     .join("\n");
 }
 
+function processStatus(result) {
+  if (isFailureExpected(result)) {
+    return "other";
+  } else {
+    return result.status;
+  }
+}
+
 function buildTestList(results) {
-  return results.map(({ file, status, duration, assertions }) => ({
-    name: file,
-    message: processAssertions(assertions),
-    status,
-    duration,
+  return results.map((result) => ({
+    name: result.file,
+    message: processAssertions(result.assertions),
+    status: processStatus(result),
+    duration: result.duration,
   }));
 }
 
