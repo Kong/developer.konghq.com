@@ -9,7 +9,7 @@ curl -X POST "$ISSUER_URL/oauth/token" \
   -d "grant_type=client_credentials" \
   -d "client_id=$CLIENT_ID" \
   -d "client_secret=$CLIENT_SECRET" \
-  -d "scope=Scope"
+  -d "scope=my-scope"
 ```
 <!--vale on-->
 

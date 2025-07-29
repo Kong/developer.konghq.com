@@ -22,7 +22,7 @@ description: Learn how to configure Kong Identity with OIDC.
 tldr: 
   q: How do I configure Kong Identity with OIDC?
   a: | 
-    Create a Kong Identity auth server, scope, claim, and client. Configure the OIDC plugin with your issuer URL, client ID, and client secret. Generate a client token by sending a POST request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to the Gateway Service.
+    Create a Kong Identity auth server, scope, claim, and client. Configure the OpenID Connect (OIDC) plugin with your issuer URL, client ID, and client secret. Generate a client token by sending a POST request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to a protected  Gateway Service.
 
 tools:
     # - konnect-api
@@ -40,9 +40,9 @@ faqs:
     a: |
       For Consumer-scoped plugins, do the following:
       - Create a Consumer per client in the respective control plane.
-      - You don't need to migrate the client credential to a Consumer credential.
       - The OIDC plugin will map clients to Consumers using claims with the `consumer_claim` field.
       - Apply the Consumer-scoped plugin to the Consumer entity in the control plane.
+      You don't need to migrate the client credential to a Consumer credential.
   - q: Can I retrieve my client’s secret again?
     a: |
       No, the secret is only shared once when the client is created. Store it securely.
@@ -79,7 +79,7 @@ Export the control plane ID:
 export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
 ```
 
-[Enable the OIDC](/api/konnect/control-planes-config/v2/#/operations/create-plugin) plugin globally:
+Enable the OIDC plugin globally:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins/
