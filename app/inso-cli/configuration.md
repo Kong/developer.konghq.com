@@ -34,18 +34,19 @@ Inso CLI uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) for co
 
 You can also use the `--configuration $FILE` global option to specify the file to use.
 
-## Options
+## Inso CLI options
 
-Options from the configuration file are combined with option defaults and any explicit overrides specified in scripts or command invocations. The priority order works as follows:
+The `options` field in the configuration file can be used to define [global options](/inso-cli/reference/#global-flags). You can use any of the global flags in this field. Flags without arguments should be configured as booleans in the configuration file. For example, you can use the following configuration to show additional logs when running all commands:
 
+```yaml
+options:
+  verbose: true
+```
+
+Any options specified in this file will apply to all scripts and manual commands. You can override these options by specifying them explicitly when invoking a script or command. The priority order works as follows:
 1. Command options
-2. Configuration file options
-3. Default options
-
-Any options specified in this file will apply to all scripts and manual commands. You can override these options by specifying them explicitly when invoking a script or command.
-
-{:.info}
-> Only [global options](/inso-cli/reference/#global-flags) can be set in the configuration file.
+1. Configuration file options
+1. Default options
 
 ## Inso CLI scripts
 
