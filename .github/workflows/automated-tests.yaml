@@ -93,6 +93,6 @@ jobs:
           report-path: './tools/automated-tests/testReport.json'
           summary-report: true
           test-report: true
-          failed-folded: true
-          report-order: 'summary-report,test-report,failed-folded'
+          failed-folded-report: true
+          report-order: 'summary-report,test-report,failed-folded-report'
         if: always()
