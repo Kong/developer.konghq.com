@@ -40,21 +40,21 @@ columns:
   - title: Description
     key: description
 rows:
-  - type: `workspace`
+  - type: "`workspace`"
     description: Top‑level container for all project data. For example, anchors requests, environments, folders, and mocks.
-  - type: `environment`
+  - type: "`environment`"
     description: Scoped variable collections used to parameterize requests.
-  - type: `request`
+  - type: "`request`"
     description: Represents an individual API call, including HTTP, GraphQL, WebSocket, or gRPC operations.
-  - type: `response`
+  - type: "`response`"
     description: Sample or saved responses associated with requests, often used for documentation or testing.
-  - type: `folder`
+  - type: "`folder`"
     description: Organizational grouping of other entities such as requests and environments.
-  - type: `mock`
+  - type: "`mock`"
     description: Definitions of mock endpoints and behaviors for testing.
-  - type: `plugin`
+  - type: "`plugin`"
     description: Plugin configurations or metadata when workspace-level plugins are used.
-  - type: `test`
+  - type: "`test`"
     description: Test scripts or suites associated with requests or collections (where available).
 {% endtable %}
 
