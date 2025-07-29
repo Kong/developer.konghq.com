@@ -33,10 +33,11 @@ export async function testeableUrlsFromFiles(config, files) {
         }
         console.log(`Skipping file: ${relativeFilePath}. ${message}`);
 
+        const name = `[${frontmatter.name}](${config.productionUrl}${howToUrl})`;
         skipped.push({
-          name: howToUrl,
           status: "skipped",
           duration: 0,
+          name,
           message,
         });
       } else {

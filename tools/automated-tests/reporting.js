@@ -56,17 +56,18 @@ function summarizeFailures(failed) {
 function buildSummary(
   results,
   passed,
+  skipped,
   failedCount,
   expectedCount,
   start,
   stop
 ) {
   return {
-    tests: results.length,
+    tests: results.length + skipped.length,
     passed: passed.length,
     failed: failedCount,
     pending: 0,
-    skipped: 0,
+    skipped: skipped.length,
     other: expectedCount,
     suites: 1,
     start,
@@ -96,7 +97,7 @@ function processStatus(result) {
 
 function buildTestList(results) {
   return results.map((result) => ({
-    name: result.file,
+    name: result.name,
     message: processAssertions(result.assertions),
     status: processStatus(result),
     duration: result.duration,
@@ -104,7 +105,12 @@ function buildTestList(results) {
 }
 
 export async function logResults(results, start, stop) {
-  const { passed, failed, skipped } = categorizeResults(results);
+  const skippedInstructions = yaml.load(
+    await fs.readFile("./.automated-tests", "utf-8")
+  );
+  const { passed, failed, skipped } = categorizeResults(
+    results.concat(skippedInstructions)
+  );
   const { expectedCount, failedCount } = summarizeFailures(failed);
 
   const resultObject = {
@@ -115,6 +121,7 @@ export async function logResults(results, start, stop) {
       summary: buildSummary(
         results,
         passed,
+        skipped,
         failedCount,
         expectedCount,
         start,
