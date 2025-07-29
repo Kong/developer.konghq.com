@@ -54,7 +54,7 @@ automated_tests: false
 
 ## Configure the AI Proxy plugin
 
-Proxy requests to Cohere’s `command-a-03-2025` model:
+Configure the [AI Proxy](/plugins/ai-proxy/) plugin to proxy requests to Cohere’s `command-a-03-2025` model:
 
 {% entity_examples %}
 entities:
