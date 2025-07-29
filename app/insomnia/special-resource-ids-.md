@@ -26,17 +26,15 @@ Insomnia uses **special resource IDs** as placeholder identifiers to represent c
 
 ## Types of special resource IDs
 Use the following table to learn about our special resource IDs:
-- blocks:
-    - type: table
-      config:
-        columns:
-          - title: Placeholder format
-            key: placeholder
-          - title: Represents
-            key: represents
-          - title: Description
-            key: description
-        rows:
+{% table %}
+    columns:
+      - title: Placeholder format
+        key: placeholder
+      - title: Represents
+        key: represents
+      - title: Description
+        key: description
+    rows:
           - placeholder: `__WORKSPACE_ID__`
             represents: Active workspace identity
             description: Abstract pointer to the workspace in JSON, rather than exposing its real ID.
@@ -46,6 +44,7 @@ Use the following table to learn about our special resource IDs:
           - placeholder: `__<NAME>_<NUMBER>__`.
             represents: Random user-created entities (requests, environments)
             description: Placeholder IDs that are generated to avoid collisions and support consistent ID mapping during imports. For example: `__request_1__`, `__env_2__`.
+{% endtable %}
 
 ## Behaviour and usage
 When Insomnia produces structured JSON data, it replaces real UUIDs with **placeholder IDs**. These IDs serve specific internal purposes:

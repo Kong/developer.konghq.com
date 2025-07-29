@@ -12,7 +12,7 @@ tags:
 
 tldr:
   q: How do I export an API design document, collection, or a request in Insomnia?
-  a: In your workspace, open the Document or Collection menu, click **Import/Export → Export Data**, select the target format and scope, and then save the file.
+  a: In your workspace, open the Document or Collection menu, click **Import/Export → Export Data**, select the target format and scope, and then export the file.
 
 faqs:
   - q: Can I export just one request?
