@@ -4,12 +4,7 @@ import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
-import {
-  addEnvVariablesFromContainer,
-  executeCommand,
-  removeContainer,
-  getLiveEnv,
-} from "../docker-helper.js";
+import { executeCommand } from "../docker-helper.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
@@ -173,6 +168,7 @@ export async function runInstructions(instructions, runtimeConfig, container) {
 }
 
 export async function runInstructionsFile(file, runtimeConfig, container) {
+  const start = Date.now();
   log(`Running file: ${file}`);
   const fileContent = await fs.readFile(file, "utf8");
   const instructions = yaml.load(fileContent);
@@ -182,7 +178,8 @@ export async function runInstructionsFile(file, runtimeConfig, container) {
     container
   );
 
-  const result = { file, status, assertions };
+  const duration = Date.now() - start;
+  const result = { file, status, assertions, duration };
   if (result.status === "error" && !process.env.CONTINUE_ON_ERROR) {
     logResult(result);
     throw new ExitOnFailure();
