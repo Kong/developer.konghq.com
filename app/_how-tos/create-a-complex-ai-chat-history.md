@@ -5,7 +5,7 @@ description: Use the AI Prompt Decorator plugin to enforce privacy-aware classif
 
 tldr:
   q: How do I guide LLM behavior to perform safe, privacy-aware classification of survey responses?
-  a: Route requests to Cohere using the AI Proxy plugin and configure the AI Prompt Decorator plugin to establish task-specific behavior, tone, and privacy rules.
+  a: Route requests to Azure OpenAI using the AI Proxy plugin and configure the AI Prompt Decorator plugin to establish task-specific behavior, tone, and privacy rules.
 
 products:
   - gateway
@@ -68,18 +68,24 @@ entities:
       config:
         route_type: llm/v1/chat
         auth:
-          header_name: Authorization
-          header_value: Bearer ${cohere_api_key}
+          header_name: api-key
+          header_value: Bearer ${azure_api_key}
         model:
-          provider: cohere
-          name: command-a-03-2025
+          provider: azure
+          name: gpt-4.1
           options:
-            max_tokens: 512
-            temperature: 0.7
+            azure_api_version: '2024-12-01-preview'
+            azure_instance: ${azure_instance_name}
+            azure_deployment_id: ${azure_deployment_id}
 variables:
   cohere_api_key:
-    value: $COHERE_API_KEY
+    value: $AZURE_API_KEY
+  azure_instance_name:
+    value: $AZURE_INSTANCE_NAME
+  azure_deployment_id:
+    value: $AZURE_DEPLOYMENT_ID
 {% endentity_examples %}
+
 
 ## Shape classification behavior with the Prompt Decorator plugin
 
@@ -129,7 +135,8 @@ headers:
 body:
   messages:
     - role: user
-      content: Classify this response My name is Robin Kowalski and I found the course well-organized, and the instructor was very clear and engaging.
+      content: |
+        Classify this response: "My name is Robin Kowalski and I found the course well-organized, and the instructor was very clear and engaging."
 status_code: 200
 {% endvalidation %}
 
@@ -142,7 +149,8 @@ headers:
 body:
   messages:
     - role: user
-      content: Classify this response Some parts of the training were useful, others not so much. It was okay overall. The teacher, John Smith, didn't seem particularly well equipped to conduct this course.
+      content: |
+         Classify this response: "Some parts of the training were useful, others not so much. It was okay overall. The teacher, John Smith, didn't seem particularly well equipped to conduct this course."
 status_code: 200
 {% endvalidation %}
 
@@ -155,6 +163,7 @@ headers:
 body:
   messages:
     - role: user
-      content: Classify this responseThe platform was buggy, and I didn’t find the sessions helpful at all.
+      content: |
+       Classify this response: "The platform used during the course was buggy, and I didn’t find the sessions helpful at all."
 status_code: 200
 {% endvalidation %}
