@@ -80,6 +80,14 @@ variables:
 
 Now we can configure the AI Prompt Decorator plugin. In this configuration, we’ll use the plugin to prepend a set of ethical, security, and compliance-focused instructions to every chat request. These instructions enforce responsible behavior from the AI, such as refusing biased prompts, protecting personal data, and avoiding unsafe outputs.
 
+{:.info}
+> The [AI Prompt Decorator plugin](/plugins/ai-prompt-decorator/) is also helpful for ensuring the LLM [responds only to questions related to the injected RAG context](/how-to/compress-llm-prompts/#govern-your-llm-pipeline). When combined with the RAG Injector plugin, this keeps responses grounded in retrieved content and rejects unrelated queries.
+>
+> You can also use the AI Prompt Decorator plugin to [inject example dialogue](/plugins/ai-prompt-decorator/examples/create-a-complex-chat-history/) that defines task-specific behavior or tone—for example, simulating a data scientist classifying survey results.
+>
+> Unlike the [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/#how-it-works), [AI AWS Guardrails](/plugins/ai-aws-guardrail/), or [AI Azure Content Safety](/plugins/azure-content-safety/) plugins—which return fixed system messages or 404 errors when content is blocked—the AI Prompt Decorator lets you customize the message shown to users when a prompt violates defined guardrails.
+
+
 {% entity_examples %}
 entities:
   plugins:
