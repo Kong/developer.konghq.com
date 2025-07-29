@@ -19,7 +19,9 @@ related_resources:
   - text: Import an API specification as a design document in Insomnia
     url: /how-to/import-an-api-spec-as-a-document/
   - text: Export an API specification as a design document in Insomnia
-    url: /how-to/export-an-api-spec-as-a-document/    
+    url: /how-to/export-an-api-spec-as-a-document/
+  - text: Resource types reference
+    url: /reference/resource-types-reference/     
 ---
 Insomnia uses **special resource IDs** as placeholder identifiers to represent core workspace entities in structured JSON data. These placeholders enable accurate reconstruction of object relationships without exposing stable IDs.
 
@@ -27,23 +29,23 @@ Insomnia uses **special resource IDs** as placeholder identifiers to represent c
 ## Types of special resource IDs
 Use the following table to learn about our special resource IDs:
 {% table %}
-    columns:
-      - title: Placeholder format
-        key: placeholder
-      - title: Represents
-        key: represents
-      - title: Description
-        key: description
-    rows:
-          - placeholder: `__WORKSPACE_ID__`
-            represents: Active workspace identity
-            description: Abstract pointer to the workspace in JSON, rather than exposing its real ID.
-          - placeholder: `__BASE_ENVIRONMENT_ID__`
-            represents: Workspace’s base environment
-            description: Identifies the default environment set for a workspace.
-          - placeholder: `__<NAME>_<NUMBER>__`.
-            represents: Random user-created entities (requests, environments)
-            description: Placeholder IDs that are generated to avoid collisions and support consistent ID mapping during imports. For example: `__request_1__`, `__env_2__`.
+columns:
+  - title: Placeholder format
+    key: placeholder
+  - title: Represents
+    key: represents
+  - title: Description
+    key: description
+rows:
+  - placeholder: `__WORKSPACE_ID__`
+    represents: Active workspace identity
+    description: Abstract pointer to the workspace in JSON, rather than exposing its real ID.
+  - placeholder: `__BASE_ENVIRONMENT_ID__`
+    represents: Workspace’s base environment
+    description: Identifies the default environment set for a workspace.
+  - placeholder: `__<NAME>_<NUMBER>__`.
+    represents: Random user-created entities (requests, environments)
+    description: Placeholder IDs that are generated to avoid collisions and support consistent ID mapping during imports. For example: `__request_1__`, `__env_2__`.
 {% endtable %}
 
 ## Behaviour and usage

@@ -12,11 +12,11 @@ tags:
 
 tldr:
   q: How do I export an API design document, collection, or a request in Insomnia?
-  a: In your workspace, open the Document or Collection menu, click **Import/Export → Export Data**, select the target format and scope, and then export the file.
+  a: In your workspace, open the Document or Collection menu, click **Preferences → Data**, select the target format and scope, and then export the file.
 
 faqs:
   - q: Can I export just one request?
-    a: Yes. Click **Export Data → Single Request** from the Document or Collection menu or Preferences → Data. Then select just that request.
+    a: Yes. Click **Export Data → Single Request** from the Document or Collection menu or click  **Preferences → Data**. Then select just that request.
 prereqs:
   inline:
     - title: API specification
@@ -38,6 +38,8 @@ related_resources:
     url: /insomnia/documents/
   - text: Import an API specification as a design document in Insomnia
     url: /how-to/import-an-api-spec-as-a-document/
+  - text: Resource types reference
+    url: /reference/resource-types-reference/   
 ---
 Export your API design documents from Insomnia to capture the exact endpoints and schemas that you use, ensuring accurate documentation, seamless teamwork, and easy integration with tools such as ([/inso-cli/](https://developer.konghq.com/inso-cli/)) or CI/CD workflows.
 

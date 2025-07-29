@@ -20,40 +20,42 @@ related_resources:
   - text: Import an API specification as a design document in Insomnia
     url: /how-to/import-an-api-spec-as-a-document/
   - text: Export your API design document or request data
-    url: /how-to/export-an-api-spec-as-a-document/         
+    url: /how-to/export-an-api-spec-as-a-document/
+  - text: Special resource IDs
+    url: /reference/special-resource-ids/   
 ---
 
-Resource types define the structure and identity of key entities like requests, workspaces, environments, and API design documents in  exported or synced data.
+Resource types define the structure and role of key entities in exported or synced Insomnia data, for example requests, workspaces, environments, and API design documents. 
 
-Resource types define the scope of structured data that Insomnia can interpret and operate on. By clearly identifying each entity’s role—such as a request, environment, or workspace—they enable consistent behavior across Insomnia’s interface, CLI tooling, CI pipelines, and syncing systems. This structure also helps keep workspace data clean and reliable by filtering out unsupported or obsolete metadata, ensuring only valid and meaningful entities are preserved during export, import, and collaboration.
+Each object in the resources array includes a `_type` field that tells Insomnia how to interpret and process it. These types ensure consistent behavior across the Insomnia app, CLI tools, CI pipelines, and sync systems. By clearly identifying supported entities, resource types help maintain clean, reliable workspace data and exclude obsolete or unsupported metadata. 
 
-Each object in a resources array includes a `_type field` that tells Insomnia how to interpret and process it. These resource types are used by the Insomnia application itself, by automation tools like the CLI importer/exporter. You'll encounter them when inspecting exported workspaces, syncing data across devices, or integrating Insomnia projects with Git workflows or external systems.
+You’ll encounter them during export and import operations, across device syncs, and when you integrate Insomnia projects with Git or automation workflows.
 
 ## Core resource types
 
 {% table %}
-    columns:
-      - title: Resource type (`_type`)
-        key: type
-      - title: Description
-        key: description
-    rows:
-      - type: `workspace`
-        description: Top‑level container for all project data. For example, anchors requests, environments, folders, and mocks.
-      - type: `environment`
-        description: Scoped variable collections used to parameterize requests.
-      - type: `request`
-        description: Represents an individual API call, including HTTP, GraphQL, WebSocket, or gRPC operations.
-      - type: `response`
-        description: Sample or saved responses associated with requests, often used for documentation or testing.
-      - type: `folder`
-        description: Organizational grouping of other entities such as requests and environments.
-      - type: `mock`
-        description: Definitions of mock endpoints and behaviors for testing.
-      - type: `plugin`
-        description: Plugin configurations or metadata when workspace-level plugins are used.
-      - type: `test`
-        description: Test scripts or suites associated with requests or collections (where available).
+columns:
+  - title: Resource type (`_type`)
+    key: type
+  - title: Description
+    key: description
+rows:
+  - type: `workspace`
+    description: Top‑level container for all project data. For example, anchors requests, environments, folders, and mocks.
+  - type: `environment`
+    description: Scoped variable collections used to parameterize requests.
+  - type: `request`
+    description: Represents an individual API call, including HTTP, GraphQL, WebSocket, or gRPC operations.
+  - type: `response`
+    description: Sample or saved responses associated with requests, often used for documentation or testing.
+  - type: `folder`
+    description: Organizational grouping of other entities such as requests and environments.
+  - type: `mock`
+    description: Definitions of mock endpoints and behaviors for testing.
+  - type: `plugin`
+    description: Plugin configurations or metadata when workspace-level plugins are used.
+  - type: `test`
+    description: Test scripts or suites associated with requests or collections (where available).
 {% endtable %}
 
 ## Logic
