@@ -1,5 +1,5 @@
 ---
-title: Enforce responsible AI behavior using prompt decorator
+title: Enforce responsible AI behavior using the AI Prompt Decorator plugin
 content_type: how_to
 description: Use the AI Prompt Decorator plugin to inject ethical and safety guidelines before proxying requests to Cohere via Kong AI Gateway.
 
