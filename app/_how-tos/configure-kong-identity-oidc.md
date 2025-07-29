@@ -22,7 +22,7 @@ description: Learn how to configure Kong Identity with OIDC.
 tldr: 
   q: How do I configure Kong Identity with OIDC?
   a: | 
-    Create a Kong Identity auth server, scope, claim, and client. Configure the OpenID Connect (OIDC) plugin with your issuer URL, client ID, and client secret. Generate a client token by sending a POST request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to a protected  Gateway Service.
+    Create a Kong Identity auth server, scope, claim, and client. Configure the OpenID Connect (OIDC) plugin with your issuer URL, audience, and `bearer` for the `auth_method`. Generate a client token by sending a POST request to `$ISSUER_URL/oauth/token` and use the access token in a header when you send a request to a protected  Gateway Service.
 
 tools:
     # - konnect-api
@@ -99,9 +99,8 @@ body:
 <!--vale on-->
 
 In this example:
-* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, Kong Identity). 
-* `auth_methods`: Specifies that the plugin should use client credentials (client ID and secret) for authentication.
-* `client_credentials_param_type`: Restricts client credential lookup to request headers only.
+* `issuer`: Setting that connects the plugin to your IdP (in this case, Kong Identity). 
+* `auth_methods`: Specifies that the plugin should use bearer for authentication.
 
 {% include /how-tos/steps/konnect-identity-generate-token.md %}
 
