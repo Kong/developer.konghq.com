@@ -129,6 +129,27 @@ Starting in {{ site.kic_product_name }} 3.5, several Kong-specific resources hav
 
 These deprecated resources will be removed in a future version. We recommend migrating to the Gateway API equivalents as soon as possible.
 
+#### Gateway API Support
+
+Starting in {{ site.kic_product_name }} 3.5, {{ site.kic_product_name }} supports Gateway API version 1.3.
+
+To upgrade Gateway API from 1.2 to 1.3:
+
+1. Ensure you are using {{ site.kic_product_name }} version 3.5 or later.
+2. Install Gateway API 1.3 CRDs:
+
+   ```bash
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
+   ```
+
+   For experimental features like CORS filters, install the experimental channel:
+
+   ```bash
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
+   ```
+
+3. [Upgrade to {{ site.kic_product_name }} v3.5](#upgrade-kong-ingress-controller).
+
 #### New Features
 
 {{ site.kic_product_name }} 3.5 introduces several new features:
