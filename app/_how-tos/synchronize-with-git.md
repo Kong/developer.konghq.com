@@ -18,6 +18,9 @@ tier: pro
 min_version:
   insomnia: '11.0'
 
+search_aliases:
+  - git sync
+
 prereqs:
     inline:
     - title: Git repository
@@ -72,14 +75,6 @@ If your Git repository already contains Insomnia content, you will be prompted t
 {:.info}
 > {% new_in 11.2 %} If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in version 11.0.
 
-## Create a new branch
-
-Insomnia synchronizes with the repository's default branch, but it's a good practice to make changes on a different branch.
-
-1. Click the name of the branch at the bottom of the left pane to see the Git sync menu.
-1. Click **Branches**.
-1. Enter a name for the new branch and click **Create**.
-
 ## Commit and push the content to your repository
 
 Once you've created content or made changes to existing content in your project, you can push the changes to your repository:
@@ -89,3 +84,5 @@ Once you've created content or made changes to existing content in your project,
 1. Enter a commit message.
 1. Stage changes by clicking the **+** button next to the changes that you want to commit to the repository.
 1. Click **Commit** or **Commit and push**.
+
+   {% new_in 11.4 %} Git status notifications will appear at the bottom right corner of the window.
