@@ -1,0 +1,29 @@
+setup:
+  - gateway: '3.4'
+prereqs:
+  blocks: []
+steps:
+  - name: request-check
+    config:
+      url: http://localhost:8001/event-hooks/
+      headers: []
+      body:
+        source: crud
+        event: consumers
+        handler: lambda
+        config:
+          functions:
+            - >-
+              return function (data, event, source, pid) local user =
+              data.entity.username error("Event Hook on consumer " .. user ..
+              "") end
+      method: POST
+      status_code: 201
+  - name: request-check
+    config:
+      url: http://localhost:8001/consumers/
+      headers: []
+      body:
+        username: my-consumer
+      method: POST
+      status_code: 201

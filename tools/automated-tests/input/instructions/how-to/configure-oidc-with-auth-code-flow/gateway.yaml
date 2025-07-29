@@ -1,0 +1,52 @@
+setup:
+  - gateway: '3.4'
+prereqs:
+  blocks:
+    - |
+      echo '
+      _format_version: "3.0"
+      services:
+        - name: example-service
+          url: http://httpbin.konghq.com/anything
+      routes:
+        - name: example-route
+          paths:
+          - "/anything"
+          service:
+            name: example-service
+      ' | deck gateway apply -
+steps:
+  - name: env-variables
+    config:
+      DECK_ISSUER: http://host.docker.internal:8080/realms/master
+      DECK_CLIENT_ID: kong
+      DECK_CLIENT_SECRET: UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: openid-connect
+        service: example-service
+        config:
+          issuer: "${{ env "DECK_ISSUER" }}"
+          client_id:
+          - "${{ env "DECK_CLIENT_ID" }}"
+          client_secret:
+          - "${{ env "DECK_CLIENT_SECRET" }}"
+          client_auth:
+          - client_secret_post
+          auth_methods:
+          - authorization_code
+          - session
+          response_mode: form_post
+          preserve_query_args: true
+          login_action: redirect
+          login_tokens:
+          authorization_endpoint: http://localhost:8080
+    ' | deck gateway apply -
+  - name: request-check
+    config:
+      method: GET
+      status_code: 302
+      display_headers: true
+      url: http://localhost:8000/anything?hello=world

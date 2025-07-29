@@ -1,0 +1,31 @@
+setup:
+  - konnect
+prereqs:
+  blocks: []
+steps:
+  - |2
+     curl -X POST "https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/config-stores" \
+         -H "Authorization: Bearer $KONNECT_TOKEN" \
+         --json '{
+           "name": "my-config-store"
+         }'
+  - |
+    echo '
+    _format_version: "3.0"
+    vaults:
+      - name: konnect
+        prefix: mysecretvault
+        description: Storing secrets in Konnect
+        config:
+          config_store_id: "${{ env "DECK_CONFIG_STORE_ID" }}"
+    ' | deck gateway apply -
+  - |2
+     curl -X POST "https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/" \
+         -H "Authorization: Bearer $KONNECT_TOKEN" \
+         --json '{
+           "key": "secret-key",
+           "value": "my-secret-value"
+         }'
+  - |2
+     curl -X GET "https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/" \
+         -H "Authorization: Bearer $KONNECT_TOKEN"

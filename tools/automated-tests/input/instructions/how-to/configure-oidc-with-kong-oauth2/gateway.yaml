@@ -1,0 +1,91 @@
+setup:
+  - gateway: '3.4'
+prereqs:
+  blocks:
+    - |
+      echo '
+      _format_version: "3.0"
+      services:
+        - name: example-service
+          url: http://httpbin.konghq.com/anything
+      routes:
+        - name: example-route
+          paths:
+          - "/anything"
+          service:
+            name: example-service
+      ' | deck gateway apply -
+steps:
+  - name: env-variables
+    config:
+      DECK_ISSUER: http://host.docker.internal:8080/realms/master
+      DECK_CLIENT_ID: kong
+      DECK_CLIENT_SECRET: UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
+  - |
+    echo '
+    _format_version: "3.0"
+    consumers:
+      - username: alex
+        oauth2_credentials:
+        - client_secret: secret
+          client_id: client
+          hash_secret: true
+          name: oauth2-app
+    ' | deck gateway apply -
+  - name: env-variables
+    config:
+      DECK_PROVISION_KEY: $(uuidgen)
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: oauth2
+        route: example-route
+        config:
+          global_credentials: true
+          enable_client_credentials: true
+          provision_key: "${{ env "DECK_PROVISION_KEY" }}"
+    ' | deck gateway apply -
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: openid-connect
+        service: example-service
+        config:
+          issuer: "${{ env "DECK_ISSUER" }}"
+          client_id:
+          - "${{ env "DECK_CLIENT_ID" }}"
+          client_secret:
+          - "${{ env "DECK_CLIENT_SECRET" }}"
+          client_auth:
+          - client_secret_post
+          auth_methods:
+          - kong_oauth2
+          bearer_token_param_type:
+          - header
+    ' | deck gateway apply -
+  - name: request-check
+    config:
+      insecure: true
+      method: POST
+      on_prem_url: https://localhost:8443
+      headers:
+        - 'Content-Type: application/json'
+      body:
+        client_id: client
+        client_secret: secret
+        grant_type: client_credentials
+      extract_body:
+        - name: access_token
+          variable: ACCESS_TOKEN
+      status_code: 200
+      url: https://localhost:8443/anything/oauth2/token
+  - name: request-check
+    config:
+      method: GET
+      status_code: 200
+      display_headers: true
+      headers:
+        - 'Authorization: Bearer $ACCESS_TOKEN'
+      url: http://localhost:8000/anything

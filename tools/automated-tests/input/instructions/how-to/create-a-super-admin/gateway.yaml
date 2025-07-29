@@ -1,0 +1,40 @@
+setup:
+  - gateway: '3.4'
+    rbac: true
+prereqs:
+  blocks: []
+steps:
+  - name: env-variables
+    config:
+      KONG_ADMIN_TOKEN: kong
+      ADMIN_NAME: tim
+      USER_TOKEN: my-admin-token
+  - name: control_plane_request
+    config:
+      method: POST
+      headers:
+        - 'Accept: application/json'
+        - 'Content-Type: application/json'
+        - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+      body:
+        name: $ADMIN_NAME
+        user_token: $USER_TOKEN
+      status_code: 201
+      url: http://localhost:8001/rbac/users
+  - name: control_plane_request
+    config:
+      method: POST
+      headers:
+        - 'Accept: application/json'
+        - 'Content-Type: application/json'
+        - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+      body:
+        roles: super-admin
+      status_code: 201
+      url: http://localhost:8001/rbac/users/$ADMIN_NAME/roles
+  - name: control_plane_request
+    config:
+      headers:
+        - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+      status_code: 200
+      url: http://localhost:8001/rbac/users/$ADMIN_NAME/roles

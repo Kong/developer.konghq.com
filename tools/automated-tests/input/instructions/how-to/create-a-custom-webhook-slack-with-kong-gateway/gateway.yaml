@@ -1,0 +1,31 @@
+setup:
+  - gateway: '3.4'
+prereqs:
+  blocks: []
+steps:
+  - name: request-check
+    config:
+      url: http://localhost:8001/event-hooks/
+      headers: []
+      body:
+        source: crud
+        event: consumers
+        handler: webhook-custom
+        on_change: true
+        config:
+          method: POST
+          url: $SLACK_WEBHOOK_URL
+          headers:
+            Content-type: application/json
+          payload:
+            text: new consumer added
+      method: POST
+      status_code: 201
+  - name: request-check
+    config:
+      url: http://localhost:8001/consumers/
+      headers: []
+      body:
+        username: my-consumer
+      method: POST
+      status_code: 201

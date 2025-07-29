@@ -1,0 +1,114 @@
+setup:
+  - gateway: '3.4'
+prereqs:
+  blocks:
+    - |
+      echo '
+      _format_version: "3.0"
+      services:
+        - name: example-service
+          url: http://httpbin.konghq.com/anything
+      routes:
+        - name: example-route
+          paths:
+          - "/anything"
+          service:
+            name: example-service
+      ' | deck gateway apply -
+steps:
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: key-auth
+        config:
+          key_names:
+          - apikey
+    ' | deck gateway apply -
+  - |
+    echo '
+    _format_version: "3.0"
+    consumer_groups:
+      - name: Free
+      - name: Basic
+      - name: Premium
+    ' | deck gateway apply -
+  - |
+    echo '
+    _format_version: "3.0"
+    consumers:
+      - username: Amal
+        groups:
+        - name: Free
+        keyauth_credentials:
+        - key: amal
+      - username: Dana
+        groups:
+        - name: Basic
+        keyauth_credentials:
+        - key: dana
+      - username: Mahan
+        groups:
+        - name: Premium
+        keyauth_credentials:
+        - key: mahan
+    ' | deck gateway apply -
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: rate-limiting-advanced
+        consumer_group: Free
+        config:
+          limit:
+          - 3
+          window_size:
+          - 30
+          window_type: fixed
+          retry_after_jitter_max: 0
+          namespace: free
+      - name: rate-limiting-advanced
+        consumer_group: Basic
+        config:
+          limit:
+          - 5
+          window_size:
+          - 30
+          window_type: sliding
+          retry_after_jitter_max: 0
+          namespace: basic
+      - name: rate-limiting-advanced
+        consumer_group: Premium
+        config:
+          limit:
+          - 10
+          window_size:
+          - 30
+          window_type: sliding
+          retry_after_jitter_max: 0
+          namespace: premium
+    ' | deck gateway apply -
+  - name: rate-limit-check
+    config:
+      message: API rate limit exceeded
+      status_code: 429
+      iterations: 4
+      headers:
+        - apikey:amal
+      url: http://localhost:8000/anything
+  - name: rate-limit-check
+    config:
+      message: API rate limit exceeded
+      status_code: 429
+      iterations: 6
+      headers:
+        - apikey:dana
+      url: http://localhost:8000/anything
+  - name: rate-limit-check
+    config:
+      message: API rate limit exceeded
+      status_code: 429
+      iterations: 11
+      headers:
+        - apikey:mahan
+      url: http://localhost:8000/anything

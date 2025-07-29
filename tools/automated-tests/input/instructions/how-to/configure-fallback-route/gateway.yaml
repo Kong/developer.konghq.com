@@ -1,0 +1,46 @@
+setup:
+  - gateway: '3.4'
+prereqs:
+  blocks:
+    - |
+      echo '
+      _format_version: "3.0"
+      services:
+        - name: example-service
+          url: http://httpbin.konghq.com/anything
+      routes:
+        - name: example-route
+          paths:
+          - "/anything"
+          service:
+            name: example-service
+      ' | deck gateway apply -
+steps:
+  - name: request-check
+    config:
+      status_code: 200
+      display_headers: true
+      url: http://localhost:8000/anything
+  - name: request-check
+    config:
+      status_code: 404
+      display_headers: true
+      url: http://localhost:8000/
+  - |
+    echo '
+    _format_version: "3.0"
+    services:
+      - name: fallback_service
+        url: http://httpbun.com
+    routes:
+      - name: fallback_route
+        service:
+          name: fallback_service
+        paths:
+        - "/"
+    ' | deck gateway apply -
+  - name: request-check
+    config:
+      status_code: 302
+      display_headers: true
+      url: http://localhost:8000/

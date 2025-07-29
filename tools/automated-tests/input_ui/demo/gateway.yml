@@ -1,0 +1,21 @@
+steps:
+  - navigate: /default/services/create
+  - element: label
+    text: Protocol, host, port, and path
+    action: click
+  - element: label
+    label: Protocol
+    fill: https
+  - element: label
+    label: Host
+    fill: example.com
+  - element: label
+    label: Port
+    fill: '80'
+  - element: label
+    label: Path
+    fill: /
+  - element: button
+    text: Save
+    action: click
+

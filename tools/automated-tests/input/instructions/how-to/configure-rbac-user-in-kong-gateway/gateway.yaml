@@ -1,0 +1,63 @@
+setup:
+  - gateway: '3.4'
+    rbac: true
+prereqs:
+  blocks: []
+steps:
+  - name: control_plane_request
+    config:
+      method: POST
+      body:
+        name: alex
+        user_token: alex-token
+      headers:
+        - Kong-Admin-Token:kong
+      status_code: 201
+      url: http://localhost:8001/rbac/users
+  - name: control_plane_request
+    config:
+      method: POST
+      headers:
+        - Kong-Admin-Token:kong
+      body:
+        name: dev
+      status_code: 201
+      url: http://localhost:8001/rbac/roles
+  - name: control_plane_request
+    config:
+      method: POST
+      headers:
+        - Kong-Admin-Token:kong
+      body:
+        endpoint: /services/
+        workspace: default
+        actions:
+          - '*'
+      status_code: 201
+      url: http://localhost:8001/rbac/roles/dev/endpoints
+  - name: control_plane_request
+    config:
+      method: POST
+      headers:
+        - Kong-Admin-Token:kong
+      body:
+        roles: dev
+      status_code: 201
+      url: http://localhost:8001/rbac/users/alex/roles
+  - name: control_plane_request
+    config:
+      headers:
+        - Kong-Admin-Token:alex-token
+      display_headers: true
+      status_code: 403
+      url: http://localhost:8001/routes
+  - name: control_plane_request
+    config:
+      method: POST
+      body:
+        name: test-service
+        host: httpbin.konghq.com
+      headers:
+        - Kong-Admin-Token:alex-token
+      status_code: 201
+      url: http://localhost:8001/services

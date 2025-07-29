@@ -1,0 +1,32 @@
+setup:
+  - konnect
+prereqs:
+  blocks:
+    - |
+      echo '
+      _format_version: "3.0"
+      services:
+        - name: example-service
+          url: http://httpbin.konghq.com/anything
+      routes:
+        - name: example-route
+          paths:
+          - "/anything"
+          service:
+            name: example-service
+      ' | deck gateway apply -
+steps:
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: statsd
+        config:
+          host: kong-quickstart-statsd
+          port: 8125
+    ' | deck gateway apply -
+  - name: request-check
+    config:
+      status_code: 200
+      display_headers: true
+      url: $KONNECT_PROXY_URL/anything

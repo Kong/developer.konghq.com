@@ -1,0 +1,82 @@
+setup:
+  - gateway: '3.4'
+prereqs:
+  blocks:
+    - |
+      echo '
+      _format_version: "3.0"
+      services:
+        - name: example-service
+          url: http://httpbin.konghq.com/anything
+      routes:
+        - name: example-route
+          paths:
+          - "/anything"
+          service:
+            name: example-service
+      ' | deck gateway apply -
+steps:
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: key-auth
+        service: example-service
+        config:
+          key_names:
+          - apikey
+          anonymous: 81823632-10c0-4098-a4f7-31062520c1e6
+    ' | deck gateway apply -
+  - |
+    echo '
+    _format_version: "3.0"
+    consumers:
+      - username: alex
+        keyauth_credentials:
+        - key: hello_world
+      - username: anonymous_users
+        id: 81823632-10c0-4098-a4f7-31062520c1e6
+    ' | deck gateway apply -
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: session
+        service: example-service
+        config:
+          storage: kong
+          cookie_secure: false
+    ' | deck gateway apply -
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: request-termination
+        service: example-service
+        consumer: anonymous_users
+        config:
+          status_code: 403
+          message: Forbidden
+    ' | deck gateway apply -
+  - name: unauthorized-check
+    config:
+      message: Forbidden
+      status_code: 403
+      url: http://localhost:8000/anything
+  - name: request-check
+    config:
+      headers:
+        - 'apikey: hello_world'
+      message: OK
+      status_code: 200
+      extract_headers:
+        - name: Set-Cookie
+          variable: COOKIE_HEADER
+      url: http://localhost:8000/anything
+  - name: request-check
+    config:
+      headers:
+        - 'cookie: $COOKIE_HEADER'
+      message: OK
+      status_code: 200
+      url: http://localhost:8000/anything

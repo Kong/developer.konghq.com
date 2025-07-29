@@ -1,0 +1,8 @@
+steps:
+  - Navigate to https://localhost:8002/default/services/create
+  - Click on 'Protocol, host, port, and path'
+  - Fill in the 'Protocol' input with `https`
+  - Fill in the 'Host' input with `example.com`
+  - Fill in the 'Port' input with `80`
+  - Fill in the 'Path' input with `/`
+  - Click on the Save button

@@ -1,0 +1,31 @@
+setup:
+  - konnect
+prereqs:
+  blocks:
+    - |
+      echo '
+      _format_version: "3.0"
+      services:
+        - name: example-service
+          url: http://httpbin.konghq.com/anything
+      routes:
+        - name: example-route
+          paths:
+          - "/anything"
+          service:
+            name: example-service
+      ' | deck gateway apply -
+steps:
+  - |
+    echo '
+    _format_version: "3.0"
+    plugins:
+      - name: prometheus
+        config:
+          status_code_metrics: true
+    ' | deck gateway apply -
+  - name: traffic-generator
+    config:
+      iterations: 60
+      sleep: 1
+      url: $KONNECT_PROXY_URL/anything
