@@ -106,7 +106,7 @@ Once you've uploaded the spec, you can also preview the way the spec will render
 
 ## Publish an API to a classic Dev Portal (v2)
 
-Using API Products, you can create and manage API products to productize your Services. Each API product consists of at least one API product version, and each API product version is connected to a Gateway Service. Creating API products is the first step in making your APIs and their documentation available to developers. API products are geo-specific and are not shared between [geographic regions](/konnect/geo/).
+Using API Products, you can create and manage API products to productize your Services. Each API product consists of at least one API product version, and each API product version is connected to a Gateway Service. Creating API products is the first step in making your APIs and their documentation available to developers. API products are geo-specific and are not shared between [geographic regions](/konnect-platform/geos/).
 
 This guide will walk you through creating an API product and productizing it by deploying it to the v2 Dev Portal.
 
