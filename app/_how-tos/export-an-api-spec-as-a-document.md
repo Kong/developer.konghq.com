@@ -1,5 +1,5 @@
 ---
-title: Export your API design document or request data in Insomnia
+title: Export your API design document or request data
 content_type: how_to
 
 products:
@@ -47,22 +47,22 @@ You can export the following formats from Insomnia:
 - Request
 
 To export a file from Insomnia, navigate to your workspace:
-- Click **Preferences**, and then click **Data**
-- Select an export option:
+1. Click **Preferences**, and then click **Data**
+2. Select an export option:
     - **Export the [file name] Document**: Export a single, specific API design document.
     - **Export the [project name] Project**: Export a project, including all associated API requests, design documents, and tests.
     - **Export all data**: Export all data from your all your workspaces.
     - **Create Run Button**: Create a sharable button that, when clicked, automatically opens a specific request or collection in the Insomnia application and executes it.
-- Click **Export**.
-- Choose a format to export the file as:
-    - **Insomnia v5**: A native JSON export format containing the full structure of Insomnia projects, including requests, environments, metadata, and documentation—ideal for backups or transferring between Insomnia instances. 
-    - **HAR - HTTP Archive Format**: A standardized, JSON‑based log of HTTP requests and responses (with timing and headers), used primarily for network-level debugging and performance analysis. 
-- Click **Done**.
+3. Click **Export**.
+4. Choose a format to export the file as:
+    - **Insomnia v5**: A native JSON export format that contains the full structure of Insomnia projects, including requests, environments, metadata, and documentation.
+    - **HAR - HTTP Archive Format**: A standardized, JSON‑based log of HTTP requests and responses that is used primarily for network-level debugging and performance analysis. 
+5. Click **Done**.
 
 ### Special resource IDs
 To ensure workspace identity is preserved at import and avoid collisions, exported Insomnia files include placeholder resource IDs like `__WORKSPACE_ID__` and `__BASE_ENVIRONMENT_ID__`. Insomnia replaces these during import to reconstruct the structure accurately. These IDs are automatically handled by the tool—no user editing necessary.
 
-For more information, refer to our Special resource IDs and resource type reference page.
+For more information, refer to our [Special resource IDs] () reference page.
 
 ### Resource types
 The export file includes a `data.resources` object with a `resources` array, each element represents an object of a specific resource type:

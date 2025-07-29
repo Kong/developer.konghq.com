@@ -1,6 +1,9 @@
 ---
-title: Resource Types (`data.resources`)
+title: Resource Types
+
 content_type: reference
+
+layout: reference
 
 products:
   - insomnia
@@ -14,8 +17,10 @@ tags:
   - serialization
 
 related_resources:
-  - text: Import and export overview
-    url: /insomnia/import-export-data/
+  - text: Import an API specification as a design document in Insomnia
+    url: /how-to/import-an-api-spec-as-a-document/
+  - text: Export your API design document or request data
+    url: /how-to/export-an-api-spec-as-a-document/         
 ---
 
 In Insomnia, resource types define the structure and identity of key entities like requests, workspaces, environments, and API design documents in  exported or synced data.

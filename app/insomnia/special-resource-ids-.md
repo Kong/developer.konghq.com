@@ -1,6 +1,8 @@
 ---
-title: Special Resource IDs
+title: Special resource IDs
 content_type: reference
+
+layout: reference
 
 products:
   - insomnia
@@ -58,4 +60,4 @@ Insomnia uses placeholder IDs to simplify how environments, workspaces, and rela
 - **During serialization**: Insomnia emits these IDs when generating structured JSON for syncing, CLI exports, or backups.
 - **In downstream consumers**: Tools like the Insomnia importer or internal sync logic detect placeholders, automatically map them to actual or newly assigned unique IDs to recreate data structures.
 - **No manual editing**: Users don’t need to modify or reconcile these IDs—each system handles resolution behind the scenes according to established logic.  
-- **Collision avoidance**: When importing into an environment with existing entities, these placeholder IDs ensure no overwriting occurs.:contentReference.
+- **Collision avoidance**: When importing into an environment with existing entities, these placeholder IDs ensure no overwriting occurs.
