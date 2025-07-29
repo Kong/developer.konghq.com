@@ -77,10 +77,9 @@ function buildSummary(
 function processAssertions(assertions) {
   return assertions
     .map((a) => {
-      try {
-        const json = JSON.parse(a);
-        return JSON.stringify(json, null, 2);
-      } catch (error) {
+      if (typeof a === "object") {
+        return JSON.stringify(a, null, 2);
+      } else {
         return a;
       }
     })
