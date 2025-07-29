@@ -50,7 +50,7 @@ Any options specified in this file will apply to all scripts and manual commands
 
 ## Inso CLI scripts
 
-Scripts in the Inso CLI configuration file can have any name, and can be nested. Scripts must be prefixed with `inso`.
+Scripts in the Inso CLI configuration file can have any name and can be nested. Scripts must be prefixed with `inso`.
 
 ## Inso CLI configuration example
 
