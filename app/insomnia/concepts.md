@@ -21,9 +21,6 @@ tags:
 - glossary
 - terminology
 
-tldr:
-    q: What do some of these terms mean in Insomnia?
-    a: Refer to our terminology guide to learn the meanings of any unfamiliar terms.
 
 ---
 ## User
