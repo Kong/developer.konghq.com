@@ -4,7 +4,7 @@ content_type: how_to
 breadcrumbs:
   - /kong-identity/
 
-tech_preview: true
+beta: true
 entities:
   - route
   - service
@@ -29,12 +29,6 @@ tools:
     - deck
   
 prereqs:
-  inline: 
-    - title: "{{site.konnect_short_name}} Labs"
-      content: |
-        {{site.konnect_short_name}} Labs is a program for people to experiment with early-stage {{site.konnect_short_name}} experiences. Kong Identity can be opted in through {{site.konnect_short_name}} Labs. 
-        You can view [Labs](https://cloud.konghq.com/global/labs/) in {{site.konnect_short_name}} 
-      icon_url: /assets/icons/world.svg
   entities:
     services:
       - example-service

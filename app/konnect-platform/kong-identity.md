@@ -2,7 +2,7 @@
 title: "Kong Identity"
 content_type: reference
 layout: reference
-tech_preview: true
+beta: true
 
 products:
     - konnect-platform
