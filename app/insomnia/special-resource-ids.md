@@ -37,15 +37,15 @@ columns:
   - title: Description
     key: description
 rows:
-  - placeholder: `__WORKSPACE_ID__`
+  - placeholder: "`__WORKSPACE_ID__`"
     represents: Active workspace identity
     description: Abstract pointer to the workspace in JSON, rather than exposing its real ID.
-  - placeholder: `__BASE_ENVIRONMENT_ID__`
+  - placeholder: "`__BASE_ENVIRONMENT_ID__`"
     represents: Workspace’s base environment
     description: Identifies the default environment set for a workspace.
-  - placeholder: `__<NAME>_<NUMBER>__`.
+  - placeholder: "`__<NAME>_<NUMBER>__`".
     represents: Random user-created entities (requests, environments)
-    description: Placeholder IDs that are generated to avoid collisions and support consistent ID mapping during imports. For example: `__request_1__`, `__env_2__`.
+    description: Placeholder IDs that are generated to avoid collisions and support consistent ID mapping during imports. For example: "`__request_1__`, `__env_2__`".
 {% endtable %}
 
 ## Behaviour and usage
