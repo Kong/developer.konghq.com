@@ -10,12 +10,16 @@ export function isFailureExpected(result) {
 }
 
 export function logResult(result) {
+  let icon;
   const statusIcons = {
     passed: "✅",
-    failed: isFailureExpected(result) ? "🤔" : "❌",
     skipped: "⚠️",
   };
-  const icon = statusIcons[result.status] || "❓";
+  if (result.status === "failed") {
+    icon = isFailureExpected(result) ? "🤔" : "❌";
+  } else {
+    icon = statusIcons[result.status] || "❓";
+  }
 
   process.stdout.write(`Test: ${result.file} ${icon}\n`);
 }
@@ -87,8 +91,16 @@ function processAssertions(assertions) {
     .join("\n");
 }
 
+function processMessage(result) {
+  if (result.message) {
+    return result.message;
+  } else {
+    return processAssertions(result.assertions);
+  }
+}
+
 function processStatus(result) {
-  if (isFailureExpected(result)) {
+  if (result.status === "failed" && isFailureExpected(result)) {
     return "other";
   } else {
     return result.status;
@@ -98,7 +110,7 @@ function processStatus(result) {
 function buildTestList(results) {
   return results.map((result) => ({
     name: result.name,
-    message: processAssertions(result.assertions),
+    message: processMessage(result),
     status: processStatus(result),
     duration: result.duration,
   }));
@@ -127,7 +139,7 @@ export async function logResults(results, start, stop) {
         start,
         stop
       ),
-      tests: buildTestList(results),
+      tests: buildTestList(results.concat(skipped)),
     },
   };
 
