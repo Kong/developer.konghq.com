@@ -5,7 +5,10 @@ extended_description: |
 
   For a detailed walkthrough, see [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).
 
-title: 'Only deny messages about a specific topic.'
+  {:.info}
+  > If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
+title: 'Only deny messages about a specific topic'
 
 weight: 900
 

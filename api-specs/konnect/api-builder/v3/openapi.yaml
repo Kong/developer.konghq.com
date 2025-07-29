@@ -1585,6 +1585,7 @@ components:
         domains:
           - web
           - mobile
+      default: {}
       additionalProperties:
         nullable: true
         description: 'Set of attributes with unique keys. Each key can include lowercase letters, numbers, hyphens, and underscores.'
@@ -1596,6 +1597,7 @@ components:
           minLength: 1
           maxLength: 512
           pattern: '^[^,<>]*$'
+      nullable: false
       title: API Attributes
     ApiFilterParameters:
       type: object
@@ -2925,6 +2927,8 @@ components:
               updated_at:
                 $ref: '#/components/schemas/UpdatedAt'
             additionalProperties: false
+            required:
+              - spec
             title: API Version
           examples:
             CreateApiVersionRequestExampleJson:

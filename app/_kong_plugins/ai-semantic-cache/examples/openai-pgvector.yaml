@@ -2,6 +2,13 @@ title: 'Set up with OpenAI and PGVector'
 
 description: 'Enable AI Semantic Caching with OpenAI embeddings API and a PGVector database.'
 
+extended_description: |
+
+  Enable AI Semantic Caching with OpenAI embeddings API and a PGVector database.
+
+  {:.info}
+  > If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+
 weight: 900
 requirements:
   - "The [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin is enabled"
@@ -13,7 +20,7 @@ variables:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key
 
-config: 
+config:
   embeddings:
     auth:
       header_name: Authorization

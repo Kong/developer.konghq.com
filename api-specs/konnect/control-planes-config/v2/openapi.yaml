@@ -5706,7 +5706,7 @@ components:
             timeout:
               description: Connection timeout.
               type: integer
-              default: 1000
+              default: 2000
               nullable: true
             username:
               description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. Requires Redis v6.0.0+.'
@@ -5755,8 +5755,8 @@ components:
             keepalive_pool_size: 256
             password: password
             port: 6379
-            read_timeout: 1000
-            send_timeout: 1000
+            read_timeout: 2000
+            send_timeout: 2000
             sentinel_nodes:
               - host: sentinel1.redis.server
                 port: 26379
@@ -5786,7 +5786,7 @@ components:
             connect_timeout:
               description: Connect timeout.
               type: integer
-              default: 1000
+              default: 2000
               nullable: true
             connection_is_proxied:
               description: 'If the connection to Redis is proxied, e.g., Envoy.'
@@ -5824,12 +5824,12 @@ components:
             read_timeout:
               description: Read timeout.
               type: integer
-              default: 1000
+              default: 2000
               nullable: true
             send_timeout:
               description: Send timeout.
               type: integer
-              default: 1000
+              default: 2000
               nullable: true
             sentinel_master:
               description: Sentinel master to use for Redis connections. Defining this implies using Redis Sentinel.
