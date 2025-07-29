@@ -85,7 +85,7 @@ Now we can configure the AI Prompt Decorator plugin. In this configuration, we�
 >
 > You can also use the AI Prompt Decorator plugin to [inject example dialogue](/plugins/ai-prompt-decorator/examples/create-a-complex-chat-history/) that defines task-specific behavior or tone—for example, simulating a data scientist classifying survey results.
 >
-> Unlike the [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/#how-it-works), [AI AWS Guardrails](/plugins/ai-aws-guardrail/), or [AI Azure Content Safety](/plugins/azure-content-safety/) plugins—which return fixed system messages or 404 errors when content is blocked—the AI Prompt Decorator lets you customize the message shown to users when a prompt violates defined guardrails.
+> Unlike the [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/#how-it-works), [AI AWS Guardrails](/plugins/ai-aws-guardrails/), or [AI Azure Content Safety](/plugins/ai-azure-content-safety/) plugins—which return fixed system messages or 404 errors when content is blocked—the AI Prompt Decorator lets you customize the message shown to users when a prompt violates defined guardrails.
 
 
 {% entity_examples %}
