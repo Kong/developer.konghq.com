@@ -114,7 +114,7 @@ async function runSteps(steps, runtimeConfig, container) {
 }
 
 export async function runInstructions(instructions, runtimeConfig, container) {
-  let result = {};
+  let result = { name: instructions.name };
   const { rbac, wasm } = await getSetupConfig(instructions.setup);
   try {
     const check = await checkSetup(
@@ -172,14 +172,14 @@ export async function runInstructionsFile(file, runtimeConfig, container) {
   log(`Running file: ${file}`);
   const fileContent = await fs.readFile(file, "utf8");
   const instructions = yaml.load(fileContent);
-  const { status, assertions } = await runInstructions(
+  const { status, assertions, name } = await runInstructions(
     instructions,
     runtimeConfig,
     container
   );
 
   const duration = Date.now() - start;
-  const result = { file, status, assertions, duration };
+  const result = { file, status, assertions, duration, name };
   if (result.status === "error" && !process.env.CONTINUE_ON_ERROR) {
     logResult(result);
     throw new ExitOnFailure();

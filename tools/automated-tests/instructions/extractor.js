@@ -147,7 +147,10 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 
     for (const platform of platforms) {
       await page.select("aside select.deployment-topology-switch", platform);
+      const title = await page.$eval("h1", (el) => el.textContent.trim());
+      const howToUrl = `${config.productionUrl}${url.pathname}`;
 
+      const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
@@ -156,6 +159,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
         config,
         platform,
         {
+          name,
           setup,
           prereqs,
           steps,
