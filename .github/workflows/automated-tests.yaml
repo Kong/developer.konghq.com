@@ -94,5 +94,6 @@ jobs:
           summary-report: true
           test-report: true
           failed-folded-report: true
-          report-order: 'summary-report,test-report,failed-folded-report'
+          skipped-report: true
+          report-order: 'summary-report,test-report,failed-folded-report,skipped-report'
         if: always()
