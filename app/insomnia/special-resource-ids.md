@@ -43,9 +43,9 @@ rows:
   - placeholder: "`__BASE_ENVIRONMENT_ID__`"
     represents: Workspace’s base environment
     description: Identifies the default environment set for a workspace.
-  - placeholder: "`__<NAME>_<NUMBER>__`".
+  - placeholder: "`__<NAME>_<NUMBER>__`"
     represents: Random user-created entities (requests, environments)
-    description: Placeholder IDs that are generated to avoid collisions and support consistent ID mapping during imports. For example: "`__request_1__`, `__env_2__`".
+    description: Placeholder IDs that are generated to avoid collisions and support consistent ID mapping during imports. For example: "`__request_1__`, `__env_2__`"
 {% endtable %}
 
 ## Behaviour and usage

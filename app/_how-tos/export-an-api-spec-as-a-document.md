@@ -41,12 +41,14 @@ related_resources:
   - text: Resource types reference
     url: /reference/resource-types-reference/   
 ---
-Export your API design documents from Insomnia to capture the exact endpoints and schemas that you use, ensuring accurate documentation, seamless teamwork, and easy integration with tools such as ([/inso-cli/](https://developer.konghq.com/inso-cli/)) or CI/CD workflows.
+Export your API design documents from Insomnia to capture the exact endpoints and schemas that you use, ensuring accurate documentation, seamless teamwork, and easy integration with tools such as [Inso CLI](/inso-cli/) or CI/CD workflows.
 
 You can export the following formats from Insomnia:
 - API design document
 - Collection
 - Request
+
+## Export
 
 To export a file from Insomnia, navigate to your workspace:
 1. Click **Preferences**, and then click **Data**
