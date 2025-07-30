@@ -81,7 +81,7 @@ If a [dashboard-level filter](#filters) is applied, it also applies in the **Edi
 
 You can also add a tile by selecting an existing report, which lets you reuse previously created analytics configurations as dashboard tiles.
 
-Each tile is customizable from the **Edit tile** view. You can choose the datasource (API Usage or LLM Usage), change the type of chart, change the dimensions, add [filters](#filters), and update other configuration to control the display of the tile. For more information on creating custom dashboards, review the [how-to](/how-to/create-custom-dashboards/) on creating custom dashboards.
+Each tile is customizable from the **Edit tile** view. You can choose the data source (API Usage or LLM Usage), change the type of chart, change the dimensions, add [filters](#filters), and update other configuration to control the display of the tile. For more information on creating custom dashboards, review the [how-to](/how-to/create-custom-dashboards/) on creating custom dashboards.
 
 
 ## Filters
