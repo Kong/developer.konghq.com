@@ -86,3 +86,14 @@ jobs:
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |
           DEBUG=tests:*,debug npm run run-tests
+
+      - name: Publish Test Report
+        uses: ctrf-io/github-test-reporter@984acbd8e96f167d4053d95f9d657d7b949baac5 # v1
+        with:
+          report-path: './tools/automated-tests/testReport.json'
+          summary-report: true
+          test-report: true
+          failed-folded-report: true
+          skipped-report: true
+          report-order: 'summary-report,test-report,failed-folded-report,skipped-report'
+        if: always()

@@ -1,9 +1,16 @@
+import fs from "fs/promises";
 import fastGlob from "fast-glob";
 import matter from "gray-matter";
 import path from "path";
+import yaml from "js-yaml";
+
+function fileToUrl(file) {
+  return file.replace("../../app/_how-tos/", "").replace(".md", "/");
+}
 
 export async function testeableUrlsFromFiles(config, files) {
   const howTosUrls = [];
+  const skipped = [];
 
   for (const file of files) {
     const { data: frontmatter, content } = matter.read(file);
@@ -14,25 +21,32 @@ export async function testeableUrlsFromFiles(config, files) {
     if (isTesteable) {
       const skipHowTo =
         content.includes("@todo") || frontmatter.automated_tests === false;
+      const howToUrl = `/how-to/${fileToUrl(file)}`;
+
       if (skipHowTo) {
         const relativeFilePath = file.replace("../../", "");
+        let message;
         if (frontmatter.automated_tests === false) {
-          console.log(
-            `Skipping file: ${relativeFilePath}, it's tagged with automated_tests=false`
-          );
+          message = "Tagged with automated_tests=false";
         } else {
-          console.log(
-            `Skipping file: ${relativeFilePath}, it's tagged with @todo.`
-          );
+          message = "Tagged with @todo.";
         }
+        console.log(`Skipping file: ${relativeFilePath}. ${message}`);
+
+        const name = `[${frontmatter.title}](${config.productionUrl}${howToUrl})`;
+        skipped.push({
+          status: "skipped",
+          duration: 0,
+          name,
+          message,
+        });
       } else {
-        const fileToUrl = file
-          .replace("../../app/_how-tos/", "")
-          .replace(".md", "/");
-        howTosUrls.push(`${config.baseUrl}/how-to/${fileToUrl}`);
+        howTosUrls.push(`${config.baseUrl}${howToUrl}`);
       }
     }
   }
+  await fs.writeFile(".automated-tests", yaml.dump(skipped), "utf-8");
+
   return howTosUrls;
 }
 
