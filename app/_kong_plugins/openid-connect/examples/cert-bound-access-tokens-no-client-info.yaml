@@ -1,0 +1,35 @@
+title: "Cert-bound access tokens without client secret or ID"
+description: |
+  Configure the OpenID Connect plugin wih TLS Handshake Modifier to use certificate-bound access tokens without a client secret or ID.
+extended_description: |
+  Configure the OpenID Connect plugin to use [certificate-bound access tokens](/plugins/openid-connect/#certificate-bound-access-tokens) without a client secret or ID.
+  Instead, you can use the [TLS Handshake Modifier plugin](/plugins/tls-handshake-modifier/) to request a client certificate and make it available to the OpenID Connect plugin.
+  
+  The OIDC plugin will validate and use the provided certificates to authenticate with your IdP and retrieve a bearer token.
+
+weight: 819
+
+requirements:
+  - "The [TLS Handshake Modifier plugin](/plugins/tls-handshake-modifier/) is configured to request client certificates from your IdP"
+  - An identity provider (IdP) configured with mTLS and X.509 client certificate authentication
+
+config:
+  issuer: ${issuer}
+  auth_methods:
+  - bearer
+  proof_of_possession_mtls: strict
+  proof_of_possession_auth_methods_validation: on
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: The well-known issuer endpoint of your IdP, for example `http://keycloak.test:8080/realms/master`.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: fapi
