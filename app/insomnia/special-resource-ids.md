@@ -56,7 +56,7 @@ When Insomnia produces structured JSON data, it replaces real UUIDs with **place
 - **Obscure internal identifiers**: References entities generically to avoid exposing actual storage-layer IDs.
 
 ### How and when they're used
-Insomnia uses placeholder IDs to simplify how environments, workspaces, and related data are packaged and shared. These IDs aren't static, they act as flexible references that get resolved intelligently during different stages of data handling. The following points outline where and how these identifiers come into play across Insomnia’s workflows.
+Insomnia uses placeholder IDs to simplify how environments, workspaces, and related data are packaged and shared. These IDs aren't static, they act as flexible references that get resolved intelligently during different stages of data handling. The following points outline where and how these identifiers come into play across Insomnia’s workflows:
 
 - **During serialization**: Insomnia emits these IDs when generating structured JSON for syncing, CLI exports, or backups.
 - **In downstream consumers**: Tools like the Insomnia importer or internal sync logic detect placeholders, automatically map them to actual or newly assigned unique IDs to recreate data structures.
