@@ -101,7 +101,7 @@ Specify a body, and click **Send**.
 
 Specify a body, and click **Send**.
 
-{:.important}
+{:.warning}
 > **Note**: The time it takes to response depends on the server. In the example below, the second request uses grpcbin.proto, where the server stream responds much slower, and is easier to visualize.
 
 ### Client streaming
