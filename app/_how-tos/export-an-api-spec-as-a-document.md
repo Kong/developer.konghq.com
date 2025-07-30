@@ -43,20 +43,20 @@ related_resources:
   - text: Special resource IDs
     url: /insomnia/special-resource-ids/    
 ---
-Export your API design documents from Insomnia to capture the exact endpoints and schemas that you use, ensuring accurate documentation, seamless teamwork, and easy integration with tools such as [Inso CLI](/inso-cli/) or CI/CD workflows.
+Export your API design documents from Insomnia to capture the exact endpoints and schemas that you use. This ensures accurate documentation, seamless teamwork, and easy integration with tools like [Inso CLI](/inso-cli/) or CI/CD workflows.
 
-You can export the following formats from Insomnia:
+You can export the following files from Insomnia:
 - API design document
 - Collection
 - Request
 
-## Export
+## Export a file
 
 To export a file from Insomnia, navigate to your workspace:
-1. Click **Preferences**, and then click **Data**
+1. Click **Preferences**, and then click **Data**.
 2. Select an export option:
-    - **Export the 'name of file' Document**: Export a single, specific API design document.
-    - **Export the 'project name' Project**: Export a project, including all associated API requests, design documents, and tests.
+    - **Export the "name of file" Document**: Export a single, specific API design document.
+    - **Export the "project name" Project**: Export a project, including all associated API requests, design documents, and tests.
     - **Export all data**: Export all data from your all your workspaces.
     - **Create Run Button**: Create a sharable button that, when clicked, automatically opens a specific request or collection in the Insomnia application and executes it.
 3. Click **Export**.
@@ -68,10 +68,12 @@ To export a file from Insomnia, navigate to your workspace:
 ### Special resource IDs
 To ensure workspace identity is preserved at import and avoid collisions, exported Insomnia files include placeholder resource IDs like `__WORKSPACE_ID__` and `__BASE_ENVIRONMENT_ID__`. Insomnia replaces these during import to reconstruct the structure accurately. These IDs are automatically handled by the tool—no user editing necessary.
 
-For more information, refer to our [Special resource IDs] () reference page.
+For more information, go to our [Special resource IDs](/insomnia/special-resource-ids/) reference page.
 
 ### Resource types
 The export file includes a `data.resources` object with a `resources` array, each element represents an object of a specific resource type:
 - `_type` field indicates the kind: `workspace`, `environment`, `request`, `response`, `folder`.
 - Only supported resource types defined in Insomnia’s schema are included; internal metadata or auxiliary data is typically excluded.
 These resource types determine what you create when you import. If a resource type is omitted or unsupported, the related element won't appear in the reconstructed workspace.
+
+For more information, go to our [Resource types reference](/insomnia/resource-types-reference/) reference page.

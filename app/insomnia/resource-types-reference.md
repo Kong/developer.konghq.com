@@ -33,6 +33,10 @@ You’ll encounter them during export and import operations, across device syncs
 
 ## Core resource types
 
+Insomnia defines a small set of core resource types that the system recognizes when exporting or syncing workspace data. Each object in the resources array features a `_type` value that tells Insomnia what kind of entity it represents. 
+
+Use the following table to view the list of core types and descriptions of their role in workspace structure and import logic:
+
 {% table %}
 columns:
   - title: Resource type (`_type`)
@@ -55,10 +59,10 @@ rows:
   - type: "`plugin`"
     description: Plugin configurations or metadata when workspace-level plugins are used.
   - type: "`test`"
-    description: Test scripts or suites associated with requests or collections (where available).
+    description: Test scripts or suites associated with requests or collections.
 {% endtable %}
 
-## Logic
+## Apply resource types in workflows
 Resource types guide how Insomnia and its tools read, validate, and reconstruct data. The logic below explains how they're processed during import, export, and sync.
 - Structured JSON includes only supported `_type` values defined in Insomnia’s schema; unsupported or deprecated types are dropped.
 - Each resource object contains `_id` and `_type`; clients or CLI tools then parse these to reconstruct objects if they match supported types.
