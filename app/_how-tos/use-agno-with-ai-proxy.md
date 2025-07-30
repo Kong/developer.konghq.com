@@ -93,7 +93,7 @@ variables:
 ```sh
 pip3 install -U agno openai duckduckgo-search newspaper4k lxml_html_clean
 ```
-Install the necessary Python packages for running the Agnos research agent:
+Install the necessary Python packages for running the Agno's research agent:
 
 {% endnavtab %}
 {% navtab "macOS, with Python via Homebrew" %}
