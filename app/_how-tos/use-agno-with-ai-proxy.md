@@ -6,11 +6,14 @@ description: Connect Agno’s research agents to Kong AI Gateway with no code ch
 
 tldr:
   q: How can I use Agno with Kong AI Gateway?
-  a: Replace the `base_url` in your Agno model configuration with your Kong AI Gateway Route URL to proxy requests through Kong and apply AI Gateway plugins.
+  a: Configure the AI Proxy plugin on a Kong Gateway Route to forward OpenAI-compatible requests to OpenAI, and set Agno’s `base_url` to that Route. This lets you use Agno’s research agents with Kong plugins—such as logging, rate limiting, prompt decoration, and access control—without changing Agno’s code.
 
 related_resources:
   - text: AI Proxy
     url: /plugins/ai-proxy/
+  - text: What is Agno?
+    url: https://docs.agno.com/introduction
+    icon: assets/icons/agno.svg
 
 products:
   - gateway
