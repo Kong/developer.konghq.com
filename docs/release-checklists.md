@@ -3,8 +3,8 @@
 * [Kong Gateway](#gateway-release-checklist)
 
 ## Konnect release checklist
-1. [Update compatibility table](#konnect-compatibility)
 1. [Publish OpenAPI specs](#openapi-specs)
+1. Provide preview link to PM
 
 After merging release branch, and once the Netlify build is complete and docs are visible on developer.konghq.com:
 1. [Run Algolia crawler](#algolia)
@@ -29,6 +29,9 @@ For minor or major version releases (e.g. 3.10 or 4.0):
 After merging release branch, and once the Netlify build is complete and docs are visible on developer.konghq.com:
 1. [Run Algolia crawler](#algolia)
 1. [Update sources in Kapa](#kapa)
+
+After Gateway is available on Konnect:
+1. [Update compatibility table](#konnect-compatibility)
 
 There are a few items that we expect to come from engineering teams with each release:
 * [Performance benchmark update](https://developer.konghq.com/gateway/performance/benchmarks/)
