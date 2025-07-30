@@ -46,6 +46,9 @@ prereqs:
     - title: OpenAI
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
+    - title: Python
+      include_content: prereqs/python
+      icon_url: /assets/icons/python.svg
   entities:
     services:
       - example-service
