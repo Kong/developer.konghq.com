@@ -18,6 +18,20 @@ works_on:
 min_version:
   gateway: '3.6'
 
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI Proxy
+    url: /plugins/ai-proxy/
+  - text: AI Prompt Decorator
+    url: /plugins/ai-prompt-decorator/
+  - text: Use Azure Content Safety plugin
+    url: /how-to/use-azure-ai-content-safety/
+  - text: Use the AI AWS Guardrails plugin
+    url: /how-to/use-ai-aws-guardrails-plugin/
+  - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
+    url: /how-to/use-ai-semantic-prompt-guard-plugin/
+
 plugins:
   - ai-proxy
   - ai-prompt-decorator
