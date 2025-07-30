@@ -142,7 +142,7 @@ TBA.
 In the kong/docs-plugin-toolkit repo, you'll need to run a few workflows. 
 
 1. [Download schemas](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/download-schemas.yml)
-   Use the branch generated in this first step to run all the subsequent steps, in order.
+    Use the branch generated in this first step to run all the subsequent steps, in order.
 1. [Generate plugin priorities](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/generate-plugin-priorities.yml)
 1. [Generate referenceable fields](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/generate-referenceable-fields.yml)
 1. [Generate JSON schemas](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/generate-json-schemas.yml)
@@ -180,7 +180,7 @@ to make sure the new spec is included. If not, add it.
 1. Clone the https://github.com/Kong/kong-admin-spec-generator repo locally.
 1. Run `DOCKER_IMAGE=kong/kong-gateway:3.11.0.0 make setup-kong` (adjust for your own version).
 
-   If generating from an RC, pass the RC registry name and tag: `DOCKER_IMAGE=kong/kong-gateway-dev:3.11.0.0-rc.5 make setup-kong`
+    If generating from an RC, pass the RC registry name and tag: `DOCKER_IMAGE=kong/kong-gateway-dev:3.11.0.0-rc.5 make setup-kong`
 
 1. Run `make kong`.
 1. If there are any plugin updates, you can generate the plugin specs as well, as long as you know the endpoint that the plugin creates.For example, the following command will pull out :
@@ -193,6 +193,7 @@ to make sure the new spec is included. If not, add it.
    ```
 1. Copy the generated spec files into the `api-specs` folder in the `developer.konghq.com` repo.
   * For Gateway Admin API: `developer.konghq.com/api-specs/gateway/admin-ee/<version-folder>/openapi.yaml`
+	* For plugins: `developer.konghq.com/api-specs/plugins/<plugin-name>/openapi.yaml`
 
   Make sure the file is named `openapi.yaml`, otherwise the Insomnia buttons won't generate.
 
@@ -206,7 +207,7 @@ Update the search index:
 
 1. Log into Algolia using team-docs (credentials in 1pass).
    
-   Make sure the **kongdeveloper** application is selected.
+    Make sure the **kongdeveloper** application is selected.
 
 2. Go to **Data sources** (database icon in bottom left corner) > **Crawler**.
 
