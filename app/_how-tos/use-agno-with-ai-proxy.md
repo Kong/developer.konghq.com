@@ -25,7 +25,6 @@ min_version:
 
 plugins:
   - ai-proxy
-  - key-auth
 
 entities:
   - service
