@@ -103,15 +103,14 @@ In this case, we would remove Debian 10, CentOS 7, and RHEL 7 from the supported
 Bump the release version and set a release date in `app/_data/products/gateway.yml`.
 
 1. Under `releases`, update:
-  * `release` - if adding a new minor release.
-  * `ee-version` - for any major, minor, or patch release.
-  * `eol` - only if adding a major or minor release. 
+  * Replace `label: unreleased` with `latest: true` for the new version, and remove `latest: true` from the previous version.
+  * `release` - update if adding a new major or minor release.
+  * `ee-version` - update for any major, minor, or patch release.
+  * `eol` - update if adding a major or minor release. 
      
     Add exactly one year to the release date to find the EOL (e.g., if release date 2025-07-03, EOL is 2026-07-03).
     
     > Exception: If the version is an LTS, add three years.
-
-	* Replace `label: unreleased` with `latest: true` for the new version, and remove `latest: true` from the previous version.
 
 2. Under `release_dates`, add a new entry and set the date in `year/month/day` format.
 
@@ -188,7 +187,8 @@ to make sure the new spec is included. If not, add it.
     If generating from an RC, pass the RC registry name and tag: `DOCKER_IMAGE=kong/kong-gateway-dev:3.11.0.0-rc.5 make setup-kong`
 
 1. Run `make kong`.
-1. If there are any plugin updates, you can generate the plugin specs as well, as long as you know the endpoint that the plugin creates.For example, the following command will pull out :
+1. Copy the generated spec file into `developer.konghq.com/api-specs/gateway/admin-ee/<version-folder>/openapi.yaml`.
+1. If there are any plugin spec updates, you can generate the plugin specs as well, as long as you know the endpoint that the plugin creates. For example, the following command will pull out `jwt` and `jwts` endpoints for the JWT plugin from the `openapi.yaml` you already generated:
 
    ```
    yq '.paths |= with_entries(select(.key=="*/jwt/*" or .key=="*/jwts))' work/openapi.yaml > tmp123
@@ -196,11 +196,14 @@ to make sure the new spec is included. If not, add it.
    npx -y oas-toolkit remove-unused-tags tmp456 > openapi.yaml
    rm tmp123 tmp456
    ```
-1. Copy the generated spec files into the `api-specs` folder in the `developer.konghq.com` repo.
-  * For Gateway Admin API: `developer.konghq.com/api-specs/gateway/admin-ee/<version-folder>/openapi.yaml`
-	* For plugins: `developer.konghq.com/api-specs/plugins/<plugin-name>/openapi.yaml`
 
-  Make sure the file is named `openapi.yaml`, otherwise the Insomnia buttons won't generate.
+   Most plugins only have one unique entity. For example, for Basic Auth, the entity is `basic-auths`. You can check the entity for any plugin by going to their API page, e.g. https://developer.konghq.com/plugins/jwt/api/.
+
+	 > **Note**: All plugins that add unique entities to the Admin API are listed here: https://github.com/Kong/developer.konghq.com/tree/main/api-specs/plugins. However, the admin apec generator doesn't generate specs for all of these plugins. Check the generated complete `openapi.yaml` before attempting to generate a plugin spec.
+
+1. Copy the generated spec files into `developer.konghq.com/api-specs/plugins/<plugin-name>/openapi.yaml`.
+
+> Make sure the file is named `openapi.yaml`, otherwise the Insomnia buttons won't generate.
 
 ### Konnect compatibility
 
