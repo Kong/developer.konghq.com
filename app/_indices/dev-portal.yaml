@@ -6,6 +6,7 @@ sections:
       - path: /dev-portal/**/*
       - path: /dev-portal/analytics/
       - path: /dev-portal/breaking-changes/
+      - path: /konnect-platform/audit-logs/
     auto_exclude: true
   - title: API catalog
     items:
