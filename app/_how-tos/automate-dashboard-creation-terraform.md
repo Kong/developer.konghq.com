@@ -20,14 +20,8 @@ series:
 tldr:
   q: How do I automate dashboard creation using Terraform?
   a: |
-    Create the following resources using Terraform:
-
-    * `konnect_api`
-    * `konnect_api_document`
-    * `konnect_api_version`
-    * `konnect_api_implementation`
-    * `konnect_api_publication`
-
+    Use the `konnect_dashboard` resource from the [terraform](/terraform/) provider to define and manage dashboards.
+    You can import existing dashboards or create new ones with configurable chart layouts, titles, and filters.
 
 prereqs:
   skip_product: true
