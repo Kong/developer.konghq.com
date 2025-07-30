@@ -6,6 +6,7 @@ description: |
     Custom Dashboards allow you to create dashboards for your specific use cases.
 breadcrumbs:
   - /advanced-analytics/
+  - /advanced-analytics/custom-dashboards/
 products:
     - advanced-analytics
 tags:
@@ -29,7 +30,7 @@ With [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), you can cre
 
 ## Templates
 
-Templates are best-practice templates created by Kong, that can be used as a starting point when creating analytics views and dashboards.
+Templates are best-practice presets created by Kong. You can use them as a starting point when creating analytics views and dashboards.
 
 
 {% table %}
@@ -40,20 +41,29 @@ columns:
     key: description
 rows:
   - type: Quick summary dashboard
-    description: High-level overview of your organization's API traffic and performance. This dashboard highlights top services, routes, and consumers across your Konnect organization with time-based trends for key performance metrics. It surfaces critical bottlenecks in the slowest services, routes, and consumers, helping you identify areas that may need optimization.
+    description: | 
+      High-level overview of your organization's API traffic and performance. 
+      This dashboard highlights the top Gateway Services, Routes, and Consumers across your {{site.konnect_short_name}} organization with time-based trends for key performance metrics. 
+      It surfaces critical bottlenecks in the slowest Services, Routes, and Consumers, helping you identify areas that may need optimization.
   - type: AI gateway dashboard
-    description: AI-focused insight into your LLM traffic and operational costs. Track request volume by model and provider, understand token usage trends, and monitor latency across different models. This dashboard helps teams operating AI gateways to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
+    description: |
+      AI-focused insight into your LLM traffic and operational costs. 
+      Track request volume by model and provider, understand token usage trends, and monitor latency across different models. 
+      This dashboard helps teams operating AI gateways to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
   - type: Shared services dashboard
-    description: Health and performance of services managed inside your Konnect organization. This dashboard focuses on golden signals such as latency, error rates, and throughput, alongside detailed breakdowns of 4xx and 5xx responses, failed authentications, and rate limit hits. It provides a clear picture of how your services are behaving including which consumers and routes are most active or error-prone.
+    description: |
+      Health and performance of Gateway Services managed inside your {{site.konnect_short_name}} organization. 
+      This dashboard focuses on golden signals such as latency, error rates, and throughput, alongside detailed breakdowns of 4xx and 5xx responses, failed authentications, and rate limit hits. 
+      It provides a clear picture of how your Services are behaving, including which Consumers and Routes are most active or error-prone.
 {% endtable %}
 
-Learn how to create a [custom dashboard from a template](/how-to/create-custom-dashboards/)
+For more information, learn how to create a [custom dashboard from a template](/how-to/create-custom-dashboards/).
 
 ## Tiles
 
 Tiles represent charts that you can add to your custom dashboard. You can create new chart tiles from scratch or add a tile from an existing report.
 
-To add a new tile, select **New Tile** from the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards/) view. After selecting from a series of charts, you'll be taken into a chart editor similar to the [Explorer](/advanced-analytics/explorer/) experience, where you can slice and dice the chart until it shows what you need.
+To add a new tile, select **New Tile** from the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards/) view. After selecting from a series of charts, you'll be taken into a chart editor similar to the [Explorer](/advanced-analytics/explorer/) experience, where you can adjust the chart until it shows what you need.
 
 In the **Edit tile** view, you can:
 
@@ -64,30 +74,33 @@ In the **Edit tile** view, you can:
   * Use the global dashboard time range (automatically updates if a viewer changes the dashboard time), or
   * Use a fixed time range that always applies to this specific chart, regardless of dashboard-level settings.
 
-If a [dashboard-level filter](#filters) is applied, it will also apply in the **Edit tile** view and is shown in the **Dashboard filters** section. However, be careful: these filters only affect the chart’s data as long as they remain applied to the dashboard. If someone removes the dashboard filter, the chart will no longer be filtered by it.
+If a [dashboard-level filter](#filters) is applied, it also applies in the **Edit tile** view and is shown in the **Dashboard filters** section. 
+
+{:.warning}
+> **Be careful**: These filters only affect the chart’s data as long as they remain applied to the dashboard. If someone removes the dashboard filter, the chart will no longer be filtered by it.
 
 You can also add a tile by selecting an existing report, which lets you reuse previously created analytics configurations as dashboard tiles.
 
-Each tile is customizable from the **Edit tile** view. You can select from a series of [filters](#filters), and modify the lines and time series. For more information on creating custom dashboards, review the [custom dashboard](/how-to/create-custom-dashboards/) documentation.
+Each tile is customizable from the **Edit tile** view. You can choose the datasource (API Usage or LLM Usage), change the type of chart, change the dimensions, add [filters](#filters), and update other configuration to control the display of the tile. For more information on creating custom dashboards, review the [how-to](/how-to/create-custom-dashboards/) on creating custom dashboards.
 
 
 ## Filters
 
 Custom Dashboards support dashboard-level filters that apply across all tiles in a dashboard. Filters help users narrow down the data shown in charts without modifying individual tiles.
 
-All users can add **temporary filters**, which apply only for the duration of the session. These filters allow users to explore data dynamically without changing the dashboard for others.
+All users can add **temporary filters**, which apply only for the duration of the session. These filters allow users to explore data dynamically without changing the dashboard for others.  Users can bookmark the page to return to a specific set of filters.
 
 Admins can define **preset filters** when creating or editing a dashboard. Preset filters persist across sessions and are applied for all users viewing the dashboard. They are useful for:
 
 * Ensuring viewers only see data they are authorized to access.
 * Avoiding repetitive filter configuration across individual tiles.
 
-Preset filters appear as badges at the top of the dashboard. Viewers with "Viewer" access can see these filters but cannot remove them. A lock icon indicates that the filter is preset and enforced. Hovering over the badge reveals the filter values for additional context.
+Preset filters appear as badges at the top of the dashboard. Viewers with ["Viewer" access](#role-based-access) can see these filters but can't remove them. A lock icon indicates that the filter is preset and enforced. Hovering over the badge reveals the filter values for additional context.
 
 ![Example of a preset filter](/assets/images/analytics/admin.png)
 >_**Figure 1:** An example of a preset filter_
 
-For more information, review [Use preset-filters to scope dashboards](/how-to/use-preset-filters-scope-dashboards/)
+For more information, review [Use preset-filters to scope dashboards](/how-to/use-preset-filters-scope-dashboards/).
 
 ## Role-based access
 
@@ -103,7 +116,7 @@ For more details, see the [teams and roles](/konnect-platform/teams-and-roles/) 
 
 ### Roles
 
-The **Dashboard viewer** role allows an organization admin or analytics admin to manage the content that is visible to specific users. Users with this role can access dashboards shared with them, interact with charts, apply temporary filters, but cannot create, edit, or delete dashboards.
+Users with the **Dashboard viewer** role can access dashboards shared with them, interact with charts, and apply temporary filters; but cannot create, edit, or delete dashboards.  Organization admins can use this role to manage the content that is visible to specific users.
 
 
 ## Automation
@@ -112,7 +125,7 @@ Custom Dashboards can be managed programmatically to support automation and vers
 
 There are two primary ways to automate dashboard creation and updates:
 
-* **API + JSON definition**: Use the [Konnect API](/api/konnect/analytics-requests/) along with the **Download definition as JSON** option available in the UI. This option provides the full dashboard definition in JSON format, which you can modify and use in API calls to create or update dashboards programmatically.
+* **API + JSON definition**: Use the [Konnect API](/api/konnect/analytics-requests/) along with the **Export JSON definition** option available in the UI. This option provides the full dashboard definition in JSON format, which you can modify and use in API calls to create or update dashboards programmatically.
 
 * **Terraform**: You can use [Terraform](/terraform/) to define and deploy dashboards as code, making it easier to integrate dashboard configuration into your infrastructure workflows.
 

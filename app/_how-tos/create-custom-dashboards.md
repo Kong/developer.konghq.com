@@ -34,35 +34,35 @@ related_resources:
 
 ## Create a dashboard
 
-You can create custom dashboards either from scratch or from a [template](/advanced-analytics/custom-dashboards-reference/#templates). 
+You can create custom dashboards either from scratch or from a [template](/advanced-analytics/custom-dashboards-reference/#templates). In this tutorial, we'll use a template.
 
-To create a new custom dashboard, follow these steps: 
+To create a custom dashboard, follow these steps: 
 
-1. Log into your {{site.konnect_short_name}} account and navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section.
+1. Navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section.
 
 1. Select **Create dashboard** > **Create from Template**.
 
-1. Select **Quick summary dashboard**, then **Use template**.
+1. Select **Quick summary dashboard**, then click **Use template**.
 
 
 This creates a new template with pre-configured tiles.
 
 ## Add a filter
 
-Filters help users narrow down the data shown in charts without modifying individual tiles. You can add a filter so that the data shown in the dashboard is scoped to only one control plane: 
+Filters help users narrow down the data shown in charts without modifying individual tiles. For this example, let's add a filter so that the data shown in the dashboard is scoped to only one control plane: 
 
 1. From the dashboard, select **Add filter** to bring up the configuration options.
 
-1. Configure a filter on the desired control plane
+1. Configure a filter on the desired control plane:
   * Filter by: `Control Plane`
   * Operator: `In`
   * Value: `default` 
-1. Select **Make this a preset for all viewers** and click **Apply**. 
+1. Select **Make this a preset for all viewers**, then click **Apply**. 
 
-This applies the filter to the dashboard anyone that views this dashboard will be viewing it scoped to the filter you created.
+This applies the filter to the dashboard. Anyone that views this dashboard will be viewing it scoped to the filter you created.
 
 
 ## Validate
 
-You can verify that the dashboard filter was applied correctly from the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section of {{site.konnect_short_name}}. Now the dashboard will display a **Preset filters** tag, with your **Control plane in (default)** filter.
+You can verify that the dashboard filter was applied correctly from the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section of {{site.konnect_short_name}}. Now the dashboard displays a **Preset filters** tag, with your **Control plane in (default)** filter.
 
