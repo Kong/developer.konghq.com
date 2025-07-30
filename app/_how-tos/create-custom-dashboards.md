@@ -24,7 +24,7 @@ prereqs:
   inline: 
     - title: Roles and permissions
       content: |
-        This guide requires belonging to the [Analytics admin](/konnect-platform/teams-and-roles/) team. 
+        This guide requires belonging to either the Organization admin or Analytics admin [teams](/konnect-platform/teams-and-roles/). 
 related_resources:
   - text: Custom Dashboards
     url: /advanced-analytics/custom-dashboards/

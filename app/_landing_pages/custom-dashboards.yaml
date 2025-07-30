@@ -85,7 +85,7 @@ rows:
                   [Assign the Viewer role](/advanced-analytics/custom-dashboards-reference/#Role-based-access) to your team. They will be able to view dashboards shared with their group but not create or edit them.
               - q: Can I automate dashboard creation?
                 a: |
-                  Yes. You can use the API to create dashboards from reusable definitions.
+                  Yes. You can use the [API](/placeholder/) or [Terraform](/how-to/automate-dashboard-creation-terraform/) to create dashboards from reusable definitions.
               - q: Once I create a dashboard from a template, can I customize it?
                 a: |
                   Yes. Templates are intended as starting points. Once you create a dashboard from a template, you can modify tiles, filters, and layouts as needed.

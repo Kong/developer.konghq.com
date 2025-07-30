@@ -6,7 +6,7 @@ description: |
     Custom Dashboards allow you to create dashboards for your specific use cases.
 breadcrumbs:
   - /advanced-analytics/
-  - /advanced-analytics/custom-dashboards/
+  - /custom-dashboards/
 products:
     - advanced-analytics
 tags:

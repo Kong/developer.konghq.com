@@ -46,12 +46,11 @@ related_resources:
     url: /advanced-analytics/custom-dashboards/
 ---
 
-
 ## Get the dashboard ID
 
-Managing dashboards with Terraform requires the dashboard ID of the target dashboard: 
+Managing dashboards with Terraform requires the dashboard ID of the target dashboard:
 
-1. Get the dashboard ID from the {{site.konnect_short_name}} URL of your dashboard. It appears at the end of the URL when viewing the dashboard:
+1. Get an existing dashboard ID from the {{site.konnect_short_name}} URL of your dashboard. It appears at the end of the URL when viewing the dashboard:
    ```
    https://cloud.konghq.com/us/analytics/dashboards/$DASHBOARD_ID
    ```
@@ -60,17 +59,16 @@ Managing dashboards with Terraform requires the dashboard ID of the target dashb
 
 Import the dashboard into Terraform by creating an `import.tf` file:
 
-```hcl
-echo '
-import {
-  provider = "konnect-beta"
-  to = konnect_dashboard.service_dashboard_template
-  id = 0810eb60-1290-4428-8b3a-d74ca6182c3d
+```sh
+echo 'import {
+  provider = konnect-beta
+  to       = konnect_dashboard.service_dashboard_template
+  id       = 0810eb60-1290-4428-8b3a-d74ca6182c3d
 }
-' >> import.tf
+' > import.tf
 ```
 
-## Generate the Terraform configuration: 
+## Generate the Terraform configuration
 
 Generate the Terraform configuration from the imported resource:
 
@@ -78,9 +76,16 @@ Generate the Terraform configuration from the imported resource:
 terraform plan -generate-config-out=create_dashboard.tf
 ```
 
-## Validate 
+This creates a new file named `create_dashboard.tf` that contains the Terraform resource definition for the imported dashboard.
 
+## Validate
 
-???
+To validate that your changes are working, make an update in the generated Terraform file (for example, change a chart title).
 
-Now, you can commit the file to your GitHub repo and ensure it’s included in your CI/CD pipeline. 
+1. Run the following command to apply the update:
+   ```sh
+   terraform apply
+   ```
+1. After the change is applied, return to the [{{site.konnect_short_name}} dashboard manager](https://cloud.konghq.com/us/analytics/dashboards) to confirm the update is reflected in the dashboard UI.
+
+Now, you can commit the Terraform files to your GitHub repo and include them in your CI/CD pipeline to manage future changes as code.
