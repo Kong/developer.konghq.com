@@ -38,52 +38,63 @@ columns:
     key: description    
 rows:
   - shortcut: |
-      Windows: `Ctrl + Shift + ,`
+      Windows: `Ctrl + Shift + ,` <br>
       Mac: `⇧ ⌘ ,`
     action: "Show document/collection settings"
     description: Open settings for the current document or collection.
   - shortcut: |
-      `Ctrl + Alt + Shift + ,`
+      Windows: `Ctrl + Alt + Shift + ,` <br>
+      Mac: `⌥ ⇧ ⌘ ,`
     action: "Show request settings"
     description: Open the settings for the currently selected request.
   - shortcut: |
-      `Ctrl + Shift + /`
+      Windows: `Ctrl + Shift + /` <br>
+      Mac: `⌃ ⇧ ⌘ /`
     action: "Show keyboard shortcuts"
     description: Display a list of all available keyboard shortcuts.
   - shortcut: |
-      `Ctrl + ,`
+      Windows: `Ctrl + ,` <br>
+      Mac: `⌘ ,`
     action: "Show app preferences"
     description: Open the global preferences dialog.
   - shortcut: |
-      `Ctrl + P`
+      Windows: `Ctrl + P` <br>
+      Mac: `⌘ P`
     action: "Quick search"
     description: Open the quick switcher to search requests and environments.
   - shortcut: |
-      `Ctrl + Shift + R`
+      Windows: `Ctrl + Shift + R` <br>
+      Mac: `⇧ ⌘ R`
     action: "Reload plugins"
     description: Reload all active Insomnia plugins.
   - shortcut: |
-      `Ctrl + Space`
+      Windows: `Ctrl + Space` <br>
+      Mac: `⌃ Space`
     action: "Show autocomplete"
     description: Activate autocomplete suggestions in the editor.
   - shortcut: |
-      `Ctrl + Shift + H`
+      Windows: `Ctrl + Shift + H` <br>
+      Mac: `⇧ ⌘ H`
     action: "Show request history"
     description: Display the full history of sent requests.
   - shortcut: |
-      `Ctrl + Shift + F`
+      Windows: `Ctrl + Shift + F` <br>
+      Mac: `⇧ ⌘ F`
     action: "Filter sidebar"
     description: Filter the request list in the sidebar.
   - shortcut: |
-      `Ctrl + \`
+      Windows: `Ctrl + \` <br>
+      Mac: `⌘ \`
     action: "Toggle sidebar"
     description: Show or hide the left-hand request sidebar.
   - shortcut: |
-      `Ctrl + '`
+      Windows: `Ctrl + '` <br>
+      Mac: `⌘ '`
     action: "Focus response"
     description: Select the content in the response pane.
   - shortcut: |
-      `Ctrl + Shift + I`
+      Windows: `Ctrl + Shift + I` <br>
+      Mac: `⇧ ⌘ I`
     action: "Focus graphQL explorer filter"
     description: Focus the filter field in the GraphQL explorer.               
 {% endtable %}
@@ -100,23 +111,28 @@ columns:
     key: description    
 rows:
   - shortcut: |
-      `Ctrl + Enter` or `F5`
+      Windows: `Ctrl + Enter` or `F5` <br>
+      Mac: `⌘ Enter` or `⌘ R` or `F5`
     action: "Send request"
     description: Send the currently active request.
   - shortcut: |
-      `Ctrl + Shift + Enter`
+      Windows: `Ctrl + Shift + Enter` <br>
+      Mac: `⇧ ⌘ Enter`
     action: "Send request (with options)"
     description: Send request with additional options, such as repeating or adding a delay.
   - shortcut: |
-      `Ctrl + E`
+      Windows: `Ctrl + E` <br>
+      Mac: `⌘ E`
     action: "Show environment editor"
     description: Open the environment editor to view or edit environment variables.
   - shortcut: |
-      `Ctrl + Shift + E`
+      Windows: `Ctrl + Shift + E` <br>
+      Mac: `⇧ ⌘ E`
     action: "Switch environments"
     description: Open a dialog to switch between predefined environments.
   - shortcut: |
-      `Alt + Shift + U`
+      Windows: `Alt + Shift + U` <br>
+      Mac: `⌥ ⇧ U`
     action: "Show variable source and value"
     description: Reveal where a variable is defined and its resolved value at runtime.
 {% endtable %}
@@ -133,23 +149,28 @@ columns:
     key: description    
 rows:
   - shortcut: |
-      `Ctrl + Shift + L`
+      Windows: `Ctrl + Shift + L` <br>
+      Mac: `⇧ ⌘ L`
     action: "Change HTTP method"
     description: Selects the HTTP method dropdown.
   - shortcut: |
-      `Ctrl + L`
+      Windows: `Ctrl + L`<br>
+      Mac: `⌘ L`
     action: "Focus URL"
     description: Selects the request URL field.
   - shortcut: |
-      `Ctrl + Shift + G`
+      Windows: `Ctrl + Shift + G`<br>
+      Mac: `⇧ ⌘ G`
     action: "Generate code"
     description: Open the code generation window for the current request in various languages.
   - shortcut: |
-      `Ctrl + Shift + F`
+      Windows: `Ctrl + Shift + F`<br>
+      Mac: `⇧ ⌘ F`
     action: "Beautify active code editors"
     description: Automatically format and beautify structured text, for example, JSON or XML.
   - shortcut: |
-      `Ctrl + K`
+      Windows: `Ctrl + K`<br>
+      Mac: `⌘ K`
     action: "Edit cookies"
     description: Open the cookie editor for the active domain associated with the request.
 {% endtable %}
@@ -166,23 +187,28 @@ columns:
     key: description    
 rows:
   - shortcut: |
-      `Ctrl + N` or `Ctrl + Alt + N`
+      Windows: `Ctrl + N` or `Ctrl + Alt + N`<br>
+      Mac: `⌘ N` or `⌥ ⌘ N`
     action: "Create HTTP Request"
     description: Create a new HTTP request in the current workspace.
   - shortcut: |
-      `Ctrl + D`
+      Windows: `Ctrl + D`<br>
+      Mac: `⌘ D`
     action: "Duplicate request"
     description: Duplicate the currently selected request.
   - shortcut: |
-      `Ctrl + Shift + Backspace`
+      Windows: `Ctrl + Shift + Backspace`<br>
+      Mac: `⇧ ⌘ Backspace`
     action: "Delete request"
     description: Permanently delete the selected request.
   - shortcut: |
-      `Ctrl + Shift + N`
+      Windows: `Ctrl + Shift + N`<br>
+      Mac: `⇧ ⌘ N`
     action: "Create folder"
     description: Add a new folder to the request sidebar.
   - shortcut: |
-      `Ctrl + Shift + P`
+      Windows: `Ctrl + Shift + P`<br>
+      Mac: `⇧ ⌘ P`
     action: "Pin or unpin request"
     description: Pin or unpin a request for quick access in the UI.
 {% endtable %}
@@ -199,7 +225,8 @@ columns:
     key: description    
 rows:
   - shortcut: |
-      `Ctrl + W`
+      Windows: `Ctrl + W`<br>
+      Mac: `⌘ W`
     action: "Close tab"
     description: Close the currently open request tab.
 {% endtable %}    
