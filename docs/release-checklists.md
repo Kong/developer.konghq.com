@@ -21,10 +21,10 @@ For minor or major version releases (e.g. 3.10 or 4.0):
 1. [Add GPG and RSA keys](#add-gpg-and-rsa-keys)
 1. [Generate changelogs and update breaking changes](#generate-changelogs)
 1. [Update support matrix](#support-matrix)
-1. [Bump the release version and set release date](#bump-release-version)
+1. [Bump the release version, tag as latest, and set release date](#bump-release-version)
 1. [Update SBOM link](#sbom-link)
-1. Remove all `if_version` tags
-1. Add latest Postgres version to support matrix after release tests pass
+1. Search for and remove all `if_version` tags for the release that you're publishing
+1. Add latest Postgres version to support matrix after engineering release tests pass
 
 After merging release branch, and once the Netlify build is complete and docs are visible on developer.konghq.com:
 1. [Run Algolia crawler](#algolia)
@@ -107,6 +107,8 @@ Bump the release version and set a release date in `app/_data/products/gateway.y
     Add exactly one year to the release date to find the EOL (e.g., if release date 2025-07-03, EOL is 2026-07-03).
     
     > Exception: If the version is an LTS, add three years.
+
+	* Replace `label: unreleased` with `latest: true` for the new version, and remove `latest: true` from the previous version.
 
 2. Under `release_dates`, add a new entry and set the date in `year/month/day` format.
 
