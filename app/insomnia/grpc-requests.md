@@ -48,7 +48,7 @@ Insomnia allows you to upload Protobuf files to a request. You can upload a sing
 
 Insomnia supports the [Buf Schema Registry](https://buf.build/docs/bsr/introduction) for reflection.
 
-The BSR doesn't require your gRPC servers to expose any reflection endpoints, it's all managed for you externally. You'll need to configure an [API Token](https://buf.build/docs/bsr/authentication) and your [BSR module path](https://buf.build/docs/bsr/module/manage) to get started.
+The BSR doesn't require your gRPC servers to expose any reflection endpoints, it's all managed for you externally. You'll need to configure an [API Token](https://buf.build/docs/bsr/authentication) and your [BSR module path](https://buf.build/docs/bsr/module/dependency-management/) to get started.
 
 To configure this for your request:
 
