@@ -22,7 +22,7 @@ related_resources:
   - text: Export your API design document or request data
     url: /how-to/export-an-api-spec-as-a-document/
   - text: Special resource IDs
-    url: /reference/special-resource-ids/   
+    url: /insomnia/special-resource-ids/   
 ---
 
 Resource types define the structure and role of key entities in exported or synced Insomnia data, for example requests, workspaces, environments, and API design documents. 

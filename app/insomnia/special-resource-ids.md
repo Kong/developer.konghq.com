@@ -21,7 +21,7 @@ related_resources:
   - text: Export an API specification as a design document in Insomnia
     url: /how-to/export-an-api-spec-as-a-document/
   - text: Resource types reference
-    url: /reference/resource-types-reference/     
+    url: /insomnia/resource-types-reference/     
 ---
 Insomnia uses **special resource IDs** as placeholder identifiers to represent core workspace entities in structured JSON data. These placeholders enable accurate reconstruction of object relationships without exposing stable IDs.
 

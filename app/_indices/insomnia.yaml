@@ -87,5 +87,5 @@ sections:
       - path: /how-to/synchronize-with-git/
       - path: /insomnia/verify-binary-provenance/
       - path: /insomnia/version-control/
-      - path: /reference/resource-types-reference/
-      - path: /reference/special-resource-ids/
+      - path: /insomnia/resource-types-reference/
+      - path: /insomnia/special-resource-ids/

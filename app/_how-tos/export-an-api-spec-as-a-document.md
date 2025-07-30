@@ -39,7 +39,9 @@ related_resources:
   - text: Import an API specification as a design document in Insomnia
     url: /how-to/import-an-api-spec-as-a-document/
   - text: Resource types reference
-    url: /reference/resource-types-reference/   
+    url: /insomnia/resource-types-reference/   
+  - text: Special resource IDs
+    url: /insomnia/special-resource-ids/    
 ---
 Export your API design documents from Insomnia to capture the exact endpoints and schemas that you use, ensuring accurate documentation, seamless teamwork, and easy integration with tools such as [Inso CLI](/inso-cli/) or CI/CD workflows.
 
