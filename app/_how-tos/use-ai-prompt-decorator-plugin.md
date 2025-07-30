@@ -39,6 +39,11 @@ prereqs:
     - title: Cohere
       include_content: prereqs/cohere
       icon_url: /assets/icons/cohere.svg
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
 
 cleanup:
   inline:
