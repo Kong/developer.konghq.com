@@ -87,6 +87,7 @@ boolean
 booleans
 bps
 brotli
+Buf
 burstable
 callees
 CAs
