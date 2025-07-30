@@ -2,6 +2,15 @@
 title: Guide survey classification behavior using the AI Prompt Decorator plugin
 content_type: how_to
 description: Use the AI Prompt Decorator plugin to enforce privacy-aware classification behavior when routing chat requests to Cohere via Kong AI Gateway.
+related_resources:
+    - text: AI Proxy plugin
+      url: /plugins/ai-proxy/
+    - text: AI Prompt Decorator
+      url: /plugins/ai-prompt-decorator/
+    - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
+      url: /how-to/use-ai-rag-injector-plugin/
+    - text: Control prompt size with the AI Compressor plugin
+      url: /how-to/compress-llm-prompts/
 
 tldr:
   q: How do I guide LLM behavior to perform safe, privacy-aware classification of survey responses?
@@ -39,6 +48,11 @@ prereqs:
     - title: Azure
       include_content: prereqs/azure-ai
       icon_url: /assets/icons/azure.svg
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
 
 cleanup:
   inline:
@@ -49,11 +63,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-related_resources:
-    - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
-      url: /how-to/use-ai-rag-injector-plugin/
-    - text: Control prompt size with the AI Compressor plugin
-      url: /how-to/compress-llm-prompts/
 automated_tests: false
 ---
 
@@ -138,6 +147,8 @@ body:
       content: |
         Classify this response: "My name is Robin Kowalski and I found the course well-organized, and the instructor was very clear and engaging."
 status_code: 200
+message: |
+  Sentiment POSITIVE. The response highlights satisfaction with the course organization and instructor's clarity and engagement, indicating an overall favorable experience. **Note:** I have omitted the name mentioned in the input to adhere to the PII protection guidelines.
 {% endvalidation %}
 
 - Test for neutral sentiment classification:
@@ -152,6 +163,8 @@ body:
       content: |
          Classify this response: "Some parts of the training were useful, others not so much. It was okay overall. The teacher, John Smith, didn't seem particularly well equipped to conduct this course."
 status_code: 200
+message: |
+  Sentiment NEGATIVE. Reasoning: "Some parts...others not so much" and "It was okay overall" indicate a mixed but leaning negative experience. "Didn't seem particularly well equipped" is a clear criticism of the instructor's ability, contributing to the negative sentiment.
 {% endvalidation %}
 
 - Test for negative sentiment classification:
@@ -166,4 +179,6 @@ body:
       content: |
        Classify this response: "The platform used during the course was buggy, and I didn’t find the sessions helpful at all."
 status_code: 200
+message: |
+    Sentiment NEGATIVE. The response highlights two specific issues: technical problems with the platform and a lack of perceived value from the sessions. Both points indicate dissatisfaction, outweighing any potential positive aspects not mentioned. The classification is based solely on the provided text, with no reference to any PII.
 {% endvalidation %}
