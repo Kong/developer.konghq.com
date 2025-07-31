@@ -38,6 +38,8 @@ cleanup:
       include_content: cleanup/products/kic
       icon_url: /assets/icons/kubernetes.svg
 
+min_version:
+  kic: "3.5"
 ---
 
 ## Overview
@@ -93,6 +95,24 @@ Alternatively, you can set the corresponding environment variable:
 env:
 - name: CONTROLLER_ENABLE_DRAIN_SUPPORT
   value: "true"
+```
+
+### Helm Chart Configuration
+
+If you're using the official Kong Helm chart, you can enable drain support in your `values.yaml` file:
+
+```yaml
+controller:
+  ingressController:
+    env:
+      enable_drain_support: "true"
+```
+
+Alternatively, you can set it directly during installation:
+
+```bash
+helm install kong kong/ingress -n kong --create-namespace \
+  --set controller.ingressController.env.enable_drain_support=true
 ```
 
 ## Configuring Sticky Sessions with KongUpstreamPolicy
