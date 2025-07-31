@@ -2,7 +2,7 @@
 title: Migrate from Postman to Insomnia
 
 content_type: how_to
-description: 
+description: Migrate Postman collections and environments to Insomnia.
 products:
     - insomnia
 
@@ -41,7 +41,7 @@ In Insomnia, click the **+** button in the left panel to create a new project in
 
 ## Import your Postman data
 
-1. In the new project, click **Import** and select teh files to import. You can import a ZIP file containing all of your Postman data, or separate JSON files.
+1. In the new project, click **Import** and select the files to import. You can import a ZIP file containing all of your Postman data, or separate JSON files.
 1. Click **Scan** to get a list of all the data that will be imported into Insomnia:
    ![Import of Postman data with two collections and an environment](/assets/images/insomnia/postman-scan.png)
 1. Click **Import**.
