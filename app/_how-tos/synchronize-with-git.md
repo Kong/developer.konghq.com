@@ -82,7 +82,7 @@ Once you've created content or made changes to existing content in your project,
 1. Click the name of the branch at the bottom of the left pane.
 1. Click **Commit**.
 1. Enter a commit message.
-1. Stage changes by clicking the **+** button next to the changes that you want to commit to the repository.
-1. Click **Commit** or **Commit and push**.
+1. Stage changes by clicking the **+** button next to the changes that you want to commit to the repository and click **Commit**.
+1. Click the name of the branch again and click **Push 1 Commit**.
 
    {% new_in 11.4 %} Git status notifications will appear at the bottom right corner of the window.
