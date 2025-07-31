@@ -1,5 +1,5 @@
 ---
-title: Migrate from Postman to Insomnia
+title: Migrate collections and environments from Postman to Insomnia
 
 content_type: how_to
 description: Migrate Postman collections and environments to Insomnia.
@@ -13,6 +13,12 @@ tags:
   - migration
   - collections
   - environments
+
+related_resources:
+  - text: Collections
+    url: /insomnia/collections/
+  - text: Environments
+    url: /insomnia/environments/
 
 tldr:
     q: How can I import my Postman data into Insomnia? 
