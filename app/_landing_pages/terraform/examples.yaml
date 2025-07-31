@@ -14,7 +14,7 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "Explore Terraform providers for Kong"
+                text: "Explore configuration samples for Kong Terraform providers"
               blocks:
                 - type: text
                   text: |
@@ -82,11 +82,19 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Apply rate limiting to Routes
+              title: Deploy a Serverless Control Plane and cloud Gateway with TLS
               description: |
-                Use Terraform to deploy a serverless Gateway Service and Route, and apply a rate limiting plugin for traffic control.
+                 Use Terraform to provision a {{site.konnect_short_name}} Serverless Control Plane secured with client certificates, configure a service and route, and deploy a cloud data plane using custom TLS certificates.
               cta:
                 url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/serverless-gateway.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Apply rate limiting to Routes
+              description: |
+                Use Terraform to deploy a Konnect Control Plane, define a Service and Route, and enforce traffic limits with a local rate limiting plugin scoped to the Route.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/route-rate-limiting.tf"
       - blocks:
           - type: card
             config:
