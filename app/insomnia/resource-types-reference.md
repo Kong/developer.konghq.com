@@ -30,7 +30,7 @@ Supported resource types ensure that only valid entities appear in exports; unsu
  
 You encounter resource types whenever you export data, sync across devices, or integrate Insomnia exports with Git or automation workflows. 
 
-## Core resource types
+## Supported resource types
 
 Insomnia defines a small set of core resource types that the system recognizes when exporting or syncing workspace data. Each object in the resources array features a `_type` value that tells Insomnia what kind of entity it represents. 
 
@@ -52,7 +52,7 @@ rows:
   - type: "`response`"
     description: A sample or a saved response that is tied to a request.
   - type: "`folder`"
-    description: A logical grouping of related entities such as requests and environments.
+    description: A logical grouping of related entities, for example requests and environments.
   - type: "`mock`"
     description: A local mock endpoint definitions and behaviors for testing.
   - type: "`plugin`"
