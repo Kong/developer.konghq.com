@@ -28,6 +28,10 @@ rows:
               {{ site.kic_product_name }} takes Kubernetes resources such as `Ingress` and `HTTPRoute` and converts them into a valid {{ site.base_gateway }} configuration. It enables you to configure all the [features](/gateway/#learn) of {{ site.base_gateway }} using Kubernetes CRDs.
 
               KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](/kubernetes-ingress-controller/split-traffic/).
+          - type: button
+            config:
+              text: Get started with {{ site.kic_product_name }}
+              url: "/kubernetes-ingress-controller/install/"
 
       - blocks:
           - type: mermaid
