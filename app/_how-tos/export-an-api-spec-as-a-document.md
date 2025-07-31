@@ -66,14 +66,14 @@ To export a file from Insomnia, navigate to your workspace:
 5. Click **Done**.
 
 ### Special resource IDs
-To ensure workspace identity is preserved at import and avoid collisions, exported Insomnia files include placeholder resource IDs like `__WORKSPACE_ID__` and `__BASE_ENVIRONMENT_ID__`. Insomnia replaces these during import to reconstruct the structure accurately. These IDs are automatically handled by the tool—no user editing necessary.
+To ensure workspace identity is preserved at import and avoid collisions, exported Insomnia files include special resource IDs like `__WORKSPACE_ID__` and `__BASE_ENVIRONMENT_ID__`. Insomnia automatically replaces these during import to reconstruct the structure accurately.
 
 For more information, go to our [Special resource IDs](/insomnia/special-resource-ids/) reference page.
 
 ### Resource types
 The export file includes a `data.resources` object with a `resources` array, each element represents an object of a specific resource type:
-- `_type` field indicates the kind: `workspace`, `environment`, `request`, `response`, `folder`.
-- Only supported resource types defined in Insomnia’s schema are included; internal metadata or auxiliary data is typically excluded.
+- `_type` field indicates the type of resource: `workspace`, `environment`, `request`, `response`, `folder`, `mock`, `plugin`, and `test`.
+- Only supported resource types that are defined in Insomnia’s schema are included; internal metadata or auxiliary data is excluded.
 These resource types determine what you create when you import. If a resource type is omitted or unsupported, the related element won't appear in the reconstructed workspace.
 
 For more information, go to our [Resource types reference](/insomnia/resource-types-reference/) reference page.
