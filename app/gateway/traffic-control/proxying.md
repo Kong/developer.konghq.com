@@ -209,7 +209,7 @@ This hook may be called multiple times, due to the streaming nature of Nginx.
 Each chunk of the upstream response that is successfully processed by such `body_filter` hooks is sent back to the client.
 
 You can also use `advanced_latency_tokens` {% new_in 3.11 %} to expose more detailed timing headers, such as total latency, third-party latency, and client latency. 
-For more information, see the [Kong configuration reference](/gateway/configuration/#advanced_latency_tokens).
+For more information, see the [Kong configuration reference](/gateway/configuration/#advanced-latency-tokens).
 
 ## Proxy WebSocket traffic
 

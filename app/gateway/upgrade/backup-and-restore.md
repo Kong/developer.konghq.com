@@ -217,7 +217,7 @@ kong config db_export ./kong_backup.yaml
 
 To back up a DB-less deployment, make a copy of your declarative configuration file (`kong.yml` by default) and store it in a safe place.
 
-You can find your declarative config file at the path set via the [`declarative_config`](/gateway/configuration/#declarative_config) setting.
+You can find your declarative config file at the path set via the [`declarative_config`](/gateway/configuration/#declarative-config) setting.
 
 {% endnavtab %}
 {% endnavtabs %}
