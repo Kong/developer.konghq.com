@@ -46,7 +46,9 @@ sections:
     items:
       - path: /insomnia/plugins/
       - path: /how-to/create-an-insomnia-plugin/
-      - path: /insomnia/plugin-reference/
+      - path: /insomnia/plugins/plugin-reference/
+      - path: /insomnia/plugins/context-object-reference/
+      - path: /insomnia/plugins/hooks-and-actions/
 
   - title: Authentication and authorization
     items: 
