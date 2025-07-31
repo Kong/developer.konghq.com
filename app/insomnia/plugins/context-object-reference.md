@@ -150,7 +150,7 @@ interface ResponseContext {
 
 ```
 
-{:.note}
+{:.info}
 > The response body works with [NodeJS Buffers](https://nodejs.org/api/buffer.html). To change the response body through a plugin, you'll need to translate to and from a Buffer.
 
 ### context.response examples
