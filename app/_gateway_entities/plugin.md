@@ -105,6 +105,8 @@ Every plugin supports a subset of these scopes.
 
 A plugin can have multiple instances in the same configuration. 
 Different instances can be used to apply the plugin to various entities, combinations of entities, or even globally. 
+You can give each plugin instance a unique name to help identify it. The instance name itself doesn't affect processing - it acts like an internal label instead.
+
 A single plugin instance always runs _once_ per request. 
 The configuration with which it runs depends on the entities it has been configured for.
 
