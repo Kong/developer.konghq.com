@@ -1,5 +1,5 @@
 description: 'Configure the Upstream OAuth plugin with a custom header to use when sending the access token (obtained from the IdP) to the upstream service.'
-
+extended_description: 'Configure the Upstream OAuth plugin with a custom header to use when sending the access token (obtained from the IdP) to the upstream service. For a complete tutorial, see [Configure the Upstream OAuth plugin with Kong Identity](/how-to/configure-kong-identity-upstream-oauth/).'
 title: 'Use a custom access token header'
 
 weight: 900
