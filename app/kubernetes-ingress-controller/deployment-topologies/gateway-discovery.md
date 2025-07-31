@@ -27,7 +27,7 @@ related_resources:
   - text: Architecture
     url: /kubernetes-ingress-controller/architecture/
 next_steps:
-  - text: Get started with Kong Ingress Controller
+  - text: Get started with {{site.kic_product_name}}
     url: /kubernetes-ingress-controller/install/
 ---
 

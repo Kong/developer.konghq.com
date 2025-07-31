@@ -31,7 +31,7 @@ tldr:
 next_steps:
   - text: Learn about Custom resource definitions (CRDs)
     url: /operator/reference/custom-resources/
-  - text: Create a Kong Ingress Controller Control Plane
+  - text: Create a {{site.kic_product_name}} Control Plane
     url: /operator/konnect/crd/control-planes/kubernetes/
 ---
 
