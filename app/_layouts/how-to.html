@@ -19,12 +19,12 @@ layout: with_aside
 {% include sections/faq.html %}
 {% endif %}
 
-{% if page.next_steps %}
-{% include sections/next_steps.html %}
-{% endif %}
-
 {% if page.navigation %}
 {% include sections/prev_next.html %}
+{% endif %}
+
+{% if page.next_steps %}
+{% include sections/next_steps.html %}
 {% endif %}
 
 {% contentfor info_box %}
