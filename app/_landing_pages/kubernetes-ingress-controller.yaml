@@ -30,7 +30,7 @@ rows:
               KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](/kubernetes-ingress-controller/split-traffic/).
           - type: button
             config:
-              text: Get Started with {{ site.kic_product_name }}
+              text: Get started with {{ site.kic_product_name }}
               url: "/kubernetes-ingress-controller/install/"
 
       - blocks:
