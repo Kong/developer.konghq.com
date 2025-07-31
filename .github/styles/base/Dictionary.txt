@@ -656,6 +656,7 @@ requery
 Requeue
 requeue
 request_counts
+requestable
 RequestResponse
 Rerank
 reranking
