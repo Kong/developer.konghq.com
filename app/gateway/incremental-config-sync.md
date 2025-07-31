@@ -83,7 +83,7 @@ style id2 stroke-dasharray:3,rx:10,ry:10
 > _**Figure 1**: In an environment with 30k entities of about 30MB total, sending a `POST` request to update one entity sends the whole 30MB config to every Data Plane. 
 With incremental config sync enabled, that same `POST` request only triggers an update of a few KB._
 
-Incremental config sync achieves significant memory savings and control planeU savings. 
+Incremental config sync achieves significant memory savings and CPU savings. 
 This means lower total cost of ownership for {{site.base_gateway}} users, shorter config propagation delay, and less impact to proxy latency. 
 See our [blog on incremental config sync](https://konghq.com/blog/product-releases/incremental-config-sync-tech-preview) for the performance comparisons.
 
