@@ -110,15 +110,15 @@ export KONG_INCREMENTAL_SYNC=on
 
 You can selectively enable or disable incremental config sync across your control plane and data plane nodes.
 
-### Rolling out incremental sync to some data planes
+### Rolling out incremental config sync to some data planes
 
-Incremental sync (sync.v2) is a different protocol from the original full sync `sync.v1`. The Lua-based control plane supports both `sync.v1` and `sync.v2` simultaneously.
+Incremental config sync (sync.v2) is a different protocol from the original full sync `sync.v1`. The Lua-based control plane supports both `sync.v1` and `sync.v2` simultaneously.
 
 Each data plane uses the `KONG_INCREMENTAL_SYNC` setting to determine which protocol to use:
 
-* If the environment variable `KONG_INCREMENTAL_SYNC=on`, the data plane attempts incremental sync (v2).
-* If the control plane or data plane does not support or disables incremental sync, they automatically fall back to full sync (v1).
-* You can roll out incremental sync incrementally by toggling this variable per data plane, no additional changes are required.
+* If the environment variable `KONG_INCREMENTAL_SYNC=on`, the data plane attempts incremental config sync (v2).
+* If the control plane or data plane does not support or disables incremental config sync, they automatically fall back to full sync (v1).
+* You can roll out incremental config sync incrementally by toggling this variable per data plane, no additional changes are required.
 
 ### Rolling back to full sync
 
@@ -130,7 +130,7 @@ No restart or configuration purge is required.
 
 ### Automatic full sync triggers
 
-Even when incremental sync is enabled, a full sync will still occur in some cases:
+Even when incremental config sync is enabled, a full sync will still occur in some cases:
 
 * **Config drift or overflow**:
   * If more than 512 changes occur while a data plane is disconnected from the control plane, a full sync is triggered.
