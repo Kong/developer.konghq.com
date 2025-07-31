@@ -99,7 +99,7 @@ env:
 
 ### Helm Chart Configuration
 
-If you're using the official Kong Helm chart, you can enable drain support in your `values.yaml` file:
+If you're using Kong's `ingress` Helm chart, you can enable drain support in your `values.yaml` file:
 
 ```yaml
 controller:
