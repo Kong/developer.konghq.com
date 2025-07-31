@@ -34,6 +34,15 @@ tldr:
 faqs:
   - q: Can I reference {{site.konnect_short_name}} Config Store Vault secrets in `kong.conf`?
     a: No. You can't reference secrets stored in a {{site.konnect_short_name}} Config Store Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane. For more information about the fields you can reference as secrets, see [What can be stored as a secret?](/gateway/entities/vault/#what-can-be-stored-as-a-secret).
+  - q: How do I configure the {{site.konnect_short_name}} Config Store Vault in the {{site.konnect_short_name}} UI?
+    a: |
+      1. In [Gateway Manager](https://cloud.konghq.com/gateway-manager/), navigate to your control plane.
+      1. Click **Vaults** in the sidebar.
+      1. Click **New vault**.
+      1. Select "Konnect" in the **Vault Configuration** dropdown.
+      1. Configure the vault prefix, description, and tags as needed.
+      1. Click **Save**. 
+      1. Click **Store New Secret** and configure your secret.
 
 prereqs:
   inline:

@@ -66,6 +66,15 @@ tools:
 faqs:
   - q: How do I replace certificates used in {{site.base_gateway}} data plane nodes with a secret reference?
     a: Set up a {{site.konnect_short_name}} or any other Vault and define the certificate and key in a secret in the Vault.
+  - q: How do I configure the {{site.konnect_short_name}} Config Store Vault in the {{site.konnect_short_name}} UI?
+    a: |
+      1. In [Gateway Manager](https://cloud.konghq.com/gateway-manager/), navigate to your control plane.
+      1. Click **Vaults** in the sidebar.
+      1. Click **New vault**.
+      1. Select "Konnect" in the **Vault Configuration** dropdown.
+      1. Configure the vault prefix, description, and tags as needed.
+      1. Click **Save**. 
+      1. Click **Store New Secret** and configure your secret.
 cleanup:
   inline:
     - title: Clean up {{site.konnect_short_name}} environment
