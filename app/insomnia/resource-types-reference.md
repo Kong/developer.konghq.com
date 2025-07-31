@@ -32,7 +32,7 @@ You encounter resource types whenever you export data, sync across devices, or i
 
 ## Supported resource types
 
-Insomnia defines a small set of core resource types that the system recognizes when exporting or syncing workspace data. Each object in the resources array features a `_type` value that tells Insomnia what kind of entity it represents. 
+Insomnia defines a set of core resource types that the system recognizes when exporting or syncing workspace data. Each object in the resources array features a `_type` value that tells Insomnia what kind of entity it represents. 
 
 Use the following table to view the list of core types and descriptions of their role in workspace structure and import logic:
 
