@@ -65,12 +65,12 @@ To export a file from Insomnia, navigate to your workspace:
     - **HAR - HTTP Archive Format**: A standardized, JSON‑based log of HTTP requests and responses that is used primarily for network-level debugging and performance analysis. 
 5. Click **Done**.
 
-### Special resource IDs
+## Special resource IDs
 To ensure workspace identity is preserved at import and avoid collisions, exported Insomnia files include placeholder resource IDs like `__WORKSPACE_ID__` and `__BASE_ENVIRONMENT_ID__`. Insomnia replaces these during import to reconstruct the structure accurately. These IDs are automatically handled by the tool—no user editing necessary.
 
 For more information, go to our [Special resource IDs](/insomnia/special-resource-ids/) reference page.
 
-### Resource types
+## Resource types
 The export file includes a `data.resources` object with a `resources` array, each element represents an object of a specific resource type:
 - `_type` field indicates the kind: `workspace`, `environment`, `request`, `response`, `folder`.
 - Only supported resource types defined in Insomnia’s schema are included; internal metadata or auxiliary data is typically excluded.

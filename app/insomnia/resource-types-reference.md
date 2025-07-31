@@ -24,12 +24,11 @@ related_resources:
   - text: Special resource IDs
     url: /insomnia/special-resource-ids/   
 ---
+Resource types specify what each object in the resources array represents in workspace data that you exported and synced. Each object contains a `_type` field that Insomnia uses to interpret and reconstruct the data.
 
-Resource types define the structure and role of key entities in exported or synced Insomnia data, for example requests, workspaces, environments, and API design documents. 
-
-Each object in the resources array includes a `_type` field that tells Insomnia how to interpret and process it. These types ensure consistent behavior across the Insomnia app, CLI tools, CI pipelines, and sync systems. By clearly identifying supported entities, resource types help maintain clean, reliable workspace data and exclude obsolete or unsupported metadata. 
-
-You’ll encounter them during export and import operations, across device syncs, and when you integrate Insomnia projects with Git or automation workflows.
+Supported resource types ensure that only valid entities appear in exports; unsupported or deprecated types are omitted. 
+ 
+You encounter resource types whenever you export data, sync across devices, or integrate Insomnia exports with Git or automation workflows. 
 
 ## Core resource types
 
@@ -45,25 +44,19 @@ columns:
     key: description
 rows:
   - type: "`workspace`"
-    description: Top‑level container for all project data. For example, anchors requests, environments, folders, and mocks.
+    description: The top‑level container for all project data, that groups requests, environments, folders, and mocks.
   - type: "`environment`"
-    description: Scoped variable collections used to parameterize requests.
+    description: A set of variables used to parameterize requests, including base or nested environments.
   - type: "`request`"
-    description: Represents an individual API call, including HTTP, GraphQL, WebSocket, or gRPC operations.
+    description: An individual API call that may use HTTP GraphQL WebSocket or gRPC protocols.
   - type: "`response`"
-    description: Sample or saved responses associated with requests, often used for documentation or testing.
+    description: A sample or a saved response that is tied to a request.
   - type: "`folder`"
-    description: Organizational grouping of other entities such as requests and environments.
+    description: A logical grouping of related entities such as requests and environments.
   - type: "`mock`"
-    description: Definitions of mock endpoints and behaviors for testing.
+    description: A local mock endpoint definitions and behaviors for testing.
   - type: "`plugin`"
-    description: Plugin configurations or metadata when workspace-level plugins are used.
+    description: Workspace-level plugin configurations or metadata.
   - type: "`test`"
-    description: Test scripts or suites associated with requests or collections.
+    description: Scripts or test suites associated with requests or collections.
 {% endtable %}
-
-## Apply resource types in workflows
-Resource types guide how Insomnia and its tools read, validate, and reconstruct data. The logic below explains how they're processed during import, export, and sync.
-- Structured JSON includes only supported `_type` values defined in Insomnia’s schema; unsupported or deprecated types are dropped.
-- Each resource object contains `_id` and `_type`; clients or CLI tools then parse these to reconstruct objects if they match supported types.
-- Unsupported `_type` entries are silently ignored, avoiding potential errors or workspace corruption.
