@@ -83,7 +83,7 @@ style id2 stroke-dasharray:3,rx:10,ry:10
 > _**Figure 1**: In an environment with 30k entities of about 30MB total, sending a `POST` request to update one entity sends the whole 30MB config to every Data Plane. 
 With incremental config sync enabled, that same `POST` request only triggers an update of a few KB._
 
-Incremental config sync achieves significant memory savings and CPU savings. 
+Incremental config sync achieves significant memory savings and control planeU savings. 
 This means lower total cost of ownership for {{site.base_gateway}} users, shorter config propagation delay, and less impact to proxy latency. 
 See our [blog on incremental config sync](https://konghq.com/blog/product-releases/incremental-config-sync-tech-preview) for the performance comparisons.
 
@@ -106,6 +106,42 @@ Or, if you're running {{site.base_gateway}} in Docker, set the following environ
 ```
 export KONG_INCREMENTAL_SYNC=on
 ```
+## Operational behavior and fallback
+
+You can selectively enable or disable incremental config sync across your control plane and data plane nodes.
+
+### Rolling out incremental sync to some data planes
+
+Incremental sync (sync.v2) is a different protocol from the original full sync `sync.v1`. The Lua-based control plane supports both `sync.v1` and `sync.v2` simultaneously.
+
+Each data plane uses the `KONG_INCREMENTAL_SYNC` setting to determine which protocol to use:
+
+* If the environment variable `KONG_INCREMENTAL_SYNC=on`, the data plane attempts incremental sync (v2).
+* If the control plane or data plane does not support or disables incremental sync, they automatically fall back to full sync (v1).
+* You can roll out incremental sync incrementally by toggling this variable per data plane, no additional changes are required.
+
+### Rolling back to full sync
+
+To revert a data plane from incremental to full sync, set:
+
+`KONG_INCREMENTAL_SYNC=off`
+
+No restart or configuration purge is required.
+
+### Automatic full sync triggers
+
+Even when incremental sync is enabled, a full sync will still occur in some cases:
+
+* **Config drift or overflow**:
+  * If more than 512 changes occur while a data plane is disconnected from the control plane, a full sync is triggered.
+  * If a data plane falls too far behind the control plane, or appears to be ahead (which may indicate data corruption or clock drift), a full sync is triggered.
+
+* **Observability**:
+  * The data plane logs the start and completion of each full sync at `info` level.
+
+* **Data handling**:
+  * If a full sync fails, the data plane continues to serve the last known good configuration and retries the sync.
+  * Database purging is only performed after a successful full sync.
 
 ## Handling special cases
 
