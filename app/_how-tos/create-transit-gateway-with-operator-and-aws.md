@@ -40,7 +40,7 @@ prereqs:
 
 tldr:
   q: How can I create an AWS transit gateway and link it to {{site.konnect_short_name}} using {{ site.operator_product_name }}?
-  a: Create a transit gateway in AWS and create a resources share to share the transit gateway with the AWS account linked to your {{site.konnect_short_name}} account, then create a [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) and accept the transit gateway attachment in AWS.
+  a: Create a transit gateway in AWS and create a resources share to share the transit gateway with the AWS account linked to your {{site.konnect_short_name}} account. Then, create a [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) and accept the transit gateway attachment in AWS.
 
 faqs:
   - q: Can I create a {{site.konnect_short_name}} Transit Gateway linked to an Azure virtual network?
@@ -83,7 +83,9 @@ spec:
    ```
 
    {:.warning}
-   > Make sure to create the transit gateway in the same region as the {{site.konnect_short_name}} network provider. You can set the region in the [AWS CLI configuration](#aws-cli) or use the `--region` flag in each command.
+   > **Notes:**
+   > * Make sure to create the transit gateway in the same region as the {{site.konnect_short_name}} network provider. You can set the region in the [AWS CLI configuration](#aws-cli) or use the `--region` flag in each command.
+   > * If you have issues creating resources with AWS CLI, try using the env variables instead of the `aws configure` command for credentials. Make sure to include `AWS_REGION` or use the `--region` flag in every command.
 
 1. Export the transit gateway ID and ARN to your environment:
    ```sh
@@ -151,7 +153,7 @@ spec:
    aws ec2 describe-transit-gateway-vpc-attachments
    ```
 
-1. Retrieve the relevant attachment ID:
+1. Export the relevant attachment ID:
    ```sh
    export ATTACHMENT_ID='YOUR AWS TRANSIT GATEWAY VPC ATTACHMENT ID'
    ```
