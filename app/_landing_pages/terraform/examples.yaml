@@ -1,0 +1,181 @@
+metadata:
+  title: Kong Terraform Providers - configuration reference hub
+  content_type: landing_page
+  description: This page provides references to configuration samples and scenarios for Terraform providers for {{site.konnect_short_name}}, {{site.base_gateway}} and {{ site.mesh_product_name }}.
+
+
+rows:
+  - header:
+      type: h1
+      text: "Kong Terraform Providers - configuration reference hub"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Explore Terraform providers for Kong"
+              blocks:
+                - type: text
+                  text: |
+                    This page provides configuration examples and references for all officially supported Kong Terraform providers:
+
+                    - [{{site.konnect_short_name}} Provider](#{{site.konnect_short_name | downcase | replace: ' ', '-'}}-provider): Manage Konnect resources such as control planes, Gateway Services, Dev Portals, and teams.
+                    - [{{site.konnect_short_name}} Beta Provider](#{{site.konnect_short_name | downcase | replace: ' ', '-'}}-beta-provider): Configure advanced resources such as Identity Providers, Service Meshes, and Deve Portals.
+                    - [{{site.base_gateway}} Provider](#{{site.base_gateway | downcase | replace: ' ', '-'}}-provider): Automate Gateway configuration including services, Routes, Consumers, and Plugins.
+                    - [Kong Mesh Provider](#kong-mesh-provider): Define and manage Kong Mesh resources and policies for on-prem service meshes.
+
+  - header:
+      type: h2
+      text: "{{site.konnect_short_name}} Provider "
+      sub_text: "Configure the {{site.konnect_short_name}} Terraform provider to automate management of your {{site.konnect_short_name}} resources, including control planes, services, Dev Portals, and teams."
+    column_count: 4
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Manage centralized Consumers
+              description: |
+                Provision centralized Consumers, realms, and keys in {{site.konnect_short_name}} using Terraform to manage identity across control planes.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/centralized-consumers.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Secure and manage Services
+              description: |
+                Use Terraform to deploy a {{site.konnect_short_name}} Service secured with basic auth, organized by consumer groups, and protected by rate limiting.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/consumer-groups.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Deploy a cloud Gateway
+              description: |
+                Use Terraform to provision a Konnect Cloud Gateway with autoscaling data planes, API access, and a custom domain.
+              cta:
+                url: "http://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/cloud-gateways.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Manage system accounts
+              description: |
+                Provision a {{site.konnect_short_name}} system account, roles, access token, and team association using Terraform.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/create-system-account.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Deploy Dev Portal
+              description: |
+                Use Terraform to provision a private Dev Portal with custom domain support and team management.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/dev-portal-teams.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Publish API Products to Dev Portal
+              description: |
+                Use Terraform to deploy a Service, define an API product with authentication, and publish it to a private Dev Portal with documentation.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/publish-api-product.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Apply rate limiting to Routes
+              description: |
+                Use Terraform to deploy a serverless Gateway Service and Route, and apply a rate limiting plugin for traffic control.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/serverless-gateway.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Secure a Service with basic auth
+              description: |
+                Provision a Control Plane, Service, Route, and secure it with basic authentication.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/service-with-basic-auth.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Manage {{site.konnect_short_name}} Teams
+              description: |
+                Create and configure a {{site.konnect_short_name}} team, assign roles, and add users programmatically using Terraform.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/team-management.tf"
+
+  - header:
+      type: h2
+      text: "{{site.konnect_short_name}} Beta Provider"
+      sub_text: "Manage advanced Konnect resources using the {{site.konnect_short_name}} Beta Terraform provider, including authentication servers, service meshes, and developer portals."
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Configure Konnect Beta auth server and clients
+              description: |
+                Use Terraform to provision an Auth Server with scopes, claims, and clients for managing OAuth2 and OpenID Connect authentication flows in {{site.konnect_short_name}}.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/scenarios/idp/auth-server.tf"
+      - blocks:
+          - type: card
+            config:
+              title: Deploy and manage {{site.konnect_short_name}} Mesh
+              description: |
+               Provision a Mesh Control Plane, Mesh, and demo policies using Terraform, with optional Kubernetes mesh zone deployment via your kubeconfig.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect-beta/tree/main/examples/scenarios/mesh"
+      - blocks:
+          - type: card
+            config:
+              title: Provision a Developer Portal with API Publishing
+              description: |
+               Deploy a Gateway Control Plane, Service, Route, and Developer Portal along with authentication, API definitions, and documentation, then publish the API to the portal using Terraform.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect-beta/tree/main/examples/scenarios/portal"
+
+  - header:
+      type: h2
+      text: "{{site.base_gateway}} Provider"
+      sub_text: "Automate the deployment and configuration of core {{site.base_gateway}} resources using {{site.base_gateway}} Terraform provider."
+    column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Set up {{site.base_gateway}} resources with Terraform
+              description: |
+                Provision core {{site.base_gateway}} resources—including services, routes, consumers, and plugins.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-kong-gateway/tree/main/examples/resources"
+      - blocks:
+          - type: card
+            config:
+              title: Secure and rate limit a Gateway Service
+              description: |
+                Use Terraform to deploy a {{site.base_gateway}} service and route protected with basic authentication and rate limiting.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/scenarios/idp/auth-server.tf"
+  - header:
+      type: h2
+      text: "Kong Mesh Provider"
+      sub_text: "Define and manage Kong Mesh resources in on-prem environments using the Terraform-based Kong Mesh provider. Currently in beta."
+    column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Set Up Kong Mesh resources with Kong Mesh Terraform provider
+              description: |
+                Use the Kong Mesh Terraform provider to define and manage mesh resources including services, routes, gateways, policies, and observability primitives.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-kong-mesh/tree/main/examples/data-sources"
+      - blocks:
+          - type: card
+            config:
+              title: Manage Kong Mesh resources and policies with Kong Mesh Terraform provider
+              description: |
+                Use the Kong Mesh Terraform provider to define and manage Kong Mesh resources and policies—such as routes, rate limits, retries, and traffic permissions—across your on-prem service mesh.
+              cta:
+                url: "https://github.com/Kong/terraform-provider-kong-mesh"
