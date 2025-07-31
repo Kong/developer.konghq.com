@@ -28,6 +28,12 @@ rows:
               {{ site.kic_product_name }} takes Kubernetes resources such as `Ingress` and `HTTPRoute` and converts them into a valid {{ site.base_gateway }} configuration. It enables you to configure all the [features](/gateway/#learn) of {{ site.base_gateway }} using Kubernetes CRDs.
 
               KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](/kubernetes-ingress-controller/split-traffic/).
+          
+              ### When should I use KIC?
+              You should use KIC if one or more of the following is true:
+              - You're running {{site.base_gateway}} in a Kubernetes environment
+              - You want Kubernetes-native API Gateway management
+          
           - type: button
             config:
               text: Get started with {{ site.kic_product_name }}

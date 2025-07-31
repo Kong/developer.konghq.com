@@ -14,11 +14,13 @@ rows:
       text: "decK"
       sub_text: Kong's command line tool for API Lifecycle Automation
 
+
   - header:
-      type: h2
-      text: What is decK?
     columns:
-    - blocks:
+      - header:
+          type: h2
+          text: What is the decK?
+        blocks:
         - type: text
           config: |
             decK is a command line tool that facilitates API Lifecycle Automation (APIOps) 
@@ -31,7 +33,16 @@ rows:
 
             decK is one of the many tools you can use to manage {{site.base_gateway}} and {{site.konnect_short_name}}. 
             To learn about other tools, review our [tools page](/tools/).
-
+      - header:
+          type: h2
+          text: When should I use decK?
+        blocks:
+        - type: text
+          config: |
+            You should use decK if one or more of the following is true:
+            - You want to manage Gateway entity configuration with declarative, file-based, GitOps-style API configuration and automation
+            - You don't use Kubernetes or Terraform already
+            - You're running {{site.base_gateway}} in traditional or hybrid mode, or in {{site.konnect_short_name}}
   - header:
       type: h2
       text: "Install decK"
