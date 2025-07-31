@@ -33,7 +33,7 @@ search_aliases:
 
 tldr:
     q: How do I configure SSO with OpenID Connect and Okta in Insomnia?
-    a: Obtain the single sign-on URL and audience URI from the Insomnia SSO settings and add them to an application integration in Okta. Copy the auth server issuer URL, client ID, and client secret from Okta and enter those in the Insomnia SSO settings. Finally, add users or groups to the Okta app integration and invite those same users to the Insomnia app.
+    a: Set up an app integration in Okta using values from the Insomnia SSO settings, then copy credentials from Okta back into Insomnia. Add users to the Okta app and invite them to Insomnia
 
 prereqs:
   inline:
@@ -50,9 +50,9 @@ prereqs:
 
 ## Create the SSO connection in Insomnia
 
-Before you can configure the SSO connection in Okta, you must start configuring the SSO settings in Insomnia so you have access to the single-sign on URL and audience URI for the Okta settings.
+Begin setting up SSO in Insomnia to get the single sign-on URL and audience URI you'll need for the Okta configuration.
 
-1. In your Insomnia account settings, click your account at the top right and select **Enterprise Controls** from the dropdown.
+1. In your Insomnia account settings, click your account and select **Enterprise Controls** from the dropdown.
 1. Click **SSO** in the sidebar and then click **Create Connection**.
 1. In the SSO settings, enter your company's domain.
 
@@ -78,9 +78,10 @@ Now that Okta SSO is configured and you have the issuer URL, client ID, and clie
 
 ## Add users or groups to the application in Okta
 
-You can add users or groups to the application in Okta. They won't be allowed to log in with SSO yet though.
+Assign users or groups to the Okta app integration. They won’t be able to log in with SSO yet, but this step is required.
 
-In Okta, [assign users or groups to the app integration](https://help.okta.com/en-us/content/topics/apps/apps-manage-assignments.htm). 
+In Okta, [assign users or groups to the app integration](https://help.okta.com/en-us/content/topics/apps/apps-manage-assignments.htm).
+
 
 ## Invite users to Insomnia
 
