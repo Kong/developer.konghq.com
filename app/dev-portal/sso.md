@@ -43,7 +43,7 @@ When configuring SSO for Dev Portal, keep the following guidelines in mind:
 * Developers are auto-approved by {{site.konnect_short_name}} when using SSO to log in to the Dev Portal.
   * Kong outsources the approval process to the IdP, so access restrictions must be configured in the IdP.
 * If you are using [team mappings from an IdP](/dev-portal/team-mapping/), they must come from the same IdP as your Dev Portal SSO.
-* To automatically initiate the login flow when linking developers to the Dev Portal, utilize the SSO URL: `https://$YOUR_DOMAIN.com/login/sso`
+* To automatically initiate the login flow when linking developers to the Dev Portal, use the SSO URL: `https://$YOUR_DOMAIN.com/login/sso`
 * Each Dev Portal has its own SSO configuration.
   * You can use the same IdP across multiple Dev Portals or configure different IdPs per portal.
 * Dev Portal SSO is distinct from [{{site.konnect_short_name}} Org-level SSO](/konnect-platform/authentication/).
@@ -69,18 +69,19 @@ To ensure the preview experience in the {{site.konnect_short_name}} Dev Portal E
   * For example, Okta requires [Trusted Origins](https://help.okta.com/en-us/content/topics/api/trusted-origins-iframe.htm).
     Add `https://cloud.konghq.com` as a Trusted Origin to allow login in the preview.
 
-### Configuration Example
+## Dev Portal SSO configuration example
 
-Included below is an example configuration. For the example, we will utilize the following values:
+The following is an example Dev Portal SSO configuration. For the example, we will use the following values:
 
 - **{{site.konnect_short_name}} Dev Portal region/geo**: `us`
 - **{{site.konnect_short_name}} Dev Portal provided domain**: `abc123456789.us.kongportals.com`
 - **Desired custom domain**: `www.example.com`
 
-#### OIDC-specific settings
+### OIDC-specific settings
 
+If you're using OIDC for SSO, you'd configure your settings like the following:
 - **Single Sign On URL (SSO URL)**: `https://www.example.com/login/sso`
-  - Also sometimes referred to as **Initiate login URI**, utilized to automatically initiate the SSO login flow.
+  - Also sometimes referred to as **Initiate login URI**, use to automatically initiate the SSO login flow.
 - **Sign-in redirect URIs**:
   - `https://www.example.com/login`
   - `https://abc123456789.portal-preview.us.api.konghq.com/login`
@@ -89,10 +90,11 @@ Included below is an example configuration. For the example, we will utilize the
   - `https://www.example.com/login`
   - `https://abc123456789.portal-preview.us.api.konghq.com/login`
 
-#### SAML-specific settings:
+### SAML-specific settings:
 
+If you're using SAML for SSO, you'd configure your settings like the following:
 - **Single Sign On URL (SSO URL)**: `https://www.example.com/api/v2/developer/authenticate/saml/acs`
-  - Also sometimes referred to as **Initiate login URI**, utilized to automatically initiate the SSO login flow.
-  - To automatically initiate the login flow when linking developers to the Dev Portal, utilize the dedicated path: `https://www.example.com/login/sso`
+  - Also sometimes referred to as **Initiate login URI**, used to automatically initiate the SSO login flow.
+  - To automatically initiate the login flow when linking developers to the Dev Portal, use the dedicated path: `https://www.example.com/login/sso`
 - **Other Requestable SSO URLs** (typically found in Advanced settings):
   - `https://abc123456789.portal-preview.us.api.konghq.com/api/v2/developer/authenticate/saml/acs`
