@@ -535,6 +535,7 @@ no_version
 node_quantifier
 Node.js
 Node.js
+Nullsoft
 nunjucks
 Noname
 Noname
@@ -695,6 +696,7 @@ SBOMs
 SCCs
 SCCs
 schema's
+Scriptable
 SDKs
 search_by_username
 secret_id
