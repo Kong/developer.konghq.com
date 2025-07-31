@@ -107,7 +107,7 @@ Error: building state: consumer-group 'finance' not found for consumer '093645f9
 
 You have two options to resolve this issue:
 
-1. Ensure that all resources use the same `select_tags`
+1. Ensure that all resources use the same `select_tags`.
 1. Use `default_lookup_tags` to load additional resources _without_ including them in your state file. Default lookup tags can be used on Services, Routes, Partials, Consumers, and Consumer Groups.
 
 Update `consumers.yaml` now to specify `default_lookup_tags.consumer_groups`:
