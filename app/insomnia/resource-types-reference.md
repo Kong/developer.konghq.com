@@ -56,7 +56,7 @@ rows:
   - type: "`mock`"
     description: A local mock endpoint definitions and behaviors for testing.
   - type: "`plugin`"
-    description: Workspace-level plugin configurations or metadata.
+    description: A workspace-level plugin configuration or metadata.
   - type: "`test`"
-    description: Scripts or test suites associated with requests or collections.
+    description: A script or test suite associated with requests or collections.
 {% endtable %}

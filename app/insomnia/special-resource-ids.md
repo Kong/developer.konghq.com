@@ -57,5 +57,5 @@ Special resource IDs serve specific internal purposes:
 
 ## When special resource IDs apply
 Insomnia utilizes special resource IDs in different stages of your workflow:
-- **During serialization**: Insomnia exports workspace data and replaces real UUIDs with placeholder IDs like`__WORKSPACE_ID__`, `__BASE_ENVIRONMENT_ID__`, or `__<NAME>_<NUMBER>__`. These placeholders mark key entities for later resolution.
+- **During serialization**: Insomnia exports workspace data and replaces real UUIDs with placeholder IDs. These placeholders mark key entities for later resolution.
 - **In downstream consumers**: Importers and built-in sync logic detect these placeholders during import or sync and map them to actual or newly generated unique IDs. This process preserves object relationships and workspace structure.
