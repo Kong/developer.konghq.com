@@ -99,5 +99,9 @@
     "https://www.vaultproject.io/",
     "https://learn.microsoft.com/*",
     "https://app.swaggerhub.com/*",
-    "https://auth.mistral.ai/ui/"
+    "https://auth.mistral.ai/ui/",
+    "https://redis.io/*",
+    "https://docs.amberflo.io/*",
+    "https://konghq.com/legal/privacy-policy",
+    "https://www.gnu.org/*"
   ]
