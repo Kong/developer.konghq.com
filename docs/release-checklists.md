@@ -4,7 +4,7 @@
 
 ## Konnect release checklist
 1. [Publish OpenAPI specs](#openapi-specs)
-1. Provide preview link to PM
+1. Provide netlify preview link to PM
 
 After merging release branch, and once the Netlify build is complete and docs are visible on developer.konghq.com:
 1. [Run Algolia crawler](#algolia)
@@ -158,7 +158,7 @@ In the kong/docs-plugin-toolkit repo, you'll need to run a few workflows.
 
 #### Publishing a new spec
 
-1. Check workflow file in [platform API](https://github.com/Kong/platform-api/blob/main/.github/raise-pr-on-change.json)
+1. Check [workflow file](https://github.com/Kong/platform-api/blob/main/.github/raise-pr-on-change.json) in Platform API
 to make sure the new spec is included. If not, add it.
 
 1. The previous step will kick off an automatic update to the docs repo. Any public update to a spec opens a PR that looks like this: [feat(sdk): automated oas update](https://github.com/Kong/developer.konghq.com/pull/2372). 
