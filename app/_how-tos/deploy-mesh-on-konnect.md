@@ -14,7 +14,7 @@ products:
 
 tldr:
   q: How do I install {{site.mesh_product_name}} with a {{site.konnect_short_name}} managed Control plane
-  a: Install {{site.mesh_product_name}} on your environment and let {{site.konnect_short_name}} take care of the Control plane.
+  a: Install {{site.mesh_product_name}} zone Control plane in your environment and let {{site.konnect_short_name}} take care of the global Control plane.
 
 prereqs:
   inline:
@@ -60,6 +60,7 @@ The `CONTROL_PLANE_TOKEN` will be created automatically in {{site.konnect_short_
 Create the Helm values file:
 
 ```yaml
+echo "
 kuma:
   controlPlane:
     mode: zone
@@ -75,6 +76,7 @@ kuma:
     enabled: true
   egress:
     enabled: true
+  " > values.yaml
   ```
 
 {% tip %}
@@ -92,26 +94,28 @@ helm upgrade --install -n kong-mesh-system kong-mesh kong-mesh/kong-mesh -f valu
 Save Control Plane token to a file:
 ```sh
 mkdir -p ~/kuma-cp \
-  && echo CONTROL_PLANE_TOKEN > ~/kuma-cp/cpTokenFile \
+  && echo $CONTROL_PLANE_TOKEN > ~/kuma-cp/cpTokenFile \
   && chmod 600 ~/kuma-cp/cpTokenFile
 ```
 
 Create Mesh config file:
 
 ```yaml
+echo "
 environment: universal
 mode: zone
 multizone:
   zone:
     name: zone3
-    globalAddress: CONTROL_PLANE_URL
+    globalAddress: $CONTROL_PLANE_URL
 kmesh:
   multizone:
     zone:
       konnect:
-        cpId: CONTROL_PLANE_ID
+        cpId: $CONTROL_PLANE_ID
 experimental:
   kdsDeltaEnabled: true
+" > config.yaml
 ```
 
 {% tip %}
@@ -130,7 +134,7 @@ curl -L http://developer.konghq.com/mesh/installer.sh | sh - \
 
 ## Deploy the demo application
 
-To start learning how {{site.mesh_product_name}} works, you can use our simple and secure a simple demo application that consists of two services:
+To start learning how {{site.mesh_product_name}} works, you can use our simple and secure demo application that consists of two services:
 
 * `demo-app`: A web application that lets you increment a numeric counter. It listens on port `5000`
 * `redis`: The data store for the counter
@@ -161,7 +165,7 @@ The `demo-app` service listens on port 5000. When it starts, it expects to find 
 
 The zone key is purely static and arbitrary. Different zone values for different Redis instances let you keep track of which Redis instance stores the counter if you manage routes across different zones, clusters, and clouds.
 
-### Prerequisites
+### Universal Prerequisites
 
 - [Redis installed](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack)
 - [{{site.mesh_product_name}} installed](/mesh)
@@ -273,7 +277,7 @@ kubectl port-forward svc/demo-app -n kuma-demo 5000:5000
 
 ## Validate
 
-Navigate to `127.0.0.1:5000` in your web browser and increment the counter.
+Navigate to [`127.0.0.1:5000/`](http://127.0.0.1:5000/) in your web browser and increment the counter.
 
 Now that you have you workloads up and running, we can secure them with Mutual TLS.
 

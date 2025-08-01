@@ -1,6 +1,6 @@
 ---
-title: Deploy Self Managed Control Plane
-description: "Learn how to install Mesh on an existing Kubernetes cluster, and deploy the {{site.mesh_product_name}} demo application."
+title: Deploy Self Managed Control Plane on Kubernetes
+description: "Learn how to install Mesh Control plane on an existing Kubernetes cluster, and deploy the {{site.mesh_product_name}} demo application."
 content_type: how_to
 permalink: /mesh/deploy-mesh-self-managed/
 bread-crumbs: 
@@ -43,7 +43,7 @@ helm install --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh
 
 ## Deploy the demo application
 
-To start learning how {{site.mesh_product_name}} works, you can use our simple and secure a simple demo application that consists of two services:
+To start learning how {{site.mesh_product_name}} works, you can use our simple and secure demo application that consists of two services:
 
 * `demo-app`: A web application that lets you increment a numeric counter. It listens on port `5000`
 * `redis`: The data store for the counter

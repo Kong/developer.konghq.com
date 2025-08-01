@@ -154,6 +154,8 @@ You can use the `kumactl` CLI to perform **read-only** operations on {{site.mesh
 Run `kumactl`, for example:
 
 ```sh
+kubectl port-forward svc/{{site.mesh_cp_name}} -n {{site.mesh_namespace}} 5681:5681&
+
 kumactl get dataplanes
 # MESH      NAME                                              TAGS
 # default   kuma-demo-app-68758d8d5d-dddvg.kuma-demo          app=kuma-demo-demo-app env=prod pod-template-hash=68758d8d5d protocol=http service=demo-app_kuma-demo_svc_5000 version=v8
@@ -186,29 +188,22 @@ mtls:
 EOF
 ```
 
-Once Mutual TLS has been enabled, {{site.mesh_product_name}} will **not allow** traffic to flow freely across our services unless we explicitly have a [Traffic Permission](/docs/{{ page.release }}/policies/traffic-permissions/) policy that describes what services can be consumed by other services.
-By default, a very permissive traffic permission is created.
-
-For the sake of this demo we will delete it:
-
-```sh
-kumactl delete traffic-permission allow-all-default
-```
+Once Mutual TLS has been enabled, {{site.mesh_product_name}} will **not allow** traffic to flow freely across our services unless we explicitly have a [Traffic Traffic Permission](/mesh/policies/meshtrafficpermission/) policy that describes what services can be consumed by other services.
 
 You can try to make requests to the demo application at [`127.0.0.1:5000/`](http://127.0.0.1:5000/) and you will notice that they will **not** work.
 
 Now let's add back the default traffic permission:
 ```sh
 cat <<EOF | kumactl apply -f -
-type: TrafficPermission
-name: allow-all-default
+type: MeshTrafficPermission
+name: allow-all
 mesh: default
-sources:
-  - match:
-      kuma.io/service: '*'
-destinations:
-  - match:
-      kuma.io/service: '*'
+spec:
+  from:
+  - targetRef:
+      kind: Mesh
+    default:
+      action: Allow
 EOF
 ```
 
@@ -220,7 +215,7 @@ As usual, you can visualize the Mutual TLS configuration and the Traffic Permiss
 
 ## Explore Traffic Metrics
 
-One of the most important [policies](/policies) that {{site.mesh_product_name}} provides out of the box is [Traffic Metrics](/docs/{{ page.release }}/policies/traffic-metrics/).
+One of the most important [policies](/policies) that {{site.mesh_product_name}} provides out of the box is [Mesh Metrics](/mesh/policies/meshmetric/).
 
 With Traffic Metrics we can leverage Prometheus and Grafana to provide powerful dashboards that visualize the overall traffic activity of our application and the status of the service mesh.
 
@@ -256,9 +251,3 @@ Increment the counter to generate traffic, and access the dashboard at [127.0.0.
 * `{{site.mesh_product_name}} Service to Service`: to visualize traffic metrics for our services.
 
 You can now explore the dashboards and see the metrics being populated over time.
-
-## Next steps
-
-* Explore the [Policies](/policies) available to govern and orchestrate your service traffic.
-* Read the [full documentation](/docs/{{ page.release }}/) to learn about all the capabilities of {{site.mesh_product_name}}.
-* Chat with us at the official [Kuma Slack](/community) for questions or feedback.
