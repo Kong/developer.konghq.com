@@ -10,6 +10,7 @@ products:
 - insomnia
 
 breadcrumbs:
+- /insomnia/
 - /insomnia/plugins/
 
 tags:
@@ -22,6 +23,10 @@ search_aliases:
 related_resources:
   - text: Plugins
     url: /insomnia/plugins/
+  - text: Context object reference
+    url: /insomnia/plugins/context-object-reference/
+  - text: Hooks and actions
+    url: /insomnia/plugins/hooks-and-actions/
   - text: Insomnia Plugin Hub
     url: https://insomnia.rest/plugins
   - text: Template tags
@@ -145,3 +150,4 @@ module.exports.themes = [{
   },
 }];
 ```
+
