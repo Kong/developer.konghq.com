@@ -113,14 +113,14 @@ rows:
   - property: "`ai.proxy.aws-guardrails.inputput_processing_latency`"
     description: The time (in milliseconds) taken to process the input through guardrails.
   - property: "`ai.proxy.aws-guardrails.guardrails_version`"
-    description: The version or state of the guardrails configuration (e.g., DRAFT, RELEASE).
+    description: The version or state of the guardrails configuration (for example, `DRAFT`, `RELEASE`).
   - property: "`ai.proxy.aws-guardrails.aws_region`"
     description: The AWS region where the guardrails are deployed or executed.
 {% endtable %}
 
 ### AI Azure Content Safety logs
 
-If the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/) is enabled, each corresponding log entry records a detected feature level for a user-defined content safety category (for example, Hate, Violence, SexualContent). The category is a user-defined name, and the feature level indicates the detected severity for that category, as seen here. Multiple entries can appear per request depending on the configuration and detected content.
+If the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/) is enabled, each corresponding log entry records a detected feature level for a user-defined content safety category (for example, `Hate`, `Violence`, `SexualContent`). The category is a user-defined name, and the feature level indicates the detected severity for that category, as seen here. Multiple entries can appear per request depending on the configuration and detected content.
 
 {:.info}
 > For detailed information on categories and severity levels, see [Harm categories in Azure AI Content Safety - Azure AI services](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
@@ -204,7 +204,7 @@ columns:
     key: description
 rows:
   - property: "`ai.proxy.rag-inject.vector_db`"
-    description: The vector database used (e.g., pgvector).
+    description: The vector database used (for example, `pgvector`).
   - property: "`ai.proxy.rag-inject.injected`"
     description: Boolean indicating if RAG injection occurred.
   - property: "`ai.proxy.rag-inject.fetch_latency`"
