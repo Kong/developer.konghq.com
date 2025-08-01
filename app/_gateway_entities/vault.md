@@ -189,7 +189,7 @@ features:
     oss: true
     enterprise: true
     supports_konnect: true
-  - title: Konnect Config Store
+  - title: Konnect (Konnect Config Store)
     url: /how-to/configure-the-konnect-config-store/
     oss: false
     enterprise: false
