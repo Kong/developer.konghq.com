@@ -41,8 +41,6 @@ To migrate from Dev Portal classic (v2) to the new Dev Portal (v3), do the follo
    1. [Create a new v3 Dev Portal in {{site.konnect_short_name}}](https://cloud.konghq.com/portals/create)
    1. [Republish your API catalog](/how-to/automate-api-catalog/) either via the UI or the v3 API
    
-   {:.warning}
-   > For self-hosted Dev Portals, [contact Kong support](https://support.konghq.com) for help.
 1. If you are using an [IdP for developer credentials](/dev-portal/team-mapping/), update your IdP with the new Dev Portal domain for the redirect URIs. This will maintain developer logins.
 1. If you are using {{site.konnect_short_name}} developer logins, like basic auth, developers will need to register at the new v3 Dev Portal and regenerate their API credentials.
 1. If you're using a custom domain for your Dev Portal, do the following:
@@ -50,4 +48,5 @@ To migrate from Dev Portal classic (v2) to the new Dev Portal (v3), do the follo
    1. Delete your custom domain from v2 Dev Portal.
    1. Add the custom domain to the v3 Dev Portal.
 1. If you've enabled developer RBAC, manually assign developers to teams and roles by navigating to your v3 Dev Portal in {{site.konnect_short_name}}, clicking **Access and approvals** in the sidebar, and click the **Teams** tab.
-
+   {:.warning}
+   > For self-hosted Dev Portals, [contact Kong support](https://support.konghq.com) for help.
