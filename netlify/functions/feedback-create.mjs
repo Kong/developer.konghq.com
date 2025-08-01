@@ -1,7 +1,31 @@
 import { v4 as uuidv4 } from "uuid";
+import {
+  createFeedbackInSnowflake,
+  createSnowflakeConnection,
+  connectSnowflake,
+} from "../utils/snowflake.js";
+
+async function sendDataToSlack(url, vote, id, webhookUrl) {
+  const payload = {
+    text: `New feedback received:\n• Page: ${url}\n• Vote: ${
+      vote ? "Yes" : "No"
+    }\n• Feedback Id: ${id}`,
+  };
+
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Slack API returned status ${response.status}`);
+  }
+}
 
 export async function handler(event, context) {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+  let connection;
 
   if (!webhookUrl) {
     console.log("Missing Slack webhook URL.");
@@ -22,7 +46,7 @@ export async function handler(event, context) {
   let id = uuidv4();
 
   try {
-    const { pageUrl, vote, feedbackId } = JSON.parse(event.body);
+    const { pageUrl, vote } = JSON.parse(event.body);
 
     if (!pageUrl || typeof vote !== "boolean") {
       return {
@@ -32,28 +56,15 @@ export async function handler(event, context) {
       };
     }
 
-    if (feedbackId) {
-      id = feedbackId;
-    }
-
     const url = new URL(pageUrl);
     url.hash = "";
 
-    const payload = {
-      text: `New feedback received:\n• Page: ${url}\n• Vote: ${
-        vote ? "Yes" : "No"
-      }\n• Feedback Id: ${id}`,
-    };
+    await sendDataToSlack(url, vote, id, webhookUrl);
 
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { "Content-Type": "application/json" },
-    });
+    connection = createSnowflakeConnection();
+    await connectSnowflake(connection);
 
-    if (!response.ok) {
-      throw new Error(`Slack API returned status ${response.status}`);
-    }
+    await createFeedbackInSnowflake(connection, id, url, vote, null);
 
     return {
       statusCode: 201,
@@ -65,10 +76,19 @@ export async function handler(event, context) {
       headers: { "Content-Type": "application/json" },
     };
   } catch (error) {
+    console.log(error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: "Server error", error: error.message }),
+      body: JSON.stringify({ message: "Server error" }),
       headers: { "Content-Type": "application/json" },
     };
+  } finally {
+    if (connection) {
+      connection.destroy((err) => {
+        if (err) {
+          console.error("Error disconnecting from Snowflake");
+        }
+      });
+    }
   }
 }
