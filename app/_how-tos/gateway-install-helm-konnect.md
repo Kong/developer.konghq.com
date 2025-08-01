@@ -25,7 +25,11 @@ prereqs:
   skip_product: true
 
 topology_switcher: page
-
+next_steps:
+  - text: Rate limit a Gateway Service
+    url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
+  - text: Enable key authentication on a Gateway Service
+    url: /how-to/authenticate-consumers-with-key-auth-enc/
 ---
 
 ## Konnect setup

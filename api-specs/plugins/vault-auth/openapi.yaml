@@ -33,6 +33,129 @@ security:
   - personalAccessToken: []
 
 paths:
+  /vault-auth:
+    get:
+      summary: List Vault objects
+      operationId: listVaults
+      description: Retrieves a list of all configured Vault objects.
+      responses:
+        '200':
+          description: List of Vault objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Vault'
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+
+    post:
+      summary: Create a Vault object
+      operationId: createVault
+      description: Creates a Vault object that defines a connection to a HashiCorp Vault server.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: A unique name for the Vault object.
+                mount:
+                  type: string
+                  description: The mount path of the Vault secrets engine.
+                protocol:
+                  type: string
+                  enum: [http, https]
+                  description: The protocol used to communicate with the Vault server.
+                host:
+                  type: string
+                  description: The host of the Vault server.
+                port:
+                  type: integer
+                  description: The port of the Vault server.
+                vault_token:
+                  type: string
+                  description: The authentication token used to access Vault.
+                kv:
+                  type: string
+                  enum: [v1, v2]
+                  description: The KV secrets engine version to use.
+              required:
+                - name
+                - mount
+                - protocol
+                - host
+                - port
+                - vault_token
+      responses:
+        '201':
+          description: Vault object successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vault'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+
+  /vault-auth/{id}:
+    get:
+      summary: Retrieve a Vault object
+      operationId: getVault
+      description: Retrieves a specific Vault object by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the Vault object.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vault object retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vault'
+        '404':
+          description: Vault object not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+
+    delete:
+      summary: Delete a Vault object
+      operationId: deleteVault
+      description: Deletes a Vault object by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the Vault object.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Vault object deleted successfully.
+        '404':
+          description: Vault object not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
   /vault-auth/{vault}/credentials:
     get:
       operationId: listVaultCredentials
@@ -201,3 +324,32 @@ components:
       type: http
       scheme: bearer
       bearerFormat: Token
+  schemas:
+    Vault:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        mount:
+          type: string
+        protocol:
+          type: string
+          enum: [http, https]
+        host:
+          type: string
+        port:
+          type: integer
+        vault_token:
+          type: string
+        kv:
+          type: string
+          enum: [v1, v2]
+        created_at:
+          type: integer
+          format: int64
+        updated_at:
+          type: integer
+          format: int64

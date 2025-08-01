@@ -88,7 +88,7 @@ the Service is **not** in the database anymore (it was deleted by node `A`), it 
 
 All nodes perform a periodic background job to synchronize with changes that
 may have been triggered by other nodes. The frequency of this job can be
-configured using the [`db_update_frequency`](/gateway/configuration/#db_update_frequency) parameter in `kong.conf`.
+configured using the [`db_update_frequency`](/gateway/configuration/#db-update-frequency) parameter in `kong.conf`.
 
 Every `db_update_frequency` seconds, all running {{site.base_gateway}} nodes will poll the
 database for any update, and will purge the relevant entities from their cache
