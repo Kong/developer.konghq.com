@@ -47,6 +47,8 @@ search_aliases:
 related_resources:
   - text: Enforce responsible AI behavior using the AI Prompt Decorator plugin
     url: /how-to/use-ai-prompt-decorator-plugin/
+  - text: Guide survey classification behavior using the AI Prompt Decorator plugin
+    url: /how-to/create-a-complex-ai-chat-history/
 ---
 
 The AI Prompt Decorator plugin adds an array of `llm/v1/chat` messages to either the start or end of an LLM consumer's chat history.

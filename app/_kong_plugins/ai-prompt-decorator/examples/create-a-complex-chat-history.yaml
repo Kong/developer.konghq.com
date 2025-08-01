@@ -5,7 +5,7 @@ description: 'Creates a detailed chat history by configuring the plugin to prepe
 extended_description: |
     Creates a detailed chat history by configuring the plugin to prepend and append multiple messages, allowing any user to continue the conversation.
 
-    For a full walkthrough, see [Enforce responsible AI behavior using the AI Prompt Decorator plugin](/how-to/use-ai-prompt-decorator-plugin/).
+    For a full walkthrough, see [Guide survey classification behavior using the AI Prompt Decorator plugin](how-to/create-a-complex-ai-chat-history/).
 
 weight: 900
 
