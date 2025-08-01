@@ -93,6 +93,71 @@ rows:
       {% new_in 3.8 %} Time taken by the LLM provider to generate the full response (ms).
 {% endtable %}
 
+### AI AWS Guardrails logs {% new_in 3.11 %}
+
+For users using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), logs capture processing times and configuration metadata related to content guardrails applied to inputs and outputs.
+
+The following fields appear in structured AI logs when the I AWS Guardrails plugin is enabled:
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.aws-guardrails.guardrails_id`"
+    description: The unique identifier of the guardrails configuration applied.
+  - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
+    description: The time (in milliseconds) taken to process the output through guardrails.
+  - property: "`ai.proxy.aws-guardrails.inputput_processing_latency`"
+    description: The time (in milliseconds) taken to process the input through guardrails.
+  - property: "`ai.proxy.aws-guardrails.guardrails_version`"
+    description: The version or state of the guardrails configuration (e.g., DRAFT, RELEASE).
+  - property: "`ai.proxy.aws-guardrails.aws_region`"
+    description: The AWS region where the guardrails are deployed or executed.
+{% endtable %}
+
+### AI Azure Content Safety logs
+
+If the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/) is enabled, each corresponding log entry records a detected feature level for a user-defined content safety category (for example, Hate, Violence, SexualContent). The category is a user-defined name, and the feature level indicates the detected severity for that category, as seen here. Multiple entries can appear per request depending on the configuration and detected content.
+
+{:.info}
+> For detailed information on categories and severity levels, see [Harm categories in Azure AI Content Safety - Azure AI services](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.audit.azure_content_safety.<CATEGORY>`"
+    description: Detected feature level for a user-defined category (for example, `Hate`, `Violence`). There can be multiple entries per request depending on configuration and detected content.
+{% endtable %}
+
+### AI PII Sanitizer logs {% new_in 3.10 %}
+
+If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), AI Gateway logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.
+
+The following fields appear in structured AI logs when the AI PII Sanitizer plugin is enabled:
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.sanitizer.pii_identified`"
+    description: The number of PII entities detected in the input payload.
+  - property: "`ai.sanitizer.pii_sanitized`"
+    description: The number of PII entities that were anonymized or redacted.
+  - property: "`ai.sanitizer.duration`"
+    description: The time taken (in milliseconds) by the `ai-pii-service` container to process the payload.
+  - property: "`ai.sanitizer.sanitized_items`"
+    description: A list of sanitized PII entities, each including the original text, redacted text, and the entity type.
+{% endtable %}
 
 ### AI Prompt Compressor logs {% new_in 3.11 %}
 
@@ -124,55 +189,6 @@ rows:
   - property: "`ai.compressor.information`"
     description: A summary or message describing the result of compression.
 {% endtable %}
-
-### AI PII Sanitizer Logs {% new_in 3.10 %}
-
-If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), AI Gateway logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.
-
-The following fields appear in structured AI logs when the AI PII Sanitizer plugin is enabled:
-
-{% table %}
-columns:
-  - title: Property
-    key: property
-  - title: Description
-    key: description
-rows:
-  - property: "`ai.sanitizer.pii_identified`"
-    description: The number of PII entities detected in the input payload.
-  - property: "`ai.sanitizer.pii_sanitized`"
-    description: The number of PII entities that were anonymized or redacted.
-  - property: "`ai.sanitizer.duration`"
-    description: The time taken (in milliseconds) by the `ai-pii-service` container to process the payload.
-  - property: "`ai.sanitizer.sanitized_items`"
-    description: A list of sanitized PII entities, each including the original text, redacted text, and the entity type.
-{% endtable %}
-
-### AI AWS Guardrails logs {% new_in 3.11 %}
-
-For users using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), logs capture processing times and configuration metadata related to content guardrails applied to inputs and outputs.
-
-The following fields appear in structured AI logs when the I AWS Guardrails plugin is enabled:
-
-{% table %}
-columns:
-  - title: Property
-    key: property
-  - title: Description
-    key: description
-rows:
-  - property: "`ai.proxy.aws-guardrails.guardrails_id`"
-    description: The unique identifier of the guardrails configuration applied.
-  - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
-    description: The time (in milliseconds) taken to process the output through guardrails.
-  - property: "`ai.proxy.aws-guardrails.inputput_processing_latency`"
-    description: The time (in milliseconds) taken to process the input through guardrails.
-  - property: "`ai.proxy.aws-guardrails.guardrails_version`"
-    description: The version or state of the guardrails configuration (e.g., DRAFT, RELEASE).
-  - property: "`ai.proxy.aws-guardrails.aws_region`"
-    description: The AWS region where the guardrails are deployed or executed.
-{% endtable %}
-
 
 ### AI RAG Injector logs {% new_in 3.10 %}
 
@@ -239,25 +255,6 @@ rows:
 > **Note:**
 > When returning a cache response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
-
-
-### AI Azure Content Safety logs
-
-If the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/) is enabled, each corresponding log entry records a detected feature level for a user-defined content safety category (for example, Hate, Violence, SexualContent). The category is a user-defined name, and the feature level indicates the detected severity for that category, as seen here. Multiple entries can appear per request depending on the configuration and detected content.
-
-{:.info}
-> For detailed information on categories and severity levels, see [Harm categories in Azure AI Content Safety - Azure AI services](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
-
-{% table %}
-columns:
-  - title: Property
-    key: property
-  - title: Description
-    key: description
-rows:
-  - property: "`ai.audit.azure_content_safety.<CATEGORY>`"
-    description: Detected feature level for a user-defined category (for example, `Hate`, `Violence`). There can be multiple entries per request depending on configuration and detected content.
-{% endtable %}
 
 ## Example log entry
 
