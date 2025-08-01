@@ -35,6 +35,8 @@ icon: cors.png
 categories:
   - security
 
+min_version:
+  gateway: '1.0'
 ---
 
 The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) to a Service or a Route. This allows you to automate the configuration of CORS rules, ensuring that your upstreams only accept and share resources with approved sources.

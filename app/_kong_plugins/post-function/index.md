@@ -42,6 +42,9 @@ related_resources:
     url: /how-to/adjust-header-names-in-request/
   - text: Pre-Function plugin
     url: /plugins/pre-function/
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Post-Function plugin (also known as Kong Functions, Post-Plugin) lets you dynamically run Lua code from {{site.base_gateway}} **after** other plugins in succession.

@@ -44,6 +44,9 @@ notes: |
    <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or 
    Serverless Cloud Gateways because it depends on a local agent, and there are no local nodes 
    in Dedicated or Serverless Cloud Gateways.
+
+min_version:
+  gateway: '1.0'
 ---
 
 Log request and response data to Syslog.

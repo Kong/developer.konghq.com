@@ -117,7 +117,7 @@ After the product hits the end of the support period, Kong will provide limited 
 
 ## Supported versions
 
-Kong supports the following versions of {{site.base_gateway}}: 
+Kong supports the following versions of {{site.ee_product_name}}: 
 
 {% assign releases = site.data.products.gateway.releases | reverse | where: "label", empty %}
 
@@ -127,7 +127,7 @@ Kong supports the following versions of {{site.base_gateway}}:
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{tab_name}} %}
-{{site.base_gateway}} {{tab_name}} supports the following deployment targets until {{release.eol}}, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
+{{site.ee_product_name}} {{tab_name}} supports the following deployment targets until {{release.eol}}, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
   {% include support/gateway.html release=release %}
 {% endnavtab %}
 {% endunless %}
@@ -135,6 +135,7 @@ Kong supports the following versions of {{site.base_gateway}}:
 {% endnavtabs %}
 
 For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
+
 ## Marketplaces
 
 {{site.base_gateway}} is available through the following marketplaces:
@@ -153,7 +154,7 @@ For information about FIPS, see the [FIPS support policy](/gateway/fips-support/
 
 ## Older versions
 
-These versions have reached the end of full support.
+These versions of {{site.ee_product_name}} have reached the end of full support.
 
 <!--vale off-->
 {% table %}

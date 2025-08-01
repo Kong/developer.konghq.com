@@ -34,6 +34,13 @@ rows:
               include_content: tools/inso-cli/install/windows
             - title: Linux
               include_content: tools/inso-cli/install/linux
+            - title: Docker
+              content: |
+                1. Pull the [Inso CLI Docker image](https://hub.docker.com/r/kong/inso/tags):
+                   ```sh
+                   docker pull kong/inso:latest
+                   ```
+                1. Mount your specs folder to the `/var/temp folder` in the container. For more details, see [Run Inso CLI on Docker](/how-to/run-inso-cli-on-docker/).
 
   - header:
     columns:
@@ -114,7 +121,7 @@ rows:
                         - output.yaml
                     
                 - text: |
-                    Run a script defined in the configuration file
+                    Run a script defined in the [configuration file](/inso-cli/configuration/)
                   action:
                     type: command
                     config:

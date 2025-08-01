@@ -40,6 +40,9 @@ related_resources:
     url: /plugins/grpc-gateway/
   - text: Use the gRPC-Web plugin to proxy HTTP requests to a gRPC service
     url: /how-to/use-grpc-web/
+
+min_version:
+  gateway: '2.1'
 ---
 
 The gRPC-Web plugins allows access to a [gRPC](https://grpc.io/) service via the [gRPC-Web protocol](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-WEB.md#protocol-differences-vs-grpc-over-http2).

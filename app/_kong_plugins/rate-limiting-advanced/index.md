@@ -51,6 +51,9 @@ notes: |
   For DB-less mode, use one of <code>redis</code> or <code>local</code>;
   for Konnect and hybrid mode, use <code>redis</code>, or <code>local</code> for data
   planes only. In Serverless gateways only the <code>local</code> config strategy is supported.
+
+min_version:
+  gateway: '1.0'
 ---
 
 Rate limit how many HTTP requests can be made in a given time frame using multiple rate limits and window sizes, and applying sliding windows.
