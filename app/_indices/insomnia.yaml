@@ -46,7 +46,9 @@ sections:
     items:
       - path: /insomnia/plugins/
       - path: /how-to/create-an-insomnia-plugin/
-      - path: /insomnia/plugin-reference/
+      - path: /insomnia/plugins/plugin-reference/
+      - path: /insomnia/plugins/context-object-reference/
+      - path: /insomnia/plugins/hooks-and-actions/
 
   - title: Authentication and authorization
     items: 
@@ -72,10 +74,21 @@ sections:
       - path: /insomnia/collected-data/
       - path: /insomnia/incident-response/
       - path: /how-to/manage-secrets-in-insomnia-with-1password/
+  
+  - title: Inso CLI
+    items:
+      - path: /inso-cli/
+      - path: /inso-cli/reference/
+      - path: /inso-cli/configuration/
+      - path: /inso-cli/continuous-integration/
+      - path: /how-to/run-inso-cli-on-docker/
+      - path: /inso-cli/sbom/
+      - path: /inso-cli/verify-binary-provenance/
+      - path: /inso-cli/verify-docker-image-provenance/
+      - path: /inso-cli/verify-docker-image-signature/
 
   - title: Reference
     items:
-      - path: /inso-cli/
       - path: /insomnia/accounts/
       - path: /insomnia/allowlist/
       - path: /insomnia/dynamic-variables/
@@ -86,3 +99,4 @@ sections:
       - path: /how-to/synchronize-with-git/
       - path: /insomnia/verify-binary-provenance/
       - path: /insomnia/version-control/
+      - path: /insomnia/keyboard-shortcuts/

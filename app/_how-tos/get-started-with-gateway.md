@@ -66,7 +66,15 @@ cleanup:
 
 min_version:
     gateway: '3.4'
-
+next_steps:
+  - text: See all {{site.base_gateway}} tutorials
+    url: /how-to/?products=gateway
+  - text: Learn about {{site.base_gateway}} entities
+    url: /gateway/entities/
+  - text: Learn about how {{site.base_gateway}} is configured
+    url: /gateway/configuration/
+  - text: See all {{site.base_gateway}} plugins
+    url: /plugins/
 automated_tests: false
 ---
 

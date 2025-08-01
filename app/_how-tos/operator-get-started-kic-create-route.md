@@ -31,6 +31,11 @@ tldr:
 
 prereqs:
   skip_product: true
+next_steps:
+  - text: Proxying HTTP Traffic
+    url: /kubernetes-ingress-controller/routing/http/
+  - text: Rate limiting with {{site.kic_product_name}}
+    url: /kubernetes-ingress-controller/rate-limiting/
 ---
 
 {% assign gatewayApiVersion = "v1" %}

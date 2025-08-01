@@ -46,6 +46,9 @@ related_resources:
     url: /how-to/transform-a-client-request/
   - text: AI Request Transformer
     url: /plugins/ai-request-transformer/
+
+min_version:
+  gateway: '1.0'
 ---
 
 {% include plugins/request-response-transformer/request-transformer-description.md %}

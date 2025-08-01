@@ -97,6 +97,9 @@ entities:
               options:
                 max_tokens: 512
                 temperature: 1.0
+            logging:
+              log_payloads: true
+              log_statistics: true
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
@@ -252,7 +255,7 @@ Before we send requests to our LLM, we need to set up the HTTP Logs plugin to ch
 entities:
   plugins:
     - name: http-log
-      service: example-route
+      service: example-service
       config:
         http_endpoint: http://host.docker.internal:9999/
         headers:

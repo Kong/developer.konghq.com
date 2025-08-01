@@ -189,6 +189,26 @@ rows:
                   In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals.
 
                   For more information, see [Dev Portal analytics](/dev-portal/analytics/).
+  - header:
+      type: h2
+      text: "References"
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Dev Portal audit logs
+              description: |
+                Learn about what events are logged in Dev Portal logs.
+              cta:
+                url: "/konnect-platform/audit-logs/"
+      - blocks:
+          - type: card
+            config:
+              title: Dev Portal v3 breaking changes
+              description: |
+                Review breaking changes from Dev Portal v3 beta to general release.
+              cta:
+                url: "/dev-portal/breaking-changes/"
   
   - columns:
       - blocks:

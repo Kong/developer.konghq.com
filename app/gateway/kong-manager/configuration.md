@@ -168,20 +168,20 @@ is cleared from the browser after testing to prevent stale certificates from int
 `localhost`.
 
 ## Multiple domains {% new_in 3.9 %}
-To configure Kong Manager to be accessible from multiple domains, you can list the domains as comma-separated values in the [`admin_gui_url`](/gateway/configuration/#admin_gui_url) parameter in your Kong configuration. For example:
+To configure Kong Manager to be accessible from multiple domains, you can list the domains as comma-separated values in the [`admin_gui_url`](/gateway/configuration/#admin-gui-url) parameter in your Kong configuration. For example:
 ```
 admin_gui_url = http://localhost:8002, http://127.0.0.1:8002
 ```
 
-If the [`admin_gui_path`](/gateway/configuration/#admin_gui_path) is also set, update the Kong configuration:
+If the [`admin_gui_path`](/gateway/configuration/#admin-gui-path) is also set, update the Kong configuration:
 ```
 admin_gui_url = http://localhost:8002/manager, http://127.0.0.1:8002/manager
 admin_gui_path = /manager
 ```
 Make sure that each domain has proper DNS records and that the {{site.base_gateway}} instance is accessible from all specified domains.
 
-If your setup involves multiple domains or subdomains, we recommend removing the `cookie_domain` setting in the [`admin_gui_session_conf`](/gateway/configuration/#admin_gui_session_conf) or [`admin_gui_auth_conf`](/gateway/configuration/#admin_gui_auth_conf).
-When `cookie_domain` is not specified, cookies are set for the domain initiated in the request if [`admin_gui_api_url`](/gateway/configuration/#admin_gui_api_url) is not specified. This allows the browser to manage cookies correctly for each domain independently, avoiding conflicts or scope issues. 
+If your setup involves multiple domains or subdomains, we recommend removing the `cookie_domain` setting in the [`admin_gui_session_conf`](/gateway/configuration/#admin-gui-session-conf) or [`admin_gui_auth_conf`](/gateway/configuration/#admin-gui-auth-conf).
+When `cookie_domain` is not specified, cookies are set for the domain initiated in the request if [`admin_gui_api_url`](/gateway/configuration/#admin-gui-api-url) is not specified. This allows the browser to manage cookies correctly for each domain independently, avoiding conflicts or scope issues. 
 
 For example, a request to `gui.konghq.com` and `other-gui.example.com` will produce cookies for `gui.konghq.com` and `other-gui.example.com` respectively, instead of the root-level `konghq.com` domain when `cookie_domain` isn't specified:
 

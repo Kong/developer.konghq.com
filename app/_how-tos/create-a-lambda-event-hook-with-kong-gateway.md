@@ -50,6 +50,7 @@ Create a Lua script to load into the lambda Event Hook.
 return function (data, event, source, pid)
 local user = data.entity.username
 error("Event Hook on consumer " .. user .. "")
+return true
 end
 ```
 
@@ -64,10 +65,13 @@ data:
   config:
     functions:
       - |-
-        return function (data, event, source, pid) local user = data.entity.username error("Event Hook on consumer " .. user .. "") end
+        return function (data, event, source, pid) local user = data.entity.username error("Event Hook on consumer " .. user .. "") return true end
 formats:
   - admin-api
 {% endentity_example %}
+
+{:.info}
+> **Note:** This should return true if the Lua function executed succeeded. The backend engine will check the return value, if it is not true, it would be considered as a failure, and the backend engine will try it later.
 
 
 ## Validate the webhook

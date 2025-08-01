@@ -31,7 +31,7 @@ related_resources:
 {{site.konnect_short_name}} Debugger provides a connected debugging experience and real-time trace-level visibility into API traffic, enabling you to:
 
 * **Troubleshoot issues:** Investigate and resolve problems during deployments or incidents with targeted, on-demand traces.
-* **Understand request lifecycle**: Visualize exactly what happened during a specific request, including order and duration plugin execution, and more.
+* **Understand request lifecycle**: Visualize exactly what happened during a specific request, including order and duration plugin execution. See [Debugger spans](/gateway/debugger-spans/) for a list of spans captured.
 * **Improve performance and reliability:** Use deep insights to fine-tune configurations and resolve bottlenecks.
 
 {{site.konnect_product_name}}'s Debugger provides exclusive, in-depth insights not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
@@ -43,7 +43,7 @@ related_resources:
 ### Traces
 Traces provide a visual representation of the request and response lifecycle, offering a comprehensive overview of Kong's request processing pipeline. 
 
-The debugger helps capture OpenTelemetry-compatible traces for all requests matching the sampling criteria. The detailed spans are captured for the entire request/response lifecycle. These traces can be visualized with {{site.konnect_short_name}}'s built-in span viewer with no additional instrumentation or telemetry tools.
+The debugger helps capture OpenTelemetry-compatible traces for all requests matching the sampling criteria. The detailed spans are captured for the entire request/response lifecycle. These traces can be visualized with {{site.konnect_short_name}}'s built-in span viewer with no additional instrumentation or telemetry tools. For a complete list of available spans and their meanings, see [Debugger spans](/gateway/debugger-spans/).
 
 **Key Highlights**
 * Traces can be generated for a service or per route
@@ -70,7 +70,7 @@ The span view gives you unparalleled visibility into {{site.base_gateway}}’s i
 * Plugin execution and performance
 * Request and response handling
 
-Use the span view to troubleshoot issues, optimize performance, and refine your configuration.
+For detailed definitions of each span, see [Debugger spans](/gateway/debugger-spans/). Use the span view to troubleshoot issues, optimize performance, and refine your configuration.
 ### Logs View
 A drill-down view of all the logs generated during specific debug session are shown in the logs tab. All the spans in the trace are correlated using `trace_id` and `span_id`. The logs can be filtered on log level and spans. Logs are displayed in reverse chronological order. {{site.konnect_short_name}} encrypts all the logs that are ingested. You can further ensure complete privacy and control by using customer-managed encryption keys (CMEK).
 Use the logs view to quickly troubleshoot and pinpoint issues.

@@ -20,7 +20,7 @@ jobs:
           - '3.11'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
 
@@ -86,3 +86,14 @@ jobs:
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |
           DEBUG=tests:*,debug npm run run-tests
+
+      - name: Publish Test Report
+        uses: ctrf-io/github-test-reporter@984acbd8e96f167d4053d95f9d657d7b949baac5 # v1
+        with:
+          report-path: './tools/automated-tests/testReport.json'
+          summary-report: true
+          test-report: true
+          failed-folded-report: true
+          skipped-report: true
+          report-order: 'summary-report,test-report,failed-folded-report,skipped-report'
+        if: always()

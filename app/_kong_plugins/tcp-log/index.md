@@ -35,6 +35,9 @@ search_aliases:
   - tcp-log
   - tcp
   - logging
+
+min_version:
+  gateway: '1.0'
 ---
 
 Log request and response data to a TCP server.

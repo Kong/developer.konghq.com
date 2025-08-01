@@ -28,7 +28,11 @@ works_on:
 tldr:
   q: How can I create a Route with {{ site.operator_product_name }}?
   a: Create a `KongService` object , then create a `KongRoute` and associate it to the `KongService`.
-
+next_steps:
+  - text: Learn about Custom resource definitions (CRDs)
+    url: /operator/reference/custom-resources/
+  - text: Create a {{site.kic_product_name}} Control Plane
+    url: /operator/konnect/crd/control-planes/kubernetes/
 ---
 
 {:data-deployment-topology='konnect'}
