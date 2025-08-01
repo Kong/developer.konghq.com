@@ -46,6 +46,9 @@ notes: |
   and shouldn't be used with the {{site.kic_product_name}}. Instead, use the 
   <a href="/kubernetes-ingress-controller/gateway-api/">Gateway API</a> 
   to manage canary deploys.
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Canary Release plugin helps minimize risk when deploying a new software version by gradually rolling out changes to a limited group of users. 

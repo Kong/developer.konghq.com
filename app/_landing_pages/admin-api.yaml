@@ -91,6 +91,31 @@ rows:
             align: end
 
   - header:
+      type: h2
+      text: "Next Steps"
+      sub_text: Use one of the following tutorials to get started.              
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/gateway.svg
+            title: Install self-managed {{ site.base_gateway }}
+            description: |
+              {{ site.base_gateway }} is a low-demand, high-performing API gateway. 
+              You can set up {{ site.base_gateway }} with {{site.konnect_short_name}}, or install it on various self-managed systems.
+            cta:
+              url: /gateway/install/
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/gateway.svg
+            title: Get started with {{ site.base_gateway }}
+            description: |
+              This tutorial will help you get started with {{ site.base_gateway }} by setting up either a {{site.konnect_short_name}} hybrid deployment or self-managed local installation and walking through some common API management tasks.
+            cta:
+              url: /gateway/get-started/
+  - header:
       text: "Frequently asked questions"
       type: h2
     columns:

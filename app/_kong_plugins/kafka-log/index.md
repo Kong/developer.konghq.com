@@ -38,6 +38,9 @@ search_aliases:
   - kafka-log
   - events
   - event-gateway
+
+min_version:
+  gateway: '1.3'
 ---
 
 Publish request and response logs to an [Apache Kafka](https://kafka.apache.org/) topic. This plugin does not support message compression.

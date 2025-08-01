@@ -319,3 +319,15 @@ rows:
                     ]
                   }
                   ```
+  
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tools:
+                - konnect-api
+              quantity: 5
+              allow_empty: true

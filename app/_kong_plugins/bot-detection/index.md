@@ -35,6 +35,8 @@ search_aliases:
 tags:
   - security
 
+min_version:
+  gateway: '1.0'
 ---
 
 Using the Bot Detection plugin, you can protect your a Gateway Service or a Route from bots. It automatically detects [common bots](https://github.com/Kong/kong/blob/master/kong/plugins/bot-detection/rules.lua) on every request from the associated Gateway Service or Route using regex.

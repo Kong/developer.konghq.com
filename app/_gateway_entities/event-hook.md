@@ -93,7 +93,7 @@ There are four types of handlers that can be used with Event Hooks:
 * **`webhook-custom`**: Fully configurable request. Supports templating, configurable body, payload, and headers. 
 * **`lambda`**: This handler runs Lua code after an event is triggered.
 
-By default, the `lambda` handler is "Sandboxed". Sandboxing means that {{site.base_gateway}} restricts the types of Lua functions that can be loaded as well as the level of access to {{site.base_gateway}} that is available for these custom functions. For example, in `sandbox` mode, a `lambda` Event Hook will not have access to global values such as `kong.configuration.pg_password`, or OS level functions like `os.execute(rm -rf /*)`, but can still run Lua code like `local foo = 1 + 1`. Removing `sandbox` requires editing the `kong.conf` value `untrusted_lua`, for more information see the [kong.conf documentation](/gateway/configuration/#untrusted_lua).
+By default, the `lambda` handler is "Sandboxed". Sandboxing means that {{site.base_gateway}} restricts the types of Lua functions that can be loaded as well as the level of access to {{site.base_gateway}} that is available for these custom functions. For example, in `sandbox` mode, a `lambda` Event Hook will not have access to global values such as `kong.configuration.pg_password`, or OS level functions like `os.execute(rm -rf /*)`, but can still run Lua code like `local foo = 1 + 1`. Removing `sandbox` requires editing the `kong.conf` value `untrusted_lua`, for more information see the [kong.conf documentation](/gateway/configuration/#untrusted-lua).
 
 ### Sources
 

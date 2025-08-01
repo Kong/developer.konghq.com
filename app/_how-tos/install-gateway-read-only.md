@@ -37,7 +37,9 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/docker
       icon_url: /assets/icons/gateway.svg
-
+next_steps:
+  - text: Learn about DB-less mode
+    url: /gateway/db-less-mode/
 ---
 
 ## Create a `kong.yml` configuration file
