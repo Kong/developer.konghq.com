@@ -107,9 +107,9 @@ rows:
   - property: "`ai.compressor.save_token_count`"
     description: The number of tokens saved by compression (original minus compressed).
   - property: "`ai.compressor.compress_value`"
-    description: The compression ratio applied (e.g., 0.75 means 25% reduction).
+    description: The compression ratio applied.
   - property: "`ai.compressor.compress_type`"
-    description: The type or method of compression used (e.g., semantic, lossy, etc.).
+    description: The type or method of compression used.
   - property: "`ai.compressor.compressor_model`"
     description: The model used to perform the compression.
   - property: "`ai.compressor.msg_id`"
@@ -145,7 +145,7 @@ rows:
 
 For users using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), logs capture processing times and configuration metadata related to content guardrails applied to inputs and outputs. This aids in auditing and troubleshooting guardrails enforcement.
 
-The following fields appear in structured AI logs when Athe I AWS Guardrails plugin is enabled:
+The following fields appear in structured AI logs when the I AWS Guardrails plugin is enabled:
 
 {% table %}
 columns:
