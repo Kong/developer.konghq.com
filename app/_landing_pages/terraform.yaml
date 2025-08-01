@@ -265,3 +265,14 @@ rows:
               control_plane_id = konnect_gateway_control_plane.tfdemo.id
             }
             ```
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tools:
+                - terraform
+              quantity: 5
+              allow_empty: true
