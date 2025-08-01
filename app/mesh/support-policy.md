@@ -58,7 +58,7 @@ rows:
     patch: 2.6.15
     released: "2024-02-01"
     support: "2025-02-01"
-  - version: 2.7.x
+  - version: 2.7.x (LTS)
     patch: 2.7.13
     released: "2024-04-19"
     support: "2026-04-19"
