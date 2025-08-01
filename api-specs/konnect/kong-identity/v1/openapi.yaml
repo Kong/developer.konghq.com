@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Kong identity - Tech preview
+  title: Konnect Sliver
   version: 0.0.1
 servers:
   - url: 'https://us.api.konghq.com/v1'
@@ -18,19 +18,48 @@ paths:
     get:
       operationId: listAuthServers
       summary: List all auth servers
-      description: List all auth servers
+      description: List all available auth servers.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of auth servers. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+            - audience
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter auth servers returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/StringFieldFilter'
+              description:
+                $ref: '#/components/schemas/StringFieldFilter'
+              audience:
+                $ref: '#/components/schemas/StringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              labels:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
       responses:
         '200':
           $ref: '#/components/responses/AuthServerList'
       tags:
-        - authserver
+        - Auth Server
     post:
       operationId: createAuthServer
       summary: Create a new auth server
-      description: Create a new auth server
+      description: 'Create a new auth server. Each auth server has a unique, randomly generated, public issuer URL.'
       requestBody:
         $ref: '#/components/requestBodies/CreateAuthServer'
       responses:
@@ -41,25 +70,25 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
       tags:
-        - authserver
+        - Auth Server
   '/auth-servers/{authServerId}':
     parameters:
       - $ref: '#/components/parameters/authServerId'
     get:
       operationId: getAuthServer
       summary: Get an auth server
-      description: Get an auth server
+      description: Get an auth server.
       responses:
         '200':
           $ref: '#/components/responses/AuthServer'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server
     patch:
       operationId: updateAuthServer
       summary: Update an auth server
-      description: Update an auth server
+      description: Update an auth server.
       requestBody:
         $ref: '#/components/requestBodies/UpdateAuthServer'
       responses:
@@ -72,36 +101,61 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
       tags:
-        - authserver
+        - Auth Server
     delete:
       operationId: deleteAuthServer
       summary: Delete an auth server
-      description: Delete an auth server
+      description: Delete an auth server. All resources associated with the auth server will also be deleted. This action is irreversible.
       responses:
         '204':
           description: Success
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server
   '/auth-servers/{authServerId}/claims':
     parameters:
       - $ref: '#/components/parameters/authServerId'
     get:
       operationId: listAuthServerClaims
       summary: List all auth server claims
-      description: List all the claims for a given auth server
+      description: List all the claims for a given auth server.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of claims. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter claims returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/StringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
       responses:
         '200':
           $ref: '#/components/responses/ClaimList'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Claims
     post:
       operationId: createAuthServerClaim
       summary: Create a new auth server claim
-      description: Create a new claim for a given auth server
+      description: 'Create a new claim for a given auth server. The `name` attribute will appear in the JWT access token as a claim with the given case-sensitive name. The `value` attribute will be used to populate the claim value in the JWT access token. The value can be templated, which allows you to use variables like `${ uuidv4 }` to generate dynamic values. Claim values are hydrated based on their types, which may include JSON.'
       requestBody:
         $ref: '#/components/requestBodies/CreateClaim'
       responses:
@@ -112,7 +166,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Claims
   '/auth-servers/{authServerId}/claims/{claimId}':
     parameters:
       - $ref: '#/components/parameters/authServerId'
@@ -120,18 +174,18 @@ paths:
     get:
       operationId: getAuthServerClaim
       summary: Get an auth server claim
-      description: Get a claim for given auth server
+      description: Get a claim for given auth server.
       responses:
         '200':
           $ref: '#/components/responses/Claim'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Claims
     patch:
       operationId: updateAuthServerClaim
       summary: Update an auth server claim
-      description: Update a claim for a given auth server
+      description: Update a claim for a given auth server.
       requestBody:
         $ref: '#/components/requestBodies/UpdateClaim'
       responses:
@@ -142,36 +196,61 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Claims
     delete:
       operationId: deleteAuthServerClaim
       summary: Delete an auth server claim
-      description: Delete a claim for a given auth server
+      description: 'Delete a claim for a given auth server. If the claim is included in any scopes, it will be removed from those scopes.'
       responses:
         '204':
           description: Success
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Claims
   '/auth-servers/{authServerId}/scopes':
     parameters:
       - $ref: '#/components/parameters/authServerId'
     get:
       operationId: listAuthServerScopes
       summary: List all auth server scopes
-      description: List all the scopes for a given auth server
+      description: List all the scopes for a given auth server.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of scopes. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter scopes returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/StringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
       responses:
         '200':
           $ref: '#/components/responses/ScopeList'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Scopes
     post:
       operationId: createAuthServerScope
       summary: Create a new auth server scope
-      description: Create a new scope for a given auth server
+      description: Create a new scope for a given auth server. The `name` attribute must be unique within the auth server.
       requestBody:
         $ref: '#/components/requestBodies/CreateScope'
       responses:
@@ -184,7 +263,7 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
       tags:
-        - authserver
+        - Auth Server Scopes
   '/auth-servers/{authServerId}/scopes/{scopeId}':
     parameters:
       - $ref: '#/components/parameters/authServerId'
@@ -192,18 +271,18 @@ paths:
     get:
       operationId: getAuthServerScope
       summary: Get an auth server scope
-      description: Get a scope for given auth server
+      description: Get a scope for given auth server.
       responses:
         '200':
           $ref: '#/components/responses/Scope'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Scopes
     patch:
       operationId: updateAuthServerScope
       summary: Update an auth server scope
-      description: Update a scope for a given auth server
+      description: Update a scope for a given auth server.
       requestBody:
         $ref: '#/components/requestBodies/UpdateScope'
       responses:
@@ -216,39 +295,63 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
       tags:
-        - authserver
+        - Auth Server Scopes
     delete:
       operationId: deleteAuthServerScope
       summary: Delete an auth server scope
-      description: Delete a scope for a given auth server
+      description: 'Delete a scope for a given auth server. If the scope is included in any clients, it will be removed from those clients.'
       responses:
         '204':
           description: Success
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Scopes
   '/auth-servers/{authServerId}/clients':
     parameters:
       - $ref: '#/components/parameters/authServerId'
     get:
       operationId: listAuthServerClients
       summary: List all auth server clients
-      description: List all the clients for a given auth server
+      description: List all the clients for a given auth server.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of clients. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter clients returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/StringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              labels:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
       responses:
         '200':
           $ref: '#/components/responses/ClientList'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
     post:
       operationId: createAuthServerClient
       summary: Create a new auth server client
-      description: Create a new client for a given auth server
+      description: Create a new client for a given auth server. The client ID and secret will be generated automatically. The `name` attribute must be unique within the auth server. The `grant_types` and `response_types` attributes define the OAuth 2.0 and OpenID Connect capabilities of the client.
       requestBody:
         $ref: '#/components/requestBodies/CreateClient'
       responses:
@@ -261,7 +364,7 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
       tags:
-        - authserver
+        - Auth Server Clients
   '/auth-servers/{authServerId}/clients/{clientId}':
     parameters:
       - $ref: '#/components/parameters/authServerId'
@@ -269,18 +372,18 @@ paths:
     get:
       operationId: getAuthServerClient
       summary: Get an auth server client
-      description: Get a client for given auth server
+      description: Get a client for given auth server.
       responses:
         '200':
           $ref: '#/components/responses/Client'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
     patch:
       operationId: updateAuthServerClient
       summary: Update an auth server client
-      description: Update a client for a given auth server
+      description: Update a client for a given auth server.
       requestBody:
         $ref: '#/components/requestBodies/UpdateClient'
       responses:
@@ -293,11 +396,11 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
       tags:
-        - authserver
+        - Auth Server Clients
     put:
       operationId: replaceAuthServerClient
       summary: Replace an auth server client
-      description: Replace a client for a given auth server
+      description: 'Replace a client for a given auth server. The client ID and secret can be provided to update an existing client, or to create a client with the matching ID and secret.'
       requestBody:
         $ref: '#/components/requestBodies/ReplaceClient'
       responses:
@@ -312,18 +415,18 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
       tags:
-        - authserver
+        - Auth Server Clients
     delete:
       operationId: deleteAuthServerClient
       summary: Delete an auth server client
-      description: Delete a client for a given auth server
+      description: Delete a client for a given auth server. All tokens associated with the client will also be deleted. This action is irreversible.
       responses:
         '204':
           description: Success
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
   '/auth-servers/{authServerId}/clients/{clientId}/test-claim':
     parameters:
       - $ref: '#/components/parameters/authServerId'
@@ -331,7 +434,7 @@ paths:
     post:
       operationId: testClaimForClient
       summary: Test a claim template for a client
-      description: Test a claim template for a client
+      description: Test a claim template for a client. Utility function to test claim templates against a client and verify the resulting claim values.
       requestBody:
         $ref: '#/components/requestBodies/TestClaimPayload'
       responses:
@@ -342,7 +445,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
   '/auth-servers/{authServerId}/clients/{clientId}/tokens':
     parameters:
       - $ref: '#/components/parameters/authServerId'
@@ -350,28 +453,47 @@ paths:
     get:
       operationId: listAuthServerClientTokens
       summary: List all auth server client tokens
-      description: List all the tokens for a given client and auth server
+      description: List all the tokens for a given client.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of tokens. Supported sort attributes are:
+            - created_at
+            - expires_at
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter tokens returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
       responses:
         '200':
           $ref: '#/components/responses/TokenList'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
     delete:
       operationId: deleteAllAuthServerClientTokens
       summary: Delete all auth server client tokens
-      description: Revoke all tokens for a given client and auth server
+      description: Revoke all tokens for a given client. Revoked tokens can no longer be used to access resources when introspection is enabled on the client.
       responses:
         '204':
           description: Success
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
   '/auth-servers/{authServerId}/clients/{clientId}/tokens/{tokenId}':
     parameters:
       - $ref: '#/components/parameters/authServerId'
@@ -380,25 +502,25 @@ paths:
     get:
       operationId: getAuthServerClientToken
       summary: Get an auth server client token
-      description: Get a token for given client and auth server
+      description: Get a token for given client and auth server.
       responses:
         '200':
           $ref: '#/components/responses/Token'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
     delete:
       operationId: deleteAuthServerClientToken
       summary: Delete an auth server client token
-      description: Revoke a token for a given client and auth server
+      description: Revoke a token for a given client and auth server. Revoked tokens can no longer be used to access resources when introspection is enabled on the client.
       responses:
         '204':
           description: Success
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - authserver
+        - Auth Server Clients
 components:
   parameters:
     PageNumber:
@@ -464,7 +586,7 @@ components:
       description: The token ID
   schemas:
     TestClaimResult:
-      description: a map<string>any of the claim that have been templated
+      description: A map<string>any of the claim that have been templated
       type: object
     ResponseType:
       description: OAuth 2.0 response type
@@ -506,12 +628,20 @@ components:
       type: string
       format: uri
       nullable: true
+    UpdateTokenDuration:
+      description: 'The duration of the minted token is valid for, in seconds'
+      type: integer
+      maximum: 2592000
+      minimum: 60
     TokenDuration:
       description: 'The duration of the minted token is valid for, in seconds'
       type: integer
       default: 300
-      maximum: 31536000
+      maximum: 2592000
       minimum: 60
+    UpdateClientAllowAllScopes:
+      description: Specifies whether the client is allowed to request all scopes
+      type: boolean
     ClientAllowAllScopes:
       description: Specifies whether the client is allowed to request all scopes
       type: boolean
@@ -521,6 +651,7 @@ components:
       type: array
       items:
         type: string
+        format: uuid
       nullable: false
     ClientId:
       description: The OAuth 2.0 client ID
@@ -541,6 +672,16 @@ components:
       description: The recipients that the tokens are intended for. This becomes the 'aud' claim in an access token
       type: string
       minLength: 1
+    UpdateAlgorithm:
+      description: Algorithm used in the key signing process
+      type: string
+      enum:
+        - RS256
+        - RS384
+        - RS512
+        - PS256
+        - PS384
+        - PS512
     Algorithm:
       description: Algorithm used in the key signing process
       type: string
@@ -613,10 +754,16 @@ components:
       description: Specifies the value of the claim. It may contain a static value or a dynamic (templated) value. Static values which are valid JSON will result in a JSON object in the token claims.
       type: string
       minLength: 1
+    UpdateClaimIncludeInToken:
+      description: 'Specifies whether to include claim in the token. If the value is set to ''false'' for a claim, the client instead uses the access token to get claims from the ''/userinfo'' endpoint.'
+      type: boolean
     ClaimIncludeInToken:
       description: 'Specifies whether to include claim in the token. If the value is set to ''false'' for a claim, the client instead uses the access token to get claims from the ''/userinfo'' endpoint.'
       type: boolean
       default: false
+    UpdateClaimIncludeInAllScopes:
+      description: 'Specifies whether to include the claim in all scopes. If the value is set to ''false'' for a claim, the claim is only included in the scopes that explicitly list it.'
+      type: boolean
     ClaimIncludeInAllScopes:
       description: 'Specifies whether to include the claim in all scopes. If the value is set to ''false'' for a claim, the claim is only included in the scopes that explicitly list it.'
       type: boolean
@@ -626,9 +773,13 @@ components:
       type: array
       items:
         type: string
+        format: uuid
       nullable: false
+    UpdateClaimEnabled:
+      description: 'Specifies whether the claim is enabled. If the claim is not enabled, it will not be included in the token or the ''/userinfo'' endpoint.'
+      type: boolean
     ClaimEnabled:
-      description: Specifies whether the claim is enabled
+      description: 'Specifies whether the claim is enabled. If the claim is not enabled, it will not be included in the token or the ''/userinfo'' endpoint.'
       type: boolean
       default: true
     Claim:
@@ -683,16 +834,25 @@ components:
     ScopeDescription:
       description: Description of the scope
       type: string
+    UpdateScopeDefault:
+      description: 'Specifies whether the scope is included by default in access tokens without being explicitly requested by the client. If the scope is not allowed by the client, it will not be included in the access token.'
+      type: boolean
     ScopeDefault:
-      description: Specifies whether the scope is a default scope
+      description: 'Specifies whether the scope is included by default in access tokens without being explicitly requested by the client. If the scope is not allowed by the client, it will not be included in the access token.'
       type: boolean
       default: false
+    UpdateScopeIncludeInMetadata:
+      description: Specifies whether to include the scope in the metadata document
+      type: boolean
     ScopeIncludeInMetadata:
       description: Specifies whether to include the scope in the metadata document
       type: boolean
       default: false
+    UpdateScopeEnabled:
+      description: 'Specifies whether the scope is enabled. If the scope is not enabled, it cannot be requested by clients and will not be included in the access token.'
+      type: boolean
     ScopeEnabled:
-      description: Specifies whether the scope is enabled
+      description: 'Specifies whether the scope is enabled. If the scope is not enabled, it cannot be requested by clients and will not be included in the access token.'
       type: boolean
       default: true
     Scope:
@@ -845,6 +1005,34 @@ components:
       required:
         - data
         - meta
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    StringFieldEqualsFilter:
+      description: Filter a string value by exact match.
+      type: string
+      title: StringFieldEqualsFilter
+    StringFieldContainsFilter:
+      description: Filter a string value field by partial contains.
+      type: object
+      properties:
+        contains:
+          type: string
+      required:
+        - contains
+      title: StringFieldContainsFilter
+    StringFieldFilter:
+      description: Filter a string value field either by exact match or partial contains.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+      title: StringFieldFilter
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -1521,7 +1709,7 @@ components:
       content:
         application/json:
           schema:
-            description: a map<string>string of the claims and templates
+            description: A map<string>string of the claims and templates
             type: object
             example:
               destination: anywhere
@@ -1565,7 +1753,7 @@ components:
               audience:
                 $ref: '#/components/schemas/Audience'
               signing_algorithm:
-                $ref: '#/components/schemas/Algorithm'
+                $ref: '#/components/schemas/UpdateAlgorithm'
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
           examples:
@@ -1610,13 +1798,13 @@ components:
               value:
                 $ref: '#/components/schemas/ClaimValue'
               include_in_token:
-                $ref: '#/components/schemas/ClaimIncludeInToken'
+                $ref: '#/components/schemas/UpdateClaimIncludeInToken'
               include_in_all_scopes:
-                $ref: '#/components/schemas/ClaimIncludeInAllScopes'
+                $ref: '#/components/schemas/UpdateClaimIncludeInAllScopes'
               include_in_scopes:
                 $ref: '#/components/schemas/ClaimIncludeInScopes'
               enabled:
-                $ref: '#/components/schemas/ClaimEnabled'
+                $ref: '#/components/schemas/UpdateClaimEnabled'
           examples:
             Claim:
               $ref: '#/components/examples/UpdateClaim'
@@ -1644,7 +1832,7 @@ components:
             Scope:
               $ref: '#/components/examples/CreateScope'
     UpdateScope:
-      description: Scope to be updated
+      description: Scope to be update
       required: true
       content:
         application/json:
@@ -1656,11 +1844,11 @@ components:
               description:
                 $ref: '#/components/schemas/ScopeDescription'
               default:
-                $ref: '#/components/schemas/ScopeDefault'
+                $ref: '#/components/schemas/UpdateScopeDefault'
               include_in_metadata:
-                $ref: '#/components/schemas/ScopeIncludeInMetadata'
+                $ref: '#/components/schemas/UpdateScopeIncludeInMetadata'
               enabled:
-                $ref: '#/components/schemas/ScopeEnabled'
+                $ref: '#/components/schemas/UpdateScopeEnabled'
           examples:
             Scope:
               $ref: '#/components/examples/UpdateScope'
@@ -1722,11 +1910,11 @@ components:
               login_uri:
                 $ref: '#/components/schemas/LoginURI'
               access_token_duration:
-                $ref: '#/components/schemas/TokenDuration'
+                $ref: '#/components/schemas/UpdateTokenDuration'
               id_token_duration:
-                $ref: '#/components/schemas/TokenDuration'
+                $ref: '#/components/schemas/UpdateTokenDuration'
               allow_all_scopes:
-                $ref: '#/components/schemas/ClientAllowAllScopes'
+                $ref: '#/components/schemas/UpdateClientAllowAllScopes'
               allow_scopes:
                 $ref: '#/components/schemas/ClientAllowScopes'
               labels:
@@ -1930,8 +2118,14 @@ components:
       description: |
         The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
 tags:
-  - name: authserver
-    description: Auth server management API
+  - name: Auth Server
+    description: 'Auth Servers expose an OAuth 2.0 and OpenID Connect server interface for generating access tokens. The management API will give you the ability to create, configure and manage multiple Auth Servers per Konnect organization. Auth Servers are a regional Konnect entity.'
+  - name: Auth Server Clients
+    description: 'Clients represent the identity of machines, such as microservices, mobile apps, or scripts entity. The management API will give you the ability to create, configure and manage multiple Clients per Auth Server.'
+  - name: Auth Server Claims
+    description: 'Claims are statements about the Client, included in tokens issued by the Auth Server. The management API will give you the ability to create, configure and manage multiple Claims per Auth Server, and include them in tokens based on the requested Scopes.'
+  - name: Auth Server Scopes
+    description: 'Scopes define the extent of access that an access token grants to a Client. The management API will give you the ability to create, configure and manage multiple Scopes per Auth Server, and restrict their usage by Client.'
 security:
   - systemAccountAccessToken: []
   - personalAccessToken: []
