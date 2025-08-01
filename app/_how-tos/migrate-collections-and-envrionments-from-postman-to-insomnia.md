@@ -52,7 +52,7 @@ In Insomnia, click the **+** button in the left panel to create a new project in
    ![Import of Postman data with two collections and an environment](/assets/images/insomnia/postman-scan.png)
 1. Click **Import**.
 
-In this example, two collections and an environment are imported. In the case of a Cloud Sync project, the imported data is automatically synchronize. You don't need to do anything else to share it with other members in your organization.
+In this example, two collections and an environment are imported. Once the import is done, you'll see your content in the **Collections** and **Environments** sections. In the case of a Cloud Sync project, the imported data is automatically synchronize. You don't need to do anything else to share it with other members in your organization.
 
 ## Select global environments (Optional)
 
