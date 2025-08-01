@@ -10,6 +10,8 @@ admin_listen
 admin's
 admin's
 agentic
+Agno
+Agno's
 Alertmanager
 allow_terminated
 allowlist
