@@ -42,6 +42,8 @@ rows:
             - You need low-level, flexible, and direct integration or automation
             - You want granular access to all {{site.base_gateway}} entities
             - You want to interact with {{site.base_gateway}} through Insomnia
+            
+            If you're using {{site.konnect_short_name}}, you should use the [{{site.konnect_short_name}} API](/konnect-api/) instead.
   - header:
       text: "Specification"
       type: h2
