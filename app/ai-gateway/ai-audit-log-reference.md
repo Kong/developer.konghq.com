@@ -43,7 +43,7 @@ Each AI plugin returns a set of tokens. Log entries include the following detail
 
 ### AI Proxy core logs
 
-The [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy/) plugins act as the main gateway for forwarding requests to AI providers. Logs here capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. These provide a comprehensive view of each AI interaction.
+The [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy/) plugins act as the main gateway for forwarding requests to AI providers. Logs here capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
 
 {% table %}
 columns:
@@ -120,7 +120,7 @@ rows:
 
 ### AI PII Sanitizer Logs {% new_in 3.10 %}
 
-If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), AI Gateway logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type. This helps ensure transparency and auditability in privacy-focused applications.
+If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), AI Gateway logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.
 
 The following fields appear in structured AI logs when the AI PII Sanitizer plugin is enabled:
 
@@ -143,7 +143,7 @@ rows:
 
 ### AI AWS Guardrails logs {% new_in 3.11 %}
 
-For users using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), logs capture processing times and configuration metadata related to content guardrails applied to inputs and outputs. This aids in auditing and troubleshooting guardrails enforcement.
+For users using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), logs capture processing times and configuration metadata related to content guardrails applied to inputs and outputs.
 
 The following fields appear in structured AI logs when the I AWS Guardrails plugin is enabled:
 
@@ -169,7 +169,7 @@ rows:
 
 ### AI RAG Injector logs {% new_in 3.10 %}
 
-If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), AI Gateway logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the provider/model details. This helps you gain insight into how external knowledge is incorporated dynamically to enrich AI responses.
+If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), AI Gateway logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the provider/model details.
 
 The following fields appear in structured AI logs when the AI RAG Injector plugin is enabled:
 
