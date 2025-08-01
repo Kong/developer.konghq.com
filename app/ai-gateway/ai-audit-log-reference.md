@@ -61,31 +61,38 @@ rows:
   - property: "`ai.proxy.usage.completion_token`"
     description: The number of tokens used for completion.
   - property: "`ai.proxy.usage.total_tokens`"
-    description: The total number of tokens used.
-  - property: "`ai.proxy.usage.cost`"
-    description: The total cost of the request (input and output).
-  - property: "`ai.proxy.usage.time_per_token`"
-    description: |
-      {% new_in 3.8 %} The average time to generate an output token, in milliseconds.
-  - property: "`ai.proxy.usage.time_to_first_token`"
-    description: |
-      {% new_in 3.8 %} The time in milliseconds to receive the first output token.
+    description: The total number of tokens used (input + output).
   - property: "`ai.proxy.usage.input_tokens`"
     description: The total number of input tokens (text + image + audio).
+  - property: "`ai.proxy.usage.input_tokens_details`"
+    description: |
+      {% new_in 3.11 %} A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
   - property: "`ai.proxy.usage.output_tokens`"
     description: The total number of output tokens (text + audio).
+  - property: "`ai.proxy.usage.output_tokens_details`"
+    description: |
+      {% new_in 3.11 %} A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
+  - property: "`ai.proxy.usage.cost`"
+    description: The total cost of the request.
+  - property: "`ai.proxy.usage.time_per_token`"
+    description: |
+      {% new_in 3.8 %} Average time to generate an output token (ms).
+  - property: "`ai.proxy.usage.time_to_first_token`"
+    description: |
+      {% new_in 3.8 %} Time to receive the first output token (ms).
   - property: "`ai.proxy.meta.request_model`"
     description: The model used for the AI request.
+  - property: "`ai.proxy.meta.response_model`"
+    description: The model used to generate the AI response.
   - property: "`ai.proxy.meta.provider_name`"
     description: The name of the AI service provider.
-  - property: "`ai.proxy.meta.response_model`"
-    description: The model used for the AI response.
   - property: "`ai.proxy.meta.plugin_id`"
-    description: The unique identifier of the plugin.
+    description: Unique identifier of the plugin instance.
   - property: "`ai.proxy.meta.llm_latency`"
     description: |
-      {% new_in 3.8 %} The time, in milliseconds, it took the LLM provider to generate the full response.
+      {% new_in 3.8 %} Time taken by the LLM provider to generate the full response (ms).
 {% endtable %}
+
 
 ### AI Prompt Compressor logs {% new_in 3.11 %}
 
@@ -268,13 +275,22 @@ The following example shows a structured AI Gateway log entry:
       },
       "usage": {
         "prompt_token": 28,
-        "total_tokens": 48,
         "completion_token": 20,
+        "total_tokens": 48,
+        "input_tokens": 30,
+        "output_tokens": 18,
+        "input_tokens_details": {
+          "text_tokens": 26,
+          "image_tokens": 4,
+          "audio_tokens_count": 0
+        },
+        "output_tokens_details": {
+          "text_tokens": 18,
+          "audio_tokens": 0
+        },
         "cost": 0.0038,
         "time_per_token": 133,
-        "time_to_first_token": 520,
-        "input_tokens": 30,
-        "output_tokens": 18
+        "time_to_first_token": 520
       },
       "meta": {
         "request_model": "command",
