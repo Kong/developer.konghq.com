@@ -27,22 +27,13 @@ tldr:
     q: How do I use a {{site.konnect_short_name}}-native Vault?
     a: |
       1. Use the {{site.konnect_short_name}} API to create a Config Store using the `/config-stores` endpoint.
-      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/#/operations/create-vault).
-      3. Store your secret as a key/value pair using the `/secrets` endpoint. 
-      4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/secret-key}`).
+      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/#/operations/create-vault) or UI.
+      3. Store your secret as a key/value pair using the `/secrets` endpoint or the UI. 
+      4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/secret-key}`). 
 
 faqs:
   - q: Can I reference {{site.konnect_short_name}} Config Store Vault secrets in `kong.conf`?
     a: No. You can't reference secrets stored in a {{site.konnect_short_name}} Config Store Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane. For more information about the fields you can reference as secrets, see [What can be stored as a secret?](/gateway/entities/vault/#what-can-be-stored-as-a-secret).
-  - q: How do I configure the {{site.konnect_short_name}} Config Store Vault in the {{site.konnect_short_name}} UI?
-    a: |
-      1. In [Gateway Manager](https://cloud.konghq.com/gateway-manager/), navigate to your control plane.
-      1. Click **Vaults** in the sidebar.
-      1. Click **New vault**.
-      1. Select "Konnect" in the **Vault Configuration** dropdown.
-      1. Configure the vault prefix, description, and tags as needed.
-      1. Click **Save**. 
-      1. Click **Store New Secret** and configure your secret.
 
 prereqs:
   inline:
@@ -87,10 +78,15 @@ Export the Config Store ID in the response body as an environment variable so yo
 export DECK_CONFIG_STORE_ID='CONFIG STORE ID'
 ```
 
+{:.info}
+> **Note:** If you're configuring the {{site.konnect_short_name}} Vault via the {{site.konnect_short_name}} UI, you can skip this step as the UI creates the Config Store for you.
+
 ## Configure {{site.konnect_short_name}} as your Vault
 
 Enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/):
 
+{% navtabs "config-store-vault" %}
+{% navtab "decK" %}
 {% entity_examples %}
 entities:
   vaults:
@@ -104,12 +100,25 @@ variables:
   config-store-id:
     value: $CONFIG_STORE_ID
 {% endentity_examples %}
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. In [Gateway Manager](https://cloud.konghq.com/gateway-manager/), navigate to your control plane.
+1. Click **Vaults** in the sidebar.
+1. Click **New vault**.
+1. Select "Konnect" in the **Vault Configuration** dropdown.
+1. Enter `mysecretvault` in the **Prefix** field.
+1. Enter `Storing secrets in {{site.konnect_short_name}}` in the **Description** field.
+1. Click **Save**. 
+{% endnavtab %}
+{% endnavtabs %}
 
 
 ## Store a secret in your {{site.konnect_short_name}} Vault
 
 By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it within [`kong.conf`](/gateway/manage-kong-conf/) or as a referenceable plugin fields without having to store any values in plain-text.
 
+{% navtabs "config-store-secret" %}
+{% navtab "{{site.konnect_short_name}} API" %}
 Store your secret by sending a `POST` request to the `/secrets` endpoint:
 
 <!--vale off-->
@@ -122,6 +131,15 @@ body:
     value: my-secret-value
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. Navigate to the {{site.konnect_short_name}} Vault you just created.
+1. Click **Store New Secret**.
+1. Enter `secret-key` in the **Key** field.
+1. Enter `my-secret-value` in the **Value** field.
+1. Click **Save**.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Validate
 
@@ -134,6 +152,9 @@ status_code: 201
 method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
+
+{:.info}
+> **Note:** If you configured your Vault and secret using the UI, you can find your Config Store ID by sending a GET request to the [`/control-planes/{controlPlaneId}/config-stores` endpoint](/api/konnect/control-planes-config/v2/#/operations/list-config-stores).
 
 If your secret was successfully stored in {{site.konnect_short_name}}, the endpoint should return a `201` status code and your `secret-key` key in the output.
 
