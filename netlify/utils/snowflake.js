@@ -63,7 +63,24 @@ export async function updateFeedbackInSnowflake(connection, id, body) {
   return statementResult;
 }
 
+function checkRequiredEnv(vars) {
+  const missing = vars.filter((key) => !process.env[key]);
+  if (missing.length) {
+    throw new Error(`Missing env vars: ${missing.join(", ")}`);
+  }
+}
+
 export function createSnowflakeConnection() {
+  checkRequiredEnv([
+    "SNOWFLAKE_USER",
+    "SNOWFLAKE_ACCOUNT",
+    "SNOWFLAKE_PRIVATE_KEY",
+    "SNOWFLAKE_WAREHOUSE",
+    "SNOWFLAKE_DATABASE",
+    "SNOWFLAKE_SCHEMA",
+    "SNOWFLAKE_ROLE",
+  ]);
+
   const user = process.env.SNOWFLAKE_USER;
   const account = process.env.SNOWFLAKE_ACCOUNT;
   const warehouse = process.env.SNOWFLAKE_WAREHOUSE;
@@ -71,18 +88,6 @@ export function createSnowflakeConnection() {
   const schema = process.env.SNOWFLAKE_SCHEMA;
   const role = process.env.SNOWFLAKE_ROLE;
   const privateKey = process.env.SNOWFLAKE_PRIVATE_KEY;
-
-  if (
-    !user ||
-    !account ||
-    !privateKey ||
-    !warehouse ||
-    !database ||
-    !schema ||
-    !role
-  ) {
-    throw new Error("Missing Snowflake environment variables.");
-  }
 
   return snowflake.createConnection({
     account: account,
