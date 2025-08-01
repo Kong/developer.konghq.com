@@ -191,6 +191,20 @@ rows:
                   For more information, see [Dev Portal analytics](/dev-portal/analytics/).
   - header:
       type: h2
+      text: "Migrate from classic Dev Portal (v2)"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  With the GA release of the new Dev Portal (v3) in June 2025, you can migrate from classic Dev Portals (v2) to the new Dev Portal. 
+                  
+                  See the [migration guide](/dev-portal/v2-migration/) to learn how to migrate from the classic Dev Portal (v2) to the new Dev Portal (v3).
+
+  - header:
+      type: h2
       text: "References"
   - columns:
       - blocks:
@@ -207,35 +221,6 @@ rows:
               title: Dev Portal v3 breaking changes
               description: |
                 Review breaking changes from Dev Portal v3 beta to general release.
-              cta:
-                url: "/dev-portal/breaking-changes/"
-  
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Migrate from classic Dev Portal (v2)"
-            blocks:
-              - type: text
-                text: |
-                  With the GA release of the new Dev Portal (v3) in June 2025, you can migrate from classic Dev Portals (v2) to the new Dev Portal. 
-  - column_count: 3
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Migration guide
-              description: |
-                Learn how to migrate from the classic Dev Portal (v2) to the new Dev Portal (v3).
-              cta:
-                url: "/dev-portal/v2-migration/"
-      - blocks:
-          - type: card
-            config:
-              title: Dev Portal breaking changes
-              description: |
-                Review breaking changes from Dev Portal v3 beta to GA.
               cta:
                 url: "/dev-portal/breaking-changes/"
 
