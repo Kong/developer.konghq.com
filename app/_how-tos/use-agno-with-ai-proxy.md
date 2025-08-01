@@ -120,6 +120,8 @@ Use the following command to create a file named `research-agent.py` containing 
 ```sh
 cat <<EOF > research-agent.py
 
+import os
+
 from textwrap import dedent
 
 from agno.agent import Agent
@@ -154,23 +156,23 @@ research_agent = Agent(
         - Explaining long-term implications and legacy
     """),
     instructions=dedent("""\
-        1. Research Phase
+        1. Research Phase 📚
            - Locate academic analyses, historical summaries, and expert commentary
            - Identify internal and external factors contributing to the fall
            - Note military conflicts, economic instability, and political fragmentation
 
-        2. Analysis Phase
+        2. Analysis Phase 🔍
            - Weigh the long-term structural issues versus short-term triggers
            - Consider geopolitical pressures, internal weaknesses, and cultural shifts
            - Highlight contributions of leadership decisions and external actors
 
-        3. Reporting Phase
+        3. Reporting Phase 📝
            - Write a compelling executive summary and clear narrative
            - Structure by thematic causes (military, political, economic, religious)
            - Include quotes or viewpoints from notable historians
            - Present lessons learned or possible historical counterfactuals
 
-        4. Review Phase
+        4. Review Phase ✔️
            - Validate all claims against reputable sources
            - Ensure neutrality and historical rigor
            - Provide a bibliography or references list
@@ -214,6 +216,8 @@ EOF
 ```sh
 cat <<EOF > research-agent.py
 
+import os
+
 from textwrap import dedent
 
 from agno.agent import Agent
@@ -247,23 +251,23 @@ research_agent = Agent(
         - Explaining long-term implications and legacy
     """),
     instructions=dedent("""\
-        1. Research Phase
+        1. Research Phase 📚
            - Locate academic analyses, historical summaries, and expert commentary
            - Identify internal and external factors contributing to the fall
            - Note military conflicts, economic instability, and political fragmentation
 
-        2. Analysis Phase
+        2. Analysis Phase 🔍
            - Weigh the long-term structural issues versus short-term triggers
            - Consider geopolitical pressures, internal weaknesses, and cultural shifts
            - Highlight contributions of leadership decisions and external actors
 
-        3. Reporting Phase
+        3. Reporting Phase 📝
            - Write a compelling executive summary and clear narrative
            - Structure by thematic causes (military, political, economic, religious)
            - Include quotes or viewpoints from notable historians
            - Present lessons learned or possible historical counterfactuals
 
-        4. Review Phase
+        4. Review Phase ✔️
            - Validate all claims against reputable sources
            - Ensure neutrality and historical rigor
            - Provide a bibliography or references list
@@ -306,7 +310,7 @@ With the `base_url` parameter, we can override the OpenAI base URL that LangChai
 
 ## Validate
 
-Run your script to validate that LangChain can access the Route:
+Run your script to validate that Agno agent can access the Route:
 
 ```sh
 python3 ./research-agent.py
