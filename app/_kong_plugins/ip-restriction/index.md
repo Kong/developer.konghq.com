@@ -39,6 +39,9 @@ search_aliases:
 related_resources:
   - text: Restrict access to {{site.base_gateway}} resources by allowing specific IPs
     url: /how-to/restrict-access-to-resources-by-allowing-ips/
+
+min_version:
+  gateway: '1.0'
 ---
 
 The IP Restriction plugin restricts access to a Gateway Service or a Route by either allowing or denying IP addresses. This can help block malicious activity, such as spam or access to certain websites. Single IPs, multiple IPs, or ranges in [Classless Inter-Domain Routing (CIDR) notation](https://datatracker.ietf.org/doc/html/rfc4632) like 10.10.10.0/24 can be used. The plugin supports IPv4 and IPv6 addresses.

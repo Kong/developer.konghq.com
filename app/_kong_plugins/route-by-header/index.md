@@ -39,6 +39,9 @@ search_aliases:
 related_resources:
   - text: Route requests to different Upstreams based on headers
     url: /how-to/route-requests-to-different-upstreams-based-on-headers/
+
+min_version:
+  gateway: '1.0'
 ---
 
 This plugin allows you to route a request to a specific [Upstream](/gateway/entities/upstream/) if it matches one of the
