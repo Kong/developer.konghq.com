@@ -29,8 +29,8 @@ prereqs:
   - title: Postman export
     content: |
       This how-to guide requires a Postman export. You can either export environments and collections individually (this can be useful if you want to import them into different Insomnia projects), or all at once from:
-      * The [Postman export page](https://web.postman.co/me/export) if you a  re using Postman Enterprise or Cloud.
-      * **Settings** > **Data** in your Postman app if you are using the scratch pad.
+      * The [Postman export page](https://web.postman.co/me/export) if you're using Postman Enterprise or Cloud.
+      * **Settings** > **Data** in your Postman app if you're using the scratch pad.
     icon_url: /assets/icons/postman.svg
 
 faqs:
@@ -52,7 +52,7 @@ In Insomnia, click the **+** button in the left panel to create a new project in
    ![Import of Postman data with two collections and an environment](/assets/images/insomnia/postman-scan.png)
 1. Click **Import**.
 
-In this example, two collections and an environment are imported. Once the import is done, you'll see your content in the **Collections** and **Environments** sections. In the case of a Cloud Sync project, the imported data is automatically synchronize. You don't need to do anything else to share it with other members in your organization.
+In this example, two collections and an environment are imported. Once the import is done, you'll see your content in the **Collections** and **Environments** sections. In the case of a Cloud Sync project, the imported data is automatically synchronized. You don't need to do anything else to share it with other members in your organization.
 
 ## Select global environments (Optional)
 
