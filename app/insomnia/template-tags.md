@@ -24,7 +24,7 @@ related_resources:
   - text: Plugins
     url: /insomnia/plugins/
   - text: Plugin reference
-    url: /insomnia/plugin-reference/
+    url: /insomnia/plugins/plugin-reference/
 ---
 
 A template tag is a type of variable that you can use to reference or transform values. You can reuse an element from a request or a response, get the current timestamp, encode a value, or prompt the user for an input value.
@@ -48,7 +48,7 @@ Available template tag functions include:
 
 ## Custom template tags
 
-If you want to extend the template tag functionality, you can do so by developing a custom template tag as an [Insomnia plugin](/insomnia/plugin-reference/). Once you’ve added your custom plugin to your Insomnia application, the template tag will show up exactly as if it were a native Insomnia tag.
+If you want to extend the template tag functionality, you can do so by developing a custom template tag as an [Insomnia plugin](/insomnia/plugins/plugin-reference/). Once you’ve added your custom plugin to your Insomnia application, the template tag will show up exactly as if it were a native Insomnia tag.
 
 Here's the schema to create custom template tags:
 
