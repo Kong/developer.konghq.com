@@ -85,7 +85,7 @@ module.exports.requestActions = [
 ];
 ```
 
-Add a **Send request** option to the dropdown menu that appears when you right-click on a request in the sidebar:
+Adds a **Send request** option to the dropdown menu that appears when you right-click on a request in the sidebar:
 
 ```ts
 module.exports.requestActions = [
@@ -120,7 +120,7 @@ module.exports.requestGroupActions = Array<RequestGroupAction>
 
 ### Folder action examples
 
-Add a **Send Requests** option to the dropdown menu that appears when you click on a request folder. **Send Requests** sends all requests in that folder at once:
+Adds a **Send Requests** option to the dropdown menu that appears when you click on a request folder. **Send Requests** sends all requests in that folder at once:
 
 ```ts
 module.exports.requestGroupActions = [
@@ -148,7 +148,7 @@ module.exports.requestGroupActions = [
 Actions can be added to the collection or document settings dropdown by defining a workspace action plugin. These apply to both types of workspaces, Request Collections and Design Documents.
 
 {:.info}
-**Note**: "Workspace" is a name in our codebase we use to refer to both documents and collections.
+> **Note**: "Workspace" is a name in our codebase that we use to refer to both documents and collections.
 
 ```ts
 interface WorkspaceAction {
@@ -180,7 +180,7 @@ module.exports.workspaceActions = [{
       workspace: models.workspace,
     });
 
-    fs.writeFileSync('/users/user/Desktop/export.json', ex);
+    fs.writeFileSync('./export.json', ex);
   },
 }];
 ```

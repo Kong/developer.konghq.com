@@ -163,13 +163,13 @@ const fs = require('fs');
 module.exports.responseHooks = [
   context => {
    context.response.getBodyStream().pipe(
-      fs.createWriteStream('/Users/gschier/Desktop/response-body.txt')
+      fs.createWriteStream('./response-body.txt')
     );
   }
 ];
 ```
 
-Use `responseHooks` and shows how to work with the NodeJS Buffers to:
+The following example uses `responseHooks` and shows how to work with the NodeJS Buffers to:
 * Convert a Buffer to a string
 * Parse a string to a JS object
 * Modify the response by:
@@ -203,7 +203,7 @@ module.exports.responseHooks = [
 
 ## context.store
 
-Plugins can store persistent data via the storage context. Data is only accessible to the plugin that stored it.
+Plugins can store persistent data via the storage context. Data is only accessible by the plugin that stored it.
 
 ```ts
 interface StoreContext {
