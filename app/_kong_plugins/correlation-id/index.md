@@ -40,6 +40,9 @@ faqs:
   - q: Can I see my correlation IDs in my {{site.base_gateway}} logs?
     a: |
       Yes, if you edit your Nginx logging parameters you can see your correlation ID in the Nginx access log. For complete instructions, see [Add Correlation IDs to {{site.base_gateway}} logs](/how-to/add-correlation-ids-to-gateway-logs/).
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Correlation ID plugin lets you correlate requests and responses using a unique ID transmitted as HTTP headers.

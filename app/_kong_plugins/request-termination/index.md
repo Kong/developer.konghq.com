@@ -37,6 +37,9 @@ search_aliases:
 related_resources:
   - text: Allow clients to choose their authentication methods and prevent unauthorized access
     url: /how-to/allow-multiple-authentication/
+
+min_version:
+  gateway: '1.0'
 ---
 
 This plugin terminates incoming requests with a specified status code and message.

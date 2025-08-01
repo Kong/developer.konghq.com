@@ -48,6 +48,9 @@ search_aliases:
 notes: | 
    <b>Serverless Gateways</b>: This plugin is not supported in serverless gateways because the 
    TLS handshake does not occur at the Kong layer in this setup. 
+
+min_version:
+  gateway: '2.0'
 ---
 
 The ACME plugin allows {{site.base_gateway}} to apply SSL certificates from Let's Encrypt or any other ACMEv2 service and serve them dynamically for TLS requests.
