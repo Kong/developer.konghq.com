@@ -38,6 +38,9 @@ categories:
 related_resources:
   - text: Map URIs into GraphQL queries with DeGraphQL
     url: /how-to/map-uris-into-graphql-queries/
+
+min_version:
+  gateway: '1.3'
 ---
 
 The DeGraphQL plugin transforms GraphQL upstreams into traditional endpoints by mapping URIs into GraphQL queries.

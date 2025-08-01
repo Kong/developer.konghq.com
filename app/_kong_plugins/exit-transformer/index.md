@@ -35,6 +35,9 @@ tags:
 
 search_aliases:
   - exit-transformer
+
+min_version:
+  gateway: '1.3'
 ---
 
 Transform and customize {{site.base_gateway}} response exit messages using Lua functions.

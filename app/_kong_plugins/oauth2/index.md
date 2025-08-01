@@ -41,6 +41,9 @@ notes: |
   This plugin can't be used in Konnect, hybrid, or DB-less modes. It needs to
   generate and delete tokens, and commit those changes to a database on the
   same node.
+
+min_version:
+  gateway: '1.0'
 ---
 
 Add an [OAuth 2.0](https://oauth.net/2/) authentication layer with one of the following grant flows:
