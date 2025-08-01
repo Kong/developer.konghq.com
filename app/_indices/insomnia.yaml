@@ -41,6 +41,7 @@ sections:
       - path: /how-to/use-the-collection-runner/
       - path: /insomnia/graphql/
       - path: /how-to/set-a-value-from-a-response-as-an-environment-variable/
+      - path: /insomnia/grpc-requests/
   
   - title: Plugins
     items:
