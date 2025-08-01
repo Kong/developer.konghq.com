@@ -87,7 +87,10 @@ export function createSnowflakeConnection() {
   const database = process.env.SNOWFLAKE_DATABASE;
   const schema = process.env.SNOWFLAKE_SCHEMA;
   const role = process.env.SNOWFLAKE_ROLE;
-  const privateKey = process.env.SNOWFLAKE_PRIVATE_KEY;
+  const privateKey = Buffer.from(
+    process.env.SNOWFLAKE_PRIVATE_KEY,
+    "base64"
+  ).toString("utf8");
 
   return snowflake.createConnection({
     account: account,
