@@ -50,18 +50,40 @@ min_version:
 
 Now that you have an external endpoint and authorization credentials, you can set up a webhook in {{site.konnect_short_name}}.
 
-Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/audit-logs/v2/#/operations/update-audit-log-webhook) endpoint with the connection details for your SIEM vendor:
+## Set up the audit log destination
+
+Create an audit log destination by sending a `POST` request to the [`/audit-log-destinations`](/api/konnect/audit-logs/v2/#/operations/create-audit-log-destination) endpoint with the connection details for your SIEM vendor:
+
+```sh
+curl -i -X POST https://global.api.konghq.com/v2/audit-log-destinations \
+--header "Content-Type: application/json" \
+--header "Authorization: Bearer $KONNECT_TOKEN" \
+--json '{
+    "endpoint": "'$SIEM_ENDPOINT'",
+    "authorization": "'$SIEM_TOKEN'",
+    "log_format": "cef",
+    "name": "Example destination"
+}'
+```
+
+Export the ID of the new destination to your environment:
+
+```sh
+export DESTINATION_ID='YOUR DESTINATION ID'
+```
+
+## Enable the webhook on Konnect
+
+Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/v3/#/operations/audit-log-webhook) endpoint with the audit log destination:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/audit-log-webhook
+url: /v3/audit-log-webhook
 status_code: 201
 method: PATCH
 body:
-    endpoint: $SIEM_ENDPOINT
+    audit_log_destination_id: $DESTINATION_ID
     enabled: true
-    authorization: "Bearer $SIEM_TOKEN"
-    log_format: cef
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -72,6 +94,7 @@ Webhooks are triggered via an HTTPS request using the following retry rules:
 - Maximum number of retries: 4
 
 A retry is performed on a connection error, server error (`500` HTTP status code), or too many requests (`429` HTTP status code).
+
 
 ## Validate
 
