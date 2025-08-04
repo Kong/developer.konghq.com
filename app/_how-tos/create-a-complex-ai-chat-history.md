@@ -168,10 +168,10 @@ body:
   messages:
     - role: user
       content: |
-         Classify this response: "Some parts of the training were useful, others not so much. It was okay overall. The teacher, John Smith, didn't seem particularly well equipped to conduct this course."
+         Classify this response: "Some parts of the training were useful, others not so much. It was okay overall. The teacher, John Smith, did not seem particularly well equipped to conduct this course."
 status_code: 200
 message: |
-  Sentiment NEGATIVE. Reasoning: "Some parts...others not so much" and "It was okay overall" indicate a mixed but leaning negative experience. "Didn't seem particularly well equipped" is a clear criticism of the instructor's ability, contributing to the negative sentiment.
+  Sentiment NEGATIVE. Reasoning: "Some parts...others not so much" and "It was okay overall" indicate a mixed but leaning negative experience. "Did not seem particularly well equipped" is a clear criticism of the instructor's ability, contributing to the negative sentiment.
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -188,7 +188,7 @@ body:
   messages:
     - role: user
       content: |
-       Classify this response: "The platform used during the course was buggy, and I didn’t find the sessions helpful at all."
+       Classify this response: "The platform used during the course was buggy, and I did not find the sessions helpful at all."
 status_code: 200
 message: |
     Sentiment NEGATIVE. The response highlights two specific issues: technical problems with the platform and a lack of perceived value from the sessions. Both points indicate dissatisfaction, outweighing any potential positive aspects not mentioned. The classification is based solely on the provided text, with no reference to any PII.
