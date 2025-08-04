@@ -1,3 +1,8 @@
+- release: "3.11"
+  konnect: true
+  beginning: "3.11.0.0"
+  release_date: "2025-07-03"
+  eol: "2028-03-31"
 - release: "3.10"
   lts: true
   konnect: true
