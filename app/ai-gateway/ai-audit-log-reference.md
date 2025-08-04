@@ -56,19 +56,35 @@ rows:
     description: The request payload sent to the upstream AI provider.
   - property: "`ai.proxy.payload.response`"
     description: The response payload received from the upstream AI provider.
-  - property: "`ai.proxy.usage.prompt_token`"
-    description: The number of tokens used for prompting.
-  - property: "`ai.proxy.usage.completion_token`"
-    description: The number of tokens used for completion.
+  - property: "`ai.proxy.usage.prompt_tokens`"
+    description: |
+      The number of tokens used for prompting.
+      Used for text-based requests (chat, completions, embeddings).
+  - property: "`ai.proxy.usage.prompt_tokens_details`"
+    description: |
+      {% new_in 3.11 %} A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`).
+  - property: "`ai.proxy.usage.completion_tokens`"
+    description: |
+      The number of tokens used for completion.
+      Used for text-based responses (chat, completions).
+  - property: "`ai.proxy.usage.completion_tokens_details`"
+    description: |
+      {% new_in 3.11 %} A breakdown of completion tokens (`rejected_prediction_tokens`, `reasoning_tokens`, `accepted_prediction_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.total_tokens`"
-    description: The total number of tokens used (input + output).
+    description: |
+      The total number of tokens used (input + output).
+      Includes prompt/completion tokens for text, and input/output tokens for non-text modalities.
   - property: "`ai.proxy.usage.input_tokens`"
-    description: The total number of input tokens (text + image + audio).
+    description: |
+      {% new_in 3.11 %} The total number of input tokens (text + image + audio).
+      Used for non-text requests (e.g., image or audio generation).
   - property: "`ai.proxy.usage.input_tokens_details`"
     description: |
       {% new_in 3.11 %} A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
   - property: "`ai.proxy.usage.output_tokens`"
-    description: The total number of output tokens (text + audio).
+    description: |
+      {% new_in 3.11 %} The total number of output tokens (text + audio).
+      Used for non-text responses (e.g., image or audio generation).
   - property: "`ai.proxy.usage.output_tokens_details`"
     description: |
       {% new_in 3.11 %} A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
@@ -271,24 +287,23 @@ The following example shows a structured AI Gateway log entry:
         "response": "$OPTIONAL_PAYLOAD_RESPONSE"
       },
       "usage": {
-        "prompt_token": 28,
-        "completion_token": 20,
-        "total_tokens": 48,
-        "input_tokens": 30,
-        "output_tokens": 18,
-        "input_tokens_details": {
-          "text_tokens": 26,
-          "image_tokens": 4,
-          "audio_tokens_count": 0
-        },
-        "output_tokens_details": {
-          "text_tokens": 18,
-          "audio_tokens": 0
-        },
-        "cost": 0.0038,
-        "time_per_token": 133,
-        "time_to_first_token": 520
+      "time_per_token": 30.142857142857,
+      "time_to_first_token": 631,
+      "completion_tokens": 21,
+      "completion_tokens_details": {
+        "rejected_prediction_tokens": 0,
+        "reasoning_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0
       },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "prompt_tokens": 14,
+      "total_tokens": 35,
+      "cost": 0
+    },
       "meta": {
         "request_model": "command",
         "provider_name": "cohere",
