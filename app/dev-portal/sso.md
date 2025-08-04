@@ -81,8 +81,8 @@ The following is an example Dev Portal SSO configuration. For the example, we wi
 
 If you're using OIDC for SSO, you'd configure your settings like the following:
 - **Single Sign On URL (SSO URL)**: Also sometimes referred to as **Initiate login URI**, use to automatically initiate the SSO login flow.
-  - If using a custom domain: `https://www.example.com/login/sso`
-  - If not using a custom domain: `https://abc123456789.us.kongportals.com/login/sso`
+  - If you're using a custom domain: `https://www.example.com/login/sso`
+  - If you aren't using a custom domain: `https://abc123456789.us.kongportals.com/login/sso`
 - **Sign-in redirect URIs**:
   - `https://www.example.com/login`
   - `https://abc123456789.us.kongportals.com/login`
@@ -97,10 +97,10 @@ If you're using OIDC for SSO, you'd configure your settings like the following:
 
 If you're using SAML for SSO, you'd configure your settings like the following:
 - **Single Sign On URL (SSO URL)**: Also sometimes referred to as **Initiate login URI**, used to automatically initiate the SSO login flow.
-    - If using a custom domain: `https://www.example.com/api/v2/developer/authenticate/saml/acs`
-    - If not using a custom domain: `https://abc123456789.us.kongportals.com/api/v2/developer/authenticate/saml/acs`
+    - If you're using a custom domain: `https://www.example.com/api/v2/developer/authenticate/saml/acs`
+    - If you aren't using a custom domain: `https://abc123456789.us.kongportals.com/api/v2/developer/authenticate/saml/acs`
   - To automatically initiate the login flow when linking developers to the Dev Portal, use the dedicated path:
-    - If using a custom domain: `https://www.example.com/login/sso`
-    - If not using a custom domain: `https://abc123456789.us.kongportals.com/login/sso`
+    - If you're using a custom domain: `https://www.example.com/login/sso`
+    - If you aren't using a custom domain: `https://abc123456789.us.kongportals.com/login/sso`
 - **Other Requestable SSO URLs** (typically found in Advanced settings) for the Konnect Portal Editor:
   - `https://abc123456789.portal-preview.us.api.konghq.com/api/v2/developer/authenticate/saml/acs`
