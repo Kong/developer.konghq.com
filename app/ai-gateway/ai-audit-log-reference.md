@@ -113,7 +113,7 @@ rows:
 
 For users using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), logs capture processing times and configuration metadata related to content guardrails applied to inputs and outputs.
 
-The following fields appear in structured AI logs when the I AWS Guardrails plugin is enabled:
+The following fields appear in structured AI logs when the AI AWS Guardrails plugin is enabled:
 
 {% table %}
 columns:
@@ -138,8 +138,7 @@ rows:
 
 If the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/) is enabled, each corresponding log entry records a detected feature level for a user-defined content safety category (for example, `Hate`, `Violence`, `SexualContent`). The category is a user-defined name, and the feature level indicates the detected severity for that category, as seen here. Multiple entries can appear per request depending on the configuration and detected content.
 
-{:.info}
-> For detailed information on categories and severity levels, see [Harm categories in Azure AI Content Safety - Azure AI services](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
+For detailed information on categories and severity levels, see [Harm categories in Azure AI Content Safety - Azure AI services](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
 
 {% table %}
 columns:
@@ -255,21 +254,21 @@ rows:
     {% new_in 3.8 %} The cache status. This can be `Hit`, `Miss`, `Bypass`, or `Refresh`.
 - property: "`ai.proxy.cache.fetch_latency`"
   description: |
-    The time, in milliseconds, it took to return a cache response.
+    The time, in milliseconds, it took to return a cached response.
 - property: "`ai.proxy.cache.embeddings_provider`"
   description: |
-    For semantic caching, the provider used to generate the embeddings.
+    The provider used to generate the embeddings.
 - property: "`ai.proxy.cache.embeddings_model`"
   description: |
-    For semantic caching, the model used to generate the embeddings.
+    The model used to generate the embeddings.
 - property: "`ai.proxy.cache.embeddings_latency`"
   description: |
-    For semantic caching, the time taken to generate the embeddings.
+    The time taken to generate the embeddings.
 {% endtable %}
 
 {:.info}
 > **Note:**
-> When returning a cache response, `time_per_token` and `llm_latency` are omitted.
+> When returning a cached response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
 
 ## Example log entry
