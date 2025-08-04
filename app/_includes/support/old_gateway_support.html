@@ -1,0 +1,30 @@
+{% assign today = 'now' | date: '%s' %}
+{% assign versions = "" | split: "" %}
+
+{% for version in site.data.support.gateway %}
+  {% assign timestamp = version.eol | date: '%s' %}
+  {% if timestamp < today %}
+    {% assign versions = versions | push: version %}
+  {% endif %}
+{% endfor %}
+
+<table>
+    <thead>
+        <tr>
+            <th><span class="font-semibold text-primary">Version</span></th>
+            <th><span class="font-semibold text-primary">Released Date</span></th>
+            <th><span class="font-semibold text-primary">End of Full Support</span></th>
+            <th><span class="font-semibold text-primary">End of Sunset Support</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for version in versions %}
+            <tr>
+                <td>{{version.release}}{% unless version.release[0] != 0 %}.x.x{% endunless %}</td>
+                <td>{{version.release_date}}</td>
+                <td>{{version.eol}}</td>
+                <td>{{version.sunset}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
