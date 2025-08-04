@@ -189,7 +189,7 @@ features:
     oss: true
     enterprise: true
     supports_konnect: true
-  - title: Konnect Config Store
+  - title: Konnect (Konnect Config Store)
     url: /how-to/configure-the-konnect-config-store/
     oss: false
     enterprise: false
@@ -619,6 +619,22 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% endnavtabs %}
+
+### AWS Secrets Manager credentials
+
+To access secrets stored in the AWS Secrets Manager, {{site.base_gateway}} needs to be configured with an IAM Role that has sufficient permissions to read the required secret values.
+
+{{site.base_gateway}} can automatically fetch IAM role credentials based on your AWS environment, observing the following precedence order:
+- Fetch from credentials defined in environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+- Fetch from profile and credential file, defined by `AWS_PROFILE` and `AWS_SHARED_CREDENTIALS_FILE`.
+- Fetch from an ECS [container credential provider](https://docs.aws.amazon.com/sdkref/latest/guide/feature-container-credentials.html).
+- Fetch from an EKS [IAM roles for service account](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
+- Fetch from EC2 IMDS metadata. Both v1 and v2 are supported
+
+{{site.base_gateway}} also supports role assuming (with [`vaults.config.assume_role_arn` and `vaults.config.role_session_name`](/gateway/entities/vault/?tab=aws#vault-provider-specific-configuration-parameters)) which allows you to use a different IAM role to fetch secrets from AWS Secrets Manager. This is a common practice in permission division and governance and cross-AWS account management.
+
+{:.info}
+> **Note:** IAM Identity Center credential provider and process credential provider are not supported.
 
 ## Set up a Vault
 

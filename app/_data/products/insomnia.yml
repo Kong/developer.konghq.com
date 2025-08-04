@@ -22,4 +22,6 @@ releases:
     version: "11.2.0"
   - release: "11.3"
     version: "11.3.0"
+  - release: "11.4"
+    version: "11.4.0"
     latest: true
