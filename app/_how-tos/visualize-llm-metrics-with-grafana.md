@@ -21,7 +21,7 @@ works_on:
   - on-prem
 
 min_version:
-  gateway: '3.11'
+  gateway: '3.8'
 
 plugins:
   - ai-proxy-advanced
