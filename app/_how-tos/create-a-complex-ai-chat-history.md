@@ -137,6 +137,7 @@ entities:
 Use the following prompts to confirm that the assistant classifies sentiment according to the input tone and avoids echoing any personal information.
 
 - Test for positive sentiment classification:
+{% capture positive %}
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
@@ -152,9 +153,12 @@ message: |
   Sentiment POSITIVE. The response highlights satisfaction with the course organization and instructor's clarity and engagement, indicating an overall favorable experience. **Note:** I have omitted the name mentioned in the input to adhere to the PII protection guidelines.
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
+{{ positive | indent: 2}}
 
 - Test for neutral sentiment classification:
 
+{% capture negative-mixed %}
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
@@ -170,9 +174,11 @@ message: |
   Sentiment NEGATIVE. Reasoning: "Some parts...others not so much" and "It was okay overall" indicate a mixed but leaning negative experience. "Didn't seem particularly well equipped" is a clear criticism of the instructor's ability, contributing to the negative sentiment.
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
+{{ negative-mixed | indent: 2}}
 
 - Test for negative sentiment classification:
-
+{% capture sentiment %}
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
@@ -188,3 +194,5 @@ message: |
     Sentiment NEGATIVE. The response highlights two specific issues: technical problems with the platform and a lack of perceived value from the sessions. Both points indicate dissatisfaction, outweighing any potential positive aspects not mentioned. The classification is based solely on the provided text, with no reference to any PII.
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
+{{ sentiment | indent: 2}}
