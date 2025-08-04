@@ -64,3 +64,56 @@ rows:
               text: 
               url: /terraform/
               align: end
+
+  - header:
+      type: h2
+      text: "How do I pick a management tool?"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Why should I use this?
+                  key: description
+                - title: Konnect
+                  key: konnect
+                - title: Self-managed
+                  key: onprem
+              features:
+                - title: "[decK](/deck/)"
+                  description: |
+                    - You want to manage entity configuration with declarative, file-based, GitOps-style API configuration and automation
+                    - You don't use Kubernetes or Terraform already
+                  konnect: true
+                  onprem: true
+                - title: "[Konnect APIs](/konnect-api/)"
+                  description: |
+                    - You want to manage resources on the Konnect platform and its apps (such as Dev Portal and Service Catalog) programmatically
+                    - You need low-level, flexible, and direct integration or automation
+                  konnect: true
+                  onprem: false
+                - title: "[Kong Admin API](/admin-api/)"
+                  description: |
+                    - You're running {{site.base_gateway}} on-prem with a database
+                    - You need low-level, flexible, and direct integration or automation
+                  konnect: false
+                  onprem: true
+                - title: "[KIC](/kubernetes-ingress-controller/)"
+                  description: |
+                    - You're running {{site.base_gateway}} in a Kubernetes environment
+                    - You want Kubernetes-native API Gateway management
+                  konnect: true
+                  onprem: true
+                - title: "[Terraform](/terraform/)"
+                  description: |
+                    - You have existing review and approval processes built around Terraform
+                    - Your internal users are already familiar with HCL / Terraform
+                  konnect: true
+                  onprem: true
+                - title: "[kong CLI](/gateway/cli/reference/)"
+                  description: |
+                    - You're running {{site.base_gateway}} in DB-less mode and not on Kubernetes 
+                    - You need to interact with individual Gateway instances directly, such as for upgrades, or to restart or reload a specific instance
+                    - You need to interact with data planes when running in hybrid mode
+                  konnect: true
+                  onprem: true
