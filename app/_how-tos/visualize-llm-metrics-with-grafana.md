@@ -56,11 +56,19 @@ prereqs:
       icon_url: /assets/icons/mistral.svg
     - title: Grafana
       content: |
-        Ensure Grafana is installed locally and accessible:
+        Ensure Grafana is installed locally and accessible. You can quickly start a Grafana instance using Docker:
 
         ```sh
         docker run -d -p 3000:3000 --name=grafana grafana/grafana-enterprise
         ```
+
+        This command pulls the official Grafana Enterprise image and runs it on port `3000`. Once running, Grafana is accessible at [http://localhost:3000](http://localhost:3000).
+
+        On first login, use the default credentials:
+        - **Username:** `admin`
+        - **Password:** `admin`
+
+        Grafana will prompt you to set a new password after the initial login.
       icon_url: /assets/icons/third-party/grafana.svg
   entities:
     services:
@@ -77,11 +85,13 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
-
-
 ## Configure the AI Proxy Advanced plugin
 
-Configure the AI Proxy Advanced plugin to log payloads and collect detailed performance statistics from your LLMs. In this example, traffic is balanced between OpenAI's GPT-4.1 and Mistral's Tiny model using a round-robin algorithm. The plugin will capture metrics such as request counts, latencies, and model-specific usage, which Prometheus will later scrape for visualization.
+To expose AI traffic metrics to Prometheus, you must first configure the AI Proxy Advanced plugin to enable detailed logging. This makes request payloads, model performance statistics, and cost metrics available for collection.
+
+In this example, traffic is balanced between OpenAI's `gpt-4.1` and Mistral's `mistral-tiny` models using a round-robin algorithm. For each model target, logging is enabled to capture request counts, latencies, token usage, and payload data. Additionally, we define `input_cost` and `output_cost` values to track estimated usage costs per 1,000 tokens, which are exposed as Prometheus metrics.
+
+Apply the following configuration to enable metrics collection for both models:
 
 {% entity_examples %}
 entities:
@@ -97,6 +107,8 @@ entities:
               options:
                 max_tokens: 512
                 temperature: 1.0
+                input_cost: 0.75
+                output_cost: 0.75
             route_type: llm/v1/chat
             logging:
               log_payloads: true
@@ -111,6 +123,8 @@ entities:
               options:
                 mistral_format: openai
                 upstream_url: https://api.mistral.ai/v1/chat/completions
+                input_cost: 0.25
+                output_cost: 0.25
             route_type: llm/v1/chat
             logging:
               log_payloads: true
@@ -181,16 +195,15 @@ Prometheus will begin to scrape metrics data from {{site.base_gateway}}.
 
 ## Configure Grafana
 
+TBA
+
 ## Validate
 
 You can validate that the plugin is collecting metrics by generating traffic to the example service.
 
-Now, we can run the script from the previous tutorial again:
-
 ```bash
 test
 ```
-
 
 Run the following to query the collected `kong_ai_llm_requests_total` metric data:
 
@@ -204,4 +217,4 @@ This should return something like the following:
 test
 ```
 
-You can also view the [Prometheus expression](https://prometheus.io/docs/prometheus/latest/querying/basics/) viewer by opening [http://localhost:9090/graph](http://localhost:9090/graph) in a browser.
+<!-- TBA: see your Grafana dashboard. -->
