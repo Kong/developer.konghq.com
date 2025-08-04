@@ -96,7 +96,7 @@ variables:
 {% navtab "WSL2, Linux, macOS native" %}
 
 ```sh
-pip3 install -U agno openai ddgs newspaper4k lxml_html_clean
+pip3 install -U agno openai duckduckgo-search newspaper4k lxml_html_clean
 ```
 Install the necessary Python packages for running the Agno's research agent:
 
@@ -107,7 +107,7 @@ Install the necessary Python packages for running the Agno's research agent:
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install -U agno openai ddgs newspaper4k lxml_html_clean
+pip3 install -U agno openai duckduckgo-search newspaper4k lxml_html_clean
 ```
 {% endnavtab %}
 {% endnavtabs %}
