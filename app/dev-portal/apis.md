@@ -36,7 +36,7 @@ faqs:
 ---
 
 {:.success}
-> **How-to guides**
+> **How-to guides** <br>
 > This is a reference guide, you can also follow along with our tutorials: 
 >* [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/)
 >* [Automate your API catalog with Terraform](/how-to/automate-api-catalog-with-terraform/)
@@ -45,7 +45,44 @@ An API is the interface that you publish to your end customer. They can, and sho
 
 Additionally, you can link your API to a Gateway Service to allow developers to register [applications](/dev-portal/self-service/) for your specific APIs.
 
-To create an API, navigate to **Dev Portal > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create).
+To create an API, do one of the following:
+{% navtabs "create-api" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+Navigate to **Dev Portal > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create).
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+Send a POST request to the [`/apis` endpoint](/api/konnect/api-builder/v3/#/operations/create-api):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis
+status_code: 201
+method: POST
+body:
+    name: MyAPI
+    attributes: {"env":["development"],"domains":["web","mobile"]}
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_api` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api/resource.tf):
+```hcl
+echo '
+resource "konnect_api" "my_api" {
+  provider = konnect-beta
+  attributes  = "{ \"see\": \"documentation\" }"
+  description = "...my_description..."
+  labels = {
+    key = "value"
+  }
+  name         = "MyAPI"
+  slug         = "my-api-v1"
+  spec_content = "...my_spec_content..."
+  version      = "...my_version..."
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ## API versioning
 
@@ -62,10 +99,32 @@ To version an API, do one of the following:
 Navigate to **Dev Portal > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version).
+Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/versions
+status_code: 201
+method: POST
+body:
+    version: 1.0.0
+    spec:
+        content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
+{% endkonnect_api_request %}
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf).
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf):
+```hcl
+echo '
+resource "konnect_api_version" "my_apiversion" {
+  provider = konnect-beta
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  spec = {
+    content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
+    type    = "oas3"
+  }
+  version = "1.0.0"
+}
+' >> main.tf
+```
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -80,10 +139,34 @@ To upload a spec to an API, do one of the following:
 Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version).
+Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/versions
+status_code: 201
+method: POST
+body:
+    version: 1.0.0
+    spec:
+        content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
+{% endkonnect_api_request %}
+<!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_specification` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_specification/resource.tf).
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf):
+```hcl
+echo '
+resource "konnect_api_version" "my_apiversion" {
+  provider = konnect-beta
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  spec = {
+    content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
+    type    = "oas3"
+  }
+  version = "1.0.0"
+}
+' >> main.tf
+```
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -114,10 +197,35 @@ To create a new API document, do one of the following:
 Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document).
+Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/documents
+status_code: 201
+method: POST
+body:
+    slug: api-document
+    status: published
+    title: API Document
+    content: '# API Document Header'
+{% endkonnect_api_request %}
+<!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf).
+Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf):
+```hcl
+echo '
+resource "konnect_api_document" "my_apidocument" {
+  provider = konnect-beta
+  api_id             = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  content            = "...my_content..."
+  parent_document_id = "b689d9da-f357-4687-8303-ec1c14d44e37"
+  slug               = "api-document"
+  status             = "published"
+  title              = "API Document"
+}
+' >> main.tf
+```
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -155,10 +263,33 @@ To link your API to a Gateway Service, do one of the following:
 Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation).
+Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/implementations
+status_code: 201
+method: POST
+body:
+    service:
+        control_plane_id: $CONTROL_PLANE_ID
+        id: $SERVICE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_implementation/resource.tf).
+Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_implementation/resource.tf):
+```hcl
+echo '
+resource "konnect_api_implementation" "my_apiimplementation" {
+  provider = konnect-beta
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  service = {
+    control_plane_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+    id               = "7710d5c4-d902-410b-992f-18b814155b53"
+  }
+}
+' >> main.tf
+```
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -233,10 +364,31 @@ To publish your API, do one of the following:
 Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Portals** tab, and then click **Publish API**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal).
+Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/publications/$PORTAL_ID
+status_code: 201
+method: PUT
+{% endkonnect_api_request %}
+<!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_publication/resource.tf).
+Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_publication/resource.tf):
+```hcl
+echo '
+resource "konnect_api_publication" "my_apipublication" {
+  provider = konnect-beta
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  auth_strategy_ids = [
+    "9c3bed4d-0322-4ea0-ba19-a4bd65d821f6"
+  ]
+  auto_approve_registrations = true
+  portal_id                  = "f32d905a-ed33-46a3-a093-d8f536af9a8a"
+  visibility                 = "private"
+}
+' >> main.tf
+```
 {% endnavtab %}
 {% endnavtabs %}
 
