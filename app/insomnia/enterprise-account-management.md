@@ -42,7 +42,7 @@ Once the domain is verified, you can configure its settings to control users wit
 
 ### Domain lock
 
-Use domain lock to remove access to your Enterprise account for existing hobby users and uninvited new users.
+Use domain lock to remove access to your Insomnia Enterprise account for existing hobby users and uninvited new users.
 
 To enable domain lock:
 - Navigate to your domain settings and click the toggle under **Lock**.

@@ -1,4 +1,4 @@
-Use domain capture to automatically add new users to your Enterprise account when they sign up with a verified email domain.
+Use domain capture to automatically add new users to your Insomnia Enterprise account when they sign up with a verified email domain.
 To enable domain capture and auto-capture all new employees:
 1. Add and verify a [domain](https://app.insomnia.rest/app/enterprise/domains/list).
 1. In the domain settings, click the toggle to enable domain capture.
@@ -11,4 +11,4 @@ When you enable domain capture on a verified domain, all new users that create a
 - Kong uses @kong.com and enables Domain capture: When JoeSmith@kong.com signs up for Insomnia, the platform automatically adds JoeSmith@kong.com to the Enterprise license and lists the user on the licenses page.
 
 
-<!-- @TODO: Clarify what happens if there are no seats available -->
+<!-- @TODO: Clarify what happens if there are no seats available then point to enterprise user management to support getting more seats-->
