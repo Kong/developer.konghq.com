@@ -36,8 +36,6 @@ related_resources:
   - text: Special resource IDs
     url: /insomnia/special-resource-ids/    
 ---
-Export your API design documents from Insomnia to capture the exact endpoints and schemas that you use. This ensures accurate documentation, seamless teamwork, and easy integration with tools like [Inso CLI](/inso-cli/) or CI/CD workflows.
-
 You can export the following files from Insomnia:
 - API design document
 - Collection
