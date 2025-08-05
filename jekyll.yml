@@ -3,11 +3,10 @@ destination: dist
 permalink: pretty
 timezone: America/San_Francisco
 markdown: kramdown
+highlighter: none
 kramdown:
-  syntax_highlighter: rouge
   syntax_highlighter_opts:
-    css_class: "highlight"
-    guess_lang: true
+    disable: true
 incremental: true
 liquid:
   error_mode: strict
