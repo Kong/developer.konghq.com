@@ -8,5 +8,5 @@ Supported in: {% new_in 3.11 %}
 }
 ```
 
-{:.note}
+{:.info}
 > **Note:** The `<IMAGE_SIZE>` placeholder defines the output image resolution (for example, `1024x1024`, `512x512`). Supported sizes vary depending on the LLM model used. Refer to your LLM provider's documentation for allowed dimensions.
