@@ -1,5 +1,5 @@
 ---
-title: "Monitor LLM traffic with Prometheus and Grafana"
+title: "Visualize LLM traffic with Prometheus and Grafana"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -8,7 +8,7 @@ related_resources:
     url: /plugins/ai-proxy-advanced/
   - text: Prometheus plugin
     url: /plugins/prometheus/
-  - text: Visualize AI metrics with Grafana
+  - text: Monitor AI metrics
     url: /ai-gateway/monitor-ai-llm-metrics/
 
 description: Learn how to monitor LLM traffic and visualize AI metrics in Grafana using the AI Proxy Advanced and Prometheus plugins in {{ site.base_gateway }}.
