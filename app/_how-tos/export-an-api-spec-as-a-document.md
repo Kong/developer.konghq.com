@@ -14,9 +14,6 @@ tldr:
   q: How do I export an API design document, collection, or a request in Insomnia?
   a: In your workspace, open the Document or Collection menu, click **Preferences → Data**, select the target format and scope, and then export the file.
 
-faqs:
-  - q: Can I export just one request?
-    a: Select the collection drop-down menu, then **Export**, from here you can select an individual request.
 prereqs:
   inline:
     - title: An Insomnia design document
@@ -44,7 +41,7 @@ This tutorial will explain how to export a document.
 ## Export a file
 
 To export a file from Insomnia, navigate to your workspace:
-1. Click **Preferences**, and then click **Data**.
+1. Click **Preferences**, and then click **Data**
 1. Select an export option:
     - **Export Document**: Export a single, specific API design document.
     - **Export Project**: Export a project, including all associated API requests, design documents, and tests.
