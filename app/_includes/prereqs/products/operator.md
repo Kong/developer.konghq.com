@@ -12,22 +12,12 @@
    helm repo update
    ```
 
-1. Create a `kong` namespace:
+1. Install {{ site.operator_product_name }} using Helm:
 
-   ```bash
-   kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
-   ```
+{% include k8s/helm_install_v2.md raw=true %}
 
-1. Install {{ site.kic_product_name }} using Helm:
-
-   ```bash
-   helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
-     --set image.tag={{ site.data.operator_latest.release }} \
-     --set kubernetes-configuration-crds.enabled=true \
-     --set env.ENABLE_CONTROLLER_KONNECT=true{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
-     --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
-   ```
-
+   > **Note:** If you’re working with KGO 1.x use this command:
+   > {% include k8s/helm_install_v1.md raw=true %}
 
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
