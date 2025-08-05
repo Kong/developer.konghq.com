@@ -1,6 +1,6 @@
 Supported in: {% new_in 3.11 %}
 
-```bash
+```json
 curl http://localhost:8000 \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
