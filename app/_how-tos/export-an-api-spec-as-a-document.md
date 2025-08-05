@@ -16,7 +16,7 @@ tldr:
 
 faqs:
   - q: Can I export just one request?
-    a: Yes. Click **Export Data → Single Request** from the Document or Collection menu or click  **Preferences → Data**. Then select just that request.
+    a: Select the collection drop-down menu, then **Export**, from here you can select an individual request.
 prereqs:
   inline:
     - title: An Insomnia design document
