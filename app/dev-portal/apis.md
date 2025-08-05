@@ -36,7 +36,6 @@ faqs:
 ---
 
 {:.success}
-> **How-to guides** <br>
 > This is a reference guide, you can also follow along with our tutorials: 
 >* [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/)
 >* [Automate your API catalog with Terraform](/how-to/automate-api-catalog-with-terraform/)
