@@ -312,7 +312,7 @@ With the `base_url` parameter, we can override the OpenAI base URL that LangChai
 Run your script to validate that Agno agent can access the Route:
 
 ```sh
-python3 ./research-agent.py
+python3 research-agent.py
 ```
 
 The response should look like this:
