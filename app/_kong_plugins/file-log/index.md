@@ -38,6 +38,9 @@ notes: |
    <b>Dedicated Cloud Gateways</b>: This plugin is not supported in Dedicated or 
    Serverless Cloud Gateways because it depends on a local agent, and there are no 
    local nodes in Dedicated or Serverless Cloud Gateways.
+  
+min_version:
+  gateway: '1.0'
 ---
 
 Append request and response data in JSON format to a log file. You can also specify

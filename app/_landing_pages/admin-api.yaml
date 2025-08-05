@@ -15,10 +15,11 @@ rows:
       text: "Kong Admin API"
 
   - header:
-      type: h2
-      text: What is the Kong Admin API?
     columns:
-    - blocks:
+      - header:
+          type: h2
+          text: What is the Kong Admin API?
+        blocks:
         - type: text
           config: |
             The Admin API is an internal RESTful API designed for administration purposes. It provides full control over {{site.base_gateway}}.
@@ -30,7 +31,19 @@ rows:
             * 8444 for HTTPS
 
             This can be customized with the `admin_listen` parameter in in the [{{site.base_gateway}} configuration](/gateway/configuration/#admin-listen).
-  
+      - header:
+          type: h2
+          text: When should I use the Kong Admin API?
+        blocks:
+        - type: text
+          config: |
+            You should use the Admin API if one or more of the following is true:
+            - You're running {{site.base_gateway}} on-prem with a database
+            - You need low-level, flexible, and direct integration or automation
+            - You want granular access to all {{site.base_gateway}} entities
+            - You want to interact with {{site.base_gateway}} through Insomnia
+            
+            If you're using {{site.konnect_short_name}}, you should use the [{{site.konnect_short_name}} API](/konnect-api/) instead.
   - header:
       text: "Specification"
       type: h2
@@ -77,6 +90,31 @@ rows:
             url: /how-to/enable-rbac-with-admin-api/
             align: end
 
+  - header:
+      type: h2
+      text: "Next Steps"
+      sub_text: Use one of the following tutorials to get started.              
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/gateway.svg
+            title: Install self-managed {{ site.base_gateway }}
+            description: |
+              {{ site.base_gateway }} is a low-demand, high-performing API gateway. 
+              You can set up {{ site.base_gateway }} with {{site.konnect_short_name}}, or install it on various self-managed systems.
+            cta:
+              url: /gateway/install/
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/gateway.svg
+            title: Get started with {{ site.base_gateway }}
+            description: |
+              This tutorial will help you get started with {{ site.base_gateway }} by setting up either a {{site.konnect_short_name}} hybrid deployment or self-managed local installation and walking through some common API management tasks.
+            cta:
+              url: /gateway/get-started/
   - header:
       text: "Frequently asked questions"
       type: h2

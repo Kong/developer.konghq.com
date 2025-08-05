@@ -85,3 +85,16 @@ rows:
                     config: |
                       1. Click **Generate New Plugin**.
                       1. Enter a name for the new plugin and click **Generate**.
+  - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              products:
+                - insomnia
+              tags:
+                - plugins
+              quantity: 5
+              allow_empty: true

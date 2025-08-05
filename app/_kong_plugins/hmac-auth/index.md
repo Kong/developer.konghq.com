@@ -40,6 +40,8 @@ related_resources:
   - text: ACL plugin
     url: /plugins/acl/
     
+min_version:
+  gateway: '1.0'
 ---
 
 This plugin adds HMAC Signature authentication to a Gateway Service or a Route

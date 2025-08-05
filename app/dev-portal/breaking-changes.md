@@ -14,7 +14,7 @@ tags:
     - upgrades
     - versioning
 
-description: "Review breaking changes from Dev Portal v2 to v3."
+description: "Review breaking changes from Dev Portal v3 beta to GA."
 
 related_resources:
   - text: Dev Portal

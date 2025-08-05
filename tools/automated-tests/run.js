@@ -37,6 +37,7 @@ export async function loadConfig() {
   let files = [];
   const args = minimist(process.argv.slice(2));
   const testsConfig = await loadConfig();
+  const start = Date.now();
   try {
     if (args.files) {
       files = Array.isArray(args.files) ? args.files : [args.files];
@@ -86,10 +87,10 @@ export async function loadConfig() {
     await stopContainer(container);
     await removeContainer(container);
 
-    await logResults(results);
+    await logResults(results, start, Date.now());
     process.exit(1);
   }
-  await logResults(results);
+  await logResults(results, start, Date.now());
 
   const failedTests = results.filter(
     (r) => r.status === "failed" && !isFailureExpected(r)
