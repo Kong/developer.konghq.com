@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "syntax-highlight-element/themes/prettylights.css";
 
 @tailwind base;
 @tailwind components;
@@ -172,9 +173,10 @@
   }
 
   body {
-    @apply transition-colors duration-200;
+    /* Can't use @apply here due to syntax highlighting, the light-dark function
+     and CSS variables don't play nicely sometimes. */
+    transition: background-color 200ms ease-in-out;
   }
-
 
   code {
     font-family: "JetBrains Mono", system-ui, sans-serif;
@@ -812,6 +814,16 @@
 
   .dropdown-caret {
     @apply absolute left-1/2 transform -translate-x-1/2 -bottom-4 !mb-0 hidden peer-aria-[expanded='true']:flex;
+  }
+
+  syntax-highlight {
+    color-scheme: inherit;
+    font-family: "JetBrains Mono", system-ui, sans-serif;
+    /* The font we use for codeblocks includes a ligature that renders things like
+      != as ≠, this property disables all ligatures.
+    */
+    font-variant-ligatures: none;
+    @apply p-2 pt-2 pb-4 max-w-full relative rounded-lg block overflow-auto transition-opacity duration-300;
   }
 }
 

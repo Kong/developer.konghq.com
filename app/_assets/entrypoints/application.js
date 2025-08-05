@@ -22,6 +22,7 @@ import "@/javascripts/toc";
 import "@/javascripts/search_modal";
 import "@/javascripts/mesh_service_switcher";
 import "@/javascripts/feedback";
+import "syntax-highlight-element";
 
 document.addEventListener("DOMContentLoaded", function () {
   new TopNav();
