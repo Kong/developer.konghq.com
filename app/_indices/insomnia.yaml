@@ -101,3 +101,4 @@ sections:
       - path: /insomnia/verify-binary-provenance/
       - path: /insomnia/version-control/
       - path: /insomnia/keyboard-shortcuts/
+      - path: /insomnia/Insomnia-terminology-reference/
