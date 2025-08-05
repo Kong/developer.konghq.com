@@ -81,6 +81,7 @@
     "https://packages.konghq.com/public/kong-mesh-binaries-release/raw/names/security-assets/versions/security-assets.tar.gz",
     "https://cloudsmith.io/~kong/repos/ai-pii/packages/",
     "https://app.datadoghq.com/*",
+    "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories",
     "https://wiki.ubuntu.com/Releases",
     "https://claude.ai/",
     "https://claude.ai/*",
@@ -104,4 +105,5 @@
     "https://docs.amberflo.io/*",
     "https://konghq.com/legal/privacy-policy",
     "https://www.gnu.org/*"
+
   ]
