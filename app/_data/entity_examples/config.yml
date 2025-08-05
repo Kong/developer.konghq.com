@@ -115,7 +115,7 @@ formats:
     label: 'Terraform'
 
   ui:
-    label: 'Kong/Gateway Manager'
+    label: 'UI'
     entities:
       - admin
       - ca_certificate

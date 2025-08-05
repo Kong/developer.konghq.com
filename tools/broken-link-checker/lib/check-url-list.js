@@ -43,7 +43,7 @@ export default function (urls, opts) {
             if (
               opts.skipEditLink &&
               result.url.resolved.match(
-                /.*github.com\/Kong\/developer.konghq.com\/edit\/.*/
+                /.*github\.com\/Kong\/developer\.konghq\.com\/edit\/.*/
               )
             ) {
               return;

@@ -48,6 +48,9 @@ faqs:
       Because Kubernetes resources are the source of truth for configuring {{ site.base_gateway }} in Kubernetes, the KIC instance configuration in {{site.konnect_short_name}} is marked as read-only. This prevents configuration drift in {{ site.base_gateway }} caused by changes made outside the Ingress or Kubernetes Gateway API.
 
       For example, if a Route is created via the Kubernetes Gateway API and then modified in {{site.base_gateway}}, those changes wouldn't be reflected in the CRD and would conflict with the desired state defined in the CRD.
+  - q: I'm using AWS CDK, can I manage Kong resources with CDK instead of {{ site.kic_product_name }}?
+    a: |
+      Currently, you can't manage Kong resources via AWS CDK. We recommend managing Kong configurations by [deploying decK](/deck/) or custom automation (for example, Lambda functions) through CDK that interact with the [Admin API](/admin-api/). 
 ---
 
 {: data-deployment-topology="konnect" }

@@ -87,6 +87,7 @@ boolean
 booleans
 bps
 brotli
+Buf
 burstable
 callees
 CAs
@@ -535,6 +536,7 @@ no_version
 node_quantifier
 Node.js
 Node.js
+Nullsoft
 nunjucks
 Noname
 Noname
@@ -657,6 +659,7 @@ requery
 Requeue
 requeue
 request_counts
+requestable
 RequestResponse
 Rerank
 reranking
@@ -695,6 +698,7 @@ SBOMs
 SCCs
 SCCs
 schema's
+Scriptable
 SDKs
 search_by_username
 secret_id

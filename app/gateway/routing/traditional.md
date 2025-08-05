@@ -41,7 +41,7 @@ tags:
 
 The traditional router is {{ site.base_gateway }}'s original routing configuration format. It uses JSON to provide a list of routing criteria, including `host`, `path`, and `headers`.
 
-Routing based on JSON configuration is available when [`router_flavor`](/gateway/configuration/#router_flavor) is set to `traditional_compat` _or_ `expressions` in `kong.conf`.
+Routing based on JSON configuration is available when [`router_flavor`](/gateway/configuration/#router-flavor) is set to `traditional_compat` _or_ `expressions` in `kong.conf`.
 
 ## Routing criteria
 
@@ -325,7 +325,7 @@ You can avoid creating complex regular expressions using the [Router Expressions
 
 If you see unexpected behavior, use the Kong debug header to help track down the source:
 
-1. In `kong.conf`, set [`allow_debug_header=on`](/gateway/configuration/#allow_debug_header).
+1. In `kong.conf`, set [`allow_debug_header=on`](/gateway/configuration/#allow-debug-header).
 1. Send `Kong-Debug: 1` in your request headers to indicate the matched route ID in the response headers for
    troubleshooting purposes.
 

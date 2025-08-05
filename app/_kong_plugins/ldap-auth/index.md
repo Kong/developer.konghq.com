@@ -35,6 +35,9 @@ search_aliases:
 related_resources:
   - text: LDAP Authentication Advanced
     url: /plugins/ldap-auth-advanced/
+  
+min_version:
+  gateway: '1.0'
 ---
 
 {% include /plugins/ldap/description.md %}
