@@ -46,8 +46,8 @@ This tutorial will explain how to export a document.
 To export a file from Insomnia, navigate to your workspace:
 1. Click **Preferences**, and then click **Data**.
 1. Select an export option:
-    - **Export the "name of file" Document**: Export a single, specific API design document.
-    - **Export the "project name" Project**: Export a project, including all associated API requests, design documents, and tests.
+    - **Export Document**: Export a single, specific API design document.
+    - **Export Project**: Export a project, including all associated API requests, design documents, and tests.
     - **Export all data**: Export all data from your all your workspaces.
     - **Create Run Button**: Create a sharable button that, when clicked, automatically opens a specific request or collection in the Insomnia application and executes it.
 3. Click **Export**.
