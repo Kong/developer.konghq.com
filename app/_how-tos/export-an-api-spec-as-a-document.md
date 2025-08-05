@@ -54,4 +54,4 @@ To export a file from Insomnia, navigate to your workspace:
 4. Choose a format to export the file as:
     - **Insomnia v5**: A native JSON export format that contains the full structure of Insomnia projects, including requests, environments, metadata, and documentation.
     - **HAR - HTTP Archive Format**: A standardized, JSON‑based log of HTTP requests and responses that is used primarily for network-level debugging and performance analysis. 
-5. Click **Done**.
+The file will start downloading
