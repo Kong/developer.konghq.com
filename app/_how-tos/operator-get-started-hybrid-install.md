@@ -65,7 +65,6 @@ Install {{ site.operator_product_name }} with Helm:
 ```bash
 helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
   --set image.tag={{ site.data.operator_latest.release }} \
-  --set kubernetes-configuration-crds.enabled=true \
   --set env.ENABLE_CONTROLLER_KONNECT=true
 ```
 
