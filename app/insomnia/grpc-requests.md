@@ -106,15 +106,15 @@ Specify a body, and click **Send**.
 
 ### Client streaming
 
-`/hello.HelloService/LotsOfGreetings` is client streaming RPC. You send a multiple messages, and the server responds with a single message.
+`/hello.HelloService/LotsOfGreetings` is client streaming RPC. You send multiple messages and the server responds with a single message.
 
-Click **Start** to open a channel with the server, then edit the body with the contents of your first message and press the **Stream** button to send that message. You should see a read-only snapshot of the message appear as a tab. You can now edit the contents in the **Body** tab again, and click **Stream** each time you want to send a new message. Once all messages have been sent, click **Commit** and the server should respond accordingly.
+Click **Start** to open a channel with the server, then edit the body with the contents of your first message and click **Stream** to send that message. You should see a read-only snapshot of the message appear as a tab. You can now edit the contents in the **Body** tab again, and click **Stream** each time you want to send a new message. Once all messages have been sent, click **Commit** and the server should respond accordingly.
 
 ### Bidirectional streaming
 
 `/hello.HelloService/BiDiHello` is bidirectional streaming RPC. You send multiple messages, and the server responds with multiple messages.
 
-This is a combination of server and client streaming. As such, the steps to send messages are identical to client streaming above, and the manner in which the server responds is identical to server streaming. Be sure to press **Commit** once you have finished sending all your messages, and allow the server to terminate the connection.
+This is a combination of server and client streaming. As such, the steps to send messages are identical to client streaming above, and the manner in which the server responds is identical to server streaming. Be sure to click **Commit** once you have finished sending all your messages, and allow the server to terminate the connection.
 
 ## TLS/SSL
 
