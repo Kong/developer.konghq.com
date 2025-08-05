@@ -11,4 +11,5 @@ curl http://localhost:8000 \
   --output speech.mp3
 ```
 
+{:.info}
 > **Note:** Replace `<VOICE_NAME>` with a supported voice identifier (e.g., `serene`, `vibrant`). Available voices depend on the LLM model or provider. Check your provider's documentation for the list of supported voices.
