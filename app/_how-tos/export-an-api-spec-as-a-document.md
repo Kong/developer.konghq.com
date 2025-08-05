@@ -19,16 +19,9 @@ faqs:
     a: Yes. Click **Export Data → Single Request** from the Document or Collection menu or click  **Preferences → Data**. Then select just that request.
 prereqs:
   inline:
-    - title: API specification
+    - title: An Insomnia design document
       content: |
-        You need to have an API specification in one of the following formats:
-          * Insomnia
-          * Postman v2
-          * HAR
-          * OpenAPI (versions 3.0, 3.1)
-          * Swagger
-          * WSDL
-          * cURL
+        You need to have an Insomnia design document. For instructions on creating one see [Create a design document](/how-to/create-a-design-document/)
       icon_url: /assets/icons/code.svg
 
 related_resources:
