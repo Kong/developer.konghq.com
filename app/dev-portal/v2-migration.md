@@ -33,7 +33,7 @@ With the GA release of the new Dev Portal (v3) in June 2025, you can migrate fro
 
 Dev Portal v3 provides additional features such as a streamlined [API creation and publishing process](/dev-portal/apis/) and enhanced [Dev Portal customization](/dev-portal/customizations/dev-portal-customizations/) with Markdown components and snippets.
 
-## Migrate to Dev Portal v3
+## Migrate manually
 
 To migrate from Dev Portal classic (v2) to the new Dev Portal (v3), do the following:
 
@@ -50,3 +50,78 @@ To migrate from Dev Portal classic (v2) to the new Dev Portal (v3), do the follo
 1. If you've enabled developer RBAC, manually assign developers to teams and roles by navigating to your v3 Dev Portal in {{site.konnect_short_name}}, clicking **Access and approvals** in the sidebar, and click the **Teams** tab.
    {:.warning}
    > For self-hosted Dev Portals, [contact Kong support](https://support.konghq.com) for help.
+
+## Migrate with Terraform
+
+Users can migrate to the new konnect_portal_classic resource using `import` and `removed` blocks in the manifests or using the CLI. We recommend using the `import`/`removed` blocks in manifests.
+
+{:.warning}
+> While not recommended, you can edit your state file directly to migrate. To do this, search `"type":"konnect_portal"` and replace with `"type": "konnect_portal_classic"`.
+
+{% navtabs "Terraform" %}
+{% navtab "Manifests" %}
+1. Get your Dev Portal ID from the Terraform state: 
+   ```sh
+   terraform state show konnect_portal_classic.my_portal | grep "id"
+   ```
+   You can also do this from the {{site.konnect_short_name}} UI by navigating to [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar, clicking the **Classic** tab, and clicking on your v2 Dev Portal.
+
+1. Rename `konnect_portal` to `konnect_portal_classic` in your manifest. For example:
+   ```hcl
+   resource "konnect_portal_classic" "my_portal" {
+     name                      = "My New Portal"
+     auto_approve_applications = false
+     auto_approve_developers   = false
+     is_public                 = false
+     rbac_enabled              = false
+   }
+
+   import {
+     to = konnect_portal_classic.my_portal
+     id = "854cb4ce-8a3f-4cf7-b878-52347a78d8d6"
+   }
+
+   removed {
+     from = konnect_portal.my_portal
+     lifecycle {
+       destroy = false
+     }
+   }
+   ```
+
+   {:.danger}
+   > **Warning:** If the `removed` block is missing, the Dev Portal will be destroyed.
+
+1. Apply all of the resource changes using Terraform:
+   ```sh
+   terraform apply -auto-approve
+   ```
+1. Remove the `import` and `removed` lines in your manifest.
+{% endnavtab %}
+{% navtab "CLI" %}
+1. Get your Dev Portal ID from the Terraform state: 
+   ```sh
+   echo konnect_portal.my_portal.id | terraform console
+   ```
+   You can also do this from the {{site.konnect_short_name}} UI by navigating to [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar, clicking the **Classic** tab, and clicking on your v2 Dev Portal.
+
+1. Remove the resource from state:
+   ```sh
+   terraform state rm konnect_portal.my_portal
+   ```
+1. Update your manifest to use the `konnect_portal_classic` resource.
+
+1. Update the provider in your manifests to `provider = konnect`.
+
+1. Re-import the Dev Portal into the new resource:
+   ```sh
+   terraform import konnect_portal_classic.my_portal "fc32ee8a-84cc-4a05-b0d2-98d7e4b0fb59"
+   ```
+1. Apply all of the resource changes using Terraform:
+   ```sh
+   terraform apply -auto-approve
+   ```
+   Some things will say they need updating. It’s safe to do as it’s just the state file updating IDs + references.
+{% endnavtab %}
+{% endnavtabs %}
+
