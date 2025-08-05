@@ -47,14 +47,14 @@ Use domain lock to remove access to your Insomnia Enterprise account for existin
 To enable domain lock:
 - Navigate to your domain settings and click the toggle under **Lock**.
 
-When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Enterprise account. For example:
-- Kong configures Domain lock on @oldkong.com. Jane is an existing hobby user and wasn’t invited to the Enterprise account. Now, when JaneHobby@oldkong.com attempts to sign in to Insomnia with that address; she can’t access the Enterprise account.
-
+When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Insomnia Enterprise account. For example:
+- Kong configures domain lock on @oldkong.com: Jane is an existing hobby user and wasn’t invited to the Enterprise account. Now, when JaneHobby@oldkong.com attempts to sign in to Insomnia with that address; she can’t access the Enterprise account.
+- Kong configures domain lock on @DomainLockExample.com: George doesn't have an Insomnia account, but has an email address george@DomainLockExample.com. When George creates an Insomnia account, the domain lock blocks his sign in, which means he can't access the Enterprise account or its features.
 {:.info}
-> If you enable both Domain capture and Domain lock on the same verified domain in Insomnia, then Domain capture takes priority for new sign-ups and overrides domain lock.
+> If you enable both domain capture and domain lock on the same verified domain in Insomnia, then domain capture takes priority for new sign-ups and overrides domain lock.
 
 ### Invite control
-Use our invite control feature to specify domains that are allowed to be invited into your Enterprise organizations.
+Use invite control to specify which domains can receive invitations to your Enterprise organizations.
 
 To configure invite control: 
 - Navigate to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
