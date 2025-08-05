@@ -116,7 +116,7 @@ Create a resource share to allow the AWS account associated with your {{site.kon
 
 1. Export the resource share ARN to your environment:
    ```sh
-   export RESOURCE_SHARE_ARN='YOUR RESOURCE SHARE ARN'
+   export RESOURCE_SHARE_ARN='YOUR-RESOURCE-SHARE-ARN'
    ```
 
 ## Create the KonnectCloudGatewayTransitGateway resource
@@ -155,7 +155,7 @@ spec:
 
 1. Export the relevant attachment ID:
    ```sh
-   export ATTACHMENT_ID='YOUR AWS TRANSIT GATEWAY VPC ATTACHMENT ID'
+   export ATTACHMENT_ID='YOUR-AWS-TRANSIT-GATEWAY-VPC-ATTACHMENT-ID'
    ```
 
 1. Accept the transit gateway attachment:
