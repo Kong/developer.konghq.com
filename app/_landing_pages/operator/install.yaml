@@ -21,11 +21,14 @@ rows:
           - type: text
             config: |
               ```bash
-              helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
-                --set image.tag={{ site.data.operator_latest.release }} \
-                --set kubernetes-configuration-crds.enabled=true \
+              helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace \
                 --set env.ENABLE_CONTROLLER_KONNECT=true
               ```
+
+              > **Note:** If you're still using {{ site.kong_gateway_operator_product_name }} please
+              refer to this installation guide: [Install Kong Gateway Operator (KGO)][kgo_install_guide].
+
+              [kgo_install_guide]: /operator/get-started/install/install_v1
 
           - type: faqs
             config:
