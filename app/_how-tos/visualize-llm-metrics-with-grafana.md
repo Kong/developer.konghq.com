@@ -195,7 +195,19 @@ Prometheus will begin to scrape metrics data from {{site.base_gateway}}.
 
 ## Configure Grafana
 
-TBA
+### Add Prometheus Data Source
+
+1. In the Grafana UI, go to **Connections** > **Data Sources**.
+2. Click **Add data source**.
+3. Select **Prometheus** from the list.
+4. In the **Connection > Prometheus server URL** field, enter: `http://host.docker.internal:9090`.
+5. Scroll down and click **Save & test** to verify the connection.
+
+### Import Dashboard
+
+1. In the Grafana UI, navigate to **Dashboards** > **New** > **Import**.
+2. In the **Import via grafana.com** field, enter the dashboard ID: `21162`.
+3. Click **Load**.
 
 ## Validate
 
@@ -212,7 +224,7 @@ curl -s 'localhost:9090/api/v1/query?query=kong_ai_llm_requests_total'
 ```
 
 
-This should return something like the following:
+This should return the following response:
 ```
 test
 ```
