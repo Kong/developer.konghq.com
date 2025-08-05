@@ -42,19 +42,28 @@ Once the domain is verified, you can configure its settings to control users wit
 
 ### Domain lock
 
-Domain lock allows you to disable access to your Enterprise account for:
-* Existing Hobby users in the domain
-* Uninvited users in the domain
+Use domain lock to remove access to your Enterprise account for existing hobby users and uninvited new users.
 
-To enable domain lock, go to your domain settings and click the toggle under **Lock**.
+To enable domain lock:
+- Navigate to your domain settings and click the toggle under **Lock**.
+
+When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Enterprise account. For example:
+- Kong configures Domain lock on @oldkong.com. Jane is an existing hobby user and wasn’t invited to the Enterprise account. Now, when JaneHobby@oldkong.com attempts to sign in to Insomnia with that address; she can’t access the Enterprise account.
+
+{:.info}
+> If you enable both Domain capture and Domain lock on the same verified domain in Insomnia, then Domain capture takes priority for new sign-ups and overrides domain lock.
 
 ### Invite control
+Use our invite control feature to specify domains that are allowed to be invited into your Enterprise organizations.
 
-Invite control allows you to specify domains that are allowed to be invited into your Enterprise organizations.
+To configure invite control: 
+- Navigate to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
 
-To configure invite control, go to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
+You can set your preference for allowing invitations from the following domain types:
+- **All domains**: Invites to any email domain are accepted which includes personal addresses.
+- **Verified domains only**: Invites are restricted to domains already added and verified in the Domains section of Enterprise controls.
+- **Specific domains only**: Invites are limited to manually specified domains or sub‑domains for a specific organization, even if those domains are not globally verified.
 
-You can allow invites to all domains, to verified domains only, or to specific domains only.
 
 ## Manage storage
 
