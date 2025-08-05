@@ -1,5 +1,5 @@
 ---
-title: Export your API design document or request data
+title: Export a design document in Insomnia
 content_type: how_to
 
 products:
