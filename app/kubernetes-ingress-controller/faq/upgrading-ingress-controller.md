@@ -96,9 +96,9 @@ If you installed the Experimental Channel of Gateway API v1.0, complete the foll
 ### {{ site.kic_product_name }} 3.4
 
 Starting in {{ site.kic_product_name }} 3.4, {{ site.kic_product_name }} supports Gateway API version 1.2.
-There is a breaking change in Gateway API 1.2 to remove the `v1alpha2` version of `GRPCRoute` and `ReferenceGrant`.
+Gateway API 1.2 introduces a breaking change by removing the `v1alpha2` versions of `GRPCRoute` and `ReferenceGrant.`
 
-If you have been using Gateway API v1.1 and {{ site.kic_product_name }} 3.2 and above, and there are no `GRPCRoute` and `ReferenceGrant` resources stored in `v1alpha2` version, you can directly upgrade Gateway API from v1.1 to v1.2.
+If you are using Gateway API v1.1 with {{ site.kic_product_name }} 3.2 or later, and you do not have any `GRPCRoute` or `ReferenceGrant` resources in the `v1alpha2` version, you can upgrade directly to Gateway API v1.2.
 You can use the following script to ensure your `GRPCRoute` and `ReferenceGrant` CRDs aren't using `v1alpha2` storage version:
 
 ```bash
@@ -112,12 +112,12 @@ Otherwise, upgrade Gateway API and {{ site.kic_product_name }} following these s
 
 1. Ensure you are using Gateway API 1.1 (you can upgrade by following the steps in the section above).
 2. Ensure you are using {{ site.kic_product_name }} version 3.2 or later.
-3. Update all your `GRPCRoute` manifests to use `v1` instead of `v1alpha2` and your `ReferenceGrant` manifests to use `v1beta1` instead of `v1alpha2`. This can be done by following the [upgrade guide from Gateway API](https://gateway-api.sigs.k8s.io/guides/?h=v1.2#v12-upgrade-notes).
+3. Update all `GRPCRoute` manifests to use `v1` instead of `v1alpha2`, and all `ReferenceGrant` manifests to use `v1beta1` instead of `v1alpha2`. You can follow the [Gateway API upgrade guide](https://gateway-api.sigs.k8s.io/guides/?h=v1.2#v12-upgrade-notes) for detailed steps.
 4. Install the standard or experimental channel of Gateway API 1.2.
 
 ### {{ site.kic_product_name }} 3.5
 
-Starting in {{ site.kic_product_name }} 3.5, several Kong-specific resources have been deprecated in favor of their Gateway API equivalents, and CRDs are now managed separately.
+Starting from {{ site.kic_product_name }} 3.5, several Kong-specific resources have been deprecated in favor of their Gateway API equivalents, and CRDs are now managed separately.
 
 #### Resource Deprecations
 
