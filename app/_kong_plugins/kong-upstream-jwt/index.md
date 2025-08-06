@@ -25,6 +25,9 @@ icon: optum.png
 
 search_aliases:
   - optum
+
+min_version:
+  gateway: '3.0'
 ---
 
 The Kong Upstream JWT plugin adds a signed JWT into the HTTP Header `JWT` of requests proxied through {{site.base_gateway}}. 

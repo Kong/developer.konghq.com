@@ -41,6 +41,13 @@ prereqs:
 min_version:
     gateway: '3.4'
 
+next_steps:
+  - text: Learn about {{site.base_gateway}} entities
+    url: /gateway/entities/
+  - text: Learn about {{site.base_gateway}} plugins
+    url: /plugins/
+  - text: Learn about decK
+    url: /deck/
 ---
 
 
@@ -103,4 +110,5 @@ You can validate that the datastore was configured correctly by starting {{site.
     ```sh
     curl -i http://localhost:8001
     ```
-If you receive a `200` status code, {{site.base_gateway}} was configured correctly.
+If you receive a `200` status code, {{site.base_gateway}} was configured correctly. You can now start to configure your API gateway with [plugins](/plugins/) and other [entities](/gateway/entities/).
+

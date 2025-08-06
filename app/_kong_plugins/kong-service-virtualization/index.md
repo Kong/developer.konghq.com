@@ -25,6 +25,9 @@ icon: optum.png
 
 search_aliases:
   - optum
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Kong Service Virtualization plugin enables mocking virtual API request and responses using {{site.base_gateway}}.

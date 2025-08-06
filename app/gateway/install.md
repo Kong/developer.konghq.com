@@ -39,8 +39,13 @@ faqs:
 
 no_wrap: true
 versioned: true
+next_steps:
+  - text: Get started with {{site.base_gateway}}
+    url: /gateway/get-started/
 ---
 
 {% include install/gateway.html %}
 
 {% include sections/faq.html %}
+
+{% include sections/next_steps.html %}

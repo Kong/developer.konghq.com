@@ -51,7 +51,7 @@ rows:
                     1. Link an [API to a Gateway Service](/dev-portal/apis/#gateway-service-link).
                        
                        This is required to enforce auth strategies.
-                    1. Publish an [API to a Dev Portal](/dev-portal/publishing/).
+                    1. Publish an [API to a Dev Portal](/dev-portal/apis/#publish-your-api-to-dev-portal).
                     1. Select an authentication strategy when publishing the API to a Dev Portal.
                     1. For public content with restricted access, use [visibility settings](/dev-portal/pages-and-content/#page-visibility-and-publishing) to show public pages or APIs to anonymous users while restricting actions to logged-in users.
   - header:

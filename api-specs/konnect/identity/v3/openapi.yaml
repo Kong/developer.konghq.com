@@ -4347,11 +4347,11 @@ components:
           examples:
             Example:
               value:
-                created_at: '2023-01-18T11:35:45.130Z'
                 id: 023bfa42-3513-4cbf-b059-a9ddb4ea995d
                 name: Acme Co.
                 owner_id: e02c829c-0e2d-44b5-9057-07714ea613a3
                 login_path: acme
+                created_at: '2023-01-18T11:35:45.130Z'
                 updated_at: '2023-01-23T17:22:52.150Z'
                 state: active
                 retention_period_days: 90
