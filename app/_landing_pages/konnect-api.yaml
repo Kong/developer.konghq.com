@@ -101,7 +101,7 @@ rows:
 
             Org Admins can revoke personal access tokens for users that leave their organization by using the UI or {{site.konnect_short_name}} API: 
             * **UI:** Navigate to **Organization > Users**, click the user, click the **Personal access tokens** tab
-            * **API:** Send a POST request to the `/users/{userId}/access-tokens/{tokenId}/revoke` endpoint
+            * **API:** Send a PATCH request to the `/users/{userId}/access-tokens/{tokenId}/revoke` endpoint
 
             Organization Admins can disable the use of PATs by all users by navigating to **Organization > Settings > General**.
       - header:
