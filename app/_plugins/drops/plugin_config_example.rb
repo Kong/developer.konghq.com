@@ -46,10 +46,18 @@ module Jekyll
         @requirements ||= example.fetch('requirements', [])
       end
 
+      def show_in_api?
+        example['show_in_api']
+      end
+
       def variables
         @variables ||= example.fetch('variables', {}).map do |k, v|
           EnvVariable.new(v)
         end
+      end
+
+      def raw_variables
+        @raw_variables ||= example.fetch('variables', {})
       end
 
       def plugin_slug
