@@ -13,7 +13,7 @@
             <tr>
                 <td>{{version.release}}.x {% if version.lts %}(LTS){% endif %}</td>
                 <td>{{version.beginning}}</td>
-                <td>{{version.eol | date: "%b %Y" }}</td>
+                <td>{{version.eol}}</td>
             </tr>
         {% endfor %}
     </tbody>
