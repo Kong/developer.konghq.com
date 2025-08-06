@@ -102,6 +102,8 @@ faqs:
       If the IdP connected to the plugin enforces PKCE, it will be used during the authorization code flow. 
       If the IdP doesn't support or enforce PCKE, it won't be used.
  
+min_version:
+  gateway: '1.0'
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).

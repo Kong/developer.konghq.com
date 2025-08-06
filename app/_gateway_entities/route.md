@@ -182,7 +182,10 @@ For more information, see the detailed [expressions](/gateway/routing/expression
 
 The Route entity allows you to configure proxy behavior on a per route basis by setting the `strip_path`, `preserve_host`, and `path_handling` values.
 
-In most cases, `strip_path` and `preserve_host` should be `false` (this is the default value), and `path_handling` should be set to `v0`.
+In most cases:
+* `strip_path` should be `true` (default)
+* `preserve_host` should be `false` (default)
+* `path_handling` should be set to `v0`
 
 <!--vale off-->
 

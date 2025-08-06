@@ -22,6 +22,9 @@ icon: datadome.png
 related_resources:
   - text: DataDome Kong documentation
     url: https://docs.datadome.co/docs/kong-plugin
+
+min_version:
+  gateway: '2.8'
 ---
 
 The Kong DataDome plugin relies on the DataDome Bot & Fraud Protection Platform to validate if any incoming API request is legitimate or coming from a bot.

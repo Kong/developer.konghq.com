@@ -19,7 +19,7 @@
 {% when ca_certificate %}
   The following creates a new CA Certificate:
 {% when 'plugin' %}
-  Add this section to your declarative configuration file:
+  Add this section to your [`kong.yaml`](/deck/get-started/) configuration file:
 {% else %}
 {% endcase %}
 {% endif %}

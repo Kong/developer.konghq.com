@@ -26,6 +26,9 @@ search_aliases:
 related_resources:
   - text: Performance benchmark of {{site.base_gateway}} with Noname Security
     url: https://docs.nonamesecurity.com/docs/kong-performance-results
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Noname Traffic Source plugin (also known as `nonamesecurity`) lets you tune

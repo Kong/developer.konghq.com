@@ -35,6 +35,9 @@ related_resources:
     url: https://app.inigo.io
   - text: Inigo documentation
     url: https://docs.inigo.io
+
+min_version:
+  gateway: '3.0'
 ---
 
 Inigo offers complete visibility, control, and security for your production GraphQL APIs, enabling you to confidently adopt and scale GraphQL with the Inigo Kong plugin. 

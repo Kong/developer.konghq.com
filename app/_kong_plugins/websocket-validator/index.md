@@ -16,7 +16,7 @@ works_on:
     - konnect
 
 min_version:
-    gateway: '3.1'
+    gateway: '3.0'
 
 topologies:
   on_prem:
