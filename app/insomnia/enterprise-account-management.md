@@ -49,7 +49,7 @@ To enable domain lock:
 
 When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Insomnia Enterprise account. For example:
 - Kong configures domain lock on @oldkong.com: Jane is an existing hobby user and wasn’t invited to the Enterprise account. Now, when JaneHobby@oldkong.com attempts to sign in to Insomnia with that address; she can’t access the Enterprise account.
-- Kong configures domain lock on @DomainLockExample.com: George doesn't have an Insomnia account, but has an email address george@DomainLockExample.com. When George creates an Insomnia account, the domain lock blocks his sign in, which means he can't access the Enterprise account or its features.
+- Kong configures domain lock on @DomainLockExample.com: George doesn't have an Insomnia account, but has an email address george@DomainLockExample.com. When George creates an Insomnia account, the domain lock blocks his sign-in, which means that he can't access the Insomnia Enterprise account or its features.
 {:.info}
 > If you enable both domain capture and domain lock on the same verified domain in Insomnia, then domain capture takes priority for new sign-ups and overrides domain lock.
 
