@@ -6967,7 +6967,9 @@ components:
                   description: A map of header names to arrays of header values.
                   type: object
                   additionalProperties:
-                    type: string
+                    items:
+                      type: string
+                    type: array
                 healthy:
                   type: object
                   properties:
