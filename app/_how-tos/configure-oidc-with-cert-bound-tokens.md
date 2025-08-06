@@ -206,9 +206,11 @@ docker run \
   --https-trust-store-file=/opt/keycloak/ssl/kong-keystore.p12 \
   --https-trust-store-password=$PKCS12_PASSWORD \
   --https-client-auth=request \
-  --hostname=https://localhost:9443 \
+  --hostname-url=https://localhost:9443 \
   --hostname-admin=https://localhost:9443
 ```
+
+
 
 https://localhost:9443/admin/master/console/
 
@@ -238,7 +240,8 @@ curl -s \
   --data-urlencode 'client_id=kong' \
   --data-urlencode 'grant_type=client_credentials' \
   --cert client.crt \
-  --key client.key | jq -r .access_token
+  --key client.key \
+  --cacert rootCA.crt | jq -r .access_token
 ```
 
 
