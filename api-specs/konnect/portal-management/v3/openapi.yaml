@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.23
+  version: 3.0.24
   description: The management API for Portals
   contact:
     name: Kong
@@ -3544,17 +3544,37 @@ components:
       title: PortalCustomDomainSSL
     CreatePortalCustomDomainSSL:
       type: object
-      properties:
-        domain_verification_method:
-          $ref: '#/components/schemas/PortalCustomDomainVerificationMethod'
-      additionalProperties: false
-      required:
-        - domain_verification_method
+      oneOf:
+        - additionalProperties: false
+          properties:
+            domain_verification_method:
+              type: string
+              enum:
+                - custom_certificate
+            custom_certificate:
+              description: Custom certificate to be used for the SSL termination.
+              type: string
+            custom_private_key:
+              description: Custom certificate private key to be used for the SSL termination.
+              type: string
+          required:
+            - domain_verification_method
+            - custom_certificate
+            - custom_private_key
+        - additionalProperties: false
+          properties:
+            domain_verification_method:
+              type: string
+              enum:
+                - http
+          required:
+            - domain_verification_method
       title: CreatePortalCustomDomainSSL
     PortalCustomDomainVerificationMethod:
       type: string
       enum:
         - http
+        - custom_certificate
       title: PortalCustomDomainVerificationMethod
     PortalCustomDomainVerificationStatus:
       type: string
