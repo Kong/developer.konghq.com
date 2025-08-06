@@ -10,6 +10,7 @@ module Jekyll
 
         def to_json(*_args)
           {
+            'slug' => @example.slug,
             'config' => config,
             'env' => env,
             'required_fields' => required_fields
