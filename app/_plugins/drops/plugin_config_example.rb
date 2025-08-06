@@ -19,7 +19,7 @@ module Jekyll
         end
       end
 
-      attr_reader :file
+      attr_reader :file, :plugin
 
       def initialize(file:, plugin:) # rubocop:disable Lint/MissingSuper
         @file   = file

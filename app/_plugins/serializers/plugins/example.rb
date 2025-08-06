@@ -9,10 +9,11 @@ module Jekyll
         end
 
         def to_json(*_args)
-          json = { 'config' => config }
-          json['env'] = env
-
-          json
+          {
+            'config' => config,
+            'env' => env,
+            'required_fields' => required_fields
+          }
         end
 
         private
@@ -28,6 +29,10 @@ module Jekyll
             data: @example.config,
             variables: @example.raw_variables
           )
+        end
+
+        def required_fields
+          @example.plugin.schema.required_fields.map { |f| "config.#{f}" }
         end
       end
     end
