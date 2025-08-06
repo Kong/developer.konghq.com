@@ -38,6 +38,7 @@ You can export the following files from Insomnia:
 - Collection
 - Request
 This tutorial will explain how to export a document. 
+
 ## Export a file
 
 To export a file from Insomnia, navigate to your workspace:
