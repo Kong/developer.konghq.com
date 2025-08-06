@@ -5,9 +5,10 @@ topologies:
 
 
 releases:
+  - release: "3.5"
+    latest: true
   - release: "3.4"
     lts: true
-    latest: true
   - release: "3.3"
   - release: "3.2"
   - release: "2.12"
