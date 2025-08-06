@@ -131,7 +131,7 @@ These deprecated resources will be removed in a future version. We recommend mig
 
 #### Gateway API Support
 
-Starting in {{ site.kic_product_name }} 3.5, {{ site.kic_product_name }} supports Gateway API version 1.3.
+Starting from {{ site.kic_product_name }} 3.5, {{ site.kic_product_name }} supports Gateway API version 1.3.
 
 To upgrade Gateway API from 1.2 to 1.3:
 
@@ -152,10 +152,10 @@ To upgrade Gateway API from 1.2 to 1.3:
 
 #### New Features
 
-{{ site.kic_product_name }} 3.5 introduces several new features:
+The {{ site.kic_product_name }} 3.5 release introduces several new features:
 
-* **Combined HTTP Routes (GA):** Now generally available, this feature allows consolidation of multiple `HTTPRoute` resources into a single {{site.base_gateway}} service. Enable with the `--combined-services-from-different-httproutes` flag.
-* **Connection Draining:** Ensures graceful handling of client connections to terminating pods. Enable with the `--enable-drain-support` flag.
+* **Combined HTTP Routes (GA):** Now generally available, this feature allows you to consolidate multiple `HTTPRoute` resources into a single {{ site.base_gateway }} service. Enable with the `--combined-services-from-different-httproutes` flag.
+* **Connection Draining:** Ensures graceful handling of client connections when pods terminate. Enable with the `--enable-drain-support` flag.
 
 ## Upgrade {{ site.kic_product_name }}
 
