@@ -238,9 +238,9 @@ Upgrading from {{ site.kic_product_name }} 2.12 to 3.x+ is a major version chang
 
 1. **Remove or rename outdated CLI arguments and `CONTROLLER_*` environment variables.**
 
-    Version 3.0 removes or renames several flags that were previously deprecated, were removed due to other changes, or were left over for compatibility after their functionality was removed.
+    Version 3.0 removes or renames several flags that were previously deprecated, removed due to other changes, or retained temporarily for compatibility after their functionality was removed.
 
-    The CLI argument versions of flags are listed below. You must also change the equivalent `CONTROLLER_` (for example, `CONTROLLER_SYNC_RATE_LIMIT` for `--sync-rate-limit`) environment variable if you use those.
+    The CLI argument versions of these flags are listed below. If you use the equivalent `CONTROLLER_` environment variables (for example, `CONTROLLER_SYNC_RATE_LIMIT` for `--sync-rate-limit`), you must update those as well.
 
     * `--sync-rate-limit` is now `--proxy-sync-seconds`.
     * `--konnect-runtime-group-id` is now `--konnect-control-plane-id`.
