@@ -68,7 +68,7 @@
    controller:
      ingressController:
        image:
-         tag: "3.4"
+         tag: "3.5"
        env:
          feature_gates: "FillIDs=true"
        konnect:
@@ -80,7 +80,8 @@
          apiHostname: "us.kic.api.konghq.com"{% endif %}
    gateway:
      image:
-       repository: kong/kong-gateway{% if prereqs.kubernetes.gateway_env or is_konnect or use_kong_license %}
+       repository: kong/kong-gateway
+       tag: "{{site.data.gateway_latest.release}}"{% if prereqs.kubernetes.gateway_env or is_konnect or use_kong_license %}
      env:{% for env in prereqs.kubernetes.gateway_env %}
        {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}{% if use_kong_license %}
        LICENSE_DATA:
