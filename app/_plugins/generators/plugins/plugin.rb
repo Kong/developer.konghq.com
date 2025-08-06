@@ -67,6 +67,10 @@ module Jekyll
         end
       end
 
+      def examples_groups
+        @examples_groups ||= metadata.fetch('examples_groups', [])
+      end
+
       def schema
         @schema ||= schemas.detect { |s| s.release == latest_release_in_range }
       end
