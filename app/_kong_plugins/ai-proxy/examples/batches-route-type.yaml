@@ -2,6 +2,8 @@ title: 'Batches route type'
 description: 'Create large batches of API requests for asynchronous processing.'
 weight: 900
 
+show_in_api: true
+
 min_version:
   gateway: '3.11'
 
