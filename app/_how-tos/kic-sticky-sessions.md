@@ -49,6 +49,7 @@ cleanup:
 
 min_version:
   kic: '3.5'
+  gateway: '3.11'
 ---
 
 ## Overview
@@ -61,9 +62,9 @@ Sticky sessions, also known as session affinity, ensure that requests from the s
 
 {% new_in 3.11 %} {{site.base_gateway}} supports sticky sessions through the `sticky-sessions` load balancing algorithm, which uses browser-managed cookies to maintain session affinity.
 
-## Deploy additional echo replicas
+## Deploy multiple backend pods
 
-To demonstrate sticky session functionality, we need multiple backend pods. Scale out the `echo` deployment:
+To test sticky sessions, you need more than one pod. Scale the `echo` deployment:
 
 ```bash
 kubectl scale -n kong --replicas 3 deployment echo
@@ -75,11 +76,9 @@ Verify the pods are running:
 kubectl get pods -n kong -l app=echo
 ```
 
-## Configure sticky sessions with KongUpstreamPolicy
+## Create a KongUpstreamPolicy
 
-### Create a KongUpstreamPolicy for sticky sessions
-
-Create a `KongUpstreamPolicy` resource that configures the sticky sessions algorithm:
+Apply a `KongUpstreamPolicy` resource that enables sticky sessions:
 
 ```bash
 echo '
@@ -98,14 +97,14 @@ spec:
 ' | kubectl apply -f -
 ```
 
-Key configuration options:
+Explanation of key fields:
 
 - **`algorithm: sticky-sessions`**: Enables the sticky session load balancing algorithm
 - **`hashOn.input: "none"`**: Set it to `none` (required for sticky sessions)
 - **`stickySessions.cookie`**: Name of the cookie used for session tracking
 - **`stickySessions.cookiePath`**: Path for the session cookie (default: `/`)
 
-### Apply the policy to your service
+### Attach policy to your service
 
 Associate the `KongUpstreamPolicy` with your service using the `konghq.com/upstream-policy` annotation:
 
@@ -113,7 +112,7 @@ Associate the `KongUpstreamPolicy` with your service using the `konghq.com/upstr
 kubectl annotate -n kong service echo konghq.com/upstream-policy=sticky-session-policy
 ```
 
-Verify the annotation was applied:
+Check that the annotation was applied:
 
 ```bash
 kubectl get service echo -n kong -o jsonpath='{.metadata.annotations.konghq\.com/upstream-policy}'
@@ -121,32 +120,31 @@ kubectl get service echo -n kong -o jsonpath='{.metadata.annotations.konghq\.com
 
 ## Test sticky session behavior
 
-### Initial request without cookie
+### Initial request
 
-Make an initial request to observe the session cookie being set:
+1. Make an initial request to observe the session cookie being set:
+
+    ```bash
+    curl -v $PROXY_IP/echo
+    ```
+
+1. You should see a `Set-Cookie` header in the response:
+
+    ```bash
+    < Set-Cookie: session_id=01234567-89ab-cdef-0123-456789abcdef; Path=/
+    ```
+
+1. Note the pod name in the response:
+
+    ```bash
+    Running on Pod echo-965f7cf84-frpjc.
+    ```
+
+### Repeat requests with the same cookie
+
+Extract the cookie and make multiple requests:
 
 ```bash
-curl -v $PROXY_IP/echo
-```
-
-Look for the `Set-Cookie` header in the response:
-
-```bash
-< Set-Cookie: session_id=01234567-89ab-cdef-0123-456789abcdef; Path=/
-```
-
-Note the pod name in the response:
-
-```bash
-Running on Pod echo-965f7cf84-frpjc.
-```
-
-### Subsequent requests with cookie
-
-Use the cookie from the previous response to make subsequent requests:
-
-```bash
-# Extract the cookie value and make multiple requests
 COOKIE=$(curl -s -D - $PROXY_IP/echo | grep -i 'set-cookie:' | sed 's/.*session_id=\([^;]*\).*/\1/')
 
 for i in {1..5}; do
@@ -154,7 +152,7 @@ for i in {1..5}; do
 done
 ```
 
-You should see all requests being routed to the same pod:
+All requests are routed to the same pod: 
 
 ```bash
 Running on Pod echo-965f7cf84-frpjc.
@@ -186,9 +184,8 @@ Running on Pod echo-965f7cf84-wlvw9.
 
 Sticky sessions provide a powerful mechanism for maintaining session affinity in Kubernetes environments. By using `KongUpstreamPolicy` with the `sticky-sessions` algorithm, you can ensure that client requests are consistently routed to the same backend pod, improving application performance and user experience.
 
-Remember to:
 - Test thoroughly with your specific application requirements
 - Consider the trade-offs between session affinity and load distribution
 - Combine with health checks for robust traffic management
 
-For more advanced load balancing scenarios, refer to the [load balancing documentation](/gateway/load-balancing/) and explore other algorithms like consistent hashing and least connections.
+For more advanced load balancing scenarios, refer to the [load balancing documentation](/gateway/load-balancing/) and explore other algorithms like [Consistent-hashing](/gateway/entities/upstream/#consistent-hashing) and [Least-connections](/gateway/entities/upstream/#least-connections).
