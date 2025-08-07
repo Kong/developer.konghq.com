@@ -1,12 +1,19 @@
 ---
 title: Migrating from Ingress to Gateway API
+short_title: Migrating from Ingress to Gateway API
 
 description: |
   How to migrate from deprecated Ingress API resources (including TCPIngress and UDPIngress) to the Gateway API
 
 content_type: how_to
+
+permalink: /kubernetes-ingress-controller/migrate/ingress-to-gateway/
+
 breadcrumbs:
   - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: How To
+
 products:
   - kic
 
