@@ -190,6 +190,18 @@ openssl x509 -req \
   -out keycloak.crt -days 365 -sha256 -extfile keycloak.ext
 ```
 
+Fixed thing maybe?
+```
+in /oidc/certs
+keytool -import -alias rootca \
+  -keystore keycloak-truststore.p12 \
+  -storetype PKCS12 \
+  -file rootCA.crt \
+  -storepass "$PKCS12_PASSWORD"
+
+keytool -list -keystore keycloak-truststore.p12 -storepass "$PKCS12_PASSWORD"
+```
+
 ## Keycloak
 
 ```
@@ -203,10 +215,10 @@ docker run \
   --https-port=9443 \
   --https-certificate-file=/opt/keycloak/ssl/keycloak.crt \
   --https-certificate-key-file=/opt/keycloak/ssl/keycloak.key \
-  --https-trust-store-file=/opt/keycloak/ssl/kong-keystore.p12 \
+  --https-trust-store-file=/opt/keycloak/ssl/keycloak-truststore.p12 \
   --https-trust-store-password=$PKCS12_PASSWORD \
   --https-client-auth=request \
-  --hostname-url=https://localhost:9443 \
+  --hostname=https://localhost:9443 \
   --hostname-admin=https://localhost:9443
 ```
 
