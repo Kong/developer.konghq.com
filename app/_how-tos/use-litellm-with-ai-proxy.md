@@ -146,10 +146,9 @@ response = litellm.completion(
     base_url=f"{kong_url}/{kong_route}"
 )
 
-print(f"\$ ChainAnswer:> {response['choices'][0]['message']['content']}")
+print(f"$ ChainAnswer:> {response['choices'][0]['message']['content']}")
 EOF
 ```
-
 {: data-deployment-topology="on-prem" }
 
 ```sh
@@ -167,10 +166,9 @@ response = litellm.completion(
     base_url=f"{kong_url}/{kong_route}"
 )
 
-print(f"\$ ChainAnswer:> {response['choices'][0]['message']['content']}")
+print(f"$ ChainAnswer:> {response['choices'][0]['message']['content']}")
 EOF
 ```
-
 {: data-deployment-topology="konnect" }
 
 With the `base_url` parameter, we can override the OpenAI base URL that LiteLLM uses by default with the URL to our {{site.base_gateway}} Route. This allows proxying requests and applying {{site.base_gateway}} plugins while still using LiteLLM’s API interface.
@@ -188,7 +186,6 @@ python3 ./app.py
 The response should look like this:
 
 ```sh
-ChainAnswer:> I am an AI language model created by OpenAI, designed to assist with understanding and generating human-like text based on the input I receive. I can help answer questions, provide explanations, and assist with a variety of tasks involving language. What would you like to know or discuss today?
+ChainAnswer:> I'm an artificial intelligence (AI) assistant created by OpenAI. I'm designed to help answer questions, provide information, write content, and assist with a wide variety of tasks through natural conversation. You can think of me as a type of intelligent computer program that uses language models to understand and respond to your messages. If you have any questions or need help with something, just let me know!
 ```
-
 {:.no-copy-code}
