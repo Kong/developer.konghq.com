@@ -121,6 +121,7 @@ rules:
       - meshtrafficpermissions
       - hostnamegenerators
       - meshexternalservices
+      - meshidentities
       - meshmultizoneservices
       - meshservices
       - meshtrusts
