@@ -32,6 +32,7 @@ module Jekyll
         generate_reference_page(plugin)
         generate_example_pages(plugin)
         generate_api_reference_page(plugin)
+        generate_plugin_endpoint(plugin)
       end
 
       def generate_overview_page(plugin)
@@ -79,6 +80,13 @@ module Jekyll
                         .to_jekyll_page
 
         site.pages << api_reference
+      end
+
+      def generate_plugin_endpoint(plugin)
+        page = Jekyll::PluginPages::Endpoints::Plugin
+               .new(plugin)
+               .to_jekyll_page
+        site.pages << page if page
       end
     end
   end
