@@ -25,10 +25,8 @@ rows:
                 --set env.ENABLE_CONTROLLER_KONNECT=true
               ```
 
-              > **Note:** If you're still using {{ site.kong_gateway_operator_product_name }} please
-              refer to this installation guide: [Install Kong Gateway Operator (KGO)][kgo_install_guide].
-
-              [kgo_install_guide]: /operator/get-started/install/install_v1
+          # TODO: Amend this guide with KGO 1.x installation instructions when version
+          # picker is available.
 
           - type: faqs
             config:
