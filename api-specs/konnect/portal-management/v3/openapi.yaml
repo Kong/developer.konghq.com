@@ -3545,12 +3545,14 @@ components:
     CreatePortalCustomDomainSSL:
       type: object
       oneOf:
-        - additionalProperties: false
+        - title: custom_certificate
+          additionalProperties: false
           properties:
             domain_verification_method:
               type: string
               enum:
                 - custom_certificate
+              x-terraform-transform-const: true
             custom_certificate:
               description: Custom certificate to be used for the SSL termination.
               type: string
@@ -3561,12 +3563,14 @@ components:
             - domain_verification_method
             - custom_certificate
             - custom_private_key
-        - additionalProperties: false
+        - title: http
+          additionalProperties: false
           properties:
             domain_verification_method:
               type: string
               enum:
                 - http
+              x-terraform-transform-const: true
           required:
             - domain_verification_method
       title: CreatePortalCustomDomainSSL
