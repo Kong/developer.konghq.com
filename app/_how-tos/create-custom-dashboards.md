@@ -30,6 +30,8 @@ related_resources:
     url: /advanced-analytics/custom-dashboards/
   - text: Custom dashboards reference
     url: /advanced-analytics/custom-dashboards-reference/
+  - text: Automate dashboards with Terraform
+    url: /how-to/automate-dashboard-terraform/
 ---
 
 ## Create a dashboard
