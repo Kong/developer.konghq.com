@@ -104,6 +104,6 @@
     "https://redis.io/*",
     "https://docs.amberflo.io/*",
     "https://konghq.com/legal/privacy-policy",
-    "https://www.gnu.org/*"
-
+    "https://www.gnu.org/*",
+    "https://konghq.com/pricing"
   ]
