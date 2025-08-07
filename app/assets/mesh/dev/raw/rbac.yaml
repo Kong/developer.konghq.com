@@ -123,6 +123,7 @@ rules:
       - meshexternalservices
       - meshmultizoneservices
       - meshservices
+      - meshtrusts
     verbs:
       - get
       - list
