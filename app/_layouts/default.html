@@ -154,5 +154,13 @@
     window.searchFilters = {{site.data.searchFilters | jsonify }}
     window.searchSources = {{site.data.searchSources | jsonify }}
   </script>
+
+    <script>
+    window.she = window.she || {};
+
+    window.she.config = {
+      languages: ["yaml", "bash", "javascript", "hcl"]
+    };
+  </script>
 </body>
 </html>
