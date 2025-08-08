@@ -21,7 +21,7 @@ works_on:
   - on-prem
 
 min_version:
-  gateway: '3.8'
+  gateway: '3.11'
 
 plugins:
   - ai-proxy-advanced
@@ -229,4 +229,16 @@ This should return the following response:
 test
 ```
 
-<!-- TBA: see your Grafana dashboard. -->
+## View metrics in Grafana
+
+## View metrics in Grafana
+
+1. Open Grafana in your browser at [http://localhost:3000](http://localhost:3000).
+1. Navigate to **Dashboards** and open the **Kong CX AI** dashboard you imported earlier.
+1. You should see, among other panels:
+   - **AI Total Request** — total request count and breakdown by provider.
+   - **Tokens consumption** — counts for `completion_tokens`, `prompt_tokens`, and `total_tokens`.
+   - **Cost AI Request** — estimated cost of AI requests (shown if `input_costs` and `output_costs` are configured).
+   - **DB Vector** — vector database request metrics (shown if `vector_db` is enabled).
+   - **AI Requests Details** — timeline of recent AI requests.
+1. Use the time range selector to focus on specific periods and confirm that metrics update in real time as you send test traffic.
