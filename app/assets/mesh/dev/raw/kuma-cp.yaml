@@ -823,6 +823,7 @@ coreResources:
   enabled: # ENV: KUMA_CORE_RESOURCES_ENABLED
     - hostnamegenerators
     - meshexternalservices
+    - meshidentities
     - meshmultizoneservices
     - meshservices
     - meshtrusts
