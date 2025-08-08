@@ -5,9 +5,16 @@ content_type: how_to
 breadcrumbs:
   - /mesh/
 permalink: /mesh/use-mesh
+related_resources:
+  - text: All {{site.mesh_product_name}} documentation
+    url: /index/mesh/
 products:
   - mesh
-
+works_on:
+  - on-prem
+  - konnect
+tags:
+  - CLI
 tldr:
   q: How do I use the CLI components and communicate with {{site.mesh_product_name}}?
   a: "kumactl and kubectl can be used to communicate with the Mesh Control plane"
@@ -20,23 +27,42 @@ prereqs:
         ```sh
           curl -L https://kuma.io/installer.sh | VERSION=2.11.1 sh -
         ```
-    - title: Review kumactl documentation
-      content: Go to the [kumactl reference](/mesh/cli/) to see what options you have on the command line.
-
+    - title: Review {{site.mesh_product_name}} documentation
+      content: Go to the [CLI reference](/mesh/cli/) to see what options you have on the command line.
 
 ---
 
 After {{site.mesh_product_name}} is installed, you can access the control plane via the following methods:
 
 
-| Access method | Mode | Permissions |
-| ---- | ---- | ----- |
-| [{{site.mesh_product_name}} GUI](/docs/latest/production/gui/) | Kubernetes and Universal self managed Control Plane | Read-only |
-| HTTP API | Kubernetes and Universal | Read-only |
-| `kumactl` | Kubernetes self managed Control Plane| Read-only |
-| `kumactl` | Kubernetes Konnect managed Control Plane| Read and write |
-| `kubectl` | Kubernetes self managed Control Plane| Read and write |
-| `kubectl` | Kubernetes Konnect managed Control Plane| Read-only |
+{% table %}
+columns:
+  - title: Access method
+    key: access_method
+  - title: Mode
+    key: mode
+  - title: Permissions
+    key: permissions
+rows:
+  - access_method: "The {{site.konnect_short_name}} GUI"
+    mode: Kubernetes and Universal self managed Control Plane
+    permissions: Read-only
+  - access_method: "HTTP API"
+    mode: Kubernetes and Universal
+    permissions: Read-only
+  - access_method: "`kumactl`"
+    mode: Kubernetes self managed Control Plane
+    permissions: Read-only
+  - access_method: "`kumactl`"
+    mode: Kubernetes Konnect managed Control Plane
+    permissions: Read and write
+  - access_method: "`kubectl`"
+    mode: Kubernetes self managed Control Plane
+    permissions: Read and write
+  - access_method: "`kubectl`"
+    mode: Kubernetes Konnect managed Control Plane
+    permissions: Read-only
+{% endtable %}
 
 
 By accessing the control plane using one of these methods, you can see the current {{site.mesh_product_name}} configuration or with some methods, you can edit the configuration.

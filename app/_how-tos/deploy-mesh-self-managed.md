@@ -28,7 +28,7 @@ prereqs:
 
 
 {% tip %}
-To install the {{site.mesh_product_name}} components on Universal / VM / Baremetal, follow the instructions [here](/mesh/deploy-universal-self-managed).
+To install the {{site.mesh_product_name}} components on Universal / VM / Bare metal, follow the instructions [here](/mesh/deploy-universal-self-managed).
 {% endtip %}
 
 ## Install {{site.mesh_product_name}}
@@ -64,7 +64,7 @@ kubectl apply -f https://raw.githubusercontent.com/kumahq/kuma-counter-demo/mast
 kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --timeout=90s
 ```
 
-{:.note}
+{:.info}
 When using the {{site.konnect_short_name}} managed Control Plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}} Mesh Manager](https://cloud.konghq.com/us/mesh-manager).
 
 
@@ -78,7 +78,7 @@ kubectl port-forward svc/demo-app -n kuma-demo 5000:5000
 
 ## Validate
 
-Navigate to `127.0.0.1:5000` in your web browser and increment the counter.
+Navigate to [`127.0.0.1:5000`](http://127.0.0.1:5000) in your web browser and increment the counter.
 
 Now that you have you workloads up and running, we can secure them with Mutual TLS.
 

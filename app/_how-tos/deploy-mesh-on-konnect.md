@@ -89,7 +89,7 @@ Install {{site.mesh_product_name}}:
 helm upgrade --install -n kong-mesh-system kong-mesh kong-mesh/kong-mesh -f values.yaml
 ```
 {% endnavtab %}
-{% navtab "Universal / VM / Baremetal" %}
+{% navtab "Universal / VM / Bare metal" %}
 
 Save Control Plane token to a file:
 ```sh
@@ -119,7 +119,7 @@ experimental:
 ```
 
 {% tip %}
-`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prequisites section.
+`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prerequisites section.
 {% endtip %}
 
 Download {{site.mesh_product_name}} and connect to the zone:
@@ -159,7 +159,7 @@ kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --ti
 
 
 {% endnavtab %}
-{% navtab "Universal / VM / Baremetal" %}
+{% navtab "Universal / VM / Bare metal" %}
 
 The `demo-app` service listens on port 5000. When it starts, it expects to find a zone key in Redis that specifies the name of the data center (or cluster) where the Redis instance is running. This name is displayed in the browser.
 
@@ -263,7 +263,7 @@ kuma-dp run \
 {% endnavtab %}
 {% endnavtabs %}
 
-{:.note}
+{:.info}
 When using the {{site.konnect_short_name}} managed Control Plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}} Mesh Manager](https://cloud.konghq.com/us/mesh-manager).
 
 

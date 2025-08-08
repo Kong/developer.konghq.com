@@ -106,7 +106,7 @@ rows:
               title: Deployment types
               icon: /assets/icons/mesh.svg
               description: |
-                You can deploy {{site.mesh_product_name}} in a single zone or across multiple zones, such as datacenters, Kubernetes clusters, or cloud regions - giving you unified control over all your services.
+                You can deploy {{site.mesh_product_name}} in a single zone or across multiple zones, such as data centers, Kubernetes clusters, or cloud regions - giving you unified control over all your services.
               ctas:
                 - text: Single Zone 
                   url: /mesh/single-zone/

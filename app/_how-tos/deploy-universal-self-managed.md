@@ -1,6 +1,6 @@
 ---
-title: Deploy Self Managed Control Plane on VM / Baremetal
-description: "Learn how to install Mesh on Virtual Machines or Baremetal, and deploy the {{site.mesh_product_name}} demo application."
+title: Deploy Self Managed Control Plane on VM / Bare metal
+description: "Learn how to install Mesh on Virtual Machines or Bare metal, and deploy the {{site.mesh_product_name}} demo application."
 content_type: how_to
 permalink: /mesh/deploy-universal-self-managed/
 bread-crumbs: 
@@ -33,7 +33,7 @@ To start learning how {{site.mesh_product_name}} works, you can download and run
 
 This guide also introduces some of the tools {{site.mesh_product_name}} provides to help you control and monitor traffic, track resource status, and more.
 
-The `demo-app` service listens on port 5000. When it starts, it expects to find a zone key in Redis that specifies the name of the datacenter (or cluster) where the Redis instance is running. This name is displayed in the browser.
+The `demo-app` service listens on port 5000. When it starts, it expects to find a zone key in Redis that specifies the name of the data center (or cluster) where the Redis instance is running. This name is displayed in the browser.
 
 The zone key is purely static and arbitrary. Different zone values for different Redis instances let you keep track of which Redis instance stores the counter if you manage routes across different zones, clusters, and clouds.
 
