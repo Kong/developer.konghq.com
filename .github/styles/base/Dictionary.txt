@@ -851,6 +851,8 @@ unpublish
 unpublishing
 unregister
 unregistering
+unsecure
+unsecured
 unscoped
 unshorten
 unshortened
