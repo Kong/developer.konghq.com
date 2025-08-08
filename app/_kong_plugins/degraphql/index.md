@@ -104,7 +104,7 @@ custom_entities:
     fields:
       service:
         name: "github"
-      uri: /me
+      uri: /:owner/:name
       query: |-
         query ($owner:String! $name:String!){
                         repository(owner:$owner, name:$name) {
@@ -135,7 +135,7 @@ custom_entities:
     fields:
       service:
         name: "github"
-      uri: /me
+      uri: /repo
       query: |-
         query ($owner:String! $name:String!){
                   repository(owner:$owner, name:$name) {
