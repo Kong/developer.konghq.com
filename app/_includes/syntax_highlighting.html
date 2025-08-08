@@ -1,0 +1,14 @@
+<div class="w-full h-fit inline-grid rounded-lg {{include.css_classes}}"
+  {% for data in include.data %}{{ data[0] }}="{{ data[1] }}" {% endfor %}
+>
+    {% if include.render_header %}
+    <div class="p-3 bg-secondary rounded-t-lg border border-primary/5">
+        {% if include.data['data-file'] %}<div class="text-sm text-white">{{include.data['data-file']}}</div>{% endif %}
+        {% if include.copy %}
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="bg-code-block rounded-b-lg border border-primary/5 overflow-auto p-3 {% if include.render_header %}border-t-0{% else %}rounded-t-lg{% endif %}">
+        <syntax-highlight language="{{include.lang}}">{{include.code}}</syntax-highlight>
+    </div>
+</div>
