@@ -61,9 +61,8 @@ To configure invite control:
 
 You can set your preference for allowing invitations from the following domain types:
 - **All domains**: Invites to any email domain are accepted which includes personal addresses.
-- **Verified domains only**: Invites are restricted to domains already added and verified in the Domains section of Enterprise controls.
-- **Specific domains only**: Invites are limited to manually specified domains or sub‑domains for a specific organization, even if those domains are not globally verified.
-
+- **Only verified domains**: Invites are restricted to domains already added and verified in the Domains section of Enterprise controls.
+- **Custom domains**: Invites are limited to manually specified domains or sub‑domains for a specific organization, even if those domains are not globally verified.
 
 ## Manage storage
 
