@@ -14,7 +14,9 @@ breadcrumbs:
     section: Advanced Usage
 
 min_version:
-  operator: '2.0'
+  operator: '1.0'
+max_version:
+  operator: '1.6'
 
 ---
 
@@ -28,7 +30,7 @@ This page shows how to autoscale Data Planes based on their average CPU utilizat
 
 ### Install {{ site.operator_product_name }}
 
-{% include prereqs/products/operator.md raw=true v_maj=2 %}
+{% include prereqs/products/operator.md raw=true v_maj=1 %}
 
 ### Install a metrics server
 
