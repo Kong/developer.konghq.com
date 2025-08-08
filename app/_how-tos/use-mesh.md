@@ -25,7 +25,7 @@ prereqs:
         Go to the [Kuma packages](https://cloudsmith.io/~kong/repos/kuma-binaries-release/packages/) page to download and extract the installation archive for your OS, or download and extract the latest release automatically (Linux or macOS):
 
         ```sh
-          curl -L https://developer.konghq.com/mesh/installer.sh | VERSION=VERSION={{site.data.mesh_latest.version} sh -
+          curl -L https://developer.konghq.com/mesh/installer.sh | VERSION=VERSION={{site.data.mesh_latest.version}} sh -
         ```
     - title: Review {{site.mesh_product_name}} documentation
       content: Go to the [CLI reference](/mesh/cli/) to see what options you have on the command line.
