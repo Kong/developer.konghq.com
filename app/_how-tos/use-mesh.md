@@ -34,11 +34,11 @@ prereqs:
 
 After {{site.mesh_product_name}} is installed, you can access the control plane via the following methods:
 
-
+<!--vale off-->
 {% table %}
 columns:
   - title: Access method
-    key: access_method
+    key: "`access_method`"
   - title: Mode
     key: mode
   - title: Permissions
@@ -63,7 +63,7 @@ rows:
     mode: Kubernetes Konnect managed Control Plane
     permissions: Read-only
 {% endtable %}
-
+<!--vale on-->
 
 By accessing the control plane using one of these methods, you can see the current {{site.mesh_product_name}} configuration or with some methods, you can edit the configuration.
 
