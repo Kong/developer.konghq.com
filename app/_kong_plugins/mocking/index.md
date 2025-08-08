@@ -3,7 +3,7 @@ title: 'Mocking'
 name: 'Mocking'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Provide mock endpoints to test your APIs against your Services'
 
@@ -39,6 +39,8 @@ categories:
   - traffic-control
   - api-design
 
+min_version:
+  gateway: '2.4'
 ---
 
 The Mocking plugin allows you to provide mock endpoints to test APIs in development against your existing services. The Mocking plugin leverages standards based on the Open API Specification (OAS) for sending out mock responses to APIs. Mocking supports both Swagger 2.0 and OpenAPI 3.0.

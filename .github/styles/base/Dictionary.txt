@@ -10,6 +10,8 @@ admin_listen
 admin's
 admin's
 agentic
+Agno
+Agno's
 Alertmanager
 allow_terminated
 allowlist
@@ -87,6 +89,7 @@ boolean
 booleans
 bps
 brotli
+Buf
 burstable
 callees
 CAs
@@ -126,6 +129,7 @@ consumer_group
 consumer_id
 content_safety_url
 cors
+cosmiconfig
 cosocket
 CPUs
 crd
@@ -305,6 +309,7 @@ idempotency
 IdPs
 if_version
 If-Match
+Imagen
 impactful
 Imperva
 Imperva
@@ -462,6 +467,7 @@ Lua's
 Lua's
 Luarocks
 Luarocks
+Luhn
 M_Account
 M_Link
 M_Resource
@@ -533,6 +539,7 @@ no_version
 node_quantifier
 Node.js
 Node.js
+Nullsoft
 nunjucks
 Noname
 Noname
@@ -655,6 +662,7 @@ requery
 Requeue
 requeue
 request_counts
+requestable
 RequestResponse
 Rerank
 reranking
@@ -693,6 +701,7 @@ SBOMs
 SCCs
 SCCs
 schema's
+Scriptable
 SDKs
 search_by_username
 secret_id
@@ -853,6 +862,7 @@ unvetted
 unversioned
 unwanted
 updated_at
+unprefixed
 upsert
 upstream
 upstream_payload

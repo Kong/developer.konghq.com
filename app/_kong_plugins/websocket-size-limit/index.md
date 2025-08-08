@@ -3,7 +3,7 @@ title: 'WebSocket Size Limit'
 name: 'WebSocket Size Limit'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Block incoming WebSocket messages greater than a specified size'
 
@@ -15,7 +15,7 @@ works_on:
     - konnect
 
 min_version:
-    gateway: '3.1'
+    gateway: '3.0'
 
 topologies:
   on_prem:

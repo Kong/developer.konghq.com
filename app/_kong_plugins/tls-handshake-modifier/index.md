@@ -3,7 +3,7 @@ title: 'TLS Handshake Modifier'
 name: 'TLS Handshake Modifier'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Requests a client to present its client certificate'
 
@@ -15,7 +15,7 @@ works_on:
     - konnect
 
 min_version:
-    gateway: '3.1'
+    gateway: '3.0'
 
 topologies:
   on_prem:

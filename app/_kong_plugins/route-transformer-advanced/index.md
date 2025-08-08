@@ -3,7 +3,7 @@ title: 'Route Transformer Advanced'
 name: 'Route Transformer Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform routing by changing the upstream server, port, or path'
 
@@ -34,6 +34,9 @@ tags:
 
 search_aliases:
   - route-transformer-advanced
+
+min_version:
+  gateway: '1.3'
 ---
 
 This plugin transforms routing on the fly in {{site.base_gateway}}, changing the host, port, or path of the request. 

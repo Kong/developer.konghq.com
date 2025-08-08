@@ -3,7 +3,7 @@ title: 'Exit Transformer'
 name: 'Exit Transformer'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Customize Kong exit responses sent downstream'
 
@@ -35,6 +35,9 @@ tags:
 
 search_aliases:
   - exit-transformer
+
+min_version:
+  gateway: '1.3'
 ---
 
 Transform and customize {{site.base_gateway}} response exit messages using Lua functions.

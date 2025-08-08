@@ -3,7 +3,7 @@ title: 'Kafka Upstream'
 name: 'Kafka Upstream'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform requests into Kafka messages in a Kafka topic.'
 
@@ -39,6 +39,8 @@ search_aliases:
   - events
   - event gateway
 
+min_version:
+  gateway: '1.3'
 ---
 
 This plugin converts requests into [Apache Kafka](https://kafka.apache.org/) messages and publishes them to a specified Kafka topic.  

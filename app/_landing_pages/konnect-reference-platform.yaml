@@ -10,7 +10,8 @@ metadata:
     - konnect
     - automation
     - apiops
-  breadcrumb: /konnect-reference-platform/
+  breadcrumbs: 
+    - /konnect/
 
 rows:
   - header:

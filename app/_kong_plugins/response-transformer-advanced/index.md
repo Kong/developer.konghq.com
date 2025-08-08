@@ -3,7 +3,7 @@ title: 'Response Transformer Advanced'
 name: 'Response Transformer Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Modify the upstream response before returning it to the client, with greater customization capabilities'
 
@@ -40,6 +40,9 @@ related_resources:
     url: /plugins/response-transformer/
   - text: All transformation plugins
     url: /plugins/?category=transformations
+
+min_version:
+  gateway: '1.0'
 ---
 
 {% include plugins/request-response-transformer/response-transformer-description.md %}

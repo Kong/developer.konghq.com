@@ -3,7 +3,6 @@ title: 'Zipkin'
 name: 'Zipkin'
 
 content_type: plugin
-
 publisher: kong-inc
 description: 'Propagate Zipkin spans and report tracing data to a Zipkin server'
 
@@ -44,6 +43,9 @@ related_resources:
     url: /plugins/opentelemetry/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+
+min_version:
+  gateway: '1.0'
 ---
 
 When enabled, the Zipkin plugin traces requests in a way that's compatible with [zipkin](https://zipkin.io/).

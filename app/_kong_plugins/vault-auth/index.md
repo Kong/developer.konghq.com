@@ -3,7 +3,7 @@ title: 'Vault Authentication'
 name: 'Vault Authentication'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Add Vault authentication to your Services or Routes'
 
@@ -39,6 +39,9 @@ related_resources:
     url: /gateway/authentication/
   - text: Configure HashiCorp Vault as a vault backend
     url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
+
+min_version:
+  gateway: '1.0'
 ---
 
 Add authentication to a Gateway Service or Route with an access token and a secret token. 

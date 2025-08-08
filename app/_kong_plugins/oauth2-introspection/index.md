@@ -3,7 +3,7 @@ title: 'OAuth 2.0 Introspection'
 name: 'OAuth 2.0 Introspection'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Integrate {{site.base_gateway}} with a third-party OAuth 2.0 Authorization Server'
 
@@ -42,6 +42,11 @@ related_resources:
     url: /gateway/authentication/
   - text: OAuth 2.0 Authentication plugin
     url: /plugins/oauth2/reference/
+  - text: Configure the OAuth 2.0 Introspection plugin with Kong Identity
+    url: /how-to/configure-kong-identity-oauth-introspection/
+
+min_version:
+  gateway: '1.0'
 ---
 
 You can validate access tokens sent by developers using a third-party OAuth 2.0

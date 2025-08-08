@@ -46,6 +46,9 @@ notes: |
   For DB-less mode, use one of <code>redis</code> or <code>local</code>;
   for Konnect and hybrid mode, use <code>redis</code>, or <code>local</code> for data
   planes only. In Serverless gateways only the <code>local</code> config policy is supported.
+
+min_version:
+  gateway: '1.0'
 ---
 
 This plugin allows you to impose rate limits based on custom response headers returned by the upstream service.

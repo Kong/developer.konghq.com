@@ -29,6 +29,8 @@ support_url: https://appsentinels.ai/
 
 icon: appsentinels.png
 
+min_version:
+  gateway: '2.8'
 ---
 
 The AppSentinels API Security Platform is purpose-built for keeping the security needs of next-generation applications in mind.

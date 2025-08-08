@@ -3,7 +3,7 @@ title: 'OpenID Connect'
 name: 'OpenID Connect'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Integrate {{site.base_gateway}} with a third-party OpenID Connect provider'
 
@@ -102,6 +102,8 @@ faqs:
       If the IdP connected to the plugin enforces PKCE, it will be used during the authorization code flow. 
       If the IdP doesn't support or enforce PCKE, it won't be used.
  
+min_version:
+  gateway: '1.0'
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).
@@ -271,6 +273,7 @@ If it's not included, the PKCE `code_challenge` query parameter won't be sent.
 Set up the auth code flow:
 * [Plugin configuration example](/plugins/openid-connect/examples/authorization-code/)
 * [Authorization code tutorial with Keycloak](/how-to/configure-oidc-with-auth-code-flow/)
+* [Configure OpenID Connect with the authorization code flow and Okta](/how-to/configure-oidc-with-auth-code-flow-and-okta/)
 
 ### Authorization
 

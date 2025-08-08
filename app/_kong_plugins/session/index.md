@@ -42,6 +42,9 @@ related_resources:
     url: /how-to/authenticate-consumers-with-session-and-key-auth/
   - text: "{{site.base_gateway}} authentication"
     url: /gateway/authentication/
+
+min_version:
+  gateway: '1.3'
 ---
 
 The Session plugin can be used to manage browser sessions for APIs proxied

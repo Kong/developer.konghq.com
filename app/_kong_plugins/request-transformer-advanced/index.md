@@ -6,7 +6,7 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Use powerful regular expressions, variables, and templates to transform API requests'
-
+tier: enterprise
 
 products:
     - gateway
@@ -46,6 +46,9 @@ related_resources:
     url: /how-to/transform-a-client-request/
   - text: AI Request Transformer
     url: /plugins/ai-request-transformer/
+
+min_version:
+  gateway: '1.0'
 ---
 
 {% include plugins/request-response-transformer/request-transformer-description.md %}

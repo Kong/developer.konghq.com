@@ -2,6 +2,11 @@ title: 'Create a complex chat history'
 
 description: 'Creates a detailed chat history by configuring the plugin to prepend and append multiple messages, allowing any user to continue the conversation.'
 
+extended_description: |
+    Creates a detailed chat history by configuring the plugin to prepend and append multiple messages, allowing any user to continue the conversation.
+
+    For a full walkthrough, see [Guide survey classification behavior using the AI Prompt Decorator plugin](/how-to/create-a-complex-ai-chat-history/).
+
 weight: 900
 
 requirements:

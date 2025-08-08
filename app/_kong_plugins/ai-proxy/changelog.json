@@ -68,6 +68,38 @@
       "type": "bugfix"
     }
   ],
+  "3.11.0.2": [
+    {
+      "message": "Fixed an issue where aws stream parser didn't parse correctly when the frame was incomplete.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock streaming requests would panic when the ai-semantic-cache plugin was enabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced can't properly failover to a Bedrock target.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced might produce duplicate content in the response when the SSE event was truncated.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced might drop content in the response when the SSE event was truncated.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where resource was not being passed correctly when using Azure as provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
@@ -175,6 +207,33 @@
     },
     {
       "message": "Fixed an issue where AI Proxy returns 403 using gemini provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where aws stream parser didn't parse correctly when the frame was incomplete.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock streaming requests would panic when the ai-semantic-cache plugin was enabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where model name did not escape when using AWS Bedrock inference profile.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Proxy and AI Proxy Advanced can't properly failover to a Bedrock target.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where resource was not being passed correctly when using Azure as provider.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

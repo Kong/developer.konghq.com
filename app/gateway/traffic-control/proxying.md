@@ -201,7 +201,7 @@ rows:
 {:.warning}
 > **Important:** These latency headers are reported during the `header_filter` phase, which may occur before the full response body has been processed.
 <br><br>
-> In scenarios where body processing takes significant time, the latency values in these headers might not reflect the complete duration of the request lifecycle. For more accurate and comprehensive latency data, consider using [Active Tracing in {{site.konnect_short_name}}](/konnect-platform/active-tracing/), the [Analytics feature in {{site.konnect_short_name}}](/advanced-analytics/), a metrics plugin like [Prometheus](/plugins/prometheus/), or a [logging plugin](/plugins/?category=logging). 
+> In scenarios where body processing takes significant time, the latency values in these headers might not reflect the complete duration of the request lifecycle. For more accurate and comprehensive latency data, consider using the [Debugger in {{site.konnect_short_name}}](/gateway/debugger/), the [Analytics feature in {{site.konnect_short_name}}](/advanced-analytics/), a metrics plugin like [Prometheus](/plugins/prometheus/), or a [logging plugin](/plugins/?category=logging). 
 
 Once the headers are sent to the client, {{site.base_gateway}} starts executing plugins for the Route or Service that implement the
 `body_filter` hook. 
@@ -209,7 +209,7 @@ This hook may be called multiple times, due to the streaming nature of Nginx.
 Each chunk of the upstream response that is successfully processed by such `body_filter` hooks is sent back to the client.
 
 You can also use `advanced_latency_tokens` {% new_in 3.11 %} to expose more detailed timing headers, such as total latency, third-party latency, and client latency. 
-For more information, see the [Kong configuration reference](/gateway/configuration/#advanced_latency_tokens).
+For more information, see the [Kong configuration reference](/gateway/configuration/#advanced-latency-tokens).
 
 ## Proxy WebSocket traffic
 

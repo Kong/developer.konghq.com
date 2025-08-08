@@ -3,7 +3,7 @@ title: 'WebSocket Validator'
 name: 'WebSocket Validator'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Validate WebSocket messages before they are proxied'
 
@@ -16,7 +16,7 @@ works_on:
     - konnect
 
 min_version:
-    gateway: '3.1'
+    gateway: '3.0'
 
 topologies:
   on_prem:

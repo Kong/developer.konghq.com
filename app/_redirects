@@ -68,6 +68,7 @@
 /mesh/features/signed-images/   /mesh/signed-images/
 /mesh/networking/transparent-proxying   /mesh/transparent-proxying/
 /reference/proxy-template  /mesh/policies/proxy-template/
+/mesh/production/secure-deployment/manage-control-plane-permissions-on-kubernetes/ /mesh/manage-control-plane-permissions-on-kubernetes/
 
 /docs/:version/policies/*   /mesh/policies/:splat
 /docs/:version/*    /mesh/:splat
@@ -113,9 +114,17 @@
 /dev-portal/snippets/   /dev-portal/pages-and-content/
 /dev-portal/application-registration/   /dev-portal/self-service/
 /dev-portal/access-and-approval/    /dev-portal/self-service/
+/dev-portal/publishing/ /dev-portal/apis/
 
 
 # Gateway LTS
 /archive/dev-portal/ https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/dev-portal/
 /archive/vitals/     https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/analytics/
+
+
+
+## Debugger
+
+/konnect-platform/active-tracing/  /gateway/debugger/
+/konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
 

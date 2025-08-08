@@ -3,7 +3,7 @@ title: 'Forward Proxy Advanced'
 name: 'Forward Proxy Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Allows {{site.base_gateway}} to connect to intermediary transparent HTTP proxies'
 
@@ -35,6 +35,9 @@ tags:
 
 search_aliases:
   - forward-proxy
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Forward Proxy Advanced plugin allows {{site.base_gateway}} to connect to intermediary transparent HTTP proxies, instead of directly to the `upstream_url`, when forwarding requests upstream. 

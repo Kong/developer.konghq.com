@@ -26,6 +26,9 @@ related_resources:
     url: /kubernetes-ingress-controller/deployment-topologies/sidecar/
   - text: Architecture
     url: /kubernetes-ingress-controller/architecture/
+next_steps:
+  - text: Get started with {{site.kic_product_name}}
+    url: /kubernetes-ingress-controller/install/
 ---
 
 Gateway Discovery is a deployment topology in which {{ site.kic_product_name }} and {{ site.base_gateway }} are separate deployments in the Kubernetes cluster. {{ site.kic_product_name }} uses Kubernetes service discovery to discover the {{ site.base_gateway }} Pods.

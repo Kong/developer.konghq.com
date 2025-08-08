@@ -8,7 +8,7 @@ tags:
 
 publisher: kong-inc
 description: 'Insert arbitrary API calls before proxying a request to the upstream service.'
-
+tier: enterprise
 
 products:
     - gateway
@@ -82,15 +82,20 @@ uses for Lua expressions.
 In `custom` values, callouts can be referenced via the shorthand `callouts.CALLOUT_NAME`
 instead of the full `kong.ngx.shared.callouts.CALLOUT_NAME`. 
 Lua expressions don't carry side effects.
+If the `custom` value is a raw string, make sure the string doesn't start with `#` or `$`,
+as the backend interpreter will read anything following these characters as a Lua expression.
+If you need to include a `#` or `$` character, change the value to `$("$|#RAW STRING")`.
+For example, `#1234!` is not a valid `custom` value. To make it valid, pass the value as `$("#1234!")`.
 
 `by_lua` fields work in a similar way, but they don't support shortcuts.
 Shortcuts can produce unintended side effects and modify callout and upstream requests.
 
 Both request and response callout objects may contain a `by_lua` field:
-* `request.by_lua` runs before the callout request is performed and is useful to 
-further customize aspects of the request.
-* `response.by_lua` runs after a response is obtained, and is useful to
-customize aspects of the response such as caching.
+* `request.by_lua` runs before the callout request is performed or the cache is queried
+and is useful to further customize aspects of the request.
+* `response.by_lua` runs after a response is obtained from the service and 
+before it is stored in the cache and is useful to customize aspects of the
+response.
 
 The upstream object may also contain a `by_lua` field for Lua code 
 that runs before the upstream request runs. This is useful to further customize 

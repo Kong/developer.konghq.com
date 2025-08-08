@@ -3,6 +3,7 @@ sections:
   - title: Overview
     items:
       - path: /mesh/
+      - path: /mesh/about/
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
@@ -10,8 +11,6 @@ sections:
         description: Release notes for supported Kong Mesh versions.
         url: /mesh/changelog/
       - path: /mesh/enterprise/
-      - path: /mesh/vulnerability-patching-process/
-      - path: /mesh/support-policy/
 
   - title: Install & Configure
     items:
@@ -24,6 +23,8 @@ sections:
       - path: /mesh/ecs/
       - path: /mesh/openshift-quickstart/
       - path: /mesh/ubi-images/
+      - path: /mesh/deploy-with-terraform-konnect/
+      - path: /mesh/import-konnect-deployment-to-terraform/
       - title: Mesh Manager
         description: Manage service meshes and Control Planes in Konnect.
         url: /mesh-manager/
@@ -35,12 +36,19 @@ sections:
 
   - title: How Mesh Works
     items:
-      - path: /mesh/about/
       - path: /mesh/concepts/
       - path: /mesh/architecture/
       - path: /mesh/ingress/
+      - path: /mesh/service-discovery/
+      - path: /mesh/mesh-multi-tenancy/
+      - path: /mesh/single-zone/
+      - path: /mesh/mesh-multizone-service-deployment/
       - path: /mesh/kuma-user-interface-gui/
       - path: /mesh/use-mesh/
+      - path: /mesh/annotations/
+      - path: /mesh/data-plane-proxy/
+      - path: /mesh/data-plane-kubernetes/
+      - path: /mesh/data-plane-universal/
 
   - title: Production Deployments
     items:
@@ -56,18 +64,26 @@ sections:
   - title: Policies
     items:
       - path: /mesh/policies-introduction/
+      - path: /mesh/consumer-producer-policies/
       - path: /mesh/policies/**/*
       - path: /mesh/acm-private-ca-policy/
       - path: /mesh/cert-manager/
+      - path: /mesh/meshexternalservice/
+      - path: /mesh/meshmultizoneservice/
+      - path: /mesh/meshservice/
+      - path: /mesh/hostnamegenerator/
       - path: /mesh/vault/
     auto_exclude: true
-  
+
   - title: Built-in Gateways
     items:
       - path: /mesh/add-builtin-gateway/
       - path: /mesh/managing-ingress-traffic/gateway/
       - path: /mesh/gateway-listeners/
       - path: /mesh/gateway-routes/
+      - path: /mesh/gateway-api/
+      - path: /mesh/gateway-pods-k8s/
+      - path: /mesh/kubernetes-gateway-api/
 
   - title: Delegated Gateways
     items:
@@ -77,21 +93,45 @@ sections:
   - title: Authentication and Authorization
     items:
       - path: /mesh/multi-zone-authentication/
+      - path: /mesh/secure-access/
       - path: /mesh/rbac/
       - path: /mesh/authentication-with-the-api-server/
       - path: /mesh/dp-auth/
       - path: /mesh/zone-proxy-auth/
+      - path: /mesh/manage-control-plane-permissions-on-kubernetes/
+      - path: /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/
 
-  - title: References
+  - title: Security
     items:
-      - path: /mesh/cli/
+      - path: /mesh/ca-rotation/
+      - path: /mesh/manage-secrets/
+      - path: /mesh/progressively-rolling-in-strict-mtls/
       - path: /mesh/access-audit/
       - path: /mesh/provenance-verification-binaries/
       - path: /mesh/provenance-verification-images/
       - path: /mesh/signed-images/
+
+  - title: Observability
+    items:
+      - path: /mesh/observability/
+      - path: /mesh/collect-metrics-with-opentelemetry/
+      - path: /mesh/dataplane-health/
+
+  - title: References
+    items:
+      - path: /mesh/zone-egress/
+      - path: /mesh/zone-ingress/
+      - path: /mesh/cli/
       - path: /mesh/sbom/
       - path: /mesh/reference/kuma-cp/
       - path: /mesh/data-collection/
+      - path: /mesh/configure-data-plane-proxy-membership/
+      - path: /mesh/cp-config/
+      - path: /mesh/dns/
+      - path: /mesh/ipv6-support/
+      - path: /mesh/performance-tuning/
+      - path: /mesh/vulnerability-patching-process/
+      - path: /mesh/support-policy/
 
   - title: Hidden paths
     hidden: true

@@ -1,0 +1,6 @@
+message: |
+  When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), Kong Gateway can't apply configuration deltas to the stream subsystem. 
+  This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).
+  As a workaround for this issue, set `incremental_sync=off` when using stream proxying.
+type: "known-issues"
+scope: "Core"

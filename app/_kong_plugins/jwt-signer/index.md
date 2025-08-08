@@ -3,7 +3,7 @@ title: 'JWT Signer'
 name: 'JWT Signer'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Verify and sign one or two tokens in a request'
 
@@ -31,6 +31,9 @@ tags:
 search_aliases:
   - json web tokens
   - jwt-signer
+
+min_version:
+  gateway: '1.0'
 ---
 
 The {{site.base_gateway}} JWT Signer plugin allows you to verify, sign, or re-sign

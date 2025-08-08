@@ -3,11 +3,11 @@ title: Configure the {{site.base_gateway}} datastore on Linux
 content_type: how_to
 products:
     - gateway
-breadcrumbs: 
+breadcrumbs:
     - /gateway/
 works_on:
     - on-prem
-search_aliases: 
+search_aliases:
     - datastore
 tldr:
   q: How do I configure the datastore for {{site.base_gateway}} when running on Linux?
@@ -27,7 +27,7 @@ prereqs:
     - title: Configure environment variables
       content: |
         Set the following variables so that `kong.conf` can interact with the datastore:
-        
+
         ```sh
           export KONG_DATABASE=postgres
           export KONG_PG_HOST=127.0.0.1
@@ -41,12 +41,19 @@ prereqs:
 min_version:
     gateway: '3.4'
 
+next_steps:
+  - text: Learn about {{site.base_gateway}} entities
+    url: /gateway/entities/
+  - text: Learn about {{site.base_gateway}} plugins
+    url: /plugins/
+  - text: Learn about decK
+    url: /deck/
 ---
 
 
-## Configure PostgreSQL 
+## Configure PostgreSQL
 
-1. Switch to the default PostgreSQL user: 
+1. Switch to the default PostgreSQL user:
 
     ```sh
     sudo -i -u postgres
@@ -54,7 +61,7 @@ min_version:
 1. Start the PostgreSQL shell:
 
     ```
-    psql 
+    psql
     ```
 1. Create a `kong` user and password:
 
@@ -66,35 +73,42 @@ min_version:
     ```
     CREATE DATABASE kong OWNER kong;
     ```
-1. Exit PostgreSQL, and exit the PostgreSQL shell:
-    
+1. Exit PostgreSQL:
+
+    ```
+    \quit
+    ```
+
+1. Exit the PostgreSQL shell:
+
     ```
     exit
     ```
 
 ## Run a {{site.base_gateway}} database migration
 
-`kong migrations` is used to configure the database for the first time. 
-Running `bootstrap` forces {{site.base_gateway}} to bootstrap the database set up in the previous step and run all of the migrations: 
+`kong migrations` is used to configure the database for the first time.
+Running `bootstrap` forces {{site.base_gateway}} to bootstrap the database set up in the previous step and run all of the migrations:
 
 ```sh
-kong migrations bootstrap
+sudo -E kong migrations bootstrap
 ```
 
-This command must be run as the `root` user. 
+This command must be run as the `root` user.
 
 ## Validate
 
-You can validate that the datastore was configured correctly by starting {{site.base_gateway}}. 
+You can validate that the datastore was configured correctly by starting {{site.base_gateway}}.
 
 1. Start {{site.base_gateway}}:
 
     ```sh
-    kong start
+    sudo -E kong start
     ```
 2. Verify the installation:
 
     ```sh
     curl -i http://localhost:8001
     ```
-If you receive a `200` status code, {{site.base_gateway}} was configured correctly. 
+If you receive a `200` status code, {{site.base_gateway}} was configured correctly. You can now start to configure your API gateway with [plugins](/plugins/) and other [entities](/gateway/entities/).
+

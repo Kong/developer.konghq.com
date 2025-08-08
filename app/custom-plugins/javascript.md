@@ -10,6 +10,7 @@ products:
     - gateway
 
 works_on:
+    - konnect
     - on-prem
 
 description: Learn how to write plugins for {{site.base_gateway}} in JavaScript.
@@ -43,9 +44,14 @@ TypeScript is also supported in the following ways:
 * The PDK includes type definitions for PDK functions that allow type checking when developing plugins in TypeScript.
 * Plugins written in TypeScript can be loaded directly to {{site.base_gateway}} and transpiled.
 
+{:.info}
+> **Using JavaScript plugins in Konnect**
+>
+> You can use JavaScript plugins on the data plane in Konnect. However, you must **provide the plugin schema in Lua format** to Konnect in order to configure the custom plugin.
+
 ## Installation
 
-You can install the [JavaScript PDK](https://github.com/Kong/kong-js-pdk) using `npm`. 
+You can install the [JavaScript PDK](https://github.com/Kong/kong-js-pdk) using `npm`.
 To install the plugin server binary globally, run the following command:
 
 ```sh
@@ -79,7 +85,7 @@ Configuration reference for the JavaScript PDK.
 
 ### Phase handlers
 
-You can implement custom logic to be executed at various [phases](/custom-plugins/handler.lua/) in the request processing lifecycle. 
+You can implement custom logic to be executed at various [phases](/custom-plugins/handler.lua/) in the request processing lifecycle.
 For example, to execute custom JavaScript code in the access phase, define a function named `access`:
 
 ```javascript
@@ -107,7 +113,7 @@ The presence of the `response` handler automatically enables the buffered proxy 
 ### PDK functions
 
 Kong interacts with the PDK through network-based inter-rocess communication.
-Each function returns a [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) instance. 
+Each function returns a [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) instance.
 
 You can use `async` and `await` keywords in the phase handlers for better readability.
 For example:
@@ -146,7 +152,7 @@ When using the plugin server, plugins are allowed to have extra dependencies, as
 directory that holds plugin source code also includes a `node_modules` directory.
 
 Assuming plugins are stored under `/usr/local/kong/js-plugins`, the extra dependencies are
-then defined in `/usr/local/kong/js-plugins/package.json`. 
+then defined in `/usr/local/kong/js-plugins/package.json`.
 
 Developers also need to run `npm install` under `/usr/local/kong/js-plugins` to install those dependencies locally
 into `/usr/local/kong/js-plugins/node_modules`.
@@ -207,7 +213,7 @@ See the [JavaScript PDK repo](https://github.com/Kong/kong-js-pdk/tree/master/ex
 
 ## Loading the plugin into {{site.base_gateway}}
 
-Prepare the system by installing the required dependencies. 
+Prepare the system by installing the required dependencies.
 
 For example, in Debian/Ubuntu based systems:
 
@@ -220,19 +226,30 @@ npm install -g kong-pdk
 Copy the plugin code and the `package.json` file in `/usr/local/kong/js-plugins`, then run:
 
 ````sh
-cd /usr/local/kong/js-plugins/ 
+cd /usr/local/kong/js-plugins/
 npm install
 ````
 
-To load plugins using the `kong.conf` [configuration file](/gateway/configuration/), you have to map existing {{site.base_gateway}} properties to aspects of your plugin. 
-Here is an example of loading a plugin within `kong.conf`:
+To load plugins using the `kong.conf` [configuration file](/gateway/configuration/), you have to map existing {{site.base_gateway}} properties to aspects of your plugin.
 
-````
-pluginserver_names = js
+Here is an example of loading two plugins within `kong.conf`:
 
-pluginserver_js_start_cmd = /usr/local/bin/kong-js-pluginserver -v --plugins-directory /usr/local/kong/js-plugins
-pluginserver_js_query_cmd = /usr/local/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins --dump-all-plugins
+```
+pluginserver_names = my-plugin,other-one
 
-pluginserver_js_socket = /usr/local/kong/js_pluginserver.sock
-````
+pluginserver_my_plugin_socket = /usr/local/kong/my-plugin_pluginserver.sock
+pluginserver_my_plugin_start_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/my-plugin --sock-name my-plugin_pluginserver.sock
+pluginserver_my_plugin_query_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/my-plugin --dump-all-plugins
 
+pluginserver_other_one_socket = /usr/local/kong/other-one_pluginserver.sock
+pluginserver_other_one_start_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/other-one --sock-name other-one_pluginserver.sock
+pluginserver_other_one_query_cmd = /usr/bin/kong-js-pluginserver --plugins-directory /usr/local/kong/js-plugins/other-one --dump-all-plugins
+
+plugins = bundled,my-plugin,other-one
+```
+
+If you want to open verbose logging, pass the `-v` argument to the `start` command line:
+
+```
+pluginserver_my_plugin_start_cmd = /usr/bin/kong-js-pluginserver -v --plugins-directory /usr/local/kong/js-plugins/my-plugin --sock-name my-plugin_pluginserver.sock
+```

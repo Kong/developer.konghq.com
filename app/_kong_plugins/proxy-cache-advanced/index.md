@@ -3,7 +3,7 @@ title: 'Proxy Caching Advanced'
 name: 'Proxy Caching Advanced'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Cache and serve commonly requested responses in Kong, in-memory or using Redis'
 
@@ -58,6 +58,9 @@ faqs:
 
 notes: |
   In Serverless gateways only the <code>memory</code> config strategy is supported.
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Proxy Cache Advanced plugin provides a reverse proxy cache implementation for {{site.base_gateway}}. 

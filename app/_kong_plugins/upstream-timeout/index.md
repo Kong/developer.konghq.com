@@ -3,7 +3,7 @@ title: 'Upstream Timeout'
 name: 'Upstream Timeout'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Set custom timeouts on connections to upstream services to override Gateway Service-level timeouts.'
 
@@ -37,6 +37,9 @@ search_aliases:
 related_resources:
   - text: Gateway Service timeout settings
     url: /gateway/entities/service/#schema-service-connect-timeout
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Upstream Timeout plugin allows you to configure specific timeouts for the connection between {{site.base_gateway}} and an upstream service.

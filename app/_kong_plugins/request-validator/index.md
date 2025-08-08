@@ -3,7 +3,7 @@ title: 'Request Validator'
 name: 'Request Validator'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Validates requests before they reach the upstream service'
 
@@ -40,6 +40,9 @@ tags:
 
 search_aliases:
   - request-validator
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Request Validator plugin allows you to validate requests before they reach the upstream server. This plugin supports validating the schema of the body and the parameters of the request using either Kong's own schema validator (body only) or a JSON Schema Draft 4 compliant validator.
