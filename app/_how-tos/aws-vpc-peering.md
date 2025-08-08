@@ -11,7 +11,7 @@ works_on:
   - konnect
 automated_tests: false
 tldr:
-  q: How do I set up a VPC peering connection with my Dedicated Cloud Gateway using the API?
+  q: How do I set up an AWS VPC peering connection with my Dedicated Cloud Gateway using the API?
   a: Use the {{site.konnect_short_name}} API to initiate peering, then accept the request in AWS and update your route table.
 related_resources:
   - text: Dedicated Cloud Gateways
