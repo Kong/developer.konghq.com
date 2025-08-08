@@ -11,10 +11,10 @@ breadcrumbs:
     group: Konnect
   - index: operator
     group: Konnect
-    section: "Konnect CRDs: Control Planes"
+    section: "Control Planes: watch namespaces"
 related_resources:
   - text: "Create a Control Plane with KGO"
-    url: /operator/konnect/crd/control-planes/hybrid/
+    url: /operator/controlplanes/how-to/watch-namespaces/
 
 min_version:
   operator: '1.6'
