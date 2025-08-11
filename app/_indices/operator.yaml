@@ -23,11 +23,6 @@ groups:
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
 
-  - title: Operator configuration
-    sections:
-      - items:
-          - path: /operator/configuration/how-to/watch-namespaces/
-
   - title: Gateway Deployment
     sections:
       - title: Get Started
