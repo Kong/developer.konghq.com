@@ -152,6 +152,9 @@ entities:
       config:
         status_code_metrics: true
         ai_metrics: true
+        bandwidth_metrics: true
+        latency_metrics: true
+        upstream_health_metrics: true
 {% endentity_examples %}
 
 ## Configure Prometheus
@@ -237,16 +240,14 @@ for i in {1..5}; do
   echo -n "Request #$i — Model: "
   curl -s -X POST "http://localhost:8000/anything" \
     -H "Content-Type: application/json" \
-    --json "{
-
-       "messages": [
-         {
-           "role": "user",
+    --data '{
+      "messages": [
+        {
+          "role": "user",
           "content": "Hello sir!"
-         }
-       ]
-     }
-    }" | jq -r '.model'
+        }
+      ]
+    }' | jq -r '.model'
   sleep 10
 done
 ```
@@ -274,4 +275,8 @@ Now we can see that traffic visualized in the Grafana dashboard:
    - **Cost AI Request** — estimated cost of AI requests (shown if `input_costs` and `output_costs` are configured).
    - **DB Vector** — vector database request metrics (shown if `vector_db` is enabled).
    - **AI Requests Details** — timeline of recent AI requests.
+
+The visualized metrics in Grafana will look similar to the example dashboard shown above:
+
+![Grafana AI Dashboard](/assets/images/ai-gateway/grafana-ai-dashboard.png)
 
