@@ -14,7 +14,7 @@ config:
   genai_category: image/generation
   auth:
     header_name: Authorization
-    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
+    header_value: Bearer ${key}
   model:
     provider: openai
     name: dall-e-2

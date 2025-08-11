@@ -29,6 +29,11 @@ prereqs:
     include_content: prereqs/git-sync
     icon_url: /assets/icons/git.svg
 
+faqs:
+  - q: How can I use custom linting with Inso CLI?
+    a: |
+      Create your `.spectral.yaml` file in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
+
 ---
 
 ## Create add the file ruleset

@@ -24,7 +24,7 @@ related_resources:
 ---
 
 
-[Custom Resources (CRDs)](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/) in Kubernetes allow controllers to extend Kubernetes-style declarative APIs that are specific to certain applications.
+[Custom Resources (CRDs)](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/) in Kubernetes allow controllers to extend Kubernetes-style declarative APIs that are specific to certain applications. 
 
 A few custom resources are bundled with the {{site.kic_product_name}} to configure settings that are specific to {{site.base_gateway}} and provide fine-grained control over the proxying behavior.
 
@@ -89,6 +89,13 @@ This custom resource configures Consumers in {{site.base_gateway}}.  Every KongC
 
 ## TCPIngress
 
+{:.warning}
+> **Important: TCPIngress Deprecation Notice**
+>
+> The `TCPIngress` custom resource is **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in Kong Operator 2.0.0**. This resource was created to address limitations of the traditional Kubernetes Ingress API, but since the Gateway API has reached maturity and widespread adoption, it's now redundant and causes confusion.
+>
+> **Migration is required** before upgrading to Kong Operator 2.0.0. Use the [Migrating from Ingress to Gateway API](/kubernetes-ingress-controller/migrate/ingress-to-gateway/) guide to migrate your existing `TCPIngress` resource to its Gateway API equivalents (`TCPIngress` → `Gateway` + `TCPRoute` + `TLSRoute`).
+
 _This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/reference/annotations/). Its value must match the value of the controller's `--ingress-class` argument, which is `kong` by default._
 
 This Custom Resource is used for exposing non-HTTP and non-GRPC services running inside Kubernetes to the outside world through {{site.base_gateway}}. This proves to be useful when you want to use a single cloud LoadBalancer for all kinds of traffic into your Kubernetes cluster.
@@ -96,6 +103,13 @@ This Custom Resource is used for exposing non-HTTP and non-GRPC services running
 It is very similar to the Ingress resource that ships with Kubernetes.
 
 ## UDPIngress
+
+{:.warning}
+> **Important: UDPIngress Deprecation Notice**
+>
+> The `UDPIngress` custom resource is **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in Kong Operator 2.0.0**. This resource was created to address limitations of the traditional Kubernetes Ingress API, but since the Gateway API has reached maturity and widespread adoption, it's now redundant and causes confusion.
+>
+> **Migration is required** before upgrading to Kong Operator 2.0.0. Use the [Migrating from Ingress to Gateway API](/kubernetes-ingress-controller/migrate/ingress-to-gateway/) guide to migrate your existing `UDPIngress` resource to its Gateway API equivalents (`UDPIngress` → `Gateway` + `UDPRoute`).
 
 _This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/reference/annotations/). Its value
 must match the value of the controller's `--ingress-class` argument, which is

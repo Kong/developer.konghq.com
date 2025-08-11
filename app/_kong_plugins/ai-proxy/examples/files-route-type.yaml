@@ -14,7 +14,7 @@ config:
   model_name_header: false
   auth:
     header_name: Authorization
-    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
+    header_value: Bearer ${key}
   model:
     provider: openai
 
