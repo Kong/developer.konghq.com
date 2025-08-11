@@ -143,7 +143,7 @@ variables:
 
 ## Enable the Prometheus plugin
 
-Before you configure Prometheus, enable the [Prometheus plugin](/plugins/prometheus/) on {{site.base_gateway}}:
+Before you configure Prometheus, enable the [Prometheus plugin](/plugins/prometheus/) on {{site.base_gateway}}. In this example, we’ve enabled two types of metrics: status code metrics, and AI metrics which expose detailed performance and usage data for AI-related requests:
 
 {% entity_examples %}
 entities:
@@ -179,6 +179,14 @@ scrape_configs:
    scrape_interval: 5s
    static_configs:
      - targets: ['kong-quickstart-gateway:8100']
+```
+Now, run a Prometheus server, and pass it the configuration file created in the previous step:
+
+```sh
+docker run -d --name kong-quickstart-prometheus \
+  --network=kong-quickstart-net -p 9090:9090 \
+  -v $(PWD)/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus:latest
 ```
 
 Prometheus will begin to scrape metrics data from Kong AI Gateway.
@@ -219,7 +227,6 @@ This should return the following response:
 2. In the **Import via grafana.com** field, enter the dashboard ID: `21162`.
 3. In the **Prometheus** dropdown, select the Prometheus data source you created in Step 1.
 3. Click **Import**.
-
 
 ## View Grafana configuration
 
