@@ -200,7 +200,7 @@ This should return the following response:
 ```
 {: .no-copy-code }
 
-## Configure Grafana dasboard
+## Configure Grafana dashboard
 
 ### Step 1: Add Prometheus Data Source
 
