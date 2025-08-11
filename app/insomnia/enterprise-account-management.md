@@ -56,8 +56,7 @@ When you enable domain lock on a specific domain, all users from that domain wil
 ### Invite control
 Use invite control to specify which domains can receive invitations to your Enterprise organizations.
 
-To configure invite control: 
-- Navigate to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
+To configure invite control, navigate to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
 
 You can set your preference for allowing invitations from the following domain types:
 - **All domains**: Invites to any email domain are accepted which includes personal addresses.
