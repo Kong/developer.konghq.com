@@ -170,6 +170,16 @@ If you have configured [RBAC](/gateway/entities/rbac/#enable-rbac) and configure
 
 If you have not configured Kong Manager to send email, you can generate a registration link by selecting the newly invited Admin, and clicking **Generate Registration Link**.
 
+{% when 'partial' %}
+The following creates a new Partial called **{{ include.presenter.data['name'] }}**:
+
+1. In Kong Manager or Gateway Manager, go to **Redis Configurations**.
+2. Click **New configuration**.
+3. Select the **Redis type** `Host/Port (Enterprise)`.
+4. Enter the **Name** `{{ include.presenter.data['name'] }}`.
+5. Enter the **Host** `{{ include.presenter.data['config']['host'] }}` and **Port** `{{ include.presenter.data['config']['port'] }}`.
+6. Click **Save**.
+
 {% else %}
 {% endcase %}
 {% endif %}
