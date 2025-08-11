@@ -127,7 +127,7 @@ The new `create_dashboard.tf` file contains information about your dashboard. Yo
 }
 ```
 
-You can add a label to the dashboard by configuring the file: 
+You can add a label to the dashboard by modifying the file: 
 
 ```
   }
