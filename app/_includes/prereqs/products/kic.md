@@ -27,6 +27,9 @@
 {% if prereqs.kubernetes.dump_config %}
   {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.dump_config=true' %}
 {% endif %}
+{% if prereqs.kubernetes.drain_support %}
+  {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.enable_drain_support=true' %}
+{% endif %}
 
 {% if prereqs.kubernetes.env %}
   {% for env in prereqs.kubernetes.env %}
