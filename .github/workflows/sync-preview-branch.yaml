@@ -34,5 +34,5 @@ jobs:
         run: |
           git fetch origin preview-developer
           git checkout preview-developer
-          git merge origin/main --no-edit
+          git reset --hard origin/main
           git push origin preview-developer
