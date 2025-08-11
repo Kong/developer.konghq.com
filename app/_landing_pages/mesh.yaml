@@ -260,7 +260,7 @@ rows:
                 Access Kong Mesh via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.
               ctas:
                 - text: Learn more 
-                  url: /mesh/use-mesh/
+                  url: /mesh/use-mesh-cli/
                 - text: Kuma Control Plane CLI options
                   url: /mesh/reference/kuma-cp/
 

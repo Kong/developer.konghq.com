@@ -1,5 +1,5 @@
 ---
-title: Deploy Self Managed Control Plane on VM / Bare metal
+title: Deploy a self-managed control plane on a VM or Bare metal
 description: "Learn how to install Mesh on Virtual Machines or Bare metal, and deploy the {{site.mesh_product_name}} demo application."
 content_type: how_to
 permalink: /mesh/deploy-universal-self-managed/
@@ -8,6 +8,8 @@ bread-crumbs:
 related_resources:
   - text: "{{site.mesh_product_name}}"
     url: /mesh/overview/
+  - text: All {{site.mesh_product_name}} documentation
+    url: /index/mesh/
 
 products:
   - mesh
@@ -64,8 +66,7 @@ kumactl generate dataplane-token --tag kuma.io/service=app --valid-for=720h > ku
 ```
 
 {% warning %}
-This action requires [authentication](/docs/{{ page.release }}/production/secure-deployment/api-server-auth/#admin-user-token) unless executed against a control-plane running on localhost.
-If `kuma-cp` is running inside docker container please see [docker authentication docs](/docs/{{ page.release }}/production/cp-deployment/stand-alone/).
+This action requires [authentication](/mesh/authentication-with-the-api-server/) unless executed against a control plane running on `localhost`.
 {% endwarning %}
 
 ## Create a data plane proxy for each service
@@ -172,7 +173,7 @@ kumactl config control-planes add --name=XYZ --address=http://{address-to-kuma}:
 
 ## Enable Mutual TLS and Traffic Permissions
 
-By default the network is unsecure and not encrypted. We can change this with {{site.mesh_product_name}} by enabling the [Mutual TLS](/docs/{{ page.release }}/policies/mutual-tls/) policy to provision a dynamic Certificate Authority (CA) on the `default` [Mesh](/docs/{{ page.release }}/production/mesh/) resource that will automatically assign TLS certificates to our services (more specifically to the injected dataplane proxies running alongside the services).
+By default the network is unsecure and not encrypted. We can change this with {{site.mesh_product_name}} by enabling the [Mutual TLS](/mesh/policies/mutual-tls/) policy to provision a dynamic Certificate Authority (CA) on the `default` [Mesh](//) resource that will automatically assign TLS certificates to our services (more specifically to the injected dataplane proxies running alongside the services).
 
 We can enable Mutual TLS with a `builtin` CA backend by executing:
 
@@ -240,7 +241,7 @@ metrics:
 EOF
 ```
 
-This will enable the `prometheus` metrics backend on the `default` [Mesh](/docs/{{ page.release }}/production/mesh/) and automatically collect metrics for all of our traffic.
+This will enable the `prometheus` metrics backend on the `default` [Mesh](/mesh/) and automatically collect metrics for all of our traffic.
 
 Increment the counter to generate traffic, and access the dashboard at [127.0.0.1:3000](http://127.0.0.1:3000) with default credentials for both the username (`admin`) and the password (`admin`).
 

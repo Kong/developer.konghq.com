@@ -1,13 +1,16 @@
 ---
-title: Use {{site.mesh_product_name}} CLI
+title: Use the {{site.mesh_product_name}} CLI
 description: How to communicate with Mesh components
 content_type: how_to
 breadcrumbs:
   - /mesh/
-permalink: /mesh/use-mesh
+permalink: /mesh/use-mesh-cli/
 related_resources:
+  - text: "{{site.mesh_product_name}}"
+    url: /mesh/overview/
   - text: All {{site.mesh_product_name}} documentation
     url: /index/mesh/
+
 products:
   - mesh
 works_on:
@@ -38,29 +41,29 @@ After {{site.mesh_product_name}} is installed, you can access the control plane 
 {% table %}
 columns:
   - title: Access method
-    key: "`access_method`"
+    key: access_method
   - title: Mode
     key: mode
   - title: Permissions
     key: permissions
 rows:
   - access_method: "The {{site.konnect_short_name}} GUI"
-    mode: Kubernetes and Universal self managed Control Plane
+    mode: Kubernetes and Universal self managed control plane
     permissions: Read-only
   - access_method: "HTTP API"
     mode: Kubernetes and Universal
     permissions: Read-only
   - access_method: "`kumactl`"
-    mode: Kubernetes self managed Control Plane
+    mode: Kubernetes self managed control plane
     permissions: Read-only
   - access_method: "`kumactl`"
-    mode: Kubernetes Konnect managed Control Plane
+    mode: Kubernetes Konnect managed control plane
     permissions: Read and write
   - access_method: "`kubectl`"
-    mode: Kubernetes self managed Control Plane
+    mode: Kubernetes self managed control plane
     permissions: Read and write
   - access_method: "`kubectl`"
-    mode: Kubernetes Konnect managed Control Plane
+    mode: Kubernetes Konnect managed control plane
     permissions: Read-only
 {% endtable %}
 <!--vale on-->

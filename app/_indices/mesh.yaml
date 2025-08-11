@@ -44,7 +44,7 @@ sections:
       - path: /mesh/single-zone/
       - path: /mesh/mesh-multizone-service-deployment/
       - path: /mesh/kuma-user-interface-gui/
-      - path: /mesh/use-mesh/
+      - path: /mesh/use-mesh-cli/
       - path: /mesh/annotations/
       - path: /mesh/data-plane-proxy/
       - path: /mesh/data-plane-kubernetes/
