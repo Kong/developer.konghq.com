@@ -31,6 +31,8 @@ related_resources:
     url: /api/gateway/status/
   - text: Admin API
     url: /api/gateway/admin-ee/
+  - text: Visualize AI metrics with Grafana
+    url: /how-to/visualize-llm-metrics-with-grafana/
 
 works_on:
   - on-prem

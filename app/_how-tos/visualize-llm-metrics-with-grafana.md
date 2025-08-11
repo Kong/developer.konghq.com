@@ -180,42 +180,12 @@ scrape_configs:
    static_configs:
      - targets: ['kong-quickstart-gateway:8100']
 ```
-{: data-deployment-topology="konnect" }
 
-Run a Prometheus server, and pass it the configuration file created in the previous step:
+Prometheus will begin to scrape metrics data from Kong AI Gateway.
 
-```sh
-docker run -d --name kong-quickstart-prometheus \
-  --network=kong-quickstart-net -p 9090:9090 \
-  -v $(PWD)/prometheus.yml:/etc/prometheus/prometheus.yml \
-  prom/prometheus:latest
-```
-
-Prometheus will begin to scrape metrics data from {{site.base_gateway}}.
-
-## Configure Grafana
-
-### Add Prometheus Data Source
-
-1. In the Grafana UI, go to **Connections** > **Data Sources**.
-2. Click **Add data source**.
-3. Select **Prometheus** from the list.
-4. In the **Connection > Prometheus server URL** field, enter: `http://host.docker.internal:9090`.
-5. Scroll down and click **Save & test** to verify the connection.
-
-### Import Dashboard
-
-1. In the Grafana UI, navigate to **Dashboards** > **New** > **Import**.
-2. In the **Import via grafana.com** field, enter the dashboard ID: `21162`.
-3. Click **Load**.
-
-## Validate
+## Validate Prometheus configuration
 
 You can validate that the plugin is collecting metrics by generating traffic to the example service.
-
-```bash
-test
-```
 
 Run the following to query the collected `kong_ai_llm_requests_total` metric data:
 
@@ -223,15 +193,71 @@ Run the following to query the collected `kong_ai_llm_requests_total` metric dat
 curl -s 'localhost:9090/api/v1/query?query=kong_ai_llm_requests_total'
 ```
 
-
 This should return the following response:
+
+```text
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"kong_ai_llm_requests_total","ai_model":"gpt-4.1","ai_provider":"openai","instance":"kong-quickstart-gateway:8001","job":"kong","workspace":"default"},"value":[1754897018.422,"2"]},{"metric":{"__name__":"kong_ai_llm_requests_total","ai_model":"mistral-tiny","ai_provider":"mistral","instance":"kong-quickstart-gateway:8001","job":"kong","workspace":"default"},"value":[1754897018.422,"1"]}]}}%
 ```
-test
+{: .no-copy-code }
+
+## Configure Grafana dasboard
+
+### Step 1: Add Prometheus Data Source
+
+1. In the Grafana UI, go to **Connections** > **Data Sources**.
+2. Click **Add data source**.
+3. Select **Prometheus** from the list.
+4. In the **Connection > Prometheus server URL** field, enter: `http://host.docker.internal:9090`.
+5. Scroll down to the bottom of the page and click **Save & test** to verify the connection. If successful, you'll see the following message:
+  ```text
+  Successfully queried the Prometheus API.
+  ```
+
+### Step 2: Import Dashboard
+
+1. In the Grafana UI, navigate to **Dashboards** > **New** > **Import**.
+2. In the **Import via grafana.com** field, enter the dashboard ID: `21162`.
+3. In the **Prometheus** dropdown, select the Prometheus data source you created in Step 1.
+3. Click **Import**.
+
+
+## View Grafana configuration
+
+Now, we can generate additional traffic by running the following CURL request:
+
+```bash
+for i in {1..5}; do
+  echo -n "Request #$i — Model: "
+  curl -s -X POST "http://localhost:8000/anything" \
+    -H "Content-Type: application/json" \
+    --json "{
+
+       "messages": [
+         {
+           "role": "user",
+          "content": "Hello sir!"
+         }
+       ]
+     }
+    }" | jq -r '.model'
+  sleep 10
+done
 ```
+
+Once finished, you'll see in the output something like this and notice that the requested were routed to different models:
+
+```text
+Request #1 — Model: gpt-4.1-2025-04-14
+Request #2 — Model: mistral-tiny
+Request #3 — Model: mistral-tiny
+Request #4 — Model: mistral-tiny
+Request #5 — Model: gpt-4.1-2025-04-14
+```
+{: .no-copy-code }
 
 ## View metrics in Grafana
 
-## View metrics in Grafana
+Now we can see that traffic visualized in the Grafana dashboard:
 
 1. Open Grafana in your browser at [http://localhost:3000](http://localhost:3000).
 1. Navigate to **Dashboards** and open the **Kong CX AI** dashboard you imported earlier.
@@ -241,4 +267,4 @@ test
    - **Cost AI Request** — estimated cost of AI requests (shown if `input_costs` and `output_costs` are configured).
    - **DB Vector** — vector database request metrics (shown if `vector_db` is enabled).
    - **AI Requests Details** — timeline of recent AI requests.
-1. Use the time range selector to focus on specific periods and confirm that metrics update in real time as you send test traffic.
+
