@@ -68,7 +68,7 @@ rows:
 {% endtable %}
 
 
-Allowlisting these domains ensures uninterrupted access to all functionalities of Insomnia, including updates, documentation, and necessary backend services. Should you experience issues post-allowlisting, we recommend seeking assistance from your IT support or reaching out to Insomnia's customer service at `<support@insomnia.rest> ` or 
+Allowlisting these domains ensures uninterrupted access to all functionalities of Insomnia, including updates, documentation, and necessary backend services. Should you experience issues post-allowlisting, we recommend seeking assistance from your IT support or reaching out to Insomnia's customer service at `support@insomnia.rest` or 
  the [Kong support website](https://support.konghq.com/support/s/).
 Do not include sensitive data in any requests, responses, or logs you share with support unless you send it through a secure channel.
 
