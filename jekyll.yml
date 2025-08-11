@@ -163,3 +163,14 @@ mesh:
 
 # Version vars
 latest_gateway_oss_version: "3.9.1"
+
+codeblocks:
+  languages:
+    - yaml
+    - bash
+    - json
+    - lua
+    - http
+    - python
+    - hcl
+    - javascript

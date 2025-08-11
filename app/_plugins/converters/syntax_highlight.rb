@@ -18,7 +18,8 @@ module Kramdown
             'copy' => copy,
             'data' => data, 'lang' => lang(attr), 'code' => escape_html(el.value),
             'css_classes' => attr['class'],
-            'render_header' => data['data-file'] || copy
+            'render_header' => data['data-file'] || copy,
+            'id' => SecureRandom.uuid
           } },
           context
         )
@@ -31,7 +32,7 @@ module Kramdown
       end
 
       def lang(attr)
-        extract_code_language!(attr) || 'text'
+        extract_code_language!(attr) || 'plaintext'
       end
 
       def copy?(attr)

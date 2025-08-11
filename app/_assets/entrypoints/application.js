@@ -14,7 +14,6 @@ import Tabs from "@/javascripts/components/tabs";
 import TopNav from "@/javascripts/components/top_nav";
 import "@/javascripts/anchor_links";
 import "@/javascripts/accordion";
-import "@/javascripts/copy_code_snippet";
 import "@/javascripts/how_to";
 import "@/javascripts/mode";
 import "@/javascripts/dropdowns";
@@ -22,7 +21,9 @@ import "@/javascripts/toc";
 import "@/javascripts/search_modal";
 import "@/javascripts/mesh_service_switcher";
 import "@/javascripts/feedback";
+import "@/javascripts/clipboard_copy";
 import "syntax-highlight-element";
+import "@github/clipboard-copy-element";
 
 document.addEventListener("DOMContentLoaded", function () {
   new TopNav();

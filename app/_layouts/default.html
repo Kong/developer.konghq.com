@@ -155,11 +155,11 @@
     window.searchSources = {{site.data.searchSources | jsonify }}
   </script>
 
-    <script>
+  <script>
     window.she = window.she || {};
 
     window.she.config = {
-      languages: ["yaml", "bash", "javascript", "hcl"]
+      languages: {{site.codeblocks.languages | jsonify}}
     };
   </script>
 </body>

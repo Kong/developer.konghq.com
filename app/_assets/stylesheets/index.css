@@ -790,6 +790,14 @@
     font-variant-ligatures: none;
     @apply max-w-full relative rounded-lg block overflow-auto transition-opacity duration-300 text-sm bg-inherit;
   }
+
+  clipboard-copy {
+    @apply p-1 rounded border border-transparent hover:border-primary text-secondary hover:text-primary transition-colors;
+
+    &.success {
+      @apply border-semantic-green-primary;
+    }
+  }
 }
 
 #ask-ai-button {
