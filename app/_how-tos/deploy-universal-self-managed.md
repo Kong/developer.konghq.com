@@ -216,7 +216,7 @@ As usual, you can visualize the Mutual TLS configuration and the Traffic Permiss
 
 ## Explore Traffic Metrics
 
-One of the most important [policies](/policies) that {{site.mesh_product_name}} provides out of the box is [Mesh Metrics](/mesh/policies/meshmetric/).
+One of the most important [policies](/mesh/policies/) that {{site.mesh_product_name}} provides out of the box is [Mesh Metrics](/mesh/policies/meshmetric/).
 
 With Traffic Metrics we can leverage Prometheus and Grafana to provide powerful dashboards that visualize the overall traffic activity of our application and the status of the service mesh.
 
