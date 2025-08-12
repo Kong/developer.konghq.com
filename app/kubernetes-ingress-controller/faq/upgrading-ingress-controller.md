@@ -69,7 +69,7 @@ kubectl kustomize https://github.com/kong/kubernetes-ingress-controller/config/c
 
 Gateway API resources are constantly evolving, and {{ site.kic_product_name }} is updated to use the latest version of the Gateway API CRDs with each release.
 
-{{ site.kic_product_name }} 3.2 and 3.4 contain Gateway API changes that require operator intervention.
+{{ site.kic_product_name }} 3.2, 3.4, and 3.5 contain Gateway API changes that require operator intervention.
 
 ### {{ site.kic_product_name }} 3.2
 
@@ -84,7 +84,7 @@ If you installed the Experimental Channel of Gateway API v1.0, complete the foll
 1. Install the Experimental Channel of Gateway API v1.1:
 
    ```sh
-   kubectl apply --force=true -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/experimental-install.yaml  
+   kubectl apply --force=true -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/experimental-install.yaml
    ```
 
    `--force=true` is necessary because upstream updated the CRD directly for the alpha stage
@@ -96,9 +96,9 @@ If you installed the Experimental Channel of Gateway API v1.0, complete the foll
 ### {{ site.kic_product_name }} 3.4
 
 Starting in {{ site.kic_product_name }} 3.4, {{ site.kic_product_name }} supports Gateway API version 1.2.
-There is a breaking change in Gateway API 1.2 to remove the `v1alpha2` version of `GRPCRoute` and `ReferenceGrant`.
+Gateway API 1.2 introduces a breaking change by removing the `v1alpha2` versions of `GRPCRoute` and `ReferenceGrant.`
 
-If you have been using Gateway API v1.1 and {{ site.kic_product_name }} 3.2 and above, and there are no `GRPCRoute` and `ReferenceGrant` resources stored in `v1alpha2` version, you can directly upgrade Gateway API from v1.1 to v1.2. 
+If you are using Gateway API v1.1 with {{ site.kic_product_name }} 3.2 or later, and you do not have any `GRPCRoute` or `ReferenceGrant` resources in the `v1alpha2` version, you can upgrade directly to Gateway API v1.2.
 You can use the following script to ensure your `GRPCRoute` and `ReferenceGrant` CRDs aren't using `v1alpha2` storage version:
 
 ```bash
@@ -112,8 +112,50 @@ Otherwise, upgrade Gateway API and {{ site.kic_product_name }} following these s
 
 1. Ensure you are using Gateway API 1.1 (you can upgrade by following the steps in the section above).
 2. Ensure you are using {{ site.kic_product_name }} version 3.2 or later.
-3. Update all your `GRPCRoute` manifests to use `v1` instead of `v1alpha2` and your `ReferenceGrant` manifests to use `v1beta1` instead of `v1alpha2`. This can be done by following the [upgrade guide from Gateway API](https://gateway-api.sigs.k8s.io/guides/?h=v1.2#v12-upgrade-notes).
+3. Update all `GRPCRoute` manifests to use `v1` instead of `v1alpha2`, and all `ReferenceGrant` manifests to use `v1beta1` instead of `v1alpha2`. You can follow the [Gateway API upgrade guide](https://gateway-api.sigs.k8s.io/guides/?h=v1.2#v12-upgrade-notes) for detailed steps.
 4. Install the standard or experimental channel of Gateway API 1.2.
+
+### {{ site.kic_product_name }} 3.5
+
+Starting from {{ site.kic_product_name }} 3.5, several Kong-specific resources have been deprecated in favor of their Gateway API equivalents, and CRDs are now managed separately.
+
+#### Resource Deprecations
+
+{{ site.kic_product_name }} 3.5 deprecates several Kong-specific ingress resources. While these resources continue to function, you will see deprecation warnings when using them. The recommended migration paths are:
+
+* `KongIngress` → `KongUpstreamPolicy`
+* `TCPIngress` → `TCPRoute` (from Gateway API)
+* `UDPIngress` → `UDPRoute` (from Gateway API)
+
+These deprecated resources will be removed in a future version. We recommend migrating to the Gateway API equivalents as soon as possible.
+
+#### Gateway API Support
+
+Starting from {{ site.kic_product_name }} 3.5, {{ site.kic_product_name }} supports Gateway API version 1.3.
+
+To upgrade Gateway API from 1.2 to 1.3:
+
+1. Ensure you are using {{ site.kic_product_name }} version 3.5 or later.
+2. Install Gateway API 1.3 CRDs:
+
+   ```bash
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
+   ```
+
+   For experimental features like CORS filters, install the experimental channel:
+
+   ```bash
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
+   ```
+
+3. [Upgrade to {{ site.kic_product_name }} v3.5](#upgrade-kong-ingress-controller).
+
+#### New Features
+
+The {{ site.kic_product_name }} 3.5 release introduces several new features:
+
+* **Combined HTTP Routes (GA):** Now generally available, this feature allows you to consolidate multiple `HTTPRoute` resources into a single {{ site.base_gateway }} service. Enable with the `--combined-services-from-different-httproutes` flag.
+* **Connection Draining:** Ensures graceful handling of client connections when pods terminate. Enable with the `--enable-drain-support` flag.
 
 ## Upgrade {{ site.kic_product_name }}
 
@@ -196,10 +238,10 @@ Upgrading from {{ site.kic_product_name }} 2.12 to 3.x+ is a major version chang
 
 1. **Remove or rename outdated CLI arguments and `CONTROLLER_*` environment variables.**
 
-    Version 3.0 removes or renames several flags that were previously deprecated, were removed due to other changes, or were left over for compatibility after their functionality was removed.
-    
-    The CLI argument versions of flags are listed below. You must also change the equivalent `CONTROLLER_` (for example, `CONTROLLER_SYNC_RATE_LIMIT` for `--sync-rate-limit`) environment variable if you use those.
-    
+    Version 3.0 removes or renames several flags that were previously deprecated, removed due to other changes, or retained temporarily for compatibility after their functionality was removed.
+
+    The CLI argument versions of these flags are listed below. If you use the equivalent `CONTROLLER_` environment variables (for example, `CONTROLLER_SYNC_RATE_LIMIT` for `--sync-rate-limit`), you must update those as well.
+
     * `--sync-rate-limit` is now `--proxy-sync-seconds`.
     * `--konnect-runtime-group-id` is now `--konnect-control-plane-id`.
     * `--stderrthreshold` and `--debug-log-reduce-redundancy` were removed

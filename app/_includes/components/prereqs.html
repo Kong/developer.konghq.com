@@ -127,6 +127,11 @@
     {% include prereqs/operator/konnectextension.md config=prereqs.operator.konnect %}
   </div>
   {% endif %}
+  {% if prereqs.operator.konnect.network %}
+  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% include prereqs/operator/konnect_network.md config=prereqs.operator.konnect %}
+  </div>
+  {% endif %}
 
   {% if prereqs.entities? %}
     {% if product == 'operator' %}{% assign product='kic' %}{% endif %}
