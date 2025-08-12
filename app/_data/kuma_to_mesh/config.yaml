@@ -800,4 +800,16 @@ pages:
         url: /mesh/access-audit/
     tags:
       - security
+  -
+    path: app/_src/quickstart/kubernetes-demo.md
+    title: 'Deploy Kong Mesh on Kubernetes'
+    description: 'Start learning how {{site.mesh_product_name}} works by running and securing a simple demo application that consists of two services.'
+    url: '/mesh/kubernetes/'
+    related_resources:
+      - text: Get started with Red Hat OpenShift
+        url: /mesh/openshift-quickstart/
+      - text: Deploy Kong Mesh on Universal
+        url: /mesh/universal/
+    tags:
+      - get-started
 
