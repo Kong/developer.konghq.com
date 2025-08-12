@@ -23,14 +23,13 @@ related_resources:
     url: /insomnia/get-started-with-documents
   - text: Insomnia Storage Options
     url: /insomnia/insomnia-storage-options-guide
-
-faqs:
-  - q: 
-    a: |
-
+  - text: Get started with documents
+    url: /insomnia/get-started-with-documents
+  - text: Storage options in Insomnia
+    url: /insomnia/insomnia-storage-options-guide
 ---
 
-Insomnia supports importing and exporting design documents, collections, requests, and scoped data with the desktop UI and OpenAPI specs through CLI. Use these paths to move, to share, or to automate API workflows.
+Insomnia offers a unified workflow for importing and exporting API artifacts. Whether you're using the desktop UI or automating tasks via the Inso CLI, this page outlines the methods, their compatibility, and practical use cases to fit a variety of developer workflows.
 
 ## Typical use cases
 
@@ -60,7 +59,7 @@ Depending on your workflow requirements, you can import API definitions into Ins
 - CLI import
 
 ### UI import
-In a workspace or document header, select **Import** and how you'd like to import:
+In a workspace or document header, select **Import** and then specify your method:
 - file
 - URL
 - clipboard
@@ -71,47 +70,62 @@ Our UI method Supports:
 - OpenAPI/Swagger
 - WSDL
 - cURL
+For more information on importing with the UI, go to [how to import an API spec as a document](https://developer.konghq.com/how-to/import-an-api-spec-as-a-document/).
 
 ### CLI import
-Use Inso CLI to supplement UI workflows with command-line capabilities focused on API spec-focused automation. For more information about about Inso CLI, go to our [reference page](https://developer.konghq.com/inso-cli/).
+Use Inso CLI to supplement UI workflows with command-line capabilities. Instead of importing files into the application directly, you can use Inso CLI to run tests, execute collections, validate specs, export OpenAPI artifacts, and run custom scripts.
+
+An example of our key commands:
+- |
+Execute test suites via CLI
+Use `inso run test "<Design Document Name>" --env "<Environment Name>"` to run unit tests defined in the Insomnia app. The execution runs as in CI pipelines and returns a non-zero exit code if tests fail.
+- |
+Validate an OpenAPI specification
+Use `inso export spec "<Design Document Name>" --output <filename>.yaml` to extract the raw OpenAPI spec tied to a design document. Without `--output`, the CLI prints the spec to stdout for easy scripting.
+- |
+Run request collections automatically
+Use `inso run collection "<Collection Name>" --env "<Environment Name>"` to batch-run all requests and scripts in a collection. This is ideal for automation and guarantees consistency across environments.
+
+For more information, go to our [reference page](https://developer.konghq.com/inso-cli/).
 
 ## Export methods
 
-Insomnia supports flexible export options that are tailored to both manual and automated workflows. You can either use the desktop app, ideal for immediate data transfer or archival, or employ the Inso CLI to script OpenAPI specification exports within CI pipelines.
+Insomnia supports flexible export options that are tailored to both manual and automated workflows. You can either use the desktop app, ideal for immediate data transfer or archival, or use Inso CLI to script OpenAPI specification exports within CI pipelines.
 
 ### UI export
-- Via **Import/Export** menu or **Preferences → Data**: Export Document, Project, or all data.  
-  Supported formats include Insomnia JSON (v4/v5), HAR, and others.  
-  :contentReference[oaicite:3]{index=3}
+In a workspace or document header, select **Export**  and then specify the file type:
+- Document: Export only the active design document. This includes the requests, environment settings, and tests. It does not include other workspace data.
+- Project: Export the selected collection. This includes all contained requests and environments.
+- all data: Export everything in your workspace.
+Our UI method supports the following formats:
+- Insomnia JSON (v4/v5)
+- HAR
 
-### CLI export (Inso)
-- Use `inso export spec [identifier] --output <path>` to export the raw OpenAPI specification from a design document. Defaults to console if `--output` omitted.  
-  :contentReference[oaicite:4]{index=4}
+For more information on exporting with the UI, go to [how to export an API spec as a document](https://developer.konghq.com/how-to/export-an-api-spec-as-a-document/).
+
+
+### CLI export
+Use Inso CLI to automate exports of your OpenAPI specification from a design document. You can write the spec to a file, or let the CLI print to standard output for piping in scripts and CI. For a full overview, see the Inso CLI reference.
+
+An example of our key commands:
+- |
+Export an OpenAPI spec to a file
+Use `inso export spec "<Design Document Name>" --output spec.yaml` to extract the raw OpenAPI specification tied to a design document and save it to a file. The identifier can be the spec name or its ID. 
+- |
+Export to standard output for piping
+Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
+- |
+Notes about identifiers and prompts
+If you omit the identifier, Inso prompts you to select a spec interactively; in CI, pass a name or ID to avoid prompts. 
 
 ## Supported formats
 
-- **Import formats**: Insomnia JSON, Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, cURL  
-  :contentReference[oaicite:5]{index=5}
-- **Export formats**:
-  - Insomnia JSON (v5) – full fidelity project export
-  - HAR – network data archive
-  - OpenAPI via Inso CLI for design documents
-  :contentReference[oaicite:6]{index=6}
+- **Import formats**: Insomnia JSON, Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL.
+- **Export formats (UI)**: Insomnia JSON (v4/v5), HAR.
+- **Export formats (CLI)**: OpenAPI spec via `inso export spec`.
 
 ## Notes and behaviors
 
 - **Environment variables visibility**: Nested environment variables may not show in Table view; switch to JSON view helps.
-- **File extension handling**: Some exports (especially on Linux with Flatpak) may omit `.json`; append manually if needed.  
-  :contentReference[oaicite:8]{index=8}
+- **File extension handling**: Some exports (especially on Linux with Flatpak) may omit `.json`; append manually if needed.
 - **Scope control**: “Export all data” bundles entire data; individual scope exports (document, project) yield narrower sets.
-
-## Related resources
-
-- **Import and Export Data** – comprehensive UI-based import/export guide  
-  `/insomnia/import-export-data` :contentReference[oaicite:9]{index=9}
-- **Inso CLI reference** – list of CLI commands including `export spec`  
-  `/inso-cli/cli-command-reference` :contentReference[oaicite:10]{index=10}
-- **Design documents intro** – what design documents are and how to use them  
-  `/insomnia/get-started-with-documents` :contentReference[oaicite:11]{index=11}
-- **Storage Options** – control where workspaces are saved and synced  
-  `/insomnia/insomnia-storage-options-guide` :contentReference[oaicite:12]{index=12}
