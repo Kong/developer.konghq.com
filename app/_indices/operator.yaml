@@ -22,6 +22,10 @@ groups:
       - items:
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
+  - title: Security hardening
+    sections:
+      - items:
+          - path: /operator/reference/control-plane-watch-namespaces/
 
   - title: Gateway Deployment
     sections:

@@ -8,10 +8,7 @@ products:
 breadcrumbs:
   - /operator/
   - index: operator
-    group: Konnect
-  - index: operator
-    group: Konnect
-    section: "Konnect CRDs: Control Planes"
+    group: Security hardening
 
 min_version:
   operator: '1.6'
@@ -81,24 +78,24 @@ This allows you to configure {{ site.operator_product_name }} itself to watch na
 You can set watch namespaces for {{ site.operator_product_name }} using several methods:
 
 {% navtabs "multi-tenant-namespaces" %}
-{% navtab "CLI" %}
-To specify the comma separated list of namespaces to watch you can use the `--watch-namespaces` flag:
-
-```bash
-... --watch-namespaces namespace-a,namespace-b ...
-```
-{% endnavtab %}
-{% navtab "Env var" %}
-```sh
-export KONG_OPERATOR_WATCH_NAMESPACES='namespace-a,namespace-b'
-```
-{% endnavtab %}
 {% navtab "Helm chart" %}
 When using the `kong-operator` Helm chart, you can use the `env` top level configuration in your `values.yaml`:
 
 ```yaml
 env:
   watch_namespace: namespace-a,namespace-b
+```
+{% endnavtab %}
+{% navtab "Env var" %}
+```sh
+KONG_OPERATOR_WATCH_NAMESPACES='namespace-a,namespace-b'
+```
+{% endnavtab %}
+{% navtab "CLI" %}
+To specify the comma separated list of namespaces to watch you can use the `--watch-namespaces` flag:
+
+```bash
+... --watch-namespaces namespace-a,namespace-b ...
 ```
 {% endnavtab %}
 {% endnavtabs %}
