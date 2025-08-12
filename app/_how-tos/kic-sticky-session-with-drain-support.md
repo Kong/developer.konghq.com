@@ -24,14 +24,15 @@ tldr:
   a: Deploy {{ site.kic_product_name }} using the `--enable-drain-support=true` flag. Next, configure `spec.stickySessions` and set `spec.algorithm` to `sticky-sessions` in a `KongUpstreamPolicy` resource. Finally, attach the `KongUpstreamPolicy` resource to a Kubernetes Service with the `konghq.com/upstream-policy` annotation.
 
 prereqs:
+  enterprise: true
   kubernetes:
     gateway_api: true
     drain_support: true
   entities:
     services:
-      - httpbin-service
+      - echo-service
     routes:
-      - httpbin
+      - echo
 
 cleanup:
   inline:
@@ -48,12 +49,12 @@ related_resources:
     url: /kubernetes-ingress-controller/sticky-sessions/
 ---
 
-## Deploy additional httpbin replicas
+## Deploy additional echo replicas
 
-To demonstrate Kong's sticky session functionality we need multiple `httpbin` Pods. Scale out the `httpbin` deployment.
+To demonstrate Kong's sticky session functionality we need multiple `echo` Pods. Scale out the `echo` deployment.
 
 ```bash
-kubectl scale -n kong --replicas 3 deployment httpbin
+kubectl scale -n kong --replicas 3 deployment echo
 ```
 
 ## Configure sticky sessions with KongUpstreamPolicy
@@ -68,6 +69,7 @@ To implement sticky sessions, you'll need to create a `KongUpstreamPolicy` resou
    kind: KongUpstreamPolicy
    metadata:
      name: sticky-session-policy
+     namespace: kong
    spec:
      algorithm: sticky-sessions
      hashOn:
@@ -81,30 +83,14 @@ To implement sticky sessions, you'll need to create a `KongUpstreamPolicy` resou
 1. Annotate your service to use this policy:
 
    ```bash
-   echo '
-   apiVersion: v1
-   kind: Service
-   metadata:
-     name: httpbin
-     annotations:
-       konghq.com/upstream-policy: sticky-session-policy
-     labels:
-       app: httpbin
-   spec:
-     ports:
-     - name: http
-       port: 80
-       targetPort: 80
-     selector:
-       app: httpbin
-     ' | kubectl apply -f -
+   kubectl annotate -n kong service echo konghq.com/upstream-policy=sticky-session-policy --overwrite
    ```
 
 ## Test sticky sessions
 
 To test if sticky sessions are working, make a request to your service and inspect the response headers for the `session-id` cookie:
 {% validation request-check %}
-url: /httpbin/anything
+url: /echo
 status_code: 200
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
@@ -117,12 +103,12 @@ Make additional requests and verify they're being routed to the same pod.
 
 Scale down your deployment: 
 ```bash
-kubectl scale deployment httpbin --replicas=2
+kubectl scale -n kong --replicas 2 deployment echo
 ```
 
 Send another request:
 {% validation request-check %}
-url: /httpbin/anything
+url: /echo
 status_code: 200
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
