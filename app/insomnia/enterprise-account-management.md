@@ -44,7 +44,7 @@ Once the domain is verified, you can configure its settings to control users wit
 
 Use domain lock to remove access to your Insomnia Enterprise account for existing hobby users and uninvited new users.
 
-To enable domain lock, navigate to your domain settings and click the toggle under **Lock**.
+To enable domain lock, navigate to [**Company** > **Domains**](https://app.insomnia.rest/app/enterprise/domains/list), specify the domain, and then click the **Lock** toggle.
 
 When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Insomnia Enterprise account. For example:
 - **Existing users without an Enterprise invite:** Ariel is an existing hobby user and wasn’t invited to the Enterprise account. Now, when `Ariel@oldkong.com` attempts to sign in to Insomnia with that address, she won't have access to the Enterprise account.
