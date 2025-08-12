@@ -1,0 +1,2 @@
+url,title,description,content,products,content_type
+https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md,Kong Ingress Controller changelog,Changelog for supported Kong Ingress Controller versions.,Changelog for supported Kong Ingress Controller versions,kic,reference
