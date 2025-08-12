@@ -772,6 +772,30 @@
   }
 }
 
+@layer syntax-highlight-element {
+  syntax-highlight {
+    --prettylights-bg: light-dark(#f6f8fa, #151b23);
+    --prettylights-fg: light-dark(#f0f6fc, #f0f6fc);
+    --prettylights-comment: light-dark(#59636e, #9198a1);
+    --prettylights-constant:  light-dark(#FE640B, #FAB387);
+    --prettylights-constant-other-reference-link: light-dark(#0a3069, #a5d6ff);
+    --prettylights-entity: light-dark(#1E66F5, #89B4FA);
+    --prettylights-entity-tag: light-dark(#FE640B, #FAB387);
+    --prettylights-keyword: light-dark(#cf222e, #ff7b72);
+    --prettylights-bold: light-dark(#f0f6fc, #f0f6fc);
+    --prettylights-deleted-bg: light-dark(#ffebe9, #67060c);
+    --prettylights-deleted-text: light-dark(#82071e, #ffdcd7);
+    --prettylights-heading: light-dark(#0550ae, #1f6feb);
+    --prettylights-inserted-bg: light-dark(#dafbe1, #033a16);
+    --prettylights-inserted-text: light-dark(#116329, #aff5b4);
+    --prettylights-italic: light-dark(#f0f6fc, #f0f6fc);
+    --prettylights-string: light-dark(#40A02B, #A6E3A1);
+    --prettylights-string-regexp: light-dark(#116329, #7ee787);
+    --prettylights-variable: light-dark(#953800, #ffa657);
+  }
+}
+
+
 #ask-ai-button {
   @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;
 }
