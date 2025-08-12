@@ -231,7 +231,7 @@ region: global
 
 {{ account_id | indent: 3 }}
 
-1. To get the Network UUID, do the following:
+1. To fetch the UUID of the Network, do the following:
 {% capture network_id %}
 {% navtabs "network-uuid" %}
 {% navtab "UI" %}
