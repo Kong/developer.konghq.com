@@ -764,7 +764,7 @@
   }
 
   clipboard-copy {
-    @apply p-1 rounded border border-transparent hover:border-primary text-secondary hover:text-primary transition-colors;
+    @apply p-1 rounded border border-transparent hover:border-white text-secondary hover:text-white transition-colors;
 
     &.success {
       @apply border-semantic-green-primary;
