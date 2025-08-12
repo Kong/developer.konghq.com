@@ -18,15 +18,15 @@ description: Learn how to import and export data in Insomnia using the UI and th
 
 related_resources:
   - text: Inso CLI reference
-    url: /inso-cli/cli-command-reference
+    url: /inso-cli/cli-command-reference/
   - text: Design documents
-    url: /insomnia/get-started-with-documents
+    url: /insomnia/get-started-with-documents/
   - text: Insomnia Storage Options
-    url: /insomnia/insomnia-storage-options-guide
+    url: /insomnia/insomnia-storage-options-guide/
   - text: Get started with documents
-    url: /insomnia/get-started-with-documents
+    url: /insomnia/get-started-with-documents/
   - text: Storage options in Insomnia
-    url: /insomnia/insomnia-storage-options-guide
+    url: /insomnia/insomnia-storage-options-guide/
 ---
 
 Insomnia offers a unified workflow for importing and exporting API artifacts. Whether you're using the desktop UI or automating tasks via the Inso CLI, this page outlines the methods, their compatibility, and practical use cases to fit a variety of developer workflows.
