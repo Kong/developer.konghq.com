@@ -19,6 +19,7 @@ products:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.11'
@@ -47,6 +48,9 @@ tools:
   - deck
 
 prereqs:
+  konnect:
+    - name: KONG_STATUS_LISTEN
+      value: '0.0.0.0:8100'
   inline:
     - title: OpenAI
       include_content: prereqs/openai
@@ -143,7 +147,7 @@ variables:
 
 ## Enable the Prometheus plugin
 
-Before you configure Prometheus, enable the [Prometheus plugin](/plugins/prometheus/) on {{site.base_gateway}}. In this example, we’ve enabled two types of metrics: status code metrics, and AI metrics which expose detailed performance and usage data for AI-related requests:
+Before you configure Prometheus, enable the [Prometheus plugin](/plugins/prometheus/) on {{site.base_gateway}}. In this example, we’ve enabled two types of metrics: status code metrics, and AI metrics which expose detailed performance and usage data for AI-related requests.
 
 {% entity_examples %}
 entities:
@@ -183,6 +187,8 @@ scrape_configs:
    static_configs:
      - targets: ['kong-quickstart-gateway:8100']
 ```
+{: data-deployment-topology="konnect" }
+
 Now, run a Prometheus server, and pass it the configuration file created in the previous step:
 
 ```sh
@@ -194,46 +200,32 @@ docker run -d --name kong-quickstart-prometheus \
 
 Prometheus will begin to scrape metrics data from Kong AI Gateway.
 
-## Validate Prometheus configuration
-
-You can validate that the plugin is collecting metrics by generating traffic to the example service.
-
-Run the following to query the collected `kong_ai_llm_requests_total` metric data:
-
-```sh
-curl -s 'localhost:9090/api/v1/query?query=kong_ai_llm_requests_total'
-```
-
-This should return the following response:
-
-```text
-{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"kong_ai_llm_requests_total","ai_model":"gpt-4.1","ai_provider":"openai","instance":"kong-quickstart-gateway:8001","job":"kong","workspace":"default"},"value":[1754897018.422,"2"]},{"metric":{"__name__":"kong_ai_llm_requests_total","ai_model":"mistral-tiny","ai_provider":"mistral","instance":"kong-quickstart-gateway:8001","job":"kong","workspace":"default"},"value":[1754897018.422,"1"]}]}}%
-```
-{: .no-copy-code }
 
 ## Configure Grafana dashboard
 
-### Step 1: Add Prometheus Data Source
+### Add Prometheus data source
 
-1. In the Grafana UI, go to **Connections** > **Data Sources**.
+1. In the Grafana UI, go to **Connections** > **Data Sources**. If you're using the Grafana setup from the [prerequisites](/how-to/visualize-llm-metrics-with-grafana/#grafana), you can access the UI at [http://localhost:3000/](http://localhost:3000/).
 2. Click **Add data source**.
 3. Select **Prometheus** from the list.
-4. In the **Connection > Prometheus server URL** field, enter: `http://host.docker.internal:9090`.
+4. In the **Prometheus server URL** field, enter: `http://host.docker.internal:9090`.
 5. Scroll down to the bottom of the page and click **Save & test** to verify the connection. If successful, you'll see the following message:
   ```text
   Successfully queried the Prometheus API.
   ```
 
-### Step 2: Import Dashboard
+### Import Dashboard
 
-1. In the Grafana UI, navigate to **Dashboards** > **New** > **Import**.
-2. In the **Import via grafana.com** field, enter the dashboard ID: `21162`.
-3. In the **Prometheus** dropdown, select the Prometheus data source you created in Step 1.
+1. In the Grafana UI, navigate to **Dashboards**.
+1. Select "Import" from the **New** dropdown menu.
+2. Enter `21162` in the **Find and import dashboards for common applications** field.
+1. Click **Load**.
+3. In the **Prometheus** dropdown, select the Prometheus data source you created previously.
 3. Click **Import**.
 
 ## View Grafana configuration
 
-Now, we can generate additional traffic by running the following CURL request:
+Now, we can generate traffic by running the following CURL request:
 
 ```bash
 for i in {1..5}; do
@@ -252,7 +244,7 @@ for i in {1..5}; do
 done
 ```
 
-Once finished, you'll see in the output something like this and notice that the requested were routed to different models:
+Once it's finished, you'll see something like the following in the output. Notice that the requests were routed to different models based on the load balancing you configured earlier:
 
 ```text
 Request #1 — Model: gpt-4.1-2025-04-14
@@ -265,18 +257,19 @@ Request #5 — Model: gpt-4.1-2025-04-14
 
 ## View metrics in Grafana
 
-Now we can see that traffic visualized in the Grafana dashboard:
+Now you can visualize that traffic in the Grafana dashboard.
 
 1. Open Grafana in your browser at [http://localhost:3000](http://localhost:3000).
-1. Navigate to **Dashboards** and open the **Kong CX AI** dashboard you imported earlier.
-1. You should see, among other panels:
-   - **AI Total Request** — total request count and breakdown by provider.
-   - **Tokens consumption** — counts for `completion_tokens`, `prompt_tokens`, and `total_tokens`.
-   - **Cost AI Request** — estimated cost of AI requests (shown if `input_costs` and `output_costs` are configured).
-   - **DB Vector** — vector database request metrics (shown if `vector_db` is enabled).
-   - **AI Requests Details** — timeline of recent AI requests.
+1. Navigate to **Dashboards** in the sidebar.
+1. Click the **Kong CX AI** dashboard you imported earlier.
+1. You should see the following:
+   - **AI Total Request**: Total request count and breakdown by provider.
+   - **Tokens consumption*: Counts for `completion_tokens`, `prompt_tokens`, and `total_tokens`.
+   - **Cost AI Request**: Estimated cost of AI requests (shown if `input_costs` and `output_costs` are configured).
+   - **DB Vector**: Vector database request metrics (shown if `vector_db` is enabled).
+   - **AI Requests Details**: Timeline of recent AI requests.
 
-The visualized metrics in Grafana will look similar to the example dashboard shown above:
+The visualized metrics in Grafana will look similar to this example dashboard:
 
 ![Grafana AI Dashboard](/assets/images/ai-gateway/grafana-ai-dashboard.png)
 
