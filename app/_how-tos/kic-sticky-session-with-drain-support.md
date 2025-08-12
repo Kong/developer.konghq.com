@@ -41,6 +41,7 @@ cleanup:
 
 min_version:
   kic: "3.5"
+  gateway: "3.11"
 
 related_resources:
   - text: "Sticky sessions in {{ site.kic_product_name }}"
