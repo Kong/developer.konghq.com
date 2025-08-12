@@ -50,7 +50,7 @@ Partials address this issue by allowing you to extract shared configurations int
 {{site.base_gateway}} supports the following types of Partials, `redis-ce` and `redis-ee`. `redis-ce` has a shorter and simpler configuration, whereas `redis-ee` provides options for configuring Redis Sentinel or Redis Cluster connections. Each plugin that supports Partials only supports one of these types.
 
 {:.info}
-> In {{site.konnect_short_name}}, Partials are only supported for bundled {{site.konnect_short_name}} plugins, as {{site.konnect_short_name}} doesn't support custom plugins with custom DAOs.
+> In {{site.konnect_short_name}}, Partials are only supported for bundled {{site.konnect_short_name}} plugins. Custom plugins don't support Partials.
 
 ## Schema
 
