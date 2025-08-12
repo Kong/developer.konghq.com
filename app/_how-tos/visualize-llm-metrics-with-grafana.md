@@ -236,7 +236,7 @@ for i in {1..5}; do
       "messages": [
         {
           "role": "user",
-          "content": "Hello sir!"
+          "content": "Hello!"
         }
       ]
     }' | jq -r '.model'
@@ -264,7 +264,7 @@ Now you can visualize that traffic in the Grafana dashboard.
 1. Click the **Kong CX AI** dashboard you imported earlier.
 1. You should see the following:
    - **AI Total Request**: Total request count and breakdown by provider.
-   - **Tokens consumption*: Counts for `completion_tokens`, `prompt_tokens`, and `total_tokens`.
+   - **Tokens consumption**: Counts for `completion_tokens`, `prompt_tokens`, and `total_tokens`.
    - **Cost AI Request**: Estimated cost of AI requests (shown if `input_costs` and `output_costs` are configured).
    - **DB Vector**: Vector database request metrics (shown if `vector_db` is enabled).
    - **AI Requests Details**: Timeline of recent AI requests.
