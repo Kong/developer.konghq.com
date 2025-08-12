@@ -3,7 +3,7 @@ title: Mesh Timeout
 name: MeshTimeouts
 products:
     - mesh
-description: 'Connection timeout specifies the amount of time DP will wait for a TCP connection to be established.'
+description: 'Specify the amount of time Dataplane will wait for a connection to be established.'
 content_type: plugin
 type: policy
 icon: meshtimeout.png
@@ -11,7 +11,7 @@ icon: meshtimeout.png
 
 {% warning %}
 This policy uses new policy matching algorithm. 
-Do **not** combine with [Timeout policy](/docs/{{ page.release }}/policies/timeout).
+Do **not** combine with the deprecated Timeout policy policy.
 {% endwarning %}
 
 ## TargetRef support matrix

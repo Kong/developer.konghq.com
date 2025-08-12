@@ -1,9 +1,9 @@
 ---
-title: MeshTLS
+title: Mesh TLS
 name: MeshTLSes
 products:
     - mesh
-description: "This policy enables {{site.mesh_product_name}} to configure TLS mode, ciphers and version. Backends and default mode values are taken from the Mesh object."
+description: "Configure TLS mode, ciphers and version. Backends and default mode values are taken from the Mesh object."
 content_type: plugin
 type: policy
 min_version:
