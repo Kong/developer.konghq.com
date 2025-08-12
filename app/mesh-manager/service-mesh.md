@@ -64,8 +64,6 @@ To see these services:
 1. Open **Mesh Manager**, select `example-cp`, and click **Meshes**.
 1. Click **Default**, then go to the **Services** tab.
 
-For more, see [Explore {{site.mesh_product_name}} with the Kubernetes demo app](/mesh/kubernetes/).
-
 ## Configure `kumactl` to connect to the global Control Plane
 
 {:.info}
