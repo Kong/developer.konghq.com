@@ -24,7 +24,6 @@ tldr:
   a: Deploy {{ site.kic_product_name }} using the `--enable-drain-support=true` flag. Next, configure `spec.stickySessions` and set `spec.algorithm` to `sticky-sessions` in a `KongUpstreamPolicy` resource. Finally, attach the `KongUpstreamPolicy` resource to a Kubernetes Service with the `konghq.com/upstream-policy` annotation.
 
 prereqs:
-  enterprise: true
   kubernetes:
     gateway_api: true
     drain_support: true
