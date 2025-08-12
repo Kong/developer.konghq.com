@@ -46,7 +46,15 @@ min_version:
 
 related_resources:
   - text: "Sticky sessions in {{ site.kic_product_name }}"
+    url: /kubernetes-ingress-controller/sticky-sessions-reference/
+  - text: Manage sticky sessions with KongUpstreamPolicy
     url: /kubernetes-ingress-controller/sticky-sessions/
+  - text: KongUpstreamPolicy reference
+    url: /kubernetes-ingress-controller/reference/custom-resources/
+  - text: Load balancing algorithms
+    url: /gateway/load-balancing/
+  - text: Upstream entity reference
+    url: /gateway/entities/upstream/
 ---
 
 ## Deploy additional echo replicas
