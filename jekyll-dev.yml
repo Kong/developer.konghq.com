@@ -8,7 +8,7 @@ skip:
   mesh_policy: true # skip mesh policies generation, except for overviews
   explorer: true # skip explorer
   auto_generated: true # skip auto_generated references, i.e. app/_referneces
-  mesh: false # skip kuma to mesh generation
+  mesh: true # skip kuma to mesh generation
 
 # exclude app/_references
 # even though we set skip.auto_generated: true and the collection has output:false
