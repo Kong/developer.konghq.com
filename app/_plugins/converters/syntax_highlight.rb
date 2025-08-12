@@ -14,13 +14,15 @@ module Kramdown
         copy = copy?(attr)
 
         Liquid::Template.parse(template).render(
-          { 'include' => {
-            'copy' => copy,
-            'data' => data, 'lang' => lang(attr), 'code' => escape_html(el.value),
-            'css_classes' => attr['class'],
-            'render_header' => data['data-file'] || copy,
-            'id' => SecureRandom.uuid
-          } },
+          {
+            'codeblock' => {
+              'copy' => copy,
+              'data' => data, 'lang' => lang(attr), 'code' => escape_html(el.value),
+              'css_classes' => attr['class'],
+              'render_header' => !data['data-file'].nil?,
+              'id' => SecureRandom.uuid
+            }
+          },
           context
         )
       end
