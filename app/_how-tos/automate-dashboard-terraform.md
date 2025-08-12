@@ -45,9 +45,11 @@ related_resources:
 
 ## Get the dashboard ID
 
+In this tutorial, we'll export an existing dashboard in {{site.konnect_short_name}} and modify it with Terraform.
+
 Managing dashboards with Terraform requires the dashboard ID of the target dashboard:
 
-1. Get an existing dashboard ID from the {{site.konnect_short_name}} URL of your dashboard. It appears at the end of the URL when viewing the dashboard:
+1. Get an existing dashboard ID from the {{site.konnect_short_name}} URL of your dashboard. It appears at the end of the URL when viewing the dashboard in the UI:
    ```
    https://cloud.konghq.com/us/analytics/dashboards/$DASHBOARD_ID
    ```
@@ -57,18 +59,6 @@ Managing dashboards with Terraform requires the dashboard ID of the target dashb
   ```
   export DASHBOARD_ID='fe1b6b51-2e7e-44d6-bfa5-CC93489b3eed'
   ```
-## Authenticate with {{site.konnect_short_name}}
-
-To authenticate with {{site.konnect_short_name}} you have to create an `auth.tf` file in the directory you intend to manage Terraform in: 
-
-```hcl
-echo '
-provider "konnect-beta" {
-  personal_access_token = "$KONNECT_TOKEN"
-  server_url            = "https://us.api.konghq.com"
-}
-' >> auth.tf
-```
 ## Import the dashboard
 
 Now configure Terraform to import a dashboard from {{site.konnect_short_name}}.
@@ -85,13 +75,12 @@ import {
 
 ## Generate the Terraform configuration
 
-Generate the Terraform configuration from the dashboard:
 
 1. Initialize Terraform:
     ```sh
     terraform init
     ```
-1. Gernate the Terraform configuration for the dashboard: 
+1. Generate the Terraform configuration for the dashboard: 
     ```sh
     terraform plan -generate-config-out=create_dashboard.tf
     ```
@@ -130,10 +119,9 @@ The new `create_dashboard.tf` file contains information about your dashboard. Yo
 You can add a label to the dashboard by modifying the file: 
 
 ```
-  }
   labels = {
-  test = "test"
-}
+    test = "test"
+  }
 ```
 
 ## Validate

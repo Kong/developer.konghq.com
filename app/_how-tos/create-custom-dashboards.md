@@ -1,6 +1,6 @@
 ---
-title: Create a custom dashboard
-description: Learn how to create a custom dashboard in {{site.konnect_short_name}} Analytics
+title: Create a dashboard from a template
+description: Learn how to create a dashboard from a template in {{site.konnect_short_name}} Analytics.
 content_type: how_to
 automated_tests: false
 products:
@@ -16,15 +16,15 @@ series:
   id: custom-dashboards
   position: 1
 tldr:
-    q: How do I create a Custom Dashboard in {{site.konnect_short_name}}
-    a: Navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), select **Create from Template** and apply filters.
+    q: How do I create a dashboard from a template in {{site.konnect_short_name}}?
+    a: Navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), select "Create from Template" from the **Create dashboard** dropdown menu, and apply filters.
 
 prereqs:
   skip_product: true
   inline: 
     - title: Roles and permissions
       content: |
-        This guide requires belonging to either the Organization admin or Analytics admin [teams](/konnect-platform/teams-and-roles/). 
+        You must be either an [Organization admin or Analytics admin](/konnect-platform/teams-and-roles/). 
 related_resources:
   - text: Custom Dashboards
     url: /advanced-analytics/custom-dashboards/
@@ -38,33 +38,36 @@ related_resources:
 
 You can create custom dashboards either from scratch or from a [template](/advanced-analytics/custom-dashboards-reference/#templates). In this tutorial, we'll use a template.
 
-To create a custom dashboard, follow these steps: 
+To create a custom dashboard, do the following: 
 
-1. Navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section.
+1. In {{site.konnect_short_name}}, navigate to [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) in the sidebar.
 
-1. Select **Create dashboard** > **Create from Template**.
+1. From the **Create dashboard** dropdown menu, select "Create from template".
 
-1. Select **Quick summary dashboard**, then click **Use template**.
+1. Click **Quick summary dashboard**.
+1. Click **Use template**.
 
 
 This creates a new template with pre-configured tiles.
 
 ## Add a filter
 
-Filters help users narrow down the data shown in charts without modifying individual tiles. For this example, let's add a filter so that the data shown in the dashboard is scoped to only one control plane: 
+Filters help you narrow down the data shown in charts without modifying individual tiles. 
 
-1. From the dashboard, select **Add filter** to bring up the configuration options.
+For this example, let's add a filter so that the data shown in the dashboard is scoped to only one control plane: 
 
-1. Configure a filter on the desired control plane:
-  * Filter by: `Control Plane`
-  * Operator: `In`
-  * Value: `default` 
-1. Select **Make this a preset for all viewers**, then click **Apply**. 
+1. From the dashboard, click **Add filter**. This brings up the configuration options.
+
+1. Select "Control plane" from the **Filter by** dropdown menu.
+1. Select "In" from the **Operator** dropdown menu.
+1. Select "default" from the **Filter value** dropdown menu.
+1. Select the **Make this a preset for all viewers** checkbox.
+1. Click **Apply**. 
 
 This applies the filter to the dashboard. Anyone that views this dashboard will be viewing it scoped to the filter you created.
 
 
 ## Validate
 
-You can verify that the dashboard filter was applied correctly from the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section of {{site.konnect_short_name}}. Now the dashboard displays a **Preset filters** tag, with your **Control plane in (default)** filter.
+You can verify that the dashboard filter was applied correctly by navigating to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) section of {{site.konnect_short_name}}. Now the dashboard displays a **Preset filters** tag, with your **Control plane in (default)** filter.
 
