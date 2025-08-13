@@ -22,7 +22,6 @@ import "@/javascripts/search_modal";
 import "@/javascripts/mesh_service_switcher";
 import "@/javascripts/feedback";
 import "@/javascripts/clipboard_copy";
-import "syntax-highlight-element";
 import "@github/clipboard-copy-element";
 
 document.addEventListener("DOMContentLoaded", function () {
