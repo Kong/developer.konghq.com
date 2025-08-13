@@ -105,7 +105,7 @@ entities:
         - key: mahan
 variables:
   password:
-    value: $BASIC_AUTH_PASSOWRD
+    value: $BASIC_AUTH_PASSWORD
 {% endentity_examples %}
 
 ## Test with anonymous Consumer

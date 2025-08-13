@@ -65,7 +65,10 @@ entities:
     - username: jsmith
       basicauth_credentials:
        - username: jsmith
-         password: my-password
+         password: ${password}
+variables:
+  password:
+    value: $BASIC_AUTH_PASSWORD         
 {% endentity_examples %}
 
 ## Enable authentication
