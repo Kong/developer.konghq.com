@@ -21,7 +21,7 @@ rows:
     description: |
       Deprecated and stopped producing Debian 10 containers and packages, as this version reached its End of Life (EOL) date on June 30, 2024. 
       <br><br>
-      As 3.4.3.12, Kong is not building Kong Gateway installation packages or Docker images for Debian 10. Kong is no longer providing official support for any Kong version running on this system. 
+      As 3.4.3.12, Kong is not building {{site.base_gateway}} installation packages or Docker images for Debian 10. Kong is no longer providing official support for any Kong version running on this system. 
     action: |
       Debian 11 and 12 are available. Upgrade to one of these versions before 
       upgrading to {{site.base_gateway}} 3.10.
@@ -29,27 +29,31 @@ rows:
     description: |
       Deprecated and stopped producing CentOS containers and packages. 
       <br><br>
-      As 3.4.3.12, Kong is not building Kong Gateway installation packages or Docker images for CentOS. Kong is no longer providing official support for any Kong version running on this system. 
+      As 3.4.3.12, Kong is not building {{site.base_gateway}} installation packages or Docker images for CentOS. Kong is no longer providing official support for any Kong version running on this system. 
     action: |
       Migrate to a different OS before upgrading to {{site.base_gateway}} 3.10.
   - category: Deployment
     description: |
       Deprecated and stopped producing RHEL 7 containers and packages, as this version reached its End of Life (EOL) date on June 30, 2024.
       <br><br>
-      As 3.4.3.12, Kong is not building Kong Gateway installation packages or Docker images for RHEL 7. Kong is no longer providing official support for any Kong version running on this system. 
+      As 3.4.3.12, Kong is not building {{site.base_gateway}} installation packages or Docker images for RHEL 7. Kong is no longer providing official support for any Kong version running on this system. 
     action: |
       RHEL 8 and 9 are available. Upgrade to one of these versions before 
       upgrading to {{site.base_gateway}} 3.10.
   - category: Developer Portal
     description: |
-      The product component known as Kong Enterprise Portal (Developer Portal) is no longer included in Kong Gateway Enterprise. Existing customers who have purchased Kong Enterprise Portal can continue to use it and be supported via a dedicated mechanism.
+      <!--vale off-->
+      The product component known as Kong Enterprise Portal (Developer Portal) is no longer included in {{site.ee_product_name}}. Existing customers who have purchased Kong Enterprise Portal can continue to use it and be supported via a dedicated mechanism.
+      <!--vale on-->
     action: |
-      If you have purchased Kong Enterprise Portal in the past and would like to continue to use it in 3.10, contact Kong Support for more information.
+      <!--vale off-->
+      If you have purchased Kong Enterprise Portal in the past and would like to continue to use it in 3.10, contact [Kong Support](https://support.konghq.com) for more information.
+      <!--vale on-->
   - category: Vitals
     description: |
-      The product component known as Vitals is no longer included in Kong Gateway Enterprise. Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism. Kong Konnect users can take advantage of our Advanced Analytics offering, which provides a superset of Vitals functionality.
+      The product component known as Vitals is no longer included in {{site.ee_product_name}}. Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism. {{site.konnect_short_name}} users can take advantage of our Advanced Analytics offering, which provides a superset of Vitals functionality.
     action: |
-      If you have purchased Vitals in the past and would like to continue to use it in 3.10, contact Kong Support for more information.
+      If you have purchased Vitals in the past and would like to continue to use it in 3.10, contact [Kong Support](https://support.konghq.com) for more information.
   - category: Plugins
     description: |
       **SAML**
@@ -258,10 +262,10 @@ rows:
 
     action: |
       If you have plugin configurations that use dynamic plugin ordering in a free Gateway installation, they won't work.
-      Remove these configurations before upgrading, or reach out to Kong Support.
+      Remove these configurations before upgrading, or reach out to [Kong Support](https://support.konghq.com).
   - category: Licensing
     description: |
       Enterprise Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
     action: |
-      Try out Kong Konnect, or reach out to Kong Sales.
+      Try out [{{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide), or reach out to [Kong Sales](https://konghq.com/contact-sales?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide) for a demo.
 {% endtable %}

@@ -42,6 +42,7 @@ Read this document thoroughly to successfully complete the upgrade process, as i
 > Work with the Kong support team to migrate from Cassandra to PostgreSQL.
 {% endif %}
 
+<!--vale off-->
 {% if include.lts_version_from == "3.4" %}
 {:.warning}
 > Starting from {{site.base_gateway}} 3.5, Enterprise Developer Portal and Vitals are no longer 
@@ -49,6 +50,7 @@ included in {{site.ee_product_name}}.
 > Existing customers who have purchased Kong Enterprise Portal or Vitals can continue to use them and be supported via a dedicated mechanism.
 > If you have purchased Kong Enterprise Portal or Vitals in the past and would like to continue to use them in 3.10, contact [Kong Support](https://support.konghq.com) for more information.
 {% endif %}
+<!--vale on-->
 
 ## Upgrade journey overview
 
