@@ -120,11 +120,11 @@ export KEYSTORE_PASS='YOUR-PASSWORD'
 
 ```sh
 openssl pkcs12 -export \
-  -in kong.example.com.crt \
-  -inkey kong.example.com.key \
+  -in keycloak.crt \
+  -inkey keycloak.key \
   -certfile rootCA.crt \
-  -out kong-keystore.p12 \
-  -name kong \
+  -out keycloak-keystore.p12 \
+  -name keycloak \
   -passout pass:$PKCS12_PASSWORD
 ```
 
@@ -132,11 +132,11 @@ openssl pkcs12 -export \
 keytool -importkeystore \
   -deststorepass $KEYSTORE_PASS \
   -destkeypass $KEYSTORE_PASS \
-  -destkeystore kong-keystore.jks \
-  -srckeystore kong-keystore.p12 \
+  -destkeystore keycloak-keystore.jks \
+  -srckeystore keycloak-keystore.p12 \
   -srcstoretype PKCS12 \
   -srcstorepass $PKCS12_PASSWORD \
-  -alias kong
+  -alias keycloak
 ```
 
 client cert generate:
@@ -204,12 +204,21 @@ keytool -list -keystore keycloak-truststore.p12 -storepass "$PKCS12_PASSWORD"
 
 ## Keycloak
 
+In a new terminal window, export your trust store password:
+
+```sh
+export PKCS12_PASSWORD='YOUR-PASSWORD'
 ```
+
+Then, start Keycloak in Docker:
+
+```sh
 docker run \
   -p 9443:9443 \
+  --network kong-quickstart-net \
   -v $(pwd)/oidc/certs:/opt/keycloak/ssl \
-  -e KEYCLOAK_ADMIN=admin \
-  -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
+  -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
   quay.io/keycloak/keycloak \
   start \
   --https-port=9443 \
@@ -218,8 +227,7 @@ docker run \
   --https-trust-store-file=/opt/keycloak/ssl/keycloak-truststore.p12 \
   --https-trust-store-password=$PKCS12_PASSWORD \
   --https-client-auth=request \
-  --hostname=https://localhost:9443 \
-  --hostname-admin=https://localhost:9443
+  --hostname=localhost 
 ```
 
 
