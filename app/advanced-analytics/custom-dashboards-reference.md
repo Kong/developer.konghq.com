@@ -61,9 +61,9 @@ For more information, learn how to create a [custom dashboard from a template](/
 
 ## Tiles
 
-Tiles represent charts that you can add to your custom dashboard. You can create new chart tiles from scratch or add a tile from an existing report.
+Tiles represent charts that you can add to your [Dashboards](https://cloud.konghq.com/us/analytics/dashboards/). You can create new chart tiles from scratch or add a tile from an existing report.
 
-To add a new tile, select **New Tile** from the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards/) view. After selecting from a series of charts, you'll be taken into a chart editor similar to the [Explorer](/advanced-analytics/explorer/) experience, where you can adjust the chart until it shows what you need.
+To add a new tile, select **New Tile** from the view. After selecting from a series of charts, you'll be taken into a chart editor similar to the [Explorer](/advanced-analytics/explorer/) experience, where you can adjust the chart until it shows what you need.
 
 In the **Edit tile** view, you can:
 
@@ -132,7 +132,9 @@ rows:
     dashboard_viewer: ❌
 {% endtable %}
 <!--vale on -->
-Dashboard permissions only control access to the dashboard object. Access to the underlying data sources (such as a control plane) is enforced separately. A user may be able to open a dashboard but see empty or partial results if they lack permissions for one or more of its data sources.
+Dashboard permissions only control access to the dashboard object. Access to the underlying data sources (such as a control plane) is enforced separately.
+{:.info}
+> A user may be able to open a dashboard but see empty or partial results if they lack permissions for one or more of its data sources.
 
 ### Roles
 

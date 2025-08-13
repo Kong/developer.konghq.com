@@ -127,7 +127,7 @@ You can add a label to the dashboard by modifying the file to replace `labels = 
 
 ## Validate
 
-To validate that your changes are working, make an update in the generated Terraform file (for example, change a chart title).
+To validate that your changes are working, make an update in the generated Terraform file (for example, change a chart label).
 
 1. Run the following command to apply the update:
    ```sh
