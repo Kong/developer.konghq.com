@@ -47,9 +47,11 @@ rows:
   - use_case: Import a Postman collection or OpenAPI spec into Insomnia
     method: UI → Import → choose File/Clipboard/URL.
   - use_case: Integrate spec validation into CI pipelines
-    method: `inso lint spec <identifier>` in CI to lint OpenAPI and fail builds on errors. :contentReference[oaicite:1]{index=1}
+    method: |
+      `inso lint spec <identifier>` in CI to lint OpenAPI and fail builds on errors. :contentReference[oaicite:1]{index=1}
   - use_case: Automate test execution from Insomnia test suites in CI
-    method: `inso run test <identifier>` to run defined tests and return pass/fail exit codes. :contentReference[oaicite:2]{index=2}  
+    method: |
+      `inso run test <identifier>` to run defined tests and return pass/fail exit codes. :contentReference[oaicite:2]{index=2}  
 {% endtable %}
 
 ## Import methods
