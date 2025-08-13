@@ -34,7 +34,7 @@ prereqs:
       icon_url: /assets/icons/gateway.svg
     - title: Roles and permissions
       content: |
-        This guide requires belonging to the [Analytics admin](/konnect-platform/teams-and-roles/) team.
+        This guide requires being an Organization Admin or belonging to the [Analytics admin](/konnect-platform/teams-and-roles/) team.
     - title: An existing custom dashboard
       content: |
         This guide requires an existing dashboard in {{site.konnect_short_name}}. You can create one using the [Create a custom dashboard](/how-to/create-custom-dashboards/) guide.
@@ -45,7 +45,7 @@ related_resources:
 
 ## Get the dashboard ID
 
-In this tutorial, we'll export an existing dashboard in {{site.konnect_short_name}} and modify it with Terraform.
+In this tutorial, we'll export an existing dashboard in {{site.konnect_short_name}} and modify it with Terraform, so you can integrate {{site.konnect_short_name}} Analytics with your existing workflow.
 
 Managing dashboards with Terraform requires the dashboard ID of the target dashboard:
 
