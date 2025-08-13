@@ -236,7 +236,7 @@ step 4:
 Set up keys and credentials
 In your client, open the Credentials tab.
 Set Client Authenticator to X509 Certificate.
-Subject DN is `C=US, ST=State, L=City, O=ClientOrg, OU=Dev, CN=client-app`
+Subject DN is `CN=client-app, OU=Dev, O=ClientOrg, L=City, ST=State, C=US` (reverse order, idk why)
 
 **Advanced** tab.
 In Advanced settings, enable **OAuth 2.0 Mutual TLS Certificate Bound Access Tokens Enabled**.
@@ -256,11 +256,26 @@ curl -s \
   --cacert rootCA.crt | jq -r .access_token
 ```
 
+```sh
+export ACCESS_TOKEN='YOUR-ACCESS-TOKEN'
+```
 
-Copy the Client Secret.
-Switch to the Users menu and add a user.
-Open the user’s Credentials tab and add a password. Be sure to disable Temporary Password.
-In this guide, we’re going to use an example user named alex with the password doe.
+At some point:
+```sh
+export DECK_ISSUER='https://localhost:9443/realms/master'
+```
+
+## Enable TLS handshake plugin
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: tls-handshake-modifier
+      route: example-route
+      config:
+        tls_client_certificate: REQUEST
+        
+{% endentity_examples %}
 
 ## Enable the OpenID Connect plugin
 
@@ -273,30 +288,23 @@ Enable the OpenID Connect plugin on the `example-service` Service:
 entities:
   plugins:
     - name: openid-connect
-      service: example-service
+      route: example-route
       config:
         issuer: ${issuer}
-        client_id:
-            - ${client-id}
-        client_secret: 
-            - ${client-secret}
         auth_methods:
-            - bearer
+        - bearer
         proof_of_possession_mtls: strict
+        proof_of_possession_auth_methods_validation: on
 
 variables:
   issuer:
     value: $ISSUER
-  client-id:
-    value: $CLIENT_ID
-  client-secret:
-    value: $CLIENT_SECRET
 {% endentity_examples %}
 
 In this example:
-* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Specifies that the plugin should use the password grant, for easy testing.
-* `authenticated_groups_claim`: Looks for a groups claim in an ACL.
+* `issuer`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
+* `proof_of_possession_mtls`: ?
+* `proof_of_possession_auth_methods_validation`: ?
 
 {% include_cached plugins/oidc/client-auth.md %}
 
@@ -304,13 +312,12 @@ In this example:
 
 Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
-{% validation request-check %}
-url: /anything
-method: GET
-status_code: 200
-user: "alex:doe"
-display_headers: true
-{% endvalidation %}
+```sh
+curl -i -X GET "$KONNECT_PROXY_URL/anything" \
+  -H "Authorization:Bearer $ACCESS_TOKEN" \
+  --cert client.crt \
+  --key client.key
+```
 
 You should get an HTTP `200` response with an `X-Authenticated-Groups` header:
 
