@@ -25,7 +25,9 @@ related_resources:
     url: /dev-portal/v2-migration/
 ---
 
-You can migrate your classic Dev Portal (v2) `konnect_portal` Terraform resource to the new `konnect_portal_classic` resource using `import` and `removed` blocks in the manifests or using the CLI. We recommend using the `import`/`removed` blocks in manifests.
+If you use Terraform resources to manage your classic Dev Portal (v2), you must migrate your `konnect_portal` Terraform resource to the new `konnect_portal_classic`. This is a **breaking change** as the new Dev Portal (v3) will use the `konnect_portal` Terraform resource in the 3.x {{site.konnec_short_name}} Terraform provider release.
+
+You can migrate your `konnect_portal` Terraform resource to the new `konnect_portal_classic` resource using `import` and `removed` blocks in the manifests or using the CLI. We recommend using the `import`/`removed` blocks in manifests.
 
 {:.warning}
 > It's not recommended, but you can edit your state file directly to migrate. To do this, search `"type":"konnect_portal"` and replace with `"type": "konnect_portal_classic"`.
