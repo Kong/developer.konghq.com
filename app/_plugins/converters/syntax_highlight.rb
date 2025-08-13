@@ -46,6 +46,7 @@ module Kramdown
               'css_classes' => el.attr['class'],
               'render_header' => !data['data-file'].nil?,
               'id' => id,
+              'data' => data,
               'snippet' => snippet
             }
           },
