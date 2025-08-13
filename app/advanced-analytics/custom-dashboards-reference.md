@@ -100,8 +100,6 @@ Preset filters appear as badges at the top of the dashboard. Viewers with ["View
 ![Example of a preset filter](/assets/images/analytics/admin.png)
 >_**Figure 1:** An example of a preset filter_
 
-For more information, review [Use preset-filters to scope dashboards](/how-to/use-preset-filters-scope-dashboards/).
-
 ## Role-based access
 
 Organization Admins can control who is allowed to **view** a custom dashboard. This is currently the only available permission level—there are no editor or owner roles beyond the original dashboard creator.
