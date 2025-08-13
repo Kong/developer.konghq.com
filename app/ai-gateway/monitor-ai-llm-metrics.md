@@ -62,15 +62,26 @@ dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
 
 When the `config.ai_metrics` parameter is set to `true` in the Prometheus plugin, you can get the following AI LLM metrics:
 
-- **AI Requests**: AI request sent to LLM providers.
-- **AI Cost**: AI cost charged by LLM providers.
-- **AI Tokens**: AI tokens counted by LLM providers.
-- **AI LLM Latency**: {% new_in 3.8 %} Time taken to return a response by LLM providers.
-- **AI Cache Fetch Latency**: {% new_in 3.8 %} Time taken to return a response from the cache.
-- **AI Cache Embeddings Latency**: {% new_in 3.8 %} Time taken to generate embedding during the cache.
+- **AI requests**: AI request sent to LLM providers.
+- **AI cost**: AI cost charged by LLM providers.
+- **AI tokens**: AI tokens counted by LLM providers.
+- **AI LLM latency**: {% new_in 3.8 %} Time taken to return a response by LLM providers.
+- **AI cache fetch latency**: {% new_in 3.8 %} Time taken to return a response from the cache.
+- **AI cache embeddings latency**: {% new_in 3.8 %} Time taken to generate embedding during the cache.
 
 These metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace. The AI Tokens metrics are also available per token type.
 
+### MCP metrics {% new_in 3.12 %}
+
+When the `config.ai_metrics` parameter is set to `true`, the following MCP-specific metrics are also available:
+
+- **MCP response body size**: Histogram of response body sizes (in bytes) returned by MCP servers.
+- **MCP latency**: Histogram of request latencies (in milliseconds) for MCP server calls.
+- **MCP error total**: Counter of total MCP server errors, labeled by error type.
+
+These metrics are labeled with `service`, `route`, `method`, `workspace`, and `tool_name`.
+
+## Overview
 
 AI metrics are disabled by default as it may create high cardinality of metrics and may
 cause performance issues. To enable them:
@@ -110,6 +121,18 @@ ai_cache_embeddings_latency{ai_provider="provider1",ai_model="model1",cache_stat
 # HELP ai_llm_provider_latency AI cache latencies per ai_provider/database in Kong
 # TYPE ai_llm_provider_latency bucket
 ai_llm_provider_latency{ai_provider="provider1",ai_model="model1",cache_status="hit",vector_db="redis",embeddings_provider="openai",embeddings_model="text-embedding-3-large",Workspace="workspace1",le="+Inf"} 2
+
+# HELP kong_ai_mcp_response_body_size_bytes MCP server response body sizes in bytes
+# TYPE kong_ai_mcp_response_body_size_bytes histogram
+kong_ai_mcp_response_body_size_bytes_bucket{service="svc1",route="route1",method="POST",workspace="workspace1",tool_name="tool1",le="+Inf"} 1
+
+# HELP kong_ai_mcp_latency_ms MCP server latencies in milliseconds
+# TYPE kong_ai_mcp_latency_ms histogram
+kong_ai_mcp_latency_ms_bucket{service="svc1",route="route1",method="POST",workspace="workspace1",tool_name="tool1",le="+Inf"} 1
+
+# HELP kong_ai_mcp_error_total Total MCP server errors by type
+# TYPE kong_ai_mcp_error_total counter
+kong_ai_mcp_error_total{service="svc1",route="route1",type="timeout",method="POST",workspace="workspace1",tool_name="tool1"} 3
 ```
 
 {:.info}

@@ -271,7 +271,51 @@ rows:
 > When returning a cached response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
 
-## Example log entry
+### AI MCP logs {% new_in 3.12 %}
+
+If you're using the [AI MCP plugin](/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, and tool usage.
+
+{:.info}
+> **Note:** Unlike other available `AI` plugins, the AI MCP plugin is not invoked as part of an AI request.
+> Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of AI request flow.
+> Do not configure the AI MCP plugin together with other `ai-*` plugins on the same service or route.
+
+The MCP log structure groups traffic by **MCP session ID**, with each session containing zero or more recorded JSON-RPC requests:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.mcp.mcp_session_id`"
+    description: The ID of the MCP session. A session can contain multiple requests.
+  - property: "`ai.mcp.rpc`"
+    description: An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
+  - property: "`ai.mcp.rpc[].id`"
+    description: The ID of the JSON-RPC request. Not all JSON-RPC requests have an ID.
+  - property: "`ai.mcp.rpc[].latency`"
+    description: The latency of the JSON-RPC request, in milliseconds.
+  - property: "`ai.mcp.rpc[].payload.request`"
+    description: The request payload of the JSON-RPC request, serialized as a JSON string.
+  - property: "`ai.mcp.rpc[].payload.response`"
+    description: The response payload of the JSON-RPC request, serialized as a JSON string.
+  - property: "`ai.mcp.rpc[].method`"
+    description: The JSON-RPC method name.
+  - property: "`ai.mcp.rpc[].tool_name`"
+    description: If the method is a tool call, the name of the tool being invoked.
+  - property: "`ai.mcp.rpc[].error`"
+    description: The error message if an error occurred during the request.
+  - property: "`ai.mcp.rpc[].response_body_size`"
+    description: The size of the JSON-RPC response body, in bytes.
+{% endtable %}
+<!-- vale on -->
+
+## Example log entries
+
+### LLM traffic entry
 
 The following example shows a structured AI Gateway log entry:
 
@@ -368,6 +412,32 @@ The following example shows a structured AI Gateway log entry:
         "Violence": "Medium"
       }
     }
+  }
+}
+```
+
+### MCP traffic entry
+
+The following example shows an MCP log entry:
+
+```json
+"ai": {
+  "mcp": {
+    "mcp_session_id": "session-id",
+    "rpc": [
+      {
+        "id": "4",
+        "latency": 1,
+        "payload": {
+          "response": "$OPTIONAL_MCP_PAYLOAD_REQUEST",
+          "request": "$OPTIONAL_MCP_PAYLOAD_REQUEST"
+        },
+        "method": "tools/call",
+        "tool_name": "tool 1",
+        "error": "Method not found",
+        "response_body_size": 100
+      }
+    ]
   }
 }
 ```
