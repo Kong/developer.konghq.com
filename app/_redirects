@@ -97,7 +97,6 @@
 /mesh/policies/traffic-permissions  /mesh/policies/meshtrafficpermission/
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
-/mesh/policies/mutual-tls/   /mesh/policies/
 
 
 ## Kubernetes
@@ -129,3 +128,5 @@
 /konnect-platform/active-tracing/  /gateway/debugger/
 /konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
 
+## Insomnia
+/insomnia/concepts/ /insomnia/terminology/
