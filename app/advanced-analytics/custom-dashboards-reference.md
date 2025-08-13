@@ -107,7 +107,7 @@ Organization Admins can control who is allowed to **view** a custom dashboard. T
 To manage dashboard visibility, Organization Admins can assign roles to users through [**Organization**](https://cloud.konghq.com/organization/) > **Users** in {{site.konnect_short_name}}, using the **Role Assignments** tab. Only users with the appropriate roles will be able to access dashboards that are restricted to specific teams or audiences.
 
 ### Permissions
-
+<!-- vale off-->
 For more details, see the [teams and roles](/konnect-platform/teams-and-roles/) documentation.
 {% table %}
 columns:
@@ -131,7 +131,7 @@ rows:
     org_admin: ✅
     dashboard_viewer: ❌
 {% endtable %}
-
+<!--vale on -->
 Dashboard permissions only control access to the dashboard object. Access to the underlying data sources (such as a control plane) is enforced separately. A user may be able to open a dashboard but see empty or partial results if they lack permissions for one or more of its data sources.
 
 ### Roles
