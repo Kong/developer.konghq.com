@@ -26,12 +26,9 @@ related_resources:
 ---
 
 {:.warning}
-> **BREAKING CHANGE**: Version 3.x of the {{site.konnect_short_name}} Terraform provider deploys a v3 Portal using the `konnect_portal` resource. If you are using Portal v2 (classic), you need to migrate to the `konnect_portal_classic` resource in version 2.x of the Terraform provider before upgrading.
+> **BREAKING CHANGE**: Version 3.x of the {{site.konnect_short_name}} Terraform provider deploys a v3 Dev Portal using the `konnect_portal` resource. If you are using Dev Portal v2 (classic), you need to migrate to the `konnect_portal_classic` resource in version 2.x of the Terraform provider before upgrading.
 
 You can migrate your `konnect_portal` Terraform resource to the new `konnect_portal_classic` resource using `import` and `removed` blocks in the manifests or using the CLI. We recommend using the `import`/`removed` blocks in manifests.
-
-{:.warning}
-> It's not recommended, but you can edit your state file directly to migrate. To do this, search `"type":"konnect_portal"` and replace with `"type": "konnect_portal_classic"`.
 
 {% navtabs "Terraform" %}
 {% navtab "Manifests" %}
@@ -100,6 +97,9 @@ You can migrate your `konnect_portal` Terraform resource to the new `konnect_por
    terraform apply -auto-approve
    ```
    Some things will say they need updating. It’s safe to do so as it’s just the state file updating IDs and references.
+{% endnavtab %}
+{% navtab "Edit state file" %}
+It's not recommended, but you can edit your state file directly to migrate. To do this, search `"type":"konnect_portal"` and replace with `"type": "konnect_portal_classic"`.
 {% endnavtab %}
 {% endnavtabs %}
 
