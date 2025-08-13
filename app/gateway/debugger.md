@@ -94,10 +94,11 @@ To begin using the Debugger, ensure the following requirements are met:
 
 
 1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
-1. Select the control plane that contains the data plane to be traced.
-2. In the left navigation menu, click **Debugger**.
-3. Click **New session**.
-4. Define the sampling criteria and click **Start Session**.
+1. Click the control plane that contains the data plane to be traced.
+1. Navigate to **Debugger** in the sidebar.
+1. Click **New session**.
+1. Define the sampling criteria.
+1. Click **Start Session**.
 
 Once the session starts, traces will be captured for requests that match the rule. Click a trace to view it in the span viewer.
 

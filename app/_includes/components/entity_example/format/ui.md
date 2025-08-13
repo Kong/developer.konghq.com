@@ -17,7 +17,7 @@ The following creates a new Consumer Group called **{{ include.presenter.data['n
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to **Consumers**.
-1. Select the **Consumer Groups** tab.
+1. Click the **Consumer Groups** tab.
 1. Click **New Consumer Group**.
 1. Enter the **Name** `{{ include.presenter.data['name'] }}`.
 1. Click **Save**.
@@ -67,7 +67,7 @@ The following creates a new Upstream and a Target with basic configuration:
 1. Click **New Upstream**.
 1. Enter a unique name for the Upstream. For example: `example_upstream`.
 1. Click **Save**.
-1. From your Upstream, select the **Targets** tab.
+1. From your Upstream, click the **Targets** tab.
 1. Click **New Target**.
 1. Enter an IP address/hostname and port in the **Target Address** field. For example: `{{ include.presenter.data['target'] }}`
 1. Update the weight. For example: `{{ include.presenter.data['weight'] }}`.
@@ -142,7 +142,7 @@ The following creates a new Certificate with basic configuration:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to **Certificates**.
-1. Select the **CA Certificates** tab.
+1. Click the **CA Certificates** tab.
 1. Click **New CA Certificate**.
 1. In the **Cert** field, enter the PEM-encoded public certificate of the CA:
     ```
@@ -153,7 +153,7 @@ The following creates a new Certificate with basic configuration:
 The following instructions create an RBAC user in Kong Manager. `kong.conf` must be configured to `ENFORCE_RBAC=on`.
 
 1. In Kong Manager, go to **Teams**. 
-1. Select the **RBAC Users** tab.
+1. Click the **RBAC Users** tab.
 1. Select the appropriate [Workspace](/gateway/entities/workspace/) then **Add new user**.
 1. Create a **Name** and **User Token**.
 1. Click **Create**. 
@@ -185,7 +185,7 @@ The following creates a new JSON Web Key Set with basic configuration:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.
   * In Kong Manager, select your Workspace.
 1. Navigate to **Keys**.
-1. Select the **Key Sets** tab.
+1. Click the **Key Sets** tab.
 1. Click **New Key Set**.
 1. Enter a name for the Key Set:
     ```
@@ -196,7 +196,7 @@ The following creates a new JSON Web Key Set with basic configuration:
 The following instructions create a Group in Kong Manager. Groups are a function of RBAC, and require RBAC to be [enabled](/gateway/entities/rbac/#enable-rbac).
 
 1. In Kong Manager, go to **Teams**.
-1. Select the **Groups** tab. 
+1. Click the **Groups** tab. 
 1. Click **New Group**.
 1. Enter a name for your Group.
 1. Select **Add/Edit Roles** to assign Roles to this Group.

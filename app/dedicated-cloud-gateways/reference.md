@@ -211,7 +211,7 @@ arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID
 {% navtab "UI" %}
 1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
 1. Click your Dedicated Cloud Gateway.
-1. Click **Networks** in the sidebar.
+1. Navigate to **Networks** in the sidebar.
 1. Configure private networking and click **Transit Gateway**.
 1. Copy the AWS account ID.
 {% endnavtab %}
@@ -237,7 +237,7 @@ region: global
 {% navtab "UI" %}
 1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
 1. Click your Dedicated Cloud Gateway.
-1. Click **Data Plane Nodes** in the sidebar.
+1. Navigate to **Data Plane Nodes** in the sidebar.
 1. Copy the network ID from the data plane group table.
 {% endnavtab %}
 {% navtab "API" %}
@@ -263,11 +263,12 @@ region: global
 ### {{site.konnect_short_name}} configuration
 
 1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
-1. Choose a Control Plane to open the Overview dashboard, then click **Connect**.
-    
-    The Connect menu will open and display the URL for the Public Edge DNS. Save this URL.
-
-1. Select **Custom Domains** from the side navigation, then **New Custom Domain**, and enter your domain name.
+1. Click your control plane
+1. Click **Connect**.
+1. From the **Connect** menu, save the **Public Edge DNS** URL.
+1. Navigate to **Custom Domains** in the sidebar.
+1. Click **New Custom Domain**.
+1. Enter your domain name.
 
     Save the value that appears under CNAME. 
 
