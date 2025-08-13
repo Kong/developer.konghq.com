@@ -115,7 +115,7 @@ services:
       KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl  # Admin API on HTTP + HTTPS
       KONG_ADMIN_GUI_LISTEN: 0.0.0.0:8002, 0.0.0.0:8445 ssl  # Kong Manager on HTTP + HTTPS
       KONG_ADMIN_GUI_URL: http://${GW_HOST:-localhost}:8002  # URL for GUI links
-      KONG_PASSWORD: handyshake  # Required for logging in to Kong Manager (RBAC)
+      KONG_PASSWORD: "${BASIC_AUTH_PASSWORD}"   # Required for logging in to Kong Manager (RBAC)
     depends_on:
       kong-bootstrap:
         condition: service_completed_successfully  # Start only after bootstrap has succeeded
