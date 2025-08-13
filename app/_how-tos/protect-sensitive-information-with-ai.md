@@ -55,7 +55,7 @@ prereqs:
 
         ```bash
         Username: kong/ai-pii
-        Password: YOUR-TOKEN
+        Password: $AI_PII_ACCESS_TOKEN
         ```
         To pull an image:
 
