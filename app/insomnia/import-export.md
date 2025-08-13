@@ -41,17 +41,18 @@ columns:
     key: method
 rows:
   - use_case: Export a design document for version control
-    method: UI export from document menu or Preferences; or `inso export spec` for OpenAPI.
+    method: |
+      UI export from document menu or Preferences; or `inso export spec` for OpenAPI.
   - use_case: Transfer all API work to another machine
     method: UI → Preferences → Data → Export all data.
   - use_case: Import a Postman collection or OpenAPI spec into Insomnia
     method: UI → Import → choose File/Clipboard/URL.
   - use_case: Integrate spec validation into CI pipelines
     method: |
-      `inso lint spec <identifier>` in CI to lint OpenAPI and fail builds on errors. :contentReference[oaicite:1]{index=1}
+      `inso lint spec <identifier>` in CI to lint OpenAPI and fail builds on errors.
   - use_case: Automate test execution from Insomnia test suites in CI
     method: |
-      `inso run test <identifier>` to run defined tests and return pass/fail exit codes. :contentReference[oaicite:2]{index=2}  
+      `inso run test <identifier>` to run defined tests and return pass/fail exit codes. :contentReference
 {% endtable %}
 
 ## Import methods
@@ -78,15 +79,15 @@ For more information on importing with the UI, go to [how to import an API spec 
 Use Inso CLI to supplement UI workflows with command-line capabilities. Instead of importing files into the application directly, you can use Inso CLI to run tests, execute collections, validate specs, export OpenAPI artifacts, and run custom scripts.
 
 An example of our key commands:
-- |
-Execute test suites via CLI
-Use `inso run test "<Design Document Name>" --env "<Environment Name>"` to run unit tests defined in the Insomnia app. The execution runs as in CI pipelines and returns a non-zero exit code if tests fail.
-- |
-Validate an OpenAPI specification
-Use `inso export spec "<Design Document Name>" --output <filename>.yaml` to extract the raw OpenAPI spec tied to a design document. Without `--output`, the CLI prints the spec to stdout for easy scripting.
-- |
-Run request collections automatically
-Use `inso run collection "<Collection Name>" --env "<Environment Name>"` to batch-run all requests and scripts in a collection. This is ideal for automation and guarantees consistency across environments.
+* Execute test suites via CLI
+
+  Use `inso run test "<Design Document Name>" --env "<Environment Name>"` to run unit tests defined in the Insomnia app. The execution runs as in CI pipelines and returns a non-zero exit code if tests fail.
+* Validate an OpenAPI specification
+
+  Use `inso export spec "<Design Document Name>" --output <filename>.yaml` to extract the raw OpenAPI spec tied to a design document. Without `--output`, the CLI prints the spec to stdout for easy scripting.
+* Run request collections automatically
+
+  Use `inso run collection "<Collection Name>" --env "<Environment Name>"` to batch-run all requests and scripts in a collection. This is ideal for automation and guarantees consistency across environments.
 
 For more information, go to our [reference page](https://developer.konghq.com/inso-cli/).
 
@@ -110,15 +111,17 @@ For more information on exporting with the UI, go to [how to export an API spec 
 Use Inso CLI to automate exports of your OpenAPI specification from a design document. You can write the spec to a file, or let the CLI print to standard output for piping in scripts and CI. For a full overview, see the Inso CLI reference.
 
 An example of our key commands:
-- |
-Export an OpenAPI spec to a file
-Use `inso export spec "<Design Document Name>" --output spec.yaml` to extract the raw OpenAPI specification tied to a design document and save it to a file. The identifier can be the spec name or its ID. 
-- |
-Export to standard output for piping
-Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
-- |
-Notes about identifiers and prompts
-If you omit the identifier, Inso prompts you to select a spec interactively; in CI, pass a name or ID to avoid prompts. 
+* Export an OpenAPI spec to a file
+  
+  Use `inso export spec "<Design Document Name>" --output spec.yaml` to extract the raw OpenAPI specification tied to a design document and save it to a file. The identifier can be the spec name or its ID.
+   
+* Export to standard output for piping
+  
+  Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
+
+* Notes about identifiers and prompts
+  
+  If you omit the identifier, Inso prompts you to select a spec interactively; in CI, pass a name or ID to avoid prompts. 
 
 ## Supported formats
 
