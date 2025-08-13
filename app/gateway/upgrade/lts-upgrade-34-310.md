@@ -37,4 +37,4 @@ related_resources:
 
 ---
 
-{% include /upgrade/lts-upgrade.md lts_version_from='3.4' lts_version_to='3.10' %}
+{% include_cached /upgrade/lts-upgrade.md lts_version_from='3.4' lts_version_to='3.10' %}
