@@ -183,6 +183,7 @@
       != as ≠, this property disables all ligatures.
     */
     font-variant-ligatures: none;
+    @apply text-sm;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -326,7 +327,7 @@
   }
 
   /* single backticks */
-  code:not(:is(#api-spec code)) {
+  code:not(:is(pre code)) {
     @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-sm px-1;
   }
 
@@ -762,8 +763,18 @@
     @apply max-w-full relative rounded-lg block overflow-auto transition-opacity duration-300 text-sm bg-inherit;
   }
 
+  .custom-code-block, .highlight {
+    .code-block .shiki span, pre {
+      --shiki-dark-bg: var(--color-bg-code-block) !important;
+    }
+
+    pre {
+      @apply whitespace-pre overflow-auto !bg-code-block;
+    }
+  }
+
   clipboard-copy {
-    @apply p-1 rounded border border-transparent hover:border-white text-secondary hover:text-white transition-colors;
+    @apply p-1 rounded border border-transparent hover:border-primary text-secondary hover:text-primary transition-colors;
 
     &.success {
       @apply border-semantic-green-primary;

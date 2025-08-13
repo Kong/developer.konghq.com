@@ -25,8 +25,8 @@
         {% endif %}
     </div>
     {% endif %}
-    <div class="flex relative bg-code-block rounded-b-lg border border-primary/5 overflow-auto p-3 {% if codeblock.render_header %}border-t-0{% else %}rounded-t-lg{% endif %} {% if codeblock.copy and codeblock.render_header == false %}pr-11{% endif%}">
-        <syntax-highlight id="{{codeblock.id}}" language="{{codeblock.lang}}">{{codeblock.code}}</syntax-highlight>
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary/5 overflow-auto p-3 {% if codeblock.render_header %}border-t-0{% else %}rounded-t-lg{% endif %} {% if codeblock.copy and codeblock.render_header == false %}pr-11{% endif%}">
+        <div class="code-block h-full w-full">{{codeblock.snippet}}</div>
         {% if codeblock.copy and codeblock.render_header == false %}
         <div class="flex absolute right-3 top-[10px] items-center gap-2">
             {{copy}}
