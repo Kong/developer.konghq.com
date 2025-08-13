@@ -68,11 +68,11 @@ echo '
 import {
   provider = "konnect-beta"
   to = konnect_dashboard.service_dashboard_template
-  id = "$DASHBOARD_ID"
+  id = "8e66b804-a060-466a-aa6c-145e7f696228"
 }
 ' >> import.tf
 ```
-
+Be sure to replace the `id` with the `id` you exported for your dashboard.
 ## Generate the Terraform configuration
 
 
@@ -115,8 +115,9 @@ The new `create_dashboard.tf` file contains information about your dashboard. Yo
   name   = "Quick summary dashboard"
 }
 ```
+{:.no-copy-code}
 
-You can add a label to the dashboard by modifying the file: 
+You can add a label to the dashboard by modifying the file to replace `labels = null` with the following: 
 
 ```
   labels = {
@@ -130,6 +131,6 @@ To validate that your changes are working, make an update in the generated Terra
 
 1. Run the following command to apply the update:
    ```sh
-   terraform apply
+   terraform apply -auto-approve
    ```
 1. After the change is applied, return to the [{{site.konnect_short_name}} dashboard manager](https://cloud.konghq.com/us/analytics/dashboards) to confirm the "test" label has been added to the dashboard.
