@@ -36,7 +36,7 @@ faqs:
       DNS validation statuses for Dedicated Cloud Gateways are refreshed every 5 minutes.
   - q: How do I delete a custom domain in {{site.konnect_short_name}}?
     a: |
-      In {{site.konnect_short_name}}, go to [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
+      In {{site.konnect_short_name}}, go to [**API Gateway**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
   - q: How does network peering work with Dedicated Cloud Gateway nodes?
     a: |
       Each Cloud Gateway node is part of a dedicated network for its region (e.g., `us-east-1`). 
@@ -209,7 +209,7 @@ arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID
 {% capture account_id %}
 {% navtabs "aws-account-id" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click **Gateway Manager** in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
 1. Click your Dedicated Cloud Gateway.
 1. Click **Networks** in the sidebar.
 1. Configure private networking and click **Transit Gateway**.
@@ -235,7 +235,7 @@ region: global
 {% capture network_id %}
 {% navtabs "network-uuid" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click **Gateway Manager** in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
 1. Click your Dedicated Cloud Gateway.
 1. Click **Data Plane Nodes** in the sidebar.
 1. Copy the network ID from the data plane group table.
@@ -262,7 +262,8 @@ region: global
 
 ### {{site.konnect_short_name}} configuration
 
-1. Open **Gateway Manager**, choose a Control Plane to open the Overview dashboard, then click **Connect**.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
+1. Choose a Control Plane to open the Overview dashboard, then click **Connect**.
     
     The Connect menu will open and display the URL for the Public Edge DNS. Save this URL.
 

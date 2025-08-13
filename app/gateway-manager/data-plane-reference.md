@@ -175,8 +175,8 @@ This is a zero downtime upgrade because {{site.konnect_short_name}} synchronizes
 
 {% navtab "Hybrid mode" %}
 
-1. Open [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane,
-and provision a new Data Plane node through the Gateway Manager.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} menu.
+1. Choose a control plane and provision a new data plane node.
 
     Make sure that your new Data Plane node appears in the list of nodes, 
     displays a _Connected_ status, and that it was last seen _Just Now_.
@@ -307,9 +307,9 @@ For Dedicated Cloud Gateways, see the [upgrade documentation](#upgrade-data-plan
 
 If you're running {{site.base_gateway}} in hybrid mode, check that the Data Plane node versions are up-to-date:
 
-1. Open [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), then open your Control Plane.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
 
-1. Select **Data Plane Nodes** from the side menu, then click **New Data Plane Node**.
+1. Open your control plane, select **Data Plane Nodes** from the side menu, then click **New Data Plane Node**.
 
 1. Check the {{site.base_gateway}} version in the code block. 
 This is the version that the {{site.konnect_short_name}} Control Plane is running.

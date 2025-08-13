@@ -93,7 +93,8 @@ To begin using the Debugger, ensure the following requirements are met:
 > From version 3.10 and later, these environment variables are enabled by default and no manual configuration is required.
 
 
-1. In [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), select the control plane that contains the data plane to be traced.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
+1. Select the control plane that contains the data plane to be traced.
 2. In the left navigation menu, click **Debugger**.
 3. Click **New session**.
 4. Define the sampling criteria and click **Start Session**.
