@@ -95,17 +95,17 @@ Add the Key Auth and Basic Auth plugins to the `example-service` Gateway Service
 
 {% entity_examples %}
 entities:
-  plugins:
-    - name: key-auth
-      service: example-service
-      config:
-        hide_credentials: true
-        anonymous: anonymous
-    - name: basic-auth
-      service: example-service
-      config:
-        hide_credentials: true
-        anonymous: anonymous
+  consumers:
+    - username: Dana
+      basicauth_credentials:
+        - username: Dana
+          password: ${password}
+    - username: Mahan
+      keyauth_credentials:
+        - key: mahan
+variables:
+  password:
+    value: $BASIC_AUTH_PASSOWRD
 {% endentity_examples %}
 
 ## Test with anonymous Consumer
