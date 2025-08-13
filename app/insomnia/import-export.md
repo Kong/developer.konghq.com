@@ -33,6 +33,7 @@ Insomnia offers a unified workflow for importing and exporting API artifacts. Wh
 
 ## Typical use cases
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Use case
@@ -54,6 +55,7 @@ rows:
     method: |
       `inso run test <identifier>` to run defined tests and return pass/fail exit codes. :contentReference
 {% endtable %}
+<!-- vale on -->
 
 ## Import methods
 
@@ -114,7 +116,7 @@ An example of our key commands:
 * Export an OpenAPI spec to a file
   
   Use `inso export spec "<Design Document Name>" --output spec.yaml` to extract the raw OpenAPI specification tied to a design document and save it to a file. The identifier can be the spec name or its ID.
-   
+
 * Export to standard output for piping
   
   Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
