@@ -14,9 +14,9 @@
   {% for data in codeblock.data %}{{ data[0] }}="{{ data[1] }}" {% endfor %}
 >
     {% if codeblock.render_header %}
-    <div class="grid grid-cols-[1fr_auto]  justify-items-end items-center px-3 py-1 bg-secondary rounded-t-lg border border-primary/5">
+    <div class="custom-code-block__header grid grid-cols-[1fr_auto]  justify-items-end items-center px-3 py-1 bg-code-block-header rounded-t-lg border border-primary/5">
         {% if codeblock.data['data-file'] %}
-        <div class="text-sm text-primary justify-self-start">{{codeblock.data['data-file']}}</div>
+        <div class="text-sm text-white dark:text-primary justify-self-start">{{codeblock.data['data-file']}}</div>
         {% endif %}
         {% if codeblock.copy %}
         <div class="flex items-center gap-2">
