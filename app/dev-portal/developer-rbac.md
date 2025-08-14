@@ -41,7 +41,7 @@ To use RBAC, you need to enable it from your Dev Portal settings:
 Send a `POST` request to the [`/portals/{portalId}/teams` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-team):
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/portals/{portalId}/teams
+url: /v3/portals/$PORTAL_ID/teams
 status_code: 201
 method: POST
 body:
