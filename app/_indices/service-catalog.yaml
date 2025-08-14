@@ -5,6 +5,7 @@ sections:
       - path: /service-catalog/
       - path: /service-catalog/scorecards/
       - path: /service-catalog/integrations/
+      - path: /service-catalog/services/
   - title: Integrations
     items:
       - path: /service-catalog/integrations/**/*
