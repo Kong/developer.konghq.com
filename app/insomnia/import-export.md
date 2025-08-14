@@ -43,7 +43,7 @@ columns:
 rows:
   - use_case: Export a design document for version control
     method: |
-      UI export from document menu or Preferences; or `inso export spec` for OpenAPI.
+      UI export from document menu or Preferences; or `inso export spec` for OpenAPI in CI.
   - use_case: Transfer all API work to another machine
     method: |
       **UI → Preferences → Data → Export** all data.
@@ -52,10 +52,10 @@ rows:
       **UI → Import → choose File/Clipboard/URL**.
   - use_case: Integrate spec validation into CI pipelines
     method: |
-      `inso lint spec <identifier>` in CI to lint OpenAPI and fail builds on errors.
+      In CI, use `inso lint spec <identifier>` to lint OpenAPI and fail builds on errors.
   - use_case: Automate test execution from Insomnia test suites in CI
     method: |
-      `inso run test <identifier>` to run defined tests and return pass/fail exit codes.
+      In CI, use `inso run test <identifier>` to run defined tests and return pass/fail exit codes.
 {% endtable %}
 <!-- vale on -->
 
@@ -70,7 +70,8 @@ In a workspace or document header, select **Import** and then specify your metho
 - file
 - URL
 - clipboard
-Our UI method Supports:
+
+Our UI method Supports the following formats:
 - Insomnia JSON
 - Postman v2
 - HAR
@@ -101,9 +102,9 @@ Insomnia supports flexible export options that are tailored to both manual and a
 
 ### UI export
 In a workspace or document header, select **Export**  and then specify the file type:
-- Document: Export only the active design document. This includes the requests, environment settings, and tests. It does not include other workspace data.
-- Project: Export the selected collection. This includes all contained requests and environments.
-- All data: Export everything in your workspace.
+- **Document**: Export only the active design document. This includes the requests, environment settings, and tests. It does not include other workspace data.
+- **Project**: Export the selected collection. This includes all contained requests and environments.
+- **All data**: Export everything in your workspace.
 
 Our UI method supports the following formats:
 - Insomnia JSON (v4/v5)
@@ -132,6 +133,6 @@ An example of our key commands:
 
 ## Notes and behaviors
 
-- **Environment variables visibility**: Nested environment variables may not show in Table view; switch to JSON view helps.
-- **File extension handling**: Some exports (especially on Linux with Flatpak) may omit `.json`; append manually if needed.
-- **Scope control**: “Export all data” bundles entire data; individual scope exports (document, project) yield narrower sets.
+- **Environment variables visibility**: Nested environment variables may not show in the table view; switch to JSON view if this occurs.
+- **File extension handling**: Some exports (especially on Linux with Flatpak) may omit `.json`; fix manually if needed.
+- **Scope control**: **Export all data** bundles the entire data associated with your account. Use individual scope export options like **Document** or **Project**.
