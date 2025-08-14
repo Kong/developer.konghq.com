@@ -38,6 +38,7 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           console: "fish",
           cef: "text",
           conf: "yaml",
+          rego: "text"
       };
       const language = languageMap[lang] || lang;
       const html = highlighter.codeToHtml(code, {
