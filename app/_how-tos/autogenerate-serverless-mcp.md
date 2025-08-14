@@ -13,7 +13,7 @@ description: Learn how to use the AI MCP plugin to generate serverless MCP APIs 
 products:
   - gateway
   - ai-gateway
-
+permalink: /mcp/autogenerate-serverless-mcp/
 works_on:
   - on-prem
   - konnect

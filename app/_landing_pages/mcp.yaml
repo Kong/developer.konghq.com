@@ -10,6 +10,7 @@ metadata:
     - konnect
   tags:
     - ai
+    - mcp
 
 rows:
   - header:
@@ -57,7 +58,7 @@ rows:
                 - type: text
                   text: |
                     For production environments, you can expose any remote MCP server to AI Gateway. This setup gives AI clients access to internal systems while enforcing strict control at the edge.
-                    
+
                     Use Kong AI Gateway plugins to:
 
                     - **Secure access** with plugins like OpenID Connect or Key Auth.

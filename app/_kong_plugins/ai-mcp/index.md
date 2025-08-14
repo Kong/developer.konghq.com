@@ -6,7 +6,9 @@ content_type: plugin
 tier: ai_gateway_enterprise
 publisher: kong-inc
 description: Convert any API into a working MCP server
-
+breadcrumbs:
+ - /ai-gateway/
+ - /mcp/
 products:
     - gateway
     - ai-gateway
@@ -35,10 +37,13 @@ categories:
 
 tags:
   - ai
+  - mcp
 
 related_resources:
   - text: About AI Gateway
     url: /ai-gateway/
+  - text: Autogenerate serverless MCP
+    url: /mcp/autogenerate-serverless-mcp/
   - text: All AI Gateway plugins
     url: /plugins/?category=ai
   - text: Kong MCP traffic gateway
@@ -57,7 +62,7 @@ next_steps:
   - text: Learn about Kong MCP traffic gateway
     url: /mcp/
   - text: Learn about {{site.konnect_product_name}} MCP Server
-    url: /gateway/routing/traditional/
+    url: /mcp/kong-mcp/get-started/
 ---
 
 The **AI MCP plugin** exposes any Kong-managed Service as a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) Server. It acts as a **protocol bridge**, translating between MCP and HTTP so that existing APIs can be called by MCP-compatible clients without requiring custom server code.
