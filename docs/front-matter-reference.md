@@ -18,7 +18,7 @@ Applies to pages located under `/app/_how_tos/`.
 | `works_on` | Array of deployment environments where this applies. Can be `on_prem` or `konnect`. | <pre>works_on:<br>  - konnect<br>  - on-prem</pre> |
 | `tags` | Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
 | `plugins` | Array of plugins referenced in the guide. | <pre>plugins:<br>  - correlation-id<br>  - rate-limiting</pre> | 
-| `related_resources` | Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>  url: /gateway/logs/</pre> | 
+| `related_resources` | Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
 | `tldr` | Short question and answer summary of the guide. | <pre>tldr:<br>  q: How do I add Correlation IDs to my logs?<br>  a: Define log format and reference header</pre> | 
 | `prereqs` | Array of prerequisites needed before following the guide. Accepts a file reference or an inline entry. | See [prereqs](#example-of-how-to-prereqs) for an example and options.  |
 | `cleanup` | Array of steps to clean up your environment after completing the guide. Accepts a file reference or an inline entry. | See [cleanup](#example-of-how-to-cleanup) for an example and options. | 
@@ -26,13 +26,13 @@ Applies to pages located under `/app/_how_tos/`.
 | `premium_partner` | Marks a page with a premium partner label. | `premium_partner: true` |
 | `beta` | Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | Adds a tech preview label/banner to the page. | `tech_preview: true` |
-| `faqs` | Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>  a: You get this answer.</pre> |
+| `faqs` | Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
 
-Look at any how-to under https://github.com/Kong/developer.konghq.com/tree/main/app/_how-tos for examples.
+Look at any how-to under [`app/_how_tos/`](https://github.com/Kong/developer.konghq.com/tree/main/app/_how-tos) for examples.
 
 ### Example of how-to prereqs
 
-You can find all prereq options under https://github.com/Kong/developer.konghq.com/tree/main/app/_includes/prereqs. 
+You can find all prereq options under [`app/_includes/prereqs/`](https://github.com/Kong/developer.konghq.com/tree/main/app/_includes/prereqs). 
 
 ```yaml
 prereqs:
@@ -55,7 +55,7 @@ prereqs:
 
 ### Example of how-to cleanup
 
-You can find all cleanup options under https://github.com/Kong/developer.konghq.com/tree/main/app/_includes/cleanup.
+You can find all cleanup options under [`app/_includes/cleanup/`](https://github.com/Kong/developer.konghq.com/tree/main/app/_includes/cleanup).
 
 ```yaml
 cleanup:
@@ -71,8 +71,8 @@ cleanup:
 ## Plugin or policy overview
 
 Applies to pages located under:
-* `/app/_kong_plugins/<plugin_name>/index.md`
-* `/app/_mesh_policies/<policy_name>/index.md`
+* [`/app/_kong_plugins/<plugin_name>/index.md`](https://github.com/Kong/developer.konghq.com/tree/main/app/_kong_plugins)
+* [`/app/_mesh_policies/<policy_name>/index.md`](https://github.com/Kong/developer.konghq.com/tree/main/app/_mesh_policies)
 
 | Key | Description | Example |
 |-----|-------------|---------|
@@ -88,16 +88,16 @@ Applies to pages located under:
 | `works_on` | Array of deployment environments where this applies. Can be `on_prem` or `konnect`. | <pre>works_on:<br>  - konnect<br>  - on-prem</pre> |
 | `tags` | Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
 | `categories` | (Plugins only) Array of categories the plugin fits under. For Kong plugins, there should only be one. This category should match the category in the UI.<br>Possible categories: `ai`, `analytics-monitoring`, `logging`, `security`, `serverless`, `traffic-control`, `transformations`. <br><br> > **Note:** For third-party plugins, omit the category. | <pre>tags:<br>  - transformations</pre> | 
-| `related_resources` | Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>  url: /gateway/logs/</pre> | 
+| `related_resources` | Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
 | `topologies` | (Plugins only) Contains the nested keys `on_prem` and `konnect`. Lists the deployment topologies that the plugin can be run in. <br> - `on_prem` can contain `hybrid`, `traditional`, and `db-less`<br>- `konnect` can contain `serverless`, `cloud-gateways`, and `hybrid` | <pre>topologies:<br>  on_prem:<br>    - hybrid<br>    - db-less<br>    - traditional<br>  konnect_deployments:<br>    - hybrid<br>    - cloud-gateways<br>    - serverless</pre> |
 | `notes` | (Plugins only) Any notes on deployment topologies or types, if the plugin has any limitations in a particular topology or deployment. | <pre>notes: \|<br>  Dedicated Cloud Gateways: If you use the IAM assumeRole functionality with this plugin, it must be configured differently than for hybrid deployments in Konnect.</pre> |
   it must be configured differently than for hybrid deployments in Konnect.
-| `icon` | Filename of plugin icon. All plugin icons are located at https://github.com/Kong/developer.konghq.com/tree/main/app/assets/icons/plugins. | `icon: ai-azure-content-safety.png` |
+| `icon` | Filename of plugin icon. See all [plugin icons](https://github.com/Kong/developer.konghq.com/tree/main/app/assets/icons/plugins). | `icon: ai-azure-content-safety.png` |
 | `search_aliases` | Search aliases for the search bar and the plugins filter at `/plugins/`. | <pre>search_aliases:<br>  - ai<br>  - llm</pre> |
 | `premium_partner` | Marks a page with a premium partner label. | `premium_partner: true` |
 | `beta` | Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | Adds a tech preview label/banner to the page. | `tech_preview: true` |
-| `faqs` | Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>  a: You get this answer.</pre> |
+| `faqs` | Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
 
 ## Plugin or policy example
 
@@ -109,13 +109,13 @@ Applies to pages located under:
 |-----|-------------|---------|
 | `title` | The title of the page. This will appear in the table of contents for the plugin examples. | `title: 'Only allow messages about a specific topic'` | 
 | `description` | Brief description of the example. This will appear in search results. Must not contain any markdown or HTML formatting. | `description: Learn how to add correlation IDs to logs with the Correlation ID plugin.` |
-| `description` | Extended description of the example. This description will display on the page, and can have any markdown or HTML formatting, including links. | <pre>extended_description: \|<br>  Only allow messages about a specific topic. For example, only allow messages about DevOps. <br><br>For a detailed walkthrough, see [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).</pre> |
+| `extended_description` | Extended description of the example. This description will display on the page, and can have any markdown or HTML formatting, including links. | <pre>extended_description: \|<br>  Only allow messages about a specific topic. For example, only allow messages about DevOps. <br><br> For a detailed walkthrough, see [Use AI Semantic Prompt Guard plugin to govern your LLM traffic](/how-to/use-ai-semantic-prompt-guard-plugin/).</pre> |
 | `min_version` | Minimum version requirement. This is the version the functionality was introduced in. | <pre>min_version:<br>  gateway: '3.4'</pre> |
 | `max_version` | Maximum version. Set this if the functionality was deprecated or removed. | <pre>max_version:<br>  gateway: '3.8'</pre> |
 | `weight` | Determines the order of the table of contents. Items with a higher weight will display before items with a lower weight. | `weight: 900` |
 | `requirements` | Anything users need to do before running the example. Should omit "obvious" requirements, such as "Kong Gateway must be running". | <pre>requirements:<br>  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service."<br>  - "A [Redis](https://redis.io/docs/latest/) instance."</pre> |
 | `variables` | Environment variables used in the plugin example. | See [variables](#example-of-variables) for an example. |
-| `config` | The full declarative config of the plugin. | See any plugin, such as https://github.com/Kong/developer.konghq.com/blob/main/app/_kong_plugins/ai-azure-content-safety/examples/block-predefined-categories.yaml. | 
+| `config` | The full declarative config of the plugin. | See any plugin, such as [AI Azure Content Safety](https://github.com/Kong/developer.konghq.com/blob/main/app/_kong_plugins/ai-azure-content-safety/examples/block-predefined-categories.yaml). | 
 | `tools` | The formats to display the example in. | <pre>tools:<br>  - deck<br>  - admin-api<br>  - konnect-api<br>  - kic<br>  - terraform</pre> |
 | `beta` | Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | Adds a tech preview label/banner to the page. | `tech_preview: true` |
@@ -149,18 +149,18 @@ Can apply to any page under `/app/`. Usually contained in a subfolder, such as `
 | `products` | (Required) Array of products that the guide applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `advanced-analytics`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
 | `works_on` | (Required) Array of deployment environments where this applies. Can be `on_prem` or `konnect`. | <pre>works_on:<br>  - konnect<br>  - on-prem</pre> |
 | `tags` | (Optional) Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
-| `related_resources` | (Optional) Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>  url: /gateway/logs/</pre> | 
+| `related_resources` | (Optional) Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
 | `min_version` | (Optional) Minimum version requirement. | <pre>min_version:<br>  gateway: '3.4'</pre> |
 | `max_version` | (Optional) Maximum version. Set this if the functionality was deprecated or removed. | <pre>max_version:<br>  gateway: '3.8'</pre> |
 | `act_as_plugin` | (Optional) If set to true, the page will be added to the plugin hub. If using this option, make sure to configure all other plugin metadata as defined in the [plugins](#plugin-or-policy-overview) section. | `act_as_plugin: true` |
 | `premium_partner` | Marks a page with a premium partner label. | `premium_partner: true` |
 | `beta` | Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | Adds a tech preview label/banner to the page. | `tech_preview: true` |
-| `faqs` | Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>  a: You get this answer.</pre> |
+| `faqs` | Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
 
 ## Landing page
 
-Applies to pages located under `/app/_landing_pages/`.
+Applies to pages located under [`/app/_landing_pages/`](https://github.com/Kong/developer.konghq.com/tree/main/app/_landing_pages).
 
 The following content is nested under the `metadata` key:
 
