@@ -59,10 +59,6 @@ For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version
 >  </thead>
 >  <tbody>
 >    <tr>
->      <td>3.10</td>
->      <td>March 2025</td>
->    </tr>
->    <tr>
 >      <td>3.14</td>
 >      <td>March 2026</td>
 >    </tr>

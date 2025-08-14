@@ -27,9 +27,13 @@ rows:
                     using the {{site.konnect_short_name}} platform.
 
                     **Key benefits of Mesh Manager:**
-                    - **Kong-managed Global Control Plane**: Kong handles the management of your Global Control Plane.
-                    - **Centralized view**: See all your Services, Control Planes, and Data Plane Proxies in one place.
-                    - **Multi-zone support**: Deploy across Kubernetes, Universal environments, and multiple clouds.
+                    - **Kong-managed Global control plane**: Kong handles the management of your Global control plane.
+                    - **Centralized view**: See all your Services, control planes, and data plane proxies in one place.
+                    - **Multi-zone support**: Deploy across Kubernetes, Universal environments, and multiple clouds. 
+          - type: button
+            config:
+              text: "Create a service mesh in {{site.konnect_short_name}}"
+              url: https://cloud.konghq.com/mesh-manager/create-control-plane
       - blocks:
           - type: image
             config:
@@ -47,9 +51,9 @@ rows:
                   text: |
                     Mesh Manager follows a hierarchical control plane model to manage service mesh deployments across zones.
 
-                    - **Global Control Plane**: Stores configuration and policies for all meshes.
-                    - **Zone Control Planes**: Manage mesh networking and service traffic in their respective zones.
-                    - **Services**: Connect to the zone Control Plane for inbound and outbound traffic control.
+                    - **Global control plane**: Stores configuration and policies for all meshes.
+                    - **Zone control planes**: Manage mesh networking and service traffic in their respective zones.
+                    - **Services**: Connect to the zone control plane for inbound and outbound traffic control.
 
       - blocks:
           - type: mermaid
@@ -57,10 +61,10 @@ rows:
               diagram: |
                 graph TD
                   subgraph Konnect
-                      CP1[Global Control Plane]
+                      CP1[Global control plane]
                   end
-                  subgraph Kong Mesh US Control Plane
-                      CP2[Control Plane]
+                  subgraph Kong Mesh US control plane
+                      CP2[control plane]
                   end
 
                   S1[Service A]
@@ -78,12 +82,56 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Create a service mesh
+              title: Configure a Mesh global control plane with the Kubernetes demo app
               description: |
-                Set up Kong Mesh in {{site.konnect_short_name}}
+                Set up a global control plane in {{site.konnect_short_name}}, add a zone, and deploy the Kubernetes demo app to test your {{site.mesh_product_name}} mesh.
+              icon: /assets/icons/graduation.svg
+              cta:
+                url: /mesh-manager/service-mesh/
+      - blocks:
+          - type: card
+            config:
+              title: Deploy Kong Mesh using Terraform and Konnect
+              description: |
+                Learn how to provision a Global control plane, Mesh, and Kubernetes zone for {{site.mesh_product_name}} using Terraform and {{site.konnect_short_name}}.
+              icon: /assets/icons/terraform.svg
+              cta:
+                url: /mesh/deploy-with-terraform-konnect/
+      - blocks:
+          - type: card
+            config:
+              title: Import an existing Konnect Kong Mesh deployment into Terraform
+              description: |
+                Learn how to import an existing {{site.konnect_short_name}} {{site.mesh_product_name}} deployment into Terraform.
+              icon: /assets/icons/download.svg
+              cta:
+                url: /mesh/import-konnect-deployment-to-terraform/
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Migrate a self-managed zone control plane
+              description: |
+                Move your existing {{site.mesh_product_name}} zone control planes from a self-managed global control plane to a managed global control plane in {{site.konnect_short_name}}.
+              icon: /assets/icons/migrate.svg
+              cta:
+                url: /mesh-manager/migrate-zone/
+      - blocks:
+          - type: card
+            config:
+              title: Federate a zone control plane
+              description: |
+                Migrate a single-zone {{site.mesh_product_name}} control plane to {{site.konnect_short_name}} and enable multi-zone service mesh federation.
               icon: /assets/icons/mesh.svg
               cta:
-                url: https://cloud.konghq.com/mesh-manager/create-control-plane
+                url: /mesh-manager/federate-zone/
+  
+
+  - header:
+      type: h2
+      text: "Learn more"
+    columns:
       - blocks:
           - type: card
             config:

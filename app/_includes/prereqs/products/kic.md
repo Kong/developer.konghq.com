@@ -27,6 +27,9 @@
 {% if prereqs.kubernetes.dump_config %}
   {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.dump_config=true' %}
 {% endif %}
+{% if prereqs.kubernetes.drain_support %}
+  {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.enable_drain_support=true' %}
+{% endif %}
 
 {% if prereqs.kubernetes.env %}
   {% for env in prereqs.kubernetes.env %}
@@ -80,8 +83,8 @@
          apiHostname: "us.kic.api.konghq.com"{% endif %}
    gateway:
      image:
-       repository: kong/kong-gateway
-       tag: "{{site.data.gateway_latest.release}}"{% if prereqs.kubernetes.gateway_env or is_konnect or use_kong_license %}
+       repository: kong{% if prereqs.enterprise %}/kong-gateway{% endif %}
+       tag: "{% if prereqs.enterprise %}{{site.data.gateway_latest.release}}{% else %}{{ site.latest_gateway_oss_version }}{% endif %}"{% if prereqs.kubernetes.gateway_env or is_konnect or use_kong_license %}
      env:{% for env in prereqs.kubernetes.gateway_env %}
        {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}{% if use_kong_license %}
        LICENSE_DATA:

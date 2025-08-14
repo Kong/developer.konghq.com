@@ -25,7 +25,7 @@ sections:
       - path: /mesh/ubi-images/
       - path: /mesh/deploy-with-terraform-konnect/
       - path: /mesh/import-konnect-deployment-to-terraform/
-      - title: Mesh Manager
+      - title: Mesh Manager with Konnect
         description: Manage service meshes and Control Planes in Konnect.
         url: /mesh-manager/
 
