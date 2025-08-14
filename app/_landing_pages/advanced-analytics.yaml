@@ -79,6 +79,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Custom Dashboards
+              description: |
+                Custom Dashboards provide a flexible way to build, organize, and manage analytical views that are tailored to your organization’s needs.
+              icon: /assets/icons/bars.svg
+              cta:
+                text: See Custom Dashboards
+                url: /custom-dashboards/
+      - blocks:
+          - type: card
+            config:
               title: LLM reporting
               description: |
                 Understand LLM usage, tokens, and costs.
