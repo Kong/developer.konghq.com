@@ -32,11 +32,13 @@ You can establish a private connection between {{site.konnect_short_name}} and y
 You can configure this instead of AWS Transit Gateways to secure your connection.
 
 PrivateLink support is currently available in the following AWS regions:
+* `us-east-1`
 * `us-east-2`
 * `us-west-2`
 * `eu-central-1`
 * `eu-west-1`
 * `eu-west-2`
+* `ap-east-1`
 * `ap-southeast-1`
 * `ap-southeast-2`
 
