@@ -117,7 +117,7 @@
     --color-bg-secondary: 4, 40, 79;
     --color-bg-terciary: 28, 85, 146;
     --color-bg-code-block: 7, 53, 103;
-    --color-bg-code-block-header: 7, 53, 103;
+    --color-bg-code-block-header: 4, 40, 79;
     --color-bg-hover-component: 7, 53, 103;
 
     --color-text-primary: 255, 255, 255;
@@ -778,6 +778,12 @@
 
     &.success {
       @apply border-semantic-green-primary;
+    }
+  }
+
+  .custom-code-block__header {
+    clipboard-copy {
+      @apply hover:border-white text-white hover:text-white;
     }
   }
 }
