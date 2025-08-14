@@ -80,33 +80,38 @@ automated_tests: false
 openssl genrsa -out rootCA.key 4096
 
 # Create root CA certificate
-openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.crt -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=Root CA"
+openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 \
+  -out rootCA.crt \
+  -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=Root CA"
 
 # Generate server private key
-openssl genrsa -out kong.example.com.key 2048
+openssl genrsa -out keycloak.key 2048
 
-# Create server CSR
-openssl req -new -key kong.example.com.key -out kong.example.com.csr -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=kong.example.com"
+# Create server CSR with CN=keycloak.orb.local
+openssl req -new -key keycloak.key -out keycloak.csr \
+  -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=keycloak.orb.local"
 
-# Create server.ext file for SANs
-cat > kong.example.com.ext <<EOF
+# Create SAN config for keycloak.orb.local
+cat > keycloak.ext <<EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = kong.example.com
+DNS.1 = keycloak.orb.local
 EOF
 
 # Sign server CSR with root CA
-openssl x509 -req -in kong.example.com.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out kong.example.com.crt -days 365 -sha256 -extfile kong.example.com.ext
+openssl x509 -req -in keycloak.csr \
+  -CA rootCA.crt -CAkey rootCA.key -CAcreateserial \
+  -out keycloak.crt -days 365 -sha256 -extfile keycloak.ext
 
 # Clean up
-rm kong.example.com.csr
+rm keycloak.csr
 rm rootCA.srl
 
-echo "Root CA and server key pair generated successfully."
+echo "Root CA and server certificate for 'keycloak.orb.local' generated successfully."
 ```
 
 ```sh
@@ -171,7 +176,7 @@ server cert generate:
 openssl genrsa -out keycloak.key 2048
 
 openssl req -new -key keycloak.key -out keycloak.csr \
-  -subj "/C=US/ST=State/L=City/O=ClientOrg/OU=Dev/CN=localhost"
+  -subj "/C=US/ST=State/L=City/O=ClientOrg/OU=Dev/CN=keycloak.orb.local"
 
 cat > keycloak.ext <<EOF
 authorityKeyIdentifier=keyid,issuer
@@ -181,7 +186,7 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = localhost
+DNS.1 = keycloak.orb.local
 EOF
 
 openssl x509 -req \
@@ -219,6 +224,8 @@ docker run \
   -v $(pwd)/oidc/certs:/opt/keycloak/ssl \
   -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
   -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
+  --name keycloak \
+  --label dev.orbstack.domains=keycloak.orb.local \
   quay.io/keycloak/keycloak \
   start \
   --https-port=9443 \
@@ -227,12 +234,12 @@ docker run \
   --https-trust-store-file=/opt/keycloak/ssl/keycloak-truststore.p12 \
   --https-trust-store-password=$PKCS12_PASSWORD \
   --https-client-auth=request \
-  --hostname=localhost 
+  --hostname=keycloak.orb.local
 ```
 
 
 
-https://localhost:9443/admin/master/console/
+https://keycloak.orb.local:9443/admin/master/console/
 
 Do steps 1-3 in https://developer.konghq.com/how-to/configure-oidc-with-auth-code-flow/#set-up-keycloak
 
@@ -255,7 +262,7 @@ cd ~/oidc/certs
 ```
 ```
 curl -s \
-  --location --request POST 'https://localhost:9443/realms/master/protocol/openid-connect/token' \
+  --location --request POST 'https://keycloak.orb.local:9443/realms/master/protocol/openid-connect/token' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'client_id=kong' \
   --data-urlencode 'grant_type=client_credentials' \
@@ -270,7 +277,7 @@ export ACCESS_TOKEN='YOUR-ACCESS-TOKEN'
 
 At some point:
 ```sh
-export DECK_ISSUER='https://localhost:9443/realms/master'
+export DECK_ISSUER='https://keycloak.orb.local:9443/realms/master'
 ```
 
 ## Enable TLS handshake plugin
