@@ -9,6 +9,9 @@ products:
   - mesh
 works_on:
   - konnect
+tags:
+  - mesh-manager
+  - service-mesh
 ---
 
 Using Mesh Manager, you can create global Control Planes to manage your {{site.mesh_product_name}} meshes. This guide explains how to configure a global Control Plane and then install the Kubernetes demo app to test out the {{site.mesh_product_name}} interface in {{site.konnect_short_name}}.
@@ -60,8 +63,6 @@ To see these services:
 
 1. Open **Mesh Manager**, select `example-cp`, and click **Meshes**.
 1. Click **Default**, then go to the **Services** tab.
-
-For more, see [Explore {{site.mesh_product_name}} with the Kubernetes demo app](/mesh/kubernetes/).
 
 ## Configure `kumactl` to connect to the global Control Plane
 

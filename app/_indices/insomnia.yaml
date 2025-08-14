@@ -10,7 +10,7 @@ sections:
       - path: /insomnia/api-specs/
       - path: /insomnia/external-vault/
       - path: /insomnia/storage/
-      - path: /insomnia/concepts/
+      - path: /insomnia/terminology/
 
   - title: Design
     items:
@@ -105,3 +105,5 @@ sections:
       - path: /insomnia/special-resource-ids/
       - path: /insomnia/keyboard-shortcuts/
       - path: /insomnia/import-export/
+      - path: /insomnia/terminology/
+

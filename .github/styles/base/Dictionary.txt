@@ -10,6 +10,8 @@ admin_listen
 admin's
 admin's
 agentic
+Agno
+Agno's
 Alertmanager
 allow_terminated
 allowlist
@@ -307,6 +309,7 @@ idempotency
 IdPs
 if_version
 If-Match
+Imagen
 impactful
 Imperva
 Imperva
@@ -848,6 +851,8 @@ unpublish
 unpublishing
 unregister
 unregistering
+unsecure
+unsecured
 unscoped
 unshorten
 unshortened

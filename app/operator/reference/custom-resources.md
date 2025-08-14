@@ -19,6 +19,7 @@ breadcrumbs:
 - [configuration.konghq.com/v1beta1](#configurationkonghqcomv1beta1)
 - [gateway-operator.konghq.com/v1alpha1](#gateway-operatorkonghqcomv1alpha1)
 - [gateway-operator.konghq.com/v1beta1](#gateway-operatorkonghqcomv1beta1)
+- [incubator.ingress-controller.konghq.com/v1alpha1](#incubatoringress-controllerkonghqcomv1alpha1)
 - [konnect.konghq.com/v1alpha1](#konnectkonghqcomv1alpha1)
 
 
@@ -26,15 +27,40 @@ breadcrumbs:
 
 Package v1 contains API Schema definitions for the konghq.com v1 API group.
 
+- [KongClusterPlugin](#kongclusterplugin)
 - [KongConsumer](#kongconsumer)
+- [KongIngress](#kongingress)
 - [KongPlugin](#kongplugin)
+
+### KongClusterPlugin
+
+
+KongClusterPlugin is the Schema for the kongclusterplugins API.
+
+<!-- kong cluster plugin description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1`
+| `kind` _string_ | `KongClusterPlugin`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `consumerRef` _string_ | ConsumerRef is a reference to a particular consumer. |
+| `disabled` _boolean_ | Disabled set if the plugin is disabled or not. |
+| `config` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#json-v1-apiextensions-k8s-io)_ | Config contains the plugin configuration. It's a list of keys and values required to configure the plugin. Please read the documentation of the plugin being configured to set values in here. For any plugin in Kong, anything that goes in the `config` JSON key in the Admin API request, goes into this property. Only one of `config` or `configFrom` may be used in a KongClusterPlugin, not both at once. |
+| `configFrom` _[NamespacedConfigSource](#namespacedconfigsource)_ | ConfigFrom references a secret containing the plugin configuration. This should be used when the plugin configuration contains sensitive information, such as AWS credentials in the Lambda plugin or the client secret in the OIDC plugin. Only one of `config` or `configFrom` may be used in a KongClusterPlugin, not both at once. |
+| `configPatches` _[NamespacedConfigPatch](#namespacedconfigpatch) array_ | ConfigPatches represents JSON patches to the configuration of the plugin. Each item means a JSON patch to add something in the configuration, where path is specified in `path` and value is in `valueFrom` referencing a key in a secret. When Config is specified, patches will be applied to the configuration in Config. Otherwise, patches will be applied to an empty object. |
+| `plugin` _string_ | PluginName is the name of the plugin to which to apply the config. |
+| `run_on` _string_ | RunOn configures the plugin to run on the first or the second or both nodes in case of a service mesh deployment. |
+| `protocols` _[KongProtocol](#kongprotocol) array_ | Protocols configures plugin to run on requests received on specific protocols. |
+| `ordering` _[PluginOrdering](#pluginordering)_ | Ordering overrides the normal plugin execution order. It's only available on Kong Enterprise. `<phase>` is a request processing phase (for example, `access` or `body_filter`) and `<plugin>` is the name of the plugin that will run before or after the KongPlugin. For example, a KongPlugin with `plugin: rate-limiting` and `before.access: ["key-auth"]` will create a rate limiting plugin that limits requests _before_ they are authenticated. |
+| `instance_name` _string_ | InstanceName is an optional custom name to identify an instance of the plugin. This is useful when running the same plugin in multiple contexts, for example, on multiple services. |
 
 ### KongConsumer
 
 
 KongConsumer is the Schema for the kongconsumers API.
 
-<!-- kong_consumer description placeholder -->
+<!-- kong consumer description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -50,6 +76,21 @@ KongConsumer is the Schema for the kongconsumers API.
 
 
 
+### KongIngress
+
+
+KongIngress is the Schema for the kongingresses API.
+
+<!-- kong ingress description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1`
+| `kind` _string_ | `KongIngress`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `upstream` _[KongIngressUpstream](#kongingressupstream)_ | Upstream represents a virtual hostname and can be used to loadbalance incoming requests over multiple targets (e.g. Kubernetes `Services` can be a target, OR `Endpoints` can be targets). |
+| `proxy` _[KongIngressService](#kongingressservice)_ | Proxy defines additional connection options for the routes to be configured in the Kong Gateway, e.g. `connection_timeout`, `retries`, etc. |
+| `route` _[KongIngressRoute](#kongingressroute)_ | Route define rules to match client requests. Each Route is associated with a Service, and a Service may have multiple Routes associated to it. |
 
 ### KongPlugin
 
@@ -66,6 +107,8 @@ KongPlugin is the Schema for the kongplugins API.
 | `consumerRef` _string_ | ConsumerRef is a reference to a particular consumer. |
 | `disabled` _boolean_ | Disabled set if the plugin is disabled or not. |
 | `config` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#json-v1-apiextensions-k8s-io)_ | Config contains the plugin configuration. It's a list of keys and values required to configure the plugin. Please read the documentation of the plugin being configured to set values in here. For any plugin in Kong, anything that goes in the `config` JSON key in the Admin API request, goes into this property. Only one of `config` or `configFrom` may be used in a KongPlugin, not both at once. |
+| `configFrom` _[ConfigSource](#configsource)_ | ConfigFrom references a secret containing the plugin configuration. This should be used when the plugin configuration contains sensitive information, such as AWS credentials in the Lambda plugin or the client secret in the OIDC plugin. Only one of `config` or `configFrom` may be used in a KongPlugin, not both at once. |
+| `configPatches` _[ConfigPatch](#configpatch) array_ | ConfigPatches represents JSON patches to the configuration of the plugin. Each item means a JSON patch to add something in the configuration, where path is specified in `path` and value is in `valueFrom` referencing a key in a secret. When Config is specified, patches will be applied to the configuration in Config. Otherwise, patches will be applied to an empty object. |
 | `plugin` _string_ | PluginName is the name of the plugin to which to apply the config. |
 | `run_on` _string_ | RunOn configures the plugin to run on the first or the second or both nodes in case of a service mesh deployment. |
 | `protocols` _[KongProtocol](#kongprotocol) array_ | Protocols configures plugin to run on requests received on specific protocols. |
@@ -80,7 +123,39 @@ KongPlugin is the Schema for the kongplugins API.
 In this section you will find types that the CRDs rely on.
 
 
+#### ConfigPatch
 
+
+ConfigPatch is a JSON patch (RFC6902) to add values from Secret to the generated configuration.
+It is an equivalent of the following patch:
+`{"op": "add", "path": {.Path}, "value": {.ComputedValueFrom}}`.
+
+
+
+| Field | Description |
+| --- | --- |
+| `path` _string_ | Path is the JSON-Pointer value (RFC6901) that references a location within the target configuration. |
+| `valueFrom` _[ConfigSource](#configsource)_ | ValueFrom is the reference to a key of a secret where the patched value comes from. |
+
+
+_Appears in:_
+- [KongPlugin](#kongplugin)
+
+#### ConfigSource
+
+
+ConfigSource is a wrapper around SecretValueFromSource.
+
+
+
+| Field | Description |
+| --- | --- |
+| `secretKeyRef` _[SecretValueFromSource](#secretvaluefromsource)_ | Specifies a name and a key of a secret to refer to. The namespace is implicitly set to the one of referring object. |
+
+
+_Appears in:_
+- [ConfigPatch](#configpatch)
+- [KongPlugin](#kongplugin)
 
 #### KongConsumerSpec
 
@@ -125,9 +200,83 @@ KongPluginStatus represents the current status of the KongPlugin resource.
 | --- | --- |
 | `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#condition-v1-meta) array_ | Conditions describe the current conditions of the KongPluginStatus.<br /><br /> Known condition types are:<br /><br /> * "Programmed" |
 
+#### KongIngressRoute
+
+
+KongIngressRoute contains KongIngress route configuration.
+It contains the subset of `go-kong.kong.Route` fields supported by `kongstate.Route.overrideByKongIngress`.
+Deprecated: use Ingress' annotations instead.
+
+
+
+| Field | Description |
+| --- | --- |
+| `methods` _string array_ | Methods is a list of HTTP methods that match this Route. Deprecated: use Ingress' "konghq.com/methods" annotation instead. |
+| `headers` _object (keys:string, values:string array)_ | Headers contains one or more lists of values indexed by header name that will cause this Route to match if present in the request. The Host header cannot be used with this attribute. Deprecated: use Ingress' "konghq.com/headers" annotation instead. |
+| `protocols` _[KongProtocol](#kongprotocol) array_ | Protocols is an array of the protocols this Route should allow. Deprecated: use Ingress' "konghq.com/protocols" annotation instead. |
+| `regex_priority` _integer_ | RegexPriority is a number used to choose which route resolves a given request when several routes match it using regexes simultaneously. Deprecated: use Ingress' "konghq.com/regex-priority" annotation instead. |
+| `strip_path` _boolean_ | StripPath sets When matching a Route via one of the paths strip the matching prefix from the upstream request URL. Deprecated: use Ingress' "konghq.com/strip-path" annotation instead. |
+| `preserve_host` _boolean_ | PreserveHost sets When matching a Route via one of the hosts domain names, use the request Host header in the upstream request headers. If set to false, the upstream Host header will be that of the Service’s host. Deprecated: use Ingress' "konghq.com/preserve-host" annotation instead. |
+| `https_redirect_status_code` _integer_ | HTTPSRedirectStatusCode is the status code Kong responds with when all properties of a Route match except the protocol. Deprecated: use Ingress' "ingress.kubernetes.io/force-ssl-redirect" or "konghq.com/https-redirect-status-code" annotations instead. |
+| `path_handling` _string_ | PathHandling controls how the Service path, Route path and requested path are combined when sending a request to the upstream. Deprecated: use Ingress' "konghq.com/path-handling" annotation instead. |
+| `snis` _string array_ | SNIs is a list of SNIs that match this Route when using stream routing. Deprecated: use Ingress' "konghq.com/snis" annotation instead. |
+| `request_buffering` _boolean_ | RequestBuffering sets whether to enable request body buffering or not. Deprecated: use Ingress' "konghq.com/request-buffering" annotation instead. |
+| `response_buffering` _boolean_ | ResponseBuffering sets whether to enable response body buffering or not. Deprecated: use Ingress' "konghq.com/response-buffering" annotation instead. |
+
 
 _Appears in:_
-- [KongPlugin](#kongplugin)
+- [KongIngress](#kongingress)
+
+#### KongIngressService
+
+
+KongIngressService contains KongIngress service configuration.
+It contains the subset of go-kong.kong.Service fields supported by kongstate.Service.overrideByKongIngress.
+Deprecated: use Service's annotations instead.
+
+
+
+| Field | Description |
+| --- | --- |
+| `protocol` _string_ | The protocol used to communicate with the upstream. Deprecated: use Service's "konghq.com/protocol" annotation instead. |
+| `path` _string_ | (optional) The path to be used in requests to the upstream server. Deprecated: use Service's "konghq.com/path" annotation instead. |
+| `retries` _integer_ | The number of retries to execute upon failure to proxy. Deprecated: use Service's "konghq.com/retries" annotation instead. |
+| `connect_timeout` _integer_ | The timeout in milliseconds for	establishing a connection to the upstream server. Deprecated: use Service's "konghq.com/connect-timeout" annotation instead. |
+| `read_timeout` _integer_ | The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server. Deprecated: use Service's "konghq.com/read-timeout" annotation instead. |
+| `write_timeout` _integer_ | The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server. Deprecated: use Service's "konghq.com/write-timeout" annotation instead. |
+
+
+_Appears in:_
+- [KongIngress](#kongingress)
+
+#### KongIngressUpstream
+
+
+KongIngressUpstream contains KongIngress upstream configuration.
+It contains the subset of `go-kong.kong.Upstream` fields supported by `kongstate.Upstream.overrideByKongIngress`.
+
+
+
+| Field | Description |
+| --- | --- |
+| `host_header` _string_ | HostHeader is The hostname to be used as Host header when proxying requests through Kong. |
+| `algorithm` _string_ | Algorithm is the load balancing algorithm to use. Accepted values are: "round-robin", "consistent-hashing", "least-connections", "latency". |
+| `slots` _integer_ | Slots is the number of slots in the load balancer algorithm. |
+| `healthchecks` _[Healthcheck](#healthcheck)_ | Healthchecks defines the health check configurations in Kong. |
+| `hash_on` _string_ | HashOn defines what to use as hashing input. Accepted values are: "none", "consumer", "ip", "header", "cookie", "path", "query_arg", "uri_capture". |
+| `hash_fallback` _string_ | HashFallback defines What to use as hashing input if the primary hash_on does not return a hash. Accepted values are: "none", "consumer", "ip", "header", "cookie". |
+| `hash_on_header` _string_ | HashOnHeader defines the header name to take the value from as hash input. Only required when "hash_on" is set to "header". |
+| `hash_fallback_header` _string_ | HashFallbackHeader is the header name to take the value from as hash input. Only required when "hash_fallback" is set to "header". |
+| `hash_on_cookie` _string_ | The cookie name to take the value from as hash input. Only required when "hash_on" or "hash_fallback" is set to "cookie". |
+| `hash_on_cookie_path` _string_ | The cookie path to set in the response headers. Only required when "hash_on" or "hash_fallback" is set to "cookie". |
+| `hash_on_query_arg` _string_ | HashOnQueryArg is the query string parameter whose value is the hash input when "hash_on" is set to "query_arg". |
+| `hash_fallback_query_arg` _string_ | HashFallbackQueryArg is the "hash_fallback" version of HashOnQueryArg. |
+| `hash_on_uri_capture` _string_ | HashOnURICapture is the name of the capture group whose value is the hash input when "hash_on" is set to "uri_capture". |
+| `hash_fallback_uri_capture` _string_ | HashFallbackURICapture is the "hash_fallback" version of HashOnURICapture. |
+
+
+_Appears in:_
+- [KongIngress](#kongingress)
 
 #### KongProtocol
 _Underlying type:_ `string`
@@ -144,11 +293,78 @@ _Appears in:_
 - [KongIngressRoute](#kongingressroute)
 - [KongPlugin](#kongplugin)
 
+#### NamespacedConfigPatch
+
+
+NamespacedConfigPatch is a JSON patch to add values from secrets to KongClusterPlugin
+to the generated configuration of plugin in Kong.
+
+
+
+| Field | Description |
+| --- | --- |
+| `path` _string_ | Path is the JSON path to add the patch. |
+| `valueFrom` _[NamespacedConfigSource](#namespacedconfigsource)_ | ValueFrom is the reference to a key of a secret where the patched value comes from. |
+
+
+_Appears in:_
+- [KongClusterPlugin](#kongclusterplugin)
+
+#### NamespacedConfigSource
+
+
+NamespacedConfigSource is a wrapper around NamespacedSecretValueFromSource.
+
+
+
+| Field | Description |
+| --- | --- |
+| `secretKeyRef` _[NamespacedSecretValueFromSource](#namespacedsecretvaluefromsource)_ | Specifies a name, a namespace, and a key of a secret to refer to. |
+
+
+_Appears in:_
+- [KongClusterPlugin](#kongclusterplugin)
+- [NamespacedConfigPatch](#namespacedconfigpatch)
+
+#### NamespacedSecretValueFromSource
+
+
+NamespacedSecretValueFromSource represents the source of a secret value specifying the secret namespace.
+
+
+
+| Field | Description |
+| --- | --- |
+| `namespace` _string_ | The namespace containing the secret. |
+| `name` _string_ | The secret containing the key. |
+| `key` _string_ | The key containing the value. |
+
+
+_Appears in:_
+- [NamespacedConfigSource](#namespacedconfigsource)
+
+#### SecretValueFromSource
+
+
+SecretValueFromSource represents the source of a secret value.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | The secret containing the key. |
+| `key` _string_ | The key containing the value. |
+
+
+_Appears in:_
+- [ConfigSource](#configsource)
+
 
 ## configuration.konghq.com/v1alpha1
 
 Package v1alpha1 contains API Schema definitions for the configuration.konghq.com v1alpha1 API group.
 
+- [IngressClassParameters](#ingressclassparameters)
 - [KongCACertificate](#kongcacertificate)
 - [KongCertificate](#kongcertificate)
 - [KongCredentialACL](#kongcredentialacl)
@@ -156,6 +372,7 @@ Package v1alpha1 contains API Schema definitions for the configuration.konghq.co
 - [KongCredentialBasicAuth](#kongcredentialbasicauth)
 - [KongCredentialHMAC](#kongcredentialhmac)
 - [KongCredentialJWT](#kongcredentialjwt)
+- [KongCustomEntity](#kongcustomentity)
 - [KongDataPlaneClientCertificate](#kongdataplaneclientcertificate)
 - [KongKey](#kongkey)
 - [KongKeySet](#kongkeyset)
@@ -167,6 +384,22 @@ Package v1alpha1 contains API Schema definitions for the configuration.konghq.co
 - [KongTarget](#kongtarget)
 - [KongUpstream](#kongupstream)
 - [KongVault](#kongvault)
+
+
+### IngressClassParameters
+
+
+IngressClassParameters is the Schema for the IngressClassParameters API.
+
+<!-- ingress class parameters description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `IngressClassParameters`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[IngressClassParametersSpec](#ingressclassparametersspec)_ | Spec is the IngressClassParameters specification. |
+| `status` _[IngressClassParametersStatus](#ingressclassparametersstatus)_ | Status represents the current status of the IngressClassParameters resource. |
 
 ### KongCACertificate
 
@@ -286,7 +519,19 @@ KongCredentialJWT is the schema for JWT credentials API which defines a JWT cred
 | `status` _[KongCredentialJWTStatus](#kongcredentialjwtstatus)_ | Status contains the JWT credential status. |
 
 
+### KongCustomEntity
 
+
+KongCustomEntity defines a "custom" Kong entity that KIC cannot support the entity type directly.
+
+<!-- kong custom entity description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `KongCustomEntity`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[KongCustomEntitySpec](#kongcustomentityspec)_ |  |
 
 ### KongDataPlaneClientCertificate
 
@@ -481,6 +726,24 @@ See: https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/
 ### Types
 
 In this section you will find types that the CRDs rely on.
+#### ControlPlaneRef
+_Underlying type:_ `[ControlPlaneRef](#controlplaneref)`
+
+ControlPlaneRef is the schema for the ControlPlaneRef type.
+It is used to reference a Control Plane entity.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _string_ | Type indicates the type of the control plane being referenced. Allowed values: - konnectID - konnectNamespacedRef - kic<br /><br /> The default is kic, which implies that the Control Plane is KIC. |
+| `konnectID` _[KonnectIDType](#konnectidtype)_ | KonnectID is the schema for the KonnectID type. This field is required when the Type is konnectID. |
+| `konnectNamespacedRef` _[KonnectNamespacedRef](#konnectnamespacedref)_ | KonnectNamespacedRef is a reference to a Konnect Control Plane entity inside the cluster. It contains the name of the Konnect Control Plane. This field is required when the Type is konnectNamespacedRef. |
+
+
+_Appears in:_
+- [KonnectExtensionSpec](#konnectextensionspec)
+
 #### ControllerReference
 
 
@@ -512,20 +775,21 @@ RFC 1123 subdomain.
 _Appears in:_
 - [ControllerReference](#controllerreference)
 
-#### KeySetNamespacedRef
+#### IngressClassParametersSpec
 
 
-KeySetNamespacedRef is the schema for the KeySetNamespacedRef type.
+IngressClassParametersSpec defines the desired state of IngressClassParameters.
 
 
 
 | Field | Description |
 | --- | --- |
-| `name` _string_ | Name is the name of the KeySet object. |
+| `serviceUpstream` _boolean_ | Offload load-balancing to kube-proxy or sidecar. |
+| `enableLegacyRegexDetection` _boolean_ | EnableLegacyRegexDetection automatically detects if ImplementationSpecific Ingress paths are regular expression paths using the legacy 2.x heuristic. The controller adds the "~" prefix to those paths if the Kong version is 3.0 or higher. |
 
 
 _Appears in:_
-- [KeySetRef](#keysetref)
+- [IngressClassParameters](#ingressclassparameters)
 
 #### KeySetRef
 
@@ -539,7 +803,7 @@ It is used to reference a KeySet entity.
 | --- | --- |
 | `type` _[KeySetRefType](#keysetreftype)_ | Type defines type of the KeySet object reference. It can be one of: - konnectID - namespacedRef |
 | `konnectID` _string_ | KonnectID is the schema for the KonnectID type. This field is required when the Type is konnectID. |
-| `namespacedRef` _[KeySetNamespacedRef](#keysetnamespacedref)_ | NamespacedRef is a reference to a KeySet entity inside the cluster. This field is required when the Type is namespacedRef. |
+| `namespacedRef` _[NameRef](#nameref)_ | NamespacedRef is a reference to a KeySet entity inside the cluster. This field is required when the Type is namespacedRef. |
 
 
 _Appears in:_
@@ -932,6 +1196,27 @@ KongCredentialJWTStatus represents the current status of the JWT credential reso
 _Appears in:_
 - [KongCredentialJWT](#kongcredentialjwt)
 
+
+#### KongCustomEntitySpec
+
+
+KongCustomEntitySpec defines the specification of the KongCustomEntity.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _string_ | EntityType is the type of the Kong entity. The type is used in generating declarative configuration. |
+| `fields` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#json-v1-apiextensions-k8s-io)_ | Fields defines the fields of the Kong entity itself. |
+| `controllerName` _string_ | ControllerName specifies the controller that should reconcile it, like ingress class. |
+| `parentRef` _[ObjectReference](#objectreference)_ | ParentRef references the kubernetes resource it attached to when its scope is "attached". Currently only KongPlugin/KongClusterPlugin allowed. This will make the custom entity to be attached to the entity(service/route/consumer) where the plugin is attached. |
+
+
+_Appears in:_
+- [KongCustomEntity](#kongcustomentity)
+
+
+
 #### KongDataPlaneClientCertificateAPISpec
 
 
@@ -958,22 +1243,6 @@ KongDataPlaneClientCertificateSpec defines the spec for a KongDataPlaneClientCer
 | --- | --- |
 | `controlPlaneRef` _[ControlPlaneRef](#controlplaneref)_ | ControlPlaneRef is a reference to a Konnect ControlPlane this KongDataPlaneClientCertificate is associated with. |
 | `cert` _string_ | Cert is the certificate in PEM format. Once the certificate gets programmed this field becomes immutable. |
-
-
-_Appears in:_
-- [KongDataPlaneClientCertificate](#kongdataplaneclientcertificate)
-
-#### KongDataPlaneClientCertificateStatus
-
-
-KongDataPlaneClientCertificateStatus defines the status for a KongDataPlaneClientCertificate.
-
-
-
-| Field | Description |
-| --- | --- |
-| `konnect` _[KonnectEntityStatusWithControlPlaneRef](#konnectentitystatuswithcontrolplaneref)_ | Konnect contains the Konnect entity status. |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#condition-v1-meta) array_ | Conditions describe the status of the Konnect entity. |
 
 
 _Appears in:_
@@ -1117,21 +1386,20 @@ KongLicenseStatus stores the status of the KongLicense being processesed in each
 _Appears in:_
 - [KongLicense](#konglicense)
 
-#### KongObjectRef
+#### KongPluginBindingScope
+_Underlying type:_ `string`
+
+KongPluginBindingScope defines the scope of the plugin binding.
+Allowed values are:
+- OnlyTargets
+- GlobalInControlPlane
 
 
-KongObjectRef is a reference to another object representing a Kong entity with deterministic type.
 
-
-
-| Field | Description |
-| --- | --- |
-| `name` _string_ | Name is the name of the entity. |
 
 
 _Appears in:_
-- [KongSNISpec](#kongsnispec)
-- [ServiceRef](#serviceref)
+- [KongPluginBindingSpec](#kongpluginbindingspec)
 
 #### KongPluginBindingSpec
 
@@ -1205,7 +1473,7 @@ to make the code generation required for Kubernetes CRDs work.
 | `path_handling` _[PathHandling](#pathhandling)_ | Controls how the Service path, Route path and requested path are combined when sending a request to the upstream. See above for a detailed description of each behavior. |
 | `paths` _string array_ | A list of paths that match this Route. |
 | `preserve_host` _boolean_ | When matching a Route via one of the `hosts` domain names, use the request `Host` header in the upstream request headers. If set to `false`, the upstream `Host` header will be that of the Service's `host`. |
-| `protocols` _RouteWithoutParentsProtocols array_ | An array of the protocols this Route should allow. See KongRoute for a list of accepted protocols. When set to only `"https"`, HTTP requests are answered with an upgrade error. When set to only `"http"`, HTTPS requests are answered with an error. |
+| `protocols` _RouteJSONProtocols array_ | An array of the protocols this Route should allow. See KongRoute for a list of accepted protocols. When set to only `"https"`, HTTP requests are answered with an upgrade error. When set to only `"http"`, HTTPS requests are answered with an error. |
 | `regex_priority` _integer_ | A number used to choose which route resolves a given request when several routes match it using regexes simultaneously. When two routes match the path and have the same `regex_priority`, the older one (lowest `created_at`) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones). |
 | `request_buffering` _boolean_ | Whether to enable request body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that receive data with chunked transfer encoding. |
 | `response_buffering` _boolean_ | Whether to enable response body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that send data with chunked transfer encoding. |
@@ -1238,7 +1506,7 @@ KongRouteSpec defines spec of a Kong Route.
 | `path_handling` _[PathHandling](#pathhandling)_ | Controls how the Service path, Route path and requested path are combined when sending a request to the upstream. See above for a detailed description of each behavior. |
 | `paths` _string array_ | A list of paths that match this Route. |
 | `preserve_host` _boolean_ | When matching a Route via one of the `hosts` domain names, use the request `Host` header in the upstream request headers. If set to `false`, the upstream `Host` header will be that of the Service's `host`. |
-| `protocols` _RouteWithoutParentsProtocols array_ | An array of the protocols this Route should allow. See KongRoute for a list of accepted protocols. When set to only `"https"`, HTTP requests are answered with an upgrade error. When set to only `"http"`, HTTPS requests are answered with an error. |
+| `protocols` _RouteJSONProtocols array_ | An array of the protocols this Route should allow. See KongRoute for a list of accepted protocols. When set to only `"https"`, HTTP requests are answered with an upgrade error. When set to only `"http"`, HTTPS requests are answered with an error. |
 | `regex_priority` _integer_ | A number used to choose which route resolves a given request when several routes match it using regexes simultaneously. When two routes match the path and have the same `regex_priority`, the older one (lowest `created_at`) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones). |
 | `request_buffering` _boolean_ | Whether to enable request body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that receive data with chunked transfer encoding. |
 | `response_buffering` _boolean_ | Whether to enable response body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that send data with chunked transfer encoding. |
@@ -1292,7 +1560,7 @@ KongSNISpec defines specification of a Kong SNI.
 
 | Field | Description |
 | --- | --- |
-| `certificateRef` _[KongObjectRef](#kongobjectref)_ | CertificateRef is the reference to the certificate to which the KongSNI is attached. |
+| `certificateRef` _[NameRef](#nameref)_ | CertificateRef is the reference to the certificate to which the KongSNI is attached. |
 | `name` _string_ | Name is the name of the SNI. Required and must be a host or wildcard host. |
 | `tags` _[Tags](#tags)_ | Tags is an optional set of strings associated with the SNI for grouping and filtering. |
 
@@ -1415,7 +1683,7 @@ KongTargetSpec defines the spec of KongTarget.
 
 | Field | Description |
 | --- | --- |
-| `upstreamRef` _[TargetRef](#targetref)_ | UpstreamRef is a reference to a KongUpstream this KongTarget is attached to. |
+| `upstreamRef` _[NameRef](#nameref)_ | UpstreamRef is a reference to a KongUpstream this KongTarget is attached to. |
 | `target` _string_ | Target is the target address of the upstream. |
 | `weight` _integer_ | Weight is the weight this target gets within the upstream loadbalancer. |
 | `tags` _[Tags](#tags)_ | Tags is an optional set of strings associated with the Target for grouping and filtering. |
@@ -1599,6 +1867,24 @@ RFC 1123 labels, or RFC 1035 labels.
 _Appears in:_
 - [ControllerReference](#controllerreference)
 
+#### ObjectReference
+
+
+ObjectReference defines reference of a kubernetes object.
+
+
+
+| Field | Description |
+| --- | --- |
+| `group` _string_ | Group defines the API group of the referred object. |
+| `kind` _string_ | Kind defines the kind of the referred object. |
+| `namespace` _string_ | Empty namespace means the same namespace of the owning object. |
+| `name` _string_ | Name defines the name of the referred object. |
+
+
+_Appears in:_
+- [KongCustomEntitySpec](#kongcustomentityspec)
+
 #### PEMKeyPair
 
 
@@ -1642,7 +1928,7 @@ ServiceRef is a reference to a KongService.
 | Field | Description |
 | --- | --- |
 | `type` _string_ | Type can be one of: - namespacedRef |
-| `namespacedRef` _[KongObjectRef](#kongobjectref)_ | NamespacedRef is a reference to a KongService. |
+| `namespacedRef` _[NameRef](#nameref)_ | NamespacedRef is a reference to a KongService. |
 
 
 _Appears in:_
@@ -1662,7 +1948,6 @@ TargetRef is a reference based on the object's name.
 
 _Appears in:_
 - [KongPluginBindingTargets](#kongpluginbindingtargets)
-- [KongTargetSpec](#kongtargetspec)
 
 #### TargetRefWithGroupKind
 
@@ -1687,12 +1972,15 @@ _Appears in:_
 Package v1beta1 contains API Schema definitions for the configuration.konghq.com v1beta1 API group.
 
 - [KongConsumerGroup](#kongconsumergroup)
+- [KongUpstreamPolicy](#kongupstreampolicy)
+- [TCPIngress](#tcpingress)
+- [UDPIngress](#udpingress)
 ### KongConsumerGroup
 
 
 KongConsumerGroup is the Schema for the kongconsumergroups API.
 
-<!-- kong_consumer_group description placeholder -->
+<!-- kong consumer group description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -1704,12 +1992,357 @@ KongConsumerGroup is the Schema for the kongconsumergroups API.
 
 
 
+### KongUpstreamPolicy
+
+
+KongUpstreamPolicy allows configuring algorithm that should be used for load balancing traffic between Kong
+Upstream's Targets. It also allows configuring health checks for Kong Upstream's Targets.<br /><br />
+Its configuration is similar to Kong Upstream object (https://docs.konghq.com/gateway/latest/admin-api/#upstream-object),
+and it is applied to Kong Upstream objects created by the controller.<br /><br />
+It can be attached to Services. To attach it to a Service, it has to be annotated with
+`konghq.com/upstream-policy: <name>`, where `<name>` is the name of the KongUpstreamPolicy
+object in the same namespace as the Service.<br /><br />
+When attached to a Service, it will affect all Kong Upstreams created for the Service.<br /><br />
+When attached to a Service used in a Gateway API *Route rule with multiple BackendRefs, all of its Services MUST
+be configured with the same KongUpstreamPolicy. Otherwise, the controller will *ignore* the KongUpstreamPolicy.<br /><br />
+Note: KongUpstreamPolicy doesn't implement Gateway API's GEP-713 strictly.
+In particular, it doesn't use the TargetRef for attaching to Services and Gateway API *Routes - annotations are
+used instead. This is to allow reusing the same KongUpstreamPolicy for multiple Services and Gateway API *Routes.
+
+<!-- kong upstream policy description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1beta1`
+| `kind` _string_ | `KongUpstreamPolicy`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[KongUpstreamPolicySpec](#kongupstreampolicyspec)_ | Spec contains the configuration of the Kong upstream. |
+| `status` _[KongUpstreamPolicyStatus](#kongupstreampolicystatus)_ | Status represents the current status of the KongUpstreamPolicy resource. |
+
+
+
+### TCPIngress
+
+
+TCPIngress is the Schema for the tcpingresses API.
+
+<!-- tcp ingress description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1beta1`
+| `kind` _string_ | `TCPIngress`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[TCPIngressSpec](#tcpingressspec)_ | Spec is the TCPIngress specification. |
+| `status` _[TCPIngressStatus](#tcpingressstatus)_ | Status represents the current status of the TCPIngress resource. |
+
+
+
+### UDPIngress
+
+
+UDPIngress is the Schema for the udpingresses API.
+
+<!-- udp ingress description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1beta1`
+| `kind` _string_ | `UDPIngress`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[UDPIngressSpec](#udpingressspec)_ | Spec is the UDPIngress specification. |
+| `status` _[UDPIngressStatus](#udpingressstatus)_ | Status represents the current status of the UDPIngress resource. |
 
 
 
 ### Types
 
 In this section you will find types that the CRDs rely on.
+#### HTTPStatus
+_Underlying type:_ `integer`
+
+HTTPStatus is an HTTP status code.
+
+
+
+
+
+_Appears in:_
+- [KongUpstreamHealthcheckHealthy](#kongupstreamhealthcheckhealthy)
+- [KongUpstreamHealthcheckUnhealthy](#kongupstreamhealthcheckunhealthy)
+
+#### HashInput
+_Underlying type:_ `string`
+
+HashInput is the input for consistent-hashing load balancing algorithm.
+Can be one of: "ip", "consumer", "path".
+
+
+
+
+
+_Appears in:_
+- [KongUpstreamHash](#kongupstreamhash)
+
+#### IngressBackend
+
+
+IngressBackend describes all endpoints for a given service and port.
+
+
+
+| Field | Description |
+| --- | --- |
+| `serviceName` _string_ | Specifies the name of the referenced service. |
+| `servicePort` _integer_ | Specifies the port of the referenced service. |
+
+
+_Appears in:_
+- [IngressRule](#ingressrule)
+- [UDPIngressRule](#udpingressrule)
+
+#### IngressRule
+
+
+IngressRule represents a rule to apply against incoming requests.
+Matching is performed based on an (optional) SNI and port.
+
+
+
+| Field | Description |
+| --- | --- |
+| `host` _string_ | Host is the fully qualified domain name of a network host, as defined by RFC 3986. If a Host is not specified, then port-based TCP routing is performed. Kong doesn't care about the content of the TCP stream in this case. If a Host is specified, the protocol must be TLS over TCP. A plain-text TCP request cannot be routed based on Host. It can only be routed based on Port. |
+| `port` _integer_ | Port is the port on which to accept TCP or TLS over TCP sessions and route. It is a required field. If a Host is not specified, the requested are routed based only on Port. |
+| `backend` _[IngressBackend](#ingressbackend)_ | Backend defines the referenced service endpoint to which the traffic will be forwarded to. |
+
+
+_Appears in:_
+- [TCPIngressSpec](#tcpingressspec)
+
+#### IngressTLS
+
+
+IngressTLS describes the transport layer security.
+
+
+
+| Field | Description |
+| --- | --- |
+| `hosts` _string array_ | Hosts are a list of hosts included in the TLS certificate. The values in this list must match the name/s used in the tlsSecret. Defaults to the wildcard host setting for the loadbalancer controller fulfilling this Ingress, if left unspecified. |
+| `secretName` _string_ | SecretName is the name of the secret used to terminate SSL traffic. |
+
+
+_Appears in:_
+- [TCPIngressSpec](#tcpingressspec)
+
+#### KongConsumerGroupSpec
+
+
+KongConsumerGroupSpec defines the desired state of KongConsumerGroup.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the ConsumerGroup in Kong. |
+| `controlPlaneRef` _[ControlPlaneRef](#controlplaneref)_ | ControlPlaneRef is a reference to a ControlPlane this ConsumerGroup is associated with. |
+| `tags` _[Tags](#tags)_ | Tags is an optional set of tags applied to the ConsumerGroup. |
+
+
+_Appears in:_
+- [KongConsumerGroup](#kongconsumergroup)
+
+
+
+#### KongUpstreamActiveHealthcheck
+
+
+KongUpstreamActiveHealthcheck configures active health check probing.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _string_ | Type determines whether to perform active health checks using HTTP or HTTPS, or just attempt a TCP connection. Accepted values are "http", "https", "tcp", "grpc", "grpcs". |
+| `concurrency` _integer_ | Concurrency is the number of targets to check concurrently. |
+| `healthy` _[KongUpstreamHealthcheckHealthy](#kongupstreamhealthcheckhealthy)_ | Healthy configures thresholds and HTTP status codes to mark targets healthy for an upstream. |
+| `unhealthy` _[KongUpstreamHealthcheckUnhealthy](#kongupstreamhealthcheckunhealthy)_ | Unhealthy configures thresholds and HTTP status codes to mark targets unhealthy for an upstream. |
+| `httpPath` _string_ | HTTPPath is the path to use in GET HTTP request to run as a probe. |
+| `httpsSni` _string_ | HTTPSSNI is the SNI to use in GET HTTPS request to run as a probe. |
+| `httpsVerifyCertificate` _boolean_ | HTTPSVerifyCertificate is a boolean value that indicates if the certificate should be verified. |
+| `timeout` _integer_ | Timeout is the probe timeout in seconds. |
+| `headers` _object (keys:string, values:string array)_ | Headers is a list of HTTP headers to add to the probe request. |
+
+
+_Appears in:_
+- [KongUpstreamHealthcheck](#kongupstreamhealthcheck)
+
+#### KongUpstreamHash
+
+
+KongUpstreamHash defines how to calculate hash for consistent-hashing load balancing algorithm.
+Only one of the fields must be set.
+
+
+
+| Field | Description |
+| --- | --- |
+| `input` _[HashInput](#hashinput)_ | Input allows using one of the predefined inputs (ip, consumer, path). For other parametrized inputs, use one of the fields below. |
+| `header` _string_ | Header is the name of the header to use as hash input. |
+| `cookie` _string_ | Cookie is the name of the cookie to use as hash input. |
+| `cookiePath` _string_ | CookiePath is cookie path to set in the response headers. |
+| `queryArg` _string_ | QueryArg is the name of the query argument to use as hash input. |
+| `uriCapture` _string_ | URICapture is the name of the URI capture group to use as hash input. |
+
+
+_Appears in:_
+- [KongUpstreamPolicySpec](#kongupstreampolicyspec)
+
+#### KongUpstreamHealthcheck
+
+
+KongUpstreamHealthcheck represents a health-check config of an Upstream in Kong.
+
+
+
+| Field | Description |
+| --- | --- |
+| `active` _[KongUpstreamActiveHealthcheck](#kongupstreamactivehealthcheck)_ | Active configures active health check probing. |
+| `passive` _[KongUpstreamPassiveHealthcheck](#kongupstreampassivehealthcheck)_ | Passive configures passive health check probing. |
+| `threshold` _integer_ | Threshold is the minimum percentage of the upstream’s targets’ weight that must be available for the whole upstream to be considered healthy. |
+
+
+_Appears in:_
+- [KongUpstreamPolicySpec](#kongupstreampolicyspec)
+
+#### KongUpstreamHealthcheckHealthy
+
+
+KongUpstreamHealthcheckHealthy configures thresholds and HTTP status codes to mark targets healthy for an upstream.
+
+
+
+| Field | Description |
+| --- | --- |
+| `httpStatuses` _[HTTPStatus](#httpstatus) array_ | HTTPStatuses is a list of HTTP status codes that Kong considers a success. |
+| `interval` _integer_ | Interval is the interval between active health checks for an upstream in seconds when in a healthy state. |
+| `successes` _integer_ | Successes is the number of successes to consider a target healthy. |
+
+
+_Appears in:_
+- [KongUpstreamActiveHealthcheck](#kongupstreamactivehealthcheck)
+- [KongUpstreamPassiveHealthcheck](#kongupstreampassivehealthcheck)
+
+#### KongUpstreamHealthcheckUnhealthy
+
+
+KongUpstreamHealthcheckUnhealthy configures thresholds and HTTP status codes to mark targets unhealthy.
+
+
+
+| Field | Description |
+| --- | --- |
+| `httpFailures` _integer_ | HTTPFailures is the number of failures to consider a target unhealthy. |
+| `httpStatuses` _[HTTPStatus](#httpstatus) array_ | HTTPStatuses is a list of HTTP status codes that Kong considers a failure. |
+| `tcpFailures` _integer_ | TCPFailures is the number of TCP failures in a row to consider a target unhealthy. |
+| `timeouts` _integer_ | Timeouts is the number of timeouts in a row to consider a target unhealthy. |
+| `interval` _integer_ | Interval is the interval between active health checks for an upstream in seconds when in an unhealthy state. |
+
+
+_Appears in:_
+- [KongUpstreamActiveHealthcheck](#kongupstreamactivehealthcheck)
+- [KongUpstreamPassiveHealthcheck](#kongupstreampassivehealthcheck)
+
+#### KongUpstreamPassiveHealthcheck
+
+
+KongUpstreamPassiveHealthcheck configures passive checks around
+passive health checks.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _string_ | Type determines whether to perform passive health checks interpreting HTTP/HTTPS statuses, or just check for TCP connection success. Accepted values are "http", "https", "tcp", "grpc", "grpcs". |
+| `healthy` _[KongUpstreamHealthcheckHealthy](#kongupstreamhealthcheckhealthy)_ | Healthy configures thresholds and HTTP status codes to mark targets healthy for an upstream. |
+| `unhealthy` _[KongUpstreamHealthcheckUnhealthy](#kongupstreamhealthcheckunhealthy)_ | Unhealthy configures thresholds and HTTP status codes to mark targets unhealthy. |
+
+
+_Appears in:_
+- [KongUpstreamHealthcheck](#kongupstreamhealthcheck)
+
+#### KongUpstreamPolicySpec
+
+
+KongUpstreamPolicySpec contains the specification for KongUpstreamPolicy.
+
+
+
+| Field | Description |
+| --- | --- |
+| `algorithm` _string_ | Algorithm is the load balancing algorithm to use. Accepted values are: "round-robin", "consistent-hashing", "least-connections", "latency". |
+| `slots` _integer_ | Slots is the number of slots in the load balancer algorithm. If not set, the default value in Kong for the algorithm is used. |
+| `hashOn` _[KongUpstreamHash](#kongupstreamhash)_ | HashOn defines how to calculate hash for consistent-hashing load balancing algorithm. Algorithm must be set to "consistent-hashing" for this field to have effect. |
+| `hashOnFallback` _[KongUpstreamHash](#kongupstreamhash)_ | HashOnFallback defines how to calculate hash for consistent-hashing load balancing algorithm if the primary hash function fails. Algorithm must be set to "consistent-hashing" for this field to have effect. |
+| `healthchecks` _[KongUpstreamHealthcheck](#kongupstreamhealthcheck)_ | Healthchecks defines the health check configurations in Kong. |
+
+
+_Appears in:_
+- [KongUpstreamPolicy](#kongupstreampolicy)
+
+#### TCPIngressSpec
+
+
+TCPIngressSpec defines the desired state of TCPIngress.
+
+
+
+| Field | Description |
+| --- | --- |
+| `rules` _[IngressRule](#ingressrule) array_ | A list of rules used to configure the Ingress. |
+| `tls` _[IngressTLS](#ingresstls) array_ | TLS configuration. This is similar to the `tls` section in the Ingress resource in networking.v1beta1 group. The mapping of SNIs to TLS cert-key pair defined here will be used for HTTP Ingress rules as well. Once can define the mapping in this resource or the original Ingress resource, both have the same effect. |
+
+
+_Appears in:_
+- [TCPIngress](#tcpingress)
+
+
+
+#### UDPIngressRule
+
+
+UDPIngressRule represents a rule to apply against incoming requests
+wherein no Host matching is available for request routing, only the port
+is used to match requests.
+
+
+
+| Field | Description |
+| --- | --- |
+| `port` _integer_ | Port indicates the port for the Kong proxy to accept incoming traffic on, which will then be routed to the service Backend. |
+| `backend` _[IngressBackend](#ingressbackend)_ | Backend defines the Kubernetes service which accepts traffic from the listening Port defined above. |
+
+
+_Appears in:_
+- [UDPIngressSpec](#udpingressspec)
+
+#### UDPIngressSpec
+
+
+UDPIngressSpec defines the desired state of UDPIngress.
+
+
+
+| Field | Description |
+| --- | --- |
+| `rules` _[UDPIngressRule](#udpingressrule) array_ | A list of rules used to configure the Ingress. |
+
+
+_Appears in:_
+- [UDPIngress](#udpingress)
+
+
+
 
 ## gateway-operator.konghq.com/v1alpha1
 
@@ -1756,7 +2389,7 @@ provided. We may also want to use CEL to validate things like identifier
 unique-ness, e.t.c.<br /><br />
 See: https://kubernetes.io/docs/reference/using-api/cel/
 
-<!-- ai_gateway description placeholder -->
+<!-- ai gateway description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -1764,7 +2397,7 @@ See: https://kubernetes.io/docs/reference/using-api/cel/
 | `kind` _string_ | `AIGateway`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[AIGatewaySpec](#aigatewayspec)_ | Spec is the desired state of the AIGateway. |
-| `status` _[AIGatewayStatus](#aigatewaystatus)_ | Status is the observed state of the AIGateway. |
+| `status` _[AIGatewayStatus](#aigatewaystatus)_ | Status represents the current status of the AIGateway resource. |
 
 
 
@@ -1780,7 +2413,7 @@ enriched with metadata required for in-cluster Kubernetes autoscaling.<br /><br 
 NOTE: This is an enterprise feature. In order to use it you need to use
 the EE version of Kong Gateway Operator with a valid license.
 
-<!-- data_plane_metrics_extension description placeholder -->
+<!-- data plane metrics extension description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -1788,7 +2421,7 @@ the EE version of Kong Gateway Operator with a valid license.
 | `kind` _string_ | `DataPlaneMetricsExtension`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[DataPlaneMetricsExtensionSpec](#dataplanemetricsextensionspec)_ |  |
-| `status` _[DataPlaneMetricsExtensionStatus](#dataplanemetricsextensionstatus)_ |  |
+| `status` _[DataPlaneMetricsExtensionStatus](#dataplanemetricsextensionstatus)_ | Status represents the current status of the DataPlaneMetricsExtension resource. |
 
 
 
@@ -1799,7 +2432,7 @@ KongPluginInstallation allows using a custom Kong Plugin distributed as a contai
 Such a plugin can be associated with GatewayConfiguration or DataPlane to be available for particular Kong Gateway
 and configured with KongPlugin CRD.
 
-<!-- kong_plugin_installation description placeholder -->
+<!-- kong plugin installation description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -1807,7 +2440,7 @@ and configured with KongPlugin CRD.
 | `kind` _string_ | `KongPluginInstallation`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KongPluginInstallationSpec](#kongplugininstallationspec)_ |  |
-| `status` _[KongPluginInstallationStatus](#kongplugininstallationstatus)_ |  |
+| `status` _[KongPluginInstallationStatus](#kongplugininstallationstatus)_ | Status represents the current status of the KongPluginInstallation resource. |
 
 
 
@@ -1819,7 +2452,7 @@ and is intended to be referenced as extension by the DataPlane API.
 If a DataPlane successfully refers a KonnectExtension, the DataPlane
 deployment spec gets customized to include the konnect-related configuration.
 
-<!-- konnect_extension description placeholder -->
+<!-- konnect extension description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -1827,7 +2460,25 @@ deployment spec gets customized to include the konnect-related configuration.
 | `kind` _string_ | `KonnectExtension`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KonnectExtensionSpec](#konnectextensionspec)_ | Spec is the specification of the KonnectExtension resource. |
-| `status` _[KonnectExtensionStatus](#konnectextensionstatus)_ | Status is the status of the KonnectExtension resource. |
+| `status` _[KonnectExtensionStatus](#konnectextensionstatus)_ | Status represents the current status of the KonnectExtension resource. |
+
+
+
+### WatchNamespaceGrant
+
+
+WatchNamespaceGrant is a grant that allows a trusted namespace to watch
+resources in the namespace this grant exists in.
+
+<!-- watch namespace grant description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `gateway-operator.konghq.com/v1alpha1`
+| `kind` _string_ | `WatchNamespaceGrant`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[WatchNamespaceGrantSpec](#watchnamespacegrantspec)_ | Spec is the desired state of the WatchNamespaceGrant. |
+| `status` _[WatchNamespaceGrantStatus](#watchnamespacegrantstatus)_ | Status represents the current status of the WatchNamespaceGrant resource. |
 
 ### WatchNamespaceGrant
 
@@ -2302,7 +2953,7 @@ Package v1beta1 contains API Schema definitions for the gateway-operator.konghq.
 
 ControlPlane is the Schema for the controlplanes API
 
-<!-- control_plane description placeholder -->
+<!-- control plane description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -2310,7 +2961,7 @@ ControlPlane is the Schema for the controlplanes API
 | `kind` _string_ | `ControlPlane`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[ControlPlaneSpec](#controlplanespec)_ |  |
-| `status` _[ControlPlaneStatus](#controlplanestatus)_ |  |
+| `status` _[ControlPlaneStatus](#controlplanestatus)_ | Status represents the current status of the ControlPlane resource. |
 
 
 
@@ -2319,7 +2970,7 @@ ControlPlane is the Schema for the controlplanes API
 
 DataPlane is the Schema for the dataplanes API
 
-<!-- data_plane description placeholder -->
+<!-- data plane description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -2327,16 +2978,16 @@ DataPlane is the Schema for the dataplanes API
 | `kind` _string_ | `DataPlane`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[DataPlaneSpec](#dataplanespec)_ |  |
-| `status` _[DataPlaneStatus](#dataplanestatus)_ |  |
+| `status` _[DataPlaneStatus](#dataplanestatus)_ | Status represents the current status of the DataPlane resource. |
 
 
 
 ### GatewayConfiguration
 
 
-GatewayConfiguration is the Schema for the gatewayconfigurations API
+GatewayConfiguration is the Schema for the gatewayconfigurations API.
 
-<!-- gateway_configuration description placeholder -->
+<!-- gateway configuration description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -2344,7 +2995,7 @@ GatewayConfiguration is the Schema for the gatewayconfigurations API
 | `kind` _string_ | `GatewayConfiguration`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[GatewayConfigurationSpec](#gatewayconfigurationspec)_ |  |
-| `status` _[GatewayConfigurationStatus](#gatewayconfigurationstatus)_ |  |
+| `status` _[GatewayConfigurationStatus](#gatewayconfigurationstatus)_ | Status represents the current status of the GatewayConfiguration resource. |
 
 
 
@@ -2451,6 +3102,7 @@ deploy and connect a ControlPlane to a DataPlane object.
 | `deployment` _[ControlPlaneDeploymentOptions](#controlplanedeploymentoptions)_ |  |
 | `dataplane` _string_ | DataPlanes refers to the named DataPlane objects which this ControlPlane is responsible for. Currently they must be in the same namespace as the DataPlane. |
 | `extensions` _ExtensionRef array_ | Extensions provide additional or replacement features for the ControlPlane resources to influence or enhance functionality. |
+| `watchNamespaces` _[WatchNamespaces](#watchnamespaces)_ | WatchNamespaces indicates the namespaces to watch for resources. |
 
 
 _Appears in:_
@@ -2469,6 +3121,7 @@ ControlPlaneSpec defines the desired state of ControlPlane
 | `deployment` _[ControlPlaneDeploymentOptions](#controlplanedeploymentoptions)_ |  |
 | `dataplane` _string_ | DataPlanes refers to the named DataPlane objects which this ControlPlane is responsible for. Currently they must be in the same namespace as the DataPlane. |
 | `extensions` _ExtensionRef array_ | Extensions provide additional or replacement features for the ControlPlane resources to influence or enhance functionality. |
+| `watchNamespaces` _[WatchNamespaces](#watchnamespaces)_ | WatchNamespaces indicates the namespaces to watch for resources. |
 | `gatewayClass` _[ObjectName](#objectname)_ | GatewayClass indicates the Gateway resources which this ControlPlane should be responsible for configuring routes for (e.g. HTTPRoute, TCPRoute, UDPRoute, TLSRoute, e.t.c.).<br /><br /> Required for the ControlPlane to have any effect: at least one Gateway must be present for configuration to be pushed to the data-plane and only Gateway resources can be used to identify data-plane entities. |
 | `ingressClass` _string_ | IngressClass enables support for the older Ingress resource and indicates which Ingress resources this ControlPlane should be responsible for.<br /><br /> Routing configured this way will be applied to the Gateway resources indicated by GatewayClass.<br /><br /> If omitted, Ingress resources will not be supported by the ControlPlane. |
 
@@ -2626,7 +3279,7 @@ DataPlaneServiceOptions contains Services related DataPlane configuration.
 | Field | Description |
 | --- | --- |
 | `ports` _[DataPlaneServicePort](#dataplaneserviceport) array_ | Ports defines the list of ports that are exposed by the service. The ports field allows defining the name, port and targetPort of the underlying service ports, while the protocol is defaulted to TCP, as it is the only protocol currently supported. |
-| `type` _[ServiceType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#servicetype-v1-core)_ | Type determines how the Service is exposed. Defaults to `LoadBalancer`.<br /><br /> Valid options are `LoadBalancer` and `ClusterIP`.<br /><br /> `ClusterIP` allocates a cluster-internal IP address for load-balancing to endpoints.<br /><br /> `LoadBalancer` builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the same endpoints as the clusterIP.<br /><br /> More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
+| `type` _[ServiceType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#servicetype-v1-core)_ | Type determines how the Service is exposed. Defaults to `LoadBalancer`.<br /><br /> `ClusterIP` allocates a cluster-internal IP address for load-balancing to endpoints.<br /><br /> `NodePort` exposes the Service on each Node's IP at a static port (the NodePort). To make the node port available, Kubernetes sets up a cluster IP address, the same as if you had requested a Service of type: ClusterIP.<br /><br /> `LoadBalancer` builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the same endpoints as the clusterIP.<br /><br /> More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
 | `name` _string_ | Name defines the name of the service. If Name is empty, the controller will generate a service name from the owning object. |
 | `annotations` _object (keys:string, values:string)_ | Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects.<br /><br /> More info: http://kubernetes.io/docs/user-guide/annotations |
 | `externalTrafficPolicy` _[ServiceExternalTrafficPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#serviceexternaltrafficpolicy-v1-core)_ | ExternalTrafficPolicy describes how nodes distribute service traffic they receive on one of the Service's "externally-facing" addresses (NodePorts, ExternalIPs, and LoadBalancer IPs). If set to "Local", the proxy will configure the service in a way that assumes that external load balancers will take care of balancing the service traffic between nodes, and so each node will deliver traffic only to the node-local endpoints of the service, without masquerading the client source IP. (Traffic mistakenly sent to a node with no endpoints will be dropped.) The default value, "Cluster", uses the standard behavior of routing to all endpoints evenly (possibly modified by topology and other features). Note that traffic sent to an External IP or LoadBalancer IP from within the cluster will always get "Cluster" semantics, but clients sending to a NodePort from within the cluster may need to take traffic policy into account when picking a node.<br /><br /> More info: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip |
@@ -2647,6 +3300,7 @@ DataPlaneServicePort contains information on service's port.
 | `name` _string_ | The name of this port within the service. This must be a DNS_LABEL. All ports within a ServiceSpec must have unique names. When considering the endpoints for a Service, this must match the 'name' field in the EndpointPort. Optional if only one ServicePort is defined on this service. |
 | `port` _integer_ | The port that will be exposed by this service. |
 | `targetPort` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#intorstring-intstr-util)_ | Number or name of the port to access on the pods targeted by the service. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME. If this is a string, it will be looked up as a named port in the target Pod's container ports. If this is not specified, the value of the 'port' field is used (an identity map). This field is ignored for services with clusterIP=None, and should be omitted or set equal to the 'port' field. More info: https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service |
+| `nodePort` _integer_ | The port on each node on which this service is exposed when type is NodePort or LoadBalancer. Usually assigned by the system. If a value is specified, in-range, and not in use it will be used, otherwise the operation will fail. If not specified, a port will be allocated if this Service requires one. If this field is specified when creating a Service which does not need it, creation will fail. This field will be wiped when updating a Service to no longer need it (e.g. changing type from NodePort to ClusterIP).<br /><br /> More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport<br /><br /> Can only be specified if type is NodePort or LoadBalancer. |
 
 
 _Appears in:_
@@ -2755,12 +3409,29 @@ configure and deploy a DataPlane object.
 | --- | --- |
 | `deployment` _[DataPlaneDeploymentOptions](#dataplanedeploymentoptions)_ |  |
 | `network` _[GatewayConfigDataPlaneNetworkOptions](#gatewayconfigdataplanenetworkoptions)_ |  |
+| `resources` _[GatewayConfigDataPlaneResources](#gatewayconfigdataplaneresources)_ |  |
 | `extensions` _ExtensionRef array_ | Extensions provide additional or replacement features for the DataPlane resources to influence or enhance functionality. NOTE: since we have one extension only (KonnectExtension), we limit the amount of extensions to 1. |
 | `pluginsToInstall` _[NamespacedName](#namespacedname) array_ | PluginsToInstall is a list of KongPluginInstallation resources that will be installed and available in the Gateways (DataPlanes) that use this GatewayConfig. |
 
 
 _Appears in:_
 - [GatewayConfigurationSpec](#gatewayconfigurationspec)
+
+#### GatewayConfigDataPlaneResources
+
+
+GatewayConfigDataPlaneResources defines the resources that will be
+created and managed for Gateway's DataPlane.
+
+
+
+| Field | Description |
+| --- | --- |
+| `podDisruptionBudget` _[PodDisruptionBudget](#poddisruptionbudget)_ | PodDisruptionBudget is the configuration for the PodDisruptionBudget that will be created for the DataPlane. |
+
+
+_Appears in:_
+- [GatewayConfigDataPlaneOptions](#gatewayconfigdataplaneoptions)
 
 #### GatewayConfigDataPlaneServices
 
@@ -2787,7 +3458,7 @@ such as the annotations.
 
 | Field | Description |
 | --- | --- |
-| `type` _[ServiceType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#servicetype-v1-core)_ | Type determines how the Service is exposed. Defaults to `LoadBalancer`.<br /><br /> Valid options are `LoadBalancer` and `ClusterIP`.<br /><br /> `ClusterIP` allocates a cluster-internal IP address for load-balancing to endpoints.<br /><br /> `LoadBalancer` builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the same endpoints as the clusterIP.<br /><br /> More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
+| `type` _[ServiceType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#servicetype-v1-core)_ | Type determines how the Service is exposed. Defaults to `LoadBalancer`.<br /><br /> `ClusterIP` allocates a cluster-internal IP address for load-balancing to endpoints.<br /><br /> `NodePort` exposes the Service on each Node's IP at a static port (the NodePort). To make the node port available, Kubernetes sets up a cluster IP address, the same as if you had requested a Service of type: ClusterIP.<br /><br /> `LoadBalancer` builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the same endpoints as the clusterIP.<br /><br /> More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
 | `name` _string_ | Name defines the name of the service. If Name is empty, the controller will generate a service name from the owning object. |
 | `annotations` _object (keys:string, values:string)_ | Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects.<br /><br /> More info: http://kubernetes.io/docs/user-guide/annotations |
 | `externalTrafficPolicy` _[ServiceExternalTrafficPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#serviceexternaltrafficpolicy-v1-core)_ | ExternalTrafficPolicy describes how nodes distribute service traffic they receive on one of the Service's "externally-facing" addresses (NodePorts, ExternalIPs, and LoadBalancer IPs). If set to "Local", the proxy will configure the service in a way that assumes that external load balancers will take care of balancing the service traffic between nodes, and so each node will deliver traffic only to the node-local endpoints of the service, without masquerading the client source IP. (Traffic mistakenly sent to a node with no endpoints will be dropped.) The default value, "Cluster", uses the standard behavior of routing to all endpoints evenly (possibly modified by topology and other features). Note that traffic sent to an External IP or LoadBalancer IP from within the cluster will always get "Cluster" semantics, but clients sending to a NodePort from within the cluster may need to take traffic policy into account when picking a node.<br /><br /> More info: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip |
@@ -2813,6 +3484,7 @@ GatewayConfigurationSpec defines the desired state of GatewayConfiguration
 _Appears in:_
 - [GatewayConfiguration](#gatewayconfiguration)
 
+
 #### GatewayConfigurationStatus
 
 
@@ -2827,7 +3499,6 @@ GatewayConfigurationStatus defines the observed state of GatewayConfiguration
 
 _Appears in:_
 - [GatewayConfiguration](#gatewayconfiguration)
-
 
 
 #### HorizontalScaling
@@ -2899,6 +3570,7 @@ PodDisruptionBudget defines the configuration for the PodDisruptionBudget.
 
 _Appears in:_
 - [DataPlaneResources](#dataplaneresources)
+- [GatewayConfigDataPlaneResources](#gatewayconfigdataplaneresources)
 
 #### PodDisruptionBudgetSpec
 
@@ -2967,39 +3639,19 @@ _Appears in:_
 - [DataPlaneDeploymentOptions](#dataplanedeploymentoptions)
 
 #### RolloutResourcePlan
-
+_Underlying type:_ `[struct{Deployment RolloutResourcePlanDeployment "json:\"deployment,omitempty\""}](#struct{deployment-rolloutresourceplandeployment-"json:\"deployment,omitempty\""})`
 
 RolloutResourcePlan is a type that holds rollout resource plan related fields
 which control how the operator handles resources during and after a rollout.
 
 
 
-| Field | Description |
-| --- | --- |
-| `deployment` _[RolloutResourcePlanDeployment](#rolloutresourceplandeployment)_ | Deployment describes how the operator manages Deployments during and after a rollout. |
 
 
 _Appears in:_
 - [RolloutResources](#rolloutresources)
 
-#### RolloutResourcePlanDeployment
-_Underlying type:_ `string`
 
-RolloutResourcePlanDeployment is the type that holds the resource plan for
-managing the Deployment objects during and after a rollout.<br /><br />
-Allowed values:<br /><br />
-  - `ScaleDownOnPromotionScaleUpOnRollout` is a rollout
-    resource plan for Deployment which makes the operator scale down
-    the Deployment to 0 when the rollout is not initiated by a spec change
-    and then to scale it up when the rollout is initiated (the owner resource
-    like a DataPlane is patched or updated).
-
-
-
-
-
-_Appears in:_
-- [RolloutResourcePlan](#rolloutresourceplan)
 
 #### RolloutResources
 
@@ -3075,7 +3727,7 @@ such as the annotations.
 
 | Field | Description |
 | --- | --- |
-| `type` _[ServiceType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#servicetype-v1-core)_ | Type determines how the Service is exposed. Defaults to `LoadBalancer`.<br /><br /> Valid options are `LoadBalancer` and `ClusterIP`.<br /><br /> `ClusterIP` allocates a cluster-internal IP address for load-balancing to endpoints.<br /><br /> `LoadBalancer` builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the same endpoints as the clusterIP.<br /><br /> More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
+| `type` _[ServiceType](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#servicetype-v1-core)_ | Type determines how the Service is exposed. Defaults to `LoadBalancer`.<br /><br /> `ClusterIP` allocates a cluster-internal IP address for load-balancing to endpoints.<br /><br /> `NodePort` exposes the Service on each Node's IP at a static port (the NodePort). To make the node port available, Kubernetes sets up a cluster IP address, the same as if you had requested a Service of type: ClusterIP.<br /><br /> `LoadBalancer` builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the same endpoints as the clusterIP.<br /><br /> More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
 | `name` _string_ | Name defines the name of the service. If Name is empty, the controller will generate a service name from the owning object. |
 | `annotations` _object (keys:string, values:string)_ | Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects.<br /><br /> More info: http://kubernetes.io/docs/user-guide/annotations |
 | `externalTrafficPolicy` _[ServiceExternalTrafficPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#serviceexternaltrafficpolicy-v1-core)_ | ExternalTrafficPolicy describes how nodes distribute service traffic they receive on one of the Service's "externally-facing" addresses (NodePorts, ExternalIPs, and LoadBalancer IPs). If set to "Local", the proxy will configure the service in a way that assumes that external load balancers will take care of balancing the service traffic between nodes, and so each node will deliver traffic only to the node-local endpoints of the service, without masquerading the client source IP. (Traffic mistakenly sent to a node with no endpoints will be dropped.) The default value, "Cluster", uses the standard behavior of routing to all endpoints evenly (possibly modified by topology and other features). Note that traffic sent to an External IP or LoadBalancer IP from within the cluster will always get "Cluster" semantics, but clients sending to a NodePort from within the cluster may need to take traffic policy into account when picking a node.<br /><br /> More info: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip |
@@ -3084,6 +3736,100 @@ such as the annotations.
 _Appears in:_
 - [DataPlaneServiceOptions](#dataplaneserviceoptions)
 - [GatewayConfigServiceOptions](#gatewayconfigserviceoptions)
+
+#### WatchNamespaces
+
+
+WatchNamespaces defines the namespaces to watch for resources
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[WatchNamespacesType](#watchnamespacestype)_ | Type indicates the type of namespace watching to be done. By default, all namespaces are watched. |
+| `list` _string array_ | List is a list of namespaces to watch for resources. Only used when Type is set to List. |
+
+
+_Appears in:_
+- [ControlPlaneOptions](#controlplaneoptions)
+- [ControlPlaneSpec](#controlplanespec)
+
+#### WatchNamespacesType
+_Underlying type:_ `string`
+
+WatchNamespacesType indicates the type of namespace watching to be done.
+
+
+
+
+
+_Appears in:_
+- [WatchNamespaces](#watchnamespaces)
+
+
+## incubator.ingress-controller.konghq.com/v1alpha1
+
+Package v1alpha1 contains API Schema definitions for the incubator.ingress-controller.konghq.com v1alpha1 API group.
+
+- [KongServiceFacade](#kongservicefacade)
+### KongServiceFacade
+
+
+KongServiceFacade allows creating separate Kong Services for a single Kubernetes
+Service. It can be used as Kubernetes Ingress' backend (via its path's `backend.resource`
+field). It's designed to enable creating two "virtual" Services in Kong that will point
+to the same Kubernetes Service, but will have different configuration (e.g. different
+set of plugins, different load balancing algorithm, etc.).<br /><br />
+KongServiceFacade requires `kubernetes.io/ingress.class` annotation with a value
+matching the ingressClass of the Kong Ingress Controller (`kong` by default) to be reconciled.
+
+<!-- kong service facade description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `incubator.ingress-controller.konghq.com/v1alpha1`
+| `kind` _string_ | `KongServiceFacade`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[KongServiceFacadeSpec](#kongservicefacadespec)_ |  |
+| `status` _[KongServiceFacadeStatus](#kongservicefacadestatus)_ | Status represents the current status of the KongServiceFacade resource. |
+
+
+
+### Types
+
+In this section you will find types that the CRDs rely on.
+#### KongServiceFacadeBackend
+
+
+KongServiceFacadeBackend is a reference to a Kubernetes Service
+that is used as a backend for a Kong Service Facade.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the referenced Kubernetes Service. |
+| `port` _integer_ | Port is the port of the referenced Kubernetes Service. |
+
+
+_Appears in:_
+- [KongServiceFacadeSpec](#kongservicefacadespec)
+
+#### KongServiceFacadeSpec
+
+
+KongServiceFacadeSpec defines the desired state of KongServiceFacade.
+
+
+
+| Field | Description |
+| --- | --- |
+| `backendRef` _[KongServiceFacadeBackend](#kongservicefacadebackend)_ | Backend is a reference to a Kubernetes Service that is used as a backend for this Kong Service Facade. |
+
+
+_Appears in:_
+- [KongServiceFacade](#kongservicefacade)
+
 
 
 
@@ -3094,6 +3840,7 @@ Package v1alpha1 contains API Schema definitions for the konnect.konghq.com v1al
 - [KonnectAPIAuthConfiguration](#konnectapiauthconfiguration)
 - [KonnectCloudGatewayDataPlaneGroupConfiguration](#konnectcloudgatewaydataplanegroupconfiguration)
 - [KonnectCloudGatewayNetwork](#konnectcloudgatewaynetwork)
+- [KonnectCloudGatewayTransitGateway](#konnectcloudgatewaytransitgateway)
 - [KonnectExtension](#konnectextension)
 - [KonnectGatewayControlPlane](#konnectgatewaycontrolplane)
 ### KonnectAPIAuthConfiguration
@@ -3101,7 +3848,7 @@ Package v1alpha1 contains API Schema definitions for the konnect.konghq.com v1al
 
 KonnectAPIAuthConfiguration is the Schema for the Konnect configuration type.
 
-<!-- konnect_api_auth_configuration description placeholder -->
+<!-- konnect api auth configuration description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -3109,7 +3856,7 @@ KonnectAPIAuthConfiguration is the Schema for the Konnect configuration type.
 | `kind` _string_ | `KonnectAPIAuthConfiguration`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KonnectAPIAuthConfigurationSpec](#konnectapiauthconfigurationspec)_ | Spec is the specification of the KonnectAPIAuthConfiguration resource. |
-| `status` _[KonnectAPIAuthConfigurationStatus](#konnectapiauthconfigurationstatus)_ | Status is the status of the KonnectAPIAuthConfiguration resource. |
+| `status` _[KonnectAPIAuthConfigurationStatus](#konnectapiauthconfigurationstatus)_ | Status represents the current status of the KonnectAPIAuthConfiguration resource. |
 
 
 
@@ -3118,7 +3865,7 @@ KonnectAPIAuthConfiguration is the Schema for the Konnect configuration type.
 
 KonnectCloudGatewayDataPlaneGroupConfiguration is the Schema for the Konnect Network API.
 
-<!-- konnect_cloud_gateway_data_plane_group_configuration description placeholder -->
+<!-- konnect cloud gateway data plane group configuration description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -3126,7 +3873,7 @@ KonnectCloudGatewayDataPlaneGroupConfiguration is the Schema for the Konnect Net
 | `kind` _string_ | `KonnectCloudGatewayDataPlaneGroupConfiguration`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KonnectCloudGatewayDataPlaneGroupConfigurationSpec](#konnectcloudgatewaydataplanegroupconfigurationspec)_ | Spec defines the desired state of KonnectCloudGatewayDataPlaneGroupConfiguration. |
-| `status` _[KonnectCloudGatewayDataPlaneGroupConfigurationStatus](#konnectcloudgatewaydataplanegroupconfigurationstatus)_ | Status defines the observed state of KonnectCloudGatewayDataPlaneGroupConfiguration. |
+| `status` _[KonnectCloudGatewayDataPlaneGroupConfigurationStatus](#konnectcloudgatewaydataplanegroupconfigurationstatus)_ | Status represents the current status of the KonnectCloudGatewayDataPlaneGroupConfiguration resource. |
 
 
 
@@ -3135,7 +3882,7 @@ KonnectCloudGatewayDataPlaneGroupConfiguration is the Schema for the Konnect Net
 
 KonnectCloudGatewayNetwork is the Schema for the Konnect Network API.
 
-<!-- konnect_cloud_gateway_network description placeholder -->
+<!-- konnect cloud gateway network description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -3143,7 +3890,24 @@ KonnectCloudGatewayNetwork is the Schema for the Konnect Network API.
 | `kind` _string_ | `KonnectCloudGatewayNetwork`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KonnectCloudGatewayNetworkSpec](#konnectcloudgatewaynetworkspec)_ | Spec defines the desired state of KonnectCloudGatewayNetwork. |
-| `status` _[KonnectCloudGatewayNetworkStatus](#konnectcloudgatewaynetworkstatus)_ | Status defines the observed state of KonnectCloudGatewayNetwork. |
+| `status` _[KonnectCloudGatewayNetworkStatus](#konnectcloudgatewaynetworkstatus)_ | Status represents the current status of the KonnectCloudGatewayNetwork resource. |
+
+
+
+### KonnectCloudGatewayTransitGateway
+
+
+KonnectCloudGatewayTransitGateway is the Schema for the Konnect Transit Gateway API.
+
+<!-- konnect cloud gateway transit gateway description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `konnect.konghq.com/v1alpha1`
+| `kind` _string_ | `KonnectCloudGatewayTransitGateway`
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[KonnectCloudGatewayTransitGatewaySpec](#konnectcloudgatewaytransitgatewayspec)_ | Spec defines the desired state of KonnectCloudGatewayTransitGateway. |
+| `status` _[KonnectCloudGatewayTransitGatewayStatus](#konnectcloudgatewaytransitgatewaystatus)_ | Status represents the current status of the KonnectCloudGatewayTransitGateway resource. |
 
 
 
@@ -3155,7 +3919,7 @@ extension by the DataPlane, ControlPlane or GatewayConfiguration APIs.
 If one of the above mentioned resources successfully refers a KonnectExtension, the underlying
 deployment(s) spec gets customized to include the konnect-related configuration.
 
-<!-- konnect_extension description placeholder -->
+<!-- konnect extension description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -3163,7 +3927,7 @@ deployment(s) spec gets customized to include the konnect-related configuration.
 | `kind` _string_ | `KonnectExtension`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KonnectExtensionSpec](#konnectextensionspec)_ | Spec is the specification of the KonnectExtension resource. |
-| `status` _[KonnectExtensionStatus](#konnectextensionstatus)_ | Status is the status of the KonnectExtension resource. |
+| `status` _[KonnectExtensionStatus](#konnectextensionstatus)_ | Status represents the current status of the KonnectExtension resource. |
 
 
 
@@ -3172,7 +3936,7 @@ deployment(s) spec gets customized to include the konnect-related configuration.
 
 KonnectGatewayControlPlane is the Schema for the KonnectGatewayControlplanes API.
 
-<!-- konnect_gateway_control_plane description placeholder -->
+<!-- konnect gateway control plane description placeholder -->
 
 | Field | Description |
 | --- | --- |
@@ -3180,13 +3944,227 @@ KonnectGatewayControlPlane is the Schema for the KonnectGatewayControlplanes API
 | `kind` _string_ | `KonnectGatewayControlPlane`
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KonnectGatewayControlPlaneSpec](#konnectgatewaycontrolplanespec)_ | Spec defines the desired state of KonnectGatewayControlPlane. |
-| `status` _[KonnectGatewayControlPlaneStatus](#konnectgatewaycontrolplanestatus)_ | Status defines the observed state of KonnectGatewayControlPlane. |
+| `status` _[KonnectGatewayControlPlaneStatus](#konnectgatewaycontrolplanestatus)_ | Status represents the current status of the KonnectGatewayControlPlane resource. |
 
 
 
 ### Types
 
 In this section you will find types that the CRDs rely on.
+
+
+#### AWSTransitGateway
+
+
+AWSTransitGateway is the configuration of an AWS transit gateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Human-readable name of the transit gateway. |
+| `dns_config` _[TransitGatewayDNSConfig](#transitgatewaydnsconfig) array_ | List of mappings from remote DNS server IP address sets to proxied internal domains, for a transit gateway attachment. |
+| `cidr_blocks` _string array_ | CIDR blocks for constructing a route table for the transit gateway, when attaching to the owning network. |
+| `attachment_config` _[AwsTransitGatewayAttachmentConfig](#awstransitgatewayattachmentconfig)_ | configuration to attach to AWS transit gateway on the AWS side. |
+
+
+_Appears in:_
+- [KonnectCloudGatewayTransitGatewaySpec](#konnectcloudgatewaytransitgatewayspec)
+- [KonnectTransitGatewayAPISpec](#konnecttransitgatewayapispec)
+
+#### AwsTransitGatewayAttachmentConfig
+
+
+AwsTransitGatewayAttachmentConfig is the configuration to attach to a AWS transit gateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `transit_gateway_id` _string_ | TransitGatewayID is the AWS transit gateway ID to create attachment to. |
+| `ram_share_arn` _string_ | RAMShareArn is the resource share ARN to verify request to create transit gateway attachment. |
+
+
+_Appears in:_
+- [AWSTransitGateway](#awstransitgateway)
+
+#### AzureTransitGateway
+
+
+AzureTransitGateway is the configuration of an Azure transit gateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Human-readable name of the transit gateway. |
+| `dns_config` _[TransitGatewayDNSConfig](#transitgatewaydnsconfig) array_ | List of mappings from remote DNS server IP address sets to proxied internal domains, for a transit gateway attachment. |
+| `attachment_config` _[AzureVNETPeeringAttachmentConfig](#azurevnetpeeringattachmentconfig)_ | configuration to attach to Azure VNET peering gateway. |
+
+
+_Appears in:_
+- [KonnectCloudGatewayTransitGatewaySpec](#konnectcloudgatewaytransitgatewayspec)
+- [KonnectTransitGatewayAPISpec](#konnecttransitgatewayapispec)
+
+#### AzureVNETPeeringAttachmentConfig
+
+
+AzureVNETPeeringAttachmentConfig is the configuration to attach to a Azure VNET peering gateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `tenant_id` _string_ | TenantID is the tenant ID for the Azure VNET Peering attachment. |
+| `subscription_id` _string_ | SubscriptionID is the subscription ID for the Azure VNET Peering attachment. |
+| `resource_group_name` _string_ | ResourceGroupName is the resource group name for the Azure VNET Peering attachment. |
+| `vnet_name` _string_ | VnetName is the VNET Name for the Azure VNET Peering attachment. |
+
+
+_Appears in:_
+- [AzureTransitGateway](#azuretransitgateway)
+
+#### CertificateSecret
+
+
+CertificateSecret contains the information to access the client certificate.
+
+
+
+| Field | Description |
+| --- | --- |
+| `provisioning` _[ProvisioningMethod](#provisioningmethod)_ | Provisioning is the method used to provision the certificate. It can be either Manual or Automatic. In case manual provisioning is used, the certificate must be provided by the user. In case automatic provisioning is used, the certificate will be automatically generated by the system. |
+| `secretRef` _[SecretRef](#secretref)_ | CertificateSecretRef is the reference to the Secret containing the client certificate. |
+
+
+_Appears in:_
+- [KonnectExtensionClientAuth](#konnectextensionclientauth)
+
+#### ConfigurationDataPlaneGroupAutoscale
+
+
+ConfigurationDataPlaneGroupAutoscale specifies the autoscale configuration for the data-plane group.
+
+
+
+| Field | Description |
+| --- | --- |
+| `static` _[ConfigurationDataPlaneGroupAutoscaleStatic](#configurationdataplanegroupautoscalestatic)_ | Static specifies the static configuration for the data-plane group. |
+| `autopilot` _[ConfigurationDataPlaneGroupAutoscaleAutopilot](#configurationdataplanegroupautoscaleautopilot)_ | Autopilot specifies the autoscale configuration for the data-plane group. |
+| `type` _[ConfigurationDataPlaneGroupAutoscaleType](#configurationdataplanegroupautoscaletype)_ | Type of autoscaling to use. |
+
+
+_Appears in:_
+- [KonnectConfigurationDataPlaneGroup](#konnectconfigurationdataplanegroup)
+
+#### ConfigurationDataPlaneGroupAutoscaleAutopilot
+
+
+ConfigurationDataPlaneGroupAutoscaleAutopilot specifies the autoscale configuration for the data-plane group.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base_rps` _integer_ | Base number of requests per second that the deployment target should support. |
+| `max_rps` _integer_ | Max number of requests per second that the deployment target should support. If not set, this defaults to 10x base_rps. |
+
+
+_Appears in:_
+- [ConfigurationDataPlaneGroupAutoscale](#configurationdataplanegroupautoscale)
+
+#### ConfigurationDataPlaneGroupAutoscaleStatic
+
+
+ConfigurationDataPlaneGroupAutoscaleStatic specifies the static configuration for the data-plane group.
+
+
+
+| Field | Description |
+| --- | --- |
+| `instance_type` _[InstanceTypeName](#instancetypename)_ | Instance type name to indicate capacity. Currently supported values are small, medium, large but this list might be expanded in the future. For all the allowed values, please refer to the Konnect API documentation at https://docs.konghq.com/konnect/api/cloud-gateways/latest/#/Data-Plane%20Group%20Configurations/create-configuration. |
+| `requested_instances` _integer_ | Number of data-planes the deployment target will contain. |
+
+
+_Appears in:_
+- [ConfigurationDataPlaneGroupAutoscale](#configurationdataplanegroupautoscale)
+
+#### ConfigurationDataPlaneGroupAutoscaleType
+_Underlying type:_ `string`
+
+ConfigurationDataPlaneGroupAutoscaleType is the type of autoscale configuration for the data-plane group.
+
+
+
+
+
+_Appears in:_
+- [ConfigurationDataPlaneGroupAutoscale](#configurationdataplanegroupautoscale)
+
+#### ConfigurationDataPlaneGroupEnvironmentField
+
+
+ConfigurationDataPlaneGroupEnvironmentField specifies an environment variable field for the data-plane group.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name of the environment variable field to set for the data-plane group. Must be prefixed by KONG_. |
+| `value` _string_ | Value assigned to the environment variable field for the data-plane group. |
+
+
+_Appears in:_
+- [KonnectConfigurationDataPlaneGroup](#konnectconfigurationdataplanegroup)
+
+#### CreateControlPlaneRequest
+
+
+CreateControlPlaneRequest - The request schema for the create control plane request.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | The name of the control plane. |
+| `description` _string_ | The description of the control plane in Konnect. |
+| `cluster_type` _[CreateControlPlaneRequestClusterType](#createcontrolplanerequestclustertype)_ | The ClusterType value of the cluster associated with the Control Plane. |
+| `auth_type` _[AuthType](#authtype)_ | The auth type value of the cluster associated with the Runtime Group. |
+| `cloud_gateway` _boolean_ | Whether this control-plane can be used for cloud-gateways. |
+| `proxy_urls` _ProxyURL array_ | Array of proxy URLs associated with reaching the data-planes connected to a control-plane. |
+| `labels` _object (keys:string, values:string)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br /> Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+
+
+_Appears in:_
+- [KonnectGatewayControlPlaneSpec](#konnectgatewaycontrolplanespec)
+
+#### DataPlaneClientAuthStatus
+
+
+DataPlaneClientAuthStatus contains the status information related to the ClientAuth configuration.
+
+
+
+| Field | Description |
+| --- | --- |
+| `certificateSecretRef` _[SecretRef](#secretref)_ | CertificateSecretRef is the reference to the Secret containing the client certificate. |
+
+
+_Appears in:_
+- [KonnectExtensionStatus](#konnectextensionstatus)
+
+#### DataPlaneLabelValue
+_Underlying type:_ `string`
+
+DataPlaneLabelValue is the type that defines the value of a label that will be applied to the Konnect DataPlane.
+
+
+
+
+
+_Appears in:_
+- [KonnectExtensionDataPlane](#konnectextensiondataplane)
+
 #### KonnectAPIAuthConfigurationRef
 
 
@@ -3267,25 +4245,28 @@ KonnectCloudGatewayDataPlaneGroupConfigurationSpec defines the desired state of 
 _Appears in:_
 - [KonnectCloudGatewayDataPlaneGroupConfiguration](#konnectcloudgatewaydataplanegroupconfiguration)
 
-#### KonnectCloudGatewayDataPlaneGroupConfigurationStatus
 
 
-KonnectCloudGatewayDataPlaneGroupConfigurationStatus defines the observed state of KonnectCloudGatewayDataPlaneGroupConfiguration.
+#### KonnectCloudGatewayDataPlaneGroupConfigurationStatusGroup
+
+
+KonnectCloudGatewayDataPlaneGroupConfigurationStatusGroup defines the observed state of a deployed data-plane group.
 
 
 
 | Field | Description |
 | --- | --- |
-| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
-| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
-| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
-| `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this Route is associated with. |
-| `dataplane_groups` _[KonnectCloudGatewayDataPlaneGroupConfigurationStatusGroup](#konnectcloudgatewaydataplanegroupconfigurationstatusgroup) array_ | DataPlaneGroups is a list of deployed data-plane groups. |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#condition-v1-meta) array_ | Conditions describe the current conditions of the KonnectCloudGatewayDataPlaneGroupConfiguration.<br /><br /> Known condition types are:<br /><br /> * "Programmed" |
+| `id` _string_ | ID is the ID of the deployed data-plane group. |
+| `cloud_gateway_network_id` _string_ | CloudGatewayNetworkID is the ID of the cloud gateway network. |
+| `provider` _[ProviderName](#providername)_ | Name of cloud provider. |
+| `region` _string_ | Region ID for cloud provider region. |
+| `private_ip_addresses` _string array_ | PrivateIPAddresses is a list of private IP addresses of the internal load balancer that proxies traffic to this data-plane group. |
+| `egress_ip_addresses` _string array_ | EgressIPAddresses is a list of egress IP addresses for the network that this data-plane group runs on. |
+| `state` _string_ | State is the current state of the data plane group. Can be e.g. initializing, ready, terminating. |
 
 
 _Appears in:_
-- [KonnectCloudGatewayDataPlaneGroupConfiguration](#konnectcloudgatewaydataplanegroupconfiguration)
+- [KonnectCloudGatewayDataPlaneGroupConfigurationStatus](#konnectcloudgatewaydataplanegroupconfigurationstatus)
 
 #### KonnectCloudGatewayNetworkSpec
 
@@ -3308,24 +4289,27 @@ KonnectCloudGatewayNetworkSpec defines the desired state of KonnectCloudGatewayN
 _Appears in:_
 - [KonnectCloudGatewayNetwork](#konnectcloudgatewaynetwork)
 
-#### KonnectCloudGatewayNetworkStatus
 
 
-KonnectCloudGatewayNetworkStatus defines the observed state of KonnectCloudGatewayNetwork.
+#### KonnectCloudGatewayTransitGatewaySpec
+
+
+KonnectCloudGatewayTransitGatewaySpec defines the desired state of KonnectCloudGatewayTransitGateway.
 
 
 
 | Field | Description |
 | --- | --- |
-| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
-| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
-| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
-| `state` _string_ | State is the current state of the network. Can be e.g. initializing, ready, terminating. |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#condition-v1-meta) array_ | Conditions describe the current conditions of the KonnectCloudGatewayNetwork.<br /><br /> Known condition types are:<br /><br /> * "Programmed" |
+| `networkRef` _[ObjectRef](#objectref)_ | NetworkRef is the schema for the NetworkRef type. |
+| `type` _[TransitGatewayType](#transitgatewaytype)_ | Type is the type of the Konnect transit gateway. |
+| `awsTransitGateway` _[AWSTransitGateway](#awstransitgateway)_ | AWSTransitGateway is the configuration of an AWS transit gateway. Used when type is "AWS Transit Gateway". |
+| `azureTransitGateway` _[AzureTransitGateway](#azuretransitgateway)_ | AzureTransitGateway is the configuration of an Azure transit gateway. Used when type is "Azure Transit Gateway". |
 
 
 _Appears in:_
-- [KonnectCloudGatewayNetwork](#konnectcloudgatewaynetwork)
+- [KonnectCloudGatewayTransitGateway](#konnectcloudgatewaytransitgateway)
+
+
 
 #### KonnectConfiguration
 
@@ -3341,8 +4325,44 @@ KonnectConfiguration is the Schema for the KonnectConfiguration API.
 
 _Appears in:_
 - [KonnectCloudGatewayNetworkSpec](#konnectcloudgatewaynetworkspec)
-- [KonnectExtensionSpec](#konnectextensionspec)
+- [KonnectExtensionKonnectSpec](#konnectextensionkonnectspec)
 - [KonnectGatewayControlPlaneSpec](#konnectgatewaycontrolplanespec)
+
+#### KonnectConfigurationDataPlaneGroup
+
+
+KonnectConfigurationDataPlaneGroup is the schema for the KonnectConfiguration type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `provider` _[ProviderName](#providername)_ | Name of cloud provider. |
+| `region` _string_ | Region for cloud provider region. |
+| `networkRef` _[ObjectRef](#objectref)_ | NetworkRef is the reference to the network that this data-plane group will be deployed on.<br /><br /> Cross namespace references are not supported for networkRef of type namespacedRef. This will be enforced in the future but currently (due to limitation in CEL validation in Kubernetes 1.31 and older) it is not. |
+| `autoscale` _[ConfigurationDataPlaneGroupAutoscale](#configurationdataplanegroupautoscale)_ | Autoscale configuration for the data-plane group. |
+| `environment` _[ConfigurationDataPlaneGroupEnvironmentField](#configurationdataplanegroupenvironmentfield) array_ | Array of environment variables to set for a data-plane group. |
+
+
+_Appears in:_
+- [KonnectCloudGatewayDataPlaneGroupConfigurationSpec](#konnectcloudgatewaydataplanegroupconfigurationspec)
+
+#### KonnectEndpoints
+
+
+KonnectEndpoints defines the Konnect endpoints for the control plane.
+
+
+
+| Field | Description |
+| --- | --- |
+| `telemetry` _string_ | TelemetryEndpoint is the endpoint for telemetry. |
+| `controlPlane` _string_ | ControlPlaneEndpoint is the endpoint for the control plane. |
+
+
+_Appears in:_
+- [KonnectExtensionControlPlaneStatus](#konnectextensioncontrolplanestatus)
+- [KonnectGatewayControlPlaneStatus](#konnectgatewaycontrolplanestatus)
 
 #### KonnectEntityStatus
 
@@ -3361,23 +4381,114 @@ KonnectEntityStatus represents the status of a Konnect entity.
 _Appears in:_
 - [KonnectCloudGatewayDataPlaneGroupConfigurationStatus](#konnectcloudgatewaydataplanegroupconfigurationstatus)
 - [KonnectCloudGatewayNetworkStatus](#konnectcloudgatewaynetworkstatus)
+- [KonnectCloudGatewayTransitGatewayStatus](#konnectcloudgatewaytransitgatewaystatus)
 - [KonnectEntityStatusWithControlPlaneAndCertificateRefs](#konnectentitystatuswithcontrolplaneandcertificaterefs)
 - [KonnectEntityStatusWithControlPlaneAndConsumerRefs](#konnectentitystatuswithcontrolplaneandconsumerrefs)
 - [KonnectEntityStatusWithControlPlaneAndKeySetRef](#konnectentitystatuswithcontrolplaneandkeysetref)
 - [KonnectEntityStatusWithControlPlaneAndServiceRefs](#konnectentitystatuswithcontrolplaneandservicerefs)
 - [KonnectEntityStatusWithControlPlaneAndUpstreamRefs](#konnectentitystatuswithcontrolplaneandupstreamrefs)
 - [KonnectEntityStatusWithControlPlaneRef](#konnectentitystatuswithcontrolplaneref)
+- [KonnectEntityStatusWithNetworkRef](#konnectentitystatuswithnetworkref)
 - [KonnectGatewayControlPlaneStatus](#konnectgatewaycontrolplanestatus)
 
+#### KonnectEntityStatusWithControlPlaneAndCertificateRefs
+
+
+KonnectEntityStatusWithControlPlaneAndCertificateRefs represents the status of a Konnect entity with references to a ControlPlane and a Certificate.
 
 
 
+| Field | Description |
+| --- | --- |
+| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
+| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
+| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
+| `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this entity is associated with. |
+| `certificateID` _string_ | CertificateID is the Konnect ID of the Certificate this entity is associated with. |
+
+
+_Appears in:_
+- [KongSNIStatus](#kongsnistatus)
+
+#### KonnectEntityStatusWithControlPlaneAndConsumerRefs
+
+
+KonnectEntityStatusWithControlPlaneAndConsumerRefs represents the status of a Konnect entity with references to a ControlPlane and a Consumer.
 
 
 
+| Field | Description |
+| --- | --- |
+| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
+| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
+| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
+| `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this Route is associated with. |
+| `consumerID` _string_ | ConsumerID is the Konnect ID of the Consumer this entity is associated with. |
+
+
+_Appears in:_
+- [KongCredentialACLStatus](#kongcredentialaclstatus)
+- [KongCredentialAPIKeyStatus](#kongcredentialapikeystatus)
+- [KongCredentialBasicAuthStatus](#kongcredentialbasicauthstatus)
+- [KongCredentialHMACStatus](#kongcredentialhmacstatus)
+- [KongCredentialJWTStatus](#kongcredentialjwtstatus)
+
+#### KonnectEntityStatusWithControlPlaneAndKeySetRef
+
+
+KonnectEntityStatusWithControlPlaneAndKeySetRef represents the status of a Konnect entity with references to a ControlPlane and a KeySet.
 
 
 
+| Field | Description |
+| --- | --- |
+| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
+| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
+| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
+| `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this entity is associated with. |
+| `keySetID` _string_ | KeySetID is the Konnect ID of the KeySet this entity is associated with. |
+
+
+_Appears in:_
+- [KongKeyStatus](#kongkeystatus)
+
+#### KonnectEntityStatusWithControlPlaneAndServiceRefs
+
+
+KonnectEntityStatusWithControlPlaneAndServiceRefs represents the status of a Konnect entity with references to a ControlPlane and a Service.
+
+
+
+| Field | Description |
+| --- | --- |
+| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
+| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
+| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
+| `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this entity is associated with. |
+| `serviceID` _string_ | ServiceID is the Konnect ID of the Service this entity is associated with. |
+
+
+_Appears in:_
+- [KongRouteStatus](#kongroutestatus)
+
+#### KonnectEntityStatusWithControlPlaneAndUpstreamRefs
+
+
+KonnectEntityStatusWithControlPlaneAndUpstreamRefs represents the status of a Konnect entity with references to a ControlPlane and an Upstream.
+
+
+
+| Field | Description |
+| --- | --- |
+| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
+| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
+| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
+| `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this entity is associated with. |
+| `upstreamID` _string_ | UpstreamID is the Konnect ID of the Upstream this entity is associated with. |
+
+
+_Appears in:_
+- [KongTargetStatus](#kongtargetstatus)
 
 #### KonnectEntityStatusWithControlPlaneRef
 
@@ -3395,7 +4506,146 @@ KonnectEntityStatusWithControlPlaneRef represents the status of a Konnect entity
 
 
 _Appears in:_
+- [KongCACertificateStatus](#kongcacertificatestatus)
+- [KongCertificateStatus](#kongcertificatestatus)
+- [KongConsumerGroupStatus](#kongconsumergroupstatus)
+- [KongConsumerStatus](#kongconsumerstatus)
+- [KongDataPlaneClientCertificateStatus](#kongdataplaneclientcertificatestatus)
+- [KongKeySetStatus](#kongkeysetstatus)
+- [KongPluginBindingStatus](#kongpluginbindingstatus)
+- [KongServiceStatus](#kongservicestatus)
+- [KongUpstreamStatus](#kongupstreamstatus)
+- [KongVaultStatus](#kongvaultstatus)
 - [KonnectCloudGatewayDataPlaneGroupConfigurationStatus](#konnectcloudgatewaydataplanegroupconfigurationstatus)
+
+#### KonnectEntityStatusWithNetworkRef
+
+
+KonnectEntityStatusWithNetworkRef represents the status of a Konnect entity with reference to a Konnect cloud gateway network.
+
+
+
+| Field | Description |
+| --- | --- |
+| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
+| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
+| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
+| `networkID` _string_ | NetworkID is the Konnect ID of the Konnect cloud gateway network this entity is associated with. |
+
+
+_Appears in:_
+- [KonnectCloudGatewayTransitGatewayStatus](#konnectcloudgatewaytransitgatewaystatus)
+
+#### KonnectExtensionClientAuth
+
+
+KonnectExtensionClientAuth contains the configuration for the client authentication for the DataPlane.
+At the moment authentication is only supported through client certificate, but it might be extended in the future,
+with e.g., token-based authentication.
+
+
+
+| Field | Description |
+| --- | --- |
+| `certificateSecret` _[CertificateSecret](#certificatesecret)_ | CertificateSecret contains the information to access the client certificate. |
+
+
+_Appears in:_
+- [KonnectExtensionSpec](#konnectextensionspec)
+
+#### KonnectExtensionClusterType
+_Underlying type:_ `string`
+
+KonnectExtensionClusterType is the type of the Konnect Control Plane.
+
+
+
+
+
+_Appears in:_
+- [KonnectExtensionControlPlaneStatus](#konnectextensioncontrolplanestatus)
+
+#### KonnectExtensionControlPlane
+
+
+KonnectExtensionControlPlane is the configuration for the Konnect Control Plane.
+
+
+
+| Field | Description |
+| --- | --- |
+| `ref` _[ControlPlaneRef](#controlplaneref)_ | Ref is a reference to a Konnect ControlPlane this KonnectExtension is associated with. |
+
+
+_Appears in:_
+- [KonnectExtensionKonnectSpec](#konnectextensionkonnectspec)
+
+#### KonnectExtensionControlPlaneStatus
+
+
+KonnectExtensionControlPlaneStatus contains the Konnect Control Plane status information.
+
+
+
+| Field | Description |
+| --- | --- |
+| `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this KonnectExtension is associated with. |
+| `clusterType` _[KonnectExtensionClusterType](#konnectextensionclustertype)_ | ClusterType is the type of the Konnect Control Plane. |
+| `endpoints` _[KonnectEndpoints](#konnectendpoints)_ | Endpoints defines the Konnect endpoints for the control plane. |
+
+
+_Appears in:_
+- [KonnectExtensionStatus](#konnectextensionstatus)
+
+#### KonnectExtensionDataPlane
+
+
+KonnectExtensionDataPlane is the configuration for the Konnect DataPlane.
+
+
+
+| Field | Description |
+| --- | --- |
+| `labels` _object (keys:string, values:[DataPlaneLabelValue](#dataplanelabelvalue))_ | Labels is a set of labels that will be applied to the Konnect DataPlane. |
+
+
+_Appears in:_
+- [KonnectExtensionKonnectSpec](#konnectextensionkonnectspec)
+
+#### KonnectExtensionKonnectSpec
+
+
+KonnectExtensionKonnectSpec holds the konnect-related configuration.
+
+
+
+| Field | Description |
+| --- | --- |
+| `controlPlane` _[KonnectExtensionControlPlane](#konnectextensioncontrolplane)_ | ControlPlane is the configuration for the Konnect Control Plane. |
+| `dataPlane` _[KonnectExtensionDataPlane](#konnectextensiondataplane)_ | DataPlane is the configuration for the Konnect DataPlane. |
+| `configuration` _[KonnectConfiguration](#konnectconfiguration)_ | Configuration holds the information needed to set up the Konnect Configuration. |
+
+
+_Appears in:_
+- [KonnectExtensionSpec](#konnectextensionspec)
+
+#### KonnectExtensionSpec
+
+
+KonnectExtensionSpec defines the desired state of KonnectExtension.
+
+
+
+| Field | Description |
+| --- | --- |
+| `konnect` _[KonnectExtensionKonnectSpec](#konnectextensionkonnectspec)_ | Konnect holds the konnect-related configuration |
+| `clientAuth` _[KonnectExtensionClientAuth](#konnectextensionclientauth)_ | ClientAuth is the configuration for the client certificate authentication. In case the ControlPlaneRef is of type KonnectID, it is required to set up the connection with the Konnect Platform. |
+
+
+_Appears in:_
+- [KonnectExtension](#konnectextension)
+
+
 
 #### KonnectGatewayControlPlaneSpec
 
@@ -3411,8 +4661,10 @@ KonnectGatewayControlPlaneSpec defines the desired state of KonnectGatewayContro
 | `cluster_type` _[CreateControlPlaneRequestClusterType](#createcontrolplanerequestclustertype)_ | The ClusterType value of the cluster associated with the Control Plane. |
 | `auth_type` _[AuthType](#authtype)_ | The auth type value of the cluster associated with the Runtime Group. |
 | `cloud_gateway` _boolean_ | Whether this control-plane can be used for cloud-gateways. |
-| `proxy_urls` _[ProxyURL](#proxyurl) array_ | Array of proxy URLs associated with reaching the data-planes connected to a control-plane. |
+| `proxy_urls` _ProxyURL array_ | Array of proxy URLs associated with reaching the data-planes connected to a control-plane. |
 | `labels` _object (keys:string, values:string)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br /> Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `mirror` _[MirrorSpec](#mirrorspec)_ | Mirror is the Konnect Mirror configuration. It is only applicable for ControlPlanes that are created as Mirrors. |
+| `source` _[EntitySource](#entitysource)_ | Source represents the source type of the Konnect entity. |
 | `members` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#localobjectreference-v1-core) array_ | Members is a list of references to the KonnectGatewayControlPlaneMembers that are part of this control plane group. Only applicable for ControlPlanes that are created as groups. |
 | `konnect` _[KonnectConfiguration](#konnectconfiguration)_ |  |
 
@@ -3420,40 +4672,112 @@ KonnectGatewayControlPlaneSpec defines the desired state of KonnectGatewayContro
 _Appears in:_
 - [KonnectGatewayControlPlane](#konnectgatewaycontrolplane)
 
-#### KonnectGatewayControlPlaneStatus
 
 
-KonnectGatewayControlPlaneStatus defines the observed state of KonnectGatewayControlPlane.
+#### KonnectTransitGatewayAPISpec
 
 
-
-| Field | Description |
-| --- | --- |
-| `id` _string_ | ID is the unique identifier of the Konnect entity as assigned by Konnect API. If it's unset (empty string), it means the Konnect entity hasn't been created yet. |
-| `serverURL` _string_ | ServerURL is the URL of the Konnect server in which the entity exists. |
-| `organizationID` _string_ | OrgID is ID of Konnect Org that this entity has been created in. |
-| `konnectEndpoints` _[KonnectEndpoints](#konnectendpoints)_ | Endpoints defines the Konnect endpoints for the control plane. They are required by the DataPlane to be properly configured in Konnect and connect to the control plane. |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#condition-v1-meta) array_ | Conditions describe the current conditions of the KonnectGatewayControlPlane.<br /><br /> Known condition types are:<br /><br /> * "Programmed" |
-
-
-_Appears in:_
-- [KonnectGatewayControlPlane](#konnectgatewaycontrolplane)
-
-#### NetworkRef
-
-
-NetworkRef is the schema for the NetworkRef type.
-It is used to reference a Network entity.
+KonnectTransitGatewayAPISpec specifies a transit gateway on the Konnect side.
+The type and all the types it referenced are mostly copied github.com/Kong/sdk-konnect-go/models/components.CreateTransitGatewayRequest.
 
 
 
 | Field | Description |
 | --- | --- |
-| `type` _string_ | Type indicates the type of the control plane being referenced. |
-| `konnectID` _string_ | KonnectID is the schema for the KonnectID type. This field is required when the Type is konnectID. |
+| `type` _[TransitGatewayType](#transitgatewaytype)_ | Type is the type of the Konnect transit gateway. |
+| `awsTransitGateway` _[AWSTransitGateway](#awstransitgateway)_ | AWSTransitGateway is the configuration of an AWS transit gateway. Used when type is "AWS Transit Gateway". |
+| `azureTransitGateway` _[AzureTransitGateway](#azuretransitgateway)_ | AzureTransitGateway is the configuration of an Azure transit gateway. Used when type is "Azure Transit Gateway". |
 
 
 _Appears in:_
-- [KonnectConfigurationDataPlaneGroup](#konnectconfigurationdataplanegroup)
+- [KonnectCloudGatewayTransitGatewaySpec](#konnectcloudgatewaytransitgatewayspec)
+
+#### MirrorKonnect
+
+
+MirrorKonnect contains the Konnect Mirror configuration.
+
+
+
+| Field | Description |
+| --- | --- |
+| `id` _[KonnectIDType](#konnectidtype)_ | ID is the ID of the Konnect entity. It can be set only in case the ControlPlane type is Mirror. |
+
+
+_Appears in:_
+- [MirrorSpec](#mirrorspec)
+
+#### MirrorSpec
+
+
+MirrorSpec contains the Konnect Mirror configuration.
+
+
+
+| Field | Description |
+| --- | --- |
+| `konnect` _[MirrorKonnect](#mirrorkonnect)_ | Konnect contains the KonnectID of the KonnectGatewayControlPlane that is mirrored. |
+
+
+_Appears in:_
+- [KonnectGatewayControlPlaneSpec](#konnectgatewaycontrolplanespec)
+
+#### ProvisioningMethod
+_Underlying type:_ `string`
+
+ProvisioningMethod is the type of the provisioning methods available to provision the certificate.
+
+
+
+
+
+_Appears in:_
+- [CertificateSecret](#certificatesecret)
+
+#### SecretRef
+
+
+SecretRef contains the reference to the Secret containing the Konnect Control Plane's cluster certificate.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the Secret containing the Konnect Control Plane's cluster certificate. |
+
+
+_Appears in:_
+- [CertificateSecret](#certificatesecret)
+- [DataPlaneClientAuthStatus](#dataplaneclientauthstatus)
+
+#### TransitGatewayDNSConfig
+
+
+TransitGatewayDNSConfig is the DNS configuration of a tansit gateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `remote_dns_server_ip_addresses` _string array_ | RemoteDNSServerIPAddresses is the list of remote DNS server IP Addresses to connect to for resolving internal DNS via a transit gateway. |
+| `domain_proxy_list` _string array_ | DomainProxyList is the list of internal domain names to proxy for DNS resolution from the listed remote DNS server IP addresses, for a transit gateway. |
+
+
+_Appears in:_
+- [AWSTransitGateway](#awstransitgateway)
+- [AzureTransitGateway](#azuretransitgateway)
+
+#### TransitGatewayType
+_Underlying type:_ `string`
+
+TransitGatewayType defines the type of Konnect transit gateway.
+
+
+
+
+
+_Appears in:_
+- [KonnectCloudGatewayTransitGatewaySpec](#konnectcloudgatewaytransitgatewayspec)
+- [KonnectTransitGatewayAPISpec](#konnecttransitgatewayapispec)
 
 <!-- vale on -->

@@ -78,7 +78,7 @@ tags:
 {:.warning}
 > **Dedicated Cloud Gateways domain breaking changes:** [Review domain breaking changes](/dedicated-cloud-gateways/breaking-changes/) for Dedicated Cloud Gateways and migrate to the new domain before September 30, 2025.
 
-## How do Dedicated Cloud Gateways work?
+## How do Dedicated Cloud Gateways work? 
 
 When you create a Dedicated Cloud Gateway, {{site.konnect_short_name}} creates a **Control Plane**. 
 This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different [regions](/konnect-platform/geos/#dedicated-cloud-gateways).
@@ -155,6 +155,107 @@ body:
 {% endcapture %}
 {{request | indent: 3}}
 <!--vale on -->
+
+## AWS workload identities
+
+Dedicated Cloud Gateways support [AWS workload identities](https://docs.aws.amazon.com/rolesanywhere/latest/userguide/workload-identities.html) for data plane instances, enabling secure integration with your own AWS-managed services using IAM AssumeRole. This allows native and custom Kong plugins running in the data plane to access AWS services (like S3, Secrets Manager, Lambda, and DynamoDB) without static credentials, improving both security and operational simplicity.
+
+Using AWS workload identities with Dedicated Cloud Gateways provides the following benefits:
+* **Credential-less integration:** No need to manage or rotate static AWS credentials.
+* **Security-first:** Workload identity is scoped to assume specific roles defined by you.
+* **Compatibility:** Native and custom Kong plugins can seamlessly use AssumeRole credentials.
+
+{:.info}
+> This is currently only available for AWS. 
+
+### How AWS workload identities works
+
+1. When an AWS Dedicated Cloud Gateway is provisioned, {{site.konnect_short_name}} automatically creates the following:
+   * An IAM Role in your dedicated tenant AWS account named after the network UUID. You can [derive this IAM Role ARN](#derive-the-konnect-iam-role-arn).
+   * A trust policy that enables `AssumeRoleWithWebIdentity` for the EKS service account used by the {{site.base_gateway}} data planes. For example:
+     ```json
+     {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::*:root"
+        },
+        "Action": "sts:AssumeRole",
+        "Condition": {
+          "StringLike": {
+            "aws:PrincipalArn": "arn:aws:iam::*:role/*"
+          }
+        }
+      }]
+    }
+    ```
+1. You define a trust relationship in your AWS account, allowing the Dedicated Cloud Gateway IAM role to assume a target role in your account.
+1. The workload identity annotation on {{site.konnect_short_name}}'s service account is used to connect to this IAM role.
+
+Keep the following security considerations in mind:
+* The IAM role created by {{site.konnect_short_name}} is assume-only and has no permissions to manage infrastructure or cloud resources.
+* You control which of your IAM roles {{site.konnect_short_name}} is allowed to assume by configuring trust relationships.
+
+### Derive the {{site.konnect_short_name}} IAM Role ARN
+
+You can compute the ARN for {{site.konnect_short_name}}'s IAM role using this pattern:
+
+```
+arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID
+```
+
+1. To get the AWS account ID, do the following:
+{% capture account_id %}
+{% navtabs "aws-account-id" %}
+{% navtab "UI" %}
+1. In {{site.konnect_short_name}}, click **Gateway Manager** in the sidebar.
+1. Click your Dedicated Cloud Gateway.
+1. Click **Networks** in the sidebar.
+1. Configure private networking and click **Transit Gateway**.
+1. Copy the AWS account ID.
+{% endnavtab %}
+{% navtab "API" %}
+Send a GET request to the [`/cloud-gateways/provider-accounts` endpoint](/api/konnect/cloud-gateways/v2/#/operations/list-provider-accounts):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/provider-accounts
+method: GET
+status_code: 200
+region: global
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
+{% endcapture %}
+
+{{ account_id | indent: 3 }}
+
+1. To fetch the UUID of the Network, do the following:
+{% capture network_id %}
+{% navtabs "network-uuid" %}
+{% navtab "UI" %}
+1. In {{site.konnect_short_name}}, click **Gateway Manager** in the sidebar.
+1. Click your Dedicated Cloud Gateway.
+1. Click **Data Plane Nodes** in the sidebar.
+1. Copy the network ID from the data plane group table.
+{% endnavtab %}
+{% navtab "API" %}
+Send a GET request to the [`/cloud-gateways/networks` endpoint](/api/konnect/cloud-gateways/v2/#/operations/list-networks):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/networks
+method: GET
+status_code: 200
+region: global
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
+{% endcapture %}
+
+{{ network_id | indent: 3 }}
+
 
 ## Custom DNS
 {{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/dedicated-cloud-gateways/).
@@ -242,9 +343,11 @@ body:
 ### AWS Transit Gateway
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in AWS, AWS Transit Gateway is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Transit Gateways](/dedicated-cloud-gateways/transit-gateways/) documentation.
 
-
 ### Azure VNet Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
+
+### GCP VPC Peering
+If you are using Dedicated Cloud Gateways and your upstream services are hosted in GCP, VPC Network Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [GCP VPC Peering](/dedicated-cloud-gateways/gcp-vpc-peering/) documentation.
 
 ## Custom plugins
 

@@ -126,6 +126,16 @@ pages:
         url: /mesh/policies/
     min_version:
       mesh: '2.7'
+  -
+    path: app/_src/policies/mutual-tls.md
+    title: 'Configuring Mutual TLS'
+    description: 'Configuring Mutual TLS for your workloads'
+    url: '/mesh/policies/mutual-tls/'
+    related_resources:
+      - text: MeshTLS Policy
+        url: /mesh/policies/meshtls/
+    min_version:
+      mesh: '2.9'
 
   -
     path: app/_src/guides/progressively-rolling-in-strict-mtls-kv.md
@@ -388,24 +398,6 @@ pages:
         url: '/mesh/upgrade-notes/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-  -
-    path: app/_src/quickstart/kubernetes-demo-kv.md
-    title: 'Deploy Kong Mesh on Kubernetes'
-    description: 'Step-by-step guide to deploy {{site.mesh_product_name}} on Kubernetes using Helm and Minikube. Includes demo app setup, GUI exploration, and enabling mTLS for zero-trust security.'
-    url: '/mesh/kubernetes/'
-    related_resources:
-      - text: Zone Egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
-      - text: Deploy {{site.mesh_product_name}} in production with Helm
-        url: /mesh/production-usuage-values/
-    search_aliases:
-      - k8s
-    min_version:
-      mesh: '2.6'
   -
     path: app/_src/quickstart/universal-docker-demo.md
     title: 'Deploy Kong Mesh on Universal'
@@ -808,4 +800,16 @@ pages:
         url: /mesh/access-audit/
     tags:
       - security
+  -
+    path: app/_src/quickstart/kubernetes-demo.md
+    title: 'Deploy Kong Mesh on Kubernetes'
+    description: 'Start learning how {{site.mesh_product_name}} works by running and securing a simple demo application that consists of two services.'
+    url: '/mesh/kubernetes/'
+    related_resources:
+      - text: Get started with Red Hat OpenShift
+        url: /mesh/openshift-quickstart/
+      - text: Deploy Kong Mesh on Universal
+        url: /mesh/universal/
+    tags:
+      - get-started
 

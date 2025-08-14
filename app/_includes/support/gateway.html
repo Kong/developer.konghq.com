@@ -51,7 +51,7 @@
                         {% if distro.docker %}<span class="flex justify-center">{{ distro.docker_support.graviton | to_check }}</span>{% endif %}
                     </div>
                 </td>
-                <td>{% if distro.eol %}{{ distro.eol }}{% else %}{{release.eol |  date: "%b %Y" }}{% endif %}</td>
+                <td>{% if distro.eol %}{{ distro.eol }}{% else %}{{release.eol}}{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>
