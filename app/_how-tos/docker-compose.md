@@ -25,6 +25,7 @@ tldr:
   q: How do I install {{site.base_gateway}} using Docker Compose?
   a: "Copy the Docker Compose file and run `docker compose up -d`."
 prereqs:
+  skip_product: true
   inline:
     - title: Basic auth password
       content: |
@@ -35,7 +36,6 @@ prereqs:
         ```
 
         You’ll need this variable when running the tutorial commands.
-  skip_product: true
     - title: Docker Compose 
       content: |
         This guide requires [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
