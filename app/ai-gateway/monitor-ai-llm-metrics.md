@@ -124,7 +124,7 @@ ai_llm_provider_latency{ai_provider="provider1",ai_model="model1",cache_status="
 
 # HELP kong_ai_mcp_response_body_size_bytes MCP server response body sizes in bytes
 # TYPE kong_ai_mcp_response_body_size_bytes histogram
-kong_ai_mcp_response_body_size_bytes_bucket{service="svc1",route="route1",method="POST",workspace="workspace1",tool_name="tool1",le="+Inf"} 1
+kong_ai_mcp_response_body_size_bytes_bucket{service="svc1",route="route1",method="tools/call",workspace="workspace1",tool_name="tool1",le="+Inf"} 1
 
 # HELP kong_ai_mcp_latency_ms MCP server latencies in milliseconds
 # TYPE kong_ai_mcp_latency_ms histogram
@@ -132,7 +132,7 @@ kong_ai_mcp_latency_ms_bucket{service="svc1",route="route1",method="POST",worksp
 
 # HELP kong_ai_mcp_error_total Total MCP server errors by type
 # TYPE kong_ai_mcp_error_total counter
-kong_ai_mcp_error_total{service="svc1",route="route1",type="timeout",method="POST",workspace="workspace1",tool_name="tool1"} 3
+kong_ai_mcp_error_total{service="svc1",route="route1",type="Invalid Request",method="unknown",workspace="workspace1",tool_name=""} 3
 ```
 
 {:.info}
