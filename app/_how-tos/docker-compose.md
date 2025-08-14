@@ -36,7 +36,6 @@ prereqs:
 
         You’ll need this variable when running the tutorial commands.
   skip_product: true
-  inline: 
     - title: Docker Compose 
       content: |
         This guide requires [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
