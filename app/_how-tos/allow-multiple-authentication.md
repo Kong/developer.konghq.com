@@ -55,13 +55,6 @@ faqs:
 tools:
   - deck
 
-prereqs:
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
-
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -81,6 +74,11 @@ prereqs:
         ```
 
         You’ll need this variable when running the tutorial commands.
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
 ---
 
 ## Create Consumers
@@ -153,10 +151,13 @@ entities:
     - username: Dana
       basicauth_credentials:
         - username: Dana
-          password: dana
+          password: ${password}
     - username: Mahan
       keyauth_credentials:
         - key: mahan
+variables:
+  password:
+    value: $BASIC_AUTH_PASSWORD        
 {% endentity_examples %}
 
 

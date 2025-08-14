@@ -35,13 +35,6 @@ tldr:
 tools:
     - deck
 
-prereqs:
-  entities:
-    services:
-        - example-service
-    routes:
-        - example-route
-
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -50,6 +43,7 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+      
 prereqs:
   inline:
     - title: Basic auth password
@@ -61,6 +55,11 @@ prereqs:
         ```
 
         You’ll need this variable when running the tutorial commands.
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route        
 ---
 
 ## Create a Consumer
