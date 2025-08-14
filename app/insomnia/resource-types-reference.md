@@ -26,7 +26,7 @@ related_resources:
 ---
 Resource types specify what each object in the resources array represents in workspace data that you exported and synced. Each object contains a `_type` field that Insomnia uses to interpret and reconstruct the data.
 
-Supported resource types ensure that only valid entities appear in exports; unsupported or deprecated types are omitted. 
+Supported resource types ensure that only valid entities appear in exports, unsupported, or deprecated types are omitted. 
  
 You encounter resource types whenever you export data, sync across devices, or integrate Insomnia exports with Git or automation workflows. 
 
