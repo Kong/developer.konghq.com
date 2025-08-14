@@ -194,7 +194,7 @@ providers:
       streaming: false
       upstream_path: 'llm/v1/completions'
       route_type: 'llm/v1/completions'
-      model_example: 'n/a'
+      model_example: 'gemini-2.0-flash'
       min_version: '3.8'
     embeddings:
       supported: true
@@ -209,14 +209,14 @@ providers:
         streaming: false
         upstream_path: 'image/v1/images/generations'
         route_type: 'image/v1/images/generations'
-        model_example: 'gemini-2.0-flash-preview-image-generation'
+        model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
       edits:
         supported: true
         streaming: false
         upstream_path: 'image/v1/images/edits'
         route_type: 'image/v1/images/edits'
-        model_example: 'gemini-2.0-flash-preview-image-generation'
+        model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
 
   - name: 'Gemini Vertex'
@@ -249,14 +249,14 @@ providers:
         streaming: false
         upstream_path: 'image/v1/images/generations'
         route_type: 'image/v1/images/generations'
-        model_example: 'gemini-2.0-flash-preview-image-generation'
+        model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
       edits:
         supported: true
         streaming: false
         upstream_path: 'image/v1/images/edits'
         route_type: 'image/v1/images/edits'
-        model_example: 'gemini-2.0-flash-preview-image-generation'
+        model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
 
   - name: 'Hugging Face'
