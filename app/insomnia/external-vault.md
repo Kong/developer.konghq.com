@@ -46,13 +46,6 @@ Insomnia supports the following vault services:
 1. Navigate to **Preferences > Cloud Credentials**.
 1. Click **Add Credentials** and select **AWS**.
 1. Select a **Credential Type** and fill in the required fields.
-   
-   {:.warning}
-   > Insomnia doesn't support spaces in the [SSO session name](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure). If you select the **SSO Credential** type, make sure your SSO session name contains only supported characters:
-    * Letters
-    * Numbers
-    * Hyphens (`-`)
-    * Underscores (`_`)
     
 {% endnavtab %}
 
@@ -91,6 +84,13 @@ There are three options to authenticate to your AWS vault from Inso CLI:
 {% endnavtab %}
 
 {% endnavtabs %}
+
+{:.warning}
+> Insomnia doesn't support spaces in the [SSO session name](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure). If you select the **SSO Credential** type, make sure your SSO session name contains only supported characters:
+* Letters
+* Numbers
+* Hyphens (`-`)
+* Underscores (`_`)
 
 ## GCP Secret Manager
 
