@@ -133,12 +133,12 @@ sequenceDiagram
 
 ## Prerequisites
 
-Before using the AI MCP plugin, make sure your setup matches the following requirements:
-
-* Your upstream Service must expose a valid OpenAPI schema.
-* The Service must be configured and accessible in Kong.
-* An MCP-compatible client must be available to connect to Kong.
-* The Kong AI Gateway instance must support the AI MCP plugin.
+{:.warning}
+> Before using the AI MCP plugin, ensure your setup meets these requirements:
+> The upstream Service exposes a valid OpenAPI schema.
+> That Service is configured and accessible in Kong.
+> An MCP-compatible client is available to connect to Kong.
+> The Kong AI Gateway instance supports the AI MCP plugin (is 3.12 or higher)
 
 ## Configuration modes
 
