@@ -1,9 +1,9 @@
-## OpenAPI specs
+# OpenAPI specs
 
 * Konnect specs are managed through Platform API
 * Gateway on-prem Admin API is generated through [kong-admin-spec-generator](https://github.com/Kong/kong-admin-spec-generator)
 
-### Publishing a new spec
+## Publishing a new spec
 
 1. Check [workflow file](https://github.com/Kong/platform-api/blob/main/.github/raise-pr-on-change.json) in Platform API
 to make sure the new spec is included. If not, add it the new spec to it.
@@ -17,7 +17,7 @@ to make sure the new spec is included. If not, add it the new spec to it.
 1. Run the [Sync Konnect OAS data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) workflow and merge the generated PR.
 
 
-### Updating a spec
+## Updating a spec
 
 To update an existing spec, upload the newest version of the spec to the Konnect product organization. The update will happen automatically. 
 
