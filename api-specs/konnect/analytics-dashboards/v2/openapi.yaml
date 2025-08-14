@@ -6,7 +6,7 @@ info:
     Dashboards are entities within Konnect that contain tiles, which are
     essentially saved queries combined with configuration for a chart to render
     the data.
-  version: 4.0.0
+  version: 2.0.0
   contact:
     name: Kong
     url: https://cloud.konghq.com
