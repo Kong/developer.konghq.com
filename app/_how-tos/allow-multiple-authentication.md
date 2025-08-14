@@ -70,6 +70,17 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+prereqs:
+  inline:
+    - title: Basic auth password
+      content: |
+        Export your Basic Auth password as an environment variable:
+
+        ```sh
+        export DECK_BASIC_AUTH_PASSWORD=your_password
+        ```
+
+        You’ll need this variable when running the tutorial commands.
 ---
 
 ## Create Consumers
