@@ -434,7 +434,6 @@ The following example shows an MCP log entry:
         },
         "method": "tools/call",
         "tool_name": "tool 1",
-        "error": "Method not found",
         "response_body_size": 100
       }
     ]
