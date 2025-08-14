@@ -110,9 +110,6 @@ Our UI method supports the following formats:
 - Insomnia JSON (v4/v5)
 - HAR
 
-For more information on exporting with the UI, go to [how to export an API spec as a document](/how-to/export-an-api-spec-as-a-document/).
-
-
 ### CLI export
 Use Inso CLI to automate exports of your OpenAPI specification from a design document. You can write the spec to a file, or let the CLI print to standard output for piping in scripts and CI. For a full overview, see the Inso CLI reference.
 
