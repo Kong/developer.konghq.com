@@ -1,34 +1,12 @@
 # frozen_string_literal: true
 
-require 'open3'
-require 'json'
-
-module Jekyll
-  class ShikiHighlighter # rubocop:disable Style/Documentation
-    def self.highlight(code, language, id)
-      command = ['node', 'app/_plugins/converters/shiki-bridge.js', language, id]
-
-      stdout, stderr, status = Open3.capture3(*command, stdin_data: code)
-
-      raise stderr.to_s if status != 0
-
-      stdout
-    end
-  end
-end
-
-# Hook into Kramdown
 module Kramdown
   module Converter
     class Html # rubocop:disable Style/Documentation
       alias original_convert_codeblock convert_codeblock
 
       def convert_codeblock(el, indent)
-        if %w[production preview].include?(Jekyll.env)
-          render_shiki(el, indent)
-        else
-          original_convert_codeblock(el, indent)
-        end
+        render_shiki(el, indent)
       end
 
       def render_shiki(el, _indent) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Naming/MethodParameterName
@@ -38,7 +16,7 @@ module Kramdown
         code = el.value
         id = SecureRandom.uuid
 
-        snippet = Jekyll::ShikiHighlighter.highlight(code, language, id)
+        snippet = CodeHighlighter.new.highlight(code, language, id)
         Liquid::Template.parse(template).render(
           {
             'codeblock' => {
