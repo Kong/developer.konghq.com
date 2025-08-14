@@ -46,10 +46,11 @@ prereqs:
   inline:
     - title: Cursor
       content: |
-        Install Cursor:
-        1. Go to Cursor [downloads](https://cursor.com/downloads) page.
-        2. Download the installation file and install it on your machine.
-        3. Run Cursor.
+        This tutorial uses Cursor as an MCP client:
+        1. Go to the [Cursor downloads](https://cursor.com/downloads) page.
+        2. Download the installer for your operating system.
+        3. Install Cursor on your machine.
+        4. Launch Cursor and sign in to your account.
       icon_url: /assets/icons/cursor.svg
     - title: Mock Node.js server
       content: |
