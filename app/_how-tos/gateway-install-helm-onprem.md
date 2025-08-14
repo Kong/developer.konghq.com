@@ -24,6 +24,16 @@ entities: []
 tldr: null
 
 prereqs:
+  inline:
+    - title: Basic auth password
+      content: |
+        Export your Basic Auth password as an environment variable:
+
+        ```sh
+        export DECK_BASIC_AUTH_PASSWORD=your_password
+        ```
+
+        You’ll need this variable when running the tutorial commands.
   skip_product: true
 
 topology_switcher: page

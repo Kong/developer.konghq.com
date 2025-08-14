@@ -25,6 +25,16 @@ tldr:
   q: How do I install {{site.base_gateway}} using Docker Compose?
   a: "Copy the Docker Compose file and run `docker compose up -d`."
 prereqs:
+  inline:
+    - title: Basic auth password
+      content: |
+        Export your Basic Auth password as an environment variable:
+
+        ```sh
+        export DECK_BASIC_AUTH_PASSWORD=your_password
+        ```
+
+        You’ll need this variable when running the tutorial commands.
   skip_product: true
   inline: 
     - title: Docker Compose 
