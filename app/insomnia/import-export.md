@@ -45,9 +45,11 @@ rows:
     method: |
       UI export from document menu or Preferences; or `inso export spec` for OpenAPI.
   - use_case: Transfer all API work to another machine
-    method: **UI → Preferences → Data → Export** all data.
+    method: |
+      **UI → Preferences → Data → Export** all data.
   - use_case: Import a Postman collection or OpenAPI spec into Insomnia
-    method: **UI → Import → choose File/Clipboard/URL**.
+    method: |
+      **UI → Import → choose File/Clipboard/URL**.
   - use_case: Integrate spec validation into CI pipelines
     method: |
       `inso lint spec <identifier>` in CI to lint OpenAPI and fail builds on errors.
