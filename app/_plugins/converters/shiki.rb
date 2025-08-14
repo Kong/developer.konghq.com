@@ -3,11 +3,11 @@
 require 'nodo'
 
 class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
+  require :shiki
+
   script do
     <<~JS
-      const { createHighlighter } = require('shiki');
-
-      const highlighter = await createHighlighter({
+      const highlighter = await shiki.createHighlighter({
         themes: ["catppuccin-latte", "catppuccin-mocha"],
         langs: [
           "yaml",
