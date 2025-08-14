@@ -79,7 +79,7 @@ When the `config.ai_metrics` parameter is set to `true`, the following MCP-speci
 - **MCP latency**: Histogram of request latencies (in milliseconds) for MCP server calls.
 - **MCP error total**: Counter of total MCP server errors, labeled by error type.
 
-These metrics are labeled with `service`, `route`, `method`, `workspace`, and `tool_name`.
+These metrics are labeled with `service`, `route`, `method`, `workspace`, and `tool_name`. The MCP error total metric also includes the type label.
 
 ## Overview
 
