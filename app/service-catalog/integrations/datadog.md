@@ -34,6 +34,15 @@ The Datadog integration lets you connect Datadog entities directly to your Servi
 
 For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Datadog resources in Service Catalog](/how-to/install-and-map-datadog-resources/).
 
+## Prerequisites
+
+Your Datadog instance API key must either have no scopes or the following scopes:
+* `monitors_read`
+* `dashboards_read`
+* `create_webhooks`
+* `integrations_read`
+* `manage_integrations`
+
 ## Authenticate the Datadog integration
 
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
