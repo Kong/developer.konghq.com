@@ -72,8 +72,8 @@ rows:
                   * OIDC
                   * SAML
 
-                  Additionally, you can enable RBAC from your Dev Portal's security settings to control who can view or view and consume APIs in your Dev Portal.
-                  When RBAC is enabled, any Dev Portal teams and roles you apply to a developer will control their access.
+                  Additionally, you can enable [RBAC](/dev-portal/developer-rbac/) from your Dev Portal's security settings to control who can view or view and consume APIs in your Dev Portal.
+                  When rbac is enabled, any Dev Portal teams and roles you apply to a developer will control their access.
   - header:
       type: h3
       text: "Get started with user authentication"
