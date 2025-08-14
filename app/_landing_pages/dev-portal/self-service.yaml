@@ -104,7 +104,7 @@ rows:
                 Learn about Dev Portal pre-defined teams and roles for RBAC.
               icon: /assets/icons/rbac.svg
               cta:
-                url: /konnect-platform/teams-and-roles/#dev-portal
+                url: /dev-portal/developer-rbac/
   
   - header:
       type: h2
