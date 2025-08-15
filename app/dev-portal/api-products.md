@@ -29,6 +29,8 @@ faqs:
 related_resources:
   - text: Create and publish APIs in new Dev Portals (v3)
     url: /dev-portal/apis/
+  - text: Migrate your classic Dev Portal (v2) Terraform resource
+    url: /dev-portal/migrate-classic-dev-portal-resource-with-terraform/
 ---
 
 {:.warning}
