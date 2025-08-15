@@ -1,0 +1,129 @@
+metadata:
+  title: "Kong Academy"
+  content_type: landing_page
+  description: Choose your learning path based on your role and the Kong products you work with
+  tags:
+    - training
+    - kong-academy
+rows:
+  - header:
+      type: h1
+      text: Kong Training
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: |
+                  Get started with training by role or product
+              blocks:
+                - type: text
+                  text: |
+                    Choose your learning path based on your role and the Kong products you work with.
+  - header:
+      type: h2
+      text: "Roles"
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Developer
+            description: Learn to build and integrate APIs, implement authentication, and develop applications using Kong's developer tools and SDKs
+            icon: /assets/icons/code.svg
+            cta:
+              text: "6 weeks | Intermediate"
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Operator
+            description: Master Kong deployment, configuration, monitoring, and troubleshooting in production environments
+            icon: /assets/icons/team.svg
+            cta:
+              text: "4 weeks | Intermediate"
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Architect
+            description: Design scalable API architectures, plan Kong implementations, and establish governance structures
+            icon: /assets/icons/design.svg
+            cta:
+              text: "8 weeks | Advanced"
+              url: /
+              align: end
+
+  - header:
+      type: h2
+      text: "Products"
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.ee_product_name}}"
+            description: |
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+              
+              Proin ac nisi volutpat, placerat lectus facilisis, luctus nisl. Etiam tincidunt vulputate magna, vitae porttitor lacus rutrum eu. 
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: "5 weeks | Intermediate"
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}}"
+            description: |
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+              
+              Proin ac nisi volutpat, placerat lectus facilisis, luctus nisl. Etiam tincidunt vulputate magna, vitae porttitor lacus rutrum eu. 
+            icon: /assets/logos/konglogo-gradient-secondary.svg
+            cta:
+              text: "4 weeks | Beginner"
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Insomnia
+            description: |
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+              
+              Proin ac nisi volutpat, placerat lectus facilisis, luctus nisl. Etiam tincidunt vulputate magna, vitae porttitor lacus rutrum eu. 
+            icon: /assets/icons/insomnia/insomnia-logo-bug.svg
+            cta:
+              text: "3 weeks | Beginner"
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Kubernetes
+            description: |
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+              
+              Proin ac nisi volutpat, placerat lectus facilisis, luctus nisl. Etiam tincidunt vulputate magna, vitae porttitor lacus rutrum eu. 
+            icon: /assets/icons/kubernetes.svg
+            cta:
+              text: "6 weeks | Advanced"
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI Gateway
+            description: |
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+              
+              Proin ac nisi volutpat, placerat lectus facilisis, luctus nisl. Etiam tincidunt vulputate magna, vitae porttitor lacus rutrum eu. 
+            icon: /assets/icons/ai.svg
+            cta:
+              text: "4 weeks | Advanced"
+              url: /
+              align: end
