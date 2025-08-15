@@ -44,12 +44,9 @@ Insomnia supports the following vault services:
 {% navtab "Insomnia UI" %}
 
 1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **AWS**, and enter your temporary security credentials.
-1. Open **AWS Secrets Manager** from the context menu.
-1. Fill in the required fields:
-   - Secret name
-   - Secret version
-   - Secret type
+1. Click **Add Credentials** and select **AWS**.
+1. Select a **Credential Type** and fill in the required fields.
+    
 {% endnavtab %}
 
 {% navtab "Inso CLI" %}
@@ -88,6 +85,13 @@ There are three options to authenticate to your AWS vault from Inso CLI:
 
 {% endnavtabs %}
 
+{:.warning}
+> Insomnia doesn't support spaces in the [SSO session name](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure). If you select the **SSO Credential** type, make sure your SSO session name contains only supported characters:
+* Letters
+* Numbers
+* Hyphens (`-`)
+* Underscores (`_`)
+
 ## GCP Secret Manager
 
 {% navtabs "type" %}
@@ -96,10 +100,6 @@ There are three options to authenticate to your AWS vault from Inso CLI:
 
 1. Navigate to **Preferences > Cloud Credentials**.
 1. Click **Add Credentials**, select **GCP**, and upload your [service account key](https://cloud.google.com/iam/docs/keys-create-delete).
-1. Open **GCP Secrets Manager** from the context menu.
-1. Fill in the required fields:
-   - Secret name
-   - Secret version
 {% endnavtab %}
 
 {% navtab "Inso CLI" %}
@@ -161,8 +161,13 @@ For HashiCorp, the environment variables to define for Inso CLI depend on the pl
 1. Click **Add Credentials**, select **Azure**.
 1. You will be redirected to authorize Insomnia in your browser.
 1. After authorization, you'll return to Insomnia with your Azure account credential added.
-1. Open **Azure Key Vault** from the context menu.
-1. Enter the **Secret Identifier** for the secret you want to access.
+
+## Using secrets
+
+External vault secrets can be referenced anywhere in Insomnia requests using [template tags](/insomnia/template-tags/). In the field of your choice:
+1. Press `Control+Space`.
+1. Select the external vault to use.
+1. Fill in the details required to access the secret.
 
 ## Vault secrets cache
 
