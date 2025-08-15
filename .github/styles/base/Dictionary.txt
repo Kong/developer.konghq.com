@@ -241,6 +241,7 @@ fips
 firewalled
 firstTimestamp
 flamegraph
+Flatpak
 foogineer
 full_name
 Gateway

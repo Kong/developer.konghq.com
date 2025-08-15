@@ -18,6 +18,7 @@ sections:
       - path: /how-to/create-a-design-document/
       - path: /how-to/add-custom-linting-rules/
       - path: /how-to/import-an-api-spec-as-a-document/
+      - path: /how-to/export-an-api-spec-as-a-document/
       - path: /how-to/generate-a-collection-from-a-design-document/
       - path: /how-to/import-content-from-a-git-repository/
 
@@ -100,5 +101,9 @@ sections:
       - path: /how-to/synchronize-with-git/
       - path: /insomnia/verify-binary-provenance/
       - path: /insomnia/version-control/
+      - path: /insomnia/resource-types-reference/
+      - path: /insomnia/special-resource-ids/
       - path: /insomnia/keyboard-shortcuts/
+      - path: /insomnia/import-export/
       - path: /insomnia/terminology/
+
