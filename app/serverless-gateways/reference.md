@@ -121,11 +121,13 @@ Provisioning a serverless gateway includes creating the serverless Control Plane
 
 ### {{site.konnect_short_name}} configuration
 
-1. Open **Gateway Manager**, choose a Control Plane to open the **Overview** dashboard, then click **Connect**.
-    
-    The **Connect** menu will open and display the URL for the **Public Edge DNS**. Save this URL.
-
-1. Select **Custom Domains** from the side navigation, then **New Custom Domain**, and enter your domain name.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
+1. Click a control plane to open the **Overview** dashboard.
+1. Click **Connect**.
+1. In the **Connect** menu, save the URL from the **Public Edge DNS** field.
+1. Navigate to **Custom Domains** in the sidebar.
+1. Click **New Custom Domain**.
+1. Enter your domain name.
 
     Save the value that appears under **CNAME**. 
 
