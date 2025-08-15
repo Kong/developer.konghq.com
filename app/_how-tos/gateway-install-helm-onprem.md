@@ -150,18 +150,18 @@ proxy:
 
 {{ values_file | indent }}
 
-1. _(Optional)_ If you want to deploy a Postgres database within the cluster for testing purposes, add the following to the bottom of `values-cp.yaml`.
+1. _(Optional)_ If you want to deploy a Postgres database within the cluster for testing purposes, you can use the Developer use only (Do not use in Production) Bitnami helm chart to install this:
 
-   ```yaml
-   # This is for testing purposes only
-   # DO NOT DO THIS IN PRODUCTION
-   # Your cluster needs a way to create PersistentVolumeClaims
-   # if this option is enabled
-   postgresql:
-     enabled: true
-     auth:
-       password: demo123
-   ```
+  ```sh
+  helm install gw-postgres oci://registry-1.docker.io/bitnamicharts/postgresql
+  ```
+  The chart installation will tell you the in-cluster service name for the Postgres database which can be used in the database connection values below.
+
+  To get the password for the postgres user, base64 decode the Helm created secret:
+
+  ```sh
+  kubectl get secret --namespace default gw-postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d
+  ```
 
 1. Update the database connection values in `values-cp.yaml`.
 
