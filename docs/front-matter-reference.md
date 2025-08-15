@@ -18,8 +18,8 @@ Applies to pages located under `/app/_how_tos/`.
 | `works_on` | (Required) Array of deployment environments where this applies. Can be `on_prem` or `konnect`. | <pre>works_on:<br>  - konnect<br>  - on-prem</pre> |
 | `tags` | (Optional) Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
 | `plugins` | (Optional) Array of plugins referenced in the guide. | <pre>plugins:<br>  - correlation-id<br>  - rate-limiting</pre> | 
-| `related_resources` | (Optional) Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
-| `tldr` | (Required) Short question and answer summary of the guide. | <pre>tldr:<br>  q: How do I add Correlation IDs to my logs?<br>  a: Define log format and reference header</pre> | 
+| `related_resources` | (Optional) Array of links to related documentation. Takes the following attributes:<br>  - `text`: The title of the linked page.<br>  - `url`: The link to the page. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
+| `tldr` | (Required) Short question and answer summary of the guide. Takes the following attributes:<br>  - `q`: The question displayed as the title of the collapsed section.<br>  - `a`: The answer, which is hidden in a collapsible section. | <pre>tldr:<br>  q: How do I add Correlation IDs to my logs?<br>  a: Define log format and reference header</pre> | 
 | `prereqs` | (Optional) Array of prerequisites needed before following the guide. Accepts a file reference or an inline entry. | See [prereqs](#example-of-how-to-prereqs) for an example and options.  |
 | `cleanup` | (Optional) Array of steps to clean up your environment after completing the guide. Accepts a file reference or an inline entry. | See [cleanup](#example-of-how-to-cleanup) for an example and options. | 
 | `min_version` | (Optional) Minimum version requirement. | <pre>min_version:<br>  gateway: '3.4'</pre> |
@@ -27,6 +27,8 @@ Applies to pages located under `/app/_how_tos/`.
 | `beta` | (Optional) Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | (Optional) Adds a tech preview label/banner to the page. | `tech_preview: true` |
 | `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
+| `series` | (Optional) Marks this page as part of a series. Takes the following attributes:<br> - `id`: Series ID, e.g. `custom-dashboards`. All items in a specific series must have the same ID.<br>  - `position`: The order this page comes in in the series, e.g. `1`. |
+| `automated_tests` | (Optional) Specifies whether automated tests should run on this page. Default is `true`, set to `false` to disable on any page that can't be tested programmatically. | `automated_tests: false` |
 
 Look at any how-to under [`app/_how_tos/`](https://github.com/Kong/developer.konghq.com/tree/main/app/_how-tos) for examples.
 
@@ -36,17 +38,18 @@ You can find all prereq options under [`app/_includes/prereqs/`](https://github.
 
 ```yaml
 prereqs:
-  skip_product: true # skips the product installation prereq; set to false by default
+  skip_product: true | false  # If set to true, skips the product installation prereq; false by default
+  show_works_on: true | false # If set to false, skips the instructions for Konnect PAT. Useful for ; true by default
   inline: # text or references to a file
     - title: Enable Keyring
-      position: before # positions this prereq before the product installation prereq
+      position: before # Positions this prereq before the product installation prereq
       content: |
           Before configuring this plugin, you must enable {{site.base_gateway}}'s encryption [Keyring](/gateway/keyring).
       icon_url: /assets/icons/keyring.svg
     - title: "{{site.base_gateway}} license"
       include_content: prereqs/gateway-license
       icon_url: /assets/icons/gateway.svg
-  entities: # references to a predefined gateway entity
+  entities: # References predefined gateway entities
     services:
         - example-service
     routes:
