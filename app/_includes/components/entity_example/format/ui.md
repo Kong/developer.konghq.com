@@ -73,15 +73,16 @@ The following creates a new Vault with basic configuration:
 {% when 'sni' %}
 The following creates a new SNI with basic configuration:
 
-1. In Kong Manager or Gateway Manager, go to **SNIs**.
-2. On the SNIs tab, click **New SNI**.
+1. In Kong Manager or Gateway Manager, go to **Certificates**.
+2. Select the SNIs tab, and click **New SNI**.
 3. In the **Name** field, enter a name for the SNI:
     ```
     {{ include.presenter.data['name'] }}
     ```
-4. In the **SSL Certificate ID** field, enter the ID for an existing Certificate:
+4. In the **SSL Certificate ID** field, select or enter the ID for an existing Certificate:
     ```
     {{ include.presenter.data['certificate']['id'] }}
+    ```
 {% when 'workspace' %}
 The following creates a new Workspace:
 
