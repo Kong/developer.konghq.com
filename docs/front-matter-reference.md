@@ -13,7 +13,7 @@ Applies to pages located under `/app/_how_tos/`.
 | `breadcrumbs` | (Optional) Array of URLs to use as breadcrumbs, in ascending order. Each item in the array renders as a different breadcrumb. <br> If not specified, the breadcrumb defaults to "How-to Guides".| <pre>breadcrumbs:<br>  - /gateway/<br>  - /gateway/entities/</pre>|
 | `permalink` | (Optional) URL to override the default one for the page (default is the file path after `app`). | `permalink: /gateway/get-started/` to replace the default value of `/how-to/gateway-get-started/` |
 | `description` | (Required) Brief description of what the page covers. | `description: Learn how to add correlation IDs to logs with the Correlation ID plugin.` |
-| `tools` | (Required) Array of tools mentioned or used in the guide.  Can be one or more of: | <pre>tools:<br>  - deck</pre> |
+| `tools` | (Required) Array of tools mentioned or used in the guide.  Can be one or more of:<br> - deck<br>- admin-api<br>- konnect-api<br>- kic<br>- terraform | <pre>tools:<br>  - deck</pre> |
 | `products` | (Required) Array of products that the guide applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `advanced-analytics`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
 | `works_on` | (Required) Array of deployment environments where this applies. Can be `on_prem` or `konnect`. | <pre>works_on:<br>  - konnect<br>  - on-prem</pre> |
 | `tags` | (Optional) Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
@@ -49,11 +49,23 @@ prereqs:
     - title: "{{site.base_gateway}} license"
       include_content: prereqs/gateway-license
       icon_url: /assets/icons/gateway.svg
+  konnect: #Sets kong.conf parameters when running the Konnect DP container in the prereqs 
+    - name: KONG_PARAM
+      value: 'value to set'
   entities: # References predefined gateway entities
     services:
         - example-service
     routes:
         - example-route
+    kubernetes: 
+      gateway_api: true # Renders a section in the prereq to enable the Gateway API
+      skip_proxy_ip: true # Skips setting the Proxy IP
+      gateway_custom_env: # Adds variables when running KIC in Konnect in the prereqs
+        AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+        AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  cloud: # Renders a prereq for AWS
+    aws:
+      secret: true
 ```
 
 ### Example of how-to cleanup
@@ -94,7 +106,6 @@ Applies to pages located under:
 | `related_resources` | (Optional) Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
 | `topologies` | (Plugins only; required) Contains the nested keys `on_prem` and `konnect`. Lists the deployment topologies that the plugin can be run in. <br> - `on_prem` can contain `hybrid`, `traditional`, and `db-less`<br>- `konnect` can contain `serverless`, `cloud-gateways`, and `hybrid` | <pre>topologies:<br>  on_prem:<br>    - hybrid<br>    - db-less<br>    - traditional<br>  konnect_deployments:<br>    - hybrid<br>    - cloud-gateways<br>    - serverless</pre> |
 | `notes` | (Plugins only; optional) Any notes on deployment topologies or types, if the plugin has any limitations in a particular topology or deployment. | <pre>notes: \|<br>  Dedicated Cloud Gateways: If you use the IAM assumeRole functionality with this plugin, it must be configured differently than for hybrid deployments in Konnect.</pre> |
-  it must be configured differently than for hybrid deployments in Konnect.
 | `icon` | (Required) Filename of plugin icon. See all [plugin icons](https://github.com/Kong/developer.konghq.com/tree/main/app/assets/icons/plugins). | `icon: ai-azure-content-safety.png` |
 | `search_aliases` | (Optional) Search aliases for the search bar and the plugins filter at `/plugins/`. | <pre>search_aliases:<br>  - ai<br>  - llm</pre> |
 | `premium_partner` | (Optional) Marks a page with a premium partner label. | `premium_partner: true` |

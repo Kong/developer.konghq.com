@@ -6,7 +6,7 @@
 ## Publishing a new spec
 
 1. Check [workflow file](https://github.com/Kong/platform-api/blob/main/.github/raise-pr-on-change.json) in Platform API
-to make sure the new spec is included. If not, add it the new spec to it.
+to make sure the new spec is included in the "kong/developer.konghq.com" section. If not, add it the new spec to it.
 
 1. The previous step will kick off an automatic update to the docs repo. Any public update to a spec opens a PR that looks like this: [feat(sdk): automated oas update](https://github.com/Kong/developer.konghq.com/pull/2372). 
 
