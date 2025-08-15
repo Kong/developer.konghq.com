@@ -45,7 +45,7 @@ faqs:
   - q: What happens if {{site.base_gateway}} starts with `enforce_rbac=on` but with no password set?
     a: |
       If you start {{site.base_gateway}} with RBAC enabled but with no password set, the super admin user won't be created and you won't have access to the Gateway through the Admin API or Kong Manager.
-      Your Gateway will be locked and unconfigurable.
+      Your Gateway will be locked and you'll be unable to configure it.
 
       If starting {{site.base_gateway}} with `enforce_rbac=on`, you **must** set `KONG_PASSWORD` during startup. Doing so bootstraps a super admin user named `kong_admin`, which you can use to interact with Kong Manager, or you can pass the password as `Kong-Admin-Token` header to the API.
 
