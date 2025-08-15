@@ -1355,22 +1355,26 @@ components:
           description: JSON-B object containing the configuration for the OIDC strategy under the key 'openid-connect' or the configuration for the Key Auth strategy under the key 'key-auth'
           type: object
           oneOf:
-            - type: object
-              additionalProperties: false
-              required:
-                - openid-connect
-              properties:
-                openid-connect:
-                  $ref: '#/components/schemas/PartialAppAuthStrategyConfigOpenIDConnect'
-            - type: object
-              additionalProperties: false
-              required:
-                - key-auth
-              properties:
-                key-auth:
-                  $ref: '#/components/schemas/AppAuthStrategyConfigKeyAuth'
+            - $ref: '#/components/schemas/UpdateAppAuthStrategyRequestOpenIdConnect'
+            - $ref: '#/components/schemas/UpdateAppAuthStrategyRequestKeyAuth'
       additionalProperties: false
       title: UpdateAppAuthStrategyRequest
+    UpdateAppAuthStrategyRequestOpenIdConnect:
+      type: object
+      properties:
+        openid-connect:
+          $ref: '#/components/schemas/PartialAppAuthStrategyConfigOpenIDConnect'
+      additionalProperties: false
+      required:
+        - openid-connect
+    UpdateAppAuthStrategyRequestKeyAuth:
+      type: object
+      properties:
+        key-auth:
+          $ref: '#/components/schemas/AppAuthStrategyConfigKeyAuth'
+      additionalProperties: false
+      required:
+        - key-auth
     CreateAppAuthStrategyResponse:
       $ref: '#/components/schemas/AppAuthStrategy'
     UpdateAppAuthStrategyResponse:
