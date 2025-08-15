@@ -20,7 +20,7 @@ tldr:
     a: Navigate to the [Dashboards](https://cloud.konghq.com/us/analytics/dashboards), select "Create from Template" from the **Create dashboard** dropdown menu, and apply filters.
 
 prereqs:
-  skip_product: true
+  show_works_on: false
   inline: 
     - title: Roles and permissions
       content: |
