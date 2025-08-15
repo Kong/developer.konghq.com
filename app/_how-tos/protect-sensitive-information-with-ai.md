@@ -53,9 +53,11 @@ prereqs:
 
         Docker will then prompt you to enter a username and password:
 
+        Ensure that you export your token into an environment variable.
+
         ```bash
         Username: kong/ai-pii
-        Password: YOUR-TOKEN
+        Password: YOUR_PASSWORD
         ```
         To pull an image:
 
