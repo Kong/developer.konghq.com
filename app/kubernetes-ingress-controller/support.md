@@ -1,5 +1,5 @@
 ---
-title: "{{site.kic_product_name}} Support Policy"
+title: "{{site.kic_product_name}} version support policy"
 
 description: |
   The {{site.kic_product_name}} version support policy outlines the {{site.kic_product_name}} versioning scheme and version lifecycle, from release to sunset support.
