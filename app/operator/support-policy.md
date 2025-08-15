@@ -1,5 +1,5 @@
 ---
-title: "Support Policy"
+title: "{{site.operator_product_name}} version support policy"
 description: "Check if your version of {{ site.operator_product_name }} is supported"
 content_type: reference
 layout: reference

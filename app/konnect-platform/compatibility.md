@@ -1,5 +1,5 @@
 ---
-title: "{{site.konnect_short_name}} compatibility"
+title: "{{site.konnect_short_name}} compatibility and support policy"
 description: 'Details which browsers, software, and versions {{site.konnect_short_name}} is compatible with.'
 content_type: policy
 layout: reference
