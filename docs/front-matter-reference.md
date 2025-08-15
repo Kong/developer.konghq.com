@@ -19,14 +19,14 @@ Applies to pages located under `/app/_how_tos/`.
 | `tags` | (Optional) Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
 | `plugins` | (Optional) Array of plugins referenced in the guide. | <pre>plugins:<br>  - correlation-id<br>  - rate-limiting</pre> | 
 | `related_resources` | (Optional) Array of links to related documentation. Takes the following attributes:<br>  - `text`: The title of the linked page.<br>  - `url`: The link to the page. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
-| `tldr` | (Required) Short question and answer summary of the guide. Takes the following attributes:<br>  - `q`: The question displayed as the title of the collapsed section.<br>  - `a`: The answer, which is hidden in a collapsible section. | <pre>tldr:<br>  q: How do I add Correlation IDs to my logs?<br>  a: Define log format and reference header</pre> | 
+| `tldr` | (Required) Short question and answer summary of the guide. Takes the following attributes:<br>  - `q`: The question, which is hiddne from the page but appears in search results.<br>  - `a`: The answer, which displays as the short description at the top of the page. | <pre>tldr:<br>  q: How do I add Correlation IDs to my logs?<br>  a: Define log format and reference header</pre> | 
 | `prereqs` | (Optional) Array of prerequisites needed before following the guide. Accepts a file reference or an inline entry. | See [prereqs](#example-of-how-to-prereqs) for an example and options.  |
 | `cleanup` | (Optional) Array of steps to clean up your environment after completing the guide. Accepts a file reference or an inline entry. | See [cleanup](#example-of-how-to-cleanup) for an example and options. | 
 | `min_version` | (Optional) Minimum version requirement. | <pre>min_version:<br>  gateway: '3.4'</pre> |
 | `premium_partner` | (Optional) Marks a page with a premium partner label. | `premium_partner: true` |
 | `beta` | (Optional) Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | (Optional) Adds a tech preview label/banner to the page. | `tech_preview: true` |
-| `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
+| `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. Takes the following attributes:<br>  - `q`: The question displayed as the title of the collapsed section.<br>  - `a`: The answer, which is hidden in a collapsible section. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
 | `series` | (Optional) Marks this page as part of a series. Takes the following attributes:<br> - `id`: Series ID, e.g. `custom-dashboards`. All items in a specific series must have the same ID.<br>  - `position`: The order this page comes in in the series, e.g. `1`. |
 | `automated_tests` | (Optional) Specifies whether automated tests should run on this page. Default is `true`, set to `false` to disable on any page that can't be tested programmatically. | `automated_tests: false` |
 
@@ -111,7 +111,7 @@ Applies to pages located under:
 | `premium_partner` | (Optional) Marks a page with a premium partner label. | `premium_partner: true` |
 | `beta` | (Optional) Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | (Optional) Adds a tech preview label/banner to the page. | `tech_preview: true` |
-| `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
+| `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. Takes the following attributes:<br>  - `q`: The question displayed as the title of the collapsed section.<br>  - `a`: The answer, which is hidden in a collapsible section. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
 
 ## Plugin or policy example
 
@@ -170,7 +170,7 @@ Can apply to any page under `/app/`. Usually contained in a subfolder, such as `
 | `premium_partner` | (Optional) Marks a page with a premium partner label. | `premium_partner: true` |
 | `beta` | (Optional) Adds a beta label/banner to the page. | `beta: true` |
 | `tech_preview` | (Optional) Adds a tech preview label/banner to the page. | `tech_preview: true` |
-| `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
+| `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. Takes the following attributes:<br>  - `q`: The question displayed as the title of the collapsed section.<br>  - `a`: The answer, which is hidden in a collapsible section. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
 
 ## Landing page
 
