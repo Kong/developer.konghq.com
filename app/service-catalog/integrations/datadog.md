@@ -36,7 +36,7 @@ For a complete tutorial using the {{site.konnect_short_name}} API, see [Import a
 
 ## Prerequisites
 
-Your Datadog instance API key must either have no scopes or the following scopes:
+Your Datadog instance application key must either have no scopes or the following [scopes](https://docs.datadoghq.com/api/latest/scopes/):
 * `monitors_read`
 * `dashboards_read`
 * `create_webhooks`
