@@ -59,7 +59,7 @@ rows:
                     - **Off:** Advanced analytics collection stops, but basic API metrics remain available in Gateway Manager, 
                     and can still be used for custom reports.
                     
-                    Advanced Analytics inclues the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
+                    Advanced Analytics includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
                     You can create them from scratch or use existing templates. The functionality is powered by a robust [API](/api/konnect/analytics-dashboards/), and [Terraform integration](/how-to/automate-dashboard-terraform/).
 
   - header:
