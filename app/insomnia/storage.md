@@ -156,7 +156,8 @@ Key features:
 * {% new_in 10.2 %} **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
 
 {:.info}
-> When you create a project with Git sync in an organization, it's only available to you.  The project name, its metadata, and the corresponding Git URL are not shared with other users in the organization. To collaborate on a Git sync project, each user must create a project and connect to the Git repository. This allows you to control who can access the project within the organization.
+> When you create a project with Git sync in an organization, it's only available to you. The project name, its metadata, and the corresponding Git URL are not shared with other users in the organization. To collaborate on a Git sync project, each user must create a project and connect to the Git repository. This allows you to control who can access the project within the organization. <br><br>
+> {% new_in 11.5 %} You can also create the Git Sync project now and add a repository later. 
 
 ### Git sync data flow
 
