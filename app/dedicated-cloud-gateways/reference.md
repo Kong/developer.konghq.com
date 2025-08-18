@@ -364,6 +364,17 @@ A custom plugin must meet the following requirements:
 * Must be written in Lua
 * A [personal or system access token](https://cloud.konghq.com/global/account/tokens) for the {{site.konnect_short_name}} API
 
+### Custom plugin limitations
+
+Keep the following custom plugin limitations in mind when adding them to Dedicated Cloud Gateways:
+
+* Only `schema.lua` and `handler.lua` files are supported. Plugin logic must be self-contained in these two files. You can't use DAOs, custom APIs, migrations, or multiple Lua modules.
+* Custom modules cannot be required when plugin sandboxing is enabled. Eternal Lua files or shared libraries can't be loaded.
+* Custom validation must be implemented in `handler.lua`, not `schema.lua`. In `handler.lua`, it can be logged and handled as part of plugin business logic.
+* Plugin files are limited to 100 KB per upload.
+* Plugins cannot read/write to the {{site.base_gateway}} filesystem.
+* The LuaJIT version is fixed per {{site.base_gateway}} version. Any future major Lua/LuaJIT upgrade will be communicated in advance due to potential breaking changes.
+
 ### How do I add a custom plugin?
 
 Plugins can be uploaded to {{site.konnect_short_name}} using the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/).
@@ -384,4 +395,3 @@ Once uploaded, you can manage custom plugins using any of the following methods:
 * [decK](/deck/)
 * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
 * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
-
