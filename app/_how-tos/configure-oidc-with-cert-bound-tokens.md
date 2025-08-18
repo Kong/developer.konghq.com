@@ -346,7 +346,7 @@ In this example:
 
 ## Generate the access token
 
-Now, you can generate your access token to authenicate with certificate-bound authentication.
+Now, you can generate your access token to authenticate with certificate-bound authentication.
 
 Navigate to the `/oidc/certs` you created previously and generate the access token:
 ```
