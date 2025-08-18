@@ -3,7 +3,7 @@ title: Mesh Health Check
 name: MeshHealthChecks
 products:
     - mesh
-description: 'This policy will look for errors in the live traffic being exchanged between our data plane proxies. It will mark a data'
+description: 'Run health checks between Services and mark Dataplanes as unhealthy when they are unhealthy.'
 content_type: plugin
 type: policy
 icon: meshhealthcheck.png
@@ -13,7 +13,7 @@ icon: meshhealthcheck.png
 
 {% warning %}
 This policy uses new policy matching algorithm. 
-Do **not** combine with [HealthCheck](/docs/{{ page.release }}/policies/health-check).
+Do **not** combine with the deprecated HealthCheck policy.
 {% endwarning %}
 
 This policy enables {{site.mesh_product_name}} to keep track of the health of every data plane proxy,
