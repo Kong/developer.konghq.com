@@ -10,7 +10,7 @@ extended_description: |
   > ```yaml
   > services:
   > - name: mcp-service
-  >   url: http://localhost:3000/
+  >   url: http://host.docker.internal:3000/
   >   routes:
   >   - name: mcp-route
   >    paths:
@@ -23,7 +23,7 @@ requirements:
 - "A running and exposed API"
 
 config:
-  tool:
+  tools:
   - description: Get users
     method: GET
     path: /marketplace/users
