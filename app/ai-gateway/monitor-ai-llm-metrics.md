@@ -101,7 +101,7 @@ cause performance issues. To enable them:
 * Set `config.ai_metrics` to `true` in the [Prometheus plugin configuration](/plugins/prometheus/reference/).
 * Set `config.logging.log_statistics` to `true` in the [AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/reference/).
 
-### LLM traffic metrics overivew
+### LLM traffic metrics overview
 
 Here is an example of output you could expect from the `/metrics` endpoint for LLM traffic:
 
