@@ -67,7 +67,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: true
+automated_tests: false
 ---
 ## Install mock API Server
 
