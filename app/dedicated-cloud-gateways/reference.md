@@ -370,7 +370,7 @@ Keep the following custom plugin limitations in mind when adding them to Dedicat
 
 * Only `schema.lua` and `handler.lua` files are supported. Plugin logic must be self-contained in these two files. You can't use DAOs, custom APIs, migrations, or multiple Lua modules.
 * Custom modules cannot be required when plugin sandboxing is enabled. Eternal Lua files or shared libraries can't be loaded.
-* Custom validation must be implemented in `handler.lua`, not `schema.lua`. In `handler.lua` it can be logged and handled as part of plugin business logic.
+* Custom validation must be implemented in `handler.lua`, not `schema.lua`. In `handler.lua`, it can be logged and handled as part of plugin business logic.
 * Plugin files are limited to 100 KB per upload.
 * Plugins cannot read/write to the {{site.base_gateway}} filesystem.
 * The LuaJIT version is fixed per {{site.base_gateway}} version. Any future major Lua/LuaJIT upgrade will be communicated in advance due to potential breaking changes.
