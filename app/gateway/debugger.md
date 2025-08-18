@@ -98,7 +98,7 @@ When a debug session is initiated with payload capture, the debugger captures re
 {:.info}
 > Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
 
-### Payload ingestions, storage and retention
+### Payload ingestion, storage and retention
 By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
 
 Debug session with payload data are retained for up to 3 days after which there are purged from {{site.konnect_short_name}}.
