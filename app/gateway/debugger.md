@@ -75,13 +75,13 @@ For detailed definitions of each span, see [Debugger spans](/gateway/debugger-sp
 A drill-down view of all the logs generated during specific debug session are shown in the logs tab. All the spans in the trace are correlated using `trace_id` and `span_id`. The logs can be filtered on log level and spans. Logs are displayed in reverse chronological order. {{site.konnect_short_name}} encrypts all the logs that are ingested. You can further ensure complete privacy and control by using customer-managed encryption keys (CMEK).
 Use the logs view to quickly troubleshoot and pinpoint issues.
 
-## Capture Payload (Optional)
-In critical scenarios, having access to payload details can help identify and pinpoint failures. With payload capture feature, a debug session can be configured to capture header and/or body for requests and response. However due to the nature of this telemetry, this feature requires customers to explicitly opt-in with a prior agreement (Advanced Features Addendum). Once the agreement is in place, the feature is enabled in debugger. 
+## Capture payload (Optional)
+In critical scenarios, having access to payload details can help identify and pinpoint failures. With payload capture feature, a debug session can be configured to capture header and/or body for requests and response. However due to the nature of this telemetry, this feature requires customers to explicitly opt-in with a prior agreement called the Advanced Features Addendum. Once the agreement is in place, the feature is enabled in debugger. For more information contact your account manager. 
 
-### Prerequites
-- Your org has opted-in to use debugger's payload capture feature and signed the Advanced Features Addendum
-- Dataplane nodes are deployed with new telemetry endpoints that support the payload capture feature
-- Customer firewall rules updated to allow for the new telemetry endpoints
+### Prerequisites
+* Your organization has opted-in to use debugger's payload capture feature and signed the Advanced Features Addendum
+* data plane nodes are deployed with new telemetry endpoints that support the payload capture feature
+* Customer firewall rules updated to allow for the new telemetry endpoints
 
 {:.info}
 > To use the payload capture during a debugging session, the data plane nodes have to be deployed with the following new telemetry endpoints:
@@ -92,16 +92,16 @@ In critical scenarios, having access to payload details can help identify and pi
 * `KONG_CLUSTER_TELEMETRY_SERVER_NAME=xxx.us.tp.konghq.com`
 ```
 
-### Payload Collection & Sanitization
-When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria.  Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers are redacted from the payload.
+### Payload collection and sanitization
+When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload.
 
 {:.info}
-> Log sanitizer uses the Luhn algorithm, a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with *
+> Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
 
-### Payload Ingestions, Storage and Retention
-By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a customer-managed encryption keys (CMEK). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services(KMS). 
+### Payload ingestions, storage and retention
+By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
 
-Debug session with payload data are retained for upto 3 days after which there are purged from {{site.konnect_short_name}}.
+Debug session with payload data are retained for up to 3 days after which there are purged from {{site.konnect_short_name}}.
 
 ## Data Security with Customer-Managed Encryption Keys (CMEK)
 By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data. For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
