@@ -95,7 +95,7 @@ rows:
       {% new_in 3.8 %} Average time to generate an output token (ms).
   - property: "`ai.proxy.usage.time_to_first_token`"
     description: |
-      {% new_in 3.8 %} Time to receive the first output token (ms).
+      {% new_in 3.12 %} Time to receive the first output token (ms).
   - property: "`ai.proxy.meta.request_model`"
     description: The model used for the AI request.
   - property: "`ai.proxy.meta.response_model`"
@@ -107,6 +107,9 @@ rows:
   - property: "`ai.proxy.meta.llm_latency`"
     description: |
       {% new_in 3.8 %} Time taken by the LLM provider to generate the full response (ms).
+  - property: "`ai.proxy.meta.request_mode`"
+    description: |
+      {% new_in 3.12 %} The request mode. Can be `oneshot`, `stream`, or `realtime`.
 {% endtable %}
 
 ### AI AWS Guardrails logs {% new_in 3.11 %}
@@ -126,7 +129,7 @@ rows:
     description: The unique identifier of the guardrails configuration applied.
   - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
     description: The time (in milliseconds) taken to process the output through guardrails.
-  - property: "`ai.proxy.aws-guardrails.inputput_processing_latency`"
+  - property: "`ai.proxy.aws-guardrails.input_processing_latency`"
     description: The time (in milliseconds) taken to process the input through guardrails.
   - property: "`ai.proxy.aws-guardrails.guardrails_version`"
     description: The version or state of the guardrails configuration (for example, `DRAFT`, `RELEASE`).
