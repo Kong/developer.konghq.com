@@ -49,14 +49,6 @@ Creating `GatewayClass` and `Gateway` resources in Kubernetes causes {{ site.ope
 
 You can customize your {{ site.kic_product_name }} and {{ site.base_gateway }} deployments using the `GatewayConfiguration` CRD. This allows you to control the image being used, and set any required environment variables.
 
-## Create the `kong` namespace
-
-Create the `kong` namespace in your Kubernetes cluster:
-
-```sh
-kubectl create namespace kong
-```
-
 {:data-deployment-topology='konnect'}
 ## Create the GatewayConfiguration
 
