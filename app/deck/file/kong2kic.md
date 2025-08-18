@@ -183,7 +183,7 @@ consumers:
     custom_id: "1234567890"
     basicauth_credentials:
       - username: my_basic_user
-        password: my_basic_password
+        password: ${BASIC_AUTH_PASSWORD}
         tags:
           - internal
     plugins:
@@ -493,7 +493,7 @@ metadata:
     konghq.com/credential: basic-auth
   name: basic-auth-example-user
 stringData:
-  password: my_basic_password
+  password: ${BASIC_AUTH_PASSWORD}
   username: my_basic_user
 ---
 apiVersion: configuration.konghq.com/v1
@@ -709,7 +709,7 @@ metadata:
     konghq.com/credential: basic-auth
   name: basic-auth-example-user
 stringData:
-  password: my_basic_password
+  password: ${BASIC_AUTH_PASSWORD}
   username: my_basic_user
 ---
 apiVersion: configuration.konghq.com/v1

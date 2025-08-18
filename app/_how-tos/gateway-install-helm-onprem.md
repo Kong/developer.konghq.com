@@ -24,6 +24,16 @@ entities: []
 tldr: null
 
 prereqs:
+  inline:
+    - title: Basic auth password
+      content: |
+        Export your Basic Auth password as an environment variable:
+
+        ```sh
+        export DECK_BASIC_AUTH_PASSWORD=your_password
+        ```
+
+        You’ll need this variable when running the tutorial commands.
   skip_product: true
 
 topology_switcher: page
@@ -109,12 +119,12 @@ env:
   database: postgres
   pg_database: kong
   pg_user: kong
-  pg_password: demo123
+  pg_password: "${BASIC_AUTH_PASSWORD}" 
   pg_host: kong-cp-postgresql.kong.svc.cluster.local
   pg_ssl: "on"
 
   # Kong Manager password
-  password: kong_admin_password
+  password: "${BASIC_ADMIN_PASSWORD}"
 
 # Enterprise functionality
 enterprise:
@@ -160,7 +170,7 @@ proxy:
    postgresql:
      enabled: true
      auth:
-       password: demo123
+       password: "${BASIC_AUTH_PASSWORD}" 
    ```
 
 1. Update the database connection values in `values-cp.yaml`.

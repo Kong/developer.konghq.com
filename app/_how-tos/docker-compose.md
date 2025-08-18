@@ -26,7 +26,16 @@ tldr:
   a: "Copy the Docker Compose file and run `docker compose up -d`."
 prereqs:
   skip_product: true
-  inline: 
+  inline:
+    - title: Basic auth password
+      content: |
+        Export your Basic Auth password as an environment variable:
+
+        ```sh
+        export DECK_BASIC_AUTH_PASSWORD=your_password
+        ```
+
+        You’ll need this variable when running the tutorial commands.
     - title: Docker Compose 
       content: |
         This guide requires [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
@@ -65,7 +74,7 @@ x-kong-config: &kong-env
   KONG_PG_HOST: kong-ee-database      # Hostname of the Postgres service
   KONG_PG_DATABASE: kong              # Name of the database to connect to
   KONG_PG_USER: kong                  # Database username
-  KONG_PG_PASSWORD: kong              # Database password
+  KONG_PG_PASSWORD: "${BASIC_AUTH_PASSWORD}"              # Database password
   KONG_LICENSE_DATA: "\${KONG_LICENSE_DATA}"  # Kong Enterprise license passed via environment variable
 
 services:
@@ -81,7 +90,7 @@ services:
     environment:
       POSTGRES_USER: kong            # Set DB user inside the container
       POSTGRES_DB: kong              # Create this database on first run
-      POSTGRES_PASSWORD: kong        # Set the password for the DB user
+      POSTGRES_PASSWORD: "${BASIC_AUTH_PASSWORD}"        # Set the password for the DB user
     healthcheck:                     # Ensure the DB is ready before starting dependent services
       test: ["CMD", "pg_isready", "-U", "kong"]
       interval: 5s
@@ -101,7 +110,7 @@ services:
     restart: on-failure
     environment:
       <<: *kong-env                 # Reuse environment config from x-kong-config
-      KONG_PASSWORD: handyshake    # Admin GUI password (required for RBAC)
+      KONG_PASSWORD: "${BASIC_AUTH_PASSWORD}"    # Admin GUI password (required for RBAC)
     command: kong migrations bootstrap  # Run DB migrations to initialize Kong schema
 
   kong-cp:
@@ -115,7 +124,7 @@ services:
       KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl  # Admin API on HTTP + HTTPS
       KONG_ADMIN_GUI_LISTEN: 0.0.0.0:8002, 0.0.0.0:8445 ssl  # Kong Manager on HTTP + HTTPS
       KONG_ADMIN_GUI_URL: http://${GW_HOST:-localhost}:8002  # URL for GUI links
-      KONG_PASSWORD: handyshake  # Required for logging in to Kong Manager (RBAC)
+      KONG_PASSWORD: "${BASIC_AUTH_PASSWORD}"   # Required for logging in to Kong Manager (RBAC)
     depends_on:
       kong-bootstrap:
         condition: service_completed_successfully  # Start only after bootstrap has succeeded
