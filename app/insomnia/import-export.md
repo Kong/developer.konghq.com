@@ -27,9 +27,13 @@ related_resources:
     url: /insomnia/get-started-with-documents/
   - text: Storage options in Insomnia
     url: /insomnia/insomnia-storage-options-guide/
+  - text: Resource types reference
+    url: /insomnia/resource-types-reference/
+  - text: Special resource IDs
+    url: /insomnia/special-resource-ids/
 ---
 
-Insomnia offers a unified workflow for importing and exporting API artifacts. Whether you're using the desktop UI or automating tasks via the Inso CLI, this page outlines the methods, their compatibility, and practical use cases to fit a variety of developer workflows.
+Insomnia offers a unified workflow for importing and exporting API artifacts. Whether you're using the desktop UI or automating tasks through the Inso CLI, this page outlines the methods, their compatibility, and the practical use cases to fit a variety of developer workflows.
 
 ## Typical use cases
 
@@ -59,6 +63,10 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+During imports and exports, Insomnia serializes workspace data by replacing real UUIDs with special resource IDs and classifying each item by resource type:
+- **Resource Type**: An object that specifies the type of information in the request. Insomnia includes only supported entities in exports; indicated by the `_type` field in each resource object. Deprecated or unsupported types are excluded. For more information, go to the [Resource Types](/insomnia/resource-types-reference/) page.
+- **Special Resource ID**: A placeholder identifier that Insomnia uses to preserve workspace structure, prevent identifier collisions, enable cross-environment reuse, and obscure storage-layer IDs. Insomnia replaces real UUIDs with placeholders like `__WORKSPACE_ID__`, `__BASE_ENVIRONMENT_ID__`, or `__<NAME>_<NUMBER>__`. These placeholders are resolved on import. For more information, go to the [Special Resource IDs](/insomnia/special-resource-ids/) page.
+
 ## Import methods
 
 Depending on your workflow requirements, you can import API definitions into Insomnia with either of the following methods:
@@ -66,7 +74,7 @@ Depending on your workflow requirements, you can import API definitions into Ins
 - CLI import
 
 ### UI import
-In a workspace or document header, select **Import** and then specify your method:
+In a workspace or document header, select **Import** and then specify your import method:
 - file
 - URL
 - clipboard
