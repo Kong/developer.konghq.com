@@ -75,8 +75,12 @@ For detailed definitions of each span, see [Debugger spans](/gateway/debugger-sp
 A drill-down view of all the logs generated during specific debug session are shown in the logs tab. All the spans in the trace are correlated using `trace_id` and `span_id`. The logs can be filtered on log level and spans. Logs are displayed in reverse chronological order. {{site.konnect_short_name}} encrypts all the logs that are ingested. You can further ensure complete privacy and control by using customer-managed encryption keys (CMEK).
 Use the logs view to quickly troubleshoot and pinpoint issues.
 
-## Capture payload (Optional)
-In critical scenarios, having access to payload details can help identify and pinpoint failures. With payload capture feature, a debug session can be configured to capture header and/or body for requests and response. However due to the nature of this telemetry, this feature requires customers to explicitly opt-in with a prior agreement called the Advanced Features Addendum. Once the agreement is in place, the feature is enabled in debugger. For more information contact your account manager. 
+## Payload capture
+
+In critical scenarios, having access to payload details can help identify and pinpoint failures. With payload capture feature, a debug session can be configured to capture header and/or body for requests and response. However due to the nature of this telemetry, this feature requires customers to explicitly opt-in with a prior agreement called the Advanced Features Addendum. Once the agreement is in place, the feature is enabled in debugger.
+
+{:.info}
+> Payload capture is an opt-in feature that can be enabled with prior agreement. Please contact your organization admin or reach out to your Kong representative
 
 ### Prerequisites
 * Your organization has opted-in to use debugger's payload capture feature and signed the Advanced Features Addendum
