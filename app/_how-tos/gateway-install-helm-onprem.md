@@ -110,7 +110,7 @@ env:
   pg_database: kong
   pg_user: kong
   pg_password: demo123
-  pg_host: kong-cp-postgresql.kong.svc.cluster.local
+  pg_host: kong-cp-db-postgresql.kong.svc.cluster.local
   pg_ssl: "on"
 
   # Kong Manager password
@@ -150,20 +150,40 @@ proxy:
 
 {{ values_file | indent }}
 
-1. _(Optional)_ If you want to deploy a Postgres database within the cluster for testing purposes, you can use the Developer use only (Do not use in Production) Bitnami helm chart to install this:
+1. _(Optional)_ If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
+
+Create a Helm values file with the following:
+
+  ```yaml
+    auth:
+        username: kong
+        password: "${BASIC_AUTH_PASSWORD}" 
+        database: kong
+    service:
+      ports:
+        postgresql: "5432"
+    primary:
+      annotations:
+        "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
+      podSecurityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containerSecurityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+  ```
 
   ```sh
-  helm install gw-postgres oci://registry-1.docker.io/bitnamicharts/postgresql
-  ```
-  The chart installation will tell you the in-cluster service name for the Postgres database which can be used in the database connection values below.
-
-  To get the password for the postgres user, base64 decode the Helm created secret:
-
-  ```sh
-  kubectl get secret --namespace default gw-postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d
+  helm install kong-cp-db --namespace kong oci://registry-1.docker.io/bitnamicharts/postgresql --values ./values.yaml
   ```
 
-1. Update the database connection values in `values-cp.yaml`.
+1. If you are using an existing, or external Postgres database (recommended), update the database connection values in `values-cp.yaml`.
 
    - `env.pg_database`: The database name to use
    - `env.pg_user`: Your database username
