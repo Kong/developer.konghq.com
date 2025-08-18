@@ -84,8 +84,8 @@ The control plane contains all {{ site.base_gateway }} configurations. The confi
 
 {% capture values_file %}
 
-```yaml
-# Do not use {{ site.kic_product_name }}
+```sh
+echo """# Do not use {{ site.kic_product_name }}
 ingressController:
   enabled: false
 
@@ -109,7 +109,7 @@ env:
   database: postgres
   pg_database: kong
   pg_user: kong
-  pg_password: demo123
+  pg_password: "${BASIC_AUTH_PASSWORD}"
   pg_host: kong-cp-db-postgresql.kong.svc.cluster.local
   pg_ssl: "on"
 
@@ -144,6 +144,7 @@ manager:
 # These roles will be served by different Helm releases
 proxy:
   enabled: false
+""" > ./values-cp.yaml
 ```
 
 {% endcapture %}
@@ -154,7 +155,8 @@ proxy:
 
 Create a Helm values file with the following:
 
-  ```yaml
+  ```sh
+  echo """
     auth:
         username: kong
         password: "${BASIC_AUTH_PASSWORD}" 
@@ -177,7 +179,10 @@ Create a Helm values file with the following:
         capabilities:
           drop:
           - ALL
+  """ > values.yaml 
   ```
+
+And install the PostgreSQL Helm chart:
 
   ```sh
   helm install kong-cp-db --namespace kong oci://registry-1.docker.io/bitnamicharts/postgresql --values ./values.yaml
@@ -217,7 +222,8 @@ The {{ site.base_gateway }} data plane is responsible for processing incoming tr
 
 {% capture values_file %}
 
-```yaml
+```sh
+echo '
 # Do not use {{ site.kic_product_name }}
 ingressController:
   enabled: false
@@ -259,6 +265,7 @@ admin:
 
 manager:
   enabled: false
+' > ./values-dp.yaml
 ```
 
 {% endcapture %}
