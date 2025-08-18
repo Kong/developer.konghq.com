@@ -9,8 +9,8 @@ related_resources:
     url: /gateway/authentication/
   - text: OpenID Connect authorization options
     url: /plugins/openid-connect/#authorization
-  - text: ACL authorization in OIDC
-    url: /plugins/openid-connect/#acl-plugin-authorization
+  - text: About certificate-bound access tokens with OIDC
+    url: /plugins/openid-connect/#certificate-bound-access-tokens
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
@@ -42,10 +42,14 @@ prereqs:
       - example-service
     routes:
       - example-route
-  inline:
-    - title: Set up Keycloak
-      include_content: prereqs/auth/oidc/keycloak-password
-      icon_url: /assets/icons/keycloak.svg
+  inline: 
+    - title: DNS hostname
+      content: |
+        In this tutorial, you'll need a DNS hostname that you can use for your Keycloak server. You'll need to replace the hostname in any scripts or commands in this tutorial with your own hostname. Export your hostname:
+        ```sh
+        export HOSTNAME='YOUR-KEYCLOAK-HOSTNAME'
+        ```
+      icon_url: /assets/icons/code.svg
 
 tags:
   - authorization
@@ -53,11 +57,14 @@ tags:
 search_aliases:
   - oidc
 
-description: Configure the OpenID Connect and ACL plugins together to apply auth flows to ACL allow or deny lists.
+description: Learn how to configure certificate-bound access token authentication with OpenID Connect and TLS Handshake Modifier.
 
 tldr:
-  q: How do I integrate my IdP with ACL allow or deny lists?
-  a: Using the OpenID Connect and ACL plugins, set up any type of authentication (the password grant, in this guide) and enable authorization through ACL groups.
+  q: How do I configure certificate-bound access token authentication with OpenID Connect?
+  a: |
+    Certificate-bound access tokens allow binding tokens to clients. This guarantees the authenticity of the token by verifying whether the sender is authorized to use the token for accessing protected resources.
+
+    You can configure certificate-bound access token authentication with OpenID Connect by mounting your certificates up an IdP, like Keycloak, and configuring the IdP with a client and mTLS authentication. Then, configure the TLS Handshake Modifier plugin with `config.tls_client_certificate` set to `REQUEST` and the OIDC plugin with your IdP issuer, `config.proof_of_possession_mtls` set to `strict`, and enable `config.proof_of_possession_auth_methods_validation`. Generate an access token and pass it in a request. 
 
 cleanup:
   inline:
@@ -71,8 +78,18 @@ cleanup:
 automated_tests: false
 ---
 
-## Drafting grounds
+## Generate certificates
 
+In this tutorial, you'll need various certificates such as:
+* CA certificate store
+* Client certificate
+* Server certificate
+
+1. You can save the following script as `gen_certs.sh` to help you generate a CA certificate, CA private key, and server private key:
+   
+   {:.danger}
+   > **Important:** In this tutorial, use your DNS hostname in place of `$HOSTNAME`.
+{% capture "gen-certs" %}
 ```sh
 #!/bin/bash
 
@@ -87,11 +104,11 @@ openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 \
 # Generate server private key
 openssl genrsa -out keycloak.key 2048
 
-# Create server CSR with CN=keycloak.orb.local
+# Create server CSR with CN=$HOSTNAME
 openssl req -new -key keycloak.key -out keycloak.csr \
-  -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=keycloak.orb.local"
+  -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=$HOSTNAME"
 
-# Create SAN config for keycloak.orb.local
+# Create SAN config for $HOSTNAME
 cat > keycloak.ext <<EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
@@ -99,7 +116,7 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = keycloak.orb.local
+DNS.1 = $HOSTNAME
 EOF
 
 # Sign server CSR with root CA
@@ -111,28 +128,33 @@ openssl x509 -req -in keycloak.csr \
 rm keycloak.csr
 rm rootCA.srl
 
-echo "Root CA and server certificate for 'keycloak.orb.local' generated successfully."
+echo "Root CA and server certificate for '$HOSTNAME' generated successfully."
 ```
+{% endcapture %}
+{{ gen-certs | indent: 3 }}
 
-```sh
-mkdir -p ~/oidc/certs && cd ~/oidc/certs
-bash ~/gen_certs.sh
-```
-```sh
-export PKCS12_PASSWORD='YOUR-PASSWORD'
-export KEYSTORE_PASS='YOUR-PASSWORD'
-```
-
-```sh
-openssl pkcs12 -export \
-  -in keycloak.crt \
-  -inkey keycloak.key \
-  -certfile rootCA.crt \
-  -out keycloak-keystore.p12 \
-  -name keycloak \
-  -passout pass:$PKCS12_PASSWORD
-```
-
+1. Now, make an `/oidc/certs` directory to store the certificates and run the script to generate and sign the certificates:
+   ```sh
+   mkdir -p ~/oidc/certs && cd ~/oidc/certs
+   bash ~/gen_certs.sh
+   ```
+1. Export your PKCS#12 and keystore passwords, both must be at least six characters:
+   ```sh
+   export PKCS12_PASSWORD='YOUR-PASSWORD'
+   export KEYSTORE_PASS='YOUR-PASSWORD'
+   ```
+1. Build a PKCS#12 keystore file:
+   ```sh
+   openssl pkcs12 -export \
+     -in keycloak.crt \
+     -inkey keycloak.key \
+     -certfile rootCA.crt \
+     -out keycloak-keystore.p12 \
+     -name keycloak \
+     -passout pass:$PKCS12_PASSWORD
+   ```
+1. Import the root certificates to the `.p12` file:
+{% capture "import-root" %}
 ```sh
 keytool -importkeystore \
   -deststorepass $KEYSTORE_PASS \
@@ -143,40 +165,36 @@ keytool -importkeystore \
   -srcstorepass $PKCS12_PASSWORD \
   -alias keycloak
 ```
-
-client cert generate:
-
+{% endcapture %}
+{{ import-root | indent: 3 }}
+1. Generate the client certificate:
+{% capture "client-cert" %}
 ```sh
 openssl genrsa -out client.key 2048
-
 openssl req -new -key client.key -out client.csr \
   -subj "/C=US/ST=State/L=City/O=ClientOrg/OU=Dev/CN=client-app"
-```
 
-```sh
 cat > client.ext <<EOF
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth
 EOF
 
-```
-
-```sh
 openssl x509 -req \
   -in client.csr \
   -CA rootCA.crt -CAkey rootCA.key -CAcreateserial \
   -out client.crt -days 365 -sha256 -extfile client.ext
-
 ```
+{% endcapture %}
+{{ client-cert | indent: 3 }}
 
-server cert generate:
-
+1. Generate the server certificate:
+{% capture "server-cert" %}
 ```sh
 openssl genrsa -out keycloak.key 2048
 
 openssl req -new -key keycloak.key -out keycloak.csr \
-  -subj "/C=US/ST=State/L=City/O=ClientOrg/OU=Dev/CN=keycloak.orb.local"
+  -subj "/C=US/ST=State/L=City/O=ClientOrg/OU=Dev/CN=$HOSTNAME"
 
 cat > keycloak.ext <<EOF
 authorityKeyIdentifier=keyid,issuer
@@ -186,7 +204,7 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = keycloak.orb.local
+DNS.1 = $HOSTNAME
 EOF
 
 openssl x509 -req \
@@ -194,10 +212,13 @@ openssl x509 -req \
   -CA rootCA.crt -CAkey rootCA.key -CAcreateserial \
   -out keycloak.crt -days 365 -sha256 -extfile keycloak.ext
 ```
+{% endcapture %}
+{{ server-cert | indent: 3 }}
+This is used to authenticate with Keycloak and to consume the API with access token. The generated CN must adhere to the pre-defined pattern for Keycloak validation.
 
-Fixed thing maybe?
-```
-in /oidc/certs
+1. Configure Keycloak to trust certificates signed by the CA:
+{% capture "keycloak-trust" %}
+```sh
 keytool -import -alias rootca \
   -keystore keycloak-truststore.p12 \
   -storetype PKCS12 \
@@ -206,17 +227,22 @@ keytool -import -alias rootca \
 
 keytool -list -keystore keycloak-truststore.p12 -storepass "$PKCS12_PASSWORD"
 ```
+{% endcapture %}
+{{ keycloak-trust | indent: 3 }}
+The Keycloak server presents this certificate to the client.
 
-## Keycloak
+## Configure Keycloak
 
-In a new terminal window, export your trust store password:
+1. In a new terminal window, export your trust store password:
+   ```sh
+   export PKCS12_PASSWORD='YOUR-PASSWORD'
+   ```
 
-```sh
-export PKCS12_PASSWORD='YOUR-PASSWORD'
-```
-
-Then, start Keycloak in Docker:
-
+1. Then, start Keycloak in Docker:
+   
+   {:.danger}
+   > **Important:** In this tutorial, use your DNS hostname in place of `$HOSTNAME`.
+{% capture "keycloak-docker" %}
 ```sh
 docker run \
   -p 9443:9443 \
@@ -225,7 +251,7 @@ docker run \
   -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
   -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
   --name keycloak \
-  --label dev.orbstack.domains=keycloak.orb.local \
+  --label dev.orbstack.domains=$HOSTNAME \
   quay.io/keycloak/keycloak \
   start \
   --https-port=9443 \
@@ -234,54 +260,50 @@ docker run \
   --https-trust-store-file=/opt/keycloak/ssl/keycloak-truststore.p12 \
   --https-trust-store-password=$PKCS12_PASSWORD \
   --https-client-auth=request \
-  --hostname=keycloak.orb.local
+  --hostname=$HOSTNAME
 ```
+{% endcapture %}
+{{ keycloak-docker | indent: 3 }}
 
-
-
-https://keycloak.orb.local:9443/admin/master/console/
-
-Do steps 1-3 in https://developer.konghq.com/how-to/configure-oidc-with-auth-code-flow/#set-up-keycloak
-
-step 4:
-* general settings same
-* capability config: Client authentication to on and authorization is on
-* Make sure that Standard flow, Direct access grants, and Service accounts roles are checked. (same)
-
-Set up keys and credentials
-In your client, open the Credentials tab.
-Set Client Authenticator to X509 Certificate.
-Subject DN is `CN=client-app, OU=Dev, O=ClientOrg, L=City, ST=State, C=US` (reverse order, idk why)
-
-**Advanced** tab.
-In Advanced settings, enable **OAuth 2.0 Mutual TLS Certificate Bound Access Tokens Enabled**.
-
-
-```
-cd ~/oidc/certs
-```
-```
-curl -s \
-  --location --request POST 'https://keycloak.orb.local:9443/realms/master/protocol/openid-connect/token' \
-  --header 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'client_id=kong' \
-  --data-urlencode 'grant_type=client_credentials' \
-  --cert client.crt \
-  --key client.key \
-  --cacert rootCA.crt | jq -r .access_token
-```
-
-```sh
-export ACCESS_TOKEN='YOUR-ACCESS-TOKEN'
-```
-
-At some point:
-```sh
-export DECK_ISSUER='https://keycloak.orb.local:9443/realms/master'
-```
+1. Open the Keycloak admin console.
+   The default URL of the console is `http://$HOSTNAME:8080/admin/master/console/`.
+1. In the sidebar, open **Clients**, then click **Create client**.
+1. Configure the client:
+{% capture "keycloak-client" %}
+<!--vale off-->
+{% table %}
+columns:
+  - title: Section
+    key: section
+  - title: Settings
+    key: settings
+rows:
+  - section: "**General settings**"
+    settings: |
+      * Client type: **OpenID Connect**
+      * Client ID: any unique name, for example `kong`
+  - section: "**Capability config**"
+    settings: |
+      * Enable **Client authentication**
+      * Enable **Authorization**
+      * Select **Standard flow**, **Direct access grants**, and **Service accounts roles** 
+{% endtable %}
+<!--vale on-->
+{% endcapture %}
+{{ keycloak-client | indent: 3 }}
+1. Click the **Credentials** tab.
+1. Select "X509 Certificate" from the **Client Authenticator** dropdown menu.
+1. Enter `CN=client-app, OU=Dev, O=ClientOrg, L=City, ST=State, C=US` in the **Subject DN** field.
+1. Click the **Advanced** tab.
+1. In Advanced settings, enable **OAuth 2.0 Mutual TLS Certificate Bound Access Tokens Enabled**.
+1. Export your issuer:
+   ```sh
+   export DECK_ISSUER='https://$HOSTNAME:9443/realms/master'
+   ```
 
 ## Enable TLS handshake plugin
 
+Configure the [TLS Handshake Modifier](/plugins/tls-handshake-modifier/) plugin to request that the client to send a client certificate:
 {% entity_examples %}
 entities:
   plugins:
@@ -289,13 +311,14 @@ entities:
       route: example-route
       config:
         tls_client_certificate: REQUEST
-        
 {% endentity_examples %}
+
+Alternatively, you can use the [Mutual TLS Authentication](/plugins/mtls-auth/) plugin instead.
 
 ## Enable the OpenID Connect plugin
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
-set up an instance of the OpenID Connect plugin. In this example, we're using the simple password grant with authenticated groups.
+set up an instance of the OpenID Connect plugin. 
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
@@ -318,75 +341,42 @@ variables:
 
 In this example:
 * `issuer`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `proof_of_possession_mtls`: ?
-* `proof_of_possession_auth_methods_validation`: ?
+* `proof_of_possession_mtls`: By setting this to `strict`, it ensures all tokens are verified.
+* `proof_of_possession_auth_methods_validation`: Ensures that only the `auth_methods` that are compatible with Proof of Possession (PoP) can be configured when PoP is enabled.
 
-{% include_cached plugins/oidc/client-auth.md %}
+## Generate the access token
+
+Now, you can generate your access token to authenicate with certificate-bound authentication.
+
+Navigate to the `/oidc/certs` you created previously and generate the access token:
+```
+curl -s \
+  --location --request POST 'https://$HOSTNAME:9443/realms/master/protocol/openid-connect/token' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'client_id=kong' \
+  --data-urlencode 'grant_type=client_credentials' \
+  --cert client.crt \
+  --key client.key \
+  --cacert rootCA.crt | jq -r .access_token
+```
+
+Export the access token:
+```sh
+export ACCESS_TOKEN='YOUR-ACCESS-TOKEN'
+```
+
+The access token, by default, expires in 60 seconds. If you want to extend the expiration, you can configure this in the Keycloak Advanced settings for the client by adjusting the **Access Token Lifespan** settings.
 
 ## Validate the OpenID Connect plugin configuration
 
-Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
+Request the Service with the Keycloak access token:
 
 ```sh
-curl -i -X GET "$KONNECT_PROXY_URL/anything" \
+curl -isk \
+  -X GET "https://localhost:8443/anything" \
   -H "Authorization:Bearer $ACCESS_TOKEN" \
   --cert client.crt \
   --key client.key
 ```
 
-You should get an HTTP `200` response with an `X-Authenticated-Groups` header:
-
-```
-"X-Authenticated-Groups": "openid, email, profile"
-```
-{:.no-copy-code}
-
-## Enable the ACL plugin and verify
-
-Let's try denying access to the `openid` group first:
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: acl
-      service: example-service
-      config:
-        deny:
-        - openid
-{% endentity_examples %}
-
-Try to access the `/anything` Route:
-
-{% validation request-check %}
-url: /anything
-method: GET
-status_code: 403
-user: "alex:doe"
-display_headers: true
-{% endvalidation %}
-
-You should get a `403 Forbidden` error code with the message `You cannot consume this service`.
-
-Now let's allow access to the `openid` group:
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: acl
-      service: example-service
-      config:
-        allow:
-        - openid
-{% endentity_examples %}
-
-And try accessing the `/anything` Route again:
-
-{% validation request-check %}
-url: /anything
-method: GET
-status_code: 200
-user: "alex:doe"
-display_headers: true
-{% endvalidation %}
-
-This time, you should get a `200` response.
+You should get an HTTP `200` response.
