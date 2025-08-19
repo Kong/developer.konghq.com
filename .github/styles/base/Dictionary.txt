@@ -107,6 +107,7 @@ client_status
 clipanion
 CLIs
 CLIs
+CLI
 CloudFormation
 CloudFormation
 Cloudformation
@@ -241,6 +242,7 @@ fips
 firewalled
 firstTimestamp
 flamegraph
+Flatpak
 foogineer
 full_name
 Gateway
