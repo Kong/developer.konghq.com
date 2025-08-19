@@ -8,11 +8,11 @@ related_resources:
     url: /plugins/ai-mcp/
 
 description: |
-    Learn how to use the AI MCP Conversion plugin to expose WeatherAPI endpoints as MCP tools, allowing AI clients like Cursos to query weather data.
+    Learn how to use the AI MCP Conversion plugin to expose WeatherAPI endpoints as MCP tools, allowing AI clients like Cursor to query weather data.
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/weather-mcp-api/
+permalink: /mcp/autogenerate-mcp-tools-for-weather-api/
 
 works_on:
   - on-prem
@@ -98,7 +98,7 @@ variables:
 
 We can move on to configuring the AI MCP plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
 
-In this configuration, we also define the tool along with its parameters—including the preconfigured API key—so that the MCP client can make tool calls for our weather queries.
+In this configuration, we also define the tool along with its parameters—including the configured API key—so that the MCP client can make tool calls for our weather queries.
 
 {% entity_examples %}
 entities:

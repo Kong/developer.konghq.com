@@ -13,7 +13,7 @@ description: Learn how to use the AI MCP plugin to generate serverless MCP from 
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/autogenerate-serverless-mcp/
+permalink: /mcp/autogenerate-serverless-mcp-tools/
 
 works_on:
   - on-prem
@@ -172,7 +172,7 @@ I'll query the marketplace service for the list of users
 > Called mcp-route-1
 ```
 
-When the agent finishes reasoning, Yyou should see the following output:
+When the agent finishes reasoning, You should see the following output:
 
 ```text
 Let me check what users are available in the API:
