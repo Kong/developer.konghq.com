@@ -135,3 +135,8 @@
 ## Indices
 
 /index/konnect-platform/  /index/konnect/
+
+## KGO
+
+/operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
+
