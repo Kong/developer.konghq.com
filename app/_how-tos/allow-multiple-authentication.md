@@ -55,6 +55,13 @@ faqs:
 tools:
   - deck
 
+prereqs:
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
+
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -63,22 +70,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-prereqs:
-  inline:
-    - title: Basic auth password
-      content: |
-        Export your Basic Auth password as an environment variable:
-
-        ```sh
-        export DECK_BASIC_AUTH_PASSWORD=your_password
-        ```
-
-        You’ll need this variable when running the tutorial commands.
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
 ---
 
 ## Create Consumers
@@ -104,17 +95,17 @@ Add the Key Auth and Basic Auth plugins to the `example-service` Gateway Service
 
 {% entity_examples %}
 entities:
-  consumers:
-    - username: Dana
-      basicauth_credentials:
-        - username: Dana
-          password: ${password}
-    - username: Mahan
-      keyauth_credentials:
-        - key: mahan
-variables:
-  password:
-    value: $BASIC_AUTH_PASSWORD
+  plugins:
+    - name: key-auth
+      service: example-service
+      config:
+        hide_credentials: true
+        anonymous: anonymous
+    - name: basic-auth
+      service: example-service
+      config:
+        hide_credentials: true
+        anonymous: anonymous
 {% endentity_examples %}
 
 ## Test with anonymous Consumer
@@ -151,13 +142,10 @@ entities:
     - username: Dana
       basicauth_credentials:
         - username: Dana
-          password: ${password}
+          password: dana
     - username: Mahan
       keyauth_credentials:
         - key: mahan
-variables:
-  password:
-    value: $BASIC_AUTH_PASSWORD        
 {% endentity_examples %}
 
 
