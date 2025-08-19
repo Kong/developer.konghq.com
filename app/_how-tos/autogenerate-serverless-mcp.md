@@ -118,7 +118,7 @@ entities:
               description: Optional user ID
         - description: Get orders for a user
           method: GET
-          path: /marketplace/{userId}/orders
+          path: /marketplace/orders
           parameters:
             - description: User ID to filter orders
               in: query
@@ -164,10 +164,32 @@ entities:
 
 ## Validate the configuration
 
-Enter the following message in the Cursor chat:
+```text
+What users do you see in the API?
+```
+
+You should see the following output:
 
 ```text
-What did Alice order?
+Let me check what users are available in the API:
+I can see 10 users in the API:
+1. Alice Johnson (ID: a1b2c3d4)
+2. Bob Smith (ID: e5f6g7h8)
+3. Charlie Lee (ID: i9j0k1l2)
+4. Diana Evans (ID: m3n4o5p6)
+5. Ethan Brown (ID: q7r8s9t0)
+6. Fiona Clark (ID: u1v2w3x4)
+7. George Harris (ID: y5z6a7b8)
+8. Hannah Lewis (ID: c9d0e1f2)
+9. Ian Walker (ID: g3h4i5j6)
+10. Julia Turner (ID: k7l8m9n0)
+```
+{:.no-copy-code}
+
+Now, we can check what Alice Johnson ordered by entering the following message in the Cursor chat:
+
+```text
+What did Alice Johnson order?
 ```
 
 You'll notice that Cursor calls the tools exposed by the AI MCP Conversion plugin:
