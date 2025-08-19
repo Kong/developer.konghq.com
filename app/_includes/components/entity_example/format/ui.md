@@ -104,7 +104,7 @@ The following creates a new Certificate with basic configuration:
     {{ include.presenter.data['key'] }}
     ```
 {% when 'ca_certificate' %}
-The following creates a new Certificate with basic configuration:
+The following creates a new CA Certificate with basic configuration:
 
 1. In Kong Manager or Gateway Manager, go to **Certificates**.
 2. Click the **CA Certificates** tab.
