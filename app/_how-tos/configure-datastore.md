@@ -66,7 +66,7 @@ next_steps:
 1. Create a `kong` user and password:
 
     ```
-    CREATE USER kong WITH PASSWORD '$BASIC_AUTH_PASSWORD';
+    CREATE USER kong WITH PASSWORD 'super_secret';
     ```
 1. Create a database titled `kong` and assign the user as an owner:
 
