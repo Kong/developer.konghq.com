@@ -108,7 +108,6 @@ clipanion
 CLIs
 CLIs
 CLI
-cli
 CloudFormation
 CloudFormation
 Cloudformation
