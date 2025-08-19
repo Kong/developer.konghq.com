@@ -12,7 +12,6 @@ search_aliases:
   - import
   - export
   - inso
-  - cli
 
 description: Learn how to import and export data in Insomnia using the UI and the Inso CLI, and which formats are supported.
 
