@@ -17,7 +17,7 @@ description: Learn how to import and export data in Insomnia using the UI and th
 faqs:
   - q: What are special resource IDs in Insomnia exports?
     a: |
-      Special resource IDs are placeholder values used during workspace export. 
+      Special resource IDs are placeholder values used during a workspace export. 
       When Insomnia serializes data, it replaces actual UUIDs with these placeholders to mark important entities for later resolution.
       During import or sync, these placeholders are automatically mapped to real or newly generated IDs to preserve object relationships and workspace structure.
 
@@ -33,8 +33,8 @@ faqs:
 
   - q: What’s the difference between "Export all data" and scoped export options?
     a: |
-      * **Export all data** – Includes your entire account's data.
-      * **Scoped export options** – Allow you to export only specific parts of your data, such as a single **Document** or **Project**, for more targeted backups or sharing.
+      * **Export all data**: Includes your entire account's data.
+      * **Scoped export options**: Allow you to export only specific parts of your data, such as a single **Document** or **Project**, for more targeted backups or sharing.
 
 related_resources:
   - text: Inso CLI reference
@@ -80,8 +80,8 @@ rows:
 <!-- vale on -->
 
 During imports and exports, Insomnia serializes workspace data by replacing real UUIDs with special resource IDs and classifying each item by resource type:
-- **Resource Type**: An object that specifies the type of information in the request. Insomnia includes only supported entities in exports; indicated by the `_type` field in each resource object. Deprecated or unsupported types are excluded. For more information, go to the [Resource Types](/insomnia/resource-types-reference/) page.
-- **Special Resource ID**: A placeholder identifier that Insomnia uses to preserve workspace structure, prevent identifier collisions, enable cross-environment reuse, and obscure storage-layer IDs. Insomnia replaces real UUIDs with placeholders like `__WORKSPACE_ID__`, `__BASE_ENVIRONMENT_ID__`, or `__<NAME>_<NUMBER>__`. These placeholders are resolved on import. For more information, go to the [Special Resource IDs](/insomnia/special-resource-ids/) page.
+- **Resource Type**: An object that specifies the type of information in the request. Insomnia includes only supported entities in exports; indicated by the `_type` field in each resource object. Deprecated or unsupported types are excluded. 
+- **Special Resource ID**: A placeholder identifier that Insomnia uses to preserve workspace structure, prevent identifier collisions, enable cross-environment reuse, and obscure storage-layer IDs. Insomnia replaces real UUIDs with placeholders like `__WORKSPACE_ID__`, `__BASE_ENVIRONMENT_ID__`, or `__<NAME>_<NUMBER>__`. These placeholders are resolved on import.
 
 ## Import methods
 
@@ -93,14 +93,14 @@ Depending on your workflow requirements, you can import into Insomnia with eithe
 
 
 In a workspace or document header, select **Import** and then specify your import method:
-- file
+- File
 - URL
-- clipboard
+- Clipboard
 
 Insomnia supports the following formats:
-- **Import formats**: Insomnia JSON, Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL.
-- **Export formats (UI)**: Insomnia JSON (v4/v5) and  HAR.
-- **Export formats (CLI)**: OpenAPI spec.
+- **Import formats**: Insomnia JSON, Postman v2.0/v2.1, HAR, OpenAPI 3.0/3.1, Swagger, WSDL, and cURL
+- **Export formats (UI)**: Insomnia JSON (v4/v5) and  HAR
+- **Export formats (CLI)**: OpenAPI spec
 
 For more information on importing with the UI, go to [how to import an API spec as a document](/how-to/import-an-api-spec-as-a-document/).
 
@@ -119,7 +119,7 @@ An example of our key commands:
 
   `inso run collection "<Collection Name>" --env "<Environment Name>"`: Runs all requests and scripts in a collection as a batch. This is ideal for automation and guarantees consistency across environments.
 
-For more information, see our [reference page](/inso-cli/).
+For more information, see the [Inso CLI reference](/inso-cli/).
 
 ## Export methods
 
@@ -131,14 +131,14 @@ In a workspace or document header, select **Export**  and then specify the file 
 - **Project**: Export the selected collection. This includes all contained requests and environments.
 - **All data**: Export everything in your workspace.
 
-Our UI method supports the following formats:
+The UI method supports the following formats:
 - Insomnia JSON (v4/v5)
 - HAR
 
 ### CLI export
 Use Inso CLI to automate exports of your OpenAPI specification from a design document. You can write the spec to a file, or let the CLI print to standard output for piping in scripts and CI. For a full overview, see the Inso CLI reference.
 
-An example of our key commands:
+An example of the key commands:
 * **Export an OpenAPI spec to a file**
   
   Use `inso export spec "<Design Document Name>" --output spec.yaml` to extract the raw OpenAPI specification tied to a design document and save it to a file. The identifier can be the spec name or its ID.
@@ -153,7 +153,7 @@ Resource types specify what each object in the resources array represents in wor
 
 Supported resource types ensure that only valid entities appear in exports, unsupported, or deprecated types are omitted. 
  
-You encounter resource types whenever you export data, sync across devices, or integrate Insomnia exports with Git or automation workflows. 
+Resource types are used whenever you export data, sync across devices, or integrate Insomnia exports with Git or automation workflows. 
 
 ### Supported resource types
 
