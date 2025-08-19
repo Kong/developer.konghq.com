@@ -1,0 +1,2 @@
+name: weather-service
+url: https://api.weatherapi.com/v1/current.json

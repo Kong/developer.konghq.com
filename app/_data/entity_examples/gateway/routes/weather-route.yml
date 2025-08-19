@@ -1,0 +1,5 @@
+name: weather-route
+paths:
+  - /weather
+service:
+  name: weather-service

@@ -115,6 +115,52 @@ rows:
             - text: See MCP server tools
               url: "/mcp/kong-mcp/tools"
 
+  - header:
+      type: h3
+      text: "Autogenerate, proxy and secure MCP traffic"
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                   Kong AI Gateway lets you expose APIs as [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) servers, applying the same authentication, traffic control, and observability you use for any other service.
+
+                   Instead of running custom MCP servers, you define your API schema and let the Gateway handle protocol translation, scaling, and policy enforcement.
+                    - The **AI MCP** plugin performs the protocol translation and schema-based tool generation, so any API can participate in MCP workflows without custom servers.
+                    - The **OAuth** plugin adds standardized client authentication and authorization, ensuring MCP endpoints follow the same access controls as the rest of your API ecosystem.
+
+  - column_count: 2
+    columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-mcp
+      - blocks:
+        - type: card
+          config:
+            title: MCP Oauth
+            description: Enforce client authentication and authorization for MCP endpoints.
+            icon: /assets/icons/lock.svg
+            cta:
+              url: ./
+              align: end
+
+
+  - header:
+        type: h4
+        text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-mcp
+              tags:
+                - mcp
+              quantity: 2
+              allow_empty: true
 
   - header:
       type: h2

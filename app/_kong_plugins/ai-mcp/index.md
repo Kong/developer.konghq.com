@@ -49,6 +49,10 @@ related_resources:
   - text: Kong MCP traffic gateway
     url: /mcp/
     icon: /assets/icons/mcp.svg
+  - text: Autogenerate MCP tools from a RESTful API
+    url: /mcp/autogenerate-serverless-mcp/
+  - text: Autogenerate MCP tools for Weather API
+    url: /mcp/weather-mcp-api/
 
 search_aliases:
   - ai
@@ -63,6 +67,10 @@ next_steps:
     url: /mcp/
   - text: Learn about {{site.konnect_product_name}} MCP Server
     url: /mcp/kong-mcp/get-started/
+  - text: Autogenerate MCP tools from a RESTful API
+    url: /mcp/autogenerate-serverless-mcp/
+  - text: Autogenerate MCP tools for Weather API
+    url: /mcp/weather-mcp-api/
 ---
 The **AI MCP** plugin lets you expose any Kong-managed Service as a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can call existing APIs without custom server code.
 

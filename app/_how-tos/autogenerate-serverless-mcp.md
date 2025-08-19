@@ -1,5 +1,5 @@
 ---
-title: Autogenerate serverless MCP from a RESTful API
+title: Autogenerate MCP tools from a RESTful API
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -60,9 +60,6 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
@@ -164,11 +161,18 @@ entities:
 
 ## Validate the configuration
 
+Enter the following question in the Cursor chat:
+
 ```text
 What users do you see in the API?
 ```
 
-You should see the following output:
+```
+I'll query the marketplace service for the list of users
+> Called mcp-route-1
+```
+
+When the agent finishes reasoning, Yyou should see the following output:
 
 ```text
 Let me check what users are available in the API:
@@ -197,8 +201,8 @@ You'll notice that Cursor calls the tools exposed by the AI MCP plugin:
 ```text
 I'll look up the list of users to find Alice's user ID. Then I'll fetch her orders.
 
-called mcp-route-1
-called mcp-route-2
+> called mcp-route-1
+> called mcp-route-2
 ```
 {:.no-copy-code}
 
