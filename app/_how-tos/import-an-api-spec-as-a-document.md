@@ -37,8 +37,8 @@ related_resources:
     url: /insomnia/api-specs/
   - text: Design documents
     url: /insomnia/documents/
-  - text: Export your API design document or request data
-    url: /how-to/export-an-api-spec-as-a-document/      
+  - text: Import and export reference for Insomnia
+    url: /insomnia/import-export/  
 ---
 
 ## Select a specification

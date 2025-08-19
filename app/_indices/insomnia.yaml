@@ -18,7 +18,6 @@ sections:
       - path: /how-to/create-a-design-document/
       - path: /how-to/add-custom-linting-rules/
       - path: /how-to/import-an-api-spec-as-a-document/
-      - path: /how-to/export-an-api-spec-as-a-document/
       - path: /how-to/generate-a-collection-from-a-design-document/
       - path: /how-to/import-content-from-a-git-repository/
 
