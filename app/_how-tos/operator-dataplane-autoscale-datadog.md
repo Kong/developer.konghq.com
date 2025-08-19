@@ -71,19 +71,18 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
 
 1. Create a GatewayConfiguration that uses it:
 
-    ```yaml
+    ```bash
     echo '
     kind: GatewayConfiguration
-    apiVersion: gateway-operator.konghq.com/v1beta1
+    apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
     metadata:
       name: kong
       namespace: kong
     spec:
-      controlPlaneOptions:
-        extensions:
-        - kind: DataPlaneMetricsExtension
-          group: gateway-operator.konghq.com
-          name: kong
+      extensions:
+      - kind: DataPlaneMetricsExtension
+        group: gateway-operator.konghq.com
+        name: kong
     ' | kubectl apply -f -
     ```
 
@@ -103,7 +102,6 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
         }
     ]'
     ```
-
 
 {{ site.operator_product_name }} can be integrated with [Datadog Metrics](https://docs.datadoghq.com/metrics/) in order to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
 

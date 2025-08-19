@@ -73,16 +73,15 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
     ```yaml
     echo '
     kind: GatewayConfiguration
-    apiVersion: gateway-operator.konghq.com/v1beta1
+    apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
     metadata:
       name: kong
       namespace: kong
     spec:
-      controlPlaneOptions:
-        extensions:
-        - kind: DataPlaneMetricsExtension
-          group: gateway-operator.konghq.com
-          name: kong
+      extensions:
+      - kind: DataPlaneMetricsExtension
+        group: gateway-operator.konghq.com
+        name: kong
     ' | kubectl apply -f -
     ```
 
@@ -163,7 +162,7 @@ This can be verified by going to your Prometheus UI and querying:
 up{service=~"kgo-gateway-operator-metrics-service"}
 ```
 
-{:.important}
+{:.info}
 > Prometheus metrics can take up to 2 minutes to appear.
 
 ## Install prometheus-adapter
