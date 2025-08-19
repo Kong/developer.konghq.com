@@ -50,6 +50,12 @@ prereqs:
         export HOSTNAME='YOUR-KEYCLOAK-HOSTNAME'
         ```
       icon_url: /assets/icons/code.svg
+    - title: Java
+      content: |
+        To complete this tutorial, you need [Java installed](https://www.java.com/download/manual.jsp). 
+        
+        Java is required because we're using keytool to create the CA JKS keystore with your root certificates.
+      icon_url: /assets/icons/java.svg
 
 tags:
   - authorization
@@ -85,88 +91,28 @@ In this tutorial, you'll need various certificates such as:
 * Client certificate
 * Server certificate
 
-1. You can save the following script as `gen_certs.sh` to help you generate a CA certificate, CA private key, and server private key:
-   
-   {:.danger}
-   > **Important:** In this tutorial, use your DNS hostname in place of `$HOSTNAME`.
+1. Make an `/oidc/certs` directory to store the certificates and run the following steps from that directory:
+   ```sh
+   mkdir -p ~/oidc/certs && cd ~/oidc/certs
+   ```
+1. Run the following to help you generate a CA certificate:
 {% capture "gen-certs" %}
 ```sh
-#!/bin/bash
-
-# Generate root CA private key
 openssl genrsa -out rootCA.key 4096
 
-# Create root CA certificate
 openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 \
   -out rootCA.crt \
   -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=Root CA"
 
-# Generate server private key
-openssl genrsa -out keycloak.key 2048
-
-# Create server CSR with CN=$HOSTNAME
-openssl req -new -key keycloak.key -out keycloak.csr \
-  -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=$HOSTNAME"
-
-# Create SAN config for $HOSTNAME
-cat > keycloak.ext <<EOF
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName = @alt_names
-
-[alt_names]
-DNS.1 = $HOSTNAME
-EOF
-
-# Sign server CSR with root CA
-openssl x509 -req -in keycloak.csr \
-  -CA rootCA.crt -CAkey rootCA.key -CAcreateserial \
-  -out keycloak.crt -days 365 -sha256 -extfile keycloak.ext
-
-# Clean up
-rm keycloak.csr
-rm rootCA.srl
-
-echo "Root CA and server certificate for '$HOSTNAME' generated successfully."
+echo "Root CA certificate (rootCA.crt) generated successfully."
 ```
 {% endcapture %}
 {{ gen-certs | indent: 3 }}
-
-1. Now, make an `/oidc/certs` directory to store the certificates and run the script to generate and sign the certificates:
-   ```sh
-   mkdir -p ~/oidc/certs && cd ~/oidc/certs
-   bash ~/gen_certs.sh
-   ```
 1. Export your PKCS#12 and keystore passwords, both must be at least six characters:
    ```sh
    export PKCS12_PASSWORD='YOUR-PASSWORD'
    export KEYSTORE_PASS='YOUR-PASSWORD'
    ```
-1. Build a PKCS#12 keystore file:
-   ```sh
-   openssl pkcs12 -export \
-     -in keycloak.crt \
-     -inkey keycloak.key \
-     -certfile rootCA.crt \
-     -out keycloak-keystore.p12 \
-     -name keycloak \
-     -passout pass:$PKCS12_PASSWORD
-   ```
-1. Import the root certificates to the `.p12` file:
-{% capture "import-root" %}
-```sh
-keytool -importkeystore \
-  -deststorepass $KEYSTORE_PASS \
-  -destkeypass $KEYSTORE_PASS \
-  -destkeystore keycloak-keystore.jks \
-  -srckeystore keycloak-keystore.p12 \
-  -srcstoretype PKCS12 \
-  -srcstorepass $PKCS12_PASSWORD \
-  -alias keycloak
-```
-{% endcapture %}
-{{ import-root | indent: 3 }}
 1. Generate the client certificate:
 {% capture "client-cert" %}
 ```sh
@@ -215,6 +161,30 @@ openssl x509 -req \
 {% endcapture %}
 {{ server-cert | indent: 3 }}
 This is used to authenticate with Keycloak and to consume the API with access token. The generated CN must adhere to the pre-defined pattern for Keycloak validation.
+1. Build a PKCS#12 keystore file:
+   ```sh
+   openssl pkcs12 -export \
+     -in keycloak.crt \
+     -inkey keycloak.key \
+     -certfile rootCA.crt \
+     -out keycloak-keystore.p12 \
+     -name keycloak \
+     -passout pass:$PKCS12_PASSWORD
+   ```
+1. Import the root certificates to the `.p12` file:
+{% capture "import-root" %}
+```sh
+keytool -importkeystore \
+  -deststorepass $KEYSTORE_PASS \
+  -destkeypass $KEYSTORE_PASS \
+  -destkeystore keycloak-keystore.jks \
+  -srckeystore keycloak-keystore.p12 \
+  -srcstoretype PKCS12 \
+  -srcstorepass $PKCS12_PASSWORD \
+  -alias keycloak
+```
+{% endcapture %}
+{{ import-root | indent: 3 }}
 
 1. Configure Keycloak to trust certificates signed by the CA:
 {% capture "keycloak-trust" %}
@@ -229,13 +199,14 @@ keytool -list -keystore keycloak-truststore.p12 -storepass "$PKCS12_PASSWORD"
 ```
 {% endcapture %}
 {{ keycloak-trust | indent: 3 }}
-The Keycloak server presents this certificate to the client.
+Type `y` when prompted to trust the certificate. The Keycloak server presents this certificate to the client.
 
 ## Configure Keycloak
 
-1. In a new terminal window, export your trust store password:
+1. In a new terminal window, export your trust store password and hostname:
    ```sh
    export PKCS12_PASSWORD='YOUR-PASSWORD'
+   export HOSTNAME='YOUR-KEYCLOAK-HOSTNAME'
    ```
 
 1. Then, start Keycloak in Docker:
@@ -251,7 +222,6 @@ docker run \
   -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
   -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
   --name keycloak \
-  --label dev.orbstack.domains=$HOSTNAME \
   quay.io/keycloak/keycloak \
   start \
   --https-port=9443 \
@@ -266,7 +236,7 @@ docker run \
 {{ keycloak-docker | indent: 3 }}
 
 1. Open the Keycloak admin console.
-   The default URL of the console is `http://$HOSTNAME:8080/admin/master/console/`.
+   The default URL of the console is `https://$HOSTNAME:8080/admin/master/console/`.
 1. In the sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 {% capture "keycloak-client" %}
