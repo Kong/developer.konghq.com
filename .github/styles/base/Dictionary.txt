@@ -192,6 +192,7 @@ DNs
 DNs
 dockerfile
 dockerfiles
+donut
 doppelganger
 downsample
 downsampled
@@ -797,6 +798,7 @@ text_splitters
 tfvars
 timeframe
 timeframes
+timeseries
 tlds
 tls
 TLSRoute
