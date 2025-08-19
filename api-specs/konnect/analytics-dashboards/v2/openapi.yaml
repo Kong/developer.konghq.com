@@ -1,22 +1,25 @@
 openapi: 3.0.2
 info:
   title: Konnect Analytics Dashboards
-  description: |
-    Konnect endpoint for creating, reading, updating, and deleting dashboards.  Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a chart to render the data.
+  description: >
+    Konnect endpoint for creating, reading, updating, and deleting dashboards. 
+    Dashboards are entities within Konnect that contain tiles, which are
+    essentially saved queries combined with configuration for a chart to render
+    the data.
   version: 2.0.0
   contact:
     name: Kong
-    url: 'https://cloud.konghq.com'
+    url: https://cloud.konghq.com
 servers:
-  - url: 'https://us.api.konghq.com/v2'
+  - url: https://us.api.konghq.com/v2
     description: United-States Production region
-  - url: 'https://eu.api.konghq.com/v2'
+  - url: https://eu.api.konghq.com/v2
     description: Europe Production region
-  - url: 'https://au.api.konghq.com/v2'
+  - url: https://au.api.konghq.com/v2
     description: Australia Production region
-  - url: 'https://me.api.konghq.com/v2'
+  - url: https://me.api.konghq.com/v2
     description: Middle-East Production region
-  - url: 'https://in.api.konghq.com/v2'
+  - url: https://in.api.konghq.com/v2
     description: India Production region
 paths:
   /dashboards:
@@ -60,23 +63,23 @@ paths:
             schema:
               $ref: '#/components/schemas/DashboardUpdateRequest'
             examples:
-              'Single Tile, Timeseries Line':
+              Single Tile, Timeseries Line:
                 $ref: '#/components/examples/TimeSeriesLineDashboardExample'
-              'Single Tile, Timeseries Bar':
+              Single Tile, Timeseries Bar:
                 $ref: '#/components/examples/TimeSeriesBarDashboardExample'
-              'Single Tile, Horizontal Bar':
+              Single Tile, Horizontal Bar:
                 $ref: '#/components/examples/HorizontalBarDashboardExample'
-              'Single Tile, Vertical Bar':
+              Single Tile, Vertical Bar:
                 $ref: '#/components/examples/VerticalBarDashboardExample'
-              'Single Tile, Donut (LLM datasource)':
+              Single Tile, Donut (LLM datasource):
                 $ref: '#/components/examples/DonutDashboardExample'
-              'Single Tile, Single Value':
+              Single Tile, Single Value:
                 $ref: '#/components/examples/SingleValueDashboardExample'
               Multiple tiles and preset filters:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
       responses:
         '201':
-          description: 'The created dashboard, including generated fields.'
+          description: The created dashboard, including generated fields.
           content:
             application/json:
               schema:
@@ -94,7 +97,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Dashboards
-  '/dashboards/{dashboardId}':
+  /dashboards/{dashboardId}:
     parameters:
       - name: dashboardId
         in: path
@@ -126,7 +129,9 @@ paths:
     put:
       operationId: dashboards-update
       summary: Update an existing dashboard
-      description: 'Update an existing dashboard, replacing its definition with the provided one.'
+      description: >-
+        Update an existing dashboard, replacing its definition with the provided
+        one.
       requestBody:
         required: true
         content:
@@ -134,23 +139,23 @@ paths:
             schema:
               $ref: '#/components/schemas/DashboardUpdateRequest'
             examples:
-              'Single Tile, Timeseries Line':
+              Single Tile, Timeseries Line:
                 $ref: '#/components/examples/TimeSeriesLineDashboardExample'
-              'Single Tile, Timeseries Bar':
+              Single Tile, Timeseries Bar:
                 $ref: '#/components/examples/TimeSeriesBarDashboardExample'
-              'Single Tile, Horizontal Bar':
+              Single Tile, Horizontal Bar:
                 $ref: '#/components/examples/HorizontalBarDashboardExample'
-              'Single Tile, Vertical Bar':
+              Single Tile, Vertical Bar:
                 $ref: '#/components/examples/VerticalBarDashboardExample'
-              'Single Tile, Donut (LLM datasource)':
+              Single Tile, Donut (LLM datasource):
                 $ref: '#/components/examples/DonutDashboardExample'
-              'Single Tile, Single Value':
+              Single Tile, Single Value:
                 $ref: '#/components/examples/SingleValueDashboardExample'
               Multiple tiles and preset filters:
                 $ref: '#/components/examples/MultipleTilePresetFiltersExample'
       responses:
         '200':
-          description: 'The created dashboard, including generated fields.'
+          description: The created dashboard, including generated fields.
           content:
             application/json:
               schema:
@@ -202,18 +207,26 @@ components:
       schema:
         allOf:
           - $ref: '#/components/schemas/SortQuery'
-          - description: |
+          - description: >
               Sorts a collection of dashboards. Supported sort attributes are:
 
+
               - name
+
               - created_at
+
               - updated_at
 
-              The `asc` suffix is optional as the default sort order is ascending.
+
+              The `asc` suffix is optional as the default sort order is
+              ascending.
+
               The `desc` suffix is used to specify a descending order.
-              Multiple sort attributes may be provided via a comma separated list.
+
+              Multiple sort attributes may be provided via a comma separated
+              list.
     PageNumber:
-      name: 'page[number]'
+      name: page[number]
       description: Determines which page of the entities to retrieve.
       required: false
       in: query
@@ -222,8 +235,10 @@ components:
         type: integer
         example: 1
     PageSize:
-      name: 'page[size]'
-      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      name: page[size]
+      description: >-
+        The maximum number of items to include per page. The last page of a
+        collection may include fewer items.
       required: false
       in: query
       allowEmptyValue: true
@@ -367,12 +382,17 @@ components:
       type: object
       properties:
         layout:
-          description: |
+          description: >
             Information about how the tile is placed on the dashboard.
 
+
             Examples:
-            - a tile occupying the first half of the top row: `{ "position": { "col": 0, "row": 0 }, size: { "cols": 3, "rows": 1 } }`
-            - a tile occupying the second half of the top row: `{ "position": { "col": 3, "row": 0 }, size: { "cols": 3, "rows": 1 } }`
+
+            - a tile occupying the first half of the top row: `{ "position": {
+            "col": 0, "row": 0 }, size: { "cols": 3, "rows": 1 } }`
+
+            - a tile occupying the second half of the top row: `{ "position": {
+            "col": 3, "row": 0 }, size: { "cols": 3, "rows": 1 } }`
           type: object
           example:
             position:
@@ -384,8 +404,10 @@ components:
           additionalProperties: false
           properties:
             position:
-              description: |
-                Position of the tile in the dashboard's grid.  Numbering starts at 0, so a tile in the upper left of the dashboard will be at column 0, row 0.
+              description: >
+                Position of the tile in the dashboard's grid.  Numbering starts
+                at 0, so a tile in the upper left of the dashboard will be at
+                column 0, row 0.
               type: object
               additionalProperties: false
               properties:
@@ -400,8 +422,10 @@ components:
                 - col
                 - row
             size:
-              description: |
-                Number of columns and rows the tile occupies.  A dashboard always has 6 columns, but has as many rows as needed to accommodate the given tiles.
+              description: >
+                Number of columns and rows the tile occupies.  A dashboard
+                always has 6 columns, but has as many rows as needed to
+                accommodate the given tiles.
               type: object
               additionalProperties: false
               properties:
@@ -424,9 +448,13 @@ components:
           enum:
             - chart
         definition:
-          description: |
-            The tile's definition, which consists of a query to fetch data and a chart to render the data.
-            Note that some charts expect certain types of queries to render properly.  The documentation for the individual chart types has more information.
+          description: >
+            The tile's definition, which consists of a query to fetch data and a
+            chart to render the data.
+
+            Note that some charts expect certain types of queries to render
+            properly.  The documentation for the individual chart types has more
+            information.
           type: object
           additionalProperties: false
           properties:
@@ -450,26 +478,37 @@ components:
         - type
         - definition
     Dashboard:
-      description: |
+      description: >
         A JSON object describing a dashboard.
 
-        A dashboard is an array of tiles.  All tiles are of type 'chart', which query data and render a chart displaying that data.
 
-        Dashboards have 6 columns and as many rows as necessary to display their tiles.
+        A dashboard is an array of tiles.  All tiles are of type 'chart', which
+        query data and render a chart displaying that data.
+
+
+        Dashboards have 6 columns and as many rows as necessary to display their
+        tiles.
       type: object
       properties:
         tiles:
-          description: 'The array of tiles.  We currently support up to 102 tiles, which is 17 rows of 6x1 tiles.'
+          description: >-
+            The array of tiles.  We currently support up to 102 tiles, which is
+            17 rows of 6x1 tiles.
           type: array
           items:
             $ref: '#/components/schemas/Tile'
           maxLength: 102
           minLength: 0
         preset_filters:
-          description: |
-            An optional array of filters that are applied globally to all relevant tiles in the dashboard.
+          description: >
+            An optional array of filters that are applied globally to all
+            relevant tiles in the dashboard.
 
-            Whether or not a preset filter applies to a tile depends on the filter's dimension.  Some dimensions, like `control_plane`, are common to all datasources; other dimensions may only apply to one datasource.
+
+            Whether or not a preset filter applies to a tile depends on the
+            filter's dimension.  Some dimensions, like `control_plane`, are
+            common to all datasources; other dimensions may only apply to one
+            datasource.
           type: array
           items:
             $ref: '#/components/schemas/AllFilterItems'
@@ -489,8 +528,10 @@ components:
       type: object
       properties:
         name:
-          description: |
-            The dashboard name, which is displayed at the top of the dashboard and in lists.
+          description: >
+            The dashboard name, which is displayed at the top of the dashboard
+            and in lists.
+
             It does not need to be unique.
           type: string
           maxLength: 255
@@ -507,8 +548,10 @@ components:
       type: object
       properties:
         name:
-          description: |
-            The dashboard name, which is displayed at the top of the dashboard and in lists.
+          description: >
+            The dashboard name, which is displayed at the top of the dashboard
+            and in lists.
+
             It does not need to be unique.
           type: string
           maxLength: 255
@@ -561,7 +604,9 @@ components:
         example-2:
           eq: some-value
     StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+      description: >-
+        Returns entities that exact match any of the comma-delimited phrases in
+        the filter string.
       type: object
       properties:
         oeq:
@@ -572,7 +617,7 @@ components:
       title: StringFieldOEQFilter
       x-examples:
         example-1:
-          oeq: 'some-value,some-other-value'
+          oeq: some-value,some-other-value
     StringFieldNEQFilter:
       description: Filters on the given string field value by exact match inequality.
       type: object
@@ -615,7 +660,9 @@ components:
         example-1:
           contains: some-value
     StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
+      description: >-
+        Returns entities that fuzzy-match any of the comma-delimited phrases in
+        the filter string.
       type: object
       properties:
         ocontains:
@@ -626,7 +673,7 @@ components:
       title: StringFieldOContainsFilter
       x-examples:
         example-1:
-          ocontains: 'this-value,or-that-value'
+          ocontains: this-value,or-that-value
     StringFieldFilter:
       description: Filters on the given string field value by either exact or fuzzy match.
       oneOf:
@@ -643,16 +690,18 @@ components:
         example-3:
           contains: some-value
         example-4:
-          ocontains: 'some-potential,value'
+          ocontains: some-potential,value
         example-5:
-          oeq: 'some-potential,value'
+          oeq: some-potential,value
         example-6:
           neq: not-this-value
     LabelsFieldFilter:
       allOf:
         - title: LabelsFieldFilter
-          description: |
-            Filters on the resource's `labels` field. Filters must use dot-notation to identify
+          description: >
+            Filters on the resource's `labels` field. Filters must use
+            dot-notation to identify
+
             the label key that will be used to filter the results. For example:
               - `filter[labels.owner]`
               - `filter[labels.owner][neq]=kong`
@@ -694,7 +743,9 @@ components:
           additionalProperties: false
           properties:
             lte:
-              description: Value is less than or equal to the given RFC-3339 formatted timestamp in UTC
+              description: >-
+                Value is less than or equal to the given RFC-3339 formatted
+                timestamp in UTC
               type: string
               format: date-time
               example: '2022-03-30T07:20:50Z'
@@ -705,7 +756,9 @@ components:
           additionalProperties: false
           properties:
             lt:
-              description: Value is greater than the given RFC-3339 formatted timestamp in UTC
+              description: >-
+                Value is greater than the given RFC-3339 formatted timestamp in
+                UTC
               type: string
               format: date-time
               example: '2022-03-30T07:20:50Z'
@@ -716,7 +769,9 @@ components:
           additionalProperties: false
           properties:
             lte:
-              description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
+              description: >-
+                Value is greater than or equal to the given RFC-3339 formatted
+                timestamp in UTC
               type: string
               format: date-time
               example: '2022-03-30T07:20:50Z'
@@ -736,16 +791,22 @@ components:
         datetime_field_6:
           gte: '2022-03-30T07:20:50Z'
     SortQuery:
-      description: |
+      description: >
         The `asc` suffix is optional as the default sort order is ascending.
+
         The `desc` suffix is used to specify a descending order.
+
         Multiple sort attributes may be provided via a comma separated list.
-        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar
+        desc').
       type: string
       example: created_at desc
       title: SortQuery
     PageMeta:
-      description: Contains pagination query parameters and the total number of objects returned.
+      description: >-
+        Contains pagination query parameters and the total number of objects
+        returned.
       type: object
       properties:
         number:
@@ -771,7 +832,9 @@ components:
         - page
       title: PaginatedMeta
     AdvancedMetrics:
-      description: 'List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.'
+      description: >-
+        List of aggregated metrics to collect across the requested time span. If
+        no metrics are specified, request_count will be computed by default.
       type: array
       items:
         type: string
@@ -803,14 +866,17 @@ components:
       default:
         - request_count
     RequestsFilterType:
-      description: 'The type of filter to apply.  `in` filters will limit results to only the specified values, while `not_in` filters will exclude the specified values.'
+      description: >-
+        The type of filter to apply.  `in` filters will limit results to only
+        the specified values, while `not_in` filters will exclude the specified
+        values.
       type: string
       enum:
         - in
         - not_in
     UnscopedUuid:
       type: string
-      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
     RequestsFilterTypeEmpty:
       description: The type of filter to apply.
       type: string
@@ -963,7 +1029,8 @@ components:
       title: Filter by application
     ScopedUuid:
       type: string
-      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      pattern: >-
+        ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
     MetricsConsumerFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -972,8 +1039,12 @@ components:
             operator:
               $ref: '#/components/schemas/RequestsFilterType'
             value:
-              description: |
-                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              description: >
+                The IDs to include in the results. Because gateway IDs are only
+                unique within a given control plane, the filter values must be
+                of the form `control_plane_id:field_id` or
+                `control_plane_group_id:field_id` for data plane nodes within a
+                control plane group.
               type: array
               items:
                 $ref: '#/components/schemas/ScopedUuid'
@@ -1080,8 +1151,12 @@ components:
             operator:
               $ref: '#/components/schemas/RequestsFilterType'
             value:
-              description: |
-                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              description: >
+                The IDs to include in the results. Because gateway IDs are only
+                unique within a given control plane, the filter values must be
+                of the form `control_plane_id:field_id` or
+                `control_plane_group_id:field_id` for data plane nodes within a
+                control plane group.
               type: array
               items:
                 $ref: '#/components/schemas/ScopedUuid'
@@ -1152,8 +1227,12 @@ components:
             operator:
               $ref: '#/components/schemas/RequestsFilterType'
             value:
-              description: |
-                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              description: >
+                The IDs to include in the results. Because gateway IDs are only
+                unique within a given control plane, the filter values must be
+                of the form `control_plane_id:field_id` or
+                `control_plane_group_id:field_id` for data plane nodes within a
+                control plane group.
               type: array
               items:
                 $ref: '#/components/schemas/ScopedUuid'
@@ -1296,8 +1375,12 @@ components:
             operator:
               $ref: '#/components/schemas/RequestsFilterType'
             value:
-              description: |
-                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              description: >
+                The IDs to include in the results. Because gateway IDs are only
+                unique within a given control plane, the filter values must be
+                of the form `control_plane_id:field_id` or
+                `control_plane_group_id:field_id` for data plane nodes within a
+                control plane group.
               type: array
               items:
                 $ref: '#/components/schemas/ScopedUuid'
@@ -1375,7 +1458,7 @@ components:
               type: array
               items:
                 type: string
-                pattern: '^\d[xX][xX]$'
+                pattern: ^\d[xX][xX]$
             field:
               description: The field to filter.
               type: string
@@ -1450,7 +1533,7 @@ components:
               type: array
               items:
                 type: string
-                pattern: '^\d[xX][xX]$'
+                pattern: ^\d[xX][xX]$
             field:
               description: The field to filter.
               type: string
@@ -1519,12 +1602,20 @@ components:
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
     Granularity:
-      description: |
-        Force time grouping into buckets of the specified duration.  Only has an effect if "time" is in the "dimensions" list.
+      description: >
+        Force time grouping into buckets of the specified duration.  Only has an
+        effect if "time" is in the "dimensions" list.
 
-        The granularity of the result may be coarser than requested.  The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity.  The exact result granularity will be reported in the response `meta.granularity_ms` field.
 
-        If granularity is not specified and "time" is in the dimensions list, a default will be chosen based on the time range requested.
+        The granularity of the result may be coarser than requested.  The finest
+        allowed granularity depends on the query's time range: data farther in
+        the past may have coarser granularity.  The exact result granularity
+        will be reported in the response `meta.granularity_ms` field.
+
+
+        If granularity is not specified and "time" is in the dimensions list, a
+        default will be chosen based on the time range requested.
+
 
         Different relative times support different granularities:
           - 15m => tenSecondly, thirtySecondly, minutely
@@ -1554,7 +1645,15 @@ components:
         - daily
         - weekly
     MetricsRelativeTimeRangeDtoV2:
-      description: 'A duration representing a relative-to-now span of time. Generally the start time is floored to the requested granularity. Eg 7d from now, with 1day granularity initiated at 2024-01-08T17:11:00+05:00 will query for the time range from 2024-01-01T00:00:00+05:00 to 2024-01-08T17:11:00+05:00. The exact start and end timestamps are returned in the result query in the meta.start and meta.end fields. If the granularity for the previous query was 1hour, it would query a time range from 2024-01-01T17:00:00+05:00 to 2024-01-08T17:11:00+05:00.'
+      description: >-
+        A duration representing a relative-to-now span of time. Generally the
+        start time is floored to the requested granularity. Eg 7d from now, with
+        1day granularity initiated at 2024-01-08T17:11:00+05:00 will query for
+        the time range from 2024-01-01T00:00:00+05:00 to
+        2024-01-08T17:11:00+05:00. The exact start and end timestamps are
+        returned in the result query in the meta.start and meta.end fields. If
+        the granularity for the previous query was 1hour, it would query a time
+        range from 2024-01-01T17:00:00+05:00 to 2024-01-08T17:11:00+05:00.
       type: object
       properties:
         tz:
@@ -1927,13 +2026,15 @@ components:
           - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
     DonutChart:
-      description: |
-        A chart that can display one-dimensional data in a hollow, segmented circle.  To use this chart, ensure that
+      description: >
+        A chart that can display one-dimensional data in a hollow, segmented
+        circle.  To use this chart, ensure that
+
         the query includes only one dimension (not `time`).
       type: object
       properties:
         chart_title:
-          description: 'The title of the chart, which is displayed in the tile''s header.'
+          description: The title of the chart, which is displayed in the tile's header.
           type: string
         type:
           type: string
@@ -1944,19 +2045,26 @@ components:
         - type
       title: Donut chart
     TimeseriesChart:
-      description: |
-        A chart that can render timeseries data -- data from a query that has `time` as a dimension -- as lines or bars.
+      description: >
+        A chart that can render timeseries data -- data from a query that has
+        `time` as a dimension -- as lines or bars.
+
 
         This type of chart can support:
 
-        - One or more metrics: `{ metrics: ["response_latency_p99", "response_latency_p95"], dimensions: ["time"] }`
-        - One metric plus one non-time dimension: `{ metrics: ["request_count"], dimensions: ["time", "gateway_service"] }` 
+
+        - One or more metrics: `{ metrics: ["response_latency_p99",
+        "response_latency_p95"], dimensions: ["time"] }`
+
+        - One metric plus one non-time dimension: `{ metrics: ["request_count"],
+        dimensions: ["time", "gateway_service"] }` 
+
 
         Either way, ensure that `time` is in the list of query dimensions.
       type: object
       properties:
         chart_title:
-          description: 'The title of the chart, which is displayed in the tile''s header.'
+          description: The title of the chart, which is displayed in the tile's header.
           type: string
         type:
           type: string
@@ -1964,21 +2072,25 @@ components:
             - timeseries_line
             - timeseries_bar
         stacked:
-          description: |
-            Whether to stack the bars or lines (implicitly adding them together to form a total), or leave them independent from each other.
+          description: >
+            Whether to stack the bars or lines (implicitly adding them together
+            to form a total), or leave them independent from each other.
           type: boolean
       additionalProperties: false
       required:
         - type
       title: Timeseries chart
     BarChart:
-      description: |
-        A chart that can display non-timeseries data as bars.  This type of chart supports up to 2 dimensions (not `time`).
-        To render a bar chart of timeseries data, use a `timeseries_bar` chart instead.
+      description: >
+        A chart that can display non-timeseries data as bars.  This type of
+        chart supports up to 2 dimensions (not `time`).
+
+        To render a bar chart of timeseries data, use a `timeseries_bar` chart
+        instead.
       type: object
       properties:
         chart_title:
-          description: 'The title of the chart, which is displayed in the tile''s header.'
+          description: The title of the chart, which is displayed in the tile's header.
           type: string
         type:
           type: string
@@ -1986,26 +2098,31 @@ components:
             - horizontal_bar
             - vertical_bar
         stacked:
-          description: |
-            Whether to stack the bars (implicitly adding them together to form a total), or leave them independent from each other.
+          description: >
+            Whether to stack the bars (implicitly adding them together to form a
+            total), or leave them independent from each other.
           type: boolean
       additionalProperties: false
       required:
         - type
       title: Bar chart
     SingleValueChart:
-      description: A chart that can render a single number.  This chart works with a single metric and no dimensions.
+      description: >-
+        A chart that can render a single number.  This chart works with a single
+        metric and no dimensions.
       type: object
       properties:
         chart_title:
-          description: 'The title of the chart, which is displayed in the tile''s header.'
+          description: The title of the chart, which is displayed in the tile's header.
           type: string
         type:
           type: string
           enum:
             - single_value
         decimal_points:
-          description: 'The number of figures to render after the decimal.  Most metrics only support up to 2 decimals, but some may support more.'
+          description: >-
+            The number of figures to render after the decimal.  Most metrics
+            only support up to 2 decimals, but some may support more.
           type: number
       additionalProperties: false
       required:
@@ -2083,16 +2200,19 @@ components:
         - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
         - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
     Labels:
-      description: |
-        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+      description: >
+        Labels store metadata of an entity that can be used for filtering an
+        entity list or for searching across entity types. 
 
-        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+
+        Keys must be of length 1-63 characters, and cannot start with "kong",
+        "konnect", "mesh", "kic", or "_".
       type: object
       example:
         env: test
       additionalProperties:
         type: string
-        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
         minLength: 1
         maxLength: 63
       maxProperties: 50
@@ -2120,9 +2240,11 @@ components:
       type: object
       properties:
         status:
-          description: |
+          description: >
             The HTTP status code of the error. Useful when passing the response
-            body to child properties in a frontend UI. Must be returned as an integer.
+
+            body to child properties in a frontend UI. Must be returned as an
+            integer.
           type: integer
           readOnly: true
         title:
@@ -2144,10 +2266,16 @@ components:
           type: string
           readOnly: true
         detail:
-          description: |
-            A human readable explanation specific to this occurence of the problem.
-            This field may contain request/entity data to help the user understand
-            what went wrong. Enclose variable values in square brackets. Should be
+          description: >
+            A human readable explanation specific to this occurence of the
+            problem.
+
+            This field may contain request/entity data to help the user
+            understand
+
+            what went wrong. Enclose variable values in square brackets. Should
+            be
+
             provided as "Sentence case" for direct use in the UI.
           type: string
           readOnly: true
@@ -2167,9 +2295,9 @@ components:
             title:
               example: Unauthorized
             type:
-              example: 'https://httpstatuses.com/401'
+              example: https://httpstatuses.com/401
             instance:
-              example: 'kong:trace:1234567890'
+              example: kong:trace:1234567890
             detail:
               example: Invalid credentials
     ForbiddenError:
@@ -2182,9 +2310,9 @@ components:
             title:
               example: Forbidden
             type:
-              example: 'https://httpstatuses.com/403'
+              example: https://httpstatuses.com/403
             instance:
-              example: 'kong:trace:1234567890'
+              example: kong:trace:1234567890
             detail:
               example: Forbidden
     NotFoundError:
@@ -2197,15 +2325,15 @@ components:
             title:
               example: Not Found
             type:
-              example: 'https://httpstatuses.com/404'
+              example: https://httpstatuses.com/404
             instance:
-              example: 'kong:trace:1234567890'
+              example: kong:trace:1234567890
             detail:
               example: Not found
   examples:
     TimeSeriesLineDashboardExample:
       value:
-        name: 'Single Tile, Timeseries Line'
+        name: Single Tile, Timeseries Line
         definition:
           tiles:
             - type: chart
@@ -2220,7 +2348,7 @@ components:
                 chart:
                   type: timeseries_line
                   stacked: false
-                  chart_title: 'Plot of p99, p95, and p50 latency over time'
+                  chart_title: Plot of p99, p95, and p50 latency over time
                 query:
                   datasource: api_usage
                   dimensions:
@@ -2231,7 +2359,7 @@ components:
                     - response_latency_p50
     TimeSeriesBarDashboardExample:
       value:
-        name: 'Single Tile, Timeseries Bar'
+        name: Single Tile, Timeseries Bar
         labels:
           team: team-1
         definition:
@@ -2256,7 +2384,7 @@ components:
                     - control_plane
     HorizontalBarDashboardExample:
       value:
-        name: 'Single Tile, Horizontal Bar'
+        name: Single Tile, Horizontal Bar
         definition:
           tiles:
             - type: chart
@@ -2281,7 +2409,7 @@ components:
                     - status_code
     VerticalBarDashboardExample:
       value:
-        name: 'Single Tile, Vertical Bar'
+        name: Single Tile, Vertical Bar
         definition:
           tiles:
             - type: chart
@@ -2308,7 +2436,7 @@ components:
                       field: api
     DonutDashboardExample:
       value:
-        name: 'Single Tile, Donut (LLM datasource)'
+        name: Single Tile, Donut (LLM datasource)
         definition:
           tiles:
             - type: chart
@@ -2333,10 +2461,11 @@ components:
                     - operator: in
                       field: gateway_service
                       value:
-                        - '00000000-0000-0000-0000-000000000000:00000000-0000-0000-0000-000000000000'
+                        - >-
+                          00000000-0000-0000-0000-000000000000:00000000-0000-0000-0000-000000000000
     SingleValueDashboardExample:
       value:
-        name: 'Single Tile, Single Value'
+        name: Single Tile, Single Value
         definition:
           tiles:
             - type: chart
@@ -2357,7 +2486,7 @@ components:
                   datasource: api_usage
     MultipleTilePresetFiltersExample:
       value:
-        name: 'Multiple tiles, with filters'
+        name: Multiple tiles, with filters
         definition:
           tiles:
             - type: chart
@@ -2410,7 +2539,7 @@ components:
       value:
         status: 400
         title: Invalid Request
-        instance: 'kong:trace:6591723055278037644'
+        instance: kong:trace:6591723055278037644
         detail: Invalid Parameters
         invalid_parameters:
           - field: time_range.time_range
@@ -2429,19 +2558,19 @@ components:
       value:
         status: 401
         title: Unauthorized
-        instance: 'kong:trace:8347343766220159418'
+        instance: kong:trace:8347343766220159418
         detail: Unauthorized
     ForbiddenExample:
       value:
         status: 403
         title: Forbidden
-        instance: 'kong:trace:2723154947768991354'
+        instance: kong:trace:2723154947768991354
         detail: You do not have permission to perform this action
     NotFoundExample:
       value:
         status: 404
         title: Not Found
-        instance: 'kong:trace:6816496025408232265'
+        instance: kong:trace:6816496025408232265
         detail: Not Found
   responses:
     Unauthorized:
@@ -2476,20 +2605,34 @@ components:
       type: http
       scheme: bearer
       bearerFormat: Token
-      description: |
-        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
-        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
+      description: >
+        The personal access token is meant to be used as an alternative to
+        basic-auth when accessing Konnect via APIs.
+
+        You can generate a Personal Access Token (PAT) from the [personal access
+        token page](https://cloud.konghq.com/global/account/tokens/) in the
+        Konnect dashboard.
+
         The PAT token must be passed in the header of a request, for example:
-        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
+
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header
+        'Authorization: Bearer kpat_xgfT...'`
     systemAccountAccessToken:
       type: http
       scheme: bearer
       bearerFormat: Token
-      description: |
-        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
-        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+      description: >
+        The system account access token is meant for automations and
+        integrations that are not directly associated with a human identity.
+
+        You can generate a system account Access Token by creating a system
+        account and then obtaining a system account access token for that
+        account.
+
         The access token must be passed in the header of a request, for example:
-        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
+
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header
+        'Authorization: Bearer spat_i2Ej...'`
 tags:
   - name: Dashboards
 security:

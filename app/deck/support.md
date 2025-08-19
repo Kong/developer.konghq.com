@@ -1,5 +1,5 @@
 ---
-title: decK version support
+title: decK version support policy
 
 description: The decK version support policy outlines the decK versioning scheme and version lifecycle.
 

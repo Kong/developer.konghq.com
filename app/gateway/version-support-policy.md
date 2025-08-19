@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} version support"
+title: "{{site.base_gateway}} version support policy"
 content_type: policy
 layout: reference
 
