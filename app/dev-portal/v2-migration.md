@@ -27,13 +27,15 @@ related_resources:
     url: /dev-portal/breaking-changes/
   - text: "{{site.konnect_short_name}} release notes"
     url: https://releases.konghq.com/en
+  - text: Migrate your classic Dev Portal (v2) Terraform resource
+    url: /dev-portal/migrate-classic-dev-portal-resource-with-terraform/
 ---
 
 With the GA release of the new Dev Portal (v3) in June 2025, you can migrate from classic Dev Portals (v2) to the new Dev Portal. 
 
 Dev Portal v3 provides additional features such as a streamlined [API creation and publishing process](/dev-portal/apis/) and enhanced [Dev Portal customization](/dev-portal/customizations/dev-portal-customizations/) with Markdown components and snippets.
 
-## Migrate to Dev Portal v3
+## Migrate manually
 
 To migrate from Dev Portal classic (v2) to the new Dev Portal (v3), do the following:
 
