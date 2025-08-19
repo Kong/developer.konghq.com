@@ -107,6 +107,7 @@ client_status
 clipanion
 CLIs
 CLIs
+CLI
 CloudFormation
 CloudFormation
 Cloudformation
