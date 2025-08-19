@@ -11,7 +11,6 @@ description: High‑level overview of special resource IDs used internally by In
 
 tags:
   - import-export
-  - technical-reference
   - identifiers
   - serialization
 
