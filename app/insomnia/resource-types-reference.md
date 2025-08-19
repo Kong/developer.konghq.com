@@ -12,7 +12,6 @@ description: High‑level overview of the supported resource types that Insomnia
 
 tags:
   - import-export
-  - technical-reference
   - schema
   - serialization
 
