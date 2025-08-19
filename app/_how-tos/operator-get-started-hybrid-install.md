@@ -53,29 +53,31 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 ## Install {{ site.operator_product_name }}
 
-Update the Helm repository:
+1. Add the Kong Helm charts:
 
-```bash
-helm repo add kong https://charts.konghq.com
-helm repo update kong
-```
+  ```bash
+  helm repo add kong https://charts.konghq.com
+  helm repo update kong
+  ```
 
-Install {{ site.operator_product_name }} with Helm:
+1. Install {{ site.kic_product_name }} using Helm:
 
-```bash
-helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
-  --set image.tag={{ site.data.operator_latest.release }} \
-  --set env.ENABLE_CONTROLLER_KONNECT=true
-```
+  ```bash
+  helm upgrade --install ko kong/kong-operator -n kong-system \
+    --create-namespace \
+    --set image.tag={{ site.data.operator_latest.release }} \
+    --set env.ENABLE_CONTROLLER_KONNECT=true
+  ```
 
 ## Wait for {{ site.operator_product_name }} to be ready
 
 {% validation custom-command %}
 command: |
-  kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kgo-gateway-operator-controller-manager
+  kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/ko-kong-operator-controller-manager
 expected:
-  stdout: "deployment.apps/kgo-gateway-operator-controller-manager condition met"
+  stdout: "deployment.apps/ko-kong-operator-controller-manager condition met"
   return_code: 0
 {% endvalidation %}
 
-Once the `gateway-operator-controller-manager` deployment is ready, you can deploy a `DataPlane` resource that is attached to a {{ site.konnect_short_name }} Control Plane.
+Once the `ko-kong-operator-controller-manager` deployment is ready, you can deploy a `DataPlane` resource that is attached to a {{ site.konnect_short_name }} Gateway Control Plane.
+You can use [this guide](/operator/dataplanes/konnectextension/#konnect-control-plane-reference) to learn more about how to do this.
