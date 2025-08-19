@@ -1,5 +1,5 @@
 ---
-title: Autogenerate MCP tools for Weather API
+title: Autogenerate serverless MCP tools for Weather API
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -8,7 +8,7 @@ related_resources:
     url: /plugins/ai-mcp/
 
 description: |
-    Learn how to use the AI MCP Conversion plugin to expose WeatherAPI endpoints as MCP tools, allowing AI agents to query weather data.
+    Learn how to use the AI MCP Conversion plugin to expose WeatherAPI endpoints as MCP tools, allowing AI clients like Cursos to query weather data.
 products:
   - gateway
   - ai-gateway
@@ -77,7 +77,7 @@ automated_tests: false
 
 ### Add API key using Request Transformer Advanced
 
-First, we configure the Request Transformer Advanced plugin. This plugin modifies outgoing requests before they reach the upstream API. In this example, it automatically appends your WeatherAPI key to the query string so that all requests are authenticated without needing to manually provide the key each time.
+First, we configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin modifies outgoing requests before they reach the upstream API. In this example, it automatically appends your [WeatherAPI](https://www.weatherapi.com/api-explorer.aspx) API key to the query string so that all requests are authenticated without needing to manually provide the key each time.
 
 {% entity_examples %}
 entities:
@@ -96,7 +96,9 @@ variables:
 
 ### Step 3: Configure the AI MCP plugin
 
-Now that the WeatherAPI API key is handled on the Kong AI Gateway side, we can configure the AI MCP plugin. This configuration exposes the upstream WeatherAPI endpoint as an MCP tool, allowing AI agents (like Cursor) to invoke it directly. We also define the tool with its parameters (including the preconfigured API key) so that our MCP Client will be able to make tolls call for our weather queries.
+We can move on to configuring the AI MCP plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
+
+In this configuration, we also define the tool along with its parameters—including the preconfigured API key—so that the MCP client can make tool calls for our weather queries.
 
 {% entity_examples %}
 entities:

@@ -1,5 +1,5 @@
 ---
-title: Autogenerate MCP tools from a RESTful API
+title: Autogenerate serverless MCP tools from a RESTful API
 content_type: how_to
 related_resources:
   - text: AI Gateway

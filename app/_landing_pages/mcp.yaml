@@ -117,7 +117,7 @@ rows:
 
   - header:
       type: h3
-      text: "Autogenerate, proxy and secure MCP traffic"
+      text: "Turn any API into a secure MCP endpoint"
   - columns:
       - blocks:
           - type: structured_text
@@ -137,16 +137,15 @@ rows:
         - type: plugin
           config:
             slug: ai-mcp
+      # This is a placeholder to be updated one the Oauth plugin is ready
       - blocks:
         - type: card
           config:
             title: MCP Oauth
-            description: Enforce client authentication and authorization for MCP endpoints.
+            description: Enforce client authentication and authorization for MCP endpoints
             icon: /assets/icons/lock.svg
             cta:
-              url: ./
-              align: end
-
+              url: /
 
   - header:
         type: h4
