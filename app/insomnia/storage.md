@@ -31,8 +31,8 @@ faqs:
     a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
   - q: Can I bulk import across multiple Cloud Sync projects?
     a: |
-      Yes. Enterprise users can activate this feature by contacting [support](https://insomnia.rest/support) to enable the feature flag on their account.
-      Once activated, go to **Insomnia → Preferences → Data** and select the **Import projects to Org** option. {% new_in 11.5 %}
+      {% new_in 11.5 %} Yes. Enterprise users can activate this feature by contacting [support](https://insomnia.rest/support) to enable the feature flag on their account.
+      Once activated, go to **Insomnia → Preferences → Data** and select the **Import projects to Org** option. 
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 

@@ -104,13 +104,6 @@ Insomnia supports the following formats:
 
 For more information on importing with the UI, go to [how to import an API spec as a document](/how-to/import-an-api-spec-as-a-document/).
 
-### Postman import {% new_in 11.5 %}
-You can migrate multiple Postman projects at once into Insomnia. To do so:
-
-1. Organize each project into its own folder.
-1. Use **Import > From Folder** from within the Insomnia UI.
-1. Insomnia will automatically detect and map the collections and environments from each folder.
-
 ### CLI import
 Use Inso CLI to supplement UI workflows with command-line capabilities. Instead of importing files into the application directly, you can use Inso CLI to run tests, execute collections, validate specs, export OpenAPI artifacts, and run custom scripts.
 
