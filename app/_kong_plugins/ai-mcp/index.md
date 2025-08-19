@@ -64,15 +64,15 @@ next_steps:
   - text: Learn about {{site.konnect_product_name}} MCP Server
     url: /mcp/kong-mcp/get-started/
 ---
-The **AI MCP Conversion** plugin lets you expose any Kong-managed Service as a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can call existing APIs without custom server code.
+The **AI MCP** plugin lets you expose any Kong-managed Service as a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can call existing APIs without custom server code.
 
 Instead of building an MCP server from scratch, you provide the plugin with an **OpenAPI-compatible schema** for your upstream Service. The plugin uses this schema to understand the available operations and automatically generate MCP tool definitions. This allows you to make *any* HTTP API part of an MCP workflow, while still leveraging Kong’s plugin ecosystem for authentication, traffic control, and observability.
 
 Because the plugin runs directly on Kong AI Gateway, MCP servers are provisioned dynamically on demand. You don’t need to host or scale them separately, and the Gateway’s performance allows a single node to handle hundreds of thousands of requests per second—your upstream APIs will reach their limits before Kong AI Gateway does.
 
-## Why use the AI MCP Conversion plugin
+## Why use the AI MCP plugin
 
-The AI MCP Conversion bridges the Kong plugin ecosystem with the MCP world, enabling you to bring all of Kong's traffic management, security, and observability capabilities to MCP endpoints:
+The AI MCP bridges the Kong plugin ecosystem with the MCP world, enabling you to bring all of Kong's traffic management, security, and observability capabilities to MCP endpoints:
 
 <!-- vale off -->
 {% table %}
@@ -99,7 +99,7 @@ rows:
 
 ## How it works
 
-The AI MCP Conversion plugin handles MCP requests by converting them into standard HTTP calls and returning the responses in MCP format. The flow works as follows:
+The AI MCP plugin handles MCP requests by converting them into standard HTTP calls and returning the responses in MCP format. The flow works as follows:
 
 1. Accepts MCP protocol requests from a client.
 2. Parses the MCP tool call and matches it to an OpenAPI operation.
@@ -111,7 +111,7 @@ The AI MCP Conversion plugin handles MCP requests by converting them into standa
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong (AI MCP Conversion plugin)
+    participant K as Kong (AI MCP plugin)
     participant U as Upstream Service
 
     C->>K: MCP request (tool invocation)
@@ -133,15 +133,15 @@ sequenceDiagram
 ## Prerequisites
 
 {:.warning}
-> Before using the AI MCP Conversion plugin, ensure your setup meets these requirements:
+> Before using the AI MCP plugin, ensure your setup meets these requirements:
 > The upstream Service exposes a valid OpenAPI schema.
 > That Service is configured and accessible in Kong.
 > An MCP-compatible client is available to connect to Kong.
-> The Kong AI Gateway instance supports the AI MCP Conversion plugin (is 3.12 or higher)
+> The Kong AI Gateway instance supports the AI MCP plugin (is 3.12 or higher)
 
 ## Configuration modes
 
-The AI MCP Conversion plugin can be configured to operate in two distinct modes, depending on whether you want to expose individual tools or run a full MCP Server on a Route. Each mode offers different capabilities and use cases, which allows you to adapt the plugin behavior to your service architecture and workflow requirements.
+The AI MCP plugin can be configured to operate in two distinct modes, depending on whether you want to expose individual tools or run a full MCP Server on a Route. Each mode offers different capabilities and use cases, which allows you to adapt the plugin behavior to your service architecture and workflow requirements.
 
 <!-- vale off -->
 {% table %}
@@ -169,7 +169,7 @@ rows:
 
 ## Scope of support
 
-The AI MCP Conversion plugin provides support for key MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is fully supported and what is outside the current scope.
+The AI MCP plugin provides support for key MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is fully supported and what is outside the current scope.
 
 <!-- vale off -->
 {% feature_table %}
