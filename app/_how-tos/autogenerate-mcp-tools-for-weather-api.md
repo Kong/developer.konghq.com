@@ -46,7 +46,7 @@ prereqs:
   inline:
     - title: Create WeatherAPI account
       content: |
-        1. Go to [WeatherAPI Signup](https://www.weatherapi.com/).
+        1. Go to [WeatherAPI](https://www.weatherapi.com/).
         2. Sign up for a free account.
         3. Navigate to [your dashboard](https://www.weatherapi.com/my/) and copy your API key.
         4. Export your API key by running the following command in your terminal:
