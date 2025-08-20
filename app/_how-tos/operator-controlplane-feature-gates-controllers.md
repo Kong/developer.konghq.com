@@ -3,11 +3,14 @@ title: Configure ControlPlane Feature Gates and Controllers
 description: "Configure feature gates and controllers for Kong ControlPlane in {{ site.ko_product_name }}"
 content_type: how_to
 
-permalink: /operator/controlplane/configure-feature-gates-controllers/
+permalink: /operator/control-planes/how-to/configure-feature-gates-controllers/
 breadcrumbs:
   - /operator/
   - index: operator
-    group: DataPlanes
+    group: Gateway Deployment
+  - index: operator
+    group: Gateway Deployment
+    section: "How-To"
 
 products:
   - operator
