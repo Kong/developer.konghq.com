@@ -45,10 +45,7 @@ prereqs:
   inline: 
     - title: DNS hostname
       content: |
-        In this tutorial, you'll need a DNS hostname that you can use for your Keycloak server. You'll need to replace the hostname in any scripts or commands in this tutorial with your own hostname. Export your hostname:
-        ```sh
-        export HOSTNAME='YOUR-KEYCLOAK-HOSTNAME'
-        ```
+        In this tutorial, you'll need a DNS hostname that you can use for your Keycloak server. You'll need to replace the hostname in any commands in this tutorial with your own hostname. 
       icon_url: /assets/icons/code.svg
     - title: Java
       content: |
@@ -135,12 +132,14 @@ openssl x509 -req \
 {{ client-cert | indent: 3 }}
 
 1. Generate the server certificate:
+   {:.danger}
+   > **Important:** In this tutorial, use your DNS hostname in place of `your.hostname`.
 {% capture "server-cert" %}
 ```sh
 openssl genrsa -out keycloak.key 2048
 
 openssl req -new -key keycloak.key -out keycloak.csr \
-  -subj "/C=US/ST=State/L=City/O=ClientOrg/OU=Dev/CN=$HOSTNAME"
+  -subj "/C=US/ST=State/L=City/O=ClientOrg/OU=Dev/CN=your.hostname"
 
 cat > keycloak.ext <<EOF
 authorityKeyIdentifier=keyid,issuer
@@ -150,7 +149,7 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = $HOSTNAME
+DNS.1 = your.hostname
 EOF
 
 openssl x509 -req \
@@ -212,7 +211,7 @@ Type `y` when prompted to trust the certificate. The Keycloak server presents th
 1. Then, start Keycloak in Docker:
    
    {:.danger}
-   > **Important:** In this tutorial, use your DNS hostname in place of `$HOSTNAME`.
+   > **Important:** In this tutorial, use your DNS hostname in place of `your.hostname`.
 {% capture "keycloak-docker" %}
 ```sh
 docker run \
@@ -230,13 +229,13 @@ docker run \
   --https-trust-store-file=/opt/keycloak/ssl/keycloak-truststore.p12 \
   --https-trust-store-password=$PKCS12_PASSWORD \
   --https-client-auth=request \
-  --hostname=$HOSTNAME
+  --hostname=your.hostname
 ```
 {% endcapture %}
 {{ keycloak-docker | indent: 3 }}
 
 1. Open the Keycloak admin console.
-   The default URL of the console is `https://$HOSTNAME:9443/admin/master/console/`.
+   The default URL of the console is `https://your.hostname:9443/admin/master/console/`.
 1. In the sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 {% capture "keycloak-client" %}
@@ -270,8 +269,10 @@ rows:
 1. Click **Save** at the bottom of the Advanced settings section.
 1. Export your issuer:
    ```sh
-   export DECK_ISSUER='https://$HOSTNAME:9443/realms/master'
+   export DECK_ISSUER='https://your.hostname:9443/realms/master'
    ```
+   {:.danger}
+   > **Important:** In this tutorial, use your DNS hostname in place of `your.hostname`.
 
 ## Enable TLS handshake plugin
 
@@ -322,7 +323,7 @@ Now, you can generate your access token to authenticate with certificate-bound a
 
 Navigate to the `/oidc/certs` you created previously and generate the access token:
 ```
-curl -s --location --request POST 'https://$HOSTNAME:9443/realms/master/protocol/openid-connect/token' \
+curl -s --location --request POST 'https://your.hostname:9443/realms/master/protocol/openid-connect/token' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'client_id=kong' \
   --data-urlencode 'grant_type=client_credentials' \
@@ -330,6 +331,8 @@ curl -s --location --request POST 'https://$HOSTNAME:9443/realms/master/protocol
   --key client.key \
   --cacert rootCA.crt | jq -r .access_token
 ```
+{:.danger}
+> **Important:** In this tutorial, use your DNS hostname in place of `your.hostname`.
 
 Export the access token:
 ```sh
