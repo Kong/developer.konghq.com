@@ -151,8 +151,9 @@ proxy:
 
 {{ values_file | indent }}
 
-## Postgres database (Optional)
-1. If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
+## Postgres database
+
+If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
 
 Create a Helm values file with the following:
 
@@ -160,7 +161,7 @@ Create a Helm values file with the following:
 echo '
 auth:
     username: kong
-    password: "${BASIC_AUTH_PASSWORD}" 
+    password: demo123
     database: kong
 service:
   ports:
