@@ -7,7 +7,6 @@ permalink: /gateway/install/kubernetes/on-prem/
 breadcrumbs:
   - /gateway/
   - /gateway/install/
-
 series:
   id: gateway-k8s-on-prem-install
   position: 1
@@ -84,14 +83,15 @@ The control plane contains all {{ site.base_gateway }} configurations. The confi
 
 {% capture values_file %}
 
-```sh
-echo """# Do not use {{ site.kic_product_name }}
+```yaml
+echo '
+# Do not use {{ site.kic_product_name }}
 ingressController:
   enabled: false
 
 image:
   repository: kong/kong-gateway
-  tag: "{{ site.data.gateway_latest.release }}"
+  tag: "'{{ site.data.gateway_latest.release }}'"
 
 # Mount the secret created earlier
 secretVolumes:
@@ -109,7 +109,7 @@ env:
   database: postgres
   pg_database: kong
   pg_user: kong
-  pg_password: "${BASIC_AUTH_PASSWORD}"
+  pg_password: demo123
   pg_host: kong-cp-db-postgresql.kong.svc.cluster.local
   pg_ssl: "on"
 
@@ -144,49 +144,50 @@ manager:
 # These roles will be served by different Helm releases
 proxy:
   enabled: false
-""" > ./values-cp.yaml
+' > values-cp.yaml
 ```
 
 {% endcapture %}
 
 {{ values_file | indent }}
 
-1. _(Optional)_ If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
+## Postgres database (Optional)
+1. If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
 
 Create a Helm values file with the following:
 
-  ```sh
-  echo """
-    auth:
-        username: kong
-        password: "${BASIC_AUTH_PASSWORD}" 
-        database: kong
-    service:
-      ports:
-        postgresql: "5432"
-    primary:
-      annotations:
-        "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
-      podSecurityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-      containerSecurityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-  """ > values.yaml 
-  ```
+```yaml
+echo '
+auth:
+    username: kong
+    password: "${BASIC_AUTH_PASSWORD}" 
+    database: kong
+service:
+  ports:
+    postgresql: "5432"
+primary:
+  annotations:
+    "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+' > values.yaml 
+```
 
 And install the PostgreSQL Helm chart:
 
-  ```sh
-  helm install kong-cp-db --namespace kong oci://registry-1.docker.io/bitnamicharts/postgresql --values ./values.yaml
-  ```
+```sh
+helm install kong-cp-db --namespace kong oci://registry-1.docker.io/bitnamicharts/postgresql --values ./values.yaml
+```
 
 1. If you are using an existing, or external Postgres database (recommended), update the database connection values in `values-cp.yaml`.
 
