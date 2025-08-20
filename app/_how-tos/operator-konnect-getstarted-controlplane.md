@@ -46,11 +46,12 @@ Apply the following configuration to define a Control Plane named `gateway-contr
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
-apiVersion: konnect.konghq.com/v1alpha1
+apiVersion: konnect.konghq.com/{{ site.konnect_konnectgatewaycontrolplane_api_version }}
 metadata:
   name: gateway-control-plane
 spec:
-  name: gateway-control-plane
+  createControlPlaneRequest:
+    name: gateway-control-plane
   konnect:
     authRef:
       name: konnect-api-auth
