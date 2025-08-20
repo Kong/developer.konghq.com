@@ -28,7 +28,7 @@ groups:
       - items:
           - path: /operator/reference/control-plane-watch-namespaces/
 
-  - title: Control plane
+  - title: Control Plane
     sections:
       - title: How-To
         items:

@@ -7,9 +7,9 @@ permalink: /operator/control-planes/how-to/configure-feature-gates-controllers/
 breadcrumbs:
   - /operator/
   - index: operator
-    group: Gateway Deployment
+    group: Control Plane
   - index: operator
-    group: Gateway Deployment
+    group: Control Plane
     section: "How-To"
 
 products:
