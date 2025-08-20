@@ -52,7 +52,7 @@ prereqs:
       icon_url: /assets/icons/code.svg
     - title: Java
       content: |
-        To complete this tutorial, you need [Java installed](https://www.java.com/download/manual.jsp). 
+        To complete this tutorial, you need [Java 11.0.12 or later installed](https://www.java.com/download/manual.jsp).
         
         Java is required because we're using keytool to create the CA JKS keystore with your root certificates.
       icon_url: /assets/icons/java.svg
@@ -70,7 +70,7 @@ tldr:
   a: |
     Certificate-bound access tokens allow binding tokens to clients. This guarantees the authenticity of the token by verifying whether the sender is authorized to use the token for accessing protected resources.
 
-    You can configure certificate-bound access token authentication with OpenID Connect by mounting your certificates up an IdP, like Keycloak, and configuring the IdP with a client and mTLS authentication. Then, configure the TLS Handshake Modifier plugin with `config.tls_client_certificate` set to `REQUEST` and the OIDC plugin with your IdP issuer, `config.proof_of_possession_mtls` set to `strict`, and enable `config.proof_of_possession_auth_methods_validation`. Generate an access token and pass it in a request. 
+    You can configure certificate-bound access token authentication with OpenID Connect by mounting your certificates into an IdP, like Keycloak, and configuring the IdP with a client and mTLS authentication. Then, configure the TLS Handshake Modifier plugin with `config.tls_client_certificate` set to `REQUEST` and the OIDC plugin with your IdP issuer, `config.proof_of_possession_mtls` set to `strict`, and enable `config.proof_of_possession_auth_methods_validation`. Generate an access token and pass it in a request. 
 
 cleanup:
   inline:
@@ -108,7 +108,7 @@ echo "Root CA certificate (rootCA.crt) generated successfully."
 ```
 {% endcapture %}
 {{ gen-certs | indent: 3 }}
-1. Export your PKCS#12 and keystore passwords, both must be at least six characters:
+1. Export the passwords you want to use for your PKCS#12 and keystore. Both must be at least six characters:
    ```sh
    export PKCS12_PASSWORD='YOUR-PASSWORD'
    export KEYSTORE_PASS='YOUR-PASSWORD'
@@ -236,7 +236,7 @@ docker run \
 {{ keycloak-docker | indent: 3 }}
 
 1. Open the Keycloak admin console.
-   The default URL of the console is `https://$HOSTNAME:8080/admin/master/console/`.
+   The default URL of the console is `https://$HOSTNAME:9443/admin/master/console/`.
 1. In the sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 {% capture "keycloak-client" %}
@@ -264,8 +264,10 @@ rows:
 1. Click the **Credentials** tab.
 1. Select "X509 Certificate" from the **Client Authenticator** dropdown menu.
 1. Enter `CN=client-app, OU=Dev, O=ClientOrg, L=City, ST=State, C=US` in the **Subject DN** field.
+1. Click **Save** and agree to the change.
 1. Click the **Advanced** tab.
 1. In Advanced settings, enable **OAuth 2.0 Mutual TLS Certificate Bound Access Tokens Enabled**.
+1. Click **Save** at the bottom of the Advanced settings section.
 1. Export your issuer:
    ```sh
    export DECK_ISSUER='https://$HOSTNAME:9443/realms/master'
@@ -320,8 +322,7 @@ Now, you can generate your access token to authenticate with certificate-bound a
 
 Navigate to the `/oidc/certs` you created previously and generate the access token:
 ```
-curl -s \
-  --location --request POST 'https://$HOSTNAME:9443/realms/master/protocol/openid-connect/token' \
+curl -s --location --request POST 'https://$HOSTNAME:9443/realms/master/protocol/openid-connect/token' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'client_id=kong' \
   --data-urlencode 'grant_type=client_credentials' \
