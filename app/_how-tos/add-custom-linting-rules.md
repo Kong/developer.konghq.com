@@ -61,7 +61,7 @@ rules:
 ## Synchronize the changes
 
 Commit and push the file on the repository, then pull the changes in Insomnia.  
-> [!NOTE]  
+{:info}
 > This will place the `.spectral.yaml` file in the local working directory.  You will not see the file in the Insomnia UI but the linting rules will be applied to the associated OAS file.
 
 ## Validate
