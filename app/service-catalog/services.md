@@ -33,7 +33,7 @@ related_resources:
     url: /service-catalog/integrations/pagerduty/
 ---
 
-A Service Catalog service can be thought of as a collection of one or more resources because you can associate resources from one or more integrations with them.
+A Service Catalog service is a collection of one or more resources from integrations.
 
 A Service Catalog service represents the following:
 * A unit of software that is typically owned by a single team
@@ -66,7 +66,7 @@ body:
 {{ service | indent: 3 }}
 <!--vale on-->
 
-1. Map an integration resource to the service by sending a POST request to the [`/resource-mappings` endpoint](/api/konnect/service-catalog/v1/#/operations/create-resource-mapping):
+1. Map a resource to the service by sending a POST request to the [`/resource-mappings` endpoint](/api/konnect/service-catalog/v1/#/operations/create-resource-mapping):
 <!--vale off-->
 {% capture resource %}
 {% konnect_api_request %}
