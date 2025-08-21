@@ -156,8 +156,10 @@ Now, add the following configuration to the file:
 > * Replace the `KONNECT_REGION` value with your geographic region. You can see a list of all {{site.konnect_short_name}} regions in the [Geographic regions](/konnect-platform/geos/#control-planes) documentation.
 
 {:.success}
+> **Use {{site.konnect_product_name}} MCP Server with Cursor**
+>
 > You can also use Kong {{site.konnect_short_name}} MCP with any other MCP client like Cursor. To do that:
-> 1. Open Cursor Desktop.
+> 1. Open Cursor desktop.
 > 2. Go to **Cursor Settings > Tools & Integrations**.
 > 3. Click **Add New MCP Server**.
 > 4. Paste the following configuration in the `mcp.json` file:
