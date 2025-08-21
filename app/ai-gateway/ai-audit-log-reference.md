@@ -279,7 +279,7 @@ rows:
 If you're using the [AI MCP plugin](/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, and tool usage.
 
 {:.info}
-> **Note:** Unlike other available `AI` plugins, the AI MCP plugin is not invoked as part of an AI request.
+> **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an AI request.
 > Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of AI request flow.
 > Do not configure the AI MCP plugin together with other `ai-*` plugins on the same service or route.
 

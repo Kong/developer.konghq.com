@@ -42,7 +42,7 @@ You can aggregate the LLM provider responses to count the number of tokens used 
 If you have defined input and output costs in the models, you can also calculate cost aggregation.
 The metrics details also expose whether the requests have been cached by {{site.base_gateway}}, saving the cost of contacting the LLM providers, which improves performance.
 
-{% new_in 3.12 %} In addition to LLM usage, Kong AI Gateway also tracks MCP server traffic.  MCP metrics provide visibility into latency, response sizes, and error rates when AI plugins invoke external MCP tools and servers.
+{% new_in 3.12 %} In addition to LLM usage, Kong AI Gateway also tracks MCP server traffic. MCP metrics provide visibility into latency, response sizes, and error rates when AI plugins invoke external MCP tools and servers.
 
 Kong AI Gateway exposes metrics related to Kong and proxied upstream services in
 [Prometheus](https://prometheus.io/docs/introduction/overview/)
