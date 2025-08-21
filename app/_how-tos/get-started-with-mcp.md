@@ -162,24 +162,10 @@ Now, add the following configuration to the file:
 > 1. Open Cursor desktop.
 > 2. Go to **Cursor Settings > Tools & Integrations**.
 > 3. Click **Add New MCP Server**.
-> 4. Paste the following configuration in the `mcp.json` file:
-> ```json
-> {
->   "mcpServers": {
->     "kong-konnect": {
->       "command": "node",
->       "args": ["/absolute/path/to/mcp-konnect/build/index.js"],
->       "env": {
->         "KONNECT_ACCESS_TOKEN": "YOUR_KONNECT_PAT",
->         "KONNECT_REGION": "us"
->       }
->     }
->   }
-> }
-> ```
+> 4. Paste the MCP server configuration from the code block above in the `mcp.json` file.
 > 5. Save the `mcp.json` file
 > 6. Go back to the **Cursor Settings > Tools & Integrations** tab.
-> 7. You should see **kong-konnect** in the MCP Tools with 10 tools available.
+> 7. You should see `kong-konnect` in the MCP Tools with 10 tools available.
 
 ## Restart Claude desktop
 
