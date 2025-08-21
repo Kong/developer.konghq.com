@@ -62,7 +62,7 @@ rows:
             config:
               title: Service Catalog services
               description: |
-                Map resources to a service.
+                Map resources to a Service Catalog service.
               icon: /assets/icons/linked-services.svg
               cta:
                 text: Learn more

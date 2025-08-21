@@ -4,7 +4,6 @@ content_type: reference
 layout: reference
 
 products:
-    - gateway
     - service-catalog
 works_on:
   - konnect
@@ -46,10 +45,14 @@ To create a Service Catalog service, do one of the following:
 
 {% navtabs "service" %}
 {% navtab "UI" %}
-In the {{site.konnect_short_name}} UI, click **Service Catalog** > **Services** in the sidebar. Click **New service** and configure the details about your service. Then, you can map a service to an integration's resource by clicking on the service and then select "Map resources" from the **Action** dropdown menu.
+1. In the {{site.konnect_short_name}} UI, navigate to **Service Catalog** > **Services** in the sidebar. 
+1. Click **New service** and configure the details about your service. 
+1. Map the service to an integration: 
+   1. Click the service.
+   1.  Select "Map resources" from the **Action** dropdown menu.
 {% endnavtab %}
 {% navtab "API" %}
-1. Create a service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
+1. Create a Service Catalog service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
 <!--vale off-->
 {% capture service %}
 {% konnect_api_request %}
