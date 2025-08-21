@@ -1,19 +1,21 @@
 ---
-title: Autogenerate serverless MCP tools from a RESTful API
+title: Autogenerate MCP tools from a RESTful API
 content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
   - text: AI MCP
     url: /plugins/ai-mcp/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
 
-description: Learn how to use the AI MCP plugin to generate serverless MCP from any RESTful API, including setting up a mock Node.js server for testing.
+description: Learn how to use the AI MCP plugin to generate MCP from any RESTful API, including setting up a mock Node.js server for testing.
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/autogenerate-serverless-mcp-tools/
+permalink: /mcp/autogenerate-mcp-tools/
+
+series:
+  id: mcp-conversion
+  position: 1
 
 works_on:
   - on-prem
@@ -33,7 +35,6 @@ tags:
   - ai
   - openai
   - mcp
-  - serverless
 
 tldr:
   q: How do I automatically generate an MCP API from an existing REST API?
@@ -57,12 +58,6 @@ prereqs:
       - mcp-service
     routes:
       - mcp-route
-
-cleanup:
-  inline:
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
 
 automated_tests: false
 ---

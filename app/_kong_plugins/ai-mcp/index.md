@@ -5,7 +5,7 @@ name: 'AI MCP'
 content_type: plugin
 tier: ai_gateway_enterprise
 publisher: kong-inc
-description: Convert any API into a working MCP server
+description: Integrate any HTTP API into the Model Context Protocol (MCP) by generating tools from an OpenAPI schema, running a full MCP server, or proxying requests to an upstream MCP server.
 breadcrumbs:
  - /ai-gateway/
  - /mcp/
@@ -43,14 +43,14 @@ related_resources:
   - text: About AI Gateway
     url: /ai-gateway/
   - text: Autogenerate serverless MCP
-    url: /mcp/autogenerate-serverless-mcp-tools/
+    url: /mcp/autogenerate-mcp-tools/
   - text: All AI Gateway plugins
     url: /plugins/?category=ai
   - text: Kong MCP traffic gateway
     url: /mcp/
     icon: /assets/icons/mcp.svg
   - text: Autogenerate MCP tools from a RESTful API
-    url: /mcp/autogenerate-serverless-mcp-tools/
+    url: /mcp/autogenerate-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
     url: /mcp/weather-mcp-api/
 
@@ -68,15 +68,15 @@ next_steps:
   - text: Learn about {{site.konnect_product_name}} MCP Server
     url: /mcp/kong-mcp/get-started/
   - text: Autogenerate MCP tools from a RESTful API
-    url: /mcp/autogenerate-serverless-mcp-tools/
+    url: /mcp/autogenerate-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
     url: /mcp/autogenerate-mcp-tools-for-weather-api/
 ---
-The **AI MCP** plugin lets you expose any Kong-managed Service as a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can call existing APIs without custom server code.
+The AI plugin lets you connect any Kong-managed Service to the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can either call existing APIs or interact with upstream MCP servers through Kong.
 
-Instead of building an MCP server from scratch, you provide the plugin with an **OpenAPI-compatible schema** for your upstream Service. The plugin uses this schema to understand the available operations and automatically generate MCP tool definitions. This allows you to make *any* HTTP API part of an MCP workflow, while still leveraging Kong’s plugin ecosystem for authentication, traffic control, and observability.
+The plugin’s `mode` parameter controls whether it proxies MCP requests, converts RESTful APIs into MCP tools, or exposes grouped tools as an MCP server. This flexibility allows you to integrate existing HTTP APIs into MCP workflows, front third-party MCP servers with Kong’s policies, or expose multiple tool sets as a managed MCP server.
 
-Because the plugin runs directly on Kong AI Gateway, MCP servers are provisioned dynamically on demand. You don’t need to host or scale them separately, and the Gateway’s performance allows a single node to handle hundreds of thousands of requests per second—your upstream APIs will reach their limits before Kong AI Gateway does.
+Because the plugin runs directly on Kong AI Gateway, MCP endpoints are provisioned dynamically on demand. You don’t need to host or scale them separately, and the Kong AI Gateway applies its authentication, traffic control, and observability features to MCP traffic at the same scale it delivers for traditional APIs.
 
 ## Why use the AI MCP plugin
 
@@ -149,7 +149,7 @@ sequenceDiagram
 
 ## Configuration modes
 
-The AI MCP plugin can be configured to operate in two distinct modes, depending on whether you want to expose individual tools or run a full MCP Server on a Route. Each mode offers different capabilities and use cases, which allows you to adapt the plugin behavior to your service architecture and workflow requirements.
+The `ai-mcp-proxy` plugin operates in four modes, controlled by the `config.mode` parameter. Each mode determines how Kong handles MCP requests and whether it converts RESTful APIs into MCP tools.
 
 <!-- vale off -->
 {% table %}
@@ -158,22 +158,27 @@ columns:
     key: mode
   - title: Description
     key: description
-  - title: Variants
-    key: variants
 rows:
-  - mode: Tool mode
+  - mode: passthrough-listener
     description: |
-      Attaches an OpenAPI spec and tool metadata to a Service.
-      Makes the Service available as a tool definition within an MCP Server.
-    variants: N/A
-  - mode: Server mode
+      Listens for incoming MCP requests and proxies them to the `upstream_url` of the gateway Service.
+      Generates MCP observability metrics for traffic, making it suitable for third-party MCP servers hosted by users.
+  - mode: conversion-listener
     description: |
-      Enables an MCP Server on the associated Route and Service.
-    variants: |
-      - **One-to-many** — Expose multiple tools through the same MCP Server.
-      - **One-to-one** — Serve MCP protocol and traditional HTTP on the same Route.
+      Converts RESTful API paths into MCP tools **and** accepts incoming MCP requests on the Route path.
+      You can define tools directly in the plugin configuration and optionally set a server block.
+  - mode: conversion-only
+    description: |
+      Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
+      This mode requires `tags` in the plugin configuration, but does not define a server.
+  - mode: listener
+    description: |
+      Exposes multiple `conversion-only` tools on a Route and accepts incoming MCP requests.
+      Requires the `server.tags` property to group the exposed tools.
 {% endtable %}
 <!-- vale on -->
+
+
 
 ## Scope of support
 
