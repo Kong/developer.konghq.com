@@ -124,7 +124,7 @@ When configuring API packages, keep the following limitations in mind:
 
 * If you have two endpoints in your spec, one with a trailing slash one without, both are counted as the same operation.
 * If two operations have the same path and method, they are marked as the same operation.
-* All operations for a control plane are removed when you unlinking the the control plane.
+* All operations for a control plane are removed when you unlink the control plane.
 * Control planes can only be mapped to one API at a time.
 * You can't change a version or edit a spec for an API if it would remove an operation. The recommended method to remove an operation is to unlink the control plane from the API.
 
