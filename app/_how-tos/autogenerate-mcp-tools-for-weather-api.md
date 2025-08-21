@@ -1,5 +1,5 @@
 ---
-title: Autogenerate serverless MCP tools for Weather API
+title: Autogenerate MCP tools for Weather API
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -13,6 +13,10 @@ products:
   - gateway
   - ai-gateway
 permalink: /mcp/autogenerate-mcp-tools-for-weather-api/
+
+series:
+  id: mcp-weather-api
+  position: 1
 
 works_on:
   - on-prem
@@ -65,17 +69,10 @@ prereqs:
         - weather-service
     routes:
         - weather-route
-
-cleanup:
-  inline:
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
-
 automated_tests: false
 ---
 
-### Add API key using Request Transformer Advanced
+## Add API key using Request Transformer Advanced
 
 First, we configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin modifies outgoing requests before they reach the upstream API. In this example, it automatically appends your [WeatherAPI](https://www.weatherapi.com/api-explorer.aspx) API key to the query string so that all requests are authenticated without needing to manually provide the key each time.
 
@@ -94,7 +91,7 @@ variables:
     value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
 
-### Step 3: Configure the AI MCP plugin
+### Configure the AI MCP plugin
 
 We can move on to configuring the AI MCP plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
 
@@ -122,9 +119,7 @@ entities:
                 required: true
                 schema:
                   type: string
-                description: >
-                  Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode,
-                  IP address, latitude/longitude, or city name.
+                description:  Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
         server:
           timeout: 60000
 {% endentity_examples %}
