@@ -11,6 +11,8 @@ Flags:
   -h, --help                                  help for dump
   -o, --output-file -                         file to which to write Kong's configuration.Use - to write to stdout. (default "-")
       --rbac-resources-only                   export only the RBAC resources (Kong Enterprise only).
+      --sanitize                              dumps a sanitized version of the gateway configuration.
+                                              This feature hashes passwords, keys and other sensitive details.
       --select-tag strings                    only entities matching tags specified with this flag are exported.
                                               When this setting has multiple tag values, entities must match every tag.
       --skip-ca-certificates                  do not dump CA certificates.
