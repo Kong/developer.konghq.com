@@ -3,11 +3,11 @@ metadata:
   content_type: landing_page
   description: This page is an introduction to the {{site.konnect_short_name}} APIs.
   products:
+    - konnect
     - gateway
     - dev-portal
     - mesh
     - advanced-analytics
-    - konnect-platform
   tools: 
     - konnect-api
   works_on:
