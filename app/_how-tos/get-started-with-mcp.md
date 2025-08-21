@@ -155,6 +155,30 @@ Now, add the following configuration to the file:
 > * Make sure the `KONNECT_ACCESS_TOKEN` matches the one you set earlier.
 > * Replace the `KONNECT_REGION` value with your geographic region. You can see a list of all {{site.konnect_short_name}} regions in the [Geographic regions](/konnect-platform/geos/#control-planes) documentation.
 
+{:.success}
+> You can also use Kong {{site.konnect_short_name}} MCP with any other MCP client like Cursor. To do that:
+> 1. Open Cursor Desktop.
+> 2. Go to **Cursor Settings > Tools & Integrations**.
+> 3. Click **Add New MCP Server**.
+> 4. Paste the following configuration in the `mcp.json` file:
+> ```json
+> {
+>   "mcpServers": {
+>     "kong-konnect": {
+>       "command": "node",
+>       "args": ["/absolute/path/to/mcp-konnect/build/index.js"],
+>       "env": {
+>         "KONNECT_ACCESS_TOKEN": "YOUR_KONNECT_PAT",
+>         "KONNECT_REGION": "us"
+>       }
+>     }
+>   }
+> }
+> ```
+> 5. Save the `mcp.json` file
+> 6. Go back to the **Cursor Settings > Tools & Integrations** tab.
+> 7. You should see **kong-konnect** in the MCP Tools with 10 tools available.
+
 ## Restart Claude desktop
 
 After saving the `claude_desktop_config.json` file, restart Claude for Desktop. The Kong {{site.konnect_product_name}} tools will now be available for Claude to use in conversation.
