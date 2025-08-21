@@ -5,7 +5,7 @@ layout: reference
 beta: true
 
 products:
-    - konnect-platform
+    - konnect
 
 permalink: /kong-identity/
 works_on:

@@ -4,7 +4,7 @@ description: '{{site.konnect_short_name}} allows you to host and operate your cl
 content_type: reference
 layout: reference
 products:
-  - konnect-platform
+  - konnect
 tags:
   - geos
 search_aliases:
