@@ -19,9 +19,9 @@
 {% when 'sni' %}
   To create an SNI, call the [Admin API’s `/snis` endpoint](/api/gateway/admin-ee/#/operations/create-sni).
 {% when 'admin' %}
-  To create an Admin, call the [Admin API’s `/admins` endpoint](/api/gateway/admin-ee/#/operations/create-admin).
+  To create an Admin, call the [Admin API’s `/admins` endpoint](/api/gateway/admin-ee/#/operations/create-admins).
 {% when 'group' %}
-  To create a Group, call the [Admin API’s `/groups` endpoint](/api/gateway/admin-ee/#/operations/create-group).
+  To create a Group, call the [Admin API’s `/groups` endpoint](/api/gateway/admin-ee/#/operations/post-groups).
 {% when 'ca_certificate' %}
   To create a CA Certificate, call the [Admin API’s `/ca_certificates` endpoint](/api/gateway/admin-ee/#/operations/create-ca_certificate).
 {% when 'certificate' %}
