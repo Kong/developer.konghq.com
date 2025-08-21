@@ -39,35 +39,10 @@ rows:
             config:
               url: /assets/images/konnect/konnect-dashboard.png
               alt_text: Image of the {{site.konnect_short_name}} dashboard
-  
-  # - header:
-  #     type: h2
-  #     text: "Get started"
-  #   columns:
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Start a free trial
-  #           description: Get started with a free {{site.konnect_short_name}} trial
-  #           icon: /assets/icons/gateway.svg
-  #           cta:
-  #             text: 
-  #             url: https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_campaign=gateway-konnect
-  #             align: end
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           title: Getting started guide
-  #           description: Learn how to use {{site.base_gateway}} in {{site.konnect_short_name}} or on-prem
-  #           icon: /assets/icons/graduation.svg
-  #           cta:
-  #             text: 
-  #             url: /gateway/get-started/
-  #             align: end
 
   - header:
       type: h2
-      text: "{{site.konnect_short_name}} applications"
+      text: "Applications"
     columns:
       - blocks:
         - type: structured_text
@@ -85,10 +60,10 @@ rows:
             description: |
               Advanced Analytics is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
             icon: /assets/icons/analytics.svg
-            cta:
-              text: Explore analytics
-              url: /advanced-analytics/
-              align: end
+            ctas:
+              - text: Explore analytics
+                url: /advanced-analytics/
+                align: end
       - blocks:
         - type: card
           config:
@@ -96,10 +71,10 @@ rows:
             description: |
               The Konnect Dev Portal is a customizable website for developers to locate, access, and consume API services.
             icon: /assets/icons/dev-portal.svg
-            cta:
-              text: Create a Dev Portal
-              url: /dev-portal/
-              align: end
+            ctas:
+              - text: Create a Dev Portal
+                url: /dev-portal/
+                align: end
       - blocks:
         - type: card
           config:
@@ -108,14 +83,14 @@ rows:
                 Service Catalog provides a centralized catalog of all services running in your organization.
 
             icon: /assets/icons/service-hub.svg
-            cta:
-              text: Set up Service Catalog integrations
-              url: /service-catalog/
-              align: end
+            ctas:
+              - text: Set up Service Catalog integrations
+                url: /service-catalog/
+                align: end
 
   - header:
       type: h2
-      text: "{{site.konnect_short_name}} runtimes"
+      text: "Connectivity"
     columns:
       - blocks:
         - type: structured_text
@@ -135,89 +110,100 @@ rows:
                 Kong AI Gateway is a powerful set of AI features built on top of {{ site.base_gateway }}, 
                 designed to help developers and organizations effectively adopt AI quickly and securely.
               icon: /assets/icons/ai.svg
-              cta:
-                text: Start using Kong AI Gateway
+              ctas:
+              - text: Learn about Kong AI Gateway
                 url: /ai-gateway/
                 align: end
-    - blocks:
-          - type: card
-            config:
-              title: Gateway Manager
-              description: |
-                Gateway Manager is a {{site.konnect_short_name}} module that lets you catalog, connect to, and monitor the status of all control planes and data plane nodes in one place.
-              icon: /assets/icons/gateway.svg
-              cta:
-                text: Explore Gateway Manager
-                url: /gateway-manager/
+              - text: Get started with AI Gateway in {{site.konnect_short_name}}
+                url: /ai-gateway/get-started/
+                align: end
+              - text: Manage Kong AI Gateway in {{site.konnect_short_name}}
+                url: /ai-manager/
                 align: end
     - blocks:
           - type: card
             config:
-              title: Mesh Manager
+              title: API Gateway
+              description: |
+                The Gateway Manager is a {{site.konnect_short_name}} module that lets you catalog, connect to, and monitor the status of all {{site.base_gateway}} control planes and data plane nodes in one place.
+              icon: /assets/icons/gateway.svg
+              ctas:
+              - text: Learn about {{site.base_gateway}}
+                url: /ai-gateway/
+                align: end
+              - text: Get started with {{site.base_gateway}} in {{site.konnect_short_name}}
+                url: /gateway/get-started/
+                align: end
+              - text: Manage {{site.base_gateway}} in {{site.konnect_short_name}}
+                url: /ai-manager/
+                align: end
+              
+    - blocks:
+          - type: card
+            config:
+              title: Service Mesh
               description: |
                 Mesh Manager allows you to create, manage, and view your Kong Mesh service meshes using the {{site.konnect_short_name}} platform.
               icon: /assets/icons/mesh.svg
-              cta:
-                text: Create a service mesh
+              ctas:
+              - text: Learn about {{site.mesh_product_name}}
+                url: /mesh/
+                align: end
+              - text: Get started with {{site.mesh_product_name}} in {{site.konnect_short_name}}
+                url: /mesh-manager/service-mesh/
+                align: end
+              - text: Manage {{site.mesh_product_name}} in {{site.konnect_short_name}}
                 url: /mesh-manager/
                 align: end
-
-  - header:
-      type: h2
-      text: "{{site.konnect_short_name}} data plane hosting options"
-    columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  The {{site.konnect_short_name}} platform runs in [hybrid mode](/gateway/hybrid-mode/) and provides several hosted control plane options to manage all service configurations.
-                  The control plane propagates those configurations to the data plane group, which is composed of data plane nodes (and in the case of {{site.mesh_product_name}}, proxies). 
-                  The individual nodes can be running either on-premise, in cloud-hosted environments, or fully managed by {{site.konnect_short_name}}.
+    
+    - blocks:
+          - type: card
+            config:
+              title: Event Gateway (Beta)
+              description: |
+                {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters. 
+                It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads and keys.
+              icon: /assets/icons/event.svg
+              ctas:
+              - text: Learn about {{site.event_gateway_short}}
+                url: /event-gateway/
+                align: end
+              - text: Get started with {{site.event_gateway_short}} in {{site.konnect_short_name}}
+                url:  /event-gateway/get-started/
+                align: end
 
   - columns:
-      - blocks:
-        - type: gateway_hosting
-          config:
-            name: serverless
-
-      - blocks:
-        - type: gateway_hosting
-          config:
-            name: dedicated_cloud_gateways
-
-      - blocks:
-        - type: gateway_hosting
-          config:
-            name: self_hosted_data_plane
-
-  - header:
-      type: h2
-      text: |
-        Kong Identity <span><a class="badge bg-semantic-yellow-secondary text-semantic-yellow-primary" style="display:inline-block" href="/stages-of-software-availability/#beta">Beta</a></span>
-    columns:
-      - blocks:
+      - header:
+          type: h3
+          text: "{{site.konnect_short_name}} data plane hosting options"
+        blocks:
           - type: structured_text
             config:
-              header:
-                text: Secure and authorize access with Kong Identity
               blocks:
-                - type: text
-                  text: |
-                    Kong Identity enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}. 
-                    It implements OAuth 2.0 with OpenID Connect and supports plugins like OpenID Connect, OAuth 2.0 Introspection, and Upstream OAuth. 
-                        
-                    You can use Kong Identity to:
-                    * Create authorization servers per region
-                    * Issue and validate access tokens
-                    * Integrate secure authentication into your {{site.base_gateway}} APIs
-                                      
-                    [Start using Kong Identity](/kong-identity/)
+              - type: unordered_list
+                items:
+                    - "![icon](/assets/icons/serverless-gateway.svg){:.inline} [Serverless gateway](/serverless-gateways/): Lightweight API gateways, where the control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned."
+                    - "![icon](/assets/icons/dedicated-cloud-gateway.svg){:.inline} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/): Data plane nodes that are fully managed by Kong in {{site.konnect_short_name}}. Each Dedicated Cloud Gateway runs on isolated infrastructure within Kong-managed environments in AWS, Azure, or GCP — offering the performance and security of dedicated infrastructure with the operational ease of SaaS."
+                    - "![icon](/assets/icons/self-hosted.svg){:.inline} [Serverless gateway](/gateway/topology-hosting-options/#self-hosted): Host your own data plane nodes on the supported system of your choice."
+      - header:
+          type: h3
+          text: Tools to manage {{site.konnect_short_name}}
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                    - "[decK](/deck/): Manage {{site.base_gateway}} configuration in {{site.konnect_short_name}} through declarative state files"
+                    - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}}, {{site.base_gateway}}, and {{site.mesh_product_name}}"
+                    - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"
+                    - "[{{site.konnect_short_name}} APIs](/konnect-api/): Manage all aspects of the {{site.konnect_short_name}} platform, applications, and runtimes using APIs"
+
+        
 
   - header:
       type: h2
-      text: Learn
+      text: Security and user management in {{site.konnect_short_name}}
     columns:
       - blocks:
         - type: card
@@ -227,22 +213,10 @@ rows:
               {{site.konnect_short_name}} offers multiple options for authentication. 
               You can configure single sign-on with any SAML and OIDC provider or use built-in authentication. 
             icon: /assets/icons/lock.svg
-            cta:
-              text: Learn about {{site.konnect_short_name}} authentication methods
+            ctas:
+            - text: Learn about {{site.konnect_short_name}} authentication methods
               url: /konnect-platform/authentication/
               align: end
-      - blocks:
-        - type: card
-          config:
-            title: Rate Limiting in {{ site.base_gateway }}
-            description: |
-              {{ site.base_gateway }} can be configured to apply rate limiting rules on incoming traffic.
-
-              This includes rate limiting by IP, API key, Consumer, and more.
-            icon: /assets/icons/gateway.svg
-            cta:
-              text: Add Rate Limiting with {{ site.base_gateway }}
-              url: "/gateway/rate-limiting/"
       - blocks: 
         - type: card
           config: 
@@ -250,21 +224,60 @@ rows:
             description: | 
               Customer-Managed Encryption Keys (CMEK) enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
             icon: /assets/icons/lock.svg
-            cta: 
-              text: View the reference
+            ctas: 
+            - text: View the reference
               url: "/konnect-platform/cmek/"
-              
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} audit logging"
+            description: |
+              Collect and review audit logs for both the {{site.konnect_short_name}} org and Dev Portal.
+            icon: /assets/icons/document-list.svg
+            ctas:
+            - text: Learn about audit logging
+              url: /konnect-platform/audit-logs/
+              align: end
+      
+      - blocks:
+        - type: card
+          config:
+            title: "Kong Identity (Beta)"
+            description: |
+              Kong Identity enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}. 
+              It implements OAuth 2.0 with OpenID Connect and supports plugins like OpenID Connect, OAuth 2.0 Introspection, and Upstream OAuth. 
+            icon: /assets/icons/rbac.svg
+            ctas:
+            - text: Start using Kong Identity
+              url: /kong-identity/
+              align: end
 
+  - columns:
+      - header:
+          type: h2
+          text: "Support and account information"
+        blocks:
+        - type: structured_text
+          config:
+            blocks:
+            - type: unordered_list
+              items:
+                - "[{{site.konnect_short_name}} compatibility](/konnect-platform/compatibility/): See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with."
+                - "[Kong vulnerability patching process](/gateway/vulnerabilities/): Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or third-party code, and how to report any security issues."
+                - "[{{site.konnect_short_name}} account](/konnect-platform/account/): Learn about the different {{site.konnect_short_name}} plans and account management."
+                - "[{{site.konnect_short_name}} pricing](https://konghq.com/pricing): Learn about {{site.konnect_short_name}} plans and pricing."
+                  
   - header:
       type: h2
-      text: Key References
-    columns:
+      text: References
+  - columns:
       - blocks:
           - type: card
             config:
               title: "{{site.konnect_short_name}} release notes"
               description: |
                 Learn about new {{site.konnect_short_name}} features.
+              icon: /assets/icons/document-list.svg
               cta:
                 text: View the changelog 
                 url: https://app.getbeamer.com/kongreleases/en
@@ -280,7 +293,6 @@ rows:
                 text: Learn about {{site.konnect_short_name}} ports
                 url: /konnect-platform/network/
                 align: end
-  - columns:
       - blocks:
           - type: card
             config:
@@ -295,17 +307,6 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Dedicated Cloud Gateway reference
-              description: |
-                Learn about how Dedicated Cloud Gateways work.
-              icon: /assets/icons/dedicated-cloud-gateway.svg
-              cta:
-                text: "{{site.konnect_short_name}} Dedicated Cloud Gateways"
-                url: /dedicated-cloud-gateways/reference/
-                align: end
-      - blocks:
-          - type: card
-            config:
               title: API reference
               description: |
                 Explore the reference documentation for all {{site.konnect_short_name}} APIs
@@ -314,75 +315,33 @@ rows:
                 text: "{{site.konnect_short_name}} API references"
                 url: /api/
                 align: end
-  
-
-  - header:
-    columns:
-      - header:
-          type: h2
-          text: "Support and account information"
-        blocks:
-        - type: structured_text
-          config:
-            blocks:
-            - type: unordered_list
-              items:
-                - "[{{site.konnect_short_name}} compatibility](/konnect-platform/compatibility/): See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with."
-                - "[Resource sizing guidelines](/gateway/resource-sizing-guidelines/): Review Kong's recommended resource allocation guidelines."
-                - "[Securing {{site.base_gateway}}](/gateway/security/): Secure every aspect of your deployment, from access control, to mTLS, to secret management in vaults."
-                - "[Performance testing benchmarks](/gateway/performance/benchmarks/): See the performance benchmark results for every {{site.base_gateway}} version."
-                - "[Kong Manager](/gateway/kong-manager/): Set up the GUI for {{site.base_gateway}}."
-
-      - header:
-          type: h2
-          text: Tools to manage {{site.konnect_short_name}}
-        blocks:
-          - type: structured_text
-            config:
-              blocks:
-              - type: unordered_list
-                items:
-                    - "[decK](/deck/): Manage {{site.base_gateway}} configuration in {{site.konnect_short_name}} through declarative state files"
-                    - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}}, {{site.base_gateway}}, and {{site.mesh_product_name}}"
-                    - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"
-                    - "[{{site.konnect_short_name}} APIs](/konnect-api/): Manage all aspects of the {{site.konnect_short_name}} platform, applications, and runtimes using APIs"
-
-
   - columns:
       - blocks:
-          - type: card
+          - type: reference_list
             config:
-              title: "Kong vulnerability patching process"
-              description: |
-                Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or 
-                third-party code, and how to report any security issues.
-              cta:
-                text: View the vulnerability policy 
-                url: /gateway/vulnerabilities/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: "{{site.konnect_short_name}} account"
-              description: |
-                Learn about the different {{site.konnect_short_name}} plans and account management.
-              cta:
-                text: View {{site.konnect_short_name}} account information 
-                url: /konnect-platform/account/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: "{{site.konnect_short_name}} pricing"
-              description: |
-                Learn about {{site.konnect_short_name}} plans and pricing.
-              cta:
-                text: View {{site.konnect_short_name}} pricing 
-                url: https://konghq.com/pricing
-                align: end
+              products:
+                  - konnect
+              works_on:
+                  - konnect
+              quantity: 10
   
+
   - header:
-      text: "Frequently Asked Questions"
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - gateway
+              works_on:
+                  - konnect
+              quantity: 5
+
+
+  - header:
+      text: "Frequently asked questions"
       type: h2
     columns:
       - blocks:
@@ -399,31 +358,3 @@ rows:
                 control plane. You should never have to deal with a license directly.
 
                 For any license questions, contact your sales representative.
-                  
-  - header:
-      type: h2
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              products:
-                  - gateway
-              works_on:
-                  - konnect
-              quantity: 5
-  
-
-  - header:
-      type: h2
-      text: References
-    columns:
-      - blocks:
-          - type: reference_list
-            config:
-              products:
-                  - konnect
-              works_on:
-                  - konnect
-              quantity: 10
-  

@@ -88,6 +88,12 @@ platform:
           icon: /_assets/icons/products/service-catalog.svg
           url: /service-catalog/
           product: service-catalog
+    - title: Explore the platform
+      links:
+        - text: Konnect
+          icon: /_assets/icons/products/konnect-platform.svg
+          url: /konnect/
+          product: konnect
 
 how_tos:
     - text: API Gateway
