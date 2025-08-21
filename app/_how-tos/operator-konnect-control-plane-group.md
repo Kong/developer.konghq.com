@@ -42,7 +42,7 @@ Create a Control Plane using the `KonnectGatewayControlPlane` object:
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
-apiVersion: konnect.konghq.com/{{ site.konnect_konnectgatewaycontrolplane_api_version }}
+apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:
   name: gateway-control-plane
 spec:
@@ -61,7 +61,7 @@ Create a new `KonnectGatewayControlPlane` object, add the `CLUSTER_TYPE_CONTROL_
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
-apiVersion: konnect.konghq.com/{{ site.konnect_konnectgatewaycontrolplane_api_version }}
+apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:
   name: control-plane-group
 spec:

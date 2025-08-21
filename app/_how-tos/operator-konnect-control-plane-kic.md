@@ -41,7 +41,7 @@ Create a Control Plane and add the cluster type `CLUSTER_TYPE_K8S_INGRESS_CONTRO
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
-apiVersion: konnect.konghq.com/{{ site.konnect_konnectgatewaycontrolplane_api_version }}
+apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:
   name: gateway-control-plane
 spec:
