@@ -111,36 +111,36 @@ spec:
 The following controllers are available:
 
 #### Ingress Controllers
-| Controller Name | Description |
-|----------------|-------------|
-| `INGRESS_NETWORKINGV1` | Manages Kubernetes Ingress resources (networking/v1) |
-| `INGRESS_CLASS_NETWORKINGV1` | Manages Kubernetes IngressClass resources (networking/v1) |
-| `INGRESS_CLASS_PARAMETERS` | Manages IngressClass parameters |
+| Controller Name | Enabled by default | Description |
+|-----------------|--------------------|-------------|
+| `INGRESS_NETWORKINGV1` | Yes | Manages Kubernetes Ingress resources (networking/v1) |
+| `INGRESS_CLASS_NETWORKINGV1` | Yes | Manages Kubernetes IngressClass resources (networking/v1) |
+| `INGRESS_CLASS_PARAMETERS` | Yes | Manages IngressClass parameters |
 
 #### Kong Controllers
-| Controller Name | Description |
-|----------------|-------------|
-| `KONG_CLUSTERPLUGIN` | Manages Kong cluster-scoped plugin resources |
-| `KONG_PLUGIN` | Manages Kong plugin resources |
-| `KONG_CONSUMER` | Manages Kong consumer resources |
-| `KONG_UPSTREAM_POLICY` | Manages Kong upstream policy resources |
-| `KONG_SERVICE_FACADE` | Manages Kong service facade resources |
-| `KONG_VAULT` | Manages Kong vault resources |
-| `KONG_LICENSE` | Manages Kong license resources |
-| `KONG_CUSTOM_ENTITY` | Manages Kong custom entity resources |
+| Controller Name | Enabled by default | Description |
+|-----------------|--------------------|-------------|
+| `KONG_CLUSTERPLUGIN` | Yes | Manages Kong cluster-scoped plugin resources |
+| `KONG_PLUGIN` | Yes | Manages Kong plugin resources |
+| `KONG_CONSUMER` | Yes | Manages Kong consumer resources |
+| `KONG_UPSTREAM_POLICY` | Yes | Manages Kong upstream policy resources |
+| `KONG_SERVICE_FACADE` | Yes | Manages Kong service facade resources |
+| `KONG_VAULT` | Yes | Manages Kong vault resources |
+| `KONG_LICENSE` | Yes | Manages Kong license resources |
+| `KONG_CUSTOM_ENTITY` | Yes | Manages Kong custom entity resources |
 
 #### Kubernetes Core Controllers
-| Controller Name | Description |
-|----------------|-------------|
-| `SERVICE` | Manages Kubernetes Service resources |
+| Controller Name | Enabled by default | Description |
+|-----------------|--------------------|-------------|
+| `SERVICE` | Yes | Manages Kubernetes Service resources |
 
 #### Gateway API Controllers
-| Controller Name | Description |
-|----------------|-------------|
-| `GWAPI_GATEWAY` | Manages Gateway API Gateway resources |
-| `GWAPI_HTTPROUTE` | Manages Gateway API HTTPRoute resources |
-| `GWAPI_GRPCROUTE` | Manages Gateway API GRPCRoute resources |
-| `GWAPI_REFERENCE_GRANT` | Manages Gateway API ReferenceGrant resources |
+| Controller Name | Enabled by default | Description |
+|-----------------|--------------------|-------------|
+| `GWAPI_GATEWAY` | Yes | Manages Gateway API Gateway resources |
+| `GWAPI_HTTPROUTE` | Yes | Manages Gateway API HTTPRoute resources |
+| `GWAPI_GRPCROUTE` | Yes | Manages Gateway API GRPCRoute resources |
+| `GWAPI_REFERENCE_GRANT` | Yes | Manages Gateway API ReferenceGrant resources |
 
 ## Examples
 
