@@ -28,7 +28,7 @@ tldr:
 
 related_resources:
     - text: "{{site.konnect_short_name}} beta Terraform provider repository"
-      url: https://github.com/Kong/terraform-provider-konnect-beta
+      url: https://github.com/Kong/terraform-provider-konnect
     - text: Dev Portal APIs reference
       url: /dev-portal/apis/
     - text: Self-service developer and application registration
