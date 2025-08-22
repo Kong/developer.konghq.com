@@ -2808,6 +2808,7 @@ components:
               spec_content:
                 description: 'The content of the API specification. This is the raw content of the API specification, in json or yaml. By including this field, you can add a API specification without having to make a separate call to update the API specification.'
                 type: string
+                nullable: false
                 writeOnly: true
             additionalProperties: false
             required:
