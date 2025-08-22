@@ -70,11 +70,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api/resource.tf):
+Use the [`konnect_api` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api.tf):
 ```hcl
 echo '
 resource "konnect_api" "my_api" {
-  provider = konnect-beta
   attributes  = "{ \"see\": \"documentation\" }"
   description = "...my_description..."
   labels = {
@@ -117,11 +116,10 @@ body:
 {% endkonnect_api_request %}
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf):
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
 ```hcl
 echo '
 resource "konnect_api_version" "my_apiversion" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   spec = {
     content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
@@ -159,11 +157,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf):
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
 ```hcl
 echo '
 resource "konnect_api_version" "my_apiversion" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   spec = {
     content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
@@ -218,11 +215,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf):
+Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf):
 ```hcl
 echo '
 resource "konnect_api_document" "my_apidocument" {
-  provider = konnect-beta
   api_id             = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   content            = "...my_content..."
   parent_document_id = "b689d9da-f357-4687-8303-ec1c14d44e37"
@@ -283,11 +279,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_implementation/resource.tf):
+Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_implementation.tf):
 ```hcl
 echo '
 resource "konnect_api_implementation" "my_apiimplementation" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   service = {
     control_plane_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
@@ -380,11 +375,10 @@ method: PUT
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_publication/resource.tf):
+Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_publication.tf):
 ```hcl
 echo '
 resource "konnect_api_publication" "my_apipublication" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   auth_strategy_ids = [
     "9c3bed4d-0322-4ea0-ba19-a4bd65d821f6"
