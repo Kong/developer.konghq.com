@@ -16,12 +16,13 @@ products:
   - operator
 
 works_on:
+  - konnect
   - on-prem
 
 entities: []
 
 tags:
-  - controlplane
+  - ControlPlane
   - feature-gates
   - controllers
 
@@ -30,9 +31,8 @@ tldr:
   a: Use the `spec.featureGates` and `spec.controllers` fields in the ControlPlane resource.
 
 prereqs:
-  products:
-    - operator:
-        prereq_type: install
+  show_works_on: true
+  skip_product: true
 ---
 
 This guide explains how to configure feature gates and controllers for a ControlPlane in {{ site.ko_product_name }}. Feature gates allow you to enable or disable specific features, while controllers allow you to enable or disable specific resource reconciliation.
