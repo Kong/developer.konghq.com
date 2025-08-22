@@ -113,7 +113,6 @@ First, create an API:
 ```hcl
 echo '
 resource "konnect_api" "my_api" {
-  provider = konnect-beta
   description = "...my_description..."
   labels = {
     key = "value"
@@ -130,7 +129,6 @@ resource "konnect_api" "my_api" {
 ```hcl
 echo '
 resource "konnect_api_version" "my_api_spec" {
-  provider = konnect-beta
   api_id = konnect_api.my_api.id
   spec = {
     content = <<JSON
@@ -172,7 +170,6 @@ Create and associate an API document:
 ```hcl
 echo '
 resource "konnect_api_document" "my_apidocument" {
-  provider = konnect-beta
   api_id  = konnect_api.my_api.id
   content = "# API Document Header"
   slug               = "api-document"
@@ -191,7 +188,6 @@ Associate the API with a Service:
 ```hcl
 echo '
 resource "konnect_api_implementation" "my_api_implementation" {
-  provider = konnect-beta
   api_id = konnect_api.my_api.id
   service_reference = {
     service = {
@@ -216,7 +212,6 @@ Now you can publish the API to a Dev Portal:
 ```hcl
 echo '
 resource "konnect_api_publication" "my_apipublication" {
-  provider = konnect-beta
   api_id = konnect_api.my_api.id
   portal_id                  = konnect_portal.my_portal.id
   visibility                 = "public"
