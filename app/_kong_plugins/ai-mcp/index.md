@@ -5,7 +5,8 @@ name: 'AI MCP'
 content_type: plugin
 tier: ai_gateway_enterprise
 publisher: kong-inc
-description: Integrate any HTTP API into the Model Context Protocol (MCP) by generating tools from an OpenAPI schema, running a full MCP server, or proxying requests to an upstream MCP server.
+description: |
+    Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time.
 breadcrumbs:
  - /ai-gateway/
  - /mcp/

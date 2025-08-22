@@ -139,16 +139,16 @@ entities:
 
     ```json
     {
-    "mcpServers": {
-        "weather": {
-        "url": "http://localhost:8000/weather",
-        "headers": {
-            "key": "<YOUR_WEATHERAPI_KEY>"
-        }
-        }
+      "mcpServers": {
+          "weather": {
+              "url": "http://localhost:8000/weather",
+              "headers": {
+                  "key": "<YOUR_WEATHERAPI_KEY>"
+              }
+          }
+      }
     }
-    }
-    ```
+  ```
 
 6. Return to the **Cursor settings** tab. You should now see the weather MCP server with one tool available:
 
