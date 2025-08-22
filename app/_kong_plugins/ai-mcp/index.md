@@ -79,6 +79,11 @@ The plugin’s `mode` parameter controls whether it proxies MCP requests, conver
 
 Because the plugin runs directly on Kong AI Gateway, MCP endpoints are provisioned dynamically on demand. You don’t need to host or scale them separately, and the Kong AI Gateway applies its authentication, traffic control, and observability features to MCP traffic at the same scale it delivers for traditional APIs.
 
+{:.warning}
+> **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an LLM request flow.
+> Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of LLM request flow.
+> **Do not configure the AI MCP plugin together with other `ai-*` plugins on the same service or route**.
+
 ## Why use the AI MCP plugin
 
 The AI MCP bridges the Kong plugin ecosystem with the MCP world, enabling you to bring all of Kong's traffic management, security, and observability capabilities to MCP endpoints:
