@@ -124,7 +124,7 @@ resource "konnect_api" "my_api" {
 
 ## Create and associate an API spec and version
 
-[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf) with your API:
+[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf) with your API:
 
 ```hcl
 echo '
@@ -163,7 +163,7 @@ resource "konnect_api_version" "my_api_spec" {
 
 ## Create and associate an API document 
 
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf).
+An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf).
 
 Create and associate an API document:
 
