@@ -48,7 +48,7 @@ prereqs:
       content: |
         For this tutorial, you’ll need {{site.base_gateway}} entities, like Gateway Services and Routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn’t the focus of this guide.
 
-        1. Before configuring a Service and a Route, you need to create a Control Plane. If you have an existing Control Plane that you'd like to reuse, you can use the [`konnect_gateway_control_plane_list`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/data/gateway_control_plane_list.tf) data source.
+        1. Before configuring a Service and a Route, you need to create a Control Plane. If you have an existing Control Plane that you'd like to reuse, you can use the [`konnect_gateway_control_plane_list`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/data/gateway_control_plane.tf) data source.
            ```hcl
            echo '
            resource "konnect_gateway_control_plane" "my_cp" {
