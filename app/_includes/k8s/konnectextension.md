@@ -1,7 +1,7 @@
 ```bash
 echo '
 kind: KonnectExtension
-apiVersion: konnect.konghq.com/v1alpha1
+apiVersion: konnect.konghq.com/{{ site.operator_konnectextension_api_version }}
 metadata:
   name: my-konnect-config
   namespace: kong
