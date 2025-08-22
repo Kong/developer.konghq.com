@@ -51,7 +51,7 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_portal_team` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_portal_team/resource.tf):
+Use the [`konnect_portal_team` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_portal_team.tf):
 ```hcl
 echo '
 resource "konnect_portal_team" "my_portalteam" {
