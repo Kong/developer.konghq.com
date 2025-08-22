@@ -3228,135 +3228,139 @@ components:
         created_at: '2022-12-22T19:09:30.712Z'
         updated_at: '2022-12-22T19:09:30.712Z'
       oneOf:
-        - title: Client Credentials Application
-          additionalProperties: false
-          type: object
-          required:
-            - id
-            - created_at
-            - updated_at
-            - name
-            - description
-            - registration_count
-            - client_id
-            - auth_strategy
-            - dcr_provider
-            - portal
-            - labels
-            - granted_scopes
-          properties:
-            id:
-              $ref: '#/components/schemas/UUID'
-            created_at:
-              $ref: '#/components/schemas/CreatedAt'
-            updated_at:
-              $ref: '#/components/schemas/UpdatedAt'
-            name:
-              description: The name of the application.
-              type: string
-            description:
-              description: A description of the application.
-              type: string
-              nullable: true
-            labels:
-              $ref: '#/components/schemas/LabelsUpdate'
-            client_id:
-              description: The ID used to linked the portal application to an Identity Provider application.
-              type: string
-              readOnly: true
-            registration_count:
-              description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
-              type: number
-              readOnly: true
-            dcr_provider:
-              description: 'Information about the DCR provider this application uses, if using DCR.'
-              type: object
-              additionalProperties: false
-              nullable: true
-              properties:
-                id:
-                  $ref: '#/components/schemas/UUID'
-              required:
-                - id
-            portal:
-              description: Information about the portal the application is in.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/UUID'
-              required:
-                - id
-            auth_strategy:
-              $ref: '#/components/schemas/AuthStrategyClientCredentials'
-            granted_scopes:
-              description: List of granted scopes for the application. Null if application type does not support returning granted scopes.
-              type: array
-              items:
-                type: string
-              nullable: true
-        - title: Key Auth Application
-          example:
-            id: b15e2460-ba40-431d-9df0-4957fcffacda
-            labels:
-              env: test
-            name: App 1
-            description: An easy to manage app in a Konnect developer portal
-            registration_count: 4
-            portal:
-              id: 95606071-49c7-4c2e-ae49-8a86d72a8110
-            auth_strategy:
-              id: 45606071-49c7-4c2e-ae49-8a86d72a8110
-              name: API Key
-              credential_type: key_auth
-              key_names:
-                - apikey
-            created_at: '2022-12-22T19:09:30.712Z'
-            updated_at: '2022-12-22T19:09:30.712Z'
-          additionalProperties: false
-          type: object
-          required:
-            - id
-            - created_at
-            - updated_at
-            - name
-            - description
-            - auth_strategy
-            - portal
-            - registration_count
-            - labels
-          properties:
-            id:
-              $ref: '#/components/schemas/UUID'
-            created_at:
-              $ref: '#/components/schemas/CreatedAt'
-            updated_at:
-              $ref: '#/components/schemas/UpdatedAt'
-            name:
-              description: The name of the application.
-              type: string
-            description:
-              description: A description of the application.
-              type: string
-              nullable: true
-            auth_strategy:
-              $ref: '#/components/schemas/AuthStrategyKeyAuth'
-            portal:
-              description: Information about the portal the application is in.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/UUID'
-              required:
-                - id
-            labels:
-              $ref: '#/components/schemas/LabelsUpdate'
-            registration_count:
-              description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
-              type: number
-              readOnly: true
+        - $ref: '#/components/schemas/ClientCredentialsApplication'
+        - $ref: '#/components/schemas/KeyAuthApplication'
       title: Application
+    ClientCredentialsApplication:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        name:
+          description: The name of the application.
+          type: string
+        description:
+          description: A description of the application.
+          type: string
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+        client_id:
+          description: The ID used to linked the portal application to an Identity Provider application.
+          type: string
+          readOnly: true
+        registration_count:
+          description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
+          type: number
+          readOnly: true
+        dcr_provider:
+          description: 'Information about the DCR provider this application uses, if using DCR.'
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+          required:
+            - id
+        portal:
+          description: Information about the portal the application is in.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+          required:
+            - id
+        auth_strategy:
+          $ref: '#/components/schemas/AuthStrategyClientCredentials'
+        granted_scopes:
+          description: List of granted scopes for the application. Null if application type does not support returning granted scopes.
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+      required:
+        - id
+        - created_at
+        - updated_at
+        - name
+        - description
+        - registration_count
+        - client_id
+        - auth_strategy
+        - dcr_provider
+        - portal
+        - labels
+        - granted_scopes
+      title: Client Credentials Application
+    KeyAuthApplication:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        name:
+          description: The name of the application.
+          type: string
+        description:
+          description: A description of the application.
+          type: string
+          nullable: true
+        auth_strategy:
+          $ref: '#/components/schemas/AuthStrategyKeyAuth'
+        portal:
+          description: Information about the portal the application is in.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+          required:
+            - id
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+        registration_count:
+          description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
+          type: number
+          readOnly: true
+      example:
+        id: b15e2460-ba40-431d-9df0-4957fcffacda
+        labels:
+          env: test
+        name: App 1
+        description: An easy to manage app in a Konnect developer portal
+        registration_count: 4
+        portal:
+          id: 95606071-49c7-4c2e-ae49-8a86d72a8110
+        auth_strategy:
+          id: 45606071-49c7-4c2e-ae49-8a86d72a8110
+          name: API Key
+          credential_type: key_auth
+          key_names:
+            - apikey
+        created_at: '2022-12-22T19:09:30.712Z'
+        updated_at: '2022-12-22T19:09:30.712Z'
+      additionalProperties: false
+      required:
+        - id
+        - created_at
+        - updated_at
+        - name
+        - description
+        - auth_strategy
+        - portal
+        - registration_count
+        - labels
+      title: Key Auth Application
     ApplicationRegistration:
       description: A application's registration for a specific version of an API.
       type: object
@@ -3545,35 +3549,39 @@ components:
     CreatePortalCustomDomainSSL:
       type: object
       oneOf:
-        - title: custom_certificate
-          additionalProperties: false
-          properties:
-            domain_verification_method:
-              type: string
-              enum:
-                - custom_certificate
-              x-terraform-transform-const: true
-            custom_certificate:
-              description: Custom certificate to be used for the SSL termination.
-              type: string
-            custom_private_key:
-              description: Custom certificate private key to be used for the SSL termination.
-              type: string
-          required:
-            - domain_verification_method
-            - custom_certificate
-            - custom_private_key
-        - title: http
-          additionalProperties: false
-          properties:
-            domain_verification_method:
-              type: string
-              enum:
-                - http
-              x-terraform-transform-const: true
-          required:
-            - domain_verification_method
+        - $ref: '#/components/schemas/CreatePortalCustomDomainSSLWithCustomCertificate'
+        - $ref: '#/components/schemas/CreatePortalCustomDomainSSLStandard'
       title: CreatePortalCustomDomainSSL
+    CreatePortalCustomDomainSSLWithCustomCertificate:
+      properties:
+        domain_verification_method:
+          type: string
+          enum:
+            - custom_certificate
+          x-terraform-transform-const: true
+        custom_certificate:
+          description: Custom certificate to be used for the SSL termination.
+          type: string
+        custom_private_key:
+          description: Custom certificate private key to be used for the SSL termination.
+          type: string
+      additionalProperties: false
+      required:
+        - domain_verification_method
+        - custom_certificate
+        - custom_private_key
+      title: custom_certificate
+    CreatePortalCustomDomainSSLStandard:
+      properties:
+        domain_verification_method:
+          type: string
+          enum:
+            - http
+          x-terraform-transform-const: true
+      additionalProperties: false
+      required:
+        - domain_verification_method
+      title: http
     PortalCustomDomainVerificationMethod:
       type: string
       enum:

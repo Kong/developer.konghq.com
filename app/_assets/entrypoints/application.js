@@ -66,7 +66,7 @@ mermaid.initialize({
 
 window.addEventListener("load", () => {
   const hash = window.location.hash;
-  if (hash) {
+  if (hash && !document.getElementById("api-spec")) {
     const escapedHash = CSS.escape(hash.slice(1));
     // Give time for collapsibles to expand/mermaid to render
     setTimeout(() => {

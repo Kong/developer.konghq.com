@@ -7,6 +7,9 @@ breadcrumbs:
   - /mesh-manager/
 products:
   - mesh
+tags:
+  - mesh-manager
+  - service-mesh
 ---
 
 If you already have zone Control Planes in {{site.mesh_product_name}}, you can migrate them to {{site.konnect_short_name}} using [Mesh Manager](/mesh-manager/).
