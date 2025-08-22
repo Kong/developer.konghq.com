@@ -78,9 +78,9 @@ For structured secrets like certificates and keys that must follow a specific fo
 
 To calculate the hash, `deck` uses the following process:
 
-1. Produce a random salt via uuid generation.
-2. Concatenate the salt with the string value and then produce a sha256 hash.
-3. Use hex-encoding over the sha256 hash result.
+1. Produce a random salt via UUID generation.
+1. Concatenate the salt with the string value and then produce a sha256 hash.
+1. Use hex-encoding over the sha256 hash result.
 
 ## Command usage
 
