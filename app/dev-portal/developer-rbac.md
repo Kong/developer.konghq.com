@@ -55,7 +55,6 @@ Use the [`konnect_portal_team` resource](https://github.com/Kong/terraform-provi
 ```hcl
 echo '
 resource "konnect_portal_team" "my_portalteam" {
-  provider = konnect-beta
   description = "The Identity Management (IDM) team."
   name        = "IDM - Developers"
   portal_id   = "f32d905a-ed33-46a3-a093-d8f536af9a8a"
