@@ -82,7 +82,8 @@ Because the plugin runs directly on Kong AI Gateway, MCP endpoints are provision
 {:.warning}
 > **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an LLM request flow.
 > Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of LLM request flow.
-> **Do not configure the AI MCP plugin together with other `ai-*` plugins on the same service or route**.
+>
+> **Do not configure the AI MCP plugin together with other AI plugins on the same service or route**.
 
 ## Why use the AI MCP plugin
 
@@ -148,14 +149,14 @@ sequenceDiagram
 
 {:.warning}
 > Before using the AI MCP plugin, ensure your setup meets these requirements:
-> The upstream Service exposes a valid OpenAPI schema.
-> That Service is configured and accessible in Kong.
-> An MCP-compatible client is available to connect to Kong.
-> The Kong AI Gateway instance supports the AI MCP plugin (is 3.12 or higher)
+> - The upstream Service exposes a valid OpenAPI schema.
+> - That Service is configured and accessible in Kong.
+> - An MCP-compatible client (such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/) or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
+> - The Kong AI Gateway instance supports the AI MCP plugin (is 3.12 or higher)
 
 ## Configuration modes
 
-The `ai-mcp-proxy` plugin operates in four modes, controlled by the `config.mode` parameter. Each mode determines how Kong handles MCP requests and whether it converts RESTful APIs into MCP tools.
+The AI MCP Proxy plugin operates in four modes, controlled by the `config.mode` parameter. Each mode determines how Kong handles MCP requests and whether it converts RESTful APIs into MCP tools.
 
 <!-- vale off -->
 {% table %}
