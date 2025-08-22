@@ -43,7 +43,6 @@ prereqs:
 ## ControlPlane and DataPlane resources
 
 {% assign gatewayApiVersion = "v1" %}
-{% assign gatewayConfigApiVersion = "v1beta1" %}
 
 Creating `GatewayClass` and `Gateway` resources in Kubernetes causes {{ site.operator_product_name }} to create a {{ site.kic_product_name }} and {{ site.base_gateway }} deployment.
 
@@ -57,27 +56,18 @@ In order to specify the `KonnectExtension` in `Gateway`'s configuration you need
 ```bash
 echo '
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v1beta1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong
   namespace: kong
 spec:
   extensions:
-    - kind: KonnectExtension
-      name: my-konnect-config
-      group: konnect.konghq.com
+  - kind: KonnectExtension
+    name: my-konnect-config
+    group: konnect.konghq.com
   dataPlaneOptions:
     deployment:
-      replicas: 2
-  controlPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: controller
-            env:
-            - name: CONTROLLER_LOG_LEVEL
-              value: debug' | kubectl apply -f -
+      replicas: 2' | kubectl apply -f -
 ```
 
 {:data-deployment-topology='on-prem'}
@@ -85,7 +75,7 @@ spec:
 
 ```yaml
 echo 'kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/{{ gatewayConfigApiVersion }}
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong
   namespace: kong
@@ -96,17 +86,7 @@ spec:
         spec:
           containers:
           - name: proxy
-            image: kong:{{site.latest_gateway_oss_version}}
-  controlPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: controller
-            image: kong/kubernetes-ingress-controller:{{ site.data.kic_latest.release }}
-            env:
-            - name: CONTROLLER_LOG_LEVEL
-              value: debug' | kubectl apply -f -
+            image: kong:{{site.latest_gateway_oss_version}}' | kubectl apply -f -
 ```
 
 ## GatewayClass
