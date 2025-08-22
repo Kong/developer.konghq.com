@@ -1,0 +1,5 @@
+name: mcp-route
+paths:
+  - /marketplace
+service:
+  name: mcp-service

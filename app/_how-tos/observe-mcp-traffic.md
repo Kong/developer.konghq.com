@@ -41,6 +41,7 @@ entities:
 tags:
   - ai
   - openai
+  - mcp
 
 tldr:
   q: How can I observe my MCP traffic using Kong AI Gateway?
