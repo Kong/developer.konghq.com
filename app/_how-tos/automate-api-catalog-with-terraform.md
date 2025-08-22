@@ -27,8 +27,8 @@ tldr:
     * `konnect_api_publication`
 
 related_resources:
-    - text: "{{site.konnect_short_name}} beta Terraform provider repository"
-      url: https://github.com/Kong/terraform-provider-konnect-beta
+    - text: "{{site.konnect_short_name}} Terraform provider repository"
+      url: https://github.com/Kong/terraform-provider-konnect
     - text: Dev Portal APIs reference
       url: /dev-portal/apis/
     - text: Self-service developer and application registration
@@ -113,7 +113,6 @@ First, create an API:
 ```hcl
 echo '
 resource "konnect_api" "my_api" {
-  provider = konnect-beta
   description = "...my_description..."
   labels = {
     key = "value"
@@ -125,12 +124,11 @@ resource "konnect_api" "my_api" {
 
 ## Create and associate an API spec and version
 
-[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf) with your API:
+[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version/resource.tf) with your API:
 
 ```hcl
 echo '
 resource "konnect_api_version" "my_api_spec" {
-  provider = konnect-beta
   api_id = konnect_api.my_api.id
   spec = {
     content = <<JSON
@@ -165,14 +163,13 @@ resource "konnect_api_version" "my_api_spec" {
 
 ## Create and associate an API document 
 
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf).
+An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document/resource.tf).
 
 Create and associate an API document:
 
 ```hcl
 echo '
 resource "konnect_api_document" "my_apidocument" {
-  provider = konnect-beta
   api_id  = konnect_api.my_api.id
   content = "# API Document Header"
   slug               = "api-document"
