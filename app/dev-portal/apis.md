@@ -116,7 +116,7 @@ body:
 {% endkonnect_api_request %}
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version/resource.tf):
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
 ```hcl
 echo '
 resource "konnect_api_version" "my_apiversion" {
@@ -157,7 +157,7 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version/resource.tf):
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
 ```hcl
 echo '
 resource "konnect_api_version" "my_apiversion" {
@@ -215,7 +215,7 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document/resource.tf):
+Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf):
 ```hcl
 echo '
 resource "konnect_api_document" "my_apidocument" {
@@ -279,7 +279,7 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_implementation/resource.tf):
+Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_implementation.tf):
 ```hcl
 echo '
 resource "konnect_api_implementation" "my_apiimplementation" {
@@ -375,7 +375,7 @@ method: PUT
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_publication/resource.tf):
+Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_publication.tf):
 ```hcl
 echo '
 resource "konnect_api_publication" "my_apipublication" {
