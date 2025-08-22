@@ -31,9 +31,9 @@ related_resources:
   - text: PagerDuty integration
     url: /service-catalog/integrations/pagerduty/
 faqs:
-  - q: What's the different between a Gateway Service and a Service Catalog service?
+  - q: What's the difference between a Gateway Service and a Service Catalog service?
     a: |
-      A [Gateway Service](/gateway/entities/service/) represent the upstream services in your system and is the business logic component of your system that's responsible for responding to requests. A Service Catalog service is a collection of one or more resources from Service Catalog integrations.
+      A [Gateway Service](/gateway/entities/service/) is a {{site.base_gateway}} entity that represents an upstream service in your system and is the business logic component that's responsible for responding to requests. A Service Catalog service is a collection of one or more resources from Service Catalog integrations.
 ---
 
 A Service Catalog service is a collection of one or more resources from integrations.
