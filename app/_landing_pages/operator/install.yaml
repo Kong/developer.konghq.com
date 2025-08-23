@@ -20,6 +20,8 @@ rows:
       - blocks:
           - type: text
             config: |
+              Prerequisite: cert-manager must be installed. See https://cert-manager.io/docs/installation/
+
               ```bash
               helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace \
                 --set env.ENABLE_CONTROLLER_KONNECT=true

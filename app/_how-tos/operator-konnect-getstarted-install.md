@@ -58,6 +58,10 @@ Create the `kong` namespace in your Kubernetes cluster, which is where the Getti
 kubectl create namespace kong
 ```
 
+## Install cert-manager (prerequisite)
+
+The {{site.operator_product_name}} Helm chart requires cert-manager to manage admission webhook certificates. Install cert-manager in your cluster before proceeding. See the official installation guide: https://cert-manager.io/docs/installation/
+
 ## Install the Operator
 
 Use Helm to install the {{site.operator_product_name}} with {{ site.konnect_short_name }}  support enabled:
