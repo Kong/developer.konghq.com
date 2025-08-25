@@ -508,7 +508,7 @@ To enable certificate-bound access for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
 * Use the [`proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
 
-See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail.
+See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail and [Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
 
 ### Demonstrating Proof-of-Possession (DPoP)
 
