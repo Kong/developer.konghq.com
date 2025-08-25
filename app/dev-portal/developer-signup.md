@@ -25,6 +25,8 @@ related_resources:
     url: /dev-portal/self-service/
   - text: Authentication strategies
     url: /dev-portal/authentication-strategies/
+  - text: Dev Portal developer RBAC
+    url: /dev-portal/developer-rbac/
 ---
 
 The Dev Portal enables you to quickly get access to your APIs of interest, in a self-serve way. 

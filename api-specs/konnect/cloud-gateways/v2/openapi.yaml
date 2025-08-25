@@ -1575,6 +1575,7 @@ components:
         - `created` - The attachment has been created but is not attached to transit gateway.
         - `initializing` - The attachment is in the process of being initialized and is setting up necessary resources.
         - `pending-acceptance` The attachment request is awaiting acceptance in customer VPC.
+        - `pending-user-action` The attachment request is awaiting user action in customer VPC.
         - `ready` - The transit gateway attachment is fully operational and can route traffic as configured.
         - `terminating` - The attachment is in the process of being deleted and is no longer accepting new traffic.
         - `terminated` - The attachment has been fully deleted and is no longer available.
@@ -1583,6 +1584,7 @@ components:
         - created
         - initializing
         - pending-acceptance
+        - pending-user-action
         - ready
         - terminating
         - terminated
@@ -1660,6 +1662,27 @@ components:
         - resource_group_name
         - vnet_name
       title: Azure VNET Peering Attachment Config
+    GCPVPCPeeringAttachmentConfig:
+      type: object
+      properties:
+        kind:
+          enum:
+            - gcp-vpc-peering-attachment
+          title: GCP VPC Peering Attachment Type
+        peer_project_id:
+          description: GCP Project ID of the peer account to create attachment to.
+          type: string
+          title: GCP Project ID
+        peer_vpc_name:
+          description: GCP VPC Name of the peer account to create attachment to.
+          type: string
+          title: GCP VPC Name
+      additionalProperties: false
+      required:
+        - kind
+        - peer_project_id
+        - peer_vpc_name
+      title: GCP VPC Peering Attachment Config
     TransitGatewayDnsConfig:
       description: |
         List of mappings from remote DNS server IP address sets to proxied internal domains, for a transit gateway
@@ -2113,11 +2136,72 @@ components:
         - created_at
         - updated_at
       title: Azure Transit Gateway
+    GCPVPCPeeringGatewayResponse:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TransitGatewayName'
+        dns_config:
+          $ref: '#/components/schemas/TransitGatewayDnsConfig'
+        transit_gateway_attachment_config:
+          $ref: '#/components/schemas/GCPVPCPeeringAttachmentConfig'
+        id:
+          $ref: '#/components/schemas/TransitGatewayId'
+        state:
+          $ref: '#/components/schemas/TransitGatewayState'
+        state_metadata:
+          description: |
+            Metadata describing the backing state of the transit gateway and why it may be in an erroneous state.
+          type: object
+          additionalProperties: false
+          properties:
+            reported_status:
+              description: Reported status of the transit gateway from backing infrastructure.
+              type: string
+              example: ERROR
+            reason:
+              description: |
+                Reason why the transit gateway may be in an erroneous state, reported from backing infrastructure.
+              type: string
+              example: |
+                Transit Gateway Attachment configuration could not find a resource with the provided ram share arn.
+          readOnly: true
+          title: TransitGatewayStateMetadata
+        entity_version:
+          description: |
+            Monotonically-increasing version count of the transit gateway, to indicate the order of updates to the
+            transit gateway.
+          type: integer
+          example: 1
+          readOnly: true
+        created_at:
+          description: An RFC-3339 timestamp representation of transit gateway creation date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        updated_at:
+          description: An RFC-3339 timestamp representation of transit gateway update date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+      required:
+        - name
+        - transit_gateway_attachment_config
+        - id
+        - dns_config
+        - state
+        - entity_version
+        - created_at
+        - updated_at
+      title: GCP VPC Peering Transit Gateway
     TransitGatewayResponse:
       oneOf:
         - $ref: '#/components/schemas/AwsTransitGatewayResponse'
         - $ref: '#/components/schemas/AwsVpcPeeringGatewayResponse'
         - $ref: '#/components/schemas/AzureTransitGatewayResponse'
+        - $ref: '#/components/schemas/GCPVPCPeeringGatewayResponse'
     CreateAwsTransitGateway:
       type: object
       properties:
@@ -2163,6 +2247,19 @@ components:
         - name
         - transit_gateway_attachment_config
       title: Azure Transit Gateway
+    CreateGCPVPCPeeringTransitGateway:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TransitGatewayName'
+        dns_config:
+          $ref: '#/components/schemas/TransitGatewayDnsConfig'
+        transit_gateway_attachment_config:
+          $ref: '#/components/schemas/GCPVPCPeeringAttachmentConfig'
+      required:
+        - name
+        - transit_gateway_attachment_config
+      title: GCP VPC Peering Transit Gateway
     CreateTransitGatewayRequest:
       description: Request schema for creating a transit gateway.
       type: object
@@ -2170,6 +2267,7 @@ components:
         - $ref: '#/components/schemas/CreateAwsTransitGateway'
         - $ref: '#/components/schemas/CreateAwsVpcPeeringGateway'
         - $ref: '#/components/schemas/CreateAzureTransitGateway'
+        - $ref: '#/components/schemas/CreateGCPVPCPeeringTransitGateway'
       title: CreateTransitGatewayRequest
     CustomDomainState:
       description: State of the custom domain.
