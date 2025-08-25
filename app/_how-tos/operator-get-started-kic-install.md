@@ -27,6 +27,9 @@ works_on:
 prereqs:
   show_works_on: false
   skip_product: true
+  inline:
+    - title: Cert manager
+      include_content: prereqs/operator-cert-manager
 
 tldr:
   q: How do I install {{ site.operator_product_name }} with {{ site.kic_product_name }} using Helm?

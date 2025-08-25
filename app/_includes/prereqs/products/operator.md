@@ -5,6 +5,10 @@
 {% endif %}
 {% capture details_content %}
 
+1. Install cert-manager (prerequisite)
+
+   The {{ site.operator_product_name }} Helm chart requires [cert-manager](https://cert-manager.io) to manage admission webhook certificates. Install cert-manager in your cluster before proceeding. Follow the official guide: https://cert-manager.io/docs/installation/
+
 1. Add the Kong Helm charts:
 
    ```bash
