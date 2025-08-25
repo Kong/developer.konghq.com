@@ -4,7 +4,7 @@ description: 'Details which browsers, software, and versions {{site.konnect_shor
 content_type: policy
 layout: reference
 products:
-  - konnect-platform
+  - konnect
 
 tags:
   - compatibility

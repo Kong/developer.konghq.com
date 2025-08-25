@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-  - konnect-platform
+  - konnect
 
 min_version:
   gateway: '3.4'

@@ -8,7 +8,7 @@ content_type: policy
 layout: reference
 
 products:
-    - konnect-platform
+    - konnect
 works_on:
     - konnect
 
