@@ -26,8 +26,10 @@ related_resources:
     url: /gateway/upgrade/rolling/
   - text: "Blue-green upgrade"
     url: /gateway/upgrade/blue-green/
+  - text: "3.4 to 3.10 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-34-310/
   - text: "2.8 to 3.4 LTS upgrade"
-    url: /gateway/upgrade/lts-upgrade/
+    url: /gateway/upgrade/lts-upgrade-28-34/
 tags:
   - versioning
   - upgrades
@@ -40,11 +42,13 @@ Additionally, this guide lists some fundamental factors that play important role
 This guide uses the following terms in the context of {{site.base_gateway}}:
 * **Upgrade**: The overall process of switching from an older to a newer version of {{site.base_gateway}}. 
 * **Migration**: The migration of your data store data into a new environment. 
-For example, the process of moving 2.8.x data from an old PostgreSQL instance to a new one for 3.4.x is referred to as database migration.
+For example, the process of moving data from an old PostgreSQL instance to a new one is referred to as database migration.
 
 {:.info}
-> **Note**: If you are interested in upgrading between the {{site.ee_product_name}} 2.8.x and 3.4.x long-term 
-support (LTS) versions, see the [LTS upgrade guide](/gateway/upgrade/lts-upgrade/).
+> **Note**: If you are interested in upgrading between the {{site.ee_product_name}} long-term 
+support (LTS) versions, see:
+> * [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
+> * [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
 
 ## Upgrade overview
 
@@ -108,12 +112,13 @@ By default, {{site.base_gateway}} has migration tests between adjacent versions,
 
 1. Between patch releases of the same major and minor version (for example, 3.8.0.0 to 3.8.1.0).
 2. Between adjacent minor releases of the same major version (for example, 3.7.x to 3.8.x).
-3. Between [LTS (Long Term Support) versions](/gateway/version-support-policy/#long-term-support).
+3. Between adjacent [LTS (Long Term Support) versions](/gateway/version-support-policy/#long-term-support).
 
     {{site.base_gateway}} maintains LTS versions and guarantees upgrades between adjacent LTS versions.
-    The current LTS in the 2.x series is 2.8, and the current LTS in the 3.x series is 3.4.
-    If you want to upgrade between the 2.8 and 3.4 LTS versions, 
-    see the [LTS Upgrade guide](/gateway/upgrade/lts-upgrade/).
+    The current LTS in the 2.x series is 2.8, and the current LTS in the 3.x series is 3.10.
+    If you want to upgrade between LTS versions, see the upgrade guides:
+    * [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
+    * [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
 
 ## Preparation: Choose a backup strategy
 

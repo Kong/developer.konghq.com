@@ -121,8 +121,7 @@
 # Gateway LTS
 /archive/dev-portal/ https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/dev-portal/
 /archive/vitals/     https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/analytics/
-
-
+/gateway/upgrade/lts-upgrade/ /gateway/upgrade/lts-upgrade-34-310/
 
 ## Debugger
 
