@@ -11,7 +11,6 @@ breadcrumbs:
 series:
   id: gateway-k8s-on-prem-install
   position: 3
-
 products:
   - gateway
 
