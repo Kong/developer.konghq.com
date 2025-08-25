@@ -71,9 +71,7 @@ headers:
 body:
   name: "Kong Identity"
   provider_type: "kong"
-  issuer: "'$ISSUER_URL'"
-  dcr_config:
-    dcr_token: "?"
+  issuer: "$ISSUER_URL"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -96,7 +94,7 @@ body:
   strategy_type: "openid_connect"
   configs:
     openid-connect:
-        issuer: "'$ISSUER_URL'"
+        issuer: "$ISSUER_URL"
         credential_claim:
         - client_id
         scopes:
@@ -104,7 +102,7 @@ body:
         auth_methods:
         - client_credentials
         - bearer
-  dcr_provider_id: "'$DCR_PROVIDER'"
+  dcr_provider_id: "$DCR_PROVIDER"
 {% endkonnect_api_request %}
 <!--vale on-->
 
