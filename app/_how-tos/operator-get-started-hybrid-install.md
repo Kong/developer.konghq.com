@@ -55,19 +55,19 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 1. Add the Kong Helm charts:
 
-  ```bash
-  helm repo add kong https://charts.konghq.com
-  helm repo update kong
-  ```
+    ```bash
+    helm repo add kong https://charts.konghq.com
+    helm repo update kong
+    ```
 
 1. Install {{ site.kic_product_name }} using Helm:
 
-  ```bash
-  helm upgrade --install ko kong/kong-operator -n kong-system \
-    --create-namespace \
-    --set image.tag={{ site.data.operator_latest.release }} \
-    --set env.ENABLE_CONTROLLER_KONNECT=true
-  ```
+    ```bash
+    helm upgrade --install ko kong/kong-operator -n kong-system \
+      --create-namespace \
+      --set image.tag={{ site.data.operator_latest.release }} \
+      --set env.ENABLE_CONTROLLER_KONNECT=true
+    ```
 
 ## Wait for {{ site.operator_product_name }} to be ready
 
