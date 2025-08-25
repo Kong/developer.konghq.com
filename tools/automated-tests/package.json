@@ -20,6 +20,6 @@
         "minimist": "^1.2.8",
         "node-fetch": "^3.3.2",
         "puppeteer": "^24.0.0",
-        "tough-cookie": "^5.1.2"
+        "tough-cookie": "^6.0.0"
     }
 }
