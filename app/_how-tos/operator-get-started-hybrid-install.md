@@ -60,7 +60,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
     helm repo update kong
     ```
 
-1. Install {{ site.kic_product_name }} using Helm:
+1. Install {{ site.operator_product_name }} using Helm:
 
     ```bash
     helm upgrade --install ko kong/kong-operator -n kong-system \
