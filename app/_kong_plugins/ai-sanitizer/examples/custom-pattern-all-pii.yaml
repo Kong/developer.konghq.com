@@ -1,6 +1,6 @@
 description: Configure the plugin to anonymize all standard PII types and a custom pattern for AWS API keys in requests.
 
-title: Full PII coverage with custom API key detection
+title: Apply full PII coverage with custom API key detection
 
 weight: 930
 
