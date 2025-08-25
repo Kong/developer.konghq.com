@@ -1,8 +1,8 @@
-description: Configure the plugin to use your sanitizer service to anonymize phone numbers in requests before they reach the upstream service.
+description: Configure the plugin to anonymize requests using a custom regex pattern for GitHub personal access tokens.
 
-title: Anonymize phone numbers only
+title: Anonymize requests with a GitHub token pattern
 
-weight: 900
+weight: 920
 
 requirements:
   - You have enabled the AI Proxy or AI Proxy Advanced plugin
@@ -16,10 +16,13 @@ variables:
     description: The sanitizer service's port
     value: $SANITIZER_SERVICE_PORT
 
-
 config:
   anonymize:
-      - phone
+      - custom
+  custom_patterns:
+      - name: github_token
+        regex: "ghp_[A-Za-z0-9]{36}"
+        score: 0.9
   port: ${port}
   host: ${host}
   redact_type: synthetic
