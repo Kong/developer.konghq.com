@@ -42,7 +42,6 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 ## Install {{ site.operator_product_name }}
 
-
 1. Add the Kong Helm charts:
 
    ```bash
@@ -53,7 +52,8 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 1. Install {{ site.kic_product_name }} using Helm:
 
    ```bash
-   helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
+   helm upgrade --install ko kong/kong-operator -n kong-system \
+     --create-namespace \
      --set image.tag={{ site.data.operator_latest.release }} \
      --set kubernetes-configuration-crds.enabled=true \
      --set env.ENABLE_CONTROLLER_KONNECT=true
@@ -63,8 +63,8 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {% validation custom-command %}
 command: |
-  kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kgo-gateway-operator-controller-manager
+  kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/ko-kong-operator-controller-manager
 expected:
-  stdout: "deployment.apps/kgo-gateway-operator-controller-manager condition met"
+  stdout: "deployment.apps/ko-kong-operator-controller-manager condition met"
   return_code: 0
 {% endvalidation %}
