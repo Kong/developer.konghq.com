@@ -99,6 +99,7 @@
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
 
+/kubernetes-ingress-controller/:version/installation/#connect-to-konnect  /kubernetes-ingress-controller/install/
 
 ## Kubernetes
 
