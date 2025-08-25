@@ -35,6 +35,9 @@ tldr:
 prereqs:
   show_works_on: false
   skip_product: true
+  inline:
+    - title: Cert manager
+      include_content: prereqs/operator-cert-manager
 ---
 
 {% assign gwapi_version = "1.3.0" %}
@@ -50,10 +53,6 @@ If you want to use Gateway API resources, run this command:
 ```shell
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ gwapi_version }}/standard-install.yaml
 ```
-
-## Install cert-manager (prerequisite)
-
-The {{ site.operator_product_name }} Helm chart requires cert-manager to manage admission webhook certificates. Install cert-manager in your cluster before proceeding. See the official installation guide: https://cert-manager.io/docs/installation/
 
 ## Install {{ site.operator_product_name }}
 

@@ -35,6 +35,9 @@ entities: []
 
 prereqs:
   skip_product: true
+  inline:
+    - title: Cert manager
+      include_content: prereqs/operator-cert-manager
 
 ---
 
@@ -58,10 +61,6 @@ Create the `kong` namespace in your Kubernetes cluster, which is where the Getti
 kubectl create namespace kong
 ```
 
-## Install cert-manager (prerequisite)
-
-The {{site.operator_product_name}} Helm chart requires cert-manager to manage admission webhook certificates. Install cert-manager in your cluster before proceeding. See the official installation guide: https://cert-manager.io/docs/installation/
-
 ## Install the Operator
 
 Use Helm to install the {{site.operator_product_name}} with {{ site.konnect_short_name }}  support enabled:
@@ -81,7 +80,7 @@ Wait for the {{site.operator_product_name}}'s controller deployment to become av
 kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kgo-gateway-operator-controller-manager
 ```
 
-Once the {{site.operator_product_name}} is ready, you can begin provisioning Gateway Control Planes and Data Planes using {{site.konnect_short_name}} CRDs, the output will look like: 
+Once the {{site.operator_product_name}} is ready, you can begin provisioning Gateway Control Planes and Data Planes using {{site.konnect_short_name}} CRDs, the output will look like:
 
 ```sh
 deployment.apps/kgo-gateway-operator-controller-manager condition met
