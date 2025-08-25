@@ -3,12 +3,14 @@ title: "Version compatibility"
 description: "Understand which versions of {{ site.kic_product_name }}, Kubernetes and the Gateway API {{ site.operator_product_name }} works with"
 content_type: reference
 layout: reference
-products:
-  - operator
+
 breadcrumbs:
   - /operator/
   - index: operator
     section: Reference
+
+products:
+  - operator
 
 ---
 
