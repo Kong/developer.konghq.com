@@ -3,12 +3,14 @@ title: "Limiting namespaces watched by ControlPlane"
 description: "Learn how to limit the namespaces that ControlPlane watches."
 content_type: reference
 layout: reference
-products:
-  - operator
+
 breadcrumbs:
   - /operator/
   - index: operator
     group: Security hardening
+
+products:
+  - operator
 
 min_version:
   operator: '1.6'
