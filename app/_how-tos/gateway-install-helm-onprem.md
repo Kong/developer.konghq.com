@@ -75,6 +75,45 @@ kubectl create secret generic kong-enterprise-license --from-file=license=licens
    kubectl create secret tls kong-cluster-cert --cert=./tls.crt --key=./tls.key -n kong
    ```
 
+## Postgres database
+
+If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
+
+Create a Helm values file with the following:
+
+```yaml
+echo '
+auth:
+    username: kong
+    password: demo123
+    database: kong
+service:
+  ports:
+    postgresql: "5432"
+primary:
+  annotations:
+    "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+' > values-database.yaml 
+```
+
+And install the PostgreSQL Helm chart:
+
+```sh
+helm install kong-cp-db --namespace kong oci://registry-1.docker.io/bitnamicharts/postgresql --values ./values-database.yaml
+```
+
 ## Create a Control Plane
 
 The control plane contains all {{ site.base_gateway }} configurations. The configuration is stored in a PostgreSQL database.
@@ -150,45 +189,6 @@ proxy:
 {% endcapture %}
 
 {{ values_file | indent }}
-
-## Postgres database
-
-If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
-
-Create a Helm values file with the following:
-
-```yaml
-echo '
-auth:
-    username: kong
-    password: demo123
-    database: kong
-service:
-  ports:
-    postgresql: "5432"
-primary:
-  annotations:
-    "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
-  podSecurityContext:
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-  containerSecurityContext:
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-      - ALL
-' > values.yaml 
-```
-
-And install the PostgreSQL Helm chart:
-
-```sh
-helm install kong-cp-db --namespace kong oci://registry-1.docker.io/bitnamicharts/postgresql --values ./values.yaml
-```
 
 1. If you are using an existing, or external Postgres database (recommended), update the database connection values in `values-cp.yaml`.
 
