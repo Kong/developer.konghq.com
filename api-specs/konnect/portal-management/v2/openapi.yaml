@@ -4308,6 +4308,7 @@ components:
         use_custom_fonts:
           description: 'If true, fonts in custom_fonts will be used over the theme''s default fonts'
           type: boolean
+          nullable: false
         text:
           $ref: '#/components/schemas/NullableAppearanceTextVariables'
         images:
