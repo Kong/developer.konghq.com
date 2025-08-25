@@ -132,6 +132,7 @@ openssl x509 -req \
 {{ client-cert | indent: 3 }}
 
 1. Generate the server certificate:
+
    {:.danger}
    > **Important:** In this tutorial, use your DNS hostname in place of `your.hostname`.
 {% capture "server-cert" %}
@@ -271,6 +272,7 @@ rows:
    ```sh
    export DECK_ISSUER='https://your.hostname:9443/realms/master'
    ```
+   
    {:.danger}
    > **Important:** In this tutorial, use your DNS hostname in place of `your.hostname`.
 
@@ -331,6 +333,7 @@ curl -s --location --request POST 'https://your.hostname:9443/realms/master/prot
   --key client.key \
   --cacert rootCA.crt | jq -r .access_token
 ```
+
 {:.danger}
 > **Important:** In this tutorial, use your DNS hostname in place of `your.hostname`.
 
