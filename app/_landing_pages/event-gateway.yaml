@@ -114,7 +114,7 @@ rows:
             title: "{{site.event_gateway}} quickstart"
             description: |
               Install, configure, and start using {{site.event_gateway}}
-            icon: /assets/icons/gateway.svg
+            icon: /assets/icons/event.svg
             cta:
               text: Start using {{site.event_gateway}}
               url: /event-gateway/get-started/
