@@ -27,7 +27,7 @@ rows:
 
                   {{site.konnect_short_name}} can help you with the following use cases:
                   * Easily manage {{site.base_gateway}}
-                  * Catalog, share, and monetize APIs
+                  * Catalog and publish APIs
                   * Achieve federated API management with [multi-geo](/konnect-platform/geos/) support
                           
           - type: button
@@ -125,17 +125,17 @@ rows:
             config:
               title: API Gateway
               description: |
-                The Gateway Manager is a {{site.konnect_short_name}} module that lets you catalog, connect to, and monitor the status of all {{site.base_gateway}} control planes and data plane nodes in one place.
+                Gateway Manager is a {{site.konnect_short_name}} module that lets you catalog, connect to, and monitor the status of all {{site.base_gateway}} control planes and data plane nodes in one place.
               icon: /assets/icons/gateway.svg
               ctas:
               - text: Learn about {{site.base_gateway}}
-                url: /ai-gateway/
+                url: /gateway/
                 align: end
               - text: Get started with {{site.base_gateway}} in {{site.konnect_short_name}}
                 url: /gateway/get-started/
                 align: end
               - text: Manage {{site.base_gateway}} in {{site.konnect_short_name}}
-                url: /ai-manager/
+                url: /gateway-manager/
                 align: end
               
     - blocks:
@@ -184,7 +184,7 @@ rows:
                 items:
                     - "![icon](/assets/icons/serverless-gateway.svg){:.inline} [Serverless gateway](/serverless-gateways/): Lightweight API gateways, where the control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned."
                     - "![icon](/assets/icons/dedicated-cloud-gateway.svg){:.inline} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/): Data plane nodes that are fully managed by Kong in {{site.konnect_short_name}}. Each Dedicated Cloud Gateway runs on isolated infrastructure within Kong-managed environments in AWS, Azure, or GCP — offering the performance and security of dedicated infrastructure with the operational ease of SaaS."
-                    - "![icon](/assets/icons/self-hosted.svg){:.inline} [Serverless gateway](/gateway/topology-hosting-options/#self-hosted): Host your own data plane nodes on the supported system of your choice."
+                    - "![icon](/assets/icons/self-hosted.svg){:.inline} [Self-hosted](/gateway/topology-hosting-options/#self-hosted): Host your own data plane nodes on the supported system of your choice."
       - header:
           type: h3
           text: Tools to manage {{site.konnect_short_name}}
