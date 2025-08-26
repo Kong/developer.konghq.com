@@ -127,7 +127,7 @@ rows:
       <br><br>
       The plugin now bypasses schema validation when the content type is not `application/json`.
     action: |
-      No?
+      Ensure that all requests have `Content-type: application/json`.
   - category: Kong Manager
     description: |   
       Kong Manager now uses the session management mechanism in the OpenID Connect plugin.
@@ -186,7 +186,7 @@ rows:
       Changed the encoding of spaces in query arguments from `+` to `%20` in the `kong.service.request.clear_query_arg` PDK module.
       While the `+` character represents the correct encoding of space in query strings, Kong uses `%20` in many other APIs, which is inherited from Nginx/OpenResty.
     action:
-      No?
+      No
           
 {% endtable %}
 
