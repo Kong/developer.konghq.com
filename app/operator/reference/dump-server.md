@@ -236,7 +236,7 @@ done
 
 ### Compare configurations
 
-To compare configurations between twocontrol planes:
+To compare configurations between two control planes:
 
 ```bash
 # Dump both configurations
