@@ -203,6 +203,9 @@ Type `y` when prompted to trust the certificate. The Keycloak server presents th
 
 ## Configure Keycloak
 
+{:.warning}
+> **Important:** You must run the following in a *new* terminal window because Keycloak's container is started in the foreground.
+
 1. In a new terminal window, export your trust store password and hostname:
    ```sh
    export PKCS12_PASSWORD='YOUR-PASSWORD'
