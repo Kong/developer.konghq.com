@@ -23,16 +23,11 @@ groups:
           - path: /operator/reference/configuration-options/
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
+          - path: /operator/reference/control-plane-feature-gates-and-controllers/
   - title: Security hardening
     sections:
       - items:
           - path: /operator/reference/control-plane-watch-namespaces/
-
-  - title: Control Plane
-    sections:
-      - title: How-To
-        items:
-          - path: /operator/control-planes/how-to/**/*
 
   - title: Gateway Deployment
     sections:
