@@ -39,6 +39,7 @@ entities:
 tags:
   - ai
   - openai
+  - mcp
 
 tldr:
   q: How can I secure my MCP traffic using {{ site.base_gateway }}?
