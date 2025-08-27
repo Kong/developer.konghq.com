@@ -185,7 +185,7 @@ rows:
     description: |
       Changed the encoding of spaces in query arguments from `+` to `%20` in the `kong.service.request.clear_query_arg` PDK module.
       While the `+` character represents the correct encoding of space in query strings, Kong uses `%20` in many other APIs, which is inherited from Nginx/OpenResty.
-    action:
+    action: |
       No
           
 {% endtable %}
