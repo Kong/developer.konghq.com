@@ -29,3 +29,10 @@ custom-dashboards:
 event-gateway-get-started:
   title: Get started with {{site.event_gateway}}
   url: /event-gateway/get-started/
+mcp-conversion:
+  title: Autogenerate and observe MCP tools from any RESTful API
+  url: /mcp/autogenerate-mcp-tools/
+mcp-weather-api:
+  title: Autogenerate and observe MCP tools for Weather API
+  url: /mcp/autogenerate-mcp-tools-for-weather-api/
+
