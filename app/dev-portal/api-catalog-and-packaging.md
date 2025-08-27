@@ -38,11 +38,11 @@ related_resources:
 <!--{:.success}
 > This is a reference guide, you can also follow along with our [Package APIs for partners with Dev Portal](/how-to/package-apis-for-partners-with-dev-portal/) tutorial.-->
 
-Compose API packages from existing APIs in Dev Portal. API packages allow you to:
-* Create distinct APIs for specific use cases or partners, based on existing API operations
-* Link to multiple gateway services/routes for Developer self-service / Application Registration.
-* Apply rate limiting policies to an API Package, or per operation
-* Manage role-based access control to specific Developers/Teams
+You can compose API packages from existing APIs in Dev Portal. API packages allow you to:
+* Create distinct APIs for specific use cases or partners based on existing API operations.
+* Link to multiple Gateway Services and/or Routes for developer self-service and application registration.
+* Apply rate limiting policies to an API Package, or per operation.
+* Manage role-based access control to specific developers and teams.
 
 The following table describes common API package use cases:
 <!--vale off-->
@@ -57,9 +57,10 @@ columns:
 rows:
   - use-case: Customize APIs for partners
     description: Using API packages, you can customize which operations/endpoints are included in Dev Portals for partners.
-    example: If you have multiple APIs/services, you can select specific operations from each API, e.g. `GET /billing` and `GET /flights`, creating an API package for partners to an external Dev Portal, titled "Flight Billing API". Meanwhile Billing and Flights APIs can be published to your internal Dev Portal.
-  - use-case: Apply rate limits to Applications
-    description: While Gateway Services or Routes may have systemic rate limits in place, it's often necessary to get lower rate limits to Applications when exposing those capabilities to partners. When createing "Flight Billing API", `GET /billing` may need a lower rate limit of 10 request/minute, while the overall Package could have something higher like 5 requests/second. 
+    example: |
+      If you have multiple APIs/services, you can select specific operations from each API (for example, `GET /billing` and `GET /flights`) creating an API package for partners in an external Dev Portal, called "Flight Billing API". Meanwhile, Billing and Flights APIs can also be published to your internal Dev Portal.
+  - use-case: Apply rate limits to applications
+    description: While Gateway Services or Routes may have systemic rate limits in place, it's often necessary to apply lower rate limits to applications when exposing those capabilities to partners. When creating the "Flight Billing API" package, `GET /billing` may need a lower rate limit of 10 request per minute, while the overall API package could have something higher, like five requests per second. 
 {% endtable %}
 <!--vale on-->
 
@@ -97,13 +98,13 @@ Packaging APIs involves the following steps:
 1. Create an API and attach an OpenAPI spec.
 1. Link a control plane (or control planes) for to allow developer consumption. 
 1. Apply the Access Control Enforcement (ACE) plugin globally.
-1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. Gateway configuration is not directly modified, any unmatched operations will be highlighted to indicate action needed by the Gateway operator.
+1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user Gateway Manager permissions needs to perform an action.
 
 ### ACE plugin
 
 Previously, when you created an API catalog in Dev Portal and linked the APIs to a Gateway Service, {{site.konnect_short_name}} would automatically apply the {{site.konnect_short_name}} application auth (KAA) plugin automatically. 
 
-API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to Control Planes to configure access control and create operations for Gateway Services in those Control Planes. 
+API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services in those control planes. 
 
 ### Package rate limits
 
@@ -129,7 +130,7 @@ When configuring API packages, keep the following limitations in mind:
 * If two operations have the same path and method, they are generated as the same operation.
 * All operations for a control plane are removed when you unlink the control plane.
 * APIs can only be mapped to one control plane at a time.
-* You can't change a version or edit a spec for an API if it would remove an operation, resulting in a breaking change. The recommended method to remove an operation is to unlink the control plane from the API.
+* You can't change a version or edit a spec for an API if it would remove an operation because this would result in a breaking change. The recommended method to remove an operation is to unlink the control plane from the API.
 
 ## Package APIs with Dev Portal
 
@@ -180,4 +181,4 @@ Your operations should now be autogenerated based on how your OpenAPI spec maps 
 1. Select an auth strategy from the **Authentication strategy** dropdown menu.
 1. Click **Publish API**. 
 
-Your API package will now be published to your Dev Portal. Published API Packages appear the same as Published APIs in the Dev Portal, and both allow developers to register applications with them.
+Your API package will now be published to your Dev Portal. Published API packages appear the same as published APIs in the Dev Portal, and both allow developers to register applications with them.
