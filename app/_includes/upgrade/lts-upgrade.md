@@ -4,8 +4,8 @@
 {{site.base_gateway}} supports direct upgrades between long-term support (LTS) versions of {{site.ee_product_name}}.
 This guide walks you through upgrading from {{site.ee_product_name}} {{ lts_version_from }} LTS to {{site.ee_product_name}} {{ lts_version_to }} LTS.
 
-There are three upgrade strategies available for the LTS to LTS upgrade: in-place, dual-cluster, and rolling.
-This guide nominates the best applicable strategy for each deployment mode that {{site.base_gateway}} supports. 
+There are three upgrade strategies available when upgrading from an LTS version to a newer LTS version: in-place, dual-cluster, and rolling.
+This guide describes the best applicable strategy for each deployment mode that {{site.base_gateway}} supports. 
 Additionally, it lists some fundamental factors that play important roles in the upgrade process, and explains how to back up and recover data.
 
 This guide uses the following terms in the context of {{site.base_gateway}}:
@@ -36,7 +36,7 @@ Read this document thoroughly to successfully complete the upgrade process, as i
 * If you're using decK, [upgrade it to the latest version](/deck/).
 
 {% if include.lts_version_from == "2.8" %}
-{:.warning}
+{:.info}
 > Starting from {{site.base_gateway}} 3.4, Cassandra is not supported. 
 > If you're using Cassandra as your data store, migrate off of Cassandra first and upgrade second.
 > Work with the Kong support team to migrate from Cassandra to PostgreSQL.
@@ -61,8 +61,8 @@ There are a number of steps you must complete before upgrading to {{site.base_ga
 1. Work through any listed prerequisites.
 1. [Back up](#preparation-choose-a-backup-strategy) your database or your declarative configuration files.
 1. Choose the right [strategy for upgrading](#preparation-choose-an-upgrade-strategy-based-on-deployment-mode) based on your deployment topology.
-1. Review the [{{site.base_gateway}} changes from {{ lts_version_from }} to {{ lts_version_to }}](#preparation-review-gateway-changes) for any breaking changes that affect your deployments.
-1. Conduct a thorough examination of the [modifications made to the `kong.conf` file](#kong-conf-changes) between the LTS releases.
+1. Review the [{{site.base_gateway}} changes from {{ lts_version_from }} to {{ lts_version_to }}](#preparation-review-gateway-changes) for any breaking changes that may affect your deployments.
+1. Review any [modifications made to the `kong.conf` file](#kong-conf-changes) between the LTS releases.
 1. Using your chosen strategy, test migration in a pre-production environment.
 
 ### Performing the upgrade
@@ -156,7 +156,7 @@ Carefully review each entry and make changes to your configuration accordingly.
 
 ## Perform upgrade
 
-Now that you have chosen an upgrade strategy and reviewed all the relevant changes between the {{ lts_version_from }} and {{ lts_version_to }} LTS releases, you can move on to performing the upgrade with your chosen strategy:
+Now that you have chosen an upgrade strategy and reviewed all the relevant changes between the {{ lts_version_from }} and {{ lts_version_to }} LTS releases, you can start the upgrade with your chosen strategy:
 
 Traditional mode or control planes in hybrid mode:
 * [Dual-cluster upgrade](/gateway/upgrade/dual-cluster/)
