@@ -38,8 +38,8 @@ rows:
       If any configurations are stored in a repository (following a GitOps model),
       these need to be upgraded using [`deck file convert`](/deck/file/convert/).
   - category: DB config
-    change: Tags may now contain space characters.
-    description: |
+    description: Tags may now contain space characters.
+    action: |
       No
   - category: "kong.conf"
     description: |
