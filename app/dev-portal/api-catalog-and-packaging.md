@@ -60,7 +60,9 @@ rows:
     example: |
       If you have multiple APIs/services, you can select specific operations from each API (for example, `GET /billing` and `GET /flights`) creating an API package for partners in an external Dev Portal, called "Flight Billing API". Meanwhile, Billing and Flights APIs can also be published to your internal Dev Portal.
   - use-case: Apply rate limits to applications
-    description: While Gateway Services or Routes may have systemic rate limits in place, it's often necessary to apply lower rate limits to applications when exposing those capabilities to partners. When creating the "Flight Billing API" package, `GET /billing` may need a lower rate limit of 10 request per minute, while the overall API package could have something higher, like five requests per second. 
+    description: While Gateway Services or Routes may have systemic rate limits in place, it's often necessary to apply lower rate limits to applications when exposing those capabilities to partners. 
+    example: |
+      When creating the "Flight Billing API" package, `GET /billing` may need a lower rate limit of 10 request per minute, while the overall API package could have something higher, like five requests per second. 
 {% endtable %}
 <!--vale on-->
 
