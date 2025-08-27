@@ -24,6 +24,7 @@ module Jekyll
       how_tos = @site.collections['how-tos'].docs.each_with_object([]) do |t, result|
         match = (!config.key?('tags') || t.data.fetch('tags', []).intersect?(config['tags'])) &&
                 (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products'])) &&
+                (!config.key?('works_on') || t.data.fetch('works_on', []).intersect?(config['works_on'])) &&
                 (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools'])) &&
                 (!config.key?('plugins') || t.data.fetch('plugins', []).intersect?(config['plugins']))
 
@@ -50,7 +51,7 @@ module Jekyll
     end
 
     def view_more_url(config)
-      query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools'))
+      query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools', 'works_on'))
       url_segment = '/how-to'
       query_string.empty? ? url_segment : "#{url_segment}?#{query_string}"
     end

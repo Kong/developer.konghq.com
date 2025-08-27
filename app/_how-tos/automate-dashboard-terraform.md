@@ -4,8 +4,8 @@ description: Learn how to manage a dashboard in {{site.konnect_short_name}} Anal
 content_type: how_to
 automated_tests: false
 products:
-    - konnect-platform
     - advanced-analytics
+    - konnect
 works_on:
     - konnect
 tools:
