@@ -35,6 +35,9 @@ tldr:
 prereqs:
   show_works_on: false
   skip_product: true
+  inline:
+    - title: Cert manager
+      include_content: prereqs/operator-cert-manager
 ---
 
 {% assign gwapi_version = "1.3.0" %}
