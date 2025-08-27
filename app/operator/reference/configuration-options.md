@@ -1,7 +1,7 @@
 ---
 title: "{{site.operator_product_name}} configuration options"
 short_title: Configuration options
-description: Learn about the various settings and configurations of the operator which can be tweaked using CLI flags.
+description: Explore the operator’s configurable settings and learn how to adjust them using CLI flags.
 content_type: reference
 layout: reference
 
@@ -25,15 +25,16 @@ The default configuration will work for most users. These options are provided f
 ## Using environment variables
 
 Each flag defined in the following table can also be configured using an environment variable.
-The name of the environment variable is `KONG_OPERATOR_` string followed by the name of flag in uppercase.
+The environment variable name is `KONG_OPERATOR_` followed by the flag name in uppercase.
 
-For example, `--secret-label-selector` can be configured using the following environment variable:
+For example, you can configure `--secret-label-selector` with the environment variable:
 
 ```
 KONG_OPERATOR_SECRET_LABEL_SELECTOR=mylabel
 ```
 
-We recommend configuring all settings through environment variables and not CLI flags.
+{:.info}
+> We recommend configuring all settings through environment variables rather than CLI flags.
 
 <!-- vale off -->
 
@@ -70,11 +71,11 @@ rows:
     default: '`100`'
   - flag: '`--cache-sync-period`'
     type: '`string`'
-    description: "Determine the minimum frequency at which watched resources are reconciled. By default or for 0s value, it falls back to controller-runtime's default."
+    description: "Sets the minimum frequency for reconciling watched resources. Defaults to the controller-runtime value if unspecified or set to 0s."
     default: '`0s`'
   - flag: '`--cache-sync-timeout`'
     type: '`string`'
-    description: "The time limit set to wait for syncing controllers' caches. Defaults to 0 to fall back to default from controller-runtime."
+    description: "Sets the time limit for syncing controller caches. Defaults to the controller-runtime value if set to `0`."
     default: '`0s`'
   - flag: '`--cluster-ca-key-size`'
     type: '`string`'
@@ -90,7 +91,7 @@ rows:
     default: '`kong-operator-ca`'
   - flag: '`--cluster-ca-secret-namespace`'
     type: '`string`'
-    description: "Name of the namespace for Secret containing the cluster CA certificate."
+    description: "Specifies the namespace of the Secret that contains the cluster CA certificate"
     default: ""
   - flag: '`--cluster-domain`'
     type: '`string`'
@@ -102,7 +103,7 @@ rows:
     default: '`konghq.com/configmap`'
   - flag: '`--controller-name`'
     type: '`string`'
-    description: "Controller name to use if other than the default, only needed for multi-tenancy."
+    description: "Custom controller name, required only in multi-tenant setups."
     default: ""
   - flag: '`--controlplane-config-dump-bind-address`'
     type: '`string`'
