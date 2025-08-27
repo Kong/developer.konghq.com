@@ -5,7 +5,7 @@ title: Anonymize multiple PII categories
 weight: 910
 
 requirements:
-  - You have enabled the AI Proxy or AI Proxy Advanced plugin
+  - You have enabled the [AI Proxy or AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - You have pulled and run an [AI PII Anonymizer service image](/plugins/ai-sanitizer/#ai-pii-anonymizer-service)
 
 variables:
