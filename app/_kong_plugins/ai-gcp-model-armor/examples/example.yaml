@@ -1,0 +1,22 @@
+description: 'AI GCP Model Armor'
+
+title: 'AI GCP Model Armor'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: # plugin config in yaml format goes here
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
