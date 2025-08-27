@@ -63,20 +63,20 @@ faqs:
       If a client drops its connection with Kong while a request is being throttled ({% new_in 3.12 %}), {{site.base_gateway}} automatically releases all associated resources for that specific request. This means the individual request will no longer be processed or retried. However, the counter that accounted for this request's slot in the "waiting room" is automatically managed by the underlying counter mechanism (shared dictionary or Redis). These counters are typically recorded within specific time windows and are automatically evicted when their window expires, ensuring resource cleanup without manual intervention for each dropped connection.
   - q: How is memory usage impacted when I enable throttling with the Rate Limiting Advanced plugin?
     a: |
-      ({% new_in 3.12 %}) The average memory consumption of each open connection is around 220 KB for one Route with one Rate Limiting Advanced plugin configured with the following:
+      ({% new_in 3.12 %}) Under the default configuration (Kong accepts a maximum request header size of 32 KB, and the Linux kernel TCP buffer is approximately 200 KB), in extreme scenarios where both Kong’s header buffer and the kernel’s TCP buffer are fully utilized, the average memory consumption of each open connection is around 220 KB for one Route with one Rate Limiting Advanced plugin configured with the following:
       * `config.limit`: 30 seconds
       * `config.throttling.interval`: 3,600 seconds
       * `config.throttling.retry`: 3
       * `config.throttling.queue`: 100000
 
-      You can test your own throttling memory usage by using a script like the following:
+      You can test your own throttling memory usage under extreme conditions by using a script like the following:
       ```sh
       #prepare header strings
       H1=$(head -c 8092 < /dev/zero | tr '\0' 'A')
       H2=$(head -c 8092 < /dev/zero | tr '\0' 'B')
       H3=$(head -c 8092 < /dev/zero | tr '\0' 'C')
       H4=$(head -c 8092 < /dev/zero | tr '\0' 'D')
-      head -c 200000 /dev/zero > /tmp/200k
+      head -c 1000000 /dev/zero > /tmp/1mb
 
       for i in {1..10000};
       do
@@ -86,7 +86,7 @@ faqs:
           -H "X-Header-2: $H2" \
           -H "X-Header-3: $H3" \
           -H "X-Header-4: $H4" \
-          --data-binary @/tmp/200k \
+          --data-binary @/tmp/1mb \
           -o /dev/null &
         echo "creating $i"
       done
