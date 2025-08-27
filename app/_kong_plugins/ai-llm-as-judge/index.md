@@ -35,3 +35,90 @@ categories:
 tags:
   - ai
 ---
+
+The **AI LLM as Judge** plugin enables automated evaluation of prompt-response pairs using a dedicated LLM. The plugin assigns a numerical score to LLM responses from 1 to 100, where:
+
+* `1`: Perfect or ideal response
+* `100`: Completely incorrect or irrelevant response
+
+This plugin is part of the **AI plugin suite**, making it easy to integrate LLM-based evaluation workflows into your API pipelines.
+
+## Features
+
+The AI LLM as Judge plugin offers several configurable features that control how the LLM evaluates prompts and responses:
+
+{% table %}
+columns:
+  - title: Feature
+    key: feature
+  - title: Description
+    key: description
+rows:
+  - feature: "Configurable system prompt"
+    description: "Instructs the LLM to act as a strict evaluator."
+  - feature: "Numerical scoring"
+    description: "Assigns a score from 1–100 to assess response quality."
+  - feature: "History depth"
+    description: "Includes previous chat messages for context when scoring."
+  - feature: "Ignore prompts"
+    description: "Options to ignore system, assistant, or tool prompts."
+  - feature: "Timeout & TLS"
+    description: "Supports HTTP(S) upstream timeout and TLS verification."
+  - feature: "Sampling rate"
+    description: "Controls probabilistic request volume for judging."
+  - feature: "Proxy support"
+    description: "Allows configuration of HTTP/HTTPS proxy for upstream AI services."
+  - feature: "Native LLM schema"
+    description: "Leverages Kong’s LLM schema for seamless integration."
+{% endtable %}
+
+
+## How it works
+
+1. The plugin sends the **user prompt** and **response** to the configured LLM as a judge.
+2. The LLM evaluates the response and returns a **numeric score** between **1 (ideal)** and **100 (irrelevant)**.
+3. This score can be used in downstream workflows, such as automated grading, feedback systems, or learning pipelines.
+
+The following sequence diagram visualizes these steps, showing how the plugin, LLM, and user interact to produce and consume the numeric score:
+
+{% mermaid %}
+sequenceDiagram
+    actor User as User
+    participant Plugin as AI LLM as Judge Plugin
+    participant LLM as Configured LLM
+
+    User->>Plugin: Sends prompt and response
+    Plugin->>LLM: Forward data for evaluation
+    LLM-->>Plugin: Returns numeric score (1 to 100)
+    Plugin->>User: Score available for downstream workflows
+{% endmermaid %}
+
+## Recommended LLM settings
+
+To ensure concise, consistent scoring, configure your LLM as follows:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Recommended Value
+    key: value
+  - title: Description
+    key: description
+rows:
+  - setting: "`temperature`"
+    value: "`2`"
+    description: "Controls randomness. Lower → more deterministic output."
+  - setting: "`max_tokens`"
+    value: "`5`"
+    description: "Maximum tokens for the LLM response."
+  - setting: "`top_p`"
+    value: "`1`"
+    description: "Nucleus sampling probability; limits token selection."
+{% endtable %}
+
+{:.info}
+> These settings produce short, precise numeric scores without extra text or verbosity.
+>
+> You may also consider setting `presence_penalty` or `frequency_penalty` to `0` to reduce influence from repeated content, further improving consistency in scoring.
+
