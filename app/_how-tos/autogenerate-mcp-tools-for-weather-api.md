@@ -4,11 +4,11 @@ content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI MCP
-    url: /plugins/ai-mcp/
+  - text: AI MCP Proxy
+    url: /plugins/ai-mcp-proxy/
 
 description: |
-    Learn how to use the AI MCP Conversion plugin to expose WeatherAPI endpoints as MCP tools, allowing AI clients like Cursor to query weather data.
+    Learn how to use the AI MCP Proxy plugin to expose WeatherAPI endpoints as MCP tools, allowing AI clients like Cursor to query weather data.
 products:
   - gateway
   - ai-gateway
@@ -41,7 +41,7 @@ tags:
 tldr:
   q: How do I automatically generate an MCP API for weather data?
   a: |
-    Use the AI MCP Conversion plugin to map WeatherAPI endpoints into MCP tools, allowing AI agents in Cursor to query current weather.
+    Use the AI MCP Proxy plugin to map WeatherAPI endpoints into MCP tools, allowing AI agents in Cursor to query current weather.
 
 tools:
   - deck
@@ -57,7 +57,6 @@ prereqs:
             ```sh
             export DECK_WEATHERAPI_API_KEY=YOUR_WEARTHERAPI_API_KEY
             ```
-      icon_url: /assets/icons/ai.svg
     - title: Install Cursor
       content: |
         1. Go to the [Cursor downloads](https://cursor.com/downloads) page.
@@ -91,35 +90,37 @@ variables:
     value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
 
-### Configure the AI MCP plugin
+### Configure the AI MCP Proxy plugin
 
-We can move on to configuring the AI MCP plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
+We can move on to configuring the AI MCP Proxy plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
 
 In this configuration, we also define the tool along with its parameters—including the configured API key—so that the MCP client can make tool calls for our weather queries.
 
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-mcp
+    - name: ai-mcp-proxy
       route: weather-route
       config:
+        mode: conversion-listener
         tools:
-          - description: Get current weather for a location
-            method: GET
-            path: "/weather"
-            parameters:
-              - name: key
-                in: query
-                description: Your API key
-                required: true
-                schema:
-                  type: string
-              - name: q
-                in: query
-                required: true
-                schema:
-                  type: string
-                description:  Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
+        - description: Get current weather for a location
+          method: GET
+          path: "/weather"
+          parameters:
+          - name: key
+            in: query
+            description: Your API key
+            required: true
+            schema:
+              type: string
+          - name: q
+            in: query
+            required: true
+            schema:
+              type: string
+            description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode,
+              IP address, latitude/longitude, or city name.
         server:
           timeout: 60000
 {% endentity_examples %}
@@ -168,7 +169,7 @@ Enter the following question in the Cursor chat:
 What is the current weather in London?
 ```
 
-You will notice that Cursor makes a tool call to the WeatherAPI tools we exposed through the AI MCP plugin:
+You will notice that Cursor makes a tool call to the WeatherAPI tools we exposed through the AI MCP Proxy plugin:
 
 ```text
 I'll fetch the current weather for London.

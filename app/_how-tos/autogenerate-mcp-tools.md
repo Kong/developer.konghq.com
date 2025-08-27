@@ -4,10 +4,10 @@ content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI MCP
-    url: /plugins/ai-mcp/
+  - text: AI MCP Proxy
+    url: /plugins/ai-mcp-proxy/
 
-description: Learn how to use the AI MCP plugin to generate MCP from any RESTful API, including setting up a mock Node.js server for testing.
+description: Learn how to use the AI MCP Proxy plugin to generate MCP from any RESTful API, including setting up a mock Node.js server for testing.
 products:
   - gateway
   - ai-gateway
@@ -39,7 +39,7 @@ tags:
 tldr:
   q: How do I automatically generate an MCP API from an existing REST API?
   a: |
-    Use the AI MCP to map your REST API endpoints into MCP capabilities, allowing you to integrate them directly with AI Gateway.
+    Use the AI MCP Proxy to map your REST API endpoints into MCP capabilities, allowing you to integrate them directly with AI Gateway.
 tools:
   - deck
 
@@ -63,7 +63,7 @@ automated_tests: false
 ---
 ## Install mock API Server
 
-Before using the **AI MCP**, you’ll need an upstream HTTP API to expose. For this tutorial, we’ll use a simple mock API built with Express. This allows you to test the plugin without relying on an external service. This mock API simulates a small marketplace system with a fixed set of users and their associated orders. Each user has between two and five sample orders, which the API exposes through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints.
+Before using the **AI MCP Proxy**, you’ll need an upstream HTTP API to expose. For this tutorial, we’ll use a simple mock API built with Express. This allows you to test the plugin without relying on an external service. This mock API simulates a small marketplace system with a fixed set of users and their associated orders. Each user has between two and five sample orders, which the API exposes through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints.
 
 Running these commands will download the mock API script and install any required dependencies automatically:
 
@@ -79,45 +79,46 @@ Validate the API is running:
 curl -X GET http://localhost:3000
 ```
 
-This request confirms that the mock server is up and responding. Later, the AI MCP will use this API’s OpenAPI schema to generate MCP tool definitions. You should see the following response from the server:
+This request confirms that the mock server is up and responding. Later, the AI MCP Proxy will use this API’s OpenAPI schema to generate MCP tool definitions. You should see the following response from the server:
 
 ```text
 {"name":"Sample Users API"}%
 ```
 {:.no-copy-code}
 
-## Configure the AI MCP plugin
+## Configure the AI MCP Proxy plugin
 
-With the mock API server running, configure the AI MCP plugin to expose its endpoints as MCP tools.
+With the mock API server running, configure the AI MCP Proxy plugin to expose its endpoints as MCP tools.
 The following example maps the mock API operations to MCP tool definitions that the client can invoke.
 
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-mcp
+    - name: ai-mcp-proxy
       route: mcp-route
       config:
+        mode: conversion-listener
         tools:
         - description: Get users
           method: GET
-          path: /marketplace/users
+          path: "/marketplace/users"
           parameters:
-            - name: id
-              in: query
-              required: false
-              schema:
-                type: string
-              description: Optional user ID
+          - name: id
+            in: query
+            required: false
+            schema:
+              type: string
+            description: Optional user ID
         - description: Get orders for a user
           method: GET
-          path: /marketplace/orders
+          path: "/marketplace/orders"
           parameters:
-            - description: User ID to filter orders
-              in: query
-              name: userid
-              required: true
-              schema:
-                type: string
+          - description: User ID to filter orders
+            in: query
+            name: userid
+            required: true
+            schema:
+              type: string
         server:
           timeout: 60000
 {% endentity_examples %}
@@ -191,7 +192,7 @@ Now, we can check what Alice Johnson ordered by entering the following message i
 What did Alice Johnson order?
 ```
 
-You'll notice that Cursor calls the tools exposed by the AI MCP plugin:
+You'll notice that Cursor calls the tools exposed by the AI MCP Proxy plugin:
 
 ```text
 I'll look up the list of users to find Alice's user ID. Then I'll fetch her orders.
