@@ -368,7 +368,7 @@ rows:
             config:
               title: "{{site.konnect_short_name}} account"
               description: |
-                Learn about the different {{site.konnect_short_name}} plasns and account management.
+                Learn about the different {{site.konnect_short_name}} plans and account management.
               cta:
                 text: View {{site.konnect_short_name}} account info
                 url: /konnect-platform/account/
