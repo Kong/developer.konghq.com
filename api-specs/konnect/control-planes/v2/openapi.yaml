@@ -413,6 +413,7 @@ components:
           description: The description of the control plane in Konnect.
           type: string
           example: A test control plane for exploration.
+          nullable: false
         cluster_type:
           description: The ClusterType value of the cluster associated with the Control Plane.
           type: string
@@ -434,6 +435,7 @@ components:
           description: Whether this control-plane can be used for cloud-gateways.
           type: boolean
           example: false
+          nullable: false
         proxy_urls:
           $ref: '#/components/schemas/ProxyURLs'
         labels:
@@ -454,6 +456,7 @@ components:
           description: The description of the control plane in Konnect.
           type: string
           example: A test control plane for exploration.
+          nullable: false
         auth_type:
           description: The auth type value of the cluster associated with the Runtime Group.
           type: string
@@ -485,6 +488,7 @@ components:
           description: The description of the control plane in Konnect.
           type: string
           example: A test control plane for exploration.
+          nullable: false
         labels:
           $ref: '#/components/schemas/Labels'
         config:
@@ -526,6 +530,7 @@ components:
             cloud_gateway:
               description: Whether the Control Plane can be used for cloud-gateways.
               type: boolean
+              nullable: false
               readOnly: true
             proxy_urls:
               $ref: '#/components/schemas/ProxyURLs'

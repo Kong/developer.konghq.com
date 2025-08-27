@@ -66,6 +66,8 @@ ratelimit:
   logLevel: INFO
   # -- Whether debug port should be exposed
   exposeDebugPort: false
+  # -- Pod restart policy for the ratelimit
+  restartPolicy: Always
   redis:
     # -- Redis address. Need to be specified for ratelimit service to start
     address:

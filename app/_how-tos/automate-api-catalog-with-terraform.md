@@ -28,7 +28,7 @@ tldr:
 
 related_resources:
     - text: "{{site.konnect_short_name}} beta Terraform provider repository"
-      url: https://github.com/Kong/terraform-provider-konnect-beta
+      url: https://github.com/Kong/terraform-provider-konnect
     - text: Dev Portal APIs reference
       url: /dev-portal/apis/
     - text: Self-service developer and application registration
@@ -48,7 +48,7 @@ prereqs:
       content: |
         For this tutorial, you’ll need {{site.base_gateway}} entities, like Gateway Services and Routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn’t the focus of this guide.
 
-        1. Before configuring a Service and a Route, you need to create a Control Plane. If you have an existing Control Plane that you'd like to reuse, you can use the [`konnect_gateway_control_plane_list`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/data/gateway_control_plane_list.tf) data source.
+        1. Before configuring a Service and a Route, you need to create a Control Plane. If you have an existing Control Plane that you'd like to reuse, you can use the [`konnect_gateway_control_plane_list`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/data/gateway_control_plane.tf) data source.
            ```hcl
            echo '
            resource "konnect_gateway_control_plane" "my_cp" {
@@ -113,7 +113,6 @@ First, create an API:
 ```hcl
 echo '
 resource "konnect_api" "my_api" {
-  provider = konnect-beta
   description = "...my_description..."
   labels = {
     key = "value"
@@ -125,12 +124,11 @@ resource "konnect_api" "my_api" {
 
 ## Create and associate an API spec and version
 
-[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf) with your API:
+[Create and associate a spec and version](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf) with your API:
 
 ```hcl
 echo '
 resource "konnect_api_version" "my_api_spec" {
-  provider = konnect-beta
   api_id = konnect_api.my_api.id
   spec = {
     content = <<JSON
@@ -165,14 +163,13 @@ resource "konnect_api_version" "my_api_spec" {
 
 ## Create and associate an API document 
 
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf).
+An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf).
 
 Create and associate an API document:
 
 ```hcl
 echo '
 resource "konnect_api_document" "my_apidocument" {
-  provider = konnect-beta
   api_id  = konnect_api.my_api.id
   content = "# API Document Header"
   slug               = "api-document"
@@ -191,7 +188,6 @@ Associate the API with a Service:
 ```hcl
 echo '
 resource "konnect_api_implementation" "my_api_implementation" {
-  provider = konnect-beta
   api_id = konnect_api.my_api.id
   service_reference = {
     service = {
@@ -216,7 +212,6 @@ Now you can publish the API to a Dev Portal:
 ```hcl
 echo '
 resource "konnect_api_publication" "my_apipublication" {
-  provider = konnect-beta
   api_id = konnect_api.my_api.id
   portal_id                  = konnect_portal.my_portal.id
   visibility                 = "public"

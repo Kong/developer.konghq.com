@@ -25,7 +25,7 @@ prereqs:
     inline:
     - title: Git repository
       content: |
-        To synchronize an Insomnia project with Git, you need a Git repository. You can either use an existing repository with Insomnia content, or an empty repository.
+        When you create an Insomnia project with Git Sync, you can either add the repository now or later (if you're using Insomnia 11.5 or later). If you want to add the repository when you create the project, you can either use an existing repository with Insomnia content or an empty repository.
       icon_url: /assets/icons/git.svg
 
 tldr:
@@ -70,7 +70,7 @@ In this example, we'll create a new project with [Git Sync](/insomnia/storage/#g
 
 {% endnavtabs %}
 
-If your Git repository already contains Insomnia content, you will be prompted to import the content to your project.
+If your Git repository already contains Insomnia content, you will be prompted to import the content to your project. {% new_in 11.5 %} You can also create the Git Sync project now and add a repository later. 
 
 {:.info}
 > {% new_in 11.2 %} If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in version 11.0.

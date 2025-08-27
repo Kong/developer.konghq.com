@@ -17,6 +17,8 @@ breadcrumbs:
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
+  - text: Service Catalog services
+    url: /service-catalog/services/
   - text: Traceable integration
     url: /service-catalog/integrations/traceable/
   - text: GitHub integration
