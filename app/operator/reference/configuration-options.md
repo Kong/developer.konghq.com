@@ -87,7 +87,7 @@ rows:
     default: '`ecdsa`'
   - flag: '`--cluster-ca-secret`'
     type: '`string`'
-    description: "Name of the Secret containing the cluster CA certificate."
+    description: "Specifies the Secret name that contains the cluster CA certificate."
     default: '`kong-operator-ca`'
   - flag: '`--cluster-ca-secret-namespace`'
     type: '`string`'
