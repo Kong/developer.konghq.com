@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.24
+  version: 3.0.25
   description: The management API for Portals
   contact:
     name: Kong
@@ -3138,6 +3138,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d200cc33-2d33-4754-b086-a98e0fcd36fb
@@ -3149,6 +3150,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -3160,6 +3162,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -3171,6 +3174,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
       additionalProperties: false
@@ -3387,10 +3391,13 @@ components:
               description: The version of the API the application is registered to.
               type: string
               nullable: true
+            entity_type:
+              $ref: '#/components/schemas/EntityType'
           required:
             - id
             - name
             - version
+            - entity_type
         application:
           description: Details about the application the registration is part of.
           type: object
@@ -3414,6 +3421,7 @@ components:
           id: 86f637b7-cd95-478b-9b02-d770618f641c
           name: Great Stuff
           version: v1
+          entity_type: api
         created_at: '2022-12-22T20:13:07.305Z'
         updated_at: '2022-12-22T20:13:36.710Z'
       additionalProperties: false
@@ -5193,6 +5201,9 @@ components:
             hide_deprecated:
               type: boolean
               default: false
+            allow_custom_server_urls:
+              type: boolean
+              default: true
         robots:
           type: string
           nullable: true
@@ -5346,6 +5357,14 @@ components:
         - name
         - credential_type
         - key_names
+    EntityType:
+      description: The type of entity that is being published. Can be either an API or an API Package.
+      type: string
+      example: api
+      enum:
+        - api
+        - api_package
+      title: Entity Type
     schemas-StringFieldEqualsFilter:
       description: Filter a string value by exact match.
       type: string
@@ -6189,6 +6208,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d200cc33-2d33-4754-b086-a98e0fcd36fb
@@ -6200,6 +6220,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -6211,6 +6232,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -6222,6 +6244,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
     GetApplicationRegistrationExample1:
@@ -6235,6 +6258,7 @@ components:
           id: 86f637b7-cd95-478b-9b02-d770618f641c
           name: Great Stuff
           version: v1
+          entity_type: api
         created_at: '2022-12-22T20:13:07.305Z'
         updated_at: '2022-12-22T20:13:36.710Z'
     UpdateApplicationRegistrationResponseExample1:
@@ -6248,6 +6272,7 @@ components:
           id: 86f637b7-cd95-478b-9b02-d770618f641c
           name: Great Stuff
           version: v1
+          entity_type: api
         created_at: '2022-12-22T20:13:07.305Z'
         updated_at: '2022-12-22T20:13:36.710Z'
     ListApplicationsBadRequestExample1:

@@ -2114,7 +2114,6 @@ components:
           type: object
           additionalProperties: true
           nullable: true
-          readOnly: true
         archived:
           description: Whether or not the resource has been archived.
           type: boolean
