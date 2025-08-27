@@ -95,7 +95,7 @@ flowchart LR
 <!--vale on-->
 
 Packaging APIs involves the following steps:
-1. Create an API and attach an OpenAPI spec.
+1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration is not directly modified by adding operations.
 1. Link a control plane (or control planes) for to allow developer consumption. 
 1. Apply the Access Control Enforcement (ACE) plugin globally.
 1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user Gateway Manager permissions needs to perform an action.
