@@ -228,7 +228,7 @@ rows:
   - flag: '`--zap-time-encoding`'
     type: '`string`'
     description: "Zap time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano'). Defaults to 'epoch'."
-    default: ""
+    default: '`epoch`'
 {% endtable %}
 
 <!-- vale on -->
