@@ -9,7 +9,11 @@ Download and update all schemas using GitHub actions:
 
 1. (Optional) If you're adding a new plugin, you need to set up the directory for it before running any GitHub actions:
     1. Clone https://github.com/Kong/docs-plugin-toolkit.
-    1. Add a folder for the new plugin at `/schemas/<plugin-name>`.
+    1. Add a folder for the new plugin at `/schemas/<plugin-name>` with a `.gitkeep` file, so that the empty directory gets pushed to GitHub:
+        ```sh  
+        mkdir schemas/plugin-name
+        touch schemas/plugin-name/.gitkeep
+        ```
     1. Push your changes to a branch.
 1. Run [Download Schemas](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/download-schemas.yml). 
 Click "Run workflow" and fill in the following:
