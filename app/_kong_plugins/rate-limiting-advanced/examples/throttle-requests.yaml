@@ -1,8 +1,12 @@
 title: Throttle requests
 description: "Allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected with a 429 status code."
 extended_description: |
-  ({% new_in 3.12 %}) Allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected with a `429` status code.
+  Allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected with a `429` status code.
   This example configures the plugin to wait 30 seconds between retries, limits the queue to five requests, and retries a maximum of 3 times.
+  
+min_version:
+  gateway: '3.12'
+
 weight: 800
 
 config:

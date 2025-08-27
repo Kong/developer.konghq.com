@@ -57,13 +57,13 @@ min_version:
 faqs:
   - q: What are the potential impacts and risks associated with enabling request throttling in Rate Limiting Advanced?
     a: |
-      Enabling request throttling ({% new_in 3.12 %}) can lead to a degradation in the capacity of {{site.base_gateway}} data plane nodes. This is because client requests are held open for a longer duration during the throttling period compared to normal rejections. This extended occupation of resources (like memory and file descriptors) can reduce the data plane's ability to handle other new requests, potentially leading to scale or stress issues during high traffic spikes. Configuring a large `config.throttle_queue_limit` can also consume significant memory on data plane nodes.
+      Enabling request throttling can lead to a degradation in the capacity of {{site.base_gateway}} data plane nodes. This is because client requests are held open for a longer duration during the throttling period compared to normal rejections. This extended occupation of resources (like memory and file descriptors) can reduce the data plane's ability to handle other new requests, potentially leading to scale or stress issues during high traffic spikes. Configuring a large [`config.throttle_queue_limit`](/plugins/rate-limiting-advanced/reference/#schema--config-throttle-queue-limit) can also consume significant memory on data plane nodes.
   - q: What happens to queued requests if a client drops its connection with {{site.base_gateway}} during the Rate Limiting Advanced throttling period?
     a: |
       If a client drops its connection with Kong while a request is being throttled ({% new_in 3.12 %}), {{site.base_gateway}} automatically releases all associated resources for that specific request. This means the individual request will no longer be processed or retried. However, the counter that accounted for this request's slot in the "waiting room" is automatically managed by the underlying counter mechanism (shared dictionary or Redis). These counters are typically recorded within specific time windows and are automatically evicted when their window expires, ensuring resource cleanup without manual intervention for each dropped connection.
   - q: How is memory usage impacted when I enable throttling with the Rate Limiting Advanced plugin?
     a: |
-      ({% new_in 3.12 %}) In extreme conditions where both {{site.base_gateways}}’s header buffer and the kernel’s TCP buffer are fully used and you're using the default configuration ({{site.base_gateways}} accepts a maximum request header size of 32 KB, and the Linux kernel TCP buffer is approximately 200 KB), the average memory consumption of each open connection is around 220 KB for one Route with one Rate Limiting Advanced plugin configured with the following:
+      In regular conditions, memory usage is minimally impacted. In extreme conditions where both {{site.base_gateways}}’s header buffer and the kernel’s TCP buffer are fully used and you're using the default configuration ({{site.base_gateways}} accepts a maximum request header size of 32 KB, and the Linux kernel TCP buffer is approximately 200 KB), the average memory consumption of each open connection is around 220 KB for one Route with one Rate Limiting Advanced plugin configured with the following:
       * `config.limit`: 30 seconds
       * `config.throttling.interval`: 3,600 seconds
       * `config.throttling.retry`: 3
@@ -181,13 +181,13 @@ You can see an example of this in the guide on [enforcing rate limiting tiers wi
 
 ## Throttle rate limits {% new_in 3.12 %}
 
-In {{site.base_gateway}} 3.12, you can enable request throttling via the Rate Limiting Advanced plugin to improve clients' experience and protect upstream origin servers from being overwhelmed by traffic spikes. By throttling requests, this allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected with a `429` status code. 
+In {{site.base_gateway}} 3.12 or later, you can enable request throttling using the Rate Limiting Advanced plugin to improve clients' experience and protect upstream origin servers from being overwhelmed by traffic spikes. With throttling, requests that exceed the rate limit threshold can be delayed and retried, rather than immediately rejected with a `429` status code. 
 
 Throttled rate limits work like the following:
-1. When a request hits the rate limit, it is placed into a "waiting room" or queue. The client's connection is held during this delay.
+1. When a request hits the rate limit, it's placed into a "waiting room" or queue. The client's connection is held during this delay.
    * This queue uses local, Redis, or cluster strategies to manage the queue of throttled requests using a counter-based approach.
-1. Requests in the queue are automatically retried after a configurable interval (`config.interval`). 
-   * There's a limit to retries for individual requests (`config.retry_times`), and a cap to the total number of requests waiting (`config.queue_limit`).
+1. Requests in the queue are automatically retried after a configurable interval ([`config.interval`](/plugins/rate-limiting-advanced/reference/#schema--config-interval)). 
+   * There's a limit to retries for individual requests ([`config.retry_times`](/plugins/rate-limiting-advanced/reference/#schema--config-retry-times)), and a cap to the total number of requests waiting ([`config.queue_limit`](/plugins/rate-limiting-advanced/reference/#schema--config-queue-limit)).
    * All concurrent requests will retry at approximately the same time once the specified interval has elapsed.
 1. If a request exceeds its maximum retries or if the waiting room is full, it will ultimately be rejected with a 429 response.
 
