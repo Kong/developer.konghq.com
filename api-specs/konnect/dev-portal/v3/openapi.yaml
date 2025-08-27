@@ -3555,6 +3555,9 @@ components:
             hide_deprecated:
               type: boolean
               default: false
+            allow_custom_server_urls:
+              type: boolean
+              default: true
         robots:
           type: string
           nullable: true
