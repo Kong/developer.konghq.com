@@ -121,7 +121,7 @@ rows:
 
   - header:
       type: h3
-      text: "Kong's {{site.konnect_product_name}} built-in MCP server"
+      text: "{{site.konnect_product_name}} built-in MCP server"
   - columns:
       - blocks:
           - type: structured_text
