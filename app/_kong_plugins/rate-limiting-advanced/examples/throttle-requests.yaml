@@ -1,9 +1,8 @@
 title: Throttle requests
-description: |
-  {% new_in 3.12 %} Allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected with a `429` status code.
-
+description: "Allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected with a 429 status code."
+extended_description: |
+  ({% new_in 3.12 %}) Allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected with a `429` status code.
   This example configures the plugin to wait 30 seconds between retries, limits the queue to five requests, and retries a maximum of 3 times.
-
 weight: 800
 
 config:
@@ -18,7 +17,7 @@ config:
     interval: 30
     queue_limit: 5
     retry_times: 3
-    dictionary_name: kong_rate_limiting_throttling
+  dictionary_name: kong_rate_limiting_throttling
 
 tools:
   - deck
