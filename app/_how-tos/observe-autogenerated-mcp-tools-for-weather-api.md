@@ -97,7 +97,7 @@ entities:
 {% endentity_examples %}
 
 
-## Log prompt compression
+## Log MCP traffic
 
 Before we send tool calls, we need to set up the HTTP Logs plugin to check how many tokens we've managed to save by using our configuration. First, create an HTTP logs plugin:
 
