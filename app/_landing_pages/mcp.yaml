@@ -162,6 +162,39 @@ rows:
 
   - header:
       type: h2
+      text: "MCP traffic observability"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Kong AI Gateway records detailed Model Context Protocol (MCP) traffic data so you can analyze how requests are processed and resolved.
+                    - Logs capture session IDs, JSON-RPC method calls, payloads, latencies, and errors.
+                    - Metrics track latency, response sizes, and error counts over time, giving you a complete view of MCP server performance and behavior.
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic audit log {% new_in 3.12 %}
+            description: Learn about AI Gateway logging capabilities for MCP traffic.
+            icon: /assets/icons/audit.svg
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic metrics {% new_in 3.12 %}
+            description: Expose and visualize LLM metrics for MCP traffic.
+            icon: /assets/icons/monitor.svg
+            cta:
+              url: /ai-gateway/monitor-ai-llm-metrics/#mcp-metrics
+              align: end
+
+  - header:
+      type: h2
       text: MCP how-to guides
 
     columns:
