@@ -64,8 +64,8 @@ faqs:
     a: No. If you remove the API-to-Service association, the Service no longer follows the API’s application-auth strategy. Test requests to confirm the current behavior.
   - q: How does {{site.konnect_short_name}} Application Auth (KAA) work with the steps on this page?
     a: |
-    Our guide uses Konnect endpoints to create the API, attach a spec or a document, associate the API with a Service, and publish it. After you associate the API with the Service, the Service includes KAA and Dev Portal controls the strategy.
-    For example, when you create an API, add a spec or a document, then associate the API with a Gateway Service by calling `/v3/apis/{apiId}/implementations`. That association is the point after which the Service includes KAA. You then publish the API to the Dev Portal.
+      Our guide uses Konnect endpoints to create the API, attach a spec or a document, associate the API with a Service, and publish it. After you associate the API with the Service, the Service includes KAA and Dev Portal controls the strategy.
+      For example, when you create an API, add a spec or a document, then associate the API with a Gateway Service by calling `/v3/apis/{apiId}/implementations`. That association is the point after which the Service includes KAA. You then publish the API to the Dev Portal.
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
