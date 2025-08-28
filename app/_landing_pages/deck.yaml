@@ -175,9 +175,8 @@ rows:
                         - --konnect-control-plane-name
                         - staging
                 - text: |
-                    Generate shell tab-completion scripts with **deck completion**.
+                    Generate completion scripts for bash, zsh, fish, and PowerShell.
                     
-                    decK can generate completion scripts for bash, zsh, fish, and PowerShell.
                     
                     _Tip: For shell specific instructions run `deck completion --help`_
                   action:
