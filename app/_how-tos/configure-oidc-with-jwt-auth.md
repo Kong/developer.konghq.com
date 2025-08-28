@@ -67,8 +67,6 @@ cleanup:
 
 search_aliases:
   - oidc
-
-automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin with JWT authentication
