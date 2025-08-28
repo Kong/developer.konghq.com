@@ -12,7 +12,7 @@ works_on:
 automated_tests: false
 tldr:
   q: How do I set up a Google Cloud private DNS with my Dedicated Cloud Gateway?
-  a: Create a private DNS in {{site.konnect_short_name}} using the [Create Private DNS endpoint](/api/konnect/cloud-gateways/v2/#/operations/create-private-dns), then create a [private DNS zone](https://cloud.google.com/dns/docs/zones) in GCP and give Kong access to it.
+  a: Create a private DNS in {{site.konnect_short_name}} using the [Create Private DNS endpoint](/api/konnect/cloud-gateways/v2/#/operations/create-private-dns), then create a [private DNS zone](https://cloud.google.com/dns/docs/zones) in GCP and give {{site.konnect_short_name}} access to it.
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
@@ -22,7 +22,7 @@ related_resources:
     url: https://cloud.google.com/vpc/docs/vpc-peering
   - text: Google Cloud DNS zones documentation
     url: https://cloud.google.com/dns/docs/zones
-  - text: Private hosted zones
+  - text: AWS private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
 prereqs:
   skip_product: true
@@ -30,6 +30,14 @@ prereqs:
     - title: "Dedicated Cloud Gateway"
       include_content: prereqs/dedicated-cloud-gateways
 
+    - title: gcloud
+      content: |
+        To use this tutorial, you must [install gcloud](https://cloud.google.com/sdk/docs/install).
+         
+         Authenticate with gcloud:
+         ```sh
+         gcloud auth login
+         ```
     - title: "GCP permissions"
       content: |
         This tutorial requires a GCP account with the [DNS Peer](https://cloud.google.com/iam/docs/roles-permissions/dns#dns.peer) (`roles/dns.peer`) and [DNS Administrator](https://cloud.google.com/iam/docs/roles-permissions/dns#dns.admin) (`roles/dns.admin`) roles, and the following [custom permissions](https://cloud.google.com/iam/docs/custom-roles-permissions-support):
@@ -93,13 +101,12 @@ body:
 {% endnavtab %}
 {% navtab "Konnect UI" %}
 
-1. From your Dedicated Cloud Gateway, open **Networks**.
-1. Choose a network, open its action menu, and select **Configure private DNS**.
-1. Fill out all of the required fields to configure the private DNS:
-  * **Private hosted zone name**: A unique name to identify this private DNS.
-  * **Domain name**: 
-  * **Project ID**: ID of your GCP project.
-  * **VPC network name**: Name of your VPC network in GCP for the peering connection.
+1. In the {{site.konnect_short_name}} UI, navigate to [**Networks**](https://cloud.konghq.com/global/networks/) in the sidebar.
+1. From the action menu of a GCP network, select **Configure private DNS**.
+1. Enter a  unique name to identify this private DNS in the **Private hosted zone name** field.
+1. Enter your domain name in the **Domain name** field.
+1. Enter your GCP project ID in the **Project ID** field.
+1. Enter the name of your VPC network in GCP in the **VPC network name** field.
 1. Click **Next**.
 
 {% endnavtab %}
@@ -121,14 +128,14 @@ body:
      --networks=$GCP_VPC_NAME
    ```
 
-1. Run this command to give permission to Kong’s service principal to access the project:
+1. Run this command to give permission to {{site.konnect_short_name}}’s service principal to access the project:
    ```sh
    gcloud projects add-iam-policy-binding $GCP_PROJECT_ID \
      --member="principal://iam.googleapis.com/projects/133260365532/locations/global/workloadIdentityPools/aws-hdp-prod/subject/system:serviceaccount:network-peering-controller:network-peering-controller" \
      --role="roles/dns.peer"
    ```
 
-   If needed, you can also give Kong access to your whole GCP organization using your organization ID:
+   If needed, you can also give {{site.konnect_short_name}} access to your whole GCP organization using your [organization ID](https://cloud.google.com/resource-manager/docs/creating-managing-organization#gcloud):
    ```sh
    gcloud organizations add-iam-policy-binding $GCP_ORGANIZATION_ID \
      --member="principal://iam.googleapis.com/projects/133260365532/locations/global/workloadIdentityPools/aws-hdp-prod/subject/system:serviceaccount:network-peering-controller:network-peering-controller" \
@@ -146,7 +153,7 @@ body:
 
 ## Validate
 
-To validate that everything was configured correctly, issue a `GET` request to the [`/private-dns`](/api/konnect/cloud-gateways/v2/#/operations/list-private-dns) endpoint to retrieve private DNS information:
+To validate that everything was configured correctly, send a `GET` request to the [`/private-dns`](/api/konnect/cloud-gateways/v2/#/operations/list-private-dns) endpoint to retrieve private DNS information:
 
 <!--vale off-->
 {% konnect_api_request %}
