@@ -33,7 +33,7 @@ Read this document thoroughly to successfully complete the upgrade process, as i
   * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/support/)
   * [Hardware resources](/gateway/resource-sizing-guidelines/)
   * [Database and dependency versions](/gateway/third-party-support/)
-* If you're using decK, [upgrade it to the latest version](/deck/).
+* [decK installed and upgraded to the latest version](/deck/).
 
 {% if include.lts_version_from == "2.8" %}
 {:.info}

@@ -139,14 +139,16 @@ point it at the existing database for cluster X.
     Provision the new cluster Y with the same-sized resource capacity as that of 
     the current cluster X.
 
-2. Migrate the database to the new version by running `kong migrations up`. 
+1. Migrate the database to the new version by running `kong migrations up`. 
 
     {{site.base_gateway}} will print a warning log entry that pending migrations exist. 
     This is expected.
 
-3. Start the new cluster Y.
+1. Start the new cluster Y.
 
-4. Perform staging tests against version Y to make sure it works for all use cases. 
+1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/#converting-between-lts-versions) your entity configuration and sync the converted file to your newly installed version.
+
+1. Perform staging tests against version Y to make sure it works for all use cases. 
 
     For example, does the Key Authentication plugin authenticate requests properly?
     
