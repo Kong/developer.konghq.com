@@ -34,8 +34,11 @@ categories:
 
 tags:
   - ai
----
 
+related_resources:
+  - text: Compare LLM models accuracy using the AI LLM as Judge plugin
+    url: /how-to/compare-llm-models-accuracy/
+---
 The **AI LLM as Judge** plugin enables automated evaluation of prompt-response pairs using a dedicated LLM. The plugin assigns a numerical score to LLM responses from 1 to 100, where:
 
 * `1`: Perfect or ideal response
@@ -72,7 +75,6 @@ rows:
     description: "Leverages Kong’s LLM schema for seamless integration."
 {% endtable %}
 
-
 ## How it works
 
 1. The plugin sends the **user prompt** and **response** to the configured LLM as a judge.
@@ -101,18 +103,18 @@ To ensure concise, consistent scoring, configure your LLM as follows:
 columns:
   - title: Setting
     key: setting
-  - title: Recommended Value
+  - title: Recommended value
     key: value
   - title: Description
     key: description
 rows:
-  - setting: "`temperature`"
+  - setting: "[`temperature`](/plugins/ai-llm-as-judge/reference/#schema--config-llm-model-options-temperature)"
     value: "`2`"
     description: "Controls randomness. Lower → more deterministic output."
-  - setting: "`max_tokens`"
+  - setting: "[`max_tokens`](/plugins/ai-llm-as-judge/reference/#schema--config-llm-model-options-max-tokens)"
     value: "`5`"
     description: "Maximum tokens for the LLM response."
-  - setting: "`top_p`"
+  - setting: "[`top_p`](/plugins/ai-llm-as-judge/reference/#schema--config-llm-model-options-top-p)"
     value: "`1`"
     description: "Nucleus sampling probability; limits token selection."
 {% endtable %}
