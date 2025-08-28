@@ -26,6 +26,7 @@ Insomnia allows Enterprise users to create self-hosted mock servers.
 You can run it [locally](https://github.com/Kong/insomnia-mockbin?tab=readme-ov-file#installation) with NodeJS or Docker, or you can use Kubernetes:
 
 1. Configure the deployment:
+
    ```sh
    echo "
     apiVersion: apps/v1
@@ -55,6 +56,7 @@ You can run it [locally](https://github.com/Kong/insomnia-mockbin?tab=readme-ov-
    ```
 
 1. Configure the service to expose Mockbin internally in the cluster:
+
    ```sh
    echo "
     apiVersion: v1
@@ -74,6 +76,7 @@ You can run it [locally](https://github.com/Kong/insomnia-mockbin?tab=readme-ov-
    ```
 
 1. Configure the Ingress to manage external access. This configuration will depend on your specific domain and TLS requirements.
+
    ```sh
    echo "
     apiVersion: networking.k8s.io/v1
@@ -102,6 +105,7 @@ You can run it [locally](https://github.com/Kong/insomnia-mockbin?tab=readme-ov-
    ```
 
 1. Check the status of your resources:
+
    ```sh
    kubectl get deployments -n mock
    kubectl get services -n mock
