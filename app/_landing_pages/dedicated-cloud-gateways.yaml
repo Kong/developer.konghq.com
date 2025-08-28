@@ -84,19 +84,21 @@ rows:
                 Dedicated Cloud Gateways support both public and private networking on AWS.
                 Private networking provides enhanced security by restricting API exposure.
               icon: /assets/icons/aws.svg
-              cta:
-                text: Set up Transit Gateways
-                url: /dedicated-cloud-gateways/transit-gateways/
+              ctas:
+                - text: Set up Transit Gateways
+                  url: /dedicated-cloud-gateways/transit-gateways/
       - blocks:
           - type: card
             config:
               title: Private hosted zones
               description: |
                 Enable private DNS resolution for your Dedicated Cloud Gateway using either a private hosted zone or an Outbound DNS Resolver.
-              icon: /assets/icons/aws.svg
-              cta:
-                text: Set up an AWS private hosted zone connection
-                url: /dedicated-cloud-gateways/private-hosted-zones/
+              icon: /assets/icons/linked-services.svg
+              ctas:
+                - text: AWS tutorial
+                  url: /dedicated-cloud-gateways/private-hosted-zones/
+                - text: GCP tutorial
+                  url: /dedicated-cloud-gateways/gcp-private-dns/
       - blocks:
           - type: card
             config:
@@ -104,9 +106,9 @@ rows:
               description: |
                 {{site.konnect_short_name}} can leverage Azure Virtual Network peering to create virtual networks, ingest data from your Azure services, and expose them to the internet via {{site.konnect_short_name}}.
               icon: /assets/icons/azure.svg
-              cta:
-                text: Set up Azure VNet peering
-                url: /dedicated-cloud-gateways/azure-peering/
+              ctas:
+                - text: Set up Azure VNet peering
+                  url: /dedicated-cloud-gateways/azure-peering/
       - blocks:
           - type: card
             config:
@@ -114,9 +116,9 @@ rows:
               description: |
                 {{site.konnect_short_name}} can leverage Google Cloud VPC network peering to create virtual networks, ingest data from your GCP services, and expose them to the internet via {{site.konnect_short_name}}.
               icon: /assets/icons/google-cloud.svg
-              cta:
-                text: Set up GCP VPC peering
-                url: /dedicated-cloud-gateways/gcp-vpc-peering/
+              ctas:
+                - text: Set up GCP VPC peering
+                  url: /dedicated-cloud-gateways/gcp-vpc-peering/
       - blocks:
           - type: card
             config:
@@ -124,9 +126,9 @@ rows:
               description: |
                 Set up an AWS VPC peering connection using the API
               icon: /assets/icons/aws.svg
-              cta:
-                text: How to configure VPC peering with AWS
-                url: /dedicated-cloud-gateways/aws-vpc-peering/
+              ctas:
+                - text: How to configure VPC peering with AWS
+                  url: /dedicated-cloud-gateways/aws-vpc-peering/
 
   - header:
       type: h2
