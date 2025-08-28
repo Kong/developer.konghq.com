@@ -27,6 +27,21 @@ related_resources:
 tags:
   - openapi
   - declarative-config
+
+faqs:
+  - q: When running `deck file openapi2kong`, I get the error `infinite circular reference detected`. How do I resolve it?
+    a: |
+      The solution depends on your use case. In some situations, [circular references](https://pb33f.io/libopenapi/circular-references/) may be valid for a particular API spec design. 
+
+      With decK, you have two options:
+        * Resolve the circular references
+        * {% new_in 1.51.0 %} Pass the `--ignore-circular-refs` flag to the command to ignore circular references and continue converting the file:
+          
+          ```sh
+          deck file openapi2kong -s /tmp/openapi.yaml --ignore-circular-refs
+          ```
+        Use this option with caution.
+
 ---
 
 The `openapi2kong` command converts an OpenAPI specification to Kong's declarative configuration format.
