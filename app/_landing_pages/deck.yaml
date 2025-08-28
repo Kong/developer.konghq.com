@@ -178,7 +178,7 @@ rows:
                     Generate completion scripts for bash, zsh, fish, and PowerShell.
                     
                     
-                    _Tip: For shell specific instructions run `deck completion --help`_
+                    _Tip: For shell specific instructions, run `deck completion --help`_
                   action:
                     type: command
                     config:
