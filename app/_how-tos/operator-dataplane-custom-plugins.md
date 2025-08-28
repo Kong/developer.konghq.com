@@ -130,7 +130,7 @@ In this example, the plugin is available in the public registry (Docker Hub) as 
    ```yaml
    echo '
    kind: GatewayConfiguration
-   apiVersion: gateway-operator.konghq.com/v1beta1
+   apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
    metadata:
      name: kong
      namespace: default
@@ -145,13 +145,6 @@ In this example, the plugin is available in the public registry (Docker Hub) as 
                      image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
         pluginsToInstall:
            - name: custom-plugin-myheader
-     controlPlaneOptions:
-        deployment:
-           podTemplateSpec:
-             spec:
-                containers:
-                   - name: controller
-                     image: kong/kubernetes-ingress-controller:{{ site.data.kic_latest.release }}
    ---
    apiVersion: gateway.networking.k8s.io/v1
    kind: GatewayClass

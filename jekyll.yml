@@ -165,4 +165,6 @@ mesh:
 # Version vars
 latest_gateway_oss_version: "3.9.1"
 
+operator_gatewayconfiguration_api_version: "v2beta1"
 operator_konnectgatewaycontrolplane_api_version: "v1alpha2"
+operator_konnectextension_api_version: "v1alpha2"
