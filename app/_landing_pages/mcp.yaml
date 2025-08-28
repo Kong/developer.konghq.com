@@ -33,6 +33,7 @@ rows:
               - [Use any external MCP server with Kong AI Gateway](./#use-any-external-mcp-server)
               - [Autogenerate and secure MCP tools from any API](./#expose-any-api-as-a-secure-mcp-server)
               - [Use Kong's {{site.konnect_product_name}} built-in MCP server](./#kong-s-kong-konnect-built-in-mcp-server)
+              - [Observe MCP traffic logs and metrics](./#mcp-traffic-observability)
               - [Leverage Kong's AI Gateway for MCP traffic using how-to guides](/mcp/#mcp-how-to-guides)
       - blocks:
           - type: image
@@ -179,7 +180,6 @@ rows:
           config:
             title: MCP traffic audit log {% new_in 3.12 %}
             description: Learn about AI Gateway logging capabilities for MCP traffic.
-            icon: /assets/icons/audit.svg
             cta:
               url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
               align: end
@@ -188,7 +188,6 @@ rows:
           config:
             title: MCP traffic metrics {% new_in 3.12 %}
             description: Expose and visualize LLM metrics for MCP traffic.
-            icon: /assets/icons/monitor.svg
             cta:
               url: /ai-gateway/monitor-ai-llm-metrics/#mcp-metrics
               align: end
