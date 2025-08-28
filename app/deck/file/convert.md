@@ -57,6 +57,13 @@ rows:
       - Prefix any paths that look like a regular expression with a `~`
       - Generate default values for missing `namespace` fields in any Rate Limiting Advanced plugins
       - Convert decK file `_format_version` from 1.1 to 3.0
+      - ACL, Bot Detection, IP Restriction, and Canary plugins: 
+        - Convert `config.blacklist` to `config.deny`
+        - Convert `config.whitelist` to `config.allow`
+      - AWS Lambda plugin: 
+        - Remove the deprecated `config.proxy_scheme` parameter
+      - Pre-Function and Post-Function plugins: 
+        - Convert `config.functions` to `config.access`
   - path: "`3.4` to `3.10`"
     transforms: |
       - Any plugins that use Redis configurations:
