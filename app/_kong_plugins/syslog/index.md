@@ -70,7 +70,7 @@ logging level severity equal to or lower than the one set in the [`config.log_le
 
 ## Custom fields by Lua
 
-{% include /plugins/logging/log-custom-fields-by-lua.md %}
+{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.custom_fields_by_lua' custom_fields_by_lua_slug='config-custom-fields-by-lua' name=page.name slug=page.slug %}
 
 ## Forwarding logs to a remote network host
 
