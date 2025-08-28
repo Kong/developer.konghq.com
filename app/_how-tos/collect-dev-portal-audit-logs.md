@@ -5,10 +5,14 @@ content_type: how_to
 related_resources:
   - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
-  - text: Collect Konnect audit logs
+  - text: Collect {{site.konnect_short_name}} audit logs
     url: /how-to/collect-audit-logs/
   - text: About Dev Portal
     url: /dev-portal/
+  - text: Recover Dev Portal audit logs
+    url: /how-to/recover-dev-portal-audit-logs/
+  - text: Recover {{site.konnect_short_name}} audit logs
+    url: /how-to/recover-konnect-org-audit-logs/
 automated_tests: false
 products:
     - gateway
