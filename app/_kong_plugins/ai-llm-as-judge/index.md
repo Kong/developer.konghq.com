@@ -77,11 +77,11 @@ rows:
 
 ## How it works
 
-1. The plugin sends the **user prompt** and **response** to the configured LLM as a judge.
-2. The LLM evaluates the response and returns a **numeric score** between **1 (ideal)** and **100 (irrelevant)**.
+1. The plugin sends the user prompt and response to the configured LLM as a judge.
+2. The LLM evaluates the response and returns a numeric score between `1` (ideal) and `100` (wrong or irrelevant).
 3. This score can be used in downstream workflows, such as automated grading, feedback systems, or learning pipelines.
 
-The following sequence diagram visualizes these steps, showing how the plugin, LLM, and user interact to produce and consume the numeric score:
+The following sequence diagram illustrates this simplified flow:
 
 {% mermaid %}
 sequenceDiagram
@@ -97,7 +97,7 @@ sequenceDiagram
 
 ## Recommended LLM settings
 
-To ensure concise, consistent scoring, configure your LLM as follows:
+To ensure concise, consistent scoring, configure the LLM that acts as the judge with these values:
 
 {% table %}
 columns:
