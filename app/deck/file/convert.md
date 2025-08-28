@@ -70,7 +70,7 @@ rows:
 
 ## Converting between LTS versions
 
-You can use `deck file convert` to automatically perform many of the changes that occured between adjacent LTS versions, such as 2.8 and 3.4, or 3.4 and 3.10.
+You can use `deck file convert` to automatically perform many of the changes that occurred between adjacent LTS versions, such as 2.8 and 3.4, or 3.4 and 3.10.
 
 {% navtabs 'convert-entities' %}
 {% navtab "Konnect" %}
