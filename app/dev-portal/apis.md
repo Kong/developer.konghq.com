@@ -255,9 +255,13 @@ Based on this data, you get the following generated URLs:
 
 You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) to allow developers to create applications and generate credentials or API keys. This is available to data planes running {{site.base_gateway}} 3.6 or later.
 
-This will install the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin can only be configured from the associated Dev Portal and its published APIs.
+When you link an API to a service, the link adds the {{site.konnect_short_name}} Application Auth (KAA) plugin on that service. The plugin ID is `konnect-application-auth`. You configure KAA only from Dev Portal. Gateway Manager does not expose KAA settings.
+
+The authentication strategy that you select for the API defines how clients authenticate. To change KAA behavior, open the API’s authentication strategy in Dev Portal and edit advanced JSON. Authorization relies on data in Dev Portal. A request succeeds only when the client application in Dev Portal has a registration for the Service.
 
 If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your Dev Portal](/dev-portal/self-service/).
+
+After you link the API and set the strategy in Dev Portal, developers can create applications, obtain credentials or keys, and call the API through the service.
 
 To link your API to a Gateway Service, do one of the following:
 {% navtabs "link-service" %}

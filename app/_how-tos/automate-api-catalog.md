@@ -58,6 +58,14 @@ faqs:
       There are two exceptions when the underlying implementation should match the selected version:
       * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
+  - q: What happens to the Service after I link the API?
+    a: After you link the API to a {{site.konnect_short_name}} Gateway Service, the Service includes the {{site.konnect_short_name}} Application Auth (KAA) plugin. The plugin ID is `konnect-application-auth`.
+  - q: Can I remove {{site.konnect_short_name}} Application Auth (KAA) from a Service?
+    a: No. If you remove the API-to-Service association, the Service no longer follows the API’s application-auth strategy. Test requests to confirm the current behavior.
+  - q: How does {{site.konnect_short_name}} Application Auth (KAA) work with the steps on this page?
+    a: |
+    Our guide uses Konnect endpoints to create the API, attach a spec or a document, associate the API with a Service, and publish it. After you associate the API with the Service, the Service includes KAA and Dev Portal controls the strategy.
+    For example, when you create an API, add a spec or a document, then associate the API with a Gateway Service by calling `/v3/apis/{apiId}/implementations`. That association is the point after which the Service includes KAA. You then publish the API to the Dev Portal.
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
