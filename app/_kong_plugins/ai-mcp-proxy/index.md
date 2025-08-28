@@ -1,6 +1,6 @@
 ---
-title: 'AI MCP Proxy Proxy'
-name: 'AI MCP Proxy Proxy'
+title: 'AI MCP Proxy'
+name: 'AI MCP Proxy'
 
 content_type: plugin
 tier: ai_gateway_enterprise
@@ -156,7 +156,7 @@ sequenceDiagram
 
 ## Configuration modes
 
-The AI MCP Proxy Proxy plugin operates in four modes, controlled by the `config.mode` parameter. Each mode determines how Kong handles MCP requests and whether it converts RESTful APIs into MCP tools.
+The AI MCP Proxy plugin operates in four modes, controlled by the `config.mode` parameter. Each mode determines how Kong handles MCP requests and whether it converts RESTful APIs into MCP tools.
 
 <!-- vale off -->
 {% table %}
