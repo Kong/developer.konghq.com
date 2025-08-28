@@ -35,7 +35,7 @@ faqs:
 
       With decK, you have two options:
         * Resolve the circular references
-        * Pass the `--ignore-circular-refs` flag to the command to ignore circular references and continue converting the file:
+        * {% new_in 1.51.0 %} Pass the `--ignore-circular-refs` flag to the command to ignore circular references and continue converting the file:
           
           ```sh
           deck file openapi2kong -s /tmp/openapi.yaml --ignore-circular-refs
