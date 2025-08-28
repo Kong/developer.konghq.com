@@ -9,6 +9,7 @@ breadcrumbs:
 products:
     - insomnia
 
+tier: enterprise
 tags:
 - mock-servers
 
