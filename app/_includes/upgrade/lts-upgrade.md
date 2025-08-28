@@ -63,7 +63,6 @@ There are a number of steps you must complete before upgrading to {{site.base_ga
 1. Choose the right [strategy for upgrading](#preparation-choose-an-upgrade-strategy-based-on-deployment-mode) based on your deployment topology.
 1. Review the [{{site.base_gateway}} changes from {{ lts_version_from }} to {{ lts_version_to }}](#preparation-review-gateway-changes) for any breaking changes that may affect your deployments.
 1. Review any [modifications made to the `kong.conf` file](#kong-conf-changes) between the LTS releases.
-1. Export and convert your Gateway entities using `deck file convert`.
 1. Using your chosen strategy, test migration in a pre-production environment.
 
 ### Performing the upgrade
@@ -165,81 +164,6 @@ Traditional mode or control planes in hybrid mode:
 
 DB-less mode or data planes in hybrid mode:
 * [Rolling upgrade](/gateway/upgrade/rolling/)
-
-## Convert Gateway entity configuration
-
-You can use the [`deck file convert`](/deck/file/convert/) command to automatically perform many of the changes that occured between {{ lts_version_from }} and {{ lts_version_to }}.
-
-{% if include.lts_version_from == "3.4" %}
-{:.info}
-> decK version 1.51 or later is required.
-{% endif %}
-
-{% navtabs 'convert-entities' %}
-{% navtab "Konnect" %}
-
-1. Using the decK file you created during backup, convert the entity configuration into {{ lts_version_to }}:
-
-   ```sh
-   deck file convert \
-     --from {{ lts_version_from }} \
-     --to {{ lts_version_to }} \
-     --input-file kong-{{ lts_version_from }}.yaml \
-     --output-file kong-{{ lts_version_to }}.yaml
-   ```
-
-1. Review the output of the command.
-   
-    `deck file convert` creates a new file and prints warnings and errors for any changes that couldn't be made automatically. 
-    These changes require some manual work, so adjust your configuration accordingly.
-
-1. Validate the converted file in a test environment.
-
-    Make sure to manually audit the generated file before applying the configuration in production. 
-    These changes may not be fully correct or exhaustive, so manual validation is strongly recommended.
-
-1. Make any other changes that you noted from the [preparation stage](#preparation-review-gateway-changes) that may be specific to your implementation.
-
-1. Upload your new configuration to a {{site.konnect_short_name}} control plane:
-
-   ```sh
-   deck gateway sync kong-{{ lts_version_to }}.yaml \
-     --konnect-token "$YOUR_KONNECT_PAT" \
-     --konnect-control-plane-name $YOUR_CP_NAME
-   ```
-{% endnavtab %}
-{% navtab "Self-managed" %}
-
-1. Using the decK file you created during backup, convert the entity configuration into {{ lts_version_to }}:
-
-   ```sh
-   deck file convert \
-     --from {{ lts_version_from }} \
-     --to {{ lts_version_to }} \
-     --input-file kong-{{ lts_version_from }}.yaml \
-     --output-file kong-{{ lts_version_to }}.yaml
-   ```
-
-1. Review the output of the command.
-   
-    `deck file convert` creates a new file and prints warnings and errors for any changes that couldn't be made automatically. 
-    These changes require some manual work, so adjust your configuration accordingly.
-
-1. Validate the converted file in a test environment.
-
-    Make sure to manually audit the generated file before applying the configuration in production. 
-    These changes may not be fully correct or exhaustive, so manual validation is strongly recommended.
-
-1. Make any other changes that you noted from the [preparation stage](#preparation-review-gateway-changes) that may be specific to your implementation.
-
-1. Upload your new configuration to the new environment:
-
-   ```sh
-   deck gateway sync kong-{{ lts_version_to }}.yaml \
-     --workspace default
-   ```
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Troubleshooting
 

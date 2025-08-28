@@ -38,6 +38,8 @@ deck file convert --input-file kong2x.yaml --from kong-gateway-2.x --to kong-gat
 
 ## Applied transformations
 
+The following table lists the transformations that `deck file convert` performs:
+
 {% table %}
 columns:
   - title: Conversion path
@@ -73,7 +75,7 @@ You can use `deck file convert` to automatically perform many of the changes tha
 {% navtabs 'convert-entities' %}
 {% navtab "Konnect" %}
 
-1. Export the entity configuration an existing installation, for example 3.4:
+1. Use an existing backup file, or export the entity configuration an existing installation, for example 3.4:
 
    ```sh
    deck gateway dump -o kong-3.4.yaml \
@@ -111,7 +113,7 @@ You can use `deck file convert` to automatically perform many of the changes tha
 {% endnavtab %}
 {% navtab "Self-managed" %}
 
-1. Export the entity configuration an existing installation, for example 3.4:
+1. Use an existing backup file, or export the entity configuration an existing installation, for example 3.4:
 
    ```sh
    deck gateway dump -o kong-3.4.yaml --all-workspaces
