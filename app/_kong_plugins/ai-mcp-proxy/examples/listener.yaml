@@ -1,0 +1,85 @@
+description: 'Generate an MCP server from {{ site.base_gateway }} Service'
+
+title: 'Generate an MCP server from the existing Service'
+
+extended_description: |
+  Generate an MCP server from {{ site.base_gateway }} services.
+
+  {:.warning}
+  > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+  > ```yaml
+  > services:
+  > - name: astronomy-service
+  >   url: https://api.weatherapi.com/v1/astronomy.json
+  >   routes:
+  >   - name: astronomy-route
+  >     paths:
+  >     - /astronomy
+  > - name: current-service
+  >   url: https://api.weatherapi.com/v1/current.json
+  >   routes:
+  >   - name: current-route
+  >     paths:
+  >     - /current
+  > ```
+
+weight: 900
+
+requirements:
+- "A running and exposed API"
+
+config:
+  mode: listener
+  tools:
+  - description: Get astronomy data (sunrise/sunset) for a location
+    method: GET
+    path: /v1/astronomy.json
+    parameters:
+    - name: key
+      in: query
+      description: Your WeatherAPI key
+      required: true
+      schema:
+        type: string
+    - name: q
+      in: query
+      description: Location query
+      required: true
+      schema:
+        type: string
+  - description: Get current weather with air quality index
+    method: GET
+    path: /v1/current.json
+    parameters:
+    - name: key
+      in: query
+      description: Your WeatherAPI key
+      required: true
+      schema:
+        type: string
+    - name: q
+      in: query
+      description: Location query
+      required: true
+      schema:
+        type: string
+    - name: aqi
+      in: query
+      description: Include air quality data (yes/no)
+      required: false
+      schema:
+        type: string
+  server:
+    tag: weather-listener
+    timeout: 45000
+  logging:
+    log_statistics: true
+    log_payloads: false
+  max_request_body_size: 32768
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
