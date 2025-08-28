@@ -134,7 +134,6 @@ paths:
       operationId: update-api
       summary: Update API
       description: Updates an API.
-      parameters: []
       requestBody:
         $ref: '#/components/requestBodies/UpdateApiRequest'
       responses:
@@ -564,7 +563,6 @@ paths:
       operationId: update-api-version
       summary: Update API Version
       description: Updates the version (OpenAPI or AsyncAPI) of an API.
-      parameters: []
       requestBody:
         $ref: '#/components/requestBodies/UpdateApiVersionRequest'
       responses:

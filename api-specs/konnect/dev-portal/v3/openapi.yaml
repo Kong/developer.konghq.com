@@ -834,7 +834,6 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
-    parameters: []
   /api/v3/developer/verify-email:
     post:
       operationId: verify-email
@@ -853,7 +852,6 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
-    parameters: []
   /api/v3/pages:
     get:
       operationId: list-portal-pages
