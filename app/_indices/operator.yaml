@@ -73,6 +73,7 @@ groups:
         items:
           - path: /operator/dataplanes/konnectextension/
           - path: /operator/reference/custom-resources/
+          - path: /operator/reference/labelselectors
 
   - title: Konnect
     sections:
