@@ -47,6 +47,8 @@ rows:
                 text: | 
                   Enterprise users can deploy self-hosted mock servers using [Insomnia Mockbin](https://github.com/kong/insomnia-mockbin). This allows you to have more control over usage for your mocks.
 
+                  [Learn more about self-hosted mock servers &rarr;](/insomnia/self-hosted-mocks/)
+
   - header:
       text: "Frequently asked questions"
       type: h2
