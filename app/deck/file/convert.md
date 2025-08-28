@@ -52,7 +52,8 @@ rows:
       - Prefix any paths that look like a regular expression with a `~`
       - Generate default values for missing `namespace` fields in any Rate Limiting Advanced plugins
       - Convert decK file `_format_version` from 1.1 to 3.0
-  - path: "`2.8` to `3.4`"
+  - path: |
+      `2.8` to `3.4` {% new_in 1.47.0 %}
     transforms: |
       - Prefix any paths that look like a regular expression with a `~`
       - Generate default values for missing `namespace` fields in any Rate Limiting Advanced plugins
@@ -64,7 +65,8 @@ rows:
         - Remove the deprecated `config.proxy_scheme` parameter
       - Pre-Function and Post-Function plugins: 
         - Convert `config.functions` to `config.access`
-  - path: "`3.4` to `3.10`"
+  - path: |
+      `3.4` to `3.10` {% new_in 1.51.0 %}
     transforms: |
       - Any plugins that use Redis configurations:
         - Transform `redis.cluster_addresses` into `redis.cluster_nodes`
@@ -78,6 +80,11 @@ rows:
 ## Converting between LTS versions
 
 You can use `deck file convert` to automatically perform many of the changes that occurred between adjacent LTS versions, such as 2.8 and 3.4, or 3.4 and 3.10.
+
+{:.info}
+> Note: Update your decK version before converting files:
+* 2.8 -> 3.4: deck 1.47.0 or later
+* 3.4 -> 3.10: decK 1.51.0 or later
 
 {% navtabs 'convert-entities' %}
 {% navtab "Konnect" %}
