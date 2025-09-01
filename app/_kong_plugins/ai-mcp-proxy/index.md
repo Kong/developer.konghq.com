@@ -6,7 +6,7 @@ content_type: plugin
 tier: ai_gateway_enterprise
 publisher: kong-inc
 description: |
-    Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time.
+    Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools for AI clients, and observe MCP traffic in real time.
 breadcrumbs:
  - /ai-gateway/
  - /mcp/
