@@ -174,7 +174,7 @@ Starting log server on http://0.0.0.0:9999
 You can validate that the Prometheus plugin is collecting metrics by generating MCP traffic to the `weather-service`. Enter the following question in the Cursor chat:
 
 ```text
-What is the current weather in London?
+What is the current weather in New York?
 ```
 
 Once Cursor agent has finished reasoning, you will see the following MCP audit log entries logged by the HTTP plugin in your terminal:
