@@ -5,7 +5,7 @@ layout: reference
 beta: true
 
 products:
-    - konnect-platform
+    - konnect
 
 permalink: /kong-identity/
 works_on:
@@ -39,7 +39,13 @@ description: |
 > * [Configure the Upstream OAuth plugin with Kong Identity](/how-to/configure-kong-identity-upstream-oauth/)
 > * [Configure the OAuth 2.0 Introspection plugin with Kong Identity](/how-to/configure-kong-identity-oauth-introspection/)
 
-Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. Specifically, Kong Identity can be used for machine-to-machine authentication. 
+Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
+Specifically, Kong Identity can be used for machine-to-machine authentication. 
+
+You can use Kong Identity to:
+* Create authorization servers per region
+* Issue and validate access tokens
+* Integrate secure authentication into your {{site.base_gateway}} APIs 
 
 Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. Kong Identity can be used with the following Kong plugins:
 * [OpenID Connect plugin](/plugins/openid-connect/)
