@@ -189,7 +189,7 @@ rows:
             title: MCP traffic metrics {% new_in 3.12 %}
             description: Expose and visualize LLM metrics for MCP traffic.
             cta:
-              url: /ai-gateway/monitor-ai-llm-metrics/#mcp-metrics
+              url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
               align: end
 
   - header:
