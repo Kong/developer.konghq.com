@@ -1,8 +1,7 @@
 platform:
   konnect:
     text: |
-          Manage everything in one place?
-          Explore Konnect, our unified API platform.
+      Kong's SaaS API management platform designed to simplify managing and securing APIs.
     icon_dark: '/assets/logos/Konnect-logo.svg'
     icon_light: '/assets/logos/Konnect-logo-light.svg'
     link:
