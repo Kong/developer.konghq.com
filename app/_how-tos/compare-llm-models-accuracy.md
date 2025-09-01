@@ -115,7 +115,13 @@ automated_tests: false
 
 ## Configure the AI Proxy Advanced plugin
 
-The [AI Proxy Advanced](/plugins/ai-proxy-advanced) plugin allows you to route requests to multiple LLM models and define load balancing, retries, timeouts, and token counting strategies. In this tutorial, we will configure it to send requests to both OpenAI and Ollama models, using the [lowest-usage balancer](/ai-gateway/load-balancing/#load-balancing-algorithms) to direct traffic to the model currently handling the fewest tokens or requests, and prepare them for evaluation by the LLM as Judge plugin.
+The [AI Proxy Advanced](/plugins/ai-proxy-advanced) plugin allows you to route requests to multiple LLM models and define load balancing, retries, timeouts, and token counting strategies. In this tutorial, we configure it to send requests to both OpenAI and Ollama models, using the [lowest-usage balancer](/ai-gateway/load-balancing/#load-balancing-algorithms) to direct traffic to the model currently handling the fewest tokens or requests.
+
+{:.info}
+> For testing purposes only, we include a **less reliable Ollama model** in the configuration.
+>
+>
+This makes it easier to demonstrate the evaluation differences when responses are judged by the LLM as Judge plugin.
 
 {% entity_examples %}
 entities:
@@ -315,46 +321,124 @@ for i in {1..5}; do
 done
 ```
 
-You should see output like this in your HTTP log plugin endpoint, showing how many tokens were saved through compression:
+You should see JSON logs like this from your HTTP log plugin endpoint. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model’s evaluation.
+
+When comparing two models, notice how `gpt-4.1-mini` produces a **much higher `llm_accuracy` score** than `orca-mini`, showing that the judged responses are significantly more accurate.
+
+{% navtabs "response-accuracy" %}
+{% navtab "orca-mini" %}
 
 ```json
 {
   "workspace_name": "default",
-  "workspace": "workspace-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "workspace": "3ec2d3e1-92d8-abcd-b3da-2732abcdefgh",
   "ai": {
     "ai-llm-as-judge": {
       "meta": {
-        "llm_latency": 460,
-        "request_model": "gpt-4.1-mini",
-        "provider_name": "openai",
         "request_mode": "oneshot",
-        "plugin_id": "plugin-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "response_model": "gpt-4o-2024-08-06"
+        "provider_name": "openai",
+        "request_model": "orca-mini",
+        "response_model": "gpt-4o-2024-08-06",
+        "llm_latency": 1491,
+        "plugin_id": "8ccfd8b8-f5bc-4af9-8951-123456789abc"
       },
-      "...": "...",
+      "payload": {
+        "...": "..."
+      },
       "tried_targets": [
         {
-          "upstream_scheme": "https",
-          "port": 443,
-          "ip": "xxx.xxx.xxx.xxx",
-          "host": "api.openai.com",
-          "provider": "openai",
-          "upstream_uri": "/v1/chat/completions",
-          "model": "gpt-4.1-mini",
-          "route_type": "llm/v1/chat"
+          "route_type": "llm/v1/chat",
+          "upstream_scheme": "http",
+          "upstream_uri": "/api/chat",
+          "ip": "192.168.00.001",
+          "port": 11434,
+          "provider": "llama2",
+          "host": "host.docker.internal",
+          "model": "orca-mini"
         }
       ],
       "usage": {
-        "completion_tokens": 254,
-        "llm_accuracy": 94,
+        "completion_tokens": 114,
+        "llm_accuracy": 14,
         "prompt_tokens_details": {
-          "audio_tokens": 0,
-          "cached_tokens": 0
+          "cached_tokens": 0,
+          "audio_tokens": 0
         },
-        "..."
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 49,
+        "total_tokens": 163,
+        "time_to_first_token": 1491,
+        "time_per_token": 21.77
       }
     }
   }
 }
 ```
+
 {:.no-copy-code}
+
+{% endnavtab %}
+
+{% navtab "gpt-4.1-mini" %}
+
+Notice the jump in `llm_accuracy` from `14` with orca-mini to `88` with gpt-4.1-mini:
+
+```json
+{
+  "workspace_name": "default",
+  "workspace": "3ec2d3e1-92d8-abcd-b3da-2732abcdefgh",
+  "ai": {
+    "ai-llm-as-judge": {
+      "meta": {
+        "request_mode": "oneshot",
+        "provider_name": "openai",
+        "request_model": "gpt-4.1-mini",
+        "response_model": "gpt-4o-2024-08-06",
+        "llm_latency": 1525,
+        "plugin_id": "8ccfd8b8-f5bc-4af9-8951-123456789abc"
+      },
+      "payload": {
+        "...": "..."
+      },
+      "tried_targets": [
+        {
+          "route_type": "llm/v1/chat",
+          "upstream_scheme": "https",
+          "upstream_uri": "/v1/chat/completions",
+          "ip": "172.66.0.243",
+          "port": 443,
+          "host": "api.openai.com",
+          "provider": "openai",
+          "model": "gpt-4.1-mini"
+        }
+      ],
+      "usage": {
+        "completion_tokens": 266,
+        "llm_accuracy": 88,
+        "prompt_tokens": 15,
+        "total_tokens": 281,
+        "time_to_first_token": 1525,
+        "time_per_token": 22.38,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}
+```
+
+{% endnavtab %}
+{% endnavtabs %}
