@@ -102,3 +102,4 @@ groups:
           - path: /operator/reference/custom-resources/
           - path: /operator/konnect/reference/faq/
           - path: /operator/konnect/reference/migrate-1.4-1.5/
+          - path: /operator/konnect/reference/prerequisite-migration-1.6.2-2.0.0/
