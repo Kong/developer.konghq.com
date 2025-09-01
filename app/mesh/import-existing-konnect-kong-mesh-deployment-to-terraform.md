@@ -7,7 +7,7 @@ breadcrumbs:
  - /mesh/
 products:
   - mesh
-  - konnect-platform
+  - konnect
 works_on:
   - konnect
 tags:

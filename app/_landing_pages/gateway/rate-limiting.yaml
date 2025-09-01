@@ -98,6 +98,10 @@ rows:
                   subtitle: Specify whether blocked requests count towards the rate limit calculation.
                   oss: false
                   ee: true
+                - title: "Throttle rate limits {% new_in 3.12 %}"
+                  subtitle: Allows requests that exceed the rate limit threshold to be delayed and retried, rather than immediately rejected.
+                  oss: false
+                  ee: true
   - columns:
       - blocks:
           - type: plugin

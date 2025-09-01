@@ -24,6 +24,12 @@ platform:
       icon: /_assets/icons/products/kic.svg
 
   sections:
+    - title: Explore the platform
+      links:
+        - text: Konnect
+          icon: /_assets/icons/products/konnect.svg
+          url: /konnect/
+          product: konnect
     - title: Build APIs
       links:
         - text: Kong Insomnia
