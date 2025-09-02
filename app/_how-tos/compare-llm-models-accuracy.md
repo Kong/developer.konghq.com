@@ -59,40 +59,41 @@ prereqs:
           ollama start
           ```
 
-        2. After installation, open a new terminal window and run the following command to pull the orca-mini model we will be using in this tutorial:
+        1. After installation, open a new terminal window and run the following command to pull the orca-mini model we will be using in this tutorial:
 
-          ```sh
-          ollama run orca-mini
-          ```
+           ```sh
+           ollama run orca-mini
+           ```
 
-        3. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance.
+        1. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance.
 
-          ```sh
-          export DECK_OLLAMA_UPSTREAM_URL='http://localhost:11434/api/chat'
-          ```
-          By default, Ollama runs at `localhost:11434`. You can verify this by running:
+           By default, Ollama runs at `localhost:11434`. You can verify this by running:
 
-          ```sh
-          lsof -i :11434
-          ```
+           ```sh
+           lsof -i :11434
+           ```
 
-          - You should see output similar to:
+           You should see output similar to:
 
-          ```
-          COMMAND   PID            USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
-          ollama   23909  your_user_name   4u  IPv4 0x...            0t0  TCP localhost:11434 (LISTEN)
-          ```
+           ```
+           COMMAND   PID            USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+           ollama   23909  your_user_name   4u  IPv4 0x...            0t0  TCP localhost:11434 (LISTEN)
+           ```
+           {:.no-copy-code}
 
-          - If Ollama is running on a different port, run:
+           If Ollama is running on a different port, run:
 
-          ```sh
-          sudo lsof -iTCP -sTCP:LISTEN -n -P
-          ```
+           ```sh
+           sudo lsof -iTCP -sTCP:LISTEN -n -P
+           ```
 
-          - Then look for the `ollama` process in the output and note the port number it’s listening on.
+           Then look for the `ollama` process in the output and note the port number it’s listening on.
 
-          {:.info}
-          > If you're running {{site.base_gateway}} locally in a Docker container, export your upstream URL as `http://host.docker.internal:11434`
+           In this example, we're running {{site.base_gateway}} locally in a Docker container, so the host is `host.docker.internal`:
+
+           ```sh
+           export DECK_OLLAMA_UPSTREAM_URL='http://host.docker.internal:11434/api/chat'
+           ```
       icon_url: /assets/icons/ollama.svg
 
   entities:
@@ -166,7 +167,7 @@ entities:
               name: orca-mini
               options:
                 llama2_format: ollama
-                upstream_url: http://host.docker.internal:11434/api/chat
+                upstream_url: ${ollama_upstream_url}
                 cohere:
                   embedding_input_type: classification
               provider: llama2
@@ -178,11 +179,13 @@ entities:
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
+  ollama_upstream_url:
+    value: $OLLAMA_UPSTREAM_URL
 {% endentity_examples %}
 
 ## Configure the AI LLM as Judge plugin
 
-The AI LLM as Judge plugin evaluates responses returned by your models and assigns an accuracy score between 1 and 100. These scores can be used for model ranking, learning, or automated evaluation. In this tutorial, we use GPT-4o as the judge model—a higher-capacity model we recommend for this plugin to ensure consistent and reliable scoring.
+The [AI LLM as Judge](/plugins/ai-llm-as-judge/) plugin evaluates responses returned by your models and assigns an accuracy score between 1 and 100. These scores can be used for model ranking, learning, or automated evaluation. In this tutorial, we use GPT-4o as the judge model—a higher-capacity model we recommend for this plugin to ensure consistent and reliable scoring.
 
 {% entity_examples %}
 entities:
@@ -230,7 +233,7 @@ variables:
 
 ## Log model accuracy
 
-The [HTTP Log plugin](/plugins/http-log/) allows you to capture plugin events and responses. We will use it to collect the LLM accuracy scores produced by AI LLM as Judge.
+The [HTTP Log plugin](/plugins/http-log/) allows you to capture plugin events and responses. We'll use it to collect the LLM accuracy scores produced by AI LLM as Judge.
 
 {% entity_examples%}
 entities:
@@ -245,7 +248,7 @@ entities:
         timeout: 3000
 {% endentity_examples%}
 
-Let's run a simple log collector script which collect logs at `9999` port. Copy and run this snippet in your terminal:
+Let's run a simple log collector script which collects logs at the `9999` port. Copy and run this snippet in your terminal:
 
 ```
 cat <<EOF > log_server.py
@@ -294,7 +297,7 @@ Now, run this script with Python:
 python3 log_server.py
 ```
 
-If script is successful, you'll receive the following prompt in your terminal:
+If the script is successful, you'll receive the following prompt in your terminal:
 
 ```sh
 Starting log server on http://0.0.0.0:9999
@@ -302,7 +305,7 @@ Starting log server on http://0.0.0.0:9999
 
 ## Validate your configuration
 
-Send test requests to the `route` route to see model responses scored:
+Send test requests to the `example-route` Route to see model responses scored:
 
 ```sh
 for i in {1..5}; do
@@ -321,7 +324,7 @@ for i in {1..5}; do
 done
 ```
 
-You should see JSON logs like this from your HTTP log plugin endpoint. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model’s evaluation.
+You should see JSON logs from your HTTP log plugin endpoint in `kong_logs.txt`. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model’s evaluation.
 
 When comparing two models, notice how `gpt-4.1-mini` produces a **much higher `llm_accuracy` score** than `orca-mini`, showing that the judged responses are significantly more accurate.
 
@@ -379,7 +382,6 @@ When comparing two models, notice how `gpt-4.1-mini` produces a **much higher `l
   }
 }
 ```
-
 {:.no-copy-code}
 
 {% endnavtab %}
@@ -439,6 +441,7 @@ Notice the jump in `llm_accuracy` from `14` with orca-mini to `88` with gpt-4.1-
   }
 }
 ```
+{:.no-copy-code}
 
 {% endnavtab %}
 {% endnavtabs %}

@@ -44,7 +44,7 @@ The **AI LLM as Judge** plugin enables automated evaluation of prompt-response p
 * `1`: Perfect or ideal response
 * `100`: Completely incorrect or irrelevant response
 
-This plugin is part of the **AI plugin suite**, making it easy to integrate LLM-based evaluation workflows into your API pipelines.
+This plugin is part of the [**AI plugin suite**](/plugins/?category=ai), making it easy to integrate LLM-based evaluation workflows into your API pipelines.
 
 ## Features
 
@@ -110,7 +110,7 @@ columns:
 rows:
   - setting: "[`temperature`](/plugins/ai-llm-as-judge/reference/#schema--config-llm-model-options-temperature)"
     value: "`2`"
-    description: "Controls randomness. Lower → more deterministic output."
+    description: "Controls randomness. A lower value leads to a more deterministic output."
   - setting: "[`max_tokens`](/plugins/ai-llm-as-judge/reference/#schema--config-llm-model-options-max-tokens)"
     value: "`5`"
     description: "Maximum tokens for the LLM response."
