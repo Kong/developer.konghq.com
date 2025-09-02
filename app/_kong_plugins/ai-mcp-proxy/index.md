@@ -83,7 +83,7 @@ Because the plugin runs directly on Kong AI Gateway, MCP endpoints are provision
 > **Note:** Unlike other available AI plugins, the AI MCP Proxy plugin is not invoked as part of an LLM request flow.
 > Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of LLM request flow.
 >
-> **Do not configure the AI MCP Proxy plugin together with other AI plugins on the same service or route**.
+> **Do not configure the AI MCP Proxy plugin together with other AI plugins on the same Service or Route**.
 
 ## Why use the AI MCP Proxy plugin
 
@@ -151,12 +151,12 @@ sequenceDiagram
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
-> - An MCP-compatible client (such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/) or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
-> - The Kong AI Gateway instance supports the AI MCP Proxy plugin (is 3.12 or higher)
+> - An MCP-compatible client (such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
+> - The Kong AI Gateway instance supports the AI MCP Proxy plugin (is 3.12 or higher).
 
 ## Configuration modes
 
-The AI MCP Proxy plugin operates in four modes, controlled by the `config.mode` parameter. Each mode determines how Kong handles MCP requests and whether it converts RESTful APIs into MCP tools.
+The AI MCP Proxy plugin operates in four modes, controlled by the [`config.mode`](./reference/#schema--config-mode) parameter. Each mode determines how Kong handles MCP requests and whether it converts RESTful APIs into MCP tools.
 
 <!-- vale off -->
 {% table %}
@@ -166,22 +166,22 @@ columns:
   - title: Description
     key: description
 rows:
-  - mode: passthrough-listener
+  - mode: "`passthrough-listener`"
     description: |
-      Listens for incoming MCP requests and proxies them to the `upstream_url` of the gateway Service.
+      Listens for incoming MCP requests and proxies them to the `upstream_url` of the Gateway Service.
       Generates MCP observability metrics for traffic, making it suitable for third-party MCP servers hosted by users.
-  - mode: conversion-listener
+  - mode: "`conversion-listener`"
     description: |
       Converts RESTful API paths into MCP tools **and** accepts incoming MCP requests on the Route path.
       You can define tools directly in the plugin configuration and optionally set a server block.
-  - mode: conversion-only
+  - mode: "`conversion-only`"
     description: |
       Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
       This mode requires `tags` in the plugin configuration, but does not define a server.
-  - mode: listener
+  - mode: "`listener`"
     description: |
       Exposes multiple `conversion-only` tools on a Route and accepts incoming MCP requests.
-      Requires the `server.tags` property to group the exposed tools.
+      Requires the [`config.server.tag`](./reference/#schema--config-server-tag) property to group the exposed tools.
 {% endtable %}
 <!-- vale on -->
 

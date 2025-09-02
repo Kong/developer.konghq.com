@@ -60,9 +60,7 @@ automated_tests: false
 
 ## Reconfigure the AI MCP Proxy plugin
 
-We can move on to configuring the AI MCP Proxy plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
-
-In this configuration, we also define the tool along with its parameters—including the configured API key—so that the MCP client can make tool calls for our weather queries.
+To observe traffic for MCP tools, you first must **enable logging and statistics** on the AI MCP Proxy plugin. Apply the below configuration for the AI MCP Proxy plugin with enabled logging capabilities:
 
 {% entity_examples %}
 entities:
@@ -163,7 +161,7 @@ Now, run this script with Python:
 python3 log_server.py
 ```
 
-If script is successful, you'll receive the following prompt in your terminal:
+If the script is successful, you'll receive the following prompt in your terminal:
 
 ```sh
 Starting log server on http://0.0.0.0:9999
@@ -171,7 +169,7 @@ Starting log server on http://0.0.0.0:9999
 
 ## Validate MCP tools configuration
 
-You can validate that the Prometheus plugin is collecting metrics by generating MCP traffic to the `weather-service`. Enter the following question in the Cursor chat:
+You can validate that the HTTP Logs plugin is collecting metrics by generating MCP traffic to the `weather-service`. Enter the following question in the Cursor chat:
 
 ```text
 What is the current weather in New York?

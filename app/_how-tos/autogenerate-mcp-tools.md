@@ -63,7 +63,7 @@ automated_tests: false
 ---
 ## Install mock API Server
 
-Before using the **AI MCP Proxy**, you’ll need an upstream HTTP API to expose. For this tutorial, we’ll use a simple mock API built with Express. This allows you to test the plugin without relying on an external service. This mock API simulates a small marketplace system with a fixed set of users and their associated orders. Each user has between two and five sample orders, which the API exposes through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints.
+Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you’ll need an upstream HTTP API to expose. For this tutorial, we’ll use a simple mock API built with Express. This allows you to test the plugin without relying on an external service. This mock API simulates a small marketplace system with a fixed set of users and their associated orders. Each user has between two and five sample orders, which the API exposes through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints.
 
 Running these commands will download the mock API script and install any required dependencies automatically:
 
@@ -147,7 +147,7 @@ entities:
 
 6. Return to the **Cursor settings** tab. You should now see the Marketplace MCP server with two tools available:
 
-![Tools exposed in Cursor](/assets/images/ai-gateway/cursor-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
+   ![Tools exposed in Cursor](/assets/images/ai-gateway/cursor-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
 
 7. To open a new Cursor chat, click <kbd>cmd</kbd> + <kbd>L</kbd> if you're on Mac, or <kbd>ctrl</kbd> + <kbd>L</kbd> if you're on Windows.
 

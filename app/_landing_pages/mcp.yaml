@@ -132,7 +132,7 @@ rows:
                   text: |
                    Kong also provides a built-in MCP server that connects directly to your {{site.konnect_product_name}} Control Planes. It offers read-only tools for analytics, configuration inspection, and Control Plane metadata—ideal for AI-driven workflows with Claude or other compatible assistants.
 
-                   Using Kong {{site.konnect_product_name}} MCP server, you can use natural language to:
+                   With {{site.konnect_product_name}} MCP server, you can use natural language to:
                     - Query API traffic across gateways with filters and time windows.
                     - List and inspect Services, Routes, Consumers, and plugins.
                     - Explore Control Plane hierarchies and group relationships.

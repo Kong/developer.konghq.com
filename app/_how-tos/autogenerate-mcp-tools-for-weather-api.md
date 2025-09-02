@@ -54,9 +54,9 @@ prereqs:
         2. Sign up for a free account.
         3. Navigate to [your dashboard](https://www.weatherapi.com/my/) and copy your API key.
         4. Export your API key by running the following command in your terminal:
-            ```sh
-            export DECK_WEATHERAPI_API_KEY=YOUR_WEARTHERAPI_API_KEY
-            ```
+           ```sh
+           export DECK_WEATHERAPI_API_KEY='your-weatherapi-api-key'
+           ```
     - title: Install Cursor
       content: |
         1. Go to the [Cursor downloads](https://cursor.com/downloads) page.
@@ -71,9 +71,9 @@ prereqs:
 automated_tests: false
 ---
 
-## Add API key using Request Transformer Advanced
+## Add an API key using the Request Transformer Advanced plugin
 
-First, we configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin modifies outgoing requests before they reach the upstream API. In this example, it automatically appends your [WeatherAPI](https://www.weatherapi.com/api-explorer.aspx) API key to the query string so that all requests are authenticated without needing to manually provide the key each time.
+First, we'll configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin modifies outgoing requests before they reach the upstream API. In this example, it automatically appends your [WeatherAPI](https://www.weatherapi.com/api-explorer.aspx) API key to the query string so that all requests are authenticated without needing to manually provide the key each time.
 
 {% entity_examples %}
 entities:
@@ -90,7 +90,7 @@ variables:
     value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
 
-### Configure the AI MCP Proxy plugin
+## Configure the AI MCP Proxy plugin
 
 We can move on to configuring the AI MCP Proxy plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
 
@@ -143,8 +143,8 @@ entities:
       "mcpServers": {
           "weather": {
               "url": "http://localhost:8000/weather",
-              "headers": {
-                  "key": "<YOUR_WEATHERAPI_KEY>"
+              "parameters": {
+                  "q": "<LOCATION>"
               }
           }
       }
@@ -153,7 +153,7 @@ entities:
 
 6. Return to the **Cursor settings** tab. You should now see the weather MCP server with one tool available:
 
-![Tools exposed in Cursor](/assets/images/ai-gateway/cursor-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
+   ![Tools exposed in Cursor](/assets/images/ai-gateway/cursor-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
 
 7. To open a new Cursor chat, click <kbd>cmd</kbd> + <kbd>L</kbd> if you're on Mac, or <kbd>ctrl</kbd> + <kbd>L</kbd> if you're on Windows.
 
