@@ -80,7 +80,6 @@ sequenceDiagram
 **Request example:** Send a POST to the **Client Registration Endpoint** with client metadata as top-level JSON members. This example follows RFC 7591 and OIDC Dynamic Client Registration 1.0:
 
 ```json
-
 {
     "client_name": "Orders Web",
     "redirect_uris": [
@@ -93,7 +92,6 @@ sequenceDiagram
     "token_endpoint_auth_method": "client_secret_basic",
     "application_type": "web"
 }
-
 ```
 
 - `redirect_uris`, `grant_types`, `token_endpoint_auth_method`, and `client_name` are standard client metadata under RFC 7591.
@@ -102,7 +100,6 @@ sequenceDiagram
 **Response example:** On success, the endpoint returns HTTP 201 and a JSON body that contains the issued identifier and the registered metadata. When the server supports client management, it also returns a Registration Access Token and a Client Configuration Endpoint URI. An example of the response you might get:
 
 ```json
-
 {
     "client_id": "s6BhdRkqt3",
     "client_secret": "ZJYCqe3GGRvdrudKyZS0XhGv_Z45DuKhCUk0gBR1vZk",
@@ -121,7 +118,6 @@ sequenceDiagram
         "refresh_token"
     ]
 }
-
 ```
 
 - `client_id` is required. 
