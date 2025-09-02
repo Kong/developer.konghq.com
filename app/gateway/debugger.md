@@ -75,7 +75,7 @@ The span view gives you unparalleled visibility into {{site.base_gateway}}’s i
 
 For detailed definitions of each span, see [Debugger spans](/gateway/debugger-spans/). 
 
-Use the span view to troubleshoot issues, optimize performance, and refine your configuration:
+Use the spans view to troubleshoot issues, optimize performance, and refine your configuration:
 ![Debugger Spans view](/assets/images/konnect/debugger-trace-span-view.png)
 
 ### Logs view
