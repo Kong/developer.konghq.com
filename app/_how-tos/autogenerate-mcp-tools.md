@@ -24,7 +24,7 @@ min_version:
   gateway: '3.12'
 
 plugins:
-  - ai-mcp
+  - ai-mcp-proxy
 
 entities:
   - service
