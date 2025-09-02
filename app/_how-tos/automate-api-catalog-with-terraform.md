@@ -100,14 +100,9 @@ faqs:
       * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
 
-  - q: What adds {{site.konnect_short_name}} Application Auth (KAA) to a service?
-    a: After the Terraform plan creates a link between the API and a Konnect Gateway Service, the Service includes the Konnect Application Auth (KAA) plugin. The plugin ID is konnect-application-auth. Data planes must run Kong Gateway 3.6 or later.
-
-  - q: Can I manage {{site.konnect_short_name}} Application Auth (KAA) in Terraform or Gateway Manager?
-    a: No. Understand KAA as a managed plugin. Terraform defines the API-to-Service link. Dev Portal controls KAA behavior. Gateway Manager does not expose KAA settings.
-  
-  - q: What do developers do after I link the API?
-    a: Developers open Dev Portal, create applications, and generate credentials or API keys. They then call the API through the linked Service.
+  - q: How does {{site.konnect_short_name}} manage authentication and authorization on Gateway Services that are linked to my APIs?
+    a: |
+      When a Gateway Service is linked to an API, {{site.konnect_short_name}} automatically adds the [{{site.konnect_short_name}} Application Auth (KAA) plugin](/dev-portal/apis/#allow-developers-to-consume-your-api) to your Service. The KAA plugin applies authentication and authorization to the Service. This is a {{site.konnect_short_name}}-managed plugin that you can't directly modify, you can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/). 
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
