@@ -2,6 +2,7 @@
 title: 'AI GCP Model Armor'
 name: 'AI GCP Model Armor'
 
+tier: ai_gateway_enterprise
 content_type: plugin
 
 publisher: kong-inc
@@ -10,6 +11,7 @@ description: 'Audit and validate LLM prompts with Google Cloud Model Armor befor
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem

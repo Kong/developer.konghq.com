@@ -1,18 +1,26 @@
-description: 'AI GCP Model Armor'
-
-title: 'AI GCP Model Armor'
+title: "AI GCP Model Armor configuration"
+description: "Configuration for enforcing content safety policies on LLM requests and responses using GCP Model Armor."
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
+variables:
+  gcp_service_account_json:
+    description: GCP service account credentials in JSON format
+    value: $GCP_SERVICE_ACCOUNT_JSON
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
-config: # plugin config in yaml format goes here
+config:
+  project_id: "your-gcp-project-id"
+  location_id: "us-central1"
+  template_id: "my-guardrail-template"
+  guarding_mode: "BOTH"
+  gcp_use_service_account: true
+  gcp_service_account_json: ${gcp_service_account_json}
+  reveal_failure_categories: true
+  request_failure_message: "Your request was blocked by content policies."
+  response_failure_message: "The model's response was filtered for safety."
+  timeout: 15000
+  response_buffer_size: 4096
+  text_source: "last_message"
 
 tools:
   - deck
