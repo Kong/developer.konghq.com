@@ -125,7 +125,7 @@ sequenceDiagram
 - `client_id_issued_at` and `client_secret_expires_at` are standard response members.
 - `registration_access_token` and `registration_client_uri` appear when the server enables client management. Implementations return both values or neither.
 
-In a DCR strategy, the Dev Portal submits the registration request to your IdP and displays the returned client credentials to the developer’s application. This behavior appears in [Application authentication strategies](/application_authentication_strategies).
+In a DCR strategy, the Dev Portal submits the registration request to your IdP and displays the returned client credentials to the developer’s application. This behavior appears in [Application authentication strategies](/auth-strategies).
 
 ## Authentication methods
 
