@@ -132,7 +132,7 @@ entities:
 
 2. Navigate to **Cursor > Settings**.
 
-3. In the **Settings** tab, go to **Tools & integrations** in the left sidebar.
+3. In the **Cursor Settings** tab, go to **MCP & integrations** in the left sidebar.
 
 4. In the **MCP Tools** section, click **Add Custom MCP**.
 

@@ -53,8 +53,6 @@ config:
       required: false
       schema:
         type: string
-  server:
-    tag: forecast-tools
   logging:
     log_statistics: false
     log_payloads: false

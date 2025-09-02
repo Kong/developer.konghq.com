@@ -24,8 +24,6 @@ requirements:
 
 config:
   mode: passthrough-listener
-  server:
-    timeout: 60000
   logging:
     log_statistics: true
     log_payloads: false
