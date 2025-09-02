@@ -210,10 +210,13 @@ features:
   - title: "JSON format"
     description: Handling standard JSON request and response bodies
     supported: true
+  - title: "Form-encoded data"
+    description: Handling `application/x-www-form-urlencoded`
+    supported: true
   - title: "SNI routing"
     description: Converting SNI-only routes
     supported: false
-  - title: "Non-JSON formats"
+  - title: "Form and XML data"
     description: Handling formats such as multipart/form-data or XML
     supported: false
   - title: "Advanced MCP features"
