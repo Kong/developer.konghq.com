@@ -91,6 +91,7 @@ sequenceDiagram
     "token_endpoint_auth_method": "client_secret_basic",
     "application_type": "web"
 }
+```
 - `redirect_uris`, `grant_types`, `token_endpoint_auth_method`, and `client_name` are standard client metadata under RFC 7591.
 - `application_type` is an OIDC client metadata parameter with allowed values like web and native, from OIDC Dynamic Client Registration 1.0.
 
@@ -114,6 +115,7 @@ sequenceDiagram
         "refresh_token"
     ]
 }
+```
 - `client_id` is required. 
 - `client_secret` appears for confidential clients.
 - `client_id_issued_at` and `client_secret_expires_at` are standard response members.
