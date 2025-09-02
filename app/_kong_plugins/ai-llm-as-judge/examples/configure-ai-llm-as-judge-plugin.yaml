@@ -1,7 +1,7 @@
-description: 'Evaluate responses by assigning a precise correctness score for AI-assisted learning and assessment.'
+description: 'Evaluate responses by assigning a correctness score for AI-assisted learning and assessment.'
 
 extended_description: |
-    Evaluate responses by assigning a precise correctness score for AI-assisted learning and assessment.
+    Evaluate responses by assigning a correctness score for AI-assisted learning and assessment.
 
     Check this [how-to guide](/how-to/compare-llm-models-accuracy/) to see how the plugin works in a real-life scenario.
 

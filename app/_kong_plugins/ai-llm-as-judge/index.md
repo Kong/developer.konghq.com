@@ -121,6 +121,4 @@ rows:
 
 {:.info}
 > These settings produce short, precise numeric scores without extra text or verbosity.
->
-> You may also consider setting `presence_penalty` or `frequency_penalty` to `0` to reduce influence from repeated content, further improving consistency in scoring.
 
