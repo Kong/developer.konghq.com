@@ -31,6 +31,7 @@ tldr:
         This tutorial uses SumoLogic, but you can apply the same steps to your SIEM provider.
 
 prereqs:
+  skip_product: true
   inline:
     - title: "{{site.konnect_short_name}} roles"
       content: |
