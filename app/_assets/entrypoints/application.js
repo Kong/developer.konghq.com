@@ -8,6 +8,7 @@ import "~/stylesheets/index.css";
 
 import { datadogRum } from "@datadog/browser-rum";
 import mermaid from "mermaid";
+import Dropdowns from "@/javascripts/components/dropdown";
 import EntityExample from "@/javascripts/components/entity_example";
 import Tabs from "@/javascripts/components/tabs";
 import TopNav from "@/javascripts/components/top_nav";
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
   new TopNav();
   new EntityExample();
   new Tabs();
+  new Dropdowns();
 });
 
 if (import.meta.env.PROD) {
