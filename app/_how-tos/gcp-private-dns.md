@@ -128,6 +128,9 @@ body:
      --networks=$GCP_VPC_NAME
    ```
 
+   {:.info}
+   > This step is only required if you don't already have a private DNS zone in your GCP project.
+
 1. Run this command to give permission to {{site.konnect_short_name}}’s service principal to access the project:
    ```sh
    gcloud projects add-iam-policy-binding $GCP_PROJECT_ID \
