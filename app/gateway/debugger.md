@@ -67,7 +67,7 @@ Use the summary view to quickly understand the end-to-end API flow, identify per
 ![Debugger Summary view](/assets/images/konnect/debugger-trace-summary-view.png)
 
 ### Spans view
-The span view gives you unparalleled visibility into {{site.base_gateway}}’s internal workings. This detailed view breaks down into individual spans, providing a comprehensive understanding of:
+The spans view gives you unparalleled visibility into {{site.base_gateway}}’s internal workings. This detailed view breaks down into individual spans, providing a comprehensive understanding of:
 
 * {{site.base_gateway}}’s internal processes and phases
 * Plugin execution and performance
