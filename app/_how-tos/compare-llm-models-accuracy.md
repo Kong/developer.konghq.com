@@ -9,7 +9,7 @@ related_resources:
   - text: HTTP Log
     url: /plugins/http-log/
 
-description: Learn how to
+description: Learn how to compare LLM models accuracy using the AI LLM as Judge plugin
 
 products:
   - gateway
