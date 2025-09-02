@@ -3461,6 +3461,8 @@ components:
                     description: The admin's username in lowercase.
                     nullable: true
                     type: string
+            required:
+                - username
             type: object
         BasicAuth:
             additionalProperties: false
@@ -3498,8 +3500,8 @@ components:
                 username:
                     type: string
             required:
-                - username
                 - password
+                - username
             type: object
         BasicAuthWithoutParents:
             additionalProperties: false
@@ -3535,8 +3537,8 @@ components:
                 username:
                     type: string
             required:
-                - username
                 - password
+                - username
             type: object
         CACertificate:
             additionalProperties: false
@@ -3747,9 +3749,9 @@ components:
                     nullable: true
                     type: integer
             required:
+                - handler
                 - name
                 - schema
-                - handler
             type: object
         Degraphql_route:
             additionalProperties: false
@@ -3791,9 +3793,9 @@ components:
                 uri:
                     type: string
             required:
-                - service
-                - uri
                 - query
+                - uri
+                - service
             type: object
         Degraphql_routeWithoutParents:
             additionalProperties: false
@@ -3833,8 +3835,8 @@ components:
                 uri:
                     type: string
             required:
-                - uri
                 - query
+                - uri
             type: object
         Event-Hooks:
             description: Event Hooks schema
@@ -4083,29 +4085,29 @@ components:
                 algorithm:
                     default: HS256
                     enum:
-                        - HS256
-                        - HS384
-                        - HS512
-                        - RS256
-                        - RS384
-                        - RS512
-                        - PS256
-                        - PS384
-                        - PS512
                         - ES256
+                        - ES256K
                         - ES384
                         - ES512
-                        - ESP256
-                        - ESP384
-                        - ESP512
                         - ESB256
                         - ESB320
                         - ESB384
                         - ESB512
-                        - ES256K
-                        - EdDSA
+                        - ESP256
+                        - ESP384
+                        - ESP512
                         - Ed25519
                         - Ed448
+                        - EdDSA
+                        - HS256
+                        - HS384
+                        - HS512
+                        - PS256
+                        - PS384
+                        - PS512
+                        - RS256
+                        - RS384
+                        - RS512
                     nullable: true
                     type: string
                 consumer:
@@ -4151,29 +4153,29 @@ components:
                 algorithm:
                     default: HS256
                     enum:
-                        - HS256
-                        - HS384
-                        - HS512
-                        - RS256
-                        - RS384
-                        - RS512
-                        - PS256
-                        - PS384
-                        - PS512
                         - ES256
+                        - ES256K
                         - ES384
                         - ES512
-                        - ESP256
-                        - ESP384
-                        - ESP512
                         - ESB256
                         - ESB320
                         - ESB384
                         - ESB512
-                        - ES256K
-                        - EdDSA
+                        - ESP256
+                        - ESP384
+                        - ESP512
                         - Ed25519
                         - Ed448
+                        - EdDSA
+                        - HS256
+                        - HS384
+                        - HS512
+                        - PS256
+                        - PS384
+                        - PS512
+                        - RS256
+                        - RS384
+                        - RS512
                     nullable: true
                     type: string
                 consumer:
@@ -4621,6 +4623,8 @@ components:
                                         type: string
                                 type: object
                             type: array
+                    required:
+                        - keys
                     type: object
             type: object
         PaginationNextResponse:
@@ -4716,6 +4720,8 @@ components:
                         port:
                             default: 6379
                             description: An integer representing a port number between 0 and 65535, inclusive.
+                            maximum: 65535
+                            minimum: 0
                             type: integer
                         server_name:
                             description: A string representing an SNI (server name indication) value for TLS.
@@ -4731,6 +4737,8 @@ components:
                         timeout:
                             default: 2000
                             description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
+                            maximum: 2.147483646e+09
+                            minimum: 0
                             type: integer
                         username:
                             description: Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.
@@ -4808,12 +4816,17 @@ components:
                                     port:
                                         default: 6379
                                         description: An integer representing a port number between 0 and 65535, inclusive.
+                                        maximum: 65535
+                                        minimum: 0
                                         type: integer
                                 type: object
+                            minLength: 1
                             type: array
                         connect_timeout:
                             default: 2000
                             description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
+                            maximum: 2.147483646e+09
+                            minimum: 0
                             type: integer
                         connection_is_proxied:
                             default: false
@@ -4829,10 +4842,14 @@ components:
                             type: string
                         keepalive_backlog:
                             description: Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.
+                            maximum: 2.147483646e+09
+                            minimum: 0
                             type: integer
                         keepalive_pool_size:
                             default: 256
                             description: The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.
+                            maximum: 2.147483646e+09
+                            minimum: 1
                             type: integer
                         password:
                             description: Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.
@@ -4840,14 +4857,20 @@ components:
                         port:
                             default: 6379
                             description: An integer representing a port number between 0 and 65535, inclusive.
+                            maximum: 65535
+                            minimum: 0
                             type: integer
                         read_timeout:
                             default: 2000
                             description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
+                            maximum: 2.147483646e+09
+                            minimum: 0
                             type: integer
                         send_timeout:
                             default: 2000
                             description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
+                            maximum: 2.147483646e+09
+                            minimum: 0
                             type: integer
                         sentinel_master:
                             description: Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel.
@@ -4863,8 +4886,11 @@ components:
                                     port:
                                         default: 6379
                                         description: An integer representing a port number between 0 and 65535, inclusive.
+                                        maximum: 65535
+                                        minimum: 0
                                         type: integer
                                 type: object
+                            minLength: 1
                             type: array
                         sentinel_password:
                             description: Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.
@@ -4872,9 +4898,9 @@ components:
                         sentinel_role:
                             description: Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel.
                             enum:
+                                - any
                                 - master
                                 - slave
-                                - any
                             type: string
                         sentinel_username:
                             description: Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.
@@ -4986,6 +5012,7 @@ components:
                     type: boolean
                 id:
                     description: A string representing a UUID (universally unique identifier).
+                    minLength: 1
                     nullable: true
                     type: string
                 instance_name:
@@ -4994,6 +5021,7 @@ components:
                     type: string
                 name:
                     description: The name of the Plugin that's going to be added. Currently, the Plugin must be installed in every Kong instance separately.
+                    minLength: 1
                     type: string
                 ordering:
                     nullable: true
@@ -5019,6 +5047,7 @@ components:
                         properties:
                             id:
                                 description: A string representing a UUID (universally unique identifier).
+                                minLength: 1
                                 type: string
                             name:
                                 description: A unique string representing a UTF-8 encoded name.
@@ -5174,6 +5203,7 @@ components:
                     type: boolean
                 id:
                     description: A string representing a UUID (universally unique identifier).
+                    minLength: 1
                     nullable: true
                     type: string
                 instance_name:
@@ -5182,6 +5212,7 @@ components:
                     type: string
                 name:
                     description: The name of the Plugin that's going to be added. Currently, the Plugin must be installed in every Kong instance separately.
+                    minLength: 1
                     type: string
                 ordering:
                     nullable: true
@@ -5207,6 +5238,7 @@ components:
                         properties:
                             id:
                                 description: A string representing a UUID (universally unique identifier).
+                                minLength: 1
                                 type: string
                             name:
                                 description: A unique string representing a UTF-8 encoded name.
@@ -5355,11 +5387,11 @@ components:
                     default: 426
                     description: 'The status code Kong responds with when all properties of a Route match except the protocol i.e. if the protocol of the request is `HTTP` instead of `HTTPS`. `Location` header is injected by Kong if the field is set to 301, 302, 307 or 308. Note: This config applies only if the Route is configured to only accept the `https` protocol.'
                     enum:
-                        - 426
                         - 301
                         - 302
                         - 307
                         - 308
+                        - 426
                     nullable: true
                     type: integer
                 id:
@@ -5386,6 +5418,8 @@ components:
                 priority:
                     default: 0
                     description: A number used to specify the matching order for expression routes. The higher the `priority`, the sooner an route will be evaluated. This field is ignored unless `expression` field is set.
+                    maximum: 7.0368744177663e+13
+                    minimum: 0
                     nullable: true
                     type: integer
                 protocols:
@@ -5407,6 +5441,7 @@ components:
                             - ws
                             - wss
                         type: string
+                    minLength: 1
                     nullable: true
                     type: array
                 request_buffering:
@@ -5472,6 +5507,8 @@ components:
                                 type: string
                             port:
                                 description: An integer representing a port number between 0 and 65535, inclusive.
+                                maximum: 65535
+                                minimum: 0
                                 type: integer
                         type: object
                     nullable: true
@@ -5494,11 +5531,11 @@ components:
                     default: 426
                     description: 'The status code Kong responds with when all properties of a Route match except the protocol i.e. if the protocol of the request is `HTTP` instead of `HTTPS`. `Location` header is injected by Kong if the field is set to 301, 302, 307 or 308. Note: This config applies only if the Route is configured to only accept the `https` protocol.'
                     enum:
-                        - 426
                         - 301
                         - 302
                         - 307
                         - 308
+                        - 426
                     nullable: true
                     type: integer
                 id:
@@ -5555,6 +5592,7 @@ components:
                             - ws
                             - wss
                         type: string
+                    minLength: 1
                     nullable: true
                     type: array
                 regex_priority:
@@ -5596,6 +5634,8 @@ components:
                                 type: string
                             port:
                                 description: An integer representing a port number between 0 and 65535, inclusive.
+                                maximum: 65535
+                                minimum: 0
                                 type: integer
                         type: object
                     nullable: true
@@ -5730,6 +5770,8 @@ components:
                 connect_timeout:
                     default: 60000
                     description: The timeout in milliseconds for establishing a connection to the upstream server.
+                    maximum: 2.147483646e+09
+                    minimum: 1
                     nullable: true
                     type: integer
                 created_at:
@@ -5746,6 +5788,7 @@ components:
                     type: string
                 id:
                     description: A string representing a UUID (universally unique identifier).
+                    minLength: 1
                     nullable: true
                     type: string
                 name:
@@ -5759,6 +5802,8 @@ components:
                 port:
                     default: 80
                     description: The upstream server port.
+                    maximum: 65535
+                    minimum: 0
                     nullable: true
                     type: integer
                 protocol:
@@ -5780,11 +5825,15 @@ components:
                 read_timeout:
                     default: 60000
                     description: The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.
+                    maximum: 2.147483646e+09
+                    minimum: 1
                     nullable: true
                     type: integer
                 retries:
                     default: 5
                     description: The number of retries to execute upon failure to proxy.
+                    maximum: 32767
+                    minimum: 0
                     nullable: true
                     type: integer
                 tags:
@@ -5795,6 +5844,7 @@ components:
                     nullable: true
                     type: array
                 tls_sans:
+                    description: Additional Subject Alternative Names that can be matched on Upstream server's TLS certificate (in addition to `host`).
                     nullable: true
                     properties:
                         dnsnames:
@@ -5816,6 +5866,8 @@ components:
                     type: boolean
                 tls_verify_depth:
                     description: Maximum depth of chain while verifying Upstream server's TLS certificate. If set to `null`, then the Nginx default is respected.
+                    maximum: 64
+                    minimum: 0
                     nullable: true
                     type: integer
                 updated_at:
@@ -5829,6 +5881,8 @@ components:
                 write_timeout:
                     default: 60000
                     description: The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.
+                    maximum: 2.147483646e+09
+                    minimum: 1
                     nullable: true
                     type: integer
             required:
@@ -5878,8 +5932,12 @@ components:
                 weight:
                     default: 100
                     description: The weight this target gets within the upstream loadbalancer (`0`-`65535`). If the hostname resolves to an SRV record, the `weight` value will be overridden by the value from the DNS record.
+                    maximum: 65535
+                    minimum: 0
                     nullable: true
                     type: integer
+            required:
+                - target
             type: object
         TargetWithoutParents:
             additionalProperties: false
@@ -5923,8 +5981,12 @@ components:
                 weight:
                     default: 100
                     description: The weight this target gets within the upstream loadbalancer (`0`-`65535`). If the hostname resolves to an SRV record, the `weight` value will be overridden by the value from the DNS record.
+                    maximum: 65535
+                    minimum: 0
                     nullable: true
                     type: integer
+            required:
+                - target
             type: object
         UnauthorizedError:
             properties:
@@ -6013,9 +6075,9 @@ components:
                     description: Which load balancing algorithm to use.
                     enum:
                         - consistent-hashing
+                        - latency
                         - least-connections
                         - round-robin
-                        - latency
                         - sticky-sessions
                     nullable: true
                     type: string
@@ -6035,11 +6097,11 @@ components:
                     default: none
                     description: What to use as hashing input if the primary `hash_on` does not return a hash (eg. header is missing, or no Consumer identified). Not available if `hash_on` is set to `cookie`.
                     enum:
-                        - none
                         - consumer
-                        - ip
-                        - header
                         - cookie
+                        - header
+                        - ip
+                        - none
                         - path
                         - query_arg
                         - uri_capture
@@ -6051,21 +6113,23 @@ components:
                     type: string
                 hash_fallback_query_arg:
                     description: The name of the query string argument to take the value from as hash input. Only required when `hash_fallback` is set to `query_arg`.
+                    minLength: 1
                     nullable: true
                     type: string
                 hash_fallback_uri_capture:
                     description: The name of the route URI capture to take the value from as hash input. Only required when `hash_fallback` is set to `uri_capture`.
+                    minLength: 1
                     nullable: true
                     type: string
                 hash_on:
                     default: none
                     description: What to use as hashing input. Using `none` results in a weighted-round-robin scheme with no hashing.
                     enum:
-                        - none
                         - consumer
-                        - ip
-                        - header
                         - cookie
+                        - header
+                        - ip
+                        - none
                         - path
                         - query_arg
                         - uri_capture
@@ -6086,19 +6150,24 @@ components:
                     type: string
                 hash_on_query_arg:
                     description: The name of the query string argument to take the value from as hash input. Only required when `hash_on` is set to `query_arg`.
+                    minLength: 1
                     nullable: true
                     type: string
                 hash_on_uri_capture:
                     description: The name of the route URI capture to take the value from as hash input. Only required when `hash_on` is set to `uri_capture`.
+                    minLength: 1
                     nullable: true
                     type: string
                 healthchecks:
+                    description: The array of healthchecks.
                     nullable: true
                     properties:
                         active:
                             properties:
                                 concurrency:
                                     default: 10
+                                    maximum: 2.147483648e+09
+                                    minimum: 1
                                     type: integer
                                 headers:
                                     additionalProperties:
@@ -6114,13 +6183,19 @@ components:
                                                 - 200
                                                 - 302
                                             items:
+                                                maximum: 999
+                                                minimum: 100
                                                 type: integer
                                             type: array
                                         interval:
                                             default: 0
+                                            maximum: 65535
+                                            minimum: 0
                                             type: number
                                         successes:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                     type: object
                                 http_path:
@@ -6135,20 +6210,24 @@ components:
                                     type: boolean
                                 timeout:
                                     default: 1
+                                    maximum: 65535
+                                    minimum: 0
                                     type: number
                                 type:
                                     default: http
                                     enum:
-                                        - tcp
-                                        - http
-                                        - https
                                         - grpc
                                         - grpcs
+                                        - http
+                                        - https
+                                        - tcp
                                     type: string
                                 unhealthy:
                                     properties:
                                         http_failures:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                         http_statuses:
                                             default:
@@ -6161,16 +6240,24 @@ components:
                                                 - 504
                                                 - 505
                                             items:
+                                                maximum: 999
+                                                minimum: 100
                                                 type: integer
                                             type: array
                                         interval:
                                             default: 0
+                                            maximum: 65535
+                                            minimum: 0
                                             type: number
                                         tcp_failures:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                         timeouts:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                     type: object
                             type: object
@@ -6200,25 +6287,31 @@ components:
                                                 - 307
                                                 - 308
                                             items:
+                                                maximum: 999
+                                                minimum: 100
                                                 type: integer
                                             type: array
                                         successes:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                     type: object
                                 type:
                                     default: http
                                     enum:
-                                        - tcp
-                                        - http
-                                        - https
                                         - grpc
                                         - grpcs
+                                        - http
+                                        - https
+                                        - tcp
                                     type: string
                                 unhealthy:
                                     properties:
                                         http_failures:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                         http_statuses:
                                             default:
@@ -6226,18 +6319,26 @@ components:
                                                 - 500
                                                 - 503
                                             items:
+                                                maximum: 999
+                                                minimum: 100
                                                 type: integer
                                             type: array
                                         tcp_failures:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                         timeouts:
                                             default: 0
+                                            maximum: 255
+                                            minimum: 0
                                             type: integer
                                     type: object
                             type: object
                         threshold:
                             default: 0
+                            maximum: 100
+                            minimum: 0
                             type: number
                     type: object
                 host_header:
@@ -6254,6 +6355,8 @@ components:
                 slots:
                     default: 10000
                     description: The number of slots in the load balancer algorithm. If `algorithm` is set to `round-robin`, this setting determines the maximum number of slots. If `algorithm` is set to `consistent-hashing`, this setting determines the actual number of slots in the algorithm. Accepts an integer in the range `10`-`65536`.
+                    maximum: 65536
+                    minimum: 10
                     nullable: true
                     type: integer
                 sticky_sessions_cookie:
@@ -18613,7 +18716,6 @@ servers:
 tags:
     - name: ACLs
     - name: API-keys
-    - name: Admins
     - description: Admin routes
       name: Admins
     - description: |-
@@ -18665,7 +18767,6 @@ tags:
         Event hooks do not work with Konnect yet.
         <br><br>
       name: Event-hooks
-    - name: Groups
     - description: Group routes
       name: Groups
     - name: HMAC-auth credentials
