@@ -18,6 +18,7 @@ api_specs:
 search_aliases:
   - postman
   - publish API specs
+  - konnect-application-auth
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:
