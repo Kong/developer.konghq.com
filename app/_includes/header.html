@@ -66,6 +66,7 @@
             <path d="M119.153 23.3611V12.7227H125.573V13.8655H120.441V17.4601H125.241V18.6029H120.441V22.2183H125.656V23.3611H119.153Z" fill="#428CDC"/>
             <path d="M110.751 23.3611H107.468V12.7227H110.896C111.928 12.7227 112.811 12.9356 113.545 13.3616C114.28 13.7841 114.842 14.3918 115.234 15.1849C115.625 15.9745 115.821 16.9199 115.821 18.0211C115.821 19.1293 115.623 20.0834 115.228 20.8833C114.834 21.6798 114.259 22.2928 113.504 22.7222C112.749 23.1481 111.831 23.3611 110.751 23.3611ZM108.756 22.2183H110.668C111.547 22.2183 112.276 22.0486 112.855 21.7092C113.433 21.3699 113.864 20.8868 114.148 20.26C114.432 19.6332 114.574 18.8869 114.574 18.0211C114.574 17.1623 114.434 16.4229 114.153 15.803C113.873 15.1797 113.454 14.7018 112.896 14.3693C112.339 14.0334 111.644 13.8655 110.813 13.8655H108.756V22.2183Z" fill="#428CDC"/>
             </svg>
+            <span class="sr-only">Open user menu</span>
           </button>
           {% include_cached header/menu_caret.html css_class="dropdown-caret" %}
           <div class="dropdown-menu w-[200px]" role="menu" aria-hidden="true">
@@ -298,10 +299,10 @@
         </button>
 
         <div class="hidden lg:flex">
-            <button class="light-mode-switch hidden dark:inline">
+            <button class="light-mode-switch hidden dark:inline" aria-label="Activate light mode">
               {% include_svg '/assets/icons/light_mode.svg' %}
             </button>
-            <button class="dark-mode-switch dark:hidden">
+            <button class="dark-mode-switch dark:hidden" aria-label="Activate dark mode">
               {% include_svg '/assets/icons/bedtime.svg' %}
             </button>
           </button>
