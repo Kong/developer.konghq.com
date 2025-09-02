@@ -462,6 +462,9 @@ body:
   end_at: $UTF_END_TIME
 {% endkonnect_api_request %}
 <!--vale on-->
+
+{:.info}
+> **Note:** The replay job is always sent to the webhook that is currently configured for the organization or Dev Portal at the time the replay job is executed. There is one webhook configuration per region.
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -494,4 +497,4 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-Once the replay job is marked as Complete, you can view the recovered audit logs in your SIEM provider.
+Once the replay job is marked as Complete, the audit logs were re-sent to a configured SIEM provider webhook for the specified date and time range.
