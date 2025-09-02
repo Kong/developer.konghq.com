@@ -1,6 +1,6 @@
 description: 'Generate an MCP server from {{ site.base_gateway }} Service'
 
-title: 'Generate an MCP server from the existing Service'
+title: 'Generate an MCP server in conversion-only mode'
 
 extended_description: |
   Generate an MCP server from {{ site.base_gateway }} services.
