@@ -287,8 +287,6 @@ sequenceDiagram
 
 If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your Dev Portal](/dev-portal/self-service/).
 
-After you link the API and set the strategy in Dev Portal, developers can create applications, obtain credentials or keys, and call the API through the service.
-
 To link your API to a Gateway Service, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
