@@ -44,13 +44,13 @@ The dump config server is disabled by default. You must enable it when installin
 Enable the dump config server by setting the values during installation:
 {% navtabs "install" %}
 {% navtab "CLI" %}
-   ```bash
-   helm upgrade --install kong-operator kong/kong-operator \
-     --set enableControlplaneConfigDump=true \
-     --set controlplaneConfigDumpPort=10256 \
-     --namespace kong-system \
-     --create-namespace
-   ```
+```bash
+helm upgrade --install kong-operator kong/kong-operator \
+  --set enableControlplaneConfigDump=true \
+  --set controlplaneConfigDumpPort=10256 \
+  --namespace kong-system \
+  --create-namespace
+```
 {% endnavtab %}
 {% navtab "Values file" %}
 
@@ -76,13 +76,87 @@ helm upgrade --install kong-operator kong/kong-operator \
 Verify the dump config service is created:
 
 ```bash
-kubectl get service -n kong-system kong-operator-controlplane-config-dump
+kubectl get service -n kong-system kong-operator-kong-operator-config-dump
 ```
 
 The output should show:
 ```
 NAME                                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)     AGE
-kong-operator-controlplane-config-dump   ClusterIP   10.96.100.150   <none>        10256/TCP   1m
+kong-operator-kong-operator-config-dump  ClusterIP   10.96.100.150   <none>        10256/TCP   1m
+```
+
+## Create a sample ControlPlane
+
+Create a minimal ControlPlane using the latest `v2beta1` API and enable per-ControlPlane config dump.
+
+```yaml
+apiVersion: gateway-operator.konghq.com/v2beta1
+kind: ControlPlane
+metadata:
+  name: controlplane-v2
+spec:
+  ingressClass: kong # required when dataplane.type is ref. Only Ingress supported
+  dataplane:
+    type: ref
+    ref:
+      name: dataplane-v2
+  featureGates:
+  - name: GatewayAlpha
+    state: enabled
+  configDump:
+    state: enabled
+---
+apiVersion: gateway-operator.konghq.com/v1beta1
+kind: DataPlane
+metadata:
+  name: dataplane-v2
+spec:
+  deployment:
+    podTemplateSpec:
+      metadata:
+        labels:
+          dataplane-pod-label: example
+        annotations:
+          dataplane-pod-annotation: example
+      spec:
+        containers:
+        - name: proxy
+          image: kong:3.9
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          readinessProbe:
+            initialDelaySeconds: 1
+            periodSeconds: 1
+  network:
+    services:
+      ingress:
+        annotations:
+          foo: bar
+```
+
+Save it to a file and apply it to the cluster:
+
+```bash
+kubectl apply -f cp-dp-v2.yaml
+```
+
+You can wait for the ControlPlane to be ready:
+
+```bash
+kubectl wait --for=condition=Ready controlplane controlplane-v2
+kubectl get  controlplane controlplane-v2
+```
+
+The output looks like this:
+
+```bash
+NAME              AGE   READY
+controlplane-v2   4m    True
 ```
 
 ## Access the dump config server
@@ -90,7 +164,7 @@ kong-operator-controlplane-config-dump   ClusterIP   10.96.100.150   <none>     
 The dump config server is not exposed externally by default. Use port-forwarding to access it locally:
 
 ```bash
-kubectl port-forward -n kong-system service/kong-operator-controlplane-config-dump 10256:10256
+kubectl port-forward -n kong-system service/kong-operator-kong-operator-config-dump 10256:10256
 ```
 
 Keep this terminal open while you work with the dump config server.
@@ -109,13 +183,8 @@ Example response:
   "controlPlanes": [
     {
       "namespace": "default",
-      "name": "my-controlplane",
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-    },
-    {
-      "namespace": "production",
-      "name": "prod-cp",
-      "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012"
+      "name": "controlplane-v2",
+      "id": "e40e8e10-6f3c-4e05-95a1-b1896eb09eaf"
     }
   ]
 }
@@ -126,7 +195,7 @@ Example response:
 To list control planes in a specific namespace:
 
 ```bash
-curl http://localhost:10256/debug/controlplanes/namespace/production | jq .
+curl http://localhost:10256/debug/controlplanes/namespace/default | jq .
 ```
 
 ## Dump ControlPlane configuration
@@ -135,17 +204,39 @@ To inspect the Kong configuration for a specific ControlPlane:
 
 ```bash
 # Replace with your ControlPlane's namespace and name
-curl http://localhost:10256/debug/controlplanes/namespace/default/name/my-controlplane/config/successful
+curl http://localhost:10256/debug/controlplanes/namespace/default/name/controlplane-v2/config/successful
 ```
 
 This returns the raw Kong configuration that would be sent to the Kong Admin API.
+
+It looks like this:
+
+```json
+{
+  "hash": "hash id of the configuration",
+  "config": {
+    "_format_version": "3.0",
+    "_info": {
+      "select_tags": [
+        "managed-by-ingress-controller"
+      ],
+      "defaults": {}
+    },
+    "upstreams": [
+      {
+        "name": "kong"
+      }
+    ]
+  }
+}
+```
 
 ### Pretty-print the configuration
 
 For better readability, pipe the output through `jq`:
 
 ```bash
-curl -s http://localhost:10256/debug/controlplanes/namespace/default/name/my-controlplane/config/successful | jq .
+curl -s http://localhost:10256/debug/controlplanes/namespace/default/name/controlplane-v2/config/successful | jq .
 ```
 
 ### Save configuration to a file
@@ -153,63 +244,11 @@ curl -s http://localhost:10256/debug/controlplanes/namespace/default/name/my-con
 To save the configuration for later analysis:
 
 ```bash
-curl -s http://localhost:10256/debug/controlplanes/namespace/default/name/my-controlplane/config/successful \
+curl -s http://localhost:10256/debug/controlplanes/namespace/default/name/controlplane-v2/config/successful \
   > controlplane-config-$(date +%Y%m%d-%H%M%S).json
 ```
 
 ## Examples
-
-### Debug routing issues
-
-When debugging why a route isn't working as expected:
-
-1. First, create a test control plane and route:
-
-   ```yaml
-   echo '
-   apiVersion: gateway-operator.konghq.com/v1beta1
-   kind: ControlPlane
-   metadata:
-     name: test-cp
-     namespace: default
-   spec:
-     dataplane: test-dataplane
-     gatewayClass: kong
-   ---
-   apiVersion: gateway.networking.k8s.io/v1
-   kind: HTTPRoute
-   metadata:
-     name: test-route
-     namespace: default
-   spec:
-     parentRefs:
-     - name: kong
-       namespace: default
-     rules:
-     - matches:
-       - path:
-           type: PathPrefix
-           value: /test
-       backendRefs:
-       - name: test-service
-         port: 80
-   ' | kubectl apply -f -
-   ```
-
-2. Wait for the control plane to be ready:
-
-   ```bash
-   kubectl wait --for=condition=Ready controlplane/test-cp -n default --timeout=120s
-   ```
-
-3. Dump and inspect the configuration:
-
-   ```bash
-   curl -s http://localhost:10256/debug/controlplanes/namespace/default/name/test-cp/config/successful | \
-     jq '.routes[] | select(.paths[] | contains("/test"))'
-   ```
-
-This shows you exactly how your HTTPRoute was translated to Kong configuration.
 
 ### Monitor configuration changes
 
@@ -220,7 +259,7 @@ Create a script to monitor configuration size over time:
 # monitor-config-size.sh
 
 NAMESPACE="default"
-NAME="my-controlplane"
+NAME="controlplane-v2"
 INTERVAL=60  # seconds
 
 echo "Monitoring ControlPlane $NAMESPACE/$NAME configuration size..."
@@ -271,6 +310,18 @@ If you see "control plane does not enable config dump":
 
 This means the control plane exists but doesn't have config dumping enabled at the individual control plane level. This is a per-control plane setting that may need to be configured separately from the global operator setting.
 
+You can use the following command to check the configuration of the config dump:
+
+```bash
+kubectl get controlplane controlplane-v2 -o jsonpath='{.spec.configDump}'
+```
+
+The output looks like this, the `state` field should be set to `"enabled"`:
+
+```json
+{"dumpSensitive":"disabled","state":"enabled"}
+```
+
 ### Empty or minimal configuration
 
 If the configuration appears empty or minimal:
@@ -284,13 +335,13 @@ If the configuration appears empty or minimal:
 
 3. Check operator logs for any errors:
    ```bash
-   kubectl logs -n kong-system deployment/kong-operator-controller-manager --tail=50
+   kubectl logs -n kong-system deployment/kong-operator-kong-operator-controller-manager --tail=50
    ```
 
 ## Security considerations
 
 {:.warning}
-> The dump config server exposes potentially sensitive configuration data, including service endpoints and routing rules. 
+> The dump config server exposes potentially sensitive configuration data, including service endpoints and routing rules.
 > Always use proper network policies and RBAC to restrict access to the dump config service in production environments.
 
 Consider these security practices:
@@ -299,4 +350,3 @@ Consider these security practices:
 2. **Implement RBAC** to control who can port-forward to the service
 3. **Avoid exposing the service** externally through LoadBalancer or Ingress
 4. **Monitor access** to the dump config endpoints through audit logs
-
