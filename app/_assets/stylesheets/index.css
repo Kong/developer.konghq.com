@@ -889,6 +889,13 @@
   @apply border-none py-0 !important;
 }
 
+html.dark .code-block pre.shiki,
+.code-block pre.shiki,
+html.dark .code-block pre.shiki span,
+.code-block pre.shiki span {
+  @apply !bg-code-block;
+}
+
 /* How-to lists */
 ol:has(code) {
   @apply flex flex-col gap-4;
