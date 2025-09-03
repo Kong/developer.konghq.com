@@ -84,7 +84,7 @@ prereqs:
            If Ollama is running on a different port, run:
 
            ```sh
-           sudo lsof -iTCP -sTCP:LISTEN -n -P
+           lsof -iTCP -sTCP:LISTEN -n -P | grep 'ollama'
            ```
 
            Then look for the `ollama` process in the output and note the port number it’s listening on.
