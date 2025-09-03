@@ -48,7 +48,6 @@ config:
       schema:
         type: string
   server:
-    tag: weather
     timeout: 60000
   logging:
     log_statistics: true

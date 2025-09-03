@@ -108,12 +108,6 @@ entities:
           method: GET
           path: "/weather"
           parameters:
-          - name: key
-            in: query
-            description: Your API key
-            required: true
-            schema:
-              type: string
           - name: q
             in: query
             required: true

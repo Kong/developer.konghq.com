@@ -1,76 +1,23 @@
-description: 'Generate an MCP server from {{ site.base_gateway }} Service'
+description: 'Generate an MCP server from {{ site.base_gateway }} services'
 
 title: 'Generate an MCP server using listener mode'
 
 extended_description: |
-  Generate an MCP server from {{ site.base_gateway }} services.
-
-  {:.warning}
-  > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
-  > ```yaml
-  > services:
-  > - name: astronomy-service
-  >   url: https://api.weatherapi.com/v1/astronomy.json
-  >   routes:
-  >   - name: astronomy-route
-  >     paths:
-  >     - /astronomy
-  > - name: current-service
-  >   url: https://api.weatherapi.com/v1/current.json
-  >   routes:
-  >   - name: current-route
-  >     paths:
-  >     - /current
-  > ```
+  Listener mode works together with `conversion-only` mode.
+  - Configure one or more Routes with the plugin in `conversion-only` mode.
+    Each `conversion-only` Route defines tools and assigns them a `tags` value.
+  - Configure a separate Route with the plugin in `listener` mode (shown below).
+    The listener uses [`config.server.tag`](./reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server.
 
 weight: 900
 
 requirements:
-- "A running and exposed API"
+- "At least one Route with the plugin in `conversion-only` mode, tagged with the same value as `server.tag`"
 
 config:
   mode: listener
-  tools:
-  - description: Get astronomy data (sunrise/sunset) for a location
-    method: GET
-    path: /v1/astronomy.json
-    parameters:
-    - name: key
-      in: query
-      description: Your WeatherAPI key
-      required: true
-      schema:
-        type: string
-    - name: q
-      in: query
-      description: Location query
-      required: true
-      schema:
-        type: string
-  - description: Get current weather with air quality index
-    method: GET
-    path: /v1/current.json
-    parameters:
-    - name: key
-      in: query
-      description: Your WeatherAPI key
-      required: true
-      schema:
-        type: string
-    - name: q
-      in: query
-      description: Location query
-      required: true
-      schema:
-        type: string
-    - name: aqi
-      in: query
-      description: Include air quality data (yes/no)
-      required: false
-      schema:
-        type: string
   server:
-    tag: weather-listener
+    tag: weather-tools
     timeout: 45000
   logging:
     log_statistics: true
