@@ -76,6 +76,7 @@ jobs:
         working-directory: tools/automated-tests
         run: |
           npm ci
+          npx playwright install --with-deps chromium
           npm run generate-instruction-files
 
       - name: Run tests
