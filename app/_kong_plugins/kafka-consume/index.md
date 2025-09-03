@@ -92,3 +92,27 @@ This mode provides parity with HTTP-based consumption, including support for:
 ## Schema registry support {% new_in 3.11 %}
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}
+
+## Migration Considerations for Kong 3.12 {% new_in 3.12 %}
+
+**Important:**
+The `kafka-consume` plugin **no longer supports scoping to a Service**.
+
+- **Fresh installations**
+  If you try to scope this plugin to a Service on a fresh {{site.base_gateway}} instance, a *schema violation* error will be returned.
+
+- **Upgrading existing configurations**
+
+  **Traditional mode**
+  - During startup, Kong will log an *error-level* message if a `kafka-consume` plugin scoped to a Service is detected.
+  - Kong will still start successfully, but the plugin configuration **must be updated after startup**.
+  - Until the configuration is updated, requests to the previous plugin URL will continue to be forwarded to the upstream Service, and responses will be returned to the downstream client as before.
+
+  **DB-less mode**
+  - If the declarative configuration file contains a `kafka-consume` plugin scoped to a Service, Kong will **fail to start**.
+  - In this case, you must **update the declarative configuration** before restarting Kong.
+
+  **Hybrid mode**
+  - If such a plugin exists in PostgreSQL, upgrading and restarting the **Control Plane (CP)** will succeed.
+  - However, before updating the **Data Plane (DP)**, you must update the plugin configuration.
+  - Otherwise, once the DP is upgraded and restarted, it will fail to sync the configuration due to validation errors.
