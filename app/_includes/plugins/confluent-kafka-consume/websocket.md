@@ -11,13 +11,13 @@ This approach provides real-time message flow without the limitations of HTTP po
 {% mermaid %}
 sequenceDiagram
     participant Client
-    participant Kong as Kong Gateway
+    participant Kong as {{site.base_gateway}}
     participant Broker as Message Broker
 
     Client->>Kong: Establish WebSocket connection
     Kong->>Broker: Connect to broker
 
-    loop Continuous Message Delivery
+    loop Continuous message delivery
         Broker->>Kong: Broker message
         Kong->>Client: Stream JSON text frame
 
