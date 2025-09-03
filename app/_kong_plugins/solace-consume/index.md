@@ -98,11 +98,12 @@ faqs:
 This plugin allows {{site.base_gateway}} to consume messages from a [Solace PubSub+ Event Broker](https://solace.com/products/event-broker/) and makes them available through HTTP endpoints.
 For more information, see [Understanding Solace topics](https://docs.solace.com/Get-Started/what-are-topics.htm).
 
-* Supports Basic Authentication and OAuth2 Authentication for secure communication with Solace.
-* Allows dynamic configuration of Solace session properties.
-* Supports custom content payloads or direct payload forwarding.
-* Provides configurable acknowledgment wait time to handle guaranteed message delivery.
-* SSL/TLS support for secure connections to Solace brokers.
+The Solace Consume plugin includes the following features:
+* Supports Basic and OAuth2 Authentication for secure communication with Solace
+* Allows dynamic configuration of Solace session properties
+* Supports custom content payloads or direct payload forwarding
+* Provides configurable acknowledgment wait time to handle guaranteed message delivery
+* SSL/TLS support for secure connections to Solace brokers
 
 Kong also provides Solace plugins for logging and publishing messages:
 * [Solace Log](/plugins/solace-log/)
