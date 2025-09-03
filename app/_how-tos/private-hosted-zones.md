@@ -91,9 +91,9 @@ body:
 {% navtab "Konnect UI" %}
 
 1. In the {{site.konnect_short_name}} UI, navigate to [**Networks**](https://cloud.konghq.com/global/networks/) in the sidebar.
-1. From the action menu of an AWS network, select **Configure private DNS**.
-1. Enter a  unique name to identify this private DNS in the **Private hosted zone name** field.
-1. Enter your AWS hosted zone ID in the **Hosted zone ID** field.
+1. Click the settings icon next to your AWS network, and select **Configure private DNS** from the dropdown menu.
+1. Enter `dev-hosted-zone` in the **Private hosted zone name** field.
+1. Enter your AWS hosted zone ID in the **Hosted zone ID** field. For example: `Z9237512550OTOW57VYEW`
 1. Click **Save**.
 
 {% endnavtab %}
