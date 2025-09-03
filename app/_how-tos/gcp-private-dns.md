@@ -148,8 +148,34 @@ body:
 {% endnavtab %}
 {% navtab "Konnect UI" %}
 
-1. Copy and run the commands provided. 
-1. Click the **Please confirm if you have completed the above mentioned steps** checkbox and click **Connect**.
+1. Run this command on your project to create a private DNS zone:
+```sh
+   gcloud dns \
+     --project=$GCP_PROJECT_ID \
+     managed-zones create $DNS_NAME \
+     --description="Konnect private DNS" \
+     --dns-name=$DOMAIN_NAME \
+     --visibility="private" \
+     --networks=$GCP_VPC_NAME
+   ```
+
+   {:.info}
+   > This step is only required if you don't already have a private DNS zone in your GCP project.
+1. Run this command to give permission to {{site.konnect_short_name}}’s service principal to access the project:
+   ```sh
+   gcloud projects add-iam-policy-binding $GCP_PROJECT_ID \
+     --member="principal://iam.googleapis.com/projects/133260365532/locations/global/workloadIdentityPools/aws-hdp-prod/subject/system:serviceaccount:network-peering-controller:network-peering-controller" \
+--role="roles/dns.peer"
+   ```
+
+   If needed, you can also give {{site.konnect_short_name}} access to your whole GCP organization using your [organization ID](https://cloud.google.com/resource-manager/docs/creating-managing-organization#gcloud):
+   ```sh
+   gcloud organizations add-iam-policy-binding $GCP_ORGANIZATION_ID \
+     --member="principal://iam.googleapis.com/projects/133260365532/locations/global/workloadIdentityPools/aws-hdp-prod/subject/system:serviceaccount:network-peering-controller:network-peering-controller" \
+     --role="roles/dns.peer" 
+   ```
+1. In the {{site.konnect_short_name}} UI GCP private DNS settings you were configuring, click the **Please confirm if you have completed the above mentioned steps** checkbox.
+1. Click **Connect**.
 
 {% endnavtab %}
 {% endnavtabs %}
