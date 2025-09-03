@@ -1,0 +1,51 @@
+description: Configure the Solace Consume plugin to consume messages over SSL.
+
+weight: 850
+
+extended_description: |
+  Configure the Solace Consume plugin to consume messages over SSL.
+
+  By default, SSL certification validation is disabled. In a production environment, we recommend enabing SSL validation.
+
+  In your Solace configuration, set up the following:
+  * `SESSION_SSL_TRUST_STORE_DIR`: Path to the trust store directory. For example, `/usr/local/share/lua/5.1/kong/plugins/solace/cert`.
+  * `SESSION_SSL_VALIDATE_CERTIFICATE_DATE`: Indicates if the session connection should fail when receiving a certificate with an invalid date.
+  * `SESSION_SSL_VALIDATE_CERTIFICATE_HOST`: Indicates if the session connection should fail when receiving a certificate with an invalid host.
+  * `SESSION_SSL_CIPHER_SUITES`:Comma-separated list of the cipher suites.
+
+  See [Configuring Secure Sessions](https://docs.solace.com/API/API-Developer-Guide/Creating-Secure-Sessions.htm) in the Solace documentation for details.
+
+title: Consume messages over SSL
+weight: 900
+
+requirements:
+  - You have a [Solace PubSub+ Event Broker](https://docs.solace.com/Get-Started/tutorial/event-broker-set-up.htm)
+  - You have a [Solace message queue](https://docs.solace.com/Messaging/Guaranteed-Msg/Queues.htm)
+
+variables:
+  host:
+    description: "The Solace broker host URL. For example, `tcps://my.broker:55443`"
+    value: $SOLACE_BROKER_HOST
+  queue_name:
+    description: The name of the message queue to consume from.
+    value: $QUEUE_NAME
+
+config:
+  session:
+    host: ${host}
+    ssl_validate_certificate: true
+    authentication:
+      scheme: BASIC
+      username: admin
+      password: admin
+    
+    flow:
+      binds:
+        - name: ${queue_name}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
