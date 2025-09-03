@@ -1,0 +1,128 @@
+- type: function
+  name: sleep
+  javascript: |
+    function (t){ return new Promise((r) => setTimeout(r, t)); }
+- type: function
+  name: activateByTestId
+  javascript: |
+    async function (s){ document.querySelector(`[data-testid='${s}']`).click(); await sleep(200); }
+- type: function
+  name: getTestId
+  javascript: |
+    function (s){ return document.querySelector(`[data-testid='${s}']`) }
+- type: function
+  name: remove
+  javascript: |
+    function (s) { const r = document.querySelector(s); r.parentNode.removeChild(r) }
+- type: function
+  name: cleanupPage
+  javascript: |
+    function () { 
+      document.querySelector(".kong-ui-app-layout").classList = []; 
+      remove(".kong-ui-app-navbar"); 
+      remove(".kong-ui-app-sidebar"); 
+      remove(".k-breadcrumbs"); 
+      remove(".intercom-lightweight-app"); 
+      document.body.style.padding = "20px"; 
+    }
+- type: function
+  name: clickElement
+  javascript: |
+    async function (selector) {
+      const elementToClick = document.querySelector(selector);
+      if (elementToClick) {
+        elementToClick.click();
+        await sleep(400);
+      }
+    }
+- type: function
+  name: annotateNumber
+  javascript: |
+    function (node, config) {
+      const num = document.createElement("div");
+      num.innerText = config.number;
+      num.style.borderRadius = "100%";
+
+      if (config.position?.left){
+      num.style.left = config.position.left;
+      }
+      if (config.position?.top){
+      num.style.top = config.position.top;
+      }
+      if (config.position?.right){
+      num.style.right = config.position.right;
+      }
+
+      num.style.display = "flex";
+      num.style.alignItems = "center";
+      num.style.justifyContent = "center";
+
+      // Styling
+      const size = config.size || "40px";
+      num.style.backgroundColor = "#5f9ea0";
+      num.style.color = "white";
+      num.style.width = size;
+      num.style.height = size;
+      num.style.border = "1px solid black";
+      num.style.fontWeight = "bold";
+
+      node.appendChild(num);
+      node.style.position = 'relative';
+      num.style.position = 'absolute';
+
+      // Now convert to absolute relative to the body so that it doesn't get affected by clipping
+      var body = document.body;
+      var bodyRect = body.getBoundingClientRect();
+      var rect = num.getBoundingClientRect();
+      num.style.top = rect.top+ "px";
+      num.style.left = rect.left + "px";
+      node.style.position = 'unset';
+      body.appendChild(num);
+    }
+- type: function
+  name: zoomPercentage
+  javascript: |
+    function (percentage) {
+      const currentZoom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('zoom')) || 1;
+      const newZoom = currentZoom + (currentZoom * percentage / 100);
+      document.documentElement.style.transform = `scale(${newZoom})`;
+    }
+- type: function
+  name: removeElementBySelector
+  javascript: |
+    function (selector) {
+      const elementToDelete = document.querySelector(selector);
+      if (elementToDelete) {
+        elementToDelete.parentNode.removeChild(elementToDelete);
+      }
+    }
+- type: function
+  name: updateElementsWithRandomNumbersInRange
+  javascript: |
+    function (selector, minRange, maxRange) {
+      const elementsToUpdate = document.querySelectorAll(selector);
+      elementsToUpdate.forEach(element => {
+        // Generate a random number
+        const randomNumber = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+        
+        const innerDiv = element.querySelector('div.k-badge-text');
+        
+        if (innerDiv) {
+          innerDiv.textContent = randomNumber.toString();
+        }
+      });
+    }
+- type: function
+  name: updateDivWithRandomNumberInRange
+  javascript: |
+    function (selector, minRange, maxRange) {
+      const targetDiv = document.querySelector(selector);
+      if (targetDiv) {
+
+        const randomNumberInRange = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+
+        // Format the number with commas
+        const formattedNumber = randomNumberInRange.toLocaleString();
+        targetDiv.textContent = formattedNumber;
+      }
+    }
