@@ -1,0 +1,36 @@
+{% capture copy %}
+<div class="flex text-xs text-white bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="{{codeblock.id}}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    <svg width="14" height="14" viewBox="0 0 24 24" class="flex group-[.success]:hidden" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6H5V20H16V22H5ZM9 18C8.45 18 7.97917 17.8042 7.5875 17.4125C7.19583 17.0208 7 16.55 7 16V4C7 3.45 7.19583 2.97917 7.5875 2.5875C7.97917 2.19583 8.45 2 9 2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V16C20 16.55 19.8042 17.0208 19.4125 17.4125C19.0208 17.8042 18.55 18 18 18H9ZM9 16H18V4H9V16Z" fill="currentColor"/>
+    </svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" class="hidden group-[.success]:flex" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="rgb(var(--color-semantic-green-primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 6 9 17l-5-5"></path>
+    </svg>
+</clipboard-copy>
+{% endcapture %}
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg {{codeblock.css_classes}}"
+  {% for data in codeblock.data %}{{ data[0] }}="{{ data[1] }}" {% endfor %}
+>
+    {% if codeblock.render_header %}
+    <div class="custom-code-block__header grid grid-cols-[1fr_auto]  justify-items-end items-center px-3 py-1 bg-code-block-header rounded-t-lg border border-primary/5">
+        {% if codeblock.data['data-file'] %}
+        <div class="text-sm text-white dark:text-primary justify-self-start">{{codeblock.data['data-file']}}</div>
+        {% endif %}
+        {% if codeblock.copy %}
+        <div class="flex items-center gap-2">
+            {{copy}}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary/5 overflow-auto p-3 {% if codeblock.render_header %}border-t-0{% else %}rounded-t-lg{% endif %} {% if codeblock.copy and codeblock.render_header == false %}pr-11{% endif%}">
+        <div class="code-block h-full w-full">{{codeblock.snippet}}</div>
+        {% if codeblock.copy and codeblock.render_header == false %}
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            {{copy}}
+        </div>
+        {% endif %}
+    </div>
+</div>
