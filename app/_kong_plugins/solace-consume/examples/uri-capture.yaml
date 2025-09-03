@@ -1,0 +1,51 @@
+title: Capture request URI
+description: Capture the URI of the request and use it as the message destination name.
+
+weight: 800
+extended_description: |
+    You can use `uri_captures` to capture the URI of the request and use it as the message destination name.
+
+    For example, if you have a Route that looks like this: 
+
+    ```sh
+    ~/demo/(?topic_id_1\w+)/hello/(?topic_id_2\w+)`
+    ```
+
+    You can use the following configuration:
+    ```yaml
+    name: /topic/$(uri_captures['topic_id_1'])/test/$(uri_captures['topic_id_2'])
+    ```
+    If the request doesn't match, the plugin will remove the placeholder and the `/`, so the final destination will be `/topic/test/`.
+
+    {:.info}
+    > **Note:** Use single quotes for the topic ID, such as `$(uri_captures['topic_id_1']`. Double quotes will cause errors.
+
+requirements:
+  - You have a [Solace PubSub+ Event Broker](https://docs.solace.com/Get-Started/tutorial/event-broker-set-up.htm)
+  - You have a [Solace message queue](https://docs.solace.com/Messaging/Guaranteed-Msg/Queues.htm)
+    
+
+variables:
+  host:
+    description: "The Solace broker host URL. For example: `tcp://my.broker:55555` (plain) or `tcps://my.broker:55443` (secure)."
+    value: $SOLACE_BROKER_HOST
+
+config:
+  session:
+    host: ${host}
+    ssl_validate_certificate: true
+    authentication:
+      scheme: BASIC
+      username: admin
+      password: admin
+    
+    flow:
+      binds:
+        - name: /topic/$(uri_captures['topic_id_1'])/test/$(uri_captures['topic_id_2'])
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
