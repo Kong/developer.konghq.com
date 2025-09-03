@@ -46,90 +46,32 @@ faqs:
   - q: What connections and protocols are involved when a custom HTTP DCR bridge is configured for a custom IdP?
     a: Kong uses HTTPS to transmit events to the domain you've provided and includes a key that can be used on your custom handler implementation to verify the events are from {{site.konnect_short_name}}.
 ---
-Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal lets an application in the portal register as a client at an Identity Provider (IdP). The IdP returns a client identifier and the registered client metadata. This shifts credential issuance and client policy to the IdP and enables OpenID Connect (OIDC) features that the IdP supports.
+Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal allows an application in the Dev Portal to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. Dev Portal DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
 
-## DCR in the {{site.konnect_short_name}} workflow
+In Dev Portal, you can create and use multiple DCR configurations.
 
-1. You set an application authentication strategy for an API in Dev Portal, then link the API to a Gateway Service.
-2. {{site.konnect_short_name}} applies a managed configuration on that Service.
-3. A developer creates an application in Dev Portal for that API.
-4. Dev Portal registers that application as a client at the IdP through DCR and displays the returned credentials to the developer.
 
-Requests to your API succeed only when the client presents valid credentials and the application holds a registration for the linked Service.
+## How does DCR work in Dev Portal?
 
-## DCR protocol
-1. Portal admins → set a DCR-based strategy on the API in Dev Portal to define how client apps identify to the API.
-2. Portal admins → link the API to a Gateway Service to ensure that all requests are routed through a Service that follows the strategy.
-3. Developer → creates an application in Dev Portal for that API to request client credentials through a self-service path.
-4. Dev Portal → calls the endpoint for client registration with client metadata to register the application as a client.
-5. Authorization server (IdP) → returns a registration response that contains `client_id` and the registered metadata, and in some cases a `client_secret`, to provide credentials for token and authorization flows.
-6. Developer → uses the issued credentials at the token endpoint and then calls the API to obtain tokens and access the API under the policy that you set.
+After you publish an API that's linked to a Gateway Service with a DCR application authentication strategy applied, developers can register an application with your API in Dev Portal. Dev Portal registers that application as a client in the IdP through DCR and displays the returned credentials to the developer. Requests to your API succeed only when the client presents valid credentials and the application holds a registration for the linked Service.
+
+The following diagram shows how this DCR flow works:
+
 
 {% mermaid %}
 sequenceDiagram
     actor Developer
-    Developer->> +Portal: Creates an application
-    Portal->>+IDP: Creates an application
-    IDP->>-Portal: Returns client metadatas, ClientID/Secrets
-    Portal->>Portal: Saves application record in database with ONLY ClientID mapping
-    Portal->>-Developer: returns application creation success with clientID/Secret
+    Developer->> +Dev Portal: Creates an application
+    Dev Portal->>+IdP: Creates an application
+    IdP->>-Dev Portal: Returns client metadata, Client ID, and secrets
+    Dev Portal->>Dev Portal: Saves application record in database with ONLY Client ID mapping
+    Dev Portal->>-Developer: Returns application creation success with client ID and secret
 {% endmermaid %}
 
-### What a valid DCR request and response look like
-
-**Request example:** Send a POST to the **Client Registration Endpoint** with client metadata as top-level JSON members. This example follows RFC 7591 and OIDC Dynamic Client Registration 1.0:
-
-```json
-{
-    "client_name": "Orders Web",
-    "redirect_uris": [
-        "https://app.example.com/callback"
-    ],
-    "grant_types": [
-        "authorization_code",
-        "refresh_token"
-    ],
-    "token_endpoint_auth_method": "client_secret_basic",
-    "application_type": "web"
-}
-```
-
-- `redirect_uris`, `grant_types`, `token_endpoint_auth_method`, and `client_name` are standard client metadata under RFC 7591.
-- `application_type` is an OIDC client metadata parameter with allowed values like web and native, from OIDC Dynamic Client Registration 1.0.
-
-**Response example:** On success, the endpoint returns HTTP 201 and a JSON body that contains the issued identifier and the registered metadata. When the server supports client management, it also returns a Registration Access Token and a Client Configuration Endpoint URI. An example of the response you might get:
-
-```json
-{
-    "client_id": "s6BhdRkqt3",
-    "client_secret": "ZJYCqe3GGRvdrudKyZS0XhGv_Z45DuKhCUk0gBR1vZk",
-    "client_id_issued_at": 1730419200,
-    "client_secret_expires_at": 0,
-    "registration_access_token": "this.is.an.access.token.value.ffx83",
-    "registration_client_uri": "https://server.example.com/connect/register?client_id=s6BhdRkqt3",
-    "token_endpoint_auth_method": "client_secret_basic",
-    "application_type": "web",
-    "redirect_uris": [
-        "https://app.example.com/callback"
-    ],
-    "client_name": "Orders Web",
-    "grant_types": [
-        "authorization_code",
-        "refresh_token"
-    ]
-}
-```
-
-- `client_id` is required. 
-- `client_secret` appears for confidential clients.
-- `client_id_issued_at` and `client_secret_expires_at` are standard response members.
-- `registration_access_token` and `registration_client_uri` appear when the server enables client management. Implementations return both values or neither.
-
-In a DCR strategy, the Dev Portal submits the registration request to your IdP and displays the returned client credentials to the developer’s application. This behavior appears in [Application authentication strategies](/auth-strategies).
 
 ## Authentication methods
 
-DCR registers the application as a client at your Identity Provider. The client authenticates when it requests tokens or calls protected resources after registration. DCR support in {{site.konnect_short_name}} provides multiple methods by which applications can be authenticated using industry-standard protocols. These methods include:
+DCR support in {{site.konnect_short_name}} provides multiple methods by which applications can be authenticated using industry-standard protocols. These methods include:
 
 * **Client credentials grant**: Authenticate with the client ID and secret provided to the application.
 * **Bearer tokens**: Authenticate using a token requested from the IdP's `/token` endpoint.
