@@ -34,7 +34,7 @@ tags:
 
 tldr:
     q: How can I use LiteLLM integrations with AI Gateway?
-    a: You can configure LiteLLM scripts to use your AI Gateway Route by replacing the `base_url` parameter in the [LiteLLM API call](https://docs.litellm.ai/docs/completion/#basic-usage) with your proxy URL.
+    a: You can configure LiteLLM to to use your AI Gateway Route by replacing the `base_url` parameter in the [LiteLLM API call](https://docs.litellm.ai/docs/completion/#basic-usage) with your {{site.base_gateway}} proxy URL.
 
 tools:
     - deck
@@ -64,7 +64,7 @@ automated_tests: false
 
 ## Configure the AI Proxy plugin
 
-Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and model details to route LiteLLM OpenAI-compatible requests through Kong AI Gateway. In this example, we'll use the `gpt-4.1` model from OpenAI.
+Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and model details to route LiteLLM OpenAI-compatible requests through Kong AI Gateway. In this example, we'll use the `gpt-4.1` model from OpenAI:
 
 {% entity_examples %}
 entities:
@@ -85,7 +85,7 @@ variables:
 
 ## Add authentication
 
-To secure access to your Route, create a Consumer and set up an authentication plugin.
+To secure access to your Route, create a Consumer and set up an authentication plugin:
 
 {:.info}
 > LiteLLM expects authentication as an `Authorization` header with a value starting with `Bearer`.
@@ -107,7 +107,7 @@ entities:
 
 ## Install LiteLLM
 
-Load the LiteLLM SDK into your Python dependencies:
+Install the LiteLLM Python SDK:
 
 {% navtabs "litellm" %}
 {% navtab "WSL2, Linux, macOS native" %}
@@ -118,7 +118,7 @@ pip3 install -U litellm
 {% endnavtab %}
 
 {% navtab "macOS, with Python installed via Homebrew" %}
-
+Create a virtual environment, then install the Python SDK:
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
