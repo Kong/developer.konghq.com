@@ -146,7 +146,7 @@ point it at the existing database for cluster X.
 
 1. Start the new cluster Y.
 
-1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/#converting-between-lts-versions) your entity configuration and sync the converted file to your newly installed version.
+1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
 
 1. Perform staging tests against version Y to make sure it works for all use cases. 
 

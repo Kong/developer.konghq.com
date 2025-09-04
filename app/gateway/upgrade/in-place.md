@@ -124,7 +124,7 @@ This will create a period of downtime until the upgrade completes.
 
 1. Start the new cluster Y.
 
-1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/#converting-between-lts-versions) your entity configuration and sync the converted file to your newly installed version.
+1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
 
 Once this is done, actively monitor all proxy metrics. If you run into any issues, [roll back the upgrade](/gateway/upgrade/backup-and-restore/#restore-gateway-entities). 
 Prioritize the database-level restoration method over the application-level method.

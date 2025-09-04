@@ -114,7 +114,7 @@ You may have to consider customization of both [`kong.conf`](/gateway/manage-kon
         Provision the new cluster Y with the same-sized resource capacity as that of 
         the current cluster X.
 
-    1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/#converting-between-lts-versions) your entity configuration and sync the converted file to your newly installed version.
+    1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
 
     1. Perform staging tests against version Y to make sure it works for all use cases. 
     
