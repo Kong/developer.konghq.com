@@ -1,8 +1,8 @@
-description: 'Configure the AIM MCP Oauth2 plugin' # Used for metadata and search; don't use markdown formatting
+description: 'Configure the AI MCP Oauth2 plugin' # Used for metadata and search; don't use markdown formatting
 
 # extended_description: '' # Displays on the page; can use any markdown formatting
 
-title: 'Configure the AIM MCP Oauth2 plugin'
+title: 'Configure the AI MCP Oauth2 plugin'
 
 weight: 900
 
