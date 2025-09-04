@@ -55,9 +55,9 @@ prereqs:
         1. Visit the [Ollama download page](https://ollama.com/download) and download the installer for your operating system. Follow the installation instructions for your platform.
 
         1. Start Ollama:
-          ```sh
-          ollama start
-          ```
+           ```sh
+           ollama start
+           ```
 
         1. After installation, open a new terminal window and run the following command to pull the orca-mini model we will be using in this tutorial:
 
