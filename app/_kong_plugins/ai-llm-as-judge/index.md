@@ -4,6 +4,7 @@ name: 'AI LLM as Judge'
 
 content_type: plugin
 
+tier: ai_gateway_enterprise
 publisher: kong-inc
 description: 'Evaluate and optimize your Large Language Models with accuracy'
 
