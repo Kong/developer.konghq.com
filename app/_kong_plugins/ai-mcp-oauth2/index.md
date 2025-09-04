@@ -51,7 +51,7 @@ The AI MCP OAuth2 plugin secures Model Context Protocol (MCP) traffic on Kong Ga
 
 The plugin provides OAuth 2.0 authentication for MCP traffic, allowing MCP clients to safely request access. It validates that access tokens are issued specifically for the target MCP server, ensuring only authorized requests are accepted. To reduce the risk of token theft or confused deputy attacks, the plugin does not pass access tokens to upstream services.
 
-In practice, the plugin performs three key functions:
+In practice, the plugin performs three core functions:
 
 * Validates incoming MCP requests by verifying access tokens from an external Authorization Server.
 * Extracts claims from validated tokens and forwards them to upstream MCP services via headers.
@@ -72,11 +72,11 @@ sequenceDiagram
     participant C as MCP client
     participant K as AI MCP OAuth2 plugin
     participant AS as Authorization server
-    participant U as Upstream service
+    participant U as Upstream MCP server
 
-    C->>K: Discover auth server
+    C->>K: Discover protected resource metadata
     activate K
-    K-->>C: Auth Server details
+    K-->>C: Protected resource metadata (includes auth server address)
     deactivate K
 
     C->>AS: Request access token
@@ -94,7 +94,7 @@ sequenceDiagram
     alt Token valid
         K->>U: Forward request with claims as headers
         activate U
-        U-->>K: HTTP response
+        U-->>K: MCP server response
         deactivate U
         K-->>C: MCP response
     else Token invalid
