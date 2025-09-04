@@ -43,9 +43,14 @@ icon: plugin-slug.png # e.g. acme.svg or acme.png
 
 categories:
    - ai
+related_resources:
+  - text: Oauth 2.0 specification for MCP
+    url: https://modelcontextprotocol.io/specification/draft/basic/authorization
+  - text: MCP Traffic Gateway
+    url: /mcp/
 ---
 
-The AI MCP OAuth2 plugin secures Model Context Protocol (MCP) traffic on Kong Gateway using OAuth 2.0. It ensures only authorized MCP clients can access protected MCP servers, and acts as a crucial security layer for MCP servers.
+The AI MCP OAuth2 plugin secures Model Context Protocol (MCP) traffic on Kong AI Gateway using [OAuth 2.0 specification for MCP servers](https://modelcontextprotocol.io/specification/draft/basic/authorization). It ensures only authorized MCP clients can access protected MCP servers, and acts as a crucial security layer for MCP servers.
 
 ## Purpose and Core Functionality
 
