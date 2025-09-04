@@ -179,7 +179,13 @@ export async function extractInstructionsFromURL(uri, config, context) {
 
 export async function generateInstructionFiles(urlsToTest, config) {
   const browser = await chromium.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--enable-clipboard",
+      "--disable-web-security",
+      "--disable-features=VizDisplayCompositor",
+    ],
   });
 
   try {
