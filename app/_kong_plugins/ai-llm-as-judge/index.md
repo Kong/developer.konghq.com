@@ -65,12 +65,8 @@ rows:
     description: "Includes previous chat messages for context when scoring."
   - feature: "Ignore prompts"
     description: "Options to ignore system, assistant, or tool prompts."
-  - feature: "Timeout & TLS"
-    description: "Supports HTTP(S) upstream timeout and TLS verification."
   - feature: "Sampling rate"
     description: "Controls probabilistic request volume for judging."
-  - feature: "Proxy support"
-    description: "Allows configuration of HTTP/HTTPS proxy for upstream AI services."
   - feature: "Native LLM schema"
     description: "Leverages Kong’s LLM schema for seamless integration."
 {% endtable %}
