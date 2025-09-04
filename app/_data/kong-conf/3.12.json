@@ -55,6 +55,12 @@
       "description": "By default, the DNS resolver will use the standard configuration files\n`/etc/hosts` and `/etc/resolv.conf`. The settings in the latter file will be\noverridden by the environment variables `LOCALDOMAIN` and `RES_OPTIONS` if\nthey have been set.\n\nKong will resolve hostnames as either `SRV` or `A` records (in that order, and\n`CNAME` records will be dereferenced in the process).\nIn case a name is resolved as an `SRV` record, it will also override any given\nport number with the `port` field contents received from the DNS server.\n\nThe DNS options `SEARCH` and `NDOTS` (from the `/etc/resolv.conf` file) will\nbe used to expand short names to fully qualified ones. So it will first try\nthe entire `SEARCH` list for the `SRV` type, if that fails it will try the\n`SEARCH` list for `A`, etc.\n\nFor the duration of the `ttl`, the internal DNS resolver will load balance each\nrequest it gets over the entries in the DNS record. For `SRV` records, the\n`weight` fields will be honored, but it will only use the lowest `priority`\nfield entries in the record.\n\nFor DNS records returned with a TTL value of 0, Kong will default to caching\nthese records for 1 second. Strict adherence to the requirement of not caching\nTTL 0 records could generate excessive query frequency to upstream DNS servers,\nleading to unsustainable load and potential service degradation. As a result,\nmost DNS resolver implementations deviate from this requirement in practice.\n"
     },
     {
+      "title": "New DNS RESOLVER",
+      "start": 1785,
+      "end": 1883,
+      "description": "This DNS resolver introduces global caching for DNS records across workers,\nsignificantly reducing the query load on DNS servers.\n\nIt provides observable statistics, you can retrieve them through the Admin API\n`/status/dns`.\n"
+    },
+    {
       "title": "VAULTS",
       "start": 1884,
       "end": 2119,
@@ -79,12 +85,6 @@
       "description": "\nThe Admin GUI for Kong Enterprise.\n\n"
     },
     {
-      "title": "VITALS",
-      "start": 2415,
-      "end": 2480,
-      "description": ""
-    },
-    {
       "title": "Konnect",
       "start": 2655,
       "end": 2661,
@@ -95,24 +95,6 @@
       "start": 2662,
       "end": 2682,
       "description": ""
-    },
-    {
-      "title": "DEVELOPER PORTAL",
-      "start": 2499,
-      "end": 2731,
-      "description": ""
-    },
-    {
-      "title": "DEFAULT DEVELOPER PORTAL AUTHENTICATION",
-      "start": 2732,
-      "end": 2848,
-      "description": "Referenced on workspace creation to set Dev Portal authentication defaults\nin the database for that particular workspace.\n\n"
-    },
-    {
-      "title": "DEFAULT PORTAL SMTP CONFIGURATION",
-      "start": 2849,
-      "end": 3037,
-      "description": "Referenced on workspace creation to set SMTP defaults in the database\nfor that particular workspace.\n\n"
     },
     {
       "title": "ADMIN SMTP CONFIGURATION",
@@ -133,12 +115,6 @@
       "description": "When enabled, Kong will store detailed audit data regarding Admin API and\ndatabase access. In most cases, updates to the database are associated with\nAdmin API requests. As such, database object audit log data is tied to a\ngiven HTTP request via a unique identifier, providing built-in association of\nAdmin API and database traffic.\n\n"
     },
     {
-      "title": "GRANULAR TRACING",
-      "start": 2580,
-      "end": 2686,
-      "description": "{:.warning}\n> **Deprecation warning**: Granular tracing is deprecated. This means the feature will eventually be removed.\nOur target for Granular tracing removal is the Kong Gateway 4.0 release.\n\nGranular tracing offers a mechanism to expose metrics and detailed debug data\nabout the lifecycle of Kong in a human- or machine-consumable format.\n\n"
-    },
-    {
       "title": "ROUTE COLLISION DETECTION/PREVENTION",
       "start": 2795,
       "end": 2842,
@@ -151,22 +127,16 @@
       "description": "When enabled, Kong will transparently encrypt sensitive fields, such as consumer\ncredentials, TLS private keys, and RBAC user tokens, among others. A full list\nof encrypted fields is available from the Kong Enterprise documentation site.\nEncrypted data is transparently decrypted before being displayed to the Admin\nAPI or made available to plugins or core routing logic.\n\nWhile this feature is GA, do note that we currently do not provide normal semantic\nversioning compatibility guarantees on the keyring feature's APIs in that Kong may\nmake a breaking change to the feature in a minor version. Also note that\nmismanagement of keyring data may result in irrecoverable data loss.\n\n"
     },
     {
-      "title": "REQUEST DEBUGGING",
-      "start": 3120,
-      "end": 3182,
-      "description": "Request debugging is a mechanism that allows admins to collect the timing of\nproxy path requests in the response header (X-Kong-Request-Debug-Output)\nand optionally, the error log.\n\nThis feature provides insights into the time spent within various components of Kong,\nsuch as plugins, DNS resolution, load balancing, and more. It also provides contextual\ninformation such as domain names tried during these processes.\n\n"
-    },
-    {
       "title": "CLUSTER FALLBACK CONFIGURATION",
       "start": 3072,
       "end": 3119,
       "description": ""
     },
     {
-      "title": "New DNS RESOLVER",
-      "start": 1785,
-      "end": 1883,
-      "description": "This DNS resolver introduces global caching for DNS records across workers,\nsignificantly reducing the query load on DNS servers.\n\nIt provides observable statistics, you can retrieve them through the Admin API\n`/status/dns`.\n"
+      "title": "REQUEST DEBUGGING",
+      "start": 3120,
+      "end": 3182,
+      "description": "Request debugging is a mechanism that allows admins to collect the timing of\nproxy path requests in the response header (X-Kong-Request-Debug-Output)\nand optionally, the error log.\n\nThis feature provides insights into the time spent within various components of Kong,\nsuch as plugins, DNS resolution, load balancing, and more. It also provides contextual\ninformation such as domain names tried during these processes.\n\n"
     }
   ],
   "params": {
@@ -260,6 +230,11 @@
       "description": "Comma-separated list of plugins this node should load.\nBy default, only plugins bundled in official distributions\nare loaded via the `bundled` keyword.\n\nLoading a plugin does not enable it by default, but only\ninstructs Kong to load its source code and allows\nconfiguration via the various related Admin API endpoints.\n\nThe specified name(s) will be substituted as such in the\nLua namespace: `kong.plugins.{name}.*`.\n\nWhen the `off` keyword is specified as the only value,\nno plugins will be loaded.\n\n`bundled` and plugin names can be mixed together, as the\nfollowing examples suggest:\n\n- `plugins = bundled,custom-auth,custom-log`\n  will include the bundled plugins plus two custom ones.\n- `plugins = custom-auth,custom-log` will\n  *only* include the `custom-auth` and `custom-log` plugins.\n- `plugins = off` will not include any plugins.\n\n**Note:** Kong will not start if some plugins were previously\nconfigured (i.e. have rows in the database) and are not\nspecified in this list. Before disabling a plugin, ensure\nall instances of it are removed before restarting Kong.\n\n**Note:** Limiting the amount of available plugins can\nimprove P99 latency when experiencing LRU churning in the\ndatabase cache (i.e. when the configured `mem_cache_size`) is full.\n",
       "sectionTitle": "GENERAL"
     },
+    "dedicated_config_processing": {
+      "defaultValue": "on",
+      "description": "Enables or disables a special worker\nprocess for configuration processing. This process\nincreases memory usage a little bit while\nallowing to reduce latencies by moving some\nbackground tasks, such as CP/DP connection\nhandling, to an additional worker process specific\nto handling these background tasks.\nCurrently this has effect only on data planes.\n",
+      "sectionTitle": "GENERAL"
+    },
     "pluginserver_names": {
       "defaultValue": null,
       "description": "Comma-separated list of names for pluginserver\nprocesses. The actual names are used for\nlog messages and to relate the actual settings.\n",
@@ -348,6 +323,11 @@
     "cluster_allowed_common_names": {
       "defaultValue": null,
       "description": "The list of Common Names that are allowed to\nconnect to control plane. Multiple entries may\nbe supplied in a comma-separated string. When not\nset, only data plane with the same parent domain as the\ncontrol plane cert is allowed to connect.\n\nThis field is ignored if `cluster_mtls` is\nnot set to `pki_check_cn`.\n",
+      "sectionTitle": "HYBRID MODE"
+    },
+    "incremental_sync": {
+      "defaultValue": "off",
+      "description": "The setting to enable or disable the incremental\nsynchronization of configuration changes.\nInstead of sending the entire entity config to data planes on\neach config update, incremental config sync lets you send only\nthe changed configuration to data planes for hybrid mode deployments.\nThe valid values are `on` and `off`.\nTo enable, set this value to `on`.\n\nIn hybrid mode, this setting must be configured\non both control plane and data plane nodes.\n",
       "sectionTitle": "HYBRID MODE"
     },
     "cluster_server_name": {
@@ -446,6 +426,11 @@
       "description": "Comma-separated list of addresses and ports on\nwhich the Debug API should listen.\n\nThe following suffix can be specified for each pair:\n\n- `ssl` will require that all connections made\n  through a particular address/port be made with TLS\n  enabled.\n- `http2` will allow for clients to open HTTP/2\n  connections to Kong's Debug API server.\n\nThis value can be set to `off`, disabling\nthe Debug API for this node.\n\nExample: `debug_listen = 0.0.0.0:8200 ssl http2`\n",
       "sectionTitle": "NGINX"
     },
+    "debug_listen_local": {
+      "defaultValue": "on",
+      "description": "Expose `debug_listen` functionalities via a\nUnix domain socket under the Kong prefix.\n\nThis option allows local users to use `kong debug` command\nto invoke various debug functionalities without needing to\nenable `debug_listen` ahead of time.\n",
+      "sectionTitle": "NGINX"
+    },
     "nginx_user": {
       "defaultValue": "kong kong",
       "description": "Defines user and group credentials used by\nworker processes. If group is omitted, a\ngroup whose name equals that of user is\nused.\n\nExample: `nginx_user = nginx www`\n\n**Note**: If the `kong` user and the `kong`\ngroup are not available, the default user\nand group credentials will be\n`nobody nobody`.\n",
@@ -464,6 +449,11 @@
     "mem_cache_size": {
       "defaultValue": "128m",
       "description": "Size of each of the two shared memory caches\nfor traditional mode database entities\nand runtime data, `kong_core_cache` and\n`kong_cache`.\n\nThe accepted units are `k` and `m`, with a minimum\nrecommended value of a few MBs.\n\n**Note**: As this option controls the size of two\ndifferent cache zones, the total memory Kong\nuses to cache entities might be double this value.\nThe created zones are shared by all worker\nprocesses and do not become larger when more\nworkers are used.\n",
+      "sectionTitle": "NGINX"
+    },
+    "consumers_mem_cache_size": {
+      "defaultValue": "128m",
+      "description": "Size of the shared memory cache for consumers\nand credentials.\n\nThe accepted units are `k` and `m`, with a minimum\nrecommended value of a few MBs.\n\n**Note**: This is only used when the \"externalized consumers\"\nfeature is active.\n",
       "sectionTitle": "NGINX"
     },
     "ssl_cipher_suite": {
@@ -725,6 +715,26 @@
       "description": "The custom STS endpoint URL used for role assuming\nin AWS IAM Database Authentication.\n\nNote that this value will override the default\nSTS endpoint URL(which should be\n`https://sts.amazonaws.com`, or\n`https://sts.<region>.amazonaws.com` if you have\n`AWS_STS_REGIONAL_ENDPOINTS` set to `regional`).\n\nIf you are not using private VPC endpoint for STS\nservice, you should not specify this value.\n",
       "sectionTitle": "DATASTORE"
     },
+    "pg_azure_auth": {
+      "defaultValue": "off",
+      "description": "Determines whether Azure authentication will be used\nfor PostgreSQL connections. When switched to\n`on`, the username defined in `pg_user` will\nbe used as the database account, and the\ndatabase connection will be forced to use TLS.\n`pg_password` will not be used when this\nswitch is `on`.\n",
+      "sectionTitle": "DATASTORE"
+    },
+    "pg_azure_tenant_id": {
+      "defaultValue": null,
+      "description": "The Azure tenant ID for Service Principal\nauthentication. This is only required when\nusing Service Principal authentication\n(not needed for Managed Identity).\nIf not specified, Managed Identity\nauthentication will be attempted.\n",
+      "sectionTitle": "DATASTORE"
+    },
+    "pg_azure_client_id": {
+      "defaultValue": null,
+      "description": "The Azure client ID for authentication.\nFor Managed Identity: the client ID of the\nuser-assigned managed identity.\nFor Service Principal: the application\n(client) ID of the service principal.\n",
+      "sectionTitle": "DATASTORE"
+    },
+    "pg_azure_client_secret": {
+      "defaultValue": null,
+      "description": "The Azure client secret for authentication.\nRequired for Service Principal authentication.\nNot needed for Managed Identity.\n",
+      "sectionTitle": "DATASTORE"
+    },
     "pg_database": {
       "defaultValue": "kong",
       "description": "The database name to connect to.\n",
@@ -833,6 +843,26 @@
     "pg_ro_iam_auth_sts_endpoint_url": {
       "defaultValue": null,
       "description": "Same as `pg_iam_auth_sts_endpoint_url`,\nbut for the read-only connection.\n",
+      "sectionTitle": "DATASTORE"
+    },
+    "pg_ro_azure_auth": {
+      "defaultValue": "<pg_azure_auth>",
+      "description": "Same as `pg_azure_auth`, but for the\nread-only connection.\n",
+      "sectionTitle": "DATASTORE"
+    },
+    "pg_ro_azure_tenant_id": {
+      "defaultValue": "<pg_azure_tenant_id>",
+      "description": "Same as `pg_azure_tenant_id`, but for the\nread-only connection.\n",
+      "sectionTitle": "DATASTORE"
+    },
+    "pg_ro_azure_client_id": {
+      "defaultValue": "<pg_azure_client_id>",
+      "description": "Same as `pg_azure_client_id`, but for the\nread-only connection.\n",
+      "sectionTitle": "DATASTORE"
+    },
+    "pg_ro_azure_client_secret": {
+      "defaultValue": "<pg_azure_client_secret>",
+      "description": "Same as `pg_azure_client_secret`, but for the\nread-only connection.\n",
       "sectionTitle": "DATASTORE"
     },
     "pg_ro_database": {
@@ -990,6 +1020,54 @@
       "description": "If enabled, then upon a cache-miss every\nrequest will trigger its own DNS query.\nWhen disabled, multiple requests for the\nsame name/type will be synchronized to a\nsingle query.\n",
       "sectionTitle": "DNS RESOLVER"
     },
+    "new_dns_client": {
+      "defaultValue": "off",
+      "description": "Enable or disable the new DNS resolver\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_address": {
+      "defaultValue": "<name servers parsed from resolv.conf>",
+      "description": "Comma-separated list of nameservers, each\nentry in `ip[:port]` format to be used by\nKong. If not specified, the nameservers in\nthe local `resolv.conf` file will be used.\nPort defaults to 53 if omitted. Accepts\nboth IPv4 and IPv6 addresses.\n\nExamples:\n\n```\nresolver_address = 8.8.8.8\nresolver_address = 8.8.8.8, [::1]\nresolver_address = 8.8.8.8:53, [::1]:53\n```\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_hosts_file": {
+      "defaultValue": "/etc/hosts",
+      "description": "The hosts file to use. This file is read\nonce and its content is static in memory.\nTo read the file again after modifying it,\nKong must be reloaded.\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_family": {
+      "defaultValue": [
+        "A",
+        "SRV"
+      ],
+      "description": "The supported query types.\n\nFor a domain name, Kong will only query\neither IP addresses (A or AAAA) or SRV\nrecords, but not both.\n\nIt will query SRV records only when the\ndomain matches the\n\"_<proto>._<service>.<name>\" format, for\nexample, \"_ldap._tcp.example.com\".\n\nFor IP addresses (A or AAAA) resolution, it\nfirst attempts IPv4 (A) and then queries\nIPv6 (AAAA).\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_valid_ttl": {
+      "defaultValue": "<TTL from responses>",
+      "description": "By default, DNS records are cached using\nthe TTL value of a response. This optional\nparameter (in seconds) allows overriding it.\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_error_ttl": {
+      "defaultValue": "1",
+      "description": "TTL in seconds for error responses and empty\nresponses.\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_stale_ttl": {
+      "defaultValue": "3600",
+      "description": "Defines, in seconds, how long a record will\nremain in cache past its TTL. This value\nwill be used while the new DNS record is\nfetched in the background.\n\nStale data will be used from expiry of a\nrecord until either the refresh query\ncompletes, or the `resolver_stale_ttl` number\nof seconds have passed.\n\nThis configuration enables Kong to be more\nresilient during the DNS server downtime.\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_lru_cache_size": {
+      "defaultValue": "10000",
+      "description": "The DNS client uses a two-layer cache system:\nL1 - worker-level LRU Lua VM cache\nL2 - across-workers shared memory cache\n\nThis value specifies the maximum allowed\nnumber of DNS responses stored in the L1 LRU\nlua VM cache.\n\nA single name query can easily take up 1~10\nslots, depending on attempted query types and\nextended domains from /etc/resolv.conf\noptions `domain` or `search`.\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
+    "resolver_mem_cache_size": {
+      "defaultValue": "5m",
+      "description": "This value specifies the size of the L2\nshared memory cache for DNS responses,\n`kong_dns_cache`.\n\nAccepted units are `k` and `m`, with a\nminimum recommended value of a few MBs.\n\n5MB shared memory size could store\n~20000 DNS responeses with single A record or\n~10000 DNS responeses with 2~3 A records.\n\n10MB shared memory size could store\n~40000 DNS responeses with single A record or\n~20000 DNS responeses with 2~3 A records.\n",
+      "sectionTitle": "New DNS RESOLVER"
+    },
     "vault_env_prefix": {
       "defaultValue": null,
       "description": "Defines the environment variable vault's\ndefault prefix. For example if you have\nall your secrets stored in environment\nvariables prefixed with `SECRETS_`, it\ncan be configured here so that it isn't\nnecessary to repeat them in Vault\nreferences.\n",
@@ -1135,6 +1213,21 @@
       "description": "Defines whether the Secret ID read from configuration\nor file is actually a response-wrapping token instead\nof a real Secret ID.\n",
       "sectionTitle": "VAULTS"
     },
+    "vault_hcv_cert_auth_role_name": {
+      "defaultValue": null,
+      "description": "The configured trusted certificate role\nname.\n",
+      "sectionTitle": "VAULTS"
+    },
+    "vault_hcv_cert_auth_cert": {
+      "defaultValue": null,
+      "description": "The contents of the certificate to use in\nHashicorp Vault auth if\n`auth_method` is set to `cert`.\n",
+      "sectionTitle": "VAULTS"
+    },
+    "vault_hcv_cert_auth_cert_key": {
+      "defaultValue": null,
+      "description": "The contents of the private key for use in\nHashicorp Vault auth if\n`auth_method` is set to `cert`.\n",
+      "sectionTitle": "VAULTS"
+    },
     "vault_hcv_ttl": {
       "defaultValue": "0",
       "description": "Time-to-live (in seconds) of a secret from\nthe HashiCorp vault when cached by this node.\n\nHashiCorp vault misses (no secret) are also\ncached according to this setting if you do not\nconfigure `vault_hcv_neg_ttl`.\n\nIf set to 0 (default), such cached secrets\nor misses never expire.\n",
@@ -1220,6 +1313,11 @@
       "description": "Maximum number of request post arguments to parse by\ndefault.\n\nThis argument can be set to an integer between 1 and 1000.\n\nWhen proxying, Kong sends all the request post\narguments, and this setting does not have any effect.\nIt is used to limit Kong and its plugins from reading\ntoo many post arguments.\n",
       "sectionTitle": "TUNING & BEHAVIOR"
     },
+    "vaults_lazy_load_secrets": {
+      "defaultValue": "off",
+      "description": "When enabled, plugin options stored as vault secrets are\nloaded only when they are first requested. This can improve\nstartup performance when using many vault references. When\ndisabled, all vault secrets are loaded during initialization.\n",
+      "sectionTitle": "TUNING & BEHAVIOR"
+    },
     "lua_ssl_trusted_certificate": {
       "defaultValue": "system",
       "description": "Comma-separated list of certificate authorities\nfor Lua cosockets in PEM format.\n\nThe special value `system` attempts to search for the\n\"usual default\" provided by each distro, according\nto an arbitrary heuristic. In the current implementation,\nthe following pathnames will be tested in order,\nand the first one found will be used:\n\n- `/etc/ssl/certs/ca-certificates.crt` (Debian/Ubuntu/Gentoo)\n- `/etc/pki/tls/certs/ca-bundle.crt` (Fedora/RHEL 6)\n- `/etc/ssl/ca-bundle.pem` (OpenSUSE)\n- `/etc/pki/tls/cacert.pem` (OpenELEC)\n- `/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem` (CentOS/RHEL 7)\n- `/etc/ssl/cert.pem` (OpenBSD, Alpine)\n\n`system` can be used by itself or in conjunction with other\nCA file paths.\n\nWhen `pg_ssl_verify` is enabled, these\ncertificate authority files will be\nused for verifying Kong's database connections.\n\nCertificates can be configured on this property\nwith any of the following values:\n- `system`\n- absolute path to the certificate\n- certificate content\n- base64 encoded certificate content\n\nSee https://github.com/openresty/lua-nginx-module#lua_ssl_trusted_certificate\n",
@@ -1293,6 +1391,21 @@
       "description": "Hierarchical part of a URI which is composed\noptionally of a host, port, and path at which the\nAdmin API accepts HTTP or HTTPS traffic. When\nthis config is disabled, Kong Manager will\nuse the window protocol + host and append the\nresolved admin_listen HTTP/HTTPS port.\n",
       "sectionTitle": "KONG MANAGER"
     },
+    "admin_gui_csp_header": {
+      "defaultValue": "off",
+      "description": "Enable or disable the `Content-Security-Policy` (CSP) header for Kong Manager\n\nThis configuration controls the presence of the CSP header when serving\nKong Manager. The default CSP header value will be used unless customized.\n\nTo modify the value of the served CSP header, refer to the `admin_gui_csp_header_value`\nconfiguration.\n\nSet this configuration to `on` to enable the CSP header.\n",
+      "sectionTitle": "KONG MANAGER"
+    },
+    "admin_gui_csp_header_value": {
+      "defaultValue": null,
+      "description": "The value of the `Content-Security-Policy` (CSP) header for Kong Manager.\n\nThis configuration controls the value of the CSP header when serving\nKong Manager. If omitted or left empty, the default CSP header value\nwill be used.\n\nThis is an advanced configuration intended for cases where the default\nCSP header value does not meet your requirements. Use with caution.\n\nFor more information on the CSP header, see:\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n",
+      "sectionTitle": "KONG MANAGER"
+    },
+    "admin_gui_ssl_protocols": {
+      "defaultValue": "TLSv1.2 TLSv1.3",
+      "description": "Defines the TLS versions supported\nfor Kong Manager\n",
+      "sectionTitle": "KONG MANAGER"
+    },
     "admin_gui_ssl_cert": {
       "defaultValue": null,
       "description": "The SSL certificate for `admin_gui_listen` values\nwith SSL enabled.\n\nvalues:\n- absolute path to the certificate\n- certificate content\n- base64 encoded certificate content\n",
@@ -1348,6 +1461,21 @@
       "description": "Number of times a user can attempt to login to Kong\nManager. 0 means infinite attempts allowed.\n",
       "sectionTitle": "KONG MANAGER"
     },
+    "admin_gui_auth_login_attempts_ttl": {
+      "defaultValue": "604800",
+      "description": "Length, in seconds, of the TTL for changing login attempts\nrecords. Records in the database older than\ntheir TTL are automatically purged.\n\nThis argument can be set to an integer between 0 and 100000000.\n\nExample, 7 days: `7 * 24 * 60 * 60 = 604800.`\n",
+      "sectionTitle": "KONG MANAGER"
+    },
+    "admin_gui_auth_change_password_attempts": {
+      "defaultValue": "0",
+      "description": "Number of times a user can attempt to change password.\n0 means infinite attempts allowed.\n",
+      "sectionTitle": "KONG MANAGER"
+    },
+    "admin_gui_auth_change_password_ttl": {
+      "defaultValue": "86400",
+      "description": "Length, in seconds, of the TTL for changing password attempts\nrecords. Records in the database older than\ntheir TTL are automatically purged.\n\nExample, 1 days: `1 * 24 * 60 * 60 = 86400.`\n",
+      "sectionTitle": "KONG MANAGER"
+    },
     "admin_gui_header_txt": {
       "defaultValue": null,
       "description": "Sets the text for the Kong Manager header banner.\nHeader banner is not shown if this config is empty.\n",
@@ -1388,50 +1516,10 @@
       "description": "Sets the body text for the Kong Manager login banner.\nLogin banner is not shown if both\n`admin_gui_login_banner_title` and\n`admin_gui_login_banner_body` are empty.\n",
       "sectionTitle": "KONG MANAGER"
     },
-    "vitals": {
-      "defaultValue": "on",
-      "description": "When enabled, Kong will store and report\nmetrics about its performance.\n\nWhen running Kong in a multi-node setup,\n`vitals` entails two separate meanings\ndepending on the node.\n\nOn a Proxy-only node, `vitals` determines\nwhether to collect data for Vitals.\n\nOn an Admin-only node, `vitals` determines\nwhether to display Vitals metrics and\nvisualizations on the dashboard.\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_strategy": {
-      "defaultValue": "database",
-      "description": "Determines whether to use the Kong database or\na separate storage engine for Vitals metrics.\nAccepted values are `database`, `prometheus`,\nor `influxdb`.\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_tsdb_address": {
-      "defaultValue": null,
-      "description": "Defines the host and port of the TSDB server\nto which Vitals data is written and read.\nThis value is only applied when the\n`vitals_strategy` option is set to\n`prometheus` or `influxdb`. This value\naccepts IPv4, IPv6, and hostname values.\nIf the `vitals_strategy` is set to\n`prometheus`, this value determines the\naddress of the Prometheus server from which\nVitals data will be read. For `influxdb`\nstrategies, this value controls both the read\nand write source for Vitals data.\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_tsdb_user": {
-      "defaultValue": null,
-      "description": "Influxdb user\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_tsdb_password": {
-      "defaultValue": null,
-      "description": "Influxdb password\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_statsd_address": {
-      "defaultValue": null,
-      "description": "Defines the host and port (and an optional\nprotocol) of the StatsD server to which\nKong should write Vitals metics. This value\nis only applied when the `vitals_strategy` is\nset to `prometheus`. This value accepts IPv4,\nIPv6, and, hostnames. Additionally, the suffix\n`tcp` can be specified; doing so will result\nin Kong sending StatsD metrics via TCP\ninstead of the UDP (default).\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_statsd_prefix": {
-      "defaultValue": "kong",
-      "description": "Defines the prefix value attached to all\nVitals StatsD events. This prefix is useful\nwhen writing metrics to a multi-tenant StatsD\nexporter or server.\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_statsd_udp_packet_size": {
-      "defaultValue": "1024",
-      "description": "Defines the maximum buffer size in\nwhich Vitals statsd metrics will be\nheld and sent in batches.\nThis value is defined in bytes.\n",
-      "sectionTitle": "VITALS"
-    },
-    "vitals_prometheus_scrape_interval": {
-      "defaultValue": "5",
-      "description": "Defines the scrape_interval query\nparameter sent to the Prometheus\nserver when reading Vitals data.\nThis should be same as the scrape\ninterval (in seconds) of the\nPrometheus server.\n",
-      "sectionTitle": "VITALS"
+    "admin_gui_hide_konnect_cta": {
+      "defaultValue": "off",
+      "description": "Hides all Konnect call to actions in Kong Manager.\nThis setting is only relevant for on-prem installations\nof Kong Enterprise.\n",
+      "sectionTitle": "KONG MANAGER"
     },
     "konnect_mode": {
       "defaultValue": "off",
@@ -1448,191 +1536,10 @@
       "description": "Max number of messages can be buffered locally\nbefore dropping data in case there is no\nnetwork connection to Konnect.\n",
       "sectionTitle": "Analytics for Konnect"
     },
-    "portal": {
+    "analytics_debug": {
       "defaultValue": "off",
-      "description": "Developer Portal Switch\n\nWhen enabled:\n\n  Kong will expose the Dev Portal interface and\n  read-only APIs on the `portal_gui_listen` address,\n  and endpoints on the Admin API to manage assets.\n\nWhen enabled along with `portal_auth`:\n\n  Kong will expose management endpoints for developer\n  accounts on the Admin API and the Dev Portal API.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_listen": {
-      "defaultValue": [
-        "0.0.0.0:8003",
-        "0.0.0.0:8446 ssl"
-      ],
-      "description": "Developer Portal GUI Listeners\n\nComma-separated list of addresses on which Kong will\nexpose the Developer Portal GUI. Suffixes can be\nspecified for each pair, similarly to\nthe `admin_listen` directive.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_protocol": {
-      "defaultValue": "http",
-      "description": "Developer Portal GUI protocol\n\nThe protocol used in conjunction with\n`portal_gui_host` to construct the lookup, or balancer\naddress for your Kong Proxy nodes.\n\nExamples: `http`,`https`\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_host": {
-      "defaultValue": "127.0.0.1:8003",
-      "description": "Developer Portal GUI host\n\nThe host used in conjunction with\n`portal_gui_protocol` to construct the lookup,\nor balancer address for your Kong Proxy nodes.\n\nExamples:\n\n- `<IP>:<PORT>`\n  -> `portal_gui_host = 127.0.0.1:8003`\n- `<HOSTNAME>`\n  -> `portal_gui_host = portal_api.domain.tld`\n- `<HOSTNAME>/<PATH>`\n  -> `portal_gui_host = dev-machine/dev-285`\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_cors_origins": {
-      "defaultValue": null,
-      "description": "Developer Portal CORS Origins\n\nA comma separated list of allowed domains for\n`Access-Control-Allow-Origin` header. This can be used to\nresolve CORS issues in custom networking environments.\n\nExamples:\n- list of domains:\n  `portal_cors_origins = http://localhost:8003, https://localhost:8004`\n- single domain:\n  `portal_cors_origins = http://localhost:8003`\n- all domains:\n  `portal_cors_origins = *`\n\nNOTE: In most cases, the Developer Portal is able to derive\nvalid CORS origins by using `portal_gui_protocol`, `portal_gui_host`,\nand if applicable, `portal_gui_use_subdomains`. In these cases,\n`portal_cors_origins` is not needed and can remain unset.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_use_subdomains": {
-      "defaultValue": "off",
-      "description": "Developer Portal GUI subdomain toggle\n\nBy default Kong Portal uses the first namespace in\nthe request path to determine workspace. By turning\n`portal_gui_subdomains` on, Kong Portal will expect\nworkspace to be included in the request url as a subdomain.\n\nExample (off):\n  - `<scheme>://<HOSTNAME>/<WORKSPACE>/<PATH>` ->\n    `http://kong-portal.com/example-workspace/index`\n\nExample (on):\n  - `<scheme>://<WORKSPACE>.<HOSTNAME>` ->\n    `http://example-workspace.kong-portal.com/index`\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_ssl_cert": {
-      "defaultValue": null,
-      "description": "Developer Portal GUI SSL Certificate\n\nThe SSL certificate for `portal_gui_listen` values\nwith SSL enabled.\n\nvalues:\n* absolute path to the certificate\n* certificate content\n* base64 encoded certificate content\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_ssl_cert_key": {
-      "defaultValue": null,
-      "description": "Developer Portal GUI SSL Certificate Key\n\nThe SSL key for `portal_gui_listen` values with\nSSL enabled.\n\nvalues:\n* absolute path to the certificate key\n* certificate key content\n* base64 encoded certificate key content\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_access_log": {
-      "defaultValue": "logs/portal_gui_access.log",
-      "description": "Developer Portal GUI Access Log location\n\nHere you can set an absolute or relative path for your\nPortal GUI access logs.\n\nSetting this value to `off` will disable logging\nPortal GUI access logs.\n\nWhen using relative pathing, logs will be placed under\nthe `prefix` location.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_gui_error_log": {
-      "defaultValue": "logs/portal_gui_error.log",
-      "description": "Developer Portal GUI Error Log location\n\nHere you can set an absolute or relative path for your\nPortal GUI error logs.\n\nSetting this value to `off` will disable logging\nPortal GUI error logs.\n\nWhen using relative pathing, logs will be placed under\nthe `prefix` location.\n\nGranularity can be adjusted through the `log_level`\ndirective.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_api_listen": {
-      "defaultValue": [
-        "0.0.0.0:8004",
-        "0.0.0.0:8447 ssl"
-      ],
-      "description": "Developer Portal API Listeners\n\nComma-separated list of addresses on which Kong will\nexpose the Developer Portal API. Suffixes can be\nspecified for each pair, similarly to\nthe `admin_listen` directive.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_api_url": {
-      "defaultValue": null,
-      "description": "Developer Portal API URL\n\nThe lookup, or balancer, address for your Developer\nPortal nodes.\n\nThis value is commonly used in a microservices\nor service-mesh oriented architecture.\n\n`portal_api_url` is the address on which your\nKong Dev Portal API is accessible by Kong. You\nshould only set this value if your Kong Dev Portal API\nlives on a different node than your Kong Proxy.\n\nAccepted format (parts in parenthesis are optional):\n\n  `<scheme>://<IP / HOSTNAME>(:<PORT>(/<PATH>))`\n\nExamples:\n\n- `<scheme>://<IP>:<PORT>`\n  -> `portal_api_url = http://127.0.0.1:8003`\n- `SSL <scheme>://<HOSTNAME>`\n  -> `portal_api_url = https://portal_api.domain.tld`\n- `<scheme>://<HOSTNAME>/<PATH>`\n  -> `portal_api_url = http://dev-machine/dev-285`\n\nBy default this value points to the local interface:\n\n- `http://0.0.0.0:8004`\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_api_ssl_cert": {
-      "defaultValue": null,
-      "description": "Developer Portal API SSL Certificate\n\nThe SSL certificate for `portal_api_listen` values\nwith SSL enabled.\n\nvalues:\n* absolute path to the certificate\n* certificate content\n* base64 encoded certificate content\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_api_ssl_cert_key": {
-      "defaultValue": null,
-      "description": "Developer Portal API SSL Certificate Key\n\nThe SSL key for `portal_api_listen` values with\nSSL enabled.\n\nvalues:\n* absolute path to the certificate key\n* certificate key content\n* base64 encoded certificate key content\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_api_access_log": {
-      "defaultValue": "logs/portal_api_access.log",
-      "description": "Developer Portal API Access Log location\n\nHere you can set an absolute or relative path for your\nPortal API access logs.\n\nSetting this value to `off` will disable logging\nPortal API access logs.\n\nWhen using relative pathing, logs will be placed under\nthe `prefix` location.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_api_error_log": {
-      "defaultValue": "logs/portal_api_error.log",
-      "description": "Developer Portal API Error Log location\n\nHere you can set an absolute or relative path for your\nPortal API error logs.\n\nSetting this value to `off` will disable logging\nPortal API error logs.\n\nWhen using relative pathing, logs will be placed under\nthe `prefix` location.\n\nGranularity can be adjusted through the `log_level`\ndirective.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_is_legacy": {
-      "defaultValue": "off",
-      "description": "Developer Portal legacy support\n\nSetting this value to `on` will cause all new\nportals to render using the legacy rendering system by default.\n\nSetting this value to `off` will cause all new\nportals to render using the current rendering system.\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_app_auth": {
-      "defaultValue": "kong-oauth2",
-      "description": "Developer Portal application registration\nauth provider and strategy. Must be set to enable\napplication_registration plugin\n",
-      "sectionTitle": "DEVELOPER PORTAL"
-    },
-    "portal_auth": {
-      "defaultValue": null,
-      "description": "Developer Portal Authentication Plugin Name\n\nSpecifies the authentication plugin\nto apply to your Developer Portal. Developers\nwill use the specified form of authentication\nto request access, register, and login to your\nDeveloper Portal.\n\nSupported Plugins:\n\n- Basic Authentication: `portal_auth = basic-auth`\n- OIDC Authentication: `portal_auth = openid-connect`\n\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_auth_password_complexity": {
-      "defaultValue": null,
-      "description": "Kong Portal Authentication Password Complexity (JSON)\n\nWhen portal_auth = basic-auth, this property defines\nthe rules required for Kong Portal passwords. Choose\nfrom preset rules or write your own.\n\nExample using preset rules:\n\n`portal_auth_password_complexity = { \"kong-preset\": \"min_8\" }`\n\nAll values for kong-preset require the password to contain\ncharacters from at least three of the following categories:\n\n1. Uppercase characters (A through Z)\n\n2. Lowercase characters (a through z)\n\n3. Base-10 digits (0 through 9)\n\n4. Special characters (for example, &, $, #, %)\n\nSupported preset rules:\n- `min_8`: minimum length of 8\n- `min_12`: minimum length of 12\n- `min_20`: minimum length of 20\n\nTo write your own rules, see\nhttps://manpages.debian.org/jessie/passwdqc/passwdqc.conf.5.en.html.\n\nNOTE: Only keywords \"min\", \"max\" and \"passphrase\" are supported.\n\nExample:\n\n`portal_auth_password_complexity = { \"min\": \"disabled,24,11,9,8\" }`\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_auth_conf": {
-      "defaultValue": null,
-      "description": "Developer Portal Authentication Plugin Config (JSON)\n\nSpecifies the plugin configuration object\nin JSON format to be applied to your Developer\nPortal authentication.\n\nFor information about Plugin Configuration\nconsult the associated plugin documentation.\n\nExample for `basic-auth`:\n\n`portal_auth_conf = { \"hide_credentials\": true }`\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_auth_login_attempts": {
-      "defaultValue": "0",
-      "description": "Number of times a user can attempt to login to the\nDev Portal before password must be reset.\n\n0 (default) means infinite attempts allowed.\n\nNote: Any value greater than 0 will only affect\nDev Portals secured with basic-auth.\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_session_conf": {
-      "defaultValue": null,
-      "description": "Portal Session Config (JSON)\n\nSpecifies the configuration for the\nSession plugin as used by Kong Portal.\n\nFor information about Plugin Configuration consult\nthe Kong Session Plugin documentation.\n\nExample:\n```\nportal_session_conf = { \"cookie_name\": \"portal_session\", \\\n                         \"secret\": \"changeme\", \\\n                         \"storage\": \"kong\" }\n```\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_auto_approve": {
-      "defaultValue": "off",
-      "description": "Developer Portal Auto Approve Access\n\nWhen set to `on`, a developer will\nautomatically be marked as \"approved\" after completing\nregistration. Access can still be revoked through\nKong Manager or the Admin API.\n\nWhen set to `off`, a Kong admin will have to manually approve the Developer\nusing Kong Manager or the Admin API.\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_token_exp": {
-      "defaultValue": "21600",
-      "description": "Duration in seconds for the expiration of the Dev Portal\nreset password token. Default is `21600` (six hours).\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_email_verification": {
-      "defaultValue": "off",
-      "description": "Portal Developer Email Verification.\n\nWhen enabled Developers will receive an email upon\nregistration to verify their account. Developers will\nnot be able to use the Developer Portal until they\nverify their account, even if auto-approve is enabled.\n\nNote: SMTP must be turned on in order to use this feature.\n",
-      "sectionTitle": "DEFAULT DEVELOPER PORTAL AUTHENTICATION"
-    },
-    "portal_invite_email": {
-      "defaultValue": "on",
-      "description": "When enabled, Kong admins can invite developers to a Dev Portal by using\nthe Invite button in Kong Manager.\n\nThe email looks like the following:\n\n```\nSubject: Invite to access Dev Portal <WORKSPACE_NAME>\n\nHello Developer!\n\nYou have been invited to create a Dev Portal account at %s.\nPlease visit `<DEV_PORTAL_URL/register>` to create your account.\n```\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_access_request_email": {
-      "defaultValue": "on",
-      "description": "When enabled, Kong admins specified by `smtp_admin_emails`\nwill receive an email when a developer requests access\nto a Dev Portal.\n\nWhen disabled, Kong admins will have to manually check\nthe Kong Manager to view any requests.\n\nThe email looks like the following:\n\n```\nSubject: Request to access Dev Portal <WORKSPACE NAME>\n\nHello Admin!\n\n<DEVELOPER NAME> has requested Dev Portal access for <WORKSPACE_NAME>.\nPlease visit <KONG_MANAGER_URL/developers/requested> to review this request.\n```\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_approved_email": {
-      "defaultValue": "on",
-      "description": "When enabled, developers will receive an email when\naccess to a Dev Portal has been approved.\n\nWhen disabled, developers will receive no indication\nthat they have beenapproved. It is suggested to only\ndisable this feature if `portal_auto_approve`\nis enabled.\n\nThe email looks like the following:\n\n```\nSubject: Dev Portal access approved\n\nHello Developer!\nYou have been approved to access <WORKSPACE_NAME>.\nPlease visit <DEV PORTAL URL/login> to login.\n```\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_reset_email": {
-      "defaultValue": "on",
-      "description": "When enabled, developers will be able to use the\nReset Password flow on a Dev Portal and will\nreceive an email with password reset instructions.\n\nNote: When disabled, developers will *not* be able to reset their account\npasswords. The password resetting email is the only way to reset developer\npasswords.\n\nThe email looks like the following:\n\n```\nSubject: Password Reset Instructions for Dev Portal <WORKSPACE_NAME>.\n\nHello Developer,\n\nPlease click the link below to reset your Dev Portal password.\n\n<DEV_PORTAL_URL/reset?token=12345>\n\nThis link will expire in <portal_reset_token_exp>\n\nIf you didn't make this request, keep your account secure by clicking\nthe link above to change your password.\n```\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_reset_success_email": {
-      "defaultValue": "on",
-      "description": "When enabled, developers will receive an email\nafter successfully resetting their Dev Portal\naccount password.\n\nWhen disabled, developers will still be able\nto reset their account passwords, but will not\nreceive a confirmation email.\n\nThe email looks like the following:\n\n```\nSubject: Dev Portal password change success\n\nHello Developer,\nWe are emailing you to let you know that your Dev Portal password at <DEV_PORTAL_URL> has been changed.\n\nClick the link below to sign in with your new credentials.\n\n<DEV_PORTAL_URL>\n```\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_application_status_email": {
-      "defaultValue": "off",
-      "description": "When enabled, developers will receive an email\nwhen the status changes for their appliciation\nservice requests.\n\nWhen disabled, developers will still be able\nto view the status in their developer portal\napplication page.\n\nThe email looks like the following:\n\n```\nSubject: Dev Portal application request <REQUEST_STATUS> (<DEV_PORTAL_URL>)\n\nHello Developer,\nWe are emailing you to let you know that your request for application access from the\nDeveloper Portal account at <DEV_PORTAL_URL> is <REQUEST_STATUS>.\n\nApplication: <APPLICATION_NAME>\nService: <SERVICE_NAME>\n\nYou will receive another email when your access has been approved.\n```\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_application_request_email": {
-      "defaultValue": "off",
-      "description": "When enabled, Kong admins specified by `smtp_admin_emails`\nwill receive an email when a developer requests access\nto service through an application.\n\nWhen disabled, Kong admins will have to manually check\nthe Kong Manager to view any requests.\n\nBy default, `smtp_admin_emails` will be the recipients.\nThis can be overriden by `portal_smtp_admin_emails`,\nwhich can be set dynamically per workspace through\nthe Admin API.\n\nThe email looks like the following:\n\n```\nSubject: Request to access Dev Portal (<DEV_PORTAL_URL>) service from <DEVELOPER_EMAIL>\n\nHello Admin,\n\n<DEVELOPER NAME> (<DEVELOPER_EMAIL>) has requested application access for <DEV_PORTAL_URL>.\n\nRequested workspace: <WORKSPACE_NAME>\nRequested application: <APPLICATION_NAME>\nRequested service: <SERVICE_NAME>\n\nPlease visit <KONG_MANAGER_URL/WORKSPACE_NAME/applications/APPLICATION_ID#requested> to review this request.\n```\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_emails_from": {
-      "defaultValue": null,
-      "description": "The name and email address for the `From` header\nincluded in all Dev Portal emails.\n\nExample:\n`portal_emails_from = Your Name <example@example.com>`\n\nNote: Some SMTP servers will not use\nthis value, but instead insert the email and name\nassociated with the account.\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_emails_reply_to": {
-      "defaultValue": null,
-      "description": "Email address for the `Reply-To` header for\nportal emails\n\nExample:\n`portal_emails_reply_to = example@example.com`\n\nNote: Some SMTP servers will not use\nthis value, but instead insert the email\nassociated with the account.\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
-    },
-    "portal_smtp_admin_emails": {
-      "defaultValue": null,
-      "description": "Comma separated list of admin emails to receive\nportal notifications. Can be dynamically set per\nworkspace through the Admin API.\n\nIf not set, `smtp_admin_emails` will be used.\n\nExample `admin1@example.com, admin2@example.com`\n",
-      "sectionTitle": "DEFAULT PORTAL SMTP CONFIGURATION"
+      "description": "Outputs analytics payload to Kong logs.\n",
+      "sectionTitle": "Analytics for Konnect"
     },
     "admin_emails_from": {
       "defaultValue": "\"\"",
@@ -1753,62 +1660,6 @@
       "description": "Defines the path to a private RSA signing key\nthat can be used to insert a signature of\naudit records, adjacent to the record. The\ncorresponding public key should be stored\noffline, and can be used to validate audit\nentries in the future. If this value is\nundefined, no signature will be generated.\n",
       "sectionTitle": "DATA & ADMIN AUDIT"
     },
-    "tracing": {
-      "defaultValue": "off",
-      "description": "When enabled, Kong will generate granular\ndebug data about various portions of the\nrequest lifecycle, such as DB or DNS queries,\nplugin execution, core handler timing, etc.\n",
-      "sectionTitle": "GRANULAR TRACING",
-      "removed_in": {
-        "gateway": "3.7"
-      }
-    },
-    "tracing_write_strategy": {
-      "defaultValue": "file",
-      "description": "Defines how Kong will write tracing data at\nthe conclusion of the request. The default\noption, `file`, writes a human-readable\ndepiction of tracing data to a configurable\nlocation on the node's file system. Other\nstrategies write tracing data as a JSON\ndocument to the configured endpoint. Valid\nentries for this option are `file`,\n`file_raw`, `http`, `tcp`, `tls`, and `udp`.\n",
-      "sectionTitle": "GRANULAR TRACING",
-      "removed_in": {
-        "gateway": "3.7"
-      }
-    },
-    "tracing_write_endpoint": {
-      "defaultValue": null,
-      "description": "Defines the endpoint to which tracing data\nwill be written.\n\n- For the `file` and `file_raw` tracing write\n  strategies, this value must be a valid\n  location on the node's file system to which\n  Kong must have write access.\n- For the `tcp`, `tls`, and\n  `udp` strategies, this value is defined as a\n  string in the form of:\n `<HOST>:<PORT>`\n- For the `http` strategy, this value is\n  defined in the form of:\n `<scheme>://<IP / HOSTNAME>(:<PORT>(/<PATH>))`\n\nTraces sent via HTTP are delivered via POST\nmethod with an `application/json`\nContent-Type.\n",
-      "sectionTitle": "GRANULAR TRACING",
-      "removed_in": {
-        "gateway": "3.7"
-      }
-    },
-    "tracing_time_threshold": {
-      "defaultValue": "0",
-      "description": "The minimum time, in microseconds, over which\na trace must execute in order to write the\ntrace data to the configured endpoint. This\nconfiguration can be used to lower the noise\npresent in trace data by removing trace\nobjects that are not interesting from a\ntiming perspective. The default value of `0`\nremoves this limitation, causing traces of\nany duration to be written.\n",
-      "sectionTitle": "GRANULAR TRACING",
-      "removed_in": {
-        "gateway": "3.7"
-      }
-    },
-    "tracing_types": {
-      "defaultValue": "all",
-      "description": "Defines the types of traces that are written.\nTrace types not defined in this list are\nignored, regardless of their lifetime. The\ndefault special value of `all` results in all\ntrace types being written, regardless of type.\n\nThe following trace types are included:\n\n- `query`: trace the database query\n- `legacy_query`: (deprecated) trace the\n   database query with legacy DAO\n- `router`: trace Kong routing the request;\n   internal routing time\n- `balancer`: trace the execution of the overall\n   balancer phase\n- `balancer.getPeer`: trace Kong selecting an\n   upstream peer from the ring-balancer\n- `balancer.toip`: trace balancer to resolve\n   peer's host to IP\n- `connect.toip`: trace cosocket to resolve\n   target's host to IP\n- `access.before`: trace the preprocessing of\n   access phase, like parameter parsing, route\n   matching, and balance preparation\n- `access.after`: trace the postprocess of\n   access phase, like balancer execution and\n   internal variable assigning\n- `plugin`: trace plugins phase handlers\n",
-      "sectionTitle": "GRANULAR TRACING",
-      "removed_in": {
-        "gateway": "3.7"
-      }
-    },
-    "tracing_debug_header": {
-      "defaultValue": null,
-      "description": "Defines the name of the HTTP request header\nthat must be present in order to generate\ntraces within a request. Setting this value\nprovides a mechanism to selectively generate\nrequest traces at the client's request. Note\nthat the value of the header does not matter,\nonly that the header is present in the\nrequest. When this value is not set and\ntracing is enabled, Kong will generate trace\ndata for all requests flowing through the\nproxy and Admin API. Note that data from\ncertificate handling phases is not logged\nwhen this setting is enabled.\n",
-      "sectionTitle": "GRANULAR TRACING",
-      "removed_in": {
-        "gateway": "3.7"
-      }
-    },
-    "generate_trace_details": {
-      "defaultValue": "off",
-      "description": "When enabled, Kong will write context-\nspecific details into traces. Trace details\noffer more data about the context of the\ntrace. This can significantly increase the\nsize of trace reports. Note also that trace\ndetails may contain potentially sensitive\ninformation, such as raw SQL queries; care\nshould be taken to store traces properly when\nthis option is enabled.\n",
-      "sectionTitle": "GRANULAR TRACING",
-      "removed_in": {
-        "gateway": "3.7"
-      }
-    },
     "route_validation_strategy": {
       "defaultValue": "smart",
       "description": "The strategy used to validate\nroutes when creating or updating them.\nDifferent strategies are available to tune\nhow to enforce splitting traffic of\nworkspaces.\n- `smart` is the default option and uses the\n  algorithm described in\n  https://developer.konghq.com/gateway/entities/workspace/.\n- `off` disables any check.\n- `path` enforces routes to comply with the pattern\n  described in config `enforce_route_path_pattern`.\n- `static` relies on the PostgreSQL database.\nBefore creating a new route, it checks if the\nroute is unique across all workspaces based on\nthe following params: `paths`, `methods`, and\n`hosts`. If all fields of the new route overlap\nwith an existing one, a 409 is returned with the\nroute of the collision. The array order is not\nimportant for the overlap filter.\n",
@@ -1837,6 +1688,11 @@
     "keyring_private_key": {
       "defaultValue": null,
       "description": "Defines the private key of an RSA keypair.\nThis keypair is used for symmetric keyring\nimport/export, e.g., for disaster recovery\nand optional bootstrapping.\n\nValues:\n- absolute path to the private key\n- private key content\n- base64 encoded private key content\n",
+      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT"
+    },
+    "keyring_recovery_public_key": {
+      "defaultValue": null,
+      "description": "Defines the public key to optionally encrypt\nall keyring materials and back them up in the\ndatabase.\n\nValues:\n- absolute path to the public key\n- public key content\n- base64 encoded public key content\n",
       "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT"
     },
     "keyring_blob_path": {
@@ -1879,6 +1735,11 @@
       "description": "Defines where the Kubernetes service account token\nshould be read from the pod's filesystem, if using\na non-standard container platform setup.\n",
       "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT"
     },
+    "keyring_encrypt_license": {
+      "defaultValue": "off",
+      "description": "Enables keyring encryption for license payloads stored\nin the database.\n\n**Warning:** For Kong deployments that rely entirely on\nthe database for license provisioning (i.e. not using\n`KONG_LICENSE_DATA` or `KONG_LICENSE_PATH`), enabling\nthis option will delay license activation until after\nthe node's keyring has been activated.\n",
+      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT"
+    },
     "untrusted_lua": {
       "defaultValue": "sandbox",
       "description": "Controls loading of Lua functions from admin-supplied\nsources such as the Admin API. LuaJIT bytecode\nloading is always disabled.\n\n**Warning:** LuaJIT is not designed as a secure\nruntime for running malicious code, therefore\nyou should properly protect your Admin API endpoint\neven with sandboxing enabled. The sandbox only\nprovides protection against trivial attackers or\nunintentional modification of the Kong global\nenvironment.\n\nAccepted values are: `off`, `sandbox`, or\n`on`:\n\n- `off`: Disallow loading of any arbitrary\n         Lua functions. The `off` option\n         disables any functionality that runs\n         arbitrary Lua code, including the\n         Serverless Functions plugins and any\n         transformation plugin that allows\n         custom Lua functions.\n\n- `sandbox`: Allow loading of Lua functions,\n             but use a sandbox when executing\n             them. The sandboxed function has\n             restricted access to the global\n             environment and only has access\n             to Kong PDK, OpenResty, and\n             standard Lua functions that will\n             generally not cause harm to the\n             Kong Gateway node.\n\n- `on`: Functions have unrestricted\n        access to the global environment and\n        can load any Lua modules. This is\n        similar to the behavior in\n        Kong Gateway prior to 2.3.0.\n\nThe default `sandbox` environment does not\nallow importing other modules or libraries,\nor executing anything at the OS level (for\nexample, file read/write). The global\nenvironment is also not accessible.\n\nExamples of `untrusted_lua = sandbox`\nbehavior:\n\n- You can't access or change global values\n  such as `kong.configuration.pg_password`\n- You can run harmless Lua:\n  `local foo = 1 + 1`. However, OS level\n  functions are not allowed, like:\n  `os.execute(`rm -rf /*`)`.\n\nTo customize the sandbox environment, use\nthe `untrusted_lua_sandbox_requires` and\n`untrusted_lua_sandbox_environment`\nparameters below.\n",
@@ -1914,6 +1775,11 @@
       "description": "Storage definition used by `cluster_fallback_config_import`\nand `cluster_fallback_config_export`.\n\nSupported storage types:\n- S3-like storages\n- GCP storage service\n\nTo use S3 with a bucket named b and place all configs\nto with a key prefix named p, set it to:\n`s3://b/p`\nTo use GCP for the same bucket and prefix, set it to:\n`gcs://b/p`\n\nThe credentials (and the endpoint URL for S3-like) for S3\nare passed with environment variables:\n`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`,\nand `AWS_CONFIG_STORAGE_ENDPOINT` (extension), where\n`AWS_CONFIG_STORAGE_ENDPOINT`\nis the endpoint that hosts S3-like storage.\n\nThe credentials for GCP are provided via the environment\nvariable `GCP_SERVICE_ACCOUNT`.\n",
       "sectionTitle": "CLUSTER FALLBACK CONFIGURATION"
     },
+    "cluster_fallback_export_s3_config": {
+      "defaultValue": null,
+      "description": "Fallback config export S3 configuration.\nThis is used only when `cluster_fallback_config_storage` is an S3-like schema.\nIf set, it will add the config table to the Kong exporter config S3 putObject request.\nThe config table should be in JSON format and can be unserialized into a table.\nIt should contain the necessary parameters as described in the documentation:\nhttps://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property.\nFor example, if you want to set the ServerSideEncryption headers/KMS Key ID\nfor the S3 putObject request, you can set the config table to:\n`{\"ServerSideEncryption\": \"aws:kms\", \"SSEKMSKeyId\": \"your-kms-key-id\"}`\n",
+      "sectionTitle": "CLUSTER FALLBACK CONFIGURATION"
+    },
     "cluster_fallback_config_export": {
       "defaultValue": "off",
       "description": "Enable fallback configuration exports.\n",
@@ -1934,304 +1800,10 @@
       "description": "The Request Debug Token is used in the\n`X-Kong-Request-Debug-Token` header to prevent abuse.\nIf this value is not set (the default),\na random token will be generated\nwhen Kong starts, restarts, or reloads. If a token is\nspecified manually, then the provided token will be used.\n\nYou can locate the generated debug token in two locations:\n- Kong error log:\n  Debug token will be logged in the error log (notice level)\n  when Kong starts, restarts, or reloads.\n  The log line will have the: `[request-debug]` prefix to aid searching.\n- Filesystem:\n  Debug token will also be stored in a file located at\n  `{prefix}/.request_debug_token` and updated\n  when Kong starts, restarts, or reloads.\n",
       "sectionTitle": "REQUEST DEBUGGING"
     },
-    "dedicated_config_processing": {
-      "defaultValue": "on",
-      "description": "Enables or disables a special worker\nprocess for configuration processing. This process\nincreases memory usage a little bit while\nallowing to reduce latencies by moving some\nbackground tasks, such as CP/DP connection\nhandling, to an additional worker process specific\nto handling these background tasks.\nCurrently this has effect only on data planes.\n",
-      "sectionTitle": "GENERAL",
-      "min_version": {
-        "gateway": "3.5"
-      }
-    },
-    "debug_listen_local": {
-      "defaultValue": "on",
-      "description": "Expose `debug_listen` functionalities via a\nUnix domain socket under the Kong prefix.\n\nThis option allows local users to use `kong debug` command\nto invoke various debug functionalities without needing to\nenable `debug_listen` ahead of time.\n",
-      "sectionTitle": "NGINX",
-      "min_version": {
-        "gateway": "3.5"
-      }
-    },
-    "admin_gui_ssl_protocols": {
-      "defaultValue": "TLSv1.2 TLSv1.3",
-      "description": "Defines the TLS versions supported\nfor Kong Manager\n",
-      "sectionTitle": "KONG MANAGER",
-      "min_version": {
-        "gateway": "3.5"
-      }
-    },
-    "analytics_debug": {
-      "defaultValue": "off",
-      "description": "Outputs analytics payload to Kong logs.\n",
-      "sectionTitle": "Analytics for Konnect",
-      "min_version": {
-        "gateway": "3.5"
-      }
-    },
-    "cluster_fallback_export_s3_config": {
-      "defaultValue": null,
-      "description": "Fallback config export S3 configuration.\nThis is used only when `cluster_fallback_config_storage` is an S3-like schema.\nIf set, it will add the config table to the Kong exporter config S3 putObject request.\nThe config table should be in JSON format and can be unserialized into a table.\nIt should contain the necessary parameters as described in the documentation:\nhttps://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property.\nFor example, if you want to set the ServerSideEncryption headers/KMS Key ID\nfor the S3 putObject request, you can set the config table to:\n`{\"ServerSideEncryption\": \"aws:kms\", \"SSEKMSKeyId\": \"your-kms-key-id\"}`\n",
-      "sectionTitle": "CLUSTER FALLBACK CONFIGURATION",
-      "min_version": {
-        "gateway": "3.5"
-      }
-    },
-    "new_dns_client": {
-      "defaultValue": "off",
-      "description": "Enable or disable the new DNS resolver\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_address": {
-      "defaultValue": "<name servers parsed from resolv.conf>",
-      "description": "Comma-separated list of nameservers, each\nentry in `ip[:port]` format to be used by\nKong. If not specified, the nameservers in\nthe local `resolv.conf` file will be used.\nPort defaults to 53 if omitted. Accepts\nboth IPv4 and IPv6 addresses.\n\nExamples:\n\n```\nresolver_address = 8.8.8.8\nresolver_address = 8.8.8.8, [::1]\nresolver_address = 8.8.8.8:53, [::1]:53\n```\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_hosts_file": {
-      "defaultValue": "/etc/hosts",
-      "description": "The hosts file to use. This file is read\nonce and its content is static in memory.\nTo read the file again after modifying it,\nKong must be reloaded.\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_family": {
-      "defaultValue": [
-        "A",
-        "SRV"
-      ],
-      "description": "The supported query types.\n\nFor a domain name, Kong will only query\neither IP addresses (A or AAAA) or SRV\nrecords, but not both.\n\nIt will query SRV records only when the\ndomain matches the\n\"_<proto>._<service>.<name>\" format, for\nexample, \"_ldap._tcp.example.com\".\n\nFor IP addresses (A or AAAA) resolution, it\nfirst attempts IPv4 (A) and then queries\nIPv6 (AAAA).\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_valid_ttl": {
-      "defaultValue": "<TTL from responses>",
-      "description": "By default, DNS records are cached using\nthe TTL value of a response. This optional\nparameter (in seconds) allows overriding it.\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_error_ttl": {
-      "defaultValue": "1",
-      "description": "TTL in seconds for error responses and empty\nresponses.\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_stale_ttl": {
-      "defaultValue": "3600",
-      "description": "Defines, in seconds, how long a record will\nremain in cache past its TTL. This value\nwill be used while the new DNS record is\nfetched in the background.\n\nStale data will be used from expiry of a\nrecord until either the refresh query\ncompletes, or the `resolver_stale_ttl` number\nof seconds have passed.\n\nThis configuration enables Kong to be more\nresilient during the DNS server downtime.\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_lru_cache_size": {
-      "defaultValue": "10000",
-      "description": "The DNS client uses a two-layer cache system:\nL1 - worker-level LRU Lua VM cache\nL2 - across-workers shared memory cache\n\nThis value specifies the maximum allowed\nnumber of DNS responses stored in the L1 LRU\nlua VM cache.\n\nA single name query can easily take up 1~10\nslots, depending on attempted query types and\nextended domains from /etc/resolv.conf\noptions `domain` or `search`.\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "resolver_mem_cache_size": {
-      "defaultValue": "5m",
-      "description": "This value specifies the size of the L2\nshared memory cache for DNS responses,\n`kong_dns_cache`.\n\nAccepted units are `k` and `m`, with a\nminimum recommended value of a few MBs.\n\n5MB shared memory size could store\n~20000 DNS responeses with single A record or\n~10000 DNS responeses with 2~3 A records.\n\n10MB shared memory size could store\n~40000 DNS responeses with single A record or\n~20000 DNS responeses with 2~3 A records.\n",
-      "sectionTitle": "New DNS RESOLVER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "admin_gui_auth_change_password_attempts": {
-      "defaultValue": "0",
-      "description": "Number of times a user can attempt to change password.\n0 means infinite attempts allowed.\n",
-      "sectionTitle": "KONG MANAGER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "admin_gui_auth_change_password_ttl": {
-      "defaultValue": "86400",
-      "description": "Length, in seconds, of the TTL for changing password attempts\nrecords. Records in the database older than\ntheir TTL are automatically purged.\n\nExample, 1 days: `1 * 24 * 60 * 60 = 86400.`\n",
-      "sectionTitle": "KONG MANAGER",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "keyring_recovery_public_key": {
-      "defaultValue": null,
-      "description": "Defines the public key to optionally encrypt\nall keyring materials and back them up in the\ndatabase.\n\nValues:\n- absolute path to the public key\n- public key content\n- base64 encoded public key content\n",
-      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "keyring_encrypt_license": {
-      "defaultValue": "off",
-      "description": "Enables keyring encryption for license payloads stored\nin the database.\n\n**Warning:** For Kong deployments that rely entirely on\nthe database for license provisioning (i.e. not using\n`KONG_LICENSE_DATA` or `KONG_LICENSE_PATH`), enabling\nthis option will delay license activation until after\nthe node's keyring has been activated.\n",
-      "sectionTitle": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
-      "min_version": {
-        "gateway": "3.8"
-      }
-    },
-    "admin_gui_auth_login_attempts_ttl": {
-      "defaultValue": "604800",
-      "description": "Length, in seconds, of the TTL for changing login attempts\nrecords. Records in the database older than\ntheir TTL are automatically purged.\n\nThis argument can be set to an integer between 0 and 100000000.\n\nExample, 7 days: `7 * 24 * 60 * 60 = 604800.`\n",
-      "sectionTitle": "KONG MANAGER",
-      "min_version": {
-        "gateway": "3.9"
-      }
-    },
-    "incremental_sync": {
-      "defaultValue": "off",
-      "description": "The setting to enable or disable the incremental\nsynchronization of configuration changes.\nInstead of sending the entire entity config to data planes on\neach config update, incremental config sync lets you send only\nthe changed configuration to data planes for hybrid mode deployments.\nThe valid values are `on` and `off`.\nTo enable, set this value to `on`.\n\nIn hybrid mode, this setting must be configured\non both control plane and data plane nodes.\n",
-      "sectionTitle": "HYBRID MODE",
-      "min_version": {
-        "gateway": "3.10"
-      }
-    },
-    "consumers_mem_cache_size": {
-      "defaultValue": "128m",
-      "description": "Size of the shared memory cache for consumers\nand credentials.\n\nThe accepted units are `k` and `m`, with a minimum\nrecommended value of a few MBs.\n\n**Note**: This is only used when the \"externalized consumers\"\nfeature is active.\n",
-      "sectionTitle": "NGINX",
-      "min_version": {
-        "gateway": "3.10"
-      }
-    },
-    "admin_gui_csp_header": {
-      "defaultValue": "off",
-      "description": "Enable or disable the `Content-Security-Policy` (CSP) header for Kong Manager\n\nThis configuration controls the presence of the CSP header when serving\nKong Manager. The default CSP header value will be used unless customized.\n\nTo modify the value of the served CSP header, refer to the `admin_gui_csp_header_value`\nconfiguration.\n\nSet this configuration to `on` to enable the CSP header.\n",
-      "sectionTitle": "KONG MANAGER",
-      "min_version": {
-        "gateway": "3.10"
-      }
-    },
-    "admin_gui_csp_header_value": {
-      "defaultValue": null,
-      "description": "The value of the `Content-Security-Policy` (CSP) header for Kong Manager.\n\nThis configuration controls the value of the CSP header when serving\nKong Manager. If omitted or left empty, the default CSP header value\nwill be used.\n\nThis is an advanced configuration intended for cases where the default\nCSP header value does not meet your requirements. Use with caution.\n\nFor more information on the CSP header, see:\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n",
-      "sectionTitle": "KONG MANAGER",
-      "min_version": {
-        "gateway": "3.10"
-      }
-    },
-    "vault_hcv_cert_auth_role_name": {
-      "defaultValue": null,
-      "description": "The configured trusted certificate role\nname.\n",
-      "sectionTitle": "VAULTS",
-      "min_version": {
-        "gateway": "3.11"
-      }
-    },
-    "vault_hcv_cert_auth_cert": {
-      "defaultValue": null,
-      "description": "The contents of the certificate to use in\nHashicorp Vault auth if\n`auth_method` is set to `cert`.\n",
-      "sectionTitle": "VAULTS",
-      "min_version": {
-        "gateway": "3.11"
-      }
-    },
-    "vault_hcv_cert_auth_cert_key": {
-      "defaultValue": null,
-      "description": "The contents of the private key for use in\nHashicorp Vault auth if\n`auth_method` is set to `cert`.\n",
-      "sectionTitle": "VAULTS",
-      "min_version": {
-        "gateway": "3.11"
-      }
-    },
-    "vaults_lazy_load_secrets": {
-      "defaultValue": "off",
-      "description": "When enabled, plugin options stored as vault secrets are\nloaded only when they are first requested. This can improve\nstartup performance when using many vault references. When\ndisabled, all vault secrets are loaded during initialization.\n",
-      "sectionTitle": "TUNING & BEHAVIOR",
-      "min_version": {
-        "gateway": "3.11"
-      }
-    },
-    "admin_gui_hide_konnect_cta": {
-      "defaultValue": "off",
-      "description": "Hides all Konnect call to actions in Kong Manager.\nThis setting is only relevant for on-prem installations\nof Kong Enterprise.\n",
-      "sectionTitle": "KONG MANAGER",
-      "min_version": {
-        "gateway": "3.11"
-      }
-    },
-    "pg_azure_auth": {
-      "defaultValue": "off",
-      "description": "Determines whether Azure authentication will be used\nfor PostgreSQL connections. When switched to\n`on`, the username defined in `pg_user` will\nbe used as the database account, and the\ndatabase connection will be forced to use TLS.\n`pg_password` will not be used when this\nswitch is `on`.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
-    "pg_azure_tenant_id": {
-      "defaultValue": null,
-      "description": "The Azure tenant ID for Service Principal\nauthentication. This is only required when\nusing Service Principal authentication\n(not needed for Managed Identity).\nIf not specified, Managed Identity\nauthentication will be attempted.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
-    "pg_azure_client_id": {
-      "defaultValue": null,
-      "description": "The Azure client ID for authentication.\nFor Managed Identity: the client ID of the\nuser-assigned managed identity.\nFor Service Principal: the application\n(client) ID of the service principal.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
-    "pg_azure_client_secret": {
-      "defaultValue": null,
-      "description": "The Azure client secret for authentication.\nRequired for Service Principal authentication.\nNot needed for Managed Identity.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
-    "pg_ro_azure_auth": {
-      "defaultValue": "<pg_azure_auth>",
-      "description": "Same as `pg_azure_auth`, but for the\nread-only connection.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
-    "pg_ro_azure_tenant_id": {
-      "defaultValue": "<pg_azure_tenant_id>",
-      "description": "Same as `pg_azure_tenant_id`, but for the\nread-only connection.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
-    "pg_ro_azure_client_id": {
-      "defaultValue": "<pg_azure_client_id>",
-      "description": "Same as `pg_azure_client_id`, but for the\nread-only connection.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
-    "pg_ro_azure_client_secret": {
-      "defaultValue": "<pg_azure_client_secret>",
-      "description": "Same as `pg_azure_client_secret`, but for the\nread-only connection.\n",
-      "sectionTitle": "DATASTORE",
-      "min_version": {
-        "gateway": "3.12"
-      }
-    },
     "identity_service": {
       "defaultValue": null,
       "description": "Overrides the default identity service URL for external consumers.\n",
-      "sectionTitle": "REQUEST DEBUGGING",
-      "min_version": {
-        "gateway": "3.12"
-      }
+      "sectionTitle": "REQUEST DEBUGGING"
     }
   }
 }
