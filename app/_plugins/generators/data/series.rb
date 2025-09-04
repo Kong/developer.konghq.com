@@ -87,6 +87,9 @@ module Jekyll
       def set_cleanup!(page)
         return unless page.data['series']
 
+        # render cleanup step in last step of the series
+        return if page.data['series']['items'].size == page.data['series']['position']
+
         page.data['cleanup'] = nil
       end
 
