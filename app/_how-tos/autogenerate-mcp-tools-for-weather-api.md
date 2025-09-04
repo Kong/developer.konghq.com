@@ -137,8 +137,8 @@ entities:
       "mcpServers": {
           "weather": {
               "url": "http://localhost:8000/weather",
-              "parameters": {
-                  "q": "<LOCATION>"
+              "headers": {
+                  "key": "<YOUR_WEATHERAPI_API_KEY>"
               }
           }
       }
