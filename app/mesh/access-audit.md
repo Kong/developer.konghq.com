@@ -15,6 +15,7 @@ tags:
 
 works_on:
   - on-prem
+  - konnect
 
 related_resources:
   - text: Observability

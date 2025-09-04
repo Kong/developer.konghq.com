@@ -77,7 +77,7 @@ headers:
 
 {{ prefix | indent }}
 
-   In the response, look for `control_plane_endpoint`. Your cluster prefix is the first portion of the endpoint: `https://CLUSTER_PREFIX.cp0.konghq.com`.
+   In the response, look for `control_plane_endpoint`. Your cluster prefix is the first portion of the endpoint: `https://CLUSTER_PREFIX.cp.konghq.com`.
 
    Using the cluster prefix value from the response, put together a `kong.conf` configuration for the your region. For example, for the US region:
  

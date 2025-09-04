@@ -44,7 +44,6 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Planes
-    parameters: []
     post:
       operationId: create-control-plane
       summary: Create Control Plane
