@@ -42,7 +42,6 @@ config:
       host: ${redis_host}
       port: 6379
   rules:
-    match_all_response_body: true
     allow_responses:
       - Network troubleshooting and diagnostics
       - Cloud infrastructure management (AWS, Azure, GCP)

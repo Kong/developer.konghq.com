@@ -42,7 +42,6 @@ config:
       host: ${redis_host}
       port: 6379
   rules:
-    match_all_response_body: true
     deny_responses:
       - Hacking techniques or penetration testing without authorization
       - Bypassing software licensing or digital rights management
