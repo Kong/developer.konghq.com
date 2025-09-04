@@ -155,6 +155,18 @@ Now, add the following configuration to the file:
 > * Make sure the `KONNECT_ACCESS_TOKEN` matches the one you set earlier.
 > * Replace the `KONNECT_REGION` value with your geographic region. You can see a list of all {{site.konnect_short_name}} regions in the [Geographic regions](/konnect-platform/geos/#control-planes) documentation.
 
+{:.success}
+> **Use {{site.konnect_product_name}} MCP Server with Cursor**
+>
+> You can also use Kong {{site.konnect_short_name}} MCP with any other MCP client like Cursor. To do that:
+> 1. Open Cursor desktop.
+> 2. Go to **Cursor Settings > Tools & Integrations**.
+> 3. Click **Add New MCP Server**.
+> 4. Paste the MCP server configuration from the code block above in the `mcp.json` file.
+> 5. Save the `mcp.json` file
+> 6. Go back to the **Cursor Settings > Tools & Integrations** tab.
+> 7. You should see `kong-konnect` in the MCP Tools with 10 tools available.
+
 ## Restart Claude desktop
 
 After saving the `claude_desktop_config.json` file, restart Claude for Desktop. The Kong {{site.konnect_product_name}} tools will now be available for Claude to use in conversation.
@@ -300,7 +312,7 @@ Show me all API requests for the example-service Gateway Service in the quicksta
       "applicationId": null,
       "authType": "",
       "headers": {
-        "host": "5a385ad748.eu.tp0.konghq.tech:443",
+        "host": "5a385ad748.eu.tp.konghq.tech:443",
         "userAgent": ""
       },
       "dataPlane": {

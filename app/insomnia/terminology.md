@@ -68,6 +68,8 @@ rows:
     description: A project is a workspace that contains API collections, specifications, environments, and tests. Projects can be stored locally, synced with Insomnia Cloud, or connected to Git repositories. They help organize and share API workflows.
   - feature: Organization
     description: "An organization is a container for projects, teams, and access management. Organizations centralize control by allowing collaborators to be invited, RBAC roles to be assigned, and SSO to be configured. For more details, see [Organizations](/insomnia/organizations/)."
+  - feature: Domain
+    description: "A domain is a verified email domain added to an Insomnia Enterprise account. A domain acts as the foundation for domain-based user access rules. For example: domain capture, domain lock, and invite‑control. You can automatically manage onboarding, license assignment, and organizational access based on user email addresses in that domain. For more information, go to [Enterprise account management](/insomnia/enterprise-user-management/)." 
 {% endtable %}
 
 ## Workspaces and API design tools

@@ -458,7 +458,7 @@ As of {{site.base_gateway}} 3.6, Kong Manager uses the session management mechan
 `admin_gui_session_conf` is no longer required when authenticating with OIDC. Instead, session-related
 configuration parameters are set in `admin_gui_auth_conf` (like `session_secret`).
 
-<!-- See the [migration FAQ](/how-to/enable-oidc-for-kong-manager/) for more information. -->
+See the [migration FAQ](/gateway/kong-manager/openid-connect/#migrate-oidc-configuration-from-older-versions) for more information.
 
 #### Plugin changes
 

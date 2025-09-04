@@ -4,6 +4,9 @@ title: 'Deny Consumers'
 
 weight: 900
 
+requirements:
+  - "[Authentication](/gateway/authentication/) configured"
+
 config:
   deny:
   - dev

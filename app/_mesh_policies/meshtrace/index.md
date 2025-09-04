@@ -1,9 +1,9 @@
 ---
-title: MeshTrace
+title: Mesh Trace
 name: MeshTraces
 products:
     - mesh
-description: 'This policy enables publishing traces to a third party tracing solution.'
+description: 'Publish traces to a third party tracing solution.'
 content_type: plugin
 type: policy
 icon: meshtrace.png
@@ -11,7 +11,7 @@ icon: meshtrace.png
 
 {% warning %}
 This policy uses new policy matching algorithm.
-Do **not** combine with [TrafficTrace](/docs/{{ page.release }}/policies/traffic-trace).
+Do **not** combine with the deprecated TrafficTrace policy.
 {% endwarning %}
 
 This policy enables publishing traces to a third party tracing solution.

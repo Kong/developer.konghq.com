@@ -1,9 +1,9 @@
 ---
-title: MeshLoadBalancingStrategy
+title: Mesh Load Balancing Strategy
 name: MeshLoadBalancingStrategies
 products:
     - mesh
-description: 'This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.'
+description: 'Configure the load balancing strategy for traffic between services in the mesh.'
 content_type: plugin
 type: policy
 icon: policy.svg

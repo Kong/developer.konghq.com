@@ -9,6 +9,9 @@ products:
   - mesh
 works_on:
   - konnect
+tags:
+  - mesh-manager
+  - service-mesh
 ---
 
 If you already have a zone Control Plane that's not connected to any global Control Plane, you can federate it to {{site.konnect_short_name}} using [Mesh Manager](/mesh-manager/).

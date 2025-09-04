@@ -18,7 +18,8 @@ tldr:
 
 products:
   - gateway
-
+min_version:
+  gateway: '3.9'
 tags:
   - custom-plugins
   - pdk
