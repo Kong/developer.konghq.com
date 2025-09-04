@@ -28,6 +28,12 @@ groups:
       - items:
           - path: /operator/reference/control-plane-watch-namespaces/
 
+  - title: Control plane
+    sections:
+      - title: How-To
+        items:
+          - path: /operator/control-planes/how-to/**/*
+
   - title: Gateway Deployment
     sections:
       - title: Get Started
