@@ -1619,7 +1619,7 @@ paths:
             type: object
             properties:
               type:
-                $ref: '#/components/schemas/schemas-StringFieldEqualsFilter'
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
           style: deepObject
       responses:
         '200':
@@ -5372,10 +5372,6 @@ components:
         - api
         - api_package
       title: Entity Type
-    schemas-StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
-      type: string
-      title: StringFieldEqualsFilter
     IdentityProviderType:
       description: Specifies the type of identity provider.
       type: string
