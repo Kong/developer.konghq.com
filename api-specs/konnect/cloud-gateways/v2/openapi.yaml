@@ -270,6 +270,34 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Transit Gateways
+    patch:
+      operationId: update-transit-gateway
+      summary: Update Transit Gateway
+      description: Updates a transit gateway by ID for a given network.
+      parameters:
+        - $ref: '#/components/parameters/NetworkId'
+        - $ref: '#/components/parameters/TransitGatewayId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchTransitGatewayRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/PatchTransitGatewayResponse'
+        '400':
+          $ref: '#/components/responses/CloudGatewaysBadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Transit Gateways
     delete:
       operationId: delete-transit-gateway
       summary: Delete Transit Gateway
@@ -963,6 +991,11 @@ components:
       type: string
       example: us-east-2
       title: Provider Region ID
+    ServerlessV1ProviderRegionId:
+      description: Region ID for serverless v1 cloud provider region.
+      type: string
+      example: us
+      title: Serverless V1 Provider Region ID
     ProviderRegion:
       description: Region ID and human-readable name for a cloud provider region.
       type: object
@@ -1011,28 +1044,28 @@ components:
         - cidr_blocks
         - reserved_cidr_blocks
       title: Provider Region
-    HighVelocityProviderRegion:
+    ServerlessV1ProviderRegion:
       description: Region ID and human-readable name for a cloud provider region.
       type: object
       properties:
         region:
-          $ref: '#/components/schemas/ProviderRegionId'
+          $ref: '#/components/schemas/ServerlessV1ProviderRegionId'
       additionalProperties: false
       required:
         - region
-      title: HighVelocity Provider Region
+      title: Serverless V1 Provider Region
     ProviderRegions:
       description: List of available regions to run cloud gateway instances on for a given cloud provider.
       type: array
       items:
         $ref: '#/components/schemas/ProviderRegion'
       title: Provider Regions
-    HighVelocityProviderRegions:
-      description: List of available regions to run high velocity cloud gateway instances  on for a given cloud provider.
+    ServerlessV1ProviderRegions:
+      description: List of available regions to run serverless v1 cloud gateway instances  on for a given cloud provider.
       type: array
       items:
-        $ref: '#/components/schemas/HighVelocityProviderRegion'
-      title: High Velocity Provider Regions
+        $ref: '#/components/schemas/ServerlessV1ProviderRegion'
+      title: Serverless V1 Provider Regions
     ProviderName:
       description: Name of cloud provider.
       type: string
@@ -1041,7 +1074,7 @@ components:
         - aws
         - azure
       title: Provider Name
-    HighVelocityCloudGatewaysProviderName:
+    ServerlessV1ProviderName:
       description: Name of cloud provider.
       type: string
       example: aws
@@ -1060,31 +1093,31 @@ components:
         - provider
         - regions
       title: Provider
-    HighVelocityProvider:
-      description: Description of cloud provider that runs high velocity cloud gateway instances.
+    ServerlessV1Provider:
+      description: Description of cloud provider that runs serverless v1 cloud gateway instances.
       type: object
       properties:
         provider:
-          $ref: '#/components/schemas/HighVelocityCloudGatewaysProviderName'
+          $ref: '#/components/schemas/ServerlessV1ProviderName'
         regions:
-          $ref: '#/components/schemas/HighVelocityProviderRegions'
+          $ref: '#/components/schemas/ServerlessV1ProviderRegions'
       additionalProperties: false
       required:
         - provider
         - regions
-      title: High Velocity Provider
+      title: Serverless V1 Provider
     Providers:
       description: List of supported cloud providers that run cloud gateway instances.
       type: array
       items:
         $ref: '#/components/schemas/Provider'
       title: Providers
-    HighVelocityProviders:
-      description: List of supported cloud providers that run high velocity cloud gateway instances.
+    ServerlessV1Providers:
+      description: List of supported cloud providers that run serverless v1 cloud gateway instances.
       type: array
       items:
-        $ref: '#/components/schemas/HighVelocityProvider'
-      title: High Velocity Providers
+        $ref: '#/components/schemas/ServerlessV1Provider'
+      title: Serverless V1 Providers
     AvailabilityDocument:
       description: Document containing availability information for configurations.
       type: object
@@ -1095,14 +1128,14 @@ components:
           $ref: '#/components/schemas/InstanceTypes'
         providers:
           $ref: '#/components/schemas/Providers'
-        high_velocity_providers:
-          $ref: '#/components/schemas/HighVelocityProviders'
+        serverless_v1_providers:
+          $ref: '#/components/schemas/ServerlessV1Providers'
       additionalProperties: false
       required:
         - versions
         - instance_types
         - providers
-        - high_velocity_providers
+        - serverless_v1_providers
       title: Availability Document
     ConfigurationDataPlaneGroupAutoscale:
       oneOf:
@@ -1590,6 +1623,23 @@ components:
         - terminated
       readOnly: true
       title: Transit Gateway State
+    AwsResourceEndpointConfigState:
+      description: |
+        The current state of the resource config in AWS Resource Endpoint. Possible values:
+        - `initializing` - The config is in the process of being initialized and is setting up necessary resources.
+        - `missing` - The config is missing and is no longer accepting new traffic.
+        - `ready` - The config is fully operational and can route traffic as configured.
+        - `error` - The config is in an error state, and is not operational.
+        - `terminating` - The config is in the process of being deleted and is no longer accepting new traffic.
+      type: string
+      enum:
+        - initializing
+        - missing
+        - ready
+        - error
+        - terminating
+      readOnly: true
+      title: AWS Resource Endpoint Config State
     AwsTransitGatewayAttachmentConfig:
       type: object
       properties:
@@ -1631,6 +1681,86 @@ components:
         - peer_vpc_id
         - peer_vpc_region
       title: AWS VPC Peering Attachment Config
+    AwsResourceEndpointAttachmentConfig:
+      type: object
+      properties:
+        kind:
+          enum:
+            - aws-resource-endpoint-attachment
+          title: AWS Resource Endpoint Attachment Type
+        ram_share_arn:
+          description: Resource Share ARN to verify request to create transit gateway attachment.
+          type: string
+          title: RAM Share ARN
+        resource_config:
+          $ref: '#/components/schemas/AwsResourceEndpointConfig'
+      additionalProperties: false
+      required:
+        - kind
+        - ram_share_arn
+      title: AWS Resource Endpoint Attachment Config
+    AwsResourceEndpointAttachmentConfigResponse:
+      type: object
+      properties:
+        kind:
+          enum:
+            - aws-resource-endpoint-attachment
+          title: AWS Resource Endpoint Attachment Type
+        ram_share_arn:
+          description: Resource Share ARN to verify request to create transit gateway attachment.
+          type: string
+          title: RAM Share ARN
+        resource_config:
+          $ref: '#/components/schemas/AwsResourceEndpointConfigResponse'
+      additionalProperties: false
+      required:
+        - kind
+        - ram_share_arn
+        - resource_config
+      title: AWS Resource Endpoint Attachment Config Response
+    AwsResourceEndpointConfig:
+      description: |
+        List of unique resource config mapping for aws resource endpoint.
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          resource_config_id:
+            description: Resource Config ID to uniquely identify a resource configuration.
+            type: string
+            title: Resource Config ID
+          domain_name:
+            description: Domain Name to uniquely identify a resource configuration.
+            type: string
+            title: Domain Name
+        required:
+          - resource_config_id
+          - domain_name
+      title: AWS Resource Endpoint Config
+    AwsResourceEndpointConfigResponse:
+      description: |
+        List of unique resource config mapping for aws resource endpoint.
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          resource_config_id:
+            description: Resource Config ID to uniquely identify a resource configuration.
+            type: string
+            title: Resource Config ID
+          domain_name:
+            description: Domain Name to uniquely identify a resource configuration.
+            type: string
+            title: Domain Name
+          state:
+            $ref: '#/components/schemas/AwsResourceEndpointConfigState'
+        required:
+          - resource_config_id
+          - domain_name
+          - state
+      title: AWS Resource Endpoint Config Response
     AzureVNETPeeringAttachmentConfig:
       type: object
       properties:
@@ -1735,6 +1865,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AwsPrivateHostedZoneResponse'
         - $ref: '#/components/schemas/AwsPrivateDnsResolverResponse'
+        - $ref: '#/components/schemas/GcpPrivateHostedZoneResponse'
     AwsPrivateHostedZoneResponse:
       type: object
       properties:
@@ -1807,6 +1938,88 @@ components:
         - kind
         - hosted_zone_id
       title: AWS Private Hosted Zone Attachment Config
+    GcpPrivateHostedZoneAttachmentConfig:
+      type: object
+      properties:
+        kind:
+          enum:
+            - gcp-private-hosted-zone-attachment
+          title: GCP Private Hosted Zone Type
+        domain_name:
+          description: Domain name to create attachment to.
+          type: string
+          title: Domain Name
+        peer_project_id:
+          description: Customer's GCP Project ID.
+          type: string
+          title: Peer Project Id
+        peer_vpc_name:
+          description: Customer's GCP VPC ID.
+          type: string
+          title: Peer VPC Name
+      additionalProperties: false
+      required:
+        - kind
+        - domain_name
+        - peer_project_id
+        - peer_vpc_name
+      title: GCP Private Hosted Zone Attachment Config
+    GcpPrivateHostedZoneResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/PrivateDnsId'
+        state:
+          $ref: '#/components/schemas/PrivateDnsState'
+        state_metadata:
+          description: |
+            Metadata describing the backing state of the Private Dns and why it may be in an erroneous state.
+          type: object
+          additionalProperties: false
+          properties:
+            reported_status:
+              description: Reported status of the Private Dns from backing infrastructure.
+              type: string
+              example: ERROR
+            reason:
+              description: |
+                Reason why the Private Dns may be in an erroneous state, reported from backing infrastructure.
+              type: string
+              example: |
+                Failed to create Private Dns due to invalid Cloud Provider configuration.
+          title: PrivateDnsStateMetadata
+        entity_version:
+          description: |
+            Monotonically-increasing version count of the Private DNS, to indicate the order of updates to the
+            Private DNS.
+          type: integer
+          example: 1
+          readOnly: true
+        created_at:
+          description: An RFC-3339 timestamp representation of Private DNS creation date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        updated_at:
+          description: An RFC-3339 timestamp representation of Private DNS update date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        name:
+          $ref: '#/components/schemas/PrivateDnsName'
+        private_dns_attachment_config:
+          $ref: '#/components/schemas/GcpPrivateHostedZoneAttachmentConfig'
+      required:
+        - id
+        - state
+        - state_metadata
+        - entity_version
+        - created_at
+        - updated_at
+        - name
+        - private_dns_attachment_config
     AwsPrivateDnsResolverResponse:
       type: object
       properties:
@@ -1943,6 +2156,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AwsPrivateHostedZoneAttachmentConfig'
             - $ref: '#/components/schemas/AwsPrivateDnsResolverAttachmentConfig'
+            - $ref: '#/components/schemas/GcpPrivateHostedZoneAttachmentConfig'
       title: CreatePrivateDnsRequest
     PatchPrivateDnsRequest:
       description: Request schema for updating a Private DNS.
@@ -2076,6 +2290,66 @@ components:
         - created_at
         - updated_at
       title: AWS VPC Peering Gateway
+    AwsResourceEndpointGatewayResponse:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TransitGatewayName'
+        dns_config:
+          $ref: '#/components/schemas/TransitGatewayDnsConfig'
+        transit_gateway_attachment_config:
+          $ref: '#/components/schemas/AwsResourceEndpointAttachmentConfigResponse'
+        id:
+          $ref: '#/components/schemas/TransitGatewayId'
+        state:
+          $ref: '#/components/schemas/TransitGatewayState'
+        state_metadata:
+          description: |
+            Metadata describing the backing state of the transit gateway and why it may be in an erroneous state.
+          type: object
+          additionalProperties: false
+          properties:
+            reported_status:
+              description: Reported status of the transit gateway from backing infrastructure.
+              type: string
+              example: ERROR
+            reason:
+              description: |
+                Reason why the transit gateway may be in an erroneous state, reported from backing infrastructure.
+              type: string
+              example: |
+                Transit Gateway Attachment configuration could not find a resource with the provided ram share arn.
+          readOnly: true
+          title: TransitGatewayStateMetadata
+        entity_version:
+          description: |
+            Monotonically-increasing version count of the transit gateway, to indicate the order of updates to the
+            transit gateway.
+          type: integer
+          example: 1
+          readOnly: true
+        created_at:
+          description: An RFC-3339 timestamp representation of transit gateway creation date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        updated_at:
+          description: An RFC-3339 timestamp representation of transit gateway update date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+      required:
+        - name
+        - transit_gateway_attachment_config
+        - id
+        - dns_config
+        - state
+        - entity_version
+        - created_at
+        - updated_at
+      title: AWS Resource Endpoint Gateway
     AzureTransitGatewayResponse:
       type: object
       properties:
@@ -2202,6 +2476,7 @@ components:
         - $ref: '#/components/schemas/AwsVpcPeeringGatewayResponse'
         - $ref: '#/components/schemas/AzureTransitGatewayResponse'
         - $ref: '#/components/schemas/GCPVPCPeeringGatewayResponse'
+        - $ref: '#/components/schemas/AwsResourceEndpointGatewayResponse'
     CreateAwsTransitGateway:
       type: object
       properties:
@@ -2234,6 +2509,19 @@ components:
         - cidr_blocks
         - transit_gateway_attachment_config
       title: AWS VPC Peering Gateway
+    CreateAwsResourceEndpointGateway:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TransitGatewayName'
+        dns_config:
+          $ref: '#/components/schemas/TransitGatewayDnsConfig'
+        transit_gateway_attachment_config:
+          $ref: '#/components/schemas/AwsResourceEndpointAttachmentConfig'
+      required:
+        - name
+        - transit_gateway_attachment_config
+      title: AWS Resource Endpoint Gateway
     CreateAzureTransitGateway:
       type: object
       properties:
@@ -2266,9 +2554,34 @@ components:
       oneOf:
         - $ref: '#/components/schemas/CreateAwsTransitGateway'
         - $ref: '#/components/schemas/CreateAwsVpcPeeringGateway'
+        - $ref: '#/components/schemas/CreateAwsResourceEndpointGateway'
         - $ref: '#/components/schemas/CreateAzureTransitGateway'
         - $ref: '#/components/schemas/CreateGCPVPCPeeringTransitGateway'
       title: CreateTransitGatewayRequest
+    PatchAwsResourceEndpointGateway:
+      description: Request schema for updating AWS Resource Endpoint.
+      properties:
+        transit_gateway_attachment_config:
+          type: object
+          additionalProperties: false
+          properties:
+            kind:
+              enum:
+                - aws-resource-endpoint-attachment
+              title: AWS Resource Endpoint Attachment Type
+            resource_config:
+              $ref: '#/components/schemas/AwsResourceEndpointConfig'
+          required:
+            - kind
+            - resource_config
+      required:
+        - transit_gateway_attachment_config
+    PatchTransitGatewayRequest:
+      description: Request schema for updating a transit gateway.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/PatchAwsResourceEndpointGateway'
+      title: PatchTransitGatewayRequest
     CustomDomainState:
       description: State of the custom domain.
       type: string
@@ -2927,9 +3240,22 @@ components:
         - updated_at
       title: Default Resource Configuration
     StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
-      type: string
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
     StringFieldNEQFilter:
       description: Filters on the given string field value by exact match inequality.
       type: object
@@ -2944,7 +3270,7 @@ components:
         example-1:
           neq: not-this-value
     StringFieldOEQFilter:
-      description: Filters on the given comma separated string by one or more exact match.
+      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
       type: object
       properties:
         oeq:
@@ -3289,16 +3615,20 @@ components:
             detail:
               example: Conflict
     StringFieldContainsFilter:
-      description: Filter a string value field by partial contains.
+      description: Filters on the given string field value by fuzzy match.
       type: object
       properties:
         contains:
           type: string
+      additionalProperties: false
       required:
         - contains
       title: StringFieldContainsFilter
+      x-examples:
+        example-1:
+          contains: some-value
     StringFieldOContainsFilter:
-      description: Filters on the union of given string values by fuzzy match.
+      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
       type: object
       properties:
         ocontains:
@@ -3309,7 +3639,7 @@ components:
       title: StringFieldOContainsFilter
       x-examples:
         example-1:
-          ocontains: 'dev,prod'
+          ocontains: 'this-value,or-that-value'
   examples:
     PermissionDeniedExample:
       value:
@@ -3543,6 +3873,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/TransitGatewayResponse'
+    PatchTransitGatewayResponse:
+      description: Response format for updating a transit gateway.
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/AwsResourceEndpointGatewayResponse'
     ListTransitGatewaysResponse:
       description: A paginated list for a collection of transit gateways for a network.
       content:
