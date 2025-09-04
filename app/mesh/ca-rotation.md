@@ -11,7 +11,9 @@ breadcrumbs:
 tags:
   - mtls
   - certificates
-
+works_on:
+  - on-prem
+  - konnect
 search_aliases:
   - mTLS
 

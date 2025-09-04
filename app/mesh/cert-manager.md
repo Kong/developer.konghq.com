@@ -18,6 +18,7 @@ search_aliases:
 
 works_on:
   - on-prem
+  - konnect
 
 related_resources:
   - text: "mTLS Policy"

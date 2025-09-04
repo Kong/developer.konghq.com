@@ -1,3 +1,5 @@
-<svg width="16" height="8" viewBox="0 0 16 8" class="navbar-item__menu-caret">
+{% assign css_class = "navbar-item__menu-caret" %}
+{% if include.css_class %}{% assign css_class = include.css_class %}{% endif %}
+<svg width="16" height="8" viewBox="0 0 16 8" class="{{ css_class }}">
     <polygon points="8,0 0,8 16,8" fill="rgb(var(--color-bg-secondary))" stroke="rgb(var(--color-border-primary), 0.05)" stroke-width="1" />
 </svg>

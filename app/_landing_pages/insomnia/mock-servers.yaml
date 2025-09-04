@@ -47,6 +47,8 @@ rows:
                 text: | 
                   Enterprise users can deploy self-hosted mock servers using [Insomnia Mockbin](https://github.com/kong/insomnia-mockbin). This allows you to have more control over usage for your mocks.
 
+                  [Learn more about self-hosted mock servers &rarr;](/insomnia/self-hosted-mocks/)
+
   - header:
       text: "Frequently asked questions"
       type: h2
@@ -57,4 +59,7 @@ rows:
             - q: Are mock servers available for all users?
               a: Yes, all plans have access to mocks, with some limitations based on the plan. Enterprise users have unlimited requests on cloud-hosted mock servers and have the option to deploy self-hosted mocks. See the API mocking section of the [pricing page](https://insomnia.rest/pricing) for more information.
             - q: Can I automatically generate mock endpoints?
-              a: Yes, you can generate a mock endpoint from a request response. The generated endpoint will contain the response body, headers, and status.
+              a: |
+                Yes, you can generate a mock endpoint from a request response. 
+                After sending a request, go to the **Mock** tab in the right panel and select or create a new mock server and route.
+                The generated endpoint will contain the response body, headers, and status.
