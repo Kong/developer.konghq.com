@@ -58,17 +58,21 @@ cleanup:
 
 Create an audit log destination by sending a `POST` request to the [`/audit-log-destinations`](/api/konnect/audit-logs/v2/#/operations/create-audit-log-destination) endpoint with the connection details for your SIEM vendor:
 
-```sh
-curl -i -X POST https://global.api.konghq.com/v2/audit-log-destinations \
---header "Content-Type: application/json" \
---header "Authorization: Bearer $KONNECT_TOKEN" \
---json '{
-    "endpoint": "'$SIEM_ENDPOINT'",
-    "authorization": "'$SIEM_TOKEN'",
-    "log_format": "cef",
-    "name": "Example destination"
-}'
-```
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v3/audit-log-destinations
+status_code: 201
+method: POST
+region: global
+headers:
+  - 'Content-Type: application/json'
+body:
+    endpoint: $SIEM_ENDPOINT
+    authorization: $SIEM_TOKEN
+    log_format: cef
+    name: Example destination
+{% endkonnect_api_request %}
+<!-- vale on -->
 
 Export the ID of the new destination to your environment:
 

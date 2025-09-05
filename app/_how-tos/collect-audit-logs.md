@@ -5,6 +5,8 @@ content_type: how_to
 related_resources:
   - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
+  - text: Collect Dev Portal audit logs
+    url: /how-to/collect-dev-portal-audit-logs/
 automated_tests: false
 products:
     - gateway
@@ -46,19 +48,18 @@ min_version:
     gateway: '3.4'
 ---
 
-## Set up the audit log webhook
+## Set up the audit log destination
 
 Now that you have an external endpoint and authorization credentials, you can set up a webhook in {{site.konnect_short_name}}.
 
-## Set up the audit log destination
-
-Create an audit log destination by sending a `POST` request to the [`/audit-log-destinations`](/api/konnect/audit-logs/v2/#/operations/create-audit-log-destination) endpoint with the connection details for your SIEM vendor:
+Create an audit log destination by sending a `POST` request to the [`/audit-log-destinations`](/api/konnect/audit-logs/#/operations/create-audit-log-destination) endpoint with the connection details for your SIEM vendor:
 
 <!-- vale off -->
 {% konnect_api_request %}
-url: /v2/audit-log-destinations
+url: /v3/audit-log-destinations
 status_code: 201
 method: POST
+region: global
 headers:
   - 'Content-Type: application/json'
 body:
