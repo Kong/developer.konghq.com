@@ -7,6 +7,9 @@ min_version:
 
 weight: 900
 
+requirements:
+  - "[Authentication](/gateway/authentication/) configured"
+
 config: 
   include_consumer_groups: true
   allow:

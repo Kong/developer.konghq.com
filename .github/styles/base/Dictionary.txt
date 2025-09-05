@@ -107,6 +107,7 @@ client_status
 clipanion
 CLIs
 CLIs
+CLI
 CloudFormation
 CloudFormation
 Cloudformation
@@ -194,6 +195,7 @@ DNs
 DNs
 dockerfile
 dockerfiles
+donut
 doppelganger
 downsample
 downsampled
@@ -242,6 +244,7 @@ fips
 firewalled
 firstTimestamp
 flamegraph
+Flatpak
 foogineer
 full_name
 Gateway
@@ -311,6 +314,7 @@ idempotency
 IdPs
 if_version
 If-Match
+Imagen
 impactful
 Imperva
 Imperva
@@ -797,6 +801,7 @@ text_splitters
 tfvars
 timeframe
 timeframes
+timeseries
 tlds
 tls
 TLSRoute
@@ -852,6 +857,8 @@ unpublish
 unpublishing
 unregister
 unregistering
+unsecure
+unsecured
 unscoped
 unshorten
 unshortened

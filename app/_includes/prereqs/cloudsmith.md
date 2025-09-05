@@ -23,11 +23,11 @@ Once you've received your Cloudsmith access token, run the following commands in
     Replace `<image-name>` and `<tag>` with the appropriate image and version, such as:
 
     ```bash
-    docker pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
+    docker pull docker.cloudsmith.io/kong/ai-compress/service:v0.0.3
     ```
 
 4. You can now run the image by pasting the following command in Docker:
 
     ```bash
-    docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
+    docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-compress/service:v0.0.3
     ```

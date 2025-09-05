@@ -12,6 +12,7 @@ tools:
     - kic
     - deck
     - terraform
+    - konnect-api
 
 description: An Upstream enables load balancing by providing a virtual hostname and collection of Targets (upstream service instances).
 

@@ -17,8 +17,8 @@ related_resources:
     url: /insomnia/manage-insomnia/#security
   - text: About version control in Insomnia
     url: /insomnia/version-control/
-  - text: Insomnia concepts
-    url: /insomnia/concepts/
+  - text: Insomnia terminology
+    url: /insomnia/terminology/
 faqs:
   - q: How is data encrypted?
     a: All data is encrypted using randomly generated 256 bit symmetric keys for use with AES-GCM-256 (Galois Counter Mode).

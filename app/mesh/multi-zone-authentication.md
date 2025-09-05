@@ -7,7 +7,9 @@ products:
   - mesh
 breadcrumbs:
   - /mesh/
-
+works_on:
+  - on-prem
+  - konnect
 tags:
   - multi-zone
   - authentication

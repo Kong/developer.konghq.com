@@ -1,9 +1,9 @@
 ---
-title: MeshOPA
+title: Mesh OPA
 name: meshopas
 products:
     - mesh
-description: '{{site.mesh_product_name}} integrates the Open Policy Agent (OPA) to provide access control for your Services.'
+description: 'Integrate Open Policy Agent (OPA) to provide access control for your Services.'
 content_type: plugin
 type: policy
 min_version:

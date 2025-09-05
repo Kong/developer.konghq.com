@@ -24,7 +24,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           submodules: 'recursive'
 
@@ -35,7 +35,7 @@ jobs:
           ruby-version: .ruby-version
 
       - name: Ruby gem cache
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
         with:
           path: ${{ github.workspace }}/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -51,7 +51,7 @@ jobs:
         with:
           node-version: "22"
       - name: Cache node modules
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
         env:
           cache-name: cache-node-modules
         with:
@@ -88,7 +88,7 @@ jobs:
           DEBUG=tests:*,debug npm run run-tests
 
       - name: Publish Test Report
-        uses: ctrf-io/github-test-reporter@984acbd8e96f167d4053d95f9d657d7b949baac5 # v1
+        uses: ctrf-io/github-test-reporter@646f98cfc16c6f7a0e1f6100cabe2deb95dd2eef # v1
         with:
           report-path: './tools/automated-tests/testReport.json'
           summary-report: true

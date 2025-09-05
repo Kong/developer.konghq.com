@@ -8,7 +8,7 @@ layout: reference
 breadcrumbs:
   - /konnect/
 products:
-  - konnect-platform
+  - konnect
 works_on:
     - konnect
 

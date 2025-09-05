@@ -31,6 +31,10 @@ related_resources:
     url: /gateway/load-balancing/
   - text: Upstream entity reference
     url: /gateway/entities/upstream/
+  - text: "Sticky sessions in {{ site.kic_product_name }}"
+    url: /kubernetes-ingress-controller/sticky-sessions-reference/
+  - text: Configure sticky sessions with drain support
+    url: /kubernetes-ingress-controller/sticky-sessions-with-drain-support/
 
 prereqs:
   kubernetes:

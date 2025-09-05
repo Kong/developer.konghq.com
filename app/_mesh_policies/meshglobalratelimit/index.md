@@ -1,11 +1,11 @@
 ---
-title: MeshGlobalRateLimit Policy
+title: Mesh Global Rate Limit
 name: MeshGlobalRateLimits
 beta: true
 tier: enterprise
 products:
     - mesh
-description: 'This policy adds global rate limit support for {{site.mesh_product_name}}.'
+description: 'Control the number of requests received by a service in a specific timeframe.'
 content_type: plugin
 type: policy
 icon: meshratelimit.png

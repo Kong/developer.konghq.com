@@ -4,6 +4,9 @@ title: 'Allow Consumers without appending the X-Consumer-Groups header'
 
 weight: 900
 
+requirements:
+  - "[Authentication](/gateway/authentication/) configured"
+
 config:
   allow:
   - dev
