@@ -8,7 +8,7 @@ extended_description: |
   You can use the `by_lua` field to dynamically modify any of the request parameters under 
   [`config.callouts.request`](/plugins/request-callout/#schema--config-callouts-request) for a particular callout.
 
-title: Dynamically change the request URL
+title: Dynamically change the request URL via `request.by_lua` Lua code
 
 weight: 900
 
