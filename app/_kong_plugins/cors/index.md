@@ -49,4 +49,6 @@ When the client is a browser, the preflight OPTIONS requests defined by the [COR
 Certain headers, including Host, are classified as forbidden headers, meaning the browser always controls their value and they can't be customized in code (for example, in JavaScript). 
 As a result, a browser can't send a custom Host header during a preflight request.
 
-This limitation is important when using the CORS plugin with Routes in Kong. If a Route is configured to match only on the hosts field, the preflight request may not carry the expected Host header, and Kong may fail to match the Route. As a result, the CORS plugin cannot reliably process these requests. To ensure correct behaviour, the plugin should be used with routes that match on paths (and optionally methods), which the preflight request will include and Kong can use for matching.
+This limitation is important when using the CORS plugin with Routes in {{site.base_gateway}}. If a Route is configured to match only on the `hosts` field, the preflight request may not carry the expected Host header, and {{site.base_gateway}} may fail to match the Route. This means that the plugin can't reliably process these requests.
+
+To ensure correct behavior, use the CORS plugin only with Routes that match on paths or methods. The preflight request includes both paths and methods, so {{site.base_gateway}} can use these fields for matching.
