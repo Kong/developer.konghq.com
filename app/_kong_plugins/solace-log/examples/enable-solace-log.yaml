@@ -1,0 +1,35 @@
+description: 'Set up the Solace logging plugin to send logs to a Solace message broker.'
+
+title: 'Enable Solace Logging'
+
+weight: 900
+
+requirements: 
+ - "[Solace installed](https://docs.solace.com/API/API-Developer-Guide/Installation.htm) and running" 
+
+config:
+  session:
+    host: "tcp://192.168.88.20:55555"
+    vpn_name: "default"
+    authentication:
+      scheme: "BASIC"
+      username: "admin"
+      password: "admin"
+  message:
+    destinations:
+      - name: "test"
+        type: "QUEUE"
+    delivery_mode: "PERSISTENT"
+    custom_fields_by_lua:
+      broker: 'return "solace"'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.12'
+    
