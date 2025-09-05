@@ -1,0 +1,66 @@
+description: 'Generate an MCP server from {{ site.base_gateway }} Service'
+
+title: 'Generate an MCP server in conversion-only mode'
+
+extended_description: |
+  Generate an MCP server from {{ site.base_gateway }} services.
+
+  {:.warning}
+  > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+  > ```yaml
+  > services:
+  > - name: forecast-service
+  >   url: https://api.weatherapi.com/v1/forecast.json
+  >   routes:
+  >   - name: forecast-route
+  >     paths:
+  >     - /forecast
+  > ```
+
+weight: 900
+
+requirements:
+- "A running and exposed API"
+
+config:
+  mode: conversion-only
+  tools:
+  - description: Get weather forecast for a location
+    method: GET
+    path: /v1/forecast.json
+    parameters:
+    - name: key
+      in: query
+      description: Your WeatherAPI key
+      required: true
+      schema:
+        type: string
+    - name: q
+      in: query
+      description: Location query
+      required: true
+      schema:
+        type: string
+    - name: days
+      in: query
+      description: Number of days of forecast (1–10)
+      required: false
+      schema:
+        type: integer
+    - name: alerts
+      in: query
+      description: Include weather alerts (yes/no)
+      required: false
+      schema:
+        type: string
+  logging:
+    log_statistics: false
+    log_payloads: false
+  max_request_body_size: 16384
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
