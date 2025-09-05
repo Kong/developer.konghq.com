@@ -69,7 +69,7 @@ You can use `deck file convert` to automatically perform many of the changes tha
 See the [deck file convert](/deck/file/convert/) reference for a list of all the conversions that decK will perform.
 
 {:.info}
-> Note: Update your decK version to 1.47 or later before converting files.
+> **Note:** Update your decK version to 1.47 or later before converting files.
 
 ## Export configuration
 
