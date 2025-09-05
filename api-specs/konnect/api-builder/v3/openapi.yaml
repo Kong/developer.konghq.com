@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect API Builder
-  version: 3.0.18
+  version: 3.0.23
   description: The management API for building APIs for Konnect Dev Portals.
   contact:
     name: Kong
@@ -154,6 +154,8 @@ paths:
           $ref: '#/components/responses/ApiForbidden'
         '404':
           $ref: '#/components/responses/ApiNotFound'
+        '409':
+          $ref: '#/components/responses/ApiVersionPatchConflict'
         '415':
           $ref: '#/components/responses/UnsupportedMediaType'
       tags:
@@ -582,7 +584,7 @@ paths:
         '404':
           $ref: '#/components/responses/ApiNotFound'
         '409':
-          $ref: '#/components/responses/ApiSpecHiddenConflict'
+          $ref: '#/components/responses/ApiVersionPatchConflict'
         '415':
           $ref: '#/components/responses/UnsupportedMediaType'
       tags:
@@ -2808,6 +2810,7 @@ components:
               spec_content:
                 description: 'The content of the API specification. This is the raw content of the API specification, in json or yaml. By including this field, you can add a API specification without having to make a separate call to update the API specification.'
                 type: string
+                nullable: false
                 writeOnly: true
             additionalProperties: false
             required:
@@ -3173,6 +3176,15 @@ components:
             $ref: '#/components/schemas/ConflictError'
           examples:
             ApiSpecConflictExample:
+              $ref: '#/components/examples/ApiSpecHiddenConflictExample'
+    ApiVersionPatchConflict:
+      description: Conflict - May occur when constraints are violated
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+          examples:
+            ApiSpecHiddenConflictExample:
               $ref: '#/components/examples/ApiSpecHiddenConflictExample'
     ApiImplementationConflict:
       description: Conflict - A gateway service can only be linked to a single API

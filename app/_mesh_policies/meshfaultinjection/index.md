@@ -1,9 +1,9 @@
 ---
-title: MeshFaultInjection
+title: Mesh Fault Injection
 name: MeshFaultInjections
 products:
     - mesh
-description: 'With the MeshFaultInjection policy you can easily test your microservices against resiliency.'
+description: 'Test services for resiliency by introducing errors.'
 content_type: plugin
 type: policy
 icon: meshfaultinjection.png
@@ -12,7 +12,7 @@ icon: meshfaultinjection.png
 
 {% warning %}
 This policy uses a new policy matching algorithm.
-Do **not** combine with [FaultInjection](/docs/{{ page.release }}/policies/fault-injection).
+Do **not** combine with the now deprecated [FaultInjection](/docs/{{ page.release }}/policies/fault-injection).
 {% endwarning %}
 
 ## `targetRef` support matrix

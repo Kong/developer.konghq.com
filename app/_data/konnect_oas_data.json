@@ -301,6 +301,27 @@
     ]
   },
   {
+    "id": "a9357984-c292-4846-856b-85aff7df6c54",
+    "title": "Konnect Analytics Dashboards",
+    "latestVersion": {
+      "name": "v2",
+      "id": "df68f986-e475-435c-8f35-976888408b2d"
+    },
+    "description": "Konnect endpoint for creating, reading, updating, and deleting dashboards. Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a chart to render the data.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "df68f986-e475-435c-8f35-976888408b2d",
+        "created_at": "2025-08-13T15:28:50.369Z",
+        "updated_at": "2025-08-14T20:42:57.704Z",
+        "name": "v2",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "830b5dd0-6914-44fc-ae5d-cc8efcf77c04",
     "title": "Konnect API Builder",
     "latestVersion": {

@@ -10,7 +10,7 @@ If everything is running, then you should get the following response:
 
 ```sh
 Successfully connected to Kong!
-Kong version: 3.9.0.0
+Kong version: {{site.data.gateway_latest.ee-version}}
 ```
 {: data-deployment-topology="on-prem" .no-copy-code}
 

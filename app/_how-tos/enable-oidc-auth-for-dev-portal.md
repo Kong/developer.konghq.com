@@ -69,6 +69,8 @@ related_resources:
     url: /dev-portal/auth-strategies/
   - text: Dev Portal developer sign-up
     url: /dev-portal/developer-signup/
+  - text: Enable key authentication for Dev Portal apps
+    url: /how-to/enable-key-auth-for-dev-portal/
 cleanup:
   inline:
     - title: Clean up {{site.konnect_short_name}} environment

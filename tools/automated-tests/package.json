@@ -19,7 +19,7 @@
         "js-yaml": "^4.1.0",
         "minimist": "^1.2.8",
         "node-fetch": "^3.3.2",
-        "puppeteer": "^24.0.0",
+        "playwright": "^1.54.2",
         "tough-cookie": "^5.1.2"
     }
 }

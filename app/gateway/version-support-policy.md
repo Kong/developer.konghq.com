@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} version support"
+title: "{{site.base_gateway}} version support policy"
 content_type: policy
 layout: reference
 
@@ -58,10 +58,6 @@ For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version
 >    <th>Planned release date</th>
 >  </thead>
 >  <tbody>
->    <tr>
->      <td>3.10</td>
->      <td>March 2025</td>
->    </tr>
 >    <tr>
 >      <td>3.14</td>
 >      <td>March 2026</td>

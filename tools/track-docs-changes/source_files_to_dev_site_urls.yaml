@@ -1659,8 +1659,6 @@ app/_src/.repos/kuma/app/_src/production/secure-deployment/dp-membership.md:
   - /mesh/configure-data-plane-proxy-membership/
 app/_src/.repos/kuma/app/_src/production/secure-deployment/secrets.md:
   - /mesh/manage-secrets/
-app/_src/.repos/kuma/app/_src/production/use-mesh.md:
-  - /mesh/use-kuma/
 app/_src/.repos/kuma/app/_src/reference/data-collection.md:
   - /mesh/data-collection/
 

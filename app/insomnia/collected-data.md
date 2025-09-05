@@ -15,8 +15,8 @@ related_resources:
     url: /insomnia/version-control/
   - text: Storage options
     url: /insomnia/storage/
-  - text: Insomnia concepts
-    url: /insomnia/concepts/
+  - text: Insomnia terminology
+    url: /insomnia/terminology/
 products:
     - insomnia
 

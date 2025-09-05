@@ -9,7 +9,9 @@ edit_and_issue_links: false
     <div class="flex justify-between gap-[60px]">
         <div class="flex flex-col gap-8 py-24">
             <div class="flex flex-col gap-2">
-                <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Developer</h1>
+                <h1 class="font-extrabold text-[40px] leading-[60px] [contain:layout:style]">
+                Kong Developer
+                </h1>
                 <span class="leading-7">Discover Kong’s tools, APIs, and tutorials to help you build, secure, and scale your services.</span>
             </div>
             <div id="homepage-search-input" class="flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-4 items-center lg:w-3/5 cursor-pointer">
@@ -59,7 +61,7 @@ edit_and_issue_links: false
         <h2>Applications</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/dev-portal.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/dev-portal.svg" class="w-8 h-8" alt="Dev Portal icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Dev Portal</h3>
                     <p class="text-sm text-secondary">Empower API consumers with self-service API documentation and developer tools</p>
@@ -70,7 +72,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/analytics.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/analytics.svg" class="w-8 h-8" alt="Analytics icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Advanced Analytics</h3>
                     <p class="text-sm text-secondary">Gain visibility into API performance and usage patterns with Kong's Advanced Analytics</p>
@@ -81,7 +83,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/service-hub.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/service-hub.svg" class="w-8 h-8" alt="Service Hub icon" />
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Service Catalog</h3>
                     <p class="text-sm text-secondary">Manage and discover services within the Kong ecosystem effortlessly</p>
@@ -92,7 +94,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/gateway.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/gateway.svg" class="w-8 h-8" alt="Kong Gateway Manager icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Gateway Manager</h3>
                     <p class="text-sm text-secondary">Catalog, connect to, and monitor the status of all Control Planes (CPs) and Data Plane nodes (DPs) in one place</p>
@@ -103,18 +105,18 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/mesh.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/mesh.svg" class="w-8 h-8" alt="Kong Mesh Manager icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Mesh Manager</h3>
                     <p class="text-sm text-secondary">Create, manage, and view your Kong Mesh service meshes using the Konnect platform</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/mesh-manager/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/mesh/">All documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/search/?tags=mesh-manager">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/insomnia/insomnia-logo-bug.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/insomnia/insomnia-logo-bug.svg" class="w-8 h-8" alt="Insomnia icon" />
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Insomnia</h3>
                     <p class="text-sm text-secondary">Design, debug, test, and mock APIs locally, on Git, or cloud</p>
@@ -132,7 +134,7 @@ edit_and_issue_links: false
         <h2>Connectivity</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/gateway.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/gateway.svg" class="w-8 h-8" alt="Kong Gateway icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Kong Gateway</h3>
                     <p class="text-sm text-secondary">A lightweight, fast, and flexible cloud-native API gateway</p>
@@ -145,7 +147,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/ai.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/ai.svg" class="w-8 h-8" alt="Kong AI Gateway icon" />
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>AI Gateway</h3>
                     <p class="text-sm text-secondary">Connectivity and governance layer for modern AI-native applications built on top of Kong Gateway</p>
@@ -158,7 +160,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/mesh.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/mesh.svg" class="w-8 h-8" alt="Kong Mesh icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Kong Mesh</h3>
                     <p class="text-sm text-secondary">Modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security</p>
@@ -171,7 +173,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/kubernetes.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/kubernetes.svg" class="w-8 h-8" alt="Kong Ingress Controller icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>KIC</h3>
                     <p class="text-sm text-secondary">Kong’s Kubernetes-native controller to manage API traffic for containerized apps</p>
@@ -184,7 +186,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/kubernetes.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/kubernetes.svg" class="w-8 h-8" alt="Kong Gateway Operator icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Operator</h3>
                     <p class="text-sm text-secondary">Deploy and manage Kong on Kubernetes using Kubernetes resources</p>
@@ -197,7 +199,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/event.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/event.svg" class="w-8 h-8" alt="Kong Native Event Proxy icon"/>
                 <div class="flex flex-col gap-3">
                     <h3>Event Gateway</h3>
                     <p class="text-sm text-secondary">A Kafka-native Gateway built for governance, security, and cost-efficient use of Kafka</p>
@@ -215,19 +217,19 @@ edit_and_issue_links: false
         <h2>Konnect Platform</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/security.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/security.svg" class="w-8 h-8" alt="Platform auth icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Platform auth</h3>
                     <p class="text-sm text-secondary">Secure the Konnect Platform using single sign-on with any SAML and OIDC provider or use built-in authentication</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/authentication/">Konnect plaftform authetication <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/authentication/">Konnect platform authetication <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/sso/">Konnect SSO<span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/teams-and-roles/">Teams and roles<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/organization.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/organization.svg" class="w-8 h-8" alt="Organization icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Org management</h3>
                     <p class="text-sm text-secondary">Streamline and govern organization-wide API access and operations</p>
@@ -239,7 +241,7 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/edit.svg" class="w-8 h-8"/>
+                <img src="/assets/icons/edit.svg" class="w-8 h-8" alt="Audit logs icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Audit logs</h3>
                     <p class="text-sm text-secondary">Detect and respond to potential security incidents when they occur</p>

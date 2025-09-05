@@ -1,9 +1,9 @@
 ---
-title: meshpassthrough
+title: Mesh Pass Through
 name: meshpassthroughs
 products:
     - mesh
-description: 'This policy enables {{site.mesh_product_name}} to configure traffic to external destinations that is allowed to pass outside the mesh.'
+description: 'Configure traffic to external destinations that is allowed to pass outside the mesh.'
 content_type: plugin
 type: policy
 min_version:

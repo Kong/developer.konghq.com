@@ -1,5 +1,5 @@
 ---
-title: "{{site.kic_product_name}} Support Policy"
+title: "{{site.kic_product_name}} version support policy"
 
 description: |
   The {{site.kic_product_name}} version support policy outlines the {{site.kic_product_name}} versioning scheme and version lifecycle, from release to sunset support.
@@ -31,9 +31,21 @@ LTS versions of {{site.kic_product_name}} are supported for 3 years after releas
 
 ## Supported versions
 
+The following table lists {{site.kic_product_name}} compatibility with versions of other dependencies.
+
+{:.info}
+> **Note**: The {{site.base_gateway}} versions listed here may or may not be currently supported by Kong. 
+See the [{{site.base_gateway}} support policy](/gateway/version-support-policy/) for the full list of supported Gateway versions and their expected EOL dates.
+> <br><br>
+> If a Gateway version is out of support, we recommend [upgrading to a newer {{site.kic_product_name}} version](/kubernetes-ingress-controller/faq/upgrading-ingress-controller/).
+
 {% include_cached k8s/supported-versions.md show_kic=true %}
 
+> _Table 1: Version support for dependencies of {{site.kic_product_name}}_
+
 ## {{site.kic_product_name}} versions
+
+The following {{site.kic_product_name}} versions are currently supported by Kong.
 
 {:.info}
 > LTS releases are marked **bold**, and are supported for 3 years from release.
@@ -56,6 +68,23 @@ rows:
   - version: "3.3.x"
     release: "2024-08-26"
     support: "2025-08-26"
+  - version: "**2.12.x**"
+    release: "**2023-09-25**"
+    support: "**2026-09-25**"
+{% endtable %}
+> _Table 2: Currently supported versions of {{site.kic_product_name}}_
+
+These versions of {{site.kic_product_name}} have reached the end of full support:
+
+{% table %}
+columns:
+  - title: Version
+    key: version
+  - title: Release Date
+    key: release
+  - title: End of Support
+    key: support
+rows:
   - version: "3.2.x"
     release: "2024-06-12"
     support: "2025-06-12"
@@ -65,9 +94,6 @@ rows:
   - version: "3.0.x"
     release: "2023-11-03"
     support: "2024-11-03"
-  - version: "**2.12.x**"
-    release: "**2023-09-25**"
-    support: "**2026-09-25**"
   - version: "2.11.x"
     release: "2023-08-09"
     support: "2024-08-09"
@@ -120,8 +146,7 @@ rows:
     release: "2018-06-02"
     support: "2019-06-02"
 {% endtable %}
-
-> _Table 1: Version Support for {{site.kic_product_name}}_
+> _Table 3: Unsupported versions of {{site.kic_product_name}}_
 
 {% include kong-support-policy.md %}
 

@@ -1,23 +1,23 @@
 ---
-title: MeshTrafficPermission
+title: Mesh Traffic Permission
 name: MeshTrafficPermissions
 products:
     - mesh
-description: "The `MeshTrafficPermission` policy provides access control within Mesh."
+description: "Define what services can talk to other services."
 content_type: plugin
 type: policy
 icon: meshtrafficpermission.png
 ---
 {% warning %}
 This policy uses new policy matching algorithm.
-Do **not** combine with [TrafficPermission](/docs/{{ page.release }}/policies/traffic-permissions).
+Do **not** combine with the deprecated TrafficPermission policy.
 {% endwarning %}
 
 {% tip %}
 [Mutual TLS](/docs/{{ page.release }}/policies/mutual-tls) has to be enabled to make MeshTrafficPermission work.
 {% endtip %}
 
-The `MeshTrafficPermission` policy provides access control within the [Mesh](/docs/{{ page.release }}/production/mesh/).
+The `MeshTrafficPermission` policy provides access control within the Mesh.
 It allows you to define granular rules about which services can communicate with each other.
 
 ## TargetRef support matrix

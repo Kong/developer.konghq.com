@@ -36,6 +36,8 @@ related_resources:
     url: /dev-portal/developer-signup/
   - text: Enable self-managed OIDC auth with Okta
     url: /how-to/enable-oidc-auth-for-dev-portal/
+  - text: Enable key authentication for Dev Portal apps
+    url: /how-to/enable-key-auth-for-dev-portal/
 ---
 
 Dev Portal application authentication strategies determine which developers can access which APIs. 
@@ -89,6 +91,8 @@ To create an additional key auth strategy:
 1. Enter a name (for internal use) and a display name (visible to developers).
 1. Select **Key auth** as the auth type.
 1. Click **Save**.
+
+For a complete tutorial, see [Enable key authentication for Dev Portal apps](/how-to/enable-key-auth-for-dev-portal/).
 
 ## Dev Portal OIDC authentication
 

@@ -189,18 +189,19 @@ rows:
 
 When you use the {{site.konnect_short_name}} wizard to create a Data Plane node, it generates a certificate key pair. Data Planes can establish a connection with this certificate key pair (pinned cert).
 
-1. Navigate to [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/) in {{site.konnect_short_name}}.
-1. Click on the Control Plane you want to create a Data Plane node for.
-1. Click **Data Plane Nodes** in the sidebar.
-1. Click **Create a New Data Plane Node**. 
-1. Follow the instructions in the wizard to create a Data Plane node and generate the certificate key pair.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
+1. Click the control plane you want to create a data plane node for.
+1. Navigate to **Data Plane Nodes** in the sidebar.
+1. Click **New Data Plane Node**. 
+1. Follow the instructions in the wizard to create a data plane node and generate the certificate key pair.
+1. Click **Done**.
 
 ### Generate a CA-signed certificate
 
 Using the {{site.konnect_short_name}} UI, you can generate a CA certificate, which allows Data Planes to connect using a certificate signed by that CA (PKI). Alternatively you can upload your own CA using the upload option.
 
-1. Navigate to [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/) in {{site.konnect_short_name}}.
-1. Click on the Control Plane you want to create a Data Plane node for.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
+1. Click the control plane you want to create a data plane node for.
 1. From the Action menu, select **Data Plane Certificates**. 
 1. Either upload or generate a certificate.
 
@@ -213,7 +214,7 @@ Docker options in Gateway Manager, we recommend creating a new Data Plane node w
 certificates.
 
 1. Stop the Data Plane node container.
-2. Open [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/), select a Control Plane, open **Data Plane Nodes** from the side menu, and click **New Data Plane Node**.
+2. Navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/), select a Control Plane, open **Data Plane Nodes** from the side menu, and click **New Data Plane Node**.
 3. Run the script to create a new Data Plane node with
 updated certificates.
 4. Remove the old Data Plane node container.

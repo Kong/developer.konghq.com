@@ -6,7 +6,7 @@ description: 'Use Customer-Managed Encryption Keys (CMEK) in {{site.konnect_shor
 breadcrumbs:
   - /konnect/
 products:
-    - konnect-platform
+    - konnect
 tags:
   - encryption
   - security

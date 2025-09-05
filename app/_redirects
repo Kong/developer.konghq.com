@@ -9,6 +9,7 @@
 /how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
 
 # Mesh redirects
+/how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
 /mesh/quickstart/universal-demo    /mesh/universal/
@@ -34,7 +35,7 @@
 /mesh/networking/hostnamegenerator      /mesh/hostnamegenerator/
 /mesh/networking/meshmultizoneservice   /mesh/meshmultizoneservice/
 /mesh/:version/reference/kuma-cp    /mesh/reference/kuma-cp/
-/mesh/introduction/install/     /mesh/#install-kong-mesh
+/mesh/introduction/install/     /mesh/#get-started
 /mesh/explore/cli       /mesh/cli/
 /mesh/production/gui    /mesh/kuma-user-interface-gui/
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
@@ -97,7 +98,6 @@
 /mesh/policies/traffic-permissions  /mesh/policies/meshtrafficpermission/
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
-/mesh/policies/mutual-tls/   /mesh/policies/
 
 
 ## Kubernetes
@@ -121,11 +121,17 @@
 # Gateway LTS
 /archive/dev-portal/ https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/dev-portal/
 /archive/vitals/     https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/analytics/
-
-
+/gateway/upgrade/lts-upgrade/ /gateway/upgrade/lts-upgrade-34-310/
 
 ## Debugger
 
 /konnect-platform/active-tracing/  /gateway/debugger/
 /konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
 
+## Insomnia
+/insomnia/concepts/ /insomnia/terminology/
+/insomnia/install/ /insomnia/#install-insomnia
+
+## Indices
+
+/index/konnect-platform/  /index/konnect/

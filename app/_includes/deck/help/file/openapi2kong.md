@@ -10,6 +10,7 @@ Flags:
       --format string            output format: yaml or json (default "yaml")
       --generate-security        generate OpenIDConnect plugins from the security directives
   -h, --help                     help for openapi2kong
+      --ignore-circular-refs     ignore circular $ref errors in the OpenAPI spec (dangerous, use with caution)
       --ignore-security-errors   ignore errors for unsupported security schemes
   -i, --inso-compatible          This flag will enable Inso compatibility. The generated entity names will be
                                  the same, and no 'id' fields will be generated.

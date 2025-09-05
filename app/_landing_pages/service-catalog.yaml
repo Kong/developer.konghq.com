@@ -45,7 +45,7 @@ rows:
                 Connect external tools like GitHub, PagerDuty, and CI/CD pipelines to map services, dependencies, and metadata.
               icon: /assets/icons/plug.svg
               cta:
-                text: View integrations
+                text: See all integrations
                 url: /service-catalog/integrations/
       - blocks:
           - type: card
@@ -55,8 +55,18 @@ rows:
                 Monitor compliance, security, and best practices across services using automated scorecards.
               icon: /assets/icons/data-object.svg
               cta:
-                text: View scorecards
+                text: Learn about scorecards
                 url: /service-catalog/scorecards/
+      - blocks:
+          - type: card
+            config:
+              title: Service Catalog services
+              description: |
+                Map resources to a Service Catalog service.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about Service Catalog services
+                url: /service-catalog/services/
   - header:
       type: h2
       text: "Frequently asked questions"

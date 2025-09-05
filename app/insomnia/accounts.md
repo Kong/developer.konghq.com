@@ -85,9 +85,20 @@ faqs:
       Some banks may show multiple charge attempts due to currency differences. 
       However, our payment provider (Stripe) only processes a single charge per billing cycle. 
       If you have concerns, please contact us through the [support page](https://insomnia.rest/support).
+      Do not include sensitive data in any requests, responses, or logs you share with support unless you send it through a secure channel.
+
+
   - q: Why am I not getting my Insomnia login code email?
     a: |
       If sender verification callout is enabled on your mail server, it may be blocking Insomnia emails. To avoid this issue, we recommend disabling sender verification for your mail server.
+
+  - q: If I update my credit card information, are my payments automatically processed?
+    a: |
+      Yes. After you update your credit card information, that new card is now the default payment method associated with your account. On your next scheduled billing day for your subscription, we process your payment automatically. To update your payment information, contact [Sales](https://insomnia.rest/pricing/contact).
+
+  - q: I have an unpaid invoice, how can I pay it?
+    a: |
+      Contact [Sales](https://insomnia.rest/pricing/contact) to update your credit card information. Once updated, the outstanding balance is immediately charged to your updated payment method and your billing schedule is restarted, with access to your account restored.
 ---
 
 ## Create an Insomnia account

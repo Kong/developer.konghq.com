@@ -32,11 +32,13 @@ You can establish a private connection between {{site.konnect_short_name}} and y
 You can configure this instead of AWS Transit Gateways to secure your connection.
 
 PrivateLink support is currently available in the following AWS regions:
+* `us-east-1`
 * `us-east-2`
 * `us-west-2`
 * `eu-central-1`
 * `eu-west-1`
 * `eu-west-2`
+* `ap-east-1`
 * `ap-southeast-1`
 * `ap-southeast-2`
 
@@ -75,7 +77,7 @@ headers:
 
 {{ prefix | indent }}
 
-   In the response, look for `control_plane_endpoint`. Your cluster prefix is the first portion of the endpoint: `https://CLUSTER_PREFIX.cp0.konghq.com`.
+   In the response, look for `control_plane_endpoint`. Your cluster prefix is the first portion of the endpoint: `https://CLUSTER_PREFIX.cp.konghq.com`.
 
    Using the cluster prefix value from the response, put together a `kong.conf` configuration for the your region. For example, for the US region:
  
@@ -91,6 +93,34 @@ headers:
 The following tables show the PrivateLink service name and DNS name for each supported AWS region and {{site.konnect_short_name}} geo:
 <!--vale off-->
 {% navtabs "service names" %}
+
+{% navtab "us-east-1" %}
+{% table %}
+columns:
+  - title: {{site.konnect_short_name}} Geo
+    key: geo
+  - title: PrivateLink Service Name
+    key: service
+  - title: DNS Name
+    key: dns
+rows:
+  - geo: AP
+    service: com.amazonaws.vpce.us-east-1.vpce-svc-03eda50387fcc5e06
+    dns: ap.svc.konghq.com
+  - geo: EU
+    service: com.amazonaws.vpce.us-east-1.vpce-svc-074b83bf704d87ba7
+    dns: eu.svc.konghq.com
+  - geo: IN
+    service: com.amazonaws.vpce.us-east-1.vpce-svc-0785a7867f5cbed8b
+    dns: in.svc.konghq.com
+  - geo: ME
+    service: com.amazonaws.vpce.us-east-1.vpce-svc-09e6e8ec26383e748
+    dns: me.svc.konghq.com
+  - geo: US
+    service: com.amazonaws.vpce.us-east-1.vpce-svc-0a701662e3ebe10b8
+    dns: us.svc.konghq.com
+{% endtable %}
+{% endnavtab %}
 
 {% navtab "us-east-2" %}
 {% table %}
@@ -228,6 +258,34 @@ rows:
     dns: me.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.eu-west-2.vpce-svc-0c23345bb2ef7b298
+    dns: us.svc.konghq.com
+{% endtable %}
+{% endnavtab %}
+
+{% navtab "ap-east-1" %}
+{% table %}
+columns:
+  - title: {{site.konnect_short_name}} Geo
+    key: geo
+  - title: PrivateLink Service Name
+    key: service
+  - title: DNS Name
+    key: dns
+rows:
+  - geo: AP
+    service: com.amazonaws.vpce.ap-east-1.vpce-svc-0c7b67a477740b8cb
+    dns: ap.svc.konghq.com
+  - geo: EU
+    service: com.amazonaws.vpce.ap-east-1.vpce-svc-0ca74e27b8d0a5c3c
+    dns: eu.svc.konghq.com
+  - geo: IN
+    service: com.amazonaws.vpce.ap-east-1.vpce-svc-0731d524d482bfb04
+    dns: in.svc.konghq.com
+  - geo: ME
+    service: com.amazonaws.vpce.ap-east-1.vpce-svc-09ca173aa8de2dd02
+    dns: me.svc.konghq.com
+  - geo: US
+    service: com.amazonaws.vpce.ap-east-1.vpce-svc-02c00c62584350b46
     dns: us.svc.konghq.com
 {% endtable %}
 {% endnavtab %}

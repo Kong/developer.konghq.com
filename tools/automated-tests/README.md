@@ -83,6 +83,10 @@ By default, it will run all the instruction files, but it also supports running 
 
 `GATEWAY_VERSION='3.9' npm run run-tests -- --files='<path-to-instruction-file1>' --files='<path-to-instruction-file2>'`
 
+#### Run unreleased gateway version
+
+`GATEWAY_VERSION='3.12' KONG_IMAGE_TAG=nightly KONG_IMAGE_NAME=kong/kong-gateway-dev npm run run-tests`
+
 #### Supported Env variables
 
 | Variable | Description | Required | Default Value |

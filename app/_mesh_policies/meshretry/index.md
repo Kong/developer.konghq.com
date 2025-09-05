@@ -1,9 +1,9 @@
 ---
-title: MeshRetry
+title: Mesh Retry
 name: MeshRetries
 products:
     - mesh
-description: 'This policy enables {{site.mesh_product_name}} to know how to behave if there are failed requests which could be retried.'
+description: 'Configure retry behaviour for HTTP, gRPC and TCP protocols.'
 content_type: plugin
 type: policy
 min_version:

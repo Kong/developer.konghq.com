@@ -1,7 +1,7 @@
 {% assign prereq = include.prereq %}
 {% capture details_content %}
 {% if prereq.content %}
-{{ include.prereq.content | markdownify | liquify }}
+{{ include.prereq.content | liquify | markdownify}}
 {% elsif prereq.include_content %}
 {% assign include_path = prereq.include_content | append: ".md" %}
 {% include {{ include_path }} %}

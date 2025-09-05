@@ -34,8 +34,10 @@
       // On page load or when changing themes, best to add inline in `head` to avoid FOUC
         if (localStorage.mode === 'dark' || (!('mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
+          document.documentElement.style.setProperty("color-scheme", "dark");
         } else {
           document.documentElement.classList.remove('dark');
+          document.documentElement.style.setProperty("color-scheme", "light");
         }
     </script>
 
@@ -79,6 +81,7 @@
       <!-- End Google Tag Manager -->
     {% endif %}
 
+    {% if jekyll.environment == "production" and site.ENABLE_KAPA_AI %}
     <script
       async
       src="https://widget.kapa.ai/kapa-widget.bundle.js"
@@ -91,6 +94,7 @@
       data-modal-override-open-id="ask-ai-button"
       data-project-logo="https://developer.konghq.com/assets/logos/konglogo-gradient-secondary.svg"
     ></script>
+    {% endif %}
 
     {% include structured_data.html %}
 
@@ -149,6 +153,14 @@
   <script>
     window.searchFilters = {{site.data.searchFilters | jsonify }}
     window.searchSources = {{site.data.searchSources | jsonify }}
+  </script>
+
+  <script>
+    window.she = window.she || {};
+
+    window.she.config = {
+      languages: {{site.codeblocks.languages | jsonify}}
+    };
   </script>
 </body>
 </html>

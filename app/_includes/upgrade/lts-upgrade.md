@@ -1,56 +1,28 @@
----
-title: "{{site.base_gateway}} 2.8 to 3.4 LTS upgrade"
-content_type: reference
-layout: reference
-breadcrumbs:
-  - /gateway/
-  - /gateway/upgrade/
-products:
-    - gateway
-
-works_on:
-    - on-prem
-    - konnect
-search_aliases:
-  - lts
-tags:
-    - upgrades
-    - versioning
-
-description: This guide walks you through upgrade paths for {{site.base_gateway}} 2.8 LTS to 3.4 LTS and helps you prepare for an upgrade.
-
-related_resources:
-  - text: "{{site.base_gateway}} breaking changes"
-    url: /gateway/breaking-changes/
-  - text: "Backing up and restoring {{site.base_gateway}}"
-    url: /gateway/upgrade/backup-and-restore/
-  - text: "Dual-cluster upgrade"
-    url: /gateway/upgrade/dual-cluster/
-  - text: "In-place upgrade"
-    url: /gateway/upgrade/in-place/
-  - text: "Rolling upgrade"
-    url: /gateway/upgrade/rolling/
-  - text: "{{site.base_gateway}} upgrade"
-    url: /gateway/upgrade/lts-upgrade/
-
----
+{%- assign lts_version_from = include.lts_version_from %}
+{%- assign lts_version_to = include.lts_version_to %}
 
 {{site.base_gateway}} supports direct upgrades between long-term support (LTS) versions of {{site.ee_product_name}}.
-This guide walks you through upgrading from {{site.ee_product_name}} 2.8 LTS to {{site.ee_product_name}} 3.4 LTS.
+This guide walks you through upgrading from {{site.ee_product_name}} {{ lts_version_from }} LTS to {{site.ee_product_name}} {{ lts_version_to }} LTS.
 
-There are three upgrade strategies available for the LTS to LTS upgrade: in-place, dual-cluster, and rolling.
-This guide nominates the best applicable strategy for each deployment mode that {{site.base_gateway}} supports. 
+There are three upgrade strategies available when upgrading from an LTS version to a newer LTS version: in-place, dual-cluster, and rolling.
+This guide describes the best applicable strategy for each deployment mode that {{site.base_gateway}} supports. 
 Additionally, it lists some fundamental factors that play important roles in the upgrade process, and explains how to back up and recover data.
 
 This guide uses the following terms in the context of {{site.base_gateway}}:
 * **Upgrade**: The overall process of switching from an older to a newer version of {{site.base_gateway}}. 
 * **Migration**: The migration of your data store data into a new environment. 
-For example, the process of moving 2.8.x data from an old PostgreSQL instance to a new one for 3.4.x is referred to as database migration.
+For example, the process of moving data from an old PostgreSQL instance to a new one is referred to as database migration.
 
 To make sure your upgrade is successful, carefully review all the steps in this guide. It’s very important to understand all the preparation steps and choose the recommended upgrade path based on your deployment type.
 
 {:.warning}
-> **Caution**: The migration pattern described in this document can only happen between two LTS versions, {{site.ee_product_name}} 2.8 LTS and {{site.ee_product_name}} 3.4 LTS. If you apply this document to other release intervals, database modifications may be run in the wrong sequence and leave the database schema in a broken state. To migrate between other versions, see the [general upgrade guide](/gateway/upgrade/).
+> **Caution**: The migration pattern described in this document can only happen between two LTS versions, {{site.ee_product_name}} {{ lts_version_from }} LTS and {{site.ee_product_name}} {{ lts_version_to }} LTS. If you apply this document to other release intervals, database modifications may be run in the wrong sequence and leave the database schema in a broken state.
+{%- if include.lts_version_from == "2.8" %}
+> * To migrate between 3.4 and 3.10 LTS versions, see the [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
+{%- elsif include.lts_version_from == "3.4" %}
+> * To migrate between 2.8 and 3.4 LTS versions, see the [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
+{%- endif %}
+> * To migrate between other versions, see the [general upgrade guide](/gateway/upgrade/).
 
 ## Prerequisites
 
@@ -63,22 +35,34 @@ Read this document thoroughly to successfully complete the upgrade process, as i
   * [Database and dependency versions](/gateway/third-party-support/)
 * If you're using decK, [upgrade it to the latest version](/deck/).
 
-{:.warning}
+{% if include.lts_version_from == "2.8" %}
+{:.info}
 > Starting from {{site.base_gateway}} 3.4, Cassandra is not supported. 
 > If you're using Cassandra as your data store, migrate off of Cassandra first and upgrade second.
 > Work with the Kong support team to migrate from Cassandra to PostgreSQL.
+{% endif %}
+
+<!--vale off-->
+{% if include.lts_version_from == "3.4" %}
+{:.warning}
+> Starting from {{site.base_gateway}} 3.5, Enterprise Developer Portal and Vitals are no longer 
+included in {{site.ee_product_name}}. 
+> Existing customers who have purchased Kong Enterprise Portal or Vitals can continue to use them and be supported via a dedicated mechanism.
+> If you have purchased Kong Enterprise Portal or Vitals in the past and would like to continue to use them in 3.10, contact [Kong Support](https://support.konghq.com) for more information.
+{% endif %}
+<!--vale on-->
 
 ## Upgrade journey overview
 
 ### Preparation phase
 
-There are a number of steps you must complete before upgrading to {{site.base_gateway}} 3.4 LTS:
+There are a number of steps you must complete before upgrading to {{site.base_gateway}} {{ lts_version_to }} LTS:
 
 1. Work through any listed prerequisites.
 1. [Back up](#preparation-choose-a-backup-strategy) your database or your declarative configuration files.
 1. Choose the right [strategy for upgrading](#preparation-choose-an-upgrade-strategy-based-on-deployment-mode) based on your deployment topology.
-1. Review the [{{site.base_gateway}} changes from 2.8 to 3.4](#preparation-review-gateway-changes) for any breaking changes that affect your deployments.
-1. Conduct a thorough examination of the [modifications made to the `kong.conf` file](#kong-conf-changes) between the LTS releases.
+1. Review the [{{site.base_gateway}} changes from {{ lts_version_from }} to {{ lts_version_to }}](#preparation-review-gateway-changes) for any breaking changes that may affect your deployments.
+1. Review any [modifications made to the `kong.conf` file](#kong-conf-changes) between the LTS releases.
 1. Using your chosen strategy, test migration in a pre-production environment.
 
 ### Performing the upgrade
@@ -98,7 +82,6 @@ Now, let's move on to preparation, starting with your backup options.
 {% include_cached /upgrade/backup.md %}
 
 ## Preparation: Choose an upgrade strategy based on deployment mode
-
 
 Choose your deployment mode:
 * [Traditional](#traditional-mode)
@@ -156,52 +139,24 @@ keeping in mind the additional resources and complexities.
 
 ## Preparation: Review gateway changes
 
+{% if include.lts_version_from == "2.8" %}
+
 The following tables categorize all relevant changelog entries from {{site.ee_product_name}} 2.8.0.0-2.8.4.1 up to 3.4.0.0.
 Carefully review each entry and make changes to your configuration accordingly.
 
-{% include_cached /upgrade/lts-changes.md %}
+{% include_cached /upgrade/lts-changes-28-34.md %}
 
-### kong.conf changes
+{% elsif include.lts_version_from == "3.4" %}
 
-The following table lists changes to parameters managed in the [`kong.conf`](/gateway/configuration/) configuration file:
+The following tables categorize all relevant changelog entries from {{site.ee_product_name}} 3.4.0.0 up to 3.10.0.3.
+Carefully review each entry and make changes to your configuration accordingly.
 
-{% table %}
-columns:
-  - title: 2.8
-    key: 28
-  - title: 3.4
-    key: 34
-rows:
-  - 28: "`data_plane_config_cache_mode = unencrypted`"
-    34: "Removed in 3.4"
-  - 28: "`data_plane_config_cache_path`"
-    34: "Removed in 3.4"
-  - 28: "`admin_api_uri`"
-    34: "Deprecated. Use `admin_gui_api_url` instead."
-  - 28: "`database` Cassandra support"
-    34: "Accepted values are `postgres` and `off`. All Cassandra options have been removed."
-  - 28: "`pg_keepalive_timeout = 60000`"
-    34: |
-      You can now specify the maximal idle timeout (in ms) for the Postgres connections in the pool.
-      If this value is set to 0 then the timeout interval is unlimited. 
-      If not specified, this value will be the same as `lua_socket_keepalive_timeout`.
-  - 28: "`worker_consistency = strict`"
-    34: "`worker_consistency = eventual`"
-  - 28: "`prometheus_plugin_*`"
-    34: "Disabled Prometheus plugin high-cardinality metrics."
-  - 28: "`lua_ssl_trusted_certificate` with no default value."
-    34: "Default value: `lua_ssl_trusted_certificate = system`"
-  - 28: "`pg_ssl_version = tlsv1`"
-    34: "`pg_ssl_version = tlsv1_2`"
-  - 28: "--"
-    34: "New parameter:`allow_debug_header = off`"
-{% endtable %}
-
+{% include_cached /upgrade/lts-changes-34-310.md %}
+{% endif %}
 
 ## Perform upgrade
 
-Now that you have chosen an upgrade strategy, reviewed all the relevant changes between the 2.8 and 3.4 LTS releases
-you can move on to performing the upgrade with your chosen strategy:
+Now that you have chosen an upgrade strategy and reviewed all the relevant changes between the {{ lts_version_from }} and {{ lts_version_to }} LTS releases, you can start the upgrade with your chosen strategy:
 
 Traditional mode or control planes in hybrid mode:
 * [Dual-cluster upgrade](/gateway/upgrade/dual-cluster/)
@@ -212,4 +167,4 @@ DB-less mode or data planes in hybrid mode:
 
 ## Troubleshooting
 
-If you run into issues during the upgrade and need to roll back, [restore {{site.base_gateway}}](/gateway/upgrade/backup-and-restore/#restore-gateway-entities) based on the backup method.
+If you run into issues during the upgrade and need to roll back, [restore {{site.base_gateway}}](/gateway/upgrade/backup-and-restore/) based on the backup method.

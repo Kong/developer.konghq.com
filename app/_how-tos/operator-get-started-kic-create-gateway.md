@@ -103,7 +103,7 @@ spec:
         spec:
           containers:
           - name: controller
-            image: kong/kubernetes-ingress-controller:{{ site.data.kong_latest_KIC.version }}
+            image: kong/kubernetes-ingress-controller:{{ site.data.kic_latest.release }}
             env:
             - name: CONTROLLER_LOG_LEVEL
               value: debug' | kubectl apply -f -

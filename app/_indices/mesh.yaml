@@ -25,10 +25,17 @@ sections:
       - path: /mesh/ubi-images/
       - path: /mesh/deploy-with-terraform-konnect/
       - path: /mesh/import-konnect-deployment-to-terraform/
-      - title: Mesh Manager
+      - title: Mesh Manager with Konnect
         description: Manage service meshes and Control Planes in Konnect.
         url: /mesh-manager/
-  
+
+  - title: Mesh guides
+    items:
+      - path: /mesh/deploy-mesh-on-konnect/
+      - path: /mesh/deploy-mesh-self-managed/
+      - path: /mesh/deploy-universal-self-managed/
+      - path: /mesh/use-mesh-cli/
+
   - title: How Mesh Works
     items:
       - path: /mesh/concepts/
@@ -39,6 +46,7 @@ sections:
       - path: /mesh/single-zone/
       - path: /mesh/mesh-multizone-service-deployment/
       - path: /mesh/kuma-user-interface-gui/
+      - path: /mesh/use-mesh-cli/
       - path: /mesh/annotations/
       - path: /mesh/data-plane-proxy/
       - path: /mesh/data-plane-kubernetes/
@@ -82,7 +90,7 @@ sections:
   - title: Delegated Gateways
     items:
       - path: /mesh/ingress-gateway-delegated/
-      - path: /mesh/gateway-delegated/
+      - path: /mesh/using-mesh/managing-ingress-traffic/delegated
 
   - title: Authentication and Authorization
     items:

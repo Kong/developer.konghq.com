@@ -40,14 +40,24 @@ export async function runtimeEnvironment(runtimeConfig) {
   }
 
   if (version) {
-    const versionConfig = runtimeConfig["versions"].find(
+    let versionConfig = runtimeConfig["versions"].find(
       (v) => v["version"] == version
     );
 
     if (!versionConfig) {
-      throw new Error(
-        `Missing version config for version: '${version}' in ${runtimeConfig.runtime}`
-      );
+      if (process.env.KONG_IMAGE_NAME && process.env.KONG_IMAGE_TAG) {
+        versionConfig = {
+          version,
+          env: {
+            KONG_IMAGE_NAME: process.env.KONG_IMAGE_NAME,
+            KONG_IMAGE_TAG: process.env.KONG_IMAGE_TAG,
+          },
+        };
+      } else {
+        throw new Error(
+          `Missing version config for version: '${version}' in ${runtimeConfig.runtime}`
+        );
+      }
     }
 
     environment = { ...environment, ...versionConfig["env"] };

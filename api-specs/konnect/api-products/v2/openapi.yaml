@@ -1299,6 +1299,7 @@ components:
             then consumers of the now deprecated verion of the API product will be notified.
           type: boolean
           example: true
+          nullable: false
         gateway_service:
           anyOf:
             - $ref: '#/components/schemas/GatewayServicePayload'

@@ -18,6 +18,7 @@ tags:
 
 works_on:
   - on-prem
+  - konnect
 
 related_resources:
   - text: "Verify signatures for signed {{site.mesh_product_name}} images"

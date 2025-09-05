@@ -37,9 +37,42 @@ For a complete tutorial using the {{site.konnect_short_name}} API, see [Import a
 
 ## Authenticate the Traceable integration
 
+{% navtabs "traceable-integration" %}
+{% navtab "UI" %}
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Select **Add Traceable Instance**.
 3. Configure the instance, add authorization and name the instance. 
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_integration_instance`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/integration_instance.tf) and [`konnect_integration_instance_auth_credential`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/integration_instance_auth_credential.tf) resources:
+```hcl
+echo '
+resource "konnect_integration_instance" "my_integrationinstance" {
+  name         = "traceable"
+  display_name = "Traceable"
+
+  integration_name = "traceable"
+  config = jsonencode({
+    include_inactive = false
+  })
+}
+resource "konnect_integration_instance_auth_credential" "my_integrationinstanceauthcredential" {
+  integration_instance_id = konnect_integration_instance.my_integrationinstance.id
+  multi_key_auth = {
+    config = {
+      headers = [
+        {
+          name = "authorization"
+          key  = "$TRACEABLE_API_KEY"
+        }
+      ]
+    }
+  }
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Resources
 

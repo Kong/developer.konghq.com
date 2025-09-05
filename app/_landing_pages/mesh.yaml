@@ -12,7 +12,7 @@ rows:
   - header:
       type: h1
       text: "Kong Mesh"
-      sub_text: Modernized service mesh for development and governance
+      sub_text: Modernized service mesh for API developers and Platform Operators
 
   - columns:
       - blocks:
@@ -25,66 +25,18 @@ rows:
 
                     **Benefits of Kong Mesh:**
                     - Built-in mTLS, service discovery, and traffic management.
-                    - Support for [multi-zone](/mesh/mesh-multizone-service-deployment/) and multi-mesh topologies.
-                    - Runs on both Kubernetes and Universal (VM) environments.
+                    - Support for [multi-zone](/mesh/mesh-multizone-service-deployment/) and multi-tenant topologies.
+                    - Runs on both Kubernetes and Universal (VM / Bare metal) environments.
                     - [Enterprise features](/mesh/enterprise/) like access control and advanced observability.
 
-                    You can manage your mesh deployments using the [Kong Mesh GUI](https://cloud.konghq.com/mesh/).
+                    You can manage your mesh environments using the [Konnect Mesh GUI](https://cloud.konghq.com/us/mesh-manager/).
       - blocks:
         - type: image
           config:
             url: /assets/images/mesh/gw_mesh.png
-            alt_text: "Mesh Diagram"
-
-  - header:
-      type: h2
-      text: "Install {{site.mesh_product_name}}"
-    columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  You can use the following script to run an instance of {{site.mesh_product_name}} in Universal mode:
-                  
-                  1. Go to the [{{site.mesh_product_name}} packages](https://cloudsmith.io/~kong/repos/{{site.mesh_product_name_path}}-binaries-release/packages/?q=version%3A{{site.data.mesh_latest.version}}) page to download and extract the installation archive for your OS, or download and extract the latest release automatically (Linux or macOS):
-                     ```shell
-                     curl -L {{site.links.web}}/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
-                     ```
-                  2. To finish installation, add {{site.mesh_product_name}} binaries to path:
-                     ```shell
-                     export PATH=$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin:$PATH
-                     ```
-                     This directory contains binaries for `kuma-dp`, `kuma-cp`, `kumactl`, `envoy`, and `coredns`.
-
-                  For detailed {{site.mesh_product_name}} quickstart guides in different deployment modes, see the get started section below.
+            alt_text: "Kong Mesh Architecture Diagram"
 
   
-  - header:
-      type: h2
-      text: "Get started"
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Universal mode quickstart
-              description: |
-                Guide to deploying Kong Mesh in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.
-              icon: /assets/icons/world.svg
-              cta:
-                text: See the quickstart 
-                url: /mesh/universal/
-      - blocks:
-          - type: card
-            config:
-              title: Kubernetes quickstart
-              description: |
-                Step-by-step guide to deploy Kong Mesh on Kubernetes using Helm and Minikube. Includes demo app setup, GUI exploration, and enabling mTLS for zero-trust security.
-              icon: /assets/icons/kubernetes.svg
-              cta:
-                text: See the quickstart 
-                url: /mesh/kubernetes/
   - header:
       type: h2
       text: "Learn"
@@ -92,7 +44,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "About service meshes"
+              title: "Why use a service mesh?"
               description: |
                 Overview of service mesh concepts and how Kong Mesh simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.
               cta:
@@ -116,105 +68,130 @@ rows:
               cta:
                 text: Learn more 
                 url: /mesh/architecture/
-      - blocks:
-          - type: card
-            config:
-              title: "Use {{site.mesh_product_name}}"
-              description: |
-                Access Kong Mesh via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.
-              cta:
-                text: Learn more 
-                url: /mesh/use-kuma/
-      
+
   - header:
       type: h2
-      text: "Deployment modes"
+      text: "Get started"
     columns:
       - blocks:
-          - type: card
-            config:
-              title: Multi-zone
-              description: |
-                Group equivalent MeshServices across zones and expose a unified, zone-agnostic service with global failover capabilities.
-              cta:
-                text: Learn more 
-                url: /mesh/mesh-multizone-service-deployment/
+        - type: card
+          config:
+            icon: /assets/logos/Konnect-logo.svg
+            title: Managed Global Control Plane
+            description: |
+              Use Konnect to host and manage you Mesh Global Control Plane.  Your Data Plane can be deployed on Kubernetes, Virtual Machines or Bare Metal.
+            featured: true
+            cta:
+                text: See the quickstart 
+                url: /mesh/deploy-mesh-on-konnect
+
       - blocks:
           - type: card
             config:
-              title: Single-zone
+              title: Self hosted Control Plane
               description: |
-                Run {{site.mesh_product_name}} in a single zone with a standalone Control Plane and interconnected Data Plane proxies.
+                Deploy and manage the Control plane and Data plane on your Kubernetes, Virtual Machines or Bare Metal infrastructure.
+              icon: /assets/icons/plug.svg
               cta:
-                text: Learn more 
-                url: /mesh/single-zone/
+                text: See the quickstart 
+                url: /mesh/deploy-mesh-self-managed
+
   - header:
       type: h2
-      text: Key references
+      text: "Next steps"
   - columns:
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} changelog"
+              title: Deployment types
+              icon: /assets/icons/mesh.svg
               description: |
-                See new {{site.mesh_product_name}} features and bug fixes.
-              cta:
-                text: View the release notes 
-                url: /mesh/changelog/
-                align: end
+                You can deploy {{site.mesh_product_name}} in a single zone or across multiple zones, such as data centers, Kubernetes clusters, or cloud regions - giving you unified control over all your services.
+              ctas:
+                - text: Single Zone 
+                  url: /mesh/single-zone/
+                - text: Multi Zone
+                  url: /mesh/mesh-multizone-service-deployment/
+
       - blocks:
           - type: card
             config:
-              title: Policy Hub
+              title: Control service traffic
+              icon: /assets/icons/linked-services.svg
               description: |
-                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
-              cta:
-                text: See policies 
-                url: /mesh/policies/
+                Enforce service-to-service communication with fine-grained policies for access control, mutual TLS, traffic permissions, and L4/L7 routing. Ensuring secure and compliant traffic flows across your mesh.
+              ctas:
+                - text: Mesh Traffic Permission 
+                  url: /mesh/policies/meshtrafficpermission/
+                - text: Mesh HTTP Route 
+                  url: /mesh/policies/meshhttproute/
+                - text: Mesh TCP Route 
+                  url: /mesh/policies/meshtcproute/
       - blocks:
           - type: card
             config:
-              title: Enterprise features
+              title: Service reliability
+              icon: /assets/icons/refresh.svg
               description: |
-                Explore the features included with {{site.mesh_product_name}} Enterprise, including mTLS backends, RBAC, FIPS support, and signed container images.
-              cta:
-                text: See enterprise features 
-                url: /mesh/enterprise/
+                Improve service reliability with built-in policies for health checks, circuit breakers, timeouts, and outlier detection. Automatically prevent unhealthy or overloaded services from impacting the rest of your mesh.
+              ctas:
+                - text: Mesh Health Check 
+                  url: /mesh/policies/meshhealthcheck/
+                - text: Mesh Retry 
+                  url: /mesh/policies/meshretry/
+                - text: Mesh Circuit Breaker 
+                  url: /mesh/policies/meshcircuitbreaker/
+
+
   - columns:
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} CLI"
+              title: Observability
+              icon: /assets/icons/monitor.svg
               description: |
-                Reference for the CLI tools included in Kong Mesh, including usage examples and commands for kumactl, kuma-cp, and kuma-dp.
-              cta:
-                text: View the reference 
-                url: /mesh/cli/
-                align: end 
+                Monitor service to service communication using Prometheus and/or OpenTelemetry.
+              ctas:
+                - text: Introduction 
+                  url: /mesh/observability/
+                - text: OpenTelemetry configuration 
+                  url: /mesh/collect-metrics-with-opentelemetry/
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} requirements"
+              title: Multi tenant Mesh
+              icon: /assets/icons/organization.svg
+
               description: |
-                See the different requirements to deploy {{site.mesh_product_name}}
+                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
               cta:
-                text: View the requirements 
-                url: /mesh/requirements/
-                align: end 
+                text: Learn more 
+                url: /mesh/mesh-multi-tenancy/
       - blocks:
           - type: card
             config:
-              title: "kuma-cp reference"
+              title: Configure ingress traffic
+              icon: /assets/icons/load-balance.svg
               description: |
-                Configuration reference for kuma-cp.
+                Configure ingress (north / south traffic into your Mesh) using built-in or Kong gateway.
               cta:
-                text: View the reference 
-                url: /mesh/reference/kuma-cp/
-                align: end 
+                text: Learn more 
+                url: /mesh/ingress/
+
   - header:
       type: h2
       text: Security and access
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: "Configure Mutual TLS"
+              description: |
+                Enables automatic encrypted mTLS traffic for all the services in a Mesh, as well as assigning an identity to every data plane proxy.
+              cta:
+                text: View the reference 
+                url: /mesh/policies/mutual-tls/
+                align: end
       - blocks:
           - type: card
             config:
@@ -238,13 +215,56 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Secure access across services"
+              title: "Secure access between Mesh components"
               description: |
                 Learn how secure access is provided across a Kong Mesh deployment.
               cta:
                 text: View the reference 
                 url: /mesh/secure-access/
                 align: end
+
+  - header:
+      type: h2
+      text: Key references
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Policy Hub
+              description: |
+                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+              ctas:
+                - text: Learn about policies 
+                  url: /mesh/policies-introduction/
+                - text: See all policies 
+                  url: /mesh/policies/
+
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} requirements and performance"
+              description: |
+                See the different requirements to deploy {{site.mesh_product_name}} as well as managing performance and resource requirements
+              ctas:
+                - text: View the requirements 
+                  url: /mesh/requirements/
+                - text: Kubernetes sidecar resources
+                  url: /mesh/data-plane-kubernetes/#custom-container-configuration
+                - text: Performance tuning
+                  url: /mesh/performance-tuning/
+      - blocks:
+          - type: card
+            config:
+              title: "Use {{site.mesh_product_name}} CLI and API"
+              description: |
+                Access Kong Mesh via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.
+              ctas:
+                - text: Learn more 
+                  url: /mesh/use-mesh-cli/
+                - text: Kuma Control Plane CLI options
+                  url: /mesh/reference/kuma-cp/
+
+
   - header:
       type: h2
       text: Support policies
@@ -256,10 +276,11 @@ rows:
               description: |
                 The {{site.mesh_product_name}} version support policy outlines the {{site.mesh_product_name}} 
                 versioning scheme and version lifecycle, from release to sunset support.
-              cta:
-                text: View the version support policy 
-                url: /mesh/support-policy/
-                align: end
+              ctas:
+                - text: View the version support policy 
+                  url: /mesh/support-policy/
+                - text: View Kuma Mesh changelog 
+                  url: /mesh/changelog/
       - blocks:
           - type: card
             config:

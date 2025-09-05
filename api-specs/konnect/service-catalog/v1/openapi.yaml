@@ -2114,7 +2114,6 @@ components:
           type: object
           additionalProperties: true
           nullable: true
-          readOnly: true
         archived:
           description: Whether or not the resource has been archived.
           type: boolean
@@ -2173,26 +2172,28 @@ components:
         resource:
           oneOf:
             - $ref: '#/components/schemas/CatalogResourceId'
-            - type: object
-              title: CreateCatalogResourceMappingResourceByConfig
-              additionalProperties: false
-              required:
-                - integration_instance
-                - type
-                - config
-              properties:
-                integration_instance:
-                  description: The `id` or `name` of the integration instance the resource belongs to.
-                  type: string
-                  example: aws-lambda-prod
-                type:
-                  $ref: '#/components/schemas/CatalogResourceType'
-                config:
-                  $ref: '#/components/schemas/CatalogResourceConfig'
+            - $ref: '#/components/schemas/CreateCatalogResourceMappingResourceByConfig'
       additionalProperties: false
       required:
         - service
         - resource
+    CreateCatalogResourceMappingResourceByConfig:
+      type: object
+      properties:
+        integration_instance:
+          description: The `id` or `name` of the integration instance the resource belongs to.
+          type: string
+          example: aws-lambda-prod
+        type:
+          $ref: '#/components/schemas/CatalogResourceType'
+        config:
+          $ref: '#/components/schemas/CatalogResourceConfig'
+      additionalProperties: false
+      required:
+        - integration_instance
+        - type
+        - config
+      title: CreateCatalogResourceMappingResourceByConfig
     CatalogResourceMappingFilterParameters:
       type: object
       properties:

@@ -2330,6 +2330,8 @@ app/_how-tos/create-a-webhook-with-kong-gateway.md:
   - app/_src/gateway/kong-enterprise/event-hooks/index.md
 app/_how-tos/deploy-mesh-on-kubernetes.md:
   - app/_src/quickstart/kubernetes-demo.md
+app/_how-tos/deploy-mesh-on-kubernetes-ht.md:
+  - app/_src/quickstart/kubernetes-demo-ht.md
 app/_how-tos/enable-key-authentication-on-a-service-with-kong-gateway.md:
   - app/_src/gateway/get-started/key-authentication.md
 app/_how-tos/map-uris-into-graphql-queries.md:

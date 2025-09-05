@@ -3405,7 +3405,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EntityBody'
+              type: object
+              additionalProperties: true
       responses:
         '200':
           $ref: '#/components/responses/ValidateEntityResponse'
@@ -4670,6 +4671,7 @@ components:
           type: string
         value:
           type: string
+          writeOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -4685,6 +4687,7 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
       required:
         - key
         - value
@@ -4695,6 +4698,7 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
       required:
         - value
     ACL:
@@ -5139,9 +5143,6 @@ components:
       required:
         - uri
         - query
-    EntityBody:
-      type: object
-      additionalProperties: true
     GatewayUnauthorizedError:
       type: object
       properties:

@@ -28,6 +28,13 @@ prereqs:
       content: |
         You'll need [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/) and must select your Datadog region to authenticate the integration. Your Datadog region must be in a format similar to `US_5`.
 
+        Your Datadog instance application key must either have no scopes or the following [scopes](https://docs.datadoghq.com/api/latest/scopes/):
+        * `monitors_read`
+        * `dashboards_read`
+        * `create_webhooks`
+        * `integrations_read`
+        * `manage_integrations`
+
         Additionally, you'll need a Datadog monitor or dashboard to ingest in {{site.konnect_short_name}} as resources.
 
         Export your Datadog authentication credentials:

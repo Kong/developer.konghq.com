@@ -15,7 +15,7 @@ import kic from '@/icons/products/kic.svg'
 import mesh from '@/icons/products/mesh.svg'
 import serviceCatalog from '@/icons/products/service-catalog.svg'
 import eventGateway from '@/icons/products/event-gateway.svg'
-import konnectPlatform from '@/icons/products/konnect-platform.svg'
+import konnect from '@/icons/products/konnect.svg'
 import referencePlatform from '@/icons/products/reference-platform.svg'
 
 const productIcons = {
@@ -26,7 +26,7 @@ const productIcons = {
   'gateway': gateway,
   'insomnia': insomnia,
   'service-catalog': serviceCatalog,
-  'konnect-platform': konnectPlatform,
+  'konnect': konnect,
   'reference-platform': referencePlatform,
   operator,
   kic,

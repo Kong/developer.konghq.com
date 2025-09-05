@@ -123,7 +123,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -614,19 +614,36 @@ components:
             detail:
               example: Conflict
     StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
-      type: string
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
     StringFieldContainsFilter:
-      description: Filter a string value field by partial contains.
+      description: Filters on the given string field value by fuzzy match.
       type: object
       properties:
         contains:
           type: string
+      additionalProperties: false
       required:
         - contains
       title: StringFieldContainsFilter
-    StringFieldFilter:
+      x-examples:
+        example-1:
+          contains: some-value
+    LegacyStringFieldFilter:
       description: Filter a string value field either by exact match or partial contains.
       oneOf:
         - $ref: '#/components/schemas/StringFieldEqualsFilter'

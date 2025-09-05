@@ -5,7 +5,7 @@ layout: reference
 breadcrumbs: 
   - /konnect/
 products:
-    - konnect-platform
+    - konnect
     - dev-portal
 works_on:
   - konnect
@@ -45,6 +45,8 @@ faqs:
       1. Get an audit log from {{site.konnect_short_name}} and remove the `sig` value. Make sure to save the signature, you'll need it in the next step.
       1. Decode the Base64-encoded signature and private key.
       1. Use your preferred tool (for example, [OpenSSL](https://www.openssl.org/)) to verify the ED25519 signature by using the signature-less audit log entry together with the decoded signature and public key.
+  - q: Do {{site.konnect_short_name}} audit logs collect personally identifiable information?
+    a: No, {{site.konnect_short_name}} audit logs don't collect any PII. See the [audit log examples](#log-formats) for the information that they do collect.
 ---
 
 {:.success}

@@ -29,6 +29,10 @@ faqs:
     a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
     a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
+  - q: Can I bulk import across multiple Cloud Sync projects?
+    a: |
+      {% new_in 11.5 %} Yes. Enterprise users can activate this feature by contacting [support](https://insomnia.rest/support) to enable the feature flag on their account.
+      Once activated, go to **Insomnia → Preferences → Data** and select the **Import projects to Org** option. 
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 
@@ -156,7 +160,8 @@ Key features:
 * {% new_in 10.2 %} **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
 
 {:.info}
-> When you create a project with Git sync in an organization, it's only available to you.  The project name, its metadata, and the corresponding Git URL are not shared with other users in the organization. To collaborate on a Git sync project, each user must create a project and connect to the Git repository. This allows you to control who can access the project within the organization.
+> When you create a project with Git sync in an organization, it's only available to you. The project name, its metadata, and the corresponding Git URL are not shared with other users in the organization. To collaborate on a Git sync project, each user must create a project and connect to the Git repository. This allows you to control who can access the project within the organization. <br><br>
+> {% new_in 11.5 %} You can also create the Git Sync project now and add a repository later. 
 
 ### Git sync data flow
 

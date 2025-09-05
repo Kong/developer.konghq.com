@@ -15,6 +15,7 @@ tools:
   - kic
   - deck
   - terraform
+  - konnect-api
 
 schema:
   api: gateway/admin-ee
@@ -35,6 +36,7 @@ search_aliases:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.10'
@@ -46,6 +48,9 @@ Some entities in {{site.base_gateway}} share common configuration settings that 
 Partials address this issue by allowing you to extract shared configurations into reusable entities that can be linked to multiple plugins. To ensure validation and consistency, Partials have defined types. 
 
 {{site.base_gateway}} supports the following types of Partials, `redis-ce` and `redis-ee`. `redis-ce` has a shorter and simpler configuration, whereas `redis-ee` provides options for configuring Redis Sentinel or Redis Cluster connections. Each plugin that supports Partials only supports one of these types.
+
+{:.info}
+> In {{site.konnect_short_name}}, Partials are only supported for bundled {{site.konnect_short_name}} plugins. Custom plugins don't support Partials.
 
 ## Schema
 

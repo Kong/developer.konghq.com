@@ -4,6 +4,8 @@ description: |
 extended_description: |
   Configure the OpenID Connect plugin to use [certificate-bound access tokens](/plugins/openid-connect/#certificate-bound-access-tokens).
 
+  For a complete tutorial, see [Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/).
+
 weight: 819
 
 requirements:

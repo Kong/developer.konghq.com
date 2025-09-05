@@ -19,6 +19,7 @@ sections:
       - title: Developer sign-up
         description: Register for the Dev Portal and create an application.
         url: /dev-portal/developer-signup/
+      - path: /dev-portal/developer-rbac/
       - path: /dev-portal/self-service/
       - path: /dev-portal/auth-strategies/
       - path: /dev-portal/dynamic-client-registration/

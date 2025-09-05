@@ -33,6 +33,10 @@ related_resources:
     url: /gateway/upgrade/backup-and-restore/
   - text: "{{site.base_gateway}} CLI reference"
     url: /gateway/cli/reference/
+  - text: "3.4 to 3.10 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-34-310/
+  - text: "2.8 to 3.4 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-28-34/
 ---
 
 The in-place upgrade strategy is a {{site.base_gateway}} upgrade option used primarily for traditional mode deployments and for control planes in hybrid mode. 
