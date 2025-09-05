@@ -27,6 +27,12 @@ To upgrade your account to the Enterprise plan:
 1. Contact the [sales team](https://insomnia.rest/pricing/contact) to get an activation code.
 1. Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update), select the Enterprise plan, and enter your activation code.
 
+{:.info}
+> Activation codes are single-use. The first user who enters the activation code activates the Enterprise plan for the account and then consequently becomes the [Owner](insomnia/terminology/#user-roles).
+
+## Activation and ownership
+Activation codes are single-use. The first user who enters the activation code activates the Enterprise plan for the account and becomes the Owner. Owners have full administrative control over the Enterprise account. They can invite additional Co-owners from Account settings → Enterprise controls → Co-owners to share those administrative privileges. For definitions of Owner and Co-owner, see Insomnia terminology.
+
 ## Add domains
 
 You can use domains in your Insomnia Enterprise account to manage users.
