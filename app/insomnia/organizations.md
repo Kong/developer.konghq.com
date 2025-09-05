@@ -42,7 +42,7 @@ Organization owners and admins can invite new users to an organization:
 
 By default, new users are added with the **Member** role.
 
-{:.warning} # Invitation links expire after 30 days. If an invite expires before the user accepts it, the pre-authorised license seat is released and becomes available for reuse.
+{:.warning} #Invitation links expire after 30 days. If an invite expires before the user accepts it, the pre-authorised license seat is released and becomes available for reuse.
 
 ## Transfer an organization
 
