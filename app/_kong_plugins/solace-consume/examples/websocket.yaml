@@ -1,0 +1,36 @@
+description: Configure the Solace Consume plugin to stream messages over WebSockets.
+
+title: WebSocket mode
+
+weight: 996
+
+requirements:
+  - You have a [Solace PubSub+ Event Broker](https://docs.solace.com/Get-Started/tutorial/event-broker-set-up.htm)
+  - You have a [Solace message queue](https://docs.solace.com/Messaging/Guaranteed-Msg/Queues.htm)
+
+variables:
+  host:
+    description: "The Solace broker host URL. For example: `ws://my.broker:80` (plain) or `wss://my.broker:443` (secure)"
+    value: $SOLACE_BROKER_HOST
+  queue_name:
+    description: The name of the message queue to consume from.
+    value: $QUEUE_NAME
+
+config:
+  mode: websocket
+  session:
+    host: ${host}
+    authentication:
+      scheme: BASIC
+      username: admin
+      password: admin
+    flow:
+      binds:
+        - name: ${queue_name}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
