@@ -26,7 +26,7 @@ tags:
 tldr:
     q: How do I send {{site.konnect_short_name}} audit logs to a SIEM provider?
     a: |
-        Create an HTTPS data collection endpoint and access key in your SIEM provider and save their values. Configure the audit log webhook endpoint (`/v2/audit-log-webhook`) in {{site.konnect_short_name}} with the provider endpoint (`endpoint`), the access key (`authorization`), and set `log_format: cef` and `enabled: true`. 
+        Create an HTTPS data collection endpoint and access key in your SIEM provider and save their values. Configure the audit log webhook endpoint (`/audit-log-webhook`) in {{site.konnect_short_name}} with the provider endpoint (`endpoint`), the access key (`authorization`), and set `log_format: cef` and `enabled: true`. 
 
         This tutorial uses SumoLogic, but you can apply the same steps to your provider.
 
@@ -78,7 +78,7 @@ export DESTINATION_ID='YOUR DESTINATION ID'
 
 ## Enable the webhook on Konnect
 
-Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/v3/#/operations/audit-log-webhook) endpoint with the audit log destination:
+Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/#/operations/audit-log-webhook) endpoint with the audit log destination:
 
 <!--vale off-->
 {% konnect_api_request %}
