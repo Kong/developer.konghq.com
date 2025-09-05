@@ -69,17 +69,11 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
       --set env.ENABLE_CONTROLLER_KONNECT=true
     ```
 
-### Optional: manage webhook certificates with cert-manager
+{% include k8s/cert-manager.md %}
 
-If you want cert-manager to issue and rotate the admission and conversion webhook certificates, install cert-manager in your cluster and enable cert-manager integration when installing the chart by adding:
+## Validate
 
-```bash
---set global.webhooks.options.certManager.enabled=true
-```
-
-If you do not enable this, the chart will generate and inject self-signed certificates automatically. This is fine for development; for production we recommend enabling cert-manager.
-
-## Wait for {{ site.operator_product_name }} to be ready
+Wait for {{ site.operator_product_name }} to be ready
 
 {% validation custom-command %}
 command: |

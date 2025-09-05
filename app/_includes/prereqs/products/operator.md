@@ -34,15 +34,8 @@
 
 {% endif %}
 
-1. Optional: manage webhook certificates with cert-manager
+{% include k8s/cert-manager.md %}
 
-   If you want cert-manager to issue and rotate the admission and conversion webhook certificates, install cert-manager in your cluster and enable cert-manager integration by adding the following value to your Helm command:
-
-   ```bash
-   --set global.webhooks.options.certManager.enabled=true
-   ```
-
-   If you do not enable this, the chart will generate and inject self-signed certificates automatically. This is fine for development; for production we recommend enabling cert-manager.
 
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
