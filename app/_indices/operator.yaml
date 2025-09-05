@@ -24,6 +24,7 @@ groups:
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
           - path: /operator/reference/control-plane-feature-gates-and-controllers/
+
   - title: Security hardening
     sections:
       - items:
@@ -74,6 +75,7 @@ groups:
         items:
           - path: /operator/dataplanes/konnectextension/
           - path: /operator/reference/custom-resources/
+          - path: /operator/reference/labelselectors
 
   - title: Konnect
     sections:
