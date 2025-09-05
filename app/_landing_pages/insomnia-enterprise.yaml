@@ -1,0 +1,210 @@
+metadata:
+  title: insomnia enterprise
+  content_type: landing_page
+  description: insomnia
+  products:
+    - insomnia
+  tags:
+    - design-apis
+    - test-apis
+rows:
+  - header:
+      type: h1
+      text: "Get started with Insomnia Enterprise"
+      sub_text: Activate your account, invite your team, and configure authentication and storage.
+
+  - header:
+      type: h2
+      text: "Account and organization management"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Activate your Enterprise plan"
+              blocks:
+                - type: text
+                  text: |
+                    After purchasing through the [sales team](https://insomnia.rest/pricing/contact), you’ll receive an activation code.  
+                    Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update), choose **Enterprise**, and enter your code. You’ll then have access to all Enterprise features.
+
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Create organizations"
+              blocks:
+                - type: text
+                  text: |
+                    Use [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations) to create workspaces for different teams or projects.  
+                    Each organization controls access to its own collections, documents, and mock servers.
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Create teams"
+              blocks:
+                - type: text
+                  text: |
+                    Use [**Teams**](https://app.insomnia.rest/app/enterprise/team) to group users and assign them to one or more organizations.  
+                    Teams make it easy to manage access and sync membership from your [SCIM](#set-up-scim) provider.
+  - header:
+      type: h2
+      text: "Enterprise features"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Feature
+                  key: feature
+                - title: Enterprise
+                  key: enterprise
+                - title: Non-Enterprise
+                  key: non_enterprise
+              features:
+                - title: feature 1
+                  enterprise: ✅
+                  non_enterprise: ❌
+                - title: feature 2
+                  enterprise: ✅
+                  non_enterprise: ✅
+                - title: feature 3
+                  enterprise: ✅
+                  non_enterprise: ❌
+                - title: feature 4
+                  enterprise: ✅
+                  non_enterprise: ❌      
+  
+  - header:
+      type: h2
+      text: "Single sign-on (SSO) options"
+      sub_text: Configure SAML 2.0 or OIDC with your preferred identity provider.
+    columns:
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/key.svg
+              title: Okta SAML
+              description: Blah blah mock text about setting up Okta SAML with Insomnia.
+              cta:
+                text: Configure Okta SAML
+                url: /how-to/okta-saml-sso-insomnia/
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/key.svg
+              title: Okta OpenID Connect
+              description: Blah blah mock text about setting up Okta OIDC with Insomnia.
+              cta:
+                text: Configure Okta OIDC
+                url: /how-to/okta-oidc-sso-insomnia/
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/key.svg
+              title: Azure SAML
+              description: Blah blah mock text about setting up Azure SAML with Insomnia.
+              cta:
+                text: Configure Azure SAML
+                url: /how-to/azure-saml-sso-insomnia/
+    columns:
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/key.svg
+              title: Google Workspace SAML
+              description: Blah blah mock text about setting up Google Workspace SAML with Insomnia.
+              cta:
+                text: Configure Google Workspace SAML
+                url: /how-to/google-saml-sso-insomnia/
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/key.svg
+              title: Auth0 SAML
+              description: Blah blah mock text about setting up Auth0 SAML with Insomnia.
+              cta:
+                text: Configure Auth0 SAML
+                url: /how-to/auth0-saml-sso-insomnia/
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/key.svg
+              title: Other providers
+              description: Blah blah mock text about other supported SSO providers for Insomnia.
+              cta:
+                text: View SSO docs
+                url: /insomnia/sso/
+
+  - header:
+      type: h2
+      text: "Domain management"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Add and verify domains"
+              blocks:
+                - type: text
+                  text: |
+                    You can use domains in your Insomnia Enterprise account to manage users automatically.  
+                    Go to **Enterprise Controls** > **Domains**, click **Add domain**, and follow the prompts to verify ownership.
+
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Domain capture"
+              blocks:
+                - type: text
+                  text: |
+                    Domain capture automatically assigns new users with a matching email domain to your Enterprise account.  
+                    Once enabled, new signups from that domain will be captured and added without manual invites.
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Domain lock"
+              blocks:
+                - type: text
+                  text: |
+                    Domain lock prevents access to your Enterprise account for:
+                    * Existing Hobby users in the domain
+                    * Uninvited users in the domain  
+                    Toggle **Lock** in your domain settings to enable this.
+
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Invite control"
+              blocks:
+                - type: text
+                  text: |
+                    Invite control allows you to restrict invites to:
+                    * All domains
+                    * Verified domains only
+                    * Specific domains only  
+                    Configure these rules in **Enterprise Controls** > **Invites**.
+
+
+
+  - header:
+      type: h2
+      text: "How-to guides"
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                - insomnia
+              tags:
+                - enterprise
+              quantity: 5
+              allow_empty: true
