@@ -92,3 +92,20 @@ This mode provides parity with HTTP-based consumption, including support for:
 ## Schema registry support {% new_in 3.11 %}
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}
+
+## Migration considerations for {{site.base_gateway}} 3.12 {% new_in 3.12 %}
+
+{:.warning}
+> The `kafka-consume` plugin **no longer supports scoping to a Service**.
+
+### Fresh installations
+
+If you try to scope this plugin to a Service on a fresh {{site.base_gateway}} instance, a schema violation error will be returned.
+
+### Upgrading existing configurations
+
+In traditional mode, {{site.base_gateway}} will log an error-level message at startup if a `kafka-consume` plugin scoped to a Service is detected. The plugin configuration must be updated after startup. Until the configuration is updated, requests to the previous plugin URL will continue to be forwarded to the upstream Service, and responses will be returned to the downstream client as before.
+
+In DB-less mode, if the declarative configuration file contains a `kafka-consume` plugin scoped to a Service, {{site.base_gateway}} will fail to start. In this case, you must update the declarative configuration before restarting {{site.base_gateway}}.
+
+In hybrid mode, if a `kafka-consume` plugin scoped to a Service exists in PostgreSQL, upgrading and restarting the control plane will succeed. However, before updating the data plane, you must update the plugin configuration. Otherwise, once the data plane is upgraded and restarted, it will fail to sync the configuration due to validation errors.
