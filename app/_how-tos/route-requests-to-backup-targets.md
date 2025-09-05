@@ -26,7 +26,7 @@ search_aliases:
 
 tldr:
     q: How do I route requests to different Targets in case my other Targets are unhealthy?
-    a: "Create a Service, a Route, and an Upstream with either the `latency`, `least-connections`, or `round-robin` load balancing strategy. Configure primary targets on the Upstream with `failover: false` and a failover Target with `failover: true`."
+    a: "Create a Service, a Route, and an Upstream with one of the `latency`, `least-connections`, or `round-robin` load balancing strategies. Configure primary Targets on the Upstream with `failover: false` and a failover Target with `failover: true`."
 
 tools:
     - deck
@@ -92,7 +92,7 @@ entities:
           failover: true
 {% endentity_examples %}
 
-## Verify the primary Targets handle traffic
+## Verify that the primary Targets handle traffic
 
 Run the following to verify that only the primary Targets handle traffic because they are both healthy:
 
@@ -100,7 +100,7 @@ Run the following to verify that only the primary Targets handle traffic because
 for i in {1..10}; do curl -sS http://localhost:8000/anything; echo; done
 ```
 
-You'll get an output like the following:
+You'll get an output like the following, where you can see the Targets cycling between `PRIMARY-1` and `PRIMARY-2`:
 ```sh
 PRIMARY-2
 
@@ -116,16 +116,15 @@ PRIMARY-2
 ```
 {:.no-copy-code}
 
-## Mark primary Targets as unhealthy
+## Validate failover
 
-To mark the primary Targets as unhealthy, you can run the following:
+To validate that the failover Target works, let's mark the primary Targets as unhealthy by shutting down the hosts. Run the following:
 ```sh
 docker stop primary1 primary2
 ```
-
-## Validate
 
 You can now validate that since the primary Targets are *both* unhealthy, only the failover Target routes traffic:
 ```sh
 for i in {1..6}; do curl -s http://localhost:8000/anything; echo; done
 ```
+This time, the response should show the `FAILOVER` Target instead of `PRIMARY`.
