@@ -432,6 +432,10 @@ rows:
           config:
             slug: ai-aws-guardrails
       - blocks:
+        - type: plugin
+          config:
+            slug: ai-gcp-model-armor
+      - blocks:
         - type: card
           config:
             title: Amazon Bedrock guardrails
