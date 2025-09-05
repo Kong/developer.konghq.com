@@ -45,6 +45,8 @@ The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) to a Service o
 
 ## CORS limitations
 
-When the client is a browser, the preflight OPTIONS requests defined by the [CORS specification](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) have strict rules about which headers can be set. Certain headers, including Host, are classified as forbidden headers, meaning the browser always controls their value and they cannot be customised in code, e.g. in JavaScript. As a result, a browser cannot send a custom Host header during a preflight request.
+When the client is a browser, the preflight OPTIONS requests defined by the [CORS specification](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) have strict rules about which headers can be set. 
+Certain headers, including Host, are classified as forbidden headers, meaning the browser always controls their value and they can't be customized in code (for example, in JavaScript). 
+As a result, a browser can't send a custom Host header during a preflight request.
 
 This limitation is important when using the CORS plugin with Routes in Kong. If a Route is configured to match only on the hosts field, the preflight request may not carry the expected Host header, and Kong may fail to match the Route. As a result, the CORS plugin cannot reliably process these requests. To ensure correct behaviour, the plugin should be used with routes that match on paths (and optionally methods), which the preflight request will include and Kong can use for matching.
