@@ -8,7 +8,7 @@ extended_description: |
   even if they also match an allow pattern. Responses not matching any allow pattern are blocked
   when allow rules are set.
 
-title: 'Allow and deny responses'
+title: 'Allow and deny responses using Redis as a vector database'
 
 weight: 900
 
