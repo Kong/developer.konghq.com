@@ -21,14 +21,14 @@
         {% for product in include.products %}
         {% assign hasTool = true %}
         {% assign product_info = site.data.products[product] %}
+            {% capture url %}/{{ product }}/{% endcapture %}
             {% if product == 'kic' %}
                 {% capture url %}/kubernetes-ingress-controller/{% endcapture %}
-            {% elsif product == 'konnect-platform' %}
-                {% capture url %}/index/konnect-platform/{% endcapture %}
+            {% elsif product == 'konnect' %}
+                {% capture url %}/konnect/{% endcapture %}
             {% else %}
             {% elsif product == 'reference-platform' %}
                 {% capture url %}/index/reference-platform/{% endcapture %}
-                {% capture url %}/{{ product }}/{% endcapture %}
             {% endif %}
             {% include badge.html url=url text=product_info.name %}
         {% endfor %}
