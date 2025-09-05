@@ -1,0 +1,61 @@
+description: |
+  Conditionally fetch or store cache data.
+
+extended_description: |
+  This example leverages the `cache` and `branch` nodes to conditionally store or retrieve
+  cache items.
+
+title: Conditionally fetch or store cache data.
+
+config:
+  nodes:
+    - type: static
+      values:
+        key: cache key
+      name: CACHE_KEY_GET
+    - type: cache
+      input: CACHE_KEY_GET
+      ttl: 200
+      name: GET
+    - type: branch
+      then:
+        - SET
+    - EXIT_MISS
+  else:
+    - EXIT_HIT
+  input: GET.miss
+  name: branch
+    - type: call
+      method: GET
+      url: http://localhost:8080/anything
+      name: DATA
+    - type: static
+      values:
+        hit:
+          x-hit: true
+        ttl: 100
+        miss:
+          x-miss: true
+        key: cache key
+      name: VALUES
+    - type: cache
+      inputs:
+        key: VALUES.key
+        data: DATA
+        ttl: VALUES.ttl
+      name: SET
+    - inputs:
+      headers: VALUES.miss
+      body: DATA
+      type: exit
+      status: 200
+      name: EXIT_MISS
+    - inputs:
+      headers: VALUES.hit
+      body: GET.data
+      type: exit
+      status: 200
+      name: EXIT_HIT
+      resources:
+        cache:
+          strategy: memory
