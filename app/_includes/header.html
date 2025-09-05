@@ -88,7 +88,9 @@
 
       <div class='flex items-center py-5 gap-5 lg:gap-4 justify-between'>
         <div class="flex items-center gap-3 w-fit">
+          {% if site.ENABLE_ALGOLIA %}
           <div id="search-modal"></div>
+          {% endif %}
           {% if jekyll.environment == 'production' and site.ENABLE_KAPA_AI %}
             <button class="no-icon" id="ask-ai-button">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
