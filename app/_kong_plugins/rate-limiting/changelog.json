@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where the rate limiting plugins can't handle decimal numbers when using Redis strategy.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fix a bug where the return values from `get_redis_connection()` are mistaken.",

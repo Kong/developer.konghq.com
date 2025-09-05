@@ -105,10 +105,9 @@ rows:
                 url: "/how-to/automate-api-catalog/"
               - text: With Terraform
                 url: "/how-to/automate-api-catalog-with-terraform/"
-              - text: Add APIs
+              - text: Create and publish APIs
                 url: "/dev-portal/apis/"
-              - text: Publish APIs
-                url: "/dev-portal/publishing/"
+  
       - blocks:
         - type: card
           config:
@@ -189,7 +188,41 @@ rows:
                   In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals.
 
                   For more information, see [Dev Portal analytics](/dev-portal/analytics/).
-  
+  - header:
+      type: h2
+      text: "Migrate from classic Dev Portal (v2)"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  With the GA release of the new Dev Portal (v3) in June 2025, you can migrate from classic Dev Portals (v2) to the new Dev Portal. 
+                  
+                  See the [migration guide](/dev-portal/v2-migration/) to learn how to migrate from the classic Dev Portal (v2) to the new Dev Portal (v3).
+
+  - header:
+      type: h2
+      text: "References"
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Dev Portal audit logs
+              description: |
+                Learn about what events are logged in Dev Portal logs.
+              cta:
+                url: "/konnect-platform/audit-logs/"
+      - blocks:
+          - type: card
+            config:
+              title: Dev Portal v3 breaking changes
+              description: |
+                Review breaking changes from Dev Portal v3 beta to general release.
+              cta:
+                url: "/dev-portal/breaking-changes/"
+
   - header:
       text: "Frequently asked questions"
       type: h2

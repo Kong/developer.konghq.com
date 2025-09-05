@@ -1,11 +1,12 @@
 ---
-title: "{{site.konnect_short_name}} audit logs"
+title: "{{site.konnect_short_name}} and Dev Portal audit logs"
 content_type: reference
 layout: reference
 breadcrumbs: 
   - /konnect/
 products:
-    - konnect-platform
+    - konnect
+    - dev-portal
 works_on:
   - konnect
 
@@ -17,8 +18,9 @@ tags:
   - audit-logging
 search_aliases: 
   - auditing
+  - Dev Portal audit logs
 
-description: "Review logs for system events in {{site.konnect_short_name}}."
+description: "Review logs for system events in {{site.konnect_short_name}} and Dev Portal."
 related_resources:
   - text: "Collect {{site.konnect_short_name}} audit logs"
     url: /how-to/collect-audit-logs/
@@ -34,7 +36,7 @@ related_resources:
     url: /gateway/logs/
 
 faqs:
-  - q: How can I verify {{site.konnect_short_name}} audit log signatures
+  - q: How can I verify {{site.konnect_short_name}} audit log signatures?
     a: |
       {{site.konnect_short_name}} and Dev Portal use an [ED25519 signature](https://ed25519.cr.yp.to/) on the audit logs they produce. You can verify the signature in your audit logs to confirm that it's from {{site.konnect_short_name}} instead of a bad actor.
 
@@ -43,8 +45,14 @@ faqs:
       1. Get an audit log from {{site.konnect_short_name}} and remove the `sig` value. Make sure to save the signature, you'll need it in the next step.
       1. Decode the Base64-encoded signature and private key.
       1. Use your preferred tool (for example, [OpenSSL](https://www.openssl.org/)) to verify the ED25519 signature by using the signature-less audit log entry together with the decoded signature and public key.
+  - q: Do {{site.konnect_short_name}} audit logs collect personally identifiable information?
+    a: No, {{site.konnect_short_name}} audit logs don't collect any PII. See the [audit log examples](#log-formats) for the information that they do collect.
 ---
 
+{:.success}
+> **Get started:**
+>* [Collect audit logs for {{site.konnect_short_name}}](/how-to/collect-audit-logs/)
+>* [Collect audit logs for Dev Portal](/how-to/collect-dev-portal-audit-logs/)
 
 Audit logs can help you detect and respond to potential security incidents when they occur.
 
@@ -52,13 +60,11 @@ Audit logging provides the following benefits:
 * **Security**: System events can be used to show abnormalities to be investigated, forensic information related to breaches, or provide evidence for compliance and regulatory purposes.
 * **Compliance**: Regulators and auditors may require audit logs to confirm whether certain certification standards are met.
 * **Debugging**: Audit logs can help determine the root causes of efficiency or performance issues.
-* **Risk management**: Prevent issues or catch them early.
+* **Risk management**: Prevent issues or catch them early. 
 
-Learn how to collect audit logs:
-* [Collect audit logs for {{site.konnect_short_name}}](/how-to/collect-audit-logs/)
-* [Collect audit logs for Dev Portal](/how-to/collect-dev-portal-audit-logs/)
+You can collect audit logs for both the {{site.konnect_short_name}} org and [Dev Portal](/dev-portal/).
 
-## Configure audit logging
+## Audit log events
 
 {{site.konnect_short_name}} captures three types of events:
 
@@ -69,21 +75,32 @@ columns:
     key: event_type
   - title: Org audit logs
     key: org_audit_logs
+  - title: Dev Portal audit logs
+    key: dev_portal_audit_logs
 rows:
   - event_type: Authentication
     org_audit_logs: "This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used."
+    dev_portal_audit_logs: Triggered when a user logs in to the Dev Portal.
   - event_type: Authorization
     org_audit_logs: "Triggered when a permission check is made for a user or system account against a resource."
+    dev_portal_audit_logs: Not collected, use the org audit log.
   - event_type: Access logs
     org_audit_logs: "Triggered when a request is made to the {{site.konnect_short_name}} API."
+    dev_portal_audit_logs: Not collected, use the org audit log.
 {% endtable %}
 <!--vale on-->
 
 {{site.konnect_short_name}} retains audit logs for 7 days.
 
+{:.info}
+> Dev Portal audit logs don't collect authorization and access events by design. You can view Dev Portal entity creation, edits, and approved state changes from the {{site.konnect_short_name}} audit logs. 
+
 ## Audit log webhook status
 
-You can view the webhook status in the UI or via the API for the [{{site.konnect_short_name}} org audit logs](/api/konnect/audit-logs/#/operations/get-audit-log-webhook-status).
+You can view the webhook status in the UI or via [the API](/api/konnect/audit-logs/#/operations/get-audit-log-webhook-status) for the {{site.konnect_short_name}} org audit logs and Dev Portal audit logs:
+
+* To view the {{site.konnect_short_name}} org audit logs webhook status in the UI, navigate to **Organization > Audit Log Setup**, and click the **{{site.konnect_short_name}}** tab.
+* To view the Dev Portal audit log status in the UI, navigate to your Dev Portal, click **Settings**, and click the **Audit log** tab.
 
 The following table describes the webhook statuses:
 

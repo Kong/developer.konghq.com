@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.23
+  version: 3.0.26
   description: The management API for Portals
   contact:
     name: Kong
@@ -1619,7 +1619,7 @@ paths:
             type: object
             properties:
               type:
-                $ref: '#/components/schemas/schemas-StringFieldEqualsFilter'
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
           style: deepObject
       responses:
         '200':
@@ -3138,6 +3138,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d200cc33-2d33-4754-b086-a98e0fcd36fb
@@ -3149,6 +3150,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -3160,6 +3162,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -3171,6 +3174,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
       additionalProperties: false
@@ -3228,135 +3232,139 @@ components:
         created_at: '2022-12-22T19:09:30.712Z'
         updated_at: '2022-12-22T19:09:30.712Z'
       oneOf:
-        - title: Client Credentials Application
-          additionalProperties: false
-          type: object
-          required:
-            - id
-            - created_at
-            - updated_at
-            - name
-            - description
-            - registration_count
-            - client_id
-            - auth_strategy
-            - dcr_provider
-            - portal
-            - labels
-            - granted_scopes
-          properties:
-            id:
-              $ref: '#/components/schemas/UUID'
-            created_at:
-              $ref: '#/components/schemas/CreatedAt'
-            updated_at:
-              $ref: '#/components/schemas/UpdatedAt'
-            name:
-              description: The name of the application.
-              type: string
-            description:
-              description: A description of the application.
-              type: string
-              nullable: true
-            labels:
-              $ref: '#/components/schemas/LabelsUpdate'
-            client_id:
-              description: The ID used to linked the portal application to an Identity Provider application.
-              type: string
-              readOnly: true
-            registration_count:
-              description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
-              type: number
-              readOnly: true
-            dcr_provider:
-              description: 'Information about the DCR provider this application uses, if using DCR.'
-              type: object
-              additionalProperties: false
-              nullable: true
-              properties:
-                id:
-                  $ref: '#/components/schemas/UUID'
-              required:
-                - id
-            portal:
-              description: Information about the portal the application is in.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/UUID'
-              required:
-                - id
-            auth_strategy:
-              $ref: '#/components/schemas/AuthStrategyClientCredentials'
-            granted_scopes:
-              description: List of granted scopes for the application. Null if application type does not support returning granted scopes.
-              type: array
-              items:
-                type: string
-              nullable: true
-        - title: Key Auth Application
-          example:
-            id: b15e2460-ba40-431d-9df0-4957fcffacda
-            labels:
-              env: test
-            name: App 1
-            description: An easy to manage app in a Konnect developer portal
-            registration_count: 4
-            portal:
-              id: 95606071-49c7-4c2e-ae49-8a86d72a8110
-            auth_strategy:
-              id: 45606071-49c7-4c2e-ae49-8a86d72a8110
-              name: API Key
-              credential_type: key_auth
-              key_names:
-                - apikey
-            created_at: '2022-12-22T19:09:30.712Z'
-            updated_at: '2022-12-22T19:09:30.712Z'
-          additionalProperties: false
-          type: object
-          required:
-            - id
-            - created_at
-            - updated_at
-            - name
-            - description
-            - auth_strategy
-            - portal
-            - registration_count
-            - labels
-          properties:
-            id:
-              $ref: '#/components/schemas/UUID'
-            created_at:
-              $ref: '#/components/schemas/CreatedAt'
-            updated_at:
-              $ref: '#/components/schemas/UpdatedAt'
-            name:
-              description: The name of the application.
-              type: string
-            description:
-              description: A description of the application.
-              type: string
-              nullable: true
-            auth_strategy:
-              $ref: '#/components/schemas/AuthStrategyKeyAuth'
-            portal:
-              description: Information about the portal the application is in.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/UUID'
-              required:
-                - id
-            labels:
-              $ref: '#/components/schemas/LabelsUpdate'
-            registration_count:
-              description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
-              type: number
-              readOnly: true
+        - $ref: '#/components/schemas/ClientCredentialsApplication'
+        - $ref: '#/components/schemas/KeyAuthApplication'
       title: Application
+    ClientCredentialsApplication:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        name:
+          description: The name of the application.
+          type: string
+        description:
+          description: A description of the application.
+          type: string
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+        client_id:
+          description: The ID used to linked the portal application to an Identity Provider application.
+          type: string
+          readOnly: true
+        registration_count:
+          description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
+          type: number
+          readOnly: true
+        dcr_provider:
+          description: 'Information about the DCR provider this application uses, if using DCR.'
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+          required:
+            - id
+        portal:
+          description: Information about the portal the application is in.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+          required:
+            - id
+        auth_strategy:
+          $ref: '#/components/schemas/AuthStrategyClientCredentials'
+        granted_scopes:
+          description: List of granted scopes for the application. Null if application type does not support returning granted scopes.
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+      required:
+        - id
+        - created_at
+        - updated_at
+        - name
+        - description
+        - registration_count
+        - client_id
+        - auth_strategy
+        - dcr_provider
+        - portal
+        - labels
+        - granted_scopes
+      title: Client Credentials Application
+    KeyAuthApplication:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        name:
+          description: The name of the application.
+          type: string
+        description:
+          description: A description of the application.
+          type: string
+          nullable: true
+        auth_strategy:
+          $ref: '#/components/schemas/AuthStrategyKeyAuth'
+        portal:
+          description: Information about the portal the application is in.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+          required:
+            - id
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+        registration_count:
+          description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
+          type: number
+          readOnly: true
+      example:
+        id: b15e2460-ba40-431d-9df0-4957fcffacda
+        labels:
+          env: test
+        name: App 1
+        description: An easy to manage app in a Konnect developer portal
+        registration_count: 4
+        portal:
+          id: 95606071-49c7-4c2e-ae49-8a86d72a8110
+        auth_strategy:
+          id: 45606071-49c7-4c2e-ae49-8a86d72a8110
+          name: API Key
+          credential_type: key_auth
+          key_names:
+            - apikey
+        created_at: '2022-12-22T19:09:30.712Z'
+        updated_at: '2022-12-22T19:09:30.712Z'
+      additionalProperties: false
+      required:
+        - id
+        - created_at
+        - updated_at
+        - name
+        - description
+        - auth_strategy
+        - portal
+        - registration_count
+        - labels
+      title: Key Auth Application
     ApplicationRegistration:
       description: A application's registration for a specific version of an API.
       type: object
@@ -3383,10 +3391,13 @@ components:
               description: The version of the API the application is registered to.
               type: string
               nullable: true
+            entity_type:
+              $ref: '#/components/schemas/EntityType'
           required:
             - id
             - name
             - version
+            - entity_type
         application:
           description: Details about the application the registration is part of.
           type: object
@@ -3410,6 +3421,7 @@ components:
           id: 86f637b7-cd95-478b-9b02-d770618f641c
           name: Great Stuff
           version: v1
+          entity_type: api
         created_at: '2022-12-22T20:13:07.305Z'
         updated_at: '2022-12-22T20:13:36.710Z'
       additionalProperties: false
@@ -3544,17 +3556,45 @@ components:
       title: PortalCustomDomainSSL
     CreatePortalCustomDomainSSL:
       type: object
+      oneOf:
+        - $ref: '#/components/schemas/CreatePortalCustomDomainSSLWithCustomCertificate'
+        - $ref: '#/components/schemas/CreatePortalCustomDomainSSLStandard'
+      title: CreatePortalCustomDomainSSL
+    CreatePortalCustomDomainSSLWithCustomCertificate:
       properties:
         domain_verification_method:
-          $ref: '#/components/schemas/PortalCustomDomainVerificationMethod'
+          type: string
+          enum:
+            - custom_certificate
+          x-terraform-transform-const: true
+        custom_certificate:
+          description: Custom certificate to be used for the SSL termination.
+          type: string
+        custom_private_key:
+          description: Custom certificate private key to be used for the SSL termination.
+          type: string
       additionalProperties: false
       required:
         - domain_verification_method
-      title: CreatePortalCustomDomainSSL
+        - custom_certificate
+        - custom_private_key
+      title: custom_certificate
+    CreatePortalCustomDomainSSLStandard:
+      properties:
+        domain_verification_method:
+          type: string
+          enum:
+            - http
+          x-terraform-transform-const: true
+      additionalProperties: false
+      required:
+        - domain_verification_method
+      title: http
     PortalCustomDomainVerificationMethod:
       type: string
       enum:
         - http
+        - custom_certificate
       title: PortalCustomDomainVerificationMethod
     PortalCustomDomainVerificationStatus:
       type: string
@@ -5144,23 +5184,33 @@ components:
           additionalProperties: false
           properties:
             try_it_ui:
+              description: Enable in-browser testing for your APIs. All linked gateways must have the CORS plugin configured.
               type: boolean
               default: true
             try_it_insomnia:
+              description: Enables users to open the API spec in Insomnia to explore and send requests with the native client.
               type: boolean
               default: true
             infinite_scroll:
+              description: 'Display the full spec on a single, scrollable page. If disabled, documentation, endpoints, and schemas appear on separate pages.'
               type: boolean
               default: true
             show_schemas:
+              description: 'Control whether schemas are visible in your API specs. When enabled, schemas appear in the side navigation below the endpoints.'
               type: boolean
               default: true
             hide_internal:
+              description: Manage visibility of internal endpoints and models.
               type: boolean
               default: false
             hide_deprecated:
+              description: Manage visibility of deprecated endpoints and models.
               type: boolean
               default: false
+            allow_custom_server_urls:
+              description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client-side only and is not saved.
+              type: boolean
+              default: true
         robots:
           type: string
           nullable: true
@@ -5314,10 +5364,14 @@ components:
         - name
         - credential_type
         - key_names
-    schemas-StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
+    EntityType:
+      description: The type of entity that is being published. Can be either an API or an API Package.
       type: string
-      title: StringFieldEqualsFilter
+      example: api
+      enum:
+        - api
+        - api_package
+      title: Entity Type
     IdentityProviderType:
       description: Specifies the type of identity provider.
       type: string
@@ -6157,6 +6211,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d200cc33-2d33-4754-b086-a98e0fcd36fb
@@ -6168,6 +6223,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Great Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -6179,6 +6235,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v2
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
           - id: d300cc33-2d33-4754-b086-a98e0fcd36fb
@@ -6190,6 +6247,7 @@ components:
               id: 56f637b7-cd95-478b-9b02-d770618f641c
               name: Good Stuff
               version: v1
+              entity_type: api
             created_at: '2022-12-22T20:13:07.305Z'
             updated_at: '2022-12-22T20:13:36.710Z'
     GetApplicationRegistrationExample1:
@@ -6203,6 +6261,7 @@ components:
           id: 86f637b7-cd95-478b-9b02-d770618f641c
           name: Great Stuff
           version: v1
+          entity_type: api
         created_at: '2022-12-22T20:13:07.305Z'
         updated_at: '2022-12-22T20:13:36.710Z'
     UpdateApplicationRegistrationResponseExample1:
@@ -6216,6 +6275,7 @@ components:
           id: 86f637b7-cd95-478b-9b02-d770618f641c
           name: Great Stuff
           version: v1
+          entity_type: api
         created_at: '2022-12-22T20:13:07.305Z'
         updated_at: '2022-12-22T20:13:36.710Z'
     ListApplicationsBadRequestExample1:

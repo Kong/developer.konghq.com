@@ -9,7 +9,7 @@ search_aliases:
   - active tracing
   - debugger
 products:
-    - konnect-platform
+    - konnect
 works_on:
     - konnect
 tags:

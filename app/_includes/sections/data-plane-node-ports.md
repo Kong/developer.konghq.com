@@ -18,11 +18,11 @@ columns:
 rows:
   - port: "`8000`"
     protocol: "HTTP"
-    kong_conf_setting: "[`proxy_listen`](/gateway/configuration/#proxy_listen)"
+    kong_conf_setting: "[`proxy_listen`](/gateway/configuration/#proxy-listen)"
     description: "Takes incoming HTTP traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services."
   - port: "`8443`"
     protocol: "HTTPS"
-    kong_conf_setting: "[`proxy_listen`](/gateway/configuration/#proxy_listen)"
+    kong_conf_setting: "[`proxy_listen`](/gateway/configuration/#proxy-listen)"
     description: "Takes incoming HTTPS traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services."
 {% endtable %}
 <!--vale on-->

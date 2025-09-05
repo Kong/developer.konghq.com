@@ -45,6 +45,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where AI rate limiting advanced plugin might panic when use redis strategy and sync_rate is set to 0.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Added support for Huggingface provider to the AI Rate Limiting Advanced plugin.\n",

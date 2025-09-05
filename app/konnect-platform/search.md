@@ -6,7 +6,7 @@ breadcrumbs:
   - /konnect/
 
 products:
-  - konnect-platform
+  - konnect
 
 works_on:
   - konnect
@@ -73,7 +73,8 @@ The following {{site.konnect_short_name}} entity types are supported:
 
 - `api_product`  
 - `api_product_version`  
-- `application`  
+- `application`
+- `catalog_service`  
 - `ca_certificate`  
 - `certificate`  
 - `consumer`  

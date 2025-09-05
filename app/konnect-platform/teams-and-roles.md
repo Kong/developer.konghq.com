@@ -6,7 +6,7 @@ breadcrumbs:
   - /konnect/
 
 products:
-  - konnect-platform
+  - konnect
 
 works_on:
   - konnect
@@ -133,6 +133,11 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 ### Predefined roles
 
 {{site.konnect_short_name}} provides the following predefined roles.
+
+#### Analytics
+
+{% include_cached konnect/analytics-roles.md %}
+
 
 #### API Products
 

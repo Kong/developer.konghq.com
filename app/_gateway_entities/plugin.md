@@ -103,10 +103,13 @@ Every plugin supports a subset of these scopes.
 
 ### Plugin precedence
 
-A single plugin instance always runs _once_ per request. The
-configuration with which it runs depends on the entities it has been
-configured for.
-Plugins can be configured for various entities, combinations of entities, or even globally.
+A plugin can have multiple instances in the same configuration. 
+Different instances can be used to apply the plugin to various entities, combinations of entities, or even globally. 
+You can give each plugin instance a unique name to help identify it. The instance name itself doesn't affect processing - it acts like an internal label instead.
+
+A single plugin instance always runs _once_ per request. 
+The configuration with which it runs depends on the entities it has been configured for.
+
 This is useful, for example, when you want to configure a plugin a certain way for most requests but make _authenticated requests_ behave slightly differently.
 
 Therefore, there is an order of precedence for running a plugin when it has been applied to different entities with different configurations. The number of entities configured to a specific plugin directly correlates to its priority. The more entities a plugin is configured for, the higher its order of precedence.
@@ -228,7 +231,10 @@ Plugins support different protocols.
 
 ### Supported protocols by plugin
 
-See the following table for plugins and their compatible protocols:
+Each plugin supports a specific set of protocols. By default, all protocols supported by a plugin are enabled.
+You can adjust the plugin’s configuration to disable support for specific protocols, if needed.
+
+See the following table for plugins and their compatible (default) protocols:
 
 {% plugin_protocols %}
 

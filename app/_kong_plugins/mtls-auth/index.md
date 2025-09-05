@@ -42,6 +42,9 @@ tags:
 notes: | 
    <b>Serverless Gateways</b>: This plugin is not supported in serverless gateways because the 
    TLS handshake does not occur at the Kong layer in this setup. 
+
+min_version:
+  gateway: '1.0'
 ---
 
 The MTLS Auth plugin lets you add mutual TLS authentication based on a client-supplied or a server-supplied certificate, 

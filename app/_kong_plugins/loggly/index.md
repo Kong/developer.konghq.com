@@ -34,6 +34,9 @@ related_resources:
 
 categories:
   - logging
+
+min_version:
+  gateway: '1.0'
 ---
 
 Log request and response data over UDP to [Loggly](https://www.loggly.com).

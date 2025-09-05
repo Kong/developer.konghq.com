@@ -71,7 +71,7 @@ faqs:
       The faster your requests come in, the faster the buffer fills up.
 
       By default, the buffer limit is 100000 requests. You can configure a custom buffer amount using the 
-      [`analytics_buffer_size_limit`](/gateway/configuration/#analytics_buffer_size_limit) setting.
+      [`analytics_buffer_size_limit`](/gateway/configuration/#analytics-buffer-size-limit) setting.
   - q: How long can Data Plane nodes remain disconnected from the Control Plane?
     a: |
       A Data Plane node will keep pinging the
@@ -94,7 +94,7 @@ faqs:
   - q: Can I create a new Data Plane node when the connection is down?
     a: Yes. {{site.base_gateway}} can support configuring new Data Plane nodes in the event of a Control Plane outage. For more information, see [Control Plane outage management](/gateway/cp-outage/). 
   - q: Can I create a backup configuration to use in case the cache fails?
-    a: You can set the [`declarative_config`](/gateway/configuration/#declarative_config) option to load a fallback YAML config.
+    a: You can set the [`declarative_config`](/gateway/configuration/#declarative-config) option to load a fallback YAML config.
   - q: Can I change a Data Plane node's configuration when it's disconnected from the Control Plane?
     a: |
       Yes, if necessary, though any manual configuration will be overwritten the next
@@ -105,7 +105,7 @@ faqs:
       plane node with a working connection and overwrite the cache file on disk
       for the disconnected node.
       * Remove the cache file, then start the Data Plane node with
-      [`declarative_config`](/gateway/configuration/#declarative_config)
+      [`declarative_config`](/gateway/configuration/#declarative-config)
       to load a fallback YAML config.
 
 tags:
@@ -189,18 +189,19 @@ rows:
 
 When you use the {{site.konnect_short_name}} wizard to create a Data Plane node, it generates a certificate key pair. Data Planes can establish a connection with this certificate key pair (pinned cert).
 
-1. Navigate to [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/) in {{site.konnect_short_name}}.
-1. Click on the Control Plane you want to create a Data Plane node for.
-1. Click **Data Plane Nodes** in the sidebar.
-1. Click **Create a New Data Plane Node**. 
-1. Follow the instructions in the wizard to create a Data Plane node and generate the certificate key pair.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
+1. Click the control plane you want to create a data plane node for.
+1. Navigate to **Data Plane Nodes** in the sidebar.
+1. Click **New Data Plane Node**. 
+1. Follow the instructions in the wizard to create a data plane node and generate the certificate key pair.
+1. Click **Done**.
 
 ### Generate a CA-signed certificate
 
 Using the {{site.konnect_short_name}} UI, you can generate a CA certificate, which allows Data Planes to connect using a certificate signed by that CA (PKI). Alternatively you can upload your own CA using the upload option.
 
-1. Navigate to [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/) in {{site.konnect_short_name}}.
-1. Click on the Control Plane you want to create a Data Plane node for.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
+1. Click the control plane you want to create a data plane node for.
 1. From the Action menu, select **Data Plane Certificates**. 
 1. Either upload or generate a certificate.
 
@@ -213,7 +214,7 @@ Docker options in Gateway Manager, we recommend creating a new Data Plane node w
 certificates.
 
 1. Stop the Data Plane node container.
-2. Open [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/), select a Control Plane, open **Data Plane Nodes** from the side menu, and click **New Data Plane Node**.
+2. Navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/), select a Control Plane, open **Data Plane Nodes** from the side menu, and click **New Data Plane Node**.
 3. Run the script to create a new Data Plane node with
 updated certificates.
 4. Remove the old Data Plane node container.

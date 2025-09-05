@@ -64,6 +64,24 @@ This creates multiple files in the current directory. Each file is named the sam
 deck gateway dump --all-workspaces
 ```
 
+## Configuration sanitization
+
+The `deck gateway dump` command contains a `--sanitize` flag that obfuscates your configuration while maintaining referential integrity. The sanitized file can be applied to a running {{ site.base_gateway }} with `deck gateway sync`, but no private details will be available.
+
+This flag should be used when sharing configuration files that contain sensitive information, such as internal service names or upstream targets.
+
+### How sanitization works
+
+Free-form strings such as names, tags, usernames, passwords, consumer IDs, hostnames, and paths are hashed to prevent leakage of original values while ensuring consistent references across linked entities. 
+
+For structured secrets like certificates and keys that must follow a specific format, the algorithm inserts unique mock examples instead of hashes, allowing them to pass validators without exposing real values.
+
+To calculate the hash, `deck` uses the following process:
+
+1. Produce a random salt via UUID generation.
+1. Concatenate the salt with the string value and then produce a sha256 hash.
+1. Use hex-encoding over the sha256 hash result.
+
 ## Command usage
 
 {% include_cached deck/help/gateway/dump.md %}

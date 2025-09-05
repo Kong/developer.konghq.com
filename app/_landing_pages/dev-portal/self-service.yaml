@@ -51,7 +51,7 @@ rows:
                     1. Link an [API to a Gateway Service](/dev-portal/apis/#gateway-service-link).
                        
                        This is required to enforce auth strategies.
-                    1. Publish an [API to a Dev Portal](/dev-portal/publishing/).
+                    1. Publish an [API to a Dev Portal](/dev-portal/apis/#publish-your-api-to-dev-portal).
                     1. Select an authentication strategy when publishing the API to a Dev Portal.
                     1. For public content with restricted access, use [visibility settings](/dev-portal/pages-and-content/#page-visibility-and-publishing) to show public pages or APIs to anonymous users while restricting actions to logged-in users.
   - header:
@@ -72,7 +72,7 @@ rows:
                   * OIDC
                   * SAML
 
-                  Additionally, you can enable RBAC from your Dev Portal's security settings to control who can view or view and consume APIs in your Dev Portal.
+                  Additionally, you can enable [RBAC](/dev-portal/developer-rbac/) from your Dev Portal's security settings to control who can view or view and consume APIs in your Dev Portal.
                   When RBAC is enabled, any Dev Portal teams and roles you apply to a developer will control their access.
   - header:
       type: h3
@@ -104,7 +104,7 @@ rows:
                 Learn about Dev Portal pre-defined teams and roles for RBAC.
               icon: /assets/icons/rbac.svg
               cta:
-                url: /konnect-platform/teams-and-roles/#dev-portal
+                url: /dev-portal/developer-rbac/
   
   - header:
       type: h2

@@ -82,6 +82,10 @@ uses for Lua expressions.
 In `custom` values, callouts can be referenced via the shorthand `callouts.CALLOUT_NAME`
 instead of the full `kong.ngx.shared.callouts.CALLOUT_NAME`. 
 Lua expressions don't carry side effects.
+If the `custom` value is a raw string, make sure the string doesn't start with `#` or `$`,
+as the backend interpreter will read anything following these characters as a Lua expression.
+If you need to include a `#` or `$` character, change the value to `$("$|#RAW STRING")`.
+For example, `#1234!` is not a valid `custom` value. To make it valid, pass the value as `$("#1234!")`.
 
 `by_lua` fields work in a similar way, but they don't support shortcuts.
 Shortcuts can produce unintended side effects and modify callout and upstream requests.

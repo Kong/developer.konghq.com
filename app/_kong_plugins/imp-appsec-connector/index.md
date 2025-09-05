@@ -30,6 +30,9 @@ search_aliases:
 related_resources:
   - text: Imperva documentation
     url: https://docs.imperva.com/
+
+min_version:
+  gateway: '3.0'
 ---
 
 The Imperva API Security plugin connects {{site.base_gateway}} with the Imperva API Security service, providing continuous discovery and monitoring of APIs exposed by {{site.base_gateway}}.

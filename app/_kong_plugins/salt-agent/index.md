@@ -25,6 +25,9 @@ search_aliases:
 
 tags:
   - traffic-control
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Salt Security Kong deployment is used to capture a mirror of application traffic and send it to the Salt Security Service for analysis.

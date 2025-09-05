@@ -3,11 +3,11 @@ metadata:
   content_type: landing_page
   description: This page is an introduction to the {{site.konnect_short_name}} APIs.
   products:
+    - konnect
     - gateway
     - dev-portal
     - mesh
     - advanced-analytics
-    - konnect-platform
   tools: 
     - konnect-api
   works_on:
@@ -21,13 +21,23 @@ rows:
       text: "{{site.konnect_short_name}} APIs"
 
   - header:
-      type: h2
-      text: What are the {{site.konnect_short_name}} APIs?
     columns:
-    - blocks:
+      - header:
+          type: h2
+          text: "What are the {{site.konnect_short_name}} APIs?"
+        blocks:
         - type: text
           config: |
             The {{site.konnect_short_name}} APIs allow you to manage your ecosystem, including {{site.base_gateway}} configuration management, Analytics, Dev Portal, and more.
+      - header:
+          type: h2
+          text: "When should I use the {{site.konnect_short_name}} APIs?"
+        blocks:
+        - type: text
+          config: |
+            You should use the {{site.konnect_short_name}} APIs if one or more of the following is true:
+            - You want to manage resources on the Konnect platform and its apps (such as Dev Portal and Service Catalog) programmatically
+            - You need low-level, flexible, and direct integration or automation
   - columns:
     - blocks:
       - type: api
@@ -309,3 +319,15 @@ rows:
                     ]
                   }
                   ```
+  
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tools:
+                - konnect-api
+              quantity: 5
+              allow_empty: true

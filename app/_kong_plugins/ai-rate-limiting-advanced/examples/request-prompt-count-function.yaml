@@ -1,28 +1,40 @@
 description: Protect your LLM services by rate limiting requests based on a custom token.
 extended_description: |
-  Protect your LLM services with rate limiting. 
-  The AI Rate Limiting Advanced plugin will analyze query costs and token response 
+  Protect your LLM services with rate limiting.
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response
   to provide an enterprise-grade rate limiting strategy.
 
-  The following example uses request prompt rate limiting, which lets you you rate limit requests based on a custom token.
+  The following example uses request prompt rate limiting, which lets you you rate limit requests based on a custom token. See the [how-to guide](/how-to/use-custom-function-for-ai-rate-limiting/) for a step-by-step walkthrough.
 
 title: 'Request prompt function'
 
 requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
 
 weight: 900
 
 config:
+  strategy: redis
+  redis:
+    host: host.docker.internal
+    port: 16379
+  sync_rate: 0
   llm_providers:
-    - name: requestPrompt
-      limit:
-        - 100
-        - 1000
-      window_size:
-        - 60
-        - 3600
-  request_prompt_count_function: "return #kong.request.get_raw_body()" 
+  - name: cohere
+    limit:
+    - 100
+    - 1000
+    window_size:
+    - 60
+    - 3600
+  request_prompt_count_function: |
+    local header_count = tonumber(kong.request.get_header("x-prompt-count"))
+    if header_count then
+      return header_count
+    end
+    return 0
 
 tools:
   - deck

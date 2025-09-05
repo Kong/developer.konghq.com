@@ -30,7 +30,9 @@ works_on:
   - konnect
 
 entities: []
-
+next_steps:
+  - text: See the Custom resource definitions (CRDs) reference
+    url: /operator/reference/custom-resources/
 ---
 
 

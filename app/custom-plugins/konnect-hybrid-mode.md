@@ -107,7 +107,7 @@ To run in {{site.konnect_short_name}}, a custom plugin must meet the following r
 * The plugin must not contain the `dao.lua` or `migrations.lua` files, as custom data entities are not supported.
 
 **Code and language requirements:** 
-* The schema for your custom plugin must be written in Lua.
+* The schema for your custom plugin must be written in Lua. {{site.konnect_short_name}} doesn't support custom plugins developed using the Go, Python, or JavaScript PDKs.
 * Custom validation functions must be written in Lua and be self-contained within the `schema.lua` file.
 * The `schema.lua` file must not contain any `require()` statements.
 * Plugins that require third-party libraries must reference them in the `handler.lua` file.

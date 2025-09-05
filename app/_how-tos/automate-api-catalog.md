@@ -50,7 +50,17 @@ related_resources:
     url: /dev-portal/auth-strategies/
 faqs:
   - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
-    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page.
+  - q: How do I allow developers to view multiple versions of an API in the Dev Portal?
+    a: |
+      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the Dev Portal spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
+      
+      There are two exceptions when the underlying implementation should match the selected version:
+      * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
+      * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
+  - q: How does {{site.konnect_short_name}} manage authentication and authorization on Gateway Services that are linked to my APIs?
+    a: |
+      When a Gateway Service is linked to an API, {{site.konnect_short_name}} automatically adds the [{{site.konnect_short_name}} Application Auth (KAA) plugin](/dev-portal/apis/#allow-developers-to-consume-your-api) to your Service. The KAA plugin applies authentication and authorization to the Service. This is a {{site.konnect_short_name}}-managed plugin that you can't directly modify, you can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/). 
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/

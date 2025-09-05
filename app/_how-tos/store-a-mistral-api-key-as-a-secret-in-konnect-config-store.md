@@ -35,8 +35,8 @@ tldr:
     q: How do I store my Mistral API key as a secret in a {{site.konnect_short_name}} Vault and then use it with the AI Proxy plugin?
     a: |
       1. Use the {{site.konnect_short_name}} API to create a Config Store using the `/config-stores` endpoint.
-      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/#/operations/create-vault).
-      3. Store your Mistral API key as a key/value pair using the `/secrets` endpoint.
+      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/#/operations/create-vault) or UI.
+      3. Store your Mistral API key as a key/value pair using the `/secrets` endpoint or UI.
       4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/mistral-key}`) in the [AI Proxy plugin](/plugins/ai-proxy/) `header_value`.
 
 prereqs:
@@ -101,10 +101,15 @@ Export your Config Store ID as an environment variable so you can use it later:
 export DECK_CONFIG_STORE_ID='CONFIG STORE ID'
 ```
 
+{:.info}
+> **Note:** If you're configuring the {{site.konnect_short_name}} Vault via the {{site.konnect_short_name}} UI, you can skip this step as the UI creates the Config Store for you.
+
 ## Configure {{site.konnect_short_name}} as your Vault
 
 Enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/):
 
+{% navtabs "config-store-vault" %}
+{% navtab "decK" %}
 {% entity_examples %}
 entities:
   vaults:
@@ -118,11 +123,26 @@ variables:
   config-store-id:
     value: $CONFIG_STORE_ID
 {% endentity_examples %}
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
+1. Click your control plane.
+1. Navigate to **Vaults** in the sidebar.
+1. Click **New vault**.
+1. In the **Vault Configuration** dropdown, select "Konnect".
+1. Enter `mysecretvault` in the **Prefix** field.
+1. Enter `Storing secrets in {{site.konnect_short_name}}` in the **Description** field.
+1. Click **Save**. 
+{% endnavtab %}
+{% endnavtabs %}
+
 
 ## Store the Mistral AI key as a secret
 
 In this tutorial, you'll be storing the Mistral API key you set previously and using it to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/). By storing it as a secret in a {{site.konnect_short_name}} Vault, you can reference it during plugin configuration in the next step.
 
+{% navtabs "config-store-secret" %}
+{% navtab "{{site.konnect_short_name}} API" %}
 Store your Mistral key as a secret by sending a `POST` request to the `/secrets` endpoint:
 
 <!--vale off-->
@@ -135,6 +155,15 @@ body:
     value: Bearer $MISTRAL_API_KEY
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. Navigate to the {{site.konnect_short_name}} Vault you just created.
+1. Click **Store New Secret**.
+1. Enter `secret-key` in the **Key** field.
+1. Enter `Bearer $MISTRAL_API_KEY` in the **Value** field.
+1. Click **Save**.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Reference your stored Mistral API key
 

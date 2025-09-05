@@ -42,6 +42,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where the `ai-prompt-decorator` plugin prompt field was too short.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "allow AI plugin to read request from buffered file",

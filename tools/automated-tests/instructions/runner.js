@@ -4,12 +4,7 @@ import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
-import {
-  addEnvVariablesFromContainer,
-  executeCommand,
-  removeContainer,
-  getLiveEnv,
-} from "../docker-helper.js";
+import { executeCommand } from "../docker-helper.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
@@ -23,6 +18,9 @@ export class ExitOnFailure extends Error {
 }
 
 function compareVersions(v1, v2) {
+  if (v2 === "next") {
+    return true;
+  }
   const v1Parts = v1.split(".");
   const v2Parts = v2.split(".");
 
@@ -119,7 +117,7 @@ async function runSteps(steps, runtimeConfig, container) {
 }
 
 export async function runInstructions(instructions, runtimeConfig, container) {
-  let result = {};
+  let result = { name: instructions.name };
   const { rbac, wasm } = await getSetupConfig(instructions.setup);
   try {
     const check = await checkSetup(
@@ -173,16 +171,18 @@ export async function runInstructions(instructions, runtimeConfig, container) {
 }
 
 export async function runInstructionsFile(file, runtimeConfig, container) {
+  const start = Date.now();
   log(`Running file: ${file}`);
   const fileContent = await fs.readFile(file, "utf8");
   const instructions = yaml.load(fileContent);
-  const { status, assertions } = await runInstructions(
+  const { status, assertions, name } = await runInstructions(
     instructions,
     runtimeConfig,
     container
   );
 
-  const result = { file, status, assertions };
+  const duration = Date.now() - start;
+  const result = { file, status, assertions, duration, name };
   if (result.status === "error" && !process.env.CONTINUE_ON_ERROR) {
     logResult(result);
     throw new ExitOnFailure();

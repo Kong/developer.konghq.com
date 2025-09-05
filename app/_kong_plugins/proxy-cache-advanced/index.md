@@ -58,6 +58,9 @@ faqs:
 
 notes: |
   In Serverless gateways only the <code>memory</code> config strategy is supported.
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Proxy Cache Advanced plugin provides a reverse proxy cache implementation for {{site.base_gateway}}. 

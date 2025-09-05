@@ -1,10 +1,10 @@
 ---
-title: "{{site.konnect_short_name}} compatibility"
+title: "{{site.konnect_short_name}} compatibility and support policy"
 description: 'Details which browsers, software, and versions {{site.konnect_short_name}} is compatible with.'
 content_type: policy
 layout: reference
 products:
-  - konnect-platform
+  - konnect
 
 tags:
   - compatibility
@@ -52,84 +52,7 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 {{site.konnect_short_name}} is compatible with the following versions of [{{site.base_gateway}}](/gateway/):
 
-{% feature_table %}
-item_title: "{{site.base_gateway}} version"
-columns:
-  - title: Supported?
-    key: supported
-  - title: Beginning with version
-    key: beginning
-  - title: End of support
-    key: end
-
-features:
-  - title: 3.10.x (LTS)
-    supported: true
-    beginning: 3.10.0.0
-    end: March 2028
-  - title: 3.9.x
-    supported: true
-    beginning: 3.9.0.0
-    end: Dec 2025
-  - title: 3.8.x
-    supported: true
-    beginning: 3.8.0.0
-    end: Oct 2025
-  - title: 3.7.x
-    supported: true
-    beginning: 3.7.0.0
-    end: Jun 2025
-  - title: 3.6.x
-    supported: true
-    beginning: 3.6.0.0
-    end: Feb 2025
-  - title: 3.5.x
-    supported: true
-    beginning: 3.5.0.0
-    end: Nov 2024
-  - title: 3.4.x (LTS)
-    supported: true
-    beginning: 3.4.0.0
-    end: Aug 2026
-  - title: 3.3.x
-    supported: true
-    beginning: 3.3.0.0
-    end: May 2024
-  - title: 3.2.x
-    supported: true
-    beginning: 3.2.1.0
-    end: Feb 2024
-  - title: 3.1.x
-    supported: true
-    beginning: 3.1.0.0
-    end: Dec 2023
-  - title: 3.0.x
-    supported: true
-    beginning: 3.0.0.0
-    end: Sep 2023
-  - title: 2.8.x (LTS)
-    supported: true
-    beginning: 2.8.0.0
-    end: Mar 2025
-  - title: 2.7.x
-    supported: true
-    beginning: 2.7.0.0
-    end: Feb 2023
-  - title: 2.6.x
-    supported: true
-    beginning: 2.6.0.0
-    end: Feb 2023
-  - title: 2.5.x
-    supported: true
-    beginning: 2.5.0.1
-    end: Aug 2022
-  - title: 2.4.x or earlier
-    supported: false
-    beginning: "-"
-    end: "-"
-  
-{% endfeature_table %}
-
+{% include_cached support/konnect_gateway_support.html %}
 
 ## {{site.mesh_product_name}} compatibility
 

@@ -2,6 +2,11 @@ title: 'Engineer a prompt with prepending'
 
 description: 'Prepends a prompt with specific instructions, such as responding in French, to control how the prompt responds.'
 
+extended_description: |
+  Prepends a prompt with specific instructions, such as responding in French, to control how the prompt responds.
+
+  For a full walkthrough, see [Enforce responsible AI behavior using the AI Prompt Decorator plugin](/how-to/use-ai-prompt-decorator-plugin/).
+
 weight: 900
 
 requirements:

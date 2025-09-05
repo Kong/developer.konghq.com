@@ -43,6 +43,9 @@ related_resources:
 notes: |
   The time-to-live (ttl) does not work in Konnect or hybrid mode. This setting
   determines the length of time a credential remains valid.
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Key Authentication plugin lets you add API key authentication to a [Gateway Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/).

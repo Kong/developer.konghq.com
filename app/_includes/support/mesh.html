@@ -1,0 +1,22 @@
+{% assign releases = site.data.products.mesh.releases %}
+
+<table>
+    <thead>
+        <tr>
+            <th><span class="font-semibold text-primary">Version</span></th>
+            <th><span class="font-semibold text-primary">Latest Patch</span></th>
+            <th><span class="font-semibold text-primary">Released Date</span></th>
+            <th><span class="font-semibold text-primary">End of Full Support</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for release in releases %}
+            <tr>
+                <td>{{release.release}}.x {% if release.lts %}(LTS){% endif %}</td>
+                <td>{{release.version}}</td>
+                <td>{{release.releaseDate}}</td>
+                <td>{{release.eol}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -34,6 +34,9 @@ tags:
 
 search_aliases:
   - route-transformer-advanced
+
+min_version:
+  gateway: '1.3'
 ---
 
 This plugin transforms routing on the fly in {{site.base_gateway}}, changing the host, port, or path of the request. 

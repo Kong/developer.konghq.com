@@ -20,11 +20,11 @@ jobs:
           - '3.11'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           submodules: 'recursive'
 
@@ -35,7 +35,7 @@ jobs:
           ruby-version: .ruby-version
 
       - name: Ruby gem cache
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
         with:
           path: ${{ github.workspace }}/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -51,7 +51,7 @@ jobs:
         with:
           node-version: "22"
       - name: Cache node modules
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
         env:
           cache-name: cache-node-modules
         with:
@@ -63,6 +63,8 @@ jobs:
       - name: npm install
         run: npm ci
       - name: Run site
+        env:
+          ENABLE_ALGOLIA: 0
         run: |
           npx netlify dev & npx wait-on http://localhost:8888
 
@@ -76,6 +78,7 @@ jobs:
         working-directory: tools/automated-tests
         run: |
           npm ci
+          npx playwright install --with-deps chromium
           npm run generate-instruction-files
 
       - name: Run tests
@@ -86,3 +89,14 @@ jobs:
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |
           DEBUG=tests:*,debug npm run run-tests
+
+      - name: Publish Test Report
+        uses: ctrf-io/github-test-reporter@646f98cfc16c6f7a0e1f6100cabe2deb95dd2eef # v1
+        with:
+          report-path: './tools/automated-tests/testReport.json'
+          summary-report: true
+          test-report: true
+          failed-folded-report: true
+          skipped-report: true
+          report-order: 'summary-report,test-report,failed-folded-report,skipped-report'
+        if: always()

@@ -1,0 +1,20 @@
+{% assign versions = site.data.support.gateway | where: "konnect", true %}
+
+<table>
+    <thead>
+        <tr>
+            <th><span class="font-semibold text-primary">Kong Gateway version</span></th>
+            <th><span class="font-semibold text-primary">Beginning with version</span></th>
+            <th><span class="font-semibold text-primary">End of support</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for version in versions %}
+            <tr>
+                <td>{{version.release}}.x {% if version.lts %}(LTS){% endif %}</td>
+                <td>{{version.beginning}}</td>
+                <td>{{version.eol}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

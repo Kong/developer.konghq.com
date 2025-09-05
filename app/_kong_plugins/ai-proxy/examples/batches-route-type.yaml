@@ -2,6 +2,8 @@ title: 'Batches route type'
 description: 'Create large batches of API requests for asynchronous processing.'
 weight: 900
 
+show_in_api: true
+
 min_version:
   gateway: '3.11'
 
@@ -13,7 +15,7 @@ config:
   model_name_header: false
   auth:
     header_name: Authorization
-    header_value: Bearer ${{ env "DECK_OPENAI_API_KEY" }}
+    header_value: Bearer ${key}
   model:
     provider: openai
 

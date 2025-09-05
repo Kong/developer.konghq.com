@@ -6,13 +6,12 @@ sections:
       - path: /dev-portal/**/*
       - path: /dev-portal/analytics/
       - path: /dev-portal/breaking-changes/
+      - path: /konnect-platform/audit-logs/
+      - path: /dev-portal/v2-migration/
     auto_exclude: true
   - title: API catalog
     items:
       - path: /dev-portal/apis/
-      - title: Publish APIs
-        description: Learn how to publish APIs with Dev Portal and control who can see published APIs.
-        url: /dev-portal/publishing/
       - path: /how-to/automate-api-catalog/
       - path: /how-to/automate-api-catalog-with-terraform/
   - title: Application registration
@@ -20,6 +19,7 @@ sections:
       - title: Developer sign-up
         description: Register for the Dev Portal and create an application.
         url: /dev-portal/developer-signup/
+      - path: /dev-portal/developer-rbac/
       - path: /dev-portal/self-service/
       - path: /dev-portal/auth-strategies/
       - path: /dev-portal/dynamic-client-registration/

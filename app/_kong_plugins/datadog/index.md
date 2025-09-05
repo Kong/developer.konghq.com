@@ -26,6 +26,9 @@ icon: datadog.png
 
 categories:
   - analytics-monitoring
+
+min_version:
+  gateway: '1.0'
 ---
 
 This plugin lets you log metrics for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a local [Datadog agent](https://docs.datadoghq.com/agent/basic_agent_usage/).

@@ -436,12 +436,12 @@ or `consumers`.
 
 #### Configuration changes
 
-The default value of the [`dns_no_sync`](/gateway/configuration/#dns_no_sync) option has been changed to `off`.
+The default value of the [`dns_no_sync`](/gateway/configuration/#dns-no-sync) option has been changed to `off`.
 
 #### TLS changes
 
 The recent OpenResty bump includes TLS 1.3 and deprecates TLS 1.1.
-If you still need to support TLS 1.1, set the [`ssl_cipher_suite`](/gateway/configuration/#ssl_cipher_suite) setting to `old`.
+If you still need to support TLS 1.1, set the [`ssl_cipher_suite`](/gateway/configuration/#ssl-cipher-suite) setting to `old`.
 
 In OpenSSL 3.2, the default SSL/TLS security level has been changed from 1 to 2.
 This means the security level is set to 112 bits of security.
@@ -458,7 +458,7 @@ As of {{site.base_gateway}} 3.6, Kong Manager uses the session management mechan
 `admin_gui_session_conf` is no longer required when authenticating with OIDC. Instead, session-related
 configuration parameters are set in `admin_gui_auth_conf` (like `session_secret`).
 
-<!-- See the [migration FAQ](/how-to/enable-oidc-for-kong-manager/) for more information. -->
+See the [migration FAQ](/gateway/kong-manager/openid-connect/#migrate-oidc-configuration-from-older-versions) for more information.
 
 #### Plugin changes
 
@@ -542,7 +542,7 @@ Breaking changes in the 3.5.0.2 release.
 
 #### Configuration changes
 
-The default value of the [`dns_no_sync`](/gateway/configuration/#dns_no_sync) has been changed to `off`.
+The default value of the [`dns_no_sync`](/gateway/configuration/#dns-no-sync) has been changed to `off`.
 
 ### 3.5.0.0
 
@@ -572,7 +572,7 @@ This adjustment prevents the Session plugin from automatically reading request b
 
 #### Configuration changes
 
-The default value of the [`dns_no_sync`](/gateway/configuration/#dns_no_sync) option has been changed to `on` for 3.5.0.0 and 3.5.0.1.
+The default value of the [`dns_no_sync`](/gateway/configuration/#dns-no-sync) option has been changed to `on` for 3.5.0.0 and 3.5.0.1.
 As of 3.5.0.2, the default value has been changed to `off`.
 
 
@@ -763,7 +763,7 @@ For breaking changes to plugins, see the [{{site.base_gateway}} Changelog](/gate
 
 The default PostgreSQL SSL version has been bumped to TLS 1.2.
 
-This causes changes to [`pg_ssl_version`](/gateway/configuration/#postgres-settings) (set through `kong.conf`):
+This causes changes to [`pg_ssl_version`](/gateway/configuration/#datastore-section) (set through `kong.conf`):
 * The default value is now `tlsv1_2`.
 * `pg_ssl_version` previously accepted any string. In this version, it requires one of the following values: `tlsv1_1`, `tlsv1_2`, `tlsv1_3` or `any`.
 
@@ -777,7 +777,7 @@ TLS versions lower than `tlsv1_2` are already deprecated and are considered inse
 
 #### Changes to the Kong-Debug header
 
-Added the [`allow_debug_header`](/gateway/configuration/#allow_debug_header)
+Added the [`allow_debug_header`](/gateway/configuration/#allow-debug-header)
 configuration property to `kong.conf` to constrain the `Kong-Debug` header for debugging. This option defaults to `off`.
 
 If you were previously relying on the `Kong-Debug` header to provide debugging information, set `allow_debug_header: on` in `kong.conf` to continue doing so.

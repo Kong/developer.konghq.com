@@ -8,7 +8,7 @@ layout: reference
 breadcrumbs:
   - /konnect/
 products:
-  - konnect-platform
+  - konnect
 works_on:
     - konnect
 
@@ -185,7 +185,15 @@ deck gateway dump --workspace inventory --output-file inventory.yaml
 deck gateway dump --workspace sales --output-file sales.yaml
 ```
 
-When using `deck` to dump the configuration, the output file will include the Workspace name in the configuration.
+When using `deck` to dump the configuration, the output file will include the Workspace name in the configuration. 
+You need to remove the `_workspace` key before uploading the configuration to {{site.konnect_short_name}}.
+To remove the key, you can use the `yq` tool:
+
+```sh
+yq -i 'del(._workspace)' default.yaml
+yq -i 'del(._workspace)' inventory.yaml
+yq -i 'del(._workspace)' sales.yaml
+```
 
 Synchronize the configuration to the Control Planes using decK configured with the
 proper Control Plane name and the {{site.konnect_short_name}} access token:

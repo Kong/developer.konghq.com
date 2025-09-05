@@ -12,6 +12,7 @@ tools:
     - kic
     - deck
     - terraform
+    - konnect-api
 
 description: An Upstream enables load balancing by providing a virtual hostname and collection of Targets (upstream service instances).
 
@@ -174,7 +175,7 @@ rows:
       Uses the Consumer ID as the hash input. If no Consumer ID is available, it will fall back on the Credential ID (for example, in case of an external authentication mechanism like LDAP).
   - option: "`ip`"
     description: |
-      Uses the originating IP address as the hash input. Review the configuration settings for [determining the real IP](/gateway/configuration/#real_ip_config) when using this option.
+      Uses the originating IP address as the hash input. Review the configuration settings for [determining the real IP](/gateway/configuration/#real-ip-config) when using this option.
   - option: "`header`"
     description: |
       Uses a specified header as the hash input. The header name is specified in either of the Upstream's `hash_on_header` or `hash_fallback_header` fields, depending on whether `header` is a primary or fallback attribute, respectively.

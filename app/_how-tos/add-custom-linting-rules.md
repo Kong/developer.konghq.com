@@ -18,7 +18,7 @@ related_resources:
 
 tldr: 
   q: How do I customize linting in Insomnia?
-  a: In your Git repository, add a `.spectral.yaml` file containing your custom ruleset at the same level as the `.insomnia` folder.
+  a: In your Git repository, add a `.spectral.yaml` file containing your custom ruleset at the same directory as the OAS file to lint.
 
 prereqs:
   inline:
@@ -29,11 +29,16 @@ prereqs:
     include_content: prereqs/git-sync
     icon_url: /assets/icons/git.svg
 
+faqs:
+  - q: How can I use custom linting with Inso CLI?
+    a: |
+      Create your `.spectral.yaml` file in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
+
 ---
 
 ## Create add the file ruleset
 
-In the Git repository connected to your document, create a `.spectral.yaml` at the same level as the `.insomnia` folder.
+In the Git repository connected to your document, create a `.spectral.yaml` at the same directory as the OAS file to lint.
 
 ## Define the rules
 
@@ -55,7 +60,10 @@ rules:
 
 ## Synchronize the changes
 
-Commit and push the file on the repository, then pull the changes in Insomnia.
+Commit and push the file on the repository, then pull the changes in Insomnia.  
+
+{:.info}
+> This will place the `.spectral.yaml` file in the local working directory.  You will not see the file in the Insomnia UI but the linting rules will be applied to the associated OAS file.
 
 ## Validate
 

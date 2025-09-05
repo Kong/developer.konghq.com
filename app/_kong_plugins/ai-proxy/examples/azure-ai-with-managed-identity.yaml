@@ -2,6 +2,7 @@
 title: 'Authenticate to Azure OpenAI Service with an Azure Managed Identity'
 description: 'Configure a chat route using Azure OpenAI Service with the latest GPT-3.5 Turbo model, and authenticate using an Azure Managed Identity.'
 
+show_in_api: true
 weight: 900
 
 requirements:

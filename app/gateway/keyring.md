@@ -16,6 +16,8 @@ related_resources:
     url: /gateway/entities/vault/
   - text: Certificate entity
     url: /gateway/entities/certificate/
+  - text: Encrypt sensitive data in {{site.base_gateway}} with a Keyring
+    url: /how-to/encrypt-sensitive-data-in-kong-gateway-with-keyring/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
 tags:
@@ -94,6 +96,12 @@ curl -X POST localhost:8001/keyring/recover -F recovery_private_key=@./key.pem
 ```
 
 The response contains a list of keys that were successfully recovered and a list of keys that could not be recovered. The {{site.base_gateway}} error log will contain the detailed reason why the keys could not be recovered.
+
+To allow {{site.base_gateway}} to use a recovered key, you need to activate it:
+
+```sh
+curl -X POST localhost:8001/keyring/activate -d key=$KEY_ID
+```
 
 ## Enable Keyring
 

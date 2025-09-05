@@ -28,6 +28,10 @@ related_resources:
     url: /gateway/upgrade/in-place/
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
+  - text: "3.4 to 3.10 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-34-310/
+  - text: "2.8 to 3.4 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-28-34/
 ---
 
 Before you start any upgrade, back up your {{site.base_gateway}} data.
@@ -217,7 +221,7 @@ kong config db_export ./kong_backup.yaml
 
 To back up a DB-less deployment, make a copy of your declarative configuration file (`kong.yml` by default) and store it in a safe place.
 
-You can find your declarative config file at the path set via the [`declarative_config`](/gateway/configuration/#declarative_config) setting.
+You can find your declarative config file at the path set via the [`declarative_config`](/gateway/configuration/#declarative-config) setting.
 
 {% endnavtab %}
 {% endnavtabs %}

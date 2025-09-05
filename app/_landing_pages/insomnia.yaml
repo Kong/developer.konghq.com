@@ -23,19 +23,30 @@ rows:
                     Insomnia is an open source desktop application that simplifies designing, debugging, and testing APIs. 
                     Insomnia combines an easy-to-use interface with advanced functionality, like authentication helpers, code generation, and environment variables.
 
-                    You can install Insomnia on macOS, Windows, and Linux.
-          - type: button
-            config:
-              align: left
-              text: Install Insomnia
-              url: https://insomnia.rest/download
+                    You can install Insomnia on macOS, Windows, and Ubuntu.
       - blocks:
           - type: image
             config:
               url: /assets/images/insomnia/entry-page.png
               alt_text: Image of the Insomnia UI
-
-  - columns:
+  - header:
+      type: h2
+      text: Install Insomnia
+    columns:
+      - blocks:
+        - type: tabs
+          tab_group: install-on-os
+          config:
+            - title: MacOS
+              include_content: tools/insomnia/install/osx
+            - title: Windows
+              include_content: tools/insomnia/install/windows
+            - title: Linux
+              include_content: tools/insomnia/install/linux
+  - header:
+      type: h2
+      text: Get started
+    columns:
       - blocks:
         - type: card
           config:

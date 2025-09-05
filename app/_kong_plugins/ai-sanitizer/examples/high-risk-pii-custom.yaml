@@ -1,0 +1,47 @@
+description: Configure the plugin to anonymize high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens.
+
+title: Anonymize high-risk PII categories with custom patterns
+
+weight: 940
+
+requirements:
+  - You have enabled the AI Proxy or AI Proxy Advanced plugin
+  - You have pulled and run an [AI PII Anonymizer service image](/plugins/ai-sanitizer/#ai-pii-anonymizer-service)
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+  port:
+    description: The sanitizer service's port
+    value: $SANITIZER_SERVICE_PORT
+
+config:
+  anonymize:
+      - email
+      - phone
+      - ssn
+      - creditcard
+      - custom
+  custom_patterns:
+      - name: aws_api_key
+        regex: "AKIA[0-9A-Z]{16}"
+        score: 0.95
+      - name: github_token
+        regex: "ghp_[A-Za-z0-9]{36}"
+        score: 0.9
+      - name: jwt_token
+        regex: 'eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+'
+        score: 0.85
+  port: ${port}
+  host: ${host}
+  redact_type: placeholder
+  stop_on_error: true
+  recover_redacted: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

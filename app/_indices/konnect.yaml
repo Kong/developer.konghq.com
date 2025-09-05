@@ -1,0 +1,63 @@
+title: All Konnect Platform Documentation
+sections:
+  - title: About Konnect
+    items:
+      - title: Introduction to Konnect
+        description: Learn about the Konnect platform.
+        url: /konnect/
+      - title: Get started with Kong Gateway on Konnect
+        description: Get started by setting up {{site.konnect_short_name}} hybrid deployment and walking through some common API management tasks. 
+        url: /gateway/get-started/
+      - path: /gateway/topology-hosting-options/
+  
+  - title: Konnect Applications
+    items:
+      - path: /dev-portal/
+      - path: /service-catalog/
+      - path: /advanced-analytics/
+      - path: /ai-manager/
+      - path: /gateway-manager/
+      - path: /mesh-manager/
+
+  - title: Org and Account Management
+    items:
+      - path: /konnect-platform/account/
+      - path: /konnect-platform/geos/
+      - path: /konnect-platform/network/
+      - path: /konnect-platform/compatibility/
+      - path: /konnect-platform/**/*
+      - path: /konnect-api/
+      - title: System accounts
+        description: Set up service accounts in {{site.konnect_short_name}} for automation and integrations.
+        url: /konnect-api/#system-accounts-and-access-tokens
+    auto_exclude: true
+
+  - title: Platform Auth
+    items:
+      - path: /konnect-platform/authentication/
+      - path: /konnect-platform/teams-and-roles/
+      - path: /konnect-platform/saml-idp-mapping/
+      - path: /konnect-platform/sso/
+      - path: /konnect-platform/cmek/
+      - title: API authentication
+        description: Use access tokens to access the Konnect APIs.
+        url: /konnect-api/#konnect-api-authentication
+  
+  - title: Auditing
+    items:
+      - path: /konnect-platform/audit-logs/
+      - title: Authentication logs
+        description: Authentication attempts and their outcomes are logged whenever a user logs in to the Konnect application or the Dev Portal.
+        url: /konnect-platform/audit-logs/#authentication-logs
+      - title: Authorization logs
+        description: Authorization log entries are created for every permission check in Konnect.
+        url: /konnect-platform/audit-logs/#authorization-logs
+      - title: Access logs
+        description: Access logs include information about create, update, and delete requests to the Konnect API.
+        url: /konnect-platform/audit-logs/#access-logs
+  - title: Konnect IDP
+    items: 
+      - path: /konnect-platform/kong-identity/
+      - path: /how-to/configure-kong-identity-oauth-introspection/
+      - path: /how-to/configure-kong-identity-upstream-oauth/
+      - path: /how-to/configure-kong-identity-oidc/

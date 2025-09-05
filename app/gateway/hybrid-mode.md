@@ -83,7 +83,7 @@ faqs:
       The faster your requests come in, the faster the buffer fills up.
 
       By default, the buffer limit is 100000 requests. You can configure a custom buffer amount using the 
-      [`analytics_buffer_size_limit`](/gateway/configuration/#analytics_buffer_size_limit) setting.
+      [`analytics_buffer_size_limit`](/gateway/configuration/#analytics-buffer-size-limit) setting.
   - q: How long can Data Plane nodes remain disconnected from the Control Plane?
     a: |
       A Data Plane node will keep pinging the
@@ -106,7 +106,7 @@ faqs:
   - q: Can I create a new Data Plane node when the connection is down?
     a: Yes. {{site.base_gateway}} can support configuring new Data Plane nodes in the event of a Control Plane outage. For more information, see [Control Plane outage management](/gateway/cp-outage/). 
   - q: Can I create a backup configuration to use in case the cache fails?
-    a: You can set the [`declarative_config`](/gateway/configuration/#declarative_config) option to load a fallback YAML config.
+    a: You can set the [`declarative_config`](/gateway/configuration/#declarative-config) option to load a fallback YAML config.
   - q: Can I change a Data Plane node's configuration when it's disconnected from the Control Plane?
     a: |
       Yes, if necessary, though any manual configuration will be overwritten the next
@@ -117,7 +117,7 @@ faqs:
       plane node with a working connection and overwrite the cache file on disk
       for the disconnected node.
       * Remove the cache file, then start the Data Plane node with
-      [`declarative_config`](/gateway/configuration/#declarative_config)
+      [`declarative_config`](/gateway/configuration/#declarative-config)
       to load a fallback YAML config.
 ---
 
@@ -321,7 +321,7 @@ plane until it's up again.
 
 To change a disconnected Data Plane node's configuration in self-managed hybrid mode, you must:
 * Remove the LMDB directory (`dbless.lmdb`)
-* Ensure the [`declarative_config`](/gateway/configuration/#declarative_config) parameter or the `KONG_DECLARATIVE_CONFIG` environment variable is set
+* Ensure the [`declarative_config`](/gateway/configuration/#declarative-config) parameter or the `KONG_DECLARATIVE_CONFIG` environment variable is set
 * Set the whole configuration in the referenced YAML file
 
 ### Data plane cache configuration
@@ -386,7 +386,7 @@ multiple Control Planes and redirecting the traffic using a TCP proxy.
 ## Read-only Status API endpoints on Data Plane
 
 Several read-only endpoints from the Admin API
-are exposed to the [Status API](/gateway/configuration/#status_listen) on Data Planes, including the following:
+are exposed to the [Status API](/gateway/configuration/#status-listen) on Data Planes, including the following:
 
 - `GET /upstreams/{upstream}/targets/`
 - `GET /upstreams/{upstream}/health/`

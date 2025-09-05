@@ -18,6 +18,8 @@ tags:
 related_resources:
   - text: Collections
     url: /insomnia/collections/
+  - text: Keyboard Shortcuts
+    url: /insomnia/keyboard-shortcuts/   
 
 faqs:
   - q: What type of requests can I send with Insomnia?

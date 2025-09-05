@@ -77,7 +77,7 @@ columns:
     key: type
   - title: Description
     key: description
-columns:
+rows:
   - name: "`name`"
     type: "`string`"
     description: |
@@ -101,7 +101,7 @@ columns:
     key: type
   - title: Description
     key: description
-columns:
+rows:
   - name: "`id`"
     type: "`string`"
     description: Auto-generated plugin ID.
@@ -155,7 +155,7 @@ return {
       config = {
         type = "record",
         fields = {
-          -- Describe your plugin's configuration's schema here.        
+          -- Describe your plugin's configuration's schema here.
         },
       },
     },
@@ -275,7 +275,7 @@ rows:
   - rule: "`contains`"
     description: Checks that the input array contains the given value.
   - rule: "`is_regex`"
-    description: Checks that the input string is a valid regex pattern.  
+    description: Checks that the input string is a valid regex pattern.
   - rule: "`custom_validator`"
     description: A custom validation function written in Lua.
 {% endtable %}
@@ -414,7 +414,7 @@ return {
                       65534
                     },
                   },
-                },  
+                },
               },
             },
           },

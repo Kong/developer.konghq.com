@@ -18,11 +18,14 @@ tier: pro
 min_version:
   insomnia: '11.0'
 
+search_aliases:
+  - git sync
+
 prereqs:
     inline:
     - title: Git repository
       content: |
-        To synchronize an Insomnia project with Git, you need a Git repository. You can either use an existing repository with Insomnia content, or an empty repository.
+        When you create an Insomnia project with Git Sync, you can either add the repository now or later (if you're using Insomnia 11.5 or later). If you want to add the repository when you create the project, you can either use an existing repository with Insomnia content or an empty repository.
       icon_url: /assets/icons/git.svg
 
 tldr:
@@ -67,18 +70,10 @@ In this example, we'll create a new project with [Git Sync](/insomnia/storage/#g
 
 {% endnavtabs %}
 
-If your Git repository already contains Insomnia content, you will be prompted to import the content to your project.
+If your Git repository already contains Insomnia content, you will be prompted to import the content to your project. {% new_in 11.5 %} You can also create the Git Sync project now and add a repository later. 
 
 {:.info}
 > {% new_in 11.2 %} If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in version 11.0.
-
-## Create a new branch
-
-Insomnia synchronizes with the repository's default branch, but it's a good practice to make changes on a different branch.
-
-1. Click the name of the branch at the bottom of the left pane to see the Git sync menu.
-1. Click **Branches**.
-1. Enter a name for the new branch and click **Create**.
 
 ## Commit and push the content to your repository
 
@@ -87,5 +82,7 @@ Once you've created content or made changes to existing content in your project,
 1. Click the name of the branch at the bottom of the left pane.
 1. Click **Commit**.
 1. Enter a commit message.
-1. Stage changes by clicking the **+** button next to the changes that you want to commit to the repository.
-1. Click **Commit** or **Commit and push**.
+1. Stage changes by clicking the **+** button next to the changes that you want to commit to the repository and click **Commit**.
+1. Click the name of the branch again and click **Push 1 Commit**.
+
+   {% new_in 11.4 %} Git status notifications will appear at the bottom right corner of the window.

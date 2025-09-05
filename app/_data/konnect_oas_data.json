@@ -259,6 +259,27 @@
     ]
   },
   {
+    "id": "090a2dcc-506d-4b09-9488-14778dc26fc4",
+    "title": "Kong Identity - Beta",
+    "latestVersion": {
+      "name": "v1",
+      "id": "62d001b6-6892-43a3-ad97-346047341169"
+    },
+    "description": null,
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "62d001b6-6892-43a3-ad97-346047341169",
+        "created_at": "2025-06-20T15:40:50.990Z",
+        "updated_at": "2025-06-20T15:51:52.567Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "f8ebf955-6f09-40f6-b020-1feb80b4a773",
     "title": "Kong Native Event Proxy (Beta)",
     "latestVersion": {
@@ -274,6 +295,27 @@
         "created_at": "2025-05-05T20:59:18.970Z",
         "updated_at": "2025-05-07T16:26:12.925Z",
         "name": "v0",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "a9357984-c292-4846-856b-85aff7df6c54",
+    "title": "Konnect Analytics Dashboards",
+    "latestVersion": {
+      "name": "v2",
+      "id": "df68f986-e475-435c-8f35-976888408b2d"
+    },
+    "description": "Konnect endpoint for creating, reading, updating, and deleting dashboards. Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a chart to render the data.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "df68f986-e475-435c-8f35-976888408b2d",
+        "created_at": "2025-08-13T15:28:50.369Z",
+        "updated_at": "2025-08-14T20:42:57.704Z",
+        "name": "v2",
         "deprecated": false,
         "registration_configs": []
       }

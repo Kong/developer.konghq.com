@@ -43,6 +43,9 @@ related_resources:
     url: /plugins/opentelemetry/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+
+min_version:
+  gateway: '1.0'
 ---
 
 When enabled, the Zipkin plugin traces requests in a way that's compatible with [zipkin](https://zipkin.io/).

@@ -40,6 +40,9 @@ related_resources:
     url: /plugins/response-transformer/
   - text: All transformation plugins
     url: /plugins/?category=transformations
+
+min_version:
+  gateway: '1.0'
 ---
 
 {% include plugins/request-response-transformer/response-transformer-description.md %}

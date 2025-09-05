@@ -63,6 +63,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.2": [
+    {
+      "message": "Fixed an issue where `untrusted_lua_sandbox_requires` option was not respected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`request.by_lua` code will now run before a request is made or a cached callout is fetched. Previously, it did not run before an attempt to fetch from cache, which did not allow for cache key customization.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now uses additional components to generate the cache key: request consumer, consumer groups, plugin ID, route ID; callout request method, URL, query params, headers, and body.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where expressions could not read headers, query, and URI captures via shortcuts of the form `$(headers.some_header)`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added the `request-callout` plugin, which provides complex request augmentation and internal authentication.\n",
@@ -108,6 +130,33 @@
     },
     {
       "message": "Fixed an issue where the Request Callout plugin failed with a timeout when `callouts.request.body.custom` was null and `callouts.request.headers.forward` was set to `true`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where `untrusted_lua_sandbox_requires` option was not respected.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`request.by_lua` code will now run before a request is made or a cached callout is fetched. Previously, it did not run before an attempt to fetch from cache, which did not allow for cache key customization.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The plugin now uses additional components to generate the cache key: request consumer, consumer groups, plugin ID, route ID; callout request method, URL, query params, headers, and body.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where expressions could not read headers, query, and URI captures via shortcuts of the form `$(headers.some_header)`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the client request body is forwarded to upstream when `upstream.body.forward` is false.",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -6,7 +6,7 @@
         :exampleVisible="false"
         :headerVisible="false"
         :enablePropertyLinks="true"
-        :maxExpandedDepth="4"
+        :maxExpandedDepth="10"
       />
     </div>
   </template>

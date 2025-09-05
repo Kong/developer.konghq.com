@@ -38,6 +38,9 @@ related_resources:
     url: /plugins/ldap-auth/
   - text: Kong Manager
     url: /gateway/kong-manager/
+
+min_version:
+  gateway: '1.0'
 ---
 
 {% include /plugins/ldap/description.md %}

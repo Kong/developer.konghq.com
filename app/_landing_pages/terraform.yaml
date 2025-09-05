@@ -34,7 +34,7 @@ rows:
                 text: |
                   A common question we hear from you all is:
 
-                  _"Why would I choose Terraform, and when would I choose [deck](/deck/)?"_
+                  _"Why would I choose Terraform, and when would I choose [decK](/deck/)?"_
 
                   You should choose Terraform if one or more of the following is true:
 
@@ -52,7 +52,7 @@ rows:
             icon: /assets/logos/Konnect-logo.svg
             title: Konnect
             description: |
-              This is the official Konnect Terraform provider. You can use it to configure Dedicated Cloud Gateways, Control Planes, Gateway Entities, Portal, Teams, and more
+              This is the official Konnect Terraform provider. You can use it to configure Dedicated Cloud Gateways, Control Planes, Gateway Entities, Dev Portal, Teams, and more
             featured: true
             ctas:
               - text: GitHub
@@ -69,10 +69,7 @@ rows:
             description: |
               Konnect regularly ships new features, and they start out as a _beta_ release. In order to provide early access to these features using Terraform, we provide the `konnect-beta` provider.
 
-              The **BETA** provider currently supports:
-
-              * Kong Mesh
-              * Portal v3
+              The **BETA** provider currently supports Kong Mesh.
             ctas:
               - text: GitHub
                 url: "https://github.com/Kong/terraform-provider-konnect-beta"
@@ -265,3 +262,14 @@ rows:
               control_plane_id = konnect_gateway_control_plane.tfdemo.id
             }
             ```
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tools:
+                - terraform
+              quantity: 5
+              allow_empty: true

@@ -38,6 +38,9 @@ search_aliases:
 related_resources:
   - text: Collect {{site.base_gateway}} metrics with the StatsD plugin
     url: /how-to/collect-metrics-with-statsd/
+
+min_version:
+  gateway: '1.0'
 ---
 
 The StatsD plugin logs [metrics](#metrics) for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a StatsD server.

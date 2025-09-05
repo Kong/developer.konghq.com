@@ -67,7 +67,7 @@ kubectl create secret tls konnect-client-tls -n kong --cert=./tls.crt --key=./tl
 echo 'controller:
   ingressController:
     image:
-      tag: "3.4"
+      tag: {{ site.data.kic_latest.release }}
     env:
       feature_gates: "FillIDs=true"
     konnect:

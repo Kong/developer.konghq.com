@@ -1,15 +1,10 @@
-import puppeteer from "puppeteer";
+import { chromium } from "playwright";
 import fs from "fs/promises";
 import path from "path";
 import yaml from "js-yaml";
 
 async function copyFromClipboard(page) {
-  const copiedText = await page.evaluate(async () => {
-    const instruction = await navigator.clipboard.readText();
-    return instruction;
-  });
-
-  return copiedText;
+  return await page.evaluate(() => navigator.clipboard.readText());
 }
 
 async function extractPrereqsBlocks(page) {
@@ -17,17 +12,16 @@ async function extractPrereqsBlocks(page) {
   // As an alternative, the prereq (accordion-item) could have the data-test-prereqs set,
   // and we could extract all the codeblocks it contains.
   const instructions = [];
-  const blocks = await page.$$("[data-test-prereqs='block']");
+  const blocks = await page.locator("[data-test-prereqs='block']").all();
 
   for (const elem of blocks) {
     if (await elem.isVisible()) {
-      const copy = await elem.$(".copy-action");
-      await copy.evaluate((e) => e.click());
+      const copy = await elem.locator(".copy-action");
+      await copy.click();
 
       const copiedText = await copyFromClipboard(page);
       instructions.push(copiedText);
     }
-    await elem.dispose();
   }
   return instructions;
 }
@@ -35,21 +29,20 @@ async function extractPrereqsBlocks(page) {
 async function extractPrereqs(page) {
   const blocks = [];
   // Handle the accordion gracefully, we need to click on each item (visible ones only).
-  const [_prereq, ...prerequisites] = await page.$$(
-    '[data-test-id="prereqs"] > *'
-  );
+  const [_prereq, ...prerequisites] = await page
+    .locator('[data-test-id="prereqs"] > *')
+    .all();
 
   let extractedBlocks = await extractPrereqsBlocks(page);
   blocks.push(...extractedBlocks);
 
   for (const prereq of prerequisites) {
-    if (await prereq.isVisible) {
-      const trigger = await prereq.$(".accordion-trigger");
-      await trigger.evaluate((e) => e.click());
+    if (await prereq.isVisible()) {
+      const trigger = await prereq.locator(".accordion-trigger");
+      await trigger.click();
     }
     extractedBlocks = await extractPrereqsBlocks(page);
     blocks.push(...extractedBlocks);
-    await prereq.dispose();
   }
 
   return { blocks };
@@ -58,15 +51,12 @@ async function extractPrereqs(page) {
 async function extractSetup(page) {
   // Fetch all elements that have data-test-setup and copy its value.
   const instructions = [];
-  const setups = await page.$$("[data-test-setup]");
+  const setups = await page.locator("[data-test-setup]").all();
 
   for (const elem of setups) {
-    if (
-      (await elem.isVisible()) ||
-      (await page.evaluate((el) => el.classList.contains("invisible"), elem))
-    ) {
-      const instruction = await elem.evaluate((el) => el.dataset.testSetup);
-      let key;
+    const cssClasses = await elem.getAttribute("class");
+    if ((await elem.isVisible()) || cssClasses?.includes("invisible")) {
+      const instruction = await elem.getAttribute("data-test-setup");
 
       try {
         const json = JSON.parse(instruction);
@@ -76,7 +66,6 @@ async function extractSetup(page) {
         instructions.push(instruction);
       }
     }
-    await elem.dispose();
   }
 
   return instructions;
@@ -84,7 +73,7 @@ async function extractSetup(page) {
 
 async function extractSteps(page) {
   const instructions = [];
-  const steps = await page.$$("[data-test-step]");
+  const steps = await page.locator("[data-test-step]").all();
 
   for (const elem of steps) {
     if (await elem.isVisible()) {
@@ -92,8 +81,8 @@ async function extractSteps(page) {
 
       if (step === "block") {
         // copy code block
-        const copy = await elem.$(".copy-action");
-        await copy.evaluate((e) => e.click());
+        const copy = await elem.locator(".copy-action");
+        await copy.click();
 
         const copiedText = await copyFromClipboard(page);
         instructions.push(copiedText);
@@ -104,7 +93,6 @@ async function extractSteps(page) {
         instructions.push(parsedInstruction);
       }
     }
-    await elem.dispose();
   }
   return instructions;
 }
@@ -127,27 +115,31 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
   return instructionsFile;
 }
 
-export async function extractInstructionsFromURL(uri, config, browser) {
+export async function extractInstructionsFromURL(uri, config, context) {
   const url = new URL(uri);
   let timeout = 0;
-  const page = await browser.newPage();
+  const page = await context.newPage();
 
   try {
     console.log(`Extracting instructions from: ${url}`);
-    await page.goto(url, { waitUntil: "domcontentloaded" });
+    await page.goto(url.toString(), { waitUntil: "domcontentloaded" });
 
-    const platforms = await page.evaluate(() => {
-      const dropdown = document.querySelector(
-        "aside select.deployment-topology-switch"
-      );
-      if (!dropdown) return [];
-
-      return Array.from(dropdown.options).map((option) => option.value);
-    });
+    const dropdown = await page.locator(
+      "aside select.deployment-topology-switch"
+    );
+    const platforms = await dropdown
+      .locator("option")
+      .evaluateAll((options) => options.map((option) => option.value));
 
     for (const platform of platforms) {
-      await page.select("aside select.deployment-topology-switch", platform);
+      await page
+        .locator("aside select.deployment-topology-switch")
+        .selectOption(platform);
 
+      const title = await page.locator("h1").textContent();
+      const howToUrl = `${config.productionUrl}${url.pathname}`;
+
+      const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
@@ -156,6 +148,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
         config,
         platform,
         {
+          name,
           setup,
           prereqs,
           steps,
@@ -185,16 +178,24 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 }
 
 export async function generateInstructionFiles(urlsToTest, config) {
-  const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  const browser = await chromium.launch({
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--enable-clipboard",
+      "--disable-web-security",
+      "--disable-features=VizDisplayCompositor",
+    ],
   });
+
   try {
-    await browser
-      .defaultBrowserContext()
-      .overridePermissions(new URL(config.baseUrl).origin, ["clipboard-read"]);
+    const context = await browser.newContext({
+      permissions: ["clipboard-read", "clipboard-write"],
+      origin: new URL(config.baseUrl).origin,
+    });
 
     for (const uri of urlsToTest) {
-      await extractInstructionsFromURL(uri, config, browser);
+      await extractInstructionsFromURL(uri, config, context);
     }
   } catch (error) {
     throw error;

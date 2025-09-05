@@ -40,6 +40,9 @@ categories:
 
 search_aliases:
   - access control list
+
+min_version:
+  gateway: '1.0'
 ---
 
 The ACL (access control list) plugin allows you to restrict [Consumer](/gateway/entities/consumer/) access to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). You do this by configuring **either** an allow list or a deny list with certain Consumers or [Consumer Groups](/gateway/entities/consumer-group/).

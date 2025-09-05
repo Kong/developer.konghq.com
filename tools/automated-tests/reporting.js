@@ -6,63 +6,152 @@ const expectedFailures = yaml.load(
 );
 
 export function isFailureExpected(result) {
-  const expectedFailure = expectedFailures[result.file];
-  return expectedFailure && expectedFailure === result.assertions[0];
+  return expectedFailures[result.file] === result.assertions[0];
 }
 
 export function logResult(result) {
-  process.stdout.write(`Test: ${result.file} `);
-  switch (result.status) {
-    case "passed":
-      process.stdout.write("✅");
-      break;
-    case "failed":
-      if (isFailureExpected(result)) {
-        process.stdout.write("🤔");
-      } else {
-        process.stdout.write("❌");
-      }
-      break;
-    case "skipped":
-      process.stdout.write("⚠️");
-      break;
-    default:
-      process.stdout.write("❓");
+  let icon;
+  const statusIcons = {
+    passed: "✅",
+    skipped: "⚠️",
+  };
+  if (result.status === "failed") {
+    icon = isFailureExpected(result) ? "🤔" : "❌";
+  } else {
+    icon = statusIcons[result.status] || "❓";
   }
-  console.log();
+
+  process.stdout.write(`Test: ${result.file} ${icon}\n`);
 }
 
-export async function logResults(results) {
-  const passed = results.filter((r) => r.status === "passed");
-  const failed = results.filter((r) => r.status === "failed");
-  const skipped = results.filter((r) => r.status === "skipped");
+function categorizeResults(results) {
+  const categorized = {
+    passed: [],
+    failed: [],
+    skipped: [],
+  };
 
+  for (const result of results) {
+    if (categorized[result.status]) {
+      categorized[result.status].push(result);
+    }
+  }
+
+  return categorized;
+}
+
+function summarizeFailures(failed) {
   let expectedCount = 0;
   let failedCount = 0;
 
-  console.log();
-
-  if (failed.length > 0) {
-    for (const failure of failed) {
-      if (isFailureExpected(failure)) {
-        expectedCount++;
-        continue;
-      }
+  for (const result of failed) {
+    if (isFailureExpected(result)) {
+      expectedCount++;
+    } else {
       failedCount++;
-
-      console.error(`Test: ${failure.file} failed.`);
-      console.error(failure.assertions);
+      console.error(`Test: ${result.file} failed.`);
+      console.error(result.assertions);
     }
   }
+
+  return { expectedCount, failedCount };
+}
+
+function buildSummary(
+  results,
+  passed,
+  skipped,
+  failedCount,
+  expectedCount,
+  start,
+  stop
+) {
+  return {
+    tests: results.length + skipped.length,
+    passed: passed.length,
+    failed: failedCount,
+    pending: 0,
+    skipped: skipped.length,
+    other: expectedCount,
+    suites: 1,
+    start,
+    stop,
+  };
+}
+
+function processAssertions(assertions) {
+  return assertions
+    .map((a) => {
+      if (typeof a === "object") {
+        return JSON.stringify(a, null, 2);
+      } else {
+        return a;
+      }
+    })
+    .join("\n");
+}
+
+function processMessage(result) {
+  if (result.message) {
+    return result.message;
+  } else {
+    return processAssertions(result.assertions);
+  }
+}
+
+function processStatus(result) {
+  if (result.status === "failed" && isFailureExpected(result)) {
+    return "other";
+  } else {
+    return result.status;
+  }
+}
+
+function buildTestList(results) {
+  return results.map((result) => ({
+    name: result.name,
+    message: processMessage(result),
+    status: processStatus(result),
+    duration: result.duration,
+  }));
+}
+
+export async function logResults(results, start, stop) {
+  const skippedInstructions = yaml.load(
+    await fs.readFile("./.automated-tests", "utf-8")
+  );
+  const { passed, failed, skipped } = categorizeResults(
+    results.concat(skippedInstructions)
+  );
+  const { expectedCount, failedCount } = summarizeFailures(failed);
+
+  const resultObject = {
+    reportFormat: "CTRF",
+    specVersion: "0.0.0",
+    results: {
+      tool: { name: "automated-tests" },
+      summary: buildSummary(
+        results,
+        passed,
+        skipped,
+        failedCount,
+        expectedCount,
+        start,
+        stop
+      ),
+      tests: buildTestList(results.concat(skipped)),
+    },
+  };
 
   console.log(
     `Summary: ${results.length} total. ${passed.length} passed, ${failedCount} failed, ${skipped.length} skipped, expected failures: ${expectedCount}.`
   );
 
   console.log("Tests result logged to ./testReport.json");
+
   await fs.writeFile(
     "testReport.json",
-    JSON.stringify(results, null, 2),
+    JSON.stringify(resultObject, null, 2),
     "utf-8"
   );
 }

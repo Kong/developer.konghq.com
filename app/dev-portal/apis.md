@@ -18,13 +18,12 @@ api_specs:
 search_aliases:
   - postman
   - publish API specs
+  - konnect-application-auth
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:
   - text: Automate your API catalog with Dev Portal
     url: /how-to/automate-api-catalog/
-  - text: Publishing
-    url: /dev-portal/publishing/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
 faqs:
@@ -32,17 +31,150 @@ faqs:
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
   - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
     a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+  - q: How do I allow developers to view multiple versions of an API in the Dev Portal?
+    a: |
+      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the Dev Portal spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
+      
+      There are two exceptions when the underlying implementation should match the selected version:
+      * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
+      * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
-    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
+    a: |
+      [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
 ---
 
-An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/self-service/) for use with specific APIs.
+{:.success}
+> This is a reference guide, you can also follow along with our tutorials: 
+>* [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/)
+>* [Automate your API catalog with Terraform](/how-to/automate-api-catalog-with-terraform/)
 
-As an API Producer, you [publish an OpenAPI or AsyncAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
+An API is the interface that you publish to your end customer. They can, and should, include an OpenAPI or AsyncAPI specification or additional documentation to help users get started with your API. 
 
-## Validation
+Additionally, you can link your API to a Gateway Service to allow developers to register [applications](/dev-portal/self-service/) for your specific APIs.
 
-All API specification files are validated during upload, although invalid specifications are permitted. If specifications are invalid, features like generated documentation and search may be degraded.
+To create an API, do one of the following:
+{% navtabs "create-api" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+Navigate to **Dev Portal > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create).
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+Send a POST request to the [`/apis` endpoint](/api/konnect/api-builder/v3/#/operations/create-api):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis
+status_code: 201
+method: POST
+body:
+    name: MyAPI
+    attributes: {"env":["development"],"domains":["web","mobile"]}
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_api` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api.tf):
+```hcl
+echo '
+resource "konnect_api" "my_api" {
+  attributes  = "{ \"see\": \"documentation\" }"
+  description = "...my_description..."
+  labels = {
+    key = "value"
+  }
+  name         = "MyAPI"
+  slug         = "my-api-v1"
+  spec_content = "...my_spec_content..."
+  version      = "...my_version..."
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+## API versioning
+
+When you create your API, you can choose to keep it unversioned or version it using a free text string. This allows you to follow the versioning system of your choice:
+* Semantic versioning (examples: `v1`, `v2`)
+* Date-based versioning (examples: `2024-05-10`, `2024-10-22`) 
+* Custom naming scheme (example: `a1b2c3-internal-xxyyzz00`)
+
+Each API is identified using the combination of `name+version`. For example, if your API is named `My Test API` and it has a version of `v3`, then it will be accessible via the API as `my-test-api-v3` in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). If a `version` isn't specified, then `name` is used as the unique identifier. 
+
+To version an API, do one of the following:
+{% navtabs "api-version" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+Navigate to **Dev Portal > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/versions
+status_code: 201
+method: POST
+body:
+    version: 1.0.0
+    spec:
+        content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
+{% endkonnect_api_request %}
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
+```hcl
+echo '
+resource "konnect_api_version" "my_apiversion" {
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  spec = {
+    content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
+    type    = "oas3"
+  }
+  version = "1.0.0"
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+
+## API specs
+
+All API specification files are validated during upload, although invalid specifications are permitted. If specifications are invalid, features like generated documentation and search may be degraded. 
+
+To upload a spec to an API, do one of the following:
+{% navtabs "api-specs" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/versions
+status_code: 201
+method: POST
+body:
+    version: 1.0.0
+    spec:
+        content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
+```hcl
+echo '
+resource "konnect_api_version" "my_apiversion" {
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  spec = {
+    content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
+    type    = "oas3"
+  }
+  version = "1.0.0"
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+### API spec validation
 
 {{site.konnect_short_name}} looks for the following during spec validation:
 
@@ -54,27 +186,62 @@ All API specification files are validated during upload, although invalid specif
         * AsyncAPI `spectral.yaml`: Should contain `extends: "spectral:asyncapi"`.
 * Invalid specs are permitted (with potential degraded experience), and `validation_messages` captures any validation issues.
 
-## Documentation
+## API documentation
 
-Learn how to manage documents for your APIs in Dev Portal.
+API documentation is content in Markdown that you can use to provide additional information about your API.
 
-### Create a new API document
+While you are creating or editing an API document, you can also choose to publish it and make it available in your Dev Portal (assuming all parent pages are published as well). Keep the following in mind:
+* The visibility of an API document is inherited from the API's visibility and access controls. 
+* If a parent page is unpublished, all child pages will also be unpublished. 
+* If no parent pages are published, no API documentation will be visible, and the APIs list will navigate directly to generated specifications.
 
-1. Navigate to a specific API from [APIs](https://cloud.konghq.com/portals/apis/) or [Published APIs](/dev-portal/publishing).
-2. Select the **Documentation** tab.
-3. Click **New Document**.
-4. Select **Start with a file** then **Upload a Markdown document**, or **Start with an empty document** and provide the Markdown content.
+To create a new API document, do one of the following:
+{% navtabs "link-service" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/documents
+status_code: 201
+method: POST
+body:
+    slug: api-document
+    status: published
+    title: API Document
+    content: '# API Document Header'
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf):
+```hcl
+echo '
+resource "konnect_api_document" "my_apidocument" {
+  api_id             = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  content            = "...my_content..."
+  parent_document_id = "b689d9da-f357-4687-8303-ec1c14d44e37"
+  slug               = "api-document"
+  status             = "published"
+  title              = "API Document"
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Page structure
 
 The `slug` and `parent` fields create a tree of documents, and build the URL based on the slug/parent relationship. 
-This document structure lives under a given API.
+This document structure lives under a given API:
 
 * **Page name**: The name used to populate the `title` in the front matter of the Markdown document
 * **Page slug**: The `slug` used to build the URL for the document within the document structure
 * **Parent page**: When creating a document, selecting a parent page creates a tree of relationships between the pages. This allows for effectively creating categories of documentation.
 
-#### Example
+For example, if you had a document configured like the following:
 
 * **API slug**: `routes`
 * **API version**: `v3`
@@ -85,60 +252,178 @@ Based on this data, you get the following generated URLs:
 * Generated URL for `about` page: `/apis/routes-v3}/docs/about`
 * Generated URL for `info` page: `/apis/routes-v3}/docs/about/info`
 
-## Publishing and visibility
+## Allow developers to consume your API
 
-When the document is complete, toggle **Published** to **on** to make the page available in your Portal, assuming all parent pages are in **Published** status as well.
+You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) to allow developers to create applications and generate credentials or API keys. This is available to data planes running {{site.base_gateway}} 3.6 or later.
 
-* The visibility of an API document is inherited from the API's visibility and access controls. 
-* If a parent page is unpublished, all child pages will also be unpublished. 
-* If no parent pages are published, no API documentation will be visible, and the APIs list will navigate directly to generated specifications.
+When you link a service with an API, {{site.konnect_short_name}} automatically adds the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin is responsible for applying authentication and authorization on the Service. The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate. While you can't directly modify the KAA plugin as it's managed by {{site.konnect_short_name}}, you can modify the plugin's behavior by adding JSON to the advanced configuration of your application auth strategy. 
 
-As an API Producer, you can [publish an OpenAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
+The following diagram shows how the KAA plugin manages authorization and authentication on the linked Service:
 
-## Versioning
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    actor Client
+    Client->> Kong:
+    Kong->>Konnect Application Auth: Send request
+    Konnect Application Auth->>Konnect Application Auth: Authenticate the request based on the auth strategy
 
-The API entity allows you to set a `version` for your APIs. Each API is identified using the combination of `name+version`. If `version` is not specified, then `name` will be used as the unique identifier. 
+    rect rgb(191, 223, 255)
+    note right of Konnect Application Auth: OIDC Strategy.
+    Konnect Application Auth-->> OIDC Plugin: 
+    OIDC Plugin->> IdP: Sends credentials request
+    IdP ->> OIDC Plugin: return JWT token
+    OIDC Plugin-->>Konnect Application Auth:
+    end
+    rect rgb(191, 223, 255)
+    note right of Konnect Application Auth: Key Auth Strategy.
+    Konnect Application Auth->>Konnect Application Auth: Authenticate Api Key
+    end
 
-### Unversioned APIs
+    Konnect Application Auth->>Konnect Application Auth: Authorize the request with the authenticated client
+    Konnect Application Auth->>Kong:
+    Kong->>Client:
+ {% endmermaid %}
+ <!--vale on-->
 
-If you have an existing unversioned API, you can create an `API` by providing a name only:
+If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your Dev Portal](/dev-portal/self-service/).
 
-```bash
-curl -X POST https://us.api.konghq.com/v3/apis \
-  -H 'Content-Type: application/json' \
-  -d '{"name": "My Test API"}'
+To link your API to a Gateway Service, do one of the following:
+{% navtabs "link-service" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/implementations
+status_code: 201
+method: POST
+body:
+    service:
+        control_plane_id: $CONTROL_PLANE_ID
+        id: $SERVICE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_implementation.tf):
+```hcl
+echo '
+resource "konnect_api_implementation" "my_apiimplementation" {
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  service = {
+    control_plane_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+    id               = "7710d5c4-d902-410b-992f-18b814155b53"
+  }
+}
+' >> main.tf
 ```
+{% endnavtab %}
+{% endnavtabs %}
 
-This API will be accessible as `my-test-api` in your Portal.
+{:.info}
+> Currently, you APIs can only have a 1:1 mapping with a Gateway Service.
 
-### Versioned APIs
+## Publish your API to Dev Portal
 
-To create a versioned API, specify the `version` field when creating an API:
+Publishing an API makes it available to one or more Dev Portals. Publishing an API in the Dev Portal involves several steps:
 
-```bash
-curl -X POST https://us.api.konghq.com/v3/apis \
-  -H 'Content-Type: application/json' \
-  -d '{"name": "My Test API", "version": "v3"}'
-```
-
-This API will be accessible as `my-test-api-v3` in your list of APIs. The API will not be visible in a portal until you [publish](/dev-portal/publishing).
-
-The `version` field is a free text string. This allows you to follow semantic versioning (e.g. `v1`, `v2`), date based versioning (e.g. `2024-05-10`, `2024-10-22`) or any custom naming scheme (e.g. `a1b2c3-internal-xxyyzz00`)
-
-## Publishing 
-
-Publishing an API in the Dev Portal involves several steps:
-
-1. Create a new API, including the [API version](/dev-portal/apis/#versioning).
+1. Create a new API, including the [API version](#api-versioning).
 2. Upload an OpenAPI spec and/or markdown documentation (one of these is required to generate API docs).
-3. Link the API to a [Gateway Service](/dev-portal/#gateway-service-link).
-4. [Publish the API to a Portal](/dev-portal/publishing/).
+3. If you want developers to consume the API in a self-serve way, link the API to a [Gateway Service](#allow-developers-to-consume-your-api).
+4. Publish the API to a Portal and apply an [auth strategy](/dev-portal/auth-strategies/). 
+   Publishing an API requires you to have the [`Product Publisher` {{site.konnect_short_name}} role](/konnect-platform/teams-and-roles/#dev-portal).
 
-Once published, the API appears in the selected Portal. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API.
+{:.info}
+> * The visibility of [pages](/dev-portal/pages-and-content/) and [menus](/dev-portal/portal-customization/) is configured independently from APIs, maximizing your flexibility.
+> * {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
-If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/konnect-platform/teams-and-roles/#teams) to access the API.
+With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/self-service/) settings, you can publish an API securely to the appropriate audience. The following table describes various Dev Portal access control scenarios and their settings:
 
-## Allow developers to try requests from the Dev Portal spec renderer
+<!--vale off-->
+{% table %}
+columns:
+  - title: Access use case
+    key: use-case
+  - title: Visibility
+    key: visibility
+  - title: Authentication strategy
+    key: strategy
+  - title: User authentication
+    key: user-auth
+  - title: Description
+    key: description
+rows:
+  - use-case: Viewable by anyone, no self-service credentials
+    visibility: Public
+    strategy: Disabled
+    user-auth: "Disabled in [security settings](/dev-portal/security-settings/)"
+    description: Anyone can view the API's specs and documentation, but cannot generate credentials and API keys. No developer registration is required.
+  - use-case: Viewable by anyone, self-service credentials
+    visibility: Public
+    strategy: "`key-auth` (or any other appropriate authentication strategy)"
+    user-auth: "Enabled in [security settings](/dev-portal/security-settings/)"
+    description: |
+      Anyone can view the API's specs and documentation, but must sign up for a developer account and create an Application to generate credentials and API keys. 
+      <br><br>
+      RBAC is disabled if fine-grained access management is not needed, configured in [security settings](/dev-portal/security-settings/).
+  - use-case: Viewable by anyone, self-service credentials with RBAC
+    visibility: Public
+    strategy: "`key-auth` (or any other appropriate Authentication strategy)"
+    user-auth: "Enabled in [security settings](/dev-portal/security-settings/)"
+    description: |
+      Anyone can view the API's specs and documentation, but must sign up for a developer account and create an Application to generate credentials and API keys. 
+        <br><br>
+        A {{site.konnect_short_name}} Admin must assign a developer to a Team to provide specific role-based access. RBAC is enabled to allow [Teams](/dev-portal/access-and-approval) assignments for developers, granting credentials with the API Consumer role.
+  - use-case: Sign up required to view API specs and/or documentation
+    visibility: Private
+    strategy: "`key-auth` (or any other appropriate Authentication strategy)"
+    user-auth: "Enabled in [security settings](/dev-portal/security-settings/)"
+    description: |
+      All users must sign up for a Developer account to view APIs. They can optionally create an Application to generate credentials/API keys. 
+      <br><br>
+      RBAC can be enabled for [Teams](/dev-portal/access-and-approval) assignments for developers, granting credentials with the API Consumer role, configured in [security settings](/dev-portal/security-settings/).
+{% endtable %}
+<!--vale on-->
+
+To publish your API, do one of the following:
+{% navtabs "link-service" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Portals** tab, and then click **Publish API**.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/publications/$PORTAL_ID
+status_code: 201
+method: PUT
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_publication.tf):
+```hcl
+echo '
+resource "konnect_api_publication" "my_apipublication" {
+  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
+  auth_strategy_ids = [
+    "9c3bed4d-0322-4ea0-ba19-a4bd65d821f6"
+  ]
+  auto_approve_registrations = true
+  portal_id                  = "f32d905a-ed33-46a3-a093-d8f536af9a8a"
+  visibility                 = "private"
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+Once published, the API appears in the selected Portal. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
+
+### Allow developers to try requests from the Dev Portal spec renderer
 
 When you upload a spec for your API to Dev Portal, you can use the **Try it!** feature to allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. 
 
@@ -172,25 +457,8 @@ features:
     cors: "[Enable Try it in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
 
-
-## Filtering published APIs in Dev Portal
+### Filtering published APIs in Dev Portal
 
 You can filter and categorize published APIs on your Dev Portals with custom attributes. By assigning attributes to an API, this allows users to filter APIs in the Dev Portal sidebar. For an API, you can define one or more custom attributes, and each attribute can have one or more values. For example, if you had a Billing API, you could label it with `"visibility": ["Internal"]` and `"platform": ["Web", "Mobile"]`.
 
 For more information about how to use custom attributes for filtering APIs displayed in your Dev Portal, see the [MDC documentation](https://portaldocs.konghq.com/components/apis-list).
-
-## Gateway service link
-
-{{site.konnect_short_name}} APIs support linking to a {{site.konnect_short_name}} Gateway Service to enable Developer self-service and generate credentials or API keys. This is available to Data Planes running {{site.base_gateway}} 3.6 or later.
-This link will install the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin can only be configured from the associated Dev Portal and its published APIs.
-
-{:.info}
-> When linking an **API** to a **Gateway Service**, it is currently a 1:1 mapping.
-
-1. Browse to a **APIs**, or **Published APIs** for a specific Dev Portal, and select a specific API
-1. Click on the **Gateway Service** tab
-1. Click **Link Gateway Service**
-1. Select the appropriate Control Plane and Gateway Service
-1. Click **Submit**
-
-If you want the Gateway Service to restrict access to the API, [configure developer & application registration for your Dev Portal](/dev-portal/self-service/).

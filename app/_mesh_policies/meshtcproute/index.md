@@ -1,20 +1,15 @@
 ---
-title: MeshTCPRoute
+title: Mesh TCP Route
 name: MeshTCPRoutes
 products:
     - mesh
-description: 'The MeshTCPRoute policy allows you to alter and redirect TCP requests depending on where the request is coming from and where it’s going to.'
+description: 'Alter and redirect TCP requests depending on where the request is coming from and where it’s going to.'
 content_type: plugin
 type: policy
 min_version:
   mesh: '2.3'
 icon: meshtcproute.png
 ---
-
-{% warning %}
-This policy uses new policy matching algorithm.
-It's recommended to migrate from [TrafficRoute](/docs/{{ page.release }}/policies/traffic-route). See "Interactions with `TrafficRoute`" section for more information.
-{% endwarning %}
 
 The `MeshTCPRoute` policy allows you to alter and redirect TCP requests
 depending on where the request is coming from and where it's going to.

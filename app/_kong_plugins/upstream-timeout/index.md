@@ -37,6 +37,9 @@ search_aliases:
 related_resources:
   - text: Gateway Service timeout settings
     url: /gateway/entities/service/#schema-service-connect-timeout
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Upstream Timeout plugin allows you to configure specific timeouts for the connection between {{site.base_gateway}} and an upstream service.

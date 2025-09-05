@@ -4,7 +4,6 @@ For this tutorial, you’ll need a Dev Portal pre-configured. These settings are
    ```hcl
    echo '
    resource "konnect_portal" "my_portal" {
-     provider = konnect-beta
      authentication_enabled               = false
      auto_approve_applications            = false
      auto_approve_developers              = true
@@ -17,7 +16,6 @@ For this tutorial, you’ll need a Dev Portal pre-configured. These settings are
      rbac_enabled = true
    }
    resource "konnect_portal_page" "my_portalpage" {
-     provider    = konnect-beta
      portal_id   = konnect_portal.my_portal.id
      title       = "My Page"
      slug        = "/apis"

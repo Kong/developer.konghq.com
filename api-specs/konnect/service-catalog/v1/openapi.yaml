@@ -244,9 +244,9 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Integration Instances
-  '/integration-instances/{id}/auth-credential':
+  '/integration-instances/{integrationInstanceId}/auth-credential':
     parameters:
-      - name: id
+      - name: integrationInstanceId
         in: path
         description: The `id` of the integration instance.
         required: true
@@ -309,9 +309,9 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Integration Instance Auth Credentials
-  '/integration-instances/{id}/auth-config':
+  '/integration-instances/{integrationInstanceId}/auth-config':
     parameters:
-      - name: id
+      - name: integrationInstanceId
         in: path
         description: The `id` of the integration instance.
         required: true
@@ -517,9 +517,9 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Catalog Resource Mappings
-  '/resource-mappings/{id}':
+  '/resource-mappings/{resourceMappingId}':
     parameters:
-      - name: id
+      - name: resourceMappingId
         in: path
         description: The `id` of the resource mapping.
         required: true
@@ -925,6 +925,7 @@ components:
         - $ref: '#/components/schemas/MultiKeyAuth'
         - $ref: '#/components/schemas/GitHubAppInstallationAuth'
       title: CatalogIntegrationAuthorization
+      x-convert-oneOf: true
     OAuth:
       description: |
         Defines the OAuth 2.0 authorization strategy used by an integration.
@@ -936,6 +937,7 @@ components:
           type: string
           enum:
             - oauth
+          x-terraform-transform-const: true
         overridable_config:
           description: |
             A list of field names from the `config` object (e.g., `client_id`, `authorization_endpoint`, etc)
@@ -1023,6 +1025,7 @@ components:
           type: string
           enum:
             - multi_key_auth
+          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -1071,6 +1074,7 @@ components:
           type: string
           enum:
             - github_app_installation
+          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -1140,6 +1144,7 @@ components:
           description: The customer-specific API URL
           required: true
       additionalProperties:
+        x-convert-oneOf: true
         anyOf:
           - type: object
             nullable: true
@@ -1605,6 +1610,7 @@ components:
           type: string
           enum:
             - oauth
+          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -1620,7 +1626,7 @@ components:
               example: Yzk5ZDczMzRlNDEwY
             redirect_uri:
               description: |
-                The redirect URI submitted to the authorization server during the authentication request 
+                The redirect URI submitted to the authorization server during the authentication request
                 to retrieve the authorization code.
               type: string
               format: uri
@@ -1642,6 +1648,7 @@ components:
           type: string
           enum:
             - github_app_installation
+          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -1673,6 +1680,7 @@ components:
           type: string
           enum:
             - multi_key_auth
+          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -1704,6 +1712,7 @@ components:
       required:
         - type
         - config
+      writeOnly: true
     OAuthCredential:
       description: Represents a credential scoped to an integration instance that supports the `OAuth` authorization strategy.
       type: object
@@ -1739,6 +1748,7 @@ components:
           type: string
           enum:
             - oauth
+          x-terraform-transform-const: true
       required:
         - id
         - integration_instance
@@ -1783,6 +1793,7 @@ components:
           type: string
           enum:
             - github_app_installation
+          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -1842,6 +1853,7 @@ components:
           type: string
           enum:
             - multi_key_auth
+          x-terraform-transform-const: true
       required:
         - id
         - integration_instance
@@ -1884,6 +1896,7 @@ components:
           type: string
           enum:
             - oauth
+          x-terraform-transform-const: true
         client_id:
           description: The OAuth client identifier.
           type: string
@@ -1892,6 +1905,7 @@ components:
           description: The OAuth client secret.
           type: string
           example: s3cr3t4p1cl13ntt0k3n1234567890abcdef
+          writeOnly: true
         authorization_endpoint:
           description: The URL where users are redirected to authorize access.
           type: string
@@ -1909,6 +1923,7 @@ components:
         - client_secret
         - authorization_endpoint
         - token_endpoint
+      title: OAuth Config
     OAuthAuthConfig:
       type: object
       properties:
@@ -1916,6 +1931,7 @@ components:
           type: string
           enum:
             - oauth
+          x-terraform-transform-const: true
         client_id:
           description: The OAuth client identifier.
           type: string
@@ -2098,7 +2114,6 @@ components:
           type: object
           additionalProperties: true
           nullable: true
-          readOnly: true
         archived:
           description: Whether or not the resource has been archived.
           type: boolean
@@ -2157,26 +2172,28 @@ components:
         resource:
           oneOf:
             - $ref: '#/components/schemas/CatalogResourceId'
-            - type: object
-              title: CreateCatalogResourceMappingResourceByConfig
-              additionalProperties: false
-              required:
-                - integration_instance
-                - type
-                - config
-              properties:
-                integration_instance:
-                  description: The `id` or `name` of the integration instance the resource belongs to.
-                  type: string
-                  example: aws-lambda-prod
-                type:
-                  $ref: '#/components/schemas/CatalogResourceType'
-                config:
-                  $ref: '#/components/schemas/CatalogResourceConfig'
+            - $ref: '#/components/schemas/CreateCatalogResourceMappingResourceByConfig'
       additionalProperties: false
       required:
         - service
         - resource
+    CreateCatalogResourceMappingResourceByConfig:
+      type: object
+      properties:
+        integration_instance:
+          description: The `id` or `name` of the integration instance the resource belongs to.
+          type: string
+          example: aws-lambda-prod
+        type:
+          $ref: '#/components/schemas/CatalogResourceType'
+        config:
+          $ref: '#/components/schemas/CatalogResourceConfig'
+      additionalProperties: false
+      required:
+        - integration_instance
+        - type
+        - config
+      title: CreateCatalogResourceMappingResourceByConfig
     CatalogResourceMappingFilterParameters:
       type: object
       properties:
@@ -2248,6 +2265,7 @@ components:
           name: On-Call Dashboard
           link: 'https://my-dashboard-svc.io/dashboards/1'
       additionalProperties:
+        x-convert-oneOf: true
         anyOf:
           - $ref: '#/components/schemas/TextCustomField'
           - $ref: '#/components/schemas/NumericCustomField'

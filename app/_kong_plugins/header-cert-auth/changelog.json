@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where Header Cert Authentication plugin failed to validate revocation using OCSP when the downstream connection wasn't an SSL connection.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Added a new plugin for header-based certificate authentication.",

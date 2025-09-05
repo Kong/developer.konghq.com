@@ -126,6 +126,163 @@ insomnia.request.auth.update(
 );
 ```
 
+#### Update the current request body
+
+The `insomnia.request.body.update()` method allows you to modify the current request body using a specific mode.
+The following modes are supported:
+
+{% table %}
+columns:
+  - title: Mode
+    key: mode
+  - title: Example
+    key: example
+rows:
+  - mode: |
+      `raw`
+    example: |
+      ```js
+      insomnia.request.body.update({
+        mode: 'raw',
+        raw: 'rawContent',
+      });
+      ```
+  - mode: |
+      `file`
+    example: |
+      ```js
+      insomnia.request.body.update({
+        mode: 'file',
+        file: "/Users/<user name>/tmp.csv",
+      });
+      ```
+  - mode: |
+      `formdata`
+    example: |
+      ```js
+      insomnia.request.method = 'POST'
+      insomnia.request.body.update({
+        mode: 'formdata',
+        header: {
+          'Content-Type': 'multipart/form-data',
+        },
+        formdata: [
+          { key: 'k1', type: 'text', value: 'v1' },
+          { key: 'k2', type: 'file', value: "/Users/<user name>/tmp.csv" },
+        ],
+      });
+      ```
+  - mode: |
+      `urlencoded`
+    example: |
+      ```js
+      insomnia.request.body.update({
+        mode: 'urlencoded',
+        urlencoded: [
+          { key: 'k1', value: 'v1' },
+          { key: 'k2', value: 'v2' },
+        ],
+      });
+      ```
+  - mode: |
+      `graphql`
+    example: |
+      ```js
+      insomnia.request.url = 'https://api.github.com/graphql';
+      insomnia.request.method = 'POST';
+      insomnia.request.body.update({
+        mode: 'graphql',
+        graphql: {
+          query: `query($number_of_repos:Int!) {
+            viewer {
+              name
+          repositories(last: $number_of_repos) {
+                nodes {
+                  name
+            }
+          }
+        }
+      }`,
+          operationName: undefined,
+          variables: {   "number_of_repos": 3},
+        },
+      });
+      ```
+{% endtable %}
+
+#### Update the current request authorization
+
+The `insomnia.request.auth` method provides a way to set different AuthN or AuthZ types:
+
+```js
+// Set Bearer auth
+insomnia.request.auth.update(
+    {
+        type: 'bearer',
+        bearer: [
+            {key: 'token', value: 'tokenValue'},
+            {key: 'prefix', value: 'CustomTokenPrefix'},
+        ],
+    },
+    'bearer'
+);
+
+// Set basic auth
+insomnia.request.auth.update(
+    {
+        type: 'basic',
+        basic: [
+            {key: 'username', value: 'myName'},
+            {key: 'password', value: 'myPwd'},
+        ],
+    },
+    'basic'
+);
+```
+
+#### Update the current proxy
+
+The `insomnia.request.proxy` method allows you to get information about the current proxy and update it:
+
+```js
+// Print current proxy URL
+console.log(insomnia.request.proxy.getProxyUrl());
+
+// Update proxy URL
+insomnia.request.proxy.update({
+ host: '127.0.0.1',
+ match: 'https://httpbin.org',
+ port: 8080,
+ tunnel: false,
+ authenticate: false,
+ username: '',
+ password: '',
+});
+```
+
+#### Update certificates
+
+
+The `insomnia.request.certificate` method allows you to get information about the current certificate and update it:
+
+```js
+// Print the original certificate
+console.log('key:', insomnia.request.certificate.key.src);
+console.log('cert:', insomnia.request.certificate.cert.src);
+console.log('passphrass:', insomnia.request.certificate.passphrass);
+console.log('pfx:', insomnia.request.certificate.pfx.src);
+
+// Update the certificate
+insomnia.request.certificate.update({
+    disabled: true,
+    key: {src: 'my.key'},
+    cert: {src: 'my.cert'},
+    passphrase: '',
+    pfx: {src: ''},
+});
+```
+
+
 #### Send a request
 
 Send another request and set the response code as an environment variable:
@@ -147,6 +304,184 @@ const resp = await new Promise((resolve, reject) => {
 insomnia.environment.set('prevResponse', resp.code);
 ```
 
+You can send requests with different content types:
+
+{% table %}
+columns:
+  - title: Content type
+    key: type
+  - title: Mode
+    key: mode
+  - title: Example
+    key: example
+rows:
+  - type: |
+      `text/plain`
+    mode: |
+      `raw`
+    example: |
+      ```js
+      const rawReq = {
+        url: 'httpbin.org/anything',
+        method: 'POST',
+        header: {
+            'Content-Type': 'text/plain',
+        },
+        body: {
+            mode: 'raw',
+            raw: 'rawContent',
+        },
+      };
+
+      const resp = await new Promise((resolve, reject) => {
+          insomnia.sendRequest(
+              rawReq,
+              (err, resp) => {
+                  if (err != null) {
+                      reject(err);
+                  } else {
+                      resolve(resp);
+                  }
+              }
+          );
+      });
+      ```
+  - type: |
+      `application/octet-stream`
+    mode: |
+      `file`
+    example: |
+      ```js
+      const fileReq = {
+          url: 'httpbin.org/anything',
+          method: 'POST',
+          header: {
+              'Content-Type': 'application/octet-stream',
+          },
+          body: {
+              mode: 'file',
+              file: "${getFixturePath('files/rawfile.txt')}",
+          },
+      };
+
+      const resp = await new Promise((resolve, reject) => {
+          insomnia.sendRequest(
+              fileReq,
+              (err, resp) => {
+                  if (err != null) {
+                      reject(err);
+                  } else {
+                      resolve(resp);
+                  }
+              }
+          );
+      });
+      ```
+  - type: |
+      `multipart/form-data`
+    mode: |
+      `formdata`
+    example: |
+      ```js
+      const formdataReq = {
+          url: 'httpbin.org/anything',
+          method: 'POST',
+          header: {
+              'Content-Type': 'multipart/form-data',
+          },
+          body: {
+              mode: 'formdata',
+              formdata: [
+                  { key: 'k1', type: 'text', value: 'v1' },
+                  { key: 'k2', type: 'file', value: "${getFixturePath('files/rawfile.txt')}" },
+              ],
+          },
+      };
+
+      const resp = await new Promise((resolve, reject) => {
+          insomnia.sendRequest(
+              formdataReq,
+              (err, resp) => {
+                  if (err != null) {
+                      reject(err);
+                  } else {
+                      resolve(resp);
+                  }
+              }
+          );
+      });
+      ```
+  - type: |
+      `application/x-www-form-urlencoded`
+    mode: |
+      `urlencoded`
+    example: |
+      ```js
+      const urlencodedReq = {
+          url: 'httpbin.org/anything',
+          method: 'POST',
+          header: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: {
+              mode: 'urlencoded',
+              urlencoded: [
+                  { key: 'k1', value: 'v1' },
+                  { key: 'k2', value: 'v2' },
+              ],
+          },
+      };
+
+      const resp = await new Promise((resolve, reject) => {
+          insomnia.sendRequest(
+              urlencodedReq,
+              (err, resp) => {
+                  if (err != null) {
+                      reject(err);
+                  } else {
+                      resolve(resp);
+                  }
+              }
+          );
+      });
+      ```
+  - type: |
+      `application/graphql`
+    mode: |
+      `graphql`
+    example: |
+      ```js
+      const gqlReq = {
+          url: 'httpbin.org/anything',
+          method: 'POST',
+          header: {
+              'Content-Type': 'application/graphql',
+          },
+          body: {
+              mode: 'graphql',
+              graphql: {
+                  query: 'query',
+                  operationName: 'operation',
+                  variables: 'var',
+              },
+          },
+      };
+
+      const resp = await new Promise((resolve, reject) => {
+          insomnia.sendRequest(
+              gqlReq,
+              (err, resp) => {
+                  if (err != null) {
+                      reject(err);
+                  } else {
+                      resolve(resp);
+                  }
+              }
+          );
+      });
+      ```
+{% endtable %}
+
 ## After-response scripts
 
 After-response scripts allow you to execute tasks after a response is received. They can be used to:
@@ -158,6 +493,20 @@ After-response scripts allow you to execute tasks after a response is received. 
 ### After-response script examples
 
 The following sections provide after-response script examples you can use.
+
+#### Access response attributes
+
+
+The `insomnia.response` method allows you to use attributes from the response in your scripts. For example:
+
+```js
+const status = insomnia.response.status;
+const responseTime = insomnia.response.responseTime;
+const jsonBody = insomnia.response.json();
+const textBody = insomnia.response.text();
+const header = insomnia.response.headers.find(header => header.key === 'Content-Type');
+const cookies = insomnia.response.cookies.toObject();
+```
 
 #### Set environment variables
 
@@ -182,6 +531,24 @@ const jsonBody = insomnia.response.json();
 insomnia.test('Check the ID', () => {
   insomnia.expect(jsonBody.id).to.eql('abc-123');
 });
+```
+
+Here are more examples using `insomnia.expect()`:
+
+```js
+insomnia.expect(200).to.eql(200);
+insomnia.expect('uname').to.be.a('string');
+insomnia.expect('a').to.have.lengthOf(1);
+insomnia.expect('xxx_customer_id_yyy').to.include("customer_id");
+insomnia.expect(201).to.be.oneOf([201,202]);
+insomnia.expect(199).to.be.below(200);
+
+// Testing objects
+insomnia.expect({a: 1, b: 2}).to.have.all.keys('a', 'b');
+insomnia.expect({a: 1, b: 2}).to.have.any.keys('a', 'b');
+insomnia.expect({a: 1, b: 2}).to.not.have.any.keys('c', 'd');
+insomnia.expect({a: 1}).to.have.property('a');
+insomnia.expect({a: 1, b: 2}).to.be.an('object').that.has.all.keys('a', 'b');
 ```
 
 ## External libraries
@@ -214,10 +581,26 @@ The following NodeJS modules are also available:
 * `url`
 * `util`
 
+Here's an example of an after-response script using the `atob` library:
+
+```js
+const atob = require('atob');
+
+await new Promise((resolve) => setTimeout(resolve, 1000));
+
+const resp = await new Promise((resolve, reject) => {
+  insomnia.sendRequest(
+    'https://mock.insomnia.rest',
+    (err, resp) => {
+      err ? reject(err) : resolve(resp);
+    }
+  );
+});
+```
 
 ## Migrating scripts from Postman
 
-Scripts exported from Postman should also work when imported into Insomnia.
+Scripts exported from both Postman v2.0 and Postman v2.1 should also work when imported into Insomnia.
 
 There are some differences to be aware about:
 

@@ -36,6 +36,9 @@ search_aliases:
   - udp-log
   - udp
   - logging
+
+min_version:
+  gateway: '1.0'
 ---
 
 Log request and response data to a UDP server.

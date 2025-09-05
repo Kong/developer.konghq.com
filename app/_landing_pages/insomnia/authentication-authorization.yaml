@@ -66,27 +66,28 @@ rows:
   - header:
       type: h3
       text: "Set up SSO"
+  - column_count: 3
     columns:
       - blocks:
         - type: card
           config:
-            title: Configure SSO with Microsoft Entra SAML
-            description: Learn how to configure Microsoft Entra as your SAML provider for SSO with Insomnia 
+            title: Configure SSO with Microsoft Entra
+            description: Learn how to configure Microsoft Entra as your provider for SSO with Insomnia 
             icon:  /assets/icons/azure.svg
-            cta:
-              text: Learn more
-              url: /how-to/azure-saml-sso-insomnia/
-              align: end
+            ctas:
+              - text: SAML
+                url: /how-to/azure-saml-sso-insomnia/
       - blocks:
         - type: card
           config:
-            title: Configure SSO with Okta SAML
-            description: Learn how to configure Okta as your SAML provider for SSO with Insomnia
+            title: Configure SSO with Okta
+            description: Learn how to configure Okta as your provider for SSO with Insomnia
             icon:  /assets/icons/okta.svg
-            cta:
-              text: Learn more
-              url: /how-to/okta-saml-sso-insomnia/
-              align: end
+            ctas:
+              - text: SAML
+                url: /how-to/okta-saml-sso-insomnia/
+              - text: OIDC
+                url: /how-to/okta-oidc-sso-insomnia/
   - header:
       type: h2
       text: "Client certificates"

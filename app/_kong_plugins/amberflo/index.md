@@ -39,6 +39,9 @@ icon: amberflo.png
 search_aliases:
   - amberflo.io
   - kong-plugin-amberflow
+
+min_version:
+  gateway: '3.0'
 ---
 
 

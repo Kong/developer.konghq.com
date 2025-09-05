@@ -49,5 +49,12 @@
       "type": "feature",
       "scope": "Plugin"
     }
+  ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where the Gemini provider could not use Anthropic 'rawPredict' endpoint models hosted in Vertex.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

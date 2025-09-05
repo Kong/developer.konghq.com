@@ -38,6 +38,7 @@ rows:
   - header:
       type: h2
       text: "Next Steps"
+      sub_text: After installing KGO, use one of the following tutorials to get started.              
     columns:
       - blocks:
         - type: card

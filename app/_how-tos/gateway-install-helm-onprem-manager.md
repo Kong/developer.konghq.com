@@ -36,6 +36,11 @@ faqs:
     a: Ensure that `env.admin_gui_api_url` is set correctly in `values-cp.yaml`.
 
 automated_tests: false
+next_steps:
+  - text: Rate limit a Gateway Service
+    url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
+  - text: Enable key authentication on a Gateway Service
+    url: /how-to/authenticate-consumers-with-key-auth-enc/
 ---
 
 Kong Manager is the graphical user interface (GUI) for {{ site.base_gateway }}. It uses the Kong Admin API under the hood to administer and control {{ site.base_gateway }}.

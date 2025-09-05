@@ -1,0 +1,2169 @@
+openapi: 3.0.3
+info:
+  title: Konnect Sliver
+  version: 0.0.1
+servers:
+  - url: 'https://us.api.konghq.com/v1'
+    description: United-States Production region
+  - url: 'https://eu.api.konghq.com/v1'
+    description: Europe Production region
+  - url: 'https://au.api.konghq.com/v1'
+    description: Australia Production region
+  - url: 'https://me.api.konghq.com/v1'
+    description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v1'
+    description: India Production region
+paths:
+  /auth-servers:
+    get:
+      operationId: listAuthServers
+      summary: List all auth servers
+      description: List all available auth servers.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of auth servers. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+            - audience
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter auth servers returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              description:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              audience:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              labels:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/AuthServerList'
+      tags:
+        - Auth Server
+    post:
+      operationId: createAuthServer
+      summary: Create a new auth server
+      description: 'Create a new auth server. Each auth server has a unique, randomly generated, public issuer URL.'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateAuthServer'
+      responses:
+        '201':
+          $ref: '#/components/responses/AuthServer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Server
+  '/auth-servers/{authServerId}':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+    get:
+      operationId: getAuthServer
+      summary: Get an auth server
+      description: Get an auth server.
+      responses:
+        '200':
+          $ref: '#/components/responses/AuthServer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server
+    patch:
+      operationId: updateAuthServer
+      summary: Update an auth server
+      description: Update an auth server.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateAuthServer'
+      responses:
+        '200':
+          $ref: '#/components/responses/AuthServer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Server
+    delete:
+      operationId: deleteAuthServer
+      summary: Delete an auth server
+      description: Delete an auth server. All resources associated with the auth server will also be deleted. This action is irreversible.
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server
+  '/auth-servers/{authServerId}/claims':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+    get:
+      operationId: listAuthServerClaims
+      summary: List all auth server claims
+      description: List all the claims for a given auth server.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of claims. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter claims returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/ClaimList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Claims
+    post:
+      operationId: createAuthServerClaim
+      summary: Create a new auth server claim
+      description: 'Create a new claim for a given auth server. The `name` attribute will appear in the JWT access token as a claim with the given case-sensitive name. The `value` attribute will be used to populate the claim value in the JWT access token. The value can be templated, which allows you to use variables like `${ uuidv4 }` to generate dynamic values. Claim values are hydrated based on their types, which may include JSON.'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateClaim'
+      responses:
+        '201':
+          $ref: '#/components/responses/Claim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Claims
+  '/auth-servers/{authServerId}/claims/{claimId}':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+      - $ref: '#/components/parameters/claimId'
+    get:
+      operationId: getAuthServerClaim
+      summary: Get an auth server claim
+      description: Get a claim for given auth server.
+      responses:
+        '200':
+          $ref: '#/components/responses/Claim'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Claims
+    patch:
+      operationId: updateAuthServerClaim
+      summary: Update an auth server claim
+      description: Update a claim for a given auth server.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateClaim'
+      responses:
+        '200':
+          $ref: '#/components/responses/Claim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Claims
+    delete:
+      operationId: deleteAuthServerClaim
+      summary: Delete an auth server claim
+      description: 'Delete a claim for a given auth server. If the claim is included in any scopes, it will be removed from those scopes.'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Claims
+  '/auth-servers/{authServerId}/scopes':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+    get:
+      operationId: listAuthServerScopes
+      summary: List all auth server scopes
+      description: List all the scopes for a given auth server.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of scopes. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter scopes returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/ScopeList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Scopes
+    post:
+      operationId: createAuthServerScope
+      summary: Create a new auth server scope
+      description: Create a new scope for a given auth server. The `name` attribute must be unique within the auth server.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateScope'
+      responses:
+        '201':
+          $ref: '#/components/responses/Scope'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Server Scopes
+  '/auth-servers/{authServerId}/scopes/{scopeId}':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+      - $ref: '#/components/parameters/scopeId'
+    get:
+      operationId: getAuthServerScope
+      summary: Get an auth server scope
+      description: Get a scope for given auth server.
+      responses:
+        '200':
+          $ref: '#/components/responses/Scope'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Scopes
+    patch:
+      operationId: updateAuthServerScope
+      summary: Update an auth server scope
+      description: Update a scope for a given auth server.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateScope'
+      responses:
+        '200':
+          $ref: '#/components/responses/Scope'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Server Scopes
+    delete:
+      operationId: deleteAuthServerScope
+      summary: Delete an auth server scope
+      description: 'Delete a scope for a given auth server. If the scope is included in any clients, it will be removed from those clients.'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Scopes
+  '/auth-servers/{authServerId}/clients':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+    get:
+      operationId: listAuthServerClients
+      summary: List all auth server clients
+      description: List all the clients for a given auth server.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of clients. Supported sort attributes are:
+            - created_at
+            - updated_at
+            - name
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter clients returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              labels:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/ClientList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+    post:
+      operationId: createAuthServerClient
+      summary: Create a new auth server client
+      description: Create a new client for a given auth server. The client ID and secret will be generated automatically. The `name` attribute must be unique within the auth server. The `grant_types` and `response_types` attributes define the OAuth 2.0 and OpenID Connect capabilities of the client.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateClient'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedClient'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Server Clients
+  '/auth-servers/{authServerId}/clients/{clientId}':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+      - $ref: '#/components/parameters/clientId'
+    get:
+      operationId: getAuthServerClient
+      summary: Get an auth server client
+      description: Get a client for given auth server.
+      responses:
+        '200':
+          $ref: '#/components/responses/Client'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+    patch:
+      operationId: updateAuthServerClient
+      summary: Update an auth server client
+      description: Update a client for a given auth server.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateClient'
+      responses:
+        '200':
+          $ref: '#/components/responses/Client'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Server Clients
+    put:
+      operationId: replaceAuthServerClient
+      summary: Replace an auth server client
+      description: 'Replace a client for a given auth server. The client ID and secret can be provided to update an existing client, or to create a client with the matching ID and secret.'
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceClient'
+      responses:
+        '200':
+          $ref: '#/components/responses/Client'
+        '201':
+          $ref: '#/components/responses/Client'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Server Clients
+    delete:
+      operationId: deleteAuthServerClient
+      summary: Delete an auth server client
+      description: Delete a client for a given auth server. All tokens associated with the client will also be deleted. This action is irreversible.
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+  '/auth-servers/{authServerId}/clients/{clientId}/test-claim':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+      - $ref: '#/components/parameters/clientId'
+    post:
+      operationId: testClaimForClient
+      summary: Test a claim template for a client
+      description: Test a claim template for a client. Utility function to test claim templates against a client and verify the resulting claim values.
+      requestBody:
+        $ref: '#/components/requestBodies/TestClaimPayload'
+      responses:
+        '200':
+          $ref: '#/components/responses/TestClaim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+  '/auth-servers/{authServerId}/clients/{clientId}/tokens':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+      - $ref: '#/components/parameters/clientId'
+    get:
+      operationId: listAuthServerClientTokens
+      summary: List all auth server client tokens
+      description: List all the tokens for a given client.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of tokens. Supported sort attributes are:
+            - created_at
+            - expires_at
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter tokens returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/TokenList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+    delete:
+      operationId: deleteAllAuthServerClientTokens
+      summary: Delete all auth server client tokens
+      description: Revoke all tokens for a given client. Revoked tokens can no longer be used to access resources when introspection is enabled on the client.
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+  '/auth-servers/{authServerId}/clients/{clientId}/tokens/{tokenId}':
+    parameters:
+      - $ref: '#/components/parameters/authServerId'
+      - $ref: '#/components/parameters/clientId'
+      - $ref: '#/components/parameters/tokenId'
+    get:
+      operationId: getAuthServerClientToken
+      summary: Get an auth server client token
+      description: Get a token for given client and auth server.
+      responses:
+        '200':
+          $ref: '#/components/responses/Token'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+    delete:
+      operationId: deleteAuthServerClientToken
+      summary: Delete an auth server client token
+      description: Revoke a token for a given client and auth server. Revoked tokens can no longer be used to access resources when introspection is enabled on the client.
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Auth Server Clients
+components:
+  parameters:
+    PageNumber:
+      name: 'page[number]'
+      description: Determines which page of the entities to retrieve.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 1
+    PageSize:
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
+    authServerId:
+      schema:
+        type: string
+        format: uuid
+        example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+      name: authServerId
+      in: path
+      required: true
+      description: The auth server ID
+    claimId:
+      schema:
+        type: string
+        format: uuid
+        example: 07d05309-45cc-4b37-92fb-1524846deec3
+      name: claimId
+      in: path
+      required: true
+      description: The claim ID
+    clientId:
+      schema:
+        $ref: '#/components/schemas/ClientId'
+      name: clientId
+      in: path
+      required: true
+      description: The OAuth 2.0 client ID
+    scopeId:
+      schema:
+        type: string
+        format: uuid
+        example: c5e12516-182c-4928-ae04-05374b3b1cca
+      name: scopeId
+      in: path
+      required: true
+      description: The scope ID
+    tokenId:
+      schema:
+        type: string
+        format: uuid
+        example: 2cec70a4-d197-495c-8f3e-c0a1199d1da4
+      name: tokenId
+      in: path
+      required: true
+      description: The token ID
+  schemas:
+    TestClaimResult:
+      description: A map<string>any of the claim that have been templated
+      type: object
+    ResponseType:
+      description: OAuth 2.0 response type
+      type: string
+      enum:
+        - none
+        - token
+        - code
+        - id_token
+    ResponseTypes:
+      description: List of OAuth 2.0 response types
+      type: array
+      items:
+        $ref: '#/components/schemas/ResponseType'
+      nullable: false
+    GrantType:
+      description: OAuth 2.0 grant type
+      type: string
+      enum:
+        - authorization_code
+        - implicit
+        - client_credentials
+    GrantTypes:
+      description: List of OAuth 2.0 grant types
+      type: array
+      items:
+        $ref: '#/components/schemas/GrantType'
+      nullable: false
+      uniqueItems: true
+    RedirectURIs:
+      description: 'The URIs that the client is allowed to redirect to after authentication in interactive flows. All redirect URIs must be absolute URIs, be secure (HTTPS), and must not include a fragment component.'
+      type: array
+      items:
+        type: string
+        format: uri
+      nullable: false
+    LoginURI:
+      description: The URI of the login page where the user is redirected to authenticate in interactive flows. The login page must be secure (HTTPS).
+      type: string
+      format: uri
+      nullable: true
+    UpdateTokenDuration:
+      description: 'The duration of the minted token is valid for, in seconds'
+      type: integer
+      maximum: 2592000
+      minimum: 60
+    TokenDuration:
+      description: 'The duration of the minted token is valid for, in seconds'
+      type: integer
+      default: 300
+      maximum: 2592000
+      minimum: 60
+    UpdateClientAllowAllScopes:
+      description: Specifies whether the client is allowed to request all scopes
+      type: boolean
+    ClientAllowAllScopes:
+      description: Specifies whether the client is allowed to request all scopes
+      type: boolean
+      default: false
+    ClientAllowScopes:
+      description: Specifies the scopes IDs that the client is allowed to request
+      type: array
+      items:
+        type: string
+        format: uuid
+      nullable: false
+    ClientId:
+      description: The OAuth 2.0 client ID
+      type: string
+      example: kYa9iQFU5xPDSIUH9z1z
+      maxLength: 36
+      minLength: 1
+      pattern: '[-_\w]+'
+      readOnly: true
+    AuthServerName:
+      description: The name of the auth server
+      type: string
+      minLength: 1
+    AuthServerDescription:
+      description: The description of the auth server
+      type: string
+    Audience:
+      description: The recipients that the tokens are intended for. This becomes the 'aud' claim in an access token
+      type: string
+      minLength: 1
+    UpdateAlgorithm:
+      description: Algorithm used in the key signing process
+      type: string
+      enum:
+        - RS256
+        - RS384
+        - RS512
+        - PS256
+        - PS384
+        - PS512
+    Algorithm:
+      description: Algorithm used in the key signing process
+      type: string
+      default: RS256
+      enum:
+        - RS256
+        - RS384
+        - RS512
+        - PS256
+        - PS384
+        - PS512
+    Issuer:
+      description: The complete URL for the custom authorization server. This becomes the 'iss' claim in an access token.
+      type: string
+    TokenEndpointAuthMethod:
+      description: Requested authentication method for OAuth 2.0 endpoints.
+      type: string
+      default: client_secret_post
+      enum:
+        - client_secret_post
+        - none
+    AuthServer:
+      type: object
+      properties:
+        id:
+          description: The ID of the auth server
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/AuthServerName'
+        description:
+          $ref: '#/components/schemas/AuthServerDescription'
+        audience:
+          $ref: '#/components/schemas/Audience'
+        signing_algorithm:
+          $ref: '#/components/schemas/Algorithm'
+        issuer:
+          $ref: '#/components/schemas/Issuer'
+        metadata_uri:
+          description: The URI of the metadata document for the auth server
+          type: string
+          format: uri
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - description
+        - audience
+        - signing_algorithm
+        - issuer
+        - metadata_uri
+        - labels
+        - created_at
+        - updated_at
+    AuthServerList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthServer'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    ClaimName:
+      description: The name of the claim
+      type: string
+      minLength: 1
+    ClaimValue:
+      description: Specifies the value of the claim. It may contain a static value or a dynamic (templated) value. Static values which are valid JSON will result in a JSON object in the token claims.
+      type: string
+      minLength: 1
+    UpdateClaimIncludeInToken:
+      description: 'Specifies whether to include claim in the token. If the value is set to ''false'' for a claim, the client instead uses the access token to get claims from the ''/userinfo'' endpoint.'
+      type: boolean
+    ClaimIncludeInToken:
+      description: 'Specifies whether to include claim in the token. If the value is set to ''false'' for a claim, the client instead uses the access token to get claims from the ''/userinfo'' endpoint.'
+      type: boolean
+      default: false
+    UpdateClaimIncludeInAllScopes:
+      description: 'Specifies whether to include the claim in all scopes. If the value is set to ''false'' for a claim, the claim is only included in the scopes that explicitly list it.'
+      type: boolean
+    ClaimIncludeInAllScopes:
+      description: 'Specifies whether to include the claim in all scopes. If the value is set to ''false'' for a claim, the claim is only included in the scopes that explicitly list it.'
+      type: boolean
+      default: false
+    ClaimIncludeInScopes:
+      description: Specifies the scopes IDs in which the claim is included
+      type: array
+      items:
+        type: string
+        format: uuid
+      nullable: false
+    UpdateClaimEnabled:
+      description: 'Specifies whether the claim is enabled. If the claim is not enabled, it will not be included in the token or the ''/userinfo'' endpoint.'
+      type: boolean
+    ClaimEnabled:
+      description: 'Specifies whether the claim is enabled. If the claim is not enabled, it will not be included in the token or the ''/userinfo'' endpoint.'
+      type: boolean
+      default: true
+    Claim:
+      type: object
+      properties:
+        id:
+          description: The ID of the claim
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/ClaimName'
+        value:
+          $ref: '#/components/schemas/ClaimValue'
+        include_in_token:
+          $ref: '#/components/schemas/ClaimIncludeInToken'
+        include_in_all_scopes:
+          $ref: '#/components/schemas/ClaimIncludeInAllScopes'
+        include_in_scopes:
+          $ref: '#/components/schemas/ClaimIncludeInScopes'
+        enabled:
+          $ref: '#/components/schemas/ClaimEnabled'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - value
+        - include_in_token
+        - include_in_all_scopes
+        - include_in_scopes
+        - enabled
+        - created_at
+        - updated_at
+    ClaimList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Claim'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    ScopeName:
+      description: The name of the scope
+      type: string
+      minLength: 1
+    ScopeDescription:
+      description: Description of the scope
+      type: string
+    UpdateScopeDefault:
+      description: 'Specifies whether the scope is included by default in access tokens without being explicitly requested by the client. If the scope is not allowed by the client, it will not be included in the access token.'
+      type: boolean
+    ScopeDefault:
+      description: 'Specifies whether the scope is included by default in access tokens without being explicitly requested by the client. If the scope is not allowed by the client, it will not be included in the access token.'
+      type: boolean
+      default: false
+    UpdateScopeIncludeInMetadata:
+      description: Specifies whether to include the scope in the metadata document
+      type: boolean
+    ScopeIncludeInMetadata:
+      description: Specifies whether to include the scope in the metadata document
+      type: boolean
+      default: false
+    UpdateScopeEnabled:
+      description: 'Specifies whether the scope is enabled. If the scope is not enabled, it cannot be requested by clients and will not be included in the access token.'
+      type: boolean
+    ScopeEnabled:
+      description: 'Specifies whether the scope is enabled. If the scope is not enabled, it cannot be requested by clients and will not be included in the access token.'
+      type: boolean
+      default: true
+    Scope:
+      type: object
+      properties:
+        id:
+          description: The ID of the scope
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/ScopeName'
+        description:
+          $ref: '#/components/schemas/ScopeDescription'
+        default:
+          $ref: '#/components/schemas/ScopeDefault'
+        include_in_metadata:
+          $ref: '#/components/schemas/ScopeIncludeInMetadata'
+        enabled:
+          $ref: '#/components/schemas/ScopeEnabled'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - description
+        - default
+        - include_in_metadata
+        - enabled
+        - created_at
+        - updated_at
+    ScopeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scope'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    ClientName:
+      description: The name of the client
+      type: string
+      minLength: 1
+    Client:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ClientId'
+        name:
+          $ref: '#/components/schemas/ClientName'
+        grant_types:
+          $ref: '#/components/schemas/GrantTypes'
+        redirect_uris:
+          $ref: '#/components/schemas/RedirectURIs'
+        login_uri:
+          $ref: '#/components/schemas/LoginURI'
+        access_token_duration:
+          $ref: '#/components/schemas/TokenDuration'
+        id_token_duration:
+          $ref: '#/components/schemas/TokenDuration'
+        allow_all_scopes:
+          $ref: '#/components/schemas/ClientAllowAllScopes'
+        allow_scopes:
+          $ref: '#/components/schemas/ClientAllowScopes'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        response_types:
+          $ref: '#/components/schemas/ResponseTypes'
+        token_endpoint_auth_method:
+          $ref: '#/components/schemas/TokenEndpointAuthMethod'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - grant_types
+        - redirect_uris
+        - allow_all_scopes
+        - allow_scopes
+        - login_uri
+        - access_token_duration
+        - id_token_duration
+        - labels
+        - response_types
+        - created_at
+        - updated_at
+    CreatedClient:
+      allOf:
+        - $ref: '#/components/schemas/Client'
+        - type: object
+          required:
+            - client_secret
+          properties:
+            client_secret:
+              description: The OAuth 2.0 client secret
+              type: string
+              example: YAzsyUlNZ5gNGeKS9H3VAdxVPzhPo4ae
+    ClientList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    Token:
+      type: object
+      properties:
+        id:
+          description: The ID of the token
+          type: string
+          format: uuid
+        granted_scope_names:
+          description: The scopes that the token has been granted
+          type: array
+          items:
+            type: string
+          nullable: false
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        expires_at:
+          description: An ISO-8601 timestamp representation of the expiration date
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+      required:
+        - id
+        - granted_scope_names
+        - created_at
+        - expires_at
+    TokenList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Token'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    StringFieldContainsFilter:
+      description: Filters on the given string field value by fuzzy match.
+      type: object
+      properties:
+        contains:
+          type: string
+      additionalProperties: false
+      required:
+        - contains
+      title: StringFieldContainsFilter
+      x-examples:
+        example-1:
+          contains: some-value
+    LegacyStringFieldFilter:
+      description: Filter a string value field either by exact match or partial contains.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+      title: StringFieldFilter
+    Labels:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 50
+      title: Labels
+    CreatedAt:
+      description: An ISO-8601 timestamp representation of entity creation date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    UpdatedAt:
+      description: An ISO-8601 timestamp representation of entity update date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    PageMeta:
+      description: Contains pagination query parameters and the total number of objects returned.
+      type: object
+      properties:
+        number:
+          type: number
+          example: 1
+        size:
+          type: number
+          example: 10
+        total:
+          type: number
+          example: 100
+      required:
+        - number
+        - size
+        - total
+    PaginatedMeta:
+      description: returns the pagination information
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMeta'
+      required:
+        - page
+      title: PaginatedMeta
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    InvalidRules:
+      description: invalid parameters rules
+      type: string
+      enum:
+        - required
+        - is_array
+        - is_base64
+        - is_boolean
+        - is_date_time
+        - is_integer
+        - is_null
+        - is_number
+        - is_object
+        - is_string
+        - is_uuid
+        - is_fqdn
+        - is_arn
+        - unknown_property
+        - missing_reference
+        - is_label
+        - matches_regex
+        - invalid
+        - is_supported_network_availability_zone_list
+        - is_supported_network_cidr_block
+        - is_supported_provider_region
+      nullable: true
+      readOnly: true
+    InvalidParameterStandard:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          $ref: '#/components/schemas/InvalidRules'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+    InvalidParameterMinimumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_length
+            - min_digits
+            - min_lowercase
+            - min_uppercase
+            - min_symbols
+            - min_items
+            - min
+          nullable: false
+          readOnly: true
+        minimum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must have at least 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_length
+            - max_items
+            - max
+          nullable: false
+          readOnly: true
+        maximum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must not have more than 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
+    InvalidParameterChoiceItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - enum
+          nullable: false
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        choices:
+          type: array
+          items: {}
+          minItems: 1
+          nullable: false
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - choices
+    InvalidParameterDependentItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - dependent_fields
+          nullable: true
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        dependents:
+          type: array
+          items: {}
+          nullable: true
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - rule
+        - reason
+        - dependents
+    InvalidParameters:
+      description: invalid parameters
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/InvalidParameterStandard'
+          - $ref: '#/components/schemas/InvalidParameterMinimumLength'
+          - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterChoiceItem'
+          - $ref: '#/components/schemas/InvalidParameterDependentItem'
+      minItems: 1
+      nullable: false
+      uniqueItems: true
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - invalid_parameters
+          properties:
+            invalid_parameters:
+              $ref: '#/components/schemas/InvalidParameters'
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
+    LabelsUpdate:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Labels are intended to store **INTERNAL** metadata.
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+        nullable: true
+      maxProperties: 50
+      nullable: true
+      writeOnly: true
+  examples:
+    TestClaimResult:
+      value:
+        destination: anywhere
+        uuid: f44567da-a0b1-4eef-86c9-b27ab2e22048
+        alt_scopes:
+          - openid
+          - profile
+    CreateAuthServer:
+      value:
+        name: Auth Server
+        description: Auth Server Description
+        audience: 'api://default'
+    UpdateAuthServer:
+      value:
+        name: Updated Auth Server
+        description: Updated Auth Server Description
+        audience: 'api://default'
+    AuthServerList:
+      value:
+        data:
+          - id: f44567da-a0b1-4eef-86c9-b27ab2e22048
+            name: Auth Server 1
+            description: Auth Server 1 Description
+            audience: 'api://default'
+            signing_algorithm: RS256
+            issuer: 'https://auth-server-1.com'
+            metadata_uri: 'https://auth-server-1.com/auth/.well-known/openid-configuration'
+            labels:
+              env: production
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+          - id: 5e051473-3b98-45c9-aa99-75b18c158bbf
+            name: Auth Server 2
+            description: Auth Server 2 Description
+            audience: 'api://default'
+            signing_algorithm: RS256
+            issuer: 'https://auth-server-2.com'
+            metadata_uri: 'https://auth-server-2.com/auth/.well-known/openid-configuration'
+            labels:
+              env: production
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+        meta:
+          page:
+            number: 1
+            size: 2
+            total: 2
+    AuthServer:
+      value:
+        id: f44567da-a0b1-4eef-86c9-b27ab2e22048
+        name: Auth Server 1
+        description: Auth Server 1 Description
+        audience: 'api://default'
+        signing_algorithm: RS256
+        issuer: 'https://auth-server-1.com'
+        metadata_uri: 'https://auth-server-1.com/auth/.well-known/openid-configuration'
+        labels:
+          env: production
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-21T09:29:14.52Z'
+    CreateClaim:
+      value:
+        name: Claim
+        value: Claim Value
+        include_in_token: true
+        include_in_all_scopes: false
+        include_in_scopes:
+          - c5e12516-182c-4928-ae04-05374b3b1cca
+          - b5525b78-f3a0-4bd6-befc-7696be58717e
+        enabled: true
+    UpdateClaim:
+      value:
+        name: Updated Claim
+        value: Updated Claim Value
+        include_in_token: true
+        include_in_all_scopes: true
+        include_in_scopes:
+          - c5e12516-182c-4928-ae04-05374b3b1cca
+        enabled: false
+    ClaimList:
+      value:
+        data:
+          - id: 07d05309-45cc-4b37-92fb-1524846deec3
+            name: Claim 1
+            value: Claim 1 Value
+            include_in_token: true
+            include_in_all_scopes: false
+            include_in_scopes:
+              - c5e12516-182c-4928-ae04-05374b3b1cca
+              - b5525b78-f3a0-4bd6-befc-7696be58717e
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+          - id: 5e051473-3b98-45c9-aa99-75b18c158bbf
+            name: Claim 2
+            value: Claim 2 Value
+            include_in_token: true
+            include_in_all_scopes: false
+            include_in_scopes:
+              - c5e12516-182c-4928-ae04-05374b3b1cca
+              - b5525b78-f3a0-4bd6-befc-7696be58717e
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+        meta:
+          page:
+            number: 1
+            size: 2
+            total: 2
+    Claim:
+      value:
+        id: 07d05309-45cc-4b37-92fb-1524846deec3
+        name: Claim 1
+        value: Claim 1 Value
+        include_in_token: true
+        include_in_all_scopes: false
+        include_in_scopes:
+          - c5e12516-182c-4928-ae04-05374b3b1cca
+          - b5525b78-f3a0-4bd6-befc-7696be58717e
+        enabled: true
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-21T09:29:14.52Z'
+    CreateScope:
+      value:
+        name: Scope
+        description: Scope Description
+        default: false
+        include_in_metadata: false
+        enabled: true
+    UpdateScope:
+      value:
+        name: Updated Scope
+        description: Updated Scope Description
+        default: true
+        include_in_metadata: true
+        enabled: false
+    ScopeList:
+      value:
+        data:
+          - id: c5e12516-182c-4928-ae04-05374b3b1cca
+            name: Scope 1
+            description: Scope 1 Description
+            default: false
+            include_in_metadata: false
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+          - id: b5525b78-f3a0-4bd6-befc-7696be58717e
+            name: Scope 2
+            description: Scope 2 Description
+            default: false
+            include_in_metadata: false
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+        meta:
+          page:
+            number: 1
+            size: 2
+            total: 2
+    Scope:
+      value:
+        id: c5e12516-182c-4928-ae04-05374b3b1cca
+        name: Scope 1
+        description: Scope 1 Description
+        default: false
+        include_in_metadata: false
+        enabled: true
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-21T09:29:14.52Z'
+    CreateClient:
+      value:
+        name: Client
+        grant_types:
+          - client_credentials
+        allow_all_scopes: false
+        allow_scopes:
+          - c5e12516-182c-4928-ae04-05374b3b1cca
+          - b5525b78-f3a0-4bd6-befc-7696be58717e
+        redirect_uris:
+          - 'https://client.com/callback'
+        login_uri: 'https://client.com/login'
+        access_token_duration: 3600
+        id_token_duration: 3600
+        response_types:
+          - token
+        token_endpoint_auth_method: client_secret_post
+    UpdateClient:
+      value:
+        name: Updated Client
+    ReplaceClient:
+      value:
+        name: Replace Client
+        client_secret: SecretPassword
+        grant_types:
+          - client_credentials
+        response_types:
+          - token
+    ClientList:
+      value:
+        data:
+          - id: kYa9iQFU5xPDSIUH9z1z
+            name: Client 1
+            grant_types:
+              - authorization_code
+              - implicit
+            allow_all_scopes: false
+            allow_scopes:
+              - c5e12516-182c-4928-ae04-05374b3b1cca
+              - b5525b78-f3a0-4bd6-befc-7696be58717e
+            redirect_uris:
+              - 'https://client.com/callback'
+            login_uri: 'https://client.com/login'
+            access_token_duration: 3600
+            id_token_duration: 3600
+            labels:
+              env: prod
+            response_types:
+              - token
+            token_endpoint_auth_method: client_secret_post
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+          - id: kYa9iQFU5xPDSIUH9z1z
+            name: Client 2
+            grant_types:
+              - client_credentials
+            allow_all_scopes: true
+            allow_scopes: []
+            redirect_uris: []
+            login_uri: null
+            access_token_duration: 3600
+            id_token_duration: 3600
+            labels:
+              env: prod
+            response_types:
+              - token
+            token_endpoint_auth_method: none
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-21T09:29:14.52Z'
+        meta:
+          page:
+            number: 1
+            size: 2
+            total: 2
+    Client:
+      value:
+        id: kYa9iQFU5xPDSIUH9z1z
+        name: Client 1
+        grant_types:
+          - client_credentials
+          - authorization_code
+          - implicit
+        allow_all_scopes: false
+        allow_scopes:
+          - c5e12516-182c-4928-ae04-05374b3b1cca
+          - b5525b78-f3a0-4bd6-befc-7696be58717e
+        redirect_uris:
+          - 'https://client.com/callback'
+        login_uri: 'https://client.com/login'
+        access_token_duration: 3600
+        id_token_duration: 3600
+        labels:
+          env: prod
+        response_types:
+          - token
+        token_endpoint_auth_method: client_secret_post
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-21T09:29:14.52Z'
+    CreatedClient:
+      value:
+        id: kYa9iQFU5xPDSIUH9z1z
+        name: Client 1
+        grant_types:
+          - client_credentials
+        allow_all_scopes: false
+        allow_scopes:
+          - c5e12516-182c-4928-ae04-05374b3b1cca
+          - b5525b78-f3a0-4bd6-befc-7696be58717e
+        redirect_uris:
+          - 'https://client.com/callback'
+        login_uri: 'https://client.com/login'
+        access_token_duration: 3600
+        id_token_duration: 3600
+        labels:
+          env: test
+        response_types:
+          - token
+        token_endpoint_auth_method: client_secret_post
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-21T09:29:14.52Z'
+        client_secret: YAzsyUlNZ5gNGeKS9H3VAdxVPzhPo4ae
+    TokenList:
+      value:
+        data:
+          - id: 2cec70a4-d197-495c-8f3e-c0a1199d1da4
+            granted_scope_names:
+              - openid
+              - profile
+            created_at: '2023-03-20T09:29:14.52Z'
+            expires_at: '2022-11-04T20:10:06.927Z'
+          - id: 8b3bd4a9-7bb3-4b4b-9447-728577bd75e2
+            granted_scope_names:
+              - openid
+              - profile
+            created_at: '2023-03-20T09:29:14.52Z'
+            expires_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            number: 1
+            size: 2
+            total: 2
+    Token:
+      value:
+        id: 2cec70a4-d197-495c-8f3e-c0a1199d1da4
+        granted_scope_names:
+          - openid
+          - profile
+        created_at: '2023-03-20T09:29:14.52Z'
+        expires_at: '2022-11-04T20:10:06.927Z'
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+  requestBodies:
+    TestClaimPayload:
+      description: Claim to be tested
+      required: true
+      content:
+        application/json:
+          schema:
+            description: A map<string>string of the claims and templates
+            type: object
+            example:
+              destination: anywhere
+              uuidv4: '${ uuidv4 }'
+    CreateAuthServer:
+      description: Auth server to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/AuthServerName'
+              description:
+                $ref: '#/components/schemas/AuthServerDescription'
+              audience:
+                $ref: '#/components/schemas/Audience'
+              signing_algorithm:
+                $ref: '#/components/schemas/Algorithm'
+              labels:
+                $ref: '#/components/schemas/Labels'
+            required:
+              - name
+              - audience
+          examples:
+            AuthServer:
+              $ref: '#/components/examples/CreateAuthServer'
+    UpdateAuthServer:
+      description: Auth server to be updated
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/AuthServerName'
+              description:
+                $ref: '#/components/schemas/AuthServerDescription'
+              audience:
+                $ref: '#/components/schemas/Audience'
+              signing_algorithm:
+                $ref: '#/components/schemas/UpdateAlgorithm'
+              labels:
+                $ref: '#/components/schemas/LabelsUpdate'
+          examples:
+            AuthServer:
+              $ref: '#/components/examples/UpdateAuthServer'
+    CreateClaim:
+      description: Claim to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/ClaimName'
+              value:
+                $ref: '#/components/schemas/ClaimValue'
+              include_in_token:
+                $ref: '#/components/schemas/ClaimIncludeInToken'
+              include_in_all_scopes:
+                $ref: '#/components/schemas/ClaimIncludeInAllScopes'
+              include_in_scopes:
+                $ref: '#/components/schemas/ClaimIncludeInScopes'
+              enabled:
+                $ref: '#/components/schemas/ClaimEnabled'
+            required:
+              - name
+              - value
+          examples:
+            Claim:
+              $ref: '#/components/examples/CreateClaim'
+    UpdateClaim:
+      description: Claim to be updated
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/ClaimName'
+              value:
+                $ref: '#/components/schemas/ClaimValue'
+              include_in_token:
+                $ref: '#/components/schemas/UpdateClaimIncludeInToken'
+              include_in_all_scopes:
+                $ref: '#/components/schemas/UpdateClaimIncludeInAllScopes'
+              include_in_scopes:
+                $ref: '#/components/schemas/ClaimIncludeInScopes'
+              enabled:
+                $ref: '#/components/schemas/UpdateClaimEnabled'
+          examples:
+            Claim:
+              $ref: '#/components/examples/UpdateClaim'
+    CreateScope:
+      description: Scope to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/ScopeName'
+              description:
+                $ref: '#/components/schemas/ScopeDescription'
+              default:
+                $ref: '#/components/schemas/ScopeDefault'
+              include_in_metadata:
+                $ref: '#/components/schemas/ScopeIncludeInMetadata'
+              enabled:
+                $ref: '#/components/schemas/ScopeEnabled'
+            required:
+              - name
+          examples:
+            Scope:
+              $ref: '#/components/examples/CreateScope'
+    UpdateScope:
+      description: Scope to be update
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/ScopeName'
+              description:
+                $ref: '#/components/schemas/ScopeDescription'
+              default:
+                $ref: '#/components/schemas/UpdateScopeDefault'
+              include_in_metadata:
+                $ref: '#/components/schemas/UpdateScopeIncludeInMetadata'
+              enabled:
+                $ref: '#/components/schemas/UpdateScopeEnabled'
+          examples:
+            Scope:
+              $ref: '#/components/examples/UpdateScope'
+    CreateClient:
+      description: Client to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/ClientName'
+              grant_types:
+                $ref: '#/components/schemas/GrantTypes'
+              response_types:
+                $ref: '#/components/schemas/ResponseTypes'
+              redirect_uris:
+                $ref: '#/components/schemas/RedirectURIs'
+              login_uri:
+                $ref: '#/components/schemas/LoginURI'
+              access_token_duration:
+                $ref: '#/components/schemas/TokenDuration'
+              id_token_duration:
+                $ref: '#/components/schemas/TokenDuration'
+              allow_all_scopes:
+                $ref: '#/components/schemas/ClientAllowAllScopes'
+              allow_scopes:
+                $ref: '#/components/schemas/ClientAllowScopes'
+              labels:
+                $ref: '#/components/schemas/Labels'
+              token_endpoint_auth_method:
+                $ref: '#/components/schemas/TokenEndpointAuthMethod'
+            required:
+              - name
+              - grant_types
+              - response_types
+          examples:
+            Client:
+              $ref: '#/components/examples/CreateClient'
+    UpdateClient:
+      description: Client to be updated
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/ClientName'
+              client_secret:
+                description: Secret of the client
+                type: string
+                minLength: 1
+              grant_types:
+                $ref: '#/components/schemas/GrantTypes'
+              response_types:
+                $ref: '#/components/schemas/ResponseTypes'
+              redirect_uris:
+                $ref: '#/components/schemas/RedirectURIs'
+              login_uri:
+                $ref: '#/components/schemas/LoginURI'
+              access_token_duration:
+                $ref: '#/components/schemas/UpdateTokenDuration'
+              id_token_duration:
+                $ref: '#/components/schemas/UpdateTokenDuration'
+              allow_all_scopes:
+                $ref: '#/components/schemas/UpdateClientAllowAllScopes'
+              allow_scopes:
+                $ref: '#/components/schemas/ClientAllowScopes'
+              token_endpoint_auth_method:
+                $ref: '#/components/schemas/TokenEndpointAuthMethod'
+              labels:
+                $ref: '#/components/schemas/LabelsUpdate'
+          examples:
+            Client:
+              $ref: '#/components/examples/UpdateClient'
+    ReplaceClient:
+      description: Client to be replaced
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/ClientName'
+              client_secret:
+                description: Secret of the client
+                type: string
+                minLength: 1
+              grant_types:
+                $ref: '#/components/schemas/GrantTypes'
+              response_types:
+                $ref: '#/components/schemas/ResponseTypes'
+              redirect_uris:
+                $ref: '#/components/schemas/RedirectURIs'
+              login_uri:
+                $ref: '#/components/schemas/LoginURI'
+              access_token_duration:
+                $ref: '#/components/schemas/TokenDuration'
+              id_token_duration:
+                $ref: '#/components/schemas/TokenDuration'
+              allow_all_scopes:
+                $ref: '#/components/schemas/ClientAllowAllScopes'
+              allow_scopes:
+                $ref: '#/components/schemas/ClientAllowScopes'
+              token_endpoint_auth_method:
+                $ref: '#/components/schemas/TokenEndpointAuthMethod'
+              labels:
+                $ref: '#/components/schemas/Labels'
+            required:
+              - name
+              - client_secret
+              - grant_types
+              - response_types
+          examples:
+            Client:
+              $ref: '#/components/examples/ReplaceClient'
+  responses:
+    TestClaim:
+      description: Result of a claim test
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TestClaimResult'
+          examples:
+            TestClaim:
+              $ref: '#/components/examples/TestClaimResult'
+    AuthServer:
+      description: An auth server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthServer'
+          examples:
+            AuthServer:
+              $ref: '#/components/examples/AuthServer'
+    AuthServerList:
+      description: List of auth servers
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthServerList'
+          examples:
+            AuthServerList:
+              $ref: '#/components/examples/AuthServerList'
+    Claim:
+      description: A claim
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Claim'
+          examples:
+            Claim:
+              $ref: '#/components/examples/Claim'
+    ClaimList:
+      description: List of claims
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClaimList'
+          examples:
+            ClaimList:
+              $ref: '#/components/examples/ClaimList'
+    Scope:
+      description: A scope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Scope'
+          examples:
+            Scope:
+              $ref: '#/components/examples/Scope'
+    ScopeList:
+      description: List of scopes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ScopeList'
+          examples:
+            ScopeList:
+              $ref: '#/components/examples/ScopeList'
+    Client:
+      description: A client
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Client'
+          examples:
+            Client:
+              $ref: '#/components/examples/Client'
+    ClientList:
+      description: List of clients
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientList'
+          examples:
+            ClientList:
+              $ref: '#/components/examples/ClientList'
+    CreatedClient:
+      description: A client with a secret
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatedClient'
+          examples:
+            CreatedClient:
+              $ref: '#/components/examples/CreatedClient'
+    Token:
+      description: A token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Token'
+          examples:
+            Token:
+              $ref: '#/components/examples/Token'
+    TokenList:
+      description: List of tokens
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenList'
+          examples:
+            TokenList:
+              $ref: '#/components/examples/TokenList'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+  securitySchemes:
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
+        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+        The access token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
+        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
+        The PAT token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
+    konnectAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
+tags:
+  - name: Auth Server
+    description: 'Auth Servers expose an OAuth 2.0 and OpenID Connect server interface for generating access tokens. The management API will give you the ability to create, configure and manage multiple Auth Servers per Konnect organization. Auth Servers are a regional Konnect entity.'
+  - name: Auth Server Clients
+    description: 'Clients represent the identity of machines, such as microservices, mobile apps, or scripts entity. The management API will give you the ability to create, configure and manage multiple Clients per Auth Server.'
+  - name: Auth Server Claims
+    description: 'Claims are statements about the Client, included in tokens issued by the Auth Server. The management API will give you the ability to create, configure and manage multiple Claims per Auth Server, and include them in tokens based on the requested Scopes.'
+  - name: Auth Server Scopes
+    description: 'Scopes define the extent of access that an access token grants to a Client. The management API will give you the ability to create, configure and manage multiple Scopes per Auth Server, and restrict their usage by Client.'
+security:
+  - systemAccountAccessToken: []
+  - personalAccessToken: []
+  - konnectAccessToken: []

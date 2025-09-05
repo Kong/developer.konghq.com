@@ -3405,7 +3405,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EntityBody'
+              type: object
+              additionalProperties: true
       responses:
         '200':
           $ref: '#/components/responses/ValidateEntityResponse'
@@ -4358,11 +4359,13 @@ components:
       schema:
         type: string
     ConsumerGroupIdManageConsumers:
+      description: The UUID or name of the consumer group
       in: path
       name: ConsumerGroupId
       required: true
       schema:
         type: string
+        example: cf4c7e60-11db-49dd-b300-7c7e5f0f7e6b
     ConsumerId:
       description: ID of the Consumer to lookup
       example: c1059869-6fa7-4329-a5f5-5946d14ca2c5
@@ -4668,6 +4671,7 @@ components:
           type: string
         value:
           type: string
+          writeOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -4683,6 +4687,7 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
       required:
         - key
         - value
@@ -4693,6 +4698,7 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
       required:
         - value
     ACL:
@@ -4712,11 +4718,14 @@ components:
         group:
           type: string
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
       example:
@@ -4744,11 +4753,14 @@ components:
         group:
           type: string
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
       example:
@@ -4772,13 +4784,16 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         password:
           type: string
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         username:
@@ -4808,13 +4823,16 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         password:
           type: string
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         username:
@@ -4843,12 +4861,14 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         tags:
           description: An optional set of strings associated with the Certificate for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -4885,6 +4905,7 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         key:
@@ -4897,12 +4918,14 @@ components:
         snis:
           type: array
           items:
+            description: 'A string representing a wildcard host name, such as *.example.com.'
             type: string
           nullable: true
         tags:
           description: An optional set of strings associated with the Certificate for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -4936,12 +4959,14 @@ components:
           type: string
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         tags:
           description: An optional set of strings associated with the Consumer for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -4967,13 +4992,17 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
+          description: The name of the consumer group.
           type: string
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -4996,17 +5025,23 @@ components:
           type: integer
           nullable: true
         handler:
+          description: The handler for the given custom plugin.
           type: string
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
+          description: The name to associate with the given custom plugin.
           type: string
         schema:
+          description: The schema for the given custom plugin.
           type: string
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -5031,11 +5066,13 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         methods:
           type: array
           items:
+            description: 'A string representing an HTTP method, such as GET, POST, PUT, or DELETE. The string must contain only uppercase letters.'
             type: string
           default:
             - GET
@@ -5073,11 +5110,13 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         methods:
           type: array
           items:
+            description: 'A string representing an HTTP method, such as GET, POST, PUT, or DELETE. The string must contain only uppercase letters.'
             type: string
           default:
             - GET
@@ -5104,9 +5143,6 @@ components:
       required:
         - uri
         - query
-    EntityBody:
-      type: object
-      additionalProperties: true
     GatewayUnauthorizedError:
       type: object
       properties:
@@ -5132,14 +5168,17 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         secret:
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         username:
@@ -5168,14 +5207,17 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         secret:
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         username:
@@ -5230,6 +5272,7 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         key:
@@ -5242,8 +5285,10 @@ components:
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
       example:
@@ -5297,6 +5342,7 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         key:
@@ -5309,8 +5355,10 @@ components:
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
       example:
@@ -5328,6 +5376,7 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         jwk:
@@ -5362,6 +5411,7 @@ components:
           description: An optional set of strings associated with the Key for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -5369,6 +5419,7 @@ components:
           type: integer
           nullable: true
         x5t:
+          description: X.509 certificate SHA-1 thumbprint.
           type: string
           nullable: true
       example:
@@ -5399,14 +5450,17 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         key:
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         ttl:
@@ -5434,14 +5488,17 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         key:
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         ttl:
@@ -5460,14 +5517,18 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
+          description: The name to associate with the given key-set.
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -5489,6 +5550,7 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         jwk:
@@ -5523,6 +5585,7 @@ components:
           description: An optional set of strings associated with the Key for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -5530,6 +5593,7 @@ components:
           type: integer
           nullable: true
         x5t:
+          description: X.509 certificate SHA-1 thumbprint.
           type: string
           nullable: true
       example:
@@ -5566,13 +5630,16 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         subject_name:
           type: string
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
       example:
@@ -5606,13 +5673,16 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         subject_name:
           type: string
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
       example:
@@ -5633,12 +5703,12 @@ components:
       type: object
       discriminator:
         mapping:
-          redis-ce: '#/components/schemas/PartialRedisCE'
-          redis-ee: '#/components/schemas/PartialRedisEE'
+          redis-ce: '#/components/schemas/PartialRedisCe'
+          redis-ee: '#/components/schemas/PartialRedisEe'
         propertyName: type
       oneOf:
-        - $ref: '#/components/schemas/PartialRedisCE'
-        - $ref: '#/components/schemas/PartialRedisEE'
+        - $ref: '#/components/schemas/PartialRedisCe'
+        - $ref: '#/components/schemas/PartialRedisEe'
     PartialLink:
       type: object
       properties:
@@ -5654,77 +5724,61 @@ components:
       required:
         - id
         - name
-    PartialRedisCE:
+    PartialRedisCe:
       type: object
       properties:
         config:
-          description: Redis-CE configuration
           type: object
-          example:
-            database: 0
-            host: localhost
-            password: password
-            port: 6379
-            server_name: redis
-            ssl: false
-            ssl_verify: false
-            timeout: 2000
-            username: username
           properties:
             database:
               description: Database to use for the Redis connection when using the `redis` strategy
               type: integer
               default: 0
-              nullable: true
             host:
-              description: Redis host.
+              description: 'A string representing a host name, such as example.com.'
               type: string
-              nullable: true
             password:
               description: 'Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.'
               type: string
-              nullable: true
             port:
-              description: Redis port.
+              description: 'An integer representing a port number between 0 and 65535, inclusive.'
               type: integer
               default: 6379
-              nullable: true
             server_name:
-              description: Server name for SSL verification.
+              description: A string representing an SNI (server name indication) value for TLS.
               type: string
-              nullable: true
             ssl:
               description: 'If set to true, uses SSL to connect to Redis.'
               type: boolean
               default: false
-              nullable: true
             ssl_verify:
-              description: 'If set to true, verifies the validity of the server SSL certificate.'
+              description: 'If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.'
               type: boolean
               default: false
-              nullable: true
             timeout:
-              description: Connection timeout.
+              description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
-              nullable: true
             username:
-              description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. Requires Redis v6.0.0+.'
+              description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.'
               type: string
-              nullable: true
         created_at:
           description: Unix epoch when the resource was created.
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
+          description: A unique string representing a UTF-8 encoded name.
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         type:
@@ -5735,162 +5789,145 @@ components:
           description: Unix epoch when the resource was last updated.
           type: integer
           nullable: true
+      example:
+        config:
+          database: 0
+          host: localhost
+          password: password
+          port: 6379
+          server_name: redis
+          ssl: false
+          ssl_verify: false
+          timeout: 2000
+          username: username
+        type: redis-ce
       additionalProperties: false
       required:
         - type
         - config
-    PartialRedisEE:
+    PartialRedisEe:
       type: object
       properties:
         config:
-          description: Redis-EE configuration
           type: object
-          example:
-            cluster_nodes:
-              - ip: 192.168.1.10
-                port: 6380
-            connect_timeout: 2000
-            database: 0
-            host: localhost
-            keepalive_pool_size: 256
-            password: password
-            port: 6379
-            read_timeout: 2000
-            send_timeout: 2000
-            sentinel_nodes:
-              - host: sentinel1.redis.server
-                port: 26379
-            server_name: redis-ee
-            ssl: false
-            ssl_verify: false
-            username: username
           properties:
             cluster_max_redirections:
               description: Maximum retry attempts for redirection.
               type: integer
               default: 5
-              nullable: true
             cluster_nodes:
-              description: Cluster addresses for Redis connections using the `redis` strategy.
+              description: Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element.
               type: array
               items:
                 properties:
                   ip:
-                    description: Cluster node IP.
+                    description: 'A string representing a host name, such as example.com.'
                     type: string
+                    default: 127.0.0.1
                   port:
-                    description: Cluster node port.
+                    description: 'An integer representing a port number between 0 and 65535, inclusive.'
                     type: integer
+                    default: 6379
                 type: object
-              nullable: true
             connect_timeout:
-              description: Connect timeout.
+              description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
-              nullable: true
             connection_is_proxied:
-              description: 'If the connection to Redis is proxied, e.g., Envoy.'
+              description: 'If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.'
               type: boolean
               default: false
-              nullable: true
             database:
-              description: Database index.
+              description: Database to use for the Redis connection when using the `redis` strategy
               type: integer
               default: 0
-              nullable: true
             host:
-              description: Redis host.
+              description: 'A string representing a host name, such as example.com.'
               type: string
               default: 127.0.0.1
-              nullable: true
             keepalive_backlog:
-              description: Limits the total number of opened connections for a pool.
+              description: 'Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.'
               type: integer
-              nullable: true
             keepalive_pool_size:
-              description: Size limit for cosocket connection pool per worker process.
+              description: 'The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn''t specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.'
               type: integer
               default: 256
-              nullable: true
             password:
               description: 'Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.'
               type: string
-              nullable: true
             port:
-              description: The port is only used when the host is set.
+              description: 'An integer representing a port number between 0 and 65535, inclusive.'
               type: integer
               default: 6379
-              nullable: true
             read_timeout:
-              description: Read timeout.
+              description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
-              nullable: true
             send_timeout:
-              description: Send timeout.
+              description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
-              nullable: true
             sentinel_master:
-              description: Sentinel master to use for Redis connections. Defining this implies using Redis Sentinel.
+              description: Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel.
               type: string
-              nullable: true
             sentinel_nodes:
-              description: Sentinel addresses for Redis connections using the `redis` strategy. Array must have at least 1 element.
+              description: Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element.
               type: array
               items:
                 properties:
                   host:
-                    description: Sentinel node hostname.
+                    description: 'A string representing a host name, such as example.com.'
                     type: string
+                    default: 127.0.0.1
                   port:
-                    description: Sentinel node port.
+                    description: 'An integer representing a port number between 0 and 65535, inclusive.'
                     type: integer
+                    default: 6379
                 type: object
-              nullable: true
             sentinel_password:
-              description: Sentinel password to authenticate with a Redis Sentinel instance.
+              description: 'Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.'
               type: string
-              nullable: true
             sentinel_role:
-              description: 'Sentinel role to use for Redis connections when `redis` strategy is used, implies using Redis Sentinel.'
+              description: Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel.
               type: string
-              nullable: true
+              enum:
+                - master
+                - slave
+                - any
             sentinel_username:
-              description: Sentinel username to authenticate with a Redis Sentinel instance. Requires Redis v6.2.0+.
+              description: 'Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won''t be performed. This requires Redis v6.2.0+.'
               type: string
-              nullable: true
             server_name:
-              description: Server name for SSL verification.
+              description: A string representing an SNI (server name indication) value for TLS.
               type: string
-              nullable: true
             ssl:
               description: 'If set to true, uses SSL to connect to Redis.'
               type: boolean
               default: false
-              nullable: true
             ssl_verify:
-              description: 'If set to true, verifies the validity of the server SSL certificate.'
+              description: 'If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.'
               type: boolean
               default: false
-              nullable: true
             username:
-              description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. Requires Redis v6.0.0+.'
+              description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.'
               type: string
-              nullable: true
         created_at:
           description: Unix epoch when the resource was created.
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
+          description: A unique string representing a UTF-8 encoded name.
           type: string
           nullable: true
         tags:
+          description: A set of strings representing tags.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         type:
@@ -5901,6 +5938,27 @@ components:
           description: Unix epoch when the resource was last updated.
           type: integer
           nullable: true
+      example:
+        config:
+          cluster_nodes:
+            - ip: 192.168.1.10
+              port: 6380
+          connect_timeout: 2000
+          database: 0
+          host: localhost
+          keepalive_pool_size: 256
+          password: password
+          port: 6379
+          read_timeout: 1000
+          send_timeout: 1000
+          sentinel_nodes:
+            - host: sentinel1.redis.server
+              port: 26379
+          server_name: redis-ee
+          ssl: false
+          ssl_verify: false
+          username: username
+        type: redis-ee
       additionalProperties: false
       required:
         - type
@@ -5923,6 +5981,7 @@ components:
               type: string
           x-foreign: true
         consumer_group:
+          description: 'If set, the plugin will activate only for requests where the specified group has been authenticated'
           type: object
           nullable: true
           properties:
@@ -5939,9 +5998,11 @@ components:
           default: true
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         instance_name:
+          description: A unique string representing a UTF-8 encoded name.
           type: string
           nullable: true
         name:
@@ -5966,12 +6027,15 @@ components:
                   items:
                     type: string
         partials:
+          description: A list of partials to be used by the plugin.
           type: array
           items:
             properties:
               id:
+                description: A string representing a UUID (universally unique identifier).
                 type: string
               name:
+                description: A unique string representing a UTF-8 encoded name.
                 type: string
               path:
                 type: string
@@ -5981,6 +6045,7 @@ components:
           description: 'A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support `"tcp"` and `"tls"`.'
           type: array
           items:
+            description: 'A string representing a protocol, such as HTTP or HTTPS.'
             enum:
               - grpc
               - grpcs
@@ -6019,6 +6084,7 @@ components:
           description: An optional set of strings associated with the Plugin for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -6071,6 +6137,7 @@ components:
               type: string
           x-foreign: true
         consumer_group:
+          description: 'If set, the plugin will activate only for requests where the specified group has been authenticated'
           type: object
           nullable: true
           properties:
@@ -6087,9 +6154,11 @@ components:
           default: true
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         instance_name:
+          description: A unique string representing a UTF-8 encoded name.
           type: string
           nullable: true
         name:
@@ -6114,12 +6183,15 @@ components:
                   items:
                     type: string
         partials:
+          description: A list of partials to be used by the plugin.
           type: array
           items:
             properties:
               id:
+                description: A string representing a UUID (universally unique identifier).
                 type: string
               name:
+                description: A unique string representing a UTF-8 encoded name.
                 type: string
               path:
                 type: string
@@ -6129,6 +6201,7 @@ components:
           description: 'A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support `"tcp"` and `"tls"`.'
           type: array
           items:
+            description: 'A string representing a protocol, such as HTTP or HTTPS.'
             enum:
               - grpc
               - grpcs
@@ -6167,6 +6240,7 @@ components:
           description: An optional set of strings associated with the Plugin for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -6229,6 +6303,7 @@ components:
             - 308
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
@@ -6249,6 +6324,7 @@ components:
           default: false
           nullable: true
         priority:
+          description: 'A number used to specify the matching order for expression routes. The higher the `priority`, the sooner an route will be evaluated. This field is ignored unless `expression` field is set.'
           type: integer
           default: 0
           nullable: true
@@ -6256,6 +6332,7 @@ components:
           description: 'An array of the protocols this Route should allow. See the [Route Object](#route-object) section for a list of accepted protocols. When set to only `"https"`, HTTP requests are answered with an upgrade error. When set to only `"http"`, HTTPS requests are answered with an error.'
           type: array
           items:
+            description: 'A string representing a protocol, such as HTTP or HTTPS.'
             enum:
               - grpc
               - grpcs
@@ -6299,6 +6376,7 @@ components:
           description: An optional set of strings associated with the Route for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -6320,8 +6398,10 @@ components:
           items:
             properties:
               ip:
+                description: 'A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16.'
                 type: string
               port:
+                description: 'An integer representing a port number between 0 and 65535, inclusive.'
                 type: integer
             type: object
           nullable: true
@@ -6351,12 +6431,14 @@ components:
             - 308
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         methods:
           description: A list of HTTP methods that match this Route.
           type: array
           items:
+            description: 'A string representing an HTTP method, such as GET, POST, PUT, or DELETE. The string must contain only uppercase letters.'
             type: string
           nullable: true
         name:
@@ -6375,6 +6457,7 @@ components:
           description: A list of paths that match this Route.
           type: array
           items:
+            description: 'A string representing a router path. It must start with a forward slash (''/'') for a fixed path, or the sequence ''~/'' for a regex path. It must not have empty segments.'
             type: string
           nullable: true
         preserve_host:
@@ -6386,6 +6469,7 @@ components:
           description: 'An array of the protocols this Route should allow. See the [Route Object](#route-object) section for a list of accepted protocols. When set to only `"https"`, HTTP requests are answered with an upgrade error. When set to only `"http"`, HTTPS requests are answered with an error.'
           type: array
           items:
+            description: 'A string representing a protocol, such as HTTP or HTTPS.'
             enum:
               - grpc
               - grpcs
@@ -6429,6 +6513,7 @@ components:
           description: A list of SNIs that match this Route when using stream routing.
           type: array
           items:
+            description: 'A string representing a wildcard host name, such as *.example.com.'
             type: string
           nullable: true
         sources:
@@ -6437,8 +6522,10 @@ components:
           items:
             properties:
               ip:
+                description: 'A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16.'
                 type: string
               port:
+                description: 'An integer representing a port number between 0 and 65535, inclusive.'
                 type: integer
             type: object
           nullable: true
@@ -6451,6 +6538,7 @@ components:
           description: An optional set of strings associated with the Route for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -6489,6 +6577,7 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
@@ -6498,6 +6587,7 @@ components:
           description: An optional set of strings associated with the SNIs for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -6529,6 +6619,7 @@ components:
           type: integer
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
@@ -6538,6 +6629,7 @@ components:
           description: An optional set of strings associated with the SNIs for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -6586,6 +6678,7 @@ components:
           description: The host of the upstream server. Note that the host value is case sensitive.
           type: string
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
@@ -6631,6 +6724,7 @@ components:
           description: An optional set of strings associated with the Service for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         tls_sans:
@@ -6638,12 +6732,16 @@ components:
           nullable: true
           properties:
             dnsnames:
+              description: A dnsName for TLS verification.
               type: array
               items:
+                description: A string representing an SNI (server name indication) value for TLS.
                 type: string
             uris:
+              description: An URI for TLS verification.
               type: array
               items:
+                description: 'A string representing a URL, such as https://example.com/path/to/resource?q=search.'
                 type: string
         tls_verify:
           description: 'Whether to enable verification of upstream server TLS certificate. If set to `null`, then the Nginx default is respected.'
@@ -6685,12 +6783,14 @@ components:
           type: number
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         tags:
           description: An optional set of strings associated with the Target for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         target:
@@ -6702,6 +6802,7 @@ components:
           type: number
           nullable: true
         upstream:
+          description: The unique identifier or the name of the upstream for which to update the target.
           type: object
           nullable: true
           properties:
@@ -6729,12 +6830,14 @@ components:
           type: number
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         tags:
           description: An optional set of strings associated with the Target for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         target:
@@ -6746,6 +6849,7 @@ components:
           type: number
           nullable: true
         upstream:
+          description: The unique identifier or the name of the upstream for which to update the target.
           type: object
           nullable: true
           properties:
@@ -6861,9 +6965,12 @@ components:
                   type: integer
                   default: 10
                 headers:
+                  description: A map of header names to arrays of header values.
                   type: object
                   additionalProperties:
-                    type: string
+                    items:
+                      type: string
+                    type: array
                 healthy:
                   type: object
                   properties:
@@ -6881,9 +6988,11 @@ components:
                       type: integer
                       default: 0
                 http_path:
+                  description: 'A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).'
                   type: string
                   default: /
                 https_sni:
+                  description: A string representing an SNI (server name indication) value for TLS.
                   type: string
                 https_verify_certificate:
                   type: boolean
@@ -6998,6 +7107,7 @@ components:
           type: string
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
@@ -7009,9 +7119,11 @@ components:
           default: 10000
           nullable: true
         sticky_sessions_cookie:
+          description: The cookie name to keep sticky sessions.
           type: string
           nullable: true
         sticky_sessions_cookie_path:
+          description: 'A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).'
           type: string
           default: /
           nullable: true
@@ -7019,6 +7131,7 @@ components:
           description: An optional set of strings associated with the Upstream for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:
@@ -7119,6 +7232,7 @@ components:
           type: string
           nullable: true
         id:
+          description: A string representing a UUID (universally unique identifier).
           type: string
           nullable: true
         name:
@@ -7131,6 +7245,7 @@ components:
           description: An optional set of strings associated with the Vault for grouping and filtering.
           type: array
           items:
+            description: A string representing a tag.
             type: string
           nullable: true
         updated_at:

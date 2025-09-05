@@ -41,6 +41,10 @@ related_resources:
     url: /how-to/block-unauthorized-requests-with-opa/
   - text: How to Implement Secure Access Control with OPA and {{site.base_gateway}}
     url: https://konghq.com/blog/engineering/secure-access-control-with-opa-and-kong
+
+min_version:
+  gateway: '2.4'
+
 ---
 
 The OPA plugin allows you to forward requests to [Open Policy Agent](https://openpolicyagent.org/) and process the requests only if the authorization policy allows it. 

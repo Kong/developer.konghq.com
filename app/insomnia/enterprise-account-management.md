@@ -27,6 +27,9 @@ To upgrade your account to the Enterprise plan:
 1. Contact the [sales team](https://insomnia.rest/pricing/contact) to get an activation code.
 1. Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update), select the Enterprise plan, and enter your activation code.
 
+{:.info}
+> Activation codes are single-use. The first user who enters the activation code activates the Enterprise plan for the account and then consequently becomes the [Owner](/insomnia/terminology/#user-roles).
+
 ## Add domains
 
 You can use domains in your Insomnia Enterprise account to manage users.
@@ -42,19 +45,26 @@ Once the domain is verified, you can configure its settings to control users wit
 
 ### Domain lock
 
-Domain lock allows you to disable access to your Enterprise account for:
-* Existing Hobby users in the domain
-* Uninvited users in the domain
+Use domain lock to remove access to your Insomnia Enterprise account for existing hobby users and uninvited new users.
 
-To enable domain lock, go to your domain settings and click the toggle under **Lock**.
+To enable domain lock, navigate to [**Company** > **Domains**](https://app.insomnia.rest/app/enterprise/domains/list), specify the domain, and then click the **Lock** toggle.
+
+When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Insomnia Enterprise account. For example:
+- **Existing users without an Enterprise invite:** Ariel is an existing hobby user and wasn’t invited to the Enterprise account. Now, when `Ariel@oldkong.com` attempts to sign in to Insomnia with that address, she won't have access to the Enterprise account.
+- **Users without an account, but with a matching email domain:** George doesn't have an Insomnia account, but has an email address `george@DomainLockExample.com`. When George creates an Insomnia account, the domain lock blocks his sign-in, which means that he can't access the Insomnia Enterprise account or its features.
+
+{:.info}
+> If you enable both domain capture and domain lock on the same verified domain in Insomnia, then domain capture takes priority for new sign-ups and overrides domain lock.
 
 ### Invite control
+Use invite control to specify which domains can receive invitations to your Enterprise organizations.
 
-Invite control allows you to specify domains that are allowed to be invited into your Enterprise organizations.
+To configure invite control, navigate to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
 
-To configure invite control, go to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
-
-You can allow invites to all domains, to verified domains only, or to specific domains only.
+You can set your preference for allowing invitations from the following domain types:
+- **All domains**: Invites to any email domain are accepted which includes personal addresses.
+- **Only verified domains**: Invites are restricted to domains already added and verified in the Domains section of Enterprise controls.
+- **Custom domains**: Invites are limited to manually specified domains or sub‑domains for a specific organization, even if those domains are not globally verified.
 
 ## Manage storage
 

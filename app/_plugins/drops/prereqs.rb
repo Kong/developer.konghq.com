@@ -80,6 +80,14 @@ module Jekyll
         @tools ||= fetch_or_fail(@page, 'tools', [])
       end
 
+      def enterprise
+        @min_version ||= @page.data.fetch('min_version', {})
+        return @prereqs['enterprise'] unless @min_version['gateway']
+
+        # We implicitly need an enterprise build if the required version >= 3.10
+        Gem::Version.new(@min_version['gateway']) >= Gem::Version.new('3.10')
+      end
+
       private
 
       def prereqs

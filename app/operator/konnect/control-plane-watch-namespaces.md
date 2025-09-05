@@ -17,7 +17,7 @@ related_resources:
     url: /operator/konnect/crd/control-planes/hybrid/
 
 min_version:
-  operator: '3.5'
+  operator: '1.6'
 ---
 
 By default, {{ site.kgo_product_name }}'s `ControlPlane` watches all namespaces.
@@ -43,7 +43,6 @@ The `all` and `own` types don't require any further changes or additional resour
 
 ## Specify a list of namespaces to watch
 
-
 The `list` type requires two additional steps:
 
 1. Specify the namespaces to watch in the `spec.watchNamespaces.list` field.
@@ -55,8 +54,9 @@ The `list` type requires two additional steps:
         - namespace-a
         - namespace-b
    ```
+
 1. Create a `WatchNamespaceGrant` resource in each of the specified namespaces. This resource grants the `ControlPlane` permission to watch resources in the specified namespace. It can be defined as:
-   
+
    ```yaml
    apiVersion: gateway-operator.konghq.com/v1alpha1
    kind: WatchNamespaceGrant

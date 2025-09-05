@@ -96,6 +96,7 @@ formats:
       sni:            '/snis/'
       key:            '/keys'
       key-set:        '/key-sets'
+      partial:        '/partials/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
@@ -115,7 +116,7 @@ formats:
     label: 'Terraform'
 
   ui:
-    label: 'Kong/Gateway Manager'
+    label: 'UI'
     entities:
       - admin
       - ca_certificate
@@ -124,6 +125,7 @@ formats:
       - consumer_group
       - key
       - key_set
+      - partial
       - plugin
       - route
       - service

@@ -35,6 +35,9 @@ search_aliases:
 
 tags:
   - traffic-control
+
+min_version:
+  gateway: '1.0'
 ---
 
 Block incoming requests where the body is greater than a specific size.

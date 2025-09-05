@@ -18,9 +18,28 @@
       "type": "bugfix"
     }
   ],
+  "3.11.0.2": [
+    {
+      "message": "Fixed an issue where Gemini Vertex AI embeddings failed due to incorrect URL construction and response parsing.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where Kong Gateway was not able to reconfigure the plugin when using DB-less mode.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where the Gemini provider could not use Anthropic 'rawPredict' endpoint models hosted in Vertex.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini Vertex AI embeddings failed due to incorrect URL construction and response parsing.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

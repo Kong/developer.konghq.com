@@ -28,3 +28,4 @@ node_modules
 .vscode/*
 
 tools/changelog-generator/tmp/*
+tools/automated-tests/.automated-tests

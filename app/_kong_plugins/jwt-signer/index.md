@@ -31,6 +31,9 @@ tags:
 search_aliases:
   - json web tokens
   - jwt-signer
+
+min_version:
+  gateway: '1.0'
 ---
 
 The {{site.base_gateway}} JWT Signer plugin allows you to verify, sign, or re-sign

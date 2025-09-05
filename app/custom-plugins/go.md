@@ -176,6 +176,7 @@ pluginserver_other_one_socket = /usr/local/kong/other-one.socket
 pluginserver_other_one_start_cmd = /usr/local/bin/other-one
 pluginserver_other_one_query_cmd = /usr/local/bin/other-one -dump
 
+plugins = bundled,my-plugin,other-one
 ```
 
 The socket and start command settings coincide with
@@ -185,4 +186,5 @@ their defaults and can be omitted:
 pluginserver_names = my-plugin,other-one
 pluginserver_my_plugin_query_cmd = /usr/local/bin/my-plugin -dump
 pluginserver_other_one_query_cmd = /usr/local/bin/other-one -dump
+plugins = bundled,my-plugin,other-one
 ```

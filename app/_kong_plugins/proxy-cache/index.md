@@ -42,6 +42,9 @@ related_resources:
     url: /plugins/proxy-cache-advanced/
   - text: GraphQL Proxy Cache Advanced plugin
     url: /plugin/graphql-proxy-cache-advanced/
+
+min_version:
+  gateway: '1.2'
 ---
 
 The Proxy Cache plugin provides a reverse proxy cache implementation for {{site.base_gateway}}. 

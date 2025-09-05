@@ -9060,7 +9060,7 @@
   "3.2.2.5": {
     "kong-ee": [
       {
-        "message": "Applied Nginx patch for early detection of HTTP/2 stream reset attacks. This change is in direct response to the identified vulnerability [CVE-2023-44487](https: //nvd.nist.gov/vuln/detail/CVE-2023-44487).",
+        "message": "Applied Nginx patch for early detection of HTTP/2 stream reset attacks. This change is in direct response to the identified vulnerability [CVE-2023-44487](https://nvd.nist.gov/vuln/detail/CVE-2023-44487).",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -9075,7 +9075,7 @@
         "scope": "Core"
       },
       {
-        "message": "Added a `User=` specification to the systemd unit definition, enabling Kong Gateway to be controlled by systemd again.[#11066](https: //github.com/Kong/kong/pull/11066)",
+        "message": "Added a `User=` specification to the systemd unit definition, enabling Kong Gateway to be controlled by systemd again.[#11066](https://github.com/Kong/kong/pull/11066)",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -12827,11 +12827,6 @@
         "message": "Fixed an issue where the custom permission endpoint didn’t work for `/services/<service-name-or-id>/application_instances`.",
         "type": "bugfix",
         "scope": "Core"
-      },
-      {
-        "message": "Introduced the **Kong Manager Open Source Edition (OSS)**, a free and open-source UI for Kong Gateway OSS! [#11131](https://github.com/Kong/kong/pull/11131)\n\n[Kong Manager OSS](https://docs.konghq.com/gateway/latest/kong-manager-oss/) allows you to view and edit all Kong Gateway objects using the Admin API. It interacts directly with the Kong Admin API and does not require a separate database. This UI provides a great way to see all of your Kong Gateway configuration at glance.\n\nStarting with 3.4.0.0, Kong Manager OSS is bundled with Kong Gateway OSS. Install a new Kong Gateway OSS instance to try it out!\n\nThe quickest way to get started is using the [quickstart script](https://github.com/Kong/kong-manager#getting-started).\n\nCheck out the [Kong Manager OSS repo](https://github.com/Kong/kong-manager) to learn more about it.",
-        "type": "feature",
-        "scope": "Core"
       }
     ]
   },
@@ -13013,7 +13008,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "**Beta** : OpenAPI specs are now available for the Kong Gateway Admin API: \n- [Kong Gateway Admin API - OSS spec](https://docs.konghq.com/gateway/api/admin-oss/3.3.x/)\n- [Kong Gateway Admin API - Enterprise spec](https://docs.konghq.com/gateway/api/admin-ee/3.3.0.x/)",
+        "message": "**Beta** : OpenAPI specs are now available for the Kong Gateway Admin API: [Kong Gateway Admin API - Enterprise spec](https://developer.konghq.com/api/gateway/admin-ee/)",
         "type": "feature",
         "scope": "Admin API"
       },
@@ -15818,5 +15813,266 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.11.0.2": {
+    "kong": [
+      {
+        "message": "**ai-proxy**: Fixed an issue where aws stream parser didn't parse correctly when the frame was incomplete.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where ai-retry phase was not correctly setting the namespace in the kong.plugin.ctx, causing ai-proxy-advanced balancer retry first target more than once.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where AWS Bedrock streaming requests would panic when the ai-semantic-cache plugin was enabled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where `untrusted_lua_sandbox_requires` option was not respected.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Semantic Plugins**: Fixed an issue where Gemini Vertex AI embeddings failed due to incorrect URL construction and response parsing.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": [
+          "ai-semantic-cache",
+          "ai-semantic-prompt-guard"
+        ]
+      },
+      {
+        "message": "Fixed an issue where AI Proxy and AI Proxy Advanced can't properly failover to a Bedrock target.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-proxy-advanced"
+        ]
+      },
+      {
+        "message": "Fixed an issue where AI Proxy and AI Proxy Advanced might produce duplicate content in the response when the SSE event was truncated.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-proxy-advanced"
+        ]
+      },
+      {
+        "message": "Fixed an issue where AI Proxy and AI Proxy Advanced might drop content in the response when the SSE event was truncated.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-proxy-advanced"
+        ]
+      },
+      {
+        "message": "**request-callout**: `request.by_lua` code will now run before a request is made or a cached callout is fetched. Previously, it did not run before an attempt to fetch from cache, which did not allow for cache key customization.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: The plugin now uses additional components to generate the cache key: request consumer, consumer groups, plugin ID, route ID; callout request method, URL, query params, headers, and body.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where expressions could not read headers, query, and URI captures via shortcuts of the form `$(headers.some_header)`.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where managed identity may not be cached properly.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where resource was not being passed correctly when using Azure as provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.10.0.4": {
+    "kong": [
+      {
+        "message": "**AI Plugins**: Fixed an issue where the Gemini provider could not use Anthropic 'rawPredict' endpoint models hosted in Vertex.",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": ["ai-proxy-advanced", "ai-semantic-cache", "ai-semantic-prompt-guard", "ai-rag-injector"]
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where aws stream parser didn't parse correctly when the frame was incomplete.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped LuaRocks from 3.11.1 to 3.12.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**lua-resty-lmdb**: updated to version 1.6.1.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the Active Tracing total time was not including connection and handshake times.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where ai-retry phase was not correctly setting the namespace in the kong.plugin.ctx, causing ai-proxy-advanced balancer retry first target more than once.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where AI rate limiting advanced plugin might panic when use redis strategy and sync_rate is set to 0.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where AWS Bedrock streaming requests would panic when the ai-semantic-cache plugin was enabled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where `untrusted_lua_sandbox_requires` option was not respected.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the LMDB database file was created with incorrect permission when running kong cli command with root privileges.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where model name did not escape when using AWS Bedrock inference profile.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Semantic Plugins**: Fixed an issue where Gemini Vertex AI embeddings failed due to incorrect URL construction and response parsing.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": ["ai-semantic-cache", "ai-semantic-prompt-guard"]
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where data planes didn't use the keys passed from the control plane to sign/re-sign.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka**: Fixed an issue where the Kafka SCRAM authentication did not send the server nonce.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where AI Proxy and AI Proxy Advanced can't properly failover to a Bedrock target.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": ["ai-proxy", "ai-proxy-advanced"]
+      },
+      {
+        "message": "Fixed an issue where the /schemas/plugins/validate endpoint returned a validation error\nwhen a plugin was linked to a partial containing a vault key.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**request-callout**: `request.by_lua` code will now run before a request is made or a cached callout is fetched. Previously, it did not run before an attempt to fetch from cache, which did not allow for cache key customization.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: The plugin now uses additional components to generate the cache key: request consumer, consumer groups, plugin ID, route ID; callout request method, URL, query params, headers, and body.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where expressions could not read headers, query, and URI captures via shortcuts of the form `$(headers.some_header)`.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where the client request body is forwarded to upstream when `upstream.body.forward` is false.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where SSE terminator may not have correct ending characters.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the Lua VM memory size returned by status API is not accurate on the control plane.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "AI Azure Content Safety: Fixed an issue where Blocklist breaches are not correctly parsed.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": ["ai-azure-content-safety"]
+      },
+      {
+        "message": "Fixed an issue where the `ai-prompt-decorator` plugin prompt field was too short.\n",
+        "type": "feature",
+        "scope": "Plugin",
+        "plugins": ["ai-prompt-decorator"]
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fix consistent-hashing algorithm not using correct value to hash.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where resource was not being passed correctly when using Azure as provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**header-cert-auth**: Fixed an issue where Header Cert Authentication plugin failed to validate revocation using OCSP when the downstream connection wasn't an SSL connection.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**mocking**: Fixed an issue where an empty array set in the mocking plugin schema with object type. It should return an array type instead of an object type in the response body.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**mtls-auth**: Fixed an issue where uselss interface is called when doing the OCSP client cert verification.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oauth2-introspection**: Fixed an issue where authentication failures did not log messages in the error logs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the rate limiting plugins can't handle decimal numbers when using Redis strategy.\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": ["rate-limiting", "rate-limiting-advanced"]
+      },
+      {
+        "message": "Improved performance by removing the n+1 query problem for plugins.\nPlugins are now fetched in bulk with plugins_partials and partials.\n",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

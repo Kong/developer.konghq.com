@@ -41,6 +41,9 @@ search_aliases:
 notes: |
   <b>Dedicated Cloud Gateways</b>: If you use the IAM assumeRole functionality with this plugin, 
   it must be configured differently than for hybrid deployments in Konnect.
+
+min_version:
+  gateway: '1.0'
 ---
 
 This plugin lets you invoke an [AWS Lambda](https://aws.amazon.com/lambda/) function from {{site.base_gateway}}. 

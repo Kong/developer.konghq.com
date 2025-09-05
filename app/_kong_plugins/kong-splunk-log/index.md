@@ -25,6 +25,9 @@ icon: optum.png
 
 search_aliases:
   - optum
+
+min_version:
+  gateway: '3.0'
 ---
 
 The Kong Splunk Log plugin is a modified version of the [HTTP Log plugin](/plugins/http-log/) 

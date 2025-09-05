@@ -47,6 +47,9 @@ faqs:
 related_resources:
   - text: Basic Auth how-to guides
     url: /how-to/?query=basic-auth
+
+min_version:
+  gateway: '1.0'
 ---
 
 The [Basic Authentication](https://datatracker.ietf.org/doc/html/rfc7617 ) plugin enforces username and password authentication for [Consumers](/gateway/entities/consumer/) when making a request to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). Consumers represent a developer or an application consuming the upstream service. 

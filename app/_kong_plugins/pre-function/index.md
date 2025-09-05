@@ -46,6 +46,9 @@ related_resources:
     url: /plugins/post-function/
   - text: All serverless plugins
     url: /plugins/?category=serverless
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Pre-Function plugin (also known as Kong Functions, Pre-Plugin) lets

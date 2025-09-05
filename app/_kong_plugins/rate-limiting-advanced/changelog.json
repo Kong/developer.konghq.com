@@ -18,6 +18,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.4": [
+    {
+      "message": "Fixed an issue where the rate limiting plugins can't handle decimal numbers when using Redis strategy.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Added a new configuration field `lock_dictionary_name` to support specifying an independent shared memory for storing locks.\n",

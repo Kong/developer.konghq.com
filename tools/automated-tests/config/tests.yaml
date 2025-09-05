@@ -1,6 +1,7 @@
 instructionsDir: './input/instructions'
 
 baseUrl: http://localhost:8888
+productionUrl: https://developer.konghq.com
 
 before:
   commands:

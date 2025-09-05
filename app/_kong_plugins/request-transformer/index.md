@@ -40,6 +40,9 @@ related_resources:
     url: /plugins/request-transformer-advanced/
   - text: AI Request Transformer
     url: /plugins/ai-request-transformer/
+
+min_version:
+  gateway: '1.2'
 ---
 
 {% include plugins/request-response-transformer/request-transformer-description.md %}

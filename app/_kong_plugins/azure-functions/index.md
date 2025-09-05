@@ -41,6 +41,9 @@ tags:
 related_resources:
   - text: Use an Azure Function through {{site.base_gateway}}
     url: /how-to/use-an-azure-function-through-gateway/
+
+min_version:
+  gateway: '1.0'
 ---
 
 This plugin invokes [Azure Functions](https://azure.microsoft.com/en-us/services/functions/).

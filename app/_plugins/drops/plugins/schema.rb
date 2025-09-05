@@ -30,6 +30,10 @@ module Jekyll
           @compatible_protocols ||= schema.dig('properties', 'protocols', 'items', 'enum')
         end
 
+        def required_fields
+          @required_fields ||= schema.dig('properties', 'config', 'required')
+        end
+
         private
 
         def plugin_slug

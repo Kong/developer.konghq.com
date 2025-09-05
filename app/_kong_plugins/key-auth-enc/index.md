@@ -48,6 +48,9 @@ notes: |
   Use the regular [Key Auth](/plugins/key-auth/) plugin instead.
   - The time-to-live (ttl) does not work in hybrid mode. This setting
   determines the length of time a credential remains valid.
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Key Authentication Encrypted plugin adds encrypted API key authentication to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/).  

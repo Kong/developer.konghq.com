@@ -17,10 +17,6 @@ requirements:
 
 config:
   issuer: ${issuer}
-  client_id:
-    - ${client-id}
-  client_secret:
-    - ${client-secret}
   auth_methods:
     - bearer
   extra_jwks_uris:
@@ -38,12 +34,6 @@ variables:
     description: |
       The issuer authentication URL for your IdP. 
       For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
-  client-id:
-    value: $CLIENT_ID
-    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
-  client-secret:
-    value: $CLIENT_SECRET
-    description: The client secret needed to connect to your IdP.
 
 tools:
   - deck

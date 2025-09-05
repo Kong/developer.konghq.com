@@ -25,6 +25,9 @@ support_url: https://github.com/Optum/kong-response-size-limiting/issues
 source_code_url: https://github.com/Optum/kong-response-size-limiting/
 
 license_type: Apache-2.0
+
+min_version:
+  gateway: '1.0'
 ---
 
 The Kong Response Size Limiting plugin blocks upstream responses with a body size that exceeds a specified limit in megabytes.

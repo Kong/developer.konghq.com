@@ -32,14 +32,23 @@
     * UK South (`uksouth`)
     * Ireland (`northeurope`)
     * France (`francecentral`)
+* Asia Pacific:
+    * Australia East (`australiaeast`)    
 
 #### Google
 
 * North America:
     * South Carolina (`us-east1`)
+    * Iowa (`us-central1`)
+    * Oregon (`us-west1`)
     * Montreal (`northamerica-northeast1`)
 * Europe:
     * Belgium (`europe-west1`)
+    * London (`europe-west2`)
+    * Frankfurt (`europe-west3`)
 * Asia Pacific:
     * Tokyo (`asia-northeast1`)
+    * Singapore (`asia-southeast1`)
+    * Mumbai (`asia-south1`)
+    * Sydney (`australia-southeast1`)
     

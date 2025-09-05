@@ -38,6 +38,9 @@ categories:
 related_resources:
   - text: Map URIs into GraphQL queries with DeGraphQL
     url: /how-to/map-uris-into-graphql-queries/
+
+min_version:
+  gateway: '1.3'
 ---
 
 The DeGraphQL plugin transforms GraphQL upstreams into traditional endpoints by mapping URIs into GraphQL queries.
@@ -85,8 +88,9 @@ For a complete tutorial, see [Map URIs into GraphQL queries with DeGraphQL](/how
 The following sections define some common patterns for DeGraphQL routes.
 
 {:.info}
-> Don’t include the GraphQL server path prefix in the `uri` configuration parameter (`/graphql` by default). 
+> - Don’t include the GraphQL server path prefix in the `uri` configuration parameter (`/graphql` by default). 
 Only include the custom portion of the path that you want to configure. For example: `uri: /my-path`, but not `uri: /graphql/my-path`.
+> - The content in the `query` field should follow [the GraphQL query syntax](https://graphql.org/learn/queries/).
 
 ### GraphQL query variables on URIs
 
@@ -101,7 +105,7 @@ custom_entities:
     fields:
       service:
         name: "github"
-      uri: /me
+      uri: /:owner/:name
       query: |-
         query ($owner:String! $name:String!){
                         repository(owner:$owner, name:$name) {
@@ -132,7 +136,7 @@ custom_entities:
     fields:
       service:
         name: "github"
-      uri: /me
+      uri: /repo
       query: |-
         query ($owner:String! $name:String!){
                   repository(owner:$owner, name:$name) {

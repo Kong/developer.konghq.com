@@ -240,7 +240,7 @@ of traffic flowing through the cluster.
 
 ### In-memory caching
 
-We recommend defining the largest [`mem_cache_size`](/gateway/configuration/#mem_cache_size) possible
+We recommend defining the largest [`mem_cache_size`](/gateway/configuration/#mem-cache-size) possible
 while still providing adequate resources to the operating system and any other
 processes running adjacent to {{site.base_gateway}}. This configuration allows
 {{site.base_gateway}} to take maximum advantage of the in-memory cache, and

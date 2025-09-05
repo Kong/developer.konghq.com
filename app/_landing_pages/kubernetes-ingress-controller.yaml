@@ -28,6 +28,16 @@ rows:
               {{ site.kic_product_name }} takes Kubernetes resources such as `Ingress` and `HTTPRoute` and converts them into a valid {{ site.base_gateway }} configuration. It enables you to configure all the [features](/gateway/#learn) of {{ site.base_gateway }} using Kubernetes CRDs.
 
               KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](/kubernetes-ingress-controller/split-traffic/).
+          
+              ### When should I use KIC?
+              You should use KIC if one or more of the following is true:
+              - You're running {{site.base_gateway}} in a Kubernetes environment
+              - You want Kubernetes-native API Gateway management
+          
+          - type: button
+            config:
+              text: Get started with {{ site.kic_product_name }}
+              url: "/kubernetes-ingress-controller/install/"
 
       - blocks:
           - type: mermaid
@@ -171,3 +181,15 @@ rows:
         config:
           entity: vault
           additional_url: "?tab=kic#set-up-a-vault"
+  
+  - header:
+      type: h2
+      text: "Frequently asked questions"
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: I'm using AWS CDK, can I manage Kong resources with CDK instead of {{ site.kic_product_name }}?
+                a: |
+                  Currently, you can't manage Kong resources via AWS CDK. 
+                  We recommend managing Kong configurations by [deploying decK](/deck/) or custom automation (for example, Lambda functions) through CDK that interact with the [Admin API](/admin-api/).

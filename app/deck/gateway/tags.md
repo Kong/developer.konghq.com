@@ -61,7 +61,8 @@ _info:
 
 The `--select-tag` flag _can_ be used with `deck gateway sync` for situations where the state file doesn't contain the above information. It is strongly advised that you **do not** supply select-tags to `sync` and `diff` commands via flags.
 
-**Important**: It is not possible to sync a subset of content from a single file using `select_tags`. `--select-tag` must be provided when running `deck gateway dump` and the same file must be synced to the Admin API using the exact same `select_tags`.
+{:.warning}
+> **Important**: You can't sync a subset of content from a single file using `select_tags`. `--select-tag` must be provided when running `deck gateway dump` and the same file must be synced to the Admin API using the exact same `select_tags`.
 
 ## Partial configuration and foreign keys
 
@@ -106,8 +107,8 @@ Error: building state: consumer-group 'finance' not found for consumer '093645f9
 
 You have two options to resolve this issue:
 
-1. Ensure that all resources use the same `select_tags`
-1. Use `default_lookup_tags` to load additional resources _without_ including them in your state file.
+1. Ensure that all resources use the same `select_tags`.
+1. Use `default_lookup_tags` to load additional resources _without_ including them in your state file. Default lookup tags can be used on Services, Routes, Partials, Consumers, and Consumer Groups.
 
 Update `consumers.yaml` now to specify `default_lookup_tags.consumer_groups`:
 
@@ -130,4 +131,22 @@ consumers:
 
 This loads all `consumer_groups` with the tag `billing-groups` in to memory and decK can successfully resolve the foreign keys used in `consumers.yaml`.
 
-Default lookup tags can be used on Services, Routes, Partials, Consumers and Consumer Groups.
+If the entity has multiple tags, **all** tags must be added to `default_lookup_tags`. For example, if the `finance` Consumer Group had tags for `billing-groups` and `demo`, then `consumer.yaml` would need both tags listed:
+
+```yaml
+# consumers.yaml
+_format_version: "3.0"
+_info:
+  select_tags:
+    - billing-consumers
+  default_lookup_tags:
+    consumer_groups:
+      - billing-groups
+      - demo
+consumers:
+  - username: alice
+    groups:
+      - name: finance
+    keyauth_credentials:
+      - key: hello_world
+```

@@ -1,6 +1,6 @@
 ---
 title: Configure Okta SAML SSO in Insomnia
-description: Learn how to secure Insomnia by setting up single sign-on (SSO) with Okta.
+description: Learn how to secure Insomnia by setting up SAML single sign-on (SSO) with Okta.
 content_type: how_to
 
 products:
@@ -9,6 +9,8 @@ products:
 related_resources:
   - text: Authentication & Authorization in Insomnia
     url: /insomnia/authentication-authorization/
+  - text: Configure Okta OIDC SSO in Insomnia
+    url: /how-to/okta-oidc-sso-insomnia/
   - text: Configure Azure SAML SSO in Insomnia
     url: /how-to/azure-saml-sso-insomnia/
   - text: SSO for Insomnia

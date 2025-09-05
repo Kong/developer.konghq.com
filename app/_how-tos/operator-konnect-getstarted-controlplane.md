@@ -28,6 +28,10 @@ works_on:
 
 entities: []
 
+related_resources:
+  - text: Deploy a DataPlane
+    url: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
+
 ---
 
 ## Create a `KonnectGatewayControlPlane`

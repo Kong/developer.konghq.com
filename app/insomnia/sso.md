@@ -34,5 +34,6 @@ To configure SSO, you need to:
 1. Enable [SSO](https://app.insomnia.rest/app/enterprise/sso/list) with the relevant parameters for your IdP.
 
 For more details, see the SSO how-to guides:
-* [Okta](/how-to/okta-saml-sso-insomnia/)
+* [Okta SAML](/how-to/okta-saml-sso-insomnia/)
+* [Okta OpenID Connect](/how-to/okta-oidc-sso-insomnia/)
 * [Azure](/how-to/azure-saml-sso-insomnia/)
