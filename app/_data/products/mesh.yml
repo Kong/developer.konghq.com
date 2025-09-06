@@ -59,7 +59,10 @@ releases:
     releaseDate: "2025-06-10"
     eol: "2026-06-10"
     branch: release-2.11
-  - version: preview
+  - version: 2.12.0
     release: "2.12"
+    branch: release-2.12
+  - version: preview
+    release: "2.13"
     branch: master
     label: dev
