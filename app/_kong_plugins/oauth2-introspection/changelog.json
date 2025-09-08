@@ -1,4 +1,11 @@
 {
+  "3.11.0.3": [
+    {
+      "message": "Fixed an issue where authentication failures did not log messages in the error logs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.4": [
     {
       "message": "Fixed an issue where authentication failures did not log messages in the error logs.",
