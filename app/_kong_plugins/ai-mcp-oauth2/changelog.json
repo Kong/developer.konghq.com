@@ -1,1 +1,9 @@
-{}
+{
+    "3.12.0.0": [
+      {
+        "message": "Added new plugin to secure MCP server access with OAuth2 authentication.\n",
+        "scope": "Plugin",
+        "type": "feature"
+      }
+    ]
+  }

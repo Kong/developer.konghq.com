@@ -6,9 +6,9 @@ extended_description: |
   Configure the AI MCP Oauth2 plugin
 
   {:.info}
-  > {:.note}
-  > The AI MCP OAuth2 plugin is in a technical preview state.
-  > The [OAuth 2.0 specification for MCP](https://modelcontextprotocol.io/specification/draft/basic/authorization) is still new and evolving, and most identity providers do not yet fully implement the required metadata and flows. As a result, the plugin behavior and configuration options may change in future releases.
+  > The AI MCP OAuth2 plugin is in a tech preview state.
+  > The [OAuth 2.0 specification for MCP](https://modelcontextprotocol.io/specification/draft/basic/authorization) is still new and evolving, and most identity providers do not yet fully implement the required metadata and flows.
+  > As a result, the plugin behavior and configuration options may change in future releases.
 
 weight: 900
 
