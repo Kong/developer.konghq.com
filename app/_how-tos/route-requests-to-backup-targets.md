@@ -41,6 +41,10 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+faqs:
+  - q: Can I set more than one failover Target?
+    a: Yes, Upstream supports multiple failover Targets.
 ---
 
 ## Start three Target backends
