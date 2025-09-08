@@ -17,6 +17,10 @@ related_resources:
     url: /insomnia/collections/
   - text: Environments
     url: /insomnia/environments/
+  - text: Import and export reference for Insomnia
+    url: /insomnia/import-export/
+  - text: Migrate collections and environments from Postman to Insomnia
+    url: /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/
 
 tier: enterprise
 
