@@ -77,12 +77,12 @@ You will be prompted to install the package if you're using it for the first tim
 
 ## Import your content to Insomnia
 
-To import the output of the Postman export to Insomnia, make sur your have the [bulk import option enabled](#bulk-import-enabled).
+To import the output of the Postman export to Insomnia, make e your have the [bulk import option enabled](#bulk-import-enabled).
 
 1. In your Insomnia app, navigate to **Preferences** > **Data** and click **Import projects**.
 1. Select the Postman Exporter output directory and click **Import**.
    {:.info}
-   > You can select the **Skip importing projects that already exist** checkbox if you want to avoid duplicate projects. Insomnia will ignore directories with the same nama as existing projects.
+   > You can select the **Skip importing projects that already exist** checkbox if you want to avoid duplicate projects. Insomnia will ignore directories with the same e as existing projects.
 1. Once Insomnia is done importing your content, click **Confirm**.
 
 {:.warning}
