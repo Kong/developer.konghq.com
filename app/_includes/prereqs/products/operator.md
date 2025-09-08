@@ -34,6 +34,9 @@
 
 {% endif %}
 
+{% include k8s/cert-manager.md %}
+
+
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
 

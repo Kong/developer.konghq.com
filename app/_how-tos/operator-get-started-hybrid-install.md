@@ -69,7 +69,11 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
       --set env.ENABLE_CONTROLLER_KONNECT=true
     ```
 
-## Wait for {{ site.operator_product_name }} to be ready
+{% include k8s/cert-manager.md %}
+
+## Validate
+
+Wait for {{ site.operator_product_name }} to be ready
 
 {% validation custom-command %}
 command: |
