@@ -9,6 +9,8 @@ related_resources:
     url: /how-to/collect-audit-logs/
   - text: Recover Dev Portal audit logs
     url: /how-to/recover-dev-portal-audit-logs/
+  - text: Configure an HTTPS data collection endpoint in SumoLogic
+    url: https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source
 automated_tests: false
 products:
     - konnect
@@ -38,7 +40,7 @@ prereqs:
         To recover audit logs, you need the Admin role for audit logs.
       icon_url: /assets/icons/gateway.svg
     - title: SumoLogic SIEM provider
-      include_content: /prereqs/sumologic-siem
+      include_content: /prereqs/sumologic-siem-for-konnect-ui
     - title: Audit log destination and webhook
       content: |
         To complete this tutorial, you'll need an audit log destination and webhook configured. If you don't already have one configured, follow these steps:
@@ -53,7 +55,7 @@ prereqs:
         1. From the **Log Format** dropdown menu, select "cef".
         1. (Optional) Click **Disable SSL Verification** to disable SSL verification of the host endpoint when delivering payloads.
             
-           {:.important}
+           {:.warning}
            > We only recommend disabling SSL verification when using self-signed SSL certificates in a non-production environment as this can subject you to man-in-the-middle and other attacks.
         1. Click the **Konnect** tab.
         1. Navigate to the region you want to configure the webhook for.

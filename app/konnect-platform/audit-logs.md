@@ -454,7 +454,7 @@ You can use either the {{site.konnect_short_name}} UI or the {{site.konnect_shor
 Send a `PUT` request to the `/audit-log-replay-job` endpoint:
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/audit-log-replay-job
+url: /v3/audit-log-replay-job
 status_code: 201
 method: PUT
 body:

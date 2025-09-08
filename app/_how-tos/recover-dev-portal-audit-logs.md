@@ -11,6 +11,8 @@ related_resources:
     url: /dev-portal/
   - text: Recover {{site.konnect_short_name}} audit logs
     url: /how-to/recover-konnect-org-audit-logs/
+  - text: Configure an HTTPS data collection endpoint in SumoLogic
+    url: https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source
 automated_tests: false
 products:
     - konnect
@@ -44,14 +46,16 @@ prereqs:
       icon_url: /assets/icons/gateway.svg
     - title: Dev Portal
       content: |
-        For this tutorial, you’ll need a Dev Portal and specific Dev Portal settings, like a pre-configured, published API. If you don't have these settings already configured, follow these steps to pre-configure them:
+        For this tutorial, you’ll need a Dev Portal pre-configured. If you don't have these settings already configured, follow these steps to pre-configure it:
 
-        1. In the {{site.konnect_short_name}} UI, navigate to **Dev Portal** in the sidebar.
+        1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
         1. Click **New portal** to [create a Dev Portal](https://cloud.konghq.com/portals/create).
-        1. [Register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in). You can do this by navigating to your Dev Portal URL and clicking **Sign up**.
+        1. Click your Dev Portal URL at the top of the Dev Portal overview.
+        1. Click **Sign up** to [register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in).
+        1. If your settings require developer or application approval, you can manage approvals by navigating to **Access and approvals** in the {{site.konnect_short_name}} sidebar.
       icon_url: /assets/icons/dev-portal.svg
     - title: SumoLogic SIEM provider
-      include_content: /prereqs/sumologic-siem
+      include_content: /prereqs/sumologic-siem-for-konnect-ui
     - title: Audit log destination and webhook
       content: |
         To complete this tutorial, you'll need an audit log destination and webhook configured. If you don't already have one configured, follow these steps:
@@ -66,7 +70,7 @@ prereqs:
         1. From the **Log Format** dropdown menu, select "cef".
         1. (Optional) Click **Disable SSL Verification** to disable SSL verification of the host endpoint when delivering payloads.
             
-           {:.important}
+           {:.warning}
            > We only recommend disabling SSL verification when using self-signed SSL certificates in a non-production environment as this can subject you to man-in-the-middle and other attacks.
         1. Click the **Dev Portal** tab.
         1. Click **New Dev Portal Audit Log**.
