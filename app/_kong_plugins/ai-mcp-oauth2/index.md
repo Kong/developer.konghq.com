@@ -44,7 +44,7 @@ icon: plugin-slug.png # e.g. acme.svg or acme.png
 categories:
    - ai
 related_resources:
-  - text: Oauth 2.0 specification for MCP
+  - text: OAuth 2.0 specification for MCP
     url: https://modelcontextprotocol.io/specification/draft/basic/authorization
   - text: MCP Traffic Gateway
     url: /mcp/
