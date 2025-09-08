@@ -33,7 +33,7 @@ works_on:
 faqs:
   - q: "How do I fix the `failed to initialize Azure client: no authentication mechanism worked for azure` error?"
     a: |
-      Try run kong command with `--vv` parameter to show the debug log. You'll see the reason why the Azure authentication failed, for example the following log shows an error when authenticating with Managed Identity:
+      Try running the {{site.base_gateway}} command with the `--vv` parameter to show the debug log. You'll see the reason why the Azure authentication failed. For example the following log shows an error when authenticating with Managed Identity:
       ```sh
       2025/08/20 06:55:13 [debug] 68220#0: *2 [lua] init.lua:32: auth(): could not authenticate to azure with ClientCredentials class, error: Couldn't find AZURE_CLIENT_SECRET env variable
       2025/08/20 06:55:13 [debug] 68220#0: *2 [lua] init.lua:32: auth(): could not authenticate to azure with WorkloadIdentityCredentials class, error: Couldn't find AZURE_FEDERATED_TOKEN_FILE env variable
@@ -63,7 +63,7 @@ Before configuring Azure authentication in {{site.base_gateway}}, you need the f
   Created role for "my-managed-identity"
   (1 row)
   ```
-  You'll also need to prepare the correct {{site.base_gateway}} database for the Azure PostgreSQL user. For example the following command creates a `kong` database and assigns permissions on the public schema to the managed identity:
+ You'll also need to prepare the correct {{site.base_gateway}} database for the Azure PostgreSQL user. For example the following command creates a `kong` database and assigns permissions on the public schema to the managed identity:
   ```
   postgres=> create database kong owner 'my-managed-identity' encoding 'utf-8';
   CREATE DATABASE
