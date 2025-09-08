@@ -3,6 +3,6 @@ A vector database can be used to store vector embeddings, or numerical represent
 The {{include.name}} plugin supports the following vector databases:
 * **[Redis](https://redis.io/docs/latest/stack/search/reference/vectors/)** with Vector Similarity Search (VSS)
 * **[PostgreSQL with pgvector](https://github.com/pgvector/pgvector)** {% new_in 3.10 %}
-* **[AWS MemoryDB for Redis**](https://docs.aws.amazon.com/memorydb/latest/devguide/vector-search-overview.html)** {% new_in 3.12 %}
+* **[AWS MemoryDB for Redis](https://docs.aws.amazon.com/memorydb/latest/devguide/vector-search-overview.html)** {% new_in 3.12 %}
 
-To learn more about vector databases in AI Gateway, see [Embedding-based similarity matching in Kong AI gateway plugins](/ai-gateway/semantic-similarity/).sx
+To learn more about vector databases in AI Gateway, see [Embedding-based similarity matching in Kong AI gateway plugins](/ai-gateway/semantic-similarity/).
