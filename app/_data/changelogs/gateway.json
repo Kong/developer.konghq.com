@@ -15908,7 +15908,12 @@
         "message": "**AI Plugins**: Fixed an issue where the Gemini provider could not use Anthropic 'rawPredict' endpoint models hosted in Vertex.",
         "type": "bugfix",
         "scope": "Plugin",
-        "plugins": ["ai-proxy-advanced", "ai-semantic-cache", "ai-semantic-prompt-guard", "ai-rag-injector"]
+        "plugins": [
+          "ai-proxy-advanced",
+          "ai-semantic-cache",
+          "ai-semantic-prompt-guard",
+          "ai-rag-injector"
+        ]
       },
       {
         "message": "**ai-proxy**: Fixed an issue where aws stream parser didn't parse correctly when the frame was incomplete.\n",
@@ -15966,7 +15971,10 @@
         "message": "**Semantic Plugins**: Fixed an issue where Gemini Vertex AI embeddings failed due to incorrect URL construction and response parsing.\n",
         "type": "bugfix",
         "scope": "Plugin",
-        "plugins": ["ai-semantic-cache", "ai-semantic-prompt-guard"]
+        "plugins": [
+          "ai-semantic-cache",
+          "ai-semantic-prompt-guard"
+        ]
       },
       {
         "message": "**jwt-signer**: Fixed an issue where data planes didn't use the keys passed from the control plane to sign/re-sign.",
@@ -15982,7 +15990,10 @@
         "message": "Fixed an issue where AI Proxy and AI Proxy Advanced can't properly failover to a Bedrock target.\n",
         "type": "bugfix",
         "scope": "Plugin",
-        "plugins": ["ai-proxy", "ai-proxy-advanced"]
+        "plugins": [
+          "ai-proxy",
+          "ai-proxy-advanced"
+        ]
       },
       {
         "message": "Fixed an issue where the /schemas/plugins/validate endpoint returned a validation error\nwhen a plugin was linked to a partial containing a vault key.\n",
@@ -16023,13 +16034,17 @@
         "message": "AI Azure Content Safety: Fixed an issue where Blocklist breaches are not correctly parsed.\n",
         "type": "bugfix",
         "scope": "Plugin",
-        "plugins": ["ai-azure-content-safety"]
+        "plugins": [
+          "ai-azure-content-safety"
+        ]
       },
       {
         "message": "Fixed an issue where the `ai-prompt-decorator` plugin prompt field was too short.\n",
         "type": "feature",
         "scope": "Plugin",
-        "plugins": ["ai-prompt-decorator"]
+        "plugins": [
+          "ai-prompt-decorator"
+        ]
       },
       {
         "message": "**ai-proxy-advanced**: Fix consistent-hashing algorithm not using correct value to hash.\n",
@@ -16065,7 +16080,10 @@
         "message": "Fixed an issue where the rate limiting plugins can't handle decimal numbers when using Redis strategy.\n",
         "type": "bugfix",
         "scope": "Plugin",
-        "plugins": ["rate-limiting", "rate-limiting-advanced"]
+        "plugins": [
+          "rate-limiting",
+          "rate-limiting-advanced"
+        ]
       },
       {
         "message": "Improved performance by removing the n+1 query problem for plugins.\nPlugins are now fetched in bulk with plugins_partials and partials.\n",
@@ -16074,5 +16092,74 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.4.3.21": {
+    "kong": [
+      {
+        "message": "Fixed a bug where the health checker could fail to initialize in rare cases.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped LuaRocks from 3.11.1 to 3.12.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where running Kong CLI commands with database configurations containing Hashicorp Vault references would fail to execute.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**kafka**: Fixed an issue where the Kafka SCRAM authentication did not send the server nonce.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the Lua VM memory size returned by status API is not accurate on the control plane.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "fixed an issue where utils.random_string() returned multiple values",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**mocking**: Fixed an issue where an empty array set in the mocking plugin schema with object type. It should return an array type instead of an object type in the response body.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oauth2-introspection**: Fixed an issue where authentication failures did not log messages in the error logs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ldap-auth-advanced**: Fixed an issue where an empty sequence or set represented in long form length couldn't be decoded.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where the password field was required when editing basic-auth credentials, now allows empty passwords.",
+        "type": "bugfix",
+        "githubs": [
+          3995
+        ],
+        "scope": "Core"
+      },
+      {
+        "message": "Resolved a security issue in the Kong Manager UI.",
+        "type": "bugfix",
+        "githubs": [
+          3997
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }
