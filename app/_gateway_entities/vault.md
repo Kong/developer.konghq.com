@@ -147,7 +147,7 @@ You can add secrets to Vaults in one of the following ways:
 
 ## What can be stored as a secret?
 
-The following plugin fields can be stored and referenced as secrets:
+You can store and reference the following as secrets in a Vault:
 
 * All [values](/gateway/manage-kong-conf/)<sup>1</sup> set in `kong.conf` are referenceable. For example:
   * Data store usernames and passwords, used with PostgreSQL and Redis
