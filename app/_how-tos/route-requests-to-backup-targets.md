@@ -59,11 +59,13 @@ docker run -d --rm --name primary2 -p 9002:5678 hashicorp/http-echo -text "PRIMA
 docker run -d --rm --name failover -p 9003:5678 hashicorp/http-echo -text "FAILOVER"
 ```
 
-## Configure a Gateway Service and Route
+## Configure a Gateway Service, Route, and Upstream
 
-Configure a Gateway Service and Route to point to the Upstream you created in the prerequisites:
+Configure a Gateway Service and Route to point to the Upstream:
 {% entity_examples %}
 entities:
+  upstreams:
+    - name: example-upstream
   services:
     - name: example-service
       host: example-upstream 
@@ -80,21 +82,56 @@ entities:
 
 Now, you can configure Upstream with the two primary Targets `failover: false` and one failover Target `failover: true`. 
 
-{% entity_examples %}
-entities:
-  upstreams:
-    - name: example-upstream
-      targets:
-        - target: host.docker.internal:9001
-          weight: 100
-          failover: false
-        - target: host.docker.internal:9002
-          weight: 100
-          failover: false
-        - target: host.docker.internal:9003
-          weight: 50
-          failover: true
-{% endentity_examples %}
+1. Configure the first primary Target:
+{% capture primary %}
+<!--vale off -->
+{% control_plane_request %}
+url: /upstreams/example-upstream/targets/
+method: POST
+headers:
+  - 'Accept: application/json'
+body:
+  target: host.docker.internal:9001
+  weight: 100
+  failover: false
+{% endcontrol_plane_request %}
+<!--vale on -->
+{% endcapture %}
+{{ primary | indent: 3}}
+
+1. Configure the second primary Target:
+{% capture secondary %}
+<!--vale off -->
+{% control_plane_request %}
+url: /upstreams/example-upstream/targets/
+method: POST
+headers:
+  - 'Accept: application/json'
+body:
+  target: host.docker.internal:9002
+  weight: 100
+  failover: false
+{% endcontrol_plane_request %}
+<!--vale on -->
+{% endcapture %}
+{{ secondary | indent: 3}}
+
+1. Configure the failover Target:
+{% capture failover %}
+<!--vale off -->
+{% control_plane_request %}
+url: /upstreams/example-upstream/targets/
+method: POST
+headers:
+  - 'Accept: application/json'
+body:
+  target: host.docker.internal:9003
+  weight: 50
+  failover: true
+{% endcontrol_plane_request %}
+<!--vale on -->
+{% endcapture %}
+{{ failover | indent: 3}}
 
 ## Verify that the primary Targets handle traffic
 
