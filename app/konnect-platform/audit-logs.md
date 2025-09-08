@@ -424,7 +424,7 @@ rows:
 
 You can use replay jobs in {{site.konnect_short_name}} to recover audit logs. These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook.
 
-You can use either the {{site.konnect_short_name}} UI or API to configure a replay job.
+You can use either the {{site.konnect_short_name}} UI or the {{site.konnect_short_name}} API to configure a replay job.
 
 ### {{site.konnect_short_name}} replay job
 
@@ -470,7 +470,7 @@ body:
 
 ### Replay job status
 
-Once you configure a replay job, it will display the status. 
+Once you configure a replay job, it displays one of the following statuses. 
 
 A replay job can be in one of the following statuses:
 
@@ -483,7 +483,7 @@ columns:
     key: description
 rows:
   - status: "Unconfigured"
-    description: Initial state. The job has not been set up.
+    description: The job has not been set up. This is the job's initial state.
   - status: "Accepted"
     description: The job has been accepted for scheduling.
   - status: "Pending"
@@ -497,4 +497,4 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-Once the replay job is marked as Complete, the audit logs were re-sent to a configured SIEM provider webhook for the specified date and time range.
+Once the replay job is marked as Complete, the audit logs are re-sent to a configured SIEM provider webhook for the specified date and time range.

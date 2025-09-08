@@ -27,9 +27,9 @@ tags:
 tldr:
     q: How do I recover Dev Portal audit logs?
     a: |
-        You can use replay jobs in {{site.konnec_short_name}} to recover audit logs. These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook. 
+        You can use replay jobs in {{site.konnect_short_name}} to recover audit logs. These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook. 
 
-        Configure an audit log webhook in {{site.konnect_short_name}} with the SIEM endpoint, the access key, and the log format. Then, configure audit logs for your Dev Portal by adding the audit log webhook you just configured. You can then navigate to your Dev Portal audit log configuration and click the **Replay** tab to recover audit logs from a specified time frame. 
+        Configure an audit log webhook in {{site.konnect_short_name}} with the SIEM endpoint, the access key, and the log format. Then, configure audit logs for your Dev Portal by adding the audit log webhook that you just configured. You can then navigate to your Dev Portal audit log configuration and click the **Replay** tab to recover audit logs from a specified time frame. 
 
         This tutorial uses SumoLogic, but you can apply the same steps to your SIEM provider.
 prereqs:
@@ -44,7 +44,7 @@ prereqs:
       icon_url: /assets/icons/gateway.svg
     - title: Dev Portal
       content: |
-        For this tutorial, you’ll need a Dev Portal and some Dev Portal settings, like a published API, pre-configured. These settings are essential for Dev Portal to function but configuring them isn’t the focus of this guide. If you don't have these settings already configured, follow these steps to pre-configure them:
+        For this tutorial, you’ll need a Dev Portal and specific Dev Portal settings, like a pre-configured, published API. If you don't have these settings already configured, follow these steps to pre-configure them:
 
         1. In the {{site.konnect_short_name}} UI, navigate to **Dev Portal** in the sidebar.
         1. Click **New portal** to [create a Dev Portal](https://cloud.konghq.com/portals/create).
@@ -96,12 +96,12 @@ Dev Portal audit logs allow you to recover audit logs by configuring a replay jo
 1. In the {{site.konnect_short_name}} UI, click [**Organization**](https://cloud.konghq.com/organization) in the sidebar.
 1. Click **Audit Logs Setup** in the sidebar.
 1. Click the **Dev Portal** tab.
-1. Click the Dev Portal you want to configure the replay job for.
+1. Click the Dev Portal that you want to configure the replay job for.
 1. Click the **Replay** tab.
 1. Select `Last 6 hours` from the **Replay Time Range** dropdown menu.
 1. Click **Send Replay**.
 
-The replay job will now display it's status. A replay job can be in one of the following statuses:
+The replay job will now display one of the following statuses:
 
 <!--vale off-->
 {% table %}
@@ -112,7 +112,7 @@ columns:
     key: description
 rows:
   - status: "Unconfigured"
-    description: Initial state. The job has not been set up.
+    description: The job has not been set up. This is the job's initial state.
   - status: "Accepted"
     description: The job has been accepted for scheduling.
   - status: "Pending"

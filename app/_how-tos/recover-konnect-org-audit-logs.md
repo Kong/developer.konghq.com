@@ -24,9 +24,9 @@ tags:
 tldr:
     q: How do I recover {{site.konnect_short_name}} org audit logs?
     a: |
-        You can use replay jobs in {{site.konnect_short_name}} to recover audit logs. These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook. 
+        Use replay jobs in {{site.konnect_short_name}} to recover audit logs. These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook. 
 
-        Configure an audit log webhook in {{site.konnect_short_name}} with the SIEM endpoint, the access key, and the log format. Then, configure audit logs for your {{site.konnect_short_name}} org by adding the audit log webhook you just configured. You can then navigate to your {{site.konnect_short_name}} org audit log configuration and click the **Replay** tab to recover audit logs from a specified time frame. 
+        Configure an audit log webhook in {{site.konnect_short_name}} with the SIEM endpoint, the access key, and the log format. Then, configure audit logs for your {{site.konnect_short_name}} org by adding the audit log webhook that you just configured. You can then navigate to your {{site.konnect_short_name}} org audit log configuration and click the **Replay** tab to recover audit logs from a specified time frame. 
 
         This tutorial uses SumoLogic, but you can apply the same steps to your SIEM provider.
 
@@ -71,7 +71,7 @@ prereqs:
         {% endkonnect_api_request %}
         <!--vale on-->
 
-        This should trigger a log in SumoLogic. Sometimes it can take a minute to populate the logs.
+        This triggers a log in SumoLogic. Sometimes it can take a minute to populate the logs.
 
 cleanup:
   inline:
@@ -86,7 +86,7 @@ faqs:
 
 ## Configure a replay job
 
-{{site.konnect_short_name}} audit logs allow you to recover audit logs by configuring a replay job.
+In {{site.konnect_short_name}}, you can restore audit logs by configuring a replay job:
 
 1. In the {{site.konnect_short_name}} UI, click [**Organization**](https://cloud.konghq.com/organization) in the sidebar.
 1. Click **Audit Logs Setup** in the sidebar.
@@ -96,7 +96,7 @@ faqs:
 1. Select `Last 6 hours` from the **Replay Time Range** dropdown menu.
 1. Click **Send Replay**.
 
-The replay job will now display it's status. A replay job can be in one of the following statuses:
+The replay job will now display one of the following statuses:
 
 <!--vale off-->
 {% table %}
@@ -107,7 +107,7 @@ columns:
     key: description
 rows:
   - status: "Unconfigured"
-    description: Initial state. The job has not been set up.
+    description: The job has not been set up. This is the job's initial state.
   - status: "Accepted"
     description: The job has been accepted for scheduling.
   - status: "Pending"
@@ -124,7 +124,7 @@ rows:
 
 ## Validate
 
-Once the replay job is marked as Complete, you can view the recovered audit logs in your SIEM provider. If you're using SumoLogic, navigate to the [log search](https://service.sumologic.com/log-search) and search for `_source=Konnect`. You should see logs like the following:
+Once the replay job is marked as Complete, you can view the recovered audit logs in your SIEM provider. If you're using SumoLogic, navigate to the [log search](https://service.sumologic.com/log-search) and search for `_source=Konnect`. You will see logs like the following:
 
 ```cef
 2025-06-18T21:02:36Z konghq.com CEF:0|KongInc|Konnect|1.0|konnect|Authz.control-planes|1|rt=1750280466889 src=127.0.0.6 action=list granted=true org_id=777db3e4-5cb7-4dd5-b51c-9878096a6999 principal_id=eb999f01-5976-4f4b-9fbc-dd5d514bd675 trace_id=3959872677347089807 user_agent=grpc-node-js/1.12.4 sig=KbLaBhQFnggT_8CyC95b777R1_fGvvLVDn7awjZK8eZLdGPrSvnS-sxJw63j930eKr-VTsQv8-TQTD_GVmAPAQ
