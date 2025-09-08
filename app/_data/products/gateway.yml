@@ -906,7 +906,6 @@ releases:
 
   - release: "3.11"
     ee-version: "3.11.0.2"
-    latest: true
     eol: 2026-07-03
     distributions:
       - amazonlinux2:
@@ -1083,7 +1082,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.12"
-    label: unreleased
+    latest: true
     ee-version: "3.12.0.0"
     eol: 2026-09-20
     distributions:
