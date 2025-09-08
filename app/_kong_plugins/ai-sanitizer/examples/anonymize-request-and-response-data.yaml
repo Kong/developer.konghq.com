@@ -1,6 +1,6 @@
-description: Configure the AI Sanitizer plugin to use your sanitizer service to anonymize phone numbers in requests before they reach the upstream service.
+description: Configure the AI Sanitizer plugin to use your sanitizer service to anonymize all sensitive data and credentials in both client requests and LLM responses.
 
-title: Anonymize phone numbers in requests
+title: Anonymize sensitive data in requests and responses
 
 weight: 900
 
@@ -15,15 +15,17 @@ variables:
     description: The sanitizer service's port
     value: $SANITIZER_SERVICE_PORT
 
-
 config: 
   anonymize:
-      - phone
+      - all_and_credentials
+  sanitization_mode: BOTH
   port: ${port}
   host: ${host}
-  redact_type: synthetic
-  stop_on_error: true
+  redact_type: placeholder
   recover_redacted: false
+
+min_version:
+    gateway: '3.12'
 
 tools:
   - deck
