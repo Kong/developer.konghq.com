@@ -202,3 +202,7 @@ For example, load balancers with the following target combinations are supported
 ## Templating {% new_in 3.7 %}
 
 {% include plugins/ai-proxy-advanced/templating.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
+
+## Vector databases
+
+{% include_cached /plugins/ai-vector-db.md name=page.name %}
