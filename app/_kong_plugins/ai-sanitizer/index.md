@@ -66,7 +66,7 @@ Here's how it works if you apply it to both requests and responses:
 1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
 1. If restoration is enabled, the plugin restores the original request data in responses before returning them to the client.
 
-<!--vale-->
+<!--vale off-->
 {% mermaid %}
 sequenceDiagram
     autonumber
@@ -89,7 +89,7 @@ sequenceDiagram
     PII->>Plugin: Return sanitized response<br/>(placeholders/synthetic data)
     Plugin->>Client: Return sanitized response<br>(with optional restored request data)
 {% endmermaid %}
-<!--endvale-->
+<!--vale on-->
 
 > _Figure 1: Diagram showing the request and response flow with the AI Sanitizer plugin._
 
