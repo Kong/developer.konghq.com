@@ -492,7 +492,7 @@ rows:
 
 ### Implicit nodes
 
-Datakit also defines a number of implicit nodes that can't be declared under nodes configuration.
+Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
 These nodes can either be used without being explicitly declared, or declared under the global resources object.
 
 These reserved node names can't be used for user-defined
@@ -566,15 +566,15 @@ If the corresponding `Content-Type` header matches the JSON mime-type, the
 `body` output is automatically JSON-decoded.
 
 #### Vault node
-The `vault` node is an implicit node that allows you to declare secrets references
-and be used in other nodes as a source of secret values. Vault references are declard
-under `resources.vault` configuration.
+The `vault` node is an implicit node that allows you to declare secret references
+and can be used in other nodes as a source of secret values. Vault references are declared
+under the `resources.vault` configuration.
 
 ##### Examples
 
 Declare two vault references and use them in a `jq` node:
 ```yaml
-resouces:
+resources:
   vault:
     secret1: "{vault://env/my-secret1}"
     secret2: "{vault://aws/my-secret2}"
@@ -1351,8 +1351,7 @@ Set common request headers for different API requests:
 
 ## Resources
 
-Datakit supports a global `resources` object that can be used to declare
-redis configuration for cache nodes and vault references for secret values.
+Datakit supports a global `resources` object that can be used to declare shared resource configurations.
 
 ### Vault
 Refer to the [Vault node](#vault-node) for more details on how to use vault references in Datakit.
