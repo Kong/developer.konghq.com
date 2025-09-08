@@ -1,5 +1,5 @@
 ---
-title: "Recover {{site.konnect_short_name}} audit logs"
+title: "Collect {{site.konnect_short_name}} audit logs"
 description: "Learn how to configure you SIEM provider to collect {{site.konnect_short_name}} logs and configure a {{site.konnect_short_name}} audit log webhook."
 content_type: how_to
 related_resources:

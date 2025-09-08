@@ -56,24 +56,24 @@ prereqs:
       content: |
         To complete this tutorial, you'll need an audit log destination and webhook configured. If you don't already have one configured, follow these steps:
 
-        1. In the {{site.konnect_short_name}} UI, click [**Organization**](https://cloud.konghq.com/organization) in the sidebar.
-        1. Click **Audit Logs Setup** in the sidebar.
+        1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
+        1. From the sidebar, click **Audit Logs Setup**.
         1. On the Webhook Destination tab, click **New Webhook**.
-        1. Enter `SumoLogic` in the **Name** field.
-        1. Enter your external endpoint that will receive audit log messages in the **Endpoint** field. For example: `https://endpoint4.collection.sumologic.com/receiver/v1/http/1234abcd`.
-        1. Enter the access token from you SIEM in the **Authorization Header** field. 
+        1. In the **Name** field, enter `SumoLogic`.
+        1. In the **Endpoint** field, enter your external endpoint that will receive audit log messages. For example: `https://endpoint4.collection.sumologic.com/receiver/v1/http/1234abcd`.
+        1. In the **Authorization Header** field, enter the access token from you SIEM. 
            {{site.konnect_short_name}} will send this string in the `Authorization` header of requests to that endpoint.
-        1. Select "cef" from the **Log Format** dropdown menu.
+        1. From the **Log Format** dropdown menu, select "cef".
         1. (Optional) Click **Disable SSL Verification** to disable SSL verification of the host endpoint when delivering payloads.
             
            {:.important}
            > We only recommend disabling SSL verification when using self-signed SSL certificates in a non-production environment as this can subject you to man-in-the-middle and other attacks.
         1. Click the **Dev Portal** tab.
         1. Click **New Dev Portal Audit Log**.
-        1. Select the region from the **View region** dropdown menu.
-        1. Select your Dev Portal from the **Dev Portal** dropdown menu.
+        1. From the **View region** dropdown menu, select the region.
+        1. From the **Dev Portal** dropdown menu, select your Dev Portal.
         1. Click **Enabled**.
-        1. Select your SIEM endpoint from the **Endpoint** dropdown menu.
+        1. From the **Endpoint** dropdown menu, select your SIEM endpoint.
         1. Click **Save**.
 
         To validate that the webhook is configured correctly, you can log in to your Dev Portal with the account you created in the [prerequisites](#dev-portal). This should trigger a log in SumoLogic. Sometimes it can take a minute to populate the logs.
@@ -93,12 +93,12 @@ faqs:
 
 Dev Portal audit logs allow you to recover audit logs by configuring a replay job.
 
-1. In the {{site.konnect_short_name}} UI, click [**Organization**](https://cloud.konghq.com/organization) in the sidebar.
-1. Click **Audit Logs Setup** in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
+1. From the sidebar, click **Audit Logs Setup**.
 1. Click the **Dev Portal** tab.
 1. Click the Dev Portal that you want to configure the replay job for.
 1. Click the **Replay** tab.
-1. Select `Last 6 hours` from the **Replay Time Range** dropdown menu.
+1. From the **Replay Time Range** dropdown menu, select `Last 6 hours`.
 1. Click **Send Replay**.
 
 The replay job will now display one of the following statuses:
