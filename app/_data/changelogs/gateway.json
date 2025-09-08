@@ -16161,5 +16161,188 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.11.0.3": {
+    "kong": [
+      {
+        "message": "**ai-proxy**: Fixed an issue where the Anthropic provider mapped the wrong stop_reason to Chat and Completions responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue Structured Output did not work correctly with Anthropic Claude models.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue Structured Output did not work correctly with Bedrock (Converse API) models.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where `id`, `created`, and/or `finish_reason` fields were missing from or incorrect in Gemini responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where Structured-Output requests were ignored.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where JSON array data is not correctly parsed.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-muiltipart from 0.5.9 to 0.5.11",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-gcp from 0.0.13 to 0.0.14.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Plugins**: GCP authentication order can be configured by `GCP_AUTH_METHOD_ORDER` environment variable. By configuring\nit to be \"adc\" allows plugin to select Application Default Credentials (ADC) in precedence over Service Account.\n",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-driver**: Fixed an issue where AI Proxy and AI Proxy Advanced generated incorrect default ports for upstream schemes, leading to 400 errors.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue with Azure Managed Identity credentials causing improper request balancing.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where AWS Bedrock did not properly handle image editing requests through the `image/v1/images/edits` route.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fix panic in LLM observability when populating token usage for AI Proxy token usage details\n",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy",
+          "ai-proxy-advanced"
+        ]
+      },
+      {
+        "message": "Fixed an issue where incorrect delimiter in cluster events caused cache key problems, preventing portal from updating page cache properly in hybrid deployment mode.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**prometheus**: Fixed an issue where Prometheus metrics would show empty consumer identifiers when consumers don't have a username. The plugin now falls back to using the consumer's custom_id when username is not available, ensuring consumer identification in metrics.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where results were lost when querying LMDB page by page.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**request-callout**: Fix regression where the upstream request body would not be forwarded if `upstream.body.custom` was empty.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the incremental sync did not work properly for the stream subsystem.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**vault**: Fixed an issue where vault config `base64_decode` caused DP to fail to start.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Azure Conteny Safety**: Fixed the plugin to work with multi-modal content.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI AWS GuardRails**: Fixed the plugin to work with multi-modal content.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where the Dimensionality was not sent for Gemini embeddings calls.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "AI Proxy Advanced: Fixed an issue where gemini provider not support model garden",
+        "type": "bugfix",
+        "scope": "Plugin",
+        "plugins": [
+          "ai-proxy-advanced"
+        ]
+      },
+      {
+        "message": "**embeddings**: Fixed an issue where the `text-embedding-ada-002` model would return an 400 error when the `dimensions` parameter was set.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where Mistral models would return `Unsupported field: seed` when using some inference libraries.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**mocking**: Fixed an issue where an empty array set in the mocking plugin schema with object type. It should return an array type instead of an object type in the response body.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Skip unknown cached details key from o11y observation.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oauth2-introspection**: Fixed an issue where authentication failures did not log messages in the error logs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where array input is not recognized as valid request for some providers. Bedrock, Gemini Public and Mistral provider don't accept array input as before.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where some Titan embeddings model reported malformed request. \n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Support for Gemini Rerank in native format",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**: Optimized fetching of the `kong_db_entities_total` metric by using internal counters instead of `select count(*)` query through the database. If this metric is found to be get out of sync with the real row counts, please use the command `kong migrations reinitialize-workspace-entity-counters` to re-sync the counts.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Resolved a security issue in the Kong Manager UI.",
+        "type": "bugfix",
+        "githubs": [
+          4000
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }
