@@ -24,7 +24,7 @@ This migration guide is only relevant for users who are currently using the `kon
 If you are using `konnectID`, you must update your manifests to use the new `konnectgatewaycontrolplane` reference before upgrading. This is a required step to ensure a smooth migration and avoid breaking changes.
 
 {:.warning}
-> **Disclaimer**: This migration guide assumes you are running Kong Gateway Operator (KGO) version 1.6.3. If you are using an earlier version, upgrade to 1.6.3 before proceeding.
+> **Disclaimer**: This migration guide assumes you are running {{site.operator_product_name}} (KGO) version 1.6.3. If you are using an earlier version, upgrade to 1.6.3 before proceeding.
 
 ## Migration Steps
 

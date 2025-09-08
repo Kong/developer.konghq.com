@@ -1,6 +1,6 @@
 ---
-title: "Migrating from Kong Gateway Operator 1.6.x to Kong Operator 2.0.0"
-description: "Complete migration guide from Kong Gateway Operator (KGO) 1.6.x to Kong Operator (KO) 2.0.0."
+title: "Migrating from {{site.operator_product_name}} 1.6.x to Kong Operator 2.0.0"
+description: "Complete migration guide from {{site.operator_product_name}} (KGO) 1.6.x to Kong Operator (KO) 2.0.0."
 content_type: reference
 layout: reference
 products:
@@ -24,7 +24,7 @@ related_resources:
 
 ---
 
-Kong Operator (KO) 2.0.0 represents a major version upgrade from Kong Gateway Operator (KGO) 1.6.x, introducing significant architectural improvements, enhanced Kubernetes-native features, and breaking changes that require careful migration planning.
+Kong Operator (KO) 2.0.0 represents a major version upgrade from {{site.operator_product_name}} (KGO) 1.6.x, introducing significant architectural improvements, enhanced Kubernetes-native features, and breaking changes that require careful migration planning.
 
 ## Prerequisites
 
@@ -58,7 +58,7 @@ The upgrade process requires several manual steps due to breaking changes in cer
 
 ### Step 1: Uninstall the Existing KGO Release
 
-First, uninstall the current Kong Gateway Operator release:
+First, uninstall the current {{site.operator_product_name}} release:
 
 ```bash
 helm uninstall kgo -n kong-system
