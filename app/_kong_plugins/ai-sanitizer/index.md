@@ -56,7 +56,10 @@ The AI Sanitizer plugin uses the AI PII Anonymizer Service, which can run in a D
 
 ## How it works
 
-The AI Sanitizer plugin can be applied to input data (requests), output data (responses) {% new_in 3.12 %}, or both.
+The AI Sanitizer plugin can be applied to:
+* Input data (requests)
+* Output data (responses) {% new_in 3.12 %}
+* Both input and output data {% new_in 3.12 %}
 Here's how it works if you apply it to both requests and responses:
 
 1. The plugin intercepts the request body and sends it to the external PII service.
@@ -87,7 +90,7 @@ sequenceDiagram
     Plugin->>PII: Intercept & send response body
     PII->>PII: Detect sensitive data in response
     PII->>Plugin: Return sanitized response<br/>(placeholders/synthetic data)
-    Plugin->>Client: Return sanitized response<br>(with optional restored request data)
+    Plugin->>Client: Return sanitized response
 {% endmermaid %}
 <!--vale on-->
 
