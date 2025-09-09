@@ -63,13 +63,17 @@ Kong also provides plugins for publishing messages to and consuming messages fro
 
 {% include /plugins/logging/log-format.md %}
 
+### Log format definitions 
+
+{% include /plugins/logging/json-object-log.md %}
+
 ## Implementation details
 
 This plugin leverages the [log PDK](/gateway/pdk/reference/kong.log/) to collect and [customize](#custom-fields-by-lua) log fields.
 
-The prepared log message is sent to Solace broker via the official [Solace C API](https://docs.solace.com/API/Messaging-APIs/C-API/c-api-home.htm). The sending job is executed in a background timer context, such that it would not block the client requests.
+The prepared log message is sent to the Solace broker via the official [Solace C API](https://docs.solace.com/API/Messaging-APIs/C-API/c-api-home.htm). The sending job is executed in a background timer context so that it doesn't block client requests.
 
-If the [custom Lua code](#custom-fields-by-lua) associated with the log fields fails to execute, the relavent fields remain untouched.
+If the [custom Lua code](#custom-fields-by-lua) associated with the log fields fails to execute, the relevant fields remain untouched.
 
 ## Custom fields by Lua
 
