@@ -85,6 +85,9 @@ Run the following commands to create a first namespace and install an instance o
 
 1. Check that the pod has the sidecar injected:
 
+   {:.info}
+   > You may need to wait a few minutes for the pods to initialize.
+
    ```bash
    kubectl get pods --namespace first-namespace
    ```
@@ -206,6 +209,10 @@ This confirms that:
    {:.no-copy-code}
 
 1. Verify that the pod now includes a sidecar:
+
+   {:.info}
+   > You may need to wait a few minutes for the pods to initialize.
+
    ```bash
    kubectl get pods --namespace second-namespace
    ```
