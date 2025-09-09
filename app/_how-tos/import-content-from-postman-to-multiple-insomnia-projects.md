@@ -45,7 +45,7 @@ prereqs:
 
 ## Export your Postman content
 
-Kong provides the [Postman Exporter](https://www.npmjs.com/package/organize-postman-export) tool, which allows you to export Postman content and organize the files in a structure supported by Insomnia for import into multiple projects.
+Kong provides the [Postman Exporter](https://www.npmjs.com/package/organize-postman-export) tool, which allows you to export Postman content and organize the files in a structure supported by Insomnia for import into multiple projects. Insomnia will create a project for each Postman workspace and import each workspace's collections and environment in the corresponding project.
 
 First, make sure that you have set the `POSTMAN_API_KEY` environment variable to your [Postman API key](#postman-api-key). You can also use the `--api-key` flag in your commands.
 
