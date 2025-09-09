@@ -68,6 +68,10 @@
         "type": "string",
         "enum": ["on-prem", "konnect"]
       }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "$ref": "schema:tags" }
     }
   },
   "if": {
