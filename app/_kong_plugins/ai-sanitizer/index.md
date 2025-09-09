@@ -64,11 +64,11 @@ The AI Sanitizer plugin can be applied to:
 Here's how it works if you apply it to both requests and responses:
 
 1. The plugin intercepts the request body and sends it to the external PII service.
-1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
+   1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
 1. The sanitized request is forwarded upstream with the AI Proxy or AI Proxy Advanced plugin.
 1. On the way back, the plugin intercepts the response body and sends it to the external PII service. {% new_in 3.12 %}
-1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
-1. If restoration is enabled, the plugin restores the original request data in responses before returning them to the client.
+   1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
+1. (_Only applies to input data sanitization_) If restoration is enabled, the plugin restores the original request data in responses before returning them to the client.
 
 <!--vale off-->
 {% mermaid %}

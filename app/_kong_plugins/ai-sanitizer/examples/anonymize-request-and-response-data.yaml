@@ -7,20 +7,12 @@ weight: 900
 requirements:
   - You have enabled the AI Proxy or AI Proxy Advanced plugin
 
-variables:
-  host:
-    description: The sanitizer service's host
-    value: $SANITIZER_SERVICE_HOST
-  port:
-    description: The sanitizer service's port
-    value: $SANITIZER_SERVICE_PORT
-
 config: 
   anonymize:
       - all_and_credentials
   sanitization_mode: BOTH
-  port: ${port}
-  host: ${host}
+  port: 8080
+  host: example.service.com
   redact_type: placeholder
   recover_redacted: false
 
