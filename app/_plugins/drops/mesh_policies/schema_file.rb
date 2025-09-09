@@ -60,6 +60,7 @@ module Jekyll
         def roots
           [
             File.join('app/assets/mesh', @release.label ? @release.to_s : @release.number.to_s),
+            File.join('app/assets/mesh', "#{@release.number}.x"),
             File.join(site.config['mesh_policy_schemas_path'], @release.label ? @release.to_s : "#{@release.number}.x")
           ]
         end
