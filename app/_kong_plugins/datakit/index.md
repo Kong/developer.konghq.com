@@ -532,7 +532,7 @@ rows:
     outputs: none
     description: Updates properties of the outgoing client response
     declaration: none
-  - node: "vault"
+  - node: "`vault`"
     inputs: none
     outputs: "`$self`"
     description: Vault reference to hold secret values
