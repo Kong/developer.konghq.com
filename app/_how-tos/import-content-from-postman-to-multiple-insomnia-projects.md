@@ -23,6 +23,8 @@ related_resources:
     url: /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/
 
 tier: enterprise
+min_version:
+  insomnia: '11.6'
 
 tldr:
     q: How can I import Postman content to multiple Insomnia projects at once?
