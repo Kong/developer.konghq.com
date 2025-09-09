@@ -7,6 +7,8 @@ extended_description: |
 
 title: Conditionally fetch or store cache data.
 
+weight: 900
+
 config:
   nodes:
     - type: static
@@ -28,7 +30,7 @@ config:
       name: branch
     - type: call
       method: GET
-      url: http://localhost:8080/anything
+      url: "http://localhost:8080/anything"
       name: DATA
     - type: static
       values:
@@ -60,3 +62,13 @@ config:
       resources:
         cache:
           strategy: memory
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.12'
