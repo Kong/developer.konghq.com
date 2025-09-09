@@ -60,6 +60,7 @@ The AI Sanitizer plugin can be applied to:
 * Input data (requests)
 * Output data (responses) {% new_in 3.12 %}
 * Both input and output data {% new_in 3.12 %}
+
 Here's how it works if you apply it to both requests and responses:
 
 1. The plugin intercepts the request body and sends it to the external PII service.
