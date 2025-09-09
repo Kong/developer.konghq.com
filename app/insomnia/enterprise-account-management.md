@@ -30,6 +30,8 @@ To upgrade your account to the Enterprise plan:
 {:.info}
 > Activation codes are single-use. The first user who enters the activation code activates the Enterprise plan for the account and then consequently becomes the [Owner](/insomnia/terminology/#user-roles).
 
+If you have requested to increase the number of seats in your instance, you should get a new activation code. Follow the same steps to update your instances with the new seats.
+
 ## Add domains
 
 You can use domains in your Insomnia Enterprise account to manage users.

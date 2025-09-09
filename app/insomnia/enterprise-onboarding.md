@@ -14,10 +14,26 @@ tier: enterprise
 related_resources:
   - text: Enterprise
     url: /insomnia/enterprise/
+  - text: Enterprise account management
+    url: /insomnia/enterprise-account-management/
+  - text: Enterprise user management
+    url: /insomnia/enterprise-user-management/
+
+next_steps:
+  - text: Documents
+    url: /insomnia/documents/
+  - text: Collections
+    url: /insomnia/collections/
+  - text: Environments
+    url: /insomnia/environments/
+  - text: Mock servers
+    url: /insomnia/mock-servers/
+  - text: Scripts
+    url: /insomnia/scripts/
 
 ---
 
-If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance.
+If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance in [**Insomnia Admin**](https://app.insomnia.rest/).
 
 ## 1. Activate your Enterprise membership
 
@@ -90,7 +106,7 @@ To add a new domain:
 1. If you selected **Unique verification record**, Insomnia provides a TXT record that you'll need to add to your DNS tool to verify the domain.
 1. Once you've added the record to your DNS tool, click the checkbox to confirm that it's done, and click **Verify Domain**.
 
-Once your domain is created, you can click it to access its settings. 
+Once your domain is created, you can click it to access its settings. For more details, see [Add domains](/insomnia/enterprise-account-management/#add-domains).
 
 ## 6. Enable SSO
 
@@ -111,4 +127,20 @@ See our how-to guides to learn how to configure SCIM for Insomnia with:
 
 ## 8. Configure storage control
 
+Insomnia allows you to have control over the [storage options](/insomnia/storage/) used in your instance. You cna define whether users can use [Cloud Sync](/insomnia/storage/#cloud-sync), [Local Vault](/insomnia/storage/#local-vault), or [Git Sync](/insomnia/storage/#git-sync) storage, or a combination of these.
+
+To set up storage control:
+1. Go to [**Storage**](https://app.insomnia.rest/app/enterprise/storage).
+1. Select the storage options to allow for:
+  * Members' personal workspaces
+  * Owners' personal workspaces
+  * Organizations
+
 ## 9. Import content
+
+Now that your Insomnia Enterprise instance is configured, you and your collaborators can start using the Insomnia app to design and test your APIs. If you are migrating from another tool, such as Postman, you can import your content:
+
+* [Import and export reference for Insomnia](/insomnia/import-export/)
+* [Migrate collections and environments from Postman to Insomnia](/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/)
+* {% new_in 11.6 %} [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
+* [Import an API specification as a design document in Insomnia](/how-to/import-an-api-spec-as-a-document/)
