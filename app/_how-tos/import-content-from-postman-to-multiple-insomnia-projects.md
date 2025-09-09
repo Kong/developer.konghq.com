@@ -41,7 +41,8 @@ prereqs:
     icon_url: /assets/icons/postman.svg
   - title: Bulk import enabled
     content: |
-      This tutorial requires the **Bulk import** feature on your Insomnia Enterprise instance. This feature is not available by default, please reach out to your Customer Success Manager to enable it.
+      This tutorial requires the **Bulk import** feature on your organization. This feature is not available by default, please reach out to your Customer Success Manager to enable it, and provide the organization ID. The ID starts with `org_`, and you can find it in the page URL when you open your organization in [Insomnia Admin](https://app.insomnia.rest/app/dashboard/organizations).
+
     icon_url: /assets/icons/insomnia/insomnia.svg
 
 faqs:
