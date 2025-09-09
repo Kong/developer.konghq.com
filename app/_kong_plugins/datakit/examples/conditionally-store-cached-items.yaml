@@ -19,12 +19,13 @@ config:
       name: GET
     - type: branch
       then:
+        - CALL
         - SET
-    - EXIT_MISS
-  else:
-    - EXIT_HIT
-  input: GET.miss
-  name: branch
+        - EXIT_MISS
+      else:
+        - EXIT_HIT
+      input: GET.miss
+      name: branch
     - type: call
       method: GET
       url: http://localhost:8080/anything
