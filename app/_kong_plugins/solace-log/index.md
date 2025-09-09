@@ -6,7 +6,7 @@ content_type: plugin
 
 publisher: kong-inc
 tier: enterprise
-description: 'Publish request and response logs to a Solace topic'
+description: 'Publish request and response logs to a Solace endpoint or topic'
 
 products:
     - gateway
@@ -52,10 +52,10 @@ related_resources:
     url: /event-gateway/
 ---
 
-Publish request and response logs to a [Solace](https://solace.com/) topic.
-For more information, see [Understanding Solace topics](https://docs.solace.com/Get-Started/what-are-topics.htm).
+Publish request and response logs in `JSON` format to a [Solace](https://solace.com/) endpoint or topic.
+For more information, see [Solace Event Messaging Overview](https://docs.solace.com/Messaging/messaging-overview.htm).
 
-Kong also provides Solace plugins for request and response transformations:
+Kong also provides plugins for publishing messages to and consuming messages from Solace:
 * [Solace Upstream](/plugins/solace-upstream/)
 * [Solace Consume](/plugins/solace-consume/)
 
@@ -65,7 +65,11 @@ Kong also provides Solace plugins for request and response transformations:
 
 ## Implementation details
 
-TBA
+This plugin leverages the [log PDK](/gateway/pdk/reference/kong.log/) to collect and [customize](#custom-fields-by-lua) log fields.
+
+The prepared log message is sent to Solace broker via the official [Solace C API](https://docs.solace.com/API/Messaging-APIs/C-API/c-api-home.htm). The sending job is executed in a background timer context, such that it would not block the client requests.
+
+If the [custom Lua code](#custom-fields-by-lua) associated with the log fields fails to execute, the relavent fields remain untouched.
 
 ## Custom fields by Lua
 
