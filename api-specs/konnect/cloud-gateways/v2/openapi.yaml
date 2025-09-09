@@ -939,6 +939,7 @@ components:
     ApiAccess:
       description: Type of API access data-plane groups will support for a configuration.
       type: string
+      example: private+public
       default: private+public
       enum:
         - private
