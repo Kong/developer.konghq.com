@@ -38,7 +38,11 @@ If you're new to Insomnia Enterprise, this document will guide you through the f
 ## 1. Activate your Enterprise membership
 
 Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code.
-The first thing you'll need to do is go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update), select the Enterprise plan, and enter your activation code.
+The first thing you'll need to do is:
+
+1. Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update).
+1. Select the Enterprise plan, and enter your activation code.
+
 Once this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
 
 ## 2. Create organizations
@@ -47,12 +51,15 @@ By default, your account is created with an organization named **Personal Worksp
 You can invite users to that organization, but you can also create other organizations to manage access to projects.
 For example, you could have a _Product_ organization and an _Engineering_ organization, with different projects accessible to different users.
 
-To create organizations, go to [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations) and click **New organization**.
+To create organizations:
+1. Go to [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
+1. Click **New organization**.
+1. Enter a name and click **Create organization**.
 
 ## 3. Create teams
 
 You can add individual users to organizations, but you can also create teams and link them to organizations.
-Using the example above, you could create:
+Using the _Product_ and _Engineering_ orgs example above, you could create:
 
 * An _Admin_ team which has access to both organizations
 * A _Dev_ team which has access to the engineering organization only
@@ -61,7 +68,12 @@ Using the example above, you could create:
 {:.info}
 > You can either create teams manually, or through your [SCIM](#set-up-scim) provider. Teams created manually can be synchronized with SCIM teams.
 
-To create teams manually, go to [**Teams**](https://app.insomnia.rest/app/enterprise/team) and click **Create Team**. Once a team is created, open it and click the **+** button to link one or several organizations to the team. 
+To create teams manually:
+
+1. Go to [**Teams**](https://app.insomnia.rest/app/enterprise/team).
+1. Click **Create Team**. 
+1. Enter a name and description, and click **Create team**.
+1. Once a team is created, open it and click the **+** button to link one or several organizations to the team.
 
 Each time a new member is added to the team, they will automatically have access to the linked organizations.
 
@@ -75,14 +87,14 @@ New users can be invited to your Enterprise instance in three different ways:
 {:.info}
 > **Notes**:
 > * Each pending invitation uses a seat in your instance.
-> * An invitation expire after 30 days. Once an invitation expires, the corresponding seat is freed.
+> * An invitation expires after 30 days. Once an invitation expires, the corresponding seat is freed.
 > * When you remove a user from an org or team, you also need to remove them from the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page to free the seat.
 
 ### Invite a user to an organization
 
 1. Go to [Organizations](https://app.insomnia.rest/app/dashboard/organizations) and open the org in which you want to invite users.
 1. In the **Collaborators** tab, enter the users' email addresses and click **Invite**.
-1. By default, users are added with **Member** role, but you can change their role to **Admin** if needed.
+1. By default, users are added with the **Member** role, but you can change their role to **Admin** if needed.
 
 Once the users accept the invitation, they will have access to the content in the selected organization.
 
