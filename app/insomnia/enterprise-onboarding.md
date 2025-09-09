@@ -127,7 +127,7 @@ See our how-to guides to learn how to configure SCIM for Insomnia with:
 
 ## 8. Configure storage control
 
-Insomnia allows you to have control over the [storage options](/insomnia/storage/) used in your instance. You cna define whether users can use [Cloud Sync](/insomnia/storage/#cloud-sync), [Local Vault](/insomnia/storage/#local-vault), or [Git Sync](/insomnia/storage/#git-sync) storage, or a combination of these.
+Insomnia allows you to have control over the [storage options](/insomnia/storage/) used in your instance. You can define whether users can use [Cloud Sync](/insomnia/storage/#cloud-sync), [Local Vault](/insomnia/storage/#local-vault), or [Git Sync](/insomnia/storage/#git-sync) storage, or a combination of these.
 
 To set up storage control:
 1. Go to [**Storage**](https://app.insomnia.rest/app/enterprise/storage).
