@@ -45,7 +45,7 @@ prereqs:
 
 ## Export your Postman content
 
-Kong provides the [Postman Exporter](https://www.npmjs.com/package/organize-postman-export) tool, which allows you to export Postman content and organize the files in a structure supported by Insomnia for import into multiple projects. Insomnia will create a project for each Postman workspace and import each workspace's collections and environment in the corresponding project.
+Kong provides the [Postman Exporter](https://www.npmjs.com/package/organize-postman-export) tool, which allows you to export Postman content and organize the files in a structure supported by Insomnia for import into multiple projects. Insomnia will create a project for each Postman workspace and import each workspace's collections, environments, and global variables in the corresponding project.
 
 First, make sure that you have set the `POSTMAN_API_KEY` environment variable to your [Postman API key](#postman-api-key). You can also use the `--api-key` flag in your commands.
 
@@ -62,14 +62,21 @@ You will be prompted to install the package if you're using it for the first tim
 
 🚀 Starting Postman data export...
 📥 Fetching all workspaces...
-🔎 Found 1 workspaces
+🔎 Found 2 workspaces
 
-📂 Processing workspace: Username's Workspace
+📂 Processing workspace: My Internal Workspace
   📚 Exporting 2 collections...
-     ✅ Exported collection: Uplisting API [Public].postman_collection.json
-     ✅ Exported collection: Total Expert Public API.postman_collection.json
+     ✅ Exported collection: API 1.postman_collection.json
+     ✅ Exported collection: API 2.postman_collection.json
   🌍 Exporting 1 environments...
-     ✅ Exported environment: Public API Details.template.postman_environment.json
+     ✅ Exported environment: Global Environment 1.postman_environment.json
+  🌐 Exporting global variables...
+     ✅ Exported global variables: globals.postman_globals.json
+📂 Processing workspace: My Public Workspace
+  📚 Exporting 1 collections...
+     ✅ Exported collection: API 3.postman_collection.json
+  🌍 Exporting 1 environments...
+     ✅ Exported environment: Global Environment 2.postman_environment.json
   🌐 No global variables found in the workspace
 
  🎉 All data export completed!
