@@ -19,6 +19,8 @@ related_resources:
     url: /insomnia/enterprise/
   - text: Enterprise user management
     url: /insomnia/enterprise-user-management/
+  - text: Get started with Insomnia Enterprise
+    url: /insomnia/enterprise-onboarding/
 ---
 
 ## Enable Enterprise membership

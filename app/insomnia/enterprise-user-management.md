@@ -18,6 +18,8 @@ tier: enterprise
 related_resources:
   - text: Enterprise
     url: /insomnia/enterprise/
+  - text: Get started with Insomnia Enterprise
+    url: /insomnia/enterprise-onboarding/
   - text: Team RBAC and domain capture
     url: https://konghq.com/blog/product-releases/insomnia-teams-rbac-and-domain-capture
   - text: Organizations
