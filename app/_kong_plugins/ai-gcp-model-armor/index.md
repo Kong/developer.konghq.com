@@ -30,15 +30,22 @@ topologies:
     - cloud-gateways
     - serverless
 
-
-icon: plugin-slug.png
+icon: ai-gcp-model-armor.png
 
 tags:
    - ai
----
-# GCP Model Armor Plugin
 
-The **GCP Model Armor** plugin integrates Kong AI Gateway with Google Cloud’s Model Armor service to enforce content safety guardrails on AI requests and responses. It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsafe content from being processed or returned to users.
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
+---
+
+The **GCP Model Armor** plugin integrates Kong AI Gateway with [Google Cloud’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses. 
+It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsafe content from being processed or returned to users.
 
 ## Features
 
@@ -53,11 +60,11 @@ columns:
     key: description
 rows:
   - feature: Request and response guardrails
-    description: Checks chat requests and chat responses to prevent unsafe content. Controlled by `guarding_mode` (INPUT, OUTPUT, or BOTH).
+    description: Checks chat requests and chat responses to prevent unsafe content. Controlled by `guarding_mode` (`INPUT`, `OUTPUT`, or `BOTH`).
   - feature: Single template enforcement
     description: Applies one GCP Model Armor template for all inspections, ensuring consistent filtering. Set with `template_id`.
   - feature: Reveal blocked categories
-    description: Optionally show the categories that triggered blocking (for example, "hate speech"). Controlled by `reveal_failure_categories`.
+    description: Optionally show the categories that triggered blocking (for example, `"hate speech"`). Controlled by `reveal_failure_categories`.
   - feature: Streaming response inspection
     description: Buffers streaming responses and terminates if unsafe content is detected. Configurable via `response_buffer_size`.
   - feature: Custom failure messages
@@ -110,7 +117,7 @@ columns:
 rows:
   - field: |
       `guarding_mode`
-    description: Set to INPUT for request-only inspection, OUTPUT for response-only, or BOTH to guard both directions.
+    description: Set to `INPUT` for request-only inspection, `OUTPUT` for response-only, or `BOTH` to guard both directions.
   - field: |
       `request_failure_message` / `response_failure_message`
     description: Provide user-friendly error messages when prompts or responses are blocked.
@@ -120,7 +127,7 @@ rows:
   - field: |
       `response_buffer_size`
     description: Tune how much of the upstream response is buffered before inspection; smaller values reduce latency.
-  - field: Default Last Message Inspection
+  - field: Default last message inspection with `text_source`
     description: Keep the default behavior of checking only the last user prompt message for highest accuracy.
 {% endtable %}
 
