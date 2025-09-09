@@ -39,9 +39,9 @@ config:
       username: admin
       password: admin
     
-    flow:
-      binds:
-        - name: /topic/$(uri_captures['topic_id_1'])/test/$(uri_captures['topic_id_2'])
+  flow:
+    binds:
+      - name: /topic/$(uri_captures['topic_id_1'])/test/$(uri_captures['topic_id_2'])
 
 tools:
   - deck

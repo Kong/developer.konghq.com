@@ -17,16 +17,16 @@ variables:
     value: $QUEUE_NAME
 
 config:
-  mode: websocket
+  mode: WEBSOCKET
   session:
     host: ${host}
     authentication:
       scheme: BASIC
       username: admin
       password: admin
-    flow:
-      binds:
-        - name: ${queue_name}
+  flow:
+    binds:
+      - name: ${queue_name}
 
 tools:
   - deck

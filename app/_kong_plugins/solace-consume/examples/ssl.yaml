@@ -39,9 +39,9 @@ config:
       username: admin
       password: admin
     
-    flow:
-      binds:
-        - name: ${queue_name}
+  flow:
+    binds:
+      - name: ${queue_name}
 
 tools:
   - deck
