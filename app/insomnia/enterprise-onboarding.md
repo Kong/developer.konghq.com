@@ -59,7 +59,7 @@ To create organizations:
 ## 3. Create teams
 
 You can add individual users to organizations, but you can also create teams and link them to organizations.
-Using the _Product_ and _Engineering_ orgs example above, you could create:
+Using the _Product_ and _Engineering_ organizations example above, you could create:
 
 * An _Admin_ team which has access to both organizations
 * A _Dev_ team which has access to the engineering organization only
