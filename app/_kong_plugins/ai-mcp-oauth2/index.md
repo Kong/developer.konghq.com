@@ -39,7 +39,7 @@ search_aliases:
   - MCP
 
 
-icon: plugin-slug.png # e.g. acme.svg or acme.png
+icon: ai-mcp-proxy.png
 
 categories:
    - ai
