@@ -66,7 +66,7 @@ faqs:
       * Check if the Solace broker is properly configured for SSL connections
       * Verify that the broker's SSL certificate is valid
       * Verify that the plugin has [`config.session.ssl_validate_certificate`](./reference/#schema--config-session-ssl-validate-certificate) set to `true`
-      * Ensure the correct port is being used for SSL connections (usually port 55443)
+      * Ensure that the correct port is being used for SSL connections (usually port 55443)
       
       Note that the plugin doesn't implement any retry logic, so if the connection fails, the client has to retry sending the message.
   - q: Connections to Solace are failing.
@@ -87,7 +87,7 @@ faqs:
       * Increase the `ack` timeout (`ack_max_wait_time_ms`)
       * Consider using direct messaging instead of guaranteed messaging for higher throughput
       
-      Since {{site.base_gateway}} workers are single-threaded, this plugin uses once Solace context per {{site.base_gateway}} worker with up to 4 sessions per plugin. 
+      Since {{site.base_gateway}} workers are single-threaded, this plugin uses one Solace context per {{site.base_gateway}} worker with up to 4 sessions per plugin. 
       All sessions on a plugin share the same event loop. The plugin executes non-blocking event handling to avoid delaying {{site.base_gateway}} requests.
 
       {:.info}
@@ -110,6 +110,8 @@ Kong also provides Solace plugins for logging and publishing messages:
 * [Solace Upstream](/plugins/solace-upstream/)
 
 ## Use cases and examples
+
+See the following table for Solace Consume use cases:
 
 {% table %}
 columns:
@@ -135,10 +137,10 @@ rows:
 ## Implementation details
 
 The plugin supports the following modes of operation:
-* `polling`: Check for messages at set intervals instead of waiting for a push notification (default)
-* `auto`: Determine the mode automatically from the client request
-* `server-sent-events`: Stream messages using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
-* `websocket`: Stream messages over a [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) connection
+* `polling`: Checks for messages at set intervals instead of waiting for a push notification (default)
+* `auto`: Determines the mode automatically from the client request
+* `server-sent-events`: Streams messages using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
+* `websocket`: Streams messages over a [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) connection
 
 ### WebSocket mode
 
