@@ -106,7 +106,7 @@ In the consumer group plugin flow:
    {:.info}
    > If using OIDC, you don’t need to manually map credentials. The OIDC plugin automatically maps clients to consumers based on token claims.
 2. The client defines the required Consumer Groups in {{site.konnect_short_name}}, and then applies the desired plugin at the consumer group scope.
-3. The client assigns Each consumer to the appropriate consumer group. Once assigned, the plugin configuration at the group level automatically applies to the consumer.
+3. The client assigns each consumer to the appropriate consumer group. Once assigned, the plugin configuration at the group level automatically applies to the consumer.
 
 ## Dynamic claim templates
 
