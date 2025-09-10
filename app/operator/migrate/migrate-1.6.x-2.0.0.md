@@ -66,7 +66,7 @@ helm uninstall kgo -n kong-system
 
 ### Step 2: Label the Kong CA Certificate Secret
 
-To ensure the Kong operator can properly reconcile the CA certificate secret, it must have the following label:
+To ensure the Kong Operator can properly reconcile the CA certificate secret, it must have the following label:
 
 ```bash
 kubectl label secrets -n kong-system kong-operator-ca konghq.com/secret=true
