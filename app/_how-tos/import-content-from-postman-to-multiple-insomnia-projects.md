@@ -34,14 +34,14 @@ prereqs:
   inline:
   - title: Postman API key
     content: |
-      This tutorial requires a Postman API key. In your Postman account, navigate to **API keys**, generate a key, and export it as an environment variable:
+      This tutorial requires a Postman API key. In your Postman account settings, navigate to **API keys**, generate a key, and export it as an environment variable:
       ```sh
       export POSTMAN_API_KEY='your-postman-api-key'
       ```
     icon_url: /assets/icons/postman.svg
   - title: Bulk import enabled
     content: |
-      This tutorial requires the **Bulk import** feature on your organization. This feature is not available by default, please reach out to your Customer Success Manager to enable it, and provide the organization ID. The ID starts with `org_`, and you can find it in the page URL when you open your organization in [Insomnia Admin](https://app.insomnia.rest/app/dashboard/organizations).
+      This tutorial requires the **Bulk import** feature on your organization. This feature is not available by default. Reach out to your Customer Success Manager to enable it, and provide your organization ID. The ID starts with `org_`, and you can find it in the page URL when you open your organization in [Insomnia Admin](https://app.insomnia.rest/app/dashboard/organizations).
 
     icon_url: /assets/icons/insomnia/insomnia.svg
 
@@ -53,7 +53,7 @@ faqs:
       If you change the type to Git Sync, you'll need to create a repository for each project and link the repository to the project manually. This will be improved in a future release.
   - q: How does Insomnia transform my Postman data?
     a: | 
-       During the import, Insomnia transforms your content to convert Postman syntax to Insomnia syntax. We regularly update these transformations. However, there are some elements that we'll likely never be able to detect and transform. For example:
+       During the import, Insomnia transforms your content to convert Postman syntax to Insomnia syntax. We regularly update these transformations. The following Postman elements have limitations:
        * `tests.property = expression` syntax (only bracket notation supported)
        * Expressions without semicolons in `tests` assignments
        * `request` object operations
@@ -64,7 +64,7 @@ faqs:
 
 ## Export your Postman content
 
-Kong provides the [Postman Exporter](https://www.npmjs.com/package/organize-postman-export) tool, which allows you to export Postman content and organize the files in a structure supported by Insomnia for import into multiple projects within the same organization. Insomnia will create a project for each Postman workspace and import each workspace's collections, environments, and global variables in the corresponding project.
+The [Postman Exporter](https://www.npmjs.com/package/organize-postman-export) tool allows you to export your Postman content and files to Insomnia while preserving the folder structure. In Insomnia, this imports the files into multiple projects within the same organization. Insomnia will create a project for each Postman workspace and import each workspace's collections, environments, and global variables in the corresponding project.
 
 First, make sure that you have set the `POSTMAN_API_KEY` environment variable to your [Postman API key](#postman-api-key). You can also use the `--api-key` flag in your commands.
 
@@ -72,6 +72,8 @@ Run the following command to export and organize your Postman content:
 ```sh
 npx organize-postman-export export
 ```
+{:.info}
+> If needed, you can use the `--output` flag to specify an output directory.
 
 You will be prompted to install the package if you're using it for the first time. Once it's done running, you should get a response similar to this:
 ```sh
@@ -102,15 +104,18 @@ You will be prompted to install the package if you're using it for the first tim
 ```
 {:.no-copy-code}
 
-{:.info}
-> If needed, you can use the `--output` flag to specify an output directory.
+This creates a `postman_workspaces` directory in your working directory with the exported content and files.
 
 ## Import your content to Insomnia
 
-To import the output of the Postman export to Insomnia, make e your have the [bulk import option enabled](#bulk-import-enabled).
+To import the output of the Postman export to Insomnia, do the following:
 
-1. In your Insomnia app, navigate to **Preferences** > **Data** and click **Import projects**.
-1. Select the Postman Exporter output directory and click **Import**.
+1. In your Insomnia app, navigate to **Preferences** > **Data**.
+1.  Click **Import projects**.
+1. Click **Choose folder**.
+1. Select the `postman_workspaces` Postman Exporter output directory.
+1. Click **Import**.
+   
    {:.info}
-   > You can select the **Skip importing projects that already exist** checkbox if you want to avoid duplicate projects. Insomnia will ignore directories with the same e as existing projects.
+   > You can select the **Skip importing projects that already exist** checkbox if you want to avoid duplicate projects. Insomnia will ignore directories with the same name as existing projects.
 1. Once Insomnia is done importing your content, click **Confirm**.
