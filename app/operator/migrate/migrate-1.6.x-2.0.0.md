@@ -92,7 +92,7 @@ helm upgrade --install ko kong/kong-operator
 {:.info}
 > **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release.
 
-### Step 5: Verify the Installation
+### Step 5: Verify the installation
 
 Verify that Kong Operator 2.0.0 is running correctly:
 
