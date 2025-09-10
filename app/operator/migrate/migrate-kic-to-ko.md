@@ -27,13 +27,16 @@ In this guide, we will walk you through the steps to migrate from {{site.kic_pro
 
 ## Prerequisites
 
-Before starting the migration, ensure you have:
+Before starting the migration, ensure you:
 
 1. **Backup your current configuration**
 
-1. **Note down the current {{ site.base_gateway }} version that you use.**
-
-1. **Access to Kubernetes cluster** with admin privileges
+2. **Verify current operator version**:
+   
+   ```bash
+   helm list -n kong-system
+   ```
+1. Can **Access the Kubernetes cluster** with admin privileges
 
 1. **Verify cert-manager is installed** (recommended for webhooks certificate management):
 
@@ -49,15 +52,15 @@ The migration process requires several manual steps due to breaking changes in c
 
 ### Step 1: Uninstall existing KIC Helm Release
 
-Uninstall `helm` release which was used to deploy {{ site.base_gateway }} and {{ site.kic_product_name_short }}.
+First, uninstall the Helm release that was used to deploy {{ site.base_gateway }} and {{ site.kic_product_name_short }}.
 
 ```bash
-helm uninstall ${RELEASE_NAME} -n ${RELEASE_NAMESPACE}
+helm uninstall kic -n kong-system
 ```
 
 ### Step 2: Install KO
 
-Install KO using `helm`
+Install the new Kong Operator using Helm:
 
 ```bash
 helm repo update kong
@@ -67,22 +70,24 @@ helm upgrade --install ko kong/kong-operator \
   --take-ownership \
   --set env.ENABLE_CONTROLLER_KONNECT=true \
   --set ko-crds.enabled=true \
-  --set global.conversionWebhook.certManager.enabled=true
+  --set global.conversionWebhook.enabled=true \
+  --set global.conversionWebhook.certManager.enabled=true 
 ```
 
 ### Step 3: Verify the Installation
 
 Verify that Kong Operator 2.0.0 is running correctly:
 
+Check the operator deployment:
 ```bash
-# Check the operator deployment
 kubectl get pod -n kong-system
-
-# Check operator logs
+```
+Check operator logs:
+```
 kubectl logs -n kong-system -l app=ko-kong-operator
 ```
 
-### Step 4: Prepare `Gateway` manifest to replace {{ site.base_gateway }} and {{ site.kic_product_name_short }}
+### Step 4: Prepare the `Gateway` manifest to replace {{ site.base_gateway }} and {{ site.kic_product_name_short }}
 
 KO uses CRDs to manage among other things: {{ site.base_gateway }} and the ingress controller.
 
@@ -95,8 +100,9 @@ To customize the `Gateway` manifest for your environment, you can use Kong's `Ga
 Please refer to the following example which can serve as a base for your configuration:
 
 ```yaml
+echo '
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v2beta1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong
   namespace: default
@@ -107,7 +113,7 @@ spec:
         spec:
           containers:
           - name: proxy
-            image: kong/kong-gateway:3.11 # Use Kong Gateway version that matches your deployment.
+            image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
   controlPlaneOptions:
     featureGates:
     - name: GatewayAlpha
@@ -141,11 +147,12 @@ spec:
   - name: http
     protocol: HTTP
     port: 80
+' | kubectl apply -f -
 ```
 
-Learn more about the parameters of `GatewayConfiguration` on [the reference page](/operator/reference/custom-resources/#gatewayconfiguration).
+For more information on the `GatewayConfiguration` parameters review [the reference page](/operator/reference/custom-resources/#gatewayconfiguration).
 
-### Step 5: Verify `Gateway` status
+### Step 5: Validate `Gateway` status
 
 At this point the `Gateway` should be marked as `Programmed` in its status:
 
