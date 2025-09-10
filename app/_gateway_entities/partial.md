@@ -47,7 +47,11 @@ Some entities in {{site.base_gateway}} share common configuration settings that 
 
 Partials address this issue by allowing you to extract shared configurations into reusable entities that can be linked to multiple plugins. To ensure validation and consistency, Partials have defined types. 
 
-{{site.base_gateway}} supports the following types of Partials, `redis-ce` and `redis-ee`. `redis-ce` has a shorter and simpler configuration, whereas `redis-ee` provides options for configuring Redis Sentinel or Redis Cluster connections. Each plugin that supports Partials only supports one of these types.
+{{site.base_gateway}} supports the following types of Partials; each plugin supports only one type:
+- `redis-ce`: A shorter, simpler configuration.
+- `redis-ee`: A configuration with support for Redis Sentinel or Redis Cluster connections.
+
+Any plugin that supports Redis configuration can reference those settings using Partial entities, enabling shared configuration across plugin instances.
 
 {:.info}
 > In {{site.konnect_short_name}}, Partials are only supported for bundled {{site.konnect_short_name}} plugins. Custom plugins don't support Partials.
@@ -69,6 +73,46 @@ data:
 {% endentity_example %}
 
 ## Use Partials
+
+ By defining a Redis Partial once and then referencing it across these plugins, you avoid repeating connection details, reduce configuration errors, and ensure consistent Redis behaviour throughout your gateway. The following plugins use Redis for storing counters, sessions, or cached data:
+
+{% table %}
+columns:
+  - title: Plugin Name
+    key: Name
+  - title: Redis Usage (What’s Stored)
+    key: Redis
+  - title: Benefit of using a Partial
+    key: Benefit
+rows:
+  - Name: [ACME](/_kong_plugins/acme/index.md)
+    Redis: Certificate state (Let’s Encrypt ACME data)
+    Benefit: Keep certificate state storage consistent across environments by reusing one Redis config.
+  - Name: [GraphQL Proxy Caching Advanced](/_kong_plugins/graphql-proxy-cache-advanced/index.md)
+    Redis: Cached GraphQL responses
+    Benefit: Apply the same Redis configuration to multiple GraphQL caches for easier management.
+  - Name: [GraphQL Rate Limiting Advanced](/_kong_plugins/graphql-rate-limiting-advanced/index.md)
+    Redis: GraphQL request counters
+    Benefit: Standardise Redis-based GraphQL rate limiting across endpoints with one Partial.
+  - Name: [OpenID Connect](/_kong_plugins/openid-connect/index.md)
+    Redis: Sessions and tokens
+    Benefit: Reuse Redis settings for session storage, avoiding redundant configs across identity flows.
+  - Name: [Proxy Caching Advanced](/_kong_plugins/proxy-cache-advanced/index.md)
+    Redis: Cached API responses
+    Benefit: Reuse a single Redis definition to simplify and stabilise cache behaviour.
+  - Name: [Rate Limiting](/_kong_plugins/rate-limiting/index.md)
+    Redis: Request counters
+    Benefit: Apply the same Redis setup across multiple rate-limiting policies without duplication.
+  - Name: [Rate Limiting Advanced](/_kong_plugins/rate-limiting-advanced/index.md)
+    Redis: Request counters (supports Sentinel/Cluster)
+    Benefit: Centralise complex Redis HA configuration so all services use it reliably.
+  - Name: [Response Rate Limiting](/_kong_plugins/response-ratelimiting/index.md)
+    Redis: Response counters
+    Benefit: Ensure consistent Redis-backed throttling rules across different services.
+  - Name: [SAML](/_kong_plugins/saml/index.md)
+    Redis: Session data
+    Benefit: Centralise session handling so all SAML flows share the same Redis configuration.              
+{% endtable %}
 
 The following examples describe how to use Partials with plugins.
 
