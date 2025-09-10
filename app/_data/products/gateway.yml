@@ -906,7 +906,6 @@ releases:
 
   - release: "3.11"
     ee-version: "3.11.0.2"
-    latest: true
     eol: 2026-07-03
     distributions:
       - amazonlinux2:
@@ -1083,7 +1082,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.12"
-    label: unreleased
+    latest: true
     ee-version: "3.12.0.0"
     eol: 2026-09-20
     distributions:
@@ -1391,6 +1390,9 @@ release_dates:
 
 public_keys:
   # e.g.: https://cloudsmith.io/~kong/repos/internal-gateway-37/pub-keys/
+  "312":
+    rsa_key: CF99E3B118DABBFB
+    gpg_key: 875433A518B93006
   "311":
     rsa_key: D0099E9501A25DF6
     gpg_key: CF9CDA9D288571F9
