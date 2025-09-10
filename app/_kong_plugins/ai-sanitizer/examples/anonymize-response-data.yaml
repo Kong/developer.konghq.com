@@ -1,0 +1,27 @@
+description: Configure the AI Sanitizer plugin to use your sanitizer service to anonymize all sensitive data and credentials in LLM responses before they reach the client.
+
+title: Anonymize sensitive data in responses
+
+weight: 900
+
+requirements:
+  - You have enabled the AI Proxy or AI Proxy Advanced plugin
+
+config: 
+  anonymize:
+      - all_and_credentials
+  sanitization_mode: OUTPUT
+  port: 8080
+  host: example.service.com
+  redact_type: placeholder
+  recover_redacted: false
+
+min_version:
+    gateway: '3.12'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
