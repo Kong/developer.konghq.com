@@ -497,8 +497,10 @@ rows:
 
 ### Implicit nodes
 
-Datakit also defines a number of implicit nodes that can be used without being
-explicitly declared. These reserved node names can't be used for user-defined
+Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
+These nodes can either be used without being explicitly declared, or declared under the global resources object.
+
+These reserved node names can't be used for user-defined
 nodes. They include:
 
 <!--vale off-->
@@ -512,23 +514,34 @@ columns:
     key: outputs
   - title: Description
     key: description
+  - title: declaration
+    key: declaration
 rows:
   - node: "`request`"
     inputs: none
     outputs: "`body`, `headers`, `query`"
     description: Reads incoming client request properties
+    declaration: none
   - node: "`service_request`"
     inputs: "`body`, `headers`, `query`"
     outputs: none
     description: Updates properties of the request sent to the service being proxied to
+    declaration: none
   - node: "`service_response`"
     inputs: none
     outputs: "`body`, `headers`"
     description: Reads response properties from the service being proxied to
+    declaration: none
   - node: "`response`"
     inputs: "`body`, `headers`"
     outputs: none
     description: Updates properties of the outgoing client response
+    declaration: none
+  - node: "`vault`"
+    inputs: none
+    outputs: "`$self`"
+    description: Vault reference to hold secret values
+    declaration: "resources.vault"
 {% endtable %}
 <!--vale off-->
 
@@ -556,6 +569,28 @@ If the data is an object, it will automatically be JSON-encoded, and the
 The `request.body` and `service_response.body` outputs have a similar behavior.
 If the corresponding `Content-Type` header matches the JSON mime-type, the
 `body` output is automatically JSON-decoded.
+
+#### Vault node
+The `vault` node is an implicit node that allows you to declare secret references
+and can be used in other nodes as a source of secret values. Vault references are declared
+under the `resources.vault` configuration.
+
+##### Examples
+
+Declare two vault references and use them in a `jq` node:
+```yaml
+resources:
+  vault:
+    secret1: "{vault://env/my-secret1}"
+    secret2: "{vault://aws/my-secret2}"
+nodes:
+  - name: JQ
+    type: jq
+    inputs:
+      secret1: vault.secret1
+      secret2: vault.secret2
+    jq: "."
+```
 
 ### `cache` node
 
@@ -1349,6 +1384,13 @@ Set common request headers for different API requests:
   inputs:
     headers: HEADERS
 ```
+
+## Resources
+
+Datakit supports a global `resources` object that can be used to declare shared resource configurations.
+
+### Vault
+Refer to the [Vault node](#vault-node) for more details on how to use vault references in Datakit.
 
 ## Debugging
 
