@@ -65,9 +65,9 @@ groups:
           - path: /operator/dataplanes/reference/autoscale-workloads/
       - title: Upgrading
         items:
-          - title: Migration Guides
-            url: /operator/migrate/
-            description: Comprehensive guides for upgrading Kong Gateway Operator and migrating CRDs
+          - path: /operator/migrate/migrate-1.6.x-2.0.0/
+          - path: /operator/migrate/konnectextension-konnectid-to-konnectgatewaycontrolplane/
+          - path: /operator/konnect/reference/migrate-1.4-1.5/
           - path: /operator/dataplanes/upgrade/operator/
           - path: /operator/dataplanes/upgrade/gateway/rolling/
           - path: /operator/dataplanes/upgrade/gateway/blue-green/
