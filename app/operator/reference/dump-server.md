@@ -23,7 +23,7 @@ related_resources:
     url: /operator/reference/custom-resources/
   - text: "Troubleshooting control plane status"
     url: /operator/dataplanes/troubleshooting/status/
-  - text: "{{ site.operator_product_name }} Helm Chart"
+  - text: "{{ site.gateway_operator_product_name }} Helm Chart"
     url: https://github.com/Kong/charts/tree/main/charts/kong-operator
 
 min_version:
@@ -31,15 +31,15 @@ min_version:
 faqs:
   - q: How can I inspect the Kong configuration generated for my control plane?
     a: |
-        Enable the dump config server when installing {{ site.operator_product_name }}, then use the
+        Enable the dump config server when installing {{ site.gateway_operator_product_name }}, then use the
         diagnostic endpoints to inspect configurations for debugging and troubleshooting.
 ---
 
-The dump config server is a diagnostic feature in {{ site.operator_product_name }} that allows you to inspect the Kong configuration generated for each ControlPlane. This is particularly useful when debugging configuration issues or understanding how your Kubernetes resources are translated to Kong configuration.
+The dump config server is a diagnostic feature in {{ site.gateway_operator_product_name }} that allows you to inspect the Kong configuration generated for each ControlPlane. This is particularly useful when debugging configuration issues or understanding how your Kubernetes resources are translated to Kong configuration.
 
 ## Enable the dump config server
 
-The dump config server is disabled by default. You must enable it when installing or upgrading {{ site.operator_product_name }}.
+The dump config server is disabled by default. You must enable it when installing or upgrading {{ site.gateway_operator_product_name }}.
 
 Enable the dump config server by setting the values during installation:
 {% navtabs "install" %}

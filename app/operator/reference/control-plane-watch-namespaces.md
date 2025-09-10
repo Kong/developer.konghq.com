@@ -16,7 +16,7 @@ min_version:
   operator: '1.6'
 ---
 
-By default, {{ site.operator_product_name }}'s `ControlPlane` watches all namespaces.
+By default, {{ site.gateway_operator_product_name }}'s `ControlPlane` watches all namespaces.
 This provides a convenient out-of-the-box experience but may not suit all production environments, especially those where multiple teams share the same cluster or in multi-tenant setups.
 
 To limit the namespaces watched by `ControlPlane`, you can set the `watchNamespaces` field in the `ControlPlane`'s `spec`.
@@ -70,14 +70,14 @@ For more information on the `WatchNamespaceGrant` CRD, see the [CRD reference](/
 
 ## Multi-tenancy using watch namespaces {% new_in 2.0 %}
 
-Multi-tenancy, in the context of {{ site.operator_product_name }}, is an approach that allows multiple instances of the {{ site.operator_product_name }} to share the same underlying infrastructure while keeping their data isolated and more specifically to watch disjoint namespaces.
+Multi-tenancy, in the context of {{ site.gateway_operator_product_name }}, is an approach that allows multiple instances of the {{ site.gateway_operator_product_name }} to share the same underlying infrastructure while keeping their data isolated and more specifically to watch disjoint namespaces.
 
-This allows you to configure {{ site.operator_product_name }} itself to watch namespaces instead of always specifying them in the `ControlPlane` resources.
+This allows you to configure {{ site.gateway_operator_product_name }} itself to watch namespaces instead of always specifying them in the `ControlPlane` resources.
 
 {:.warning}
-> **Important:** If you configure watch namespaces on both {{ site.operator_product_name }} and `ControlPlane` resources, they must be configured so that they don't conflict. For example, if the {{ site.operator_product_name }} watches namespaces A and B, the `ControlPlane` resource can only define watch namespaces A and B. If you use other watch namespaces, such as namespace C, the `ControlPlane` object will receive an appropriate status condition and won't reconcile your configuration.
+> **Important:** If you configure watch namespaces on both {{ site.gateway_operator_product_name }} and `ControlPlane` resources, they must be configured so that they don't conflict. For example, if the {{ site.gateway_operator_product_name }} watches namespaces A and B, the `ControlPlane` resource can only define watch namespaces A and B. If you use other watch namespaces, such as namespace C, the `ControlPlane` object will receive an appropriate status condition and won't reconcile your configuration.
 
-You can set watch namespaces for {{ site.operator_product_name }} using several methods:
+You can set watch namespaces for {{ site.gateway_operator_product_name }} using several methods:
 
 {% navtabs "multi-tenant-namespaces" %}
 {% navtab "Helm chart" %}

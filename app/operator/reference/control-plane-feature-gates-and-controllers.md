@@ -1,6 +1,6 @@
 ---
-title: "{{ site.operator_product_name }} ControlPlane feature gates and controllers"
-description: "Configure feature gates and controllers for Kong ControlPlane in {{ site.operator_product_name }}"
+title: "{{ site.gateway_operator_product_name }} ControlPlane feature gates and controllers"
+description: "Configure feature gates and controllers for Kong ControlPlane in {{ site.gateway_operator_product_name }}"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -21,18 +21,18 @@ min_version:
 related_resources:
   - text: Gateway API reference
     url: /operator/dataplanes/gateway-api/
-  - text: Get started with {{ site.operator_product_name }} in {{site.konnect_short_name}}
+  - text: Get started with {{ site.gateway_operator_product_name }} in {{site.konnect_short_name}}
     url: /operator/konnect/get-started/install/
 ---
 
-This guide explains how to configure feature gates and controllers for a ControlPlane in {{ site.operator_product_name }}. Feature gates (`spec.featureGates`) allow you to enable or disable specific features, while controllers (`spec.controllers`) allow you to enable or disable specific resource reconciliation.
+This guide explains how to configure feature gates and controllers for a ControlPlane in {{ site.gateway_operator_product_name }}. Feature gates (`spec.featureGates`) allow you to enable or disable specific features, while controllers (`spec.controllers`) allow you to enable or disable specific resource reconciliation.
 
 You can use these for the following use cases:
 * [Enable Gateway API support](#enable-gateway-api-support)
 * [Minimal Ingress-only configuration](#minimal-ingress-only-configuration)
 * [Enable experimental features](#enable-experimental-features)
 
-## {{ site.operator_product_name }} feature gates
+## {{ site.gateway_operator_product_name }} feature gates
 
 Feature gates control the availability of features in the ControlPlane. They follow the same concept as [Kubernetes feature gates](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/).
 
@@ -95,7 +95,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## {{ site.operator_product_name }} controllers
+## {{ site.gateway_operator_product_name }} controllers
 
 Controllers determine which Kubernetes resources the ControlPlane will reconcile. You can selectively enable or disable controllers based on your needs.
 
@@ -122,13 +122,13 @@ spec:
     type: managedByOwner
 ```
 
-### Available {{ site.operator_product_name }} controllers
+### Available {{ site.gateway_operator_product_name }} controllers
 
 The following tables describe which controllers are available by product or tool.
 
 #### Ingress controllers
 
-The following Ingress controllers are available in {{ site.operator_product_name }}:
+The following Ingress controllers are available in {{ site.gateway_operator_product_name }}:
 <!--vale off-->
 {% table %}
 columns:
@@ -154,7 +154,7 @@ rows:
 
 #### {{site.base_gateway}} controllers
 
-The following {{site.base_gateway}} controllers are available in {{ site.operator_product_name }}:
+The following {{site.base_gateway}} controllers are available in {{ site.gateway_operator_product_name }}:
 <!--vale off-->
 {% table %}
 columns:
@@ -195,7 +195,7 @@ rows:
 
 #### Kubernetes core controllers
 
-The following kubernetes core controllers are available in {{ site.operator_product_name }}:
+The following kubernetes core controllers are available in {{ site.gateway_operator_product_name }}:
 <!--vale off-->
 {% table %}
 columns:
@@ -215,7 +215,7 @@ rows:
 
 #### Gateway API controllers
 
-The following Gateway API controllers are available in {{ site.operator_product_name }}:
+The following Gateway API controllers are available in {{ site.gateway_operator_product_name }}:
 <!--vale off-->
 {% table %}
 columns:
@@ -252,7 +252,7 @@ kubectl get controlplane my-controlplane -o jsonpath='{.status}' | jq .
 The status will show which feature gates and controllers are active.
 
 
-## {{ site.operator_product_name }} feature gate and controller use case examples
+## {{ site.gateway_operator_product_name }} feature gate and controller use case examples
 
 The following sections provide examples using feature gates and controllers for common use cases.
 

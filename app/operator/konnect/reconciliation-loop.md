@@ -1,6 +1,6 @@
 ---
 title: "Reconciliation loop"
-description: "How does the {{ site.operator_product_name }} reconciliation loop work?"
+description: "How does the {{ site.gateway_operator_product_name }} reconciliation loop work?"
 content_type: reference
 layout: reference
 products:
@@ -27,7 +27,7 @@ faqs:
 
 ---
 
-{{site.operator_product_name}} continuously watches your Kubernetes cluster and reconciles its state with {{site.konnect_short_name}}.
+{{site.gateway_operator_product_name}} continuously watches your Kubernetes cluster and reconciles its state with {{site.konnect_short_name}}.
 
 This happens in a loop where the operator detects changes in the cluster and synchronizes them to {{site.konnect_short_name}}. Changes made in the Kubernetes cluster are propagated immediately. Changes made outside the cluster are overwritten within 60 seconds.
 
