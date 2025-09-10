@@ -1,6 +1,6 @@
 ---
-title: "Migrate KonnectExtension from konnectID to KonnectGatewayControlPlane"
-description: "Learn how to migrate your KonnectExtension resources to KonnectGatewayControlPlane before upgrading to KO 2.0.0."
+title: Migrate KonnectExtension from konnectID to KonnectGatewayControlPlane
+description: Learn how to migrate your KonnectExtension resources to KonnectGatewayControlPlane before upgrading to KO 2.0.0.
 content_type: reference
 layout: reference
 products:
@@ -10,7 +10,7 @@ breadcrumbs:
 related_resources:
   - text: Migrating from Kong Gateway Operator 1.6.x to Kong Operator 2.0.0
     url: /operator/migrate/migrate-1.6.x-2.0.0/
-  - text:Migrate Konnect DataPlanes from Kong Gateway Operator 1.4 to 1.5
+  - text: Migrate Konnect DataPlanes from Kong Gateway Operator 1.4 to 1.5
     url: /operator/konnect/reference/migrate-1.4-1.5/
 ---
 
