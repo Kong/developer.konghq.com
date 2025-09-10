@@ -13,8 +13,6 @@ min_version:
 products:
   - mesh
 
-works_on:
-  - on-prem
 
 tldr:
   q: How can I configure {{site.mesh_product_name}} to only manage specific namespaces?
@@ -114,9 +112,9 @@ Run the following commands to create a first namespace and install an instance o
 
 This confirms that:
 
-* A `Dataplane` was created
-* The pod includes the `kuma-sidecar`
-* A `RoleBinding` named `{{ kuma-control-plane-workloads }}` grants elevated access to the control plane
+* A `Dataplane` was created.
+* The pod includes the `kuma-sidecar`.
+* A `RoleBinding` named `kong-mesh-control-plane-workloads` grants elevated access to the control plane.
 
 ## Create a second namespace in which {{site.mesh_product_name}} doesn't run
 
@@ -172,9 +170,9 @@ Check that the control plane is **not** managing resources in `second-namespace`
    {:.no-copy-code}
 
 This confirms that:
-* The control plane does not have permission to manage this namespace
-* The pod was started without sidecar injection
-* No `RoleBinding` was created to grant control plane access
+* The control plane does not have permission to manage this namespace.
+* The pod was started without sidecar injection.
+* No `RoleBinding` was created to grant control plane access.
 
 ## Update {{site.mesh_product_name}} to also manage the second namespace
 
