@@ -5,6 +5,9 @@ sections:
       - path: /kubernetes-ingress-controller/
       - path: /kubernetes-ingress-controller/support/
       - path: /kubernetes-ingress-controller/**/*
+      - title: Kong Ingress Controller changelog
+        description: Release notes for Kong Ingress Controller.
+        url: https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md
     auto_exclude: true
   - title: Get Started
     items:

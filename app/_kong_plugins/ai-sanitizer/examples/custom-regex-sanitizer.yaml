@@ -1,0 +1,37 @@
+description: Configure the plugin to anonymize requests using a custom regex pattern for GitHub personal access tokens.
+
+title: Anonymize requests with a GitHub token pattern
+
+weight: 920
+
+requirements:
+  - You have enabled the [AI Proxy or AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - You have pulled and run an [AI PII Anonymizer service image](/plugins/ai-sanitizer/#ai-pii-anonymizer-service)
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+  port:
+    description: The sanitizer service's port
+    value: $SANITIZER_SERVICE_PORT
+
+config:
+  anonymize:
+      - custom
+  custom_patterns:
+      - name: github_token
+        regex: "ghp_[A-Za-z0-9]{36}"
+        score: 0.9
+  port: ${port}
+  host: ${host}
+  redact_type: synthetic
+  stop_on_error: true
+  recover_redacted: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

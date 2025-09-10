@@ -96,17 +96,17 @@ The exact execution of these steps will vary depending on your environment.
 1. Stop any {{site.base_gateway}} configuration updates (for example, [Admin API](/api/gateway/admin-ee/) calls to `:8001/config`). 
 This is critical to guarantee data consistency between cluster X and cluster Y.
 
-2. Back up data from the current cluster X by following the 
+1. Back up data from the current cluster X by following the 
 [declarative configuration backup instructions](/gateway/upgrade/backup-and-restore/#declarative-backup).
 
-3. Evaluate factors that may impact the upgrade, as described in [Upgrade considerations](/gateway/upgrade/).
+1. Evaluate factors that may impact the upgrade, as described in [Upgrade considerations](/gateway/upgrade/).
 You may have to consider customization of both [`kong.conf`](/gateway/manage-kong-conf/) and {{site.base_gateway}} configuration data.
 
-4. Evaluate any changes that have happened between releases:
+1. Evaluate any changes that have happened between releases:
     * [Breaking changes](/gateway/breaking-changes/)
     * [Full changelog](/gateway/changelog/)
 
-5.  Deploy a new {{site.base_gateway}} cluster of version Y:
+1.  Deploy a new {{site.base_gateway}} cluster of version Y:
     
     1. Install a new cluster running version Y as instructed in the 
     [{{site.base_gateway}} Installation Options](/gateway/install/).
@@ -114,7 +114,9 @@ You may have to consider customization of both [`kong.conf`](/gateway/manage-kon
         Provision the new cluster Y with the same-sized resource capacity as that of 
         the current cluster X.
 
-    2. Perform staging tests against version Y to make sure it works for all use cases. 
+    1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
+
+    1. Perform staging tests against version Y to make sure it works for all use cases. 
     
         For example, does the Key Authentication plugin authenticate requests properly?
 
@@ -125,17 +127,17 @@ You may have to consider customization of both [`kong.conf`](/gateway/manage-kon
         [breaking changes](/gateway/breaking-changes/)
         again to see if you missed anything.
 
-    3. Continuously install and launch more Y nodes.
+    1. Continuously install and launch more Y nodes.
 
-6. Divert traffic from old cluster X to new cluster Y.
+1. Divert traffic from old cluster X to new cluster Y.
     
     This is usually done gradually and incrementally, depending on the risk profile of the deployment. 
     Any load balancers that support traffic splitting will work here, such as DNS, Nginx, Kubernetes rollout mechanisms, and so on.
 
-7. If any issues arise, roll back by setting all traffic to cluster X, investigate the issues, 
+1. If any issues arise, roll back by setting all traffic to cluster X, investigate the issues, 
 and repeat the steps above.
 
-8. When there are no more issues, decommission the old cluster X to complete the upgrade. 
+1. When there are no more issues, decommission the old cluster X to complete the upgrade. 
 
 Write updates to {{site.base_gateway}} can now be performed, though we suggest you keep monitoring metrics for a while.
 

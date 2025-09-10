@@ -10,7 +10,7 @@ metadata:
     - konnect
     - authentication
   products:
-    - konnect-platform
+    - konnect
   breadcrumbs: 
     - /konnect/
 rows:

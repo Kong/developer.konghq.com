@@ -27,16 +27,7 @@ pages:
         url: '/mesh/policies-introduction/'
     min_version:
       mesh: '2.9'
-  -
-    path: app/_src/guides/restrict-permissions-to-selected-namespaces-on-kubernetes.md
-    title: 'Restrict permissions to selected namespaces on Kubernetes'
-    description: 'This guide explains how to limit Kuma to specific namespaces, giving you greater control over security and resource management.'
-    url: /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/
-    related_resources: 
-      - text: Manage control plane permissions on Kubernetes
-        url: '/mesh/manage-control-plane-permissions-on-kubernetes/'
-    min_version:
-      mesh: '2.11'
+      
   -
     path: app/_src/production/secure-deployment/manage-control-plane-permissions-on-kubernetes.md
     title: 'Manage Control Plane permissions on Kubernetes'

@@ -39,9 +39,42 @@ You need a [SwaggerHub API key](https://swagger.io/docs/specification/v3_0/authe
 
 ## Authenticate the SwaggerHub integration
 
+{% navtabs "swaggerhub-integration" %}
+{% navtab "UI" %}
 1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
 2. Select **Add SwaggerHub Instance**.
 3. Add your Swaggerhub API key and name the instance.
+{% endnavtab %}
+{% navtab "Terraform" %}
+Use the [`konnect_integration_instance`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/integration_instance.tf) and [`konnect_integration_instance_auth_credential`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/integration_instance_auth_credential.tf) resources:
+```hcl
+echo '
+resource "konnect_integration_instance" "my_integrationinstance" {
+  name             = "swaggerhub"
+  display_name     = "SwaggerHub"
+  integration_name = "swaggerhub"
+
+  config = jsonencode({})
+}
+
+resource "konnect_integration_instance_auth_credential" "my_integrationinstanceauthcredential" {
+  integration_instance_id = konnect_integration_instance.my_integrationinstance.id
+
+  multi_key_auth = {
+    config = {
+      headers = [
+        {
+          name = "authorization"
+          key  = "$SWAGGERHUB_API_KEY"
+        }
+      ]
+    }
+  }
+}
+' >> main.tf
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 This will take you to SwaggerHub, where you can use your SwaggerHub API key to grant {{site.konnect_short_name}} access to your account.
 

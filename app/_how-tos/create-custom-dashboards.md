@@ -4,8 +4,8 @@ description: Learn how to create a dashboard from a template in {{site.konnect_s
 content_type: how_to
 automated_tests: false
 products:
-    - konnect-platform
     - advanced-analytics
+    - konnect
 works_on:
     - konnect
 tools:

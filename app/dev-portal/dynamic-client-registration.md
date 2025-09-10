@@ -46,10 +46,28 @@ faqs:
   - q: What connections and protocols are involved when a custom HTTP DCR bridge is configured for a custom IdP?
     a: Kong uses HTTPS to transmit events to the domain you've provided and includes a key that can be used on your custom handler implementation to verify the events are from {{site.konnect_short_name}}.
 ---
+Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal allows an application in the Dev Portal to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. Dev Portal DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
 
-Dynamic Client Registration (DCR) within {{site.konnect_short_name}} Dev Portal allows applications created in the portal to automatically create a linked application in a third-party Identity Provider (IdP).
+In Dev Portal, you can create and use multiple DCR configurations.
 
-This outsources the issuer and management of application credentials to a third party, allowing for additional configuration options and compatibility with various OIDC features provided by the IdP. {{site.konnect_short_name}} offers the flexibility to create multiple DCR configurations.
+
+## How does DCR work in Dev Portal?
+
+After you publish an API that's linked to a Gateway Service with a DCR application authentication strategy applied, developers can register an application with your API in Dev Portal. Dev Portal registers that application as a client in the IdP through DCR and displays the returned credentials to the developer. Requests to your API succeed only when the client presents valid credentials and the application holds a registration for the linked Service.
+
+The following diagram shows how this DCR flow works:
+
+
+{% mermaid %}
+sequenceDiagram
+    actor Developer
+    Developer->> +Dev Portal: Creates an application
+    Dev Portal->>+IdP: Creates an application
+    IdP->>-Dev Portal: Returns client metadata, Client ID, and secrets
+    Dev Portal->>Dev Portal: Saves application record in database with ONLY Client ID mapping
+    Dev Portal->>-Developer: Returns application creation success with client ID and secret
+{% endmermaid %}
+
 
 ## Authentication methods
 

@@ -18,6 +18,9 @@ export class ExitOnFailure extends Error {
 }
 
 function compareVersions(v1, v2) {
+  if (v2 === "next") {
+    return true;
+  }
   const v1Parts = v1.split(".");
   const v2Parts = v2.split(".");
 

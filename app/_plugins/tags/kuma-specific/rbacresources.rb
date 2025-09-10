@@ -29,7 +29,7 @@ module Jekyll
       def initialize(tag_name, text, tokens)
         super
         @markup = text.strip
-        @params = { "filename" => DEFAULT_FILENAME }
+        @params = { 'filename' => DEFAULT_FILENAME }
 
         @markup.split(' ').each do |item|
           key, value = item.split('=')
@@ -42,17 +42,20 @@ module Jekyll
 
         yaml_content = YAML.load_stream(File.read(filename))
         grouped = yaml_content
-          .select { |doc| doc.is_a?(Hash) && %w[ClusterRole ClusterRoleBinding Role RoleBinding].include?(doc["kind"]) }
-          .group_by { |doc| doc["kind"] }
+                  .select do |doc|
+          doc.is_a?(Hash) && %w[ClusterRole ClusterRoleBinding Role
+                                RoleBinding].include?(doc['kind'])
+        end
+                  .group_by { |doc| doc['kind'] }
 
         tab_output = grouped.map do |kind, docs|
           subtabs = docs.map do |doc|
-            name = doc.dig("metadata", "name")
+            name = doc.dig('metadata', 'name')
             if name.nil? || name.strip.empty?
               raise ArgumentError, "RBAC resource of kind '#{kind}' is missing a non-empty metadata.name"
             end
 
-            yaml = YAML.dump(doc).lines.reject { |line| line.strip == "---" }.join.strip
+            yaml = YAML.dump(doc).lines.reject { |line| line.strip == '---' }.join.strip
             <<~SUBTAB
               {% tab #{name} %}
               ```yaml
@@ -88,16 +91,19 @@ module Jekyll
         base_paths = site_config.fetch(PATHS_CONFIG, DEFAULT_PATHS)
 
         base_paths.each do |base_path|
-          candidate = File.join(base_path, release, "raw", @params["filename"])
-          p candidate
-          return candidate if File.exist?(candidate)
+          candidate = [
+            File.join(base_path, release, 'raw', @params['filename']),
+            File.join(base_path, "#{release}.x", 'raw', @params['filename'])
+          ].find { |path| File.exist?(path) }
+
+          return candidate if candidate
         end
 
-
-        fallback = @params["filename"]
+        fallback = @params['filename']
         return fallback if File.exist?(fallback)
 
-        raise ArgumentError, "File not found: #{@params["filename"]} (searched in configured paths and as absolute path)"
+        raise ArgumentError,
+              "File not found: #{@params['filename']} (searched in configured paths and as absolute path)"
       end
     end
   end

@@ -227,7 +227,6 @@ paths:
           $ref: '#/components/responses/IdentityNotFound'
       tags:
         - Auth Settings
-    parameters: []
     patch:
       operationId: update-idp-configuration
       summary: Update IdP Configuration
@@ -359,7 +358,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -370,7 +369,6 @@ paths:
           $ref: '#/components/responses/IdentityNotFound'
       tags:
         - Teams
-    parameters: []
     post:
       operationId: create-team
       summary: Create Team
@@ -413,9 +411,9 @@ paths:
               id:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               email:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               full_name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               active:
                 $ref: '#/components/schemas/BooleanFieldFilter'
           style: deepObject
@@ -643,9 +641,9 @@ paths:
               id:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               email:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               full_name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               active:
                 $ref: '#/components/schemas/BooleanFieldFilter'
           style: deepObject
@@ -732,7 +730,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -847,9 +845,9 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               description:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               konnect_managed:
                 $ref: '#/components/schemas/BooleanFieldFilter'
           style: deepObject
@@ -954,7 +952,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -1000,7 +998,6 @@ paths:
       operationId: get-system-accounts-id-access-tokens-id
       summary: Fetch System Account Access Token
       description: Returns the system account (SA) access token for the SA Access Token ID specified as a path parameter.
-      parameters: []
       responses:
         '200':
           $ref: '#/components/responses/SystemAccountAccessTokenSingle'
@@ -1168,7 +1165,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -1252,7 +1249,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -1852,11 +1849,6 @@ components:
         expires_at: '2022-12-31T12:52:23Z'
         last_used_at: '2022-10-24T13:05:42Z'
       title: System Account Access Token
-    BooleanFieldFilter:
-      description: Filter by a boolean value (true/false).
-      type: boolean
-      example: true
-      title: BooleanFieldFilter
     BaseError:
       description: standard error
       type: object
@@ -2175,9 +2167,22 @@ components:
             detail:
               example: Conflict
     StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
-      type: string
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
     UUID:
       description: Contains a unique identifier used for this resource.
       type: string
@@ -2220,15 +2225,19 @@ components:
       default: false
       title: Identity Provider Enabled Property
     StringFieldContainsFilter:
-      description: Filter a string value field by partial contains.
+      description: Filters on the given string field value by fuzzy match.
       type: object
       properties:
         contains:
           type: string
+      additionalProperties: false
       required:
         - contains
       title: StringFieldContainsFilter
-    StringFieldFilter:
+      x-examples:
+        example-1:
+          contains: some-value
+    LegacyStringFieldFilter:
       description: Filter a string value field either by exact match or partial contains.
       oneOf:
         - $ref: '#/components/schemas/StringFieldEqualsFilter'
@@ -2249,6 +2258,12 @@ components:
         maxLength: 63
       maxProperties: 50
       title: Labels
+    BooleanFieldFilter:
+      description: Filter by a boolean value (true/false).
+      type: boolean
+      title: BooleanFieldFilter
+      x-examples:
+        example-1: true
     LabelsUpdate:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 

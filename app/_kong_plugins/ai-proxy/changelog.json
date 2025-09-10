@@ -100,6 +100,33 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.3": [
+    {
+      "message": "Fixed an issue where the Anthropic provider mapped the wrong stop_reason to Chat and Completions responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where JSON array data is not correctly parsed.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with Azure Managed Identity credentials causing improper request balancing.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock did not properly handle image editing requests through the `image/v1/images/edits` route.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fix panic in LLM observability when populating token usage for AI Proxy token usage details\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",

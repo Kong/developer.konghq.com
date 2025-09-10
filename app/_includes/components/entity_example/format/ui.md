@@ -136,7 +136,7 @@ The following creates a new Certificate with basic configuration:
     ```
 1. Click **Save**.
 {% when 'ca_certificate' %}
-The following creates a new Certificate with basic configuration:
+The following creates a new CA Certificate with basic configuration:
 
 1. Navigate to your Gateway instance:
   * In Konnect, open **API Gateway** from the sidebar, then choose a control plane.

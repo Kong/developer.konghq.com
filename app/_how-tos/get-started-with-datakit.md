@@ -52,6 +52,8 @@ related_resources:
   - text: Datakit plugin
     url: /plugins/datakit/
 
+# temporary setting; will remove once the guide is reworked
+automated_tests: false 
 ---
 
 ## Enable Datakit

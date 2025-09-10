@@ -10,5 +10,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.11.0.3": [
+    {
+      "message": "Fixed the plugin to work with multi-modal content.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

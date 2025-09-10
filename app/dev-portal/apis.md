@@ -18,6 +18,7 @@ api_specs:
 search_aliases:
   - postman
   - publish API specs
+  - konnect-application-auth
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:
@@ -70,11 +71,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api/resource.tf):
+Use the [`konnect_api` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api.tf):
 ```hcl
 echo '
 resource "konnect_api" "my_api" {
-  provider = konnect-beta
   attributes  = "{ \"see\": \"documentation\" }"
   description = "...my_description..."
   labels = {
@@ -117,11 +117,10 @@ body:
 {% endkonnect_api_request %}
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf):
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
 ```hcl
 echo '
 resource "konnect_api_version" "my_apiversion" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   spec = {
     content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
@@ -159,11 +158,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_version/resource.tf):
+Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
 ```hcl
 echo '
 resource "konnect_api_version" "my_apiversion" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   spec = {
     content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
@@ -218,11 +216,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_document/resource.tf):
+Use the [`konnect_api_document` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf):
 ```hcl
 echo '
 resource "konnect_api_document" "my_apidocument" {
-  provider = konnect-beta
   api_id             = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   content            = "...my_content..."
   parent_document_id = "b689d9da-f357-4687-8303-ec1c14d44e37"
@@ -259,7 +256,35 @@ Based on this data, you get the following generated URLs:
 
 You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) to allow developers to create applications and generate credentials or API keys. This is available to data planes running {{site.base_gateway}} 3.6 or later.
 
-This will install the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin can only be configured from the associated Dev Portal and its published APIs.
+When you link a service with an API, {{site.konnect_short_name}} automatically adds the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin is responsible for applying authentication and authorization on the Service. The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate. While you can't directly modify the KAA plugin as it's managed by {{site.konnect_short_name}}, you can modify the plugin's behavior by adding JSON to the advanced configuration of your application auth strategy. 
+
+The following diagram shows how the KAA plugin manages authorization and authentication on the linked Service:
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    actor Client
+    Client->> Kong:
+    Kong->>Konnect Application Auth: Send request
+    Konnect Application Auth->>Konnect Application Auth: Authenticate the request based on the auth strategy
+
+    rect rgb(191, 223, 255)
+    note right of Konnect Application Auth: OIDC Strategy.
+    Konnect Application Auth-->> OIDC Plugin: 
+    OIDC Plugin->> IdP: Sends credentials request
+    IdP ->> OIDC Plugin: return JWT token
+    OIDC Plugin-->>Konnect Application Auth:
+    end
+    rect rgb(191, 223, 255)
+    note right of Konnect Application Auth: Key Auth Strategy.
+    Konnect Application Auth->>Konnect Application Auth: Authenticate Api Key
+    end
+
+    Konnect Application Auth->>Konnect Application Auth: Authorize the request with the authenticated client
+    Konnect Application Auth->>Kong:
+    Kong->>Client:
+ {% endmermaid %}
+ <!--vale on-->
 
 If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your Dev Portal](/dev-portal/self-service/).
 
@@ -283,11 +308,10 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_implementation/resource.tf):
+Use the [`konnect_api_implementation` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_implementation.tf):
 ```hcl
 echo '
 resource "konnect_api_implementation" "my_apiimplementation" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   service = {
     control_plane_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
@@ -380,11 +404,10 @@ method: PUT
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Terraform" %}
-Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect-beta/blob/main/examples/resources/konnect_api_publication/resource.tf):
+Use the [`konnect_api_publication` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_publication.tf):
 ```hcl
 echo '
 resource "konnect_api_publication" "my_apipublication" {
-  provider = konnect-beta
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   auth_strategy_ids = [
     "9c3bed4d-0322-4ea0-ba19-a4bd65d821f6"
