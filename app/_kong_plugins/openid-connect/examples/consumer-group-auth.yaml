@@ -1,0 +1,39 @@
+title: Consumer Group authorization
+description: |
+  Configure Consumer Group mapping with the OpenID Connect plugin.
+  
+extended_description: |
+  Configure Consumer Group mapping with the OpenID Connect plugin.
+  
+  This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods) with Consumer Groups.
+
+  {% include_cached plugins/oidc/client-auth.md %}
+
+weight: 849
+
+requirements:
+  - A configured identity provider (IdP)
+  - At least one [Consumer Group](/gateway/entities/consumer-group/) with a name matching the value defined in `config.consumer_group_claim`
+min_version: 3.12
+config:
+  issuer: ${issuer}
+  auth_methods:
+    - client_credentials
+  consumer_group_claim:
+    - tier
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: authorization
