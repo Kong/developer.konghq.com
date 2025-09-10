@@ -118,3 +118,4 @@ The AI MCP OAuth2 plugin is designed to secure MCP traffic as early as possible 
 > **Note:** Like, the AI MCP Proxy plugin, the AI MCP OAuth2 plugin is not invoked as part of an LLM request flow.
 >
 > Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of LLM request flow.
+> The AI MCP OAuth2 plugin can be used on its own for upstream MCP proxying or in combination with the AI MCP Proxy plugin when request/response conversion is needed.

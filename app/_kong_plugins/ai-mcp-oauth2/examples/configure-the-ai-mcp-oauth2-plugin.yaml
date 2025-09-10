@@ -22,7 +22,7 @@ config:
   claim_to_header:
     - claim: "sub"
       header: "X-User-Id"
-      insecure_relaxed_audience_validation: true
+  insecure_relaxed_audience_validation: true
 
 variables:
   mcp_auth_url:
