@@ -50,7 +50,7 @@ faqs:
     a: |
       By default, projects are created as Cloud Sync projects, however, you can change the type as needed.
       
-      If you change the type to Git Sync, you'll need to create a repository for each project and link the repository to the project manually.
+      If you change the type to Git Sync, you'll need to create a repository for each project and link the repository to the project manually. This will be improved in a future release.
   - q: How does Insomnia transform my Postman data?
     a: | 
        During the import, Insomnia transforms your content to convert Postman syntax to Insomnia syntax. We regularly update these transformations. However, there are some elements that we'll likely never be able to detect and transform. For example:
