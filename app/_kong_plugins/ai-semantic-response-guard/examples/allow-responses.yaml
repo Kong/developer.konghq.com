@@ -1,0 +1,62 @@
+description: Allow only specific LLM responses based on semantic similarity to defined rules.
+
+extended_description: |
+  The AI Semantic Response Guard plugin analyzes the full response from an LLM service and permits it
+  only if it semantically matches one of the configured allow patterns.
+
+  If a response does not match any of the allow patterns, it is blocked with a 400 Bad Request.
+
+title: 'Allow only responses'
+
+weight: 900
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service."
+  - "A [Redis](https://redis.io/docs/latest/) instance or another supported vector database."
+  - "Port `6379`, or your custom Redis port, is open and reachable from {{site.base_gateway}}."
+
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
+
+config:
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${header_value}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  search:
+    threshold: 0.7
+  vectordb:
+    strategy: redis
+    distance_metric: cosine
+    threshold: 0.7
+    dimensions: 1024
+    redis:
+      host: ${redis_host}
+      port: 6379
+  rules:
+    allow_responses:
+      - Network troubleshooting and diagnostics
+      - Cloud infrastructure management (AWS, Azure, GCP)
+      - Cybersecurity best practices and incident response
+      - DevOps workflows and automation
+      - Programming concepts and language usage
+      - IT policy and compliance guidance
+      - Software development lifecycle and CI/CD
+      - Documentation writing and technical explanation
+      - System administration and configuration
+      - Productivity and collaboration tools usage
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
