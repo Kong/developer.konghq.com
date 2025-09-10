@@ -1,6 +1,6 @@
 ---
 title: "Migrate KonnectExtension from konnectID to KonnectGatewayControlPlane"
-description: "Migrate your KonnectExtension resources to use KonnectGatewayControlPlane before upgrading to KO 2.0.0."
+description: "Learn how to migrate your KonnectExtension resources to KonnectGatewayControlPlane before upgrading to KO 2.0.0."
 content_type: reference
 layout: reference
 products:
