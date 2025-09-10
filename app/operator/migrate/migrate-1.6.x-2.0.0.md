@@ -28,7 +28,7 @@ Kong Operator (KO) 2.0.0 represents a major version upgrade from {{site.operator
 
 ## Prerequisites
 
-Before starting the migration, ensure you have:
+Before starting the migration, ensure you:
 
 1. **Backup your current configuration**
 
@@ -86,11 +86,12 @@ helm upgrade --install ko kong/kong-operator \
   --set ko-crds.enabled=true \
   --set global.conversionWebhook.enabled=true \
   --set global.conversionWebhook.certManager.enabled=true 
+```
 
 {:.info}
 > **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release.
 
-### Step 5: Verify the installation
+### Step 4: Verify the installation
 
 Verify that Kong Operator 2.0.0 is running correctly.
 

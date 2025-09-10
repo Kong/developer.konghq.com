@@ -71,6 +71,7 @@ groups:
           - path: /operator/dataplanes/upgrade/operator/
           - path: /operator/dataplanes/upgrade/gateway/rolling/
           - path: /operator/dataplanes/upgrade/gateway/blue-green/
+          - path: /operator/migrate/migrate-kic-to-ko/
       - title: Troubleshooting
         items:
           - path: /operator/dataplanes/troubleshooting/status/
