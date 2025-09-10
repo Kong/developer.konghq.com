@@ -12,6 +12,7 @@ tools:
     - kic
     - deck
     - terraform
+    - konnect-api
 
 description: An Upstream enables load balancing by providing a virtual hostname and collection of Targets (upstream service instances).
 
@@ -294,6 +295,10 @@ rows:
     sticky: "Continues routing to NotReady or terminating pods."
     hashing: "Avoids routing to unhealthy or terminating pods."
 {% endtable %}
+
+### Managing failover Targets {% new_in 3.12 %}
+
+{% include_cached /gateway/failover-targets.md %}
 
 ## Schema
 

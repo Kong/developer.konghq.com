@@ -36,7 +36,7 @@ faqs:
       DNS validation statuses for Dedicated Cloud Gateways are refreshed every 5 minutes.
   - q: How do I delete a custom domain in {{site.konnect_short_name}}?
     a: |
-      In {{site.konnect_short_name}}, go to [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
+      In {{site.konnect_short_name}}, go to [**API Gateway**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
   - q: How does network peering work with Dedicated Cloud Gateway nodes?
     a: |
       Each Cloud Gateway node is part of a dedicated network for its region (e.g., `us-east-1`). 
@@ -209,9 +209,9 @@ arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID
 {% capture account_id %}
 {% navtabs "aws-account-id" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click **Gateway Manager** in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
 1. Click your Dedicated Cloud Gateway.
-1. Click **Networks** in the sidebar.
+1. Navigate to **Networks** in the sidebar.
 1. Configure private networking and click **Transit Gateway**.
 1. Copy the AWS account ID.
 {% endnavtab %}
@@ -235,9 +235,9 @@ region: global
 {% capture network_id %}
 {% navtabs "network-uuid" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click **Gateway Manager** in the sidebar.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
 1. Click your Dedicated Cloud Gateway.
-1. Click **Data Plane Nodes** in the sidebar.
+1. Navigate to **Data Plane Nodes** in the sidebar.
 1. Copy the network ID from the data plane group table.
 {% endnavtab %}
 {% navtab "API" %}
@@ -262,11 +262,13 @@ region: global
 
 ### {{site.konnect_short_name}} configuration
 
-1. Open **Gateway Manager**, choose a Control Plane to open the Overview dashboard, then click **Connect**.
-    
-    The Connect menu will open and display the URL for the Public Edge DNS. Save this URL.
-
-1. Select **Custom Domains** from the side navigation, then **New Custom Domain**, and enter your domain name.
+1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the sidebar.
+1. Click your control plane
+1. Click **Connect**.
+1. From the **Connect** menu, save the **Public Edge DNS** URL.
+1. Navigate to **Custom Domains** in the sidebar.
+1. Click **New Custom Domain**.
+1. Enter your domain name.
 
     Save the value that appears under CNAME. 
 
@@ -343,9 +345,11 @@ body:
 ### AWS Transit Gateway
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in AWS, AWS Transit Gateway is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Transit Gateways](/dedicated-cloud-gateways/transit-gateways/) documentation.
 
-
 ### Azure VNet Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
+
+### GCP VPC Peering
+If you are using Dedicated Cloud Gateways and your upstream services are hosted in GCP, VPC Network Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [GCP VPC Peering](/dedicated-cloud-gateways/gcp-vpc-peering/) documentation.
 
 ## Custom plugins
 
@@ -361,6 +365,17 @@ A custom plugin must meet the following requirements:
 * Cannot run in the `init_worker` phase or create timers
 * Must be written in Lua
 * A [personal or system access token](https://cloud.konghq.com/global/account/tokens) for the {{site.konnect_short_name}} API
+
+### Custom plugin limitations
+
+Keep the following custom plugin limitations in mind when adding them to Dedicated Cloud Gateways:
+
+* Only `schema.lua` and `handler.lua` files are supported. Plugin logic must be self-contained in these two files. You can't use DAOs, custom APIs, migrations, or multiple Lua modules.
+* Custom modules cannot be required when plugin sandboxing is enabled. Eternal Lua files or shared libraries can't be loaded.
+* Custom validation must be implemented in `handler.lua`, not `schema.lua`. In `handler.lua`, it can be logged and handled as part of plugin business logic.
+* Plugin files are limited to 100 KB per upload.
+* Plugins cannot read/write to the {{site.base_gateway}} filesystem.
+* The LuaJIT version is fixed per {{site.base_gateway}} version. Any future major Lua/LuaJIT upgrade will be communicated in advance due to potential breaking changes.
 
 ### How do I add a custom plugin?
 
@@ -382,4 +397,3 @@ Once uploaded, you can manage custom plugins using any of the following methods:
 * [decK](/deck/)
 * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
 * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
-

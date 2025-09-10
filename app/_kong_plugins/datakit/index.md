@@ -449,6 +449,7 @@ invalid connection ("get-bar" -> "response.body"): conflicts with existing conne
 
 The Datakit plugin provides the following node types:
 
+* `cache`: Store and fetch cached data.
 * `call`: Send third-party HTTP calls.
 * `jq`: Transform data and cast variables with `jq` to be shared with other nodes.
 * `exit`: Return directly to the client.
@@ -467,6 +468,10 @@ columns:
   - title: Attributes
     key: attributes
 rows:
+  - nodetype: "cache"
+    inputs: "`key`, `ttl`, `data`"
+    outputs: "`hit`, `miss`, `stored`, `data`"
+    attributes: "`bypass_on_error`, `ttl`"
   - nodetype: "`call`"
     inputs: "`body`, `headers`, `query`"
     outputs: "`body`, `headers`, `status`"
@@ -587,6 +592,30 @@ nodes:
     jq: "."
 ```
 
+### `cache` node
+
+Stored data into cache and fetch cached data from cache.
+
+Inputs:
+
+* `key` (**required**): the cache key string
+* `ttl`: The TTL (Time to Live) in seconds
+* `data`: The data to be cached. If not null, the cache node works in set mode, 
+  storing data into cache; if null, the cache node fetches data
+  
+Outputs:
+
+* `hit`: `true` if a cache hit occured
+* `miss`: `true` if a cache miss occurred
+* `stored`: `true` if data was successfuly stored into cache
+* `data`: The data that was stored into cache
+
+Configuration attributes:
+
+* `bypass_on_error`: if `true`, cache backend errors are treated as a cache 
+  miss
+* `ttl`: The TTL (Time to Live) in seconds
+
 ### `call` node
 
 Send an HTTP request and retrieve the response.
@@ -596,6 +625,13 @@ Inputs:
 * `body`: Request body
 * `headers`: Request headers
 * `query`: Key-value pairs to encode as the request query string
+
+#### `cache` resource
+
+The `cache` node requires a `resources.cache` resource definition containing 
+cache configuration.
+
+{% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
 
 Outputs:
 

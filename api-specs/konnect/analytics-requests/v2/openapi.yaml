@@ -62,88 +62,92 @@ components:
   schemas:
     AnalyticsRequestsQuery:
       oneOf:
-        - title: Filter by field
-          type: object
-          additionalProperties: false
-          properties:
-            filters:
-              type: array
-              items:
-                oneOf:
-                  - $ref: '#/components/schemas/ApiFilterByField'
-                  - $ref: '#/components/schemas/ApiProductFilterByField'
-                  - $ref: '#/components/schemas/ApiProductVersionFilterByField'
-                  - $ref: '#/components/schemas/ApplicationFilterByField'
-                  - $ref: '#/components/schemas/AuthTypeFilterByField'
-                  - $ref: '#/components/schemas/ClientIpFilterByField'
-                  - $ref: '#/components/schemas/ConsumerFilterByField'
-                  - $ref: '#/components/schemas/ControlPlaneFilterByField'
-                  - $ref: '#/components/schemas/ControlPlaneGroupFilterByField'
-                  - $ref: '#/components/schemas/DataPlaneNodeFilterByField'
-                  - $ref: '#/components/schemas/DataPlaneNodeVersionFilterByField'
-                  - $ref: '#/components/schemas/GatewayServiceFilterByField'
-                  - $ref: '#/components/schemas/HeaderHostFilterByField'
-                  - $ref: '#/components/schemas/HeaderUserAgentFilterByField'
-                  - $ref: '#/components/schemas/HttpMethodFilterByField'
-                  - $ref: '#/components/schemas/LatenciesKongGatewayMsFilterByField'
-                  - $ref: '#/components/schemas/LatenciesResponseMsFilterByField'
-                  - $ref: '#/components/schemas/LatenciesUpstreamMsFilterByField'
-                  - $ref: '#/components/schemas/PortalFilterByField'
-                  - $ref: '#/components/schemas/RealmFilterByField'
-                  - $ref: '#/components/schemas/ResponseBodySizeFilterByField'
-                  - $ref: '#/components/schemas/ResponseHeaderContentLengthFilterByField'
-                  - $ref: '#/components/schemas/ResponseSourceFilterByField'
-                  - $ref: '#/components/schemas/RequestBodySizeFilterByField'
-                  - $ref: '#/components/schemas/RequestIdFilterByField'
-                  - $ref: '#/components/schemas/RequestUriFilterByField'
-                  - $ref: '#/components/schemas/ResponseHeaderContentTypeFilterByField'
-                  - $ref: '#/components/schemas/RouteFilterByField'
-                  - $ref: '#/components/schemas/ServicePortFilterByField'
-                  - $ref: '#/components/schemas/ServiceProtocolFilterByField'
-                  - $ref: '#/components/schemas/StatusCodeFilterByField'
-                  - $ref: '#/components/schemas/StatusCodeGroupedFilterByField'
-                  - $ref: '#/components/schemas/TraceIdFilterByField'
-                  - $ref: '#/components/schemas/UpstreamStatusCodeFilterByField'
-                  - $ref: '#/components/schemas/UpstreamStatusCodeGroupedFilterByField'
-                  - $ref: '#/components/schemas/UpstreamUriFilterByField'
-              default: []
-            time_range:
-              $ref: '#/components/schemas/FilterTimeRange'
-            order:
-              $ref: '#/components/schemas/FilterOrder'
-            size:
-              $ref: '#/components/schemas/FilterSize'
-            offset:
-              $ref: '#/components/schemas/FilterOffset'
-        - title: Filter by dimension
-          type: object
-          deprecated: true
-          additionalProperties: false
-          properties:
-            filters:
-              type: array
-              items:
-                oneOf:
-                  - $ref: '#/components/schemas/ApiProductFilterByDimension'
-                  - $ref: '#/components/schemas/ApiProductVersionFilterByDimension'
-                  - $ref: '#/components/schemas/ApplicationFilterByDimension'
-                  - $ref: '#/components/schemas/ConsumerFilterByDimension'
-                  - $ref: '#/components/schemas/ControlPlaneFilterByDimension'
-                  - $ref: '#/components/schemas/ControlPlaneGroupFilterByDimension'
-                  - $ref: '#/components/schemas/DataPlaneNodeFilterByDimension'
-                  - $ref: '#/components/schemas/GatewayServiceFilterByDimension'
-                  - $ref: '#/components/schemas/RouteFilterByDimension'
-                  - $ref: '#/components/schemas/StatusCodeFilterByDimension'
-                  - $ref: '#/components/schemas/StatusCodeGroupedFilterByDimension'
-              default: []
-            time_range:
-              $ref: '#/components/schemas/FilterTimeRange'
-            order:
-              $ref: '#/components/schemas/FilterOrder'
-            size:
-              $ref: '#/components/schemas/FilterSize'
-            offset:
-              $ref: '#/components/schemas/FilterOffset'
+        - $ref: '#/components/schemas/AnalyticsRequestsFilterByFieldQuery'
+        - $ref: '#/components/schemas/AnalyticsRequestsFilterByDimensionQuery'
+    AnalyticsRequestsFilterByFieldQuery:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ApiFilterByField'
+              - $ref: '#/components/schemas/ApiProductFilterByField'
+              - $ref: '#/components/schemas/ApiProductVersionFilterByField'
+              - $ref: '#/components/schemas/ApplicationFilterByField'
+              - $ref: '#/components/schemas/AuthTypeFilterByField'
+              - $ref: '#/components/schemas/ClientIpFilterByField'
+              - $ref: '#/components/schemas/ConsumerFilterByField'
+              - $ref: '#/components/schemas/ControlPlaneFilterByField'
+              - $ref: '#/components/schemas/ControlPlaneGroupFilterByField'
+              - $ref: '#/components/schemas/DataPlaneNodeFilterByField'
+              - $ref: '#/components/schemas/DataPlaneNodeVersionFilterByField'
+              - $ref: '#/components/schemas/GatewayServiceFilterByField'
+              - $ref: '#/components/schemas/HeaderHostFilterByField'
+              - $ref: '#/components/schemas/HeaderUserAgentFilterByField'
+              - $ref: '#/components/schemas/HttpMethodFilterByField'
+              - $ref: '#/components/schemas/LatenciesKongGatewayMsFilterByField'
+              - $ref: '#/components/schemas/LatenciesResponseMsFilterByField'
+              - $ref: '#/components/schemas/LatenciesUpstreamMsFilterByField'
+              - $ref: '#/components/schemas/PortalFilterByField'
+              - $ref: '#/components/schemas/RealmFilterByField'
+              - $ref: '#/components/schemas/ResponseBodySizeFilterByField'
+              - $ref: '#/components/schemas/ResponseHeaderContentLengthFilterByField'
+              - $ref: '#/components/schemas/ResponseSourceFilterByField'
+              - $ref: '#/components/schemas/RequestBodySizeFilterByField'
+              - $ref: '#/components/schemas/RequestIdFilterByField'
+              - $ref: '#/components/schemas/RequestUriFilterByField'
+              - $ref: '#/components/schemas/ResponseHeaderContentTypeFilterByField'
+              - $ref: '#/components/schemas/RouteFilterByField'
+              - $ref: '#/components/schemas/ServicePortFilterByField'
+              - $ref: '#/components/schemas/ServiceProtocolFilterByField'
+              - $ref: '#/components/schemas/StatusCodeFilterByField'
+              - $ref: '#/components/schemas/StatusCodeGroupedFilterByField'
+              - $ref: '#/components/schemas/TraceIdFilterByField'
+              - $ref: '#/components/schemas/UpstreamStatusCodeFilterByField'
+              - $ref: '#/components/schemas/UpstreamStatusCodeGroupedFilterByField'
+              - $ref: '#/components/schemas/UpstreamUriFilterByField'
+          default: []
+        time_range:
+          $ref: '#/components/schemas/FilterTimeRange'
+        order:
+          $ref: '#/components/schemas/FilterOrder'
+        size:
+          $ref: '#/components/schemas/FilterSize'
+        offset:
+          $ref: '#/components/schemas/FilterOffset'
+      additionalProperties: false
+      title: Filter by field
+    AnalyticsRequestsFilterByDimensionQuery:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ApiProductFilterByDimension'
+              - $ref: '#/components/schemas/ApiProductVersionFilterByDimension'
+              - $ref: '#/components/schemas/ApplicationFilterByDimension'
+              - $ref: '#/components/schemas/ConsumerFilterByDimension'
+              - $ref: '#/components/schemas/ControlPlaneFilterByDimension'
+              - $ref: '#/components/schemas/ControlPlaneGroupFilterByDimension'
+              - $ref: '#/components/schemas/DataPlaneNodeFilterByDimension'
+              - $ref: '#/components/schemas/GatewayServiceFilterByDimension'
+              - $ref: '#/components/schemas/RouteFilterByDimension'
+              - $ref: '#/components/schemas/StatusCodeFilterByDimension'
+              - $ref: '#/components/schemas/StatusCodeGroupedFilterByDimension'
+          default: []
+        time_range:
+          $ref: '#/components/schemas/FilterTimeRange'
+        order:
+          $ref: '#/components/schemas/FilterOrder'
+        size:
+          $ref: '#/components/schemas/FilterSize'
+        offset:
+          $ref: '#/components/schemas/FilterOffset'
+      additionalProperties: false
+      deprecated: true
+      title: Filter by dimension
     FilterTimeRange:
       description: 'The period of time to return data. Relative time ranges are relative to the current moment. Absolute time ranges specify an unchanging period of time. If not specified, a default relative timeframe of 1 hour will be chosen.'
       default:

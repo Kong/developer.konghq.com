@@ -1,0 +1,2497 @@
+openapi: 3.0.2
+info:
+  title: Konnect Analytics Dashboards
+  description: |
+    Konnect endpoint for creating, reading, updating, and deleting dashboards.  Dashboards are entities within Konnect that contain tiles, which are essentially saved queries combined with configuration for a chart to render the data.
+  version: 2.0.0
+  contact:
+    name: Kong
+    url: 'https://cloud.konghq.com'
+servers:
+  - url: 'https://us.api.konghq.com/v2'
+    description: United-States Production region
+  - url: 'https://eu.api.konghq.com/v2'
+    description: Europe Production region
+  - url: 'https://au.api.konghq.com/v2'
+    description: Australia Production region
+  - url: 'https://me.api.konghq.com/v2'
+    description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v2'
+    description: India Production region
+paths:
+  /dashboards:
+    get:
+      operationId: dashboards-list
+      summary: List dashboards
+      description: Get a paginated list of dashboards that your account has access to.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/DashboardListFilters'
+        - $ref: '#/components/parameters/DashboardSort'
+      responses:
+        '200':
+          description: List of dashboards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/PaginatedMeta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DashboardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Dashboards
+    post:
+      operationId: dashboards-create
+      summary: Create a new dashboard
+      description: Creates a new dashboard from the provided definition.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DashboardUpdateRequest'
+            examples:
+              'Single Tile, Timeseries Line':
+                $ref: '#/components/examples/TimeSeriesLineDashboardExample'
+              'Single Tile, Timeseries Bar':
+                $ref: '#/components/examples/TimeSeriesBarDashboardExample'
+              'Single Tile, Horizontal Bar':
+                $ref: '#/components/examples/HorizontalBarDashboardExample'
+              'Single Tile, Vertical Bar':
+                $ref: '#/components/examples/VerticalBarDashboardExample'
+              'Single Tile, Donut (LLM datasource)':
+                $ref: '#/components/examples/DonutDashboardExample'
+              'Single Tile, Single Value':
+                $ref: '#/components/examples/SingleValueDashboardExample'
+              Multiple tiles and preset filters:
+                $ref: '#/components/examples/MultipleTilePresetFiltersExample'
+      responses:
+        '201':
+          description: 'The created dashboard, including generated fields.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        '400':
+          description: Bad request; returned when the request payload was not valid.
+          content:
+            application/problem+json:
+              examples:
+                BadRequestExample:
+                  $ref: '#/components/examples/BadRequestExample'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Dashboards
+  '/dashboards/{dashboardId}':
+    parameters:
+      - name: dashboardId
+        in: path
+        description: The dashboard's ID.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+    get:
+      operationId: dashboards-get
+      summary: Get a single dashboard
+      description: Get a dashboard that your account has access to.
+      responses:
+        '200':
+          description: The dashboard with the given ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Dashboards
+    put:
+      operationId: dashboards-update
+      summary: Update an existing dashboard
+      description: 'Update an existing dashboard, replacing its definition with the provided one.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DashboardUpdateRequest'
+            examples:
+              'Single Tile, Timeseries Line':
+                $ref: '#/components/examples/TimeSeriesLineDashboardExample'
+              'Single Tile, Timeseries Bar':
+                $ref: '#/components/examples/TimeSeriesBarDashboardExample'
+              'Single Tile, Horizontal Bar':
+                $ref: '#/components/examples/HorizontalBarDashboardExample'
+              'Single Tile, Vertical Bar':
+                $ref: '#/components/examples/VerticalBarDashboardExample'
+              'Single Tile, Donut (LLM datasource)':
+                $ref: '#/components/examples/DonutDashboardExample'
+              'Single Tile, Single Value':
+                $ref: '#/components/examples/SingleValueDashboardExample'
+              Multiple tiles and preset filters:
+                $ref: '#/components/examples/MultipleTilePresetFiltersExample'
+      responses:
+        '200':
+          description: 'The created dashboard, including generated fields.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        '400':
+          description: Bad request; returned when the request payload was not valid.
+          content:
+            application/problem+json:
+              examples:
+                BadRequestExample:
+                  $ref: '#/components/examples/BadRequestExample'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Dashboards
+    delete:
+      operationId: dashboards-delete
+      summary: Delete an existing dashboard
+      description: Delete an existing dashboard.
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Dashboards
+components:
+  parameters:
+    DashboardListFilters:
+      name: filter
+      description: Filters dashboards in the response.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/DashboardFilterParameters'
+      style: deepObject
+    DashboardSort:
+      name: sort
+      required: false
+      in: query
+      schema:
+        allOf:
+          - $ref: '#/components/schemas/SortQuery'
+          - description: |
+              Sorts a collection of dashboards. Supported sort attributes are:
+
+              - name
+              - created_at
+              - updated_at
+
+              The `asc` suffix is optional as the default sort order is ascending.
+              The `desc` suffix is used to specify a descending order.
+              Multiple sort attributes may be provided via a comma separated list.
+    PageNumber:
+      name: 'page[number]'
+      description: Determines which page of the entities to retrieve.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 1
+    PageSize:
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
+  schemas:
+    AdvancedQuery:
+      description: A query targeting the API usage analytics datasource.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - api_usage
+        metrics:
+          $ref: '#/components/schemas/AdvancedMetrics'
+        dimensions:
+          description: List of attributes or entity types to group by.
+          type: array
+          items:
+            type: string
+            enum:
+              - api
+              - api_product
+              - api_product_version
+              - application
+              - consumer
+              - control_plane
+              - control_plane_group
+              - data_plane_node
+              - data_plane_node_version
+              - gateway_service
+              - portal
+              - response_source
+              - route
+              - status_code
+              - status_code_grouped
+              - time
+              - upstream_status_code
+              - upstream_status_code_grouped
+          example:
+            - status_code_grouped
+          maxItems: 2
+        filters:
+          $ref: '#/components/schemas/AdvancedFilters'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        time_range:
+          $ref: '#/components/schemas/TimeRange'
+      example:
+        datasource: api_usage
+        time_range:
+          type: relative
+          time_range: 24h
+          tz: EST
+        dimensions:
+          - time
+          - gateway_service
+        filters:
+          - operator: in
+            field: control_plane
+            value:
+              - d5ac5d88-efed-4e10-9dfe-0b0a6646c219
+        granularity: hourly
+        metrics:
+          - request_count
+          - response_latency_p99
+      additionalProperties: false
+      required:
+        - datasource
+    LLMQuery:
+      description: A query targeting the LLM usage analytics datasource.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - llm_usage
+        metrics:
+          $ref: '#/components/schemas/LLMMetrics'
+        dimensions:
+          description: List of attributes or entity types to group by.
+          type: array
+          items:
+            type: string
+            enum:
+              - control_plane
+              - control_plane_group
+              - gateway_service
+              - consumer
+              - application
+              - route
+              - ai_provider
+              - ai_response_model
+              - ai_request_model
+              - llm_cache_status
+              - llm_embeddings_provider
+              - llm_embeddings_model
+              - time
+              - realm
+              - status_code
+              - status_code_grouped
+              - ai_plugin
+          maxItems: 2
+        filters:
+          $ref: '#/components/schemas/LLMFilters'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        time_range:
+          $ref: '#/components/schemas/TimeRange'
+      example:
+        datasource: llm_usage
+        time_range:
+          type: relative
+          time_range: 24h
+          tz: EST
+        dimensions:
+          - time
+          - ai_plugin
+        filters:
+          - operator: in
+            field: control_plane
+            value:
+              - d5ac5d88-efed-4e10-9dfe-0b0a6646c219
+        granularity: hourly
+        metrics:
+          - total_tokens
+      additionalProperties: false
+      required:
+        - datasource
+    Tile:
+      discriminator:
+        propertyName: type
+        mapping:
+          chart: '#/components/schemas/ChartTile'
+      oneOf:
+        - $ref: '#/components/schemas/ChartTile'
+    ChartTile:
+      description: A tile that queries data and renders a chart.
+      type: object
+      properties:
+        layout:
+          description: |
+            Information about how the tile is placed on the dashboard.
+
+            Examples:
+            - a tile occupying the first half of the top row: `{ "position": { "col": 0, "row": 0 }, size: { "cols": 3, "rows": 1 } }`
+            - a tile occupying the second half of the top row: `{ "position": { "col": 3, "row": 0 }, size: { "cols": 3, "rows": 1 } }`
+          type: object
+          example:
+            position:
+              col: 3
+              row: 0
+            size:
+              cols: 3
+              rows: 1
+          additionalProperties: false
+          properties:
+            position:
+              description: |
+                Position of the tile in the dashboard's grid.  Numbering starts at 0, so a tile in the upper left of the dashboard will be at column 0, row 0.
+              type: object
+              additionalProperties: false
+              properties:
+                col:
+                  type: integer
+                  maximum: 5
+                  minimum: 0
+                row:
+                  type: integer
+                  minimum: 0
+              required:
+                - col
+                - row
+            size:
+              description: |
+                Number of columns and rows the tile occupies.  A dashboard always has 6 columns, but has as many rows as needed to accommodate the given tiles.
+              type: object
+              additionalProperties: false
+              properties:
+                cols:
+                  type: integer
+                  maximum: 6
+                  minimum: 1
+                rows:
+                  type: integer
+                  minimum: 1
+              required:
+                - cols
+                - rows
+          required:
+            - position
+            - size
+        type:
+          description: The type of tile.  Chart tiles must have type 'chart'.
+          type: string
+          enum:
+            - chart
+        definition:
+          description: |
+            The tile's definition, which consists of a query to fetch data and a chart to render the data.
+            Note that some charts expect certain types of queries to render properly.  The documentation for the individual chart types has more information.
+          type: object
+          additionalProperties: false
+          properties:
+            query:
+              discriminator:
+                propertyName: datasource
+                mapping:
+                  api_usage: '#/components/schemas/AdvancedQuery'
+                  llm_usage: '#/components/schemas/LLMQuery'
+              oneOf:
+                - $ref: '#/components/schemas/AdvancedQuery'
+                - $ref: '#/components/schemas/LLMQuery'
+            chart:
+              $ref: '#/components/schemas/Chart'
+          required:
+            - query
+            - chart
+      additionalProperties: false
+      required:
+        - layout
+        - type
+        - definition
+    Dashboard:
+      description: |
+        A JSON object describing a dashboard.
+
+        A dashboard is an array of tiles.  All tiles are of type 'chart', which query data and render a chart displaying that data.
+
+        Dashboards have 6 columns and as many rows as necessary to display their tiles.
+      type: object
+      properties:
+        tiles:
+          description: 'The array of tiles.  We currently support up to 102 tiles, which is 17 rows of 6x1 tiles.'
+          type: array
+          items:
+            $ref: '#/components/schemas/Tile'
+          maxLength: 102
+          minLength: 0
+        preset_filters:
+          description: |
+            An optional array of filters that are applied globally to all relevant tiles in the dashboard.
+
+            Whether or not a preset filter applies to a tile depends on the filter's dimension.  Some dimensions, like `control_plane`, are common to all datasources; other dimensions may only apply to one datasource.
+          type: array
+          items:
+            $ref: '#/components/schemas/AllFilterItems'
+          example:
+            - operator: in
+              field: control_plane
+              value:
+                - 00000000-0000-0000-0000-000000000000
+            - operator: in
+              field: ai_request_model
+              value:
+                - request_model1
+      additionalProperties: false
+      required:
+        - tiles
+    DashboardUpdateRequest:
+      type: object
+      properties:
+        name:
+          description: |
+            The dashboard name, which is displayed at the top of the dashboard and in lists.
+            It does not need to be unique.
+          type: string
+          maxLength: 255
+          minLength: 1
+        definition:
+          $ref: '#/components/schemas/Dashboard'
+        labels:
+          $ref: '#/components/schemas/Labels'
+      required:
+        - name
+        - definition
+      title: Dashboard Request
+    DashboardResponse:
+      type: object
+      properties:
+        name:
+          description: |
+            The dashboard name, which is displayed at the top of the dashboard and in lists.
+            It does not need to be unique.
+          type: string
+          maxLength: 255
+          minLength: 1
+        definition:
+          $ref: '#/components/schemas/Dashboard'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_by:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - name
+        - definition
+      title: Dashboard Request
+    DashboardFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+      title: Dashboard Filter Parameters
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    StringFieldOEQFilter:
+      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+      type: object
+      properties:
+        oeq:
+          type: string
+      additionalProperties: false
+      required:
+        - oeq
+      title: StringFieldOEQFilter
+      x-examples:
+        example-1:
+          oeq: 'some-value,some-other-value'
+    StringFieldNEQFilter:
+      description: Filters on the given string field value by exact match inequality.
+      type: object
+      properties:
+        neq:
+          type: string
+      additionalProperties: false
+      required:
+        - neq
+      title: StringFieldNEQFilter
+      x-examples:
+        example-1:
+          neq: not-this-value
+    UuidFieldFilter:
+      description: Filters on the given UUID field value by exact match.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: UuidFieldFilter
+      x-examples:
+        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+        example-2:
+          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+        example-3:
+          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+        example-4:
+          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+    StringFieldContainsFilter:
+      description: Filters on the given string field value by fuzzy match.
+      type: object
+      properties:
+        contains:
+          type: string
+      additionalProperties: false
+      required:
+        - contains
+      title: StringFieldContainsFilter
+      x-examples:
+        example-1:
+          contains: some-value
+    StringFieldOContainsFilter:
+      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
+      type: object
+      properties:
+        ocontains:
+          type: string
+      additionalProperties: false
+      required:
+        - ocontains
+      title: StringFieldOContainsFilter
+      x-examples:
+        example-1:
+          ocontains: 'this-value,or-that-value'
+    StringFieldFilter:
+      description: Filters on the given string field value by either exact or fuzzy match.
+      oneOf:
+        - $ref: '#/components/schemas/StringFieldEqualsFilter'
+        - $ref: '#/components/schemas/StringFieldContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOContainsFilter'
+        - $ref: '#/components/schemas/StringFieldOEQFilter'
+        - $ref: '#/components/schemas/StringFieldNEQFilter'
+      title: StringFieldFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+        example-3:
+          contains: some-value
+        example-4:
+          ocontains: 'some-potential,value'
+        example-5:
+          oeq: 'some-potential,value'
+        example-6:
+          neq: not-this-value
+    LabelsFieldFilter:
+      allOf:
+        - title: LabelsFieldFilter
+          description: |
+            Filters on the resource's `labels` field. Filters must use dot-notation to identify
+            the label key that will be used to filter the results. For example:
+              - `filter[labels.owner]`
+              - `filter[labels.owner][neq]=kong`
+              - `filter[labels.env]=dev`
+              - `filter[labels.env][ocontains]=dev,test`
+        - $ref: '#/components/schemas/StringFieldFilter'
+    DateTimeFieldFilter:
+      description: Filters on the given datetime (RFC-3339) field value.
+      oneOf:
+        - type: string
+          title: DateTimeFieldImplicitEqualsFilter
+          format: date-time
+          description: Value strictly equals given RFC-3339 formatted timestamp in UTC
+          example: '2022-03-30T07:20:50Z'
+        - type: object
+          title: DateTimeFieldEqualsFilter
+          additionalProperties: false
+          properties:
+            eq:
+              description: Value strictly equals given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - eq
+        - type: object
+          title: DateTimeFieldLTFilter
+          additionalProperties: false
+          properties:
+            lt:
+              description: Value is less than the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - lt
+        - type: object
+          title: DateTimeFieldLTEFilter
+          additionalProperties: false
+          properties:
+            lte:
+              description: Value is less than or equal to the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - lte
+        - type: object
+          title: DateTimeFieldGTFilter
+          additionalProperties: false
+          properties:
+            lt:
+              description: Value is greater than the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - gt
+        - type: object
+          title: DateTimeFieldGTEFilter
+          additionalProperties: false
+          properties:
+            lte:
+              description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - gte
+      title: DateTimeFieldFilter
+      x-examples:
+        datetime_field_1: '2022-03-30T07:20:50Z'
+        datetime_field_2:
+          eq: '2022-03-30T07:20:50Z'
+        datetime_field_3:
+          lt: '2022-03-30T07:20:50Z'
+        datetime_field_4:
+          lte: '2022-03-30T07:20:50Z'
+        datetime_field_5:
+          gt: '2022-03-30T07:20:50Z'
+        datetime_field_6:
+          gte: '2022-03-30T07:20:50Z'
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    PageMeta:
+      description: Contains pagination query parameters and the total number of objects returned.
+      type: object
+      properties:
+        number:
+          type: number
+          example: 1
+        size:
+          type: number
+          example: 10
+        total:
+          type: number
+          example: 100
+      required:
+        - number
+        - size
+        - total
+    PaginatedMeta:
+      description: returns the pagination information
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMeta'
+      required:
+        - page
+      title: PaginatedMeta
+    AdvancedMetrics:
+      description: 'List of aggregated metrics to collect across the requested time span. If no metrics are specified, request_count will be computed by default.'
+      type: array
+      items:
+        type: string
+        enum:
+          - kong_latency_average
+          - kong_latency_p50
+          - kong_latency_p95
+          - kong_latency_p99
+          - request_count
+          - request_per_minute
+          - request_size_average
+          - request_size_p50
+          - request_size_p95
+          - request_size_p99
+          - request_size_sum
+          - response_latency_average
+          - response_latency_p50
+          - response_latency_p95
+          - response_latency_p99
+          - response_size_average
+          - response_size_p50
+          - response_size_p95
+          - response_size_p99
+          - response_size_sum
+          - upstream_latency_average
+          - upstream_latency_p50
+          - upstream_latency_p95
+          - upstream_latency_p99
+      default:
+        - request_count
+    RequestsFilterType:
+      description: 'The type of filter to apply.  `in` filters will limit results to only the specified values, while `not_in` filters will exclude the specified values.'
+      type: string
+      enum:
+        - in
+        - not_in
+    UnscopedUuid:
+      type: string
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    RequestsFilterTypeEmpty:
+      description: The type of filter to apply.
+      type: string
+      enum:
+        - empty
+        - not_empty
+    MetricsApiFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api
+          required:
+            - operator
+            - field
+      title: Filter by api
+    MetricsApiProductFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api_product
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api_product
+          required:
+            - operator
+            - field
+      title: Filter by api_product
+    MetricsApiProductVersionFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api_product_version
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api_product_version
+          required:
+            - operator
+            - field
+      title: Filter by api_product_version
+    MetricsApplicationFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - application
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - application
+          required:
+            - operator
+            - field
+      title: Filter by application
+    ScopedUuid:
+      type: string
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    MetricsConsumerFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ScopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - consumer
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - consumer
+          required:
+            - operator
+            - field
+      title: Filter by consumer
+    MetricsControlPlaneFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - control_plane
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - control_plane
+          required:
+            - operator
+            - field
+      title: Filter by control_plane
+    MetricsControlPlaneGroupFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - control_plane_group
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - control_plane_group
+          required:
+            - operator
+            - field
+      title: Filter by control_plane_group
+    MetricsDataPlaneNodeFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ScopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_node
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_node
+          required:
+            - operator
+            - field
+      title: Filter by data_plane_node
+    MetricsDataPlaneNodeVersionFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_node_version
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - data_plane_node_version
+          required:
+            - operator
+            - field
+      title: Filter by data_plane_node_version
+    MetricsGatewayServiceFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ScopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - gateway_service
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - gateway_service
+          required:
+            - operator
+            - field
+      title: Filter by gateway_service
+    MetricsPortalFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - portal
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - portal
+          required:
+            - operator
+            - field
+      title: Filter by portal
+    MetricsRealmFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - realm
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - realm
+          required:
+            - operator
+            - field
+      title: Filter by realm
+    MetricsResponseSourceFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - response_source
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - response_source
+          required:
+            - operator
+            - field
+      title: Filter by response_source
+    MetricsRouteFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ScopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - route
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - route
+          required:
+            - operator
+            - field
+      title: Filter by route
+    MetricsStatusCodeFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The codes to include in the results.
+              type: array
+              items:
+                type: integer
+                minimum: 0
+                maximum: 999
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - status_code
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - status_code
+          required:
+            - operator
+            - field
+      title: Filter by status_code
+    MetricsStatusCodeGroupedFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The code groups to include in the results.
+              type: array
+              items:
+                type: string
+                pattern: '^\d[xX][xX]$'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - status_code_grouped
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - status_code_grouped
+          required:
+            - operator
+            - field
+      title: Filter by status_code_grouped
+    MetricsUpstreamStatusCodeFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The codes to include in the results.
+              type: array
+              items:
+                type: integer
+                minimum: 0
+                maximum: 999
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - upstream_status_code
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - upstream_status_code
+          required:
+            - operator
+            - field
+      title: Filter by upstream_status_code
+    MetricsUpstreamStatusCodeGroupedFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The code groups to include in the results.
+              type: array
+              items:
+                type: string
+                pattern: '^\d[xX][xX]$'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - upstream_status_code_grouped
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - upstream_status_code_grouped
+          required:
+            - operator
+            - field
+      title: Filter by upstream_status_code_grouped
+    AdvancedFilters:
+      description: A list of filters to apply to the query.
+      type: array
+      items:
+        discriminator:
+          propertyName: field
+          mapping:
+            api: '#/components/schemas/MetricsApiFilterByField'
+            api_product: '#/components/schemas/MetricsApiProductFilterByField'
+            api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
+            application: '#/components/schemas/MetricsApplicationFilterByField'
+            consumer: '#/components/schemas/MetricsConsumerFilterByField'
+            control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
+            control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+            data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
+            data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+            gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
+            portal: '#/components/schemas/MetricsPortalFilterByField'
+            realm: '#/components/schemas/MetricsRealmFilterByField'
+            response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
+            route: '#/components/schemas/MetricsRouteFilterByField'
+            status_code: '#/components/schemas/MetricsStatusCodeFilterByField'
+            status_code_grouped: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+            upstream_status_code: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
+            upstream_status_code_grouped: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+        oneOf:
+          - $ref: '#/components/schemas/MetricsApiFilterByField'
+          - $ref: '#/components/schemas/MetricsApiProductFilterByField'
+          - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
+          - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
+          - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
+          - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+          - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
+          - $ref: '#/components/schemas/MetricsPortalFilterByField'
+          - $ref: '#/components/schemas/MetricsRealmFilterByField'
+          - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
+          - $ref: '#/components/schemas/MetricsRouteFilterByField'
+          - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
+          - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+          - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
+          - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+    Granularity:
+      description: |
+        Force time grouping into buckets of the specified duration.  Only has an effect if "time" is in the "dimensions" list.
+
+        The granularity of the result may be coarser than requested.  The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity.  The exact result granularity will be reported in the response `meta.granularity_ms` field.
+
+        If granularity is not specified and "time" is in the dimensions list, a default will be chosen based on the time range requested.
+
+        Different relative times support different granularities:
+          - 15m => tenSecondly, thirtySecondly, minutely
+          - 1h  => tenSecondly, thirtySecondly, minutely, fiveMinutely, tenMinutely
+          - 6h  => thirtySecondly, minutely, fiveMinutely, tenMinutely, thirtyMinutely, hourly
+          - 12h => minutely, fiveMinutely, tenMinutely, thirtyMinutely, hourly
+          - 24h => fiveMinutely, tenMinutely, thirtyMinutely, hourly
+          - 7d  => thirtyMinutely, hourly, twoHourly, twelveHourly, daily
+          - 30d => hourly, twoHourly, twelveHourly, daily, weekly
+
+        For special time ranges:
+          - current_week, previous_week   => thirtyMinutely, hourly, twoHourly, twelveHourly, daily
+          - current_month, previous_month => hourly, twoHourly, twelveHourly, daily, weekly
+
+        For absolute time ranges, daily will be used.
+      type: string
+      enum:
+        - tenSecondly
+        - thirtySecondly
+        - minutely
+        - fiveMinutely
+        - tenMinutely
+        - thirtyMinutely
+        - hourly
+        - twoHourly
+        - twelveHourly
+        - daily
+        - weekly
+    MetricsRelativeTimeRangeDtoV2:
+      description: 'A duration representing a relative-to-now span of time. Generally the start time is floored to the requested granularity. Eg 7d from now, with 1day granularity initiated at 2024-01-08T17:11:00+05:00 will query for the time range from 2024-01-01T00:00:00+05:00 to 2024-01-08T17:11:00+05:00. The exact start and end timestamps are returned in the result query in the meta.start and meta.end fields. If the granularity for the previous query was 1hour, it would query a time range from 2024-01-01T17:00:00+05:00 to 2024-01-08T17:11:00+05:00.'
+      type: object
+      properties:
+        tz:
+          type: string
+          default: Etc/UTC
+        type:
+          type: string
+          enum:
+            - relative
+        time_range:
+          type: string
+          default: 1h
+          enum:
+            - 15m
+            - 1h
+            - 6h
+            - 12h
+            - 24h
+            - 7d
+            - 30d
+            - current_week
+            - current_month
+            - previous_week
+            - previous_month
+      required:
+        - type
+        - time_range
+      title: Relative time range
+    MetricsAbsoluteTimeRangeDtoV2:
+      description: A duration representing an exact start and end time.
+      type: object
+      properties:
+        tz:
+          type: string
+          default: Etc/UTC
+        type:
+          type: string
+          enum:
+            - absolute
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+      required:
+        - type
+      title: Absolute time range
+    TimeRange:
+      description: The time range to query.
+      default:
+        type: relative
+        time_range: 1h
+      discriminator:
+        propertyName: type
+        mapping:
+          relative: '#/components/schemas/MetricsRelativeTimeRangeDtoV2'
+          absolute: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
+      oneOf:
+        - $ref: '#/components/schemas/MetricsRelativeTimeRangeDtoV2'
+        - $ref: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
+    LLMMetrics:
+      description: List of aggregated metrics to collect across the requested time span.
+      type: array
+      items:
+        type: string
+        enum:
+          - total_tokens
+          - prompt_tokens
+          - completion_tokens
+          - ai_request_count
+          - cost
+          - llm_cache_embeddings_latency_average
+          - llm_cache_fetch_latency_average
+          - llm_latency_average
+          - llm_embeddings_tokens
+          - llm_embeddings_cost
+      default:
+        - ai_request_count
+    MetricsAiPluginFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_plugin
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_plugin
+          required:
+            - operator
+            - field
+      title: Filter by ai_plugin
+    MetricsAiProviderFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_provider
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_provider
+          required:
+            - operator
+            - field
+      title: Filter by ai_provider
+    MetricsAiRequestModelFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_request_model
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_request_model
+          required:
+            - operator
+            - field
+      title: Filter by ai_request_model
+    MetricsAiResponseModelFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_response_model
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_response_model
+          required:
+            - operator
+            - field
+      title: Filter by ai_response_model
+    MetricsLlmCacheStatusFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - llm_cache_status
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - llm_cache_status
+          required:
+            - operator
+            - field
+      title: Filter by llm_cache_status
+    MetricsLlmEmbeddingsModelFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - llm_embeddings_model
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - llm_embeddings_model
+          required:
+            - operator
+            - field
+      title: Filter by llm_embeddings_model
+    MetricsLlmEmbeddingsProviderFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - llm_embeddings_provider
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - llm_embeddings_provider
+          required:
+            - operator
+            - field
+      title: Filter by llm_embeddings_provider
+    LLMFilters:
+      description: A list of filters to apply to the query.
+      type: array
+      items:
+        discriminator:
+          propertyName: field
+          mapping:
+            ai_plugin: '#/components/schemas/MetricsAiPluginFilterByField'
+            ai_provider: '#/components/schemas/MetricsAiProviderFilterByField'
+            ai_request_model: '#/components/schemas/MetricsAiRequestModelFilterByField'
+            ai_response_model: '#/components/schemas/MetricsAiResponseModelFilterByField'
+            application: '#/components/schemas/MetricsApplicationFilterByField'
+            consumer: '#/components/schemas/MetricsConsumerFilterByField'
+            control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
+            control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+            gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
+            llm_cache_status: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
+            llm_embeddings_model: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
+            llm_embeddings_provider: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+            realm: '#/components/schemas/MetricsRealmFilterByField'
+            route: '#/components/schemas/MetricsRouteFilterByField'
+            status_code: '#/components/schemas/MetricsStatusCodeFilterByField'
+            status_code_grouped: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+        oneOf:
+          - $ref: '#/components/schemas/MetricsAiPluginFilterByField'
+          - $ref: '#/components/schemas/MetricsAiProviderFilterByField'
+          - $ref: '#/components/schemas/MetricsAiRequestModelFilterByField'
+          - $ref: '#/components/schemas/MetricsAiResponseModelFilterByField'
+          - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
+          - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
+          - $ref: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
+          - $ref: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
+          - $ref: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+          - $ref: '#/components/schemas/MetricsRealmFilterByField'
+          - $ref: '#/components/schemas/MetricsRouteFilterByField'
+          - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
+          - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+    DonutChart:
+      description: |
+        A chart that can display one-dimensional data in a hollow, segmented circle.  To use this chart, ensure that
+        the query includes only one dimension (not `time`).
+      type: object
+      properties:
+        chart_title:
+          description: 'The title of the chart, which is displayed in the tile''s header.'
+          type: string
+        type:
+          type: string
+          enum:
+            - donut
+      additionalProperties: false
+      required:
+        - type
+      title: Donut chart
+    TimeseriesChart:
+      description: |
+        A chart that can render timeseries data -- data from a query that has `time` as a dimension -- as lines or bars.
+
+        This type of chart can support:
+
+        - One or more metrics: `{ metrics: ["response_latency_p99", "response_latency_p95"], dimensions: ["time"] }`
+        - One metric plus one non-time dimension: `{ metrics: ["request_count"], dimensions: ["time", "gateway_service"] }` 
+
+        Either way, ensure that `time` is in the list of query dimensions.
+      type: object
+      properties:
+        chart_title:
+          description: 'The title of the chart, which is displayed in the tile''s header.'
+          type: string
+        type:
+          type: string
+          enum:
+            - timeseries_line
+            - timeseries_bar
+        stacked:
+          description: |
+            Whether to stack the bars or lines (implicitly adding them together to form a total), or leave them independent from each other.
+          type: boolean
+      additionalProperties: false
+      required:
+        - type
+      title: Timeseries chart
+    BarChart:
+      description: |
+        A chart that can display non-timeseries data as bars.  This type of chart supports up to 2 dimensions (not `time`).
+        To render a bar chart of timeseries data, use a `timeseries_bar` chart instead.
+      type: object
+      properties:
+        chart_title:
+          description: 'The title of the chart, which is displayed in the tile''s header.'
+          type: string
+        type:
+          type: string
+          enum:
+            - horizontal_bar
+            - vertical_bar
+        stacked:
+          description: |
+            Whether to stack the bars (implicitly adding them together to form a total), or leave them independent from each other.
+          type: boolean
+      additionalProperties: false
+      required:
+        - type
+      title: Bar chart
+    SingleValueChart:
+      description: A chart that can render a single number.  This chart works with a single metric and no dimensions.
+      type: object
+      properties:
+        chart_title:
+          description: 'The title of the chart, which is displayed in the tile''s header.'
+          type: string
+        type:
+          type: string
+          enum:
+            - single_value
+        decimal_points:
+          description: 'The number of figures to render after the decimal.  Most metrics only support up to 2 decimals, but some may support more.'
+          type: number
+      additionalProperties: false
+      required:
+        - type
+      title: Single value chart
+    Chart:
+      description: The type of chart to render.
+      discriminator:
+        propertyName: type
+        mapping:
+          donut: '#/components/schemas/DonutChart'
+          timeseries_line: '#/components/schemas/TimeseriesChart'
+          timeseries_bar: '#/components/schemas/TimeseriesChart'
+          horizontal_bar: '#/components/schemas/BarChart'
+          vertical_bar: '#/components/schemas/BarChart'
+          single_value: '#/components/schemas/SingleValueChart'
+      oneOf:
+        - $ref: '#/components/schemas/DonutChart'
+        - $ref: '#/components/schemas/TimeseriesChart'
+        - $ref: '#/components/schemas/BarChart'
+        - $ref: '#/components/schemas/SingleValueChart'
+    AllFilterItems:
+      discriminator:
+        propertyName: field
+        mapping:
+          ai_plugin: '#/components/schemas/MetricsAiPluginFilterByField'
+          ai_provider: '#/components/schemas/MetricsAiProviderFilterByField'
+          ai_request_model: '#/components/schemas/MetricsAiRequestModelFilterByField'
+          ai_response_model: '#/components/schemas/MetricsAiResponseModelFilterByField'
+          api: '#/components/schemas/MetricsApiFilterByField'
+          api_product: '#/components/schemas/MetricsApiProductFilterByField'
+          api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
+          application: '#/components/schemas/MetricsApplicationFilterByField'
+          consumer: '#/components/schemas/MetricsConsumerFilterByField'
+          control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
+          control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+          data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
+          data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+          gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
+          llm_cache_status: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
+          llm_embeddings_model: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
+          llm_embeddings_provider: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+          portal: '#/components/schemas/MetricsPortalFilterByField'
+          realm: '#/components/schemas/MetricsRealmFilterByField'
+          response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
+          route: '#/components/schemas/MetricsRouteFilterByField'
+          status_code: '#/components/schemas/MetricsStatusCodeFilterByField'
+          status_code_grouped: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+          upstream_status_code: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
+          upstream_status_code_grouped: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+      oneOf:
+        - $ref: '#/components/schemas/MetricsAiPluginFilterByField'
+        - $ref: '#/components/schemas/MetricsAiProviderFilterByField'
+        - $ref: '#/components/schemas/MetricsAiRequestModelFilterByField'
+        - $ref: '#/components/schemas/MetricsAiResponseModelFilterByField'
+        - $ref: '#/components/schemas/MetricsApiFilterByField'
+        - $ref: '#/components/schemas/MetricsApiProductFilterByField'
+        - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
+        - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+        - $ref: '#/components/schemas/MetricsConsumerFilterByField'
+        - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
+        - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+        - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
+        - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+        - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
+        - $ref: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
+        - $ref: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
+        - $ref: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+        - $ref: '#/components/schemas/MetricsPortalFilterByField'
+        - $ref: '#/components/schemas/MetricsRealmFilterByField'
+        - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
+        - $ref: '#/components/schemas/MetricsRouteFilterByField'
+        - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
+        - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+        - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
+        - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+    Labels:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 50
+      title: Labels
+    UUID:
+      description: Contains a unique identifier used for this resource.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      readOnly: true
+    CreatedAt:
+      description: An ISO-8601 timestamp representation of entity creation date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    UpdatedAt:
+      description: An ISO-8601 timestamp representation of entity update date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: 'https://httpstatuses.com/401'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Invalid credentials
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: 'https://httpstatuses.com/403'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Forbidden
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
+  examples:
+    TimeSeriesLineDashboardExample:
+      value:
+        name: 'Single Tile, Timeseries Line'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                position:
+                  col: 0
+                  row: 0
+                size:
+                  cols: 3
+                  rows: 2
+              definition:
+                chart:
+                  type: timeseries_line
+                  stacked: false
+                  chart_title: 'Plot of p99, p95, and p50 latency over time'
+                query:
+                  datasource: api_usage
+                  dimensions:
+                    - time
+                  metrics:
+                    - response_latency_p99
+                    - response_latency_p95
+                    - response_latency_p50
+    TimeSeriesBarDashboardExample:
+      value:
+        name: 'Single Tile, Timeseries Bar'
+        labels:
+          team: team-1
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 6
+                  rows: 1
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: timeseries_bar
+                  stacked: true
+                  chart_title: Plot of requests per control plane over time
+                query:
+                  datasource: api_usage
+                  dimensions:
+                    - time
+                    - control_plane
+    HorizontalBarDashboardExample:
+      value:
+        name: 'Single Tile, Horizontal Bar'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 3
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: horizontal_bar
+                  chart_title: Request count by consumer and status code
+                  stacked: true
+                query:
+                  metrics:
+                    - request_count
+                  datasource: api_usage
+                  dimensions:
+                    - consumer
+                    - status_code
+    VerticalBarDashboardExample:
+      value:
+        name: 'Single Tile, Vertical Bar'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 3
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: vertical_bar
+                  chart_title: Total response size by API
+                  stacked: true
+                query:
+                  metrics:
+                    - response_size_sum
+                  datasource: api_usage
+                  dimensions:
+                    - api
+                  filters:
+                    - operator: not_empty
+                      field: api
+    DonutDashboardExample:
+      value:
+        name: 'Single Tile, Donut (LLM datasource)'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 3
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: donut
+                  chart_title: AI providers for sample gateway service
+                query:
+                  metrics:
+                    - ai_request_count
+                  datasource: llm_usage
+                  dimensions:
+                    - ai_provider
+                  filters:
+                    - operator: in
+                      field: gateway_service
+                      value:
+                        - '00000000-0000-0000-0000-000000000000:00000000-0000-0000-0000-000000000000'
+    SingleValueDashboardExample:
+      value:
+        name: 'Single Tile, Single Value'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 3
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: single_value
+                  chart_title: p99 response latency across all traffic
+                query:
+                  metrics:
+                    - response_latency_p99
+                  datasource: api_usage
+    MultipleTilePresetFiltersExample:
+      value:
+        name: 'Multiple tiles, with filters'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 3
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: timeseries_bar
+                  stacked: true
+                  chart_title: Plot of requests per control plane over time
+                query:
+                  datasource: api_usage
+                  dimensions:
+                    - time
+                    - control_plane
+            - type: chart
+              layout:
+                size:
+                  cols: 3
+                  rows: 2
+                position:
+                  col: 3
+                  row: 0
+              definition:
+                chart:
+                  type: donut
+                  chart_title: Donut chart by LLM provider
+                query:
+                  datasource: llm_usage
+                  dimensions:
+                    - ai_provider
+                  metrics:
+                    - ai_request_count
+          preset_filters:
+            - operator: in
+              field: control_plane
+              value:
+                - 00000000-0000-0000-0000-000000000000
+                - 11111111-1111-1111-1111-111111111111
+            - operator: in
+              field: ai_request_model
+              value:
+                - request_model1
+    BadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:6591723055278037644'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: time_range.time_range
+            rule: unknown_property
+            choices: []
+            reason: property time_range should not exist
+          - field: time_range.start_date
+            rule: is_date
+            choices: []
+            reason: start must be a valid date in ISO format
+          - field: time_range.end_date
+            rule: is_date
+            choices: []
+            reason: end must be a valid date in ISO format
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: Unauthorized
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
+        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
+        The PAT token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
+        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+        The access token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
+tags:
+  - name: Dashboards
+security:
+  - personalAccessToken: []
+  - systemAccountAccessToken: []

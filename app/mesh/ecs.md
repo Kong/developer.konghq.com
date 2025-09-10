@@ -15,7 +15,9 @@ tags:
 search_aliases:
   - Amazon ECS
 
-
+works_on:
+  - on-prem
+  - konnect
 related_resources:
   - text: Install {{site.mesh_product_name}}
     url: /mesh/#install-kong-mesh

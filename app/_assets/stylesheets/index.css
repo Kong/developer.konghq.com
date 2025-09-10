@@ -793,6 +793,26 @@
   .feedback__button--active[value="false"] {
     @apply bg-semantic-red-secondary;
   }
+
+  .dropdown-container {
+    @apply relative flex;
+  }
+
+  .dropdown-menu {
+    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+
+    ul {
+      @apply list-none ml-0;
+    }
+  }
+
+  .dropdown-menu[aria-hidden="false"] {
+    @apply flex translate-y-0;
+  }
+
+  .dropdown-caret {
+    @apply absolute left-1/2 transform -translate-x-1/2 -bottom-4 !mb-0 hidden peer-aria-[expanded='true']:flex;
+  }
 }
 
 #ask-ai-button {

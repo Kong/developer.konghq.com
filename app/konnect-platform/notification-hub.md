@@ -3,7 +3,7 @@ title: Notifications in {{site.konnect_short_name}}
 content_type: reference
 layout: reference
 products:
-  - konnect-platform
+  - konnect
 works_on:
     - konnect
 api_specs:

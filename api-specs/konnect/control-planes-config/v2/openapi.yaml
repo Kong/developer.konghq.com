@@ -3405,7 +3405,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EntityBody'
+              type: object
+              additionalProperties: true
       responses:
         '200':
           $ref: '#/components/responses/ValidateEntityResponse'
@@ -5139,9 +5140,6 @@ components:
       required:
         - uri
         - query
-    EntityBody:
-      type: object
-      additionalProperties: true
     GatewayUnauthorizedError:
       type: object
       properties:

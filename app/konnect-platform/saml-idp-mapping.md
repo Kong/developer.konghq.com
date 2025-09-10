@@ -3,7 +3,7 @@ title: IdP SAML attribute mapping reference
 content_type: reference
 layout: reference
 products:
-  - konnect-platform
+  - konnect
 works_on:
     - konnect
 api_specs:

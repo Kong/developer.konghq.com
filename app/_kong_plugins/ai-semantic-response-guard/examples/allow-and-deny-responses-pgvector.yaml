@@ -1,0 +1,89 @@
+description: Block or allow LLM responses based on semantic similarity to defined rules.
+
+extended_description: |
+  The AI Semantic Response Guard plugin analyzes the full response from an LLM service and filters it
+  based on semantic similarity to configured allow or deny patterns.
+
+  Deny rules take precedence over allow rules. Responses matching a deny pattern are blocked,
+  even if they also match an allow pattern. Responses not matching any allow pattern are blocked
+  when allow rules are set.
+
+title: 'Allow and deny using pgvector as a vector database'
+
+weight: 900
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service."
+  - "A [PostgreSQL database with pgvector extension](https://github.com/pgvector/pgvector) installed and reachable from {{site.base_gateway}}."
+  - "Port `5432`, or your custom PostgreSQL port, is open and reachable from {{site.base_gateway}}."
+
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  pgvector_host:
+    value: $PGVECTOR_HOST
+    description: The host where your pgvector-enabled PostgreSQL instance runs
+  pgvector_user:
+    value: $PGVECTOR_USER
+    description: Database user for pgvector
+  pgvector_password:
+    value: $PGVECTOR_PASSWORD
+    description: Database password for pgvector
+
+config:
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${header_value}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  search:
+    threshold: 0.7
+  vectordb:
+    strategy: pgvector
+    distance_metric: cosine
+    threshold: 0.7
+    dimensions: 1024
+    pgvector:
+      host: ${pgvector_host}
+      port: 5432
+      database: kong-pgvector
+      user: ${pgvector_user}
+      password: ${pgvector_password}
+      ssl: false
+      ssl_required: false
+      ssl_verify: false
+      ssl_version: tlsv1_2
+      timeout: 5000
+  rules:
+    allow_responses:
+      - Troubleshooting networks and connectivity issues
+      - Managing cloud platforms (AWS, Azure, GCP)
+      - Security hardening and incident response strategies
+      - DevOps pipelines, automation, and observability
+      - Software engineering concepts and language syntax
+      - IT governance, compliance, and regulatory guidance
+      - Continuous integration and deployment practices
+      - Writing documentation and explaining technical concepts
+      - Operating system administration and configuration
+      - Best practices for collaboration and productivity tools
+    deny_responses:
+      - Unauthorized penetration testing or hacking tutorials
+      - Methods for bypassing software licensing or DRM
+      - Step-by-step instructions for exploiting vulnerabilities
+      - Techniques to evade or disable security controls
+      - Collecting or exposing personal or employee data
+      - Using AI for impersonation, phishing, or fraud
+      - Manipulative social engineering techniques
+      - Advice on breaking internal IT or security policies
+      - Entertainment, dating, or other non-work topics
+      - Political, religious, or otherwise sensitive discussions unrelated to work
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

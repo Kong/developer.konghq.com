@@ -542,7 +542,6 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - developer
-    parameters: []
   /api/v2/developer/verify-email:
     post:
       operationId: verify-email
@@ -561,7 +560,6 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - developer
-    parameters: []
   /api/v2/portal:
     get:
       operationId: get-portal-context
