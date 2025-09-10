@@ -19,7 +19,7 @@ config:
   issuer: ${issuer}
   auth_methods:
     - client_credentials
-  consumer_group_claim:
+  consumer_groups_claim:
     - tier
 
 variables:

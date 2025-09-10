@@ -409,7 +409,7 @@ This means that we restrict the access to only those that do have a matching Con
 
 Set up Consumer Group auth:
 * [Plugin configuration example](/plugins/openid-connect/examples/consumer-group-auth/)
-* [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/) ????
+* [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
 
 ### Client authentication
 
