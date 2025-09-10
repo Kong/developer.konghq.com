@@ -94,13 +94,15 @@ helm upgrade --install ko kong/kong-operator
 
 ### Step 5: Verify the installation
 
-Verify that Kong Operator 2.0.0 is running correctly:
+Verify that Kong Operator 2.0.0 is running correctly.
 
-```bash
-# Check the operator deployment
-kubectl get pod -n kong-system
+1. Check the Kong Operator deployment:
+   ```bash
+   kubectl get pod -n kong-system
+   ```
 
-# Check operator logs
- kubectl logs -n kong-system -l app=ko-kong-operator
-```
+1. Check Kong Operator logs:
+    ```sh
+    kubectl logs -n kong-system -l app=ko-kong-operator
+    ```
 
