@@ -98,11 +98,14 @@ You will be prompted to install the package if you're using it for the first tim
      ✅ Exported collection: API 3.postman_collection.json
   🌍 Exporting 1 environments...
      ✅ Exported environment: Global Environment 2.postman_environment.json
-  🌐 No global variables found in the workspace
+  ❌ Postman API does not support global variables for public workspaces, please export it manually.
 
  🎉 All data export completed!
 ```
 {:.no-copy-code}
+
+{:.warning}
+> If you have global variables in a public Postman workspace, you will have to export them manually.
 
 This creates a `postman_workspaces` directory in your working directory with the exported content and files.
 
