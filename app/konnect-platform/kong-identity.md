@@ -99,7 +99,7 @@ In the authorization code flow:
 5. The client exchanges this code at the `/oauth/token` endpoint for access tokens.
 6. The client uses the access token to call protected APIs.
 
-## Kong Comsumer Group plugin flow
+## Kong Consumer Group plugin flow
 In the consumer group plugin flow:
 1. In **{{site.konnect_short_name}} > API Gateway > Consumers**, the consumer is created. Each client that needs access is represented as a consumer.
 
