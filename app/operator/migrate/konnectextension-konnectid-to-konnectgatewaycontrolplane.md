@@ -7,8 +7,11 @@ products:
   - operator
 breadcrumbs:
   - /operator/
-  - index: operator
-    group: Migration Guides
+related_resources:
+  - text: Migrating from Kong Gateway Operator 1.6.x to Kong Operator 2.0.0
+    url: /operator/migrate/migrate-1.6.x-2.0.0/
+  - text:Migrate Konnect DataPlanes from Kong Gateway Operator 1.4 to 1.5
+    url: /operator/konnect/reference/migrate-1.4-1.5/
 ---
 
 ## Background
