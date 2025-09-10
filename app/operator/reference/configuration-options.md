@@ -1,7 +1,7 @@
 ---
 title: "{{site.operator_product_name}} configuration options"
 short_title: Configuration options
-description: Explore the operator’s configurable settings and learn how to adjust them using CLI flags.
+description: Learn about the various settings and configurations of the operator which can be tweaked using CLI flags.
 content_type: reference
 layout: reference
 
@@ -25,16 +25,15 @@ The default configuration will work for most users. These options are provided f
 ## Using environment variables
 
 Each flag defined in the following table can also be configured using an environment variable.
-The environment variable name is `KONG_OPERATOR_` followed by the flag name in uppercase.
+The name of the environment variable is `KONG_OPERATOR_` string followed by the name of flag in uppercase.
 
-For example, you can configure `--secret-label-selector` with the environment variable:
+For example, `--secret-label-selector` can be configured using the following environment variable:
 
 ```
 KONG_OPERATOR_SECRET_LABEL_SELECTOR=mylabel
 ```
 
-{:.info}
-> We recommend configuring all settings through environment variables rather than CLI flags.
+We recommend configuring all settings through environment variables and not CLI flags.
 
 <!-- vale off -->
 
@@ -91,7 +90,7 @@ rows:
     default: '`kong-operator-ca`'
   - flag: '`--cluster-ca-secret-namespace`'
     type: '`string`'
-    description: "Specifies the namespace of the Secret that contains the cluster CA certificate"
+    description: "Specifies the namespace of the Secret that contains the cluster CA certificate."
     default: ""
   - flag: '`--cluster-domain`'
     type: '`string`'
@@ -157,6 +156,10 @@ rows:
     type: '`bool`'
     description: "Enable the Gateway API experimental features."
     default: '`false`'
+  - flag: '`--enable-validating-webhook`'
+    type: '`bool`'
+    description: "Enable the validating webhook."
+    default: '`true`'
   - flag: '`--enforce-config`'
     type: '`bool`'
     description: "Enforce the configuration on the generated cluster resources. If set to false, the operator will only enforce the configuration when the owner resource spec changes."
@@ -228,7 +231,7 @@ rows:
   - flag: '`--zap-time-encoding`'
     type: '`string`'
     description: "Zap time encoding (one of 'epoch', 'millis', 'nano', 'iso8601', 'rfc3339' or 'rfc3339nano'). Defaults to 'epoch'."
-    default: '`epoch`'
+    default: ""
 {% endtable %}
 
 <!-- vale on -->
