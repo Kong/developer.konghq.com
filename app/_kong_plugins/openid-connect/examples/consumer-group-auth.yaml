@@ -7,7 +7,8 @@ extended_description: |
   
   This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods) with Consumer Groups.
 
-  {% include_cached plugins/oidc/client-auth.md %}
+  For a full example that shows you how to set up the OpenID Connect plugin to map Consumers to IdP users, 
+  see [Configure OpenID Connect with Consumer Group authorization](/how-to/configure-oidc-with-consumer-groups/).
 
 weight: 849
 
