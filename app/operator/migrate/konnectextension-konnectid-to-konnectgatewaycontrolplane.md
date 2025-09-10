@@ -14,15 +14,8 @@ related_resources:
     url: /operator/konnect/reference/migrate-1.4-1.5/
 ---
 
-## Background
 
-
-In KO 2.0.0, the `konnectID` field has been **removed** from the `KonnectExtension` resource. 
-
-**Who needs this guide?**
-
-
-This migration guide is only relevant for users who are currently using the `konnectID` field in their `KonnectExtension`. If you are not using the `konnectID` field, you do not need to take any action.
+In {{ site.operator_product_name }} 2.0.0, the `konnectID` field has been **removed** from the `KonnectExtension` resource. If you are using the `konnectID` field in your `KonnectExtension`, you must migrate.
 
 If you are using `konnectID`, you must update your manifests to use the new `konnectgatewaycontrolplane` reference before upgrading. This is a required step to ensure a smooth migration and avoid breaking changes.
 
