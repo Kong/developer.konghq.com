@@ -594,11 +594,9 @@ Inputs:
 #### `cache` resource
 
 The `cache` node requires a `resources.cache` resource definition containing 
-cache configuration:
+cache configuration.
 
-* `resources.cache.strategy`: one of `memory` or `redis`.
-* `resources.cache.memory` TODO
-* `resoure.cache.redis`: TODO
+{% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
 
 Outputs:
 

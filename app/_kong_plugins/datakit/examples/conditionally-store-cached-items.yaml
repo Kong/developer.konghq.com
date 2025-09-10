@@ -5,11 +5,21 @@ extended_description: |
   This example leverages the `cache` and `branch` nodes to conditionally store or retrieve
   cache items.
 
-title: Conditionally fetch or store cache data.
+  The `cache` node requires a cache resource. In this example, we use an in-memory cache resource. 
+  For all options, see the [`cache` resource reference](/plugins/datakit/#cache-resource).
+
+  {:.info}
+  > **Note:** When using the `branch` node, the `then` and `else` parameters must list all nodes for both branches.
+    If a node isn't listed in the branch, the node will run depending on its location in the flow configuration.
+
+title: Conditionally fetch or store cache data
 
 weight: 900
 
 config:
+  resources:
+    cache:
+      strategy: memory
   nodes:
     - type: static
       values:
@@ -48,20 +58,17 @@ config:
         ttl: VALUES.ttl
       name: SET
     - inputs:
-      headers: VALUES.miss
-      body: DATA
+        headers: VALUES.miss
+        body: DATA
       type: exit
       status: 200
       name: EXIT_MISS
     - inputs:
-      headers: VALUES.hit
-      body: GET.data
+        headers: VALUES.hit
+        body: GET.data
       type: exit
       status: 200
       name: EXIT_HIT
-      resources:
-        cache:
-          strategy: memory
 
 tools:
   - deck
