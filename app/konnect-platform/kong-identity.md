@@ -99,14 +99,13 @@ In the authorization code flow:
 5. The client exchanges this code at the `/oauth/token` endpoint for access tokens.
 6. The client uses the access token to call protected APIs.
 
-<!--
-For Consumer Group-scoped plugins:
-- Create a consumer per client in the respective control plane.
-- No need to migrate the client credential to a consumer credential.
-- The OIDC plugin maps clients to consumers using claims.
-- Create the required consumer groups and apply the plugin at the consumer group scope.
-- Add each consumer to the appropriate consumer group in the control plane.
--->
+To enable plugin application at the [Consumer Group](/gateway_entities/consumer-group/) level, follow these steps:
+1. In **Konnect > API Gateway > Consumers**, create a consumer for each client.
+
+   {:.info}
+   > You don't need to migrate the client credential to a consumer credential. The OIDC plugin maps clients to consumers based on token claims.
+2. Create the required Consumer Groups and apply the plugin at the consumer group scope.
+3. Assign each consumer to the appropriate Consumer Group.
 
 ## Dynamic claim templates
 
