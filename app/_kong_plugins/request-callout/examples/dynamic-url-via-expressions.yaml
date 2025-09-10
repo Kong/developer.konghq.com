@@ -31,3 +31,6 @@ tools:
   - konnect-api
   - kic
   - terraform
+  
+min_version:
+  gateway: '3.12'
