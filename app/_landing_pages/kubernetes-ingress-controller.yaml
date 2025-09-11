@@ -201,7 +201,7 @@ rows:
               {% endtable %}
 
               {:.info}
-              > All other Kong {{ site.base_gateway }} features that can be configured through CRDs are supported equally in both models. For example, plugins, health checks, or load balancing.
+              > All other {{ site.base_gateway }} features that can be configured through CRDs are supported equally in both models. For example, plugins, health checks, or load balancing.
 
   - header:
       type: h3
