@@ -15,10 +15,6 @@ works_on:
 
 entities: []
 
-tags:
-  - ControlPlane
-  - feature-gates
-  - controllers
 min_version:
   operator: '2.0'
 
