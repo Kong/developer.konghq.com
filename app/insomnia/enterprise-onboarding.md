@@ -70,7 +70,7 @@ Using the _Product_ and _Engineering_ organizations example above, you could cre
 
 To create teams manually:
 
-1. Go to [**Teams**](https://app.insomnia.rest/app/enterprise/team).
+1. Navigate to [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click **Create Team**. 
 1. In the **Team name** field, enter a team name.
 1. In the **Description** field, enter a team description.
@@ -95,7 +95,8 @@ New users can be invited to your Enterprise instance in three different ways:
 
 ### Invite a user to an organization
 
-1. Go to [Organizations](https://app.insomnia.rest/app/dashboard/organizations) and open the org in which you want to invite users.
+1. Go to [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
+1. Click the org that you want to invite users to.
 1. In the **Invite** field, enter the users' email addresses.
 1. Click **Invite**.
 
@@ -104,7 +105,8 @@ Once the users accept the invitation, they will have access to the content in th
 
 ### Invite a user to a team
 
-1. Go to [Teams](https://app.insomnia.rest/app/enterprise/team) and open the team in which you want to invite users.
+1. Navigate to [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team).
+1. Click the team you want to invite users to.
 1. In the **Invite new members** field, enter the users' email addresses.
 1. Select a role from the dropdown menu.
 1. Click **Invite**.
@@ -148,7 +150,7 @@ See our how-to guides to learn how to configure SCIM for Insomnia with:
 
 Insomnia allows you to have control over the [storage options](/insomnia/storage/) used in your instance. You can define whether users can use [Cloud Sync](/insomnia/storage/#cloud-sync), [Local Vault](/insomnia/storage/#local-vault), or [Git Sync](/insomnia/storage/#git-sync) storage, or a combination of these.
 
-1. Go to [**Storage**](https://app.insomnia.rest/app/enterprise/storage).
+1. Navigate to [**Enterprise Controls** > **Storage**](https://app.insomnia.rest/app/enterprise/storage).
 1. Click the **Edit** icon for your personal workspaces and organizations.
 1. Select the storage options you want to allow.
 1. Click **Save**.
