@@ -55,7 +55,7 @@ By default, your account is created with an organization named **Personal Worksp
 You can invite users to that organization, but you can also create other organizations to manage access to projects.
 Let's take the example of [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file#kongair): the airline might have a _Cargo_ organization and a _Passengers_ organization, with different projects accessible to different users and teams.
 
-1. Go to [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
+1. In the Insomnia Admin app, navigate to your Insomnia account dropdown menu and click [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
 1. Click **New organization**.
 1. In the **Organization name** field, enter a name for your organization.
 1. Click **Create organization**.
@@ -74,7 +74,8 @@ Using the [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file
 
 To create teams manually:
 
-1. Navigate to [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team).
+1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
+1. In the sidebar, click [**Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click **Create Team**. 
 1. In the **Team name** field, enter a team name.
 1. In the **Description** field, enter a team description.
@@ -99,7 +100,7 @@ New users can be invited to your Enterprise instance in three different ways:
 
 ### Invite a user to an organization
 
-1. Go to [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
+1. In your Insomnia account dropdown menu, click [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
 1. Click the org that you want to invite users to.
 1. In the **Invite** field, enter the users' email addresses.
 1. Click **Invite**.
@@ -109,7 +110,8 @@ Once the users accept the invitation, they will have access to the content in th
 
 ### Invite a user to a team
 
-1. Navigate to [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team).
+1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
+1. In the sidebar, click [**Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click the team you want to invite users to.
 1. In the **Invite new members** field, enter the users' email addresses.
 1. Select a role from the dropdown menu.
@@ -122,7 +124,8 @@ Once the users accept the invitation, they will have access to the organizations
 Adding a domain allows you to automatically manage users with email addresses in that domain. It's also a prerequisite for SSO and SCIM.
 
 To add a new domain:
-1. Navigate to [**Enterprise Controls** > **Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
+1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
+1. In the sidebar, click [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Click **New Domain**.
 1. From the **Verify using** settings, select how you want to verify your domain:
   * **Unique verification record**: This is the option to use for most domains.
@@ -157,7 +160,8 @@ Insomnia allows you to have control over the [storage options](/insomnia/storage
 
 This allows you to completely control where your proprietary code and data are, and what servers they touch.
 
-1. Navigate to [**Enterprise Controls** > **Storage**](https://app.insomnia.rest/app/enterprise/storage).
+1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
+1. In the sidebar, click [**Storage**](https://app.insomnia.rest/app/enterprise/storage).
 1. Click the **Edit** icon for your personal workspaces and organizations.
 1. Select the storage options you want to allow.
 1. Click **Save**.
