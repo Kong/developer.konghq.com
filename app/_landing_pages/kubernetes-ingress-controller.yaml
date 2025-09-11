@@ -144,8 +144,8 @@ rows:
             config: |
               {{ site.kic_product_name }} integrates Kong {{ site.base_gateway }} with Kubernetes by translating Kubernetes resources into {{ site.base_gateway }} configuration.
               Feature support differs depending on the operational model:
-              - Standalone: You provision and manage Kong {{ site.base_gateway }} yourself, and {{ site.kic_product_name }} applies configuration using Kubernetes resources.
-              - With Kong Gateway Operator (KO/KGO): The Operator provisions and manages {{ site.base_gateway }} deployments declaratively, while {{ site.kic_product_name }} handles configuration. 
+              - **Standalone (KIC only)**: You provision and manage Kong {{ site.base_gateway }} yourself, and {{ site.kic_product_name }} applies configuration using Kubernetes resources.
+              - **With Kong Gateway Operator (KO/KGO): The Operator provisions and manages {{ site.base_gateway }} deployments declaratively, while {{ site.kic_product_name }} handles configuration. 
               
               To compare support in each model, use the following table:
               
@@ -153,7 +153,7 @@ rows:
               columns:
                 - title: Feature
                   key: feature
-                - title: KIC 
+                - title: KIC-only Mode
                   key: kic
                 - title: KO/KGO Hybrid Mode
                   key: ko/kgo
