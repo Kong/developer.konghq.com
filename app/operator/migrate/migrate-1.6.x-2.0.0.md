@@ -68,7 +68,7 @@ helm uninstall kgo -n kong-system
 
 To ensure the {{site.operator_product_name}} can properly reconcile the Secrets in your cluster, they need to be labeled with `konghq.com/secret=true`.
 
-This allows efficient listing of Secrets and prevents ingesting those that are irrelvent from Kong configuration standpoint.
+This allows efficient listing of Secrets and prevents ingesting those that are irrelevant from Kong configuration standpoint.
 
 This includes the CA certificate secret. To label it as described above it you can run the following command:
 
