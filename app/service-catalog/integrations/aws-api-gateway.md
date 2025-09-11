@@ -48,6 +48,33 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
 1. Click **Create role**.
 1. For the Trusted entity type, select **AWS account**.
 1. For the AWS account settings, select **Another AWS account**.
+1. In the **Account ID** field, enter `144681897537`. 
+
+   This is {{site.konnect_short_name}}'s account ID that is used for the IAM role principal.
+1. Select the **Require external ID** checkbox.
+1. In the **External ID** field, enter your {{site.konnect_short_name}} organization ID. You can find this by sending a [GET request to `/organizations/me`](/api/konnect/identity/#/operations/get-organizations-me) or in the {{site.konnect_short_name}} UI by navigating to your account in the top right and clicking the copy icon next to your organization name.
+1. Click **Next**.
+1. Permissions here???
+1. In the **Role name** field, enter `service-catalog-integration`. 
+1. In the **Permission policy summary** field, enter the following:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      { "Sid": "CloudWatchRead",
+        "Effect": "Allow",
+        "Action": ["cloudwatch:GetMetricData", "cloudwatch:GetMetricStatistics"],
+        "Resource": "*"
+      },
+      { "Sid": "ApiGwRead",
+        "Effect": "Allow",
+        "Action": ["apigateway:GET"],
+        "Resource": "*"
+      }
+    ]
+  }
+```
+1. Click **Create role**.
 {% endnavtab %}
 {% navtab "AWS CLI" %}
 1. Get your {{site.konnect_short_name}} org ID:
@@ -122,9 +149,10 @@ aws iam put-role-policy \
 1. Click **AWS API Gateway**.
 1. Click **Add AWS API Gateway instance**.
 1. From the **AWS region** dropdown, select your AWS region.
-1. In the **IAM role ARN** field, enter the IAM role you configured for Service Catalog.
-1. 
-1. Click **Authorize**. 
+1. In the **IAM role ARN** field, enter the [IAM role you configured for Service Catalog](#configure-an-iam-role-in-aws-for-service-catalog).
+1. In the **Display name** field, enter a name for your AWS API Gateway instance.
+1. In the **Instance name** field, enter a unique identifier for your AWS API Gateway instance.
+1. Click **Save**. 
 
 ## Resources
 
