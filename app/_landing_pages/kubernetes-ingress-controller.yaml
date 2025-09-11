@@ -153,9 +153,9 @@ rows:
               columns:
                 - title: Feature
                   key: feature
-                - title: KIC-only Mode
+                - title: KIC-only Model
                   key: kic
-                - title: KO/KGO Hybrid Mode
+                - title: KO/KGO Hybrid Model
                   key: hybrid
               rows:
                 - feature: "**Configuration**"
