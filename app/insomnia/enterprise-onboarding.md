@@ -40,16 +40,20 @@ If you're new to Insomnia Enterprise, this document will guide you through the f
 Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code.
 The first thing you'll need to do is:
 
-1. Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update).
-1. Select the Enterprise plan, and enter your activation code.
-
-Once this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
+1. In the Insomnia Admin app, click **Upgrade**.
+1. On the [Change subscription plan](https://app.insomnia.rest/app/subscription/update) page, select the Enterprise plan.
+1. Enter your activation code.
+1. Click **Verify activation code**.
+   
+   Once this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
+1. Click your email address in the header and make sure that your Enterprise instance is selected.
+1. Click **Enterprise Controls** to access your Enterprise configuration options.
 
 ## 2. Create organizations
 
 By default, your account is created with an organization named **Personal Workspace**. 
 You can invite users to that organization, but you can also create other organizations to manage access to projects.
-For example, you could have a _Product_ organization and an _Engineering_ organization, with different projects accessible to different users.
+Let's take the example of [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file#kongair): the airline might have a _Cargo_ organization and a _Passengers_ organization, with different projects accessible to different users and teams.
 
 1. Go to [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
 1. Click **New organization**.
@@ -59,11 +63,11 @@ For example, you could have a _Product_ organization and an _Engineering_ organi
 ## 3. Create teams
 
 You can add individual users to organizations, but you can also create teams and link them to organizations.
-Using the _Product_ and _Engineering_ organizations example above, you could create:
+This allows you to manage users more efficiently instead of having to invite each user to each organization manually.
 
-* An _Admin_ team which has access to both organizations
-* A _Dev_ team which only has access to the engineering organization
-* A _Product_ team which only has access to the product organization
+Using the [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file#kongair) example, you could create:
+* A _Flight_ team which has access to both organizations
+* A _Sales_ team which only has access to the _Passengers_ organization
 
 {:.info}
 > You can either create teams manually, or through your [SCIM](#7-enable-scim) provider. Manually created teams can be synchronized with SCIM teams.
@@ -117,7 +121,6 @@ Once the users accept the invitation, they will have access to the organizations
 
 Adding a domain allows you to automatically manage users with email addresses in that domain. It's also a prerequisite for SSO and SCIM.
 
-To add a new domain:
 1. Go to [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list) and click **New Domain**.
 1. From the **Verify using** settings, select how you want to verify your domain:
   * **Unique verification record**: This is the option to use for most domains.
@@ -149,6 +152,8 @@ See our how-to guides to learn how to configure SCIM for Insomnia with:
 ## 8. Configure storage control
 
 Insomnia allows you to have control over the [storage options](/insomnia/storage/) used in your instance. You can define whether users can use [Cloud Sync](/insomnia/storage/#cloud-sync), [Local Vault](/insomnia/storage/#local-vault), or [Git Sync](/insomnia/storage/#git-sync) storage, or a combination of these.
+
+This allows you to completely control where your proprietary code and data are, and what servers they touch.
 
 1. Navigate to [**Enterprise Controls** > **Storage**](https://app.insomnia.rest/app/enterprise/storage).
 1. Click the **Edit** icon for your personal workspaces and organizations.
