@@ -187,7 +187,7 @@ rows:
                     - Route and service names longer than 512 characters may block sync.
                   hybrid: "Same {{site.konnect_short_name}} behavior and restriction. No change between models"
                 - feature: "**Hybrid mode plugins**"
-                  kic: "Not applicable — Standalone mode does not use Hybrid Gateway."
+                  kic: "Not applicable — Standalone model does not use Hybrid Gateway."
                   hybrid: |
                     When {{ site.base_gateway }} runs in hybrid mode:
                     - Rate Limiting, Rate Limiting Advanced, Response Rate Limiting, AI Rate Limiting Advanced, and Service Protection cannot use the `cluster` strategy (use `local` or Redis).
