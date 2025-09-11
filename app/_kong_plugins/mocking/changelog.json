@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.3": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin schema with object type. It should return an array type instead of an object type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where random delays were out of range.",
@@ -89,6 +96,13 @@
   "3.4.3.19": [
     {
       "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.21": [
+    {
+      "message": "Fixed an issue where an empty array set in the mocking plugin schema with object type. It should return an array type instead of an object type in the response body.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -716,6 +716,7 @@ serverless
 serviceaccounts
 serviceless
 shm
+show_in_api
 Sigstore
 slas
 slsa

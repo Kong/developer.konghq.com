@@ -63,6 +63,8 @@ jobs:
       - name: npm install
         run: npm ci
       - name: Run site
+        env:
+          ENABLE_ALGOLIA: 0
         run: |
           npx netlify dev & npx wait-on http://localhost:8888
 
@@ -76,6 +78,7 @@ jobs:
         working-directory: tools/automated-tests
         run: |
           npm ci
+          npx playwright install --with-deps chromium
           npm run generate-instruction-files
 
       - name: Run tests

@@ -40,7 +40,10 @@ Organization owners and admins can invite new users to an organization:
 1. Enter the email addresses of the users to invite and click **Invite**.
 1. Enter your passphrase and click **Invite**.
 
-By default, new users are added with the **Member** role. 
+By default, new users are added with the **Member** role.
+
+{:.warning} 
+> Invitation links expire after 30 days. If an invite expires before the user accepts it, the pre-authorised license seat is released and becomes available for reuse.
 
 ## Transfer an organization
 

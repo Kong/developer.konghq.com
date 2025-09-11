@@ -3,11 +3,10 @@ destination: dist
 permalink: pretty
 timezone: America/San_Francisco
 markdown: kramdown
+highlighter: none
 kramdown:
-  syntax_highlighter: rouge
   syntax_highlighter_opts:
-    css_class: "highlight"
-    guess_lang: true
+    disable: true
 incremental: true
 liquid:
   error_mode: strict
@@ -165,6 +164,7 @@ mesh:
 # Version vars
 latest_gateway_oss_version: "3.9.1"
 
+# Operator vars
 operator_gatewayconfiguration_api_version: "v2beta1"
 operator_konnectgatewaycontrolplane_api_version: "v1alpha2"
 operator_konnectextension_api_version: "v1alpha2"

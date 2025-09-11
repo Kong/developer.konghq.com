@@ -70,6 +70,8 @@
 /mesh/networking/transparent-proxying   /mesh/transparent-proxying/
 /reference/proxy-template  /mesh/policies/proxy-template/
 /mesh/production/secure-deployment/manage-control-plane-permissions-on-kubernetes/ /mesh/manage-control-plane-permissions-on-kubernetes/
+/mesh/production/secure-deployment/secrets/ /mesh/manage-secrets/
+
 
 /docs/:version/policies/*   /mesh/policies/:splat
 /docs/:version/*    /mesh/:splat

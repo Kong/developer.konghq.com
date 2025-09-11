@@ -85,6 +85,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.3": [
+    {
+      "message": "Fix regression where the upstream request body would not be forwarded if `upstream.body.custom` was empty.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added the `request-callout` plugin, which provides complex request augmentation and internal authentication.\n",

@@ -4671,6 +4671,7 @@ components:
           type: string
         value:
           type: string
+          writeOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -4686,6 +4687,7 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
       required:
         - key
         - value
@@ -4696,6 +4698,7 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
       required:
         - value
     ACL:
