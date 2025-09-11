@@ -121,7 +121,9 @@ Once the users accept the invitation, they will have access to the organizations
 
 Adding a domain allows you to automatically manage users with email addresses in that domain. It's also a prerequisite for SSO and SCIM.
 
-1. Go to [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list) and click **New Domain**.
+To add a new domain:
+1. Navigate to [**Enterprise Controls** > **Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
+1. Click **New Domain**.
 1. From the **Verify using** settings, select how you want to verify your domain:
   * **Unique verification record**: This is the option to use for most domains.
   * **Root domain verification record**: You can this option to reuse the existing verification record of a root domain to verify a subdomain. For example, if you have already verified the `example.com` domain, you can use this option to verify `app.example.com` without having to add a new record to your DNS.
