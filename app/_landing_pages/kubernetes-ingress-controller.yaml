@@ -147,7 +147,7 @@ rows:
               - **Standalone (KIC only)**: You provision and manage Kong {{ site.base_gateway }} yourself, and {{ site.kic_product_name }} applies configuration using Kubernetes resources.
               - **With Kong Gateway Operator (KO/KGO)**: The Operator provisions and manages {{ site.base_gateway }} deployments declaratively, while {{ site.kic_product_name }} handles configuration. 
               
-              To compare support in each model, use the following table:
+              To compare feature support in each model, use the following table:
               
               {% table %}
               columns:
