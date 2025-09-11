@@ -55,12 +55,10 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
    helm upgrade --install ko kong/kong-operator -n kong-system \
      --create-namespace \
      --set image.tag={{ site.data.operator_latest.release }} \
-     --set kubernetes-configuration-crds.enabled=true \
      --set env.ENABLE_CONTROLLER_KONNECT=true
    ```
 
 {% include k8s/cert-manager.md %}
-
 
 ## Wait for {{ site.operator_product_name }} to be ready
 
