@@ -449,6 +449,7 @@ invalid connection ("get-bar" -> "response.body"): conflicts with existing conne
 
 The Datakit plugin provides the following node types:
 
+* `cache`: Store and fetch cached data.
 * `call`: Send third-party HTTP calls.
 * `jq`: Transform data and cast variables with `jq` to be shared with other nodes.
 * `exit`: Return directly to the client.
@@ -467,6 +468,10 @@ columns:
   - title: Attributes
     key: attributes
 rows:
+  - nodetype: "cache"
+    inputs: "`key`, `ttl`, `data`"
+    outputs: "`hit`, `miss`, `stored`, `data`"
+    attributes: "`bypass_on_error`, `ttl`"
   - nodetype: "`call`"
     inputs: "`body`, `headers`, `query`"
     outputs: "`body`, `headers`, `status`"
@@ -492,8 +497,10 @@ rows:
 
 ### Implicit nodes
 
-Datakit also defines a number of implicit nodes that can be used without being
-explicitly declared. These reserved node names can't be used for user-defined
+Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
+These nodes can either be used without being explicitly declared, or declared under the global resources object.
+
+These reserved node names can't be used for user-defined
 nodes. They include:
 
 <!--vale off-->
@@ -507,23 +514,34 @@ columns:
     key: outputs
   - title: Description
     key: description
+  - title: declaration
+    key: declaration
 rows:
   - node: "`request`"
     inputs: none
     outputs: "`body`, `headers`, `query`"
     description: Reads incoming client request properties
+    declaration: none
   - node: "`service_request`"
     inputs: "`body`, `headers`, `query`"
     outputs: none
     description: Updates properties of the request sent to the service being proxied to
+    declaration: none
   - node: "`service_response`"
     inputs: none
     outputs: "`body`, `headers`"
     description: Reads response properties from the service being proxied to
+    declaration: none
   - node: "`response`"
     inputs: "`body`, `headers`"
     outputs: none
     description: Updates properties of the outgoing client response
+    declaration: none
+  - node: "`vault`"
+    inputs: none
+    outputs: "`$self`"
+    description: Vault reference to hold secret values
+    declaration: "resources.vault"
 {% endtable %}
 <!--vale off-->
 
@@ -552,6 +570,52 @@ The `request.body` and `service_response.body` outputs have a similar behavior.
 If the corresponding `Content-Type` header matches the JSON mime-type, the
 `body` output is automatically JSON-decoded.
 
+#### Vault node
+The `vault` node is an implicit node that allows you to declare secret references
+and can be used in other nodes as a source of secret values. Vault references are declared
+under the `resources.vault` configuration.
+
+##### Examples
+
+Declare two vault references and use them in a `jq` node:
+```yaml
+resources:
+  vault:
+    secret1: "{vault://env/my-secret1}"
+    secret2: "{vault://aws/my-secret2}"
+nodes:
+  - name: JQ
+    type: jq
+    inputs:
+      secret1: vault.secret1
+      secret2: vault.secret2
+    jq: "."
+```
+
+### `cache` node
+
+Stored data into cache and fetch cached data from cache.
+
+Inputs:
+
+* `key` (**required**): the cache key string
+* `ttl`: The TTL (Time to Live) in seconds
+* `data`: The data to be cached. If not null, the cache node works in set mode, 
+  storing data into cache; if null, the cache node fetches data
+  
+Outputs:
+
+* `hit`: `true` if a cache hit occured
+* `miss`: `true` if a cache miss occurred
+* `stored`: `true` if data was successfuly stored into cache
+* `data`: The data that was stored into cache
+
+Configuration attributes:
+
+* `bypass_on_error`: if `true`, cache backend errors are treated as a cache 
+  miss
+* `ttl`: The TTL (Time to Live) in seconds
+
 ### `call` node
 
 Send an HTTP request and retrieve the response.
@@ -561,6 +625,13 @@ Inputs:
 * `body`: Request body
 * `headers`: Request headers
 * `query`: Key-value pairs to encode as the request query string
+
+#### `cache` resource
+
+The `cache` node requires a `resources.cache` resource definition containing 
+cache configuration.
+
+{% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
 
 Outputs:
 
@@ -1313,6 +1384,13 @@ Set common request headers for different API requests:
   inputs:
     headers: HEADERS
 ```
+
+## Resources
+
+Datakit supports a global `resources` object that can be used to declare shared resource configurations.
+
+### Vault
+Refer to the [Vault node](#vault-node) for more details on how to use vault references in Datakit.
 
 ## Debugging
 
