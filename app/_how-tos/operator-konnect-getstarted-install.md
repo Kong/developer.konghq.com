@@ -77,7 +77,7 @@ Wait for the {{site.operator_product_name}}'s controller deployment to become av
 kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kgo-gateway-operator-controller-manager
 ```
 
-Once the {{site.operator_product_name}} is ready, you can begin provisioning Gateway Control Planes and Data Planes using {{site.konnect_short_name}} CRDs, the output will look like: 
+Once the {{site.operator_product_name}} is ready, you can begin provisioning Gateway Control Planes and Data Planes using {{site.konnect_short_name}} CRDs, the output will look like:
 
 ```sh
 deployment.apps/kgo-gateway-operator-controller-manager condition met
