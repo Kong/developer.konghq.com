@@ -165,7 +165,7 @@ rows:
                   kic: "Supports `Ingress`, `HTTPRoute`, `TCPRoute`, and `UDPRoute`. From KIC 3.5 onward, compliant with Gateway API v1.3."
                   hybrid: "Supports `GatewayClass`, `Gateway`, and `GRPCRoute`, in addition to `HTTPRoute`, `TCPRoute`, and `UDPRoute`."
                 - feature: "**Feature Gates**"  
-                  kic: |
+                  kic:
                     "Enable advanced or experimental behavior: `FillIDs`, `RewriteURIs`, `CombinedServicesFromDifferentHTTPRoutes`.
                     - `FillIDs` can cause UUID collisions across workspaces with identical Consumers.
                     - Disable `CombinedRoutes` if per-route plugin configuration is required."
@@ -174,7 +174,7 @@ rows:
                   kic: "Applies valid configuration while skipping invalid objects to maintain cluster stability."
                   hybrid: "Identical fallback behavior. No change between models."
                 - feature: "**Last Known Good Config**"
-                  kic: |
+                  kic:
                     "Retains the last accepted configuration in memory and reapplies it after restart.
                     - Does not reload automatically if only the Kong proxy container restarts; use `CONTROLLER_ENABLE_REVERSE_SYNC=true` to force reloads."
                   hybrid: "Identical last-known-good behavior and limitation. No change between models."
@@ -188,7 +188,7 @@ rows:
                   hybrid: "Same {{site.konnect_short_name}} behavior and restriction. No change between models"
                 - feature: "**Hybrid mode plugins**"
                   kic: "Not applicable — Standalone mode does not use Hybrid Gateway."
-                  hybrid: |
+                  hybrid:
                     "When Kong {{ site.base_gateway }} runs in hybrid mode:
                     - Rate Limiting, Rate Limiting Advanced, Response Rate Limiting, AI Rate Limiting Advanced, and Service Protection cannot use the `cluster` strategy (use `local` or Redis).
                     - GraphQL Rate Limiting Advanced requires Redis.
