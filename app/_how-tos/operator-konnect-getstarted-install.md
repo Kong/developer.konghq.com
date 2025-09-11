@@ -26,6 +26,10 @@ entities: []
 prereqs:
   skip_product: true
 
+tldr:
+  q: How do I install {{site.operator_product_name}}?
+  a: Use Helm and Kong's `kong-operator` chart.
+
 ---
 
 ## Install {{site.operator_product_name}}
