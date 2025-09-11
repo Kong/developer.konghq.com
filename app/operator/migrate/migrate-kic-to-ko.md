@@ -64,7 +64,7 @@ Install the new Kong Operator using Helm:
 
 ```bash
 helm repo update kong
-helm upgrade --install ko kong/kong-operator \
+helm upgrade --install kong-operator kong/kong-operator \
   -n kong-system \
   --create-namespace \
   --take-ownership \
@@ -84,7 +84,7 @@ kubectl get pod -n kong-system
 ```
 Check operator logs:
 ```
-kubectl logs -n kong-system -l app=ko-kong-operator
+kubectl logs -n kong-system -l app=kong-operator-kong-operator
 ```
 
 ### Step 4: Prepare the `Gateway` manifest to replace {{ site.base_gateway }} and {{ site.kic_product_name_short }}

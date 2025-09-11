@@ -78,7 +78,7 @@ Install the new Kong Operator using Helm:
 
 ```bash
 helm repo update kong
-helm upgrade --install ko kong/kong-operator \
+helm upgrade --install kong-operator kong/kong-operator \
   -n kong-system \
   --create-namespace \
   --take-ownership \
@@ -102,6 +102,5 @@ Verify that Kong Operator 2.0.0 is running correctly.
 
 1. Check Kong Operator logs:
     ```sh
-    kubectl logs -n kong-system -l app=ko-kong-operator
+    kubectl logs -n kong-system -l app=kong-operator-kong-operator
     ```
-

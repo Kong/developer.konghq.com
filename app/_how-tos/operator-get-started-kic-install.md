@@ -52,7 +52,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 1. Install {{ site.kic_product_name }} using Helm:
 
    ```bash
-   helm upgrade --install ko kong/kong-operator -n kong-system \
+   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
      --create-namespace \
      --set image.tag={{ site.data.operator_latest.release }} \
      --set env.ENABLE_CONTROLLER_KONNECT=true
@@ -64,8 +64,8 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {% validation custom-command %}
 command: |
-  kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/ko-kong-operator-controller-manager
+  kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kong-operator-kong-operator-controller-manager
 expected:
-  stdout: "deployment.apps/ko-kong-operator-controller-manager condition met"
+  stdout: "deployment.apps/kong-operator-kong-operator-controller-manager condition met"
   return_code: 0
 {% endvalidation %}
