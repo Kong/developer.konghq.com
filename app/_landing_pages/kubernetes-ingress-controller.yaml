@@ -142,9 +142,9 @@ rows:
       - blocks:
           - type: text
             config: |
-              {{ site.kic_product_name }} integrates Kong {{ site.base_gateway }} with Kubernetes by translating Kubernetes resources into {{ site.base_gateway }} configuration.
+              {{ site.kic_product_name }} integrates  {{ site.base_gateway }} with Kubernetes by translating Kubernetes resources into {{ site.base_gateway }} configuration.
               Feature support differs depending on the operational model:
-              - **Standalone (KIC only)**: You provision and manage Kong {{ site.base_gateway }} yourself, and {{ site.kic_product_name }} applies configuration using Kubernetes resources.
+              - **Standalone (KIC only)**: You provision and manage  {{ site.base_gateway }} yourself, and {{ site.kic_product_name }} applies configuration using Kubernetes resources.
               - **With Kong Gateway Operator (KO/KGO)**: The Operator provisions and manages {{ site.base_gateway }} deployments declaratively, while {{ site.kic_product_name }} handles configuration. 
               
               To compare feature support in each model, use the following table:
@@ -159,7 +159,7 @@ rows:
                   key: hybrid
               rows:
                 - feature: "**Configuration**"
-                  kic: "Configure all Kong {{ site.base_gateway }} entities with CRDs directly. For example, Services, Routes, Consumers, Plugins, Certificates, CA Certificates, Vaults."
+                  kic: "Configure all {{ site.base_gateway }} entities with CRDs directly. For example, Services, Routes, Consumers, Plugins, Certificates, CA Certificates, Vaults."
                   hybrid: "Same configuration scope, however gateways are provisioned and reconciled automatically by the Operator."
                 - feature: "**{{ site.base_gateway }} API**" 
                   kic: "Supports `Ingress`, `HTTPRoute`, `TCPRoute`, and `UDPRoute`. From KIC 3.5 onward, compliant with Gateway API v1.3."
@@ -189,7 +189,7 @@ rows:
                 - feature: "**Hybrid mode plugins**"
                   kic: "Not applicable — Standalone mode does not use Hybrid Gateway."
                   hybrid:
-                    "When Kong {{ site.base_gateway }} runs in hybrid mode:
+                    "When {{ site.base_gateway }} runs in hybrid mode:
                     - Rate Limiting, Rate Limiting Advanced, Response Rate Limiting, AI Rate Limiting Advanced, and Service Protection cannot use the `cluster` strategy (use `local` or Redis).
                     - GraphQL Rate Limiting Advanced requires Redis.
                     - OAuth 2.0 Authentication not supported.
