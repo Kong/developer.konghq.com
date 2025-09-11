@@ -48,7 +48,7 @@ Some entities in {{site.base_gateway}} share common configuration settings that 
 Partials address this issue by allowing you to extract shared configurations into reusable entities that can be linked to multiple plugins. To ensure validation and consistency, Partials have defined types. 
 
 {{site.base_gateway}} supports the following types of Partials; each plugin supports only one type:
-- `redis-ce`: A shorter, simpler configuration.
+- `redis-ce`: A short and simple configuration.
 - `redis-ee`: A configuration with support for Redis Sentinel or Redis Cluster connections.
 
 Any plugin that supports Redis configuration can reference those settings using Partial entities, enabling shared configuration across plugin instances.
@@ -105,13 +105,13 @@ rows:
     Benefit: "Apply the same Redis setup across multiple rate-limiting policies without duplication."
   - Name: "[Rate Limiting Advanced](/plugins/rate-limiting-advanced/)"
     Redis: "Request counters (supports Sentinel/Cluster)"
-    Benefit: "Centralise complex Redis HA configuration so all services use it reliably."
+    Benefit: "Centralize complex Redis HA configuration so all services use it reliably."
   - Name: "[Response Rate Limiting](/plugins/response-ratelimiting/)"
     Redis: "Response counters"
     Benefit: "Ensure consistent Redis-backed throttling rules across different services."
   - Name: "[SAML](/plugins/saml/)"
     Redis: "Session data"
-    Benefit: "Centralise session handling so all SAML flows share the same Redis configuration."              
+    Benefit: "Centralize session handling so all SAML flows share the same Redis configuration."              
 {% endtable %}
 
 The following examples describe how to use Partials with plugins.
