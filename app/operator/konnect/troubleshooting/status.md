@@ -48,7 +48,7 @@ These objects are defined under the `konnect.konghq.com` API group.
 
 Resources like `KongConsumer`, `KongService`, `KongRoute`, and `KongPlugin` configure {{ site.base_gateway }} and are **not** native to {{ site.konnect_short_name }}. These are defined under the `configuration.konghq.com` API group and may be used with other controllers, such as {{ site.kic_product_name }}.
 
-When managed by {{ site.gateway_operator_product_name }} for {{ site.konnect_short_name }}, Konnect-specific status fields appear under `.status.konnect`:
+When managed by {{ site.operator_product_name }} for {{ site.konnect_short_name }}, Konnect-specific status fields appear under `.status.konnect`:
 
 - `controlPlaneID`: The ID of the associated Konnect Control Plane.
 - `id`: The unique ID assigned by the {{ site.konnect_short_name }} API. If empty, the entity hasn't been created.

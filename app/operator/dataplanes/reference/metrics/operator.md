@@ -1,6 +1,6 @@
 ---
-title: "{{ site.gateway_operator_product_name }} metrics"
-description: "See which metrics {{ site.gateway_operator_product_name }} exposes and learn how to authenticate using a ServiceAccount to scrape the values"
+title: "{{ site.operator_product_name }} metrics"
+description: "See which metrics {{ site.operator_product_name }} exposes and learn how to authenticate using a ServiceAccount to scrape the values"
 content_type: reference
 layout: reference
 products:
@@ -15,20 +15,20 @@ breadcrumbs:
 
 ---
 
-{{ site.gateway_operator_product_name }} exposes multiple sets of metrics on the `/metrics` endpoint:
+{{ site.operator_product_name }} exposes multiple sets of metrics on the `/metrics` endpoint:
 
 - {{site.konnect_short_name}} entity operations
 - Those provided by [controller-runtime](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/metrics).
 
 ## Configuration
 
-{{ site.gateway_operator_product_name }} itself exposes the metrics on the address set by the `--metrics-bind-address` CLI flag or `GATEWAY_OPERATOR_METRICS_BIND_ADDRESS` environment variable.
+{{ site.operator_product_name }} itself exposes the metrics on the address set by the `--metrics-bind-address` CLI flag or `GATEWAY_OPERATOR_METRICS_BIND_ADDRESS` environment variable.
 
 The default is set to `:8080`.
 
 ## How to access
 
-{{ site.gateway_operator_product_name }} uses [kube-rbac-proxy](https://github.com/brancz/kube-rbac-proxy) to secure its endpoints behind an RBAC proxy.
+{{ site.operator_product_name }} uses [kube-rbac-proxy](https://github.com/brancz/kube-rbac-proxy) to secure its endpoints behind an RBAC proxy.
 By default, [Kong's Gateway Operator Helm chart](https://github.com/Kong/charts/tree/main/charts/gateway-operator) creates a `Service` which is configured to expose `kube-rbac-proxy` behind port 8443.
 
 Assuming the following `helm` installation invocation:
@@ -50,7 +50,7 @@ NAME                                   TYPE        CLUSTER-IP    EXTERNAL-IP   P
 kgo-gateway-operator-metrics-service   ClusterIP   10.96.25.90   <none>        8443/TCP   31s
 ```
 
-Because {{ site.gateway_operator_product_name }} uses `kube-rbac-proxy` simple HTTP(S) request without a token will be rejected.
+Because {{ site.operator_product_name }} uses `kube-rbac-proxy` simple HTTP(S) request without a token will be rejected.
 You can verify that by port forwarding the exposed `Service` port:
 
 ```bash
@@ -125,14 +125,14 @@ curl -k --header "Authorization: Bearer $(TOKEN)" https://localhost:8443/metrics
 
 ## {{site.konnect_short_name}} Metrics {% new_in 1.5 %}
 
-If [{{site.konnect_short_name}} entity management](/index/operator/#konnect--get-started) is enabled, {{ site.gateway_operator_product_name }} exposes metrics to show statistics of counts and durations of calling {{site.konnect_short_name}}'s CRUD APIs.
+If [{{site.konnect_short_name}} entity management](/index/operator/#konnect--get-started) is enabled, {{ site.operator_product_name }} exposes metrics to show statistics of counts and durations of calling {{site.konnect_short_name}}'s CRUD APIs.
 The metrics are grouped by server URLs, entity types, operation types (create/update/delete/get), and the status (success/fail).
 
 * Counts of {{site.konnect_short_name}} entity operations are in the metric `gateway_operator_konnect_entity_operation_count`. It's a Prometheus counter.
 * Durations of {{site.konnect_short_name}} entity operations are in the metric `gateway_operator_konnect_entity_operation_duration_milliseconds`. It's a Prometheus histogram.
 
 {:.info}
-> **Note**: When `success = "false"` indicates the operation failed, the `status_code` label shows the status code in the response. `status_code` is `"0"` and `success` is `"false"` are operations that failed but {{ site.gateway_operator_product_name }} cannot fetch the status code. When `success` is `"true"`, the `status_code` label is empty.
+> **Note**: When `success = "false"` indicates the operation failed, the `status_code` label shows the status code in the response. `status_code` is `"0"` and `success` is `"false"` are operations that failed but {{ site.operator_product_name }} cannot fetch the status code. When `success` is `"true"`, the `status_code` label is empty.
 
 ## Example metrics dump
 

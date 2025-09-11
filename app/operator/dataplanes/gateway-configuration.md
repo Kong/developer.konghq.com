@@ -1,6 +1,6 @@
 ---
 title: "Gateway configuration"
-description: "Customize your {{ site.kic_product_name }} and {{ site.base_gateway }} deployments when using the Gateway resource"
+description: "Customize your {{ site.base_gateway }} deployments when using the Gateway resource"
 content_type: reference
 layout: reference
 products:
@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-{{ site.gateway_operator_product_name }} provides a `GatewayConfiguration` CRD to customise the deployment of `ControlPlane` and `DataPlane` resources.
+{{ site.operator_product_name }} provides a `GatewayConfiguration` CRD to customise the deployment of `ControlPlane` and `DataPlane` resources.
 
 These customizations are primarily used to set the container image and any environment variables that are required by the containers.
 

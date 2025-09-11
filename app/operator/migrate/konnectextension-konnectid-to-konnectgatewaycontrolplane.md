@@ -8,7 +8,7 @@ products:
 breadcrumbs:
   - /operator/
 related_resources:
-  - text: Migrating from {{site.operator_product_name}} 1.6.x to Kong Operator 2.0.0
+  - text: Migrating from {{site.gateway_operator_product_name}} 1.6.x to {{site.operator_product_name}} 2.0.0
     url: /operator/migrate/migrate-1.6.x-2.0.0/
   - text: Migrate Konnect DataPlanes from {{site.operator_product_name}} 1.4 to 1.5
     url: /operator/konnect/reference/migrate-1.4-1.5/

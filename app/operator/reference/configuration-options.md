@@ -1,5 +1,5 @@
 ---
-title: "{{site.gateway_operator_product_name}} configuration options"
+title: "{{site.operator_product_name}} configuration options"
 short_title: Configuration options
 description: Learn about the various settings and configurations of the operator which can be tweaked using CLI flags.
 content_type: reference
@@ -18,7 +18,7 @@ works_on:
   - konnect
 ---
 
-Configuration options allow you to customize the behavior of {{ site.gateway_operator_product_name }} to meet your needs.
+Configuration options allow you to customize the behavior of {{ site.operator_product_name }} to meet your needs.
 
 The default configuration will work for most users. These options are provided for advanced users.
 

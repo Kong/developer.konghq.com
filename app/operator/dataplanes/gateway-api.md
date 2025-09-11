@@ -1,6 +1,6 @@
 ---
 title: "Gateway API"
-description: "Understand how {{ site.gateway_operator_product_name }} interacts with Gateway API resources"
+description: "Understand how {{ site.operator_product_name }} interacts with Gateway API resources"
 content_type: reference
 layout: reference
 products:
@@ -15,8 +15,8 @@ breadcrumbs:
 
 ---
 
-Both {{ site.gateway_operator_product_name }} and [{{ site.kic_product_name }}](/kubernetes-ingress-controller/) can be configured using the [Kubernetes Gateway API](https://github.com/kubernetes-sigs/gateway-api). Configure your vendor-independent `GatewayClass` and `Gateway` objects, and {{ site.gateway_operator_product_name }} translates those requirements into Kong specific configuration.
+Both {{ site.operator_product_name }} and [{{ site.kic_product_name }}](/kubernetes-ingress-controller/) can be configured using the [Kubernetes Gateway API](https://github.com/kubernetes-sigs/gateway-api). Configure your vendor-independent `GatewayClass` and `Gateway` objects, and {{ site.operator_product_name }} translates those requirements into Kong specific configuration.
 
-When using [managed gateways](/operator/dataplanes/managed-gateways/), {{ site.gateway_operator_product_name }} watches for `GatewayClass` resources where the `spec.controllerName` is `konghq.com/gateway-operator`. When a `GatewayClass` resource is detected, {{ site.gateway_operator_product_name }} deploys an instance of {{ site.kic_product_name }} to act as a `ControlPlane` and an instance of {{ site.base_gateway }} to act a `DataPlane`.
+When using [managed gateways](/operator/dataplanes/managed-gateways/), {{ site.operator_product_name }} watches for `GatewayClass` resources where the `spec.controllerName` is `konghq.com/gateway-operator`. When a `GatewayClass` resource is detected, {{ site.operator_product_name }} deploys an instance of {{ site.kic_product_name }} to act as a `ControlPlane` and an instance of {{ site.base_gateway }} to act a `DataPlane`.
 
 You can configure traffic routing using Gateway API resources such as `HTTPRoute`, `GRPCRoute`, `TCPRoute` and `UDPRoute`. These resources are translated into Kong configuration objects by {{ site.kic_product_name }} which proxies traffic to your internal services through {{ site.base_gateway }}.

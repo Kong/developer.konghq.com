@@ -1,6 +1,6 @@
 ---
 title: "Custom resource definitions"
-description: "Explore schemas of the available Custom Resources for {{ site.gateway_operator_product_name }}"
+description: "Explore schemas of the available Custom Resources for {{ site.operator_product_name }}"
 content_type: reference
 layout: reference
 

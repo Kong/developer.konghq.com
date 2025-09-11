@@ -1,26 +1,26 @@
 metadata:
-  title: Kong Gateway Operator
+  title: Kong Operator
   content_type: landing_page
   description: |
-    {{ site.gateway_operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy Data Planes, configure {{ site.konnect_short_name }}, and more.
+    {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy Data Planes, configure {{ site.konnect_short_name }}, and more.
   products:
     - operator
 
 rows:
   - header:
       type: h1
-      text: "{{site.gateway_operator_product_name}} (KGO)"
+      text: "{{site.operator_product_name}} (KO)"
       sub_text: Deploy and manage Kong on Kubernetes using Kubernetes resources
 
   - header:
       type: h2
-      text: What is the {{site.gateway_operator_product_name}}?
+      text: What is the {{site.operator_product_name}}?
     columns:
       - blocks:
           - type: text
             config: |
-              {{ site.gateway_operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven entirely by Kubernetes 
-              Custom Resource Definitions (CRDs), {{ site.gateway_operator_product_name }} allows you to deploy and configure Kong's products 
+              {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven entirely by Kubernetes 
+              Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
               in a 100% declarative way.
 
   - header:

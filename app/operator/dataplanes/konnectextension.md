@@ -39,7 +39,7 @@ spec:
 
 ## Data Plane authentication
 
-The `DataPlane`, in order to be configured in {{site.konnect_short_name}}, needs a client certificate. This certificate can be manually created and managed by the user, or automatically provisioned by {{ site.gateway_operator_product_name }}.
+The `DataPlane`, in order to be configured in {{site.konnect_short_name}}, needs a client certificate. This certificate can be manually created and managed by the user, or automatically provisioned by {{ site.operator_product_name }}.
 
 ### Manual certificate provisioning
 
@@ -57,7 +57,7 @@ In order to manually create and set up a certificate to be used for Konnect `Dat
     kubectl create secret tls konnect-client-tls --cert=./tls.crt --key=./tls.key
     ```
 
-1. Label the secret to tell {{ site.gateway_operator_product_name }} to reconcile it:
+1. Label the secret to tell {{ site.operator_product_name }} to reconcile it:
 
     ```bash
     kubectl label secret konnect-client-tls konghq.com/konnect-dp-cert=true
@@ -76,7 +76,7 @@ spec:
 
 ### Automatic certificate provisioning
 
-Alternatively, you can leave the certificate provisioning and management to {{ site.gateway_operator_product_name }}, which will take care of creating a new certificate, write it into a Kubernetes `Secret` and manage the `Secret`'s lifecycle on behalf of you. To do so, you can configure a `KonnectExtension` as follows:
+Alternatively, you can leave the certificate provisioning and management to {{ site.operator_product_name }}, which will take care of creating a new certificate, write it into a Kubernetes `Secret` and manage the `Secret`'s lifecycle on behalf of you. To do so, you can configure a `KonnectExtension` as follows:
 
 ```yaml
 spec:

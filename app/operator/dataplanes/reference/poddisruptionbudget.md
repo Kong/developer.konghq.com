@@ -29,7 +29,7 @@ for more details on the `PodDisruptionBudget` API itself.
 
 For `DataPlane` resources, you can define a `PodDisruptionBudget` in the `spec.resources.podDisruptionBudget` field.
 
-The `DataPlane`'s `spec.resources.podDisruptionBudget.spec` matches the `PodDisruptionBudget` API, excluding the `selector` field, which is automatically set by {{ site.gateway_operator_product_name }} to match the `DataPlane` pods.
+The `DataPlane`'s `spec.resources.podDisruptionBudget.spec` matches the `PodDisruptionBudget` API, excluding the `selector` field, which is automatically set by {{ site.operator_product_name }} to match the `DataPlane` pods.
 
 ## Example
 
@@ -54,4 +54,4 @@ spec:
           image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
 ```
 
-If you leave the `resources.podDisruptionBudget` field empty, {{ site.gateway_operator_product_name }} will not create a `PodDisruptionBudget` for the `DataPlane`.
+If you leave the `resources.podDisruptionBudget` field empty, {{ site.operator_product_name }} will not create a `PodDisruptionBudget` for the `DataPlane`.
