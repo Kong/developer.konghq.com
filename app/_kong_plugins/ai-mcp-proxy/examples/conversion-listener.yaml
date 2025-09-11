@@ -47,6 +47,8 @@ config:
       required: false
       schema:
         type: string
+    annotations:
+      title: Current weather
   server:
     timeout: 60000
   logging:

@@ -31,7 +31,7 @@ topologies:
     - cloud-gateways
     - serverless
 
-icon: ai-prompt-compressor.png
+icon: ai-mcp-proxy.png
 
 categories:
   - ai
@@ -166,19 +166,23 @@ columns:
   - title: Description
     key: description
 rows:
-  - mode: "`passthrough-listener`"
+  - mode: |
+      [`passthrough-listener`](./examples/passthrough-listener/)
     description: |
       Listens for incoming MCP requests and proxies them to the `upstream_url` of the Gateway Service.
       Generates MCP observability metrics for traffic, making it suitable for third-party MCP servers hosted by users.
-  - mode: "`conversion-listener`"
+  - mode:  |
+      [`conversion-listener`](./examples/conversion-listener/)
     description: |
       Converts RESTful API paths into MCP tools **and** accepts incoming MCP requests on the Route path.
       You can define tools directly in the plugin configuration and optionally set a server block.
-  - mode: "`conversion-only`"
+  - mode:  |
+      [`conversion-only`](./examples/conversion-only/)
     description: |
       Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
       This mode requires [`config.server.tag`](./reference/#schema--config-server-tag) in the plugin configuration, but does not define a server.
-  - mode: "`listener`"
+  - mode:  |
+      [`listener`](./examples/listener/)
     description: |
       Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` tools using the [`config.server.tag`](./reference/#schema--config-server-tag) property.
       `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.
