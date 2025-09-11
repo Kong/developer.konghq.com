@@ -1,6 +1,6 @@
 ---
 title: "Labelling and Tagging resources"
-description: "How do I add additional metadata to entities managed by {{ site.operator_product_name }}?"
+description: "How do I add additional metadata to entities managed by {{ site.gateway_operator_product_name }}?"
 content_type: reference
 layout: reference
 products:
@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-Tags and labels are a way to organize and categorize your resources. This doc explains how to annotate your {{site.konnect_short_name}} entities managed by {{site.operator_product_name}} with tags and labels depending on particular entity's support for those.
+Tags and labels are a way to organize and categorize your resources. This doc explains how to annotate your {{site.konnect_short_name}} entities managed by {{site.gateway_operator_product_name}} with tags and labels depending on particular entity's support for those.
 
 ## Labeling
 Labels are key-value pairs you can attach to certain objects. Currently, the only {{site.konnect_short_name}} entity that supports labels is [`KonnectGatewayControlPlane`](/operator/konnect/crd/control-planes/hybrid/).

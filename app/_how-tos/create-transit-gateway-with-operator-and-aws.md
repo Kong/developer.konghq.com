@@ -1,6 +1,6 @@
 ---
-title: Create a Transit Gateway with {{ site.operator_product_name }} and AWS
-description: "Create a KonnectCloudGatewayTransitGateway resource with {{ site.operator_product_name }} and AWS."
+title: Create a Transit Gateway with {{ site.gateway_operator_product_name }} and AWS
+description: "Create a KonnectCloudGatewayTransitGateway resource with {{ site.gateway_operator_product_name }} and AWS."
 content_type: how_to
 
 
@@ -39,7 +39,7 @@ prereqs:
       network: true
 
 tldr:
-  q: How can I create an AWS transit gateway and link it to {{site.konnect_short_name}} using {{ site.operator_product_name }}?
+  q: How can I create an AWS transit gateway and link it to {{site.konnect_short_name}} using {{ site.gateway_operator_product_name }}?
   a: Create a transit gateway in AWS and create a resources share to share the transit gateway with the AWS account linked to your {{site.konnect_short_name}} account. Then, create a [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) and accept the transit gateway attachment in AWS.
 
 faqs:

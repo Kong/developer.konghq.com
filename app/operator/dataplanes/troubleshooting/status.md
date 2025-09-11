@@ -1,6 +1,6 @@
 ---
 title: "Status"
-description: "Inspect resource statuses to see detailed information about {{ site.operator_product_name }} resources"
+description: "Inspect resource statuses to see detailed information about {{ site.gateway_operator_product_name }} resources"
 content_type: reference
 layout: reference
 products:
@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-Resources managed by {{ site.operator_product_name }} provide the `status` field like other Kubernetes objects.
+Resources managed by {{ site.gateway_operator_product_name }} provide the `status` field like other Kubernetes objects.
 
 To see object's status you can use the `kubectl get` command:
 

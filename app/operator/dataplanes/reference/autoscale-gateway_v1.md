@@ -20,15 +20,15 @@ max_version:
 
 ---
 
-{{ site.operator_product_name }} can deploy Data Planes that will horizontally autoscale based on user defined criteria.
+{{ site.gateway_operator_product_name }} can deploy Data Planes that will horizontally autoscale based on user defined criteria.
 
 This page shows how to autoscale Data Planes based on their average CPU utilization.
 
 ## Prerequisites
 
-{{ site.operator_product_name }} uses Kubernetes [`HorizontalPodAutoscaler`](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) to perform horizontal autoscaling of data planes.
+{{ site.gateway_operator_product_name }} uses Kubernetes [`HorizontalPodAutoscaler`](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) to perform horizontal autoscaling of data planes.
 
-### Install {{ site.operator_product_name }}
+### Install {{ site.gateway_operator_product_name }}
 
 {% include prereqs/products/operator.md raw=true v_maj=1 %}
 

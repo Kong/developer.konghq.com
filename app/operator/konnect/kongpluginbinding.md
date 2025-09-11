@@ -100,7 +100,7 @@ Then the plugin will be successfully attached to the Service in {{ site.konnect_
 
 ### Attaching plugins to multiple entities
 
-{{ site.operator_product_name }} also supports attaching plugins to a combination of entities by `KongPluginBinding`.
+{{ site.gateway_operator_product_name }} also supports attaching plugins to a combination of entities by `KongPluginBinding`.
 Supported combinations include:
 
 * `Service` and `Route`
@@ -226,7 +226,7 @@ Having the `KongPluginBinding` created, the plugin will be attached globally to 
 > Users can expect that `konghq.com/plugins` annotation support will be removed at some point in the future.
 
 You can also use the `konghq.com/plugins` annotation to attach plugins to other entities like it's done in {{ site.kic_product_name }}.
-The {{ site.operator_product_name }} will create `KongPluginBinding` resources for the annotations and configure them in {{ site.konnect_short_name }}.
+The {{ site.gateway_operator_product_name }} will create `KongPluginBinding` resources for the annotations and configure them in {{ site.konnect_short_name }}.
 
 In the example above, you can create a `KongPlugin` and a `KongService` like this:
 

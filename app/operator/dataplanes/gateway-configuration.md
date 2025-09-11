@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-{{ site.operator_product_name }} provides a `GatewayConfiguration` CRD to customise the deployment of `ControlPlane` and `DataPlane` resources.
+{{ site.gateway_operator_product_name }} provides a `GatewayConfiguration` CRD to customise the deployment of `ControlPlane` and `DataPlane` resources.
 
 These customizations are primarily used to set the container image and any environment variables that are required by the containers.
 

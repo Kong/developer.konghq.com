@@ -1,4 +1,4 @@
-{% assign summary='{{site.operator_product_name}} running' %}
+{% assign summary='{{site.gateway_operator_product_name}} running' %}
 
 {% if prereqs.enterprise %}
 {% assign summary = summary | append:' (with an Enterprise license)' %}
@@ -12,7 +12,7 @@
    helm repo update
    ```
 
-1. Install {{ site.operator_product_name }} using Helm:
+1. Install {{ site.gateway_operator_product_name }} using Helm:
 
 {% if prereqs.v_maj == 1 %}
 

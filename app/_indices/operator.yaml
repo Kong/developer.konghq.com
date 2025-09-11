@@ -37,7 +37,7 @@ groups:
         items:
           - title: Deploy Hybrid DataPlanes
             url: /operator/dataplanes/get-started/hybrid/install/
-            description: Deploy {{ site.base_gateway }} data planes using {{ site.operator_product_name }}
+            description: Deploy {{ site.base_gateway }} data planes using {{ site.gateway_operator_product_name }}
           - title: Deploy {{ site.kic_product_name }}
             url: /operator/dataplanes/get-started/kic/install/
             description: Use Kubernetes resources like `Gateway` to configure {{ site.kic_product_name }} and {{ site.base_gateway }}
