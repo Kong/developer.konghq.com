@@ -135,6 +135,73 @@ rows:
                   * [Create a GitHub issue](https://github.com/Kong/kubernetes-ingress-controller/issues/new/choose): Report a bug or make a feature request for {{ site.kic_product_name }}.
                   * [Join the Kong Slack community](https://konghq.com/community#64fe8580b1a2f3c3804230f1): Get help from the team
 
+  - header:
+      type: h2
+      text: KIC feature support and deployment models
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              KIC integrates Kong Gateway with Kubernetes by translating Kubernetes resources into Gateway configuration.
+              Feature support differs depending on the operational model:
+              - Standalone: You provision and manage Kong Gateway yourself, and KIC applies configuration using Kubernetes resources.
+              - With Kong Gateway Operator (KO/KGO): The Operator provisions and manages Gateway deployments declaratively, while KIC handles configuration. 
+              
+              To compare support in each model, use the following table:
+              
+              {% table %}
+              columns:
+                - title: Feature
+                  key: feature
+                - title: KIC 
+                  key: kic
+                - title: KO/KGO Hybrid Mode
+                  key: ko/kgo
+              rows:
+                - feature: "**Configuration**""
+                  kic: "Configure all Kong Gateway entities with CRDs directly. For example, Services, Routes, Consumers, Plugins, Certificates, CA Certificates, Vaults."
+                  ko/kgo: "Same configuration scope, however gateways are provisioned and reconciled automatically by the Operator."
+                - feature: "**Gateway API**" 
+                  kic: "Supports `Ingress`, `HTTPRoute`, `TCPRoute`, and `UDPRoute`. From KIC 3.5 onward, compliant with Gateway API v1.3."
+                  ko/kgo: "Supports `GatewayClass`, `Gateway`, and `GRPCRoute`, in addition to `HTTPRoute`, `TCPRoute`, and `UDPRoute`."
+                - feature: "**Feature Gates**"  
+                  kic: |
+                    "Enable advanced or experimental behavior: `FillIDs`, `RewriteURIs`, `CombinedServicesFromDifferentHTTPRoutes`.
+                    - `FillIDs` can cause UUID collisions across workspaces with identical Consumers.
+                    - Disable `CombinedRoutes` if per-route plugin configuration is required."
+                  ko/kgo: "Identical feature gate support and constraints. No change between models.""
+                - feature: "**Fallback configuration**"
+                  kic: "Applies valid configuration while skipping invalid objects to maintain cluster stability."
+                  ko/kgo: "Identical fallback behavior. No change between models."
+                - feature: "**Last Known Good Config**"
+                  kic: |
+                    "Retains the last accepted configuration in memory and reapplies it after restart.
+                    - Does not reload automatically if only the Kong proxy container restarts; use `CONTROLLER_ENABLE_REVERSE_SYNC=true` to force reloads."
+                  ko/kgo: "Identical last-known-good behavior and limitation. No change between models."
+                - feature: "**Path Rewriting**" 
+                  kic: "Rewrite request paths using the `konghq.com/rewrite` annotation."
+                  ko/kgo: "Identical path rewriting support. No change between models."
+                - feature: "**Konnect integration**"
+                  kic: |
+                    KIC-managed resources appear as read-only in Konnect UI/Admin API.
+                    - Route and service names longer than 512 characters may block sync.
+                  ko/kgo: "Same Konnect behavior and restriction. No change between models"
+                - feature: "**Hybrid mode plugins**"
+                  kic: "Not applicable — Standalone mode does not use Hybrid Gateway."
+                  ko/kgo: |
+                    "When Kong Gateway runs in hybrid mode:
+                    - Rate Limiting, Rate Limiting Advanced, Response Rate Limiting, AI Rate Limiting Advanced, and Service Protection cannot use the `cluster` strategy (use `local` or Redis).
+                    - GraphQL Rate Limiting Advanced requires Redis.
+                    - OAuth 2.0 Authentication not supported.
+                    - Key Auth Encrypted TTL not supported.
+                    - Custom plugins must be installed on both CP and DPs."
+                - feature: "**Licensing**"
+                  kic: "Enterprise license must be valid. In DB-less deployments, expired licenses block new nodes and restarts."
+                  ko/kgo: "Enterprise license must be valid. Operator adds declarative license management with the `KongLicense` CRD or environment variables."                   
+              {% endtable %}
+
+              {:.info}
+              > All other Kong Gateway features that can be configured through CRDs are supported equally in both models. For example, plugins, health checks, or load balancing.
 
   - header:
       type: h3
