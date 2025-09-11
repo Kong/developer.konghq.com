@@ -56,9 +56,9 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    * Always be sure you trust the author of a mock before calling it, visiting it, or adding it to your code. 
+                    * Always be sure you trust the author of a mock server before calling it, visiting it, or adding it to your code. 
                     * Like any URL, mock servers can contain malicious content or redirects.
-                    * In order to enable easy use from anywhere, especially for front-end feature development, Insomnia's mock servers have a very permissive CORS configuration (`Access-Control-Allow-Origin: *`, `Access-Control-Allow-Credentials: true`). 
+                    * To enable easy use from anywhere, especially for front-end feature development, Insomnia's mock servers have a very permissive CORS configuration (`Access-Control-Allow-Origin: *`, `Access-Control-Allow-Credentials: true`). 
                     A malicious API could be used to exfiltrate data.
   - header:
       text: "Frequently asked questions"
