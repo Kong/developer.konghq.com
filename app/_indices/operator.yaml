@@ -10,7 +10,7 @@ groups:
           # These are linked from /operator/dataplanes/reference/autoscale-workloads/
           - path: /operator/dataplanes/how-to/autoscale-workloads/prometheus/
           - path: /operator/dataplanes/how-to/autoscale-workloads/datadog/
-  - title: About Kong Gateway Operator
+  - title: About Kong Operator
     sections:
       - items:
           - path: /operator/
