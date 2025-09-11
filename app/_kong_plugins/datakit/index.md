@@ -602,7 +602,7 @@ nodes:
     jq: "."
 ```
 
-### `branch` node {% new_in 3.12 %}
+### branch node {% new_in 3.12 %}
 
 Execute different nodes based on matching input conditions, such as a cache hit or miss.
 
@@ -653,7 +653,7 @@ Branch node based on cache hit or miss:
 
 See [Conditionally fetching or storing cache data]() for a full example.
 
-### `cache` node {% new_in 3.12 %}
+### cache node {% new_in 3.12 %}
 
 Stored data into cache and fetch cached data from cache.
 
@@ -677,7 +677,7 @@ Configuration attributes:
   miss
 * `ttl`: The TTL (Time to Live) in seconds
 
-### `call` node
+### call node
 
 Send an HTTP request and retrieve the response.
 
@@ -687,7 +687,7 @@ Inputs:
 * `headers`: Request headers
 * `query`: Key-value pairs to encode as the request query string
 
-#### `cache` resource {% new_in 3.12 %}
+#### cache resource {% new_in 3.12 %}
 
 The `cache` node requires a `resources.cache` resource definition containing 
 cache configuration.
@@ -799,7 +799,7 @@ invalid dependency (node #1 (CALL) -> node service_response): circular dependenc
 ```
 {:.no-copy-code}
 
-### `jq` node type
+### jq node type
 
 The `jq` node executes a jq script for processing JSON. See the official
 [jq docs](https://jqlang.org/) for more details.
@@ -1086,7 +1086,7 @@ Join the output of two API calls:
   jq: "."
 ```
 
-### `exit` node
+### exit node
 
 Trigger an early exit that produces a direct response, rather than forwarding
 a proxied response.
@@ -1117,7 +1117,7 @@ Make an HTTP request and send the response directly to the client:
   input: CALL
 ```
 
-### `property` node
+### property node
 
 Get and set {{site.base_gateway}} host and request properties.
 
@@ -1335,7 +1335,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### `static` node
+### static node
 
 Emits static values to be used as inputs for other nodes. The `static` node can help you with hardcoding some known value for an input.
 
