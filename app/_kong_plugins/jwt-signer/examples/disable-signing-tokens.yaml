@@ -1,0 +1,20 @@
+description: Disables signing or resigning access and channel tokens.
+
+extended_description: |
+  Disables signing or resigning access and channel tokens. 
+  This can be useful when the token already comes from an identity provider and your downstream services already validate that provider's keys.
+min_version: 3.12 
+title: 'Disable signing or resigning tokens'
+
+weight: 900
+
+config:
+  channel_token_signing: false
+  access_token_signing: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

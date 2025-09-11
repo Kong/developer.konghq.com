@@ -1,0 +1,19 @@
+description: Validates the issuers present in an access token.
+
+title: 'Validate issuers in an access token'
+min_version: 3.12 
+weight: 900
+
+config:
+  access_token_issuer: "kong"
+  access_token_issuer_claim: 
+  - iss
+  access_token_issuers_allowed:
+  - iss
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

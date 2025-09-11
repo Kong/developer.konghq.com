@@ -1,0 +1,18 @@
+description: Validates the subjects present in a channel token.
+
+title: 'Validate subjects in a channel token'
+min_version: 3.12 
+weight: 900
+
+config:
+  channel_token_subject_claim: 
+  - sub
+  channel_token_subjects_allowed:
+  - sub
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

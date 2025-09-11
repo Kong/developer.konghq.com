@@ -1,0 +1,20 @@
+description: Enables signing or resigning access and channel tokens.
+
+extended_description: |
+  Enables signing or resigning access and channel tokens. 
+  This can be useful when you don't fully trust the upstream identity provider or want to enforce a local trust boundary.
+min_version: 3.12 
+title: 'Enable signing or resigning tokens'
+
+weight: 900
+
+config:
+  channel_token_signing: true
+  access_token_signing: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
