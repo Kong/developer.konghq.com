@@ -41,16 +41,16 @@ Before starting the migration, ensure you:
    ```bash
    kubectl get konnectextensions --all-namespaces -o yaml | grep -A 5 -B 5 konnectID
    ```
-   
+
    {:.warning}
    > **Important**: If this command returns any results, you **must** migrate these KonnectExtensions before upgrading. Follow the [KonnectExtension Migration Guide](/operator/migrate/konnectextension-konnectid-to-konnectgatewaycontrolplane/) first.
 
 4. **Access to Kubernetes cluster** with admin privileges
 
 5. **Verify cert-manager is installed** (required for conversion webhooks):
-   
+
    {:.info}
-   > **Note**: Kong Operator 2.0.0 uses conversion webhooks that require TLS certificates managed by cert-manager. If cert-manager is not installed, follow the [cert-manager installation guide](https://cert-manager.io/docs/installation/) before proceeding. 
+   > **Note**: Kong Operator 2.0.0 uses conversion webhooks that require TLS certificates managed by cert-manager. If cert-manager is not installed, follow the [cert-manager installation guide](https://cert-manager.io/docs/installation/) before proceeding.
 
 ## Upgrade Kong Operator to 2.0.0
 
@@ -64,9 +64,13 @@ First, uninstall the current {{site.operator_product_name}} release:
 helm uninstall kgo -n kong-system
 ```
 
-### Step 2: Label the Kong CA Certificate Secret
+### Step 2: Label the Secret
 
-To ensure the Kong Operator can properly reconcile the CA certificate secret, it must have the following label:
+To ensure the {{site.operator_product_name}} can properly reconcile the Secrets in your cluster, they need to be labeled with `konghq.com/secret=true`.
+
+This allows efficient listing of Secrets and prevents ingesting those that are irrelvent from Kong configuration standpoint.
+
+This includes the CA certificate secret. To label it as described above it you can run the following command:
 
 ```bash
 kubectl label secrets -n kong-system kong-operator-ca konghq.com/secret=true
