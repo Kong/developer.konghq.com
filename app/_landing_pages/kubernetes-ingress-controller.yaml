@@ -142,10 +142,10 @@ rows:
       - blocks:
           - type: text
             config: |
-              KIC integrates Kong Gateway with Kubernetes by translating Kubernetes resources into Gateway configuration.
+              {{ site.kic_product_name }} integrates Kong {{ site.base_gateway }} with Kubernetes by translating Kubernetes resources into {{ site.base_gateway }} configuration.
               Feature support differs depending on the operational model:
-              - Standalone: You provision and manage Kong Gateway yourself, and KIC applies configuration using Kubernetes resources.
-              - With Kong Gateway Operator (KO/KGO): The Operator provisions and manages Gateway deployments declaratively, while KIC handles configuration. 
+              - Standalone: You provision and manage Kong {{ site.base_gateway }} yourself, and {{ site.kic_product_name }} applies configuration using Kubernetes resources.
+              - With Kong Gateway Operator (KO/KGO): The Operator provisions and manages {{ site.base_gateway }} deployments declaratively, while {{ site.kic_product_name }} handles configuration. 
               
               To compare support in each model, use the following table:
               
@@ -159,9 +159,9 @@ rows:
                   key: ko/kgo
               rows:
                 - feature: "**Configuration**""
-                  kic: "Configure all Kong Gateway entities with CRDs directly. For example, Services, Routes, Consumers, Plugins, Certificates, CA Certificates, Vaults."
+                  kic: "Configure all Kong {{ site.base_gateway }} entities with CRDs directly. For example, Services, Routes, Consumers, Plugins, Certificates, CA Certificates, Vaults."
                   ko/kgo: "Same configuration scope, however gateways are provisioned and reconciled automatically by the Operator."
-                - feature: "**Gateway API**" 
+                - feature: "**{{ site.base_gateway }} API**" 
                   kic: "Supports `Ingress`, `HTTPRoute`, `TCPRoute`, and `UDPRoute`. From KIC 3.5 onward, compliant with Gateway API v1.3."
                   ko/kgo: "Supports `GatewayClass`, `Gateway`, and `GRPCRoute`, in addition to `HTTPRoute`, `TCPRoute`, and `UDPRoute`."
                 - feature: "**Feature Gates**"  
@@ -181,15 +181,15 @@ rows:
                 - feature: "**Path Rewriting**" 
                   kic: "Rewrite request paths using the `konghq.com/rewrite` annotation."
                   ko/kgo: "Identical path rewriting support. No change between models."
-                - feature: "**Konnect integration**"
+                - feature: "**{{site.konnect_short_name}} integration**"
                   kic: |
-                    KIC-managed resources appear as read-only in Konnect UI/Admin API.
+                    KIC-managed resources appear as read-only in {{site.konnect_short_name}} UI/Admin API.
                     - Route and service names longer than 512 characters may block sync.
-                  ko/kgo: "Same Konnect behavior and restriction. No change between models"
+                  ko/kgo: "Same {{site.konnect_short_name}} behavior and restriction. No change between models"
                 - feature: "**Hybrid mode plugins**"
                   kic: "Not applicable — Standalone mode does not use Hybrid Gateway."
                   ko/kgo: |
-                    "When Kong Gateway runs in hybrid mode:
+                    "When Kong {{ site.base_gateway }} runs in hybrid mode:
                     - Rate Limiting, Rate Limiting Advanced, Response Rate Limiting, AI Rate Limiting Advanced, and Service Protection cannot use the `cluster` strategy (use `local` or Redis).
                     - GraphQL Rate Limiting Advanced requires Redis.
                     - OAuth 2.0 Authentication not supported.
@@ -201,7 +201,7 @@ rows:
               {% endtable %}
 
               {:.info}
-              > All other Kong Gateway features that can be configured through CRDs are supported equally in both models. For example, plugins, health checks, or load balancing.
+              > All other Kong {{ site.base_gateway }} features that can be configured through CRDs are supported equally in both models. For example, plugins, health checks, or load balancing.
 
   - header:
       type: h3
