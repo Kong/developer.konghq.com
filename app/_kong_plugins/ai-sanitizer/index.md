@@ -179,7 +179,7 @@ You can use the following fields in the `anonymize` array:
 * `ip`: Anonymizes IP addresses (both IPv4 and IPv6).
 * `nrp`: Anonymizes a person’s nationality, religious, or political group.
 * `ssn`: Anonymizes Social Security Numbers (SSN) and other related identifiers like ITIN, NIF, ABN, and more.
-* `domain`: Anonymizes domain names.
+* `domain`: Anonymizes domain names. It was deprecated, please use `url` instead.
 * `url`: Anonymizes web URLs.
 * `medical`: Anonymizes medical identifiers (for example, medical license numbers, NHS numbers, medicare numbers).
 * `driverlicense`: Anonymizes driver's license numbers.
