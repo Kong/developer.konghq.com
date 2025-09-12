@@ -73,7 +73,6 @@ Using the [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file
 > You can either create teams manually, or through your [SCIM](#7-enable-scim) provider. Manually created teams can be synchronized with SCIM teams.
 
 To create teams manually:
-
 1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
 1. In the sidebar, click [**Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click **Create Team**. 
@@ -123,7 +122,6 @@ Once the users accept the invitation, they will have access to the organizations
 
 Adding a domain allows you to automatically manage users with email addresses in that domain. It's also a prerequisite for SSO and SCIM.
 
-To add a new domain:
 1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
 1. In the sidebar, click [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Click **New Domain**.
