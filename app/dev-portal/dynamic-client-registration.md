@@ -30,6 +30,8 @@ related_resources:
     url: /how-to/auth0-dcr/
   - text: Configure Dynamic Client Registration with Azure
     url: /how-to/azure-dcr/
+  - text: Configure Dynamic Client Registration with Kong Identity
+    url: /how-to/kong-identity-dcr/
   - text: About OIDC Dynamic Client Registration
     url: https://openid.net/specs/openid-connect-registration-1_0.html
   - text: About Dev Portal OIDC authentication
@@ -82,6 +84,7 @@ Each method is available when using the following DCR identity providers:
 * [Curity](/how-to/curity-dcr/)
 * [Azure](/how-to/azure-ad-dcr/)
 * [Auth0](/how-to/auth0-dcr/)
+* [Kong Identity](/how-to/kong-identity-dcr/)
 
 {:.info}
 > **Note:** When using DCR, each application automatically receives a client ID and secret. These credentials can be used to authenticate directly with services using the client credentials grant, or to obtain an access token from the identity provider when using the bearer token authentication method.
@@ -114,6 +117,9 @@ rows:
   - vendor: "Azure"
     endpoint: "POST `https://login.microsoftonline.com/$YOUR_TENANT_ID/oauth2/v2.0/token`"
     body: '`{ "grant_type": "client_credentials", "scope": "https://graph.microsoft.com/.default" }`'
+  - vendor: "Kong Identity"
+    endpoint: "POST `https://$YOUR_KONNECT_DOMAIN.us.identity.konghq.tech/oauth2/v1/`"
+    body: '`?`'
 {% endtable %}
 <!--vale on-->
 
@@ -130,6 +136,7 @@ After successfully authenticating using either client credentials or a bearer ac
 * Azure
 * Curity
 * Okta
+* Kong Identity
 
 If your third-party IdP is not on this list, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the Dev Portal. When a developer creates a DCR application in the Dev Portal, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP.
 
