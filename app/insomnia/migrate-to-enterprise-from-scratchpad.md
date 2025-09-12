@@ -1,0 +1,95 @@
+---
+title: Migrate from Scratch Pad to Enterprise
+
+
+content_type: how_to
+description: Migrate all of the data from your Scratch Pad account to your Enterprise account.
+products:
+    - insomnia
+
+
+breadcrumbs:
+  - /insomnia/
+tags:
+  - scratch pad
+  - migration
+  - collections
+  - environments
+
+related_resources:
+  - text: Collections
+    url: /insomnia/collections/
+  - text: Environments
+    url: /insomnia/environments/
+  - text: Migrate collections and environments from Postman to Insomnia  
+
+tldr:
+    q: How can I migrate my data from my Scratch Pad to my Enterprise account?
+    a: Export your Scratch Pad workspace as a single Insomnia JSON file, and then import it into your Insomnia Enterprise account.
+
+faqs:
+  - q: Why can't I import my file?
+    a: Confirm the file uses Insomnia JSON format and ends with `.json`. Insomnia’s importer expects a supported format. For example, Insomnia JSON, Postman v2, HAR, OpenAPI.
+  - q: Import says “succeeded” but you don’t see items.
+    a: Ensure you imported into the project you opened, not a different workspace. If needed, re-import into the active project.
+  - q: Why can't I see my variables in Table view?
+    a: Open JSON view to confirm values, then switch back to Table view. This ensures you see nested or inherited keys in the editor.  
+
+prereqs:
+  inline:
+    - title: An Insomnia design document
+      content: |
+        You need to have an Insomnia design document. For instructions on creating one see [Create a design document](/how-to/create-a-design-document/)
+      icon_url: /assets/icons/code.svg
+    - title: Insomnia Enterprise account
+      content: |
+        You need to have an Insomnia Enterprise account. For more information, go to [Insomnia Enterprise](/insomnia/enterprise/)
+      icon_url: /assets/icons/code.svg
+     
+---
+Export your Scratch Pad workspace as a single Insomnia JSON file to capture all requests, collections, environments, variables, and metadata for migration.
+
+## 1. Export from your Scratch Pad to JSON file
+1. Open your Scratch Pad workspace. 
+2. Click **Export**.
+3. Select **Insomnia JSON (v4 or v5)** and save the file locally.
+
+{:.info}
+> If your export dialog does not add a file extension, rename the file to end with .json so Insomnia recognizes it during import.
+
+## 2. Sign in to Insomnia Enterprise
+1. Launch Insomnia and sign in to your Enterprise organization.
+    - If your org enforces SSO, use the SSO button and complete your IdP flow. 
+2. On the dashboard, confirm you see **Personal Workspace** or your **Organization** workspaces. (Enterprise accounts organize work into projects.) 
+
+## 3. Create a project
+1. Click **Create → New project**.
+2. Select a Cloud project to share and sync in your organization, or select Git if your team uses a repo. 
+3. Enter a name, for example Migrated Scratch Pad Data, and confirm.
+
+{:.info}
+> When to pick Cloud vs Git: Cloud sync shares the project with your org and uses E2EE; Git sync ties the project to your repository and requires each collaborator to connect the repo.
+
+## 4. Import your workspace JSON
+1. Open the project.
+2. Click Import → File and select your exported Insomnia JSON. 
+3. Confirm the import summary (Workspaces, Collections, Environments, Tests, etc.).
+
+## 5. Review and fix environment variables
+1. Click Manage environments → Base environment.
+2. Verify keys such as `base_url` and API tokens. Use **JSON view** to confirm nested values, then return to Table view. (Table and JSON are alternative editors for the same data.) 
+3. If your team uses **secret environment variables** in the local vault, set or re-enter them as needed in Enterprise.
+
+{:.important}
+> Secrets and vault: Secret variables live in the local vault namespace and do not appear in plain text. For example, `vault.foo`. Keep your vault key safe; resetting it deletes stored secrets.
+
+### Validate the migration
+- Open a few imported requests and click **Send**. Confirm the URL, headers, and body match what you used in Scratch Pad.
+- Switch environments and verify that requests resolve variables as expected. 
+Kong Docs
+- If you chose Cloud sync, sign in on another machine and confirm the project appears and stays in sync.
+
+Once you successfully migrate from Scratch Pad to Enterprise, you'll experience the following:
+- **Local → shared**: You move from local Scratch Pad storage to organization projects with Cloud or Git sync. 
+- **Solo → collaboration**: Cloud projects appear to teammates in your org; Git projects connect to your repo and follow repo rules. 
+- **Login policy**: Your org can require SSO for Enterprise access. Other login methods may be disabled once SSO is on.
