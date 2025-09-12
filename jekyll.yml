@@ -163,3 +163,5 @@ mesh:
 
 # Version vars
 latest_gateway_oss_version: "3.9.1"
+
+render_banner: true
