@@ -110,13 +110,13 @@ Request the Service with the basic authentication credentials created in the [pr
 {% validation request-check %}
 url: /anything
 method: GET
-status_code: 403
+status_code: 401
 headers:
   - 'Authorization: Basic {{ "kong:wrong-secret" | base64 }}'
 display_headers: true
 {% endvalidation %}
 
-You should get a `403 Forbidden` error code, which means the Service is protected by authentication.
+You should get a `401 Unauthorized` error code, which means the Service is protected by claim authorization.
 
 Create a Consumer Group with a name that matches the client claim value in your IdP, in this case `gold`:
 
@@ -135,9 +135,9 @@ url: /anything
 method: GET
 status_code: 200
 headers:
-  - 'Authorization: Basic {{ "kong:$DECK_CLIENT_SECRET" | base64 }}'
+  - 'Authorization: Basic {{ "kong:$CLIENT_SECRET" | base64 }}'
 display_headers: true
 {% endvalidation %}
 
 This time, you should get a `200` response. 
-The OIDC plugin decodes the token it receives from the IdP, finds the client claim value, and maps it to our Consumer `gold`.
+The OIDC plugin decodes the token it receives from the IdP, finds the client claim value, and maps it to our Consumer Group `gold`.

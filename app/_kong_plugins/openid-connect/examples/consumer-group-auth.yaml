@@ -15,7 +15,8 @@ weight: 849
 requirements:
   - A configured identity provider (IdP)
   - At least one [Consumer Group](/gateway/entities/consumer-group/) with a name matching the value defined in `config.consumer_group_claim`
-min_version: 3.12
+min_version: 
+  gateway: '3.12'
 config:
   issuer: ${issuer}
   auth_methods:
