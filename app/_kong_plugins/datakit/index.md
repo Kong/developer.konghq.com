@@ -651,7 +651,7 @@ Branch node based on cache hit or miss:
   name: branch
 ```
 
-See [Conditionally fetching or storing cache data]() for a full example.
+See [Conditionally fetching or storing cache data](/plugins/datakit/examples/conditionally-store-cached-items/) for a full example.
 
 ### cache node {% new_in 3.12 %}
 
