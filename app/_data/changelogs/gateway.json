@@ -16266,7 +16266,7 @@
         "scope": "Core"
       },
       {
-        "message": "**AI Azure Conteny Safety**: Fixed the plugin to work with multi-modal content.\n",
+        "message": "**AI Azure Content Safety**: Fixed the plugin to work with multi-modal content.\n",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -16340,6 +16340,26 @@
         "type": "bugfix",
         "githubs": [
           4000
+        ],
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.10.0.5": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "**prometheus**: Optimized fetching of the `kong_db_entities_total` metric by using internal counters instead of `select count(*)` query through the database. If this metric is found to be get out of sync with the real row counts, please use the command `kong migrations reinitialize-workspace-entity-counters` to re-sync the counts.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Resolved a security issue in the Kong Manager UI.",
+        "type": "bugfix",
+        "githubs": [
+          3998
         ],
         "scope": "Core"
       }

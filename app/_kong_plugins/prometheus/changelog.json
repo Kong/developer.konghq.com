@@ -59,6 +59,13 @@
       "type": "bugfix"
     }
   ],
+  "3.10.0.5": [
+    {
+      "message": "Optimized fetching of the `kong_db_entities_total` metric by using internal counters instead of `select count(*)` query through the database. If this metric is found to be get out of sync with the real row counts, please use the command `kong migrations reinitialize-workspace-entity-counters` to re-sync the counts.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Bumped KONG_LATENCY_BUCKETS bucket's maximal capacity to 6000",
