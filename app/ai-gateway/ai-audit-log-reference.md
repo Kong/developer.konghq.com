@@ -274,6 +274,40 @@ rows:
 > When returning a cached response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
 
+### AI LLM as Judge logs {% new_in 3.12 %}
+
+If you're using the [AI LLM as Judge plugin](/plugins/ai-llm-as-judge), AI Gateway logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior—such as which models were scored, latency, and the numeric accuracy assigned by the judge.
+
+The following fields appear in AI logs when the LLM as Judge plugin is enabled:
+
+{% table %}
+columns:
+- title: Property
+  key: property
+- title: Description
+  key: description
+rows:
+- property: "`ai.proxy.ai-llm-as-judge.meta.llm_latency`"
+  description: |
+    The time, in milliseconds, that the judge model took to return a score.
+- property: "`ai.proxy.ai-llm-as-judge.meta.request_model`"
+  description: |
+    The candidate model being evaluated by the judge.
+- property: "`ai.proxy.ai-llm-as-judge.meta.response_model`"
+  description: |
+    The model used as the judge (for example, `gpt-4o`).
+- property: "`ai.proxy.ai-llm-as-judge.meta.provider_name`"
+  description: |
+    The provider of the judge model (for example, `openai`).
+- property: "`ai.proxy.ai-llm-as-judge.meta.request_mode`"
+  description: |
+    The mode used for evaluation (for example, `oneshot`).
+- property: "`ai.proxy.ai-llm-as-judge.usage.llm_accuracy`"
+  description: |
+    The numeric accuracy score (1–100) returned by the judge model.
+{% endtable %}
+
+
 ### AI MCP logs {% new_in 3.12 %}
 
 If you're using the [AI MCP plugin](/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, and tool usage.
