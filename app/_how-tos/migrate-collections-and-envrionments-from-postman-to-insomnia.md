@@ -19,6 +19,10 @@ related_resources:
     url: /insomnia/collections/
   - text: Environments
     url: /insomnia/environments/
+  - text: Import and export reference for Insomnia
+    url: /insomnia/import-export/
+  - text: Import content from Postman to multiple Insomnia projects
+    url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
 
 tldr:
     q: How can I import my Postman data into Insomnia? 
