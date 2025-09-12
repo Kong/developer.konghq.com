@@ -1,0 +1,19 @@
+description: Validates the issuers present in a channel token.
+
+title: 'Validate issuers in a channel token'
+min_version: 3.12 
+weight: 900
+
+config:
+  channel_token_issuer: "kong"
+  channel_token_issuer_claim: 
+  - iss
+  channel_token_issuers_allowed:
+  - iss
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
