@@ -99,14 +99,14 @@ In the authorization code flow:
 5. The client exchanges this code at the `/oauth/token` endpoint for access tokens.
 6. The client uses the access token to call protected APIs.
 
-## Kong Consumer Group plugin flow
-In the consumer group plugin flow:
-1. In **{{site.konnect_short_name}} > API Gateway > Consumers**, the client creates the consumer. Each user that needs access is represented as a consumer.
+## Kong Consumer Group claim authorization flow
+When using plugins scoped to Consumer Groups:
+1. In **{{site.konnect_short_name}} > API Gateway > Consumers**, the client creates the Consumer. Each user that needs access is represented as a Consumer.
 
    {:.info}
-   > If using OIDC, you don’t need to manually map credentials. The OIDC plugin automatically maps clients to consumers based on token claims.
-2. The client defines the required Consumer Groups in {{site.konnect_short_name}}, and then applies the desired plugin at the consumer group scope.
-3. The client assigns each consumer to the appropriate consumer group. Once assigned, the plugin configuration at the group level automatically applies to the consumer.
+   > If using OIDC, you don’t need to manually map credentials. The OIDC plugin automatically maps clients to Consumers based on token claims.
+2. The client defines the required Consumer Groups in {{site.konnect_short_name}}, and then applies the desired plugin at the Consumer Group scope.
+3. The client assigns each Consumer to the appropriate Consumer Group. Once assigned, the plugin configuration at the group level automatically applies to the Consumer.
 
 ## Dynamic claim templates
 
