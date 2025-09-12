@@ -786,8 +786,47 @@
       @apply hover:border-white text-white hover:text-white;
     }
   }
-}
 
+  .switch {
+    @apply flex items-center;
+  }
+
+  .switch__option-label {
+    @apply cursor-pointer text-sm text-terciary;
+  }
+
+  .switch__options {
+    @apply flex items-center gap-2;
+  }
+
+  .switch__wrapper {
+    @apply relative inline-block w-7 h-4;
+
+    input {
+      @apply h-0 w-0 opacity-0;
+    }
+  }
+
+  .switch__slider {
+    @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-brand rounded-full;
+  }
+
+  .switch__slider:before {
+    @apply absolute content-[''] h-3 w-3 left-0.5 top-0.5 bg-white rounded-full transition-transform duration-300;
+  }
+
+  input:checked + .switch__slider:before {
+    @apply translate-x-[12px];
+  }
+
+  input:focus ~ .switch__slider {
+    @apply outline outline-2;
+
+    @supports (-webkit-appearance: none) {
+      outline-color: -webkit-focus-ring-color;
+    }
+  }
+}
 
 #ask-ai-button {
   @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;

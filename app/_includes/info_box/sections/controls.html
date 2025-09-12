@@ -1,0 +1,12 @@
+{% if page.works_on %}
+{% assign incompatibilities = include.works_on | works_on_incompatibilities %}
+
+{% if incompatibilities.size == 0  %}
+<div class="flex flex-col gap-2  w-full">
+  <div class="text-primary font-medium">Deployment Platform</div>
+  <div class="flex gap-1.5">
+    {% include how-tos/controls.html works_on=page.works_on mobile=include.mobile  %}
+  </div>
+</div>
+{% endif %}
+{% endif %}
