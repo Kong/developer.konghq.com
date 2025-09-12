@@ -20,6 +20,8 @@ related_resources:
     url: https://cloud.google.com/vpc/docs/vpc-peering
   - text: Private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
+  - text: Set up a GCP private DNS
+    url: /dedicated-cloud-gateways/gcp-private-dns/
 prereqs:
   skip_product: true
   inline:
@@ -177,7 +179,7 @@ The peering connection status will initially show as `Initializing` and should c
 
 ## Validation
 
-To validate that everything was configured correctly, issue a `GET` request to the [`/transit-gateways`](/api/konnect/control-planes/#/operations/list-transit-gateways) endpoint to retrieve VPC peering information:
+To validate that everything was configured correctly, issue a `GET` request to the [`/transit-gateways`](/api/konnect/cloud-gateways/v2/#/operations/list-transit-gateways) endpoint to retrieve VPC peering information:
 
 <!--vale off-->
 {% konnect_api_request %}
