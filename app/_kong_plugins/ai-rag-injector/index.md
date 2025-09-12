@@ -231,3 +231,7 @@ sequenceDiagram
 
 
 Rather than guessing from memory, the LLM paired with the RAG pipeline now has the ability to look up the information it needs in real time, which will dramatically reduce hallucinations and increase the accuracy of the AI output.
+
+## Vector databases
+
+{% include_cached /plugins/ai-vector-db.md name=page.name %}
