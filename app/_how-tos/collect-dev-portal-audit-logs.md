@@ -5,10 +5,16 @@ content_type: how_to
 related_resources:
   - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
-  - text: Collect Konnect audit logs
+  - text: Collect {{site.konnect_short_name}} audit logs
     url: /how-to/collect-audit-logs/
   - text: About Dev Portal
     url: /dev-portal/
+  - text: Recover Dev Portal audit logs
+    url: /how-to/recover-dev-portal-audit-logs/
+  - text: Recover {{site.konnect_short_name}} audit logs
+    url: /how-to/recover-konnect-org-audit-logs/
+  - text: Configure an HTTPS data collection endpoint in SumoLogic
+    url: https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source
 automated_tests: false
 products:
     - gateway
@@ -42,7 +48,7 @@ prereqs:
         1. [Register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in). You can do this by navigating to your Dev Portal URL and clicking **Sign up**.
       icon_url: /assets/icons/dev-portal.svg
     - title: SumoLogic SIEM provider
-      include_content: /prereqs/sumologic-siem
+      include_content: /prereqs/sumologic-siem-for-konnect-api
 
 tools:
   - konnect-api
