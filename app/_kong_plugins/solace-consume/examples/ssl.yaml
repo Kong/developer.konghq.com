@@ -7,13 +7,15 @@ extended_description: |
 
   By default, SSL certification validation is disabled. In a production environment, we recommend enabing SSL validation.
 
-  In your Solace configuration, set up the following:
-  * `SESSION_SSL_TRUST_STORE_DIR`: Path to the trust store directory. For example, `/usr/local/share/lua/5.1/kong/plugins/solace/cert`.
-  * `SESSION_SSL_VALIDATE_CERTIFICATE_DATE`: Indicates if the session connection should fail when receiving a certificate with an invalid date.
-  * `SESSION_SSL_VALIDATE_CERTIFICATE_HOST`: Indicates if the session connection should fail when receiving a certificate with an invalid host.
-  * `SESSION_SSL_CIPHER_SUITES`: Comma-separated list of the cipher suites.
+# ----- Commented out as the following is not supported for now; uncomment when support is added -----
+# In your Solace configuration, set up the following:
+# * `SESSION_SSL_TRUST_STORE_DIR`: Path to the trust store directory. For example, `/usr/local/share/lua/5.1/kong/plugins/solace/cert`.
+# * `SESSION_SSL_VALIDATE_CERTIFICATE_DATE`: Indicates if the session connection should fail when receiving a certificate with an invalid date.
+# * `SESSION_SSL_VALIDATE_CERTIFICATE_HOST`: Indicates if the session connection should fail when receiving a certificate with an invalid host.
+# * `SESSION_SSL_CIPHER_SUITES`: Comma-separated list of the cipher suites.
 
-  See [Configuring Secure Sessions](https://docs.solace.com/API/API-Developer-Guide/Creating-Secure-Sessions.htm) in the Solace documentation for details.
+# See [Configuring Secure Sessions](https://docs.solace.com/API/API-Developer-Guide/Creating-Secure-Sessions.htm) in the Solace documentation for details.
+# ------
 
 title: Consume messages over SSL
 weight: 900
@@ -38,6 +40,11 @@ config:
       scheme: BASIC
       username: admin
       password: admin
+    properties:
+      SESSION_SSL_TRUST_STORE_DIR: /usr/local/share/lua/5.1/kong/plugins/solace/cert
+      SESSION_SSL_VALIDATE_CERTIFICATE_DATE: "true"
+      SESSION_SSL_VALIDATE_CERTIFICATE_HOST: "true"
+      SESSION_SSL_CIPHER_SUITES: "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
     
   flow:
     binds:

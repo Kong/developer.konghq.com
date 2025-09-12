@@ -67,6 +67,7 @@ faqs:
       * Verify that the broker's SSL certificate is valid
       * Verify that the plugin has [`config.session.ssl_validate_certificate`](./reference/#schema--config-session-ssl-validate-certificate) set to `true`
       * Ensure that the correct port is being used for SSL connections (usually port 55443)
+      * Ensure that all necessary SSL parameters are configured in `config.session.properties`; see [Consume messages over SSL](/plugins/solace-consume/examples/ssl/) for an example.
       
       Note that the plugin doesn't implement any retry logic, so if the connection fails, the client has to retry sending the message.
   - q: Connections to Solace are failing.
