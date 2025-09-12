@@ -186,3 +186,5 @@ flowchart
 
 > _Figure 5: The diagram shows a DP upgrade using the in-place and rolling strategies._
 _The diagram shows that the database is reused by the new CP Y, while current DP nodes X are still serving API requests._
+
+When the cluster fallback configuration feature is enabled, exporting instances and importing instances must be upgraded to exactly same new version and make sure the configuration is successfully re-exported after upgrading.
