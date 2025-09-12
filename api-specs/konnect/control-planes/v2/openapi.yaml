@@ -499,7 +499,7 @@ components:
               description: Control Plane Endpoint.
               type: string
               format: url
-              example: 'https://acfe5f253f.cp0.konghq.com'
+              example: 'https://acfe5f253f.cp.konghq.com'
               readOnly: true
             telemetry_endpoint:
               description: Telemetry Endpoint.
@@ -566,7 +566,7 @@ components:
           labels:
             env: test
           config:
-            control_plane_endpoint: 'https://acfe5f253f.cp0.konghq.com'
+            control_plane_endpoint: 'https://acfe5f253f.cp.konghq.com'
             telemetry_endpoint: 'https://acfe5f253f.tp0.konghq.com'
             cluster_type: CLUSTER_TYPE_CONTROL_PLANE
             auth_type: pinned_client_certs
@@ -1282,7 +1282,7 @@ components:
         labels:
           env: test
         config:
-          control_plane_endpoint: 'https://acfe5f253f.cp0.konghq.com'
+          control_plane_endpoint: 'https://acfe5f253f.cp.konghq.com'
           telemetry_endpoint: 'https://acfe5f253f.tp0.konghq.com'
           cluster_type: CLUSTER_TYPE_CONTROL_PLANE
           auth_type: pinned_client_certs
@@ -1343,7 +1343,7 @@ components:
             labels:
               env: prod
             config:
-              control_plane_endpoint: 'https://9e0353434a.us.cp0.konghq.com'
+              control_plane_endpoint: 'https://9e0353434a.us.cp.konghq.com'
               telemetry_endpoint: 'https://9e0353434a.us.tp0.konghq.com'
               cluster_type: CLUSTER_TYPE_CONTROL_PLANE
               auth_type: pinned_client_certs
@@ -1361,7 +1361,7 @@ components:
               env: prod
               foo: bar
             config:
-              control_plane_endpoint: 'https://05459046af.us.cp0.konghq.com'
+              control_plane_endpoint: 'https://05459046af.us.cp.konghq.com'
               telemetry_endpoint: 'https://05459046af.us.tp0.konghq.com'
               cluster_type: CLUSTER_TYPE_CONTROL_PLANE
               auth_type: pinned_client_certs
