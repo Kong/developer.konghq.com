@@ -482,6 +482,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ConfigStoreSecretResponse'
+        '201':
+          $ref: '#/components/responses/ConfigStoreSecretResponse'
         '400':
           description: Bad Request
           content:
