@@ -2,8 +2,7 @@ class ToggleSwitch {
   constructor(elem) {
     this.elem = elem;
     this.inputs = this.elem.querySelectorAll(".switch__input");
-    this.onPrem = this.elem.querySelector('label[for*="on-prem"]');
-    this.konnect = this.elem.querySelector('label[for*="konnect"]');
+    this.slider = this.elem.querySelector(".switch__slider");
     this.addEventListeners();
   }
 
@@ -11,6 +10,7 @@ class ToggleSwitch {
     this.inputs.forEach((radio) => {
       radio.addEventListener("change", this.onToggleChange.bind(this));
     });
+    this.slider.addEventListener("click", this.onSliderClick.bind(this));
   }
 
   onToggleChange(event) {
@@ -20,6 +20,12 @@ class ToggleSwitch {
     });
 
     document.dispatchEvent(changeEvent);
+  }
+
+  onSliderClick() {
+    const newValue = Array.from(this.inputs).find((radio) => !radio.checked);
+    newValue.checked = true;
+    newValue.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   updateState(selectedValue) {
