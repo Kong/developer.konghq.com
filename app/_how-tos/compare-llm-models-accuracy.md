@@ -168,8 +168,6 @@ entities:
               options:
                 llama2_format: ollama
                 upstream_url: ${ollama_upstream_url}
-                cohere:
-                  embedding_input_type: classification
               provider: llama2
             route_type: llm/v1/chat
             logging:
@@ -222,8 +220,6 @@ entities:
               temperature: 2
               max_tokens: 5
               top_p: 1
-              cohere:
-                embedding_input_type: classification
           route_type: llm/v1/chat
         message_countback: 3
 variables:
