@@ -1,12 +1,10 @@
 description: |
-  Configure the AI Azure Content Safety plugin to check requests and block content matching harm categories defined by Azure.
+  Configure the AI Azure Content Safety plugin to check responses and block content matching harm categories defined by Azure.
 
 extended_description: |
-  Configure the plugin to block request content matching the `Hate` and `Violence` categories [defined by Azure](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=warning).
-  
-  The plugin only reviews content in requests by default. To change this, adjust the [`guarding_mode`](/plugins/ai-azure-content-safety/reference/#schema--config-guarding-mode) parameter.
+  Configure the plugin to block response content matching the `Hate` and `Violence` categories [defined by Azure](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=warning).
 
-title: Block request content in predefined categories
+title: Block response content in predefined categories
 
 weight: 900
 
@@ -31,6 +29,7 @@ config:
     rejection_level: 2
   - name: Violence
     rejection_level: 2
+  guarding_mode: OUTPUT
 
 tools:
   - deck
@@ -38,3 +37,6 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+min_version:
+  gateway: '3.12'
