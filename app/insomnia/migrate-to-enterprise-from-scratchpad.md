@@ -37,13 +37,12 @@ faqs:
 
 prereqs:
   inline:
-  - title: Create a design document
-    include_content: prereqs/design-document
-    icon_url: /assets/icons/file.svg
-  - title: Synchronize with Git
-    include_content: prereqs/git-sync
-    icon_url: /assets/icons/git.svg
-     
+  - title: Postman export
+    content: |
+      This how-to guide requires a Postman export. You can either export environments and collections individually (this can be useful if you want to import them into different Insomnia projects), or all at once from:
+      * The [Postman export page](https://web.postman.co/me/export) if you're using Postman Enterprise or Cloud.
+      * **Settings** > **Data** in your Postman app if you're using the scratch pad.
+    icon_url: /assets/icons/postman.svg     
 ---
 Export your Scratch Pad workspace as a single Insomnia JSON file to capture all requests, collections, environments, variables, and metadata for migration.
 
