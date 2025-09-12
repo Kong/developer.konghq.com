@@ -14,6 +14,7 @@ import Tabs from "@/javascripts/components/tabs";
 import TopNav from "@/javascripts/components/top_nav";
 import "@/javascripts/anchor_links";
 import "@/javascripts/accordion";
+import "@/javascripts/banner";
 import "@/javascripts/how_to";
 import "@/javascripts/mode";
 import "@/javascripts/dropdowns";
