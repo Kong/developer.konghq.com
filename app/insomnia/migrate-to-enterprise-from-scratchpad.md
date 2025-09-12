@@ -37,14 +37,12 @@ faqs:
 
 prereqs:
   inline:
-    - title: An Insomnia design document
-      content: |
-        You need to have an Insomnia design document.
-      icon_url: /assets/icons/code.svg
-    - title: Insomnia Enterprise account
-      content: |
-        You need to have an Insomnia Enterprise account.
-      icon_url: /assets/icons/code.svg
+  - title: Create a design document
+    include_content: prereqs/design-document
+    icon_url: /assets/icons/file.svg
+  - title: Synchronize with Git
+    include_content: prereqs/git-sync
+    icon_url: /assets/icons/git.svg
      
 ---
 Export your Scratch Pad workspace as a single Insomnia JSON file to capture all requests, collections, environments, variables, and metadata for migration.
