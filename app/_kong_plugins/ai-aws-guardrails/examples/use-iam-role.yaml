@@ -1,0 +1,45 @@
+description: |
+  Configure the AI AWS Guardrails plugin to use IAM role assumption instead of static credentials.
+extended_description: |
+  Configure the AI AWS Guardrails plugin to use IAM role assumption instead of static credentials.
+  
+  {:.info}
+  > **Note:** The IAM role fields can be used with or without static AWS credentials (`config.aws_access_key_id` and `config.aws_secret_access_key`).
+title: Use IAM role assumption
+
+weight: 900
+min_version: 3.12
+requirements: 
+  - You have an AWS Bedrock Guardrails policy and access to AWS Bedrock Guardrails service.
+  - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+
+config:
+  guardrails_id: ${guardrails_id}
+  guardrails_version: ${guardrails_version}
+  aws_region: ${aws_region}
+  aws_assume_role_arn: ${aws_assume_role_arn}
+  aws_role_session_name: ${aws_role_session_name}
+
+variables:
+  guardrails_id:
+    value: $AWS_GUARDRAILS_ID
+    description: The ID of the AWS Guardrails configuration.
+  guardrails_version:
+    value: $AWS_GUARDRAILS_VERSION
+    description: The version of the AWS Guardrails configuration (e.g. DRAFT or 1).
+  aws_region:
+    value: $AWS_REGION
+    description: The AWS region to use.
+  aws_assume_role_arn:
+    value: $AWS_ASSUME_ROLE_ARN
+    description: The ARN of the IAM role to assume.
+  aws_role_session_name:
+    value: $AWS_ROLE_SESSION_NAME
+    description: A unique identifier for the AWS role session.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
