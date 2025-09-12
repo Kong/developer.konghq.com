@@ -21,7 +21,9 @@ related_resources:
     url: /insomnia/collections/
   - text: Environments
     url: /insomnia/environments/
-  - text: Migrate collections and environments from Postman to Insomnia  
+  - text: Migrate collections and environments from Postman to Insomnia
+  - text: Import content from Postman to multiple Insomnia projects
+    url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
 
 tldr:
     q: How can I migrate my data from my Scratch Pad to my Enterprise account?
