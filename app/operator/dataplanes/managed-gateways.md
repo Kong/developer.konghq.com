@@ -17,7 +17,7 @@ breadcrumbs:
 
 {{ site.operator_product_name }} reconciles `Gateway` resources differently to {{ site.kic_product_name }}. {{ site.operator_product_name }}'s approach is known as _managed_ gateways, and the {{ site.kic_product_name }} approach is referred to as [_unmanaged_ gateways](/kubernetes-ingress-controller/gateway-api/#unmanaged-gateways).
 
-When {{ site.operator_product_name }} detects a new `Gateway`, it creates a `ControlPlane` ({{ site.kic_product_name }}) and a `DataPlane` ({{ site.base_gateway }}). This `ControlPlane` reconciles exactly one `Gateway`.
+When {{ site.operator_product_name }} detects a new `Gateway`, it creates a `ControlPlane` (an in memory instance of {{ site.kic_product_name }}) and a `DataPlane` ({{ site.base_gateway }}). This `ControlPlane` reconciles exactly one `Gateway`.
 
 As {{ site.operator_product_name }} manages the lifecycle of {{ site.base_gateway }} deployments, it can dynamically configure the `DataPlane` based on information in the `Gateway` listeners.
 

@@ -26,7 +26,7 @@ tags:
 tldr:
   q: How do I reference an existing Hybrid mode Control Plane in {{ site.konnect_short_name }} from other CRDs?
   a: |
-    Using {{ site.operator_product_name }}, create a `KonnectGatewayControlPlane` object with `spec.source: Mirror` and add {{ site.konnect_short_name }} authentication.
+    Using {{ site.gateway_operator_product_name }}, create a `KonnectGatewayControlPlane` object with `spec.source: Mirror` and add {{ site.konnect_short_name }} authentication.
 
 prereqs:
   operator:
@@ -55,6 +55,7 @@ Create a `KonnectGatewayControlPlane` object and add the {{ site.konnect_short_n
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
+apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:
   name: gateway-control-plane
 spec:
@@ -77,4 +78,4 @@ name: gateway-control-plane
 {% endvalidation %}
 <!-- vale on -->
 
-Now you can reference the `gateway-control-plane` resource from other CRDs as though it was created by {{ site.operator_product_name }}.
+Now you can reference the `gateway-control-plane` resource from other CRDs as though it was created by {{ site.gateway_operator_product_name }}.

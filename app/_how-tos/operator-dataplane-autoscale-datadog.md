@@ -49,7 +49,7 @@ This tutorial shows how to autoscale workloads based on Service latency. The `co
 
 ## Create a `DataPlaneMetricsExtension`
 
-The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monitor Service latency and expose it on the `/metrics` endpoint.
+The `DataPlaneMetricsExtension` allows {{ site.gateway_operator_product_name }} to monitor Service latency and expose it on the `/metrics` endpoint.
 
 1. Create a `DataPlaneMetricsExtension` that points to the `command` service:
 
@@ -71,19 +71,18 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
 
 1. Create a GatewayConfiguration that uses it:
 
-    ```yaml
+    ```bash
     echo '
     kind: GatewayConfiguration
-    apiVersion: gateway-operator.konghq.com/v1beta1
+    apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
     metadata:
       name: kong
       namespace: kong
     spec:
-      controlPlaneOptions:
-        extensions:
-        - kind: DataPlaneMetricsExtension
-          group: gateway-operator.konghq.com
-          name: kong
+      extensions:
+      - kind: DataPlaneMetricsExtension
+        group: gateway-operator.konghq.com
+        name: kong
     ' | kubectl apply -f -
     ```
 
@@ -104,8 +103,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
     ]'
     ```
 
-
-{{ site.operator_product_name }} can be integrated with [Datadog Metrics](https://docs.datadoghq.com/metrics/) in order to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
+{{ site.gateway_operator_product_name }} can be integrated with [Datadog Metrics](https://docs.datadoghq.com/metrics/) in order to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
 
 ## Install Datadog in your Kubernetes cluster
 
@@ -167,9 +165,9 @@ while curl -k "http://$(kubectl get gateway kong -o custom-columns='name:.status
 
 Keep this running while we move on to next steps.
 
-## Annotate {{ site.operator_product_name }} with Datadog checks config
+## Annotate {{ site.gateway_operator_product_name }} with Datadog checks config
 
-Add the following annotation on {{ site.operator_product_name }}'s Pod to tell Datadog how to scrape {{ site.operator_product_name }}'s metrics:
+Add the following annotation on {{ site.gateway_operator_product_name }}'s Pod to tell Datadog how to scrape {{ site.gateway_operator_product_name }}'s metrics:
 
 ```bash
 POD_NAME=$(kubectl get pods -n kong-system -o custom-columns='name:.metadata.name' --no-headers)

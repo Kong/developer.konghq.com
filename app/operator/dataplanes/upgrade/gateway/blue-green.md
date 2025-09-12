@@ -47,9 +47,9 @@ Blue/green upgrades can be accomplished when working with the `DataPlane` resour
     {:.info}
     > **NOTE**: Currently only `BreakBeforePromotion` is available as promotion strategy.
 
-    When applied like this, {{ site.operator_product_name }} will deploy new `Services` through which you'll be able to access new `Pod`s once they are available.
+    When applied like this, {{ site.gateway_operator_product_name }} will deploy new `Services` through which you'll be able to access new `Pod`s once they are available.
 
-    By default no `Pod`s will be deployed immediately, instead {{ site.operator_product_name }} will observe the `DataPlane` resource for `spec` changes and when any configuration drift is detected it will spawn a new "preview" `Deployment` which will contain the changes applied to the `DataPlane` resource.
+    By default no `Pod`s will be deployed immediately, instead {{ site.gateway_operator_product_name }} will observe the `DataPlane` resource for `spec` changes and when any configuration drift is detected it will spawn a new "preview" `Deployment` which will contain the changes applied to the `DataPlane` resource.
 
 1. Wait for `DataPlane` to be ready to accept changes
 
@@ -193,8 +193,8 @@ Blue/green upgrades can be accomplished when working with the `DataPlane` resour
 
 1. Now you can perform additional validation steps by inspecting the deployed resources.
 
-1. Once you've validated the newly created resources, run `kubectl annotate dataplanes.gateway-operator.konghq.com dataplane-example gateway-operator.konghq.com/promote-when-ready=true` to allow {{ site.operator_product_name }} to switch the traffic to the new `Pod`s.
+1. Once you've validated the newly created resources, run `kubectl annotate dataplanes.gateway-operator.konghq.com dataplane-example gateway-operator.konghq.com/promote-when-ready=true` to allow {{ site.gateway_operator_product_name }} to switch the traffic to the new `Pod`s.
 
-   This annotation will automatically be cleared by {{ site.operator_product_name }} once the new `Pod`s are promoted to be live.
+   This annotation will automatically be cleared by {{ site.gateway_operator_product_name }} once the new `Pod`s are promoted to be live.
 
 1. Once the promotion concludes, the updated `Pod`s start serving traffic and the old `Pod`s and their `Deployment` will be deleted to conserve the resources.

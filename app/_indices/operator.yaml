@@ -10,7 +10,7 @@ groups:
           # These are linked from /operator/dataplanes/reference/autoscale-workloads/
           - path: /operator/dataplanes/how-to/autoscale-workloads/prometheus/
           - path: /operator/dataplanes/how-to/autoscale-workloads/datadog/
-  - title: About Kong Gateway Operator
+  - title: About Kong Operator
     sections:
       - items:
           - path: /operator/
@@ -20,8 +20,16 @@ groups:
   - title: Reference
     sections:
       - items:
+          - path: /operator/reference/configuration-options/
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
+          - path: /operator/reference/control-plane-feature-gates-and-controllers/
+
+  - title: Security hardening
+    sections:
+      - items:
+          - path: /operator/reference/control-plane-watch-namespaces/
+
   - title: Gateway Deployment
     sections:
       - title: Get Started
@@ -29,7 +37,7 @@ groups:
         items:
           - title: Deploy Hybrid DataPlanes
             url: /operator/dataplanes/get-started/hybrid/install/
-            description: Deploy {{ site.base_gateway }} data planes using {{ site.operator_product_name }}
+            description: Deploy {{ site.base_gateway }} data planes using {{ site.gateway_operator_product_name }}
           - title: Deploy {{ site.kic_product_name }}
             url: /operator/dataplanes/get-started/kic/install/
             description: Use Kubernetes resources like `Gateway` to configure {{ site.kic_product_name }} and {{ site.base_gateway }}
@@ -57,9 +65,13 @@ groups:
           - path: /operator/dataplanes/reference/autoscale-workloads/
       - title: Upgrading
         items:
+          - path: /operator/migrate/migrate-1.6.x-2.0.0/
+          - path: /operator/migrate/konnectextension-konnectid-to-konnectgatewaycontrolplane/
+          - path: /operator/konnect/reference/migrate-1.4-1.5/
           - path: /operator/dataplanes/upgrade/operator/
           - path: /operator/dataplanes/upgrade/gateway/rolling/
           - path: /operator/dataplanes/upgrade/gateway/blue-green/
+          - path: /operator/migrate/migrate-kic-to-ko/
       - title: Troubleshooting
         items:
           - path: /operator/dataplanes/troubleshooting/status/
@@ -67,6 +79,7 @@ groups:
         items:
           - path: /operator/dataplanes/konnectextension/
           - path: /operator/reference/custom-resources/
+          - path: /operator/reference/labelselectors
 
   - title: Konnect
     sections:
@@ -96,3 +109,4 @@ groups:
           - path: /operator/reference/custom-resources/
           - path: /operator/konnect/reference/faq/
           - path: /operator/konnect/reference/migrate-1.4-1.5/
+          - path: /operator/migrate/konnectextension-konnectid-to-konnectgatewaycontrolplane/

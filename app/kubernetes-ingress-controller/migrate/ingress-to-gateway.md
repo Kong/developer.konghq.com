@@ -29,9 +29,9 @@ related_resources:
 {:.warning}
 > **Important: TCPIngress and UDPIngress Deprecation Notice**
 >
-> The `TCPIngress` and `UDPIngress` custom resources are **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in Kong Operator 2.0.0**. These resources were created to address limitations of the traditional Kubernetes Ingress API, but since the Gateway API has reached maturity and widespread adoption, they are now redundant and cause confusion.
+> The `TCPIngress` and `UDPIngress` custom resources are **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in {{ site.operator_product_name }} 2.0.0**. These resources were created to address limitations of the traditional Kubernetes Ingress API, but since the Gateway API has reached maturity and widespread adoption, they are now redundant and cause confusion.
 >
-> **Migration is required** before upgrading to Kong Operator 2.0.0. Use this guide to migrate your existing `TCPIngress` and `UDPIngress` resources to their Gateway API equivalents:
+> **Migration is required** before upgrading to {{ site.operator_product_name }} 2.0.0. Use this guide to migrate your existing `TCPIngress` and `UDPIngress` resources to their Gateway API equivalents:
 >
 > - `TCPIngress` → `Gateway` + `TCPRoute` + `TLSRoute`
 > - `UDPIngress` → `Gateway` + `UDPRoute`
