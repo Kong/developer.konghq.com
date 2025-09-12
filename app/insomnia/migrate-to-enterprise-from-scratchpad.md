@@ -39,11 +39,11 @@ prereqs:
   inline:
     - title: An Insomnia design document
       content: |
-        You need to have an Insomnia design document. For instructions on creating one see [Create a design document](/how-to/create-a-design-document/)
+        You need to have an Insomnia design document.
       icon_url: /assets/icons/code.svg
     - title: Insomnia Enterprise account
       content: |
-        You need to have an Insomnia Enterprise account. For more information, go to [Insomnia Enterprise](/insomnia/enterprise/)
+        You need to have an Insomnia Enterprise account.
       icon_url: /assets/icons/code.svg
      
 ---
