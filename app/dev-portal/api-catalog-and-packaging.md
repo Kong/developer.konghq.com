@@ -108,6 +108,47 @@ Previously, when you created an API catalog in Dev Portal and linked the APIs to
 
 API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services in those control planes. 
 
+The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. For example, if you have Key Authentication configured and it rejects a request, the ACE plugin *will not* run. If you're using the `config.anonymous` ACE plugin configuration, the [plugin priority](/gateway/entities/plugin/#plugin-priority) needs to be set in such a way that it executes after all other authentication plugins. For example, you can set a provisional priority of 949 so the plugin runs after KAA (which has a priority  of 950).
+
+
+#### Route matching policy
+
+When you configure the ACE plugin, you must set either `required` or `present` for `config.match_policy`. This determines how the ACE plugin will behave when a request doesn't match an existing Route.
+
+The following table describes what the `match_policy` values do and when to use each:
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Description
+    key: description
+  - title: Limitations
+    key: limitations
+  - title: Use cases
+    key: use-case
+rows:
+  - setting: |
+      `required`
+    description: |
+      Requires every incoming request to match a defined operation from an API or API package in Dev Portal. If a request doesn't match, ACE rejects the request outright with a 401. All traffic will be rejected except operations or Routes in published APIs linked to an ACE-enabled {{site.base_gateway}}. 
+    limitations: |
+      * Misconfigurations can overexpose unintended Routes.
+      * Shuts down all traffic outside of published Dev Portal APIs.
+      * If the plugin is improperly configured, potentially all traffic could be terminated.
+    use-case: |
+      * You want to lock down {{site.konnect_short_name}} so that only traffic that is part of an explicitly defined API operation is allowed through.
+      * You only plan to provide self-service access via your Dev Portal. 
+  - setting: |
+      `if_present`
+    description: |
+      The ACE plugin only engages with a request when it matches an operation. If a request doesn't match, ACE lets the request pass through untouched. This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
+    limitations: |
+      All traffic outside of published APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. Dev Portal will not be able to protect all operations.
+    use-case: |
+      * You have an environment where some Gateway Services or Routes are governed by Dev Portal–exposed APIs (with ACE), while others are regular Routes that should be left alone.
+      * You already have existing traffic and other access controls in place and want to avoid interruption.
+{% endtable %}
+
 ### Package rate limits
 
 You can set individual rate limits on an API package as well as operations in that package. Keep the following in mind when configuring rate limits:
@@ -117,6 +158,7 @@ You can set individual rate limits on an API package as well as operations in th
   * Requests that are under the current limit for the Service and API Package will be counted towards both.
   * Requests that surpass the rate limit of an API package won't be counted towards rate limits applied from other rate limiting plugins.
   * Requests that surpass the rate limit of other rate limiting plugins are still counted towards the rate limits applied for API packages. This is because the ACE plugin runs before other rate limiting plugins under the default plugin priorities. You can adjust this behavior with [custom plugin priority values](/gateway/entities/plugin/#dynamic-plugin-ordering).
+  * Rate limiting is applied per credential.
 
 For example, if you have the following rate limits set:
 * **API package A**: 10 requests per second
