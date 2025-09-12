@@ -33,7 +33,7 @@ variables:
     description: The `kid` of a [Key](/gateway/entities/key/).
   key_set:
     value: $KEY_SET
-    description: The name of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
+    description: The name or ID of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
   domain:
     value: $DOMAIN
     description: An array of strings representing hosts.
