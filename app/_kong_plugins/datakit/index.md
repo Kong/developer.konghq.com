@@ -94,21 +94,22 @@ For instance, if you have a YAML configuration for Datakit that you want to visu
 
 ### Using the Datakit flow editor 
 
-To use the Datakit flow editor:
+To configure Datakit using the flow editor:
 
-1. Open the flow editor:
-    1. From the {{site.konnect_short_name}} menu, open [**API Gateway**](https://cloud.konghq.com/gateway-manager/).
-    1. Select your control plane, then in the side menu, go to **Plugins**.
-    1. Click **New Plugin** and select Datakit. 
-    1. In the Plugin Configuration section, click **Go to flow editor**.
-1. Drag any node from the menu onto the canvas to add it to your flow, or click **Examples** and choose a pre-configured example to customize.
-1. Expand the `inputs` or `outputs` on the node to see the options, then connect a specific input or output to another node.
+1. From the {{site.konnect_short_name}} menu, open [**API Gateway**](https://cloud.konghq.com/gateway-manager/).
+1. Select your control plane, then in the side menu, go to **Plugins**.
+1. Click **New Plugin** and select Datakit. 
+1. In the Plugin Configuration section, click **Go to flow editor**.
+1. In the editor, drag any node from the menu onto the canvas to add it to your flow, or click **Examples** and choose a pre-configured example to customize.
+1. Expand the `inputs` or `outputs` on a node to see the options, then connect a specific input or output to another node.
 1. Select any node to open its detailed configuration in a slide-out menu.
 1. Fill out the configuration. Any changes to inputs or outputs will be reflected in the diagram.
 1. Click **Done** to save.
 
 {:.info}
-> **Note:** Your nodes don't have to connect to the prepopulated `request`/`service request`, or `response`/`service response` nodes. 
+> **Notes:** 
+* Each input can connect to only one output, but one output can accept many inputs.
+* Your nodes don't have to connect to the prepopulated `request`/`service request`, or `response`/`service response` nodes. 
 Whether you need them or not depends on your use case. Check out the **Examples** dropdown in the editor for some variations.
 
 ## How does the Datakit plugin work?
