@@ -1,0 +1,47 @@
+description: Configure the Confluent Consume plugin to transform messages with Lua custom filter code. In this example, the Confluent Consume plugin normalizes messages to a table and decodes them into JSON when possible.
+
+title: Transform messages with Lua custom filter code
+
+weight: 900
+
+requirements:
+  - You have a [Kafka cluster](https://kafka.apache.org/documentation/#quickstart)
+  - You have a [Kafka topic](https://kafka.apache.org/documentation/#quickstart_createtopic) in the cluster
+
+min_version:
+  gateway: '3.12'
+
+variables:
+  host:
+    description: The bootstrap server host
+    value: $BOOTSTRAP_SERVER_HOST
+  topic:
+    description: The name of the Kafka topic to consume from.
+    value: $KAFKA_TOPIC
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: server-sent-events
+  message_by_lua_functions:
+  - |
+    return function(message)
+      local json = require("cjson.safe")
+      local m = type(message) == "table" and message or { value = message }
+      if type(m.value) == "string" then
+        m.decoded = json.decode(m.value) or nil
+      end
+      m.processed_by_lua = true
+      return m
+    end
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

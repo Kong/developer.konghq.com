@@ -72,3 +72,11 @@ Kong also provides a [plugin for publishing messages to Confluent Cloud](/plugin
 ## Schema registry support {% new_in 3.11 %}
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}
+
+## Filter and transform messages {% new_in 3.12 %}
+
+You can use the `config.message_by_lua_functions` parameter to specify custom Lua code that will filter or transform Kafka messages. 
+
+For examples, see the following:
+* [Transform messages with Lua custom filter code](/plugins/confluent-consume/examples/transform-messages/)
+* [Filter messages with Lua custom filter code](/plugins/confluent-consume/examples/filter-messages/)
