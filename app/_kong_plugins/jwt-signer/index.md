@@ -83,7 +83,7 @@ The key size (the modulo) for RSA keys is currently hard-coded to 2048 bits.
 You can turn channel and access token signing or re-signing off and on as needed with `config.channel_token_signing` and `config.access_token_signing`.
 
 Use the following use cases to help you determine if you should enable or disable token signing and re-signing:
-* [**Enable signing or resigning**](/plugins/jwt-signer/examples/enable-signing-tokens/): If you don't fully trust the upstream identity provider or want to enforce a local trust boundary, set `config.channel_token_signing` or `config.access_token_signing` to `true`. This ensures that downstream services only need to trust {{site.base_gateway}}'s signing key.
+* [**Enable signing or re-signing**](/plugins/jwt-signer/examples/enable-signing-tokens/): If you don't fully trust the upstream identity provider or want to enforce a local trust boundary, set `config.channel_token_signing` or `config.access_token_signing` to `true`. This ensures that downstream services only need to trust {{site.base_gateway}}'s signing key.
 * [**Disable signing or re-signing**](/plugins/jwt-signer/examples/disable-signing-tokens/): If the token already comes from an identity provider and your downstream services already validate that provider's keys, set `config.channel_token_signing` or `config.access_token_signing` to `false`.
 
 ## Consumer mapping

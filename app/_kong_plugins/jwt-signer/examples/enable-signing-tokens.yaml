@@ -1,11 +1,11 @@
-description: Enables signing or resigning access and channel tokens.
+description: Enables signing or re-signing access and channel tokens.
 
 extended_description: |
-  Enables signing or resigning access and channel tokens. 
+  Enables signing or re-signing access and channel tokens. 
   `access_token_upstream_header` and `channel_token_upstream_header` are used to specify the header names where the signed tokens are passed to the upstream.
 min_version: 
   gateway: '3.12' 
-title: 'Enable signing or resigning tokens'
+title: 'Enable signing or re-signing tokens'
 
 weight: 900
 
@@ -20,6 +20,4 @@ config:
 tools:
   - deck
   - admin-api
-  - konnect-api
   - kic
-  - terraform

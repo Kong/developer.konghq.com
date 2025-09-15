@@ -1,11 +1,11 @@
-description: Disables signing or resigning access and channel tokens.
+description: Disables signing or re-signing access and channel tokens.
 
 extended_description: |
-  Disables signing or resigning access and channel tokens. 
+  Disables signing or re-signing access and channel tokens. 
   This can be useful when the token is just validated by {{site.base_gateway}} and doesn't need to be passed to the upstream.
 min_version: 
   gateway: '3.12' 
-title: 'Disable signing or resigning tokens'
+title: 'Disable signing or re-signing tokens'
 
 weight: 900
 
