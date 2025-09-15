@@ -69,6 +69,48 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## Datakit flow editor
+
+In addition to the standard [{{site.base_gateway}} configuration tools](/tools/),
+{{site.konnect_short_name}} provides a drag-and-drop flow editor for Datakit. 
+The flow editor helps you visualize node connections, inputs, and outputs.
+
+![Full screen flow editor](/assets/images/konnect/datakit-flow-editor-node.png)
+> _Figure 1: The Datakit flow editor opens in a full screen with a list of nodes, a drag-and-drop diagram, and detailed configuration options for each node._
+
+You can find the editor through [API Gateway](https://cloud.konghq.com/gateway-manager/) > select your control plane > Plugins > New Plugin > Datakit. 
+From here, you can configure Datakit in one of two ways:
+* Using the visual flow editor
+* Using the code editor
+
+Any changes you make in one editor are reflected in the other. 
+For instance, if you have a YAML configuration for Datakit that you want to visualize, you can add it to the code editor, then switch to the flow editor to see it in flow format.
+
+![Flow editor preview](/assets/images/konnect/datakit-flow-editor-preview.png)
+> _Figure 2: Toggle the Datakit plugin configuration to the Flow Editor to edit configuration using drag-and-drop. The flow editor shows a preview of the diagram, which you can click to edit in a full screen._
+
+![Code editor](/assets/images/konnect/datakit-code-editor.png)
+> _Figure 3: Toggle the Datakit plugin configuration to the Code Editor to edit configuration in YAML format._
+
+### Using the Datakit flow editor 
+
+To use the Datakit flow editor:
+
+1. Open the flow editor:
+    1. From the {{site.konnect_short_name}} menu, open [**API Gateway**](https://cloud.konghq.com/gateway-manager/).
+    1. Select your control plane, then in the side menu, go to **Plugins**.
+    1. Click **New Plugin** and select Datakit. 
+    1. In the Plugin Configuration section, click **Go to flow editor**.
+1. Drag any node from the menu onto the canvas to add it to your flow, or click **Examples** and choose a preconfigured example to customize.
+1. Expand the `input` or `output` on the node to see the options, then connect a specific input or output to another node.
+1. Select any node to open its detailed configuration in a slide-out menu.
+1. Fill out the configuration. Any changes to inputs or outputs will be reflected in the diagram.
+1. Click **Done** to save.
+
+{:.info}
+> **Note:** Your nodes don't have to connect to the prepopulated `request`/`service request`, or `response`/`service response` nodes. 
+Whether you need them or not depends on your use case. Check out the **Examples** dropdown in the editor for some variations.
+
 ## How does the Datakit plugin work?
 
 The following sections describes what Datakit nodes are and how they work.
