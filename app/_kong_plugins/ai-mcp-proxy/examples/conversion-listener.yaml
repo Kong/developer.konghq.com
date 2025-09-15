@@ -3,10 +3,10 @@ description: 'Generate an MCP server from {{ site.base_gateway }} Service'
 title: 'Generate an MCP server in conversion-listener mode'
 
 extended_description: |
-  Generate an MCP server from {{ site.base_gateway }} services.
+  Generate an MCP server from {{ site.base_gateway }} Services. 
 
   {:.warning}
-  > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+  > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
   > ```yaml
   > services:
   > - name: weather-service
@@ -16,6 +16,8 @@ extended_description: |
   >     paths:
   >     - /weather
   > ```
+
+  This example uses [`config.tools.annotations.title`](/plugins/ai-mcp-proxy/reference/#schema--config-tools-annotations-title) to add a meaningful name to the tool to simplify human debugging.
 
 weight: 900
 
