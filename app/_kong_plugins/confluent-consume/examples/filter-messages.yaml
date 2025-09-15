@@ -17,6 +17,12 @@ variables:
   topic:
     description: The name of the Kafka topic to consume from.
     value: $KAFKA_TOPIC
+  key:
+    description: The API key to use for authentication.
+    value: $API_KEY
+  secret:
+    description: The API secret to use for authentication.
+    value: $API_SECRET
 
 config:
   bootstrap_servers:
@@ -34,6 +40,8 @@ config:
       end
       return m
     end
+  cluster_api_key: ${key}
+  cluster_api_secret: ${secret}
 
 
 tools:
