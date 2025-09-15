@@ -190,6 +190,9 @@ releases:
               - 6
               - 7
               - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
         - influxdb:
             versions:
               - 1
@@ -720,6 +723,12 @@ releases:
               - 6
               - 7
               - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
+        - influxdb:
+            versions:
+              - 1
         - kafka:
             versions:
               - 3.3
@@ -863,8 +872,8 @@ releases:
 
       vault:
         - vaultproject:
-          versions:
-            - 1.12
+            versions:
+              - 1.12
         - aws-sm:
         - azure-key-vaults:
         - gcp-sm:
@@ -898,6 +907,12 @@ releases:
               - 6
               - 7
               - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
+        - influxdb:
+            versions:
+              - 1
         - kafka:
             versions:
               - 3.3
@@ -1040,11 +1055,14 @@ releases:
 
       vault:
         - vaultproject:
-          versions:
-            - 1.12
+            versions:
+              - 1.12
         - aws-sm:
         - azure-key-vaults:
         - gcp-sm:
+        - conjur:
+            versions:
+              - 1.22.2-12
 
       metrics:
         - prometheus:
@@ -1075,6 +1093,12 @@ releases:
               - 6
               - 7
               - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
+        - influxdb:
+            versions:
+              - 1
         - kafka:
             versions:
               - 3.3
@@ -1218,12 +1242,14 @@ releases:
 
       vault:
         - vaultproject:
-          versions:
-            - 1.12
+            versions:
+              - 1.12
         - aws-sm:
         - azure-key-vaults:
         - gcp-sm:
-
+        - conjur:
+            versions:
+              - 1.22.2-12
       metrics:
         - prometheus:
             versions:
@@ -1253,6 +1279,12 @@ releases:
               - 6
               - 7
               - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
+        - influxdb:
+            versions:
+              - 1
         - kafka:
             versions:
               - 3.3
