@@ -32,7 +32,7 @@ tldr:
 faqs:
   - q: Why can't I import my file?
     a: Confirm that the file uses Insomnia JSON format and ends with `.json`. Insomnia’s importer expects a supported format. For example, Insomnia JSON, Postman v2, HAR, OpenAPI.
-  - q: Import says “succeeded” but you don’t see items.
+  - q: Import says “succeeded” but I don’t see items.
     a: Ensure you imported into the project you opened, not a different workspace. If needed, re-import into the active project.
   - q: Why can't I see my variables in Table view?
     a: Open JSON view to confirm values, then switch back to Table view. This ensures you see nested or inherited keys in the editor.  
