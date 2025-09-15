@@ -11,10 +11,9 @@ products:
 breadcrumbs:
   - /insomnia/
 tags:
-  - scratch pad
+  - insomnia
   - migration
-  - collections
-  - environments
+  - account-management
 
 related_resources:
   - text: Collections
