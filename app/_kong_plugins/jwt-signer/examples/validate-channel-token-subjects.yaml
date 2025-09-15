@@ -1,7 +1,8 @@
 description: Validates that the subject present in a channel token is in the allowed list.
 
 title: 'Validate the subject claim in a channel token'
-min_version: 3.12 
+min_version: 
+  gateway: '3.12'
 weight: 900
 
 config:
@@ -15,6 +16,4 @@ config:
 tools:
   - deck
   - admin-api
-  - konnect-api
   - kic
-  - terraform

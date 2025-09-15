@@ -83,8 +83,8 @@ The key size (the modulo) for RSA keys is currently hard-coded to 2048 bits.
 You can turn channel and access token signing or re-signing off and on as needed with `config.channel_token_signing` and `config.access_token_signing`.
 
 Use the following use cases to help you determine if you should enable or disable token signing and re-signing:
-* **Enable signing or resigning:** If you don't fully trust the upstream identity provider or want to enforce a local trust boundary, set `config.channel_token_signing` or `config.access_token_signing` to `true`. This ensures that downstream services only need to trust {{site.base_gateway}}'s signing key.
-* **Disable signing or re-signing:** If the token already comes from an identity provider and your downstream services already validate that provider's keys, set `config.channel_token_signing` or `config.access_token_signing` to `false`.
+* [**Enable signing or resigning**](/plugins/jwt-signer/examples/enable-signing-tokens/): If you don't fully trust the upstream identity provider or want to enforce a local trust boundary, set `config.channel_token_signing` or `config.access_token_signing` to `true`. This ensures that downstream services only need to trust {{site.base_gateway}}'s signing key.
+* [**Disable signing or re-signing**](/plugins/jwt-signer/examples/disable-signing-tokens/): If the token already comes from an identity provider and your downstream services already validate that provider's keys, set `config.channel_token_signing` or `config.access_token_signing` to `false`.
 
 ## Consumer mapping
 
@@ -167,10 +167,10 @@ an external URI.
 In {{site.base_gateway}} 3.12 or later, you can perform additional claim validation by specifying the types of token claims as well as which tokens are required and which are optional. 
 
 You can validate the following types of access and channel token claims:
-* Issuer (`iss`)
-* Not before (`nbf`)
+* [Issuer](/plugins/jwt-signer/examples/validate-channel-token-issuers/) (`iss`)
+* [Not before](/plugins/jwt-signer/examples/validate-access-token-issuers/) (`nbf`)
+* [Subject](/plugins/jwt-signer/examples/validate-channel-token-subjects/) (`sub`)
 * Audience (`aud`)
-* Subject (`sub`)
 
 You can also specify optional and required claims with the following:
 * `config.access_token_optional_claims`

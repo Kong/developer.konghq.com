@@ -2,8 +2,9 @@ description: Disables signing or resigning access and channel tokens.
 
 extended_description: |
   Disables signing or resigning access and channel tokens. 
-  This can be useful when the token is just validated at Kong and doesn't need to be passed to the upstream.
-min_version: 3.12 
+  This can be useful when the token is just validated by {{site.base_gateway}} and doesn't need to be passed to the upstream.
+min_version: 
+  gateway: '3.12' 
 title: 'Disable signing or resigning tokens'
 
 weight: 900
@@ -15,6 +16,4 @@ config:
 tools:
   - deck
   - admin-api
-  - konnect-api
   - kic
-  - terraform

@@ -1,7 +1,10 @@
-description: Validates the not bofore claim in an access token.
-
+description: |
+  Validates the "not before" claim in an access token.
+extended_description: |
+  Validates the "not before" (`nbf`) claim in an access token.
 title: 'Validate the not before claim in an access token'
-min_version: 3.12 
+min_version: 
+  gateway: '3.12' 
 weight: 900
 
 config:
@@ -10,6 +13,4 @@ config:
 tools:
   - deck
   - admin-api
-  - konnect-api
   - kic
-  - terraform
