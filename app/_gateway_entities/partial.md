@@ -110,7 +110,7 @@ rows:
   - Name: "[Rate Limiting](/plugins/rate-limiting/)"
     Redis: "Request counters"
     Partial: "`redis-ce`"
-    Benefit: "Apply the same Redis setup across multiple rate-limiting policies without duplication."
+    Benefit: "Apply the same Redis setup across multiple rate limiting policies without duplication."
   - Name: "[Rate Limiting Advanced](/plugins/rate-limiting-advanced/)"
     Redis: "Request counters (supports Sentinel/Cluster)"
     Partial: "`redis-ee`"
