@@ -1,12 +1,12 @@
 ---
 title: Migrate from Scratch Pad to Enterprise
 
-
 content_type: how_to
+
 description: Migrate all of the data from your Scratch Pad account to your Enterprise account.
+
 products:
     - insomnia
-
 
 breadcrumbs:
   - /insomnia/
