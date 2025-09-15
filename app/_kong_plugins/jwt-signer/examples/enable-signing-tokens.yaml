@@ -2,7 +2,7 @@ description: Enables signing or resigning access and channel tokens.
 
 extended_description: |
   Enables signing or resigning access and channel tokens. 
-  This can be useful when you don't fully trust the upstream identity provider or want to enforce a local trust boundary.
+  `access_token_upstream_header` and `channel_token_upstream_header ` are used to specify the header names where the signed tokens are passed to the upstream.
 min_version: 3.12 
 title: 'Enable signing or resigning tokens'
 
@@ -11,6 +11,10 @@ weight: 900
 config:
   channel_token_signing: true
   access_token_signing: true
+  access_token_upstream_header: Authorization:Bearer
+  channel_token_upstream_header: Another_Authorization_Header
+  access_token_signing_algorithm: RS256
+  channel_token_signing_algorithm: ES256
 
 tools:
   - deck

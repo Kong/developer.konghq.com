@@ -1,15 +1,11 @@
-description: Validates the issuers present in an access token.
+description: Validates the not bofore claim in an access token.
 
-title: 'Validate issuers in an access token'
+title: 'Validate the not before claim in an access token'
 min_version: 3.12 
 weight: 900
 
 config:
-  access_token_issuer: "kong"
-  access_token_issuer_claim: 
-  - iss
-  access_token_issuers_allowed:
-  - iss
+  verify_access_token_notbefore: true
 
 tools:
   - deck

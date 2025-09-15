@@ -1,14 +1,16 @@
-description: Validates the subjects present in a channel token.
+description: Validates that the subject present in a channel token is in the allowed list.
 
-title: 'Validate subjects in a channel token'
+title: 'Validate the subject claim in a channel token'
 min_version: 3.12 
 weight: 900
 
 config:
+  verify_channel_token_subject: true
   channel_token_subject_claim: 
   - sub
   channel_token_subjects_allowed:
-  - sub
+  - allowed_sub1
+  - allowed_sub2
 
 tools:
   - deck

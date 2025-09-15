@@ -2,7 +2,7 @@ description: Disables signing or resigning access and channel tokens.
 
 extended_description: |
   Disables signing or resigning access and channel tokens. 
-  This can be useful when the token already comes from an identity provider and your downstream services already validate that provider's keys.
+  This can be useful when the token is just validated at Kong and doesn't need to be passed to the upstream.
 min_version: 3.12 
 title: 'Disable signing or resigning tokens'
 
