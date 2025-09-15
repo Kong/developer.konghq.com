@@ -131,7 +131,7 @@ rows:
 
                   * [Troubleshooting](/index/kubernetes-ingress-controller/#troubleshooting): Common issues that people encounter when running {{ site.kic_product_name }}.
                   * [FAQ](/index/kubernetes-ingress-controller/#faqs): Specific questions about routing behavior, plugin compatibility and more.
-                  * [Feature gates](/kubernetes-ingress-controller/reference/feature-gates/): If something isn't working as expected, ensure that you have the correct feature gates enabled
+                  * [Feature gates](/kubernetes-ingress-controller/reference/feature-gates/): If something isn't working as expected, ensure that you have the correct feature gates activated.
                   * [Create a GitHub issue](https://github.com/Kong/kubernetes-ingress-controller/issues/new/choose): Report a bug or make a feature request for {{ site.kic_product_name }}.
                   * [Join the Kong Slack community](https://konghq.com/community#64fe8580b1a2f3c3804230f1): Get help from the team
 
@@ -160,24 +160,23 @@ rows:
               rows:
                 - feature: "**Configuration**"
                   kic: "Configure all {{ site.base_gateway }} entities with CRDs directly. For example, Services, Routes, Consumers, Plugins, Certificates, CA Certificates, Vaults."
-                  hybrid: "Same configuration scope, however gateways are provisioned and reconciled automatically by the Operator."
+                  hybrid: "Same configuration scope, however the Operator automatically provisions and reconciles the gateways."
                 - feature: "**{{ site.base_gateway }} API**" 
                   kic: "Supports `Ingress`, `HTTPRoute`, `TCPRoute`, and `UDPRoute`. From KIC 3.5 onward, compliant with Gateway API v1.3."
                   hybrid: "Supports `GatewayClass`, `Gateway`, and `GRPCRoute`, in addition to `HTTPRoute`, `TCPRoute`, and `UDPRoute`."
                 - feature: "**Feature Gates**"  
                   kic: |
-                    Enable advanced or experimental behavior: `FillIDs`, `RewriteURIs`, `CombinedServicesFromDifferentHTTPRoutes`.
+                    Activate gates like  `FillIDs`, `RewriteURIs`, and `CombinedServicesFromDifferentHTTPRoutes` with `CONTROLLER_FEATURE_GATES`.
                     - `FillIDs` can cause UUID collisions across workspaces with identical Consumers.
-                    - Disable `CombinedRoutes` if per-route plugin configuration is required.
+                    - Deactivate `CombinedRoutes` if you require per-route plugin configuration.
                   hybrid: "Identical feature gate support and constraints. No change between models."
                 - feature: "**Fallback configuration**"
                   kic: "Applies valid configuration while skipping invalid objects to maintain cluster stability."
-                  hybrid: "Identical fallback behavior. No change between models."
+                  hybrid: "Behaves similarly where fallback configuration is supported, but specific operator‑driven behavior may vary and should be tested."
                 - feature: "**Last Known Good Config**"
                   kic: |
-                    Retains the last accepted configuration in memory and reapplies it after restart.
-                    - Does not reload automatically if only the Kong proxy container restarts; use `CONTROLLER_ENABLE_REVERSE_SYNC=true` to force reloads.
-                  hybrid: "Identical last-known-good behavior and limitation. No change between models."
+                    Retains the last valid configuration in memory and reapplies it after restart to avoid system lock‑ups. If you need to manually after the kong proxy container starts, use use `CONTROLLER_ENABLE_REVERSE_SYNC=true` to force reloads.
+                  hybrid: "Supports last known good configuration behavior where configured, but the exact triggers and flags may differ. For example, at single proxy container restart."
                 - feature: "**Path Rewriting**" 
                   kic: "Rewrite request paths using the `konghq.com/rewrite` annotation."
                   hybrid: "Identical path rewriting support. No change between models."
