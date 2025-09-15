@@ -42,6 +42,21 @@ search_aliases:
   - intelligence
   - language
   - model
+
+faqs:
+  - q: What do I do if I see the error `Blocked by Model Armor Floor Setting`?
+    a: |	
+      If you see the following error:
+      
+      ```json
+      {
+        "reason": "MODEL_ARMOR",
+        "message": "Blocked by Model Armor Floor Setting: The prompt violated X, Y, and Z filters.",
+        "error": true
+      }
+      ```
+      This means the plugin is conflicting with settings configured in GCP Vertex.
+      We recommend disabling the GCP Model Armor Floor in GCP, as this setting fails in some modes (for example, streaming response mode), and blocks all analytics.
 ---
 
 The **GCP Model Armor** plugin integrates Kong AI Gateway with [Google Cloud’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses. 
@@ -130,6 +145,10 @@ rows:
   - field: Default last message inspection with `text_source`
     description: Keep the default behavior of checking only the last user prompt message for highest accuracy.
 {% endtable %}
+
+{:.warning}
+> **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with this plugin. 
+See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-model-armor-floor-setting) for more information.
 
 ## Limitations
 
