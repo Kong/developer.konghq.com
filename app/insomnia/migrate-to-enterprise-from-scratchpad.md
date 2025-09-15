@@ -22,6 +22,7 @@ related_resources:
   - text: Environments
     url: /insomnia/environments/
   - text: Migrate collections and environments from Postman to Insomnia
+    url: /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/
   - text: Import content from Postman to multiple Insomnia projects
     url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
 
