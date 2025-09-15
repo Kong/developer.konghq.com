@@ -101,8 +101,8 @@ To use the Datakit flow editor:
     1. Select your control plane, then in the side menu, go to **Plugins**.
     1. Click **New Plugin** and select Datakit. 
     1. In the Plugin Configuration section, click **Go to flow editor**.
-1. Drag any node from the menu onto the canvas to add it to your flow, or click **Examples** and choose a preconfigured example to customize.
-1. Expand the `input` or `output` on the node to see the options, then connect a specific input or output to another node.
+1. Drag any node from the menu onto the canvas to add it to your flow, or click **Examples** and choose a pre-configured example to customize.
+1. Expand the `inputs` or `outputs` on the node to see the options, then connect a specific input or output to another node.
 1. Select any node to open its detailed configuration in a slide-out menu.
 1. Fill out the configuration. Any changes to inputs or outputs will be reflected in the diagram.
 1. Click **Done** to save.
