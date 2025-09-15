@@ -48,7 +48,7 @@ prereqs:
 ---
 Export your Scratch Pad workspace as a single Insomnia JSON file to capture all requests, collections, environments, variables, and metadata for migration.
 
-## 1. Export from your Scratch Pad to JSON file
+## Export from your Scratch Pad to JSON file
 1. Open your Scratch Pad workspace. 
 2. Click **Export**.
 3. Select **Insomnia JSON (v4 or v5)** and save the file locally.
@@ -56,12 +56,12 @@ Export your Scratch Pad workspace as a single Insomnia JSON file to capture al
 {:.info}
 > If your export dialog does not add a file extension, rename the file to end with .json to ensure that Insomnia recognizes it during import.
 
-## 2. Sign in to Insomnia Enterprise
+## Sign in to Insomnia Enterprise
 1. Launch Insomnia and sign in to your Enterprise organization.
     - If your org enforces SSO, use the SSO button and complete your IdP flow. 
 2. On the dashboard, confirm that you see **Personal Workspace** or your **Organization** workspaces. Enterprise accounts organize work into projects.
 
-## 3. Create a project
+## Create a project
 1. Click **Create → New project**.
 2. Select a Cloud project to share and sync in your organization, or select Git if your team uses a repo. 
 3. Enter a name, for example Migrated Scratch Pad Data, and confirm.
@@ -69,12 +69,12 @@ Export your Scratch Pad workspace as a single Insomnia JSON file to capture al
 {:.info}
 > When to pick Cloud vs Git: Cloud sync shares the project with your org and uses E2EE, in comparison, Git sync ties the project to your repository and requires each collaborator to connect the repo.
 
-## 4. Import your workspace JSON
+## Import your workspace JSON
 1. Open the project.
 2. Click **Import → File** and then select your exported Insomnia JSON. 
 3. Confirm the import summary. For example, Workspaces, Collections, Environments, and Tests.
 
-## 5. Review and fix environment variables
+## Review and fix environment variables
 1. Click **Manage environments → Base environment**.
 2. Verify keys such as `base_url` and API tokens. Use **JSON view** to confirm nested values, then return to **Table view**.
 The Table and JSON are alternative editors for the same data. 
