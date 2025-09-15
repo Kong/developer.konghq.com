@@ -143,6 +143,15 @@ export default class ToggleSwitchManager {
       if (this.type === "page") {
         this.switchPageTopology(selectedValue);
       }
+
+      if (this.getParamValue() && this.getParamValue() !== selectedValue) {
+        const url = new URL(window.location);
+
+        url.searchParams.set("deployment", selectedValue);
+
+        // Don't reload the page
+        window.history.pushState({}, "", url);
+      }
       this.switches.forEach((instance) => {
         instance.updateState(selectedValue);
       });
