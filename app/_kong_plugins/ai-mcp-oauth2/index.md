@@ -7,7 +7,7 @@ tier: ai_gateway_enterprise
 publisher: kong-inc
 description: 'Secure MCP server access with OAuth2 authentication'
 
-
+tech_preview: true
 products:
     - gateway
     - ai-gateway
@@ -52,7 +52,7 @@ related_resources:
 
 The AI MCP OAuth2 plugin secures Model Context Protocol (MCP) traffic on Kong AI Gateway using [OAuth 2.0 specification for MCP servers](https://modelcontextprotocol.io/specification/draft/basic/authorization). It ensures only authorized MCP clients can access protected MCP servers, and acts as a crucial security layer for MCP servers.
 
-## Purpose and Core Functionality
+## Purpose and core functionality
 
 The plugin provides OAuth 2.0 authentication for MCP traffic, allowing MCP clients to safely request access. It validates that access tokens are issued specifically for the target MCP server, ensuring only authorized requests are accepted. To reduce the risk of token theft or confused deputy attacks, the plugin does not pass access tokens to upstream services.
 
