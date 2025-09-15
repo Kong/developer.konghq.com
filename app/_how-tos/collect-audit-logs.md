@@ -78,7 +78,7 @@ export DESTINATION_ID='YOUR DESTINATION ID'
 
 ## Enable the webhook on Konnect
 
-Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/#/operations/audit-log-webhook) endpoint with the audit log destination:
+Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/audit-logs/#/operations/update-audit-log-webhook) endpoint with the audit log destination:
 
 <!--vale off-->
 {% konnect_api_request %}
