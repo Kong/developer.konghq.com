@@ -43,10 +43,14 @@ min_version:
 ---
 
 ## What is a Partial?
-Some entities in {{site.base_gateway}} share common configuration settings that often need to be repeated. For example, multiple [plugins](/gateway/entities/plugin/) that connect to Redis may require the same connection settings. Without Partials, you would need to replicate this configuration across all plugins. If the settings change, you would need to update each plugin individually.
 
-Partials address this issue by allowing you to extract shared configurations into reusable entities that can be linked to multiple plugins. To ensure validation and consistency, Partials have defined types. 
+Partials allow you to reuse shared Redis configurations across [plugins](/gateway/entities/plugin/).
 
+Some plugins in {{site.base_gateway}} share common Redis configuration settings that often need to be repeated. 
+Partials allow you to extract those shared configurations into reusable entities that can be linked to multiple plugins.
+Without Partials, you would need to replicate this configuration across all plugins. If the settings change, you would need to update each plugin individually.
+
+To ensure validation and consistency, Partials have defined types.
 {{site.base_gateway}} supports the following types of Partials; each plugin supports only one type:
 - `redis-ce`: A short and simple configuration.
 - `redis-ee`: A configuration with support for Redis Sentinel or Redis Cluster connections.
