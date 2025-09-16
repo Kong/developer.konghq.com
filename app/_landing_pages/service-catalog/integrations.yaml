@@ -133,8 +133,10 @@ rows:
             ctas:
               - text: Reference
                 url: "/service-catalog/integrations/aws-api-gateway/"
-              - text: Tutorial
-                url: "/how-to/discover-and-govern-apis-with-service-catalog/"
+              - text: Tutorial ({{site.konnect_short_name}} API)
+                url: "/how-to/discover-aws-gateway-apis-using-konnect-api/"
+              - text: Tutorial ({{site.konnect_short_name}} UI)
+                url: "/how-to/discover-aws-gateway-apis-using-konnect-ui/"
   
   - header:
       type: h2

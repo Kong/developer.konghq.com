@@ -43,6 +43,9 @@ prereqs:
       content: |
         You must have a [SwaggerHub API key](https://app.swaggerhub.com/settings/apiKey) to authenticate your SwaggerHub account with {{site.konnect_short_name}}. 
         Additionally, you'll need an [API version](https://support.smartbear.com/swaggerhub/docs/en/manage-apis/versioning.html?sbsearch=API%20Versions0) in SwaggerHub to pull into {{site.konnect_short_name}} as a resource.
+
+        {:.info}
+        > You can name your SwaggerHub API version whatever you'd like. In this tutorial, we'll refer to your SwaggerHub API version as `swaggerhub-api`.
       icon_url: /assets/icons/third-party/swaggerhub.svg
     - title: GitHub
       content: |
@@ -50,6 +53,9 @@ prereqs:
         * Sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App
         * A GitHub organization
         * A repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. 
+          
+          {:.info}
+          > You can name your GitHub repository whatever you'd like. In this tutorial, we'll refer to your GitHub repository as `github-repo`.
         
         The {{site.konnect_short_name}} app can be managed in your GitHub account under **Applications > GitHub Apps**.
       icon_url: /assets/icons/github.svg
@@ -99,6 +105,15 @@ The {{site.konnect_short_name}} application can be managed from GitHub as a [Git
 1. Click **Save**. 
 
 ## Create a Service Catalog service and map the API resources
+
+Now that your integrations are configured, you can create a Service Catalog service to map the ingested APIs.
+
+{:.info}
+> In this tutorial, we'll refer to your ingested resources like the following:
+* AWS API Gateway API: `aws-api`
+* GitHub repository: `github-repo`
+* SwaggerHub API version: `swaggerhub-api`
+* API Gateway Service: `example-service`
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Service Catalog**](https://cloud.konghq.com/service-catalog/).
 1. Click **New service**.
