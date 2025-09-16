@@ -81,7 +81,7 @@ Because the plugin runs directly on Kong AI Gateway, MCP endpoints are provision
 
 {:.warning}
 > **Note:** Unlike other available AI plugins, the AI MCP Proxy plugin is not invoked as part of an LLM request flow.
-> Instead, it is registered and executed as a regular plugin, allowing it to capture MCP traffic independently of LLM request flow.
+> Instead, it's part of an MCP request flow. It's registered and executed as a regular plugin, between the MCP client and the MCP server, allowing it to capture MCP traffic independently of LLM request flow.
 >
 > **Do not configure the AI MCP Proxy plugin together with other AI plugins on the same Service or Route**.
 
@@ -144,6 +144,9 @@ sequenceDiagram
     deactivate K
 {% endmermaid %}
 <!-- vale on -->
+
+{:.info}
+> Pings from your MCP client are included in the total request count for your Kong AI Gateway instance, in addition to the requests made to the MCP server.
 
 ## Prerequisites
 
