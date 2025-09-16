@@ -115,6 +115,7 @@ kic_product_name_short: KIC
 konnect_saas: Kong Konnect
 gateway_operator_product_name: Kong Gateway Operator
 operator_product_name: Kong Operator
+operator_product_name_short: KO
 event_gateway: Kong Native Event Proxy
 event_gateway_short: KNEP
 
