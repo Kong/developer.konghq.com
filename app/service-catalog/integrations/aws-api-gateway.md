@@ -17,7 +17,7 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The AWS API Gateway integration allows you to associate your Service Catalog service to one or more API Gateway APIs. 
+description: The AWS API Gateway integration allows you to associate your Service Catalog service with one or more AWS API Gateway APIs. 
 
 related_resources:
   - text: "Service Catalog"
@@ -34,7 +34,7 @@ discovery_support: true
 bindable_entities: "APIs"
 ---
 
-The AWS API Gateway integration allows you to associate your Service Catalog service to one or more API Gateway APIs.
+The AWS API Gateway integration allows you to associate your Service Catalog service with one or more AWS API Gateway APIs.
 
 {% include /service-catalog/multi-resource.md %}
 

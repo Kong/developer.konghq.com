@@ -46,8 +46,8 @@ Before you can discover APIs in Service Catalog, you must configure the AWS API 
 1. Click **Add AWS API Gateway instance**.
 1. From the **AWS region** dropdown, select your AWS region.
 1. In the **IAM role ARN** field, enter the [IAM role you configured for Service Catalog](#aws-api-gateway).
-1. In the **Display name** field, enter a name for your AWS API Gateway instance.
-1. In the **Instance name** field, enter a unique identifier for your AWS API Gateway instance.
+1. In the **Display name** field, enter `aws-api-gateway-test`.
+1. In the **Instance name** field, enter `aws-api-gateway-test`.
 1. Click **Save**.
 
 ## Create a Service Catalog service and map the API resources

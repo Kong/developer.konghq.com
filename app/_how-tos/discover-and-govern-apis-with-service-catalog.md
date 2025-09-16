@@ -1,7 +1,7 @@
 ---
 title: Discover and govern APIs with Service Catalog
 content_type: how_to
-description: Learn how to discover APIs in AWS API Gateway, SwaggerHub, GitHub, and Gateway Manager with Service Catalog and govern them with scorecards.
+description: Learn how to discover APIs in AWS API Gateway, SwaggerHub, and GitHub with Service Catalog and govern them with scorecards.
 products:
   - gateway
   - service-catalog
@@ -25,9 +25,6 @@ tldr:
   a: |
     Service Catalog allows you to find and centrally view all APIs from these integrations and map them to a Service Catalog service. First, authorize the integrations in Service Catalog for AWS API Gateway, GitHub, and SwaggerHub. Then, create a Service Catalog service and map resources from the integrations to the service. Finally, add a service documentation scorecard to your service to govern API documentation standards.
 prereqs:
-  entities:
-    services:
-        - example-service
   inline:
     - title: "{{site.konnect_short_name}} roles"
       content: |
@@ -77,8 +74,8 @@ Before you can discover APIs in Service Catalog, you must configure the third-pa
 1. Click **Add AWS API Gateway instance**.
 1. From the **AWS region** dropdown, select your AWS region.
 1. In the **IAM role ARN** field, enter the [IAM role you configured for Service Catalog](#aws-api-gateway).
-1. In the **Display name** field, enter a name for your AWS API Gateway instance.
-1. In the **Instance name** field, enter a unique identifier for your AWS API Gateway instance.
+1. In the **Display name** field, enter `aws-api-gateway-test`.
+1. In the **Instance name** field, enter `aws-api-gateway-test`.
 1. Click **Save**.
 
 ### Configure the GitHub integration
@@ -113,7 +110,6 @@ Now that your integrations are configured, you can create a Service Catalog serv
 * AWS API Gateway API: `aws-api`
 * GitHub repository: `github-repo`
 * SwaggerHub API version: `swaggerhub-api`
-* API Gateway Service: `example-service`
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Service Catalog**](https://cloud.konghq.com/service-catalog/).
 1. Click **New service**.
@@ -122,7 +118,6 @@ Now that your integrations are configured, you can create a Service Catalog serv
 1. Click **Create**.
 1. Click **Map Resources**.
 1. Select `swaggerhub-api`.
-1. Select `example-service`. 
 1. Select `aws-api`. 
 1. Select `github-repo`. 
 1. Click **Map 4 Resources**.

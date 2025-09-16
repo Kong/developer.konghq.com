@@ -1,4 +1,4 @@
-You need an [API in AWS API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-http.html#api-gateway-create-api-as-simple-proxy-for-http-build) to ingest and a correctly configured IAM role for this integration. 
+You need a [REST API in AWS API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-http.html#api-gateway-create-api-as-simple-proxy-for-http-build) to ingest and a correctly configured IAM role for this integration. 
 
 {:.info}
 > You can name your AWS API Gateway API whatever you'd like. In this tutorial, we'll refer to your AWS API Gateway API as `aws-api`.
@@ -19,11 +19,6 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
 {
     "Version": "2012-10-17",
     "Statement": [
-      { "Sid": "CloudWatchRead",
-        "Effect": "Allow",
-        "Action": ["cloudwatch:GetMetricData", "cloudwatch:GetMetricStatistics"],
-        "Resource": "*"
-      },
       { "Sid": "ApiGwRead",
         "Effect": "Allow",
         "Action": ["apigateway:GET"],
@@ -35,24 +30,24 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
 {% endcapture %}
 {{ permissions-policy | indent: 3}}
 1. Click **Next**.
-1. In the **Policy name** field, enter `service-catalog-permissions`.
+1. In the **Policy name** field, enter `konnect-service-catalog-permissions`.
 1. Click **Create policy**.
 1. In the IAM sidebar, click **Roles**.
 1. Click **Create role**.
 1. For the Trusted entity type, select **AWS account**.
 1. For the AWS account settings, select **Another AWS account**.
-1. In the **Account ID** field, enter `144681897537`. 
+1. In the **Account ID** field, enter `account id`. 
 
    This is {{site.konnect_short_name}}'s account ID that is used for the IAM role principal.
 1. Select the **Require external ID** checkbox.
 1. In the **External ID** field, enter your {{site.konnect_short_name}} organization ID. You can find this by sending a [GET request to `/organizations/me`](/api/konnect/identity/#/operations/get-organizations-me) or in the {{site.konnect_short_name}} UI by navigating to your account in the top right and clicking the copy icon next to your organization name.
 1. Click **Next**.
-1. From the Permissions policies list, select **service-catalog-permissions**. 
+1. From the Permissions policies list, select **konnect-service-catalog-permissions**. 
 1. Click **Next**.
-1. In the **Role name** field, enter `service-catalog-integration`. 
+1. In the **Role name** field, enter `konnect-service-catalog-integration`. 
 1. Click **Create role**.
 
-View the `service-catalog-integration` you just created and copy the ARN.
+View the `konnect-service-catalog-integration` you just created and copy the ARN.
 {% endnavtab %}
 {% navtab "AWS CLI" %}
 1. Get your {{site.konnect_short_name}} org ID:
@@ -74,7 +69,7 @@ region: global
    ```
 1. Export the {{site.konnect_short_name}} account ID:
    ```sh
-   export ACCOUNT_ID='144681897537'
+   export ACCOUNT_ID='Account id'
    ```
    This is {{site.konnect_short_name}}'s account ID that is used for the IAM role principal.
 1. Configure and authenticate with AWS:
@@ -85,7 +80,7 @@ region: global
 {% capture iam-role %}
 ```sh
 aws iam create-role \
-  --role-name service-catalog-integration \
+  --role-name konnect-service-catalog-integration \
   --assume-role-policy-document '{
     "Version": "2012-10-17",
     "Statement": [
@@ -106,7 +101,7 @@ aws iam create-role \
 {% capture cli-permissions-policy %}
 ```sh
 aws iam put-role-policy \
-  --role-name service-catalog-integration \
+  --role-name konnect-service-catalog-integration \
   --policy-name ServiceCatalogRead \
   --policy-document '{
     "Version": "2012-10-17",
