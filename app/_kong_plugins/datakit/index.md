@@ -78,12 +78,7 @@ The flow editor helps you visualize node connections, inputs, and outputs.
 ![Full screen flow editor](/assets/images/konnect/datakit-flow-editor-node.png)
 > _Figure 1: The Datakit flow editor opens in a full screen with a list of nodes, a drag-and-drop diagram, and detailed configuration options for each node._
 
-To use the flow editor, do the following: 
-1. In the {{site.konnect_short_name}} sidebar, navigate to [API Gateway](https://cloud.konghq.com/gateway-manager/). 
-1. Click your control plane. 
-1. In the API Gateway sidebar, click **Plugins**.  
-1. Click **New Plugin**.
-1. Click **Datakit**. 
+You can find the flow editor in the Datakit plugin's configuration page in {{site.konnect_short_name}}.
 From here, you can configure Datakit in one of two ways:
 * Using the visual flow editor
 * Using the code editor
