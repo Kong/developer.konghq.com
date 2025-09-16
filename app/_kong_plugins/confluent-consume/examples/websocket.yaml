@@ -1,0 +1,42 @@
+description: Configure the Confluent Consume plugin to stream messages over WebSockets.
+
+title: Websocket mode
+weight: 900
+
+requirements:
+  - You have a [Kafka cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud) in Confluent Cloud
+  - You have a [Kafka topic](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) in the cluster
+
+variables:
+  host:
+    description: The bootstrap server host
+    value: $BOOTSTRAP_SERVER_HOST
+  key:
+    description: The API key to use for authentication.
+    value: $API_KEY
+  secret:
+    description: The API secret to use for authentication.
+    value: $API_SECRET
+  topic:
+    description: The name of the Kafka topic to consume from.
+    value: $KAFKA_TOPIC
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: websocket
+  cluster_api_key: ${key}
+  cluster_api_secret: ${secret}
+
+min_version:
+  gateway: '3.12'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
