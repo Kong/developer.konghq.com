@@ -95,7 +95,7 @@ spec:
 {:.warning}
 > **Important: TCPIngress Deprecation Notice**
 >
-> The `TCPIngress` custom resource is **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in {{ site.operator_product_name }} 2.0.0**. This resource was created to address limitations of the traditional Kubernetes Ingress API, but since the Gateway API has reached maturity and widespread adoption, it's now redundant and causes confusion.
+> The `TCPIngress` custom resource is **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in {{ site.operator_product_name }} 2.0.0**. This resource was created to address limitations of the traditional Kubernetes Ingress API, but since the Gateway API has reached maturity and widespread adoption, it's now redundant.
 >
 > **Migration is required** before upgrading to {{ site.operator_product_name }} 2.0.0. Use the [Migrating from Ingress to Gateway API](/kubernetes-ingress-controller/migrate/ingress-to-gateway/) guide to migrate your existing `TCPIngress` resource to its Gateway API equivalents (`TCPIngress` → `Gateway` + `TCPRoute` + `TLSRoute`).
 

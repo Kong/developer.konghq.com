@@ -4,4 +4,4 @@ If you want cert-manager to issue and rotate the admission and conversion webhoo
 --set global.webhooks.options.certManager.enabled=true
 ```
 
-If you do not enable this, the chart will generate and inject self-signed certificates automatically. This is fine for development, but for production we recommend enabling cert-manager.
+If you do not enable this, the chart will generate and inject self-signed certificates automatically. We recommend enabling cert-manager to manage the lifecycle of these certificates.

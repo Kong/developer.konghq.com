@@ -50,7 +50,7 @@ Before starting the migration, ensure you:
 5. **Verify cert-manager is installed** (required for conversion webhooks):
 
    {:.info}
-   > **Note**: Kong Operator 2.0.0 uses conversion webhooks that require TLS certificates managed by cert-manager. If cert-manager is not installed, follow the [cert-manager installation guide](https://cert-manager.io/docs/installation/) before proceeding.
+   > **Note**: Kong Operator 2.0.0 uses conversion webhooks that require TLS certificates managed by cert-manager. If cert-manager is not installed, follow the [cert-manager installation guide](https://cert-manager.io/docs/installation/) before proceeding.  If you do not use cert-manager, the Helm chart will install certificates for you and you will be responsible for managing their lifecycle.
 
 ## Upgrade Kong Operator to 2.0.0
 
@@ -93,7 +93,7 @@ helm upgrade --install kong-operator kong/kong-operator \
 ```
 
 {:.info}
-> **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release.
+> **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release.  Only set `global.conversionWebhook.certManager.enabled` to true if you are using cert-manager to manage tge lifecycle of your webhook certificates.
 
 ### Step 4: Verify the installation
 

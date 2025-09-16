@@ -31,7 +31,7 @@ Before starting the migration, ensure you:
 
 1. **Backup your current configuration**
 
-1. **Verify current {{site.kic_product_name}} version**:
+1. **Verify the current {{site.kic_product_name}} version**:
 
    ```bash
    # Depending on the release name the deployment name and chart used (kong/ingress) might have a different name
@@ -48,19 +48,19 @@ Before starting the migration, ensure you:
 1. **Verify cert-manager is installed** (recommended for webhooks certificate management):
 
    {:.info}
-   > **Note**: {{ site.operator_product_name }} 2.0.0 uses webhooks that require TLS certificates managed by cert-manager. If cert-manager is not installed, follow the [cert-manager installation guide](https://cert-manager.io/docs/installation/) before proceeding.
+   > **Note**: {{ site.operator_product_name }} 2.0.0 uses webhooks that require TLS certificates managed by cert-manager. If cert-manager is not installed, follow the [cert-manager installation guide](https://cert-manager.io/docs/installation/) before proceeding. If you do not use cert-manager, the Helm chart will install certificates for you and you will be responsible for managing their lifecycle.
 
 ## Migrate to {{ site.operator_product_name }} 2.0.0
 
    {:.warning}
    > **Important**: This process involves down time. Plan your migration accordingly.
 
-The migration process requires several manual steps due to breaking changes in certificate management and CRD structure. Follow these steps carefully:
+The migration process requires several manual steps due to breaking changes in certificate management and CRD structure. We recommend a blue / green cutover of your Gateways, which are detailed in the following steps:
 
 ### Step 1: Uninstall existing {{ site.kic_product_name_short }} deployment
 
-First step is to uninstall the existing {{ site.kic_product_name_short }} deployment to stop it from reconciling in cluster objects.
-This will prevent both {{ site.kic_product_name_short }} and the new {{ site.operator_product_name_short }} from reconciling the same resources and fighting over the status updates on those.
+First step is to uninstall the existing {{ site.kic_product_name_short }} deployment to stop it from reconciling the cluster objects.
+This will prevent both {{ site.kic_product_name_short }} and the new {{ site.operator_product_name_short }} from reconciling the same resources and fighting over the status updates of your configuration.  Your existing Gateway (blue) will continue to serve traffic during this time, but any new changes to configuration will only apply to the new Gateway instance (green).
 
 {% navtabs "uninstall-kic" %}
 {% navtab "`kong` chart" %}
@@ -132,7 +132,7 @@ kubectl logs -n kong-system -l app=kong-operator-kong-operator
 
 {{ site.operator_product_name_short }} uses CRDs to manage among other things: {{ site.base_gateway }} and the ingress controller.
 
-What used to be a pair of {{ site.base_gateway }} and {{ site.kic_product_name_short }} deployed via `helm` is now modelled through Gateway API's `Gateway`.
+What used to be a pair of {{ site.base_gateway }} and {{ site.kic_product_name_short }} deployed via `helm` is now modelled through Gateway API's `Gateway` only, greatly simplifying the configuration.
 
 You can learn more about it on [Gateway API website](https://gateway-api.sigs.k8s.io/api-types/gateway/).
 
