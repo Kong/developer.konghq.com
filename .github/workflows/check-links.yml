@@ -48,6 +48,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           checkName: "Pages changed - kongdeveloper"
+          timeoutSeconds: 900
       - name: Wait for Netlify site to be ready
         if: steps.waitForCheck.outputs.conclusion == 'neutral'
         uses: jakepartusch/wait-for-netlify-action@f1e137043864b9ab9034ae3a5adc1c108e3f1a48 # v1.4

@@ -1,2 +1,4 @@
-1. Go to the [Insomnia downloads page](https://insomnia.rest/download) and download the installer for MacOS.
-1. Run the installer.
+Go to the [Insomnia downloads page](https://insomnia.rest/download) to download and run the installer for  MacOS, or use [Homebrew](https://brew.sh/):
+```sh
+brew install --cask insomnia
+```

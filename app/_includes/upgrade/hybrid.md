@@ -186,3 +186,7 @@ flowchart
 
 > _Figure 5: The diagram shows a DP upgrade using the in-place and rolling strategies._
 _The diagram shows that the database is reused by the new CP Y, while current DP nodes X are still serving API requests._
+
+When [cluster fallback configuration](/gateway/cp-outage/) is enabled, upgrade both the
+exporting instances and importing instances to exactly the same new version, including the patch level (for example, 3.11.0.3).
+After upgrading, validate that fallback configuration is successfully re-exported.
