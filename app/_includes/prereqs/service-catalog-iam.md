@@ -1,7 +1,4 @@
-You need a [REST API in AWS API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-http.html#api-gateway-create-api-as-simple-proxy-for-http-build) to ingest and a correctly configured IAM role for this integration. 
-
-{:.info}
-> You can name your AWS API Gateway API whatever you'd like. In this tutorial, we'll refer to your AWS API Gateway API as `aws-api`.
+You need a [REST API in AWS API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-http.html#api-gateway-create-api-as-simple-proxy-for-http-build) to ingest and a correctly configured IAM role for this integration. You can name your AWS API Gateway API whatever you'd like. In this tutorial, we'll refer to your AWS API Gateway API as `aws-api`.
 
 
 You can follow the setup instructions in the UI wizard when you add the AWS API Gateway instance or do the following:
@@ -36,7 +33,7 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
 1. Click **Create role**.
 1. For the Trusted entity type, select **AWS account**.
 1. For the AWS account settings, select **Another AWS account**.
-1. In the **Account ID** field, enter `account id`. 
+1. In the **Account ID** field, enter `333402130851`. 
 
    This is {{site.konnect_short_name}}'s account ID that is used for the IAM role principal.
 1. Select the **Require external ID** checkbox.
@@ -69,7 +66,7 @@ region: global
    ```
 1. Export the {{site.konnect_short_name}} account ID:
    ```sh
-   export ACCOUNT_ID='Account id'
+   export ACCOUNT_ID='333402130851'
    ```
    This is {{site.konnect_short_name}}'s account ID that is used for the IAM role principal.
 1. Configure and authenticate with AWS:
@@ -87,8 +84,8 @@ aws iam create-role \
       {
         "Effect": "Allow",
         "Action": "sts:AssumeRole",
-        "Principal": { "AWS": "$ACCOUNT_ID" },
-        "Condition": { "StringEquals": { "sts:ExternalId": "$EXTERNAL_ID" } }
+        "Principal": { "AWS": "'$ACCOUNT_ID'" },
+        "Condition": { "StringEquals": { "sts:ExternalId": "'$EXTERNAL_ID'" } }
       }
     ]
   }' \
@@ -102,7 +99,7 @@ aws iam create-role \
 ```sh
 aws iam put-role-policy \
   --role-name konnect-service-catalog-integration \
-  --policy-name ServiceCatalogRead \
+  --policy-name konnect-service-catalog-permissions \
   --policy-document '{
     "Version": "2012-10-17",
     "Statement": [

@@ -39,20 +39,14 @@ prereqs:
     - title: SwaggerHub
       content: |
         You must have a [SwaggerHub API key](https://app.swaggerhub.com/settings/apiKey) to authenticate your SwaggerHub account with {{site.konnect_short_name}}. 
-        Additionally, you'll need an [API version](https://support.smartbear.com/swaggerhub/docs/en/manage-apis/versioning.html?sbsearch=API%20Versions0) in SwaggerHub to pull into {{site.konnect_short_name}} as a resource.
-
-        {:.info}
-        > You can name your SwaggerHub API version whatever you'd like. In this tutorial, we'll refer to your SwaggerHub API version as `swaggerhub-api`.
+        Additionally, you'll need an [API version](https://support.smartbear.com/swaggerhub/docs/en/manage-apis/versioning.html?sbsearch=API%20Versions0) in SwaggerHub to pull into {{site.konnect_short_name}} as a resource. You can name your SwaggerHub API version whatever you'd like. In this tutorial, we'll refer to your SwaggerHub API version as `swaggerhub-api`.
       icon_url: /assets/icons/third-party/swaggerhub.svg
     - title: GitHub
       content: |
         To integrate GitHub with Service Catalog, you need the following:
         * Sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App
         * A GitHub organization
-        * A repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. 
-          
-          {:.info}
-          > You can name your GitHub repository whatever you'd like. In this tutorial, we'll refer to your GitHub repository as `github-repo`.
+        * A repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. You can name your GitHub repository whatever you'd like. In this tutorial, we'll refer to your GitHub repository as `github-repo`.
         
         The {{site.konnect_short_name}} app can be managed in your GitHub account under **Applications > GitHub Apps**.
       icon_url: /assets/icons/github.svg
@@ -72,7 +66,8 @@ Before you can discover APIs in Service Catalog, you must configure the third-pa
 1. In the Service Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 1. Click **AWS API Gateway**.
 1. Click **Add AWS API Gateway instance**.
-1. From the **AWS region** dropdown, select your AWS region.
+1. From the **AWS region** dropdown, select "US East (Ohio)".
+   If you're using a different region, select your region from the dropdown.
 1. In the **IAM role ARN** field, enter the [IAM role you configured for Service Catalog](#aws-api-gateway).
 1. In the **Display name** field, enter `aws-api-gateway-test`.
 1. In the **Instance name** field, enter `aws-api-gateway-test`.
