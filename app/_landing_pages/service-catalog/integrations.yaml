@@ -134,7 +134,7 @@ rows:
               - text: Reference
                 url: "/service-catalog/integrations/aws-api-gateway/"
               - text: Tutorial
-                url: "/how-to/install-and-map-aws-gateway-apis/"
+                url: "/how-to/discover-and-govern-apis-with-service-catalog/"
   
   - header:
       type: h2

@@ -1,4 +1,4 @@
-You need a correctly configured IAM role for this integration. You can follow the setup instructions in the UI wizard when you add the AWS API Gateway instance or do the following:
+You need an [API in AWS API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-http.html#api-gateway-create-api-as-simple-proxy-for-http-build) to ingest and a correctly configured IAM role for this integration. You can follow the setup instructions in the UI wizard when you add the AWS API Gateway instance or do the following:
 
 {% navtabs "IAM-role" %}
 {% navtab "AWS UI" %}
@@ -14,8 +14,6 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
 1. Select the **Require external ID** checkbox.
 1. In the **External ID** field, enter your {{site.konnect_short_name}} organization ID. You can find this by sending a [GET request to `/organizations/me`](/api/konnect/identity/#/operations/get-organizations-me) or in the {{site.konnect_short_name}} UI by navigating to your account in the top right and clicking the copy icon next to your organization name.
 1. Click **Next**.
-1. Permissions here???
-1. In the **Role name** field, enter `service-catalog-integration`. 
 1. In the **Permission policy summary** field, enter the following:
 ```json
 {
@@ -34,6 +32,7 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
     ]
   }
 ```
+1. In the **Role name** field, enter `service-catalog-integration`. 
 1. Click **Create role**.
 {% endnavtab %}
 {% navtab "AWS CLI" %}
