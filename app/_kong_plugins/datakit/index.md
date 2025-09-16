@@ -78,7 +78,12 @@ The flow editor helps you visualize node connections, inputs, and outputs.
 ![Full screen flow editor](/assets/images/konnect/datakit-flow-editor-node.png)
 > _Figure 1: The Datakit flow editor opens in a full screen with a list of nodes, a drag-and-drop diagram, and detailed configuration options for each node._
 
-You can find the editor through [API Gateway](https://cloud.konghq.com/gateway-manager/) > select your control plane > Plugins > New Plugin > Datakit. 
+To use the flow editor, do the following: 
+1. In the {{site.konnect_short_name}} sidebar, navigate to [API Gateway](https://cloud.konghq.com/gateway-manager/). 
+1. Click your control plane. 
+1. In the API Gateway sidebar, click **Plugins**.  
+1. Click **New Plugin**.
+1. Click **Datakit**. 
 From here, you can configure Datakit in one of two ways:
 * Using the visual flow editor
 * Using the code editor
@@ -96,20 +101,22 @@ For instance, if you have a YAML configuration for Datakit that you want to visu
 
 To configure Datakit using the flow editor:
 
-1. From the {{site.konnect_short_name}} menu, open [**API Gateway**](https://cloud.konghq.com/gateway-manager/).
-1. Select your control plane, then in the side menu, go to **Plugins**.
-1. Click **New Plugin** and select Datakit. 
+1. In the {{site.konnect_short_name}} sidebar, navigate to [API Gateway](https://cloud.konghq.com/gateway-manager/). 
+1. Click your control plane. 
+1. In the API Gateway sidebar, click **Plugins**.  
+1. Click **New Plugin**.
+1. Click **Datakit**.
 1. In the Plugin Configuration section, click **Go to flow editor**.
 1. In the editor, drag any node from the menu onto the canvas to add it to your flow, or click **Examples** and choose a pre-configured example to customize.
 1. Expand the `inputs` or `outputs` on a node to see the options, then connect a specific input or output to another node.
 1. Select any node to open its detailed configuration in a slide-out menu.
 1. Fill out the configuration. Any changes to inputs or outputs will be reflected in the diagram.
-1. Click **Done** to save.
+1. Click **Done**.
 
 {:.info}
 > **Notes:** 
 * Each input can connect to only one output, but one output can accept many inputs.
-* Your nodes don't have to connect to the prepopulated `request`/`service request`, or `response`/`service response` nodes. 
+* Your nodes don't have to connect to the prepopulated `request`/`service request` or `response`/`service response` nodes. 
 Whether you need them or not depends on your use case. Check out the **Examples** dropdown in the editor for some variations.
 
 ## How does the Datakit plugin work?
