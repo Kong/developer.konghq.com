@@ -76,6 +76,7 @@ In Dev Portal, you can create and use multiple DCR configurations. You can confi
 {% navtab "API" %}
 1. Configure your DCR provider by sending a POST request to the [`/dcr-providers` endpoint](/api/konnect/application-auth-strategies/#/operations/create-dcr-provider):
 {% capture provider %}
+<!--vale off-->
 {% konnect_api_request %}
 url: /v2/dcr-providers
 status_code: 200
@@ -89,6 +90,7 @@ body:
   dcr_config:
     dcr_token: "$DCR_TOKEN"
 {% endkonnect_api_request %}
+<!--vale on-->
 {% endcapture %}
 {{ provider | indent: 3 }}
 
@@ -98,6 +100,7 @@ body:
    ```
 1. Create an authentication strategy for your DCR provider by sending a POST request to the [`/application-auth-strategies` endpoint](/api/konnect/application-auth-strategies/#/operations/create-app-auth-strategy):
 {% capture strategy %}
+<!--vale off-->
 {% konnect_api_request %}
 url: /v2/application-auth-strategies
 status_code: 200
@@ -120,6 +123,7 @@ body:
         - bearer
   dcr_provider_id: "$DCR_PROVIDER"
 {% endkonnect_api_request %}
+<!--vale on-->
 {% endcapture %}
 {{ strategy | indent: 3 }}
 {% endnavtab %}
