@@ -127,6 +127,19 @@ This separation lets developers focus on the business logic within their applica
 Unlike other authentication types like Key Auth and Basic Auth, with OpenID Connect you don't need to manage user credentials directly. 
 Instead, you can offload the task to a trusted identity provider of your choice.
 
+## Discovery cache
+When you configure `config.issuer` in the OIDC plugin, Kong automatically retrieves the provider’s discovery metadata. That metadata is stored and reused by the discovery cache to avoid repeated fetches. This stored data is known as the **Discovery cache**, and the following are the behaviors and interactions to expect:
+- Discovery data is stored in the **Kong database** when using DB mode, or in **worker memory** when using DB‑less mode.  
+- The cache has **no TTL (time‑to‑live)** and does not expire automatically. You must clear it manually using the relevant DELETE endpoints in the Admin API.  
+- If a request requires discovery information that is not yet in the cache, based on the `config.issuer`, the plugin attempts to “rediscover” it. Once a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
+- If a JWT cannot be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the plugin falls back to using any sufficient discovery information that remains in the cache.
+
+### Discovery cache object
+The Discovery Cache object refers to the stored metadata retrieved from the issuer. For example, discovery document endpoints, JWKS keys, and token endpoint. It is represented internally and utilized whenever validation needs issuer metadata.
+
+### Clear discovery cache
+To manually clear discovery cache entries, use the Kong Admin API DELETE endpoints for the OpenID Connect pluging. For example, the DELETE endpoint specific to Discovery Cache Objects. Refer to the [**API Reference**](/plugins/openid-connect/api/) section for the exact URL and parameters of the DELETE endpoint.
+
 ## Supported flows and grants
 
 The OpenID Connect plugin suits many different use cases and extends other plugins 
