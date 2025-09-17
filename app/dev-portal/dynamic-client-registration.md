@@ -50,8 +50,80 @@ faqs:
 ---
 Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal allows an application in the Dev Portal to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. Dev Portal DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
 
-In Dev Portal, you can create and use multiple DCR configurations.
+In Dev Portal, you can create and use multiple DCR configurations. You can configure DCR by doing the following:
 
+{% navtabs "configure-dcr" %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
+1. In the Dev Portal sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
+1. Click the **DCR Providers** tab.
+1. Click **New provider**.
+1. In the **Name** field, enter the name for your DCR provider.
+1. In the **Provider Type** dropdown menu, select your DCR provider.
+1. In the **Auth Server** field, select your auth server.
+1. Click **Save**.
+1. Click the **Auth Strategy** tab.
+1. Click **New Auth Strategy**.
+1. In the **Name** field, enter a name for your auth strategy.
+1. In the **Display name** field, enter a name for your auth strategy.
+1. In the **Authentication Type** dropdown menu, select "DCR".
+1. In the **DCR Provider** dropdown menu, select your DCR provider.
+1. In the **Scopes** field, enter your scopes.
+1. In the **Credential Claims** field, enter your claims.
+1. In the **Auth Methods** dropdown menu, select your auth methods. 
+1. Click **Create**.
+{% endnavtab %}
+{% navtab "API" %}
+1. Configure your DCR provider by sending a POST request to the [`/dcr-providers` endpoint](/api/konnect/application-auth-strategies/#/operations/create-dcr-provider):
+{% capture provider %}
+{% konnect_api_request %}
+url: /v2/dcr-providers
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "Okta"
+  provider_type: "okta"
+  issuer: "$ISSUER_URL"
+  dcr_config:
+    dcr_token: "$DCR_TOKEN"
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ provider | indent: 3 }}
+
+1. Export your DCR provider ID:
+   ```sh
+   export DCR_PROVIDER='YOUR-DCR-PROVIDER-ID'
+   ```
+1. Create an authentication strategy for your DCR provider by sending a POST request to the [`/application-auth-strategies` endpoint](/api/konnect/application-auth-strategies/#/operations/create-app-auth-strategy):
+{% capture strategy %}
+{% konnect_api_request %}
+url: /v2/application-auth-strategies
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "Okta"
+  display_name: "Okta"
+  strategy_type: "openid_connect"
+  configs:
+    openid-connect:
+        issuer: "$ISSUER_URL"
+        credential_claim:
+        - client_id
+        scopes:
+        - my-scope
+        auth_methods:
+        - client_credentials
+        - bearer
+  dcr_provider_id: "$DCR_PROVIDER"
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ strategy | indent: 3 }}
+{% endnavtab %}
+{% endnavtabs %}
 
 ## How does DCR work in Dev Portal?
 

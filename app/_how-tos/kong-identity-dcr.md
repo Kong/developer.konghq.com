@@ -56,7 +56,7 @@ min_version:
 
 {% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
 
-## Configure the Kong Identity Dynamic Client Registration in Dev Portal (UI style!)
+## Configure the Kong Identity Dynamic Client Registration in Dev Portal
 
 After configuring Kong Identity, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the Kong Identity DCR provider, it can be used across multiple authentication strategies without needing to be set up again.
 
@@ -89,7 +89,7 @@ Now that the application auth strategy is configured, you can apply it to an API
 1. Click your Dev Portal.
 1. In the Dev Portal sidebar, click **Published APIs**.
 1. Click **Publish API**.
-1. In the **API** dropdown menu, select the API you created in the prerequities.
+1. In the **API** dropdown menu, select the API you created in the prerequisites.
 1. In the **Authentication strategy** dropdown menu, select "Kong Identity". 
 1. In the API visibility settings, click **Private**.
 1. Click **Publish API**.
@@ -99,7 +99,7 @@ Now that the application auth strategy is configured, you can apply it to an API
 {% include konnect/dcr-validate.md %}
 
 
-<!--
+<!--vale off
 ## Configure the Kong Identity Dynamic Client Registration in Dev Portal APIIIIII
 
 After configuring Kong Identity, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the Kong Identity DCR provider, it can be used across multiple authentication strategies without needing to be set up again.

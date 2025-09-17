@@ -102,6 +102,7 @@ chatbots
 cidr
 cidrs
 cleartext
+client_credentials
 client_payload
 client_status
 clipanion
