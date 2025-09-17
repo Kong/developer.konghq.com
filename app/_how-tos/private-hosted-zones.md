@@ -49,6 +49,7 @@ prereqs:
       export AWS_VPC_ID='YOUR_VPC_ID'
       ```
 
+automated_tests: false
 ---
 
 
