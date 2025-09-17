@@ -97,7 +97,7 @@ flowchart LR
 <!--vale on-->
 
 Packaging APIs involves the following steps:
-1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration is not directly modified by adding operations.
+1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
 1. Link a control plane (or control planes) for to allow developer consumption. 
 1. Apply the Access Control Enforcement (ACE) plugin globally.
 1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user Gateway Manager permissions needs to perform an action.
@@ -130,7 +130,10 @@ rows:
   - setting: |
       `required`
     description: |
-      Requires every incoming request to match a defined operation from an API or API package in Dev Portal. If a request doesn't match, ACE rejects the request outright with a 401. All traffic will be rejected except operations or Routes in published APIs linked to an ACE-enabled {{site.base_gateway}}. 
+      Requires every incoming request to match a defined operation from an API or API package in Dev Portal. If a request doesn't match, ACE rejects the request outright with a 404. All traffic will be rejected except operations or Routes in published APIs linked to an ACE-enabled {{site.base_gateway}}. 
+
+      {:.danger}
+      > **Warning:** Setting the `match_policy` to `required` can **block all traffic with a 404**. Any undefined endpoints will be blocked. If you accidentally enable this in your control planes, this could cause a potential outage in production.
     limitations: |
       * Misconfigurations can overexpose unintended Routes.
       * Shuts down all traffic outside of published Dev Portal APIs.
@@ -153,7 +156,7 @@ rows:
 
 You can set individual rate limits on an API package as well as operations in that package. Keep the following in mind when configuring rate limits:
 * API package rate limits apply across all operations in the API package **cumulatively**, not individually.
-* Each Operation in an API Package can additionally have an individual rate limit defined. This rate limit applies simultaneously with the rate limiting being counted at the API Package level.
+* Each Operation in an API Package can additionally have an individual rate limit defined. When an operation-level override is present, the package-level limit is ignored for that operation.
 * API package rate limits are applied simultaneously with rate limits from other plugins on gateway entities:
   * Requests that are under the current limit for the Service and API Package will be counted towards both.
   * Requests that surpass the rate limit of an API package won't be counted towards rate limits applied from other rate limiting plugins.
@@ -164,7 +167,7 @@ For example, if you have the following rate limits set:
 * **API package A**: 10 requests per second
 * **Operation 1**: 5 requests per second
 
-A request that is authorized for Operation 1 will count toward both the rate limit for both the API Package A and Operation 1. So, if one request is sent, the authorized application will have nine requests remaining for API Package A and four requests remaining for Operation 1 for the configured time period (per second).
+Because an operation-level override is present, the package-level limit is ignored for that operation. This means a request authorized for Operation 1 will only count toward its specific operation-level limit. So, if one request is sent, the authorized application will have four requests remaining for Operation 1 for the configured time period (per second). The package-level limit of API Package A doesn't apply to this request.
 
 ### API package limitations
 
