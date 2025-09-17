@@ -138,6 +138,12 @@ You can learn more about it on [Gateway API website](https://gateway-api.sigs.k8
 
 To customize the `Gateway` manifest for your environment, you can use Kong's `GatewayConfiguration` CRD.
 
+If you have an existing GatewayClass defined in your KIC installation, you will need to delete this before creating the new GatewayConfiguration and Gateway:
+
+```sh
+kubectl delete GatewayClass kong
+```
+
 Please refer to the following example which can serve as a base for your configuration:
 
 ```yaml
