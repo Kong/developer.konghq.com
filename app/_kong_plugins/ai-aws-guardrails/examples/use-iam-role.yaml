@@ -8,7 +8,8 @@ extended_description: |
 title: Use IAM role assumption
 
 weight: 900
-min_version: 3.12
+min_version:
+  gateway: '3.12'
 requirements: 
   - You have an AWS Bedrock Guardrails policy and access to AWS Bedrock Guardrails service.
   - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
