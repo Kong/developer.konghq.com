@@ -68,6 +68,9 @@ aws route53 create-vpc-association-authorization \
 
 Connect the Dedicated Cloud Gateway to an AWS Route 53 private hosted zone:
 
+{% navtabs "configure-dns" %}
+{% navtab "Cloud Gateways API" %}
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID/private-dns
@@ -84,6 +87,18 @@ body:
     hosted_zone_id: $AWS_HOSTED_ZONE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
+
+{% endnavtab %}
+{% navtab "Konnect UI" %}
+
+1. In the {{site.konnect_short_name}} UI, navigate to [**Networks**](https://cloud.konghq.com/global/networks/) in the sidebar.
+1. Click the settings icon next to your AWS network, and select **Configure private DNS** from the dropdown menu.
+1. Enter `dev-hosted-zone` in the **Private hosted zone name** field.
+1. Enter your AWS hosted zone ID in the **Hosted zone ID** field. For example: `Z9237512550OTOW57VYEW`
+1. Click **Save**.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Validation
 
