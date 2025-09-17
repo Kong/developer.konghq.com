@@ -115,7 +115,7 @@ Now that your integrations are configured, you can create a Service Catalog serv
 1. Select `swaggerhub-api`.
 1. Select `aws-api`. 
 1. Select `github-repo`. 
-1. Click **Map 4 Resources**.
+1. Click **Map 3 Resources**.
 
 Your integration APIs are now discoverable from one Service Catalog service.
 
