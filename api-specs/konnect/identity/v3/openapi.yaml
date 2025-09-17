@@ -1766,6 +1766,7 @@ components:
             - au
             - me
             - in
+            - sg
             - '*'
       example:
         id: 54cc6168-ebb1-4300-8168-d62a0dd08fc8
@@ -2979,6 +2980,7 @@ components:
                   - au
                   - me
                   - in
+                  - sg
                   - '*'
           examples:
             Assigned Roles US:
