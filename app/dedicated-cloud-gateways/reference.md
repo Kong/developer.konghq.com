@@ -311,6 +311,121 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+## {{site.base_gateway}} configuration
+
+You can customize the {{site.base_gateway}} configuration for your data plane nodes using environment variables. Some variables are set by default, while others can be set when creating a data plane node.
+
+### Environment variables set by {{site.konnect_short_name}}
+
+The following environment variables are set by default when creating a Dedicated Cloud Gateway data plane node:
+
+{% kong_config_table %}
+config:
+  - name: port_maps
+    default_value: 80:443,443:8443,4200:4200
+  - name: admin_listen
+    default_value: 127.0.0.1:8444 http2 reuseport backlog=16384
+  - name: status_listen
+    default_value: 0.0.0.0:8100
+  - name: admin_access_log
+    default_value: /dev/stdout
+  - name: admin_error_log
+    default_value: /dev/stderr
+  - name: proxy_error_log
+    default_value: /dev/stderr
+  - name: role
+    default_value: data_plane
+  - name: database
+    default_value: off
+  - name: cluster_mtls
+    default_value: pki
+  - name: lua_ssl_trusted_certificate
+    default_value: system
+  - name: konnect_mode
+    default_value: one
+  - name: vitals
+    default_value: off
+  - name: healthz_ids
+    default_value: 5c40ca48-590e-47b7-9a44-fcaa18fbcf40
+  - name: proxy_access_log
+    default_value: off
+  - name: "dpc_rollout_trigger"
+  - name: request_debug
+    default_value: on
+  - name: "node_id"
+  - name: "proxy_listen"
+    default_value: 0.0.0.0:8000 reuseport proxy_protocol backlog=16384, 0.0.0.0:8443 http2 ssl reuseport proxy_protocol backlog=16384, 0.0.0.0:4200 reuseport proxy_protocol backlog=16384
+  - name: "cluster_control_plane"
+  - name: "cluster_server_name"
+  - name: "cluster_telemetry_endpoint"
+  - name: "cluster_telemetry_server_name"
+directives:
+  - name: nginx_proxy_proxy_socket_keepalive
+    default_value: on
+    description: ""
+  - name: nginx_http_include
+    default_value: /etc/nginx/nginx-directive.kong.conf
+    description: ""
+
+{% endkong_config_table %}
+
+### Customizable environment variables
+
+The following table lists the environment variables that you can set while creating a Dedicated Cloud Gateway:
+
+{% kong_config_table %}
+config:
+  - name: log_level
+  - name: request_debug_token
+  - name: opentelemetry_tracing
+  - name: tracing_instrumentations
+  - name: tracing_sampling_rate
+  - name: untrusted_lua_sandbox_requires
+  - name: allow_debug_header
+  - name: header_upstream
+  - name: server_tokens
+  - name: latency_tokens
+{% endkong_config_table %}
+
+### How do I set environment variables?
+
+{% navtabs env %}
+{% navtab "Cloud Gateways API" %}
+
+When you create a Dedicated Cloud Gateway Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration), add the `environment` array containing the name and value of each variable to add:
+<!--vale off -->
+{% control_plane_request %}
+url: /v2/cloud-gateways/configurations
+status_code: 201
+method: PUT
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $KONNECT_TOKEN'
+body:
+    control_plane_id: $CONTROL_PLANE_ID
+    version: 3.9
+    control_plane_geo: ap-northeast-1
+    dataplane_groups:
+      - provider: aws 
+      - region: na
+      - cloud_gateway_network_id: $CLOUD_GATEWAY_NETWORK_ID
+      - autoscale: 
+        - kind: autopilot
+        - base_rps: 100
+    environment:
+      - name: KONG_LOG_LEVEL
+        value: info
+{% endcontrol_plane_request %}
+<!-- vale on -->
+{% endnavtab %}
+{% navtab "Konnect UI" %}
+
+In the {{site.konnect_short_name}}, you can add environment variables at the **Create a Data Plane Node** step of the Dedicated Cloud Gateway creation. Click **Advanced options** to display the **Environment variables** form and enter the key/value pairs to use.
+
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Securing backend communication
 
