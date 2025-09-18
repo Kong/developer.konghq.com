@@ -9,7 +9,7 @@ requirements:
 
 variables:
   host:
-    description: The bootstrap server host
+    description: The bootstrap server host.
     value: $BOOTSTRAP_SERVER_HOST
   key:
     description: The API key to use for authentication.
