@@ -1,6 +1,6 @@
 ---
-title: "Migrating from {{site.operator_product_name}} 1.6.x to Kong Operator 2.0.0"
-description: "Complete migration guide from {{site.operator_product_name}} (KGO) 1.6.x to Kong Operator (KO) 2.0.0."
+title: "Migrating from {{site.gateway_operator_product_name}} 1.6.x to {{site.operator_product_name}} 2.0.0"
+description: "Complete migration guide from {{site.operator_product_name}} (KGO) 1.6.x to {{site.operator_product_name}} ({{ site.operator_product_name_short }}) 2.0.0."
 content_type: reference
 layout: reference
 products:
@@ -24,7 +24,7 @@ related_resources:
 
 ---
 
-Kong Operator (KO) 2.0.0 represents a major version upgrade from {{site.operator_product_name}} (KGO) 1.6.x, introducing significant architectural improvements, enhanced Kubernetes-native features, and breaking changes that require careful migration planning.
+{{site.operator_product_name}} ({{ site.operator_product_name_short }}) 2.0.0 represents a major version upgrade from {{site.gateway_operator_product_name}} (KGO) 1.6.x, introducing significant architectural improvements, enhanced Kubernetes-native features, and breaking changes that require careful migration planning.
 
 ## Prerequisites
 
@@ -52,13 +52,13 @@ Before starting the migration, ensure you:
    {:.info}
    > **Note**: Kong Operator 2.0.0 uses conversion webhooks that require TLS certificates managed by cert-manager. If cert-manager is not installed, follow the [cert-manager installation guide](https://cert-manager.io/docs/installation/) before proceeding.  If you do not use cert-manager, the Helm chart will install certificates for you and you will be responsible for managing their lifecycle.
 
-## Upgrade Kong Operator to 2.0.0
+## Upgrade {{site.operator_product_name}} to 2.0.0
 
 The upgrade process requires several manual steps due to breaking changes in certificate management and CRD structure. Follow these steps carefully:
 
 ### Step 1: Uninstall the Existing KGO Release
 
-First, uninstall the current {{site.operator_product_name}} release:
+First, uninstall the current {{site.gateway_operator_product_name}} release:
 
 ```bash
 helm uninstall kgo -n kong-system
@@ -76,9 +76,9 @@ This includes the CA certificate secret. To label it as described above it you c
 kubectl label secrets -n kong-system kong-operator-ca konghq.com/secret=true
 ```
 
-### Step 3: Install Kong Operator 2.0.0
+### Step 3: Install {{site.operator_product_name}} 2.0.0
 
-Install the new Kong Operator using Helm:
+Install the new {{site.operator_product_name}} using Helm:
 
 ```bash
 helm repo update kong
@@ -93,18 +93,18 @@ helm upgrade --install kong-operator kong/kong-operator \
 ```
 
 {:.info}
-> **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release.  Only set `global.conversionWebhook.certManager.enabled` to true if you are using cert-manager to manage tge lifecycle of your webhook certificates.
+> **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release. Only set `global.conversionWebhook.certManager.enabled` to true if you are using cert-manager to manage tge lifecycle of your webhook certificates.
 
 ### Step 4: Verify the installation
 
-Verify that Kong Operator 2.0.0 is running correctly.
+Verify that {{site.operator_product_name}} 2.0.0 is running correctly.
 
-1. Check the Kong Operator deployment:
+1. Check the {{site.operator_product_name}} deployment:
    ```bash
    kubectl get pod -n kong-system
    ```
 
-1. Check Kong Operator logs:
+1. Check {{site.operator_product_name}} logs:
     ```sh
     kubectl logs -n kong-system -l app=kong-operator-kong-operator
     ```
