@@ -1,4 +1,5 @@
 name: Kong Gateway Operator
+icon: /_assets/icons/products/operator.svg
 
 releases:
   - release: "2.0.2"
