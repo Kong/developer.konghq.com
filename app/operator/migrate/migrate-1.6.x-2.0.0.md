@@ -88,8 +88,8 @@ helm upgrade --install kong-operator kong/kong-operator \
   --take-ownership \
   --set env.ENABLE_CONTROLLER_KONNECT=true \
   --set ko-crds.enabled=true \
-  --set global.conversionWebhook.enabled=true \
-  --set global.conversionWebhook.certManager.enabled=true 
+  --set global.webhooks.conversion.enabled=true \
+  --set global.webhooks.options.certManager.enabled=true
 ```
 
 {:.info}
