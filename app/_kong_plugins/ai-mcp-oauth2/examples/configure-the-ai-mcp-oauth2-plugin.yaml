@@ -1,0 +1,61 @@
+description: 'Configure the AI MCP Oauth2 plugin'
+
+title: 'Configure the AI MCP Oauth2 plugin'
+
+extended_description: |
+  Configure the AI MCP Oauth2 plugin.
+
+  {:.info}
+  > The AI MCP OAuth2 plugin is in a tech preview state.
+  > The [OAuth 2.0 specification for MCP](https://modelcontextprotocol.io/specification/draft/basic/authorization) is still new and evolving, and most identity providers do not yet fully implement the required metadata and flows.
+  > As a result, the plugin behavior and configuration options may change in future releases.
+
+  ### Audience validation
+  
+  This example sets `insecure_relaxed_audience_validation` to `true` to skip audience validation for MCP tokens 
+  if the authorization server doesn't include the resource URL in the audience (`aud`) claim.
+  This is defined in [RFC 8707](https://datatracker.ietf.org/doc/html/rfc8707), but not all authorization servers implement it yet.
+
+weight: 900
+
+config:
+  resource: ${mcp_auth_url}
+  authorization_servers:
+    - ${keycloak_authz_url}
+  introspection_endpoint: ${keycloak_introspection_url}
+  client_id: ${client_id}
+  client_secret: ${client_secret}
+  claim_to_header:
+    - claim: "sub"
+      header: "X-User-Id"
+  insecure_relaxed_audience_validation: true
+
+variables:
+  mcp_auth_url:
+    value: $MCP_AUTH_URL
+    description: The MCP authentication resource endpoint.
+  keycloak_authz_url:
+    value: $KEYCLOAK_AUTHZ_URL
+    description: The Keycloak authorization server URL.
+  keycloak_introspection_url:
+    value: $KEYCLOAK_INTROSPECTION_URL
+    description: |
+      The Keycloak token introspection endpoint. 
+      {{site.base_gateway}} uses this endpoint to verify access tokens sent by MCP client.
+  client_id:
+    value: $CLIENT_ID
+    description: The client ID used by {{site.base_gateway}} in introspection.
+  client_secret:
+    value: $CLIENT_SECRET
+    description: The client secret used by {{site.base_gateway}} in introspection.
+
+
+min_version:
+  gateway: '3.12'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

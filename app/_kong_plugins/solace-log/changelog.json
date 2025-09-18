@@ -1,0 +1,9 @@
+{
+  "3.12.0.0": [
+    {
+      "message": "Added Solace Log plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}
