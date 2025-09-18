@@ -375,10 +375,8 @@ We have a collection of elements to use:
 **Do:**
 
 * Use `{:.important}` when the user must perform a step before continuing.  
-* Use `{:.warning}` before operations that could cause data loss (e.g. deleting resources).
+* Use `{:.warning}` before operations that could cause data loss. For example, deleting resources.
 
-**Don’t:** 
-
-* Stack multiple callouts for one point or over-use warnings. We don’t want the document to look and feel like a siren is blaring.
+**Don’t:** Stack multiple callouts for one point or over-use warnings. We don’t want the document to look and feel like a siren is blaring.
 
 **Example:** In [Kong Manager Configuration](https://developer.konghq.com/gateway/kong-manager/configuration/) docs, there’s an **Important** note: *“If you run the Kong Gateway quickstart script, Kong Manager is automatically enabled.”* This clarifies a behavior the user must know.

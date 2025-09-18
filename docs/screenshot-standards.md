@@ -16,13 +16,9 @@
 - [ ] Avoid GIFs; keep files \~**≤2 MB**.  
 - [ ] File path: `app/_assets/images/docs/...`; file names **lowercase-with-dashes**.
 
-**Do:** 
+**Do:** Add a screenshot only when the UI is complex to describe.
 
-* Add a screenshot only when the UI is complex to describe.
-
-**Don’t:** 
-
-* Replace clear instructions with a screenshot, or ignore file-naming conventions.
+**Don’t:** Replace clear instructions with a screenshot, or ignore file-naming conventions.
 
 **Example:** In [Kong Mesh user interface (GUI)](https://developer.konghq.com/mesh/kuma-user-interface-gui/), there are images showing the menu panels and tabs. They are cropped to the relevant sidebar, labels match UI, and placed in a way that supports the text description.
 
@@ -40,7 +36,7 @@ or
 </center>
 ```
 
-## Text \+ Image flow
+## Text and image flow
 
 **Rule:** **Introduce → show → explain**; captions are optional but alt text is **required**.  
 **What:** Write a lead sentence that sets context and ends with a colon, then the image, and then alt text.  
