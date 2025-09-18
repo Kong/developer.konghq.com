@@ -402,10 +402,9 @@ config:
 
 ### How do I set environment variables?
 
-{% navtabs env %}
-{% navtab "Cloud Gateways API" %}
+In the {{site.konnect_short_name}} UI, you can add environment variables at the **Create a Data Plane Node** step of the Dedicated Cloud Gateway creation. Click **Advanced options** to display the **Environment variables** form and enter the key/value pairs to use.
 
-When you create a Dedicated Cloud Gateway Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration), add the `environment` array containing the name and value of each variable to add:
+With the Cloud Gateways API, when you [create a Dedicated Cloud Gateway Data Plane](#how-do-i-provision-a-control-plane) with a `PUT` request to the [`/cloud-gateways/configurations`](/api/konnect/cloud-gateways/#/operations/create-configuration) endpoint, add the `environment` array containing the `name` and `value` of each variable:
 <!--vale off -->
 {% control_plane_request %}
 url: /v2/cloud-gateways/configurations
@@ -431,14 +430,6 @@ body:
         value: info
 {% endcontrol_plane_request %}
 <!-- vale on -->
-{% endnavtab %}
-{% navtab "Konnect UI" %}
-
-In the {{site.konnect_short_name}}, you can add environment variables at the **Create a Data Plane Node** step of the Dedicated Cloud Gateway creation. Click **Advanced options** to display the **Environment variables** form and enter the key/value pairs to use.
-
-
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Securing backend communication
 
