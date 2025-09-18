@@ -82,6 +82,17 @@ faqs:
       * `user` is safer for untrusted content
       * `assistant` offers moderate influence
       You can set this via the [`inject_as_role`](/plugins/ai-rag-injector/reference/#schema--config-inject-as-role) setting.
+  - q: |
+      How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
+    a: |
+      If you see the following error in the logs:
+
+      ```sh
+      failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
+      ```
+
+      This means that the hardcoded MemoryDB instance limit has been reached. 
+      To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?

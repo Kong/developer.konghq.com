@@ -48,6 +48,18 @@ related_resources:
     url: /ai-gateway/get-started/
   - text: Embedding-based similarity matching in Kong AI gateway plugins
     url: /ai-gateway/semantic-similarity/
+faqs:
+  - q: |
+      How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
+    a: |
+      If you see the following error in the logs:
+
+      ```sh
+      failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
+      ```
+
+      This means that the hardcoded MemoryDB instance limit has been reached. 
+      To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 ---
 
 The AI Semantic Cache plugin stores user requests to an LLM in a vector database based on semantic meaning. When a similar query is made, it uses these embeddings to retrieve relevant cached requests efficiently.

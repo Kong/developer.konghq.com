@@ -58,7 +58,18 @@ related_resources:
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
     a: Yes, the AI Semantic Prompt Guard plugin supports multilingual input—depending on the capabilities of the configured [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The plugin sends raw UTF-8 text to the embedding provider supported by AI Gateway (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional plugin configuration.
+  - q: |
+      How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
+    a: |
+      If you see the following error in the logs:
 
+      ```sh
+      failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
+      ```
+
+      This means that the hardcoded MemoryDB instance limit has been reached. 
+      To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
+ 
 next_steps:
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
