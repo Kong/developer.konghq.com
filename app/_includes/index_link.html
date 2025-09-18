@@ -3,8 +3,15 @@
     {% else if site.data.tools[index.slug] %}
         {% assign icon = site.data.tools[index.slug].icon %}
     {% endif %}
-    {% unless icon %}{% assign icon = 'assets/icons/list-ordered.svg' %}{% endunless %}
-    <a class="flex gap-2 items-center px-1.5 py-0.5 text-xs rounded w-fit" href="{{ index.url | liquify }}" style="background-color: rgb(var(--color-{{index.slug}}-background)); color: rgb(var(--color-{{index.slug}}-brand))">
+    {% assign border = false %}
+    {% if index.slug == 'kic' or index.slug == 'operator' %}{% assign border = true %}{% endif %}
+
+    {% unless icon %}
+      {% assign icon = 'assets/icons/list-ordered.svg' %}
+      {% assign border = true %}
+    {% endunless %}
+
+    <a class="flex gap-2 items-center px-1.5 py-0.5 text-xs rounded w-fit {% if border %}product-icon--bordered{% endif %}" href="{{ index.url | liquify }}" style="background-color: rgb(var(--color-{{index.slug}}-background)); color: rgb(var(--color-{{index.slug}}-brand))">
         {% include_svg icon height="12" width="12"  %}
         {{ index.text | liquify }}
     </a>
