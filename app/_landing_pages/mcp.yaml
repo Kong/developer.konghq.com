@@ -113,8 +113,10 @@ rows:
           description: |
             Explore guides and examples to auto-generate MCP servers and tools without custom code.
           ctas:
-            - text: Use AI MCP plugin
+            - text: Proxy and observe MCP Traffic with the AI MCP Proxy plugin
               url: "/plugins/ai-mcp-proxy/"
+            - text: Secure your MCP servers with the AI MCP OAuth2 plugin
+              url: "/plugins/ai-mcp-oauth2/"
             - text: Autogenerate a serverless MCP
               url: "/mcp/autogenerate-serverless-mcp/"
             - text: Autogenerate MCP tools from any API schema

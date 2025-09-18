@@ -7,6 +7,7 @@ products:
   - mesh
 works_on:
   - konnect
+  - on-prem
 breadcrumbs:
   - /mesh/
 ---

@@ -60,12 +60,16 @@ columns:
   - title: Description
     key: description
 rows:
-  - usecase: "[Third-Party Auth](/plugins/datakit/examples/authenticate-third-party/)"
+  - usecase: "[Third-party auth](/plugins/datakit/examples/authenticate-third-party/)"
     description: Use internal auth within your ecosystem to inject request headers before proxying a request.
-  - usecase: "[Request Multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)"
+  - usecase: "[Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)"
     description: Make requests to multiple APIs and combine their responses into one response.
-  - usecase: "[Manipulate Request Headers](/plugins/datakit/examples/manipulate-request-headers/)"
+  - usecase: "[Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)"
     description: Use the Datakit plugin to dynamically adjust request headers before passing them to a third-party service.
+  - usecase: "[Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)"
+    description: Authenticate to a third-party service using Vault secrets.
+  - usecase: "[Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)"
+    description: "Leverage the `cache` and `branch` nodes to conditionally store or retrieve cache items."
 {% endtable %}
 <!--vale on-->
 
@@ -449,6 +453,8 @@ invalid connection ("get-bar" -> "response.body"): conflicts with existing conne
 
 The Datakit plugin provides the following node types:
 
+* `branch`: Execute different nodes based on matching input conditions.
+* `cache`: Store and fetch cached data.
 * `call`: Send third-party HTTP calls.
 * `jq`: Transform data and cast variables with `jq` to be shared with other nodes.
 * `exit`: Return directly to the client.
@@ -467,6 +473,14 @@ columns:
   - title: Attributes
     key: attributes
 rows:
+  - nodetype: "`branch`"
+    inputs: "user-defined"
+    outputs: "`then`, `else`"
+    attributes: "`then`, `else`"
+  - nodetype: "`cache`"
+    inputs: "`key`, `ttl`, `data`"
+    outputs: "`hit`, `miss`, `stored`, `data`"
+    attributes: "`bypass_on_error`, `ttl`"
   - nodetype: "`call`"
     inputs: "`body`, `headers`, `query`"
     outputs: "`body`, `headers`, `status`"
@@ -492,8 +506,10 @@ rows:
 
 ### Implicit nodes
 
-Datakit also defines a number of implicit nodes that can be used without being
-explicitly declared. These reserved node names can't be used for user-defined
+Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
+These nodes can either be used without being explicitly declared, or declared under the global resources object.
+
+These reserved node names can't be used for user-defined
 nodes. They include:
 
 <!--vale off-->
@@ -507,23 +523,34 @@ columns:
     key: outputs
   - title: Description
     key: description
+  - title: declaration
+    key: declaration
 rows:
   - node: "`request`"
     inputs: none
     outputs: "`body`, `headers`, `query`"
     description: Reads incoming client request properties
+    declaration: none
   - node: "`service_request`"
     inputs: "`body`, `headers`, `query`"
     outputs: none
     description: Updates properties of the request sent to the service being proxied to
+    declaration: none
   - node: "`service_response`"
     inputs: none
     outputs: "`body`, `headers`"
     description: Reads response properties from the service being proxied to
+    declaration: none
   - node: "`response`"
     inputs: "`body`, `headers`"
     outputs: none
     description: Updates properties of the outgoing client response
+    declaration: none
+  - node: "`vault`"
+    inputs: none
+    outputs: "`$self`"
+    description: Vault reference to hold secret values
+    declaration: "resources.vault"
 {% endtable %}
 <!--vale off-->
 
@@ -552,7 +579,105 @@ The `request.body` and `service_response.body` outputs have a similar behavior.
 If the corresponding `Content-Type` header matches the JSON mime-type, the
 `body` output is automatically JSON-decoded.
 
-### `call` node
+#### Vault node {% new_in 3.12 %}
+
+The `vault` node is an implicit node that allows you to declare secret references
+and can be used in other nodes as a source of secret values. Vault references are declared
+under the `resources.vault` configuration.
+
+##### Examples
+
+Declare two vault references and use them in a `jq` node:
+```yaml
+resources:
+  vault:
+    secret1: "{vault://env/my-secret1}"
+    secret2: "{vault://aws/my-secret2}"
+nodes:
+  - name: JQ
+    type: jq
+    inputs:
+      secret1: vault.secret1
+      secret2: vault.secret2
+    jq: "."
+```
+
+### branch node {% new_in 3.12 %}
+
+Execute different nodes based on matching input conditions, such as a cache hit or miss.
+
+Input:
+* `name`: The name of a node, or a reference to a node field. For example, `NODE_NAME` or `NODE_NAME.FIELD`.
+
+Output:
+* `name`: The name of a node, or a reference to a node field. For example, `NODE_NAME` or `NODE_NAME.FIELD`.
+
+Configuration attributes:
+* `then`: Array of nodes to execute if the input condition is `true`.
+* `else`: Array of nodes to execute if the input condition is `false`.
+
+{:.info}
+> **Note:** When using the `branch` node, the `then` and `else` parameters must list all nodes for both branches.
+If a node isn't listed in the branch, the node will run depending on its location in the flow configuration.
+
+#### Example
+
+The following example configuration takes the input of a cache node named `GET`:
+* If it sees a `miss`, it executes the nodes `DATA`, `SET`, and `EXIT_MISS`.
+* If it doesn't see a `miss`, it executes the node `EXIT_HIT`.
+
+Cache input:
+```yaml
+- type: static
+  values:
+    key: cache key
+  name: CACHE_KEY_GET
+- type: cache
+  input: CACHE_KEY_GET
+  ttl: 200
+  name: GET
+```
+
+Branch node based on cache hit or miss:
+```yaml
+- type: branch
+  then:
+    - DATA
+    - SET
+    - EXIT_MISS
+  else:
+    - EXIT_HIT
+  input: GET.miss
+  name: branch
+```
+
+See [Conditionally fetching or storing cache data](/plugins/datakit/examples/conditionally-store-cached-items/) for a full example.
+
+### cache node {% new_in 3.12 %}
+
+Stored data into cache and fetch cached data from cache.
+
+Inputs:
+
+* `key` (**required**): the cache key string
+* `ttl`: The TTL (Time to Live) in seconds
+* `data`: The data to be cached. If not null, the cache node works in set mode, 
+  storing data into cache; if null, the cache node fetches data
+  
+Outputs:
+
+* `hit`: `true` if a cache hit occured
+* `miss`: `true` if a cache miss occurred
+* `stored`: `true` if data was successfuly stored into cache
+* `data`: The data that was stored into cache
+
+Configuration attributes:
+
+* `bypass_on_error`: if `true`, cache backend errors are treated as a cache 
+  miss
+* `ttl`: The TTL (Time to Live) in seconds
+
+### call node
 
 Send an HTTP request and retrieve the response.
 
@@ -561,6 +686,13 @@ Inputs:
 * `body`: Request body
 * `headers`: Request headers
 * `query`: Key-value pairs to encode as the request query string
+
+#### cache resource {% new_in 3.12 %}
+
+The `cache` node requires a `resources.cache` resource definition containing 
+cache configuration.
+
+{% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
 
 Outputs:
 
@@ -667,7 +799,7 @@ invalid dependency (node #1 (CALL) -> node service_response): circular dependenc
 ```
 {:.no-copy-code}
 
-### `jq` node type
+### jq node type
 
 The `jq` node executes a jq script for processing JSON. See the official
 [jq docs](https://jqlang.org/) for more details.
@@ -954,7 +1086,7 @@ Join the output of two API calls:
   jq: "."
 ```
 
-### `exit` node
+### exit node
 
 Trigger an early exit that produces a direct response, rather than forwarding
 a proxied response.
@@ -985,7 +1117,7 @@ Make an HTTP request and send the response directly to the client:
   input: CALL
 ```
 
-### `property` node
+### property node
 
 Get and set {{site.base_gateway}} host and request properties.
 
@@ -1203,7 +1335,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### `static` node
+### static node
 
 Emits static values to be used as inputs for other nodes. The `static` node can help you with hardcoding some known value for an input.
 
@@ -1313,6 +1445,13 @@ Set common request headers for different API requests:
   inputs:
     headers: HEADERS
 ```
+
+## Resources
+
+Datakit supports a global `resources` object that can be used to declare shared resource configurations.
+
+### Vault
+Refer to the [Vault node](#vault-node) for more details on how to use vault references in Datakit.
 
 ## Debugging
 

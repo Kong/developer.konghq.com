@@ -18,6 +18,7 @@ api_specs:
 search_aliases:
   - postman
   - publish API specs
+  - konnect-application-auth
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:
@@ -255,7 +256,35 @@ Based on this data, you get the following generated URLs:
 
 You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) to allow developers to create applications and generate credentials or API keys. This is available to data planes running {{site.base_gateway}} 3.6 or later.
 
-This will install the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin can only be configured from the associated Dev Portal and its published APIs.
+When you link a service with an API, {{site.konnect_short_name}} automatically adds the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin is responsible for applying authentication and authorization on the Service. The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate. While you can't directly modify the KAA plugin as it's managed by {{site.konnect_short_name}}, you can modify the plugin's behavior by adding JSON to the advanced configuration of your application auth strategy. 
+
+The following diagram shows how the KAA plugin manages authorization and authentication on the linked Service:
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    actor Client
+    Client->> Kong:
+    Kong->>Konnect Application Auth: Send request
+    Konnect Application Auth->>Konnect Application Auth: Authenticate the request based on the auth strategy
+
+    rect rgb(191, 223, 255)
+    note right of Konnect Application Auth: OIDC Strategy.
+    Konnect Application Auth-->> OIDC Plugin: 
+    OIDC Plugin->> IdP: Sends credentials request
+    IdP ->> OIDC Plugin: return JWT token
+    OIDC Plugin-->>Konnect Application Auth:
+    end
+    rect rgb(191, 223, 255)
+    note right of Konnect Application Auth: Key Auth Strategy.
+    Konnect Application Auth->>Konnect Application Auth: Authenticate Api Key
+    end
+
+    Konnect Application Auth->>Konnect Application Auth: Authorize the request with the authenticated client
+    Konnect Application Auth->>Kong:
+    Kong->>Client:
+ {% endmermaid %}
+ <!--vale on-->
 
 If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your Dev Portal](/dev-portal/self-service/).
 

@@ -145,15 +145,15 @@ rows:
     description: The {{site.konnect_short_name}} API for the geo. Necessary if you are using decK in your workflow, decK uses this API to access and apply configurations.
   - hostname: "`PORTAL_ID.REGION.kongportals.com`"
     description: The URL for the Dev Portal in the geo.
-  - hostname: "`CONTROL_PLANE_DNS_PREFIX.REGION.cp0.konghq.com`"
+  - hostname: "`CONTROL_PLANE_DNS_PREFIX.REGION.cp.konghq.com`"
     description: Handles configuration for a Control Plane in the geo. Data plane nodes connect to this host to receive configuration updates. This hostname is unique to each organization and Control Plane.
-  - hostname: "`CONTROL_PLANE_DNS_PREFIX.REGION.tp0.konghq.com`"
+  - hostname: "`CONTROL_PLANE_DNS_PREFIX.REGION.tp.konghq.com`"
     description: Gathers telemetry data for a Control Plane in the geo. This hostname is unique to each organization and Control Plane.
 {% endtable %}
 <!--vale on-->
 
 {:.warning}
-> **Important:** Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for a full list of regional and service ingress IPs. The `ingressIPs` section contains a list of all ingress IPs per geo and consolidated IPs per service. To avoid coupling firewall rules to specific services or DNS suffixes (such as `cp0`, `tp0`), we recommend allowlisting the values in the `ingressIPs` block for each region. This ensures your setup is more resilient to future infrastructure or DNS changes. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
+> **Important:** Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for a full list of regional and service ingress IPs. The `ingressIPs` section contains a list of all ingress IPs per geo and consolidated IPs per service. To avoid coupling firewall rules to specific services or DNS suffixes (such as `cp`, `tp`), we recommend allowlisting the values in the `ingressIPs` block for each region. This ensures your setup is more resilient to future infrastructure or DNS changes. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
 
 ## Mesh Manager hostnames
 

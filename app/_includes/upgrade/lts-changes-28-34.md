@@ -38,7 +38,7 @@ rows:
       If any configurations are stored in a repository (following a GitOps model),
       these need to be upgraded using [`deck file convert`](/deck/file/convert/).
   - category: DB config
-    change: Tags may now contain space characters.
+    description: Tags may now contain space characters.
     action: |
       No
   - category: "kong.conf"
@@ -719,4 +719,40 @@ rows:
     action: |
       No
       
+{% endtable %}
+
+### kong.conf changes
+
+The following table lists changes to parameters managed in the [`kong.conf`](/gateway/configuration/) configuration file:
+
+{% table %}
+columns:
+  - title: 2.8
+    key: 28
+  - title: 3.4
+    key: 34
+rows:
+  - 28: "`data_plane_config_cache_mode = unencrypted`"
+    34: "Removed in 3.4"
+  - 28: "`data_plane_config_cache_path`"
+    34: "Removed in 3.4"
+  - 28: "`admin_api_uri`"
+    34: "Deprecated. Use `admin_gui_api_url` instead."
+  - 28: "`database` Cassandra support"
+    34: "Accepted values are `postgres` and `off`. All Cassandra options have been removed."
+  - 28: "`pg_keepalive_timeout = 60000`"
+    34: |
+      You can now specify the maximal idle timeout (in ms) for the Postgres connections in the pool.
+      If this value is set to 0 then the timeout interval is unlimited. 
+      If not specified, this value will be the same as `lua_socket_keepalive_timeout`.
+  - 28: "`worker_consistency = strict`"
+    34: "`worker_consistency = eventual`"
+  - 28: "`prometheus_plugin_*`"
+    34: "Disabled Prometheus plugin high-cardinality metrics."
+  - 28: "`lua_ssl_trusted_certificate` with no default value."
+    34: "Default value: `lua_ssl_trusted_certificate = system`"
+  - 28: "`pg_ssl_version = tlsv1`"
+    34: "`pg_ssl_version = tlsv1_2`"
+  - 28: "--"
+    34: "New parameter:`allow_debug_header = off`"
 {% endtable %}

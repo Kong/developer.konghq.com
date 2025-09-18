@@ -312,7 +312,7 @@ Show me all API requests for the example-service Gateway Service in the quicksta
       "applicationId": null,
       "authType": "",
       "headers": {
-        "host": "5a385ad748.eu.tp0.konghq.tech:443",
+        "host": "5a385ad748.eu.tp.konghq.tech:443",
         "userAgent": ""
       },
       "dataPlane": {

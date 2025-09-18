@@ -282,6 +282,7 @@ The OpenID Connect plugin has several options for performing coarse-grained auth
 1. [Claims-based authorization](#claims-based-authorization)
 2. [ACL plugin authorization](#acl-plugin-authorization)
 3. [Consumer authorization](#consumer-authorization)
+4. [Consumer Group authorization](#consumer-group-authorization) {% new_in 3.12 %}
 
 #### Claims-based authorization
 
@@ -401,6 +402,15 @@ Set up Consumer auth:
 * [Plugin configuration example](/plugins/openid-connect/examples/consumer-auth/)
 * [Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
 
+#### Consumer Group authorization {% new_in 3.12 %}
+
+You can use {{site.base_gateway}} [Consumer Groups](/gateway/entities/consumer-group/) for authorization and dynamically map claim values to Consumer Groups. 
+This means that we restrict the access to only those that do have a matching Consumer Group. 
+
+Set up Consumer Group auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/consumer-group-auth/)
+* [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
+
 ### Client authentication
 
 #### Mutual TLS client authentication
@@ -508,7 +518,7 @@ To enable certificate-bound access for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
 * Use the [`proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
 
-See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail.
+See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail and [Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
 
 ### Demonstrating Proof-of-Possession (DPoP)
 

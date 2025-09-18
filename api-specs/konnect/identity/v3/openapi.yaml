@@ -227,7 +227,6 @@ paths:
           $ref: '#/components/responses/IdentityNotFound'
       tags:
         - Auth Settings
-    parameters: []
     patch:
       operationId: update-idp-configuration
       summary: Update IdP Configuration
@@ -370,7 +369,6 @@ paths:
           $ref: '#/components/responses/IdentityNotFound'
       tags:
         - Teams
-    parameters: []
     post:
       operationId: create-team
       summary: Create Team
@@ -1000,7 +998,6 @@ paths:
       operationId: get-system-accounts-id-access-tokens-id
       summary: Fetch System Account Access Token
       description: Returns the system account (SA) access token for the SA Access Token ID specified as a path parameter.
-      parameters: []
       responses:
         '200':
           $ref: '#/components/responses/SystemAccountAccessTokenSingle'

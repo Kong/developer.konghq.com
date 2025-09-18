@@ -1,8 +1,7 @@
 platform:
   konnect:
     text: |
-          Manage everything in one place?
-          Explore Konnect, our unified API platform.
+      Kong's SaaS API management platform designed to simplify managing and securing APIs.
     icon_dark: '/assets/logos/Konnect-logo.svg'
     icon_light: '/assets/logos/Konnect-logo-light.svg'
     link:
@@ -137,21 +136,24 @@ support:
   - text: Community
     url: 'https://konghq.com/community'
     icon: '/assets/icons/team.svg'
-  - text: Community Forum
-    url: 'https://discuss.konghq.com/'
-    icon: '/assets/icons/service-document.svg'
-  - text: User Calls
-    url: 'https://konghq.com/events/user-calls'
-    icon: '/assets/icons/phone.svg'
-  - text: Help & Support
-    url: 'https://support.konghq.com/s/'
-    icon: '/assets/icons/support.svg'
   - text: Github
     url: 'https://github.com/Kong/kong'
     icon: '/assets/icons/github.svg'
+  - text: Community Forum
+    url: 'https://discuss.konghq.com/'
+    icon: '/assets/icons/service-document.svg'
+  - text: Kong Pricing
+    url: 'https://konghq.com/pricing'
+    icon: '/assets/icons/money.svg'
   - text: Demos
     url: 'https://konghq.com/resources/demos'
     icon: '/assets/icons/presentation.svg'
+  - text: User Calls
+    url: 'https://konghq.com/events/user-calls'
+    icon: '/assets/icons/phone.svg'
   - text: Workshops
     url: 'https://konghq.com/events/workshops'
     icon: '/assets/icons/mark.svg'
+  - text: Help & Support
+    url: 'https://support.konghq.com/s/'
+    icon: '/assets/icons/support.svg'

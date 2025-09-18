@@ -1,0 +1,23 @@
+description: Enables signing or re-signing access and channel tokens.
+
+extended_description: |
+  Enables signing or re-signing access and channel tokens. 
+  `access_token_upstream_header` and `channel_token_upstream_header` are used to specify the header names where the signed tokens are passed to the upstream.
+min_version: 
+  gateway: '3.12' 
+title: 'Enable signing or re-signing tokens'
+
+weight: 900
+
+config:
+  channel_token_signing: true
+  access_token_signing: true
+  access_token_upstream_header: Authorization:Bearer
+  channel_token_upstream_header: Another_Authorization_Header
+  access_token_signing_algorithm: RS256
+  channel_token_signing_algorithm: ES256
+
+tools:
+  - deck
+  - admin-api
+  - kic
