@@ -21,6 +21,7 @@ For minor or major version releases (e.g. 3.10 or 4.0):
 1. [Add GPG and RSA keys](#add-gpg-and-rsa-keys)
 1. [Generate changelogs and update breaking changes](#generate-changelogs)
 1. [Update support matrix](#support-matrix)
+1. [Update Konnect supported versions][#konnect-support]
 1. [Bump the release version, tag as latest, and set release date](#bump-release-version)
 1. [Update SBOM link](#sbom-link)
 1. Search for and remove all `if_version` tags for the release that you're publishing
@@ -97,6 +98,19 @@ Debian 10, CentOS 7, and RHEL 7 reached their End of Life (EOL) dates on June 30
 ```
 
 In this case, we would remove Debian 10, CentOS 7, and RHEL 7 from the supported versions for 3.8.0.0.
+
+### Konnect support
+
+Update the Konnect supported versions YAML file at `app/_data/support/gateway.yml` in the following format:
+
+```yaml
+- release: "3.12"
+  konnect: true
+  beginning: "3.12.0.0" # first patch version that's available in konnect
+  release_date: "2025-09-22"
+  eol: "2026-09-22" # one year from release date for a regular release; three years from release date for an LTS release
+  sunset: "2027-09-22" # two years from release date for a regular release; four years from release date for an LTS release
+```
 
 ### Bump release version
 
