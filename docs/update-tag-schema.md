@@ -1,4 +1,4 @@
-# Internal Docs: How to Add a New Tag to the Tag Schema
+# How to add a new tag to the Tag Schema
 
 The [Tag Schema](https://github.com/Kong/developer.konghq.com/blob/main/app/_data/schemas/frontmatter/tags.json) is a predefined list of tags used in our documentation front‑matter to categorize, filter, and group content. Tags improve search results, navigation, related resources, filtering by topic, UI display, and also support internal CI validation.
 
@@ -36,7 +36,7 @@ To add a new tag to the Tag Schema:
 7. Request review from docs.  
 8. Once the PR is merged, notify the team that there's a new tag available for use.
 
-## Test, Build Validation, and Troubleshoot
+## Test, build validation, and troubleshoot
 
 Use the following helpful checklist to refine your experience:
 
