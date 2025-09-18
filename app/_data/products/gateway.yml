@@ -382,7 +382,8 @@ releases:
   - release: "3.8"
     ee-version: "3.8.1.2"
     ce-version: "3.8.1"
-    eol: 2025-09-30
+    eol: 2025-09-11
+    sunset: true
     distributions:
       - amazonlinux2:
           package: true
