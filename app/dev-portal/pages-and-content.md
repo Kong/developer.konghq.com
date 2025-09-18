@@ -169,9 +169,11 @@ rows:
   - path: "`/_preview-mode/*`"
     description: {{site.konnect_short_name}} previews
     regexp: "`^/_preview-mode\\/.*`"
-  - path: "`/.well-known/*`"
+  - path: |
+      `/.well-known/*`
     description: Site-wide metadata and configurations
-    regexp: "`^/\.well-known\\/.*`"
+    regexp: |
+      `^/\.well-known\\/.*`
 {% endtable %}
 
 <!--vale on -->
