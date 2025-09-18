@@ -429,6 +429,14 @@ kong.client.get_protocol() -- "http"
 ## kong.client.get_aws_vpce_id()
 
 Returns the VPC ID of the endpoint in the PROXY protocol v2 header PP2_SUBTYPE_AWS_VPCE_ID.
+ This function requires the user to enable `proxy_protocol` flag in the `proxy_listen` directive.
+
+ Note: once the flag `proxy_protocol` is enabled
+ the listen port will only accept proxy protocol data from downstream.
+
+ Refer to the nginx doc (https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/)
+ for more detailed information.
+
 
 **Phases**
 
