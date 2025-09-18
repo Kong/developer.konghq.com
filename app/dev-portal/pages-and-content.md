@@ -158,15 +158,15 @@ rows:
   - path: "`/_api/*`"
     description: Nuxt server endpoints
     regexp: "`^/_api\\/.*`"
+  - path: "`/api/oauth/*`"
+    description: OAuth endpoints
+    regexp: "`^/api//oauth\\/.*`"
   - path: "`/npm/*`"
     description: CDN proxy
     regexp: "`^/npm\\/.*`"
   - path: "`/_preview-mode/*`"
     description: {{site.konnect_short_name}} previews
     regexp: "`^/_preview-mode\\/.*`"
-  - path: "`/oauth/*`"
-    description: OAuth endpoints
-    regexp: "`^/oauth\\/.*`"
   - path: "`/.well-known/*`"
     description: Site-wide metadata and configurations
     regexp: "`^/\.well-known\\/.*`"
