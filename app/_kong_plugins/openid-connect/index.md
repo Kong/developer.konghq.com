@@ -128,17 +128,21 @@ Unlike other authentication types like Key Auth and Basic Auth, with OpenID Conn
 Instead, you can offload the task to a trusted identity provider of your choice.
 
 ## Discovery cache
-When you configure `config.issuer` in the OIDC plugin, Kong automatically retrieves the provider’s discovery metadata. That metadata is stored and reused by the discovery cache to avoid repeated fetches. This stored data is known as the **Discovery cache**, and the following are the behaviors and interactions to expect:
-- Discovery data is stored in the **Kong database** when using DB mode, or in **worker memory** when using DB‑less mode.  
-- The cache has **no TTL (time‑to‑live)** and does not expire automatically. You must clear it manually using the relevant DELETE endpoints in the Admin API.  
-- If a request requires discovery information that is not yet in the cache, based on the `config.issuer`, the plugin attempts to “rediscover” it. Once a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
-- If a JWT cannot be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the plugin falls back to using any sufficient discovery information that remains in the cache.
+When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC plugin stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
 
-### Discovery cache object
-The Discovery Cache object refers to the stored metadata retrieved from the issuer. For example, discovery document endpoints, JWKS keys, and token endpoint. It is represented internally and utilized whenever validation needs issuer metadata.
+{{site.base_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
+- Discovery data is stored in the **{{site.base_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
+- The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default. You can also clear it manually using the relevant [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
+- If a request requires discovery information that isn't in the cache, the plugin attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
+- If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the plugin falls back to using any sufficient discovery information that remains in the cache.
 
-### Clear discovery cache
-To manually clear discovery cache entries, use the Kong Admin API DELETE endpoints for the OpenID Connect pluging. For example, the DELETE endpoint specific to Discovery Cache Objects. Refer to the [**API Reference**](/plugins/openid-connect/api/) section for the exact URL and parameters of the DELETE endpoint.
+### Manually clear discovery cache
+
+To manually clear discovery cache entries, you can use the Admin API DELETE endpoints for the OpenID Connect plugin. These endpoints let you:
+* Delete a JWKS
+* Delete all caches or a specific cache
+
+Refer to the [OIDC API reference](/plugins/openid-connect/api/) for details.
 
 ## Supported flows and grants
 
