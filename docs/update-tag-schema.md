@@ -32,7 +32,7 @@ To add a new tag to the Tag Schema:
 3. In alphabetical order, add the new tag into the schema list.  
 4. In any content pages that use the new tag, in the front matter, add the tag under the `tags:` field.  
 5. Run a local docs build to confirm that there are no build errors.  
-6. Create a PR with a clear commit message, e.g. `docs: add tag new-tag-name` and explain why this tag is needed.  
+6. Create a PR with a clear commit message. For example, `docs: add tag new-tag-name` and explain why this tag is needed.  
 7. Request review from docs.  
 8. Once the PR is merged, notify the team that there's a new tag available for use.
 
@@ -47,7 +47,7 @@ Use the following helpful checklist to refine your experience:
 
 If you needed to add a new tag called `kong-tag-example`:
 
-1. In `tags.json`, add `kong-tag-example` in alphabetical order.  
+1. In `tags.json`, in alphabetical order, add `kong-tag-example`.  
 2. In the front matter of `example‑page.md`, add the new tag:  
    `tags:`  
     `‑ metrics`  
