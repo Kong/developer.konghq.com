@@ -13,7 +13,7 @@ min_version:
 
 variables:
   host:
-    description: The bootstrap server host
+    description: The bootstrap server host.
     value: $BOOTSTRAP_SERVER_HOST
   topic:
     description: The name of the Kafka topic to consume from.
