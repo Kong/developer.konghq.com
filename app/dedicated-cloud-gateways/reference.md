@@ -345,11 +345,8 @@ config:
     default_value: one
   - name: vitals
     default_value: off
-  - name: healthz_ids
-    default_value: 5c40ca48-590e-47b7-9a44-fcaa18fbcf40
   - name: proxy_access_log
     default_value: off
-  - name: "dpc_rollout_trigger"
   - name: request_debug
     default_value: on
   - name: "node_id"
@@ -371,20 +368,36 @@ directives:
 
 ### Customizable environment variables
 
-The following table lists the environment variables that you can set while creating a Dedicated Cloud Gateway:
+The following table lists the environment variables that you can set while creating a Dedicated Cloud Gateway.
+
+{:.warning}
+> These variables should be uppercase and prefixed with `KONG_`. For example, to add `log_level` use the `KONG_LOG_LEVEL` variable. 
 
 {% kong_config_table %}
 config:
   - name: log_level
   - name: request_debug_token
-  - name: opentelemetry_tracing
   - name: tracing_instrumentations
   - name: tracing_sampling_rate
   - name: untrusted_lua_sandbox_requires
   - name: allow_debug_header
   - name: header_upstream
+    description: |
+      Comma-separated list of headers Kong should inject in requests to upstream.
+
+      At this time, the only accepted value is:
+
+      * `X-Kong-Request-Id`: Unique identifier of the request.
+
+      In addition, this value can be set to `off`, which prevents Kong from injecting the above header. Note that this does not prevent plugins from injecting headers of their own.
   - name: server_tokens
+    description: Removes the Kong version information from the HTTP response headers.
   - name: latency_tokens
+    description: Removes the latency information from the HTTP response headers.
+  - name: real_ip_recursive
+  - name: real_ip_header
+  - name: headers
+  - name: trusted_ips
 {% endkong_config_table %}
 
 ### How do I set environment variables?
