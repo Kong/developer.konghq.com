@@ -25,11 +25,13 @@ module Jekyll
 
     def build_page(site, file, index)
       filename = File.basename(file).gsub('.yaml', '.html')
+      filename = 'kubernetes-ingress-controller.html' if filename == 'kic.html'
       page = PageWithoutAFile.new(site, __dir__, 'index', filename)
       page.data['title'] = index['title']
       page.data['layout'] = 'indices'
       page.data['toc_depth'] = 3
       page.data['toc_skip_page_title'] = true
+      page.data['slug'] = File.basename(file, File.extname(file))
 
       # Needed for edit link and site regeneration
       page.instance_variable_set(:@relative_path, "_indices/#{filename.gsub('.html', '.yaml')}")
@@ -60,11 +62,11 @@ module Jekyll
         group['sections'].each do |section|
           next unless section['auto_exclude'] || section['auto_exclude_group']
 
-          if section['auto_exclude_group']
-            exclusions = group['sections'].reject { |s| s.equal?(section) }.flat_map { |s| s['items'] || [] }
-          else
-            exclusions = all_sections.reject { |s| s.equal?(section) }.flat_map { |s| s['items'] || [] }
-          end
+          exclusions = if section['auto_exclude_group']
+                         group['sections'].reject { |s| s.equal?(section) }.flat_map { |s| s['items'] || [] }
+                       else
+                         all_sections.reject { |s| s.equal?(section) }.flat_map { |s| s['items'] || [] }
+                       end
 
           section['not_match'] ||= []
           section['not_match'] = (section['not_match'] + exclusions).uniq { |item| item['path'] }
@@ -95,9 +97,18 @@ module Jekyll
             section['items'].each_with_index do |match, i|
               next unless match['path'] || match['type'] == 'how-to' || match['type'] == 'how-to-search' || match['url']
 
-              add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates'], seen) if match['path']
-              add_how_to_search(site, section['title'], match, i, section['allow_duplicates'], seen) if match['type'] == 'how-to-search'
-              add_how_to(site, section['title'], match, i, section['allow_duplicates'], seen) if match['type'] == 'how-to'
+              if match['path']
+                add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates'],
+                         seen)
+              end
+              if match['type'] == 'how-to-search'
+                add_how_to_search(site, section['title'], match, i, section['allow_duplicates'],
+                                  seen)
+              end
+              if match['type'] == 'how-to'
+                add_how_to(site, section['title'], match, i, section['allow_duplicates'],
+                           seen)
+              end
               add_entry(section['title'], match, i, section['allow_duplicates'], seen) if match['url']
             end
           end
@@ -111,7 +122,7 @@ module Jekyll
 
         # Merge everything together
         {
-          'sections' => @sections.values,
+          'sections' => @sections.values
         }.merge(group)
       end
     end
