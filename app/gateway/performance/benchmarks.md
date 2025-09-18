@@ -61,6 +61,12 @@ The performance tests cover a number of baseline configurations and common use c
 
 ### {{site.base_gateway}} performance benchmark results
 
+The following table lists all Gateway versions that have been tested using Kong's benchmark test suite. 
+
+{:.info}
+> **Note:** This table is not a guarantee of current support.
+> To see which {{site.base_gateway}} versions are currently supported by Kong, see the [{{site.base_gateway}} version support policy](/gateway/version-support-policy/).
+
 {% navtabs "gateway-version" %}
 
 {% navtab "3.11" %}
