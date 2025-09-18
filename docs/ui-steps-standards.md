@@ -58,7 +58,7 @@ For more information, go to the [Google Developer styleguide](https://developers
 * **Minimum-viable UI:** when automation (decK, Terraform, Admin API) is the **dominant workflow**.  
   Always validate at the end of a full UI workflow. Always give a navigation path for minimum-viable UI.
 
-**Important\!**: Do not use docs to paper over UX gaps. If the UI is unclear, raise an issue with PM/Design. Still document the UI if a release requires it.
+**Important**: Do not use docs to paper over UX gaps. If the UI is unclear, raise an issue with PM/Design. Still document the UI if a release requires it.
 
 ## Full UI how-to
 
@@ -330,7 +330,7 @@ Use the following rules to write instructions for the Kong UI so that users foll
 
 **How:** When a task involves external software, write a short description and link out. Do not include vendor UI step sequences.
 
-**Do:** Write: *“To configure authentication via \[VendorName\], see VendorName’s docs here.”*
+**Do:** Write: *“To configure authentication with \[VendorName\], see VendorName’s docs here.”*
 
 **Don’t:**
 
