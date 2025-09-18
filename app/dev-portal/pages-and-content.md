@@ -54,9 +54,9 @@ faqs:
   - q: Is there a character limit for snippets?
     a: |
       Yes. Snippets are limited to a maximum of 1,000,000 characters.
-  
+
   - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
-    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
+    a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page.
   - q: How do I add an external link to my Dev Portal main menu or footer?
     a: You can add external links to your main menu or footer by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Customization** in the sidebar. From the **Menu** tab, you can select the menu you want to customize and add the external link by clicking **Add menu item** and configuring the link to **Open in a new tab**. You can also send a PATCH request to the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization) to add an external link using the {{site.konnect_short_name}} API by setting the `external` property to `true`.
   - q: How do I add a child page to a parent page using the {{site.konnect_short_name}} Portal Management API?
@@ -149,9 +149,9 @@ rows:
   - path: "`/api/v*/`"
     description: Portal API
     regexp: "`^/api\\/v\\d+\\/.*`"
-  - path: "`/_proxy/*`"
-    description: Proxied APIs
-    regexp: "`^/_proxy/.*`"
+  - path: "`/_core/*`"
+    description: Core Portal APIs
+    regexp: "`^/_core/.*`"
   - path: "`/api/*`"
     description: Nuxt server endpoints
     regexp: "`^/api\\/(?!v\\d+\\/).*`"
@@ -164,6 +164,12 @@ rows:
   - path: "`/_preview-mode/*`"
     description: {{site.konnect_short_name}} previews
     regexp: "`^/_preview-mode\\/.*`"
+  - path: "`/oauth/*`"
+    description: OAuth endpoints
+    regexp: "`^/oauth\\/.*`"
+  - path: "`/.well-known/*`"
+    description: Site-wide metadata and configurations
+    regexp: "`^/\.well-known\\/.*`"
 {% endtable %}
 
 <!--vale on -->
