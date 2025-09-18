@@ -11,10 +11,7 @@
     {% if  include.config.type == 'h1' and page.all_docs_indices and page.all_docs_indices != empty %}
         <div class="flex gap-2 items-center">
             {% for index in page.all_docs_indices %}
-                <div class="flex gap-2 items-center w-fit badge bg-brand-saturated/40 py-1 px-2">
-                    <div class="flex w-3 h-3 text-brand shrink-0">{% include_svg 'assets/icons/list-ordered.svg' %}</div>
-                    <a class="text-primary text-xs" href="{{ index.url | liquify }}">{{ index.text | liquify }}</a>
-                </div>
+                {% include_cached index_link.html index=index %}
             {% endfor %}
         </div>
     {% endif %}
@@ -30,10 +27,7 @@
 {% if  include.config.type == 'h1' and page.all_docs_indices and page.all_docs_indices != empty  %}
 <div class="flex gap-2 items-center pt-2">
     {% for index in page.all_docs_indices %}
-        <div class="flex gap-2 items-center w-fit badge bg-brand-saturated/40 py-1 px-2">
-            <div class="flex w-3 h-3 text-brand shrink-0">{% include_svg 'assets/icons/list-ordered.svg' %}</div>
-            <a class="text-primary text-xs" href="{{ index.url | liquify }}">{{ index.text | liquify }}</a>
-        </div>
+      {% include_cached index_link.html index=index %}
     {% endfor %}
 </div>
 {% endif %}

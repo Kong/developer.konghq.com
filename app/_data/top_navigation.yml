@@ -26,13 +26,11 @@ platform:
     - title: Explore the platform
       links:
         - text: Konnect
-          icon: /_assets/icons/products/konnect.svg
           url: /konnect/
           product: konnect
     - title: Build APIs
       links:
         - text: Kong Insomnia
-          icon: /_assets/icons/products/insomnia.svg
           url: /insomnia/
           product: insomnia
         - text: API Design
@@ -46,33 +44,26 @@ platform:
     - title: Run APIs
       links:
         - text: API Gateway
-          icon: /_assets/icons/products/gateway.svg
           url: /gateway/
           product: gateway
         - text: AI Gateway
-          icon: /_assets/icons/products/ai-gateway.svg
           url: /ai-gateway/
           product: ai-gateway
         - text: Event Gateway
-          icon: /_assets/icons/products/event-gateway.svg
           url: /event-gateway/
           product: event-gateway
         - text: Service Mesh
-          icon: /_assets/icons/products/mesh.svg
           url: /mesh/
           product: mesh
         - text: Kong Ingress Controller
-          icon: /_assets/icons/products/kic.svg
           url: /kubernetes-ingress-controller/
           product: kic
         - text: Kubernetes Operator
-          icon: /_assets/icons/products/operator.svg
           url: /operator/
           product: operator
     - title: Govern APIs
       links:
         - text: Analytics
-          icon: /_assets/icons/products/advanced-analytics.svg
           url: /advanced-analytics/
           product: advanced-analytics
         - text: Scorecards
@@ -86,49 +77,38 @@ platform:
     - title: Discover APIs
       links:
         - text: Developer Portal
-          icon: /_assets/icons/products/dev-portal.svg
           url: /dev-portal/
           product: dev-portal
         - text: Service Catalog
-          icon: /_assets/icons/products/service-catalog.svg
           url: /service-catalog/
           product: service-catalog
 
 how_tos:
     - text: API Gateway
-      icon: /_assets/icons/products/gateway.svg
       url: /how-to/?products=gateway
       product: gateway
     - text: AI Gateway
-      icon: /_assets/icons/products/ai-gateway.svg
       url: /how-to/?products=ai-gateway
       product: ai-gateway
     - text: Event Gateway
-      icon: /_assets/icons/products/event-gateway.svg
       url: /how-to/?products=event-gateway
       product: ai-gateway
     - text: Insomnia
-      icon: /_assets/icons/products/insomnia.svg
       url: /how-to/?products=insomnia
       product: insomnia
     - text: Kong Ingress Controller
-      icon: /_assets/icons/products/kic.svg
       url: /how-to/?products=kic
       product: kic
     - text: Kubernetes Operator
-      icon: /_assets/icons/products/operator.svg
       url: /how-to/?products=operator
       product: kic
     - text: Kong Mesh
-      icon: /_assets/icons/products/mesh.svg
       url: /how-to/?products=mesh
       product: mesh
     - text: Dev Portal
-      icon: /_assets/icons/products/dev-portal.svg
       url: /how-to/?products=dev-portal
       product: dev-portal
     - text: Service Catalog
-      icon: /_assets/icons/products/service-catalog.svg
       url: /how-to/?products=service-catalog
       product: service-catalog
 
