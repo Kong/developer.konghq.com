@@ -42,7 +42,10 @@ min_version:
 
 Transform and customize {{site.base_gateway}} response exit messages using Lua functions.
 The plugin's capabilities range from changing messages, status codes, and headers,
-to completely transforming the structure of {{site.base_gateway}} responses.
+to completely transforming the structure of {{site.base_gateway}} responses. 
+
+Responses originating from upstream services can't be intercepted or transformed by this plugin.
+
 
 {:.info}
 > [`untrusted_lua`](/gateway/configuration/#untrusted-lua)
