@@ -5400,7 +5400,7 @@ components:
         - saml
     IdentityProviderEnabled:
       description: |
-        Indicates whether the identity provider is enabled. 
+        Indicates whether the identity provider is enabled.
         Only one identity provider can be active at a time, such as SAML or OIDC.
       type: boolean
       example: true
