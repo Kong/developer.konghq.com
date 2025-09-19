@@ -43,10 +43,7 @@ faqs:
   - q: What can I do after customizing an Explorer dashboard?
     a: |
         * **Save as a Report**: This function creates a new custom report based on your current view, allowing you to revisit these specific insights at a later time.
-        * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.
-  - q: What interactions are available when working with charts to investigate my data?
-    a: |
-      Charts in Analytics Explorer include interactive options to help you investigate data:          
+        * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.        
 related_resources:
   - text: Konnect Advanced Analytics
     url: /advanced-analytics/
