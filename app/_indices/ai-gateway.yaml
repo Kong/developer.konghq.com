@@ -58,6 +58,7 @@ sections:
       - path: /plugins/ai-sanitizer/
       - path: /plugins/ai-prompt-compressor/
       - path: /plugins/ai-aws-guardrails/
+      - path: /plugins/ai-llm-as-judge/
   - title: MCP traffic gateway
     items:
       - path: /mcp/
