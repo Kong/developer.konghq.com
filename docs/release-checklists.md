@@ -31,7 +31,7 @@ After merging release branch, and once the Netlify build is complete and docs ar
 1. [Update sources in Kapa](#kapa)
 
 After Gateway is available on Konnect:
-1. [Update compatibility table](#konnect-compatibility)
+1. [Update Konnect supported versions][#konnect-support]
 
 There are a few items that we expect to come from engineering teams with each release:
 * [Performance benchmark update](https://developer.konghq.com/gateway/performance/benchmarks/)
@@ -214,9 +214,18 @@ to make sure the new spec is included. If not, add it the new spec to it.
 1. If this is for a new version, run the [Sync Konnect OAS Data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) GitHub action.
 In the **Run workflow** dropdown, select your release branch (e.g. `release/gateway-3.12`), then click the **Run workflow** button.
 
-### Konnect compatibility
+### Konnect support
 
-Update the table at https://developer.konghq.com/konnect-platform/compatibility/ with the latest supported Gateway version and expected EOL.
+Update the Konnect supported versions YAML file at `app/_data/support/gateway.yml` in the following format:
+
+```yaml
+- release: "3.12"
+  konnect: true
+  beginning: "3.12.0.0" # first patch version that's available in konnect
+  release_date: "2025-09-22"
+  eol: "2026-09-22" # one year from release date for a regular release; three years from release date for an LTS release
+  sunset: "2027-09-22" # two years from release date for a regular release; four years from release date for an LTS release
+```
 
 ### Algolia
 
