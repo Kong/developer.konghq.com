@@ -1,4 +1,5 @@
 name: Kong Ingress Controller
+icon: /_assets/icons/products/kic.svg
 
 topologies:
   - db-less

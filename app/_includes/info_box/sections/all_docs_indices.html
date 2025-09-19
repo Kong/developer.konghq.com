@@ -2,10 +2,7 @@
   <div class="text-primary font-medium">Related Documentation</div>
   <div class="flex gap-3 flex-col">
     {% for index in include.all_docs_indices %}
-        <div class="flex gap-2 items-center">
-        <div class="flex w-4 h-4 text-brand shrink-0">{% include_svg 'assets/icons/list-ordered.svg' %}</div>
-        <a href="{{ index.url | liquify }}">{{ index.text | liquify }}</a>
-        </div>
+      {% include_cached index_link.html index=index %}
     {% endfor %}
   </div>
 </div>
