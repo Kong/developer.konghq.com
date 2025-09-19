@@ -807,6 +807,7 @@ tls
 TLSRoute
 TLSRoutes
 toolchain
+tooltip
 tproxy
 traceable
 Traefik
