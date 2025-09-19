@@ -29,7 +29,7 @@ module Jekyll
         end
 
         def layout
-          'mesh_policies/reference'
+          'policies/reference'
         end
       end
     end
