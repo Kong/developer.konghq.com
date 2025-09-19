@@ -7,3 +7,4 @@
 * ME (Middle East)
 * US (United States)
 * IN (India)
+* SG (Singapore) (beta)
