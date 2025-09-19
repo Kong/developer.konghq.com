@@ -1,0 +1,16 @@
+description: |
+  Validates the "not before" claim in an access token.
+extended_description: |
+  Validates the "not before" (`nbf`) claim in an access token.
+title: 'Validate the not before claim in an access token'
+min_version: 
+  gateway: '3.12' 
+weight: 900
+
+config:
+  verify_access_token_notbefore: true
+
+tools:
+  - deck
+  - admin-api
+  - kic

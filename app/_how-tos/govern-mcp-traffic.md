@@ -41,6 +41,7 @@ entities:
 tags:
   - ai
   - openai
+  - mcp
 
 tldr:
   q: How can I govern my MCP traffic using Kong AI Gateway?

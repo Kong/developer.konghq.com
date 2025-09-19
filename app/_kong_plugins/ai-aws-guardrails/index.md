@@ -72,3 +72,13 @@ For response and request inspection, the plugin by default guards input only. Yo
 ## Format
 
 This plugin works with all of the AI Proxy plugin's `route_type` settings (excluding the `preserve` mode).
+
+## AWS IAM roles {% new_in 3.12 %}
+
+The AI AWS Guardrails plugin supports AWS Identity and Access Management (IAM) roles. This allows the AWS Bedrock Guardrails service to be accessed using role assumption instead of static credentials.
+
+To use AWS IAM roles with the plugin, set the `config.aws_assume_role_arn`, `config.aws_role_session_name`, and `config.aws_role_session_name`. For an example, see [Use IAM role assumption](/plugins/ai-aws-guardrails/examples/use-iam-role/).
+
+{:.info}
+> **Note:** These fields can be used with or without static AWS credentials (`config.aws_access_key_id` and `config.aws_secret_access_key`).
+

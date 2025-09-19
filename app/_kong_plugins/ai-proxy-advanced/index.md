@@ -134,6 +134,17 @@ faqs:
   - q: What’s the approximate percentage of traffic sent to non-dominant targets with AI Proxy Advanced?
     a: |
       While exact percentages vary with latency gaps, less performant targets typically get between 0.1%–5% of traffic, just enough to keep updating their EWMA score for comparison.
+  - q: |
+      How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
+    a: |
+      If you see the following error in the logs:
+
+      ```sh
+      failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
+      ```
+
+      This means that the hardcoded MemoryDB instance limit has been reached. 
+      To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 
 ---
 
@@ -202,3 +213,7 @@ For example, load balancers with the following target combinations are supported
 ## Templating {% new_in 3.7 %}
 
 {% include plugins/ai-proxy-advanced/templating.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
+
+## Vector databases
+
+{% include_cached /plugins/ai-vector-db.md name=page.name %}

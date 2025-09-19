@@ -1,10 +1,12 @@
 description: |
-  Configure the AI Azure Content Safety plugin to block content matching harm categories defined by Azure.
+  Configure the AI Azure Content Safety plugin to check requests and block content matching harm categories defined by Azure.
 
 extended_description: |
-  Configure the plugin to block content matching the `Hate` and `Violence` categories [defined by Azure](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=warning).
+  Configure the plugin to block request content matching the `Hate` and `Violence` categories [defined by Azure](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=warning).
+  
+  The plugin only reviews content in requests by default. To change this, adjust the [`guarding_mode`](/plugins/ai-azure-content-safety/reference/#schema--config-guarding-mode) parameter.
 
-title: Block content in predefined categories
+title: Block request content in predefined categories
 
 weight: 900
 
