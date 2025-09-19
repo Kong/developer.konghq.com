@@ -29,7 +29,7 @@ module Jekyll
         end
 
         def layout
-          'mesh_policies/example'
+          'policies/example'
         end
 
         def example
