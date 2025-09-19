@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} breaking changes"
+title: "{{site.base_gateway}} breaking changes and known issues"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -137,7 +137,7 @@ rows:
       **Workaround**: 
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
-    status: Not fixed
+    status: Fixed in 3.11.0.3
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
@@ -238,7 +238,7 @@ Review the [changelog](/gateway/changelog/#3900) for all the changes in this rel
 
 ### 3.9.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.9.0.0 release.
 
 #### Node ID deprecation in `kong.conf`
 
@@ -296,7 +296,7 @@ Review the [changelog](/gateway/changelog/#3800) for all the changes in this rel
 
 ### 3.8.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.8.0.0 release.
 
 #### `kong.logrotate` configuration file no longer overwritten during upgrade
 
@@ -376,7 +376,7 @@ Review the [changelog](/gateway/changelog/#3700) for all the changes in this rel
 
 ### 3.7.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.7.0.0 release.
 
 #### Configuration
 
@@ -439,7 +439,7 @@ Review the [changelog](/gateway/changelog/#3600) for all the changes in this rel
 
 ### 3.6.1.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.6.1.0 release.
 
 #### TLS changes
 
@@ -447,7 +447,7 @@ TLSv1.1 and lower is now disabled by default in OpenSSL 3.x.
 
 ### 3.6.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.6.0.0 release.
 
 #### General
 

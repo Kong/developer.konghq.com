@@ -45,10 +45,10 @@ The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) to a Service o
 
 ## CORS limitations
 
-If the client is a browser, there is a known issue with this plugin caused by a
-limitation of the [CORS specification](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) that prevents specifying a custom
-`Host` header in a preflight `OPTIONS` request.
+When the client is a browser, the preflight OPTIONS requests defined by the [CORS specification](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) have strict rules about which headers can be set. 
+Certain headers, including Host, are classified as forbidden headers, meaning the browser always controls their value and they can't be customized in code (for example, in JavaScript). 
+As a result, a browser can't send a custom Host header during a preflight request.
 
-Because of this limitation, this plugin only works for Routes that have been
-configured with a `paths` setting. The CORS plugin does not work for Routes that
-are being resolved using a custom DNS (the `hosts` property).
+This limitation is important when using the CORS plugin with Routes in {{site.base_gateway}}. If a Route is configured to match only on the `hosts` field, the preflight request may not carry the expected Host header, and {{site.base_gateway}} may fail to match the Route. This means that the plugin can't reliably process these requests.
+
+To ensure correct behavior, use the CORS plugin only with Routes that match on paths or methods. The preflight request includes both paths and methods, so {{site.base_gateway}} can use these fields for matching.

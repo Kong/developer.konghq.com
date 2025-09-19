@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.26
+  version: 3.0.27
   description: The management API for Portals
   contact:
     name: Kong
@@ -1619,7 +1619,7 @@ paths:
             type: object
             properties:
               type:
-                $ref: '#/components/schemas/schemas-StringFieldEqualsFilter'
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
           style: deepObject
       responses:
         '200':
@@ -1802,6 +1802,23 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Audit Logs
+    delete:
+      operationId: delete-portal-audit-log-webhook
+      summary: Delete Portal Audit Log Webhook
+      description: 'Removes configuration for the audit log webhook. The destination ID is set to empty, and the webhook enabled field is set to false'
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
       tags:
         - Portal Audit Logs
   '/portals/{portalId}/audit-log-webhook/status':
@@ -3955,6 +3972,7 @@ components:
             - au
             - me
             - in
+            - sg
             - '*'
       example:
         role_name: API Viewer
@@ -4195,6 +4213,7 @@ components:
             - au
             - me
             - in
+            - sg
             - '*'
       example:
         id: 1a3c2169-27f8-4594-926b-41df3432d5dc
@@ -5372,10 +5391,6 @@ components:
         - api
         - api_package
       title: Entity Type
-    schemas-StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
-      type: string
-      title: StringFieldEqualsFilter
     IdentityProviderType:
       description: Specifies the type of identity provider.
       type: string

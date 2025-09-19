@@ -30,6 +30,8 @@ next_steps:
     url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
   - text: Enable key authentication on a Gateway Service
     url: /how-to/authenticate-consumers-with-key-auth-enc/
+
+automated_tests: false
 ---
 
 ## Konnect setup

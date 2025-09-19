@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     el.addEventListener("click", () => {
       document.documentElement.classList.add("dark");
       localStorage.setItem("mode", "dark");
+      document.documentElement.style.setProperty("color-scheme", "dark");
     });
   });
 
@@ -14,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     el.addEventListener("click", () => {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("mode", "");
+      document.documentElement.style.setProperty("color-scheme", "light");
     });
   });
 });

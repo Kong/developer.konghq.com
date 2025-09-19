@@ -33,6 +33,8 @@ faqs:
     a: While both the Control Plane and Data Plane can export the config, whatever node you select to export the config shouldn't proxy traffic due to performance implications. The Data Plane that exports config will have reduced performance. The recommended approach is to configure the Control Plane as the exporter and Data Planes as importers.
   - q: During a Control Plane outage when `KONG_CLUSTER_FALLBACK_CONFIG_IMPORT=on`, does the Data Plane always pull data from object storage, even when the {{site.konnect_short_name}} Control Plane is back online? 
     a: The Data Plane will always fetch config from {{site.konnect_short_name}} first. It will only fetch config from storage if fetching it from {{site.konnect_short_name}} fails. If the Data Plane fails to fetch the config from storage, it won't retry fetching it.
+  - q: Why won’t the exported configuration import, despite having been imported before?
+    a: "Ensure the `KONG_VERSION` on both exporting and importing data plane instances is identical. If they differ, update one to use the full image tag (for example, `3.11.0.3` instead of 3.11). If problems persist, check the error logs and address any issues. In container or Kubernetes deployments, always specify the full tag to prevent inadvertent version drift. When upgrading, move both exporting and importing instances to the same new tag, and validate the config is re-exported successfully afterwards."
 
 ---
 

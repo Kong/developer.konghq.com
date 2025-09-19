@@ -876,11 +876,9 @@ components:
           description: The display name of the integration.
           type: string
           example: Gateway Manager
-          readOnly: true
         description:
           description: The description of the integration.
           type: string
-          readOnly: true
         built_in:
           description: |
             Denotes whether the integration is built-in to the catalog.
@@ -893,6 +891,13 @@ components:
           type: string
           example: v1
           readOnly: true
+        visibility:
+          description: The visibility of the integration.
+          type: string
+          example: public
+          enum:
+            - public
+            - private
         authorization:
           $ref: '#/components/schemas/CatalogIntegrationAuthorization'
         config_schema:
@@ -916,6 +921,7 @@ components:
         - discovery
         - api_spec_provider
         - events
+        - visibility
     CatalogIntegrationAuthorization:
       description: Defines the authorization strategy for an integration.
       anyOf:
@@ -3225,6 +3231,7 @@ components:
             version: v1
             authorization: null
             config_schema: {}
+            visibility: public
             resource_types:
               gateway_svc:
                 display_name: Gateway Service
@@ -3284,6 +3291,7 @@ components:
             version: v1
             authorization: null
             config_schema: {}
+            visibility: public
             resource_types:
               report:
                 display_name: Report
@@ -3309,6 +3317,7 @@ components:
             version: v1
             authorization: null
             config_schema: {}
+            visibility: public
             resource_types:
               service_insight:
                 display_name: Mesh Service Insight

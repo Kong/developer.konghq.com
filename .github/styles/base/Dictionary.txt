@@ -180,6 +180,7 @@ dereferencing
 deserialization
 deserialize
 deserialized
+destructuring
 dev
 Dex
 Dex
@@ -714,6 +715,7 @@ serverless
 serviceaccounts
 serviceless
 shm
+show_in_api
 Sigstore
 slas
 slsa

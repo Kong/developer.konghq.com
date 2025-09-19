@@ -151,6 +151,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.21": [
+    {
+      "message": "Fixed an issue where an empty sequence or set represented in long form length couldn't be decoded.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.3.0.0": [
     {
       "message": "The plugin now performs authentication before authorization, and returns a 403 HTTP code when a user isn’t in the authorized groups.",

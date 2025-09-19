@@ -1,4 +1,11 @@
 {
+  "3.11.0.3": [
+    {
+      "message": "Fixed an issue where authentication failures did not log messages in the error logs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.4": [
     {
       "message": "Fixed an issue where authentication failures did not log messages in the error logs.",
@@ -49,6 +56,13 @@
   "3.4.3.1": [
     {
       "message": "Mark the `authorization_value` in the `oauth2-introspection` plugin as an encrypted field",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.21": [
+    {
+      "message": "Fixed an issue where authentication failures did not log messages in the error logs.",
       "type": "bugfix",
       "scope": "Plugin"
     }

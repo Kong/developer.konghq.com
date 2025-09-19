@@ -75,6 +75,43 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.3": [
+    {
+      "message": "Fix panic in LLM observability when populating token usage for AI Proxy token usage details\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "AI Proxy Advanced: Fixed an issue where gemini provider not support model garden",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Mistral models would return `Unsupported field: seed` when using some inference libraries.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Skip unknown cached details key from o11y observation.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where array input is not recognized as valid request for some providers. Bedrock, Gemini Public and Mistral provider don't accept array input as before.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some Titan embeddings model reported malformed request. \n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Support for Gemini Rerank in native format",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",

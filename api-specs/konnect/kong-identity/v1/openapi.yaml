@@ -41,11 +41,11 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               description:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               audience:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               id:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               labels:
@@ -141,7 +141,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               id:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
           style: deepObject
@@ -236,7 +236,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               id:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
           style: deepObject
@@ -335,7 +335,7 @@ paths:
             type: object
             properties:
               name:
-                $ref: '#/components/schemas/StringFieldFilter'
+                $ref: '#/components/schemas/LegacyStringFieldFilter'
               id:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               labels:
@@ -696,6 +696,13 @@ components:
     Issuer:
       description: The complete URL for the custom authorization server. This becomes the 'iss' claim in an access token.
       type: string
+    TokenEndpointAuthMethod:
+      description: Requested authentication method for OAuth 2.0 endpoints.
+      type: string
+      default: client_secret_post
+      enum:
+        - client_secret_post
+        - none
     AuthServer:
       type: object
       properties:
@@ -926,6 +933,8 @@ components:
           $ref: '#/components/schemas/Labels'
         response_types:
           $ref: '#/components/schemas/ResponseTypes'
+        token_endpoint_auth_method:
+          $ref: '#/components/schemas/TokenEndpointAuthMethod'
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -1015,19 +1024,36 @@ components:
       example: created_at desc
       title: SortQuery
     StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
-      type: string
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
     StringFieldContainsFilter:
-      description: Filter a string value field by partial contains.
+      description: Filters on the given string field value by fuzzy match.
       type: object
       properties:
         contains:
           type: string
+      additionalProperties: false
       required:
         - contains
       title: StringFieldContainsFilter
-    StringFieldFilter:
+      x-examples:
+        example-1:
+          contains: some-value
+    LegacyStringFieldFilter:
       description: Filter a string value field either by exact match or partial contains.
       oneOf:
         - $ref: '#/components/schemas/StringFieldEqualsFilter'
@@ -1568,6 +1594,7 @@ components:
         id_token_duration: 3600
         response_types:
           - token
+        token_endpoint_auth_method: client_secret_post
     UpdateClient:
       value:
         name: Updated Client
@@ -1600,6 +1627,7 @@ components:
               env: prod
             response_types:
               - token
+            token_endpoint_auth_method: client_secret_post
             created_at: '2023-03-20T09:29:14.52Z'
             updated_at: '2023-03-21T09:29:14.52Z'
           - id: kYa9iQFU5xPDSIUH9z1z
@@ -1616,6 +1644,7 @@ components:
               env: prod
             response_types:
               - token
+            token_endpoint_auth_method: none
             created_at: '2023-03-20T09:29:14.52Z'
             updated_at: '2023-03-21T09:29:14.52Z'
         meta:
@@ -1644,6 +1673,7 @@ components:
           env: prod
         response_types:
           - token
+        token_endpoint_auth_method: client_secret_post
         created_at: '2023-03-20T09:29:14.52Z'
         updated_at: '2023-03-21T09:29:14.52Z'
     CreatedClient:
@@ -1665,6 +1695,7 @@ components:
           env: test
         response_types:
           - token
+        token_endpoint_auth_method: client_secret_post
         created_at: '2023-03-20T09:29:14.52Z'
         updated_at: '2023-03-21T09:29:14.52Z'
         client_secret: YAzsyUlNZ5gNGeKS9H3VAdxVPzhPo4ae
@@ -1880,6 +1911,8 @@ components:
                 $ref: '#/components/schemas/ClientAllowScopes'
               labels:
                 $ref: '#/components/schemas/Labels'
+              token_endpoint_auth_method:
+                $ref: '#/components/schemas/TokenEndpointAuthMethod'
             required:
               - name
               - grant_types
@@ -1917,6 +1950,8 @@ components:
                 $ref: '#/components/schemas/UpdateClientAllowAllScopes'
               allow_scopes:
                 $ref: '#/components/schemas/ClientAllowScopes'
+              token_endpoint_auth_method:
+                $ref: '#/components/schemas/TokenEndpointAuthMethod'
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
           examples:
@@ -1952,6 +1987,8 @@ components:
                 $ref: '#/components/schemas/ClientAllowAllScopes'
               allow_scopes:
                 $ref: '#/components/schemas/ClientAllowScopes'
+              token_endpoint_auth_method:
+                $ref: '#/components/schemas/TokenEndpointAuthMethod'
               labels:
                 $ref: '#/components/schemas/Labels'
             required:
