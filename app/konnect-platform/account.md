@@ -71,7 +71,7 @@ faqs:
       You can view service, Dev Portal, and API call usage from the [Billing and Usage](https://cloud.konghq.com/global/plan-and-usage/).
   - q: How do I change the Owner of my organization?
     a: |
-      There's no self-service way to change the Owner of an organization in Konnect. Only Kong Support can complete the ownership transfer.
+      There's no self-service way to change the Owner of an organization in {{site.konnect_short_name}}. Only Kong Support can complete the ownership transfer.
       
       To change the Owner:
       1. Ensure that the new Owner is already a member of the Organization Admin pre-defined team.
