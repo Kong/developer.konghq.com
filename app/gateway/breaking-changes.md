@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} breaking changes"
+title: "{{site.base_gateway}} breaking changes and known issues"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -107,7 +107,7 @@ rows:
       **Workaround**: 
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
-    status: Not fixed
+    status: Fixed in 3.11.0.3
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
