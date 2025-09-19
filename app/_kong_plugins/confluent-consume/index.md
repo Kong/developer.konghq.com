@@ -66,6 +66,11 @@ Kong also provides a [plugin for publishing messages to Confluent Cloud](/plugin
 The plugin supports the following modes of operation:
 * `http-get`: Consume messages via HTTP GET requests (default)
 * `server-sent-events`: Stream messages using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
+* `websocket` {% new_in 3.12 %}: Streams messages over a [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) connection
+
+### WebSocket mode {% new_in 3.12 %}
+
+{% include /plugins/confluent-kafka-consume/websocket.md slug=page.slug broker='Confluent Cloud' name=page.name %}
 
 ## Message delivery guarantees
 
