@@ -1,0 +1,26 @@
+---
+title: Event Gateway Policies
+layout: default
+edit_and_issue_links: true
+products:
+  - event-gateway
+breadcrumbs:
+  - /event-gateway/
+
+works_on:
+  - konnect
+tags:
+  - kafka
+  - events
+description: An overview of policies that work with {{site.event_gateway_short}}.
+---
+
+{% capture subtitle %}
+Policies can be used to intercept client connections and transform messages between the client and the broker.
+They can be used to do things like enforcing encryption strategies, validating schemas, and modifying message headers.
+{% endcapture %}
+
+{% assign policies = site.data.event_gateway_policies | where_exp: "policy", "policy.published != false" %}
+{% assign title = "{{site.event_gateway}} Policies Hub" %}
+
+{% include policies/index.html title=title subtitle=subtitle policies=policies all_docs_indices=page.all_docs_indices %}
