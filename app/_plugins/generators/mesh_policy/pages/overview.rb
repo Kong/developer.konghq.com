@@ -17,7 +17,7 @@ module Jekyll
         end
 
         def layout
-          'mesh_policies/with_aside'
+          'policies/with_aside'
         end
 
         def data
