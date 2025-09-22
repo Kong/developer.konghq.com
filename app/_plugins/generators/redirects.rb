@@ -8,6 +8,7 @@ module Jekyll
       redirects = api_specs_redirects(site)
       redirects << plugin_examples_redirects(site)
       redirects << mesh_examples_redirects(site)
+      redirects << event_gateway_examples_redirects(site)
       redirects << existing_redirects(site)
 
       site.pages << build_page(redirects, site)
@@ -35,6 +36,15 @@ module Jekyll
     def mesh_examples_redirects(site)
       site.data.fetch('mesh_policies', {}).map do |_slug, policy|
         ["#{policy.url}examples/", policy.data.fetch('get_started_url')].join("\t")
+      end
+    end
+
+    def event_gateway_examples_redirects(site)
+      site.data.fetch('event_gateway_policies', {}).map do |_slug, policy|
+        if policy.data.fetch('get_started_url')
+          ["#{policy.url}examples/",
+           policy.data.fetch('get_started_url')].join("\t")
+        end
       end
     end
 
