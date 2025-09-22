@@ -3,13 +3,17 @@
 require_relative '../../policies/pages/reference'
 
 module Jekyll
-  module MeshPolicyPages
+  module EventGatewayPolicyPages
     module Pages
       class Reference < Base
         include Policies::Pages::Reference
 
         def layout
-          'mesh_policies/reference'
+          'event_gateway_policies/reference'
+        end
+
+        def data
+          super.merge('reference_type' => 'base')
         end
       end
     end
