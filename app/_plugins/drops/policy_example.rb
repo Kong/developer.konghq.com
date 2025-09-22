@@ -4,7 +4,7 @@ require 'yaml'
 
 module Jekyll
   module Drops
-    class MeshPolicyExample < Liquid::Drop # rubocop:disable Style/Documentation
+    class PolicyExample < Liquid::Drop # rubocop:disable Style/Documentation
       attr_reader :file
 
       def initialize(file:, policy:) # rubocop:disable Lint/MissingSuper
