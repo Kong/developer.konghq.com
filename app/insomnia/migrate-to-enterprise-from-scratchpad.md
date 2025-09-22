@@ -31,7 +31,7 @@ tldr:
 
 faqs:
   - q: Why can't I import my scratch pad file to my Insomnia Enterprise project?
-    a: "Confirm that the file uses the Insomnia JSON format and ends with `.json`. Insomnia’s importer expects a supported format. For example: Insomnia JSON, Postman v2, HAR, OpenAPI."
+    a: Confirm that the file uses the Insomnia JSON format and ends with `.json`. Insomnia’s importer expects a supported format. For example, Insomnia JSON, Postman v2, HAR, OpenAPI."
   - q: I've successfully imported my scratch pad file to an Insomnia Enterprise project, but I don’t see items.
     a: Ensure you imported the file into the project you opened, not a different workspace. If needed, re-import into the active project.
   - q: Why can't I see my Insomnia environment variables in Table view?
