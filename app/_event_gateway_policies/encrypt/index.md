@@ -83,7 +83,3 @@ policies:
        - type: values
          id: "static://user-chosen-id"
 ```
-
-## Schema
-
-{% entity_schema %}

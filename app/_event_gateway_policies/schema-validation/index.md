@@ -93,7 +93,3 @@ You can inspect the `kong_knep_kafka_schema_validation_failed_count{topic=topic-
 
 If there are still invalid records, consume them from the topic looking for the `kong/sverr` header to identify a client that violates the schema.
 If there are no invalid records, you can now remove `topic-1` from both expressions.
-
-## Schema
-
-{% entity_schema %}
