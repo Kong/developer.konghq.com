@@ -69,6 +69,13 @@ faqs:
   - q: How do I manage and view billing and usage?
     a: |
       You can view service, Dev Portal, and API call usage from the [Billing and Usage](https://cloud.konghq.com/global/plan-and-usage/).
+
+  - q: What is the difference between an Organization Owner and an Organization Admin?
+    a: |
+      The Organization Owner is the single user tied to the organization itself, while Organization Admins are roles that multiple users can hold.
+      - An Organization Owner is a property of the organization that identifies a single user as the Owner. The Owner is automatically assigned when the organization is created and always has the Organization Admin role. Each organization can have only one Owner.
+      - An Organization Admin is a role that can be assigned to multiple users. Admins can manage users, teams, and roles, but they can't delete the organization. Only the Owner can delete an organization.
+
   - q: How do I change the Owner of my organization?
     a: |
       There's no self-service way to change the Owner of an organization in {{site.konnect_short_name}}. Only Kong Support can complete the ownership transfer.
