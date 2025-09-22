@@ -42,7 +42,7 @@ prereqs:
 ---
 
 ## Export from your scratch pad to JSON file
-
+<!--vale off-->
 When you switch to Insomnia Enterprise, you can export your [scratch pad](/insomnia/storage/#scratch-pad) workspace as a single Insomnia JSON file to capture all requests, collections, environments, variables, and metadata for migration.
 1. In the Insomnia app, open your scratch pad workspace. 
 2. From the Scratch Pad dropdown menu, select "Export".
@@ -54,7 +54,7 @@ When you switch to Insomnia Enterprise, you can export your [scratch pad](/ins
    {:.info}
    > Make sure the file extension is `.json` to ensure that Insomnia recognizes it during import.
 1. Click **Export**. This saves the export file locally.
-
+<!--vale on-->
 
 ## Sign in to Insomnia Enterprise
 1. Launch Insomnia and sign in to your Enterprise organization.
