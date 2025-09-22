@@ -3,17 +3,13 @@
 require_relative '../policies/base'
 
 module Jekyll
-  module MeshPolicyPages
+  module EventGatewayPolicyPages
     class Policy # rubocop:disable Style/Documentation
       include Policies::Base
       include Policies::GeneratorBase
 
       def schema
-        @schema ||= schemas.detect { |s| s.release == latest_release_in_range }
-      end
-
-      def schemas
-        @schemas ||= Drops::MeshPolicies::Schema.all(policy: self)
+        @schema ||= metadata.fetch('schema')
       end
     end
   end

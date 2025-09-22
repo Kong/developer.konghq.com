@@ -19,7 +19,7 @@ api_specs:
 
 beta: true
 
-icon: /assets/icons/graph.svg
+icon: graph.svg
 ---
 
 This policy is used to set or remove record headers.
