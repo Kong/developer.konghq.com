@@ -2,7 +2,6 @@ name: Missing Redirects
 
 on:
   pull_request:
-  push:
     branches: ["**"]
 
 permissions:
