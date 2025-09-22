@@ -85,6 +85,16 @@ function fileToUrl(file) {
     } else {
       return file.replace("app/_landing_pages", "").replace(ext, "/");
     }
+  } else if (file.startsWith("app/_kong_plugins")) {
+    return file.replace("app/_kong_plugins/", "/plugins/").replace(ext, "/");
+  } else if (file.startsWith("app/_mesh_policies")) {
+    return file
+      .replace("app/_mesh_policies/", "/mesh/policies/")
+      .replace(ext, "/");
+  } else if (file.startsWith("app/_event_gateway_policies")) {
+    return file
+      .replace("app/_event_gateway_policies/", "/event-gateway/policies/")
+      .replace(ext, "/");
   }
 
   const pathWithoutExtension = file.replace(ext, "/").replace("app", "");
