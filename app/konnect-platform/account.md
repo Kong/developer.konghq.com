@@ -74,7 +74,7 @@ faqs:
       There's no self-service way to change the Owner of an organization in {{site.konnect_short_name}}. Only Kong Support can complete the ownership transfer.
       
       To change the Owner:
-      1. Ensure that the new Owner is already a member of the Organization Admin pre-defined team.
+      1. Ensure that the new Owner is already a member of the [Organization Admin pre-defined team](/konnect-platform/teams-and-roles/#predefined-teams).
       2. Open a [Kong support ticket](https://support.konghq.com/).
       3. In your support ticket, specify the current organization, the current Owner, and the user that you want to designate as the new Owner.
 ---
