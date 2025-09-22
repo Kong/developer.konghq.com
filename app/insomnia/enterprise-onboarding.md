@@ -18,6 +18,8 @@ related_resources:
     url: /insomnia/enterprise-account-management/
   - text: Enterprise user management
     url: /insomnia/enterprise-user-management/
+  - text: Migrate from scratch pad to Enterprise
+    url: /insomnia/Migrate-from-scratch-pad-to-Enterprise 
 
 next_steps:
   - text: Documents
