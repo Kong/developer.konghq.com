@@ -313,12 +313,12 @@ rows:
 
 ## {{site.base_gateway}} configuration
 
-You can customize the {{site.base_gateway}} configuration for your data plane nodes using environment variables. Some variables are set by default, while others can be set when creating a data plane node.
-<!--
+The {{site.base_gateway}} configuration for your data plane nodes are customized using environment variables. Some variables are set by default, while others can be set when creating a data plane node.
+{% comment %}
 ### Environment variables set by {{site.konnect_short_name}}
 
 The following environment variables are set by default when creating a Dedicated Cloud Gateway data plane node:
-
+<!--vale off -->
 {% kong_config_table %}
 config:
   - name: port_maps
@@ -364,10 +364,10 @@ directives:
     default_value: /etc/nginx/nginx-directive.kong.conf
     description: ""
 {% endkong_config_table %}
-
+<!--vale on -->
 
 ### Customizable environment variables
--->
+{% endcomment %}
 The following table lists the environment variables that you can set while creating a Dedicated Cloud Gateway.
 
 {:.warning}
