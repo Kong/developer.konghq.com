@@ -4,21 +4,21 @@ require_relative '../policies/generator'
 require_relative '../policies/generator_base'
 
 module Jekyll
-  module MeshPolicyPages
+  module EventGatewayPolicyPages
     class Generator # rubocop:disable Style/Documentation
       include Policies::Generator
       include Policies::GeneratorBase
 
       def self.policies_folder
-        '_mesh_policies'
+        '_event_gateway_policies'
       end
 
       def key
-        @key ||= 'mesh_policies'
+        @key ||= 'event_gateway_policies'
       end
 
       def skip?
-        site.config.dig('skip', 'mesh_policy')
+        site.config.dig('skip', 'even_gateway_policy')
       end
     end
   end
