@@ -38,6 +38,8 @@ related_resources:
     url: /custom-plugins/
   - text: Plugins
     url: /gateway/entities/plugins/
+
+automated_tests: false
 ---
 
 ## Install Pongo

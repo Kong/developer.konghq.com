@@ -3034,6 +3034,7 @@ components:
           description: URL to redirect to after completing an OIDC auth flow
           type: string
           format: uri
+          nullable: true
         description:
           description: A brief description of the application
           type: string

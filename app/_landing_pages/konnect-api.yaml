@@ -82,8 +82,8 @@ rows:
             The recommended method of authentication for {{site.konnect_short_name}} is an access token.
             There are two types of access tokens available for {{site.konnect_short_name}}:
             * Personal access tokens associated with user accounts, generated using the [personal access token page](https://cloud.konghq.com/global/account/tokens) in {{site.konnect_short_name}}.
-            * System account access tokens associated with system accounts, generated using the [system accounts page](https://cloud.konghq.com/global/organization/system-accounts/).
-            or the [Identity API](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens)
+            * System account access tokens associated with system accounts, generated using the [system accounts page](https://cloud.konghq.com/global/organization/system-accounts/)
+            or the [Identity API](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens).
 
             The access token must be passed in the `Authorization` header of all requests, for example: 
 

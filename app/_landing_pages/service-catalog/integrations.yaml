@@ -124,6 +124,19 @@ rows:
                 url: "/service-catalog/integrations/slack/"
               - text: Tutorial
                 url: "/how-to/install-and-map-slack-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: AWS API Gateway
+            description: View AWS API Gateway APIs in Service Catalog.
+            icon: /assets/icons/aws.svg
+            ctas:
+              - text: Reference
+                url: "/service-catalog/integrations/aws-api-gateway/"
+              - text: Tutorial ({{site.konnect_short_name}} API)
+                url: "/how-to/discover-aws-gateway-apis-using-konnect-api/"
+              - text: Tutorial ({{site.konnect_short_name}} UI)
+                url: "/how-to/discover-aws-gateway-apis-using-konnect-ui/"
   
   - header:
       type: h2
