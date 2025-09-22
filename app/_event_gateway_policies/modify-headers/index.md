@@ -45,7 +45,3 @@ policies:
         - key: example-header2
           value: example
 ```
-
-## Schema
-
-{% entity_schema %}
