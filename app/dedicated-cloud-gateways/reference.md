@@ -363,9 +363,8 @@ directives:
   - name: nginx_http_include
     default_value: /etc/nginx/nginx-directive.kong.conf
     description: ""
-
-
 {% endkong_config_table %}
+
 
 ### Customizable environment variables
 -->
@@ -373,7 +372,7 @@ The following table lists the environment variables that you can set while creat
 
 {:.warning}
 > These variables should be uppercase and prefixed with `KONG_`. For example, to add `log_level` use the `KONG_LOG_LEVEL` variable. 
-
+<!--vale off -->
 {% kong_config_table %}
 config:
   - name: log_level
@@ -400,7 +399,7 @@ config:
   - name: headers
   - name: trusted_ips
 {% endkong_config_table %}
-
+<!--vale on -->
 ### How do I set environment variables?
 
 In the {{site.konnect_short_name}} UI, you can add environment variables at the **Create a Data Plane Node** step of the Dedicated Cloud Gateway creation. Click **Advanced options** to display the **Environment variables** form and enter the key/value pairs to use.
