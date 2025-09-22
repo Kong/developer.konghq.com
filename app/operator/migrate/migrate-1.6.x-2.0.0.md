@@ -93,7 +93,7 @@ helm upgrade --install kong-operator kong/kong-operator \
 ```
 
 {:.info}
-> **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release. Only set `global.conversionWebhook.certManager.enabled` to true if you are using cert-manager to manage tge lifecycle of your webhook certificates.
+> **Note**: The `--take-ownership` flag is required if CRDs or other resources were previously installed or managed by another tool (such as kubectl or a previous Helm release). This ensures Helm can properly manage and upgrade those resources as part of the new release. Only set `global.conversionWebhook.certManager.enabled` to true if you are using cert-manager to manage the lifecycle of your webhook certificates.
 
 ### Step 4: Verify the installation
 

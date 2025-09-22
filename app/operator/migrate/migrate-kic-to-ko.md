@@ -55,7 +55,7 @@ Before starting the migration, ensure you:
    {:.warning}
    > **Important**: This process involves down time. Plan your migration accordingly.
 
-The migration process requires several manual steps due to breaking changes in certificate management and CRD structure. We recommend a blue / green cutover of your Gateways, which are detailed in the following steps:
+The migration process requires several manual steps due to breaking changes in certificate management and CRD structure. We recommend a blue / green cut-over of your Gateways, which are detailed in the following steps:
 
 ### Step 1: Uninstall existing {{ site.kic_product_name_short }} deployment
 
