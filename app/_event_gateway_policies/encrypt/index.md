@@ -19,7 +19,7 @@ api_specs:
 
 beta: true
 
-icon: /assets/icons/graph.svg
+icon: graph.svg
 
 related_resources:
   - text: Decrypt policy

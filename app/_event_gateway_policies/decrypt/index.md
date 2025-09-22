@@ -23,7 +23,7 @@ related_resources:
   - text: Encrypt policy
     url: /event-gateway/policies/encrypt/
 
-icon: /assets/icons/graph.svg
+icon: graph.svg
 ---
 
 This policy is used to decrypt messages that were previously encrypted using the referenced key. 
