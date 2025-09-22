@@ -82,7 +82,3 @@ policies:
        - type: keys
        - type: values
 ```
-
-## Schema
-
-{% entity_schema %}
