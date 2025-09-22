@@ -1,6 +1,6 @@
 ---
-title: "Upgrade {{ site.operator_product_name }}"
-description: "Deploy a new version of {{ site.operator_product_name }} using Helm"
+title: "Upgrade {{ site.gateway_operator_product_name }}"
+description: "Deploy a new version of {{ site.gateway_operator_product_name }} using Helm"
 content_type: reference
 layout: reference
 products:
@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-{{ site.operator_product_name }} uses [Semantic Versioning](https://semver.org/) and will not make breaking changes between major releases.
+{{ site.gateway_operator_product_name }} uses [Semantic Versioning](https://semver.org/) and will not make breaking changes between major releases.
 
 To upgrade between minor releases, follow the steps shown in the [installation guide](/operator/install/).
 

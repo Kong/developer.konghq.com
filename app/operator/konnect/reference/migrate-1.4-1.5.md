@@ -1,6 +1,6 @@
 ---
-title: Migrate Konnect DataPlanes from {{ site.operator_product_name }} 1.4 to 1.5
-description: "How do I migrate from {{ site.operator_product_name }} 1.4 to 1.5, taking in to account breaking changes?"
+title: Migrate Konnect DataPlanes from {{ site.gateway_operator_product_name }} 1.4 to 1.5
+description: "How do I migrate from {{ site.gateway_operator_product_name }} 1.4 to 1.5, taking in to account breaking changes?"
 content_type: reference
 layout: reference
 products:
