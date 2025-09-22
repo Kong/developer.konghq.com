@@ -1,0 +1,18 @@
+title: Decrypt a specific key
+
+description: Decrypt a specific key
+
+weight: 900
+
+config:
+  policies:
+    - name: decrypt-key
+      type: decrypt
+      spec:
+        failure:
+          mode: error
+        key_sources:
+        - type: ref_name
+          ref_name: ref_name
+        decrypt:
+        - type: key
