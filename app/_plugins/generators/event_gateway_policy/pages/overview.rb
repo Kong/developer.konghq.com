@@ -3,7 +3,7 @@
 require_relative '../../policies/pages/overview'
 
 module Jekyll
-  module MeshPolicyPages
+  module EventGatewayPolicyPages
     module Pages
       class Overview < Base
         include Policies::Pages::Overview
