@@ -14,7 +14,6 @@ tags:
   - terraform
   - automation
   - import
-  - mesh-manager
 permalink: /mesh/import-konnect-deployment-to-terraform/
 related_resources:
   - text: "Deploy {{site.mesh_product_name}} using Terraform and {{site.konnect_short_name}}"

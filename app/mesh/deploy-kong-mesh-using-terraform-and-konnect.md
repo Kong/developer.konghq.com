@@ -16,7 +16,6 @@ tags:
   - universal-mode
   - kubernetes
   - zones
-  - mesh-manager
 permalink: /mesh/deploy-with-terraform-konnect/
 related_resources:
   - text: "Terraform provider (GA)"
