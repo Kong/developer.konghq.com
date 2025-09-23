@@ -313,65 +313,12 @@ rows:
 
 ## {{site.base_gateway}} configuration
 
-The {{site.base_gateway}} configuration for your data plane nodes are customized using environment variables. Some variables are set by default, while others can be set when creating a data plane node.
-{% comment %}
-### Environment variables set by {{site.konnect_short_name}}
+The {{site.base_gateway}} configuration for your data plane nodes can be customized using environment variables.
 
-The following environment variables are set by default when creating a Dedicated Cloud Gateway data plane node:
-<!--vale off -->
-{% kong_config_table %}
-config:
-  - name: port_maps
-    default_value: 80:443,443:8443,4200:4200
-  - name: admin_listen
-    default_value: 127.0.0.1:8444 http2 reuseport backlog=16384
-  - name: status_listen
-    default_value: 0.0.0.0:8100
-  - name: admin_access_log
-    default_value: /dev/stdout
-  - name: admin_error_log
-    default_value: /dev/stderr
-  - name: proxy_error_log
-    default_value: /dev/stderr
-  - name: role
-    default_value: data_plane
-  - name: database
-    default_value: off
-  - name: cluster_mtls
-    default_value: pki
-  - name: lua_ssl_trusted_certificate
-    default_value: system
-  - name: konnect_mode
-    default_value: one
-  - name: vitals
-    default_value: off
-  - name: proxy_access_log
-    default_value: off
-  - name: request_debug
-    default_value: on
-  - name: "node_id"
-  - name: "proxy_listen"
-    default_value: 0.0.0.0:8000 reuseport proxy_protocol backlog=16384, 0.0.0.0:8443 http2 ssl reuseport proxy_protocol backlog=16384, 0.0.0.0:4200 reuseport proxy_protocol backlog=16384
-  - name: "cluster_control_plane"
-  - name: "cluster_server_name"
-  - name: "cluster_telemetry_endpoint"
-  - name: "cluster_telemetry_server_name"
-directives:
-  - name: nginx_proxy_proxy_socket_keepalive
-    default_value: on
-    description: ""
-  - name: nginx_http_include
-    default_value: /etc/nginx/nginx-directive.kong.conf
-    description: ""
-{% endkong_config_table %}
-<!--vale on -->
-
-### Customizable environment variables
-{% endcomment %}
 The following table lists the environment variables that you can set while creating a Dedicated Cloud Gateway.
 
 {:.warning}
-> These variables should be uppercase and prefixed with `KONG_`. For example, to add `log_level` use the `KONG_LOG_LEVEL` variable. 
+> The variable names should be in uppercase and prefixed with `KONG_`. For example, to add `log_level` use the `KONG_LOG_LEVEL` variable. 
 <!--vale off -->
 {% kong_config_table %}
 config:
@@ -400,6 +347,7 @@ config:
   - name: trusted_ips
 {% endkong_config_table %}
 <!--vale on -->
+
 ### How do I set environment variables?
 
 In the {{site.konnect_short_name}} UI, you can add environment variables at the **Create a Data Plane Node** step of the Dedicated Cloud Gateway creation. Click **Advanced options** to display the **Environment variables** form and enter the key/value pairs to use.
