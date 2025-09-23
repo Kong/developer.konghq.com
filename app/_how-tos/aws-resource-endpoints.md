@@ -24,9 +24,18 @@ prereqs:
     - title: "Dedicated Cloud Gateway"
       include_content: prereqs/dedicated-cloud-gateways
       icon_url: /assets/icons/kogo-white.svg
-    - title: "AWS IAM permissions"
+    - title: "AWS"
       content: |
         You need an AWS IAM user account with permissions to create AWS Resource Configuration Groups, Resource Gateways, and to use AWS Resource Access Manager (RAM).
+
+        You also need:
+        * configured VPC
+        * subnet
+        * [Resource gateway](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-gateway.html)
+        * [Resource configuration group](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-configuration.html)
+
+        Copy and save the resource configuration ID for each resource configuration. {{site.konnect_short_name}} will use these to create a mapping of upstream domain names and resource configuration IDs.  
+
       icon_url: /assets/icons/aws.svg
 
 ---
@@ -35,28 +44,26 @@ prereqs:
 
 AWS resource endpoints with dedicated cloud gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services—without requiring VPC peering or Transit Gateway. 
 
-AWS VPC endpoints, part of the AWS VPC Lattice offering, allow services in one AWS account to be securely shared with and accessed from another account via a single VPC dndpoint. This eliminates the need for:
+AWS VPC endpoints, part of the AWS VPC Lattice offering, allow services in one AWS account to be securely shared with and accessed from another account via a single VPC endpoint. This eliminates the need for:
 * Multiple PrivateLinks
 * Individual TLS workarounds for each service
 * Complex two-way handshakes
 
 To use AWS resource endpoints with dedicated cloud gateways, you must first create a resource configuration group and resource gateway in AWS.
 
-1. In the AWS console, navigate to **AWS VPC Lattice**.
-Log in to your AWS Console.
-Navigate to AWS VPC Lattice.
-Click Create Resource Configuration Group.
-Specify a name (e.g., Kong-DCGW-Resources) and add each upstream service as a child resource.
-Add Resource Configuration (resources) to this group. 	
-
-## Share Resource Configuration Group with Kong
-Navigate to AWS Resource Access Manager (RAM).
-Click Share Resource.
-Select the Resource Configuration Group created.
-Share this configuration with Kong’s DCGW AWS Account ID.
-
-## Information Collection and Sharing
-Document each upstream service domain name and its Resource Configuration ID. Until DNS is automated by AWS, Kong will need to create a mapping of upstream domain names and Resource Configuration IDs.  
+1. In the AWS console, navigate to [**RAM**](https://console.aws.amazon.com/ram/home).
+1. Click **Create resource share**.
+1. In the **Name** field, enter `Kong-DCGW-Resource-Share`.
+1. From the **Resource type** dropdown menu, select "VPC Lattice Resource Configurations".
+1. Select the ARN of your resource configuration.
+1. In the Selected resources settings, select your resource IDs.
+1. Click **Next**.
+1. Click **Next**.
+1. In the Principals settings, select **Allow sharing with anyone**.
+1. From the **Select principal type** dropdown menu, select "AWS Account".
+1. In the **AWS Account** field, enter `?`.
+1. Click **Next**.
+1. Click **Create resource share**.  
 
 ## Submit Resource Endpoints form
 Login to your Konnect account, navigate to Gateway Manager and your Dedicated Cloud Gateway
