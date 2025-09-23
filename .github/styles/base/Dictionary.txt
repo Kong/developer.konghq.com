@@ -229,6 +229,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+example_service
 exfiltrate
 failover
 fapi
