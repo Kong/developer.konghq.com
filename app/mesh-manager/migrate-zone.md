@@ -4,15 +4,14 @@ content_type: reference
 description: 'Move your existing {{site.mesh_product_name}} zone Control Planes from a self-managed global Control Plane to a managed global Control Plane in {{site.konnect_short_name}}.'
 layout: reference
 breadcrumbs:
-  - /mesh-manager/
+  - /mesh/
 products:
   - mesh
 tags:
-  - mesh-manager
   - service-mesh
 ---
 
-If you already have zone Control Planes in {{site.mesh_product_name}}, you can migrate them to {{site.konnect_short_name}} using [Mesh Manager](/mesh-manager/).
+If you already have zone Control Planes in {{site.mesh_product_name}}, you can migrate them to {{site.konnect_short_name}}.
 
 Here are a few benefits of managing your service mesh in {{site.konnect_short_name}}:
 

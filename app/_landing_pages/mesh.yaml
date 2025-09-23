@@ -36,7 +36,6 @@ rows:
             url: /assets/images/mesh/gw_mesh.png
             alt_text: "Kong Mesh Architecture Diagram"
 
-  
   - header:
       type: h2
       text: "Learn"
@@ -95,7 +94,32 @@ rows:
               cta:
                 text: See the quickstart 
                 url: /mesh/deploy-mesh-self-managed
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} allows you to create, manage, and view your {{site.mesh_product_name}} service meshes
+                    using the {{site.konnect_short_name}} platform.
 
+                    **Key benefits include:**
+                    - **Kong-managed Global control plane**: Kong handles the management of your global control plane.
+                    - **Centralized view**: See all your Services, control planes, and data plane proxies in one place.
+                    - **Multi-zone support**: Deploy across Kubernetes, Universal environments, and multiple clouds. 
+          - type: button
+            config:
+              text: "Create a service mesh in {{site.konnect_short_name}} &rarr; "
+              url: https://cloud.konghq.com/mesh-manager/create-control-plane
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/mesh-manager/konnect-mesh-control-plane-dashboard.png
+              alt_text: "Service Mesh Dashboard"
+      
   - header:
       type: h2
       text: "Next steps"

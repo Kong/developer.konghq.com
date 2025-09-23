@@ -4,17 +4,16 @@ content_type: reference
 description: 'Migrate a single-zone {{site.mesh_product_name}} Control Plane to {{site.konnect_short_name}} and enable multi-zone service mesh federation.'
 layout: reference
 breadcrumbs:
-  - /mesh-manager/
+  - /mesh/
 products:
   - mesh
 works_on:
   - konnect
 tags:
-  - mesh-manager
   - service-mesh
 ---
 
-If you already have a zone Control Plane that's not connected to any global Control Plane, you can federate it to {{site.konnect_short_name}} using [Mesh Manager](/mesh-manager/).
+If you already have a zone Control Plane that's not connected to any global Control Plane, you can federate it to {{site.konnect_short_name}}.
 
 By federating a zone Control Plane, you move {{site.mesh_product_name}} from a single-zone setup to a [multi-zone](/mesh/multi-zone-authentication/) setup. This enables automatic service failover if a specific zone becomes unavailable.
 
@@ -28,7 +27,11 @@ This guide explains how to federate a zone Control Plane to {{site.konnect_short
 
 ## Transfer resources from the zone Control Plane to {{site.konnect_short_name}}
 
-1. In [**Mesh Manager**](https://cloud.konghq.com/mesh-manager), click **Global Control Plane Actions**, then **Configure kumactl**.
+1. In the {{site.konnect_short_name}} menu, navigate to [**Service Mesh**](https://cloud.konghq.com/mesh-manager).
+
+1. Click **Global Control Plane Actions**.
+
+1. Select **Configure kumactl**.
 
 1. Configure `kumactl` to access the zone Control Plane.
 
@@ -83,7 +86,7 @@ This guide explains how to federate a zone Control Plane to {{site.konnect_short
 
 ## Verify federation
 
-Navigate to [**Mesh Manager**](https://cloud.konghq.com/mesh-manager) and confirm:
+Navigate to [**Service Mesh**](https://cloud.konghq.com/mesh-manager) and confirm:
 
 * The new zone appears as **Online**
 * Existing policies from the zone Control Plane are visible

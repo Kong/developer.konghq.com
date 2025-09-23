@@ -4,13 +4,12 @@ content_type: reference
 description: 'Set up a global Control Plane in {{site.konnect_short_name}}, add a zone, and deploy the Kubernetes demo app to test your {{site.mesh_product_name}} mesh.'
 layout: reference
 breadcrumbs:
-  - /mesh-manager/
+  - /mesh/
 products:
   - mesh
 works_on:
   - konnect
 tags:
-  - mesh-manager
   - service-mesh
 ---
 

@@ -141,7 +141,7 @@ rows:
             config:
               title: Service Mesh
               description: |
-                Mesh Manager allows you to create, manage, and view your Kong Mesh service meshes using the {{site.konnect_short_name}} platform.
+                Create, manage, and view your {{site.mesh_product_name}} service meshes using the {{site.konnect_short_name}} platform.
               icon: /assets/icons/mesh.svg
               ctas:
               - text: Learn
@@ -149,9 +149,6 @@ rows:
                 align: end
               - text: Get started
                 url: /mesh-manager/service-mesh/
-                align: end
-              - text: Manage
-                url: /mesh-manager/
                 align: end
     
     - blocks:
