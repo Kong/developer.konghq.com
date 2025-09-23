@@ -1,1 +1,9 @@
-{}
+{
+  "3.12.0.0": [
+    {
+      "message": "The plugin now forwards client headers when calling the tool.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "3.12.0.0": [
     {
-      "message": "Added Solace Log plugin.",
+      "message": "Added the `solace-log` plugin to support logging to Solace PubSub+ event broker.",
       "type": "feature",
       "scope": "Plugin"
     }

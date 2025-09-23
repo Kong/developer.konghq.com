@@ -1,1 +1,14 @@
-{}
+{
+  "3.12.0.0": [
+    {
+      "message": "Fix an issue where the ai-llm-as-judge plugin didn't work with non-OpenAI provider configuration.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Introduced the AI LLM as Judge plugin, enabling you to evaluate an LLM and use the score as a balancer.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}
