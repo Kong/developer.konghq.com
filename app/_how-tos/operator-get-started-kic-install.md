@@ -40,11 +40,12 @@ tldr:
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ gwapi_version }}/standard-install.yaml
 ```
 
+{% include k8s/kong-namespace.md %}
+
 ## Install {{ site.gateway_operator_product_name }}
 
 {% include prereqs/products/operator.md raw=true v_maj=1 %}
 
-{% include k8s/cert-manager.md %}
 
 ## Wait for {{ site.gateway_operator_product_name }} to be ready
 

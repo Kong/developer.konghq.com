@@ -71,6 +71,9 @@ spec:
 ```
 
 {:data-deployment-topology='on-prem'}
+
+{% include k8s/kong-namespace.md %}
+
 ## GatewayConfiguration
 
 ```yaml
