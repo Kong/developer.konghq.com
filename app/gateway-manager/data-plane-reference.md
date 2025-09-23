@@ -54,7 +54,7 @@ tags:
   - gateway-manager
 
 breadcrumbs:
-  - /gateway-manager/
+  - /konnect/
 ---
 
 

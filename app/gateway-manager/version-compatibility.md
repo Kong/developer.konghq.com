@@ -3,7 +3,7 @@ title: Version compatibility in Control Planes
 content_type: reference
 layout: reference
 breadcrumbs: 
-  - /gateway-manager/
+  - /konnect/
 products:
   - gateway
 works_on:
