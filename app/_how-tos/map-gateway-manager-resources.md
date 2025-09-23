@@ -1,7 +1,7 @@
 ---
-title: Map Gateway Manager Services in Service Catalog
+title: Map API Gateway Services in Service Catalog
 content_type: how_to
-description: Learn how to map Gateway Services from {{site.konnect_short_name}} Gateway Manager in Service Catalog to visualize services across multiple Control Planes.
+description: Learn how to map API Gateway Services from {{site.konnect_short_name}} to a service in Service Catalog to visualize services across multiple control planes.
 products:
   - gateway
   - service-catalog
@@ -13,13 +13,13 @@ entities:
   - service
 tldr:
   q: How do I map Gateway Services in Service Catalog?
-  a: Create a Service Catalog service and associate it with your Gateway Manager resources to visualize Services across multiple Control Planes.
+  a: Create a Service Catalog service and associate it with your API Gateway resources to visualize Services across multiple control planes.
 prereqs:
   entities:
     services:
         - example-service
 related_resources:
-  - text: Gateway Manager integration
+  - text: API Gateway integration
     url: /service-catalog/integrations/gateway-manager/
   - text: Service Catalog
     url: /service-catalog/
@@ -29,9 +29,9 @@ related_resources:
 
 ## Create a service in Service Catalog
 
-In this tutorial, you'll map Gateway Services from Gateway Manager to a service in Service Catalog. Because the Gateway Manager integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
+In this tutorial, you'll map API Gateway Services from {{site.konnect_short_name}} to a service in Service Catalog. Because the API Gateway integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
 
-Create a service that you'll map to your Gateway Manager resources:
+Create a service that you'll map to your API Gateway resources:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -51,9 +51,9 @@ Export the Service Catalog service ID:
 export SERVICE_ID='YOUR-SERVICE-ID'
 ```
 
-## List Gateway Manager resources
+## List API Gateway resources
 
-Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in from Gateway Manager:
+Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in from API Gateway:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -72,7 +72,7 @@ export GATEWAY_MANAGER_RESOURCE_ID='YOUR-RESOURCE-ID'
 
 ## Map resources to a Service Catalog service
 
-Now, you can map the Gateway Manager resource to the service:
+Now, you can map the API Gateway resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -89,7 +89,7 @@ body:
 
 ## Validate the mapping
 
-To confirm that the Gateway Manager resource is now mapped to the intended service, list the service’s mapped resources:
+To confirm that the API Gateway resource is now mapped to the intended service, list the service’s mapped resources:
 
 <!--vale off-->
 {% konnect_api_request %}
