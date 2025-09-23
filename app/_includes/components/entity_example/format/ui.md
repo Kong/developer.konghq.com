@@ -51,7 +51,7 @@ The following creates a new Gateway Service called **{{ include.presenter.data['
 1. Select **Plugins**.
 1. Click **New Plugin** and choose a plugin.
 1. Choose a scope for the plugin:
-    * **Global**, which applies the plugin to all Gateway Services, Routes, Consumers, and Consumer Groups in the Workspace (Kong Manager) or control plane (Gateway Manager).
+    * **Global**, which applies the plugin to all Gateway Services, Routes, Consumers, and Consumer Groups in the Workspace (Kong Manager) or control plane ({{site.konnect_short_name}}).
     * **Scoped**, which lets you choose a specific Gateway Service, Route, Consumer, or Consumer Group to apply the plugin to.
     The types of entities you have available here depend on the plugin you picked.
 

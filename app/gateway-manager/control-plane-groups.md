@@ -72,8 +72,6 @@ faqs:
     a: Even if configurations conflict and can’t be merged, the Control Plane Group is still created. Conflict detection only occurs after a Data Plane node is connected.
 
 related_resources:
-  - text: "Gateway Manager"
-    url: /gateway-manager/
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
 #  - text: "{{site.base_gateway}} debugging"

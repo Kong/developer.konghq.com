@@ -28,7 +28,7 @@ tags:
  
 tldr:
   q: How can I configure Consumers and Consumer Groups with KGO?
-  a: Use the `KongConsumer` and `KongConsumerGroup` CRDs to configure consumers and groups in Konnect Gateway Manager through your Kubernetes cluster.
+  a: Use the `KongConsumer` and `KongConsumerGroup` CRDs to configure Consumers and Groups in {{site.konnect_short_name}} through your Kubernetes cluster.
 
 
 prereqs:
@@ -41,7 +41,7 @@ prereqs:
 
 ## Create a `KongConsumer`
 
-Define a `KongConsumer` resource to provision a consumer in [{{site.konnect_short_name}} Gateway Manager](/gateway-manager/).
+Define a `KongConsumer` resource to provision a Consumer in {{site.konnect_short_name}}.
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -62,7 +62,7 @@ spec:
 
 ## Create a `KongConsumerGroup`
 
-Creating the KongConsumerGroup object in your Kubernetes cluster will provision a {{site.konnect_short_name}} Consumer Group in your Gateway Manager.
+Creating the KongConsumerGroup object in your Kubernetes cluster will provision a {{site.konnect_short_name}} Consumer Group in your control plane.
 
 <!-- vale off -->
 {% konnect_crd %}

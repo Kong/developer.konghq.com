@@ -155,11 +155,11 @@ rows:
             
             - q: How is {{site.event_gateway_short}} deployed?
               a: |
-                The {{site.event_gateway_short}} Data Planes are self-managed and deployed by you, the user. 
-                The {{site.event_gateway_short}} Control Plane is part of the {{site.konnect_product_name}} platform.
+                The {{site.event_gateway_short}} data planes are self-managed and deployed by you, the user. 
+                The {{site.event_gateway_short}} control plane is part of the {{site.konnect_product_name}} platform.
             
             - q: Does {{site.event_gateway_short}} run on-prem?
-              a: No, {{site.event_gateway_short}} is only available through Gateway Manager on the {{site.konnect_product_name}} platform.
+              a: No, {{site.event_gateway_short}} is only available on the {{site.konnect_product_name}} platform.
             
             - q: How can I get access to the {{site.event_gateway}}?
               a: |

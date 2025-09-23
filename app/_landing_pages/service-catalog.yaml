@@ -24,7 +24,7 @@ rows:
                 - type: text
                   text: |
                     Service Catalog provides a centralized catalog of all services running in your organization. 
-                    By integrating with internal applications (like Gateway Manager and Mesh Manager) and external tools (like GitHub and PagerDuty), 
+                    By integrating with internal applications (like API Gateway and Service Mesh) and external tools (like GitHub and PagerDuty), 
                     it offers a 360-degree overview of your services, including:
                 - type: unordered_list
                   items:

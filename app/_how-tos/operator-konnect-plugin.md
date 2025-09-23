@@ -1,6 +1,6 @@
 ---
 title: Enable a plugin on a Route
-description: "Enable a plugin on a Route in {{site.konnect_short_name}} using the KongPlugin and KongPluginBinding CRDs and configure it for use with your Control Plane."
+description: "Enable a plugin on a Route in {{site.konnect_short_name}} using the KongPlugin and KongPluginBinding CRDs and configure it for use with your control plane."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/plugin/
@@ -46,7 +46,7 @@ prereqs:
  
 In this tutorial, we'll bind a plugin to {{site.base_gateway}} entities, like a Route, using the `KongPluginBinding` CRD. 
 
-First, create a Gateway Service in [{{site.konnect_short_name}} Gateway Manager](/gateway-manager/) using the `KongService` CRD:
+First, create a Gateway Service in {{site.konnect_short_name}} using the `KongService` CRD:
 
 <!-- vale off -->
 {% konnect_crd %}
