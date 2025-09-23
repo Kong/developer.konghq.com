@@ -259,7 +259,6 @@ sections:
           - kong-manager
   - title: API Gateway in {{site.konnect_short_name}}
     items:
-      - path: /gateway-manager/
       - path: /gateway-manager/**/*
       - text: Troubleshoot data plane nodes
         description: Learn how to resolve some common issues with data plane nodes

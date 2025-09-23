@@ -3,7 +3,7 @@ title: '{{site.konnect_short_name}} labels'
 content_type: reference
 layout: reference
 breadcrumbs:
-  - /gateway-manager/
+  - /konnect/
 products:
     - gateway
 

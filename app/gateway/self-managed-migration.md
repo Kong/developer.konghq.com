@@ -219,7 +219,7 @@ create new Data Plane instances connected to your Control Plane, validate their 
 and then decommission the self-managed Data Plane instances.
 
 See the [Data Plane hosting options](/gateway/topology-hosting-options/) for more information. 
-The easiestway to deploy new Data Planes is using the {{site.konnect_short_name}} UI, which provides integrated
+The easiest way to deploy new Data Planes is using the {{site.konnect_short_name}} UI, which provides integrated
 launchers for popular operating systems and compute platforms.
 
 ## Next steps

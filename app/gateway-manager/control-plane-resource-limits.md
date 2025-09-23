@@ -3,7 +3,7 @@ title: "Default resource limits for control planes"
 content_type: reference
 layout: reference
 breadcrumbs: 
-  - /gateway-manager/
+  - /konnect/
 products:
   - gateway
 works_on:
