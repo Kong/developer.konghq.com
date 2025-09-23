@@ -8,3 +8,6 @@
 * US (United States)
 * IN (India)
 * SG (Singapore) (beta)
+  
+  {:.info}
+  > **Note:** A {{site.konnect_short_name}} org admin must opt-in to the Singapore region by selecting the geo in the region picker and then opting in.
