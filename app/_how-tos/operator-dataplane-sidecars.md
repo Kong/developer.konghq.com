@@ -20,14 +20,14 @@ works_on:
   - on-prem
  
 tldr:
-  q: How do I deploy a sidecar container for {{ site.base_gateway }} with {{ site.operator_product_name }}?
+  q: How do I deploy a sidecar container for {{ site.base_gateway }} with {{ site.gateway_operator_product_name }}?
   a: Use PodTemplateSpec to customize the spec and specify an additional container in `spec.containers`.
 
 ---
 
 ## Deploy Sidecar
 
-{{ site.operator_product_name }} uses [PodTemplateSpec](/operator/dataplanes/reference/podtemplatespec/) to customize deployments.
+{{ site.gateway_operator_product_name }} uses [PodTemplateSpec](/operator/dataplanes/reference/podtemplatespec/) to customize deployments.
 
 Here is an example that deploys a [Vector](https://vector.dev/) sidecar alongside the proxy containers.
 

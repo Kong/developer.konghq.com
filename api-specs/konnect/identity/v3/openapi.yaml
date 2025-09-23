@@ -1336,14 +1336,6 @@ components:
         type: integer
         example: 10
   schemas:
-    IdentityProviderEnabled:
-      description: |
-        Indicates whether the identity provider is enabled.
-        Only one identity provider can be active at a time, such as SAML or OIDC.
-      type: boolean
-      example: true
-      default: false
-      title: Identity Provider Enabled Property
     IdentityProviderType:
       description: Specifies the type of identity provider.
       type: string
@@ -1429,7 +1421,7 @@ components:
         login_path:
           $ref: '#/components/schemas/IdentityProviderLoginPath'
         enabled:
-          $ref: '#/components/schemas/schemas-IdentityProviderEnabled'
+          $ref: '#/components/schemas/IdentityProviderEnabled'
         config:
           type: object
           oneOf:
@@ -1441,7 +1433,7 @@ components:
       type: object
       properties:
         enabled:
-          $ref: '#/components/schemas/schemas-IdentityProviderEnabled'
+          $ref: '#/components/schemas/IdentityProviderEnabled'
         login_path:
           $ref: '#/components/schemas/IdentityProviderLoginPath'
         config:
@@ -2190,6 +2182,14 @@ components:
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
       readOnly: true
+    IdentityProviderEnabled:
+      description: |
+        Indicates whether the identity provider is enabled.
+        Only one identity provider can be active at a time, such as SAML or OIDC.
+      type: boolean
+      example: true
+      default: false
+      title: Identity Provider Enabled Property
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
@@ -2217,14 +2217,6 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
-    schemas-IdentityProviderEnabled:
-      description: |
-        Indicates whether the identity provider is enabled. 
-        Only one identity provider can be active at a time, such as SAML or OIDC.
-      type: boolean
-      example: true
-      default: false
-      title: Identity Provider Enabled Property
     StringFieldContainsFilter:
       description: Filters on the given string field value by fuzzy match.
       type: object

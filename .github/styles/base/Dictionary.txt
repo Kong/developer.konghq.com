@@ -122,6 +122,8 @@ Collectd
 Collectd
 config
 config_hash
+configMap
+configMaps
 configs
 configurability
 Conjur
