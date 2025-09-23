@@ -47,10 +47,12 @@ cleanup:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+  - text: What can be stored as a secret?
+    url: /gateway/entities/vault/#what-can-be-stored-as-a-secret    
 
 related_resources:
   - text: Secrets management
-    url: /gateway/secrets-management/
+    url: /gateway/secrets-management/ 
 
 tags:
   - secrets-management
@@ -85,3 +87,5 @@ command: kubectl exec -n kong -it deployment/kong-gateway -c proxy --
 {% endvalidation %}
 
 If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://aws-vault/my-aws-secret/token}` to reference the secret in any referenceable field.
+
+For more information about what secret types we support, go to [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 

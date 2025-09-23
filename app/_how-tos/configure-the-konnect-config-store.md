@@ -56,6 +56,8 @@ min_version:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+  - text: What can be stored as a secret?
+    url: /gateway/entities/vault/#what-can-be-stored-as-a-secret  
 ---
 
 ## Configure a {{site.konnect_short_name}} Config Store
@@ -159,4 +161,4 @@ method: GET
 
 If your secret was successfully stored in {{site.konnect_short_name}}, the endpoint should return a `201` status code and your `secret-key` key in the output.
 
-You can now reference your {{site.konnect_short_name}} secret in configurations as `{vault://mysecretvault/secret-key}`.
+You can now reference your {{site.konnect_short_name}} secret in configurations as `{vault://mysecretvault/secret-key}`. For more information about secret types, go to [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 

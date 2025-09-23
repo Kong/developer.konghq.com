@@ -80,6 +80,8 @@ faqs:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+  - text: What can be stored as a secret?
+    url: /gateway/entities/vault/#what-can-be-stored-as-a-secret   
 
 automated_tests: false
 ---
@@ -125,3 +127,5 @@ value: 'your-secret'
 This assumes your secret was stored in `BotApp/secretVar` in Conjur.
 
 If the Vault was configured correctly, this command should return the value of the secret. You can use `{vault://my-conjur/BotApp%2FsecretVar}` to reference the secret in any referenceable field.
+
+For more information about what secret types we support, go to [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 
