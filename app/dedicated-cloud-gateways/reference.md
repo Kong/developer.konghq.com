@@ -317,10 +317,8 @@ The {{site.base_gateway}} configuration for your data plane nodes can be customi
 
 The following table lists the environment variables that you can set while creating a Dedicated Cloud Gateway.
 
-{:.warning}
-> The variable names should be in uppercase and prefixed with `KONG_`. For example, to add `log_level` use the `KONG_LOG_LEVEL` variable. 
 <!--vale off -->
-{% kong_config_table %}
+{% kong_config_table env %}
 config:
   - name: log_level
   - name: request_debug_token
