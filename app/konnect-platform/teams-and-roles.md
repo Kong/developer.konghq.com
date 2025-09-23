@@ -89,7 +89,7 @@ rows:
   - team: Analytics Viewer
     description: Users can view the [Analytics](/advanced-analytics/) summary and report data.
   - team: Organization Admin
-    description: Users can fully manage all entities and configuration in the organization.
+    description: Users can fully manage all entities and configuration in the organization. In addition to users granted the Organization Admin role, each organization also has one Owner, who always has this role and is the only user who can delete the organization.
   - team: Organization Admin (Read Only)
     description: Users can view all entities and configuration in the organization.
   - team: Portal Admin

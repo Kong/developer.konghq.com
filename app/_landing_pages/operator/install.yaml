@@ -2,7 +2,7 @@ metadata:
   title: Install Kong Gateway Operator
   content_type: landing_page
   description: |
-    Install {{ site.operator_product_name }} using Helm
+    Install {{ site.gateway_operator_product_name }} using Helm
   products:
     - operator
   breadcrumbs:
@@ -11,25 +11,40 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Install {{site.operator_product_name}} (KGO)"
+      text: "Install {{site.gateway_operator_product_name}} (KGO)"
 
   - header:
       type: h2
-      text: How do I install {{site.operator_product_name}}?
+      text: How do I install {{site.gateway_operator_product_name}}?
     columns:
       - blocks:
           - type: text
             config: |
               ```bash
-              helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
-                --set image.tag={{ site.data.operator_latest.release }} \
-                --set kubernetes-configuration-crds.enabled=true \
+              helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace \
                 --set env.ENABLE_CONTROLLER_KONNECT=true
               ```
 
+          - type: text
+            config: |
+              Optional: manage webhook certificates with cert-manager
+
+              If you want cert-manager to issue and rotate the admission and conversion webhook certificates, [install cert-manager](https://cert-manager.io/docs/installation/) to your cluster and enable cert-manager integration when installing the chart:
+
+              ```bash
+              helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace \
+                --set env.ENABLE_CONTROLLER_KONNECT=true \
+                --set global.webhooks.options.certManager.enabled=true
+              ```
+
+              If you do not enable this, the chart will generate and inject self-signed certificates automatically. This is fine for development; for production we recommend enabling cert-manager.
+
+          # TODO: Amend this guide with KGO 1.x installation instructions when version
+          # picker is available.
+
           - type: faqs
             config:
-              - q: Can {{ site.operator_product_name }} be installed with Kustomize or any other tools?
+              - q: Can {{ site.gateway_operator_product_name }} be installed with Kustomize or any other tools?
                 a: Helm is the only officially supported installation method.
               - q: How to I customize which controllers I want to run?
                 a: |

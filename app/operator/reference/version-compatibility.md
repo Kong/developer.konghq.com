@@ -1,14 +1,16 @@
 ---
 title: "Version compatibility"
-description: "Understand which versions of {{ site.kic_product_name }}, Kubernetes and the Gateway API {{ site.operator_product_name }} works with"
+description: "Understand which versions of Kubernetes and the Gateway API {{ site.operator_product_name }} works with"
 content_type: reference
 layout: reference
-products:
-  - operator
+
 breadcrumbs:
   - /operator/
   - index: operator
     section: Reference
+
+products:
+  - operator
 
 ---
 
@@ -17,6 +19,10 @@ The following table presents the general compatibility of {{site.operator_produc
 ## Kubernetes
 
 ## {{ site.kic_product_name }}
+
+{:.info}
+> **Note:**
+> {{ site.operator_product_name }} 2.0.0+ includes {{ site.kic_product_name }}. The table below is only relevant for {{ site.gateway_operator_product_name }} versions below 2.0.0.
 
 {% version_compatibility_table %}
 product: "{{ site.kic_product_name }}"
@@ -55,15 +61,10 @@ versions:
   - 1.30
   - 1.31
   - 1.32
+  - 1.33
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
-  1.0.x: [1.25, 1.26, 1.27, 1.28, 1.29, 1.30, 1.31, 1.32]
-  1.1.x: [1.25, 1.26, 1.27, 1.28, 1.29, 1.30, 1.31, 1.32]
-  1.2.x: [1.25, 1.26, 1.27, 1.28, 1.29, 1.30, 1.31, 1.32]
-  1.3.x: [1.25, 1.26, 1.27, 1.28, 1.29, 1.30, 1.31, 1.32]
-  1.4.x: [1.28, 1.29, 1.30, 1.31, 1.32]
-  1.5.x: [1.28, 1.29, 1.30, 1.31, 1.32]
-  1.6.x: [1.28, 1.29, 1.30, 1.31, 1.32]
+  2.0.x: [1.28, 1.29, 1.30, 1.31, 1.32, 1.33]
 {% endversion_compatibility_table %}
 
 ### Gateway API
@@ -76,20 +77,13 @@ of Gateway API features might be limited to those.
 {% version_compatibility_table %}
 product: "Gateway API"
 versions:
-  - 0.8.1
   - 1.0.0
   - 1.1.0
   - 1.2.0
   - 1.3.0
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
-  1.0.x: [0.8.1, 1.0.0, 1.1.0]
-  1.1.x: [0.8.1, 1.0.0, 1.1.0]
-  1.2.x: [0.8.1, 1.0.0, 1.1.0]
-  1.3.x: [0.8.1, 1.0.0, 1.1.0]
-  1.4.x: [0.8.1, 1.0.0, 1.1.0, 1.2.0]
-  1.5.x: [0.8.1, 1.0.0, 1.1.0, 1.2.0]
-  1.6.x: [0.8.1, 1.0.0, 1.1.0, 1.2.0, 1.3.0]
+  2.0.x: [1.0.0, 1.1.0, 1.2.0, 1.3.0]
 {% endversion_compatibility_table %}
 
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api

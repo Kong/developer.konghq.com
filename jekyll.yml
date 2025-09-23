@@ -113,7 +113,9 @@ mesh_product_name: Kong Mesh
 kic_product_name: Kong Ingress Controller
 kic_product_name_short: KIC
 konnect_saas: Kong Konnect
-operator_product_name: Kong Gateway Operator
+gateway_operator_product_name: Kong Gateway Operator
+operator_product_name: Kong Operator
+operator_product_name_short: KO
 event_gateway: Kong Native Event Proxy
 event_gateway_short: KNEP
 
@@ -164,4 +166,8 @@ mesh:
 # Version vars
 latest_gateway_oss_version: "3.9.1"
 
+# Operator vars
+operator_gatewayconfiguration_api_version: "v2beta1"
+operator_konnectgatewaycontrolplane_api_version: "v1alpha2"
+operator_konnectextension_api_version: "v1alpha2"
 render_banner: true

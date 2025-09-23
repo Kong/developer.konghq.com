@@ -3,24 +3,20 @@ title: "Limiting namespaces watched by ControlPlane"
 description: "Learn how to limit the namespaces that ControlPlane watches."
 content_type: reference
 layout: reference
-products:
-  - operator
+
 breadcrumbs:
   - /operator/
   - index: operator
-    group: Konnect
-  - index: operator
-    group: Konnect
-    section: "Konnect CRDs: Control Planes"
-related_resources:
-  - text: "Create a Control Plane with KGO"
-    url: /operator/konnect/crd/control-planes/hybrid/
+    group: Security hardening
+
+products:
+  - operator
 
 min_version:
   operator: '1.6'
 ---
 
-By default, {{ site.kgo_product_name }}'s `ControlPlane` watches all namespaces.
+By default, {{ site.operator_product_name }}'s `ControlPlane` watches all namespaces.
 This provides a convenient out-of-the-box experience but may not suit all production environments, especially those where multiple teams share the same cluster or in multi-tenant setups.
 
 To limit the namespaces watched by `ControlPlane`, you can set the `watchNamespaces` field in the `ControlPlane`'s `spec`.
@@ -71,3 +67,42 @@ The `list` type requires two additional steps:
    ```
 
 For more information on the `WatchNamespaceGrant` CRD, see the [CRD reference](/operator/reference/custom-resources/#watchnamespacegrant).
+
+## Multi-tenancy using watch namespaces {% new_in 2.0 %}
+
+Multi-tenancy, in the context of {{ site.operator_product_name }}, is an approach that allows multiple instances of the {{ site.operator_product_name }} to share the same underlying infrastructure while keeping their data isolated and more specifically to watch disjoint namespaces.
+
+This allows you to configure {{ site.operator_product_name }} itself to watch namespaces instead of always specifying them in the `ControlPlane` resources.
+
+{:.warning}
+> **Important:** If you configure watch namespaces on both {{ site.operator_product_name }} and `ControlPlane` resources, they must be configured so that they don't conflict. For example, if the {{ site.operator_product_name }} watches namespaces A and B, the `ControlPlane` resource can only define watch namespaces A and B. If you use other watch namespaces, such as namespace C, the `ControlPlane` object will receive an appropriate status condition and won't reconcile your configuration.
+
+You can set watch namespaces for {{ site.operator_product_name }} using several methods:
+
+{% navtabs "multi-tenant-namespaces" %}
+{% navtab "Helm chart" %}
+When using the `kong-operator` Helm chart, you can use the `env` top level configuration in your `values.yaml`:
+
+```yaml
+env:
+  watch_namespace: namespace-a,namespace-b
+```
+{% endnavtab %}
+{% navtab "Env var" %}
+```sh
+KONG_OPERATOR_WATCH_NAMESPACES='namespace-a,namespace-b'
+```
+{% endnavtab %}
+{% navtab "CLI" %}
+To specify the comma separated list of namespaces to watch you can use the `--watch-namespaces` flag:
+
+```bash
+... --watch-namespaces namespace-a,namespace-b ...
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+
+
+
+

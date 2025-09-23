@@ -21,29 +21,11 @@ The `KonnectExtension` resource can be referenced by `ControlPlane`s, `DataPlane
 
 ## {{site.konnect_short_name}} Control Plane reference
 
-`KonnectExtension` can be attached to {{site.konnect_short_name}} `ControlPlane`s of type Hybrid or KIC. This reference can be performed in two different ways: via {{site.konnect_short_name}} ID or via Kubernetes object reference to an in cluster `KonnectGatewayControlPlane`.
-
-### Reference by {{site.konnect_short_name}} ID
-
-The {{site.konnect_short_name}} Control Plane can be referenced by its ID, without having any `KonnectGatewayControlPlane` resource deployed in the cluster. The Control Plane ID can be fetched by the {{site.konnect_short_name}} UI, in the Control Plane page. With this configuration, the `KonnectExtension` object requires to have the `konnect.configuration.authref` field set, as follows in the snippet below:
-
-```yaml
-spec:
-  konnect:
-    controlPlane:
-      ref:
-        type: konnectID
-        konnectID: a6554c4c-79a6-4db7-b7a4-201c0cf746ba # The Konnect controlPlane ID
-    configuration:
-      authRef:
-        name: konnect-api-auth # Reference to the KonnectAPIAuthConfiguration object
-```
-
-The `authRef.name` fields refers to an object of type [`KonnectAPIAuthConfiguration`](/operator/reference/custom-resources/#konnectapiauthconfiguration) that needs to exist in the same namespace as the `KonnectExtension`. Such objects contains all the data (server, token, etc.) to interact with konnect.
+`KonnectExtension` can be attached to {{site.konnect_short_name}} `ControlPlane`s of type Hybrid or KIC. This reference can be performed via Kubernetes object reference to an in cluster `KonnectGatewayControlPlane`.
 
 ### Reference By Kubernetes object
 
-Alternatively, the `KonnectExtension` can reference an object in the cluster. This reference allows to attach the `DataPlane`s to the {{site.konnect_short_name}} Control Plane via a local object [(a.k.a. `KonnectGatewayControlPlane`)](/operator/reference/custom-resources/#konnectgatewaycontrolplane). When this type of reference is used, the `KonnectAPIAuthConfiguration` data is inferred by the `KonnectGatewayControlPlane` objects. For this reason, it's not possible to set the `konnect.configuration.authref` field in this scenario.
+The `KonnectExtension` can reference an object in the cluster. This reference allows to attach the `DataPlane`s to the {{site.konnect_short_name}} Control Plane via a local object [(a.k.a. `KonnectGatewayControlPlane`)](/operator/reference/custom-resources/#konnectgatewaycontrolplane). When this type of reference is used, the `KonnectAPIAuthConfiguration` data is inferred by the `KonnectGatewayControlPlane` objects. For this reason, it's not possible to set the `konnect.configuration.authref` field in this scenario.
 
 ```yaml
 spec:

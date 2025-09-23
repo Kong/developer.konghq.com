@@ -24,15 +24,16 @@ You can add labels to the `KonnectGatewayControlPlane` object by specifying the 
 ```yaml
 echo '
 kind: KonnectGatewayControlPlane
-apiVersion: konnect.konghq.com/v1alpha1
+apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:
   name: gateway-control-plane
   namespace: default
 spec:
-  labels: # Arbitrary key-value pairs
-    environment: production
-    team: devops
-  name: gateway-control-plane
+  createControlPlaneRequest:
+    labels: # Arbitrary key-value pairs
+      environment: production
+      team: devops
+    name: gateway-control-plane
   konnect:
     authRef:
       name: konnect-api-auth # Reference to the KonnectAPIAuthConfiguration object

@@ -36,7 +36,7 @@ tldr:
   q: How can I autoscale {{ site.base_gateway }} workloads using Prometheus metrics?
   a: |
     Deploy a `DataPlaneMetricsExtension` to expose latency metrics from a Service,
-    then configure the {{site.operator_product_name}} to associate those metrics with the Data Plane.
+    then configure the {{site.gateway_operator_product_name}} to associate those metrics with the Data Plane.
     This enables external tools like Prometheus and KEDA to trigger scaling decisions.
 ---
 
@@ -48,7 +48,7 @@ This tutorial shows how to autoscale workloads based on Service latency. The `co
 
 ## Create a `DataPlaneMetricsExtension`
 
-The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monitor Service latency and expose it on the `/metrics` endpoint.
+The `DataPlaneMetricsExtension` allows {{ site.gateway_operator_product_name }} to monitor Service latency and expose it on the `/metrics` endpoint.
 
 1. Create a `DataPlaneMetricsExtension` that points to the `command` service:
 
@@ -73,16 +73,15 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
     ```yaml
     echo '
     kind: GatewayConfiguration
-    apiVersion: gateway-operator.konghq.com/v1beta1
+    apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
     metadata:
       name: kong
       namespace: kong
     spec:
-      controlPlaneOptions:
-        extensions:
-        - kind: DataPlaneMetricsExtension
-          group: gateway-operator.konghq.com
-          name: kong
+      extensions:
+      - kind: DataPlaneMetricsExtension
+        group: gateway-operator.konghq.com
+        name: kong
     ' | kubectl apply -f -
     ```
 
@@ -107,7 +106,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
 
 {:.info}
 > **Note:** You can reuse your current Prometheus setup and skip this step
-> but please be aware that it needs to be able to scrape {{ site.operator_product_name }}'s metrics
+> but please be aware that it needs to be able to scrape {{ site.gateway_operator_product_name }}'s metrics
 > (e.g. through [`ServiceMonitor`](https://github.com/prometheus-operator/prometheus-operator/blob/release-0.53/Documentation/api.md#servicemonitor)) and note down the namespace
 > in which it's deployed.
 
@@ -124,9 +123,9 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
    helm upgrade --install --create-namespace -n prometheus prometheus prometheus-community/kube-prometheus-stack
    ```
 
-## Create a ServiceMonitor to scrape {{ site.operator_product_name }}
+## Create a ServiceMonitor to scrape {{ site.gateway_operator_product_name }}
 
-To make Prometheus scrape {{ site.operator_product_name }}'s `/metrics` endpoint, we'll need to create a `ServiceMonitor`:
+To make Prometheus scrape {{ site.gateway_operator_product_name }}'s `/metrics` endpoint, we'll need to create a `ServiceMonitor`:
 
 ```yaml
 echo '
@@ -148,7 +147,7 @@ spec:
       control-plane: controller-manager ' | kubectl apply -f -
 ```
 
-After applying the above manifest you can check one of the metrics exposed by {{ site.operator_product_name }}
+After applying the above manifest you can check one of the metrics exposed by {{ site.gateway_operator_product_name }}
 to verify that the scrape config has been applied.
 
 To access the Prometheus UI, create a port-forward and visit <http://localhost:9090>:
@@ -163,7 +162,7 @@ This can be verified by going to your Prometheus UI and querying:
 up{service=~"kgo-gateway-operator-metrics-service"}
 ```
 
-{:.important}
+{:.info}
 > Prometheus metrics can take up to 2 minutes to appear.
 
 ## Install prometheus-adapter
@@ -173,7 +172,7 @@ The `prometheus-adapter` package makes Prometheus metrics usable in Kubernetes.
 To deploy `prometheus-adapter`, you'll need to decide what time series to expose so that Kubernetes can consume it.
 
 {:.info}
-> **Note:** {{ site.operator_product_name }} enriches specific metrics for use with `prometheus-adapter`. See the [overview](/operator/dataplanes/reference/autoscale-workloads/#metrics-support-for-enrichment) for a complete list.
+> **Note:** {{ site.gateway_operator_product_name }} enriches specific metrics for use with `prometheus-adapter`. See the [overview](/operator/dataplanes/reference/autoscale-workloads/#metrics-support-for-enrichment) for a complete list.
 
 Create a `values.yaml` file to deploy the [`prometheus-adapter` helm chart](https://artifacthub.io/packages/helm/prometheus-community/prometheus-adapter).
 This configuration calculates a `kong_upstream_latency_ms_60s_average` metric, which exposes a 60s moving average of upstream response latency:

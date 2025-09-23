@@ -130,6 +130,7 @@
 /konnect-platform/active-tracing/  /gateway/debugger/
 /konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
 
+
 ## Insomnia
 /insomnia/concepts/ /insomnia/terminology/
 /insomnia/install/ /insomnia/#install-insomnia
@@ -137,3 +138,9 @@
 ## Indices
 
 /index/konnect-platform/  /index/konnect/
+
+
+## KGO
+
+/operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
+
