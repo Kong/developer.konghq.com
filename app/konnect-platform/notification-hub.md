@@ -28,7 +28,7 @@ You can manage your notification configurations through the [bell icon next to y
 
 The Notification Hub generates notifications for the following areas:
 * **Organization**: Configurable notifications about org access and audit logs.
-* **Gateway Manager**: Entity notification configurations. You can have up to three regional notification configurations per entity.
+* **API Gateway**: Entity notification configurations. You can have up to three regional notification configurations per entity.
 * **Billing**: Org billing notifications. These notifications are sent to organization admins, and they are mandatory - you can't opt out of billing notifications.
 
 
