@@ -13,7 +13,7 @@ tags:
   - service-mesh
 ---
 
-Using Mesh Manager, you can create global Control Planes to manage your {{site.mesh_product_name}} meshes. This guide explains how to configure a global Control Plane and then install the Kubernetes demo app to test out the {{site.mesh_product_name}} interface in {{site.konnect_short_name}}.
+Using the Mesh GUI in {{site.konnect_short_name}}, you can create global Control Planes to manage your {{site.mesh_product_name}} meshes. This guide explains how to configure a global Control Plane and then install the Kubernetes demo app to test out the {{site.mesh_product_name}} interface in {{site.konnect_short_name}}.
 
 ## Prerequisites
 
@@ -25,7 +25,8 @@ Using Mesh Manager, you can create global Control Planes to manage your {{site.m
 
 Before you can add services or apply configurations, you must create a global Control Plane.
 
-1. In [**Mesh Manager**](https://cloud.konghq.com/mesh-manager), click **New Global Control Plane**.
+1. In the sidebar, navigate to **Service Mesh**.
+1. Click **New Global Control Plane**.
 1. Name the Control Plane `example-cp` and click **Save**.
 
 The global Control Plane is now created but has no functionality until you connect a zone.
@@ -40,7 +41,7 @@ After creating the global Control Plane, add a zone to connect services and rece
     {:.info}
     > The zone name must use lowercase alphanumeric characters or hyphens, and start and end with an alphanumeric character.
 
-1. Follow the Helm and token setup instructions in the UI. Once the zone is running, it will appear in Mesh Manager.
+1. Follow the Helm and token setup instructions in the UI. Once the zone is running, it will appear in {{site.konnect_short_name}}.
 
 You now have a minimal {{site.mesh_product_name}} mesh. The next step is to add services.
 
@@ -60,7 +61,8 @@ This creates:
 
 To see these services:
 
-1. Open **Mesh Manager**, select `example-cp`, and click **Meshes**.
+1. In the sidebar, navigate to **Service Mesh**.
+1. Select `example-cp`, and click **Meshes**.
 1. Click **Default**, then go to the **Services** tab.
 
 ## Configure `kumactl` to connect to the global Control Plane
@@ -68,7 +70,8 @@ To see these services:
 {:.info}
 > Because the mesh is deployed on Kubernetes, `kumactl` is read-only. You manage resources using `kubectl`. Still, it's best practice to configure `kumactl` for visibility and diagnostics.
 
-1. In [**Mesh Manager**](https://cloud.konghq.com/mesh-manager), select `example-cp`.
+1. In the sidebar, navigate to **Service Mesh**.
+1. Select `example-cp`.
 1. From the **Actions** menu, choose **Configure kumactl** and follow the steps.
 1. Verify the demo services are running:
 
