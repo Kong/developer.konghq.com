@@ -15,8 +15,6 @@ tags:
 description: Running multiple versions of Data Plane nodes with a single Control Plane can cause version compatibility issues.
 
 related_resources:
-  - text: "Gateway Manager"
-    url: /gateway-manager/
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
 #  - text: "{{site.base_gateway}} debugging"

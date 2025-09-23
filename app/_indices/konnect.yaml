@@ -16,8 +16,8 @@ sections:
       - path: /dev-portal/
       - path: /catalog/
       - path: /advanced-analytics/
-      - path: /ai-manager/
-      - path: /gateway-manager/
+      - path: /ai-gateway/
+      - path: /gateway/
       - path: /mesh-manager/
 
   - title: Org and Account Management

@@ -24,10 +24,12 @@ requirements:
         ]
       }
       ```
-      You can find your account ID and network ID in {{site.konnect_short_name}} by navigating to your Data Plane and Networks in Gateway Manager.
+
+      You can locate the required IDs in the {{site.konnect_short_name}} UI. 
+      Navigate to **API Gateway** in the {{site.konnect_short_name}} menu, click a control plane, then find each ID:
+      * **Account ID**: Find the ID in the control plane info panel.
+      * **Network ID**: Navigate to **Networks** in the control plane menu.
       
-
-
 variables: 
   key:
     description: Your AWS access key ID.

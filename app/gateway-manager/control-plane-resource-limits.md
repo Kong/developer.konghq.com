@@ -1,5 +1,5 @@
 ---
-title: "Default resource limits for Control Planes"
+title: "Default resource limits for control planes"
 content_type: reference
 layout: reference
 breadcrumbs: 
@@ -12,14 +12,14 @@ tags:
   - control-plane
   - gateway-manager
 
-description: In Gateway Manager, every {{site.konnect_short_name}} Control Plane has a default resource limit per Gateway entity.
+description: In {{site.konnect_short_name}}, every control plane has a default resource limit per Gateway entity.
 
 related_resources:
   - text: Gateway entities
     url: /gateway/entities/
 ---
 
-In [Gateway Manager](/gateway-manager/), every {{site.konnect_short_name}} Control Plane has a default resource limit per [Gateway entity](/gateway/entities/).
+In {{site.konnect_short_name}}, every API Gateway control plane has a default resource limit per [Gateway entity](/gateway/entities/).
 
 If you need any of the {{site.konnect_short_name}} entity resource limits increased, contact [Kong Support](https://support.konghq.com). 
 

@@ -56,7 +56,7 @@ related_resources:
 ---
 Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
 
-You can manage your serverless gateway nodes in [Gateway Manager](https://cloud.konghq.com/gateway-manager/).
+You can manage your serverless gateway nodes under **API Gateway** in {{site.konnect_short_name}}.
 
 ## How do serverless gateways work?
 
