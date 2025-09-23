@@ -64,7 +64,7 @@ import {
 }
 ```
 
-You can find the names and IDs of the resources by navigating the [Mesh Manager UI](https://cloud.konghq.com/us/mesh-manager).
+You can find the names and IDs of the resources by navigating the [Mesh UI in {{site.konnect_short_name}}](https://cloud.konghq.com/us/mesh-manager).
 The `id` field in the import block is a JSON string that contains the necessary information to identify the resource.
 
 Next run:
