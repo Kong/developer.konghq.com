@@ -27,7 +27,7 @@ search_aliases:
 tldr:
     q: How do I automatically create and manage Dev Portal applications in Kong Identity?
     a: |
-      You can use Dynamic Client Registration to automatically create Dev Portal applications in Kong Identity. First, create scopes and claims in Kong Identity and copy your Issuer URL. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR.
+      You can use Dynamic Client Registration to automatically create Dev Portal applications in Kong Identity. First, create an auth server for Kong Identity and copy your Issuer URL. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR. Apply the auth strategy to published APIs.
 
 prereqs:
   entities:
