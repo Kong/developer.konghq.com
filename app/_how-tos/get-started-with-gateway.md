@@ -150,6 +150,7 @@ The [Key Authentication plugin](/plugins/key-auth/) lets you secure requests to 
 When activated, {{site.base_gateway}} generates and associates an API key with a [Consumer](/gateway/entities/consumer/). The client then presents this key as a secret in subsequent requests. Each request is approved or denied based on the validity of the key. The configuration uses the following logic:
 - The `key_names` field defines the request field the plugin checks for a key.
 - The plugin searches for this field in headers, query string parameters, and the request body.
+
 After setup, only requests that include a valid API key are accepted. To activate the Key Authentication plugin, copy and run the following command:
 
 {% entity_examples %}
@@ -270,7 +271,7 @@ curl -s $KONNECT_PROXY_URL/mock/headers \
 
 ## Enable caching
 
-Caching is used to store and reuse upstream responses for faster replies and less backend load. The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching responses based on configurable response codes, content types, and request methods.
+[Caching](/glossary/) is used to store and reuse upstream responses for faster replies and less backend load. The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching responses based on configurable response codes, content types, and request methods.
 When caching is enabled, upstream services are not bogged down with repetitive requests,
 because {{site.base_gateway}} responds on their behalf with cached results.
 
