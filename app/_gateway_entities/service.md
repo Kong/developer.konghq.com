@@ -52,15 +52,21 @@ works_on:
 ## What is a Gateway Service?
 
 Gateway Services represent the upstream services in your system. 
-These applications are the business logic components of your system responsible for responding to requests. 
-
-The configuration of a Gateway Service defines the connectivity details between the {{site.base_gateway}} and the upstream service, along with other metadata. Generally, you should map one Gateway Service to each upstream service.
-
-For simple deployments, the upstream URL can be provided directly in the Gateway Service. For sophisticated traffic management needs, a Gateway Service can point at an [Upstream](/gateway/entities/upstream/).
-
+Services are the business logic components of your system that are responsible for processing and responding to requests.
 Gateway Services, in conjunction with [Routes](/gateway/entities/route/), let you expose your upstream services to clients with {{site.base_gateway}}.
 
-[Plugins](/gateway/entities/plugin/) can be attached to a Service, and will run against every request that triggers a request to the Service that they're attached to.
+The configuration of a Gateway Service defines the connectivity details between the {{site.base_gateway}} and the upstream service, along with other metadata. 
+Generally, you should map one Gateway Service to each upstream service.
+
+Here's how it works:
+1. A client sends a request.
+1. A [Route](/gateway/entities/route/) matches the request based on defined rules and sends it to a specific Gateway Service.
+1. The Gateway Service receives the request and forwards it to your actual application (the upstream service).
+   * For simple deployments, the upstream URL can be provided directly in the Gateway Service.
+   * For sophisticated traffic management needs, a Gateway Service can point at an [Upstream](/gateway/entities/upstream/) entity.
+1. The upstream service processes the request and sends a response back through {{site.base_gateway}}.
+
+[Plugins](/gateway/entities/plugin/) can also be attached to a Service, and will run against every request that triggers a request to the Service that they're attached to.
 
 <!--vale off -->
 
@@ -87,6 +93,7 @@ flowchart LR
   style id1 rx:10,ry:10
   
 {% endmermaid %}
+ _Figure 1: Diagram showing the request and response flow through {{site.base_gateway}}._
 
 <!--vale on -->
 
