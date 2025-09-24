@@ -17241,6 +17241,11 @@
         "message": "**AI Proxy Advanced**: Exposed `input_tokens_details.cached_tokens_details.image_tokens_count` in observability metrics.",
         "type": "feature",
         "scope": "Plugin"
+      },
+      {
+        "message": "**perf**: Improved the efficiency of entity field access on hot path.\n",
+        "type": "performance",
+        "scope": "Performance"
       }
     ],
     "kong-manager-ee": [
