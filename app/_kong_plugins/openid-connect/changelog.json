@@ -1,4 +1,21 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added support for session binding (IP, scheme, and/or User-Agent header).\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for claim to consumer groups mapping.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `upstream_session_id_header` and `downstream_session_id_header` mistakenly required the `downstream_headers_claims` and `downstream_headers_names` to be present.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",

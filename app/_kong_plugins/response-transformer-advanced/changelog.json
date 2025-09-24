@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed a failure that occurred when Nginx gzip was enabled for an upstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.2.2.4": [
     {
       "message": "Does not load response body when `if_status` does not match.",

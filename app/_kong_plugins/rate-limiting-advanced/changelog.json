@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added request throttling feature.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where the rate limiting plugins can't handle decimal numbers when using Redis strategy.\n",

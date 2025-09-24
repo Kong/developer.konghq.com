@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed the deletion of guard instances and improved error handling.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where some of ai metrics was missed in analytics",

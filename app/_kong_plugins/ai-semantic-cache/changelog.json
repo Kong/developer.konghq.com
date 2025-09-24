@@ -1,4 +1,26 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed an issue where the DELETE `/ai-semantic-cache` endpoint returned 500 errors for successful deletions when using pgvector as the vector database.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the DELETE `/ai-semantic-cache` endpoint returned an incorrect 204 status for non-existent keys.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI inference requests to non-OpenAI providers in the stream mode were not supported.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the SSE terminator could have incorrect ending characters.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where some of ai metrics was missed in analytics",

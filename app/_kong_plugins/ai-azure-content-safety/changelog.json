@@ -1,4 +1,16 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added response guard to filter AI responses for safety and compliance.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the plugin to work with multi-modal content.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "AI Azure Content Safety: Fixed an issue where Blocklist breaches are not correctly parsed.\n",

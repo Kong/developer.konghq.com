@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed an issue where response time measurements to backend services were inaccurate. The plugin now captures the full request duration, including upstream.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed a segmentation fault caused by a missing destructor call on process exit.\n",
