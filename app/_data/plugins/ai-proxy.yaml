@@ -165,7 +165,7 @@ providers:
       model_example: 'command'
       min_version: '3.6'
     completions:
-      supported: false
+      supported: true
       streaming: true
       upstream_path: '/v1/generate'
       route_type: 'llm/v1/completions'
