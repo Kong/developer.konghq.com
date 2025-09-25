@@ -44,9 +44,9 @@ module Jekyll
 
       def url
         @url ||= if @policy.unreleased?
-                   "/mesh/policies/#{@policy.slug}/examples/#{slug}/#{@policy.min_release}"
+                   "/#{@policy.product}/policies/#{@policy.slug}/examples/#{slug}/#{@policy.min_release}"
                  else
-                   "/mesh/policies/#{@policy.slug}/examples/#{slug}/"
+                   "/#{@policy.product}/policies/#{@policy.slug}/examples/#{slug}/"
                  end
       end
 
