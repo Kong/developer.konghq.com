@@ -29,34 +29,25 @@ icon: graph.svg
 This policy is used to decrypt messages that were previously encrypted using the referenced key. 
 Use this policy to enforce standards for decryption across {{site.event_gateway}} clients.
 
-### Decrypt everything
+## Use cases
 
-Decrypt everything in a specific `key_source` location:
+Common use cases for the Decrypt policy:
 
-```yaml
-key_sources:
-  - name: aws
-    type: aws
-    aws:
-      credentials:
-        type: env
-policies:
-  - name: decrypt-everything
-    type: decrypt
-    spec:
-      failure:
-        mode: passthrough # | error
-      key_sources:
-        - type: static
-          static:
-            id: "user-chosen-id"
-            source:
-              type: file # | string
-              file: /var/key
-        - type: aws
-          aws:
-            # AWS API auth info
-      decrypt:
-       - type: keys
-       - type: values
-```
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: "[Decrypt a specific key from a source](/event-gateway/policies/decrypt/examples/decrypt-a-key/)"
+    description: Decrypt a key based on a specific key reference name.
+
+  - use_case: "[Decrypt all keys](/event-gateway/policies/decrypt/examples/decrypt-everything/)"
+    description: Define a static key source and decrypt all keys that come from that source.
+
+{% endtable %}
+<!--vale on-->
+
+
