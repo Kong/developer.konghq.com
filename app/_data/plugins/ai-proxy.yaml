@@ -165,7 +165,7 @@ providers:
       model_example: 'command'
       min_version: '3.6'
     completions:
-      supported: true
+      supported: false
       streaming: true
       upstream_path: '/v1/generate'
       route_type: 'llm/v1/completions'
@@ -189,13 +189,7 @@ providers:
       route_type: 'llm/v1/chat'
       model_example: 'gemini-2.0-flash'
       min_version: '3.8'
-    completions:
-      supported: true
-      streaming: false
-      upstream_path: 'llm/v1/completions'
-      route_type: 'llm/v1/completions'
-      model_example: 'gemini-2.0-flash'
-      min_version: '3.8'
+   
     embeddings:
       supported: true
       streaming: false
