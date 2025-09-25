@@ -2,12 +2,6 @@
 
 Use this page to write clear, consistent UI instructions and to include screenshots. It aligns with the Google Developer Documentation Style Guide and with Kong Docs’ site components.
 
-# Scope and audience
-
-* **Audience:** Internal technical writers  
-* **Purpose:** Establish one house style for UI instructions and screenshots → easy to apply, testable, and maintainable across products  
-* **Goal**: [Consistency](https://docs.google.com/document/d/1bpr1ziXZoCPGLLFLvYb5n96AGchG0MvoDT4_mxWCc_E/edit?tab=t.gx4tbwyaksdw#heading=h.pb0ddiqpumod), testability, and maintainability across products  
-* **Foundation**: [Google for Developers](https://developers.google.com/style/voice)
 
 ## Prioritize workflows
 
