@@ -59,8 +59,6 @@ module Jekyll
         end.sort_by { |e| -e.weight } # rubocop:disable Style/MultilineBlockChain
       end
 
-      private
-
       def release_info
         ReleaseInfo::Product.new(
           site:,
