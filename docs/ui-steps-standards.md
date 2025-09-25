@@ -108,9 +108,7 @@ When creating minimum-viable UI documentation, remember to:
 
 To avoid confusing or misleading the reader, when writing:
 
-* Don’t write a full tutorial when users expect to automate.  
 * Don’t bury UI instructions inside automation sections. Always separate them clearly.  
-* Don’t omit the navigation path—UI users need to know where to start.
 
 # Format UI steps
 
