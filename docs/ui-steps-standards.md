@@ -1,6 +1,6 @@
 # UI writing standards
 
-Use this page to write clear, consistent UI instructions and to include screenshots. It aligns with the Google Developer Documentation Style Guide and with Kong Docs’ site components.
+Use this page to write clear, consistent UI instructions and to include screenshots.
 
 
 ## Prioritize workflows
