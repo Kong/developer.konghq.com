@@ -123,7 +123,7 @@ Use the following rules to write instructions for the Kong UI so that users foll
 
 **Don’t**: *In the Key field, enter `my-secret`, and then click Save.*
 
-**Why**: One action per step makes the workflow easier to follow and ensures UI automation tests can target a single control at a time.[Google for Developers](https://developers.google.com/style)
+**Why**: One action per step makes the workflow easier to follow and ensures UI automation tests can target a single control at a time.
 
 ### Use consistent verbs for UI components
 
