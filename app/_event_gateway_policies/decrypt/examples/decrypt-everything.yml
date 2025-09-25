@@ -1,0 +1,44 @@
+title: Decrypt everything
+
+description: Decrypt everything that comes from a specific key source.
+
+extended_description: |
+  Decrypt everything that comes from a specific key source.
+
+  This example requires a key source defined in a root `key_sources` section:
+
+  ```yaml
+  key_sources:
+  - name: aws
+    type: aws
+    aws:
+      credentials:
+        type: env
+  ``` 
+
+weight: 900
+
+config:
+  policies:
+  - name: decrypt-everything
+    type: decrypt
+    spec:
+      failure:
+        mode: passthrough # | error
+      key_sources:
+        - type: static
+          static:
+            id: "user-chosen-id"
+            source:
+              type: file # | string
+              file: /var/key
+        - type: aws
+          aws:
+            # AWS API auth info
+      decrypt:
+       - type: keys
+       - type: values
+
+tools:
+  - konnect-api
+  - terraform
