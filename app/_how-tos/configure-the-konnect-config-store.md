@@ -161,4 +161,4 @@ method: GET
 
 If your secret was successfully stored in {{site.konnect_short_name}}, the endpoint should return a `201` status code and your `secret-key` key in the output.
 
-You can now reference your {{site.konnect_short_name}} secret in configurations as `{vault://mysecretvault/secret-key}`. For more information about secret types, go to [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 
+You can now reference your {{site.konnect_short_name}} secret in configurations as `{vault://mysecretvault/secret-key}`. For more information about supported secret types, see [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 

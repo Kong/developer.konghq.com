@@ -116,5 +116,5 @@ value: 'secret'
 
 If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://gcp-sm-vault/test-secret}` to reference the secret in any referenceable field.
 
-For more information about what secret types we support, go to [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 
+For more information about supported secret types, see [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 
     
