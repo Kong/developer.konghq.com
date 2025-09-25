@@ -109,8 +109,8 @@ It ends with the action.
 
 **Don’t:**
 
-* *“Select Organizations from the sidebar.”* (less nice ordering: action first)  
-* *“Click Create. In Services, Add Service.”* (splits context / action out of order)
+* *“Select Organizations from the sidebar.”* 
+* *“Click Create. In Services, Add Service.”* 
 
 # Write UI steps
 
