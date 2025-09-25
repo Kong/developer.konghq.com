@@ -51,6 +51,10 @@ prereqs:
            export PORTAL_URL='
            https://your-domain.us.kongportals.com'
            ```
+        1. In your Dev Portal sidebar, click **Settings**.
+        1. Click the **Security** tab.
+        1. Enable **Auto approve applications**. 
+           This auto approves developer applications in your Dev Portal and makes it easier to test. 
         1. Click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
         1. In the Dev Portal sidebar, click [**APIs**](https://cloud.konghq.com/portals/apis/).
         1. Click [**New API**](https://cloud.konghq.com/portals/apis/create).
