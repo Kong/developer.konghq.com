@@ -21,14 +21,6 @@ When you write anything, you must include our core principles into every piece o
 | ----- | ----- |
 | **Purpose:** Guide the user through a full, end-to-end task that they want to achieve. **Structure:** Write step-by-step instructions with action verbs. Use an ordered list. Shape it like a “How-to” or “Quickstart.” **When to use:** Use this when users need to complete something: “set up X,” “deploy Y,” “configure Z.” **Value:** Users complete tasks without switching contexts; validation at the end proves success. **Example:** [Get started with Kong Gateway](https://developer.konghq.com/gateway/get-started/) | **Purpose:** List what actions are possible (create, read, update, delete) or what fields exist, without placing them in the context of a full task. **Structure:** Present bullets or a table of operations or schema. Keep the tone neutral and reference-style. **When to use:** Use this on reference pages, schema docs, API endpoints, or plugin configs. Basically anywhere that users just need to know what can be done. **Value:** Fast lookup for parameters, options, and limits without narrative overhead. **Example:** [Gateway configuration reference](https://developer.konghq.com/gateway/configuration/) |
 
-## Every page is page one
-
-* **Rule:** Keep the concepts, steps, and validation together on one page. Don’t shatter the story into multiple pages. ([Kong Docs](https://developer.konghq.com/contributing/)) \> Don’t split a task across multiple pages—group conceptual background, step-by-step instructions, and validation (testing or outcome) all in one page..  
-* **Goal**: Let readers complete a task in one flow without bouncing around; reduce friction, cognitive load, and context switching.  
-* **Why use this**: According to Google’s style guide, procedures should be clear, self‑contained workflows. Self-contained procedures improve usability; place everything required to execute the task on the same page.  
-* **For Kong users**: It means that when they want to do something they get all they need: what to know, how to do it, and how to confirm success, without hunting through several pages.  
-  For example, [configure OIDC](https://developer.konghq.com/how-to/configure-oidc-with-user-info-auth/).
-
 ## Use active voice, present tense, plain English
 
 
