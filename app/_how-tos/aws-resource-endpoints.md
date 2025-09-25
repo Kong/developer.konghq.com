@@ -29,16 +29,25 @@ prereqs:
         You need an AWS IAM user account with permissions to create AWS Resource Configuration Groups, Resource Gateways, and to use AWS Resource Access Manager (RAM).
 
         You also need:
-        * configured VPC
-        * subnet
-        * [Resource gateway](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-gateway.html)
-        * [Resource configuration group](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-configuration.html)
+        * A configured [VPC and subnet](https://docs.aws.amazon.com/vpc/latest/userguide/create-vpc.html#create-vpc-and-other-resources)
+        * A [resource gateway](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-gateway.html)
+        * A [resource configuration group](https://docs.aws.amazon.com/vpc-lattice/latest/ug/create-resource-configuration.html)
 
         Copy and save the resource configuration ID for each resource configuration. {{site.konnect_short_name}} will use these to create a mapping of upstream domain names and resource configuration IDs.  
 
       icon_url: /assets/icons/aws.svg
 
 ---
+
+
+## Get your Account ID
+
+You'll need your account ID for AWS in {{site.konnect_short_name}}. AWS uses this account ID to configure the connection between your resource share in AWS and {{site.konnect_short_name}}.
+
+1. In the {{site.konnect_short_name}} sidebar, click [**Networks**](https://cloud.konghq.com/global/networks/).
+1. Click the settings icon next to your network.
+1. Click **Configure private networking**.
+1. Copy and save the ID in the **AWS Account ID** field.
 
 ## Create Resource Configuration Group and Resource Gateway
 
