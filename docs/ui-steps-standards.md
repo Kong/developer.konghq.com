@@ -361,16 +361,6 @@ We have a collection of elements to use:
 * Proper severity helps the reader evaluate urgency and risk.  
 * Standardizing helps consistency across the docs.
 
-**How:** In your editor, replicate the following format to accurately build callouts and notes:
-
-```
-{:.info}
-> **Info:** Context that helps but isn’t critical.
-{:.important}
-> **Important:** You must do this or the task fails.
-{:.warning}
-> **Warning:** Risk of breakage or data loss.
-```
 
 **Do:**
 
