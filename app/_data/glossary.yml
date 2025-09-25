@@ -8,11 +8,6 @@ definitions:
     description: A functionality of a feature or release version is of high quality and can be used in a **non-production** environment.
     url: |
       [Stages of software availability](/stages-of-software-availability/#beta)
-  - term: Caching
-    description: |
-      A method of temporarily storing upstream responses so that the gateway can reuse them for identical requests. In Kong Gateway, caching reduces latency, lowers backend load, and increases throughput.
-    url: |
-      [Proxy Cache](/_kong_plugins/proxy-cache/index/)   
   - term: Consumer
     description: |
       A Consumer object represents the client of a Service. 
