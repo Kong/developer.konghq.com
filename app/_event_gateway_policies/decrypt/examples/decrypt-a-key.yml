@@ -16,3 +16,7 @@ config:
           ref_name: ref_name
         decrypt:
         - type: key
+
+tools:
+  - konnect-api
+  - terraform
