@@ -129,7 +129,7 @@ Use the following rules to write instructions for the Kong UI so that users foll
 
 **Rule**: Assign one verb to each control type and use it consistently.
 
-**Why**: Consistent verbs improve comprehension, reduce ambiguity, and stabilize automated test scripts. *Priming*\!
+**Why**: Consistent verbs improve comprehension, reduce ambiguity, and stabilize automated test scripts.
 
 | UI component | Verbs | Example |
 | :---- | :---- | :---- |
