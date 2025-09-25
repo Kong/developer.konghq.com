@@ -9,10 +9,6 @@ Use this page to write clear, consistent UI instructions and to include screensh
 * **Goal**: [Consistency](https://docs.google.com/document/d/1bpr1ziXZoCPGLLFLvYb5n96AGchG0MvoDT4_mxWCc_E/edit?tab=t.gx4tbwyaksdw#heading=h.pb0ddiqpumod), testability, and maintainability across products  
 * **Foundation**: [Google for Developers](https://developers.google.com/style/voice)
 
-# Core principles
-
-When you write anything, you must include our core principles into every piece of work:
-
 ## Prioritize workflows
 
 **Rule:** Explain the end-to-end task that a user finishes in the UI. Split out “pure CRUD” only when it’s a known pain point (often in troubleshooting)
