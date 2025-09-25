@@ -271,7 +271,7 @@ curl -s $KONNECT_PROXY_URL/mock/headers \
 
 ## Enable caching
 
-[Caching](/glossary/) is used to store and reuse upstream responses for faster replies and less backend load. The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching responses based on configurable response codes, content types, and request methods.
+Caching is used to store and reuse upstream responses for faster replies and less backend load. The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching responses based on configurable response codes, content types, and request methods.
 When caching is enabled, upstream services are not bogged down with repetitive requests,
 because {{site.base_gateway}} responds on their behalf with cached results.
 
