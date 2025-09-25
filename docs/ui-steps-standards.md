@@ -37,19 +37,6 @@ When you write anything, you must include our core principles into every piece o
 | ----- | ----- | ----- |
 | **What**: The subject of the sentence performs the action. **Example**: “*You configure…*” instead of “*Configuration is completed*.” **Tip**: A quick test is to see if “…by zombies” can be added to your sentence. If it can, your sentence is passive. Prefer active forms that name the actor: “Kong Gateway applies the policy.” For example, “*Configuration is completed… **by zombies**.*” | **What**: Use present tense to keep instructions immediate and actionable. Describe how Kong works, how a user interacts with the product, or how an action applies right now.  **Example**: Your verbs will look like this: *“Configure,” “Runs,” “Applies”, “Investigate”* **Note**: Only use past or future tense when you explicitly narrate history or future roadmaps. For example, in a changelog: *“This feature was added in 3.3”*. | **What**: Use simple, straightforward words and sentence structures. Avoid: Jargon that only insiders know. Overly formal or complex constructions. Nominalizations: turning verbs into nouns, e.g., *“the configuration of”* instead of *“configure”*. Passive voice that hides the actor. For example, *“The request is handled”* vs. *“Kong Gateway handles the request”*. **Example**: Complex and unclear: *“Prior to the deployment of the Kong Gateway, the initialization of the database connection is undertaken.”* Preferred Plain English: *“**Before you deploy** Kong Gateway, **initialize** the database connection.”* |
 
-## Write for a global audience; be inclusive
-
-**Rule:** Rely on simple words, avoid idioms, and write bias-free language.
-
-**What**: Writing for a global audience means we:
-
-* Use **simple, clear language** so that non-native English speakers can understand.  
-* Avoid idioms or colloquialisms that don’t translate or assume specific cultural context.  
-* Use language that **does not exclude or offend** people of any ability, gender, race, religion, sexual orientation, or other identity.  
-* Use **bias-free, people-first** language.
-
-For more information, go to the [Google Developer styleguide](https://developers.google.com/style/inclusive-documentation). Apply inclusive wording across Dev Portal, Gateway, and Mesh docs consistently.
-
 # When to document the UI (and how much)
 
 **Rule**: Match the level of UI documentation to the way users actually configure and use the feature.
