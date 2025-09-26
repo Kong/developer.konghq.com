@@ -6,7 +6,7 @@ content_type: reference
 description: Migrate all of the data from your scratch pad account to your Enterprise account.
 
 products:
-    - insomnia
+  - insomnia
 
 breadcrumbs:
   - /insomnia/
@@ -36,9 +36,6 @@ faqs:
     a: Ensure you imported the file into the project you opened, not a different workspace. If needed, re-import into the active project.
   - q: Why can't I see my Insomnia environment variables in Table view?
     a: Enable the JSON view to confirm values, then switch back to Table view. This ensures you see nested or inherited keys in the editor.  
-
-prereqs:
-  inline:
 ---
 
 ## Export from your scratch pad to JSON file
