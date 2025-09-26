@@ -118,7 +118,7 @@ spec:
 
 ## Validation
 
-You can validate from the command line or [Gateway Manager UI](/gateway-manager/) to confirm that both the `KongService` and `KongRoute` have been provisioned and are in a valid state:
+You can validate from the command line or [{{site.konnect_short_name}} UI](/gateway/) to confirm that both the `KongService` and `KongRoute` have been provisioned and are in a valid state:
 
 
 <!-- vale off -->
