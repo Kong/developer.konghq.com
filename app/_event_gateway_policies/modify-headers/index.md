@@ -24,24 +24,19 @@ icon: graph.svg
 
 This policy is used to set or remove record headers.
 
-## Example configuration
+## Use cases
 
-Example configurations for the Modify Headers policy.
+Common use cases for the Modify Headers policy:
 
-### Remove and replace a header
-
-The following example removes a header named `example-header1` and replaces it with `example-header2`:
-
-```yaml
-policies:
-  - name: modify-headers
-    type: modify_headers
-    spec:
-      actions:
-      - type: remove
-        remove:
-        - key: example-header
-        set:
-        - key: example-header2
-          value: example
-```
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: "[Remove and replace a header](/event-gateway/policies/modify-headers/examples/remove-and-replace-header/)"
+    description: Remove a specific header and replace it with a custom header of your choice.
+{% endtable %}
+<!--vale on-->
