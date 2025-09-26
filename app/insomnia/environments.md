@@ -145,6 +145,9 @@ To store secrets:
 1. Create a new private sub-environment within any global environment.
 1. Add your secret variable in the private sub-private environment and set its type to `Secret`.
 
+   {:.warning}
+   > Variables with the `Secret` type are only available in private **global** sub-environment, not in collection environments.
+
 ### Using secrets in scripts
 
 By default, secret variables are not exposed to scripts. To enable access:
