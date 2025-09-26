@@ -102,33 +102,27 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Azure VNet peering
+              title: Virtual network peering
               description: |
-                {{site.konnect_short_name}} can leverage Azure Virtual Network peering to create virtual networks, ingest data from your Azure services, and expose them to the internet via {{site.konnect_short_name}}.
-              icon: /assets/icons/azure.svg
+                {{site.konnect_short_name}} can leverage virtual network peering to create virtual networks, ingest data from your provider's services, and expose them to the internet via {{site.konnect_short_name}}.
+              icon: /assets/icons/network.svg
               ctas:
-                - text: Set up Azure VNet peering
+                - text: Azure VNet peering
                   url: /dedicated-cloud-gateways/azure-peering/
-      - blocks:
-          - type: card
-            config:
-              title: GCP VPC peering
-              description: |
-                {{site.konnect_short_name}} can leverage Google Cloud VPC network peering to create virtual networks, ingest data from your GCP services, and expose them to the internet via {{site.konnect_short_name}}.
-              icon: /assets/icons/google-cloud.svg
-              ctas:
-                - text: Set up GCP VPC peering
+                - text: GCP VPC peering
                   url: /dedicated-cloud-gateways/gcp-vpc-peering/
+                - text: AWS VPC peering
+                  url: /dedicated-cloud-gateways/aws-vpc-peering/
       - blocks:
           - type: card
             config:
-              title: AWS VPC Peering
+              title: AWS resource endpoints
               description: |
-                Set up an AWS VPC peering connection using the API
+                Enable secure, one-way connectivity from {{site.konnect_short_name}}'s' managed infrastructure to your upstream services— without requiring VPC peering or Transit Gateway.
               icon: /assets/icons/aws.svg
               ctas:
-                - text: How to configure VPC peering with AWS
-                  url: /dedicated-cloud-gateways/aws-vpc-peering/
+                - text: Tutorial
+                  url: /dedicated-cloud-gateways/aws-resource-endpoints/
 
   - header:
       type: h2
