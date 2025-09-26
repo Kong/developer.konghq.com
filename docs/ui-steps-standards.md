@@ -1,25 +1,24 @@
 # UI writing standards
 
-Use this page to write clear, consistent UI instructions and to include screenshots.
-
+Use this page to write clear, consistent UI instructions.
 
 ## Prioritize workflows
 
-**Rule:** Explain the end-to-end task that a user finishes in the UI. Split out “pure CRUD” only when it’s a known pain point (often in troubleshooting)
+Explain the end-to-end task that a user finishes in the UI in a workflow format. Use “pure CRUD” format only when it’s a known pain point, for example, in troubleshooting.
+
+- **Workflow**: A workflow maps out a series of goal-oriented steps in a user interface to guide users through a process in a clear, repeatable order.
+- **CRUD**: CRUD refers to the four main user interface operations: Create, Read, Update, and Delete. These operations let users add, view, change, or remove information.
 
 | Workflow | CRUD |
 | ----- | ----- |
 | **Purpose:** Guide the user through a full, end-to-end task that they want to achieve. **Structure:** Write step-by-step instructions with action verbs. Use an ordered list. Shape it like a “How-to” or “Quickstart.” **When to use:** Use this when users need to complete something: “set up X,” “deploy Y,” “configure Z.” **Value:** Users complete tasks without switching contexts; validation at the end proves success. **Example:** [Get started with Kong Gateway](https://developer.konghq.com/gateway/get-started/) | **Purpose:** List what actions are possible (create, read, update, delete) or what fields exist, without placing them in the context of a full task. **Structure:** Present bullets or a table of operations or schema. Keep the tone neutral and reference-style. **When to use:** Use this on reference pages, schema docs, API endpoints, or plugin configs. Basically anywhere that users just need to know what can be done. **Value:** Fast lookup for parameters, options, and limits without narrative overhead. **Example:** [Gateway configuration reference](https://developer.konghq.com/gateway/configuration/) |
 
-## Use active voice, present tense, plain English
-
-
 # When to document the UI (and how much)
 
-**Rule**: Match the level of UI documentation to the way users actually configure and use the feature.
+Match the level of UI documentation to the way users actually configure and use the feature. Don't document the UI in abstract or exhaustive detail; instead, tailor the steps and explanations to reflect how users really perform the task in the product.
 
 * **Full UI how-to:** when the UI is the **primary workflow**.  
-* **Minimum-viable UI:** when automation (decK, Terraform, Admin API) is the **dominant workflow**.  
+* **Minimum-viable UI:** when automation is the **dominant workflow**. For example decK, Terraform, Admin API.  
   Always validate at the end of a full UI workflow. Always give a navigation path for minimum-viable UI.
 
 **Important**: Do not use docs to paper over UX gaps. If the UI is unclear, raise an issue with PM/Design. Still document the UI if a release requires it.
@@ -28,9 +27,9 @@ Use this page to write clear, consistent UI instructions and to include screensh
 
 A step-by-step tutorial that guides a user through an entire task in the Kong Manager UI, including:
 
-* Navigation,  
-* Actions,  
-* A validation step to prove success.
+* Navigation
+* Actions
+* Validation
 
 Use a full UI how-to when the UI is the **main way to configure or use the feature**, for example:
 
