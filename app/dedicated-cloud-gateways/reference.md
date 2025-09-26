@@ -348,33 +348,30 @@ config:
 
 ### How do I set environment variables?
 
-In the {{site.konnect_short_name}} UI, you can add environment variables to a Dedicated Cloud Gateway when you create the data plane node. Click **Advanced options** to display the **Environment variables** form and enter the key/value pairs to use.
+In the {{site.konnect_short_name}} UI, you can add environment variables to a Dedicated Cloud Gateway when you create the data plane node. Navigate to your Dedicated Cloud Gateway control plane and from the **Actions** dropdown menu, select "Edit or Resize Cluster". Click **Advanced options** and enter the environment variable key and value pairs you want to use.
 
 You can add environment variables using the Cloud Gateways API. When you [create a Dedicated Cloud Gateway Data Plane](#how-do-i-provision-a-control-plane) with a `PUT` request to the [`/cloud-gateways/configurations`](/api/konnect/cloud-gateways/#/operations/create-configuration) endpoint, add the `environment` array containing the `name` and `value` of each variable:
 <!--vale off -->
-{% control_plane_request %}
+{% konnect_api_request %}
 url: /v2/cloud-gateways/configurations
+region: global
 status_code: 201
 method: PUT
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-    - 'Authorization: Bearer $KONNECT_TOKEN'
 body:
-    control_plane_id: $CONTROL_PLANE_ID
-    version: 3.9
-    control_plane_geo: ap-northeast-1
-    dataplane_groups:
-      - provider: aws 
-      - region: na
-      - cloud_gateway_network_id: $CLOUD_GATEWAY_NETWORK_ID
-      - autoscale: 
-        - kind: autopilot
-        - base_rps: 100
-    environment:
-      - name: KONG_LOG_LEVEL
-        value: info
-{% endcontrol_plane_request %}
+  control_plane_id: $CONTROL_PLANE_ID
+  version: "3.11"
+  control_plane_geo: us
+  dataplane_groups:
+    - provider: aws
+      region: us-east-2
+      cloud_gateway_network_id: $CLOUD_GATEWAY_NETWORK_ID
+      autoscale:
+        kind: autopilot
+        base_rps: 100
+      environment:
+        - name: KONG_TRACING_SAMPLING_RATE
+          value: "0.01"
+{% endkonnect_api_request %}
 <!-- vale on -->
 
 ## Securing backend communication
