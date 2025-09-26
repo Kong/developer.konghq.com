@@ -28,58 +28,23 @@ related_resources:
 
 This policy can be used to encrypt portions of Kafka records.
 
-## Example configuration
+## Use cases
 
-Example configurations for the Encrypt policy.
+Common use cases for the Encrypt policy:
 
-### Encrypt a key
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: "[Encrypt a specific key from a source](/event-gateway/policies/encrypt/examples/encrypt-a-key/)"
+    description: Decrypt a key based on a specific key reference name.
 
-Encrypt a specific key:
-```yaml
-policies:
-  - name: encrypt-keys
-    type: encrypt
-    spec:
-      failure:
-        mode: error
-      key_sources:
-      - type: ref_name
-        ref_name: ref_name
-      encrypt:
-      - type: key
-        id: id
-```
+  - use_case: "[Encrypt all keys](/event-gateway/policies/encrypt/examples/encrypt-everything/)"
+    description: Define a static key source and encrypt all keys that come from that source.
 
-### Encrypt everything
-
-Encrypt everything in a specific `key_source` location:
-
-```yaml
-key_sources:
-  - name: aws
-    type: aws
-    aws:
-      credentials:
-        type: env
-policies:
-  - name: encrypt-everything
-    type: encrypt
-    spec:
-      failure:
-        mode: passthrough # | error
-      key_sources:
-        - type: static
-          static:
-            id: "user-chosen-id"
-            source:
-              type: string # | file
-              string: |
-                cT4Q34DDB25hU9lumzrXtw==...
-        - type: ref_name
-          ref_name: aws
-      encrypt:
-       - type: keys
-         id: "aws://arn:aws:kms:us-east-1:123456789012:key/password-key-id"
-       - type: values
-         id: "static://user-chosen-id"
-```
+{% endtable %}
+<!--vale on-->
