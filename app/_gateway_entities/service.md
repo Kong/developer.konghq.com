@@ -97,6 +97,33 @@ flowchart LR
 
 <!--vale on -->
 
+## Gateway Service timeouts
+
+Timeouts are configured at the Service level and influence retry behavior when failures occur.
+
+### Connect timeout
+
+The [`connect_timeout`](#schema-service-connect-timeout) parameter defines the time allowed to establish a TCP connection to the upstream server. If the connection can't be opened, it fails at the socket-setup layer. {{site.base_gateway}} returns a `502 Bad Gateway` response and retries the request up to the number of retries configured with the [`retries`](#schema-service-retries) parameter.
+
+### Read timeout
+
+The [`read_timeout`](#schema-service-read-timeout) parameter defines the time allowed for the upstream to send a full response after the connection is established. If the upstream stalls, the timeout is triggered once the idle time exceeds the configured value and {{site.base_gateway}} returns a `504 Gateway Time-out` response. 
+
+{% capture retry %}
+The retry behavior depends on the method used:
+
+* For idempotent methods (`GET`, `HEAD`, `PUT`, `DELETE`, `OPTIONS`, and `TRACE`), {{site.base_gateway}} retries the request up to the number of retries configured with the [`retries`](#schema-service-retries) parameter.
+* For non-idempotent methods (`POST`, `PATCH`, `LOCK`, `UNLOCK`, `PROPPATCH`, `MKCOL`, `MOVE`, and `COPY`), by default {{site.base_gateway}} will not retry unless [`proxy_next_upstream non_idempotent`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_next_upstream) is set in the NGINX configuration.
+{% endcapture %}
+
+{{ retry }}
+
+### Write timeout
+
+The [`write_timeout`](#schema-service-write-timeout) parameter defines the idle time between successive write operations when sending the request body to the upstream. It measures gaps in data transmission, not the total upload duration. The timer resets with each successful write. The timeout is triggered when the upstream accepts the connection but delays receiving the body at the TCP level. {{site.base_gateway}} returns a `504 Gateway Time-out` response. 
+
+{{ retry }}
+
 ## Schema
 
 {% entity_schema %}
