@@ -39,43 +39,43 @@
     {
       "title": "DATASTORE",
       "start": 1307,
-      "end": 1589,
+      "end": 1626,
       "description": "Kong can run with a database to store coordinated data between Kong nodes in\na cluster, or without a database, where each node stores its information\nindependently in memory.\n\nWhen using a database, Kong will store data for all its entities (such as\nroutes, services, consumers, and plugins) in PostgreSQL,\nand all Kong nodes belonging to the same cluster must connect to the same database.\n\nKong supports PostgreSQL versions 9.5 and above.\n\nWhen not using a database, Kong is said to be in \"DB-less mode\": it will keep\nits entities in memory, and each node needs to have this data entered via a\ndeclarative configuration file, which can be specified through the\n`declarative_config` property, or via the Admin API using the `/config`\nendpoint.\n\nWhen using Postgres as the backend storage, you can optionally enable Kong\nto serve read queries from a separate database instance.\nWhen the number of proxies is large, this can greatly reduce the load\non the main Postgres instance and achieve better scalability. It may also\nreduce the latency jitter if the Kong proxy node's latency to the main\nPostgres instance is high.\n\nThe read-only Postgres instance only serves read queries, and write\nqueries still go to the main connection. The read-only Postgres instance\ncan be eventually consistent while replicating changes from the main\ninstance.\n\nAt least the `pg_ro_host` config is needed to enable this feature.\nBy default, all other database config for the read-only connection is\ninherited from the corresponding main connection config described above but\nmay be optionally overwritten explicitly using the `pg_ro_*` config below.\n"
     },
     {
       "title": "DATASTORE CACHE",
-      "start": 1590,
-      "end": 1665,
+      "start": 1627,
+      "end": 1702,
       "description": "In order to avoid unnecessary communication with the datastore, Kong caches\nentities (such as APIs, consumers, credentials...) for a configurable period\nof time. It also handles invalidations if such an entity is updated.\n\nThis section allows for configuring the behavior of Kong regarding the\ncaching of such configuration entities.\n"
     },
     {
       "title": "DNS RESOLVER",
-      "start": 1666,
-      "end": 1747,
+      "start": 1703,
+      "end": 1784,
       "description": "By default, the DNS resolver will use the standard configuration files\n`/etc/hosts` and `/etc/resolv.conf`. The settings in the latter file will be\noverridden by the environment variables `LOCALDOMAIN` and `RES_OPTIONS` if\nthey have been set.\n\nKong will resolve hostnames as either `SRV` or `A` records (in that order, and\n`CNAME` records will be dereferenced in the process).\nIn case a name is resolved as an `SRV` record, it will also override any given\nport number with the `port` field contents received from the DNS server.\n\nThe DNS options `SEARCH` and `NDOTS` (from the `/etc/resolv.conf` file) will\nbe used to expand short names to fully qualified ones. So it will first try\nthe entire `SEARCH` list for the `SRV` type, if that fails it will try the\n`SEARCH` list for `A`, etc.\n\nFor the duration of the `ttl`, the internal DNS resolver will load balance each\nrequest it gets over the entries in the DNS record. For `SRV` records, the\n`weight` fields will be honored, but it will only use the lowest `priority`\nfield entries in the record.\n\nFor DNS records returned with a TTL value of 0, Kong will default to caching\nthese records for 1 second. Strict adherence to the requirement of not caching\nTTL 0 records could generate excessive query frequency to upstream DNS servers,\nleading to unsustainable load and potential service degradation. As a result,\nmost DNS resolver implementations deviate from this requirement in practice.\n"
     },
     {
       "title": "VAULTS",
-      "start": 1847,
-      "end": 2082,
+      "start": 1884,
+      "end": 2119,
       "description": "A secret is any sensitive piece of information required for API gateway\noperations. Secrets may be part of the core Kong Gateway configuration,\nused in plugins, or part of the configuration associated with APIs serviced\nby the gateway.\n\nSome of the most common types of secrets used by Kong Gateway include:\n\n- Data store usernames and passwords, used with PostgreSQL and Redis\n- Private X.509 certificates\n- API keys\n\nSensitive plugin configuration fields are generally used for authentication,\nhashing, signing, or encryption. Kong Gateway lets you store certain values\nin a vault. Here are the vault specific configuration options.\n"
     },
     {
       "title": "TUNING & BEHAVIOR",
-      "start": 2083,
-      "end": 2219,
+      "start": 2120,
+      "end": 2256,
       "description": ""
     },
     {
       "title": "MISCELLANEOUS",
-      "start": 2220,
-      "end": 2341,
+      "start": 2257,
+      "end": 2378,
       "description": "Additional settings inherited from lua-nginx-module allowing for more\nflexibility and advanced usage.\n\nSee the lua-nginx-module documentation for more information:\nhttps://github.com/openresty/lua-nginx-module\n"
     },
     {
       "title": "KONG MANAGER",
-      "start": 2342,
-      "end": 2617,
+      "start": 2379,
+      "end": 2654,
       "description": "\nThe Admin GUI for Kong Enterprise.\n\n"
     },
     {
@@ -86,14 +86,14 @@
     },
     {
       "title": "Konnect",
-      "start": 2618,
-      "end": 2624,
+      "start": 2655,
+      "end": 2661,
       "description": ""
     },
     {
       "title": "Analytics for Konnect",
-      "start": 2625,
-      "end": 2645,
+      "start": 2662,
+      "end": 2682,
       "description": ""
     },
     {
@@ -116,20 +116,20 @@
     },
     {
       "title": "ADMIN SMTP CONFIGURATION",
-      "start": 2646,
-      "end": 2660,
+      "start": 2683,
+      "end": 2697,
       "description": ""
     },
     {
       "title": "GENERAL SMTP CONFIGURATION",
-      "start": 2661,
-      "end": 2711,
+      "start": 2698,
+      "end": 2748,
       "description": ""
     },
     {
       "title": "DATA & ADMIN AUDIT",
-      "start": 2712,
-      "end": 2757,
+      "start": 2749,
+      "end": 2794,
       "description": "When enabled, Kong will store detailed audit data regarding Admin API and\ndatabase access. In most cases, updates to the database are associated with\nAdmin API requests. As such, database object audit log data is tied to a\ngiven HTTP request via a unique identifier, providing built-in association of\nAdmin API and database traffic.\n\n"
     },
     {
@@ -140,32 +140,32 @@
     },
     {
       "title": "ROUTE COLLISION DETECTION/PREVENTION",
-      "start": 2758,
-      "end": 2805,
+      "start": 2795,
+      "end": 2842,
       "description": ""
     },
     {
       "title": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
-      "start": 2806,
-      "end": 3034,
+      "start": 2843,
+      "end": 3071,
       "description": "When enabled, Kong will transparently encrypt sensitive fields, such as consumer\ncredentials, TLS private keys, and RBAC user tokens, among others. A full list\nof encrypted fields is available from the Kong Enterprise documentation site.\nEncrypted data is transparently decrypted before being displayed to the Admin\nAPI or made available to plugins or core routing logic.\n\nWhile this feature is GA, do note that we currently do not provide normal semantic\nversioning compatibility guarantees on the keyring feature's APIs in that Kong may\nmake a breaking change to the feature in a minor version. Also note that\nmismanagement of keyring data may result in irrecoverable data loss.\n\n"
     },
     {
       "title": "REQUEST DEBUGGING",
-      "start": 3083,
-      "end": 3145,
+      "start": 3120,
+      "end": 3182,
       "description": "Request debugging is a mechanism that allows admins to collect the timing of\nproxy path requests in the response header (X-Kong-Request-Debug-Output)\nand optionally, the error log.\n\nThis feature provides insights into the time spent within various components of Kong,\nsuch as plugins, DNS resolution, load balancing, and more. It also provides contextual\ninformation such as domain names tried during these processes.\n\n"
     },
     {
       "title": "CLUSTER FALLBACK CONFIGURATION",
-      "start": 3035,
-      "end": 3082,
+      "start": 3072,
+      "end": 3119,
       "description": ""
     },
     {
       "title": "New DNS RESOLVER",
-      "start": 1748,
-      "end": 1846,
+      "start": 1785,
+      "end": 1883,
       "description": "This DNS resolver introduces global caching for DNS records across workers,\nsignificantly reducing the query load on DNS servers.\n\nIt provides observable statistics, you can retrieve them through the Admin API\n`/status/dns`.\n"
     }
   ],
@@ -296,7 +296,7 @@
       "sectionTitle": "GENERAL"
     },
     "proxy_server_ssl_verify": {
-      "defaultValue": "off",
+      "defaultValue": "on",
       "description": "Toggles server certificate verification if\n`proxy_server` is in HTTPS.\nSee the `lua_ssl_trusted_certificate`\nsetting to specify a certificate authority.\n",
       "sectionTitle": "GENERAL"
     },
@@ -433,7 +433,7 @@
         "127.0.0.1:8001 reuseport backlog=16384",
         "127.0.0.1:8444 http2 ssl reuseport backlog=16384"
       ],
-      "description": "Comma-separated list of addresses and ports on\nwhich the Admin interface should listen.\nThe Admin interface is the API allowing you to\nconfigure and manage Kong.\nAccess to this interface should be *restricted*\nto Kong administrators *only*. This value accepts\nIPv4, IPv6, and hostnames.\n\nIt is highly recommended to avoid exposing the Admin API to public\ninterfaces, by using values such as `0.0.0.0:8001`\n\nSee https://docs.konghq.com/gateway/latest/production/running-kong/secure-admin-api/\nfor more information about how to secure your Admin API.\n\nSome suffixes can be specified for each pair:\n\n- `ssl` will require that all connections made\n  through a particular address/port be made with TLS\n  enabled.\n- `http2` will allow for clients to open HTTP/2\n  connections to Kong's proxy server.\n- `proxy_protocol` will enable usage of the\n  PROXY protocol for a given address/port.\n- `deferred` instructs to use a deferred accept on\n  Linux (the `TCP_DEFER_ACCEPT` socket option).\n- `bind` instructs to make a separate bind() call\n  for a given address:port pair.\n- `reuseport` instructs to create an individual\n  listening socket for each worker process,\n  allowing the Kernel to better distribute incoming\n  connections between worker processes.\n- `backlog=N` sets the maximum length for the queue\n  of pending TCP connections. This number should\n  not be too small to prevent clients\n  seeing \"Connection refused\" errors when connecting to\n  a busy Kong instance.\n  **Note:** On Linux, this value is limited by the\n  setting of the `net.core.somaxconn` kernel parameter.\n  In order for the larger `backlog` set here to take\n  effect, it is necessary to raise\n  `net.core.somaxconn` at the same time to match or\n  exceed the `backlog` number set.\n- `ipv6only=on|off` specifies whether an IPv6 socket listening\n  on a wildcard address [::] will accept only IPv6\n  connections or both IPv6 and IPv4 connections.\n- `so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]`\n  configures the “TCP keepalive” behavior for the listening\n  socket. If this parameter is omitted, the operating\n  system’s settings will be in effect for the socket. If it\n  is set to the value `on`, the `SO_KEEPALIVE` option is turned\n  on for the socket. If it is set to the value `off`, the\n  `SO_KEEPALIVE` option is turned off for the socket. Some\n  operating systems support setting of TCP keepalive parameters\n  on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`,\n  and `TCP_KEEPCNT` socket options.\n\nThis value can be set to `off`, thus disabling\nthe Admin interface for this node, enabling a\ndata plane mode (without configuration\ncapabilities) pulling its configuration changes\nfrom the database.\n\nExample: `admin_listen = 127.0.0.1:8444 http2 ssl`\n",
+      "description": "Comma-separated list of addresses and ports on\nwhich the Admin interface should listen.\nThe Admin interface is the API allowing you to\nconfigure and manage Kong.\nAccess to this interface should be *restricted*\nto Kong administrators *only*. This value accepts\nIPv4, IPv6, and hostnames.\n\nIt is highly recommended to avoid exposing the Admin API to public\ninterfaces, by using values such as `0.0.0.0:8001`\n\nSee https://developer.konghq.com/gateway/secure-the-admin-api/\nfor more information about how to secure your Admin API.\n\nSome suffixes can be specified for each pair:\n\n- `ssl` will require that all connections made\n  through a particular address/port be made with TLS\n  enabled.\n- `http2` will allow for clients to open HTTP/2\n  connections to Kong's proxy server.\n- `proxy_protocol` will enable usage of the\n  PROXY protocol for a given address/port.\n- `deferred` instructs to use a deferred accept on\n  Linux (the `TCP_DEFER_ACCEPT` socket option).\n- `bind` instructs to make a separate bind() call\n  for a given address:port pair.\n- `reuseport` instructs to create an individual\n  listening socket for each worker process,\n  allowing the Kernel to better distribute incoming\n  connections between worker processes.\n- `backlog=N` sets the maximum length for the queue\n  of pending TCP connections. This number should\n  not be too small to prevent clients\n  seeing \"Connection refused\" errors when connecting to\n  a busy Kong instance.\n  **Note:** On Linux, this value is limited by the\n  setting of the `net.core.somaxconn` kernel parameter.\n  In order for the larger `backlog` set here to take\n  effect, it is necessary to raise\n  `net.core.somaxconn` at the same time to match or\n  exceed the `backlog` number set.\n- `ipv6only=on|off` specifies whether an IPv6 socket listening\n  on a wildcard address [::] will accept only IPv6\n  connections or both IPv6 and IPv4 connections.\n- `so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]`\n  configures the “TCP keepalive” behavior for the listening\n  socket. If this parameter is omitted, the operating\n  system’s settings will be in effect for the socket. If it\n  is set to the value `on`, the `SO_KEEPALIVE` option is turned\n  on for the socket. If it is set to the value `off`, the\n  `SO_KEEPALIVE` option is turned off for the socket. Some\n  operating systems support setting of TCP keepalive parameters\n  on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`,\n  and `TCP_KEEPCNT` socket options.\n\nThis value can be set to `off`, thus disabling\nthe Admin interface for this node, enabling a\ndata plane mode (without configuration\ncapabilities) pulling its configuration changes\nfrom the database.\n\nExample: `admin_listen = 127.0.0.1:8444 http2 ssl`\n",
       "sectionTitle": "NGINX"
     },
     "status_listen": {
@@ -1262,7 +1262,7 @@
     },
     "event_hooks_enabled": {
       "defaultValue": "on",
-      "description": "When enabled, event hook entities represent a relationship\nbetween an event (source and event) and an action\n(handler). Similar to web hooks, event hooks can be used to\ncommunicate Kong Gateway service events. When a particular\nevent happens on a service, the event hook calls a URL with\ninformation about that event. Event hook configurations\ndiffer depending on the handler. The events that are\ntriggered send associated data.\n\nSee: https://docs.konghq.com/gateway/api/admin-ee/latest/#/Event-hooks/get-event-hooks\n",
+      "description": "When enabled, event hook entities represent a relationship\nbetween an event (source and event) and an action\n(handler). Similar to web hooks, event hooks can be used to\ncommunicate Kong Gateway service events. When a particular\nevent happens on a service, the event hook calls a URL with\ninformation about that event. Event hook configurations\ndiffer depending on the handler. The events that are\ntriggered send associated data.\n\nSee: https://developer.konghq.com/gateway/entities/event-hook/\n",
       "sectionTitle": "MISCELLANEOUS"
     },
     "fips": {
@@ -1811,7 +1811,7 @@
     },
     "route_validation_strategy": {
       "defaultValue": "smart",
-      "description": "The strategy used to validate\nroutes when creating or updating them.\nDifferent strategies are available to tune\nhow to enforce splitting traffic of\nworkspaces.\n- `smart` is the default option and uses the\n  algorithm described in\n  https://docs.konghq.com/gateway/latest/kong-enterprise/workspaces/.\n- `off` disables any check.\n- `path` enforces routes to comply with the pattern\n  described in config `enforce_route_path_pattern`.\n- `static` relies on the PostgreSQL database.\nBefore creating a new route, it checks if the\nroute is unique across all workspaces based on\nthe following params: `paths`, `methods`, and\n`hosts`. If all fields of the new route overlap\nwith an existing one, a 409 is returned with the\nroute of the collision. The array order is not\nimportant for the overlap filter.\n",
+      "description": "The strategy used to validate\nroutes when creating or updating them.\nDifferent strategies are available to tune\nhow to enforce splitting traffic of\nworkspaces.\n- `smart` is the default option and uses the\n  algorithm described in\n  https://developer.konghq.com/gateway/entities/workspace/.\n- `off` disables any check.\n- `path` enforces routes to comply with the pattern\n  described in config `enforce_route_path_pattern`.\n- `static` relies on the PostgreSQL database.\nBefore creating a new route, it checks if the\nroute is unique across all workspaces based on\nthe following params: `paths`, `methods`, and\n`hosts`. If all fields of the new route overlap\nwith an existing one, a 409 is returned with the\nroute of the collision. The array order is not\nimportant for the overlap filter.\n",
       "sectionTitle": "ROUTE COLLISION DETECTION/PREVENTION"
     },
     "enforce_route_path_pattern": {
@@ -2159,6 +2159,78 @@
       "sectionTitle": "KONG MANAGER",
       "min_version": {
         "gateway": "3.11"
+      }
+    },
+    "pg_azure_auth": {
+      "defaultValue": "off",
+      "description": "Determines whether Azure authentication will be used\nfor PostgreSQL connections. When switched to\n`on`, the username defined in `pg_user` will\nbe used as the database account, and the\ndatabase connection will be forced to use TLS.\n`pg_password` will not be used when this\nswitch is `on`.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "pg_azure_tenant_id": {
+      "defaultValue": null,
+      "description": "The Azure tenant ID for Service Principal\nauthentication. This is only required when\nusing Service Principal authentication\n(not needed for Managed Identity).\nIf not specified, Managed Identity\nauthentication will be attempted.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "pg_azure_client_id": {
+      "defaultValue": null,
+      "description": "The Azure client ID for authentication.\nFor Managed Identity: the client ID of the\nuser-assigned managed identity.\nFor Service Principal: the application\n(client) ID of the service principal.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "pg_azure_client_secret": {
+      "defaultValue": null,
+      "description": "The Azure client secret for authentication.\nRequired for Service Principal authentication.\nNot needed for Managed Identity.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "pg_ro_azure_auth": {
+      "defaultValue": "<pg_azure_auth>",
+      "description": "Same as `pg_azure_auth`, but for the\nread-only connection.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "pg_ro_azure_tenant_id": {
+      "defaultValue": "<pg_azure_tenant_id>",
+      "description": "Same as `pg_azure_tenant_id`, but for the\nread-only connection.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "pg_ro_azure_client_id": {
+      "defaultValue": "<pg_azure_client_id>",
+      "description": "Same as `pg_azure_client_id`, but for the\nread-only connection.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "pg_ro_azure_client_secret": {
+      "defaultValue": "<pg_azure_client_secret>",
+      "description": "Same as `pg_azure_client_secret`, but for the\nread-only connection.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.12"
+      }
+    },
+    "identity_service": {
+      "defaultValue": null,
+      "description": "Overrides the default identity service URL for external consumers.\n",
+      "sectionTitle": "REQUEST DEBUGGING",
+      "min_version": {
+        "gateway": "3.12"
       }
     }
   }

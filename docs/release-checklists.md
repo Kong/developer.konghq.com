@@ -205,6 +205,15 @@ to make sure the new spec is included. If not, add it the new spec to it.
 
 > Make sure the file is named `openapi.yaml`, otherwise the Insomnia buttons won't generate.
 
+1. Update the file in Konnect.
+  1. Log into the Konnect Prod org (use Okta).
+  1. Go to API Products -> Gateway Admin EE -> Product Versions.
+  1. Pick a version or create a new one.
+  1. Upload the `openapi.yaml` file.
+
+1. If this is for a new version, run the [Sync Konnect OAS Data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) GitHub action.
+In the **Run workflow** dropdown, select your release branch (e.g. `release/gateway-3.12`), then click the **Run workflow** button.
+
 ### Konnect compatibility
 
 Update the table at https://developer.konghq.com/konnect-platform/compatibility/ with the latest supported Gateway version and expected EOL.

@@ -1,0 +1,67 @@
+description: 'Configure the Confluent Consume plugin to use the Confluent Schema Registry for message deserialization and secure it with OAuth 2.0 token authentication.'
+
+title: 'Confluent Schema Registry with OAuth2'
+
+weight: 900
+
+requirements: 
+  - "[Create a Kafka cluster in Confluent Cloud](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)"
+  - "[Create a Kafka topic in the cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic)"
+  - "Create an API key and secret in the cluster"
+  - "[Configure a Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)"
+  - "Set up an identity provider (IdP) that supports OAuth 2.0 client credentials grant, such as Keycloak or Okta"
+
+variables:
+  host:
+    description: The bootstrap server host.
+    value: $BOOTSTRAP_SERVER_HOST
+  key:
+    description: The API key to use for authentication.
+    value: $API_KEY
+  secret:
+    description: The API secret to use for authentication.
+    value: $API_SECRET
+  topic:
+    description: The name of the Kafka topic to consume from.
+    value: $KAFKA_TOPIC
+  registry_url:
+    description: "The URL of your Confluent Schema Registry instance. For example, `http://schema-registry:8081`."
+    value: $REGISTRY_URL
+  client_id:
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+    value: $CLIENT_ID
+  client_secret:
+    description: 'The client secret from the IdP.'
+    value: $CLIENT_SECRET
+
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topics:
+  - name: ${topic}
+  mode: http-get
+  cluster_api_key: ${key}
+  cluster_api_secret: ${secret}
+  schema_registry:
+    confluent:
+      url: ${registry_url}
+      authentication:
+        mode: oauth2
+        oauth2:
+          token_endpoint: https://example.com/oauth2/token
+          client_id: ${client_id}
+          client_secret: ${client_secret}
+        oauth2_client:
+          auth_method: client_secret_post
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.12'

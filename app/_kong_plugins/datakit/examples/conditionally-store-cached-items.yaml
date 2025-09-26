@@ -1,0 +1,81 @@
+description: |
+  Conditionally fetch or store cache data.
+
+extended_description: |
+  This example leverages the `cache` and `branch` nodes to conditionally store or retrieve
+  cache items.
+
+  The `cache` node requires a cache resource. In this example, we use an in-memory cache resource. 
+  For all options, see the [`cache` resource reference](/plugins/datakit/#cache-resource).
+
+  {:.info}
+  > **Note:** When using the `branch` node, the `then` and `else` parameters must list all nodes for both branches.
+    If a node isn't listed in the branch, the node will run depending on its location in the flow configuration.
+
+title: Conditionally fetch or store cache data
+
+weight: 900
+
+config:
+  resources:
+    cache:
+      strategy: memory
+  nodes:
+    - type: static
+      values:
+        key: cache key
+      name: CACHE_KEY_GET
+    - type: cache
+      input: CACHE_KEY_GET
+      ttl: 200
+      name: GET
+    - type: branch
+      then:
+        - DATA
+        - SET
+        - EXIT_MISS
+      else:
+        - EXIT_HIT
+      input: GET.miss
+      name: branch
+    - type: call
+      method: GET
+      url: "http://localhost:8080/anything"
+      name: DATA
+    - type: static
+      values:
+        hit:
+          x-hit: true
+        ttl: 100
+        miss:
+          x-miss: true
+        key: cache key
+      name: VALUES
+    - type: cache
+      inputs:
+        key: VALUES.key
+        data: DATA
+        ttl: VALUES.ttl
+      name: SET
+    - inputs:
+        headers: VALUES.miss
+        body: DATA
+      type: exit
+      status: 200
+      name: EXIT_MISS
+    - inputs:
+        headers: VALUES.hit
+        body: GET.data
+      type: exit
+      status: 200
+      name: EXIT_HIT
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.12'

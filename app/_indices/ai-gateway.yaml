@@ -58,6 +58,8 @@ sections:
       - path: /plugins/ai-sanitizer/
       - path: /plugins/ai-prompt-compressor/
       - path: /plugins/ai-aws-guardrails/
+      - path: /plugins/ai-mcp-proxy/
+      - path: /plugins/ai-llm-as-judge/
   - title: MCP traffic gateway
     items:
       - path: /mcp/
@@ -76,6 +78,12 @@ sections:
       - title: "{{site.konnect_product_name}} MCP Server tools"
         description: Check available {{site.konnect_product_name}} MCP Server tools
         url: /mcp/kong-mcp/tools/
+      - title: MCP logs
+        description: Learn about logs available for MCP traffic via Kong AI Gateway
+        url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
+      - title: MCP traffic metrics
+        description: Learn about metrics available for MCP traffic via Kong AI Gateway
+        url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
   - title: AI load balancing
     items:
       - title: Load balancing with AI Proxy Advanced

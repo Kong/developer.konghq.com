@@ -10,6 +10,9 @@ influxdb:
 kafka:
   name: Kafka
   icon: kafka.svg
+valkey:
+  name: Valkey
+  icon: valkey.svg
 
 # Metrics
 prometheus:
@@ -38,7 +41,9 @@ azure-key-vaults:
 gcp-sm:
   name: Google Cloud Secret Manager
   icon: google-cloud.svg
-
+conjur:
+  name: CyberArk Conjur Vault
+  icon: cyberark.svg
 # IDP
 auth0:
   name: Auth0

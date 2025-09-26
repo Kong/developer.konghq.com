@@ -78,6 +78,14 @@ for adding an authentication header (possibly similar to
 
 The key size (the modulo) for RSA keys is currently hard-coded to 2048 bits.
 
+## Manage token signing {% new_in 3.12 %}
+
+You can turn channel and access token signing or re-signing off and on as needed with `config.channel_token_signing` and `config.access_token_signing`.
+
+Use the following use cases to help you determine if you should enable or disable token signing and re-signing:
+* [**Enable signing or re-signing**](/plugins/jwt-signer/examples/enable-signing-tokens/): If you don't fully trust the upstream identity provider or want to enforce a local trust boundary, set `config.channel_token_signing` or `config.access_token_signing` to `true`. This ensures that downstream services only need to trust {{site.base_gateway}}'s signing key.
+* [**Disable signing or re-signing**](/plugins/jwt-signer/examples/disable-signing-tokens/): If the token already comes from an identity provider and your downstream services already validate that provider's keys, set `config.channel_token_signing` or `config.access_token_signing` to `false`.
+
 ## Consumer mapping
 
 The following parameters let you map [Consumers](/gateway/entities/consumer/):
@@ -153,3 +161,26 @@ reload tokens specified in [`config.access_token_jwks_uri`](/plugins/jwt-signer/
 rotate Keys **twice**, as it effectively replaces both current and previous Key Sets
 with newly generated tokens or reloaded tokens if the Keys were loaded from
 an external URI.
+
+## Claim validation {% new_in 3.12 %}
+
+In {{site.base_gateway}} 3.12 or later, you can perform additional claim validation by specifying the types of token claims as well as which tokens are required and which are optional. 
+
+You can validate the following types of access and channel token claims:
+* [Issuer](/plugins/jwt-signer/examples/validate-channel-token-issuers/) (`iss`)
+* [Not before](/plugins/jwt-signer/examples/validate-access-token-issuers/) (`nbf`)
+* [Subject](/plugins/jwt-signer/examples/validate-channel-token-subjects/) (`sub`)
+* Audience (`aud`)
+
+You can also specify optional and required claims with the following:
+* `config.access_token_optional_claims`
+* `config.channel_token_optional_claims`
+* `config.access_token_introspection_optional_claims`
+* `config.channel_token_introspection_optional_claims`
+* `config.access_token_required_claims`
+* `config.channel_token_required_claims`
+* `config.access_token_introspection_required_claims`
+* `config.channel_token_introspection_required_claims`
+
+
+
