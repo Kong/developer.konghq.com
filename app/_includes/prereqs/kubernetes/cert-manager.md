@@ -19,7 +19,7 @@
     kind: Issuer
     metadata:
       name: example-issuer
-      namespace: kong
+      namespace: cert-manager
     spec:
       selfSigned: {}
     ' | kubectl apply -f -
@@ -33,7 +33,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: example-cert
-  namespace: kong
+  namespace: cert-manager
 spec:
   secretName: example-cert-tls
   issuerRef:
