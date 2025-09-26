@@ -4319,6 +4319,7 @@ components:
                 description: The token of the system account access token.
                 type: string
                 readOnly: true
+                x-sensitive: true
             example:
               id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
               name: Sample Access Token
