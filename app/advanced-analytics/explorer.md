@@ -55,8 +55,8 @@ faqs:
             - **Zoom**: Focuses the chart on the selected time range.
        
        From the Chart menu:
-       - Select **Explore** to open Explorer with the chart’s current filters and time range, without highlighting first.
-       - Select **Export CSV** to download the chart view. The file includes the current filters and time window.
+       - To open Explorer with the chart’s current filters and time range, without highlighting first, select **Explore**.
+       - To download the chart view, select **Export CSV**. The file includes the current filters and time window.
 related_resources:
   - text: Konnect Advanced Analytics
     url: /advanced-analytics/
