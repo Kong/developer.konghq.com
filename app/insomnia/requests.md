@@ -163,6 +163,10 @@ To send CSV data in a POST request, set the request body type to **Binary file**
 
 This method allows you to send raw CSV files directly in the request payload.
 
+## Generating random data in requests
+
+Insomnia provides [template tags](/insomnia/template-tags/) that allow you to generate random data. These can be used in the request URL, query parameters, body, and authentication, by pressing `Control+Space` and selecting a **Faker** tag. You can generate random timestamps, dates, text, passwords, etc.
+
 
 ## What can I do with folders in a request collection?
 
