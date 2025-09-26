@@ -21,7 +21,18 @@ works_on:
 entities: []
 
 tldr: null
+faqs:
+  - q: Can I install {{ site.base_gateway }} via Helm without cluster permissions?
+    a: |
+      Yes. Using the `kong` chart, set `ingressController.rbac.enableClusterRoles` to false. 
 
+      {:.danger}
+      > **Warning:** Some resources require a ClusterRole for reconciliation because the controllers need to watch cluster scoped resources. Disabling ClusterRoles causes them fail, so you need to disable the controllers when setting it to `false`. These resources include:
+      > - All Gateway API resources
+      > - `IngressClass`
+      > - `KNative/Ingress` (KIC 2.x only)
+      > - `KongClusterPlugin`
+      > - `KongVault`, `KongLicense` (KIC 3.1 and above)
 prereqs:
   skip_product: true
 
