@@ -3,7 +3,7 @@
         <div class="flex flex-col w-full">
         <div class="tablist">
             <a class="tab-button__horizontal{% if page.overview? %} tab-button__horizontal--active{% endif %}" href="{{page.overview_url}}">Overview</a>
-            <a class="tab-button__horizontal{% if page.example? %} tab-button__horizontal--active{% endif %}" href="{{page.get_started_url}}">Examples</a>
+            {% if page.get_started_url %}<a class="tab-button__horizontal{% if page.example? %} tab-button__horizontal--active{% endif %}" href="{{page.get_started_url}}">Examples</a>{% endif %}
             <a class="tab-button__horizontal{% if page.reference? %} tab-button__horizontal--active{% endif %}" href="{{page.reference_url}}">Configuration reference</a>
         </div>
         </div>

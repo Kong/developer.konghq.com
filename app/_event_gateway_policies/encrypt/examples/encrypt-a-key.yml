@@ -1,0 +1,24 @@
+title: Encrypt a key
+
+description: Encrypt a specific key.
+
+
+weight: 900
+
+config:
+  policies:
+  - name: encrypt-keys
+    type: encrypt
+    spec:
+      failure:
+        mode: error
+      key_sources:
+      - type: ref_name
+        ref_name: ref_name
+      encrypt:
+      - type: key
+        id: id
+
+tools:
+  - konnect-api
+  - terraform

@@ -1,0 +1,19 @@
+title: Validate all topics
+
+description: Ensure that every topic is validated against a schema.
+
+weight: 900
+
+config:
+  produce_policies:
+    - policies: # no match which means every topic requires a schema
+        - policy:
+            type: schema_validation
+            spec:
+              record_value:
+                schema_registry_name: my-registry
+                failure_action: reject
+
+tools:
+  - konnect-api
+  - terraform

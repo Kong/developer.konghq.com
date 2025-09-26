@@ -4,7 +4,7 @@ require 'yaml'
 
 module Jekyll
   module Drops
-    class MeshPolicyExample < Liquid::Drop # rubocop:disable Style/Documentation
+    class PolicyExample < Liquid::Drop # rubocop:disable Style/Documentation
       attr_reader :file
 
       def initialize(file:, policy:) # rubocop:disable Lint/MissingSuper
@@ -44,9 +44,9 @@ module Jekyll
 
       def url
         @url ||= if @policy.unreleased?
-                   "/mesh/policies/#{@policy.slug}/examples/#{slug}/#{@policy.min_release}"
+                   "/#{@policy.product}/policies/#{@policy.slug}/examples/#{slug}/#{@policy.min_release}"
                  else
-                   "/mesh/policies/#{@policy.slug}/examples/#{slug}/"
+                   "/#{@policy.product}/policies/#{@policy.slug}/examples/#{slug}/"
                  end
       end
 

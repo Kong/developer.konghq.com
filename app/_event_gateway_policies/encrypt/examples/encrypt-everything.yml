@@ -1,0 +1,45 @@
+title: Enrypt everything
+
+description: Encrypt everything that comes from a specific key source.
+
+extended_description: |
+  Encrypt everything that comes from a specific key source.
+
+  This example requires a key source defined in a root `key_sources` section:
+
+  ```yaml
+  key_sources:
+  - name: aws
+    type: aws
+    aws:
+      credentials:
+        type: env
+  ``` 
+
+weight: 900
+
+config:
+  policies:
+    - name: encrypt-everything
+      type: encrypt
+      spec:
+        failure:
+          mode: passthrough # | error
+        key_sources:
+          - type: static
+            static:
+              id: "user-chosen-id"
+              source:
+                type: string # | file
+                string: |
+                  cT4Q34DDB25hU9lumzrXtw==...
+          - type: ref_name
+            ref_name: aws
+        encrypt:
+        - type: keys
+          id: "aws://arn:aws:kms:us-east-1:123456789012:key/password-key-id"
+        - type: values
+          id: "static://user-chosen-id"
+tools:
+  - konnect-api
+  - terraform
