@@ -42,6 +42,11 @@ faqs:
     a: Yes. All decK dumps, or YAML configurations, will continue to work in {{site.konnect_short_name}} after they are synced.
   - q: Are there any disruptions if I choose not to upgrade my Data Plane nodes?
     a: There is **no** disruption at all if you choose **not** to upgrade your Data Plane nodes as long as the version of the Data Plane is under our [{{site.base_gateway}} active support timeline](/konnect-platform/compatibility/#kong-gateway-version-compatibility). 
+  - q: How can I create a support case in {{site.konnect_short_name}}?
+    a: |
+      To create a support case in {{site.konnect_short_name}}, navigate to the **?** icon on the top right menu, and click **Create support case**.
+
+      This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity. If you enable **Enable advanced support access**, this allows Kong engineers to update configurations for your org with audited log permissions to expidite a resolution. 
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
