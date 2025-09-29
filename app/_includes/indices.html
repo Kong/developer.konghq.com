@@ -20,7 +20,7 @@
       <div class="content">
         <ul class="list-none ml-0 grid grid-cols-1 md:grid-cols-3 gap-6">
           {% for page in section.pages %}
-            {% assign title = page.title %}
+            {% assign title = page.title %}{% unless title %}{% assign title = page.text %}{% endunless %}
             {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
             {% if page.plugin? and page.example? %}{% assign title = page.example_title %}{% endif %}
             <li class="flex flex-col gap-1">
