@@ -24,6 +24,39 @@ Use the following capture checklist to include a screenshot into a document:
 - [ ] Save images at **≤2 MB**; do not use GIFs  
 - [ ] Store files in `app/_assets/images/docs/...` with lowercase, hyphenated names
 
+## Shotscraper screenshot workflow
+
+Ensure that you have shotscraper already downloaded and installed onto your editor. To download shotscraper, go to the [README](https://github.com/Kong/developer.konghq.com/blob/main/tools/screenshots/README.md). Once you have Shotscraper downloaded, complete the following process to capture and include a screenshot:
+1. Take a screenshot of the target page
+The following saves a full-page screenshot as contributing.png in your current directory:
+```sh
+shot-scraper https://developer.konghq.com/contributing/ -o contributing.png
+```
+2. (Optional) Capture only a section
+If you want just a specific element, add a CSS selector:
+```sh
+shot-scraper https://developer.konghq.com/contributing/ -o contributing-section.png --selector "main"
+```
+3. Open the image in Visual Studio Code
+    - Launch VS Code
+    - Select **File → Open File…** 
+    - Select `contributing.png.`
+    - (Optional) Install the free extension Image Preview if you want inline image editing and annotations.
+4. Edit or annotate
+    - In VS Code, right-click the image to open it with your default editor (Paint, GIMP, or Photoshop).
+    - Save your changes back to the same file or to a new filename. For example, `contributing-annotated.png.`.
+5. Commit the screenshot
+Add the new screenshot to your docs repo:
+```sh
+git add contributing-annotated.png
+git commit -m "Add screenshot of Contributing page"
+```
+6. Use the image in documentation
+Insert the screenshot with standard Markdown:
+```sh
+![Contributing page screenshot](./contributing-annotated.png)
+```
+
 ## Text and image flow
 
 **Introduce → show → explain**: captions are optional but alt text is **required**. Write a lead sentence that sets context and ends with a colon, then the image, and then alt text.  

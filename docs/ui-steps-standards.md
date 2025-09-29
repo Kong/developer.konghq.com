@@ -82,11 +82,12 @@ Format UI steps to tell users *where they need to be first*, then *what action t
 
 **Formula**: `[Navigation context], [UI control/location reference] + Action verb + Target.`
 
-For example:
-* *“From the sidebar, select **Organizations**.”*  
-* *“In Kong Manager, go to **Services** > **Add Service**, then click **Create**.”*
+| Do | Don’t |
+| :---- | :---- |
+| From the **sidebar**, select **Organizations**. | Select **Organizations** without telling the user where to start. |
+| In **Kong Manager**, go to **Services** > **Add Service**, then click **Create**. | Click **Create** with no navigation context. |
 
-UI-step checklist: 
+Use the following UI-step checklist: 
 - [ ] A navigation context: where the user is or should go to begin
 - [ ] A UI control or location reference: sidebar, menu, tab
 - [ ] A precise action verb + target: Click, Select, Enter 
