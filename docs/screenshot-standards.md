@@ -63,16 +63,6 @@ or
 **Why:** Protects confidentiality and compliance while keeping the UI intelligible.  
 **How:** Maintain a shared pool of example values; apply the same redaction style everywhere.
 
-# Accessibility & inclusivity
-
-**Rule:** Construct documentation to include all users. Make docs accessible and globally understandable by:
-
-* including descriptive alt text for images  
-* avoiding idioms  
-* ensuring keyboard navigation is describable
-
-**Why:** Some readers use assistive tech or translation; idioms do not translate; keyboard users follow focus order and labels.
-
 **Do:** Write: *Alt text: “Mesh Overview showing tabs for Services, Policies, Data-planes”* for a screenshot.
 
 **Don’t:**
