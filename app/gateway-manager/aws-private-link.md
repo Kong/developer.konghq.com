@@ -42,7 +42,7 @@ PrivateLink support is currently available in the following AWS regions:
 * `ap-southeast-1`
 * `ap-southeast-2`
 
-If your AWS region is not listed, contact [Kong Support](https://support.konghq.com/support/s/).
+If your AWS region is not listed, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
 ## AWS configuration for PrivateLink
 
