@@ -31,9 +31,9 @@ related_resources:
 {:.warning}
 > **Important: KongIngress Deprecation Notice**
 >
-> The `KongIngress` custom resource is **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in Kong Operator 2.0.0**.
+> The `KongIngress` custom resource is **deprecated** as of {{site.kic_product_name}} 3.5 and will be **completely removed in {{ site.operator_product_name }} 2.0.0**.
 >
-> **Migration is required** before upgrading to Kong Operator 2.0.0:
+> **Migration is required** before upgrading to {{ site.operator_product_name }} 2.0.0:
 >
 > - The `proxy` and `route` sections are **already deprecated** and replaced by dedicated annotations
 > - The `upstream` section is being replaced by the new `KongUpstreamPolicy` resource

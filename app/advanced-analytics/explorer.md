@@ -57,6 +57,7 @@ faqs:
        From the chart settings, you can do the following:
        - Open Explorer with the chart’s current filters and time range, by selecting **Explore**.
        - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
+
 related_resources:
   - text: Konnect Advanced Analytics
     url: /advanced-analytics/

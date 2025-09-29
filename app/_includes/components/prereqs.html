@@ -72,10 +72,12 @@
           {% include prereqs/products/konnect.md tier=include.tier env_variables=variables ports=ports %}
         </div>
         {% endif %}
+        {% if page.works_on contains 'on-prem' %}
         <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem">
           {% assign variables=prereqs['gateway'] %}
           {% include prereqs/products/gateway.md rbac=page.rbac env_variables=variables %}
         </div>
+        {% endif %}
       {% endif %}
 
       {% if page.products contains 'kic'  %}
@@ -87,12 +89,16 @@
       {% for product in prereqs.products %}
         {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
         {% if page.works_on %}
+         {% if page.works_on contains 'konnect' %}
           <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
             {% include {{ product_include }} prereqs=prereqs topology="konnect" %}
           </div>
-          <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
-            {% include {{ product_include }} prereqs=prereqs topology="on-prem" %}
-          </div>
+          {% endif %}
+           {% if page.works_on contains 'on-prem' %}
+            <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
+              {% include {{ product_include }} prereqs=prereqs topology="on-prem" %}
+            </div>
+          {% endif %}
         {% else %}
           <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
             {% include {{ product_include }} prereqs=prereqs %}

@@ -22,7 +22,6 @@ topologies:
     - traditional
   konnect_deployments:
     - hybrid
-    - cloud-gateways
     - serverless
 icon: grpc-web.png
 

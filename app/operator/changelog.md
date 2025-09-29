@@ -1,6 +1,6 @@
 ---
-title: "{{ site.operator_product_name }} Changelog"
-description: "New features, bug fixes and breaking changes for {{ site.operator_product_name }}"
+title: "{{ site.gateway_operator_product_name }} Changelog"
+description: "New features, bug fixes and breaking changes for {{ site.gateway_operator_product_name }}"
 content_type: reference
 layout: reference
 products:
@@ -10,7 +10,7 @@ breadcrumbs:
 
 ---
 
-Changelog for supported {{ site.operator_product_name }} versions.
+Changelog for supported {{ site.gateway_operator_product_name }} versions.
 
 ## 1.6.1
 
@@ -542,7 +542,7 @@ v1.2.3 contains all the changes that v1.2.2 intended to contain.
   `GatewayConfiguration` API.
 - ✨ `Gateway` listeners are dynamically mapped to the `DataPlane` proxy service ports.
 - 🧠 The new feature `AIGateway` has been released in `alpha` stage.
-- ✨ {{site.operator_product_name}} exposes metrics with latency that can be used for autoscaling of your workloads.
+- ✨ {{site.gateway_operator_product_name}} exposes metrics with latency that can be used for autoscaling of your workloads.
 - ✨ Automated handling of certificates for Konnect's PKI mode with cert-manager.
 
 ## Added
