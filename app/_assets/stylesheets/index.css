@@ -1030,7 +1030,7 @@ ol:has(code) {
 }
 
 .nav-submenu.nav-submenu--expanded {
-  @apply h-full;
+  @apply h-full overflow-y-auto;
 }
 
 .back-button {
