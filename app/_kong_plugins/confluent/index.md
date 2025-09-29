@@ -13,9 +13,6 @@ tags:
   - confluent
   - transformations
 
-search_aliases:
-  - kafka
-  - protocol mediation
 products:
     - gateway
 
@@ -49,6 +46,7 @@ related_resources:
 
 search_aliases:
   - kafka
+  - protocol mediation
 
 premium_partner: true
 ---
