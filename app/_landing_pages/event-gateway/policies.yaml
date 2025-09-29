@@ -2,6 +2,7 @@ metadata:
   title: "Event Gateway Policies"
   content_type: landing_page
   description: An overview of policies that work with {{site.event_gateway_short}}.
+  sidebar: false
   breadcrumbs:
     - /event-gateway/
   products: 

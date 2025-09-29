@@ -42,7 +42,8 @@ module Jekyll
                    'reference_url' => Reference.url(@plugin),
                    'icon' => icon,
                    'api_spec_exists?' => @plugin.api_spec_exists?,
-                   'api_reference_url' => ApiReference.url(@plugin)
+                   'api_reference_url' => ApiReference.url(@plugin),
+                   'sidebar' => false
                  ).merge(publication_info)
         end
 

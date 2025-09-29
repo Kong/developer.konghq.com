@@ -48,6 +48,7 @@ defaults:
       type: "how-tos"
     values:
       layout: "how-to"
+      sidebar: false
       permalink: "/how-to/:path/"
       breadcrumbs:
         - "/how-to/"
@@ -67,6 +68,7 @@ defaults:
       type: "event_gateway_policies"
     values:
       layout: "gateway_entity"
+      sidebar: false
       permalink: "/event-gateway/policies/:path/"
       products:
         - event-gateway

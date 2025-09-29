@@ -9,6 +9,8 @@
   :root {
     --removed-body-scroll-bar-size: 4px;
 
+    --sticky-top-nav-height: 64px;
+
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
     --color-bg-terciary: 7, 53, 103;
@@ -636,7 +638,7 @@
   }
 
   .top-nav__controls {
-    @apply flex shrink-0 items-center bg-secondary w-full lg:hidden h-[64px] px-6 border-b border-primary/5 justify-between;
+    @apply flex shrink-0 items-center bg-secondary w-full lg:hidden h-[var(--sticky-top-nav-height)] px-6 border-b border-primary/5 justify-between;
   }
 
   .top-nav--opened {
@@ -942,4 +944,104 @@ ol:has(code) {
 
 .ot-floating-button__open > svg {
   @apply justify-self-center;
+}
+
+
+
+/* SIDEBAR */
+.nav-container {
+  @apply overflow-y-auto sticky top-[96px] h-lvh border-r border-primary/5 max-w-80;
+
+  li > *:not(:last-child) {
+    @apply !mb-0;
+  }
+}
+
+.nav-header {
+  @apply text-white p-2 bg-brand;
+}
+
+.nav-list {
+  @apply list-none m-0 p-0 gap-0;
+}
+
+.nav-container--drilled-down .nav-list:not(.active-submenu) {
+  @apply block;
+}
+
+.nav-submenu--drilldown {
+  @apply w-full h-full translate-x-full transition-transform;
+}
+
+.nav-submenu--drilldown.nav-submenu--expanded {
+  @apply translate-x-0;
+}
+
+.nav-item {
+  @apply border-b bg-primary;
+}
+
+.nav-item.nav-item--drilldown-parent {
+  @apply absolute top-20 left-0 w-full h-full;
+}
+
+.nav-item:last-child {
+  @apply border-b-0;
+}
+
+.nav-link,
+.nav-button {
+  @apply flex items-center justify-between w-full border-0 cursor-pointer text-sm p-2 transition duration-200 ease-linear text-left;
+}
+
+.nav-link:hover,
+.nav-button:hover {
+  @apply text-semantic-blue-primary;
+}
+
+.nav-link:focus,
+.nav-button:focus {
+  @apply -outline-offset-2;
+}
+
+.nav-link.nav-link--active,
+.nav-link.nav-link--active:hover {
+  @apply !text-semantic-blue-primary;
+}
+
+.nav-button[aria-expanded="true"] {
+  @apply text-semantic-blue-primary border-b cursor-default;
+}
+
+.nav-icon {
+  @apply w-3 h-3 transition-transform duration-200 ease-linear;
+}
+
+.nav-button[aria-expanded="true"] .nav-icon {
+  @apply rotate-90;
+}
+
+.nav-button.nav-button--drilldown[aria-expanded="true"] .nav-icon {
+  @apply hidden;
+ }
+
+.nav-submenu {
+  @apply bg-primary h-0 overflow-hidden;
+}
+
+.nav-submenu.nav-submenu--expanded {
+  @apply h-full;
+}
+
+.back-button {
+  @apply hidden justify-start gap-2;
+}
+
+.nav-container--drilled-down .back-button {
+  @apply flex;
+}
+
+.nav-submenu .nav-link,
+.nav-submenu .nav-button {
+  @apply text-terciary text-sm pl-4;
 }

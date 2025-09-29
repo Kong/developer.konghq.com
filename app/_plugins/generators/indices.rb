@@ -9,7 +9,9 @@ module Jekyll
 
       site.data['indices'] = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
+        slug = File.basename(file, File.extname(file))
         index = YAML.load_file(file)
+        index['slug'] = slug
 
         index['groups'] = [{ 'sections' => index.delete('sections') }] if index['sections'] && !index['groups']
 
@@ -18,7 +20,7 @@ module Jekyll
 
         page = build_page(site, file, index)
         site.pages << page
-        slug = File.basename(file, File.extname(file))
+
         site.data['indices'][slug] = page
       end
     end
@@ -37,6 +39,9 @@ module Jekyll
       page.instance_variable_set(:@relative_path, "_indices/#{filename.gsub('.html', '.yaml')}")
 
       grouped_pages = config_to_grouped_pages(site, index)
+
+      page.data['sections'] = grouped_pages.first['sections']
+
       page.content = render(index, grouped_pages, site)
       page
     end
@@ -99,17 +104,17 @@ module Jekyll
 
               if match['path']
                 add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates'],
-                         seen)
+                         seen, index)
               end
               if match['type'] == 'how-to-search'
                 add_how_to_search(site, section['title'], match, i, section['allow_duplicates'],
-                                  seen)
+                                  seen, index)
               end
               if match['type'] == 'how-to'
                 add_how_to(site, section['title'], match, i, section['allow_duplicates'],
-                           seen)
+                           seen, index)
               end
-              add_entry(section['title'], match, i, section['allow_duplicates'], seen) if match['url']
+              add_entry(section['title'], match, i, section['allow_duplicates'], seen, index) if match['url']
             end
           end
         end
@@ -131,9 +136,15 @@ module Jekyll
       page.data['releases'] && !page.data['releases'].empty? && !page.data['canonical?']
     end
 
-    def add_entry(title, page, match_index, allow_duplicates, seen)
+    def add_entry(title, page, match_index, allow_duplicates, seen, index)
       url = page.respond_to?(:url) ? page.url : page['url']
       return if seen[url] && !allow_duplicates
+
+      if page.respond_to?(:data)
+        page.data['index'] = index['slug']
+      else
+        page['index'] = index['slug']
+      end
 
       @sections[title]['pages'] << {
         'page' => page,
@@ -142,7 +153,7 @@ module Jekyll
       seen[url] = true
     end
 
-    def add_path(page, section, match, not_match, match_index, allow_duplicates, seen)
+    def add_path(page, section, match, not_match, match_index, allow_duplicates, seen, index)
       return unless File.fnmatch(match['path'], page.url, ::File::FNM_PATHNAME)
 
       should_match = !not_match || not_match.none? do |nm|
@@ -154,17 +165,17 @@ module Jekyll
 
       return unless should_match
 
-      add_entry(section, page, match_index, allow_duplicates, seen)
+      add_entry(section, page, match_index, allow_duplicates, seen, index)
     end
 
     # Supports tags, products, tools and plugins in the search config
-    def add_how_to_search(site, section, match, match_index, allow_duplicates, seen)
+    def add_how_to_search(site, section, match, match_index, allow_duplicates, seen, index)
       search = {
         'title' => match['title'],
         'description' => match['description'],
         'url' => how_to_search_link(match)
       }
-      add_entry(section, search, match_index, allow_duplicates, seen)
+      add_entry(section, search, match_index, allow_duplicates, seen, index)
     end
 
     def how_to_search_link(config)
@@ -176,10 +187,10 @@ module Jekyll
       "#{url_segment}?#{query_string}"
     end
 
-    def add_how_to(site, section, match, match_index, allow_duplicates, seen)
+    def add_how_to(site, section, match, match_index, allow_duplicates, seen, index)
       how_tos = fetch_how_tos(site, match)
       how_tos.each do |how_to|
-        add_entry(section, how_to, match_index, allow_duplicates, seen)
+        add_entry(section, how_to, match_index, allow_duplicates, seen, index)
       end
     end
 

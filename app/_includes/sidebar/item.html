@@ -1,0 +1,37 @@
+{% assign item = include.item %}
+{% assign slug = item.title | liquify | slugify %}
+<li class="nav-item" role="none">
+    {% if item.items %}
+        {% if include.level == 0 %}
+            {% assign level = level | plus: 1 %}
+            <button class="nav-button nav-button--drilldown flex items-center" role="menuitem" aria-expanded="false" aria-haspopup="true" aria-controls="{{slug}}-menu" id="{{slug}}-button">
+                <span>{{item.title | liquify}}</span>
+                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+                <span class="sr-only">Toggle {{item.title | liquify}} submenu</span>
+            </button>
+            <ul class="nav-list nav-submenu nav-submenu--drilldown" role="menu" aria-labelledby="{{slug}}-button" id="{{slug}}-menu">
+                {% for item in item.pages %}
+                    {% include_cached sidebar/item.html item=item level=level %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            {% assign level = level | plus: 1 %}
+            <button class="nav-button flex items-center" role="menuitem" aria-expanded="false" aria-haspopup="true" aria-controls="{{slug}}-menu" id="{{slug}}-button">
+                <span>{{item.title | liquify}}</span>
+                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+                <span class="sr-only">Toggle {{item.title | liquify}} submenu</span>
+            </button>
+            <ul class="nav-list nav-submenu" role="menu" aria-labelledby="{{slug}}-button" id="{{slug}}-menu">
+                {% for item in item.pages %}
+                    {% include_cached sidebar/item.html item=item level=level %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <a class="nav-link" role="menuitem" href="{{item.url}}">{{item.title | liquify}}</a>
+    {% endif %}
+</li>

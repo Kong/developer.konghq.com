@@ -31,7 +31,8 @@ module Jekyll
           'version' => @version,
           'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url:, product:),
           'insomnia_link' => insomnia_link,
-          'edit_and_issue_links' => false
+          'edit_and_issue_links' => false,
+          'sidebar' => false
         }.merge(@frontmatter)
       end
 
