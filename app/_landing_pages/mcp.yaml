@@ -118,7 +118,7 @@ rows:
             - text: Secure your MCP servers with the AI MCP OAuth2 plugin
               url: "/plugins/ai-mcp-oauth2/"
             - text: Autogenerate a serverless MCP
-              url: "/mcp/autogenerate-serverless-mcp/"
+              url: "/mcp/autogenerate-mcp-tools/"
             - text: Autogenerate MCP tools from any API schema
               url: "/mcp/autogenerate-mcp-tools-for-weather-api/"
 
