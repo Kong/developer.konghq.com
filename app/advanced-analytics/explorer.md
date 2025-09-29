@@ -54,7 +54,7 @@ faqs:
             - **Explore**: Opens Explorer with the same filters and highlighted time window, so you can add group-bys and extra filters.
             - **Zoom**: Focuses the chart on the selected time range.
        
-       From the Chart menu:
+       From the chart settings, you can do the following:
        - To open Explorer with the chart’s current filters and time range, without highlighting first, select **Explore**.
        - To download the chart view, select **Export CSV**. The file includes the current filters and time window.
 related_resources:
