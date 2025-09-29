@@ -86,9 +86,11 @@ faqs:
       3. In your support ticket, specify the current organization, the current Owner, and the user that you want to designate as the new Owner.
   - q: How can I create a support case in {{site.konnect_short_name}}?
     a: |
-      To create a support case in {{site.konnect_short_name}}, navigate to the **?** icon on the top right menu, and click **Create support case**.
+      If you're an org admin, you can create a support case in {{site.konnect_short_name}} by navigating to the **?** icon on the top right menu and clicking **Create support case**.
 
       This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity. If you enable **Enable advanced support access**, this allows Kong engineers to update configurations for your org with audited log permissions to expedite a resolution. 
+
+      You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
