@@ -46,7 +46,7 @@ faqs:
     a: |
       To create a support case in {{site.konnect_short_name}}, navigate to the **?** icon on the top right menu, and click **Create support case**.
 
-      This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity. If you enable **Enable advanced support access**, this allows Kong engineers to update configurations for your org with audited log permissions to expidite a resolution. 
+      This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity. If you enable **Enable advanced support access**, this allows Kong engineers to update configurations for your org with audited log permissions to expedite a resolution. 
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
