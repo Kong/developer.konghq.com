@@ -19,7 +19,9 @@
               </button>
             </li>
             {% for section in index.sections %}
-            {% include_cached sidebar/item.html item=section level=0 %}
+            {% unless section.hidden == true %}
+              {% include_cached sidebar/item.html item=section level=0 %}
+            {% endunless %}
             {% endfor %}
         </ul>
     </nav>
