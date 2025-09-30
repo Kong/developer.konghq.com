@@ -159,9 +159,9 @@ rows:
               blocks:
               - type: unordered_list
                 items: # links TBA, they don't exist yet
-                    - "**{{site.konnect_short_name}} UI**: Manage {{site.event_gateway_short}} entities within {{site.konnect_short_name}} control planes using a UI"
-                    - "**Control Plane API**: Manage {{site.event_gateway_short}} entities within {{site.konnect_short_name}} control planes via an API"
-                    - "[**Terraform**](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.event_gateway}}"
+                    - "**{{site.konnect_short_name}} UI**: Manage {{site.event_gateway_short}} entities within {{site.konnect_short_name}} control planes using a UI."
+                    - "**Control Plane API**: Manage {{site.event_gateway_short}} entities within {{site.konnect_short_name}} control planes via an API."
+                    - "[**Terraform**](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.event_gateway}}."
 
   - header:
       type: h2
