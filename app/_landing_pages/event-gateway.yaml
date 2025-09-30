@@ -28,8 +28,7 @@ rows:
                    {{ site.event_gateway }} is a lightweight, fast, and flexible cloud-native event streaming proxy. 
                     It sits between native consumers and producers, and backend Kafka clusters. 
 
-                    Through its extensible policy engine, you can augment, optimize, and secure 
-                    your Kafka deployments with customized business logic to transform, encrypt, and observe Kafka messages. 
+                    With its extensible policy engine, you can adapt Kafka to your requirements—transforming, encrypting, and monitoring messages to optimize performance and strengthen security.
                     
                     {{ site.event_gateway }} runs in front of any Kafka cluster and can be extended through policies and plugins. 
 
