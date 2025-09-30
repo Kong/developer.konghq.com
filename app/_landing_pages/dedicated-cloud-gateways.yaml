@@ -118,7 +118,7 @@ rows:
             config:
               title: AWS resource endpoints
               description: |
-                Enable secure, one-way connectivity from {{site.konnect_short_name}}'s' managed infrastructure to your upstream services— without requiring VPC peering or Transit Gateway.
+                Enable secure, one-way connectivity from {{site.konnect_short_name}}'s managed infrastructure to your upstream services— without requiring VPC peering or Transit Gateway.
               icon: /assets/icons/aws.svg
               ctas:
                 - text: Tutorial

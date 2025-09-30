@@ -39,17 +39,16 @@ prereqs:
 
 ---
 
+## Copy and save your {{site.konnect_short_name}} Account ID
 
-## Get your Account ID
-
-You'll need your account ID for AWS in {{site.konnect_short_name}}. AWS uses this account ID to configure the connection between your resource share in AWS and {{site.konnect_short_name}}.
+Before you can configure AWS, you'll need your account ID for AWS in {{site.konnect_short_name}}. AWS uses this account ID to configure the connection between your resource share in AWS and {{site.konnect_short_name}}.
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Networks**](https://cloud.konghq.com/global/networks/).
 1. Click the settings icon next to your network.
 1. Click **Configure private networking**.
 1. Copy and save the ID in the **AWS Account ID** field.
 
-## Create Resource Configuration Group and Resource Gateway
+## Create a Resource Configuration Group and Resource Gateway in AWS
 
 AWS resource endpoints with dedicated cloud gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services—without requiring VPC peering or Transit Gateway. 
 
@@ -70,21 +69,21 @@ To use AWS resource endpoints with dedicated cloud gateways, you must first crea
 1. Click **Next**.
 1. In the Principals settings, select **Allow sharing with anyone**.
 1. From the **Select principal type** dropdown menu, select "AWS Account".
-1. In the **AWS Account** field, enter `?`.
+1. In the **AWS Account** field, enter your account ID from {{site.konnect_short_name}}.
 1. Click **Next**.
 1. Click **Create resource share**.  
 
 ## Submit Resource Endpoints form
-Login to your Konnect account, navigate to Gateway Manager and your Dedicated Cloud Gateway
-Click on Networking
-Click the kebab {icon} and select “Configure private networking”
-Click on the Resource Endpoints tab
-Provide a Name for your Resource Endpoint Configuration
-Provide your 12-digit AWS account number 
-Provide the RAM share ARN for the Resource Configuration Group you shared in Step 3 above. 
-Submit Resource Endpoints form. 
 
-## Kong’s automation will accept the RAM share and create VPC endpoints
+1. In the {{site.konnect_short_name}} sidebar, click [**Networks**](https://cloud.konghq.com/global/networks/).
+1. Click the settings icon next to your network.
+1. Click **Configure private networking**.
+1. Click the **Resource Endpoints** tab.
+1. In the **Name** field, enter `AWS-Resource-Share`.
+1. Enter the RAM share ARN.
+1. Click **Submit**. 
+
+{{site.konnect_short_name}}’s automation will accept the RAM share and create VPC endpoints
 It may take a few minutes for automation to accept the RAM share and create VPC endpoints. You can check the status of your Resource Endpoints in the table. 
 
 ## Map your Resource Configuration IDs to upstream domain names.
