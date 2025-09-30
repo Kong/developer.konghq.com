@@ -4,6 +4,7 @@ description: Decrypt a specific key.
 
 weight: 900
 
+name: decrypt-key
 config:
   policies:
     - name: decrypt-key
@@ -19,4 +20,3 @@ config:
 
 tools:
   - konnect-api
-  - terraform
