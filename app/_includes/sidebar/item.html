@@ -1,7 +1,7 @@
 {% assign item = include.item %}
 {% assign slug = item.title | liquify | slugify %}
 <li class="nav-item" role="none">
-    {% if item.items %}
+    {% if item.pages %}
         {% if include.level == 0 %}
             {% assign level = level | plus: 1 %}
             <button class="nav-button nav-button--drilldown flex items-center" role="menuitem" aria-expanded="false" aria-haspopup="true" aria-controls="{{slug}}-menu" id="{{slug}}-button">

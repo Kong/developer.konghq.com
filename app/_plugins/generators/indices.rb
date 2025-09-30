@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'uri'
+
 module Jekyll
   class IndexGenerator < Jekyll::Generator
     priority :low
@@ -99,23 +101,7 @@ module Jekyll
           next if page.data['skip_index'] || page_is_versioned(page)
 
           group['sections'].each do |section|
-            section['items'].each_with_index do |match, i|
-              next unless match['path'] || match['type'] == 'how-to' || match['type'] == 'how-to-search' || match['url']
-
-              if match['path']
-                add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates'],
-                         seen, index)
-              end
-              if match['type'] == 'how-to-search'
-                add_how_to_search(site, section['title'], match, i, section['allow_duplicates'],
-                                  seen, index)
-              end
-              if match['type'] == 'how-to'
-                add_how_to(site, section['title'], match, i, section['allow_duplicates'],
-                           seen, index)
-              end
-              add_entry(section['title'], match, i, section['allow_duplicates'], seen, index) if match['url']
-            end
+            process_items(site, page, section, seen, index)
           end
         end
 
@@ -132,11 +118,56 @@ module Jekyll
       end
     end
 
+    def process_items(site, page, section, seen, index)
+      section['items']&.each_with_index do |match, i|
+        entry = process_match(site, page, section, seen, index, match, i)
+        if entry
+          if entry.is_a?(Array)
+            @sections[section['title']]['pages'].concat(entry) unless entry.empty?
+          else
+            @sections[section['title']]['pages'] << entry
+          end
+        end
+      end
+    end
+
+    def process_match(site, page, section, seen, index, match, i)
+      unless match['path'] || match['type'] == 'how-to' || match['type'] == 'how-to-search' || match['url'] || match['items']
+        return
+      end
+
+      if match['path']
+        add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates'],
+                 seen, index)
+      elsif match['type'] == 'how-to-search'
+        add_how_to_search(site, section['title'], match, i, section['allow_duplicates'],
+                          seen, index)
+      elsif match['type'] == 'how-to'
+        add_how_to(site, section['title'], match, i, section['allow_duplicates'],
+                   seen, index)
+      elsif match['url']
+        generate_entry(section['title'], match, i, section['allow_duplicates'], seen, index)
+      elsif match['items']
+        entry = @sections[section['title']]['pages'].detect do |e|
+          e.is_a?(Hash) && e['title'] == match['title']
+        end
+        unless entry
+          entry = { 'title' => match['title'], 'pages' => [], 'match_index' => i }
+          @sections[section['title']]['pages'] << entry
+        end
+        match['items'].each_with_index do |m, i|
+          e = process_match(site, page, match, seen, index, m, i)
+          entry['pages'] << e if e
+        end
+        nil
+      end
+    end
+
     def page_is_versioned(page)
       page.data['releases'] && !page.data['releases'].empty? && !page.data['canonical?']
     end
 
-    def add_entry(title, page, match_index, allow_duplicates, seen, index)
+    def generate_entry(title, page, match_index, allow_duplicates, seen, index)
       url = page.respond_to?(:url) ? page.url : page['url']
       return if seen[url] && !allow_duplicates
 
@@ -146,11 +177,11 @@ module Jekyll
         page['index'] = index['slug']
       end
 
-      @sections[title]['pages'] << {
+      seen[url] = true
+      {
         'page' => page,
         'match_index' => match_index
       }
-      seen[url] = true
     end
 
     def add_path(page, section, match, not_match, match_index, allow_duplicates, seen, index)
@@ -165,7 +196,7 @@ module Jekyll
 
       return unless should_match
 
-      add_entry(section, page, match_index, allow_duplicates, seen, index)
+      generate_entry(section, page, match_index, allow_duplicates, seen, index)
     end
 
     # Supports tags, products, tools and plugins in the search config
@@ -175,7 +206,7 @@ module Jekyll
         'description' => match['description'],
         'url' => how_to_search_link(match)
       }
-      add_entry(section, search, match_index, allow_duplicates, seen, index)
+      generate_entry(section, search, match_index, allow_duplicates, seen, index)
     end
 
     def how_to_search_link(config)
@@ -189,9 +220,9 @@ module Jekyll
 
     def add_how_to(site, section, match, match_index, allow_duplicates, seen, index)
       how_tos = fetch_how_tos(site, match)
-      how_tos.each do |how_to|
-        add_entry(section, how_to, match_index, allow_duplicates, seen, index)
-      end
+      how_tos.map do |how_to|
+        generate_entry(section, how_to, match_index, allow_duplicates, seen, index)
+      end.compact
     end
 
     def fetch_how_tos(site, match)
@@ -203,7 +234,7 @@ module Jekyll
     def sort_sections!
       @sections.each_key do |title|
         @sections[title]['pages'] = @sections[title]['pages'].sort_by! do |p|
-          entry = p['page'] || {}
+          entry = p['page'] || p
           [
             p['match_index'],
             entry.respond_to?(:data) ? entry.data['weight'] : entry['weight'],
@@ -211,7 +242,10 @@ module Jekyll
           ]
         end
 
-        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] || p }.uniq
+        @sections[title]['pages'] = @sections[title]['pages'].map do |p|
+          p['pages'] = p['pages'].map { |page| page['page'] }&.uniq if p['pages']
+          p['page'] || p
+        end.uniq
       end
     end
 
