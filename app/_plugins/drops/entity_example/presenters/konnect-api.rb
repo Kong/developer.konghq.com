@@ -12,7 +12,7 @@ module Jekyll
             def url
               @url ||= Utils::VariableReplacer::URL.run(
                 url: build_url,
-                defaults: formats['konnect-api']['variables'],
+                defaults: default_variables,
                 variables: variables
               )
             end
@@ -31,12 +31,16 @@ module Jekyll
 
             def missing_variables
               @missing_variables ||= begin
-                available_variables = formats['konnect-api']['variables'].except(*targets.keys, 'upstream')
+                available_variables = default_variables.except(*targets.keys, 'upstream')
                 available_variables.except(*variables.keys).values
               end
             end
 
             private
+
+            def default_variables
+              @default_variables ||= formats['konnect-api']['variables']
+            end
 
             def build_url
               [
@@ -76,6 +80,19 @@ module Jekyll
               [
                 formats['konnect-api']['base_url'],
                 formats['konnect-api']['plugin_endpoints'][@example_drop.target.key]
+              ].join
+            end
+          end
+
+          class EventGatewayPolicy < Base
+            def default_variables
+              @default_variables ||= formats['konnect-api']['event_gateway_variables']
+            end
+
+            def build_url
+              [
+                formats['konnect-api']['event_gateway_base_url'],
+                formats['konnect-api']['policy_endpoints'][@example_drop.target.key]
               ].join
             end
           end

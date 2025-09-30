@@ -4,15 +4,15 @@
 
 <div class="flex flex-col gap-4 heading-section entity-example" id="{{ plugin_config_example.id }}">
   <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-    <h2 id="set-up-the-plugin">Set up the plugin</h2>
+    <h2 id="set-up-the-plugin">Set up the {{include.entity}}</h2>
     <div class="flex w-full sm:w-fit sm:justify-end">
       <div class="flex gap-2 text-xs">
         {% if targets.size > 0 %}
         <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
-          <label for="select-target-{{ plugin_config_example.id }}" class="sr-only">Select an entity</label>
+          <label for="select-target-{{ plugin_config_example.id }}" class="sr-only">{{include.target_label}}</label>
           <select id="select-target-{{ plugin_config_example.id }}" class="select-target bg-secondary">
             {% for target in targets %}
-            <option value="{{ target }}">{{ site.data.entity_examples.config.targets[target].label }}</option>
+            <option value="{{ target }}">{{ include.targets[target].label }}</option>
             {% endfor %}
           </select>
         </div>
@@ -35,14 +35,14 @@
   <div class="content">
 
     {% if targets.size > 0 %}
-    {% for entity_example in plugin_config_example.entity_examples %}
-    {% assign target = entity_example.target.key %}
+    {% for example in plugin_config_example.examples %}
+    {% assign target = example.target.key %}
 
-    {% assign formatted_examples = entity_example.formatted_examples %}
-    <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
+    {% assign formatted_examples = example.formatted_examples %}
+    <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="select-target-{{ example.id }}" data-target="{{ target }}">
       {% for formatted_example in formatted_examples %}
       {% assign format = formatted_example.format %}
-      <div tabindex="0" class="entity-example-format-panel hidden content" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format }}">
+      <div tabindex="0" class="entity-example-format-panel {% if formats.size > 1 %} hidden {% endif %} content" aria-labelledby="select-format-{{ example.id }}" data-format="{{ format }}">
         {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=true %}{% endcapture %}
         {{ markdown_template | markdownify }}
       </div>

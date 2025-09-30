@@ -19,27 +19,9 @@ konnect_variables: &konnect_variables
   region:
     placeholder: 'region'
     description: 'Geographic region where your Kong Konnect is hosted and operates.'
-  control_plane:
-    placeholder: 'controlPlaneId'
-    description: 'The `id` of the control plane.'
   pat:
     placeholder: 'KONNECT_TOKEN'
     description: 'Your Personal Access Token (PAT) associated with your Konnect account.'
-  upstream:
-    placeholder: 'upstreamId'
-    description: 'The `id` of the upstream the target is associated with.'
-  consumer:
-    placeholder: 'consumerId'
-    description: 'The `id` of the consumer the plugin configuration will target.'
-  consumer_group:
-    placeholder: 'consumerGroupId'
-    description: 'The `id` of the consumer group the plugin configuration will target.'
-  route:
-    placeholder: 'routeId'
-    description: 'The `id` of the route the plugin configuration will target.'
-  service:
-    placeholder: 'serviceId'
-    description: 'The `id` of the service the plugin configuration will target.'
 
 formats:
   deck:
@@ -83,6 +65,7 @@ formats:
   konnect-api:
     label: 'Konnect API'
     base_url: 'https://{region}.api.konghq.com/v2/control-planes/{control_plane}/core-entities'
+    event_gateway_base_url: 'https://{region}.api.konghq.com/v1/event-gateways/{event_gateway}'
     endpoints:
       consumer:       '/consumers/'
       consumer_group: '/consumer_groups/'
@@ -103,8 +86,39 @@ formats:
       global:         '/plugins/'
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
+    policy_endpoints:
+      consume: '/virtual-clusters/{virtual_cluster}/consume-policies/'
+      produce: '/virtual-clusters/{virtual_cluster}/produce-policies/'
+      cluster: '/virtual-clusters/{virtual_cluster}/cluster-policies/'
     variables:
       <<: *konnect_variables
+      control_plane:
+        placeholder: 'controlPlaneId'
+        description: 'The `id` of the control plane.'
+      upstream:
+        placeholder: 'upstreamId'
+        description: 'The `id` of the upstream the target is associated with.'
+      consumer:
+        placeholder: 'consumerId'
+        description: 'The `id` of the consumer the plugin configuration will target.'
+      consumer_group:
+        placeholder: 'consumerGroupId'
+        description: 'The `id` of the consumer group the plugin configuration will target.'
+      route:
+        placeholder: 'routeId'
+        description: 'The `id` of the route the plugin configuration will target.'
+      service:
+        placeholder: 'serviceId'
+        description: 'The `id` of the service the plugin configuration will target.'
+    event_gateway_variables:
+      <<: *konnect_variables
+      virtual_cluster:
+        placeholder: 'virtualClusterId'
+        description: 'The `id` of the Virtual Cluster.'
+      event_gateway:
+        placeholder: 'eventGatewayId'
+        description: 'The `id` of the Event Gateway.'
+
 
   kic:
     label: 'KIC'
@@ -147,3 +161,11 @@ targets:
     label: 'Route'
   service:
     label: 'Service'
+
+phases:
+  consume:
+    label: 'Consume Policy'
+  produce:
+    label: 'Produce Policy'
+  cluster:
+    label: 'Cluster Policy'
