@@ -15,6 +15,15 @@ module Jekyll
       def schemas
         @schemas ||= Drops::MeshPolicies::Schema.all(policy: self)
       end
+
+      def examples
+        @examples ||= example_files.map do |file|
+          Drops::PolicyConfigExample::Mesh.new(
+            file: file,
+            plugin: self
+          )
+        end.sort_by { |e| -e.weight } # rubocop:disable Style/MultilineBlockChain
+      end
     end
   end
 end
