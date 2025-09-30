@@ -54,11 +54,12 @@ The plugin analyzes the semantic content of the full LLM response before it is r
 
 To enforce these rules, the plugin:
 
-1. **Disables streaming** (`stream=false`) to ensure the full response body is buffered before analysis.
-2. **Intercepts the response body** using the `guard-response` filter.
-3. **Extracts response text**, supporting JSON parsing of multiple LLM formats and gzipped content.
-4. **Generates embeddings** for the extracted text.
-5. **Searches the vector database** (Redis, Pgvector, or other) against configured `allow_responses` or `deny_responses`.
-6. **Applies the decision rules** described above.
+1. Disables streaming (`stream=false`) to ensure the full response body is buffered before analysis.
+2. Intercepts the response body using the `guard-response` filter.
+3. Extracts response text, supporting JSON parsing of multiple LLM formats and gzipped content.
+4. Generates embeddings for the extracted text.
+5. Searches the vector database (Redis, Pgvector, or other) against configured `allow_responses` or `deny_responses`.
+6. Applies the decision rules described above.
 
-If a response is blocked or if a system error occurs during evaluation, the plugin returns a `400 Bad Request` to the client without exposing that the Semantic Response Guard blocked it.
+{:.info}
+> If a response is blocked or if a system error occurs during evaluation, the plugin returns a `400 Bad Request` to the client without exposing that the Semantic Response Guard blocked it.
