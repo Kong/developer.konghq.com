@@ -262,6 +262,10 @@ rows:
     description: Manage publishing products to a Dev Portal.
   - role: "`Viewer`"
     description: Read-only access to Dev Portal developers and applications.
+  - role: "`API Registration Approver`"
+    description: Can approve Dev Portal application registrations.
+  - role: "`Content Editor`"
+    description: Edits Dev Portal pages, snippets, and customization.
 {% endtable %}
 
 #### Application auth strategies

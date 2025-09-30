@@ -45,6 +45,9 @@ prereqs:
     - title: "{{site.konnect_product_name}}"
       include_content: prereqs/products/konnect-terraform
       icon_url: /assets/icons/gateway.svg
+    - title: "{{site.konnect_product_name}} roles"
+      content: prereqs/dev-portal-automated-api-catalog-roles
+      icon_url: /assets/icons/gateway.svg
     - title: Required entities
       content: |
         For this tutorial, you’ll need {{site.base_gateway}} entities, like Gateway Services and Routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn’t the focus of this guide.
