@@ -50,15 +50,6 @@ module Jekyll
         @icon ||= metadata['icon']
       end
 
-      def examples
-        @examples ||= example_files.map do |file|
-          Drops::PolicyExample.new(
-            file: file,
-            policy: self
-          )
-        end.sort_by { |e| -e.weight } # rubocop:disable Style/MultilineBlockChain
-      end
-
       def release_info
         ReleaseInfo::Product.new(
           site:,
