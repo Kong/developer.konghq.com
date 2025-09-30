@@ -119,7 +119,7 @@ body:
   description: "Auth server for the Appointment dev environment"
 {% endkonnect_api_request %}
 
-Export the auth server ID and issuer URL:
+Export the issuer URL:
 ```sh
 export ISSUER_URL='YOUR-ISSUER-URL'
 ```
@@ -185,12 +185,12 @@ Now that DCR is configured, you can create an application with Dynamic Client Re
 1. Click **Copy secret and close**.
 1. Create an access token with your client ID and secret:
    ```sh
-   ACCESS_TOKEN="$(curl -s -H "Content-Type: application/x-www-form-urlencoded" \
-   -d "grant_type=client_credentials" \
-   -d "client_id=$CLIENT_ID" \
-   -d "client_secret=$CLIENT_SECRET" \
-   -d "scope=openid" \
-   "$ISSUER_URL/oauth/token" | jq -r .access_token)"
+   export ACCESS_TOKEN="$(curl -sS -H 'Content-Type: application/x-www-form-urlencoded' \
+     -d 'grant_type=client_credentials' \
+     -d "client_id=$CLIENT_ID" \
+     -d "client_secret=$CLIENT_SECRET" \
+     -d 'scope=openid' \
+     "$ISSUER_URL/oauth/token" | jq -r '.access_token')"
    ```
 1. Make an authorized request to the API:
 {% capture api-request %}
@@ -202,52 +202,3 @@ status_code: 200
 {% endvalidation %}
 {% endcapture %}
 {{ api-request | indent: 3 }}
-
-
-<!--
-## Configure the Kong Identity Dynamic Client Registration in Dev Portal APIIIIII
-
-After configuring Kong Identity, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two main steps: first, creating the DCR provider, and second, establishing the authentication strategy. DCR providers are designed to be reusable configurations. This means once you've configured the Kong Identity DCR provider, it can be used across multiple authentication strategies without needing to be set up again.
-
-Configure Kong Identity as a DCR provider:
-{% konnect_api_request %}
-url: /v3/dcr-providers
-status_code: 200
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "Kong Identity"
-  provider_type: "kong"
-  issuer: "$ISSUER_URL"
-{% endkonnect_api_request %}
-
-Export your DCR provider ID:
-```sh
-export DCR_PROVIDER='YOUR-KONG-IDENTITY-DCR-ID'
-```
-
-Create a Kong Identity authentication strategy:
-{% konnect_api_request %}
-url: /v3/application-auth-strategies
-status_code: 200
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: "Kong Identity"
-  display_name: "Kong Identity"
-  strategy_type: "openid_connect"
-  configs:
-    openid-connect:
-        issuer: "$ISSUER_URL"
-        credential_claim:
-        - client_id
-        scopes:
-        - my-scope
-        auth_methods:
-        - client_credentials
-        - bearer
-  dcr_provider_id: "$DCR_PROVIDER"
-{% endkonnect_api_request %}
--->
