@@ -42,7 +42,7 @@ categories:
 search_aliases:
   - solace-upstream
   - events
-  - event gateway
+  - protocol mediation
 ---
 
 This plugin converts requests (or custom data) into [Solace](https://solace.com/) messages and publishes them to specified
