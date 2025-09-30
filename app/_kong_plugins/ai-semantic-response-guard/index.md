@@ -29,8 +29,10 @@ topologies:
     - cloud-gateways
     - serverless
 
-icon: ai-semantic-response-guard.png # e.g. acme.svg or acme.png
+icon: ai-semantic-response-guard.png
 
+categories:
+ - ai
 tags:
     - ai
 ---

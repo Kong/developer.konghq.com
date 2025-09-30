@@ -39,7 +39,7 @@ search_aliases:
   - MCP
 
 
-icon: ai-mcp-proxy.png
+icon: ai-mcp-oauth2.png
 
 categories:
    - ai
