@@ -14,7 +14,7 @@ rows:
   - header:
       type: h1
       text: "Kong Event Gateway"
-      sub_text: "A Kafka proxy for productizing your Kafka cluster to clients inside and outside of your business"
+      sub_text: "A Kafka proxy for controlled, secure client access to your Kafka cluster—both internal and external."
 
   - columns:
       - blocks:
