@@ -1,7 +1,7 @@
 metadata:
   title: "Event Gateway"
   content_type: landing_page
-  description: "A Kafka proxy for productizing your Kafka cluster to clients inside and outside of your business."
+  description: "A Kafka proxy for controlled, secure client access to your Kafka cluster—both internal and external."
   products:
     - event-gateway
   works_on:
