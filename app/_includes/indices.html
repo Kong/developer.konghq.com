@@ -23,12 +23,23 @@
             {% assign title = page.title %}{% unless title %}{% assign title = page.text %}{% endunless %}
             {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
             {% if page.plugin? and page.example? %}{% assign title = page.example_title %}{% endif %}
-            <li class="flex flex-col gap-1">
-              <a class="text-brand-saturated !mb-0 text-base tracking-[-.01em]" href="{{ page.url }}">{{ title }}</a>
-              <p class="text-xs text-terciary">
-                {{ page.description }}
-              </p>
-            </li>
+            {% if page.pages %}
+              {% for page in page.pages %}
+                <li class="flex flex-col gap-1">
+                  <a class="text-brand-saturated !mb-0 text-base tracking-[-.01em]" href="{{ page.url }}">{{ page.title }}</a>
+                  <p class="text-xs text-terciary">
+                    {{ page.description }}
+                  </p>
+                </li>
+              {% endfor %}
+            {% else %}
+              <li class="flex flex-col gap-1">
+                <a class="text-brand-saturated !mb-0 text-base tracking-[-.01em]" href="{{ page.url }}">{{ title }}</a>
+                <p class="text-xs text-terciary">
+                  {{ page.description }}
+                </p>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
       </div>
