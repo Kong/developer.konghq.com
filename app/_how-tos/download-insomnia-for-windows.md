@@ -47,6 +47,11 @@ next_steps:
     url: /insomnia/collections/
 ---
 
+Insomnia for Windows uses the **NSIS installer**. Depending on your environment, you can run the installer with GUI, silently, or with administrator privileges. It's also possible to remove Insomnia from the GUI or with a silent uninstall command.
+
+{% navtabs %}
+{% navtab GUI install %}
+
 ## Download the installer
 Before you install, close any open Insomnia windows. The NSIS installer can't update files that are actively in use.
 
@@ -66,3 +71,43 @@ Once you've run the installer, you can use the Insomnia setup wizard to complete
 2. In the **Destination Folder** field, enter the install location of the Insomnia file.
 3. Click **Install**.
 4. Click **Finish**.
+
+{% endnavtab %}
+{% navtab Silent install %}
+
+## Run the installer
+1. After installing the NSIS installer, run the installer with the `/S` flag to perform a silent installation:
+```powershell
+Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S
+```
+{:.info}
+> Silent installs use default options unless specifically overridden. To specify a custom directory, add `/D=path`: 
+```powershell
+Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D=C:\Insomnia
+```
+
+{% endnavtab %}
+{% navtab Admin deployment %}
+
+## Run the installer
+
+For system-wide installations, run the installer with administrator privileges:
+```powershell
+Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D="C:\Program Files\Insomnia"
+```
+
+{% endnavtab %}
+{% navtab Uninstall %}
+
+## GUI uninstall
+
+1. Go to **Settings → Apps → Installed** apps.
+2. Find Insomnia in the list and select the ellipsis (⋯).
+3. Click **Uninstall**, and then confirm.
+
+## Silent uninstall
+
+To remove Insomnia without prompts, run the uninstaller with the /S flag:
+```powershell
+"%ProgramFiles%\Insomnia\Uninstall.exe" /S
+```
