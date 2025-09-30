@@ -1,27 +1,23 @@
 metadata:
   title: "Event Gateway"
   content_type: landing_page
-  description: "Learn about Kong's event gateway capabilities through {{site.base_gateway}} and {{site.event_gateway}}."
+  description: "A Kafka proxy for controlled, secure client access to your Kafka cluster—both internal and external."
   products:
     - event-gateway
   works_on:
     - konnect
   tags:
     - kafka
-    - solace
     - events
   
 rows:
   - header:
       type: h1
-      text: "Event Gateway"
-      sub_text: "A protocol-native Gateway built for governance, security, and cost-efficient use of Kafka"
+      text: "Kong Event Gateway"
+      sub_text: "A Kafka proxy for controlled, secure client access to your Kafka cluster—both internal and external."
 
-
-  - column_count: 3
-    columns:
-      - col_span: 1
-        blocks:
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -29,14 +25,19 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The event gateway is composed of two core branches: 
-                    * Protocol mediation using the {{site.base_gateway}}
-                    * Native event processing using the {{site.event_gateway}}
+                   {{ site.event_gateway }} is a lightweight, fast, and flexible cloud-native event streaming proxy. 
+                    It sits between native consumers and producers, and backend Kafka clusters. 
 
-
+                    With its extensible policy engine, you can adapt Kafka to your requirements—transforming, encrypting, and monitoring messages to optimize performance and strengthen security.
                     
-      - col_span: 2
-        blocks:
+                    {{ site.event_gateway }} runs in front of any Kafka cluster and can be extended through policies and plugins. 
+
+          - type: button
+            config:
+              text: "Get started with {{site.event_gateway_short}} &rarr;"
+              url: "/event-gateway/get-started/"
+                
+      - blocks:
           - type: structured_text
             config:
               blocks:
@@ -44,129 +45,207 @@ rows:
                   text: |
                     <img src="/assets/images/event-gateway/event-gateway-light.svg" alt="Diagram of how {{ site.base_gateway }} works" class="flex dark:hidden">
                     <img src="/assets/images/event-gateway/event-gateway-dark.svg" alt="Diagram of how {{ site.base_gateway }} works" class="hidden dark:flex">
-                    
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Protocol Mediation"
-              blocks:
-                - type: text
-                  text: | 
-                    Protocol mediation enables HTTP clients to produce to and consume from event streams using {{site.base_gateway}}.
-                    
-                    This includes functionality such as producing to and consuming from Kafka topics via `http-get` or SSE.
 
-                    In {{site.base_gateway}}, we provide multiple plugins to produce and consume data for Kafka, as well as a Kafka logging plugin. 
-
-                    [See all protocol mediation plugins &rarr;](#protocol-mediation-plugins)
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "{{site.event_gateway}} (Beta)"
-              blocks:
-                - type: text
-                  text: | 
-                    {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters. 
-                    It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads and keys.
-
-                    Through its extensible policy engine, you can augment, optimize, and secure 
-                    your Kafka deployments with customized business logic to transform, encrypt, and observe Kafka messages. 
-                    
-                    The {{site.event_gateway}} supports many policies such as
-                    encryption, cluster virtualization, message filtering, and more.
-
-                    [Get started with {{site.event_gateway_short}} &rarr;](/event-gateway/get-started/)
   - header:
       type: h2
-      text: Protocol mediation plugins
-    column_count: 3
-    columns:
-      - blocks:       
-        - type: plugin
-          config:
-            slug: kafka-upstream
-      - blocks:
-        - type: plugin
-          config:
-            slug: kafka-consume
-      - blocks:
-        - type: plugin
-          config:
-            slug: confluent
-      - blocks:
-        - type: plugin
-          config:
-            slug: confluent-consume
-      - blocks:
-        - type: plugin
-          config:
-            slug: solace-upstream
-  - header:
-      type: h2
-      text: Get started with {{site.event_gateway_short}} (Beta)
+      text: "Get started with {{site.event_gateway}}"
     columns:
       - blocks:
         - type: card
           config:
-            title: "{{site.event_gateway}} quickstart"
+            title: Deploy {{site.event_gateway_short}} in {{ site.konnect_short_name }}
             description: |
-              Install, configure, and start using {{site.event_gateway}}
-            icon: /assets/icons/event.svg
+              Configure a control plane and launch a {{ site.event_gateway }} data plane through {{ site.konnect_short_name }} in minutes     
+            icon: /assets/icons/event.svg  
             cta:
-              text: Start using {{site.event_gateway}}
+              url: https://cloud.konghq.com/event-gateway/
+              align: end
+              text: Set up {{site.event_gateway_short}} in {{site.konnect_short_name}}
+      - blocks:
+        - type: card
+          config:
+            title: Try the Getting Started guide
+            description: Set up a data plane, configure backend cluster, create virtual cluster, set up a listener, and apply policies
+            icon: /assets/icons/graduation.svg
+            cta:
               url: /event-gateway/get-started/
               align: end
+              text: Get started
       - blocks:
         - type: card
           config:
-            title: Proxy configuration reference
-            description: |
-              You can configure {{site.event_gateway}} using declarative YAML configuration files
-              
-            icon: /assets/icons/lock.svg
+            title: Understand core concepts
+            description: Learn about how {{site.event_gateway_short}} works, including its architecture and key entities
+            icon: /assets/icons/linked-services.svg
             cta:
-              text: See all configuration options for {{site.event_gateway_short}}
-              url: /api/event-gateway/knep/
+              url: /event-gateway/architecture/
               align: end
-      - blocks:
-        - type: card
-          config:
-            title: Policy reference
-            description: Learn how to use policies to apply access control, create virtual topics, validate schemas, and more
-            icon: /assets/icons/graph.svg
-            cta:
-              text: See policy reference for {{site.event_gateway_short}}
-              url: /event-gateway/policies/
-              align: end
+              text: Learn about {{site.event_gateway_short}}
+
   - header:
-      text: "Frequently asked questions about {{site.event_gateway_short}}"
       type: h2
+      text: "{{site.event_gateway}} entities"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "Backend clusters"
+              description: |
+                Physical Kafka clusters that are proxied by {{site.event_gateway_short}}
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about backend clusters
+                url: /event-gateway/entities/backend-clusters/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Virtual clusters"
+              description: |
+                Core abstraction for client isolation when connecting to the same backend cluster
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: Learn about virtual clusters
+                url: /event-gateway/entities/virtual-clusters/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Listeners"
+              description: |
+                Network interfaces for Kafka client connections
+              icon: /assets/icons/plug.svg
+              cta:
+                text: Learn about listeners
+                url: /event-gateway/entities/listeners/
+                align: end
+      
+      - blocks:
+          - type: card
+            config:
+              title: "Policies"
+              description: |
+                 Control how Kafka protocol traffic is modified between the client and the backend cluster
+              icon: /assets/icons/plug.svg
+              cta:
+                text: Learn about policies
+                url: /event-gateway/entities/policies/
+                align: end
+          
+
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: "Common use cases"
+        blocks:
+        - type: structured_text
+          config:
+            blocks:
+            - type: unordered_list
+              items:
+                - "[Productizing Kafka topics](/how-to/event-gateway/productize-kafka-topics/): Create virtual clusters to expose and isolate topics for different environments and customers."
+                - "[Rewriting topics](/how-to/event-gateway/rewrite-kafka-topics/): Use the topic rewrite policy to map topics between clients and backend clusters."
+                - "[Using SNIs for hostname mapping](/how-to/event-gateway/sni-hostname-mapping/): Route client connections to different backend clusters based on the SNI hostname."
+                - "[Setting up Kong Identity for OAuth](/how-to/event-gateway/kong-identity-oauth/): Secure client connections with OAuth 2.0 using Kong Identity as the authorization server."
+                - "[Using ACLs for topic-level access control](/how-to/event-gateway/acls/): Control which topics clients can access using allow and deny lists."
+
+      - header:
+          type: h2
+          text: Tools to manage {{site.event_gateway}}
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items: # links TBA, they don't exist yet
+                    - "**{{site.konnect_short_name}} UI**: Manage {{site.event_gateway_short}} entities within {{site.konnect_short_name}} control planes using a UI."
+                    - "**Control Plane API**: Manage {{site.event_gateway_short}} entities within {{site.konnect_short_name}} control planes via an API."
+                    - "[**Terraform**](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.event_gateway}}."
+
+  - header:
+      type: h2
+      text: Key references
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.event_gateway_short}} policy hub"
+              description: All available virtual cluster policies for {{site.event_gateway}}
+              icon: /assets/icons/plug.svg
+              cta:
+                text: See all policies
+                url: /event-gateway/policies/
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: Authentication
+            description: |
+              Flexible authentication for both virtual cluster client connections and backend cluster access
+            icon: /assets/icons/security.svg
+            cta:
+              text: Configure authentication
+              url: /event-gateway/authentication/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Hostname mapping"
+            description: |
+              Map gateway servers to upstream Kafka brokers using port mapping or SNI routing
+            icon: /assets/icons/load-balance.svg
+            cta:
+              text: Understand hostname mapping
+              url: /event-gateway/hostname-mapping/
+              align: end
+      - blocks:
+          - type: card
+            config:
+              title: API reference
+              description: |
+                Explore the reference documentation for all {{ site.event_gateway }} APIs
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Event Gateway API reference
+                url: /api/event-gateway/
+                align: end
+      
+  - header:
+      type: h2
+      text: "Frequently asked questions about {{site.event_gateway}}"
     columns:
       - blocks:
         - type: faqs
           config:
-            - q: Are OS-specific distributions currently supported?
+            - q: How is {{site.event_gateway}} deployed?
               a: |
-                During the beta of {{site.event_gateway}}, we will only provide support for Docker images. 
-                If you have OS specific requirements, please share with the Kong team.
+                The {{site.event_gateway}} data planes are self-managed and deployed by you, the user. 
+                The {{site.event_gateway}} control plane is part of the {{site.konnect_product_name}} platform.
             
-            - q: How is {{site.event_gateway_short}} deployed?
+            - q: Does {{site.event_gateway}} run on-prem?
+              a: No, {{site.event_gateway}} is only available through the {{site.konnect_product_name}} platform.
+            
+            - q: Can I proxy multiple Kafka clusters?
               a: |
-                The {{site.event_gateway_short}} Data Planes are self-managed and deployed by you, the user. 
-                The {{site.event_gateway_short}} Control Plane is part of the {{site.konnect_product_name}} platform.
-            
-            - q: Does {{site.event_gateway_short}} run on-prem?
-              a: No, {{site.event_gateway_short}} is only available through Gateway Manager on the {{site.konnect_product_name}} platform.
-            
-            - q: How can I get access to the {{site.event_gateway}}?
-              a: |
-               If you're an existing Kong customer or prospect, please fill out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.
-            
-              
-            - q: I am interested in using {{site.event_gateway_short}} but don't have a {{site.konnect_short_name}} account - how do I get started?
-              a: |
-                Start by filling out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta). 
-                Once we get in touch, we'll provide instructions on how to set up a {{site.konnect_short_name}} account and enable {{site.event_gateway_short}} for your organization.
+                Yes, the gateway can proxy multiple backend clusters, though only one can currently be proxied in a single client connection.
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - event-gateway
+              quantity: 8
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    _Looking for HTTP over Kafka? Check out the [{{site.base_gateway}} protocol mediation plugins](/plugins/?terms=protocol%2520mediation)._
