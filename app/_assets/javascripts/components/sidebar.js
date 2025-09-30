@@ -37,11 +37,11 @@ class SidebarComponent {
     });
 
     if (activeLink) {
-      this.expandParentMenus(activeLink);
+      this.expandParentMenus(activeLink, false);
     }
   }
 
-  expandParentMenus(link) {
+  expandParentMenus(link, close) {
     let parentSubmenu = link.closest(".nav-submenu");
     while (parentSubmenu) {
       const parentButton = this.container.querySelector(
@@ -51,7 +51,7 @@ class SidebarComponent {
         parentButton.setAttribute("aria-expanded", "true");
         parentSubmenu.classList.add("nav-submenu--expanded");
         if (parentButton.classList.contains("nav-button--drilldown")) {
-          this.handleDrillDown(parentButton);
+          this.handleDrillDown(parentButton, close);
         }
       }
       parentSubmenu = parentSubmenu.parentElement.closest(".nav-submenu");
@@ -85,7 +85,7 @@ class SidebarComponent {
     }
   }
 
-  handleDrillDown(button) {
+  handleDrillDown(button, close) {
     const submenu = document.getElementById(
       button.getAttribute("aria-controls")
     );
@@ -93,10 +93,12 @@ class SidebarComponent {
     button.disabled = true;
     button.parentElement.classList.add("nav-item--drilldown-parent");
 
-    this.closeAllSubmenus();
+    if (close !== false) {
+      this.closeAllSubmenus();
+    }
     this.container.classList.add("nav-container--drilled-down");
     submenu.classList.add("active-submenu");
-    this.openSubmenu(button, submenu);
+    this.openSubmenu(button, submenu, close);
   }
 
   handleBackClick() {
@@ -119,16 +121,16 @@ class SidebarComponent {
     }
   }
 
-  openSubmenu(button, submenu) {
+  openSubmenu(button, submenu, focus) {
     button.setAttribute("aria-expanded", "true");
     submenu.classList.add("nav-submenu--expanded");
 
-    const activeLink = submenu.querySelector(".nav-link--active");
+    const activeLink = submenu.querySelector(":scope > .nav-link--active");
     if (activeLink) {
       return;
     }
     const firstItem = submenu.querySelector(".nav-link, .nav-button");
-    if (firstItem) {
+    if (firstItem && focus !== false) {
       setTimeout(() => firstItem.focus(), 150);
     }
   }

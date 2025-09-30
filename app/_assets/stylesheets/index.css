@@ -1043,5 +1043,10 @@ ol:has(code) {
 
 .nav-submenu .nav-link,
 .nav-submenu .nav-button {
-  @apply text-terciary text-sm pl-4;
+  @apply text-sm pl-4;
+}
+
+.nav-submenu .nav-submenu .nav-link,
+.nav-submenu .nav-submenu .nav-button {
+  @apply pl-8;
 }
