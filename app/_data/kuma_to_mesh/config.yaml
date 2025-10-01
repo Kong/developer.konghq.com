@@ -803,4 +803,16 @@ pages:
         url: /mesh/universal/
     tags:
       - get-started
+  -
+    path: app/_src/guides/meshidentity-spire-guide.md
+    title: 'Issue identity with MeshIdentity Spire provider'
+    description: 'Learn how to issue identities using Spire provider and how to use them to encrypt traffic in mesh.'
+    url: '/mesh/meshidentity-spire/'
+    related_resources:
+      - text: Data plane proxy
+        url: '/mesh/data-plane-proxy/'
+    tags:
+      - security
+    min_version:
+      mesh: '2.12'
 
