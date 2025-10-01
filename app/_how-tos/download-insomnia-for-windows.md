@@ -110,4 +110,4 @@ To remove Insomnia without prompts, run the uninstaller with the /S flag:
 ```powershell
 "%ProgramFiles%\Insomnia\Uninstall.exe" /S
 ```
-{% endnavtab %}
+{% endnavtabs %}
