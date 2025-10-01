@@ -194,8 +194,8 @@ rows:
     endpoint: "POST `https://login.microsoftonline.com/$YOUR_TENANT_ID/oauth2/v2.0/token`"
     body: '`{ "grant_type": "client_credentials", "scope": "https://graph.microsoft.com/.default" }`'
   - vendor: "Kong Identity"
-    endpoint: "POST `https://$YOUR_KONNECT_DOMAIN.us.identity.konghq.tech/oauth2/v1/`"
-    body: '`?`'
+    endpoint: "POST `https://$YOUR_KONNECT_DOMAIN.us.identity.konghq.com/oauth2/v1/`"
+    body: '`{ "grant_type": "client_credentials", "scope": "openid" }`'
 {% endtable %}
 <!--vale on-->
 
