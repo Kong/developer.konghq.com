@@ -4,15 +4,15 @@ description: Insomnia allows Enterprise users to create self-hosted mock servers
 
 content_type: reference
 layout: reference
-breadcrumbs: 
+breadcrumbs:
   - /insomnia/
   - /insomnia/mock-servers/
 products:
-    - insomnia
+  - insomnia
 
 tier: enterprise
 tags:
-- mock-servers
+  - mock-servers
 
 related_resources:
   - text: Mocks
@@ -23,9 +23,9 @@ related_resources:
 
 Insomnia allows Enterprise users to create self-hosted mock servers.
 
-[Configuration details](https://github.com/Kong/insomnia-mockbin) and a [Docker image](https://github.com/kong/insomnia-mockbin/pkgs/container/insomnia-mockbin) can be found on GitHub.
+[Configuration details](https://github.com/Kong/insomnia-mockbin/tree/self-hosted) and a [Docker image](https://github.com/Kong/insomnia-mockbin/pkgs/container/insomnia-mockbin-self-hosted/versions) can be found on GitHub.
 
-You can run it [locally](https://github.com/Kong/insomnia-mockbin?tab=readme-ov-file#installation) with NodeJS or Docker, or you can use Kubernetes.
+You can run it [locally](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#installation) with NodeJS or Docker, or you can use Kubernetes.
 
 ## Create a self-hosted mock server with Kubernetes
 
@@ -52,7 +52,7 @@ echo "
       spec:
         containers:
         - name: insomnia-mock
-          image: ghcr.io/kong/insomnia-mockbin:master
+          image: ghcr.io/kong/insomnia-mockbin-self-hosted:latest
           ports:
           - containerPort: 9080
           env:
@@ -61,7 +61,7 @@ echo "
 " | kubectl apply -f -
 ```
 
-### Configure the service 
+### Configure the service
 
 Run the following command create a service to expose Mockbin internally in the cluster:
 
@@ -83,9 +83,9 @@ echo "
 " | kubectl apply -f -
 ```
 
-### Configure the Ingress 
+### Configure the Ingress
 
-Run the following command to configure the Ingress to manage external access. This configuration will depend on your specific domain and TLS requirements. 
+Run the following command to configure the Ingress to manage external access. This configuration will depend on your specific domain and TLS requirements.
 
 For this example, you'll need to export a domain and a TLS secret name as environment variables:
 
