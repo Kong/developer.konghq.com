@@ -520,7 +520,7 @@ columns:
 rows:
   - nodetype: "`branch`"
     inputs: "user-defined"
-    outputs: "`then`, `else`"
+    outputs: none
     attributes: "`then`, `else`"
   - nodetype: "`cache`"
     inputs: "`key`, `ttl`, `data`"
@@ -651,13 +651,15 @@ nodes:
 
 Execute different nodes based on matching input conditions, such as a cache hit or miss.
 
-Input:
-* `name`: The name of a node, or a reference to a node field. For example, `NODE_NAME` or `NODE_NAME.FIELD`.
+#### Input
 
-Output:
-* `name`: The name of a node, or a reference to a node field. For example, `NODE_NAME` or `NODE_NAME.FIELD`.
+The input to a branch node represents a boolean condition to test and branch on:
+* If the input is `true`, the nodes named by the `then` array are executed.
+* If the input is `false`, the nodes named by the `else` array are executed.
+* If the input is a non-boolean value, an error is raised.
 
-Configuration attributes:
+#### Configuration attributes
+
 * `then`: Array of nodes to execute if the input condition is `true`.
 * `else`: Array of nodes to execute if the input condition is `false`.
 
