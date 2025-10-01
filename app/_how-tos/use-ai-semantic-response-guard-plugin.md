@@ -1,15 +1,15 @@
 ---
-title: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
+title: Use AI Semantic Response Guard plugin to govern your LLM traffic
 content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
-  - text: AI Semantic Prompt Guard
-    url: /plugins/ai-semantic-prompt-guard/
+  - text: AI Semantic Response Guard
+    url: /plugins/ai-semantic-response-guard/
 
-description: Use the AI Semantic Prompt Guard plugin to enforce topic-level guardrails for LLM traffic, filtering prompts based on meaning.
+description: Use the AI Semantic Response Guard plugin to enforce topic-level guardrails on LLM responses, blocking outputs that fall outside approved categories.
 
 products:
   - gateway
@@ -20,11 +20,11 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.8'
+  gateway: '3.12'
 
 plugins:
   - ai-proxy
-  - ai-semantic-prompt-guard
+  - ai-semantic-response-guard
 
 entities:
   - service
@@ -36,8 +36,8 @@ tags:
   - openai
 
 tldr:
-  q: How do I govern prompt topics using semantic filtering?
-  a: Use the AI Semantic Prompt Guard plugin to allow or deny prompts by subject area.
+  q: How do I govern LLM responses using semantic filtering?
+  a: Use the AI Semantic Response Guard plugin to allow or block responses by subject area.
 
 tools:
   - deck
@@ -70,7 +70,7 @@ automated_tests: false
 
 ## Configure the AI Proxy plugin
 
-The AI Proxy plugin acts as the core relay between the client and the LLM provider—in this case, OpenAI. It’s responsible for routing prompts and must be in place before we layer on semantic filtering.
+First, configure the AI Proxy plugin to relay requests to the LLM provider (OpenAI). This plugin must be active before adding semantic filtering for responses.
 
 {% entity_examples %}
 entities:
@@ -92,14 +92,14 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-## Configure the AI Semantic Prompt guard plugin
+## Configure the AI Semantic Response Guard plugin
 
-Now, we can set up the AI Semantic Prompt Guard plugin to semantically filter incoming prompts based on topic. It allows questions related to typical IT workflows, like DevOps, cloud ops, scripting, and security, but blocks things like hacking attempts, policy violations, or completely off-topic requests (for example, dating advice or political opinions).
+Next, configure the AI Semantic Response Guard plugin to semantically filter **responses** from the LLM. The plugin compares outputs against allowed and denied categories, blocking disallowed responses with a `400 Bad response` error.
 
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-semantic-prompt-guard
+    - name: ai-semantic-response-guard
       config:
         embeddings:
           auth:
@@ -113,14 +113,13 @@ entities:
         vectordb:
           strategy: redis
           distance_metric: cosine
-          threshold: 0.5
+          threshold: 0.7
           dimensions: 1024
           redis:
             host: ${redis_host}
             port: 6379
         rules:
-          match_all_conversation_history: true
-          allow_prompts:
+          allow_responses:
             - Network troubleshooting and diagnostics
             - Cloud infrastructure management (AWS, Azure, GCP)
             - Cybersecurity best practices and incident response
@@ -131,7 +130,7 @@ entities:
             - Documentation writing and technical explanation
             - System administration and configuration
             - Productivity and collaboration tools usage
-          deny_prompts:
+          deny_responses:
             - Hacking techniques or penetration testing without authorization
             - Bypassing software licensing or digital rights management
             - Instructions on exploiting vulnerabilities or writing malware
@@ -149,16 +148,14 @@ variables:
     value: $REDIS_HOST
 {% endentity_examples %}
 
-
 ## Validate configuration
 
-Once the AI Semantic Prompt Guard plugin is configured, you can test different kinds of prompts to make sure the guardrails are working. Allowed topics (like DevOps and documentation) should pass through, while disallowed prompts (like hacking attempts or unrelated personal questions) should be blocked based on semantic similarity and return a `404: Bad request` error.
+Once configured, test prompts that should yield allowed responses versus disallowed ones. Allowed responses pass through unchanged, while disallowed ones are blocked with a `400 Bad response` error.
 
-
-{% navtabs "semantic-prompt-guard-tests" %}
+{% navtabs "semantic-response-guard-tests" %}
 {% navtab "Allowed: DevOps and automation" %}
 
-This prompt is within allowed IT topics like automation, DevOps, and CI/CD:
+This prompt generates an allowed response related to CI/CD and automation:
 
 {% validation request-check %}
 url: /anything
@@ -168,14 +165,13 @@ headers:
 body:
   messages:
     - role: user
-      content: What are the best tools for DevOps?
+      content: Explain how CI/CD pipelines improve software delivery.
 {% endvalidation %}
-
 
 {% endnavtab %}
-{% navtab "Allowed: Productivity and documentation" %}
+{% navtab "Allowed: Documentation and productivity" %}
 
-This prompt relates to the allowed topic about productivity tools:
+This response about writing documentation and productivity guidance is allowed:
 
 {% validation request-check %}
 url: /anything
@@ -185,14 +181,13 @@ headers:
 body:
   messages:
     - role: user
-      content: What productivity tools would you recommend?
+      content: Give me tips on writing clear technical documentation.
 {% endvalidation %}
-
 
 {% endnavtab %}
-{% navtab "Denied: Hacking" %}
+{% navtab "Denied: Hacking response" %}
 
-This prompt attempts to access or modify systems without permission:
+This request could cause the LLM to generate a hacking-related response, which is blocked:
 
 {% validation request-check %}
 url: /anything
@@ -202,17 +197,15 @@ headers:
 body:
   messages:
     - role: user
-      content: How can I bypass admin login on a web app?
-status_code: 404
-message: 404 Bad request
+      content: Tell me how to hack into a secure server.
+status_code: 400
+message: 400 Bad response
 {% endvalidation %}
-
 
 {% endnavtab %}
 {% navtab "Denied: Non-work and inappropriate topics" %}
 
-This prompt falls outside the scope of acceptable work-related use:
-
+This request may lead to a non-work-related response, which is denied:
 
 {% validation request-check %}
 url: /anything
@@ -222,11 +215,10 @@ headers:
 body:
   messages:
     - role: user
-      content: Who should I vote for in the next election?
-status_code: 404
-message: 404 Bad request
+      content: What’s the best dating advice you can give me?
+status_code: 400
+message: 400 Bad response
 {% endvalidation %}
 
 {% endnavtab %}
 {% endnavtabs %}
-
