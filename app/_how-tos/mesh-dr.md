@@ -56,7 +56,7 @@ You actually don't need to have a KIC instance on both zones.  For a partial, or
 * ...or in the event of a failure, the service hosted in another zone
 
 We've decided to use 2 KIC instances to deal with a scenario where an entire Zone goes down for say, a Cloud region failure.
-
+<!--vale off -->
 {% mermaid %}
 ---
 config:
@@ -92,13 +92,14 @@ flowchart LR
     Z1DEP --> Z1SVC
     Z2DEP --> Z2SVC
     GLB --> Z1KIC1  & Z2KIC1 
-    Z1KIC1 -. "HTTP to\n<code>echo.&lt;mesh&gt;.svc</code>" .-> MMS
-    Z2KIC1 -. "HTTP to\n<code>echo.&lt;mesh&gt;.svc</code>" .-> MMS
+    Z1KIC1 -. "HTTP<br/>echo-mmzs-service" .-> MMS
+    Z2KIC1 -. "HTTP<br/>echo-mmzs-service" .-> MMS
     MMS -. "zone-local preferred" .-> Z1SVC & Z2SVC
     Z1DEP@{ shape: rect}
     Z2DEP@{ shape: rect}
     ext@{ shape: rounded}
 {% endmermaid %}
+<!--vale on -->
 
 ## Setup your zones
 
