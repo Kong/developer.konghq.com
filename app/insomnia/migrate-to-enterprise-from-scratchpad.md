@@ -61,7 +61,7 @@ When you switch to Insomnia Enterprise, you can export your [scratch pad](/ins
 ## Create a project
 1. In the Insomnia app, sign in to your Enterprise organization. 
    If your org enforces SSO, click **Continue with SSO** and login. 
-1. In the Insomnia app in the Project sidebar, click **+**.
+1. In the Project sidebar, click **+**.
 1. In the **Project name** field, enter `Migrated scratch pad data`. 
 1. In the Project type settings, select one of the following:
     * **Cloud Sync:** A cloud project to share and sync in your organization, uses E2EE.
