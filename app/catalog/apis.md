@@ -35,7 +35,7 @@ faqs:
     a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
   - q: How do I allow developers to view multiple versions of an API in the Dev Portal?
     a: |
-      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the Dev Portal spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
+      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the Dev Portal spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
       
       There are two exceptions when the underlying implementation should match the selected version:
       * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
@@ -60,7 +60,7 @@ To create an API, do one of the following:
 Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create).
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis` endpoint](/api/konnect/api-builder/v3/#/operations/create-api):
+Send a POST request to the [`/apis` endpoint](/api/konnect/api-catalog/v3/#/operations/create-api):
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/apis
@@ -99,7 +99,7 @@ When you create your API, you can choose to keep it unversioned or version it us
 * Date-based versioning (examples: `2024-05-10`, `2024-10-22`) 
 * Custom naming scheme (example: `a1b2c3-internal-xxyyzz00`)
 
-Each API is identified using the combination of `name+version`. For example, if your API is named `My Test API` and it has a version of `v3`, then it will be accessible via the API as `my-test-api-v3` in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). If a `version` isn't specified, then `name` is used as the unique identifier. 
+Each API is identified using the combination of `name+version`. For example, if your API is named `My Test API` and it has a version of `v3`, then it will be accessible via the API as `my-test-api-v3` in your [list of APIs](/api/konnect/api-catalog/v3/#/operations/list-apis). If a `version` isn't specified, then `name` is used as the unique identifier. 
 
 To version an API, do one of the following:
 {% navtabs "api-version" %}
@@ -107,7 +107,7 @@ To version an API, do one of the following:
 Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
+Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-version):
 {% konnect_api_request %}
 url: /v3/apis/$API_ID/versions
 status_code: 201
@@ -146,7 +146,7 @@ To upload a spec to an API, do one of the following:
 Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
+Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-version):
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/apis/$API_ID/versions
@@ -203,7 +203,7 @@ To create a new API document, do one of the following:
 Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document):
+Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-document):
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/apis/$API_ID/documents
@@ -296,7 +296,7 @@ To link your API to a Gateway Service, do one of the following:
 Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
+Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-implementation):
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/apis/$API_ID/implementations
@@ -396,7 +396,7 @@ To publish your API, do one of the following:
 Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Portals** tab, and then click **Publish API**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal):
+Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-catalog/v3/#/operations/publish-api-to-portal):
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/apis/$API_ID/publications/$PORTAL_ID

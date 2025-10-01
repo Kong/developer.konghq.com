@@ -1,6 +1,6 @@
 
 
-1. [Create an API](/api/konnect/api-builder/v3/#/operations/create-api) using the `/v3/apis` endpoint:
+1. [Create an API](/api/konnect/api-catalog/v3/#/operations/create-api) using the `/v3/apis` endpoint:
 <!--vale off-->
 {% capture create-api %}
 {% konnect_api_request %}
@@ -54,7 +54,7 @@ export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
 
 {{ list-services | indent: 3 }}
 
-1. [Associate the API with a Service](/api/konnect/api-builder/v3/#/operations/create-api-implementation) using the `/v3/apis/{apiId}/implementations` endpoint:
+1. [Associate the API with a Service](/api/konnect/api-catalog/v3/#/operations/create-api-implementation) using the `/v3/apis/{apiId}/implementations` endpoint:
 <!--vale off-->
 {% capture associate-service %}
 {% konnect_api_request %}
@@ -71,7 +71,7 @@ body:
 {{ associate-service | indent: 3 }}
 <!--vale on-->
 
-1. Now you can [publish the API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
+1. Now you can [publish the API](/api/konnect/api-catalog/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 <!--vale off-->
 {% capture publish %}
 {% konnect_api_request %}
