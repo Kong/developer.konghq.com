@@ -1,5 +1,5 @@
 ---
-title: Setup Multi Zone services in Kong Mesh
+title: Setup Multi Zone services in {{site.mesh_product_name}}
 description: "Learn how to setup Multi Zone services to deal with zone to zone communication, failover and disaster recovery."
 content_type: how_to
 permalink: /mesh/mesh-dr/
@@ -17,8 +17,8 @@ works_on:
   - on-prem
 
 tldr:
-  q: How do I setup Failover and Disaster recovery with Kong Mesh
-  a: Use Mesh Multi Zone Services with Kong Gateway to automatically route traffic to healthy zones.
+  q: How do I setup Failover and Disaster recovery with {{site.mesh_product_name}}
+  a: Use Mesh Multi Zone Services with {{site.base_gateway}} to automatically route traffic to healthy zones.
 
 prereqs:
   inline:
@@ -26,7 +26,7 @@ prereqs:
       content: |
         This tutorial requires a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
 
-        After creating your {{site.konnect_short_name}} account, [create the Kong Mesh Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
+        After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
     - title: Setup multiple Mesh zones
       content: |
         Use {{site.konnect_short_name}} to create a new zone in [Mesh manager](https://cloud.konghq.com/us/mesh-manager/).  This will be used as the secondary zone to host your workloads and can be in a different datacenter or Cloud region.
@@ -40,13 +40,13 @@ cleanup:
 
 ## Mesh Failover and DR
 
-One of the most difficult things to setup in a Service Mesh is multi zone failover, and communication.  Kong Mesh is built from the ground up to support multiple zones, and seamlessly setup zone to zone communication through MeshMultiZoneServices.
+One of the most difficult things to setup in a Service Mesh is multi zone failover, and communication.  {{site.mesh_product_name}} is built from the ground up to support multiple zones, and seamlessly setup zone to zone communication through MeshMultiZoneServices.
 
-In this walkthrough, we will show you how to create a service that spans multiple zones, as well as how to have an active/active failover for your Kong Ingress controllers.
+In this walkthrough, we will show you how to create a service that spans multiple zones, as well as how to have an active/active failover for your {{site.kic_product_name}}.
 
 ## Our target architecture
 
-To demonstrate how to setup a Multi Zone services, we will create two Kubernetes clusters, each being a separate Mesh Zone.  Each Zone will have a Kong Ingress Controller that will handle traffic into the zones.  In front of the KIC instances will be a Global Load balancer, which will deal with traffic at the edge.  
+To demonstrate how to setup a Multi Zone services, we will create two Kubernetes clusters, each being a separate Mesh Zone.  Each Zone will have a {{site.kic_product_name}} that will handle traffic into the zones.  In front of the KIC instances will be a Global Load balancer, which will deal with traffic at the edge.  
 
 ### Do I need KIC in both zones?
 
@@ -63,11 +63,11 @@ config:
   layout: dagre
 ---
 flowchart LR
- subgraph MESH["Kong Mesh"]
+ subgraph MESH["{{site.mesh_product_name}}"]
         MMS[("Multi Zone Service")]
   end
  subgraph Z1Edge["Kong Operator (edge)"]
-        Z1KIC1["Kong Gateway"]
+        Z1KIC1["{{site.base_gateway}}"]
   end
  subgraph Z1Apps["Workloads"]
         Z1DEP["Deployment: echo"]
@@ -78,7 +78,7 @@ flowchart LR
         Z1Apps
   end
  subgraph Z2Edge["Kong Operator (edge)"]
-        Z2KIC1["Kong Gateway"]
+        Z2KIC1["{{site.base_gateway}}"]
   end
  subgraph Z2Apps["Workloads"]
         Z2DEP["Deployment: echo"]
@@ -102,7 +102,7 @@ flowchart LR
 
 ## Setup your zones
 
-This walkthrough is based on using Kubernetes as the compute platform.  The configuration of workloads running on Universal will be exactly the same from a Kong Mesh point of view, and we will use kumactl YAML notation in all of our examples.
+This walkthrough is based on using Kubernetes as the compute platform.  The configuration of workloads running on Universal will be exactly the same from a {{site.mesh_product_name}} point of view, and we will use kumactl YAML notation in all of our examples.
 
 ### Label your namespaces and deploy your workloads
 
@@ -124,7 +124,7 @@ kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n
 
 ### Deploy Kong Operator
 
-For each Zone, follow the instructions to deploy [Kong Operator](https://developer.konghq.com/operator/dataplanes/get-started/kic/create-gateway/) into each zone.  
+For each Zone, follow the instructions to deploy [Kong Operator](operator/dataplanes/get-started/kic/create-gateway/) into each zone.  
 
 The Gateway will need to be part of the Mesh, so make sure your Dataplanes are deployed into the ```kong``` namespace that has been marked as being part of the Mesh.
 
@@ -155,7 +155,7 @@ spec:
 ' | kubectl apply -f -
 ```
 
-Kong Mesh will automatically resolve the Kubernetes ```echo``` service to the Cluster IP address and route traffic through the Mesh dataplanes.  We do not have to to anything 
+{{site.mesh_product_name}} will automatically resolve the Kubernetes ```echo``` service to the Cluster IP address and route traffic through the Mesh dataplanes.  We do not have to to anything 
 
 Test the route has been created, and programmed by calling the ```echo``` service through the Gateway:
 
@@ -174,7 +174,7 @@ This confirms that the Service is reachable by the Gateway.
 
 A MeshMultiZoneService (MMZS) uses the Mesh to bring together services in more than one zone.  Traffic between each Zone will leave the Zone (egress) through the zone1 Egress gateway, and enter (ingress) Zone 2 at its Ingress gateway.
 
-Create the new MMZS by combining the services in both zones based on the meshService matchLabel.  In this case, we are using the name of the service, but this can be based on workload labels too.
+Create the new MMZS by combining the services in both zones based on the ```meshService``` ```matchLabel```.  In this case, we are using the name of the service, but this can be based on workload labels too.
 
 ```sh
 echo 'type: MeshMultiZoneService
@@ -190,7 +190,7 @@ spec:
 ```
 
 
-## Configure Kong Gateway
+## Configure {{site.base_gateway}}
 
 As a MMZS is a Global Mesh construct, it is defined at the Global control plane.  The multi zone service will *not* resolve through cluster DNS, and can only be accessed from within the Mesh.  The Mesh dataplanes are responsible for routing traffic from one workload to another.
 
@@ -242,7 +242,7 @@ spec:
 For our scenario, we can apply the changes to both Gateways so that traffic will be correctly routed from one Zone to another based on the echo service's health and availability.
 
 ## What scenarios does Mesh Multi Zone Service help with?
-Multi Zones Services are a very powerful construct in Kong Mesh.  As we have both a Global and a Zone control plane, we are able to greatly simplify the configuration of not just routing between Zones, but also creating logical services that can span multiple Zones.
+Multi Zones Services are a very powerful construct in {{site.mesh_product_name}}.  As we have both a Global and a Zone control plane, we are able to greatly simplify the configuration of not just routing between Zones, but also creating logical services that can span multiple Zones.
 
-In this example we looked at Failover and DR scenarios that encapsulate traffic entering your environments, but this could equally help with service availability during workload rollouts and upgrades.  Coupled with readiness, health probles, as well as automated functional and non-functional testing, you will be able to maintain a service level objective across multiple environments with zero configuration needed.
+In this example we looked at Failover and DR scenarios that encapsulate traffic entering your environments, but this could equally help with service availability during workload rollouts and upgrades.  Coupled with readiness, health probes, as well as automated functional and non-functional testing, you will be able to maintain a service level objective across multiple environments with zero configuration needed.
 
