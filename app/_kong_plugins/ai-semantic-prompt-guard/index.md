@@ -57,7 +57,6 @@ related_resources:
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
   - text: Embedding-based similarity matching in Kong AI gateway plugins
     url: /ai-gateway/semantic-similarity/
-  - text:
 
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
