@@ -43,7 +43,21 @@ faqs:
   - q: What can I do after customizing an Explorer dashboard?
     a: |
         * **Save as a Report**: This function creates a new custom report based on your current view, allowing you to revisit these specific insights at a later time.
-        * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.        
+        * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.   
+  - q: What interactions are available when working with charts to investigate my data?
+    a: |
+       Charts in {{site.konnect_short_name}} Analytics include interactive options to help you investigate data:
+       - **Hover** over a chart to see a tooltip with exact values.
+       - **Left-click** to pin the tooltip. This lets you scroll through long lists or drag the tooltip to a different spot.
+       - **Click and drag** across the chart to highlight a time range. When you release, choose one of the following actions: 
+            - **View requests**: Opens **Analytics > API Requests** with a filtered list of matching calls.
+            - **Explore**: Opens Explorer with the same filters and highlighted time window, so you can add group-bys and extra filters.
+            - **Zoom**: Focuses the chart on the selected time range.
+       
+       From the chart settings, you can do the following:
+       - Open Explorer with the chart’s current filters and time range, by selecting **Explore**.
+       - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
+
 related_resources:
   - text: Konnect Advanced Analytics
     url: /advanced-analytics/
