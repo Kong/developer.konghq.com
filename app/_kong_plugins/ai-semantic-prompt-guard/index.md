@@ -48,7 +48,6 @@ related_resources:
     url: /ai-gateway/get-started/
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/
-  - text: AI Semantic Response Guard plugin
   - text: AI Proxy plugin
     url: /plugins/ai-proxy/
   - text: AI Semantic Cache plugin
