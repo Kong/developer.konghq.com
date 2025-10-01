@@ -2,7 +2,7 @@
 title: Migrate from scratch pad to Enterprise
 
 content_type: reference
-
+layout: reference
 description: Migrate all of the data from your scratch pad account to your Enterprise account.
 
 products:
