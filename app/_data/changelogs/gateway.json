@@ -16365,6 +16365,17 @@
       }
     ]
   },
+  "3.11.0.4": {
+    "kong": [
+      {
+        "message": "**ai-proxy**: Fixed an issue when empty array in structured output was encoded as empty object.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [],
+    "kong-manager-ee": []
+  },
   "3.12.0.0": {
     "kong": [
       {

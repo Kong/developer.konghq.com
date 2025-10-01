@@ -204,6 +204,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.4": [
+    {
+      "message": "Fixed an issue when empty array in structured output was encoded as empty object.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",

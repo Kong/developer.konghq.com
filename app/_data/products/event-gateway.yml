@@ -1,4 +1,5 @@
 name: Event Gateway
+icon: /_assets/icons/products/event-gateway.svg
 
 releases:
   - release: "0.1"
