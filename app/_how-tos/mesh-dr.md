@@ -29,7 +29,7 @@ prereqs:
         After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
     - title: Setup multiple Mesh zones
       content: |
-        Use {{site.konnect_short_name}} to create a new zone in [Mesh manager](https://cloud.konghq.com/us/mesh-manager/).  This will be used as the secondary zone to host your workloads and can be in a different datacenter or Cloud region.
+        Use {{site.konnect_short_name}} to create a new zone in [Mesh manager](https://cloud.konghq.com/us/mesh-manager/).  This will be used as the secondary zone to host your workloads and can be in a different data center or Cloud region.
 cleanup:
   inline:
     - title: Clean up Mesh
@@ -62,42 +62,26 @@ We've decided to use 2 KIC instances to deal with a scenario where an entire Zon
 config:
   layout: dagre
 ---
-flowchart LR
- subgraph MESH["{{site.mesh_product_name}}"]
-        MMS[("Multi Zone Service")]
+flowchart TB
+ subgraph Z1["</br>"]
+    direction TB
+        Z1KIC["Kong Gateway (KO)"]
+        Z1ECHO["echo service"]
   end
- subgraph Z1Edge["Kong Operator (edge)"]
-        Z1KIC1["{{site.base_gateway}}"]
+ subgraph Z2["<br>"]
+    direction TB
+        Z2KIC["Kong Gateway (KO)"]
+        Z2ECHO["echo service"]
   end
- subgraph Z1Apps["Workloads"]
-        Z1DEP["Deployment: echo"]
-        Z1SVC(["Service: echo"])
+ subgraph MESH["Kong Mesh"]
+        MMS@{ label: "MeshMultiZoneService<br><div style=\"color:\"><span style=\"color:\">echo.mzsvc.mesh.local</span></div>" }
   end
- subgraph Z1["Kubernetes Cluster: zone1 (Mesh Zone: zone1)"]
-        Z1Edge
-        Z1Apps
-  end
- subgraph Z2Edge["Kong Operator (edge)"]
-        Z2KIC1["{{site.base_gateway}}"]
-  end
- subgraph Z2Apps["Workloads"]
-        Z2DEP["Deployment: echo"]
-        Z2SVC(["Service: echo"])
-  end
- subgraph Z2["Kubernetes Cluster: zone2 (Mesh Zone: zone2)"]
-        Z2Edge
-        Z2Apps
-  end
-    ext["External Clients"] --> GLB[("Global Load Balancer")]
-    Z1DEP --> Z1SVC
-    Z2DEP --> Z2SVC
-    GLB --> Z1KIC1  & Z2KIC1 
-    Z1KIC1 -. "HTTP<br/>echo-mmzs-service" .-> MMS
-    Z2KIC1 -. "HTTP<br/>echo-mmzs-service" .-> MMS
-    MMS -. "zone-local preferred" .-> Z1SVC & Z2SVC
-    Z1DEP@{ shape: rect}
-    Z2DEP@{ shape: rect}
-    ext@{ shape: rounded}
+    EXT["External Clients"] --> GLB["Global Load Balancer"]
+    GLB --> Z1KIC & Z2KIC
+    Z1KIC -. "HTTP<br>echo-mmzs-service" .-> MMS
+    Z2KIC -. "HTTP<br>echo-mmzs-service" .-> MMS
+    MMS -. <br> .-> Z1ECHO & Z2ECHO
+    MMS@{ shape: rect}
 {% endmermaid %}
 <!--vale on -->
 
