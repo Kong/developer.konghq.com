@@ -37,10 +37,10 @@ faqs:
   - q: Why can't I see my Insomnia environment variables in Table view?
     a: Enable the JSON view to confirm values, then switch back to Table view. This ensures you see nested or inherited keys in the editor.  
 ---
+When you switch to Insomnia Enterprise, you can export your [scratch pad](/insomnia/storage/#scratch-pad) workspace as a single Insomnia JSON file to capture all requests, collections, environments, variables, and metadata for migration.
 
 ## Export from your scratch pad to JSON file
 <!--vale off-->
-When you switch to Insomnia Enterprise, you can export your [scratch pad](/insomnia/storage/#scratch-pad) workspace as a single Insomnia JSON file to capture all requests, collections, environments, variables, and metadata for migration.
 1. In the Insomnia app, open your scratch pad workspace. 
 2. From the Scratch Pad dropdown menu, select "Export".
 1. Click **Export**.
