@@ -11,8 +11,6 @@ series:
   id: event-gateway-get-started
   position: 1
 
-beta: true
-
 products:
     - event-gateway
 
@@ -29,20 +27,19 @@ description: Use this tutorial to get started with {{site.event_gateway}}.
 tldr: 
   q: How can I get started with {{site.event_gateway}}?
   a: | 
-    Get started with {{site.event_gateway}} ({{site.event_gateway_short}}) by setting up a {{site.konnect_short_name}} control plane and a Kafka cluster, then configuring the control plane using the `/declarative_config` endpoint of the Control Plane Config API.
+    Get started with {{site.event_gateway}} by setting up a {{site.konnect_short_name}} control plane and data plane, then configuring a backend cluster, virtual cluster, listener, and policy with the {{site.event_gateway}} API.
 
 tools:
     - konnect-api
   
 prereqs:
   inline:
-    - title: Sign up for the {{site.event_gateway_short}} beta
-      content: |
-        If you're an existing Kong customer or prospect, please fill out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.
-
     - title: Install kafkactl
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
+    
+    - title: Start a local Kafka cluster
+      include_content: knep/docker-compose-start
 
 automated_tests: false
 related_resources:
@@ -76,61 +73,104 @@ and much more.
 
 Now, let's configure a proxy and test your first virtual cluster setup.
 
-## Create a Control Plane in {{site.konnect_short_name}}
+## Create an Event Gateway in {{site.konnect_short_name}}
 
 {% include knep/konnect-create-cp.md name='KNEP getting started' %}
 
-## Start a local Kafka cluster
+## Create a data plane node
 
-{% include knep/docker-compose-start.md %}
+1. In {{site.konnect_short_name}}, navigate to [**Event Gateway**](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click your event gateway.
+1. Navigate to **Data Plane Nodes** in the sidebar.
+1. Click **Configure data plane**.
+1. In the **Platform** dropdown, select your platform.
+1. Click **Generate Certificate**.
+1. Click the **Copy** button to copy the command.
+1. Run the command in your terminal.
 
-Let's look at the logs of the KNEP container to see if it started correctly:
-```shell
-docker compose logs knep
+## Add a backend cluster
+
+Run the following command to create a new backend cluster linked to the local Kafka server we created in the [prerequisites](#start-a-local-kafka-server):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/backend-clusters
+status_code: 201
+method: POST
+body:
+  name: kafka-localhostkafka:9092
+  bootstrap_servers:
+    - kafka:9092
+  authentication:
+    type: anonymous
+  insecure_allow_anonymous_virtual_cluster_auth: true
+  tls:
+    insecure_skip_verify: false
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the backend cluster ID to your environment:
+```sh
+export BACKEND_CLUSTER_ID="YOUR-BACKEND-CLUSTER-ID"
 ```
 
-You should see something like this:
-```
-knep  | 2025-04-30T08:59:58.004076Z  WARN tokio-runtime-worker ThreadId(09) add_task{task_id="konnect_watch_config"}:task_run:check_dataplane_config{cp_config_url="/v2/control-planes/c6d325ec-0bd6-4fbc-b2c1-6a56c0a3edb0/declarative-config/native-event-proxy"}: knep::konnect: src/konnect/mod.rs:218: Konnect API returned 404, is the control plane ID correct?
-```
-{:.no-copy-code}
+## Add a virtual cluster
 
-This is expected, as we haven't configured the Control Plane yet. We'll do this in the next step.
+Run the following command to create a new virtual cluster associated with our backend cluster:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/virtual-clusters
+status_code: 201
+method: POST
+body:
+  name: team-a
+  destination:
+    id: $BACKEND_CLUSTER_ID
+  dns_label: my-hostname-label
+  authentication:
+    - type: anonymous
+{% endkonnect_api_request %}
+<!--vale on-->
 
-## Configure {{site.event_gateway}} control plane with a passthrough cluster 
-
-Create the configuration file for the Control Plane. This file will define the backend cluster and the virtual cluster:
-
-```shell
-cat <<EOF > knep-config.yaml
-backend_clusters:
-  - name: kafka-localhost
-    bootstrap_servers:
-      - kafka:9092
-
-listeners:
-  port:
-    - listen_address: 0.0.0.0
-      listen_port_start: 19092
-      advertised_host: localhost
-
-virtual_clusters:
-  - name: team-a
-    backend_cluster_name: kafka-localhost
-    route_by:
-      type: port
-      port:
-        min_broker_id: 1
-    authentication:
-      - type: anonymous
-        mediation:
-          type: anonymous
-EOF
+Export the virtual cluster ID to your environment:
+```sh
+export VIRTUAL_CLUSTER_ID="YOUR-VIRTUAL-CLUSTER-ID"
 ```
 
-## Update the control plane and data plane
+## Add a listener
 
-{% include_cached /knep/update.md %}
+Run the following command to create a new listener:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/listeners
+status_code: 201
+method: POST
+body:
+  name: listener-localhost
+  addresses:
+    - 0.0.0.0
+  ports:
+    - '19092'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Add a policy
+
+Run the following command to add a consume policy that adds a new header on the virtual cluster:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
+status_code: 201
+method: POST
+body:
+  type: modify_headers
+  name: new-header
+  config:
+    actions:
+      - op: set
+        key: My-New-Header
+        value: header_value
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Configure the cluster
 
@@ -197,4 +237,4 @@ my-test-topic      1              1
 ```
 {:.no-copy-code}
 
-You now have a Kafka cluster running with a {{site.event_gateway_short}} proxy in front. 
+You now have a Kafka cluster running with an {{site.event_gateway_short}} proxy in front. 
