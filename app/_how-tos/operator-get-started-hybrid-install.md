@@ -55,8 +55,6 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
 
-{% include k8s/cert-manager.md %}
-
 ## Validate
 
 Wait for {{ site.operator_product_name }} to be ready
