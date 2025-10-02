@@ -63,6 +63,28 @@ The [AI Semantic Cache](/plugins/ai-semantic-cache/), [AI Semantic Prompt Guard]
 
 This change invalidates previous caches created by these plugins. If you are using a very long cache TTL, cache warmup is required after this change.
 
+#### Known issues in 3.12.0.0
+
+The following is a list of known issues in 3.12.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "Kong Manager: Schema registry configuration in Kafka and Confluent plugins"
+    description: |
+      When configuring the [Confluent Consume](/plugins/confluent-consume/), [Kafka Consume](/plugins/kafka-consume/), [Kafka Upstream](/plugins/kafka-upstream/), [Kafka Log](/plugins/kafka-log/), and [Confluent](/plugins/confluent/) plugins in Kong Manager, setting `schema_registry.confluent.authentication.mode` or `topics.schema_registry.confluent.authentication.mode` to `none` may not be saved after submission.
+      <br><br>
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
+
+
 ## 3.11.x breaking changes
 
 Review the [changelog](/gateway/changelog/#31100) for all the changes in this release.

@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed an issue where requests without a body were blocked.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.7.0.0": [
     {
       "message": "priorities have been updated to prevent collisions between plugins.\nThe relative priority (and the order of execution) of bundled plugins remained unchanged.\n",

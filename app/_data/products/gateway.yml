@@ -1,4 +1,5 @@
 name: Kong Gateway
+icon: /_assets/icons/products/gateway.svg
 
 topologies:
   on_prem:
@@ -921,8 +922,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.11"
-    ee-version: "3.11.0.3"
-    latest: true
+    ee-version: "3.11.0.4"
     eol: 2026-07-03
     distributions:
       - amazonlinux2:
@@ -1110,7 +1110,7 @@ releases:
   - release: "3.12"
     latest: true
     ee-version: "3.12.0.0"
-    eol: 2026-09-20
+    eol: 2026-10-01
     distributions:
       - amazonlinux2:
           package: true
@@ -1311,6 +1311,8 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.12.0.0': 2025/10/01
+  '3.11.0.4': 2025/09/30
   '3.11.0.3': 2025/09/05
   '3.11.0.2': 2025/07/28
   '3.11.0.1': 2025/07/16

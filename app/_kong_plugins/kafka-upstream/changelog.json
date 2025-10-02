@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed an issue where `forward_body` dropped request bodies larger than Nginx's\ndefault buffer size (16 KB). It now reads up to 1 MB and returns an error if the body can't be fully read.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added support for sending messages with dynamic keys to determine partitions.",
