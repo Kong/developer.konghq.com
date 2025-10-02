@@ -129,7 +129,6 @@ Each section uses the format:
 - [Mesh CLI](https://developer.konghq.com/mesh/cli/): Reference guide for using the `kumactl` CLI to manage Kong Mesh.
 - [Kubernetes Support](https://developer.konghq.com/mesh/kubernetes/): Kong Mesh installation and operation within Kubernetes clusters.
 - [Universal Mode](https://developer.konghq.com/mesh/universal/): Running Kong Mesh outside of Kubernetes in a VM-based environment.
-- [Mesh Manager](https://developer.konghq.com/mesh-manager/): GUI and API for managing multiple Kong Mesh control planes.
 - [Ingress & Gateway Delegation](https://developer.konghq.com/mesh/ingress/): Routing external traffic into the mesh.
 - [Policies Intro](https://developer.konghq.com/mesh/policies-introduction/): Overview of available traffic policies and how to apply them.
 - [All Policies](https://developer.konghq.com/mesh/policies/): Complete index of supported traffic, security, and telemetry policies in Kong Mesh.
