@@ -89,11 +89,7 @@ rows:
   
   - header:
       type: h2
-      text: |
-        "Test APIs"
-
-        {:.warning}
-        > **Deprecation advisory**: In 2026, we will deprecate unit tests. To create new tests or maintain existing tests, we recommend that users migrate to pre-request and after-response [scripts](/insomnia/scripts/).
+      text: "Test APIs"
     columns:
       - blocks:
           - type: image
@@ -101,6 +97,10 @@ rows:
               url: /assets/images/insomnia/document-test.png
               alt_text: Image of document tests in a test suite.
       - blocks:
+          - type: text
+            text: |
+                {:.warning}
+                > **Deprecation advisory**: In 2026, we will deprecate unit tests. To create new tests or maintain existing tests, we recommend that users migrate to pre-request and after-response [scripts](/insomnia/scripts/).
           - type: structured_text
             config:
               blocks:
