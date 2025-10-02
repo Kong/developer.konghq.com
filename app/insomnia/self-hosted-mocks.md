@@ -25,7 +25,7 @@ Insomnia allows Enterprise users to create self-hosted mock servers.
 
 [Configuration details](https://github.com/Kong/insomnia-mockbin/tree/self-hosted) and a [Docker image](https://github.com/Kong/insomnia-mockbin/pkgs/container/insomnia-mockbin-self-hosted/versions) can be found on GitHub.
 
-You can run it [locally](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#installation) with NodeJS or Docker, or you can use Kubernetes.
+To run it [locally](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#installation), use NodeJS, Docker, or Kubernetes.
 
 ## Create a self-hosted mock server with Kubernetes
 
