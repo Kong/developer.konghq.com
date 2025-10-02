@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added the ability to allow users to check a request path or query.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Added the `injection-protection` plugin that supports blocking requests based on regex patterns.",

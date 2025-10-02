@@ -296,6 +296,10 @@ rows:
     hashing: "Avoids routing to unhealthy or terminating pods."
 {% endtable %}
 
+### Managing failover Targets {% new_in 3.12 %}
+
+{% include_cached /gateway/failover-targets.md %}
+
 ## Schema
 
 {% entity_schema %}

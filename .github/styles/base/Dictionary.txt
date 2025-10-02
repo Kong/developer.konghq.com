@@ -834,6 +834,7 @@ uid
 UIs
 UIs
 ulimit
+ulimits
 unary
 unassign
 uncheck
