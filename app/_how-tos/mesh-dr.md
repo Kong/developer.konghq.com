@@ -63,25 +63,41 @@ config:
   layout: dagre
 ---
 flowchart TB
- subgraph Z1["</br>"]
+
+%% ========== Outer Mesh Box ==========
+subgraph MESHBOX["Mesh"]
+
+  %% Zone 1
+  subgraph Z1["Cluster: zone1"]
     direction TB
-        Z1KIC["Kong Gateway (KO)"]
-        Z1ECHO["echo service"]
+    Z1KIC["Kong Gateway (KO)"]
+    Z1ECHO["echo service"]
   end
- subgraph Z2["<br>"]
+
+  %% Zone 2
+  subgraph Z2["Cluster: zone2"]
     direction TB
-        Z2KIC["Kong Gateway (KO)"]
-        Z2ECHO["echo service"]
+    Z2KIC["Kong Gateway (KO)"]
+    Z2ECHO["echo service"]
   end
- subgraph MESH["Kong Mesh"]
-        MMS@{ label: "MeshMultiZoneService<br><div style=\"color:\"><span style=\"color:\">echo.mzsvc.mesh.local</span></div>" }
+
+  %% Kong Mesh Service
+  subgraph MESH["MeshMultiZoneService"]
+    MMS["echo.mzsvc.mesh.local"]
   end
-    EXT["External Clients"] --> GLB["Global Load Balancer"]
-    GLB --> Z1KIC & Z2KIC
-    Z1KIC -. "HTTP<br>echo-mmzs-service" .-> MMS
-    Z2KIC -. "HTTP<br>echo-mmzs-service" .-> MMS
-    MMS -. <br> .-> Z1ECHO & Z2ECHO
-    MMS@{ shape: rect}
+
+end
+
+%% External Traffic Flow
+EXT["External Clients"] --> GLB["Global Load Balancer"]
+GLB --> Z1KIC
+GLB --> Z2KIC
+
+Z1KIC -.->|HTTP to echo.mzsvc.mesh.local| MMS
+Z2KIC -.->|HTTP to echo.mzsvc.mesh.local| MMS
+
+MMS -.->|zone-local preferred| Z1ECHO
+MMS -.->|zone-local preferred| Z2ECHO
 {% endmermaid %}
 <!--vale on -->
 
@@ -225,6 +241,13 @@ spec:
 ```
 
 For our scenario, we can apply the changes to both Gateways so that traffic will be correctly routed from one Zone to another based on the echo service's health and availability.
+
+## Simulating failover and disaster
+This architecture solves for a couple of different scenarions.  To simulate a failover.  Simply deleting the ```echo``` deployment, service or misconfiguring the service (for example a wrong destination port) would mean that the Mesh would automatically reroute traffic to Zone 2.
+
+In the case of a Zone disaster, deleting the Zone 1 cluster, the Gateway, or the ```echo``` deployment would also mean traffic is moved to Zone 1.  
+
+If the failover or disaster is temporary, as services, mis-configuration, or regions come back online, the Mesh will automatically reroute traffic to the "happy path" as locality aware routing would make sure calls to the echo service are within the relevant zones.
 
 ## What scenarios does Mesh Multi Zone Service help with?
 Multi Zones Services are a very powerful construct in {{site.mesh_product_name}}.  As we have both a Global and a Zone control plane, we are able to greatly simplify the configuration of not just routing between Zones, but also creating logical services that can span multiple Zones.
