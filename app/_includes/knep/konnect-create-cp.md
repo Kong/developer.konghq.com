@@ -1,16 +1,17 @@
-Use the {{ site.konnect_short_name }} API to create a new `CLUSTER_TYPE_KAFKA_NATIVE_EVENT_PROXY` Control Plane:
+Use the {{site.event_gateway}} API to create a new Event Gateway control plane:
 
 <!--vale off-->
-
 {% konnect_api_request %}
-url: /v2/control-planes
+url: /v1/event-gateways
 status_code: 201
 method: POST
-capture: KONNECT_CONTROL_PLANE_ID
 body:
-    name: {% if include.name %}{{ include.name }}{% else %}My KNEP Control Plane{% endif %}
-    cluster_type: "CLUSTER_TYPE_KAFKA_NATIVE_EVENT_PROXY"
-jq: ".id"
+    name: {% if include.name %}{{ include.name }}{% else %}My Event Gateway{% endif %}
 {% endkonnect_api_request %}
-
 <!--vale on-->
+
+Export the Event Gateway ID to your environment:
+
+```sh
+export KONNECT_EVENT_GATEWAY_ID="YOUR-EVENT-GATEWAY-ID"
+```
