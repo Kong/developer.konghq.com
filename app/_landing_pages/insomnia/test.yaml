@@ -23,7 +23,7 @@ rows:
                 - type: text
                   text: | 
                     {:.warning}
-                    > **Deprecation advisory**: In 2026, we will deprecate unit tests. To create new tests or maintain existing tests, we recommend that users migrate to pre-request and after-response [scripts](/insomnia/scripts/).
+                    > **Deprecation advisory**: In 2026, we will deprecate **unit tests**. To create new tests or maintain existing tests, we recommend that users migrate to pre-request and after-response [scripts.](/insomnia/scripts/)
 
                     Insomnia has several testing features that can help you ensure the quality of your APIs: 
                 - type: unordered_list
