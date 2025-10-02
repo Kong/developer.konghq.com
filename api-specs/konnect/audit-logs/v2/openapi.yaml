@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /audit-log-replay-job:
     put:

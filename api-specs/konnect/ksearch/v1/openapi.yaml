@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v1'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v1'
+    description: Singapore Production region
   - url: 'https://global.api.konghq.com/v1'
     description: Global Production
 paths:
