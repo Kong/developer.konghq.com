@@ -5,6 +5,7 @@ description: Encrypt a specific key.
 
 weight: 900
 
+name: encrypt-keys
 config:
   policies:
   - name: encrypt-keys
@@ -21,4 +22,3 @@ config:
 
 tools:
   - konnect-api
-  - terraform

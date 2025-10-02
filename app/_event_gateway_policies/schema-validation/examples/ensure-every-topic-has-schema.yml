@@ -18,6 +18,7 @@ extended_description: |
 
 weight: 900
 
+name: ensure-topcis-have-schema
 config:
   produce_policies:
   - match: "kafka.topic.name == \"topic-1\" || kafka.topic.name == \"topic-2\" || kafka.topic.name == \"topic-3\""
@@ -39,4 +40,3 @@ config:
 
 tools:
   - konnect-api
-  - terraform
