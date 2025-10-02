@@ -18,6 +18,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /dashboards:
     get:
@@ -482,6 +484,7 @@ components:
               field: ai_request_model
               value:
                 - request_model1
+          nullable: false
       additionalProperties: false
       required:
         - tiles
@@ -1935,6 +1938,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:
@@ -1958,6 +1962,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:
@@ -1967,6 +1972,7 @@ components:
           description: |
             Whether to stack the bars or lines (implicitly adding them together to form a total), or leave them independent from each other.
           type: boolean
+          nullable: false
       additionalProperties: false
       required:
         - type
@@ -1980,6 +1986,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:
@@ -1989,6 +1996,7 @@ components:
           description: |
             Whether to stack the bars (implicitly adding them together to form a total), or leave them independent from each other.
           type: boolean
+          nullable: false
       additionalProperties: false
       required:
         - type
@@ -2000,6 +2008,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:

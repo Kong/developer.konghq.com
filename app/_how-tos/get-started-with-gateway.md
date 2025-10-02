@@ -145,10 +145,13 @@ As its name implies, API gateway authentication authenticates the flow of data t
 
 ### Enable Key Auth plugin
 
-For this example, we'll use the [Key Authentication plugin](/plugins/key-auth/). In key authentication, 
-{{site.base_gateway}} generates and associates an API key with a [Consumer](/gateway/entities/consumer/). 
-That key is the authentication secret presented by the client when making subsequent requests. 
-{{site.base_gateway}} approves or denies requests based on the validity of the presented key.
+The [Key Authentication plugin](/plugins/key-auth/) lets you secure requests to your services with API keys. Use this plugin when you want to verify that every request comes from a known client.
+
+When activated, {{site.base_gateway}} generates and associates an API key with a [Consumer](/gateway/entities/consumer/). The client then presents this key as a secret in subsequent requests. Each request is approved or denied based on the validity of the key. The configuration uses the following logic:
+- The `key_names` field defines the request field the plugin checks for a key.
+- The plugin searches for this field in headers, query string parameters, and the request body.
+
+After setup, only requests that include a valid API key are accepted. To activate the Key Authentication plugin, copy and run the following command:
 
 {% entity_examples %}
 entities:
@@ -158,10 +161,6 @@ entities:
         key_names:
           - apikey
 {% endentity_examples %}
-
-The `key_names` configuration field defines the name of the field that the
-plugin looks for to read the key when authenticating requests. 
-The plugin looks for the field in headers, query string parameters, and the request body.
 
 ### Create a Consumer
 
@@ -206,6 +205,7 @@ Now, let's send a request with the valid key in the `apikey` header:
 
 {% validation request-check %}
 url: /mock/anything
+display_headers: true
 headers:
   - 'apikey:top-secret-key'
 status_code: 200
@@ -271,9 +271,7 @@ curl -s $KONNECT_PROXY_URL/mock/headers \
 
 ## Enable caching
 
-One of the ways Kong delivers performance is through caching.
-The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
-responses based on configurable response codes, content types, and request methods.
+Caching is used to store and reuse upstream responses for faster replies and less backend load. The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching responses based on configurable response codes, content types, and request methods.
 When caching is enabled, upstream services are not bogged down with repetitive requests,
 because {{site.base_gateway}} responds on their behalf with cached results.
 
