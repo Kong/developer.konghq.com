@@ -10,7 +10,7 @@
 {%- assign include_path =  "install/gateway/linux/packages/" | append: include.os | append: ".html" -%}
 {% include {{include_path}} gpg_key=gpg_key release=page.release %}
   <p class="text-secondary text-sm">
-    After installation, <a href="/how-to/configure-datastore/" class="text-link hover:underline">configure the datastore</a> to complete setup.
+    Make sure your version is <a href="/gateway/version-support-policy/#supported-versions" class="text-link hover:underline">supported</a>. After installation you can <a href="/how-to/configure-datastore/" class="text-link hover:underline">configure the datastore</a> to complete setup.
   </p>
     </div>
 
