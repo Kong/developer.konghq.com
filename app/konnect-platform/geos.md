@@ -51,7 +51,7 @@ The following objects are geo-specific:
 
 ### Dedicated Cloud Gateways
 
-{{site.konnect_short_name}} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) support the following geos and their corresponding [Availability Zones (AZ)](https://docs.aws.amazon.com/global-infrastructure/latest/regions/aws-availability-zones.html):
+{{site.konnect_short_name}} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) support the following geos:
 
 {% include_cached /sections/dcg-regions.md %}
 
