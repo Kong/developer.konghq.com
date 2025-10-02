@@ -133,4 +133,4 @@ kubectl get services -n mock
 kubectl get ingress -n mock
 ```
 
-Once your mock is deployed, you can point your front-end application to the mock URL.
+Once you deploy your mock, point your front-end application to the mock URL.
