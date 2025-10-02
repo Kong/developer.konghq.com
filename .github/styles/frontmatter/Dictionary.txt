@@ -34,3 +34,4 @@ CACertificate
 KeySet
 ControlPlane
 virtual_cluster
+gateway_entity
