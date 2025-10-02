@@ -18,6 +18,7 @@ extended_description: |
 
 weight: 900
 
+name: encrypt-everything
 config:
   policies:
     - name: encrypt-everything
@@ -42,4 +43,3 @@ config:
           id: "static://user-chosen-id"
 tools:
   - konnect-api
-  - terraform

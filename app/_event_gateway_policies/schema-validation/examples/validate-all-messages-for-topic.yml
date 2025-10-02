@@ -4,6 +4,7 @@ description: Ensure that all messages produced for a specific topic are validate
 
 weight: 900
 
+name: validate-all-messagers
 config:
   produce_policies: # need to check if this can be produce or consume
   - match: "kafka.topic.name == \"xyz\""
@@ -16,4 +17,3 @@ config:
               failure_action: reject
 tools:
   - konnect-api
-  - terraform
