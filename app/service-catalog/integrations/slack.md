@@ -44,7 +44,7 @@ For a complete tutorial using the {{site.konnect_short_name}} API, see [Import a
 
 ## Authenticate the Slack integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
 2. Select **Add Slack Instance**.
 3. Select **Authorize in Slack**, and name the instance.
    Only Slack admins can authorize the integration.

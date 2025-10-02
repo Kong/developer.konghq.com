@@ -37,7 +37,7 @@ prereqs:
 
 ## Authorize the GitLab integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
 2. Click **GitLab**, then click **Add GitLab instance**.
 3. Select **GitLab (SaaS)**, authorize GitLab to connect your account, and enter `gitlab` for your instance name.
 

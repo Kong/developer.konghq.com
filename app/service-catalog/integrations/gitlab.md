@@ -65,7 +65,7 @@ To use the GitLab integration in a self-hosted environment:
 1. Click **Authorize** to complete the connection.
 {% endnavtab %}
 {% navtab "SaaS" %}
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 1. Select **GitLab**, then **Install GitLab**.
 1. Click **Authorize**. 
 {% endnavtab %}

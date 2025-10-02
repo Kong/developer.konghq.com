@@ -47,7 +47,7 @@ Your Datadog instance application key must either have no scopes or the followin
 
 {% navtabs "datadog-integration" %}
 {% navtab "UI" %}
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
 1. Select **Add Datadog Instance**.
 1. Select your Datadog region and enter your [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/). 
 1. Select **Authorize**. 
