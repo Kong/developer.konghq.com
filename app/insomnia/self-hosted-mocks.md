@@ -94,7 +94,7 @@ export DOMAIN='your-domain'
 export SECRET_NAME='your-tls-secret-name'
 ```
 
-Then run the following command:
+To apply the Ingress manifest, run the following command:
 
 ```sh
 echo "
