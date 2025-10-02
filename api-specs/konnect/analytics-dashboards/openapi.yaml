@@ -482,6 +482,7 @@ components:
               field: ai_request_model
               value:
                 - request_model1
+          nullable: false
       additionalProperties: false
       required:
         - tiles
@@ -1935,6 +1936,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:
@@ -1958,6 +1960,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:
@@ -1967,6 +1970,7 @@ components:
           description: |
             Whether to stack the bars or lines (implicitly adding them together to form a total), or leave them independent from each other.
           type: boolean
+          nullable: false
       additionalProperties: false
       required:
         - type
@@ -1980,6 +1984,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:
@@ -1989,6 +1994,7 @@ components:
           description: |
             Whether to stack the bars (implicitly adding them together to form a total), or leave them independent from each other.
           type: boolean
+          nullable: false
       additionalProperties: false
       required:
         - type
@@ -2000,6 +2006,7 @@ components:
         chart_title:
           description: 'The title of the chart, which is displayed in the tile''s header.'
           type: string
+          nullable: false
         type:
           type: string
           enum:
