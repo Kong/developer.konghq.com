@@ -46,3 +46,4 @@ discovery_default
 examples_groups
 basic_examples
 wasm
+gateway_entity

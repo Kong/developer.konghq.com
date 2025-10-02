@@ -111,10 +111,14 @@ For instance, a single `orders` topic can be exposed through separate virtual cl
 
 * **Reverse mapping**: One backend topic (`orders`) can appear as multiple separate topics (`dev-orders`, `test-orders`, `prod-orders`) across different virtual clusters, each pre-filtered for specific users.
 
+## Virtual cluster policies
+
+TO DO
+
 ## Set up a virtual cluster
 
 Before setting up a virtual cluster, make sure you have a [backend cluster](/event-gateway/entities/backend-clusters/) configured. 
-A virtual cluster must connnect to an existing backend cluster.
+A virtual cluster must connect to an existing backend cluster.
 
 {% navtabs 'virtual-cluster' %}
 {% navtab "Konnect API" %}
