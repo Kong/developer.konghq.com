@@ -2,7 +2,7 @@
 title: Setup Multi Zone services in {{site.mesh_product_name}}
 description: "Learn how to setup Multi Zone services to deal with zone to zone communication, failover and disaster recovery."
 content_type: how_to
-permalink: /mesh/mesh-dr/
+permalink: /mesh/disaster-recovery/
 bread-crumbs: 
   - /mesh/
 related_resources:
