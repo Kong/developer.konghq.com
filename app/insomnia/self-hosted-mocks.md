@@ -85,7 +85,7 @@ echo "
 
 ### Configure the Ingress
 
-Run the following command to configure the Ingress to manage external access. This configuration will depend on your specific domain and TLS requirements.
+To configure the Ingress to manage external access, first set your domain and TLS secret, and then apply the manifest. Your domain and TLS settings determine the host and secret of the configuration.
 
 For this example, you'll need to export a domain and a TLS secret name as environment variables:
 
