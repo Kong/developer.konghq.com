@@ -6,7 +6,7 @@ The [Tag Schema](https://github.com/Kong/developer.konghq.com/blob/main/app/_dat
 
 The schema is defined in: 
 
-* [**developer.konghq.com/app/_data/schemas/frontmatter/tags.json**](http://developer.konghq.com/app/_data/schemas/frontmatter/tags.json)  
+* https://github.com/Kong/developer.konghq.com/blob/main/app/_data/schemas/frontmatter/tags.json  
 
 The build pipeline for documentation includes validation that tags used in front‑matter are among those defined in this tag schema. If an unknown tag is used, the build fails.
 
