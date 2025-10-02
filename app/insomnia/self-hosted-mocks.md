@@ -63,7 +63,7 @@ echo "
 
 ### Configure the service
 
-Run the following command create a service to expose Mockbin internally in the cluster:
+To create a service that exposes the Mockbin internally to the cluster, run the following command:
 
 ```sh
 echo "
