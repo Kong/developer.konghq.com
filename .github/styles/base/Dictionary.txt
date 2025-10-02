@@ -122,6 +122,8 @@ Collectd
 Collectd
 config
 config_hash
+configMap
+configMaps
 configs
 configurability
 Conjur
@@ -807,6 +809,7 @@ tls
 TLSRoute
 TLSRoutes
 toolchain
+tooltip
 tproxy
 traceable
 Traefik
@@ -831,6 +834,7 @@ uid
 UIs
 UIs
 ulimit
+ulimits
 unary
 unassign
 uncheck

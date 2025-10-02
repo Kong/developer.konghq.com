@@ -5,6 +5,19 @@ with `x.y.z` being the version you are planning to upgrade to.
 
 Make sure to also check the upgrade notes for the matching version of [Kuma](https://kuma.io/docs/latest/production/upgrades-tuning/upgrades).
 
+## Upgrade to `2.13.x`
+
+### OPA using `dynamicconfig` instead of xDS server
+
+Starting with Kong Mesh `2.13.x`, the Open Policy Agent (OPA) integration uses the same mechanism for dynamic configuration as DNS and MeshMetrics.
+This is a completely transparent change for users.
+
+However, this will not work with the legacy `OPAPolicy` and only its replacement `MeshOPA` resources is supported.
+If you are using `OPAPolicy`, two choices:
+
+1. (recommended) Migrate to `MeshOPA` resources. `TargetRef` policies are mature and this is the recommended path forward.
+2. Disable `dynconfig` for OPA by setting: `KMESH_OPA_EXPERIMENTAL_USE_DYNAMIC_CONFIG=false` in the environment variables of the data plane.
+
 ## Upgrade to `2.11.x`
 
 ### Introduce an option to skip RBAC creation

@@ -189,13 +189,7 @@ providers:
       route_type: 'llm/v1/chat'
       model_example: 'gemini-2.0-flash'
       min_version: '3.8'
-    completions:
-      supported: true
-      streaming: false
-      upstream_path: 'llm/v1/completions'
-      route_type: 'llm/v1/completions'
-      model_example: 'gemini-2.0-flash'
-      min_version: '3.8'
+   
     embeddings:
       supported: true
       streaming: false

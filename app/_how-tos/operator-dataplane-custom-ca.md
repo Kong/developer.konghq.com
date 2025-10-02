@@ -31,7 +31,7 @@ tldr:
 
 ## Use a custom CA certificate
 
-{{ site.operator_product_name }} generates TLS certificates to enable {{ site.base_gateway }} to authenticate with Konnect. By default, {{ site.operator_product_name }} will act as its own CA. If you would prefer to use your own CA, upload the CA certificate as a Kubernetes secret.
+{{ site.gateway_operator_product_name }} generates TLS certificates to enable {{ site.base_gateway }} to authenticate with Konnect. By default, {{ site.gateway_operator_product_name }} will act as its own CA. If you would prefer to use your own CA, upload the CA certificate as a Kubernetes secret.
 
 ## Generate a certificate
 
@@ -47,7 +47,7 @@ tldr:
     kubectl create -n kong secret tls konnect-client-tls --cert=./tls.crt --key=./tls.key
     ```
 
-1. Label the secret to tell {{ site.operator_product_name }} to reconcile it:
+1. Label the secret to tell {{ site.gateway_operator_product_name }} to reconcile it:
 
     ```sh
     kubectl label -n kong secret konnect-client-tls konghq.com/konnect-dp-cert=true
@@ -55,7 +55,7 @@ tldr:
 
 ## Create a KonnectExtension
 
-{{ site.operator_product_name }} inspects the `spec.clientAuth.certificateSecret` to decide how to provision certificates. Create a `KonnectExtension` with `spec.clientAuth.certificateSecret.provisioning: Manual`:
+{{ site.gateway_operator_product_name }} inspects the `spec.clientAuth.certificateSecret` to decide how to provision certificates. Create a `KonnectExtension` with `spec.clientAuth.certificateSecret.provisioning: Manual`:
 
 {% include /k8s/konnectextension.md use_custom_ca=true %}
 

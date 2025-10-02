@@ -62,11 +62,13 @@ These tools are managed services and Kong provides compatibility with the curren
 {% assign releases = site.data.products.gateway.releases | reverse | where: "label", empty %}
 {% navtabs "gateway-version" %}
 {% for release in releases %}
+{% unless release.sunset == true %}
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{ tab_name }} %}
   {% include_cached support/gateway-third-party.html release=release %}
 {% endnavtab %}
+{% endunless %}
 {% endfor %}
 {% endnavtabs %}
 
