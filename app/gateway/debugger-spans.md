@@ -2,7 +2,8 @@
 title: Debugger spans
 description: 'Spans represent a single unit of trace in {{site.base_gateway}} this page contains all available spans.'
 breadcrumbs:
-  - /gateway-manager/
+  - /gateway/
+  - /gateway/debugger/
 content_type: reference
 layout: reference
 search_aliases: 

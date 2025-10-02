@@ -123,7 +123,7 @@ rows:
         - type: faqs
           config:
             - q: Does the Kong Admin API work with Gateway entities in {{site.konnect_short_name}}?
-              a: It does not. All of the apps in {{site.konnect_short_name}} have their own APIs. To manage entities in the Gateway Manager, you can use the [Konnect Control Plane Config API](/api/konnect/control-planes-config/v2/).
+              a: It does not. All of the apps in {{site.konnect_short_name}} have their own APIs. To manage API Gateway entities in {{site.konnect_short_name}}, you can use the [Konnect Control Plane Config API](/api/konnect/control-planes-config/v2/).
             - q: Can I use the Admin API in DB-less mode?
               a: |
                 In DB-less mode, you configure {{site.base_gateway}} declaratively. The Admin API for each {{site.base_gateway}} node functions independently, reflecting the memory state of that particular node. 

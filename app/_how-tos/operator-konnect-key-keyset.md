@@ -1,6 +1,6 @@
 ---
 title: Create a Key and Key Set
-description: "Provision Keys and Key Sets in {{site.konnect_short_name}} Gateway Manager using CRDs, and associate Keys with Key Sets."
+description: "Provision Keys and Key Sets in {{site.konnect_short_name}} using CRDs, and associate Keys with Key Sets."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/key-keyset/
