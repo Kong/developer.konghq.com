@@ -35,7 +35,7 @@ prereqs:
 
 ## Authenticate the PagerDuty integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Click **PagerDuty**, and then click **Add PagerDuty Instance**.
 3. Configure the region, grant authorization, and name the instance. 
    PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. **Both Read and Write scopes are required.**

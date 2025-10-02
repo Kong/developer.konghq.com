@@ -89,13 +89,13 @@ definitions:
       Gateway Services represent the upstream services in your system. These applications are the business logic components of your system responsible for responding to requests.
     url: |
       [Gateway Service entity](/gateway/entities/service/)
-  - term: Service Catalog service
+  - term: "{{site.konnect_catalog}} service"
     description: |
-      A Service Catalog service in Konnect represents a service running within your organization.
-      Each Service Catalog service aggregates both internal tools, like Gateway and Mesh Services, and external integrations,
+      A {{site.konnect_catalog}} service in Konnect represents a service running within your organization.
+      Each {{site.konnect_catalog}} service aggregates both internal tools, like Gateway and Mesh Services, and external integrations,
       like GitHub repositories and Slack webhooks.
     url: |
-      [Service Catalog](/service-catalog/)
+      [{{site.konnect_catalog}}](/service-catalog/)
   - term: Super admin
     description: |
       A super admin is a specialized role in self-managed Kong Gateway that manages Workspaces, admins, roles, and customizes permissions.

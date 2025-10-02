@@ -79,7 +79,7 @@ platform:
         - text: Developer Portal
           url: /dev-portal/
           product: dev-portal
-        - text: Service Catalog
+        - text: "Catalog"
           url: /service-catalog/
           product: service-catalog
 
@@ -108,7 +108,7 @@ how_tos:
     - text: Dev Portal
       url: /how-to/?products=dev-portal
       product: dev-portal
-    - text: Service Catalog
+    - text: "Catalog"
       url: /how-to/?products=service-catalog
       product: service-catalog
 

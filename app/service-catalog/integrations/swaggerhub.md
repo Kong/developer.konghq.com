@@ -41,7 +41,7 @@ You need a [SwaggerHub API key](https://swagger.io/docs/specification/v3_0/authe
 
 {% navtabs "swaggerhub-integration" %}
 {% navtab "UI" %}
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
 2. Select **Add SwaggerHub Instance**.
 3. Add your Swaggerhub API key and name the instance.
 {% endnavtab %}

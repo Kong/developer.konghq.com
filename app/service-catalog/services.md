@@ -49,7 +49,7 @@ To create a Service Catalog service, do one of the following:
 
 {% navtabs "service" %}
 {% navtab "UI" %}
-1. In the {{site.konnect_short_name}} UI, navigate to **Service Catalog** > **Services** in the sidebar. 
+1. In the {{site.konnect_short_name}} UI, navigate to **Catalog** > **Services** in the sidebar. 
 1. Click **New service** and configure the details about your service. 
 1. Map the service to an integration: 
    1. Click the service.
