@@ -140,7 +140,7 @@ spec:
 ' | kubectl apply -f -
 ```
 
-{{site.mesh_product_name}} will automatically resolve the Kubernetes ```echo``` service to the Cluster IP address and route traffic through the Mesh dataplanes.  We do not have to to anything 
+{{site.mesh_product_name}} will automatically resolve the Kubernetes ```echo``` service to the Cluster IP address and route traffic through the Mesh dataplanes.  We do not have to to anything.
 
 Test the route has been created, and programmed by calling the ```echo``` service through the Gateway:
 
