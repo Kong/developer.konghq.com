@@ -30,9 +30,3 @@ layout: with_aside
 {% contentfor info_box %}
 {% include info_box/concept.html %}
 {% endcontentfor %}
-
-{% if page.works_on %}
-{% contentfor controls %}
-{% include how-tos/controls.html works_on=page.works_on %}
-{% endcontentfor %}
-{% endif %}

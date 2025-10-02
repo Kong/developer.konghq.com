@@ -23,6 +23,8 @@ related_resources:
     url: /insomnia/enterprise-user-management/
   - text: Enterprise account management
     url: /insomnia/enterprise-account-management/
+  - text: Get started with Insomnia Enterprise
+    url: /insomnia/enterprise-onboarding/
 
 faqs:
   - q: What platforms does Insomnia run on?

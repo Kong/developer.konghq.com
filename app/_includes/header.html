@@ -41,7 +41,7 @@
 </svg>
 
 
-<header class='flex bg-header h-[64px] border-b border-primary/5 sticky top-0 bg-primary z-10 text-sm' id="header-nav">
+<header class='flex bg-header h-[64px] border-b border-primary/5 sticky top-0 bg-primary z-20 text-sm' id="header-nav">
     <div class="flex justify-between w-full 2xl:mx-auto px-5 lg:px-8 {% if include.api_spec == true %} 2xl:px-16 {% else %} 2xl:px-[156px] max-w-screen-2xl {% endif %} ">
       <div class="flex flex-row items-center gap-2.5">
         <div class="dropdown-container">
@@ -88,9 +88,11 @@
 
       <div class='flex items-center py-5 gap-5 lg:gap-4 justify-between'>
         <div class="flex items-center gap-3 w-fit">
+          {% if site.ENABLE_ALGOLIA %}
           <div id="search-modal"></div>
+          {% endif %}
           {% if jekyll.environment == 'production' and site.ENABLE_KAPA_AI %}
-            <button class="no-icon" id="ask-ai-button">
+            <button class="no-icon ask-ai-button" id="ask-ai-button">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="rgb(var(--color-text-secondary)"/>
               </svg>

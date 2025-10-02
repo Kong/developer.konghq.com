@@ -1,0 +1,17 @@
+{
+    "name": "missing-redirects",
+    "version": "1.0.0",
+    "description": "Checks for missing redirects when files are deleted/renamed.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "type": "module",
+    "keywords": [],
+    "license": "MIT",
+    "dependencies": {
+        "gray-matter": "^4.0.3",
+        "js-yaml": "^4.1.0",
+        "minimist": "^1.2.8"
+    }
+}

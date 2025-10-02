@@ -136,7 +136,7 @@ The compressor service exposes both REST and JSON-RPC endpoints. You can use the
 
 * **POST `/llm/v1/compressPrompt`**: Compresses a prompt using either a compression ratio or a target token count. Supports selective compression via `<LLMLINGUA>` tags.
 
-* **GET `/llm/v1/status`**: Returns information about the currently loaded LLMLingua model and device settings (for example, CPU or GPU).
+* **GET `/status`**: Returns information about the currently loaded LLMLingua model and device settings (for example, CPU or GPU).
 
 * **POST `/`**: JSON-RPC endpoint that supports the `llm.v1.compressPrompt` method. Use this to invoke compression programmatically over JSON-RPC.
 

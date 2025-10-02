@@ -60,7 +60,7 @@ the following functions are provided to support the reference platform features:
 
 ## How do I install `koctl`?
 
-MacOS users can install the orchestrator using Homebrew:
+macOS users can install the orchestrator using Homebrew:
 
 ```shell
 brew install kong/konnect-orchestrator/koctl

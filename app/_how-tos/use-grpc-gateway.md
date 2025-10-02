@@ -115,7 +115,7 @@ entities:
     - name: grpc-gateway
       route: http-route
       config:
-        proto: usr/local/kong/hello-gateway.proto
+        proto: /usr/local/kong/hello-gateway.proto
 {% endentity_examples %}
 
 ## Validate

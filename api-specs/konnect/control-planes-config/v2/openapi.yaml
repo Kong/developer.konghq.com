@@ -25,6 +25,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   '/control-planes/{controlPlaneId}/expected-config-hash':
     get:
@@ -461,7 +463,7 @@ paths:
     get:
       operationId: get-config-store-secret
       summary: Fetch Config Store Secret
-      description: Returns a secret for the Config Store.
+      description: Returns the secret entity for the Config Store. Secret values once stored cannot be retrieved.
       responses:
         '200':
           $ref: '#/components/responses/ConfigStoreSecretResponse'
@@ -481,6 +483,8 @@ paths:
         $ref: '#/components/requestBodies/UpdateConfigStoreSecretRequest'
       responses:
         '200':
+          $ref: '#/components/responses/ConfigStoreSecretResponse'
+        '201':
           $ref: '#/components/responses/ConfigStoreSecretResponse'
         '400':
           description: Bad Request
@@ -4671,6 +4675,8 @@ components:
           type: string
         value:
           type: string
+          writeOnly: true
+          x-sensitive: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -4686,6 +4692,8 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
+          x-sensitive: true
       required:
         - key
         - value
@@ -4696,6 +4704,8 @@ components:
           type: string
           maxLength: 5120
           minLength: 1
+          writeOnly: true
+          x-sensitive: true
       required:
         - value
     ACL:
@@ -4803,8 +4813,8 @@ components:
         username: darius
       additionalProperties: false
       required:
-        - username
         - password
+        - username
     BasicAuthWithoutParents:
       type: object
       properties:
@@ -4840,8 +4850,8 @@ components:
         username: darius
       additionalProperties: false
       required:
-        - username
         - password
+        - username
     CACertificate:
       description: A CA certificate object represents a trusted CA. These objects are used by Kong to verify the validity of a client or server certificate.
       type: object
@@ -5052,9 +5062,9 @@ components:
         schema: 'return { name = ''set-header'', fields = { { protocols = require(''kong.db.schema.typedefs'').protocols_http }, { config = { type = ''record'', fields = { { name = { description = ''The name of the header to set.'', type = ''string'', required = true } }, { value = { description = ''The value for the header.'', type = ''string'', required = true } } } } } } }'
       additionalProperties: false
       required:
+        - handler
         - name
         - schema
-        - handler
     Degraphql_route:
       type: object
       properties:
@@ -5096,9 +5106,9 @@ components:
         uri: /users
       additionalProperties: false
       required:
-        - service
-        - uri
         - query
+        - uri
+        - service
     Degraphql_routeWithoutParents:
       type: object
       properties:
@@ -5138,8 +5148,8 @@ components:
         uri: /users
       additionalProperties: false
       required:
-        - uri
         - query
+        - uri
     GatewayUnauthorizedError:
       type: object
       properties:
@@ -5233,29 +5243,29 @@ components:
           type: string
           default: HS256
           enum:
-            - HS256
-            - HS384
-            - HS512
-            - RS256
-            - RS384
-            - RS512
-            - PS256
-            - PS384
-            - PS512
             - ES256
+            - ES256K
             - ES384
             - ES512
-            - ESP256
-            - ESP384
-            - ESP512
             - ESB256
             - ESB320
             - ESB384
             - ESB512
-            - ES256K
-            - EdDSA
+            - ESP256
+            - ESP384
+            - ESP512
             - Ed25519
             - Ed448
+            - EdDSA
+            - HS256
+            - HS384
+            - HS512
+            - PS256
+            - PS384
+            - PS512
+            - RS256
+            - RS384
+            - RS512
           nullable: true
         consumer:
           type: object
@@ -5303,29 +5313,29 @@ components:
           type: string
           default: HS256
           enum:
-            - HS256
-            - HS384
-            - HS512
-            - RS256
-            - RS384
-            - RS512
-            - PS256
-            - PS384
-            - PS512
             - ES256
+            - ES256K
             - ES384
             - ES512
-            - ESP256
-            - ESP384
-            - ESP512
             - ESB256
             - ESB320
             - ESB384
             - ESB512
-            - ES256K
-            - EdDSA
+            - ESP256
+            - ESP384
+            - ESP512
             - Ed25519
             - Ed448
+            - EdDSA
+            - HS256
+            - HS384
+            - HS512
+            - PS256
+            - PS384
+            - PS512
+            - RS256
+            - RS384
+            - RS512
           nullable: true
         consumer:
           type: object
@@ -5741,6 +5751,8 @@ components:
               description: 'An integer representing a port number between 0 and 65535, inclusive.'
               type: integer
               default: 6379
+              maximum: 65535
+              minimum: 0
             server_name:
               description: A string representing an SNI (server name indication) value for TLS.
               type: string
@@ -5756,6 +5768,8 @@ components:
               description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
+              maximum: 2147483646
+              minimum: 0
             username:
               description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.'
               type: string
@@ -5825,11 +5839,16 @@ components:
                     description: 'An integer representing a port number between 0 and 65535, inclusive.'
                     type: integer
                     default: 6379
+                    maximum: 65535
+                    minimum: 0
                 type: object
+              minLength: 1
             connect_timeout:
               description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
+              maximum: 2147483646
+              minimum: 0
             connection_is_proxied:
               description: 'If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.'
               type: boolean
@@ -5845,10 +5864,14 @@ components:
             keepalive_backlog:
               description: 'Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.'
               type: integer
+              maximum: 2147483646
+              minimum: 0
             keepalive_pool_size:
               description: 'The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn''t specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.'
               type: integer
               default: 256
+              maximum: 2147483646
+              minimum: 1
             password:
               description: 'Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.'
               type: string
@@ -5856,14 +5879,20 @@ components:
               description: 'An integer representing a port number between 0 and 65535, inclusive.'
               type: integer
               default: 6379
+              maximum: 65535
+              minimum: 0
             read_timeout:
               description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
+              maximum: 2147483646
+              minimum: 0
             send_timeout:
               description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
               default: 2000
+              maximum: 2147483646
+              minimum: 0
             sentinel_master:
               description: Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel.
               type: string
@@ -5880,7 +5909,10 @@ components:
                     description: 'An integer representing a port number between 0 and 65535, inclusive.'
                     type: integer
                     default: 6379
+                    maximum: 65535
+                    minimum: 0
                 type: object
+              minLength: 1
             sentinel_password:
               description: 'Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.'
               type: string
@@ -5888,9 +5920,9 @@ components:
               description: Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel.
               type: string
               enum:
+                - any
                 - master
                 - slave
-                - any
             sentinel_username:
               description: 'Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won''t be performed. This requires Redis v6.2.0+.'
               type: string
@@ -5997,6 +6029,7 @@ components:
         id:
           description: A string representing a UUID (universally unique identifier).
           type: string
+          minLength: 1
           nullable: true
         instance_name:
           description: A unique string representing a UTF-8 encoded name.
@@ -6005,6 +6038,7 @@ components:
         name:
           description: 'The name of the Plugin that''s going to be added. Currently, the Plugin must be installed in every Kong instance separately.'
           type: string
+          minLength: 1
         ordering:
           type: object
           nullable: true
@@ -6031,6 +6065,7 @@ components:
               id:
                 description: A string representing a UUID (universally unique identifier).
                 type: string
+                minLength: 1
               name:
                 description: A unique string representing a UTF-8 encoded name.
                 type: string
@@ -6153,6 +6188,7 @@ components:
         id:
           description: A string representing a UUID (universally unique identifier).
           type: string
+          minLength: 1
           nullable: true
         instance_name:
           description: A unique string representing a UTF-8 encoded name.
@@ -6161,6 +6197,7 @@ components:
         name:
           description: 'The name of the Plugin that''s going to be added. Currently, the Plugin must be installed in every Kong instance separately.'
           type: string
+          minLength: 1
         ordering:
           type: object
           nullable: true
@@ -6187,6 +6224,7 @@ components:
               id:
                 description: A string representing a UUID (universally unique identifier).
                 type: string
+                minLength: 1
               name:
                 description: A unique string representing a UTF-8 encoded name.
                 type: string
@@ -6293,11 +6331,11 @@ components:
           type: integer
           default: 426
           enum:
-            - 426
             - 301
             - 302
             - 307
             - 308
+            - 426
           nullable: true
         id:
           description: A string representing a UUID (universally unique identifier).
@@ -6324,6 +6362,8 @@ components:
           description: 'A number used to specify the matching order for expression routes. The higher the `priority`, the sooner an route will be evaluated. This field is ignored unless `expression` field is set.'
           type: integer
           default: 0
+          maximum: 70368744177663
+          minimum: 0
           nullable: true
         protocols:
           description: 'An array of the protocols this Route should allow. See the [Route Object](#route-object) section for a list of accepted protocols. When set to only `"https"`, HTTP requests are answered with an upgrade error. When set to only `"http"`, HTTPS requests are answered with an error.'
@@ -6345,6 +6385,7 @@ components:
           default:
             - http
             - https
+          minLength: 1
           nullable: true
         request_buffering:
           description: 'Whether to enable request body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that receive data with chunked transfer encoding.'
@@ -6400,6 +6441,8 @@ components:
               port:
                 description: 'An integer representing a port number between 0 and 65535, inclusive.'
                 type: integer
+                maximum: 65535
+                minimum: 0
             type: object
           nullable: true
         headers:
@@ -6421,11 +6464,11 @@ components:
           type: integer
           default: 426
           enum:
-            - 426
             - 301
             - 302
             - 307
             - 308
+            - 426
           nullable: true
         id:
           description: A string representing a UUID (universally unique identifier).
@@ -6482,6 +6525,7 @@ components:
           default:
             - http
             - https
+          minLength: 1
           nullable: true
         regex_priority:
           description: 'A number used to choose which route resolves a given request when several routes match it using regexes simultaneously. When two routes match the path and have the same `regex_priority`, the older one (lowest `created_at`) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones).'
@@ -6524,6 +6568,8 @@ components:
               port:
                 description: 'An integer representing a port number between 0 and 65535, inclusive.'
                 type: integer
+                maximum: 65535
+                minimum: 0
             type: object
           nullable: true
         strip_path:
@@ -6661,6 +6707,8 @@ components:
           description: The timeout in milliseconds for establishing a connection to the upstream server.
           type: integer
           default: 60000
+          maximum: 2147483646
+          minimum: 1
           nullable: true
         created_at:
           description: Unix epoch when the resource was created.
@@ -6677,6 +6725,7 @@ components:
         id:
           description: A string representing a UUID (universally unique identifier).
           type: string
+          minLength: 1
           nullable: true
         name:
           description: The Service name.
@@ -6690,6 +6739,8 @@ components:
           description: The upstream server port.
           type: integer
           default: 80
+          maximum: 65535
+          minimum: 0
           nullable: true
         protocol:
           description: The protocol used to communicate with the upstream.
@@ -6711,11 +6762,15 @@ components:
           description: The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.
           type: integer
           default: 60000
+          maximum: 2147483646
+          minimum: 1
           nullable: true
         retries:
           description: The number of retries to execute upon failure to proxy.
           type: integer
           default: 5
+          maximum: 32767
+          minimum: 0
           nullable: true
         tags:
           description: An optional set of strings associated with the Service for grouping and filtering.
@@ -6725,6 +6780,7 @@ components:
             type: string
           nullable: true
         tls_sans:
+          description: Additional Subject Alternative Names that can be matched on Upstream server's TLS certificate (in addition to `host`).
           type: object
           nullable: true
           properties:
@@ -6747,6 +6803,8 @@ components:
         tls_verify_depth:
           description: 'Maximum depth of chain while verifying Upstream server''s TLS certificate. If set to `null`, then the Nginx default is respected.'
           type: integer
+          maximum: 64
+          minimum: 0
           nullable: true
         updated_at:
           description: Unix epoch when the resource was last updated.
@@ -6760,6 +6818,8 @@ components:
           description: The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.
           type: integer
           default: 60000
+          maximum: 2147483646
+          minimum: 1
           nullable: true
       example:
         host: example.internal
@@ -6810,6 +6870,8 @@ components:
           description: 'The weight this target gets within the upstream loadbalancer (`0`-`65535`). If the hostname resolves to an SRV record, the `weight` value will be overridden by the value from the DNS record.'
           type: integer
           default: 100
+          maximum: 65535
+          minimum: 0
           nullable: true
       example:
         id: 089292a7-ba3d-4d88-acf0-97b4b2e2621a
@@ -6818,6 +6880,8 @@ components:
           id: 5f1d7e76-2fed-4806-a6af-869984f025cb
         weight: 100
       additionalProperties: false
+      required:
+        - target
     TargetWithoutParents:
       description: 'A target is an ip address/hostname with a port that identifies an instance of a backend service. Every upstream can have many targets, and the targets can be dynamically added, modified, or deleted. Changes take effect on the fly. To disable a target, post a new one with `weight=0`; alternatively, use the `DELETE` convenience method to accomplish the same. The current target object definition is the one with the latest `created_at`.'
       type: object
@@ -6857,12 +6921,16 @@ components:
           description: 'The weight this target gets within the upstream loadbalancer (`0`-`65535`). If the hostname resolves to an SRV record, the `weight` value will be overridden by the value from the DNS record.'
           type: integer
           default: 100
+          maximum: 65535
+          minimum: 0
           nullable: true
       example:
         id: 089292a7-ba3d-4d88-acf0-97b4b2e2621a
         target: 203.0.113.42
         weight: 100
       additionalProperties: false
+      required:
+        - target
     Upstream:
       description: 'The upstream object represents a virtual hostname and can be used to loadbalance incoming requests over multiple services (targets). So for example an upstream named `service.v1.xyz` for a Service object whose `host` is `service.v1.xyz`. Requests for this Service would be proxied to the targets defined within the upstream. An upstream also includes a [health checker][healthchecks], which is able to enable and disable targets based on their ability or inability to serve requests. The configuration for the health checker is stored in the upstream object, and applies to all of its targets.'
       type: object
@@ -6873,9 +6941,9 @@ components:
           default: round-robin
           enum:
             - consistent-hashing
+            - latency
             - least-connections
             - round-robin
-            - latency
             - sticky-sessions
           nullable: true
         client_certificate:
@@ -6895,11 +6963,11 @@ components:
           type: string
           default: none
           enum:
-            - none
             - consumer
-            - ip
-            - header
             - cookie
+            - header
+            - ip
+            - none
             - path
             - query_arg
             - uri_capture
@@ -6911,21 +6979,23 @@ components:
         hash_fallback_query_arg:
           description: The name of the query string argument to take the value from as hash input. Only required when `hash_fallback` is set to `query_arg`.
           type: string
+          minLength: 1
           nullable: true
         hash_fallback_uri_capture:
           description: The name of the route URI capture to take the value from as hash input. Only required when `hash_fallback` is set to `uri_capture`.
           type: string
+          minLength: 1
           nullable: true
         hash_on:
           description: What to use as hashing input. Using `none` results in a weighted-round-robin scheme with no hashing.
           type: string
           default: none
           enum:
-            - none
             - consumer
-            - ip
-            - header
             - cookie
+            - header
+            - ip
+            - none
             - path
             - query_arg
             - uri_capture
@@ -6946,12 +7016,15 @@ components:
         hash_on_query_arg:
           description: The name of the query string argument to take the value from as hash input. Only required when `hash_on` is set to `query_arg`.
           type: string
+          minLength: 1
           nullable: true
         hash_on_uri_capture:
           description: The name of the route URI capture to take the value from as hash input. Only required when `hash_on` is set to `uri_capture`.
           type: string
+          minLength: 1
           nullable: true
         healthchecks:
+          description: The array of healthchecks.
           type: object
           nullable: true
           properties:
@@ -6961,6 +7034,8 @@ components:
                 concurrency:
                   type: integer
                   default: 10
+                  maximum: 2147483648
+                  minimum: 1
                 headers:
                   description: A map of header names to arrays of header values.
                   type: object
@@ -6974,6 +7049,8 @@ components:
                     http_statuses:
                       type: array
                       items:
+                        maximum: 999
+                        minimum: 100
                         type: integer
                       default:
                         - 200
@@ -6981,9 +7058,13 @@ components:
                     interval:
                       type: number
                       default: 0
+                      maximum: 65535
+                      minimum: 0
                     successes:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
                 http_path:
                   description: 'A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).'
                   type: string
@@ -6997,24 +7078,30 @@ components:
                 timeout:
                   type: number
                   default: 1
+                  maximum: 65535
+                  minimum: 0
                 type:
                   type: string
                   default: http
                   enum:
-                    - tcp
-                    - http
-                    - https
                     - grpc
                     - grpcs
+                    - http
+                    - https
+                    - tcp
                 unhealthy:
                   type: object
                   properties:
                     http_failures:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
                     http_statuses:
                       type: array
                       items:
+                        maximum: 999
+                        minimum: 100
                         type: integer
                       default:
                         - 429
@@ -7028,12 +7115,18 @@ components:
                     interval:
                       type: number
                       default: 0
+                      maximum: 65535
+                      minimum: 0
                     tcp_failures:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
                     timeouts:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
             passive:
               type: object
               properties:
@@ -7043,6 +7136,8 @@ components:
                     http_statuses:
                       type: array
                       items:
+                        maximum: 999
+                        minimum: 100
                         type: integer
                       default:
                         - 200
@@ -7067,24 +7162,30 @@ components:
                     successes:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
                 type:
                   type: string
                   default: http
                   enum:
-                    - tcp
-                    - http
-                    - https
                     - grpc
                     - grpcs
+                    - http
+                    - https
+                    - tcp
                 unhealthy:
                   type: object
                   properties:
                     http_failures:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
                     http_statuses:
                       type: array
                       items:
+                        maximum: 999
+                        minimum: 100
                         type: integer
                       default:
                         - 429
@@ -7093,12 +7194,18 @@ components:
                     tcp_failures:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
                     timeouts:
                       type: integer
                       default: 0
+                      maximum: 255
+                      minimum: 0
             threshold:
               type: number
               default: 0
+              maximum: 100
+              minimum: 0
         host_header:
           description: The hostname to be used as `Host` header when proxying requests through Kong.
           type: string
@@ -7114,6 +7221,8 @@ components:
           description: 'The number of slots in the load balancer algorithm. If `algorithm` is set to `round-robin`, this setting determines the maximum number of slots. If `algorithm` is set to `consistent-hashing`, this setting determines the actual number of slots in the algorithm. Accepts an integer in the range `10`-`65536`.'
           type: integer
           default: 10000
+          maximum: 65536
+          minimum: 10
           nullable: true
         sticky_sessions_cookie:
           description: The cookie name to keep sticky sessions.
@@ -8370,6 +8479,7 @@ tags:
       <br><br>
       A certificate object can have many hostnames associated with it. When Kong Gateway receives an SSL request, it uses the SNI field in the Client Hello to look up the certificate object based on the SNI associated with the certificate.
     name: SNIs
+  - name: Schemas
   - description: |
       Service entities are abstractions of your microservice interfaces or formal APIs. For example, a service could be a data transformation microservice or a billing API.
       <br><br>

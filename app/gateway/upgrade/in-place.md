@@ -111,18 +111,20 @@ You may have to consider customization of both `kong.conf` and {{site.base_gatew
 1. Stop the {{site.base_gateway}} nodes of the old cluster X but keep the database running. 
 This will create a period of downtime until the upgrade completes.
 
-2. Install a new cluster running version Y as instructed in the 
+1. Install a new cluster running version Y as instructed in the 
     [{{site.base_gateway}} Installation Options](/gateway/install/) and 
     point it at the existing database for cluster X.
     
     Provision the new cluster Y with the same-sized resource capacity as that of 
     the current cluster X.
 
-3. Migrate the database to the new version by running `kong migrations up`. 
+1. Migrate the database to the new version by running `kong migrations up`. 
 
-4. When complete, run `kong migrations finish`.
+1. When complete, run `kong migrations finish`.
 
-5. Start the new cluster Y.
+1. Start the new cluster Y.
+
+1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
 
 Once this is done, actively monitor all proxy metrics. If you run into any issues, [roll back the upgrade](/gateway/upgrade/backup-and-restore/#restore-gateway-entities). 
 Prioritize the database-level restoration method over the application-level method.

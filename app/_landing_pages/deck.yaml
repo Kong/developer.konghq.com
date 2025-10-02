@@ -51,7 +51,7 @@ rows:
         - type: tabs
           tab_group: install-on-os
           config:
-            - title: MacOS
+            - title: macOS
               include_content: tools/deck/install/osx
             - title: Windows
               include_content: tools/deck/install/windows

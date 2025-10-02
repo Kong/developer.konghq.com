@@ -175,7 +175,7 @@ Access-Control-Allow-Origin: *
 
 # HELP kong_control_plane_connected Kong connected to control plane, 0 is unconnected
 # TYPE kong_control_plane_connected gauge
-kong_control_plane_connected{instance="localhost:8100", job="kong"}	
+kong_control_plane_connected{instance="localhost:8100", job="kong"}	1
 # HELP kong_data_plane_cluster_cert_expiry_timestamp Unix timestamp of Data Plane's cluster_cert expiry time
 # TYPE kong_data_plane_cluster_cert_expiry_timestamp gauge
 kong_data_plane_cluster_cert_expiry_timestamp 2068058801

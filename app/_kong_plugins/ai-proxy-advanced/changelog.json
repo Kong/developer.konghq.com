@@ -1,4 +1,56 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added latency and cost observability to realtime API.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the AI Proxy Advanced plugin's lowest latency load balancer could fail to select a target when only one target was available, leading to 500 errors.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ai-retry phase was not correctly setting the namespace in the `kong.plugin.ctx`, causing the ai-proxy-advanced balancer to retry the first target more than once.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Gemini provider didn't support Model Garden.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where managed identity could be cached incorrectly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Mistral models would return `Unsupported field: seed` when using some inference libraries.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where array input wasn't being properly validated for certain providers. Note that Bedrock, Gemini Public, and Mistral providers don't support array input, as before.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some Titan embeddings models reported malformed requests.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for Gemini Rerank in native format.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Exposed `input_tokens_details.cached_tokens_details.image_tokens_count` in observability metrics.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Add `tried_targets` field in serialized analytics logs for record of all tried ai targets.\n",
@@ -72,6 +124,43 @@
     {
       "message": "Fixed an issue where managed identity may not be cached properly.\n",
       "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.3": [
+    {
+      "message": "Fix panic in LLM observability when populating token usage for AI Proxy token usage details\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "AI Proxy Advanced: Fixed an issue where gemini provider not support model garden",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Mistral models would return `Unsupported field: seed` when using some inference libraries.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Skip unknown cached details key from o11y observation.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where array input is not recognized as valid request for some providers. Bedrock, Gemini Public and Mistral provider don't accept array input as before.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some Titan embeddings model reported malformed request. \n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Support for Gemini Rerank in native format",
+      "type": "feature",
       "scope": "Plugin"
     }
   ],

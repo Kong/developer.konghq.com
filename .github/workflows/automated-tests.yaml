@@ -20,7 +20,7 @@ jobs:
           - '3.11'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
           egress-policy: audit
 
@@ -35,7 +35,7 @@ jobs:
           ruby-version: .ruby-version
 
       - name: Ruby gem cache
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ${{ github.workspace }}/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -51,7 +51,7 @@ jobs:
         with:
           node-version: "22"
       - name: Cache node modules
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         env:
           cache-name: cache-node-modules
         with:
@@ -63,6 +63,8 @@ jobs:
       - name: npm install
         run: npm ci
       - name: Run site
+        env:
+          ENABLE_ALGOLIA: 0
         run: |
           npx netlify dev & npx wait-on http://localhost:8888
 
@@ -76,6 +78,7 @@ jobs:
         working-directory: tools/automated-tests
         run: |
           npm ci
+          npx playwright install --with-deps chromium
           npm run generate-instruction-files
 
       - name: Run tests

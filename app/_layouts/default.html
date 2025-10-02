@@ -34,14 +34,16 @@
       // On page load or when changing themes, best to add inline in `head` to avoid FOUC
         if (localStorage.mode === 'dark' || (!('mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
+          document.documentElement.style.setProperty("color-scheme", "dark");
         } else {
           document.documentElement.classList.remove('dark');
+          document.documentElement.style.setProperty("color-scheme", "light");
         }
     </script>
 
     {% if jekyll.environment == "production" %}
     <!-- OneTrust Cookies Consent Notice start for konghq.com -->
-    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a" ></script>
+    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a" async></script>
     <script type="text/javascript">
     function OptanonWrapper() { }
     </script>
@@ -50,7 +52,7 @@
 
     {% if jekyll.environment == "preview" %}
     <!-- OneTrust Cookies Consent Notice start for konghq.com -->
-    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a-test/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a-test" ></script>
+    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a-test/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a-test" async></script>
     <script type="text/javascript">
     function OptanonWrapper() { }
     </script>
@@ -89,7 +91,8 @@
       data-project-color="#121418"
       data-modal-header-bg-color="#121418"
       data-modal-title-color="#ffffff"
-      data-modal-override-open-id="ask-ai-button"
+      data-modal-override-open-selector=".ask-ai-button"
+      data-kapa-branding-hide="true"
       data-project-logo="https://developer.konghq.com/assets/logos/konglogo-gradient-secondary.svg"
     ></script>
     {% endif %}
@@ -133,6 +136,7 @@
 
     <div class="min-h-full flex flex-col">
       {% include_cached header.html api_spec=layout.api_spec %}
+      {% include_cached banner.html %}
 
     <div class="flex flex-col gap-3 px-5 md:px-8 2xl:mx-auto flex-1 w-full {% if layout.api_spec == true %} 2xl:px-16 {% else %} max-w-screen-2xl  2xl:px-[156px] {% endif %}">
       {% unless layout.api_spec == true %}
@@ -151,6 +155,14 @@
   <script>
     window.searchFilters = {{site.data.searchFilters | jsonify }}
     window.searchSources = {{site.data.searchSources | jsonify }}
+  </script>
+
+  <script>
+    window.she = window.she || {};
+
+    window.she.config = {
+      languages: {{site.codeblocks.languages | jsonify}}
+    };
   </script>
 </body>
 </html>

@@ -1,0 +1,114 @@
+name: Gateway Automated Tests
+on:
+  workflow_dispatch:
+    inputs:
+      gateway_image:
+        description: 'Docker Image for Tests'
+        required: true
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
+
+permissions:
+  actions: read
+  contents: read
+  checks: write
+  statuses: write
+
+env:
+  VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          submodules: 'recursive'
+
+      # Configure Ruby to build Jekyll site
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@84684c07c1965536eb4802c8daf1a77968df0cb1 # v1
+        with:
+          ruby-version: .ruby-version
+
+      - name: Ruby gem cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ github.workspace }}/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Bundle Setup
+        run: bundle config path ${{ github.workspace }}/vendor/bundle
+      - name: Bundle Install
+        run: bundle install --jobs 4 --retry 3
+
+      # Configure Node to build assets
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Cache node modules
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: npm install
+        run: npm ci
+      - name: Run site
+        env:
+          ENABLE_ALGOLIA: 0
+        run: |
+          npx netlify dev & npx wait-on http://localhost:8888
+
+      - name: Download Kong License
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      - name: Generate instruction files
+        working-directory: tools/automated-tests
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm run generate-instruction-files
+
+      - name: Set Gateway Image and Tag
+        run: |
+          INPUT_IMAGE="${{ inputs.gateway_image }}"
+          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
+          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
+
+      - name: Run tests
+        working-directory: tools/automated-tests
+        env:
+          KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
+          RUNTIME: gateway
+          GATEWAY_VERSION: next
+          KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
+          KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
+        run: |
+          DEBUG=tests:*,debug npm run run-tests
+
+      - name: Publish Test Report
+        uses: ctrf-io/github-test-reporter@646f98cfc16c6f7a0e1f6100cabe2deb95dd2eef # v1
+        with:
+          report-path: './tools/automated-tests/testReport.json'
+          summary-report: true
+          test-report: true
+          failed-folded-report: true
+          skipped-report: true
+          report-order: 'summary-report,test-report,failed-folded-report,skipped-report'
+        if: always()

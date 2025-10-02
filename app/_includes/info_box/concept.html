@@ -1,9 +1,9 @@
-{% if page.all_docs_indices and page.all_docs_indices != empty  %}
-{% include_cached info_box/sections/all_docs_indices.html all_docs_indices=page.all_docs_indices %}
-{% endif %}
-
 {% if page.works_on %}
 {% include info_box/sections/works_on.html works_on=page.works_on %}
+{% endif %}
+
+{% if page.all_docs_indices and page.all_docs_indices != empty  %}
+{% include_cached info_box/sections/all_docs_indices.html all_docs_indices=page.all_docs_indices %}
 {% endif %}
 
 {% if page.series %}

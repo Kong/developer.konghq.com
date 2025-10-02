@@ -47,6 +47,10 @@ related_resources:
     url: /insomnia/get-started-with-documents/
   - text: Storage options in Insomnia
     url: /insomnia/insomnia-storage-options-guide/
+  - text: Import content from Postman to multiple Insomnia projects
+    url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
+  - text: Migrate collections and environments from Postman to Insomnia
+    url: /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/
 ---
 
 Insomnia offers a unified workflow for importing and exporting API artifacts. Whether you're using the desktop UI or automating tasks through the Inso CLI, this page outlines the methods, their compatibility, and the practical use cases to fit a variety of developer workflows.

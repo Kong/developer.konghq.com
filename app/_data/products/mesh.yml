@@ -1,4 +1,5 @@
 name: Kong Mesh
+icon: /_assets/icons/products/mesh.svg
 tiers:
   enterprise:
     text: Enterprise
@@ -55,11 +56,16 @@ releases:
     branch: release-2.10
   - version: 2.11.5
     release: "2.11"
-    latest: true
     releaseDate: "2025-06-10"
     eol: "2026-06-10"
     branch: release-2.11
-  - version: preview
+  - version: 2.12.0
     release: "2.12"
+    latest: true
+    releaseDate: "2025-09-09"
+    eol: "2026-09-09"
+    branch: release-2.12
+  - version: preview
+    release: "2.13"
     branch: master
     label: dev

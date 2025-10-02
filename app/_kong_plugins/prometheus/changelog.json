@@ -1,4 +1,21 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed an issue where WebSocket wasn't recorded in the Prometheus metrics.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Prometheus metrics would show empty consumer identifiers when consumers didn't have a username. The plugin now falls back to using the consumer's `custom_id` when the username is not available, ensuring consumer identification in metrics.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Optimized fetching of the `kong_db_entities_total` metric by using internal counters instead of the `select count(*)` query through the database. If this metric is found to be of sync with the real row counts, use the command `kong migrations reinitialize-workspace-entity-counters` to re-sync the counts.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "added `consumer` label for ai metrics and added metrics for ai-rag-injector plugin.",
@@ -18,6 +35,18 @@
     {
       "message": "Fixed an issue where the metric `data_plane_config_hash` might not work correctly for incremental sync.\n",
       "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.3": [
+    {
+      "message": "Fixed an issue where Prometheus metrics would show empty consumer identifiers when consumers don't have a username. The plugin now falls back to using the consumer's custom_id when username is not available, ensuring consumer identification in metrics.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Optimized fetching of the `kong_db_entities_total` metric by using internal counters instead of `select count(*)` query through the database. If this metric is found to be get out of sync with the real row counts, please use the command `kong migrations reinitialize-workspace-entity-counters` to re-sync the counts.",
+      "type": "performance",
       "scope": "Plugin"
     }
   ],
@@ -45,6 +74,13 @@
       "message": "Fixed an issue where AI latency histogram might miss some calculation.",
       "scope": "Plugin",
       "type": "bugfix"
+    }
+  ],
+  "3.10.0.5": [
+    {
+      "message": "Optimized fetching of the `kong_db_entities_total` metric by using internal counters instead of `select count(*)` query through the database. If this metric is found to be get out of sync with the real row counts, please use the command `kong migrations reinitialize-workspace-entity-counters` to re-sync the counts.",
+      "type": "performance",
+      "scope": "Plugin"
     }
   ],
   "3.9.0.0": [
