@@ -95,6 +95,10 @@ function fileToUrl(file) {
     return file
       .replace("app/_event_gateway_policies/", "/event-gateway/policies/")
       .replace(ext, "/");
+  } else if (file.startsWith("app/_api")) {
+    return file
+      .replace("app/_api/", "/api/")
+      .replace(`_index${ext}`, "");
   }
 
   const pathWithoutExtension = file.replace(ext, "/").replace("app", "");
@@ -134,7 +138,7 @@ function ignoreFile(file) {
       }
 
       const oldUrl = fileToUrl(filePath);
-      if (oldUrl && !redirects.some((r) => r.startsWith(oldUrl + " "))) {
+      if (oldUrl && !redirects.some((r) => new RegExp("^" + oldUrl + "(?:\\*|:splat)?\\s").test(r))) {
         missingRedirects.push({ path: filePath, url: oldUrl, status });
       }
     }

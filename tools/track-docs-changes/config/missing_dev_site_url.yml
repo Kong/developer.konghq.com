@@ -814,7 +814,7 @@
   dev_site_url: '/plugins/statsd/'
   status: "?"
 - docs_url: "/konnect/api/api-builder/latest/"
-  dev_site_url: '/api/konnect/api-builder/'
+  dev_site_url: '/api/konnect/api-catalog/'
   status: "?"
 - docs_url: "/konnect/api/consumers/latest/"
   dev_site_url: '/api/konnect/consumers/'
