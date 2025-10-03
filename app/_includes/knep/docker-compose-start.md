@@ -39,25 +39,6 @@ services:
         timeout: 5s
         retries: 5
   
-  knep:
-    image: kong/kong-native-event-proxy:latest
-    container_name: knep
-    ports:
-      - "8080:8080"
-      - "19092:19092"
-    env_file: "knep.env"
-    environment:
-      KONNECT_API_TOKEN: ${KONNECT_TOKEN}
-      KONNECT_API_HOSTNAME: us.api.konghq.com
-      KONNECT_CONTROL_PLANE_ID: ${KONNECT_CONTROL_PLANE_ID}
-      KNEP__RUNTIME__DRAIN_DURATION: 1s # makes shutdown quicker, not recommended to be set like this in production 
-      # KNEP__OBSERVABILITY__LOG_FLAGS: "info,knep=debug" # Uncomment for debug logging
-    healthcheck:
-      test: curl -f http://localhost:8080/health/probes/liveness
-      interval: 10s
-      timeout: 5s
-      retries: 5
-  
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
@@ -86,15 +67,6 @@ Note that the above config publishes the following ports to the host:
 - `schema-registry:8081` for access to the schema registry
 - `knep:9192` to `knep:9292` for access to the {{site.event_gateway_short}} proxy (the port range is wide to allow many virtual clusters to be created)
 - `knep:8080` for probes and metrics access to {{site.event_gateway_short}}
-
-The {{site.event_gateway_short}} container will use environment variables from `knep.env` file. Let's create it:
-```shell
-cat <<EOF > knep.env
-KONNECT_API_TOKEN=\${KONNECT_TOKEN}
-KONNECT_API_HOSTNAME=us.api.konghq.com
-KONNECT_CONTROL_PLANE_ID=\${KONNECT_CONTROL_PLANE_ID}
-EOF
-```
 
 Now let's start the local setup:
 ```shell
