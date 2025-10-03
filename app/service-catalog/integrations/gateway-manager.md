@@ -1,5 +1,5 @@
 ---
-title: "Gateway Manager"
+title: "API Gateway integration"
 content_type: reference
 layout: reference
 
@@ -16,10 +16,10 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The Gateway Manager integration is built directly into Service Catalog, so no additional authorization is needed.
+description: The API Gateway integration is built directly into Service Catalog, so no additional authorization is needed.
 
 related_resources:
-  - text: Map Gateway Manager Services in Service Catalog
+  - text: Map Gateway Services in Service Catalog
     url: /how-to/map-gateway-manager-resources/
   - text: "Service Catalog"
     url: /service-catalog/
@@ -27,17 +27,15 @@ discovery_support: true
 bindable_entities: "Gateway Service"
 ---
 
-This integration allows you to associate your Service Catalog service to one or more Gateway Services registered in {{site.konnect_short_name}}’s Gateway Manager application.
+This integration allows you to associate your Service Catalog service to one or more Gateway Services registered in {{site.konnect_short_name}}.
 
-## Authorize the Gateway Manager integration
+## Authorize the API Gateway integration
 
-The Gateway Manager integration is built directly into Service Catalog. No additional authorization is required. As new Gateway Services are created in Gateway Manager, they are automatically discovered by Service Catalog and surfaced as Resources.
-
-
+The API Gateway integration is built directly into Service Catalog. No additional authorization is required. As new Gateway Services are created in {{site.konnect_short_name}}, they are automatically discovered by Service Catalog and surfaced as Resources.
 
 ## Resources
 
-Available Gateway Manager entities:
+Available API Gateway entities:
 
 {% table %}
 columns:
@@ -47,7 +45,7 @@ columns:
     key: description
 rows:
   - entity: "Gateway Service"
-    description: "Represents an upstream backend service in your system. See [Gateway Services](/gateway-manager/) for more information."
+    description: "Represents an upstream backend service in your system. See [Gateway Services](/gateway/entities/service/) for more information."
 {% endtable %}
 
 
