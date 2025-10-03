@@ -59,6 +59,8 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+published: false
+
 automated_tests: false
 ---
 
