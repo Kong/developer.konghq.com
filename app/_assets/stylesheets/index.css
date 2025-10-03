@@ -1026,11 +1026,11 @@ ol:has(code) {
  }
 
 .nav-submenu {
-  @apply bg-primary h-0 overflow-hidden;
+  @apply bg-primary h-0 overflow-x-hidden;
 }
 
 .nav-submenu.nav-submenu--expanded {
-  @apply h-full overflow-y-auto;
+  @apply h-full min-h-fit;
 }
 
 .back-button {
