@@ -7,8 +7,8 @@ description: |
 breadcrumbs:
   - /advanced-analytics/
 products:
-    - gateway
     - advanced-analytics
+    - gateway
 tags:
   - analytics
 works_on:
