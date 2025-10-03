@@ -23,6 +23,9 @@ related_resources:
   - text: Encrypt policy
     url: /event-gateway/policies/encrypt/
 
+phases:
+  - consume
+
 icon: graph.svg
 ---
 
