@@ -21,6 +21,9 @@ beta: true
 
 icon: graph.svg
 
+phases:
+  - produce
+
 related_resources:
   - text: Decrypt policy
     url: /event-gateway/policies/decrypt/
