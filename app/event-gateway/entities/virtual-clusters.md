@@ -56,7 +56,7 @@ flowchart LR
     C --> D[Backend 
     cluster]
 
-    style C fill:#cee1ff,stroke-width:2px
+    style C stroke:#86e2cc
 {% endmermaid %}
 
 {:.info}
