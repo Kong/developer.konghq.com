@@ -6,7 +6,7 @@ metadata:
     fully-validated integrations for {{site.base_gateway}} and the {{site.konnect_short_name}} platform.
   products:
     - gateway
-    - service-catalog
+    - catalog
   tags:
     - premium
     - plugins
@@ -137,18 +137,18 @@ rows:
           blocks:
             - type: text
               text: | 
-                With [Service Catalog](/service-catalog/), you gain visibility into all your Traceable services, including unrecognized or undiscovered APIs in your organization.
+                With [{{site.konnect_catalog}}](/service-catalog/), you gain visibility into all your Traceable services, including unrecognized or undiscovered APIs in your organization.
 
-                Using Traceable through the {{site.konnect_short_name}} Service Catalog, you can 
+                Using Traceable through the {{site.konnect_short_name}} {{site.konnect_catalog}}, you can 
                 manage and secure services that Traceable discovers by analyzing API traffic across your entire application landscape.
     - blocks:
       - type: card
         config:
-          title: Traceable integration in Service Catalog
+          title: Traceable integration in {{site.konnect_catalog}}
       
           icon: /assets/icons/plugins/traceableai.svg
           cta:
-            text: Set up Traceable in the Service Catalog 
+            text: Set up Traceable in the {{site.konnect_catalog}} 
             url: "/service-catalog/integrations/traceable/"
 
   - header:

@@ -85,7 +85,7 @@ Review the list of [entities managed by decK](/deck/reference/entities/) to see 
 
 {:.info}
 > **Note:** This method only backs up Control Plane configurations in Gateway Manager. 
-It does not back up Dev Portal, API Products, Service Catalog, and so on. 
+It does not back up Dev Portal, API Products, {{site.konnect_catalog}}, and so on. 
 Data stored in these applications, such as API specs and documents, must be manually backed up.
 
 ### Back up a {{site.konnect_short_name}} Control Plane

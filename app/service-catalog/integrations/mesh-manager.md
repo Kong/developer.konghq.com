@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
     - gateway
     
 tags:
@@ -17,11 +17,12 @@ breadcrumbs:
 works_on:
     - konnect
 description: Map Mesh Services from {{site.konnet_short_name}} Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones.
-
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Map Mesh Manager services in Service Catalog
+  - text: Map Mesh Manager services in {{site.konnect_catalog}}
     url: /how-to/map-mesh-manager-resources/
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
 discovery_support: true
 discovery_default: true
@@ -32,7 +33,7 @@ The {{site.konnect_short_name}} Mesh integration allows users gain visibility in
 
 ## Authorize the Mesh Manager integration
 
-The Mesh Manager integration is built directly into Service Catalog. No additional authorization is required. As new Mesh Services are created in Mesh Manager, they are automatically discovered by Service Catalog and surfaced as Resources.
+The Mesh Manager integration is built directly into {{site.konnect_catalog}}. No additional authorization is required. As new Mesh Services are created in Mesh Manager, they are automatically discovered by {{site.konnect_catalog}} and surfaced as Resources.
 
 
 
