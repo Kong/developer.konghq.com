@@ -47,12 +47,17 @@ faqs:
       1. Use your preferred tool (for example, [OpenSSL](https://www.openssl.org/)) to verify the ED25519 signature by using the signature-less audit log entry together with the decoded signature and public key.
   - q: Do {{site.konnect_short_name}} audit logs collect personally identifiable information?
     a: No, {{site.konnect_short_name}} audit logs don't collect any PII. See the [audit log examples](#log-formats) for the information that they do collect.
+  - q: How many days of {{site.konnect_short_name}} org audit logs can I recover?
+    a: |
+      {{site.konnect_short_name}} only collects audit logs from the past seven days, so you can only recover up to seven days of logs from the current date.
 ---
 
 {:.success}
-> **Get started:**
+> This is a reference guide, you can also follow along with our tutorials: 
 >* [Collect audit logs for {{site.konnect_short_name}}](/how-to/collect-audit-logs/)
 >* [Collect audit logs for Dev Portal](/how-to/collect-dev-portal-audit-logs/)
+>* [Recover {{site.konnect_short_name}} audit logs](/how-to/recover-konnect-org-audit-logs/)
+>* [Recover Dev Portal audit logs](/how-to/recover-dev-portal-audit-logs/)
 
 Audit logs can help you detect and respond to potential security incidents when they occur.
 
@@ -414,3 +419,82 @@ rows:
     description: "The HTTP response code; for example, `200` or `403`."
 {% endtable %}
 <!--vale on-->
+
+## Recover audit logs
+
+You can use replay jobs in {{site.konnect_short_name}} to recover audit logs. These are useful when you've missed audit log entries due to an error or a misconfigured audit log webhook.
+
+You can use either the {{site.konnect_short_name}} UI or the {{site.konnect_short_name}} API to configure a replay job.
+
+### {{site.konnect_short_name}} replay job
+
+{% navtabs "replay-job" %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} UI, click [**Organization**](https://cloud.konghq.com/organization) in the sidebar.
+1. Click **Audit Logs Setup** in the sidebar.
+1. Do one of the following:
+   {% navtabs "portal-konnect" %}
+   {% navtab "Konnect" %}
+   1. Click the **Konnect** tab.
+   1. Navigate to the region you want to configure the replay job for.
+   1. Click the **Replay** tab.
+   1. Select a time frame from the **Replay Time Range** dropdown menu.
+   1. Click **Send Replay**.
+   {% endnavtab %}
+   {% navtab "Dev Portal" %}
+   1. Click the **Dev Portal** tab.
+   1. Click the Dev Portal you want to configure the replay job for.
+   1. Click the **Replay** tab.
+   1. Select a time frame from the **Replay Time Range** dropdown menu.
+   1. Click **Send Replay**.
+   {% endnavtab %}
+   {% endnavtabs %}
+{% endnavtab %}
+{% navtab "API" %}
+Send a `PUT` request to the `/audit-log-replay-job` endpoint:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/audit-log-replay-job
+status_code: 201
+method: PUT
+body:
+  start_at: $UTF_START_TIME
+  end_at: $UTF_END_TIME
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> **Note:** The replay job is always sent to the webhook that is currently configured for the organization or Dev Portal at the time the replay job is executed. There is one webhook configuration per region.
+{% endnavtab %}
+{% endnavtabs %}
+
+### Replay job status
+
+Once you configure a replay job, it displays one of the following statuses. 
+
+A replay job can be in one of the following statuses:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Status
+    key: status
+  - title: Description
+    key: description
+rows:
+  - status: "Unconfigured"
+    description: The job has not been set up. This is the job's initial state.
+  - status: "Accepted"
+    description: The job has been accepted for scheduling.
+  - status: "Pending"
+    description: The job has been scheduled.
+  - status: "Running"
+    description: The job is in progress. When a replay job is `running`, a request to update the job will return a `409` response code until it has completed or failed.
+  - status: "Completed"
+    description: The job has finished with no errors.
+  - status: "Failed"
+    description: The job has failed.
+{% endtable %}
+<!--vale on-->
+
+Once the replay job is marked as Complete, the audit logs are re-sent to a configured SIEM provider webhook for the specified date and time range.
