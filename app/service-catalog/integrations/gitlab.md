@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
     - gateway
 tags:
   - integrations
@@ -17,28 +17,29 @@ breadcrumbs:
 works_on:
     - konnect
 
-description: The GitLab integration allows you to associate your Service Catalog Service to one or more GitLab projects
-
+description: The GitLab integration allows you to associate your {{site.konnect_catalog}} Service to one or more GitLab projects
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Service Catalog
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Integrations
     url: /service-catalog/integrations/
-  - text: Import and map self-managed GitLab resources in Service Catalog
+  - text: Import and map self-managed GitLab resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-gitlab-resources/
-  - text: Import and map SaaS GitLab resources in Service Catalog
+  - text: Import and map SaaS GitLab resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-gitlab-saas-resources/
 discovery_support: true
 bindable_entities: "Projects"
 ---
-The GitLab integration allows you to associate your Service Catalog service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
+The GitLab integration allows you to associate your {{site.konnect_catalog}} service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
 {% include /service-catalog/multi-resource.md %}
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
 
 For a complete tutorial using the {{site.konnect_short_name}} API, see the following:
-* [Import and map self-managed GitLab resources in Service Catalog](/how-to/install-and-map-gitlab-resources/)
-* [Import and map SaaS GitLab resources in Service Catalog](/how-to/install-and-map-gitlab-saas-resources/)
+* [Import and map self-managed GitLab resources in {{site.konnect_catalog}}](/how-to/install-and-map-gitlab-resources/)
+* [Import and map SaaS GitLab resources in {{site.konnect_catalog}}](/how-to/install-and-map-gitlab-saas-resources/)
 
 ## Prerequisites
 
@@ -81,7 +82,7 @@ columns:
     key: description
 rows:
   - entity: Projects
-    description: Organizes all the data for a specific development project that relates to a Service Catalog Service.
+    description: "Organizes all the data for a specific development project that relates to a {{site.konnect_catalog}} service."
 {% endtable %}
 <!--vale on-->
 

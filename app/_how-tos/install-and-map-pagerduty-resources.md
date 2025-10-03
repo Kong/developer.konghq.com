@@ -1,9 +1,9 @@
 ---
-title: Import and map PagerDuty resources in Service Catalog
+title: Import and map PagerDuty resources in {{site.konnect_catalog}}
 content_type: how_to
 description: Learn how to connect PagerDuty services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,8 +11,10 @@ tools:
 tags:
   - integrations
   - pagerduty
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Service Catalog
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Integrations
     url: /service-catalog/integrations/
@@ -20,8 +22,8 @@ related_resources:
     url: /service-catalog/integrations/pagerduty/
 automated_tests: false
 tldr:
-  q: How do I view PagerDuty services in Service Catalog?
-  a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a Service Catalog service and associate it with your PagerDuty services to display metadata and enable event tracking. 
+  q: How do I view PagerDuty services in {{site.konnect_catalog}}?
+  a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a {{site.konnect_catalog}} service and associate it with your PagerDuty services to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -42,7 +44,7 @@ prereqs:
 
 Once authorized, resources from your PagerDuty account will be discoverable in the UI.
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
 Create a service that you'll map to your PagerDuty resources:
 
@@ -66,7 +68,7 @@ export PAGERDUTY_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List PagerDuty resources
 
-Before you can map your PagerDuty resources to a service in Service Catalog, you first need to find the resources that are pulled in from PagerDuty:
+Before you can map your PagerDuty resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from PagerDuty:
 
 <!--vale off-->
 {% konnect_api_request %}

@@ -3,7 +3,7 @@ title: Install and map self-hosted GitLab resources in {{site.konnect_catalog}}
 content_type: how_to
 description: Learn how to connect a GitLab project to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,6 +11,8 @@ tools:
 tags:
   - integrations
   - gitlab
+search_aliases:
+  - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
     url: /service-catalog/

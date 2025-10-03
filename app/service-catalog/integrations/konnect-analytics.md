@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
     - gateway
     
 tags:
@@ -17,11 +17,12 @@ breadcrumbs:
 works_on:
     - konnect
 description: Connect reports from {{site.konnect_short_name}} Analytics
-
+search_aliases:
+  - service catalog
 related_resources:
-  - text: "Map {{site.konnect_short_name}} Analytics reports in Service Catalog"
+  - text: "Map {{site.konnect_short_name}} Analytics reports in {{site.konnect_catalog}}"
     url: /how-to/map-analytics-resources/
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
 discovery_support: true
 discovery_default: true
@@ -32,7 +33,7 @@ The {{site.konnect_short_name}} Analytics integration will allow users to connec
 
 ## Authorize the {{site.konnect_short_name}} Analytics integration
 
-The {{site.konnect_short_name}} Analytics integration is built directly into Service Catalog. No additional authorization is required.
+The {{site.konnect_short_name}} Analytics integration is built directly into {{site.konnect_catalog}}. No additional authorization is required.
 
 
 ## Resources

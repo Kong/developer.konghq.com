@@ -4,19 +4,20 @@ content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
 works_on:
   - konnect
 
-description: Scorecards in Service Catalog allow platform teams to monitor services for compliance with Kong-recommended and industry-defined best practices in {{site.konnect_short_name}}.
+description: Scorecards in {{site.konnect_catalog}} allow platform teams to monitor services for compliance with Kong-recommended and industry-defined best practices in {{site.konnect_short_name}}.
 
 breadcrumbs:
   - /service-catalog/
-
+search_aliases:
+  - service catalog
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
-  - text: Service Catalog services
+  - text: "{{site.konnect_catalog}} services"
     url: /service-catalog/services/
   - text: Traceable integration
     url: /service-catalog/integrations/traceable/
@@ -32,13 +33,13 @@ related_resources:
     url: /service-catalog/integrations/pagerduty/
 ---
 
-A Service Catalog scorecard helps you evaluate services based on validation criteria. Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed. 
+A {{site.konnect_catalog}} scorecard helps you evaluate services based on validation criteria. Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed. 
 
 From the scorecard view, you can view details on either a per-service or per-criteria basis.
 
 ## Scorecard templates
 
-{{site.konnect_short_name}} provides several scorecard templates to help ensure your Service Catalog services adhere to industry best practices.
+{{site.konnect_short_name}} provides several scorecard templates to help ensure your {{site.konnect_catalog}} services adhere to industry best practices.
 
 <!--vale off-->
 {% table %}

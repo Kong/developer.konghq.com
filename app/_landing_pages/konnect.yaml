@@ -78,13 +78,13 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Service Catalog
+            title: "{{site.konnect_catalog}}"
             description: |
-                Service Catalog provides a centralized catalog of all services running in your organization.
+                {{site.konnect_catalog}} provides a centralized catalog of all services running in your organization.
 
             icon: /assets/icons/service-hub.svg
             ctas:
-              - text: Set up Service Catalog integrations
+              - text: Set up {{site.konnect_catalog}} integrations
                 url: /service-catalog/
                 align: end
 

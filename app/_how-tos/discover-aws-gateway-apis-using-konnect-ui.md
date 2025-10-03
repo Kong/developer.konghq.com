@@ -3,7 +3,7 @@ title: Discover AWS Gateway APIs in {{site.konnect_catalog}} with the {{site.kon
 content_type: how_to
 description: Learn how to connect an AWS Gateway API to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the UI.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,6 +11,8 @@ tools:
 tags:
   - integrations
   - aws
+search_aliases:
+  - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
     url: /service-catalog/

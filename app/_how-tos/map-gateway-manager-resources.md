@@ -1,19 +1,21 @@
 ---
-title: Map Gateway Manager Services in Service Catalog
+title: Map Gateway Manager Services in {{site.konnect_catalog}}
 content_type: how_to
-description: Learn how to map Gateway Services from {{site.konnect_short_name}} Gateway Manager in Service Catalog to visualize services across multiple Control Planes.
+description: Learn how to map Gateway Services from {{site.konnect_short_name}} Gateway Manager in {{site.konnect_catalog}} to visualize services across multiple Control Planes.
 products:
   - gateway
-  - service-catalog
+  - catalog
 tools:
   - deck
 works_on:
   - konnect
 entities: 
   - service
+search_aliases:
+  - service catalog
 tldr:
-  q: How do I map Gateway Services in Service Catalog?
-  a: Create a Service Catalog service and associate it with your Gateway Manager resources to visualize Services across multiple Control Planes.
+  q: How do I map Gateway Services in {{site.konnect_catalog}}?
+  a: Create a {{site.konnect_catalog}} service and associate it with your Gateway Manager resources to visualize Services across multiple Control Planes.
 prereqs:
   entities:
     services:
@@ -21,15 +23,15 @@ prereqs:
 related_resources:
   - text: Gateway Manager integration
     url: /service-catalog/integrations/gateway-manager/
-  - text: Service Catalog
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
-  - text: Service Catalog integrations
+  - text: "{{site.konnect_catalog}} integrations"
     url: /service-catalog/integrations/
 ---
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
-In this tutorial, you'll map Gateway Services from Gateway Manager to a service in Service Catalog. Because the Gateway Manager integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
+In this tutorial, you'll map Gateway Services from Gateway Manager to a service in {{site.konnect_catalog}}. Because the Gateway Manager integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
 
 Create a service that you'll map to your Gateway Manager resources:
 
@@ -45,7 +47,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Export the Service Catalog service ID:
+Export the {{site.konnect_catalog}} service ID:
 
 ```sh
 export SERVICE_ID='YOUR-SERVICE-ID'
@@ -53,7 +55,7 @@ export SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List Gateway Manager resources
 
-Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in from Gateway Manager:
+Before you can map a resource to {{site.konnect_catalog}}, you first need to find the resources that are pulled in from Gateway Manager:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -70,7 +72,7 @@ Export the resource ID you want to map to the service:
 export GATEWAY_MANAGER_RESOURCE_ID='YOUR-RESOURCE-ID'
 ```
 
-## Map resources to a Service Catalog service
+## Map resources to a {{site.konnect_catalog}} service
 
 Now, you can map the Gateway Manager resource to the service:
 
