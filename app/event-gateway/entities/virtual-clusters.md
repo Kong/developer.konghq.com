@@ -208,7 +208,7 @@ You might do this to:
 * Consume topics owned by other teams
 * Gradually migrate to a namespace while still using old topics temporarily
 
-Here's an example confiuration using an exact list of topics:
+Here's an example configuration using an exact list of topics:
 
 ```yaml
 namespace:
@@ -225,7 +225,7 @@ You could also use a glob expression to capture topics using name patterns.
 
 #### Applying prefixes to additional consumer groups
 
-You can apply prefixes to existing consumer groups to avoud migrating offsets.
+You can apply prefixes to existing consumer groups to avoid migrating offsets.
 For example:
 
 ```yaml
@@ -246,7 +246,7 @@ You could also use a glob expression to capture consumer groups using name patte
 
 ## Virtual cluster policies
 
-Virtual clusters can be modified by policies, which let you you do things like modify headers, encrypt and decrypt records, validate record schemas, and much more.
+Virtual clusters can be modified by policies, which let you do things like modify headers, encrypt and decrypt records, validate record schemas, and much more.
 
 To learn more, see:
 * [Policy entity reference](/event-gateway/entities/policies/)
