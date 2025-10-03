@@ -123,6 +123,44 @@ To create and configure a custom team:
 1. (Optional) Enable group-to-team mappings  
    If [single sign-on (SSO)](/konnect-platform/sso/) is enabled, you can configure {{site.konnect_short_name}} to automatically map users to teams based on group claims from your IdP. To do this, send a `PUT` request to the [`/team-mappings` endpoint](/api/konnect/identity/#/operations/update-idp-team-mappings) with `team_ids` in the request body.
 
+#### Dev Portal custom teams
+
+some text here about how you can use Dev Portal roles to create a custom team for common Dev Portal personas.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Persona
+    key: persona
+  - title: Custom team description
+    key: description
+  - title: Dev Portal roles
+    key: roles
+rows:
+  - persona: ""
+    description:
+    roles:
+  - persona:
+    description:
+    roles:
+  - persona:
+    description:
+    roles:
+  - persona:
+    description:
+    roles:
+  - persona:
+    description:
+    roles:
+  - persona:
+    description:
+    roles:
+  - persona:
+    description:
+    roles:
+{% endtable %}
+<!--vale on-->
+
 ## Roles
 
 Roles predefine access to a particular resource, or
@@ -262,6 +300,10 @@ rows:
     description: Manage publishing products to a Dev Portal.
   - role: "`Viewer`"
     description: Read-only access to Dev Portal developers and applications.
+  - role: "`API Registration Approver`"
+    description: Can approve Dev Portal application registrations.
+  - role: "`Content Editor`"
+    description: Edits Dev Portal pages, snippets, and customization.
 {% endtable %}
 
 #### Application auth strategies
