@@ -22,7 +22,7 @@ module Jekyll
       end
 
       def phases
-        @phases ||= site.data.dig('entity_examples', 'config', 'phases').keys
+        @phases ||= site.data.dig('entity_examples', 'config', 'phases').keys & metadata.fetch('phases', [])
       end
     end
   end

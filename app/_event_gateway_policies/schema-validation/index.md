@@ -19,6 +19,10 @@ api_specs:
 
 beta: true
 
+phases:
+  - produce
+  - consume
+
 icon: graph.svg
 ---
 

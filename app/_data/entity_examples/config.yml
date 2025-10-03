@@ -164,8 +164,8 @@ targets:
 
 phases:
   consume:
-    label: 'Consume Policy'
+    label: 'Consume Phase'
   produce:
-    label: 'Produce Policy'
+    label: 'Produce Phase'
   cluster:
-    label: 'Cluster Policy'
+    label: 'Cluster Phase'
