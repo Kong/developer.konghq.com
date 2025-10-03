@@ -1,7 +1,7 @@
 ---
-title: Map Mesh Manager services in Service Catalog
+title: Map {{site.mesh_product_name}} services in Service Catalog
 content_type: how_to
-description: Learn how to map Mesh Manager resources in Service Catalog to gain visibility into how the service is deployed across meshes and zones.
+description: Learn how to map {{site.mesh_product_name}} resources in Service Catalog to gain visibility into how the service is deployed across meshes and zones.
 products:
   - service-catalog
 works_on:
@@ -9,16 +9,16 @@ works_on:
 automated_tests: false
 entities: []
 tldr:
-  q: How do I map Mesh Manager services in Service Catalog?
-  a: Create a Service Catalog service and associate it with your Mesh Manager resources to visualize meshes.
+  q: How do I map {{site.mesh_product_name}} services in Service Catalog?
+  a: Create a Service Catalog service and associate it with your Service Mesh resources to visualize meshes.
 prereqs:
   inline:
-    - title: "Mesh Manager services"
+    - title: "{{site.mesh_product_name}} services"
       content: |
-        You'll need a [Mesh Manager service](https://cloud.konghq.com/mesh-manager) to ingest in Service Catalog as resources.
+        You'll need a [{{site.mesh_product_name}} service](https://cloud.konghq.com/mesh-manager) to ingest in Service Catalog as resources.
       icon_url: /assets/icons/mesh.svg
 related_resources:
-  - text: "Mesh Manager integration"
+  - text: "Service Mesh integration"
     url: /service-catalog/integrations/mesh-manager/
   - text: Service Catalog
     url: /service-catalog/
@@ -28,9 +28,9 @@ related_resources:
 
 ## Create a service in Service Catalog
 
-In this tutorial, you'll map services from Mesh Manager to a service in Service Catalog. Because the Mesh Manager integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
+In this tutorial, you'll map services from {{site.konnect_short_name}} to a service in Service Catalog. Because the Service Mesh integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
 
-Create a service that you'll map to your Mesh Manager resources:
+Create a service that you'll map to your Service Mesh resources:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -50,9 +50,9 @@ Export the Service Catalog service ID:
 export SERVICE_ID='YOUR-SERVICE-ID'
 ```
 
-## List Mesh Manager resources
+## List Service Mesh resources
 
-Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in from Mesh Manager:
+Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -71,7 +71,7 @@ export MESH_RESOURCE_ID='YOUR-RESOURCE-ID'
 
 ## Map resources to a Service Catalog service
 
-Now, you can map the Mesh Manager resource to the service:
+Now, you can map the Service Mesh resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -87,7 +87,7 @@ body:
 
 ## Validate the mapping
 
-To confirm that the Mesh Manager resource is now mapped to the intended service, list the service’s mapped resources:
+To confirm that the Service Mesh resource is now mapped to the intended service, list the service’s mapped resources:
 
 <!--vale off-->
 {% konnect_api_request %}
