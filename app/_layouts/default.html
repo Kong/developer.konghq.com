@@ -138,17 +138,23 @@
       {% include_cached header.html api_spec=layout.api_spec %}
       {% include_cached banner.html %}
 
-    <div class="flex flex-col gap-3 px-5 md:px-8 2xl:mx-auto flex-1 w-full {% if layout.api_spec == true %} 2xl:px-16 {% else %} max-w-screen-2xl  2xl:px-[156px] {% endif %}">
-      {% unless layout.api_spec == true %}
-        {% include_cached breadcrumbs_and_links.html breadcrumbs=page.breadcrumbs edit_and_issue_links=page.edit_and_issue_links layout=page.layout edit_link=page.edit_link %}
-      {% endunless%}
+    <div class="flex w-full">
+      {% if page.index and page.sidebar != false %}
+        {% include_cached sidebar.html index=page.index %}
+      {% endif %}
 
-      {{ content }}
+      <div class="flex flex-col gap-3 px-5 md:px-8 2xl:mx-auto flex-1 w-full {% if layout.api_spec == true %} 2xl:px-16 {% else %} max-w-screen-2xl  2xl:px-[156px] {% endif %}">
+        {% unless layout.api_spec == true %}
+          {% include_cached breadcrumbs_and_links.html breadcrumbs=page.breadcrumbs edit_and_issue_links=page.edit_and_issue_links layout=page.layout edit_link=page.edit_link %}
+        {% endunless%}
+
+        {{ content }}
+
+        {% if page.get_help != false %}
+         {% include_cached get_help.html edit_link=page.edit_link %}
+        {% endif %}
+      </div>
     </div>
-
-    {% if page.get_help != false %}
-      {% include_cached get_help.html edit_link=page.edit_link %}
-    {% endif %}
 
     {% include_cached footer.html %}
   </div>

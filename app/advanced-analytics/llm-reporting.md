@@ -11,8 +11,8 @@ breadcrumbs:
 min_version:
   gateway: '3.8'
 products:
-    - gateway
     - advanced-analytics
+    - gateway
     - ai-gateway
 tags:
   - analytics

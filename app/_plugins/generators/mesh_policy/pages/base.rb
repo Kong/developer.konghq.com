@@ -36,7 +36,8 @@ module Jekyll
               'plugin' => @policy,
               'plugin?' => true,
               'release' => @policy.latest_release_in_range,
-              'icon' => icon
+              'icon' => icon,
+              'sidebar' => false
             ).merge(publication_info)
         end
 

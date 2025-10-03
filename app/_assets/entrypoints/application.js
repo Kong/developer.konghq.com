@@ -10,6 +10,7 @@ import { datadogRum } from "@datadog/browser-rum";
 import mermaid from "mermaid";
 import Dropdowns from "@/javascripts/components/dropdown";
 import EntityExample from "@/javascripts/components/entity_example";
+import Sidebar from "@/javascripts/components/sidebar";
 import Tabs from "@/javascripts/components/tabs";
 import TopNav from "@/javascripts/components/top_nav";
 import ToggleSwitchManager from "@/javascripts/components/switch";
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   new Tabs();
   new Dropdowns();
   new ToggleSwitchManager();
+  new Sidebar();
 });
 
 if (import.meta.env.PROD) {

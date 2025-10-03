@@ -276,10 +276,12 @@ sections:
       - path: /gateway/performance/establish-a-benchmark/
       - path: /gateway/performance/optimize/
       - path: /gateway/logs/
-      - path: /gateway/entities/consumer-group/
-      - path: /gateway/entities/event-hook/
-      - path: /gateway/entities/partial/
-      - path: /how-to/restart-kong-gateway-container/
-      - path: /gateway/nginx-directives/
-      - path: /gateway/debug-requests/
-      - path: /gateway/amazon-rds-authentication-with-aws-iam/#configuring-your-aws-resources
+      - title: Nested Dropdown Example
+        items:
+          - path: /gateway/entities/consumer-group/
+          - path: /gateway/entities/event-hook/
+          - path: /gateway/entities/partial/
+          - path: /how-to/restart-kong-gateway-container/
+          - path: /gateway/nginx-directives/
+          - path: /gateway/debug-requests/
+          - path: /gateway/amazon-rds-authentication-with-aws-iam/#configuring-your-aws-resources
