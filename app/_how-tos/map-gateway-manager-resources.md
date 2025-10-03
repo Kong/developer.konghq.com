@@ -1,5 +1,5 @@
 ---
-title: Map Gateway Manager Services in {{site.konnect_catalog}}
+title: Map Gateway Manager Services in Catalog
 content_type: how_to
 description: Learn how to map Gateway Services from {{site.konnect_short_name}} Gateway Manager in {{site.konnect_catalog}} to visualize services across multiple Control Planes.
 products:

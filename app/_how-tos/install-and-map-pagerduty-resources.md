@@ -1,5 +1,5 @@
 ---
-title: Import and map PagerDuty resources in {{site.konnect_catalog}}
+title: Import and map PagerDuty resources in Catalog
 content_type: how_to
 description: Learn how to connect PagerDuty services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
