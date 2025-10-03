@@ -49,11 +49,14 @@ Here's how it works:
 
 {% mermaid %}
 flowchart LR
-    A[Kafka client] --> B[Listener]
-    B --> C[Virtual 
-    cluster]
+    A[Kafka client] --> B[Listener
+    + listener policies]
+    B --> C[Virtual cluster
+    + consume, produce, and cluster policies]
     C --> D[Backend 
     cluster]
+
+    style C fill:#cee1ff,stroke-width:2px
 {% endmermaid %}
 
 {:.info}
@@ -111,9 +114,65 @@ For instance, a single `orders` topic can be exposed through separate virtual cl
 
 * **Reverse mapping**: One backend topic (`orders`) can appear as multiple separate topics (`dev-orders`, `test-orders`, `prod-orders`) across different virtual clusters, each pre-filtered for specific users.
 
+Destination - this is the target backend cluster. Right now there is only one backend cluster configurable per virtual cluster [expect this change in the future].
+
+## Authentication
+
+Authentication on the virtual cluster is used to authenticate clients to the proxy. 
+The virtual cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters.
+
+The following auth methods are supported:
+
+{% table %}
+columns:
+  - title: Auth method
+    key: auth
+  - title: Description
+    key: description
+  - title: Credential mediation types
+    key: credential
+rows:
+  - auth: "Anonymous"
+    description: "Doesn't require clients to provide any authentication when connecting to the proxy."
+    credential: None
+  - auth: "SASL/PLAIN"
+    description: |
+      Requires clients to provide a username and password.
+      <br><br>
+      Accepts a hardcoded list of usernames and passwords, either as strings or environment variables.
+    credential: |
+      `passthrough`, `terminate`
+  - auth: "SASL/OAUTHBEARER"
+    description: |
+      Requires clients to provide an OAuth token and a JWKS endpoint to verify token signatures, optionally with claim mapping and validation rules.
+    credential: |
+      `passthrough`, `terminate`, `validate_forward`
+  - auth: "SASL/SCRAM-SHA-256"
+    description: |
+      Requires clients to provide a username and password using SCRAM-SHA-256 hashing.
+    credential: |
+      `passthrough` 
+  - auth: "SASL/SCRAM-SHA-512"
+    description: |
+      Requires clients to provide a username and password using SCRAM-SHA-512 hashing.
+    credential: |
+      `passthrough`
+{% endtable %}
+
+### Credential modes
+
+When performing authentication mediation, you can control how client credentials are handled between the proxy and backend cluster. 
+This enables reuse of existing credentials and principals defined on the backend cluster.
+
+Choose credential forwarding modes based on your security requirements and backend cluster configuration:
+
+* Passthrough: Authentication from the client passes through the proxy to the backend without validation.
+* Terminate: Checks whether the client’s connection is authorized based on their credential, and then terminates the authentication. Then, a new authentication session starts with the backend cluster. 
+* Validate and forward: The client’s OAuth token is first validated by the proxy, and then sent to the backend as-is. This will “fail fast” if the token is invalid before sending it to the backend.
+
 ## Virtual cluster policies
 
-TO DO
+Virtual clusters can be modified by policies. 
 
 ## Set up a virtual cluster
 
