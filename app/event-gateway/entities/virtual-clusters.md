@@ -246,7 +246,11 @@ You could also use a glob expression to capture consumer groups using name patte
 
 ## Virtual cluster policies
 
-Virtual clusters can be modified by policies. 
+Virtual clusters can be modified by policies, which let you you do things like modify headers, encrypt and decrypt records, validate record schemas, and much more.
+
+To learn more, see:
+* [Policy entity reference](/event-gateway/entities/policies/)
+* [All {{site.event_gateway_short}} policies](/event-gateway/policies/)
 
 ## Set up a virtual cluster
 
