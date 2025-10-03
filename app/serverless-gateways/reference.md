@@ -95,9 +95,10 @@ Provisioning a serverless gateway includes creating the serverless Control Plane
 2. Create a hosted Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
 {% capture request2 %}
-{% control_plane_request %}
-  url: /v2/cloud-gateways/configurations
+{% konnect_api_request %}
+  url: /v3/cloud-gateways/configurations
   status_code: 201
+  region: global
   method: PUT
   headers:
       - 'Accept: application/json'
@@ -109,7 +110,7 @@ Provisioning a serverless gateway includes creating the serverless Control Plane
       dataplane_groups: 
         - region: na
       kind: serverless.v0
-{% endcontrol_plane_request %}
+{% endkonnect_api_request %}
 {% endcapture %}
 
 {{ request2 | indent:3 }}
