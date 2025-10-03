@@ -3,11 +3,13 @@ title: Install and map GitHub resources in {{site.konnect_catalog}}
 content_type: how_to
 description: Learn how to connect a GitHub repository to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
   - konnect-api
+search_aliases:
+  - service catalog
 tags:
   - integrations
   - github

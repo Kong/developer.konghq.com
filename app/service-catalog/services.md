@@ -1,20 +1,21 @@
 ---
-title: "Service Catalog services"
+title: "{{site.konnect_catalog}} services"
 content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
 works_on:
   - konnect
 
-description: Learn about services in Service Catalog and how to configure them.
+description: Learn about services in {{site.konnect_catalog}} and how to configure them.
 
 breadcrumbs:
   - /service-catalog/
-
+search_aliases:
+  - service catalog
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Scorecards
     url: /service-catalog/scorecards/
@@ -31,21 +32,21 @@ related_resources:
   - text: PagerDuty integration
     url: /service-catalog/integrations/pagerduty/
 faqs:
-  - q: What's the difference between a Gateway Service and a Service Catalog service?
+  - q: What's the difference between a Gateway Service and a {{site.konnect_catalog}} service?
     a: |
-      A [Gateway Service](/gateway/entities/service/) is a {{site.base_gateway}} entity that represents an upstream service in your system and is the business logic component that's responsible for responding to requests. A Service Catalog service is a collection of one or more resources from Service Catalog integrations.
+      A [Gateway Service](/gateway/entities/service/) is a {{site.base_gateway}} entity that represents an upstream service in your system and is the business logic component that's responsible for responding to requests. A {{site.konnect_catalog}} service is a collection of one or more resources from {{site.konnect_catalog}} integrations.
 ---
 
-A Service Catalog service is a collection of one or more resources from integrations.
+A {{site.konnect_catalog}} service is a collection of one or more resources from integrations.
 
-A Service Catalog service represents the following:
+A {{site.konnect_catalog}} service represents the following:
 * A unit of software that is typically owned by a single team
 * Exposes one or more APIs 
-* May be dependent on other Service Catalog services (as either upstream or downstream)  
+* May be dependent on other {{site.konnect_catalog}} services (as either upstream or downstream)  
 
-Service Catalog services allow you to gain visibility into all resources in your organization, including what teams or people own them. 
+{{site.konnect_catalog}} services allow you to gain visibility into all resources in your organization, including what teams or people own them. 
 
-To create a Service Catalog service, do one of the following:
+To create a {{site.konnect_catalog}} service, do one of the following:
 
 {% navtabs "service" %}
 {% navtab "UI" %}
@@ -56,7 +57,7 @@ To create a Service Catalog service, do one of the following:
    1.  Select "Map resources" from the **Action** dropdown menu.
 {% endnavtab %}
 {% navtab "API" %}
-1. Create a Service Catalog service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
+1. Create a {{site.konnect_catalog}} service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
 <!--vale off-->
 {% capture service %}
 {% konnect_api_request %}

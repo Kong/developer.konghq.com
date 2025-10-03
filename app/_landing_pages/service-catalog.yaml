@@ -1,9 +1,9 @@
 metadata:
-  title: "{{site.konnect_short_name}} Service Catalog"
+  title: "{{site.konnect_short_name}} {{site.konnect_catalog}}"
   content_type: landing_page
   products:
-    - service-catalog
-  description: Learn how to track and manage services across your organization with the {{site.konnect_short_name}} Service Catalog.
+    - catalog
+  description: Learn how to track and manage services across your organization with the {{site.konnect_short_name}} {{site.konnect_catalog}}.
   tags:
     - service-catalog
     - governance
@@ -11,7 +11,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "{{site.konnect_short_name}} Service Catalog"
+      text: "{{site.konnect_short_name}} {{site.konnect_catalog}}"
       sub_text: "A centralized catalog of all services running in your {{site.konnect_short_name}} organization"
   
   - columns:
@@ -19,11 +19,11 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "What is the {{site.konnect_short_name}} Service Catalog?"
+                text: "What is the {{site.konnect_short_name}} {{site.konnect_catalog}}?"
               blocks:
                 - type: text
                   text: |
-                    Service Catalog provides a centralized catalog of all services running in your organization. 
+                    {{site.konnect_catalog}} provides a centralized catalog of all services running in your organization. 
                     By integrating with internal applications (like Gateway Manager and Mesh Manager) and external tools (like GitHub and PagerDuty), 
                     it offers a 360-degree overview of your services, including:
                 - type: unordered_list
@@ -60,12 +60,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Service Catalog services
+              title: "{{site.konnect_catalog}} services"
               description: |
-                Map resources to a Service Catalog service.
+                Map resources to a {{site.konnect_catalog}} service.
               icon: /assets/icons/linked-services.svg
               cta:
-                text: Learn about Service Catalog services
+                text: Learn about {{site.konnect_catalog}} services
                 url: /service-catalog/services/
   - header:
       type: h2
@@ -74,13 +74,13 @@ rows:
       - blocks:
           - type: faqs
             config:
-              - q: "How do Service Catalog services map to API products?"
-                a: "Service Catalog services do not directly map to API products. However, a Gateway Service can be linked to a Service Catalog service, which can then be associated with an API product."
+              - q: "How do {{site.konnect_catalog}} services map to API products?"
+                a: "{{site.konnect_catalog}} services do not directly map to API products. However, a Gateway Service can be linked to a {{site.konnect_catalog}} service, which can then be associated with an API product."
               - q: "How do I view service health and status?"
-                a: "Go to **Services** in the Service Catalog and select a service to view detailed health and status information."
+                a: "Go to **Services** in the {{site.konnect_catalog}} and select a service to view detailed health and status information."
               - q: "How can I identify available resources for mapping?"
-                a: "Visit the **Resources** page in the Service Catalog to see all available ingested resources."
-              - q: "What if I notice discrepancies in Service Catalog data?"
+                a: "Visit the **Resources** page in the {{site.konnect_catalog}} to see all available ingested resources."
+              - q: "What if I notice discrepancies in {{site.konnect_catalog}} data?"
                 a: "Check integration settings, verify connected tools, and ensure data synchronization is working correctly."
-              - q: "Can I control access to specific Service Catalog data?"
+              - q: "Can I control access to specific {{site.konnect_catalog}} data?"
                 a: "Yes, access can be managed through [teams and roles](/konnect-platform/teams-and-roles/)."

@@ -1,9 +1,9 @@
 ---
-title: Import and map SwaggerHub resources in Service Catalog
+title: Import and map SwaggerHub resources in {{site.konnect_catalog}}
 content_type: how_to
 description: Learn how to connect SwaggerHub API versions to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,8 +11,10 @@ tools:
 tags:
   - integrations
   - swaggerhub
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Service Catalog
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Integrations
     url: /service-catalog/integrations/
@@ -20,8 +22,8 @@ related_resources:
     url: /service-catalog/integrations/swaggerhub/
 automated_tests: false
 tldr:
-  q: How do I view SwaggerHub API specs in Service Catalog?
-  a: Install the SwaggerHub integration in {{site.konnect_short_name}} and authorize using your SwaggerHub API key. Create a Service Catalog service and associate it with your SwaggerHub API versions to display metadata and enable event tracking. 
+  q: How do I view SwaggerHub API specs in {{site.konnect_catalog}}?
+  a: Install the SwaggerHub integration in {{site.konnect_short_name}} and authorize using your SwaggerHub API key. Create a {{site.konnect_catalog}} service and associate it with your SwaggerHub API versions to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -83,7 +85,7 @@ body:
 
 Once authorized, resources from your SwaggerHub account will be discoverable in the UI.
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
 Create a service that you'll map to your SwaggerHub resources:
 
@@ -107,7 +109,7 @@ export SWAGGERHUB_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List SwaggerHub resources
 
-Before you can map your SwaggerHub resources to a service in Service Catalog, you first need to find the resources that are pulled in from SwaggerHub:
+Before you can map your SwaggerHub resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from SwaggerHub:
 
 <!--vale off-->
 {% konnect_api_request %}

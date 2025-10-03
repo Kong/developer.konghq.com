@@ -5,34 +5,35 @@ layout: reference
 icon: /assets/icons/plugins/datadog.png
 
 products:
-    - service-catalog
+    - catalog
     - gateway
 
 tags:
   - integrations
   - datadog
-
+search_aliases:
+  - service catalog
 breadcrumbs:
   - /service-catalog/
   - /service-catalog/integrations/
 
 works_on:
     - konnect
-description: The Datadog integration lets you connect Datadog entities directly to your Service Catalog services.
+description: The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} services.
 discovery_support: true
 bindable_entities: "Datadog Monitor, Datadog Dashboard"
 
 related_resources:
-  - text: "Service Catalog"
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
-  - text: Import and map Datadog resources in Service Catalog
+  - text: Import and map Datadog resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-datadog-resources/
 ---
 
-The Datadog integration lets you connect Datadog entities directly to your Service Catalog services.
+The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} services.
 {% include /service-catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Datadog resources in Service Catalog](/how-to/install-and-map-datadog-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Datadog resources in {{site.konnect_catalog}}](/how-to/install-and-map-datadog-resources/).
 
 ## Prerequisites
 

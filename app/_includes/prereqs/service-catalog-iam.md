@@ -73,7 +73,7 @@ region: global
    ```sh
    aws configure
    ```
-1. Create the Service Catalog IAM role:
+1. Create the {{site.konnect_catalog}} IAM role:
 {% capture iam-role %}
 ```sh
 aws iam create-role \
@@ -89,7 +89,7 @@ aws iam create-role \
       }
     ]
   }' \
-  --description "Service Catalog integration role"
+  --description "Catalog integration role"
 ```
 {% endcapture %}
 {{ iam-role | indent: 3}}

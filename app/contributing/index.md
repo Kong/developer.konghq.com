@@ -39,7 +39,7 @@ rows:
     examples: |
         * [{{site.konnect_short_name}} teams and roles](/konnect-platform/teams-and-roles/)<br>
         * [KIC fallback configuration](/kubernetes-ingress-controller/fallback-configuration/)<br>
-        * [Service Catalog scorecards](/service-catalog/scorecards/)<br>
+        * [{{site.konnect_catalog}} scorecards](/service-catalog/scorecards/)<br>
   - type: Landing page
     description: Acts as a "sign post" page to direct users to the correct reference or how-to page. These can contain some conceptual or reference material, like feature tables, as long as the goal is to help a user determine which page they should click next.
     examples: |

@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
     - gateway
 
 tags:
@@ -14,17 +14,18 @@ tags:
 breadcrumbs:
   - /service-catalog/
   - /service-catalog/integrations/
-
+search_aliases:
+  - service catalog
 works_on:
     - konnect
-description: The Slack integration allows you to see Slack communication channels that are relevant to a Service Catalog service.
+description: The Slack integration allows you to see Slack communication channels that are relevant to a {{site.konnect_catalog}} service.
 
 related_resources:
-  - text: Service Catalog
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Integrations
     url: /service-catalog/integrations/
-  - text: Import and map Slack resources in Service Catalog
+  - text: Import and map Slack resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-slack-resources/
 discovery_support: true
 discovery_default: true
@@ -33,10 +34,10 @@ mechanism: "pull/ingestion model"
 ---
 
 
-The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a Service Catalog service.
+The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a {{site.konnect_catalog}} service.
 {% include /service-catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Slack resources in Service Catalog](/how-to/install-and-map-slack-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Slack resources in {{site.konnect_catalog}}](/how-to/install-and-map-slack-resources/).
 
 ## Prerequisites
 
@@ -63,7 +64,7 @@ columns:
 rows:
   - entity: Slack Channel 
     description: 
-       A Slack channel that indicates who owns the Service Catalog service. Ideally, this helps users identify who they can contact if they have questions about a service.
+       A Slack channel that indicates who owns the {{site.konnect_catalog}} service. Ideally, this helps users identify who they can contact if they have questions about a service.
 {% endtable %}
 <!--vale on-->
 

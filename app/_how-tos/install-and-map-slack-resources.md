@@ -1,9 +1,9 @@
 ---
-title: Import and map Slack resources in Service Catalog
+title: Import and map Slack resources in {{site.konnect_catalog}}
 content_type: how_to
 description: Learn how to connect Slack channels to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,8 +11,10 @@ tools:
 tags:
   - integrations
   - slack
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Service Catalog
+  - text: "{{site.konnect_catalog}}"
     url: /service-catalog/
   - text: Integrations
     url: /service-catalog/integrations/
@@ -22,8 +24,8 @@ related_resources:
     url: /service-catalog/integrations/slack/
 automated_tests: false
 tldr:
-  q: How do I view a Slack channel in Service Catalog?
-  a: Install the Slack integration in {{site.konnect_short_name}} and authorize it using Slack admin credentials. Create a Service Catalog service and associate it with your Slack channel to improve visibility and ownership.
+  q: How do I view a Slack channel in {{site.konnect_catalog}}?
+  a: Install the Slack integration in {{site.konnect_short_name}} and authorize it using Slack admin credentials. Create a {{site.konnect_catalog}} service and associate it with your Slack channel to improve visibility and ownership.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -44,7 +46,7 @@ prereqs:
 Once authorized, resources from your Slack account will be discoverable in the UI.
 
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
 Create a service that you'll map to your Slack resources:
 
@@ -68,7 +70,7 @@ export SLACK_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List Slack resources
 
-Before you can map your Slack resources to a service in Service Catalog, you first need to find the resources that are pulled in from Slack:
+Before you can map your Slack resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from Slack:
 
 <!--vale off-->
 {% konnect_api_request %}
