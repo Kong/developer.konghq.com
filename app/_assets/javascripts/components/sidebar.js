@@ -24,7 +24,12 @@ class SidebarComponent {
   }
 
   setActiveLink() {
-    const currentPath = window.location.pathname;
+    let currentPath = window.location.pathname;
+    if (document.querySelector('link[rel="canonical"]')) {
+      currentPath = new URL(
+        document.querySelector('link[rel="canonical"]')?.href
+      ).pathname;
+    }
     let activeLink = null;
 
     this.links.forEach((link) => {
