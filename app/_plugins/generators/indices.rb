@@ -171,12 +171,6 @@ module Jekyll
       url = page.respond_to?(:url) ? page.url : page['url']
       return if seen[url] && !allow_duplicates
 
-      if page.respond_to?(:data)
-        page.data['index'] = index['slug']
-      else
-        page['index'] = index['slug']
-      end
-
       seen[url] = true
       {
         'page' => page,
