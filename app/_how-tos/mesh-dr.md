@@ -22,11 +22,11 @@ tldr:
 
 prereqs:
   inline:
-    - title: Create a {{site.mesh_product_name}} Control Plane
+    - title: Create a {{site.mesh_product_name}} control planes
       content: |
         This tutorial requires a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
 
-        After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} Control Plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
+        After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} control plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
     - title: Setup multiple Mesh zones
       content: |
         Use {{site.konnect_short_name}} to create a new zone in [Mesh manager](https://cloud.konghq.com/us/mesh-manager/).  This will be used as the secondary zone to host your workloads and can be in a different data center or Cloud region.
@@ -44,7 +44,7 @@ One of the most difficult things to setup in a Service Mesh is multi zone failov
 
 In this walkthrough, we will show you how to create a service that spans multiple zones, as well as how to have an active/active failover for your {{site.kic_product_name}}.
 
-## Our target architecture
+## Target architecture
 
 To demonstrate how to setup a Multi Zone services, we will create two Kubernetes clusters, each being a separate Mesh Zone.  Each Zone will have a {{site.kic_product_name}} that will handle traffic into the zones.  In front of the KIC instances will be a Global Load balancer, which will deal with traffic at the edge.  
 
@@ -53,9 +53,9 @@ To demonstrate how to setup a Multi Zone services, we will create two Kubernetes
 You actually don't need to have a KIC instance on both zones.  For a partial, or workload only failure, a MeshMultiZoneService will automatically route traffic to:
 
 * The most local instantiation of the Services (this is called Locality aware routing)
-* ...or in the event of a failure, the service hosted in another zone
+* or in the event of a failure, the service hosted in another zone
 
-We've decided to use 2 KIC instances to deal with a scenario where an entire Zone goes down for say, a Cloud region failure.
+We've decided to use 2 KIC instances to deal with a scenario where an entire Zone goes down for say, a cloud region failure.
 <!--vale off -->
 {% mermaid %}
 ---
@@ -107,7 +107,7 @@ This walkthrough is based on using Kubernetes as the compute platform.  The conf
 
 ### Label your namespaces and deploy your workloads
 
-We will use ```kubectx``` and ```kubens``` to navigate between clusters and namespaces.  These tools will save you a lot of time!
+We will use `kubectx` and `kubens` to navigate between clusters and namespaces. These tools will save you a lot of time!
 
 Let's go ahead and create a namespace in each zone, label the namespaces so that workloads that will land there to be part of the Mesh and deploy our Echo workload and Kubernetes service:
 
@@ -243,9 +243,9 @@ spec:
 For our scenario, we can apply the changes to both Gateways so that traffic will be correctly routed from one Zone to another based on the echo service's health and availability.
 
 ## Simulating failover and disaster
-This architecture solves for a couple of different scenarios.  To simulate a failover.  Simply deleting the ```echo``` deployment, service or misconfiguring the service (for example a wrong destination port) would mean that the Mesh would automatically reroute traffic to Zone 2.
+This architecture solves for a couple of different scenarios.  To simulate a failover.  Simply deleting the `echo` deployment, service or misconfiguring the service (for example a wrong destination port) would mean that the Mesh would automatically reroute traffic to Zone 2.
 
-In the case of a Zone disaster, deleting the Zone 1 cluster, the Gateway, or the ```echo``` deployment would also mean traffic is moved to Zone 1.  
+In the case of a Zone disaster, deleting the Zone 1 cluster, the Gateway, or the `echo` deployment would also mean traffic is moved to Zone 1.  
 
 If the failover or disaster is temporary, as services, mis-configuration, or regions come back online, the Mesh will automatically reroute traffic to the "happy path" as locality aware routing would make sure calls to the echo service are within the relevant zones.
 
