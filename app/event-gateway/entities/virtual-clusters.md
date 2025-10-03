@@ -125,11 +125,11 @@ The following auth methods are supported:
 
 {% table %}
 columns:
-  - title: Auth method
+  - title: "Auth method (`authentication.type`)"
     key: auth
   - title: Description
     key: description
-  - title: Credential mediation types
+  - title: "Credential mediation types (`authentication.mediation`)"
     key: credential
 rows:
   - auth: "Anonymous"
@@ -159,16 +159,90 @@ rows:
       `passthrough`
 {% endtable %}
 
-### Credential modes
+### Credential mediation
 
-When performing authentication mediation, you can control how client credentials are handled between the proxy and backend cluster. 
-This enables reuse of existing credentials and principals defined on the backend cluster.
+With virtual clusters, you can control how client credentials are handled between the proxy and backend cluster, 
+and reuse existing credentials and principals defined on the backend cluster.
 
-Choose credential forwarding modes based on your security requirements and backend cluster configuration:
+Use the virtual cluster `authentication.mediation` setting to configure a mediation mode. 
+Choose the mode based on your security requirements and backend cluster configuration:
 
-* Passthrough: Authentication from the client passes through the proxy to the backend without validation.
-* Terminate: Checks whether the client’s connection is authorized based on their credential, and then terminates the authentication. Then, a new authentication session starts with the backend cluster. 
-* Validate and forward: The client’s OAuth token is first validated by the proxy, and then sent to the backend as-is. This will “fail fast” if the token is invalid before sending it to the backend.
+* Passthrough (`passthrough`): Authentication from the client passes through the proxy to the backend without validation. 
+For SCRAM authentication, this method is required because the salt has to be calculated across the entirety of the TCP connection.
+* Terminate (`terminate`): Checks whether the client’s connection is authorized based on their credential, and then terminates the authentication. Then, a new authentication session starts with the backend cluster. 
+* Validate and forward (`validate_forward`): The client’s OAuth token is first validated by the proxy, and then sent to the backend as-is. This will “fail fast” if the token is invalid before sending it to the backend.
+
+## Namespaces
+
+With namespaces, you can preserve any naming systems that you have in place, and ensure they remain consistent.
+Namespaces let you:
+* Rewrite and enforce topic and consumer group names with a consistent prefix
+* Expose topics and consumer groups through the virtual cluster
+
+### Examples
+
+The following examples provide some common use cases for namespaces and show how to set them up.
+
+#### Apply prefixes automatically
+
+The most common use case for namespaces is to automatically prefix `read` and `create` operations when interacting with topics and consumer groups. 
+This helps avoid overlapping from multiple tenants.
+
+You can do this by setting a prefix on the virtual cluster:
+
+<!-- temporarily YAML, will convert to a curl command when we a spec -->
+
+```yaml
+namespace:
+  prefix: my-prefix
+```
+
+In this example, the prefix `my-prefix` will be used for all consumer group and topics that connect via this virtual cluster.
+
+<!-- Commented out because I need a schema/spec here: Namespaces can either add a prefix automatically (implicit_prefix which is the default), or ensure that your application explicitly comply to the defined prefix by rejecting usages that do not include prefix (explicit_prefix) -->
+
+#### Applying prefixes to additional topics
+
+Along with topics owned by a specific team, you can apply prefixes to a select group of additional topics.
+You might do this to:
+* Consume topics owned by other teams
+* Gradually migrate to a namespace while still using old topics temporarily
+
+Here's an example confiuration using an exact list of topics:
+
+```yaml
+namespace:
+  prefix: team-a
+  additional_topics:
+  - type: exact_list
+    exact_list:
+    - backend: "allowed_topic"
+```
+
+These topics are accessed using their full unmodified names.
+
+You could also use a glob expression to capture topics using name patterns.
+
+#### Applying prefixes to additional consumer groups
+
+You can apply prefixes to existing consumer groups to avoud migrating offsets.
+For example:
+
+```yaml
+namespace:
+  prefix: team-a
+  additional_topics:
+  - type: exact_list
+    exact_list:
+    - backend: "allowed_topic"
+  additional_consumer_groups:
+  - type: exact_list
+    exact_list:
+    - backend: "allowed_group"
+```
+End users of this virtual cluster can use their existing, unnamespaced consumer groups. 
+
+You could also use a glob expression to capture consumer groups using name patterns.
 
 ## Virtual cluster policies
 
