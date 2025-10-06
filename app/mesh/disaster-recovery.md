@@ -1,43 +1,22 @@
 ---
-title: Setup multi zone services in {{site.mesh_product_name}}
+title: "{{site.mesh_product_name}} disaster recovery"
 description: "Learn how to set up multi zone services to deal with zone-to-zone communication, failover, and disaster recovery."
-content_type: how_to
-permalink: /mesh/disaster-recovery/
-bread-crumbs: 
+content_type: reference
+layout: reference
+breadcrumbs: 
   - /mesh/
-related_resources:
-  - text: "{{site.mesh_product_name}}"
-    url: /mesh/overview/
-
 products:
   - mesh
-
+tags: 
+  - zones
 works_on:
-  - konnect
   - on-prem
-
-tldr:
-  q: How do I set up failover and disaster recovery with {{site.mesh_product_name}}?
-  a: Use {{site.mesh_product_name}} multi zone services with {{site.base_gateway}} to automatically route traffic to healthy zones.
-
-prereqs:
-  inline:
-    - title: Install kubectx and kubens
-      content: |
-        This tutorial uses [`kubectx`](https://github.com/ahmetb/kubectx) and [`kubens`](https://github.com/ahmetb/kubectx) to easily switch between Kubernetes contexts and namespaces.   
-    - title: Create a {{site.mesh_product_name}} control plane
-      content: |
-        This tutorial requires a {{site.konnect_short_name}} Plus account. If you don't have one, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
-
-        After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} control plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
-    - title: Set up multiple Mesh zones
-      content: |
-        Use {{site.konnect_short_name}} to create a new zone in [Mesh manager](https://cloud.konghq.com/us/mesh-manager/). This will be used as the secondary zone to host your workloads and can be in a different data center or cloud region.
-cleanup:
-  inline:
-    - title: Clean up Mesh
-      include_content: cleanup/products/mesh
-      icon_url: /assets/icons/gateway.svg
+  - konnect
+related_resources:
+  - text: "Observability"
+    url: /mesh/observability/
+  - text: "{{site.mesh_product_name}} features"
+    url: /mesh/
 ---
 
 ## Mesh failover and disaster recovery
@@ -49,7 +28,7 @@ In this walkthrough, we will show you how to create a service that spans multipl
 ## Target architecture
 
 To demonstrate how to set up multi zone services, we will create two Kubernetes clusters, each being a separate Mesh Zone. Each zone will have a {{site.kic_product_name}} that will handle traffic into the zones.  
-In front of the KIC instances will be a Global Load Balancer, which will deal with traffic at the edge.
+In front of the KIC instances will be a global Load Balancer, which will deal with traffic at the edge.
 
 ### Do I need KIC in both zones?
 
@@ -59,6 +38,7 @@ You actually don't need to have a KIC instance in both zones. For a partial or w
 * Or, in the event of a failure, the service hosted in another zone
 
 We've decided to use two KIC instances to deal with a scenario where an entire zone goes down — for example, a cloud region failure.
+
 <!--vale off -->
 {% mermaid %}
 ---
@@ -104,11 +84,11 @@ MMS -.->|zone-local preferred| Z2ECHO
 {% endmermaid %}
 <!--vale on -->
 
-## Set up your zones
+## Configure your zones
 
 This walkthrough is based on using Kubernetes as the compute platform. The configuration of workloads running on Universal will be exactly the same from a {{site.mesh_product_name}} point of view, and we will use kumactl YAML notation in all of our examples.
 
-### Label your namespaces and deploy your workloads
+### Label your namespaces and deploy workloads
 
 We will use `kubectx` and `kubens` to navigate between clusters and namespaces. These tools will save you a lot of time!
 
@@ -195,7 +175,7 @@ spec:
 
 ## Configure {{site.base_gateway}}
 
-As an MMZS is a Global Mesh construct, it is defined at the Global control plane. The multi zone service will *not* resolve through cluster DNS and can only be accessed from within the Mesh. The Mesh dataplanes are responsible for routing traffic from one workload to another.  
+As an MMZS is a global Mesh construct, it is defined at the global control plane. The multi zone service will *not* resolve through cluster DNS and can only be accessed from within the Mesh. The Mesh dataplanes are responsible for routing traffic from one workload to another.  
 Kubernetes Gateway API expects to resolve backend services to a Kubernetes service, and as this does not exist for a Multi Zone service, we need to create an ExternalName resource:
 
 ```sh
@@ -253,6 +233,6 @@ If the failover or disaster is temporary, as services, misconfiguration, or regi
 
 ## What scenarios does Mesh Multi Zone service help with?
 
-Multi Zone services are a very powerful construct in {{site.mesh_product_name}}. As we have both a Global and a zone control plane, we are able to greatly simplify the configuration of not just routing between Zones, but also creating logical services that can span multiple Zones.
+Multi Zone services are a very powerful construct in {{site.mesh_product_name}}. As we have both a global and a zone control plane, we are able to greatly simplify the configuration of not just routing between Zones, but also creating logical services that can span multiple Zones.
 
-In this example, we looked at failover and DR scenarios that encapsulate traffic entering your environments, but this could equally help with service availability during workload rollouts and upgrades. Coupled with readiness and health probes, as well as automated functional and non-functional testing, you will be able to maintain a service level objective across multiple environments with zero configuration needed.
+In this example, we looked at failover and disaster recovery scenarios that encapsulate traffic entering your environments, but this could equally help with service availability during workload rollouts and upgrades. Coupled with readiness and health probes, as well as automated functional and non-functional testing, you will be able to maintain a service level objective across multiple environments with zero configuration needed.
