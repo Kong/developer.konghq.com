@@ -27,6 +27,20 @@ rows:
             config:
               header:
                 type: h2
+                text: "Auto-generated mocks"
+              blocks:
+                - type: text
+                  text: | 
+                    Auto-generate a mock server from a prompt and an input type: URL, OpenAPI, or JSON.
+                     
+                    [Learn more about auto-generated mock servers &rarr;](/how-to/create-a-cloud-hosted-mock-server/)                    
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h2
                 text: "Cloud-hosted mocks"
               blocks:
                 - type: text
