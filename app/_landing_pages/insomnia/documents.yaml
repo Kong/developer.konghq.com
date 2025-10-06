@@ -96,16 +96,15 @@ rows:
             config:
               url: /assets/images/insomnia/document-test.png
               alt_text: Image of document tests in a test suite.
-      - blocks:
-          - type: text
-            text: |
-                {:.warning}
-                > **Deprecation advisory**: In 2026, we will deprecate unit tests. To create new tests or maintain existing tests, we recommend that users migrate to pre-request and after-response [scripts](/insomnia/scripts/).
+      - blocks:     
           - type: structured_text
             config:
               blocks:
                 - type: text
-                  text: | 
+                  text: |
+                    {:.warning}
+                    > **Deprecation advisory**: In 2026, we will deprecate unit tests. To create new tests or maintain existing tests, we recommend that users migrate to pre-request and after-response [scripts](/insomnia/scripts/).
+                    
                     Documents bundle all API testing ability together.
 
                 - type: unordered_list
