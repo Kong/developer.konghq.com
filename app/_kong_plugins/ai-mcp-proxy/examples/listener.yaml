@@ -7,7 +7,7 @@ extended_description: |
   - Configure one or more Routes with the plugin in `conversion-only` mode.
     Each `conversion-only` Route defines tools and assigns them a `tags` value.
   - Configure a separate Route with the plugin in `listener` mode (shown below).
-    The listener uses [`config.server.tag`](./reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server.
+    The listener uses [`config.server.tag`](/plugins/ai-mcp-proxy/reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server.
 
 weight: 900
 
