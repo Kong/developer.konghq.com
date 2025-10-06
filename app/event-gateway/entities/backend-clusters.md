@@ -35,7 +35,7 @@ layout: gateway_entity
 
 schema:
     api: event-gateway/knep
-    path: /schemas/VirtualCluster
+    path: /schemas/BackendCluster
 ---
 
 ## What is a Backend Cluster?
