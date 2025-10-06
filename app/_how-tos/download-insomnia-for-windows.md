@@ -86,7 +86,7 @@ Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D=C:\Insomnia
 ```
 
 {% endnavtab %}
-{% navtab "admin-deployment" %}
+{% navtab "Admin deployment" %}
 
 ## Run the installer
 
