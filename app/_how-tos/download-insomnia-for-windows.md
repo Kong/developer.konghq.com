@@ -72,7 +72,7 @@ Once you've run the installer, you can use the Insomnia setup wizard to complete
 4. Click **Finish**.
 
 {% endnavtab %}
-{% navtab "silent-install" %}
+{% navtab "Silent install" %}
 
 ## Run the installer
 1. After installing the NSIS installer, run the installer with the `/S` flag to perform a silent installation:
