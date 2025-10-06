@@ -19,7 +19,7 @@ gateway-k8s-on-prem-install:
   url: /gateway/install/kubernetes/on-prem/
 mcp-traffic:
   title: Secure, govern and observe MCP traffic with Kong AI Gateway
-  url: /mcp/secure-mcp-traffic
+  url: /mcp/secure-mcp-traffic/
 hashicorp-vault-llms:
   title: Configure dynamic authentication to LLM providers
   url: /how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/
@@ -29,3 +29,9 @@ custom-dashboards:
 event-gateway-get-started:
   title: Get started with {{site.event_gateway}}
   url: /event-gateway/get-started/
+mcp-conversion:
+  title: Autogenerate and observe MCP tools from any RESTful API
+  url: /mcp/autogenerate-mcp-tools/
+mcp-weather-api:
+  title: Autogenerate and observe MCP tools for Weather API
+  url: /mcp/autogenerate-mcp-tools-for-weather-api/

@@ -299,6 +299,7 @@ The OpenID Connect plugin has several options for performing coarse-grained auth
 1. [Claims-based authorization](#claims-based-authorization)
 2. [ACL plugin authorization](#acl-plugin-authorization)
 3. [Consumer authorization](#consumer-authorization)
+4. [Consumer Group authorization](#consumer-group-authorization) {% new_in 3.12 %}
 
 #### Claims-based authorization
 
@@ -417,6 +418,15 @@ Consumers can have ACL groups attached to them and be further authorized with th
 Set up Consumer auth:
 * [Plugin configuration example](/plugins/openid-connect/examples/consumer-auth/)
 * [Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
+
+#### Consumer Group authorization {% new_in 3.12 %}
+
+You can use {{site.base_gateway}} [Consumer Groups](/gateway/entities/consumer-group/) for authorization and dynamically map claim values to Consumer Groups. 
+This means that we restrict the access to only those that do have a matching Consumer Group. 
+
+Set up Consumer Group auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/consumer-group-auth/)
+* [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
 
 ### Client authentication
 
