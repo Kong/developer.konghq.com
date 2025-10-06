@@ -96,7 +96,7 @@ Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D="C:\Program
 ```
 
 {% endnavtab %}
-{% navtab uninstall %}
+{% navtab "Uninstall" %}
 
 ## GUI uninstall
 
