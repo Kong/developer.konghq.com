@@ -432,6 +432,7 @@ KPIs
 ksearch
 kubeconfig
 kubectl
+kubectx
 kubelet
 kubernetes
 Kuma
