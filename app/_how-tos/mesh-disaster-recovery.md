@@ -1,6 +1,6 @@
 ---
-title: Setup Multi Zone services in {{site.mesh_product_name}}
-description: "Learn how to setup Multi Zone services to deal with zone to zone communication, failover and disaster recovery."
+title: Setup multi zone services in {{site.mesh_product_name}}
+description: "Learn how to setup multi zone services to deal with zone to zone communication, failover and disaster recovery."
 content_type: how_to
 permalink: /mesh/disaster-recovery/
 bread-crumbs: 
@@ -17,8 +17,8 @@ works_on:
   - on-prem
 
 tldr:
-  q: How do I setup Failover and Disaster recovery with {{site.mesh_product_name}}
-  a: Use Mesh Multi Zone Services with {{site.base_gateway}} to automatically route traffic to healthy zones.
+  q: How do I setup failover and disaster recovery with {{site.mesh_product_name}}
+  a: Use {site.mesh_product_name}} multi zone services with {{site.base_gateway}} to automatically route traffic to healthy zones.
 
 prereqs:
   inline:
@@ -29,7 +29,7 @@ prereqs:
         After creating your {{site.konnect_short_name}} account, [create the {{site.mesh_product_name}} control plane](https://cloud.konghq.com/us/mesh-manager/create-control-plane) and your first Mesh zone. Follow the instructions in {{site.konnect_short_name}} to deploy Mesh on your Kubernetes cluster.
     - title: Setup multiple Mesh zones
       content: |
-        Use {{site.konnect_short_name}} to create a new zone in [Mesh manager](https://cloud.konghq.com/us/mesh-manager/).  This will be used as the secondary zone to host your workloads and can be in a different data center or Cloud region.
+        Use {{site.konnect_short_name}} to create a new zone in [Mesh manager](https://cloud.konghq.com/us/mesh-manager/). This will be used as the secondary zone to host your workloads and can be in a different data center or cloud region.
 cleanup:
   inline:
     - title: Clean up Mesh
@@ -38,24 +38,25 @@ cleanup:
 ---
 
 
-## Mesh Failover and DR
+## Mesh failover and disaster recovery
 
-One of the most difficult things to setup in a Service Mesh is multi zone failover, and communication.  {{site.mesh_product_name}} is built from the ground up to support multiple zones, and seamlessly setup zone to zone communication through MeshMultiZoneServices.
+One of the most difficult things to setup in a service Mesh is multi zone failover, and communication. {{site.mesh_product_name}} is built from the ground up to support multiple zones, and seamlessly setup zone to zone communication through `MeshMultiZoneServices`.
 
 In this walkthrough, we will show you how to create a service that spans multiple zones, as well as how to have an active/active failover for your {{site.kic_product_name}}.
 
 ## Target architecture
 
-To demonstrate how to setup a Multi Zone services, we will create two Kubernetes clusters, each being a separate Mesh Zone.  Each Zone will have a {{site.kic_product_name}} that will handle traffic into the zones.  In front of the KIC instances will be a Global Load balancer, which will deal with traffic at the edge.  
+To demonstrate how to setup a multi zone services, we will create two Kubernetes clusters, each being a separate Mesh Zone. Each zone will have a {{site.kic_product_name}} that will handle traffic into the zones.
+In front of the KIC instances will be a Global Load balancer, which will deal with traffic at the edge.
 
 ### Do I need KIC in both zones?
 
-You actually don't need to have a KIC instance on both zones.  For a partial, or workload only failure, a MeshMultiZoneService will automatically route traffic to:
+You actually don't need to have a KIC instance on both zones. For a partial, or workload only failure, a MeshMultiZoneService will automatically route traffic to:
 
-* The most local instantiation of the Services (this is called Locality aware routing)
+* The most local instantiation of the services (this is called Locality aware routing)
 * or in the event of a failure, the service hosted in another zone
 
-We've decided to use 2 KIC instances to deal with a scenario where an entire Zone goes down for say, a cloud region failure.
+We've decided to use 2 KIC instances to deal with a scenario where an entire zone goes down for say, a cloud region failure.
 <!--vale off -->
 {% mermaid %}
 ---
@@ -103,7 +104,7 @@ MMS -.->|zone-local preferred| Z2ECHO
 
 ## Setup your zones
 
-This walkthrough is based on using Kubernetes as the compute platform.  The configuration of workloads running on Universal will be exactly the same from a {{site.mesh_product_name}} point of view, and we will use kumactl YAML notation in all of our examples.
+This walkthrough is based on using Kubernetes as the compute platform. The configuration of workloads running on Universal will be exactly the same from a {{site.mesh_product_name}} point of view, and we will use kumactl YAML notation in all of our examples.
 
 ### Label your namespaces and deploy your workloads
 
@@ -125,13 +126,13 @@ kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n
 
 ### Deploy Kong Operator
 
-For each Zone, follow the instructions to deploy [Kong Operator](operator/dataplanes/get-started/kic/create-gateway/) into each zone.  
+For each zone, follow the instructions to deploy [Kong Operator](/operator/dataplanes/get-started/kic/create-gateway/) into each zone.
 
 The Gateway will need to be part of the Mesh, so make sure your Dataplanes are deployed into the ```kong``` namespace that has been marked as being part of the Mesh.
 
 ### Create a test HTTPRoute
 
-Let's test that everything in each Zone is correctly plumbed together by deploying an HTTPRoute for our Zone based echo service.
+Let's test that everything in each zone is correctly plumbed together by deploying an HTTPRoute for our zone based echo service.
 
 ```sh
 echo '
@@ -169,13 +170,13 @@ In namespace kong.
 With IP address 10.244.0.36.
 ```
 
-This confirms that the Service is reachable by the Gateway.
+This confirms that the service is reachable by the Gateway.
 
-## Setup a Mesh Multi Zone Service
+## Setup a Mesh Multi zone service
 
-A MeshMultiZoneService (MMZS) uses the Mesh to bring together services in more than one zone.  Traffic between each Zone will leave the Zone (egress) through the zone1 Egress gateway, and enter (ingress) Zone 2 at its Ingress gateway.
+A MeshMultiZoneService (MMZS) uses the Mesh to bring together services in more than one zone. Traffic between each zone will leave the zone (egress) through the `zone1` Egress gateway, and enter (ingress) `zone2` at its Ingress gateway.
 
-Create the new MMZS by combining the services in both zones based on the ```meshService``` ```matchLabel```.  In this case, we are using the name of the service, but this can be based on workload labels too.
+Create the new MMZS by combining the services in both zones based on the `meshService`, `matchLabel`. In this case, we are using the name of the service, but this can be based on workload labels too.
 
 ```sh
 echo 'type: MeshMultiZoneService
@@ -193,8 +194,7 @@ spec:
 
 ## Configure {{site.base_gateway}}
 
-As a MMZS is a Global Mesh construct, it is defined at the Global control plane.  The multi zone service will *not* resolve through cluster DNS, and can only be accessed from within the Mesh.  The Mesh dataplanes are responsible for routing traffic from one workload to another.
-
+As a MMZS is a Global Mesh construct, it is defined at the Global control plane. The multi zone service will *not* resolve through cluster DNS, and can only be accessed from within the Mesh. The Mesh dataplanes are responsible for routing traffic from one workload to another.
 Kubernetes Gateway API expects to resolve back end services to a Kubernetes service, and as this does not exist for a Multi Zones service, we need to create an External Name resource:
 
 ```sh
@@ -213,9 +213,9 @@ spec:
     targetPort: 1027' | kubectl apply -f -
 ```
 
-This is effectively a CNAME from a Kubernetes service to the Mesh Multi Zone Service.  As the Gateway is part of the Mesh, this will be resolved correctly.
+This is effectively a CNAME from a Kubernetes service to the Mesh Multi zone service. As the Gateway is part of the Mesh, this will be resolved correctly.
 
-Let's go back and change our original test service in Zone 1 to point at our new multi-zone service.
+Let's go back and change our original test service in zone 1 to point at our new multi-zone service.
 
 ```sh
 echo '
@@ -240,17 +240,17 @@ spec:
 ' | kubectl apply -f -
 ```
 
-For our scenario, we can apply the changes to both Gateways so that traffic will be correctly routed from one Zone to another based on the echo service's health and availability.
+For our scenario, we can apply the changes to both Gateways so that traffic will be correctly routed from one zone to another based on the echo service's health and availability.
 
 ## Simulating failover and disaster
-This architecture solves for a couple of different scenarios.  To simulate a failover.  Simply deleting the `echo` deployment, service or misconfiguring the service (for example a wrong destination port) would mean that the Mesh would automatically reroute traffic to Zone 2.
+This architecture solves for a couple of different scenarios. To simulate a failover. Simply deleting the `echo` deployment, service or misconfiguring the service (for example a wrong destination port) would mean that the Mesh would automatically reroute traffic to zone 2.
 
-In the case of a Zone disaster, deleting the Zone 1 cluster, the Gateway, or the `echo` deployment would also mean traffic is moved to Zone 1.  
+In the case of a zone disaster, deleting the zone 1 cluster, the Gateway, or the `echo` deployment would also mean traffic is moved to zone 1.
 
 If the failover or disaster is temporary, as services, mis-configuration, or regions come back online, the Mesh will automatically reroute traffic to the "happy path" as locality aware routing would make sure calls to the echo service are within the relevant zones.
 
-## What scenarios does Mesh Multi Zone Service help with?
-Multi Zones Services are a very powerful construct in {{site.mesh_product_name}}.  As we have both a Global and a Zone control plane, we are able to greatly simplify the configuration of not just routing between Zones, but also creating logical services that can span multiple Zones.
+## What scenarios does Mesh Multi zone service help with?
+Multi Zones services are a very powerful construct in {{site.mesh_product_name}}. As we have both a Global and a zone control plane, we are able to greatly simplify the configuration of not just routing between Zones, but also creating logical services that can span multiple Zones.
 
-In this example we looked at Failover and DR scenarios that encapsulate traffic entering your environments, but this could equally help with service availability during workload rollouts and upgrades.  Coupled with readiness, health probes, as well as automated functional and non-functional testing, you will be able to maintain a service level objective across multiple environments with zero configuration needed.
+In this example we looked at failover and DR scenarios that encapsulate traffic entering your environments, but this could equally help with service availability during workload rollouts and upgrades. Coupled with readiness, health probes, as well as automated functional and non-functional testing, you will be able to maintain a service level objective across multiple environments with zero configuration needed.
 
