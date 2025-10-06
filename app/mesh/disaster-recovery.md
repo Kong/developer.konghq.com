@@ -225,7 +225,7 @@ For our scenario, we can apply the changes to both Gateways so that traffic will
 
 ## Simulating failover and disaster
 
-This architecture solves for a couple of different scenarios. To simulate a failover, simply deleting the `echo` deployment, service, or misconfiguring the service (for example, a wrong destination port) would mean that the Mesh would automatically reroute traffic to zone 2.
+This architecture solves for a couple of different scenarios. To simulate a failover, simply deleting the `echo` deployment, service, or misconfigured the service (for example, a wrong destination port) would mean that the Mesh would automatically reroute traffic to zone 2.
 
 In the case of a zone disaster, deleting the zone 1 cluster, the Gateway, or the `echo` deployment would also mean traffic is moved to zone 2.
 
