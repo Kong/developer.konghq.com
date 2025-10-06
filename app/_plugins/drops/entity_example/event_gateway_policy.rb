@@ -4,6 +4,10 @@ module Jekyll
   module Drops
     module EntityExample
       class EventGatewayPolicy < Base
+        extend Forwardable
+
+        def_delegators :@example, :policy_target
+
         def entity_type
           @entity_type ||= 'event_gateway_policy'
         end

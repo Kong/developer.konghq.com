@@ -90,10 +90,14 @@ module Jekyll
             end
 
             def build_url
-              [
-                formats['konnect-api']['event_gateway_base_url'],
-                formats['konnect-api']['policy_endpoints'][@example_drop.target.key]
-              ].join
+              segments = [formats['konnect-api']['event_gateway_base_url']]
+              segments << if @example_drop.policy_target == 'listener'
+                            formats['konnect-api']['policy_endpoints']['listener']
+                          else
+                            formats['konnect-api']['policy_endpoints'][@example_drop.target.key]
+                          end
+
+              segments.join
             end
           end
         end
