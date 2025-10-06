@@ -94,6 +94,7 @@ body:
   target: host.docker.internal:9001
   weight: 100
   failover: false
+status_code: 201
 {% endcontrol_plane_request %}
 <!--vale on -->
 {% endcapture %}
@@ -111,6 +112,7 @@ body:
   target: host.docker.internal:9002
   weight: 100
   failover: false
+status_code: 201
 {% endcontrol_plane_request %}
 <!--vale on -->
 {% endcapture %}
@@ -128,6 +130,7 @@ body:
   target: host.docker.internal:9003
   weight: 50
   failover: true
+status_code: 201
 {% endcontrol_plane_request %}
 <!--vale on -->
 {% endcapture %}
