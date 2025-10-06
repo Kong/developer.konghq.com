@@ -174,7 +174,7 @@ To use AWS resource endpoints with Dedicated Cloud Gateways, you must first crea
 1. In the **Name** field, enter `Kong-DCGW-Resource-Share`.
 1. From the **Resource type** dropdown menu, select "VPC Lattice Resource Configurations".
 1. Select the ARN of your resource configuration.
-1. In the Selected resources settings, select your resource IDs.
+1. In the Selected resources settings, select your resource group IDs.
 1. Click **Next**.
 1. Click **Next**.
 1. In the Principals settings, select **Allow sharing with anyone**.
@@ -186,32 +186,33 @@ To use AWS resource endpoints with Dedicated Cloud Gateways, you must first crea
 ## Configure the resource endpoint connection in {{site.konnect_short_name}}
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Networks**](https://cloud.konghq.com/global/networks/).
-1. Click the settings icon next to your network.
+1. Click the action menu icon next to your network.
 1. Click **Configure private networking**.
 1. Click **Resource endpoint connection**.
 1. In the **Resource links configuration name** field, enter `AWS-Resource-Share`.
 1. In the **AWS RAM share ARN** field, enter your ARN.
 1. Click **Submit**. 
-
-It may take a few minutes for {{site.konnect_short_name}}’s automation to accept the RAM share and create VPC endpoints. You can check the status of your resource endpoints in the table. 
-
-## Map your resource configuration IDs to upstream domain names
-
-Now you need to manually map your resource configuration IDs from AWS to {{site.konnect_short_name}} once your resource endpoint is marked as `Ready`.
-
-1. In the {{site.konnect_short_name}} sidebar, click [**Networks**](https://cloud.konghq.com/global/networks/).
-1. Click the settings icon next to your network.
-1. Click **Configure private networking**.
-1. Click **Resource endpoint connection**.
+   
+   It may take a few minutes for {{site.konnect_short_name}}’s automation to accept the RAM share and create VPC endpoints. You can check the status of your resource endpoints in the table.
+1. Click the action menu icon. Now you need to manually map your resource configuration IDs from AWS to {{site.konnect_short_name}} once your resource endpoint is marked as `Ready`.
+1. Click **Edit**.
 1. In the **Resource configuration ID** field, enter your enter your resource configuration ID from AWS.
+   
+   {:.info}
+   > **Note:** If your resource configuration has a child resource configuration, use the ID from the child resource.
 1. In the **Domain name** field, enter your resource configuration domain name from AWS.
+   
+   {:.info}
+   > **Note:** If your resource configuration has a child resource configuration, use the domain name from the child resource.
 1. Click **Submit**.
 
 It may take a few minutes for automation to update the private hosted zones and DNS settings before upstream routing will work. 
 
 ## Validate
 
-You can validate that the resource endpoint connections in {{site.konnect_short_name}} are working correctly by navigating to your Gateway Service:
+Once the resource configuration mapping displays as `Ready`, your resource endpoint connection is set up successfully.
+
+Additionally, you can validate that the resource endpoint connections in {{site.konnect_short_name}} are working correctly by navigating to your [Gateway Service configured in the prerequisites](/dedicated-cloud-gateways/aws-resource-endpoints/#required-entities):
 
 ```sh
 curl -i -X GET "http://$RESOURCE_DOMAIN_NAME/anything"
