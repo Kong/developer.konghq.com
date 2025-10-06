@@ -504,6 +504,7 @@ minify
 minifying
 minikube
 minio
+misconfiguration
 misconfigurations
 misconfigured
 Mockbin
