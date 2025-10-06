@@ -87,9 +87,10 @@ formats:
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
     policy_endpoints:
-      consume: '/virtual-clusters/{virtual_cluster}/consume-policies/'
-      produce: '/virtual-clusters/{virtual_cluster}/produce-policies/'
-      cluster: '/virtual-clusters/{virtual_cluster}/cluster-policies/'
+      consume:  '/virtual-clusters/{virtual_cluster}/consume-policies/'
+      produce:  '/virtual-clusters/{virtual_cluster}/produce-policies/'
+      cluster:  '/virtual-clusters/{virtual_cluster}/cluster-policies/'
+      listener: '/listeners/{event_gateway_listener}/policies/'
     variables:
       <<: *konnect_variables
       control_plane:
@@ -118,7 +119,9 @@ formats:
       event_gateway:
         placeholder: 'eventGatewayId'
         description: 'The `id` of the Event Gateway.'
-
+      event_gateway_listener:
+        placeholder: 'eventGatewayListenerId'
+        description: The `id` of the Event Gateway Listener.
 
   kic:
     label: 'KIC'
