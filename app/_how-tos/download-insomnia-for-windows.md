@@ -50,7 +50,7 @@ next_steps:
 Insomnia for Windows uses the **NSIS installer**. Depending on your environment, you can run the installer with GUI, silently, or with administrator privileges. It's also possible to remove Insomnia from the GUI or with a silent uninstall command.
 
 {% navtabs "windows install" %}
-{% navtab "gui-install" %}
+{% navtab "UI" %}
 
 ## Download the installer
 Before you install, close any open Insomnia windows. The NSIS installer can't update files that are actively in use.
