@@ -11,7 +11,7 @@ sections:
     auto_exclude: true
   - title: API catalog
     items:
-      - path: /dev-portal/apis/
+      - path: /service-catalog/apis/
       - path: /how-to/automate-api-catalog/
       - path: /how-to/automate-api-catalog-with-terraform/
   - title: Application registration

@@ -120,7 +120,7 @@
 /dev-portal/snippets/   /dev-portal/pages-and-content/
 /dev-portal/application-registration/   /dev-portal/self-service/
 /dev-portal/access-and-approval/    /dev-portal/self-service/
-/dev-portal/publishing/ /dev-portal/apis/
+/dev-portal/publishing/ /service-catalog/apis/
 
 
 # Gateway LTS
@@ -147,3 +147,6 @@
 
 /operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
 
+## Service Catalog rename
+
+/dev-portal/apis/   /service-catalog/apis/

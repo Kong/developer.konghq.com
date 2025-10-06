@@ -23,7 +23,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Service Catalog provides a centralized catalog of all services running in your organization. 
+                    Service Catalog provides a centralized catalog of all services and APIs running in your organization. 
                     By integrating with internal applications (like Gateway Manager and Mesh Manager) and external tools (like GitHub and PagerDuty), 
                     it offers a 360-degree overview of your services, including:
                 - type: unordered_list
@@ -32,6 +32,7 @@ rows:
                     - Upstream and downstream dependencies
                     - Associated code repositories and CI/CD pipelines
                     - API gateway and service mesh mappings
+                    - Comprehensive API catalog
 
   - header:
         type: h2
@@ -67,6 +68,25 @@ rows:
               cta:
                 text: Learn about Service Catalog services
                 url: /service-catalog/services/
+      - blocks:
+        - type: card
+          config:
+            title: API catalog
+            description: |
+              Create APIs with Catalog.
+              Catalog APIs serve as a repository for your API specifications and documentation.
+            icon: /assets/icons/api.svg
+            ctas:
+              - text: API catalog reference
+                url: "/service-catalog/apis/"
+              - text: Create an API catalog with the {{site.konnect_short_name}} API
+                url: "/how-to/automate-api-catalog/"
+              - text: Create an API catalog with Terraform
+                url: "/how-to/automate-api-catalog-with-terraform/"
+              - text: Discover and govern APIs
+                url: /how-to/discover-and-govern-apis-with-service-catalog/
+              
+        
   - header:
       type: h2
       text: "Frequently asked questions"

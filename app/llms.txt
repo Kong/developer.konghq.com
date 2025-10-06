@@ -61,7 +61,7 @@ Each section uses the format:
 - [Dev Portal Overview](https://developer.konghq.com/dev-portal/): Documentation portal for onboarding API consumers and managing access.
 - [Access & Approval](https://developer.konghq.com/dev-portal/access-and-approval/): Grant access to portal users and review approval workflows.
 - [Analytics](https://developer.konghq.com/dev-portal/analytics/): View API usage insights by developer or app.
-- [APIs](https://developer.konghq.com/dev-portal/apis/): List and publish APIs available through the developer portal.
+- [APIs](https://developer.konghq.com/service-catalog/apis/): List and publish APIs available through the developer portal.
 - [Application Registration](https://developer.konghq.com/dev-portal/application-registration/): Register and manage consumer apps, including credentials.
 - [Auth Strategies](https://developer.konghq.com/dev-portal/auth-strategies/): Configure OAuth2, API key, and custom auth for your portal.
 - [Breaking Changes](https://developer.konghq.com/dev-portal/breaking-changes/): How to handle backward-incompatible API changes.

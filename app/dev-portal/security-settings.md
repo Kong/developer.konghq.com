@@ -29,7 +29,7 @@ related_resources:
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: Publish APIs with Dev Portal
-    url: /dev-portal/apis/
+    url: /service-catalog/apis/
   - text: Custom domains
     url: /dev-portal/custom-domains/
 ---
@@ -95,20 +95,20 @@ The following explains the behavior when auto-approval for applications is confi
 
 ### Dev Portal role-based access control
 
-When RBAC is enabled for a Dev Portal, the option to configure API access policies for developers will be available when [publishing](/dev-portal/apis/#publish-your-api-to-dev-portal) the API to a portal. Otherwise, any logged in developer can see any published API that is set to `Visibility: public`.
+When RBAC is enabled for a Dev Portal, the option to configure API access policies for developers will be available when [publishing](/service-catalog/apis/#publish-your-api-to-dev-portal) the API to a portal. Otherwise, any logged in developer can see any published API that is set to `Visibility: public`.
 
 ### Authentication strategy and creating API keys
 
 {:.info}
 > {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
-Authentication strategies determine how [published APIs](/dev-portal/apis/#publish-your-api-to-dev-portal) are authenticated, and how developers create API Keys. 
+Authentication strategies determine how [published APIs](/service-catalog/apis/#publish-your-api-to-dev-portal) are authenticated, and how developers create API Keys. 
 
-Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway Service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway Service linked to the API](/dev-portal/apis/#gateway-service-link). The KAA plugin can only be configured from the associated Dev Portal and not the {{site.konnect_short_name}} Gateway Manager.
+Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway Service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway Service linked to the API](/service-catalog/apis/#gateway-service-link). The KAA plugin can only be configured from the associated Dev Portal and not the {{site.konnect_short_name}} Gateway Manager.
 
 #### Default application authentication strategy 
 
-Determines the default authentication strategy applied to an API as it is published to a portal. Changing this default will not retroactively change any previously [published APIs](/dev-portal/apis/#publish-your-api-to-dev-portal).
+Determines the default authentication strategy applied to an API as it is published to a portal. Changing this default will not retroactively change any previously [published APIs](/service-catalog/apis/#publish-your-api-to-dev-portal).
 
 To create a new application authentication strategy, see [Application Auth](/dev-portal/application-registration).
 

@@ -51,7 +51,7 @@ If you previously attached a Kafka Consume plugin to a Service, the plugin will 
 
 #### Konnect Application Auth (internal, {{site.konnect_short_name}}-only plugin): priority change
 
-The priority of the [internal `konnect-application-auth` plugin](/dev-portal/apis/#allow-developers-to-consume-your-api) changed from 950 to 960. 
+The priority of the [internal `konnect-application-auth` plugin](/service-catalog/apis/#allow-developers-to-consume-your-api) changed from 950 to 960. 
 This plugin is used for authentication inside {{site.konnect_short_name}} and can't be configured directly.
 This change ensures that the execution sequences of the `konnect-application-auth` plugin and the ACL plugin are correct.
 
