@@ -7,7 +7,7 @@
     <h2 id="set-up-the-plugin">Set up the {{include.entity}}</h2>
     <div class="flex w-full sm:w-fit sm:justify-end">
       <div class="flex gap-2 text-xs">
-        {% if targets.size > 0 %}
+        {% if targets.size > 1 %}
         <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
           <label for="select-target-{{ plugin_config_example.id }}" class="sr-only">{{include.target_label}}</label>
           <select id="select-target-{{ plugin_config_example.id }}" class="select-target bg-secondary">

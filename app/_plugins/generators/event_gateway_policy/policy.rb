@@ -12,6 +12,10 @@ module Jekyll
         @schema ||= metadata.fetch('schema')
       end
 
+      def policy_target
+        @policy_target ||= metadata.fetch('policy_target')
+      end
+
       def examples
         @examples ||= example_files.map do |file|
           Drops::PolicyConfigExample::EventGateway.new(
