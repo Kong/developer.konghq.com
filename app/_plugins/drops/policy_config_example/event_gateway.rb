@@ -20,8 +20,9 @@ module Jekyll
           @data ||= {
             'name' => example.fetch('name'),
             'type' => @plugin.slug,
+            'condition' => example['condition'],
             'config' => config
-          }
+          }.compact
         end
 
         def targets
