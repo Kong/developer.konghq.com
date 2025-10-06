@@ -26,6 +26,8 @@ related_resources:
 phases:
   - consume
 
+policy_target: virtual_cluster
+
 icon: graph.svg
 ---
 

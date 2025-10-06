@@ -24,6 +24,8 @@ icon: graph.svg
 phases:
   - produce
 
+policy_target: virtual_cluster
+
 related_resources:
   - text: Decrypt policy
     url: /event-gateway/policies/decrypt/
