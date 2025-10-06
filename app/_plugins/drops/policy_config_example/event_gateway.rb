@@ -6,6 +6,10 @@ module Jekyll
   module Drops
     module PolicyConfigExample
       class EventGateway < Base
+        extend Forwardable
+
+        def_delegators :@plugin, :policy_target
+
         def examples
           @examples ||= targets.map do |target|
             EntityExample::EventGatewayPolicy.new(example: self, target:)
@@ -26,7 +30,9 @@ module Jekyll
         end
 
         def targets
-          @targets ||= if example.key?('phases')
+          @targets ||= if @plugin.policy_target == 'listener'
+                         [@plugin.policy_target]
+                       elsif example.key?('phases')
                          unless example['phases'].all? { |p| @plugin.phases.include?(p) }
                            raise ArgumentError,
                                  "Invalid `phases` in #{@file}, supported phases: #{@plugin.phases.join(', ')}"
