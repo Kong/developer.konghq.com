@@ -13,7 +13,7 @@ import insomnia from '@/icons/products/insomnia.svg'
 import operator from '@/icons/products/operator.svg'
 import kic from '@/icons/products/kic.svg'
 import mesh from '@/icons/products/mesh.svg'
-import serviceCatalog from '@/icons/products/service-catalog.svg'
+import catalog from '@/icons/products/catalog.svg'
 import eventGateway from '@/icons/products/event-gateway.svg'
 import konnect from '@/icons/products/konnect.svg'
 import referencePlatform from '@/icons/products/reference-platform.svg'
@@ -25,7 +25,7 @@ const productIcons = {
   'dev-portal': devPortal,
   'gateway': gateway,
   'insomnia': insomnia,
-  'service-catalog': serviceCatalog,
+  'catalog': catalog,
   'konnect': konnect,
   'reference-platform': referencePlatform,
   operator,
