@@ -21,7 +21,6 @@ rows:
                   text: | 
                     A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). Insomnia offers cloud-hosted mock servers, but you can also deploy self-hosted mocks.
 
-  - columns:
       - blocks:
           - type: structured_text
             config:
@@ -33,8 +32,7 @@ rows:
                   text: | 
                     Auto-generate a mock server from a prompt and an input type: URL, OpenAPI, or JSON.
                      
-                    [Learn more about auto-generated mock servers &rarr;](/how-to/create-a-cloud-hosted-mock-server/)                    
-
+                    [Learn more about auto-generated mock servers &rarr;](/how-to/create-a-cloud-hosted-mock-server/)           
   - columns:
       - blocks:
           - type: structured_text
