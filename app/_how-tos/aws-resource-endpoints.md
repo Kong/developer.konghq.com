@@ -147,7 +147,13 @@ faqs:
       {% endtable %}
       <!--vale on-->
 ---
+AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 
 
+
+AWS VPC endpoints, part of the AWS VPC Lattice offering, allow services in one AWS account to be securely shared with and accessed from another account via a single VPC endpoint. This eliminates the need for:
+* Multiple PrivateLinks
+* Individual TLS workarounds for each service
+* Complex two-way handshakes
 ## Copy and save your {{site.konnect_short_name}} Account ID
 
 Before you can configure AWS, you'll need your account ID for AWS in {{site.konnect_short_name}}. AWS uses this account ID to configure the connection between your resource share in AWS and {{site.konnect_short_name}}.
@@ -159,13 +165,6 @@ Before you can configure AWS, you'll need your account ID for AWS in {{site.konn
 1. Copy and save the ID in the **Kong AWS Account ID** field.
 
 ## Create a resource share in AWS
-
-AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 
-
-AWS VPC endpoints, part of the AWS VPC Lattice offering, allow services in one AWS account to be securely shared with and accessed from another account via a single VPC endpoint. This eliminates the need for:
-* Multiple PrivateLinks
-* Individual TLS workarounds for each service
-* Complex two-way handshakes
 
 To use AWS resource endpoints with Dedicated Cloud Gateways, you must first create a resource share with your resource configuration group and resource gateway in AWS.
 
