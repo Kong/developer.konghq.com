@@ -1,0 +1,145 @@
+metadata:
+  title: MCP Servers in Insomnia
+  content_type: landing_page
+  description: Learn how MCP Servers and Clients work in Insomnia, how to create and sync them, and how to manage AI feature access.
+  breadcrumbs:
+    - /insomnia/
+  products:
+    - insomnia
+rows:
+  - header:
+      type: h1
+      text: "MCP Servers"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Connect Insomnia to MCP Servers"
+              blocks:
+                - type: text
+                  text: |
+                    MCP Servers are external endpoints that expose domain-specific operations like `tools/call`, `resources/read`, and `prompts/get` through a **JSON-RPC interface**.  
+                    When you connect to a server, Insomnia creates an **MCP Client** which behaves like a request type but appears as a top-level entity for visibility.  
+                    Use MCP Clients to explore, test, and sync the capabilities your MCP Server provides.
+                - type: unordered_list
+                  items:
+                    - "[Create an MCP Client](#create-an-mcp-client)"
+                    - "[Sync with a discovered server](#sync-content)"
+                    - "[Manage AI feature access](#disable-ai-features)"
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/mcp-server-overview.png
+              alt_text: "Overview of an MCP Server in Insomnia"
+
+  - header:
+      type: h2
+      text: "Create an MCP Client"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    To connect Insomnia to a server endpoint, create an MCP Client:
+                    1. Navigate to **Create menu** -> **MCP Client**.  
+                    2. Enter the **Server URL**.  
+                    3. Click **Discover** to retrieve a list of Tools, Prompts, and Resources associated with the server.
+          - type: button
+            config:
+              text: Learn how to create an MCP Client
+              url: /how-to/create-mcp-client/
+              align: left
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/mcp-client-discovery.png
+              alt_text: "MCP Client discovery workflow"
+
+  - header:
+      type: h2
+      text: "Operations and transports"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    MCP Clients communicate with servers through **JSON-RPC**, executing specific operation types:
+                    - **Tools / call**: Execute a server-defined function on the server.  
+                    - **Resources / read**: Retrieve structured data objects.  
+                    - **Prompts / get**: Retrieve dynamic or AI-driven prompt templates.
+                    
+                    Supported transports:
+                    <!-- vale off -->
+                    {% table %}
+                    columns:
+                      - title: Use case
+                        key: use_case
+                      - title: Method
+                        key: method
+                    rows:
+                      - use_case: Send JSON-RPC requests over HTTP
+                        method: |
+                          Standard one-way JSON-RPC requests and responses between Insomnia and the MCP Server.  
+                      - use_case: Resync server definitions
+                        method: |
+                          Click **Resync** to update discovered Tools, Prompts, and Resources from the server. The server remains the **source of truth**.
+                    {% endtable %}
+                    <!-- vale on -->
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/mcp-operations.png
+              alt_text: "MCP operation and transport overview"
+
+  - header:
+      type: h2
+      text: "Deactivate AI features"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    From **Preferences → AI Features**, organization **admins** can manage which AI-powered features are available to users. Each user activates or deactivates permitted features.  
+                    If an admin disables a feature globally, the option appears greyed out with the tooltip: *“Your Insomnia administrator has disabled this feature for your organization.”*
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/ai-feature-preferences.png
+              alt_text: "AI feature preferences in Insomnia"
+
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: What is the difference between an MCP Client and a Collection?
+                a: |
+                  An MCP Client connects to an external MCP Server and syncs its Tools and Resources.  
+                  A Collection is a local group of manually created requests.  
+                  MCP Clients always mirror the server’s content; Collections are fully editable.
+              - q: Can I use Insomnia offline with an MCP Client?
+                a: |
+                  You can view previously synced content offline, but discovery and resync require an active connection to the MCP Server.
+              - q: How do I disable AI features for my workspace?
+                a: |
+                  Go to **Preferences → AI Features**, then clear the checkboxes for any feature you want to disable.  
+                  If an option is locked, your organization administrator has disabled it globally.
+              - q: Does Insomnia support both HTTP and STDIO transports?
+                a: |
+                  HTTP transport is supported in the first release.  
+                  STDIO transport will be added later after security review.
+              - q: Can MCP Clients use Git Sync or import/export?
+                a: |
+                  Not yet. MCP Clients are pure client entities in v1 and do not support Git Sync or import/export.
+              - q: What replaces scripts in MCP Clients?
+                a: |
+                  MCP Clients include **Response History** and **Notifications** tabs instead of Scripts.    
