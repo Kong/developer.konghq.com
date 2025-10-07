@@ -15,11 +15,11 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: AWS API Gateway reference
-    url: /service-catalog/integrations/aws-api-gateway/
+    url: /catalog/integrations/aws-api-gateway/
   - text: "Discover AWS Gateway APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
     url: /how-to/discover-aws-gateway-apis-using-konnect-api/
   - text: Discover and govern APIs with {{site.konnect_catalog}}
@@ -42,7 +42,7 @@ prereqs:
 
 Before you can discover APIs in {{site.konnect_catalog}}, you must configure the AWS API Gateway integration.
 
-{% include /service-catalog/aws-api-gateway-integration.md %}
+{% include /catalog/aws-api-gateway-integration.md %}
 
 ## Create a {{site.konnect_catalog}} service and map the API resources
 

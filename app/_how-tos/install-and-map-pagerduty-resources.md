@@ -15,11 +15,11 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: PagerDuty reference
-    url: /service-catalog/integrations/pagerduty/
+    url: /catalog/integrations/pagerduty/
 automated_tests: false
 tldr:
   q: How do I view PagerDuty services in {{site.konnect_catalog}}?

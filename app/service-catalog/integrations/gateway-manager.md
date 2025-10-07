@@ -11,8 +11,8 @@ tags:
   - integrations
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 search_aliases:
   - service catalog
 works_on:
@@ -23,7 +23,7 @@ related_resources:
   - text: Map Gateway Manager Services in {{site.konnect_catalog}}
     url: /how-to/map-gateway-manager-resources/
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
 discovery_support: true
 bindable_entities: "Gateway Service"
 ---

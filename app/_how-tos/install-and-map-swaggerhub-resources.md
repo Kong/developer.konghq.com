@@ -15,11 +15,11 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: SwaggerHub reference
-    url: /service-catalog/integrations/swaggerhub/
+    url: /catalog/integrations/swaggerhub/
 automated_tests: false
 tldr:
   q: How do I view SwaggerHub API specs in {{site.konnect_catalog}}?

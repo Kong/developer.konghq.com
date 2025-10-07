@@ -15,11 +15,11 @@ tags:
   - github
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: GitHub reference
-    url: /service-catalog/integrations/github/
+    url: /catalog/integrations/github/
 automated_tests: false
 tldr:
   q: How do I connect a GitHub repository to my {{site.konnect_catalog}} service?

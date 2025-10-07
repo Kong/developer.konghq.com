@@ -11,26 +11,26 @@ works_on:
 description: Scorecards in {{site.konnect_catalog}} allow platform teams to monitor services for compliance with Kong-recommended and industry-defined best practices in {{site.konnect_short_name}}.
 
 breadcrumbs:
-  - /service-catalog/
+  - /catalog/
 search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: "{{site.konnect_catalog}} services"
-    url: /service-catalog/services/
+    url: /catalog/services/
   - text: Traceable integration
-    url: /service-catalog/integrations/traceable/
+    url: /catalog/integrations/traceable/
   - text: GitHub integration
-    url: /service-catalog/integrations/github/
+    url: /catalog/integrations/github/
   - text: GitLab integration
-    url: /service-catalog/integrations/gitlab/
+    url: /catalog/integrations/gitlab/
   - text: SwaggerHub integration
-    url: /service-catalog/integrations/swaggerhub/
+    url: /catalog/integrations/swaggerhub/
   - text: Datadog integration
-    url: /service-catalog/integrations/datadog/
+    url: /catalog/integrations/datadog/
   - text: PagerDuty integration
-    url: /service-catalog/integrations/pagerduty/
+    url: /catalog/integrations/pagerduty/
 ---
 
 A {{site.konnect_catalog}} scorecard helps you evaluate services based on validation criteria. Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed. 

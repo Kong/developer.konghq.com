@@ -11,8 +11,8 @@ tags:
   - gitlab
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 
 works_on:
     - konnect
@@ -22,9 +22,9 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: Import and map self-managed GitLab resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-gitlab-resources/
   - text: Import and map SaaS GitLab resources in {{site.konnect_catalog}}
@@ -33,7 +33,7 @@ discovery_support: true
 bindable_entities: "Projects"
 ---
 The GitLab integration allows you to associate your {{site.konnect_catalog}} service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
-{% include /service-catalog/multi-resource.md %}
+{% include /catalog/multi-resource.md %}
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
 

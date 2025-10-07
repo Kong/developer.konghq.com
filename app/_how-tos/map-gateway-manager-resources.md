@@ -22,11 +22,11 @@ prereqs:
         - example-service
 related_resources:
   - text: Gateway Manager integration
-    url: /service-catalog/integrations/gateway-manager/
+    url: /catalog/integrations/gateway-manager/
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: "{{site.konnect_catalog}} integrations"
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
 ---
 
 ## Create a service in {{site.konnect_catalog}}

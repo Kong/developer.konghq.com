@@ -12,8 +12,8 @@ tags:
   - pagerduty
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 search_aliases:
   - service catalog
 works_on:
@@ -21,7 +21,7 @@ works_on:
 description: The PagerDuty integration allows you to provide a way to alert on information about current open incidents to consumers of the service directory.
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Import and map PagerDuty resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-pagerduty-resources/
 discovery_support: true
@@ -29,7 +29,7 @@ bindable_entities: "PagerDuty Service"
 ---
 
 The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory.
-{% include /service-catalog/multi-resource.md %}
+{% include /catalog/multi-resource.md %}
 
 For each linked PagerDuty service, a summary will be provided on the {{site.konnect_catalog}} service's details page, showing current unresolved incidents and the current on-call user.
 

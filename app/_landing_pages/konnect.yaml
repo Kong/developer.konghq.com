@@ -85,7 +85,7 @@ rows:
             icon: /assets/icons/service-hub.svg
             ctas:
               - text: Set up {{site.konnect_catalog}} integrations
-                url: /service-catalog/
+                url: /catalog/
                 align: end
 
   - header:

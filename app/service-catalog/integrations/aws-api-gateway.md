@@ -12,8 +12,8 @@ tags:
   - aws
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 search_aliases:
   - service catalog
 works_on:
@@ -22,7 +22,7 @@ description: The AWS API Gateway integration allows you to associate your {{site
 
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Import and map AWS API Gateway resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-aws-gateway-apis/
   - text: "Discover AWS Gateway APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
@@ -37,7 +37,7 @@ bindable_entities: "APIs"
 
 The AWS API Gateway integration allows you to associate your {{site.konnect_catalog}} service with one or more AWS API Gateway APIs.
 
-{% include /service-catalog/multi-resource.md %}
+{% include /catalog/multi-resource.md %}
 
 For complete tutorials, see the following:
 * [Discover and govern APIs with {{site.konnect_catalog}}](/how-to/discover-and-govern-apis-with-service-catalog/)

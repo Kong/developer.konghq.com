@@ -12,8 +12,8 @@ tags:
   - github
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 
 works_on:
     - konnect
@@ -22,7 +22,7 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Import and map GitHub resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-github-resources/
 discovery_support: true
@@ -32,7 +32,7 @@ bindable_entities: "Repositories"
 The GitHub integration allows you to associate your {{site.konnect_catalog}} service to one or more GitHub repositories.
 
 For each linked repository, the UI can show a **Repository Summary** with simple data pulled from the GitHub API, such as the number of open issues, open pull requests, most recently closed pull requests, languages, and more.
-{% include /service-catalog/multi-resource.md %}
+{% include /catalog/multi-resource.md %}
 
 For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map GitHub resources in {{site.konnect_catalog}}](/how-to/install-and-map-github-resources/).
 

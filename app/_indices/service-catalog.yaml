@@ -2,11 +2,11 @@ title: "Catalog Documentation"
 sections:
   - title: Overview
     items:
-      - path: /service-catalog/
-      - path: /service-catalog/scorecards/
-      - path: /service-catalog/integrations/
-      - path: /service-catalog/services/
+      - path: /catalog/
+      - path: /catalog/scorecards/
+      - path: /catalog/integrations/
+      - path: /catalog/services/
   - title: Integrations
     items:
-      - path: /service-catalog/integrations/**/*
+      - path: /catalog/integrations/**/*
     auto_exclude: true

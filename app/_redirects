@@ -147,3 +147,7 @@
 
 /operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
 
+# Service Catalog rename
+
+/service-catalog/*   /catalog/:splat   301
+/service-catalog     /catalog          301

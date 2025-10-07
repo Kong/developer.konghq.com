@@ -109,14 +109,14 @@ Each section uses the format:
 
 ## Service Catalog
 
-- [Service Catalog Overview](https://developer.konghq.com/service-catalog/): Repository of services, dependencies, and metadata for internal APIs.
-- [Service Catalog - Datadog Integration](https://developer.konghq.com/service-catalog/integrations/datadog/): Link Datadog monitors and dashboards to services.
-- [Service Catalog - GitHub Integration](https://developer.konghq.com/service-catalog/integrations/github/): Link GitHub repos to service records for ownership and CI/CD metadata.
-- [Service Catalog - GitLab Integration](https://developer.konghq.com/service-catalog/integrations/gitlab/): Sync GitLab projects and activity to the service registry.
-- [Service Catalog - PagerDuty Integration](https://developer.konghq.com/service-catalog/integrations/pagerduty/): Link on-call schedules and incident metadata to services.
-- [Service Catalog - SwaggerHub Integration](https://developer.konghq.com/service-catalog/integrations/swaggerhub/): Associate API documentation directly with SwaggerHub definitions.
-- [Service Catalog - Traceable Integration](https://developer.konghq.com/service-catalog/integrations/traceable/): Integrate service metadata with Traceable AI observability.
-- [Scorecards](https://developer.konghq.com/service-catalog/scorecards/): Configurable quality/security checks and compliance evaluations for services.
+- [Service Catalog Overview](https://developer.konghq.com/catalog/): Repository of services, dependencies, and metadata for internal APIs.
+- [Service Catalog - Datadog Integration](https://developer.konghq.com/catalog/integrations/datadog/): Link Datadog monitors and dashboards to services.
+- [Service Catalog - GitHub Integration](https://developer.konghq.com/catalog/integrations/github/): Link GitHub repos to service records for ownership and CI/CD metadata.
+- [Service Catalog - GitLab Integration](https://developer.konghq.com/catalog/integrations/gitlab/): Sync GitLab projects and activity to the service registry.
+- [Service Catalog - PagerDuty Integration](https://developer.konghq.com/catalog/integrations/pagerduty/): Link on-call schedules and incident metadata to services.
+- [Service Catalog - SwaggerHub Integration](https://developer.konghq.com/catalog/integrations/swaggerhub/): Associate API documentation directly with SwaggerHub definitions.
+- [Service Catalog - Traceable Integration](https://developer.konghq.com/catalog/integrations/traceable/): Integrate service metadata with Traceable AI observability.
+- [Scorecards](https://developer.konghq.com/catalog/scorecards/): Configurable quality/security checks and compliance evaluations for services.
 
 ---
 

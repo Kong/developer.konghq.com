@@ -12,8 +12,8 @@ tags:
   - swaggerhub
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 search_aliases:
   - service catalog
 works_on:
@@ -21,7 +21,7 @@ works_on:
 description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} services.
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Import and map SwaggerHub resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-swaggerhub-resources/
 discovery_support: true
@@ -29,7 +29,7 @@ bindable_entities: "SwaggerHub API version"
 ---
 
 The SwaggerHub integration lets you connect SwaggerHub API specs directly to your {{site.konnect_catalog}} services.
-{% include /service-catalog/multi-resource.md %}
+{% include /catalog/multi-resource.md %}
 
 For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map SwaggerHub resources in {{site.konnect_catalog}}](/how-to/install-and-map-swaggerhub-resources/).
 

@@ -12,8 +12,8 @@ tags:
   - slack
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 search_aliases:
   - service catalog
 works_on:
@@ -22,9 +22,9 @@ description: The Slack integration allows you to see Slack communication channel
 
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: Import and map Slack resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-slack-resources/
 discovery_support: true
@@ -35,7 +35,7 @@ mechanism: "pull/ingestion model"
 
 
 The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a {{site.konnect_catalog}} service.
-{% include /service-catalog/multi-resource.md %}
+{% include /catalog/multi-resource.md %}
 
 For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Slack resources in {{site.konnect_catalog}}](/how-to/install-and-map-slack-resources/).
 

@@ -13,11 +13,11 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: Datadog reference
-    url: /service-catalog/integrations/datadog/
+    url: /catalog/integrations/datadog/
 tldr:
   q: How do I view Datadog monitors and dashboards in {{site.konnect_catalog}}?
   a: Install the Datadog integration in {{site.konnect_short_name}} and authorize it using your API and app keys. Create a {{site.konnect_catalog}} service and associate it with your Datadog resources to display metadata and enable event tracking.

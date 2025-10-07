@@ -95,7 +95,7 @@ definitions:
       Each {{site.konnect_catalog}} service aggregates both internal tools, like Gateway and Mesh Services, and external integrations,
       like GitHub repositories and Slack webhooks.
     url: |
-      [{{site.konnect_catalog}}](/service-catalog/)
+      [{{site.konnect_catalog}}](/catalog/)
   - term: Super admin
     description: |
       A super admin is a specialized role in self-managed Kong Gateway that manages Workspaces, admins, roles, and customizes permissions.

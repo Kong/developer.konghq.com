@@ -15,13 +15,13 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: Traceable plugin
     url: /plugins/traceable/
   - text: Traceable reference
-    url: /service-catalog/integrations/traceable/
+    url: /catalog/integrations/traceable/
 automated_tests: false
 tldr:
   q: How do I view Traceable services in {{site.konnect_catalog}}?

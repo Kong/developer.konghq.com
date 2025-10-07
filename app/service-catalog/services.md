@@ -11,26 +11,26 @@ works_on:
 description: Learn about services in {{site.konnect_catalog}} and how to configure them.
 
 breadcrumbs:
-  - /service-catalog/
+  - /catalog/
 search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Scorecards
-    url: /service-catalog/scorecards/
+    url: /catalog/scorecards/
   - text: Traceable integration
-    url: /service-catalog/integrations/traceable/
+    url: /catalog/integrations/traceable/
   - text: GitHub integration
-    url: /service-catalog/integrations/github/
+    url: /catalog/integrations/github/
   - text: GitLab integration
-    url: /service-catalog/integrations/gitlab/
+    url: /catalog/integrations/gitlab/
   - text: SwaggerHub integration
-    url: /service-catalog/integrations/swaggerhub/
+    url: /catalog/integrations/swaggerhub/
   - text: Datadog integration
-    url: /service-catalog/integrations/datadog/
+    url: /catalog/integrations/datadog/
   - text: PagerDuty integration
-    url: /service-catalog/integrations/pagerduty/
+    url: /catalog/integrations/pagerduty/
 faqs:
   - q: What's the difference between a Gateway Service and a {{site.konnect_catalog}} service?
     a: |

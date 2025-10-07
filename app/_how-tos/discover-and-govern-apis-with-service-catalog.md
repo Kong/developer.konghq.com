@@ -16,11 +16,11 @@ search_aliases:
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: AWS API Gateway reference
-    url: /service-catalog/integrations/aws-api-gateway/
+    url: /catalog/integrations/aws-api-gateway/
 automated_tests: false
 tldr:
   q: How do I discover and govern third-party APIs in {{site.konnect_short_name}}?
@@ -64,7 +64,7 @@ Before you can discover APIs in {{site.konnect_catalog}}, you must configure the
 
 ### Configure the AWS API Gateway integration
 
-{% include /service-catalog/aws-api-gateway-integration.md %}
+{% include /catalog/aws-api-gateway-integration.md %}
 
 ### Configure the GitHub integration
 
@@ -114,7 +114,7 @@ Your integration APIs are now discoverable from one {{site.konnect_catalog}} ser
 
 ## Govern the APIs with scorecards
 
-Now that you've discovered and mapped the APIs to a {{site.konnect_catalog}} service, you can govern the service documentation of these ingested APIs with a [scorecard](/service-catalog/scorecards/). The built-in service documentation scorecard will alert you when your APIs don't adhere to [API documentation best practices](/service-catalog/scorecards/#service-documentation-linting).
+Now that you've discovered and mapped the APIs to a {{site.konnect_catalog}} service, you can govern the service documentation of these ingested APIs with a [scorecard](/catalog/scorecards/). The built-in service documentation scorecard will alert you when your APIs don't adhere to [API documentation best practices](/catalog/scorecards/#service-documentation-linting).
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/service-catalog/).
 1. In the Catalog sidebar, click **Scorecards**.

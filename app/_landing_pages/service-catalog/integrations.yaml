@@ -4,7 +4,7 @@ metadata:
   products:
     - catalog
   breadcrumbs:
-    - /service-catalog/
+    - /catalog/
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
     - integrations
@@ -55,7 +55,7 @@ rows:
             icon: /assets/icons/third-party/pagerduty.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/pagerduty/"
+                url: "/catalog/integrations/pagerduty/"
               - text: Tutorial
                 url: "/how-to/install-and-map-pagerduty-resources/"
       - blocks:
@@ -66,7 +66,7 @@ rows:
             icon: /assets/icons/third-party/github.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/github/"
+                url: "/catalog/integrations/github/"
               - text: Tutorial
                 url: "/how-to/install-and-map-github-resources/"
       - blocks:
@@ -77,7 +77,7 @@ rows:
             icon: /assets/icons/third-party/traceable.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/traceable/"
+                url: "/catalog/integrations/traceable/"
               - text: Tutorial
                 url: "/how-to/install-and-map-traceable-resources/"
       - blocks:
@@ -88,7 +88,7 @@ rows:
             icon: /assets/icons/third-party/gitlab.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/gitlab/"
+                url: "/catalog/integrations/gitlab/"
               - text: Self-managed tutorial
                 url: "/how-to/install-and-map-gitlab-resources/"
               - text: SaaS tutorial
@@ -101,7 +101,7 @@ rows:
             icon: /assets/icons/third-party/swaggerhub.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/swaggerhub/"
+                url: "/catalog/integrations/swaggerhub/"
               - text: Tutorial
                 url: "/how-to/install-and-map-swaggerhub-resources/"
       - blocks:
@@ -112,7 +112,7 @@ rows:
             icon: /assets/icons/third-party/datadog.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/datadog/"
+                url: "/catalog/integrations/datadog/"
               - text: Tutorial
                 url: "/how-to/install-and-map-datadog-resources/"
       - blocks:
@@ -123,7 +123,7 @@ rows:
             icon: /assets/icons/third-party/slack.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/slack/"
+                url: "/catalog/integrations/slack/"
               - text: Tutorial
                 url: "/how-to/install-and-map-slack-resources/"
       - blocks:
@@ -134,7 +134,7 @@ rows:
             icon: /assets/icons/aws.svg
             ctas:
               - text: Reference
-                url: "/service-catalog/integrations/aws-api-gateway/"
+                url: "/catalog/integrations/aws-api-gateway/"
               - text: Tutorial ({{site.konnect_short_name}} API)
                 url: "/how-to/discover-aws-gateway-apis-using-konnect-api/"
               - text: Tutorial ({{site.konnect_short_name}} UI)
@@ -153,7 +153,7 @@ rows:
               icon: /assets/icons/gateway.svg
               ctas:
                 - text: Reference
-                  url: "/service-catalog/integrations/gateway-manager/"
+                  url: "/catalog/integrations/gateway-manager/"
                 - text: Tutorial
                   url: "/how-to/map-gateway-manager-resources/"
       - blocks:
@@ -164,7 +164,7 @@ rows:
               icon: /assets/icons/analytics.svg
               ctas:
                 - text: Reference
-                  url: "/service-catalog/integrations/konnect-analytics/"
+                  url: "/catalog/integrations/konnect-analytics/"
                 - text: Tutorial
                   url: "/how-to/map-analytics-resources/"
       - blocks:
@@ -175,7 +175,7 @@ rows:
               icon: /assets/icons/mesh.svg
               ctas:
                 - text: Reference
-                  url: "/service-catalog/integrations/mesh-manager/"
+                  url: "/catalog/integrations/mesh-manager/"
                 - text: Tutorial
                   url: "/how-to/map-mesh-manager-resources/"
       

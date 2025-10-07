@@ -11,8 +11,8 @@ tags:
   - integrations
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 
 works_on:
     - konnect
@@ -23,7 +23,7 @@ related_resources:
   - text: Map Mesh Manager services in {{site.konnect_catalog}}
     url: /how-to/map-mesh-manager-resources/
   - text: "{{site.konnect_catalog}}"
-    url: /service-catalog/
+    url: /catalog/
 discovery_support: true
 discovery_default: true
 bindable_entities: "Mesh Service"
