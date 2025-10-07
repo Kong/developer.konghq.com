@@ -55,6 +55,7 @@ prereqs:
         1. Click the **Security** tab.
         1. Enable **Auto approve applications**. 
            This auto approves developer applications in your Dev Portal and makes it easier to test. 
+     1. Click **Save changes**.
         1. Click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
         1. In the Dev Portal sidebar, click [**APIs**](https://cloud.konghq.com/portals/apis/).
         1. Click [**New API**](https://cloud.konghq.com/portals/apis/create).
@@ -63,7 +64,7 @@ prereqs:
         1. Click **Gateway Service** tab.
         1. Click **Link Gateway Service**.
         1. From the **Control plane** dropdown menu, select "quickstart".
-        1. From the **Gateway Service** dropdown menu, select "example_service".
+        1. From the **Gateway Service** dropdown menu, select "example-service".
         1. Click **Submit**.
         1. Navigate to your Dev Portal URL:
            ```sh
@@ -132,14 +133,14 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
 1. In the Dev Portal sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
-1. Click the **DCR Providers** tab.
+1. Click the **DCR provider** tab.
 1. Click **New provider**.
 1. In the **Name** field, enter `Kong Identity`.
 1. In the **Provider Type** dropdown menu, select "Kong Identity".
 1. In the **Auth Server** field, select "Appointments Dev".
 1. Click **Save**.
-1. Click the **Auth Strategy** tab.
-1. Click **New Auth Strategy**.
+1. Click the **Authentication strategy** tab.
+1. Click **New authentication strategy**.
 1. In the **Name** field, enter `Kong Identity`.
 1. In the **Display name** field, enter `Kong Identity`.
 1. In the **Authentication Type** dropdown menu, select "DCR".

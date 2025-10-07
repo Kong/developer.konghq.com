@@ -61,8 +61,8 @@ In Dev Portal, you can create and use multiple DCR configurations. You can confi
 1. In the **Name** field, enter the name for your DCR provider.
 1. In the **Provider Type** dropdown menu, select your DCR provider.
 1. In the **Auth Server** field, select your auth server.
-1. Click **Save**.
-1. Click the **Auth Strategy** tab.
+1. Click **Create**.
+1. Click the **Authentication strategy** tab.
 1. Click **New Auth Strategy**.
 1. In the **Name** field, enter a name for your auth strategy.
 1. In the **Display name** field, enter a name for your auth strategy.
