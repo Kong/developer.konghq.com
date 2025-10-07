@@ -27,11 +27,6 @@ rows:
                     - "[Create an MCP Client](#create-an-mcp-client)"
                     - "[Sync with a discovered server](#sync-content)"
                     - "[Manage AI feature access](#disable-ai-features)"
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/insomnia/mcp-server-overview.png
-              alt_text: "Overview of an MCP Server in Insomnia"
 
   - header:
       type: h2
@@ -52,11 +47,6 @@ rows:
               text: Learn how to create an MCP Client
               url: /how-to/create-mcp-client/
               align: left
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/insomnia/mcp-client-discovery.png
-              alt_text: "MCP Client discovery workflow"
 
   - header:
       type: h2
@@ -90,12 +80,6 @@ rows:
                           Click **Resync** to update discovered Tools, Prompts, and Resources from the server. The server remains the **source of truth**.
                     {% endtable %}
                     <!-- vale on -->
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/insomnia/mcp-operations.png
-              alt_text: "MCP operation and transport overview"
-
   - header:
       type: h2
       text: "Deactivate AI features"
@@ -108,11 +92,6 @@ rows:
                   text: |
                     From **Preferences → AI Features**, organization **admins** can manage which AI-powered features are available to users. Each user activates or deactivates permitted features.  
                     If an admin disables a feature globally, the option appears greyed out with the tooltip: *“Your Insomnia administrator has disabled this feature for your organization.”*
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/insomnia/ai-feature-preferences.png
-              alt_text: "AI feature preferences in Insomnia"
 
   - header:
       text: "Frequently asked questions"
