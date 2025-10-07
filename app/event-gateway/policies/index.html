@@ -25,6 +25,9 @@ description: An overview of policies that work with {{site.event_gateway_short}}
           Policies can be used to intercept client connections and transform messages between the client and the broker.
           They can be used to do things like enforcing encryption strategies, validating schemas, and modifying message headers.
         </span>
+        {% for index in page.all_docs_indices %}
+          {% include_cached index_link.html index=index %}
+        {% endfor %}
       </div>
     </div>
     <div class="hidden lg:flex pt-9 pr-9 ">
