@@ -33,3 +33,4 @@ kongplugininstallation
 CACertificate
 KeySet
 ControlPlane
+virtual_cluster
