@@ -39,7 +39,7 @@ Configure Insomnia to contact the MCP Server and list all available Tools, Promp
 
 ---
 
-## Step 3: Handle authentication automatically
+## Handle authentication automatically
 
 When you connect to an MCP Server that requires authentication, Insomnia follows the **MCP Auth Flow**:
 

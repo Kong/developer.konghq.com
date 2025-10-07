@@ -80,21 +80,21 @@ Insomnia opens this callback URL automatically in your system browser.
 {% table %}
 columns:
 - title: Issue
- key: issue
+  key: issue
 - title: Resolution
- key: resolution
+  key: resolution
 rows:
 - issue: Authorization server returns an invalid client response
- resolution: |
+  resolution: |
    Check that the Client ID and Client Secret are correct, and that the redirect URI matches your app settings.
 - issue: Browser does not open during OAuth flow
- resolution: |
+  resolution: |
    Ensure that Insomnia can open URLs with your system default browser. The MCP Auth Flow currently supports browser-based OAuth only.
 - issue: Token obtained but requests still fail with **401 Unauthorized**
- resolution: |
+  resolution: |
    The MCP Server may require additional scopes. Update scopes in **Auth → OAuth 2.0 → Scope**.
 - issue: MCP Auth Flow not listed under OAuth 2.0
- resolution: |
+  resolution: |
    The server metadata didn’t include a valid authorization endpoint. Use a PAT or Basic Auth instead.
 {% endtable %}
 <!-- vale on -->
