@@ -3044,6 +3044,8 @@ components:
               name:
                 description: Name of the system account access token.
                 type: string
+            required:
+              - name
     CreateSystemAccountAccessToken:
       content:
         application/json:
@@ -3055,6 +3057,9 @@ components:
               expires_at:
                 type: string
                 format: date-time
+            required:
+              - name
+              - expires_at
           examples:
             Sample Access Token:
               value:
@@ -4319,6 +4324,7 @@ components:
                 description: The token of the system account access token.
                 type: string
                 readOnly: true
+                x-sensitive: true
             example:
               id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
               name: Sample Access Token

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect API Builder
-  version: 3.0.23
+  version: 3.0.24
   description: The management API for building APIs for Konnect Dev Portals.
   contact:
     name: Kong
@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v3'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v3'
+    description: Singapore Production region
 paths:
   /apis:
     post:

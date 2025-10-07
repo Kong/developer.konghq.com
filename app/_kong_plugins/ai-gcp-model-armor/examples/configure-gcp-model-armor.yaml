@@ -7,11 +7,20 @@ variables:
   gcp_service_account_json:
     description: GCP service account credentials in JSON format
     value: $GCP_SERVICE_ACCOUNT_JSON
+  project_id:
+    description: GCP project identifier
+    value: $GCP_PROJECT_ID
+  location_id:
+    description: GCP location identifier
+    value: $GCP_LOCATION_ID
+  template_id:
+    description: Guardrail template identifier
+    value: $GCP_TEMPLATE_ID
 
 config:
-  project_id: "your-gcp-project-id"
-  location_id: "us-central1"
-  template_id: "my-guardrail-template"
+  project_id: ${project_id}
+  location_id: ${location_id}
+  template_id: ${template_id}
   guarding_mode: "BOTH"
   gcp_use_service_account: true
   gcp_service_account_json: ${gcp_service_account_json}
@@ -21,6 +30,7 @@ config:
   timeout: 15000
   response_buffer_size: 4096
   text_source: "last_message"
+
 
 tools:
   - deck

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.1
+  version: 2.0.2
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /dcr-providers:
     post:

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management
-  version: 2.2.0
+  version: 2.2.1
   description: The management API for Portals
   contact:
     name: Kong
@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /portals:
     get:
@@ -6976,7 +6978,7 @@ components:
               - in
               - sg
               - '*'
-            reason: 'must be one of [us, eu, au, me, in, *]'
+            reason: 'must be one of [us, eu, au, me, in, sg, *]'
             source: body
     ListDevelopersBadRequestExample1:
       value:
