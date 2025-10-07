@@ -25,6 +25,7 @@ series:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.12'
@@ -117,6 +118,7 @@ Before you configure Prometheus, enable the [Prometheus plugin](/plugins/prometh
 entities:
   plugins:
     - name: prometheus
+      route: mcp-route
       config:
         status_code_metrics: true
         ai_metrics: true
@@ -132,14 +134,28 @@ touch prometheus.yml
 
 Now, add the following to the `prometheus.yml` file to configure Prometheus to scrape MCP traffic metrics:
 
+
 ```yaml
+cat <<EOF > prometheus.yml
 scrape_configs:
  - job_name: 'kong'
    scrape_interval: 5s
    static_configs:
      - targets: ['kong-quickstart-gateway:8001']
+EOF
 ```
 {: data-deployment-topology="on-prem" }
+
+```yaml
+cat <<EOF > prometheus.yml
+scrape_configs:
+ - job_name: 'kong'
+   scrape_interval: 5s
+   static_configs:
+     - targets: ['kong-quickstart-gateway:8100']
+EOF
+```
+{: data-deployment-topology="konnect" }
 
 
 Run a Prometheus server, and pass it the configuration file created in the previous step:

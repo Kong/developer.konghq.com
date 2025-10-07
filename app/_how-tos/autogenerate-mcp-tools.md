@@ -19,6 +19,7 @@ series:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.12'
@@ -58,6 +59,9 @@ prereqs:
       - mcp-service
     routes:
       - mcp-route
+  konnect:
+    - name: KONG_STATUS_LISTEN
+      value: '0.0.0.0:8100'
 
 automated_tests: false
 ---
