@@ -56,7 +56,7 @@ In Dev Portal, you can create and use multiple DCR configurations. You can confi
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
 1. In the Dev Portal sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
-1. Click the **DCR Providers** tab.
+1. Click the **DCR provider** tab.
 1. Click **New provider**.
 1. In the **Name** field, enter the name for your DCR provider.
 1. In the **Provider Type** dropdown menu, select your DCR provider.
@@ -93,6 +93,9 @@ body:
 <!--vale on-->
 {% endcapture %}
 {{ provider | indent: 3 }}
+   
+   {:.info}
+   > **Note:** The `DCR_TOKEN` is the token from your IdP.
 
 1. Export your DCR provider ID:
    ```sh

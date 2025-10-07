@@ -55,10 +55,10 @@ prereqs:
         1. Click the **Security** tab.
         1. Enable **Auto approve applications**. 
            This auto approves developer applications in your Dev Portal and makes it easier to test. 
-     1. Click **Save changes**.
+        1. Click **Save changes**.
         1. Click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
         1. In the Dev Portal sidebar, click [**APIs**](https://cloud.konghq.com/portals/apis/).
-        1. Click [**New API**](https://cloud.konghq.com/portals/apis/create).
+        1. Click **New API**.
         1. In the **API name** field, enter `test-kong-identity-dcr`.
         1. Click **Create**.
         1. Click **Gateway Service** tab.
