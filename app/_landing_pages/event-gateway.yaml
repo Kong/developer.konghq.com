@@ -129,7 +129,7 @@ rows:
               icon: /assets/icons/plug.svg
               cta:
                 text: Learn about policies
-                url: /event-gateway/entities/policies/
+                url: /event-gateway/entities/policy/
                 align: end
           
 

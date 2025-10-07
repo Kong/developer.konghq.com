@@ -9,7 +9,7 @@ related_resources:
   - text: "{{site.event_gateway}} Policy Hub"
     url: /event-gateway/policies/
   - text: "Policies"
-    url: /event-gateway/entities/policies/
+    url: /event-gateway/entities/policy/
   - text: "Backend Clusters"
     url: /event-gateway/entities/backend-clusters/
   - text: "Listeners"
