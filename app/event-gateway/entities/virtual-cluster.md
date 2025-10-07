@@ -191,13 +191,13 @@ This helps avoid overlapping from multiple tenants.
 You can do this by setting a prefix on the virtual cluster:
 
 ```sh
-curl -i -v -X POST https://us.api.konghq.tech/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
+curl -i -v -X POST https://us.api.konghq.com/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   -H "Content-Type: application/json" \
   --data '{
     "name": "example-virtual-cluster",
     "destination": {
-      "name": "test"
+      "name": "example-backend-cluster"
     },
     "authentication": [
       {
@@ -209,33 +209,10 @@ curl -i -v -X POST https://us.api.konghq.tech/v1/event-gateways/$EVENT_GATEWAY_I
       "prefix": "my-prefix"
     },
     "dns_label": "vcluster-1",
-    "acl_mode": "enforce_on_gateway"
   }'
 ```
 
-```
-  "namespace": {
-    "mode": "hide_prefix",
-    "prefix": "my-prefix",
-    "additional": {
-      "topics": [
-        {
-          "type": "glob",
-          "glob": "glob",
-          "conflict": "warn"
-        }
-      ],
-      "consumer_groups": [
-        {
-          "type": "glob",
-          "glob": "glob"
-        }
-      ]
-    }
-```
 In this example, the prefix `my-prefix` will be used for all consumer group and topics that connect via this virtual cluster.
-
-<!-- Commented out because I need a schema/spec here: Namespaces can either add a prefix automatically (implicit_prefix which is the default), or ensure that your application explicitly comply to the defined prefix by rejecting usages that do not include prefix (explicit_prefix) -->
 
 #### Applying prefixes to additional topics
 
@@ -247,13 +224,13 @@ You might do this to:
 Here's an example configuration using an exact list of topics:
 
 ```sh
-curl -i -v -X POST https://us.api.konghq.tech/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
+curl -i -v -X POST https://us.api.konghq.com/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   -H "Content-Type: application/json" \
   --data '{
     "name": "example-virtual-cluster",
     "destination": {
-      "name": "test"
+      "name": "example-backend-cluster"
     },
     "authentication": [
       {
@@ -278,7 +255,6 @@ curl -i -v -X POST https://us.api.konghq.tech/v1/event-gateways/$EVENT_GATEWAY_I
       }
     },
     "dns_label": "vcluster-1",
-    "acl_mode": "enforce_on_gateway"
   }'
 ```
 
@@ -292,13 +268,13 @@ You can apply prefixes to existing consumer groups to avoid migrating offsets.
 
 For example:
 ```sh
-curl -i -v -X POST https://us.api.konghq.tech/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
+curl -i -v -X POST https://us.api.konghq.com/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   -H "Content-Type: application/json" \
   --data '{
     "name": "example-virtual-cluster",
     "destination": {
-      "name": "test"
+      "name": "example-backend-cluster"
     },
     "authentication": [
       {
@@ -318,7 +294,6 @@ curl -i -v -X POST https://us.api.konghq.tech/v1/event-gateways/$EVENT_GATEWAY_I
       }
     },
     "dns_label": "vcluster-1",
-    "acl_mode": "enforce_on_gateway"
   }'
 ```
 End users of this virtual cluster can use their existing, unnamespaced consumer groups. 
