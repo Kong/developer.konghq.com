@@ -81,7 +81,7 @@ platform:
           product: dev-portal
         - text: "Catalog"
           url: /service-catalog/
-          product: service-catalog
+          product: catalog
 
 how_tos:
     - text: API Gateway
@@ -109,8 +109,8 @@ how_tos:
       url: /how-to/?products=dev-portal
       product: dev-portal
     - text: "Catalog"
-      url: /how-to/?products=service-catalog
-      product: service-catalog
+      url: /how-to/?products=catalog
+      product: catalog
 
 support:
   - text: Community
