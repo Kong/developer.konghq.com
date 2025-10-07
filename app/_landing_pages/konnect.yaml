@@ -198,6 +198,7 @@ rows:
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}}, {{site.base_gateway}}, and {{site.mesh_product_name}}"
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"
                     - "[{{site.konnect_short_name}} APIs](/konnect-api/): Manage all aspects of the {{site.konnect_short_name}} platform, applications, and runtimes using APIs"
+                    - "[Konnect AI assistant](/konnect-platform/kai/): Use {{site.konnect_short_name}}'s AI assistant, KAi, to detect issues and suggest fixes."
 
         
 

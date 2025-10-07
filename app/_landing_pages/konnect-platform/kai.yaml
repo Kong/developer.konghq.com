@@ -1,0 +1,57 @@
+metadata:
+  title: "Konnect AI assistant"
+  content_type: landing_page
+  description: Learn how to use {{site.konnect_short_name}}'s AI assistant, KAi.
+  products:
+    - konnect
+  breadcrumbs: 
+    - /konnect/
+  tags:
+    - AI
+    - MCP
+  beta: true
+
+rows:
+
+  - header:
+      type: h1
+      text: "Konnect AI assistant"
+      sub_text: Use {{site.konnect_short_name}}'s AI assistant, KAi, to detect issues and suggest fixes.
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}}'s AI assistant, KAi, can detect issues, suggest remediations, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
+                    You can enable KAi by contacting your Kong account manager. 
+
+                    KAi can help you do the following:
+                    * Investigate why an API is slow
+                    * See which Consumer has the highest usage for the API
+                    * With your permission, modify {{site.konnect_short_name}}'s configuration to fix any detected issues
+          - type: button
+            config:
+              text: "Try KAi in {{site.konnect_short_name}}"
+              url: https://cloud.konghq.com/dr-who-agent/welcome
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/kai.png
+              alt_text: "KAi"
+  
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Is the KAi AI assistant disabled by default?
+              a: Yes. You can enable it by contacting your Kong account manager.
+            - q: Does KAi automatically modify {{site.konnect_short_name}} configuration when it finds an issue?
+              a: No. KAi will ask for your permission before making any changes to {{site.konnect_short_name}} configuration. You can also approve modifications on a per session basis.
+            - q: Can all users see and modify the same resources with the AI assistant KAi?
+              a: No. Users can only see and modify {{site.konnect_short_name}} entities in KAi that they have permissions to via [teams and roles](/konnect-platform/teams-and-roles/). For example, if a user is a Portal Admin, they can see and modify Dev Portal entities, but they can't ask KAi about control planes or modify control planes.
