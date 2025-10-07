@@ -10,8 +10,6 @@ description: Use natural language to auto-generate a mock server in your Insomni
 
 tags:
 - mock-servers
-- ai
-- automated
 
 breadcrumbs:
   - /insomnia/
