@@ -1,0 +1,31 @@
+title: Allow TLS connections based on a condition
+
+description: Allow TLS connections to the {{site.event_gateway_short}} server based on a set of conditions.
+
+extended_description: |
+  Allow TLS connections to the {{site.event_gateway_short}} server based on a set of conditions.
+  In this case, the policy will only process messages from topics that end with a specific suffix.
+
+  The key value must be a reference to a secret.
+
+requirements:
+  - A certificate and key pair. The key must be stored as an environment variable.
+
+
+weight: 900
+
+name: tls
+type: tls_server
+condition: |
+  context.topic.name.endsWith('my_suffix')
+config:
+  certificates:
+    - certificate: certificate
+      key: "${env['MY_SECRET']}"
+  versions:
+    min: TLSv1.2
+    max: TLSv1.2
+  allow_plaintext: false
+
+tools:
+  - konnect-api
