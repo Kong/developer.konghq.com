@@ -11,7 +11,7 @@ related_resources:
   - text: Backend clusters
     url: /event-gateway/entities/backend-clusters/
   - text: Virtual clusters
-    url: /event-gateway/entities/virtual-clusters/
+    url: /event-gateway/entities/virtual-cluster/
 
 products:
     - event-gateway
