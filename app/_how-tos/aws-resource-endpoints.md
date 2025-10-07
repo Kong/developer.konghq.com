@@ -64,89 +64,9 @@ prereqs:
 faqs:
   - q: Which Availability Zones (AZs) does AWS resource endpoints support for Dedicated Cloud Gateway?
     a: |
-      Dedicated Cloud Gateways support the following AWS regions and [Availability Zones (AZ)](https://docs.aws.amazon.com/global-infrastructure/latest/regions/aws-availability-zones.html):
-
-      <!--vale off-->
-      {% table %}
-      columns:
-        - title: Region
-          key: region
-        - title: Supported Availability Zones
-          key: az
-      rows:
-        - region: "Ohio (`us-east-2`)"
-          az: |
-            * `use2-az1`
-            * `use2-az2`
-            * `use2-az3`
-        - region: "Oregon (`us-west-2`)"
-          az: |
-            * `usw2-az1`
-            * `usw2-az2`
-            * `usw2-az3`
-            * `usw2-az4`
-        - region: "N. Virginia (`us-east-1`)"
-          az: |
-            * `use1-az1`
-            * `use1-az2`
-            * `use1-az4`
-            * `use1-az5`
-            * `use1-az6`
-        - region: "N. California (`us-west-1`)"
-          az: |
-            * `usw1-az1`
-            * `usw1-az3`
-        - region: "Montreal (`ca-central-1`)"
-          az: |
-            * `cac1-az1`
-            * `cac1-az2`
-            * `cac1-az4`
-        - region: "Frankfurt (`eu-central-1`)"
-          az: |
-            * `euc1-az1`
-            * `euc1-az3`
-        - region: "Ireland (`eu-west-1`)"
-          az: |
-            * `euw1-az1`
-            * `euw1-az2`
-            * `euw1-az3`
-        - region: "London (`eu-west-2`)"
-          az: |
-            * `euw2-az1`
-            * `euw2-az2`
-            * `euw2-az3`
-        - region: "Paris (`eu-west-3`)"
-          az: |
-            * `euw3-az1`
-            * `euw3-az2`
-            * `euw3-az3`
-        - region: "Tokyo (`ap-northeast-1`)"
-          az: |
-            * `apne1-az4`
-            * `apne1-az1`
-            * `apne1-az2`
-        - region: "Seoul (`ap-northeast-2`)"
-          az: |
-            * `apne2-az1`
-            * `apne2-az3`
-        - region: "Mumbai (`ap-south-1`)"
-          az: |
-            * `aps1-az1`
-            * `aps1-az2`
-            * `aps1-az3`
-        - region: "Singapore (`ap-southeast-1`)"
-          az: |
-            * `apse1-az1`
-            * `apse1-az2`
-            * `apse1-az3`
-        - region: "Sydney (`ap-southeast-2`)"
-          az: |
-            * `apse2-az1`
-            * `apse2-az2`
-            * `apse2-az3`
-      {% endtable %}
-      <!--vale on-->
+      Dedicated Cloud Gateways supports [specific Availability Zones (AZs)](/konnect-platform/geos/#dedicated-cloud-gateways) in the supported AWS regions.
 ---
+
 AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 
 
 
@@ -154,6 +74,7 @@ AWS VPC endpoints, part of the AWS VPC Lattice offering, allow services in one A
 * Multiple PrivateLinks
 * Individual TLS workarounds for each service
 * Complex two-way handshakes
+
 ## Copy and save your {{site.konnect_short_name}} Account ID
 
 Before you can configure AWS, you'll need your account ID for AWS in {{site.konnect_short_name}}. AWS uses this account ID to configure the connection between your resource share in AWS and {{site.konnect_short_name}}.
@@ -183,6 +104,8 @@ To use AWS resource endpoints with Dedicated Cloud Gateways, you must first crea
 1. Click **Create resource share**.  
 
 ## Configure the resource endpoint connection in {{site.konnect_short_name}}
+
+Now that the resource share is configured in AWS, you can connect it with {{site.konnect_short_name}} to enable the resource endpoint connection.
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Networks**](https://cloud.konghq.com/global/networks/).
 1. Click the action menu icon next to your network.

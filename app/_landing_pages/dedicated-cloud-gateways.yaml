@@ -79,50 +79,43 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Transit Gateway
+              title: AWS
               description: |
                 Dedicated Cloud Gateways support both public and private networking on AWS.
                 Private networking provides enhanced security by restricting API exposure.
               icon: /assets/icons/aws.svg
               ctas:
-                - text: Set up Transit Gateways
+                - text: Transit gateways
                   url: /dedicated-cloud-gateways/transit-gateways/
-      - blocks:
-          - type: card
-            config:
-              title: Private hosted zones
-              description: |
-                Enable private DNS resolution for your Dedicated Cloud Gateway using either a private hosted zone or an Outbound DNS Resolver.
-              icon: /assets/icons/linked-services.svg
-              ctas:
-                - text: AWS tutorial
+                - text: Private zones
                   url: /dedicated-cloud-gateways/private-hosted-zones/
-                - text: GCP tutorial
-                  url: /dedicated-cloud-gateways/gcp-private-dns/
-      - blocks:
-          - type: card
-            config:
-              title: Virtual network peering
-              description: |
-                {{site.konnect_short_name}} can leverage virtual network peering to create virtual networks, ingest data from your provider's services, and expose them to the internet via {{site.konnect_short_name}}.
-              icon: /assets/icons/network.svg
-              ctas:
-                - text: Azure VNet peering
-                  url: /dedicated-cloud-gateways/azure-peering/
-                - text: GCP VPC peering
-                  url: /dedicated-cloud-gateways/gcp-vpc-peering/
-                - text: AWS VPC peering
+                - text: VPC peering
                   url: /dedicated-cloud-gateways/aws-vpc-peering/
+                - text: Resource endpoints
+                  url: /dedicated-cloud-gateways/aws-resource-endpoints/
       - blocks:
           - type: card
             config:
-              title: AWS resource endpoints
+              title: GCP
               description: |
-                Enable secure, one-way connectivity from {{site.konnect_short_name}}'s managed infrastructure to your upstream services— without requiring VPC peering or Transit Gateway.
-              icon: /assets/icons/aws.svg
+                Dedicated Cloud Gateways support both private DNS and VPC peering for Google Cloud.
+              icon: /assets/icons/google-cloud.svg
               ctas:
-                - text: Tutorial
-                  url: /dedicated-cloud-gateways/aws-resource-endpoints/
+                - text: Private DNS
+                  url: /dedicated-cloud-gateways/gcp-private-dns/
+                - text: VPC peering
+                  url: /dedicated-cloud-gateways/gcp-vpc-peering/
+      - blocks:
+          - type: card
+            config:
+              title: Azure
+              description: |
+                {{site.konnect_short_name}} can leverage Azure virtual network peering to create virtual networks, ingest data from your provider's services, and expose them to the internet via {{site.konnect_short_name}}.
+              icon: /assets/icons/azure.svg
+              ctas:
+                - text: VNet peering
+                  url: /dedicated-cloud-gateways/azure-peering/
+      
 
   - header:
       type: h2
