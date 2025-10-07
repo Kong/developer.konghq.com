@@ -20,6 +20,7 @@ series:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.12'
@@ -68,7 +69,9 @@ prereqs:
         - weather-service
     routes:
         - weather-route
-automated_tests: false
+  konnect:
+    - name: KONG_STATUS_LISTEN
+      value: '0.0.0.0:8100'
 ---
 
 ## Add an API key using the Request Transformer Advanced plugin
