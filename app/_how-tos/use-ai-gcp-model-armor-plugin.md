@@ -78,12 +78,12 @@ prereqs:
       icon_url: /assets/icons/gcp.svg
     - title: Model Armor Service Account and Template
       content: |
-            To use the AI GCP Model Armor plugin, you need a service account with **Model Armor Admin** permissions and a configured Model Armor template.
+            To use the AI GCP Model Armor plugin, you need a service account with **Model Armor Admin** permissions and a configured Model Armor template:
 
             1. **Check your IAM permissions:**
             Your service account must have the [`roles/modelarmor.admin`](https://cloud.google.com/iam/docs/roles-permissions/modelarmor) IAM role.
 
-            2. Create the service account by executing the following command in your terminal:
+            2. Create the `modelarmor-admin` service account in your GCP by executing the following command in your terminal:
             ```bash
             gcloud iam service-accounts create modelarmor-admin \
                 --description="Service account for Model Armor administration" \
@@ -91,7 +91,11 @@ prereqs:
                 --project=$DECK_GCP_PROJECT_ID
             ```
 
-            3. Create and activate a key file by executing the following commands:
+            Here’s your revised step with the new instruction included:
+
+
+            3. Create and activate a service account key file by executing the following commands:
+
             ```bash
             gcloud iam service-accounts keys create modelarmor-admin-key.json \
                 --iam-account=modelarmor-admin@$DECK_GCP_PROJECT_ID.iam.gserviceaccount.com
@@ -99,6 +103,15 @@ prereqs:
             gcloud auth activate-service-account \
                 --key-file=modelarmor-admin-key.json
             ```
+
+            After creating the key, convert the contents of `modelarmor-admin-key.json` into a **single-line JSON string**.
+            Escape all necessary characters — quotes (`"`) and newlines (`\n`) — so that it becomes a valid one-line JSON string.
+            Then export it as an environment variable:
+
+            ```bash
+            export DECK_GCP_SERVICE_ACCOUNT_JSON="<single-line-escaped-json>"
+            ```
+
 
             4. **Enable the Model Armor API by execute the following commands:
 
@@ -108,6 +121,7 @@ prereqs:
             ```
 
             5. Create a Model Armor template with strict guardrails. This template blocks **hate speech, harassment, and sexually explicit content** at medium confidence or higher, enforces PI/jailbreak and malicious URI filters, and logs all inspection events. Execute the following command to create the template:
+
             ```bash
             gcloud model-armor templates create strict-guardrails \
                 --project=$DECK_GCP_PROJECT_ID \
@@ -220,7 +234,9 @@ Once the AI GCP Model Armor is configured, you can test different kinds of promp
 
 
 {% navtabs "gcp-model-armor-validate" %}
-{% navtab "Content Filter: Hate Speech" %}
+{% navtab "Content filter: Hate speech" %}
+
+This test verifies that the content filter blocks hate speech and derogatory requests.
 
 {% validation request-check %}
 url: /anything
@@ -236,7 +252,9 @@ message: 404 Bad request Your request was blocked by content policies
 
 
 {% endnavtab %}
-{% navtab "Content Filter: Dangerous" %}
+{% navtab "Content filter: Dangerous" %}
+
+This test ensures the filter blocks requests for dangerous or illegal instructions.
 
 {% validation request-check %}
 url: /anything
@@ -252,7 +270,9 @@ message: 404 Bad request Your request was blocked by content policies
 
 
 {% endnavtab %}
-{% navtab "Content Filter: Harassment" %}
+{% navtab "Content filter: Harassment" %}
+
+This test checks that harassment, threats, and abusive messaging are blocked.
 
 {% validation request-check %}
 url: /anything
@@ -268,7 +288,9 @@ message: 404 Bad request Your request was blocked by content policies
 
 
 {% endnavtab %}
-{% navtab "Safe Prompt Control" %}
+{% navtab "Safe prompt control" %}
+
+This test confirms that benign, everyday requests are allowed through the system.
 
 {% validation request-check %}
 url: /anything
@@ -278,6 +300,7 @@ body:
   messages:
     - role: user
       content: Explain how to make a cup of tea.
+status_code: 200
 {% endvalidation %}
 
 {% endnavtab %}
