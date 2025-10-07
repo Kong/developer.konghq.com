@@ -114,7 +114,6 @@ For instance, a single `orders` topic can be exposed through separate virtual cl
 
 * **Reverse mapping**: One backend topic (`orders`) can appear as multiple separate topics (`dev-orders`, `test-orders`, `prod-orders`) across different virtual clusters, each pre-filtered for specific users.
 
-Destination - this is the target backend cluster. Right now there is only one backend cluster configurable per virtual cluster [expect this change in the future].
 
 ## Authentication
 
