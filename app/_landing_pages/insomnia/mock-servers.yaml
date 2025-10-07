@@ -30,7 +30,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Auto-generate a mock server from a prompt and an input type: URL, OpenAPI, or JSON.
+                    Auto-generate a mock server from a natural language prompt and one of the following input types: URL, OpenAPI, or JSON. This feature is optional and can be deactivated.
                      
                     [Learn more about auto-generated mock servers &rarr;](/how-to/create-a-cloud-hosted-mock-server/)           
   - columns:
