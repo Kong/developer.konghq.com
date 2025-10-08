@@ -25,7 +25,7 @@ icon: graph.svg
 policy_target: virtual_cluster
 
 related_resources:
-  - text: Virtual Cluster
+  - text: Virtual cluster
     url: /event-gateway/entities/virtual-clusters/
 ---
 
