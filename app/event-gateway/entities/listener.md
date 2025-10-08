@@ -1,5 +1,5 @@
 ---
-title: "Listeners"
+title: "{{site.event_gateway_short}} listeners"
 content_type: reference
 layout: reference
 
@@ -9,11 +9,11 @@ related_resources:
   - text: "{{site.event_gateway}} Policy Hub"
     url: /event-gateway/policies/
   - text: "Policies"
-    url: /event-gateway/entities/policies/
+    url: /event-gateway/entities/policy/
   - text: "Virtual clusters"
-    url: /event-gateway/entities/virtual-clusters/
+    url: /event-gateway/entities/virtual-cluster/
   - text: "Backend clusters"
-    url: /event-gateway/entities/backend-clusters/
+    url: /event-gateway/entities/backend-cluster/
 
 tools:
     - konnect-api
@@ -43,7 +43,7 @@ schema:
 
 A listeners represents hostname-port or IP-port combinations that connect to TCP sockets. A listener can have policies that enforce TLS certificates and perform SNI routing. The listener runs at Layer 4 of the network stack.
 
-In {{site.event_gateway}}, listeners first take in the connection and then route the TCP connection to a [virtual cluster](/event-gateway/entities/virtual-clusters/) based on conditions defined in [listener policies](/event-gateway/entities/policies/#listener-policies).
+In {{site.event_gateway}}, listeners first take in the connection and then route the TCP connection to a [virtual cluster](/event-gateway/entities/virtual-cluster/) based on conditions defined in [listener policies](/event-gateway/entities/policy/#listener-policies).
 
 
 ## Schema
