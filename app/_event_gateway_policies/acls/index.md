@@ -22,6 +22,8 @@ phases:
 
 icon: graph.svg
 
+policy_target: virtual_cluster
+
 related_resources:
   - text: Virtual Cluster
     url: /event-gateway/entities/virtual-clusters/
