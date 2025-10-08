@@ -17,8 +17,6 @@ schema:
 api_specs:
   - event-gateway/knep
 
-beta: true
-
 related_resources:
   - text: Encrypt policy
     url: /event-gateway/policies/encrypt/
@@ -31,8 +29,10 @@ policy_target: virtual_cluster
 icon: graph.svg
 ---
 
-This policy is used to decrypt messages that were previously encrypted using the referenced key. 
+The Decrypt policy decrypts portions of Kafka messages that were previously encrypted using the referenced key.
 Use this policy to enforce standards for decryption across {{site.event_gateway}} clients.
+
+The Decrypt policy uses AES-128-GCM for decryption, therefore keys must be 128 bits long.
 
 ## Use cases
 
@@ -55,4 +55,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## Key sources
+
+{% include_cached /knep/key-sources.md name=page.name %}
 
