@@ -78,7 +78,7 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 {% navtab "Terraform" %}
 TODO
 ```sh
-resource "konnect_gateway_listener" "my_listener" {
+resource "konnect_event_gateway_listener" "my_listener" {
   name = "listener-localhost"
   addresses = [
     "0.0.0.0"
@@ -86,7 +86,7 @@ resource "konnect_gateway_listener" "my_listener" {
   ports = [
     "19092"
   ]
-  control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
+  gateway_id = konnect_event_gateway.my_eventgateway.id
 }
 ```
 {% endnavtab %}
