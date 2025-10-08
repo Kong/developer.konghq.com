@@ -102,9 +102,12 @@ Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D="C:\Program
 
 ## GUI uninstall
 
-1. Go to **Settings → Apps → Installed** apps.
-2. Find Insomnia in the list and select the ellipsis (⋯).
-3. Click **Uninstall**, and then confirm.
+1. In the Windows Start menu, click **Settings**.
+2. Click **Apps**.
+3. Click  **Installed**.
+4. Click the more icon (⋯) next to Insomnia.
+5. Click **Uninstall**.
+6. Click **Confirm**.
 
 ## Silent uninstall
 
