@@ -120,7 +120,7 @@
 /dev-portal/snippets/   /dev-portal/pages-and-content/
 /dev-portal/application-registration/   /dev-portal/self-service/
 /dev-portal/access-and-approval/    /dev-portal/self-service/
-/dev-portal/publishing/ /dev-portal/apis/
+/dev-portal/publishing/ /catalog/apis/
 
 
 # Gateway LTS
@@ -151,3 +151,5 @@
 
 /service-catalog/*   /catalog/:splat   301
 /service-catalog     /catalog          301
+/dev-portal/apis/ /catalog/apis/
+/index/service-catalog/ /index/catalog/
