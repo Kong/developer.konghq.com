@@ -12248,7 +12248,7 @@ paths:
             description: |-
                 You can access request and database audit logs through the Admin API.
                 The default order of audit log is by request timestamp - latest to oldest.
-                For usage examples, see [Audit Logging in Kong Gateway](https://developer.konghq.com/gateway/Audit Logs/).
+                For usage examples, see [Audit Logging in Kong Gateway](https://developer.konghq.com/gateway/audit-logs/)
             operationId: get-audit-requests
             parameters:
                 - $ref: '#/components/parameters/beforeAuditLogFilter'
