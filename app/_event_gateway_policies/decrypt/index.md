@@ -50,7 +50,7 @@ rows:
     description: Decrypt a key based on a specific key reference name.
 
   - use_case: "[Decrypt all keys](/event-gateway/policies/decrypt/examples/decrypt-everything/)"
-    description: Define a static key source and decrypt all keys that come from that source.
+    description: Define an AWS key source and decrypt all keys that come from that source.
 
 {% endtable %}
 <!--vale on-->
