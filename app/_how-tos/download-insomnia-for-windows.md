@@ -68,8 +68,8 @@ no_wrap: true
 ---
 
 Insomnia for Windows includes two installers: Nullsoft Scriptable Install System (NSIS) and Squirrel. Use this page to install Insomnia using the NSIS installer.
-- Desktop install: Run the NSIS .exe file and follow the steps in the installation window.
-- Silent install: Run the NSIS .exe file with the /S argument and optional parameters to install or uninstall without user interaction.
+- **Desktop Install**: Run the NSIS .exe file and follow the steps in the installation window.
+- **Silent Install**: Run the NSIS .exe file with the /S argument and optional parameters to install or uninstall without user interaction.
 
 {% navtabs "windows install" %}
 {% navtab "Desktop Install" %}
