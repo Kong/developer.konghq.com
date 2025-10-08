@@ -56,6 +56,8 @@ flowchart LR
     C --> D[Backend 
     cluster]
 
+    D --> C --> B --> A
+
     style C stroke:#86e2cc
 {% endmermaid %}
 
@@ -81,9 +83,8 @@ rows:
 
   - use_case: "Authentication and mediation"
     description: |
-    Use authentication mediation to control access between clients and backend clusters. 
-    {{site.event_gateway_short}} authenticates clients (for example, with OAuth tokens) 
-    and re-authenticates separately when forwarding requests to the backend.
+      Use authentication mediation to control access between clients and backend clusters. 
+      {{site.event_gateway_short}} authenticates clients (for example, with OAuth tokens) and re-authenticates separately when forwarding requests to the backend.
 
   - use_case: "Topic and cluster virtualization"
     description: |
