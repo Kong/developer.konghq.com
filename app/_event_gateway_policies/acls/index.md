@@ -47,7 +47,7 @@ columns:
 rows:
   - use_case: "[Allow read-only access to a topic](./examples/read-only-topic/)"
     description: Allow the authenticated principal to consume messages for a specific topic.
-  - use_case: "[Allow consumer group management](./examples/manage-consumer-group/)"
+  - use_case: "[Allow consumer group management](./examples/manage-consumer-groups/)"
     description: Allow the authenticated principal to create and delete consumer groups.
 
 {% endtable %}
