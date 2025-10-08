@@ -78,7 +78,7 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 {% navtab "Terraform" %}
 TODO
 ```sh
-resource "konnect_event_gateway_listener" "my_listener" {
+resource "konnect_event_gateway_listener" "my_eventgatewaylistener" {
   name = "listener-localhost"
   addresses = [
     "0.0.0.0"
