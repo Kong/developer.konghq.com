@@ -19,20 +19,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). Insomnia offers cloud-hosted mock servers, but you can also deploy self-hosted mocks.
-
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                type: h2
-                text: "Auto-generated mocks"
-              blocks:
-                - type: text
-                  text: | 
-                    Auto-generate a mock server from a natural language prompt and one of the following input types: URL, OpenAPI, or JSON. This feature is optional and can be deactivated.
-                     
-                    [Learn more about auto-generated mock servers &rarr;](/how-to/create-a-cloud-hosted-mock-server/)           
+                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). Insomnia offers cloud-hosted mock servers, but you can also deploy self-hosted mocks.           
   - columns:
       - blocks:
           - type: structured_text
@@ -58,6 +45,18 @@ rows:
                   Enterprise users can deploy self-hosted mock servers using [Insomnia Mockbin](https://github.com/kong/insomnia-mockbin). This allows you to have more control over usage for your mocks.
 
                   [Learn more about self-hosted mock servers &rarr;](/insomnia/self-hosted-mocks/)
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h2
+                text: "Auto-generated mocks"
+              blocks:
+                - type: text
+                  text: | 
+                    Auto-generate a mock server from a natural language prompt and one of the following input types: URL, OpenAPI, or JSON. This feature is optional and can be deactivated.
+                     
+                    [Learn more about auto-generated mock servers &rarr;](/how-to/create-a-cloud-hosted-mock-server/)            
   - columns:
       - blocks:
           - type: structured_text

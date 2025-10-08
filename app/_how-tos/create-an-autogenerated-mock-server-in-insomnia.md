@@ -38,7 +38,7 @@ You can create a fully configured mock server in Insomnia using a natural langua
 
 The mock server opens and is ready for testing and editing.
 
-## (Optional) Disable AI-generated mock servers
+## (Optional) Deactivate AI-generated mock servers
 
 You can deactivate the AI feature:
 
@@ -54,7 +54,7 @@ When deactivated, the **Auto Generate** option no longer appears in the mock cre
 
 After the mock server is created:
 
-- Use the **Mock Tester** tab to send requests and inspect responses.
+- To send requests and inspect responses, use the **Mock Tester** tab.
 - Confirm that the generated endpoints and responses match your expectations.
 - Edit the mock server configuration as needed.
 
