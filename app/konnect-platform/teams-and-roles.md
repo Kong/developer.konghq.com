@@ -137,27 +137,68 @@ columns:
   - title: Dev Portal roles
     key: roles
 rows:
-  - persona: ""
-    description:
-    roles:
-  - persona:
-    description:
-    roles:
-  - persona:
-    description:
-    roles:
-  - persona:
-    description:
-    roles:
-  - persona:
-    description:
-    roles:
-  - persona:
-    description:
-    roles:
-  - persona:
-    description:
-    roles:
+  - persona: "API Platform Owner"
+    description: |
+      An API Platform Owner has full access to create, configure, and delete resources related to APIs, Portals, and Applications.
+    roles: |
+      * Portal Creator
+      * Portal Admin *
+      * Application Auth Strategy Creator
+      * Application Auth Strategy Maintainer *
+      * DCR Provider Creator
+      * DCR Provider Maintainer *
+      * API Creator
+      * API Admin *
+      * API Publisher *
+  - persona: "API Security Owner"
+    description: |
+      An API Security Owner can create, update, and delete auth strategies used between APIs and Applications.
+    roles: |
+      * Application Auth Strategy Creator
+      * Application Auth Strategy Maintainer *
+      * DCR Provider Creator
+      * DCR Provider Maintainer *
+  - persona: Portal Owner
+    description: |
+      A Portal Owner has full access to configure a Dev Portal and manage applications in a Dev Portal.
+    roles: |
+      * Portal Admin {portalId}
+      * Application Auth Strategy Viewer {authStrategyId}
+      * API Viewer {apiId} (for APIs they can approve access to)
+      * (optional) API Publisher {apiId}
+  - persona: Portal Maintainer
+    description: |
+      A Portal Maintainer has full access to configure a Dev Portal and manage applications in a Dev Portal. 
+      They cannot delete the Dev Portal.
+    roles: |
+      * Portal Admin {portalId}
+      * Application Auth Strategy Viewer {authStrategyId}
+      * API Viewer {apiId} (for APIs they can approve access to)
+      * (optional) API Publisher {apiId}
+  - persona: API Owner
+    description: |
+      An API Owner has full access to define, configure, and publish an API to Dev Portal(s) and approve registrations for the API.
+    roles: |
+      * Application Auth Strategy Viewer {authStrategyId}
+      * API Admin {apiId}
+      * API Publisher {apiId}
+      * API Approver {apiId}
+      * Portal Viewer {portalId} (for Dev Portals they can publish or approve registrations in)
+  - persona: API Maintainer
+    description: |
+      An API Maintainer has full access to define, configure, and publish an API to Dev Portal(s) and approve registrations for the API.
+      They cannot delete the API.
+    roles: |
+      * Application Auth Strategy Viewer {authStrategyId}
+      * API Maintainer {apiId}
+      * API Publisher {apiId}
+      * API Approver {apiId}
+      * Portal Viewer {portalId}
+  - persona: Portal Content Editor
+    description: |
+      The Portal Content Editor can create, update, and delete pages and other content in a Dev Portal.
+    roles: |
+      Portal Content Editor {portalId}
 {% endtable %}
 <!--vale on-->
 
@@ -305,6 +346,565 @@ rows:
   - role: "`Content Editor`"
     description: Edits Dev Portal pages, snippets, and customization.
 {% endtable %}
+
+The following matrix describes exactly which actions each role can perform on each entity:
+
+{% feature_table %} 
+item_title: CRUD permissions
+columns:
+  - title: Entity scope
+    key: scope
+  - title: Admin
+    key: admin
+  - title: Maintainer
+    key: maintainer
+  - title: Appearance maintainer
+    key: appearance
+  - title: Content editor
+    key: content
+  - title: Product publisher
+    key: product
+  - title: Viewer
+    key: viewer
+  - title: Creator
+    key: creator
+
+features:
+  - title: "Create Dev Portals"
+    scope: Org
+    admin: false
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: true
+    
+  - title: "Read Dev Portals"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: true
+    content: true
+    product: true
+    viewer: true
+    creator: true
+    
+  - title: "Edit Dev Portal"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Delete Dev Portal"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "List Dev Portals"
+    scope: Org
+    admin: true
+    maintainer: true
+    appearance: true
+    content: true
+    product: true
+    viewer: true
+    creator: true
+    
+  - title: "List applications"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: false
+    viewer: true
+    creator: false
+    
+  - title: "Create applications"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Read applications"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: false
+    viewer: true
+    creator: false
+    
+  - title: "Edit applications"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Delete applications"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "List developers"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: false
+    viewer: true
+    creator: false
+    
+  - title: "Create developers"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Read developer"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: false
+    viewer: true
+    creator: false
+    
+  - title: "Edit developer"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Delete developer"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Create teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Edit team"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Delete team"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Read team"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "List teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Add a role to teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Remove a role from teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "List roles in teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Add a developer to teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Remove a developer from teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "List developers in teams"
+    scope: Dev Portal
+    admin: true
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Create ppvs"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: true
+    viewer: false
+    creator: false
+    
+  - title: "Edit ppvs"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: true
+    viewer: false
+    creator: false
+    
+  - title: "Delete ppvs"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: true
+    viewer: false
+    creator: false
+    
+  - title: "Read ppvs"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: true
+    viewer: true
+    creator: false
+    
+  - title: "List ppvs"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: true
+    viewer: true
+    creator: false
+    
+  - title: "Edit Dev Portal appearance"
+    scope: Dev Portal
+    admin: false
+    maintainer: true
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: false
+    
+  - title: "Publish product to Dev Portal"
+    scope: Dev Portal
+    admin: true
+    maintainer: true
+    appearance: false
+    content: false
+    product: true
+    viewer: false
+    creator: false
+    
+  - title: "Edit pages"
+    scope: Dev Portal
+    admin: false
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: true
+    
+  - title: "Edit snippets"
+    scope: Dev Portal
+    admin: false
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: true
+  
+  - title: "Edit customization"
+    scope: Dev Portal
+    admin: false
+    maintainer: false
+    appearance: false
+    content: false
+    product: false
+    viewer: false
+    creator: true
+
+{% endfeature_table %}
+
+Auth strategy and DCR:
+{% feature_table %}
+item_title: CRUD permissions
+columns:
+  - title: Entity scope
+    key: scope
+  - title: Auth strategy creator
+    key: auth-creator
+  - title: Auth strategy maintainer
+    key: auth-maintainer
+  - title: Auth strategy viewer
+    key: auth-viewer
+  - title: DCR provider creator
+    key: dcr-creator
+  - title: DCR provider maintainer
+    key: dcr-maintainer
+  - title: DCR provider viewer
+    key: dcr-viewer
+
+features:
+  - title: "Create DCR providers"
+    scope: Org
+    auth-creator: false
+    auth-maintainer: false
+    auth-viewer: false
+    dcr-creator: true
+    dcr-maintainer: false
+    dcr-viewer: false
+  - title: "Edit DCR provider"
+    scope: DCR provider
+    auth-creator: false
+    auth-maintainer: false
+    auth-viewer: false
+    dcr-creator: false
+    dcr-maintainer: true
+    dcr-viewer: false
+  - title: "Delete DCR provider"
+    scope: DCR provider
+    auth-creator: false
+    auth-maintainer: false
+    auth-viewer: false
+    dcr-creator: false
+    dcr-maintainer: true
+    dcr-viewer: false
+  - title: "Read DCR provider"
+    scope: DCR provider
+    auth-creator: false
+    auth-maintainer: false
+    auth-viewer: false
+    dcr-creator: true
+    dcr-maintainer: true
+    dcr-viewer: true
+  - title: "Create auth strategy"
+    scope: Auth strategy
+    auth-creator: true
+    auth-maintainer: false
+    auth-viewer: false
+    dcr-creator: false
+    dcr-maintainer: false
+    dcr-viewer: false
+  - title: "Edit auth strategy"
+    scope: Dev Portal
+    auth-creator: false
+    auth-maintainer: true
+    auth-viewer: false
+    dcr-creator: false
+    dcr-maintainer: false
+    dcr-viewer: false
+  - title: "Delete auth strategy"
+    scope: Dev Portal
+    auth-creator: false
+    auth-maintainer: true
+    auth-viewer: false
+    dcr-creator: false
+    dcr-maintainer: false
+    dcr-viewer: false
+  - title: "Read auth strategy"
+    scope: Dev Portal
+    auth-creator: true
+    auth-maintainer: true
+    auth-viewer: true
+    dcr-creator: false
+    dcr-maintainer: false
+    dcr-viewer: false
+  - title: "List auth strategies"
+    scope: Dev Portal
+    auth-creator: true
+    auth-maintainer: true
+    auth-viewer: true
+    dcr-creator: false
+    dcr-maintainer: false
+    dcr-viewer: false
+{% endfeature_table %}
+
+Table for APIs permissions:
+
+{% feature_table %}
+item_title: CRUD permissions
+columns:
+  - title: Entity scope
+    key: scope
+  - title: Creator
+    key: creator
+  - title: Admin
+    key: admin
+  - title: Maintainer
+    key: maintainer
+  - title: Viewer
+    key: viewer
+  - title: Publisher
+    key: publisher
+  - title: Registration Approver
+    key: registration_approver
+
+features:
+  - title: "Create APIs"
+    scope: Org
+    creator: true
+    admin: false
+    maintainer: false
+    viewer: false
+    publisher: false
+    registration_approver: false
+
+  - title: "Read APIs"
+    scope: API
+    creator: false
+    admin: true
+    maintainer: true
+    viewer: true
+    publisher: true
+    registration_approver: true
+  - title: "Edit APIs"
+    scope: API
+    creator: false
+    admin: true
+    maintainer: true
+    viewer: false
+    publisher: false
+    registration_approver: false
+  - title: "Delete APIs"
+    scope: API
+    creator: false
+    admin: true
+    maintainer: false
+    viewer: false
+    publisher: false
+    registration_approver: false
+  - title: "List APIs"
+    scope: Org
+    creator: false
+    admin: true
+    maintainer: true
+    viewer: true
+    publisher: true
+    registration_approver: true
+  - title: "Publish API in all Dev Portals"
+    scope: API
+    creator: false
+    admin: false
+    maintainer: false
+    viewer: false
+    publisher: true
+    registration_approver: false
+  - title: "Grant API access"
+    scope: API
+    creator: false
+    admin: false
+    maintainer: false
+    viewer: false
+    publisher: false
+    registration_approver: true
+{% endfeature_table %}
 
 #### Application auth strategies
 
