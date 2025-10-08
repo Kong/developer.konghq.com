@@ -1,5 +1,5 @@
 ---
-title: "Backend clusters"
+title: "{{site.event_gateway_short}} backend clusters"
 content_type: reference
 
 description: |
@@ -8,11 +8,11 @@ related_resources:
   - text: "{{site.event_gateway}} Policy Hub"
     url: /event-gateway/policies/
   - text: "Policies"
-    url: /event-gateway/entities/policies/
-  - text: "Virtual Clusters"
-    url: /event-gateway/entities/virtual-clusters/
+    url: /event-gateway/entities/policy/
+  - text: "Virtual clusters"
+    url: /event-gateway/entities/virtual-cluster/
   - text: "Listeners"
-    url: /event-gateway/entities/listeners/
+    url: /event-gateway/entities/listener/
 
 tools:
     - konnect-api
