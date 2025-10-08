@@ -56,6 +56,9 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up {{site.konnect_short_name}} environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
 
 automated_tests: false
 ---
