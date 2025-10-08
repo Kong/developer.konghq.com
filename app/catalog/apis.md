@@ -24,7 +24,7 @@ search_aliases:
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:
-  - text: Automate your API catalog with Catalog and Dev Portal
+  - text: Automate your API catalog with the Konnect API
     url: /how-to/automate-api-catalog/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
@@ -42,12 +42,12 @@ faqs:
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
     a: |
-      [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Catalog and Dev Portal](/how-to/automate-api-catalog/).
+      [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
 ---
 
 {:.success}
 > This is a reference guide, you can also follow along with our tutorials: 
->* [Automate your API catalog with Catalog and Dev Portal](/how-to/automate-api-catalog/)
+>* [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/)
 >* [Automate your API catalog with Terraform](/how-to/automate-api-catalog-with-terraform/)
 
 An API is the interface that you publish to your end customer. They can, and should, include an OpenAPI or AsyncAPI specification or additional documentation to help users get started with your API. 
