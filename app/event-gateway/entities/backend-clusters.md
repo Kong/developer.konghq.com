@@ -80,7 +80,7 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 {% navtab "Terraform" %}
 TODO
 ```sh
-resource "konnect_gateway_backend_cluster" "my_backend_cluster" {
+resource "konnect_event_gateway_backend_cluster" "my_eventgatewaybackendcluster" {
   bootstrap_servers = [
     "kafka:9092"
   ]
@@ -93,7 +93,7 @@ resource "konnect_gateway_backend_cluster" "my_backend_cluster" {
   }
   name = "example-backend-cluster"
   metadata_update_interval_seconds = 60
-  control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
+  gateway_id = konnect_event_gateway.my_eventgateway.id
 }
 ```
 {% endnavtab %}
