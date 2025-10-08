@@ -7,10 +7,6 @@ breadcrumbs:
 
 permalink: /event-gateway/get-started/
 
-series:
-  id: event-gateway-get-started
-  position: 1
-
 products:
     - event-gateway
 
@@ -93,7 +89,7 @@ Now, let's configure a proxy and test your first virtual cluster setup.
 Run the following command to create a new backend cluster linked to the local Kafka server we created in the [prerequisites](#start-a-local-kafka-server):
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/backend-clusters
+url: /v1/event-gateways/$KONNECT_GATEWAY_CLUSTER_ID/backend-clusters
 status_code: 201
 method: POST
 body:
@@ -118,14 +114,14 @@ export BACKEND_CLUSTER_ID="YOUR-BACKEND-CLUSTER-ID"
 Run the following command to create a new virtual cluster associated with our backend cluster:
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/virtual-clusters
+url: /v1/event-gateways/$KONNECT_GATEWAY_CLUSTER_ID/virtual-clusters
 status_code: 201
 method: POST
 body:
-  name: team-a
+  name: example.mycompany.com
   destination:
     id: $BACKEND_CLUSTER_ID
-  dns_label: my-hostname-label
+  dns_label: example.mycompany.com
   authentication:
     - type: anonymous
 {% endkonnect_api_request %}
@@ -141,7 +137,7 @@ export VIRTUAL_CLUSTER_ID="YOUR-VIRTUAL-CLUSTER-ID"
 Run the following command to create a new listener:
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/listeners
+url: /v1/event-gateways/$KONNECT_GATEWAY_CLUSTER_ID/listeners
 status_code: 201
 method: POST
 body:
@@ -153,12 +149,33 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Add a policy
+Export the listener ID to your environment:
+```sh
+export LISTENER_ID="YOUR-LISTENER-ID"
+```
+
+## Add a listener policy
+
+Run the following command to add a listener policy that forwards messages to our virtual cluster:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$KONNECT_GATEWAY_CLUSTER_ID/listeners/$LISTENER_ID/policies
+status_code: 201
+method: POST
+body:
+  type: forward_to_virtual_cluster
+  config:
+    type: sni
+    sni_suffix: example.mycompany.com
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Add a virtual cluster policy
 
 Run the following command to add a consume policy that adds a new header on the virtual cluster:
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/event-gateways/$KONNECT_EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
+url: /v1/event-gateways/$KONNECT_GATEWAY_CLUSTER_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
 status_code: 201
 method: POST
 body:

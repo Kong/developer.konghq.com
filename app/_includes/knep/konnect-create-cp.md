@@ -13,5 +13,5 @@ body:
 Export the Event Gateway ID to your environment:
 
 ```sh
-export KONNECT_EVENT_GATEWAY_ID="YOUR-EVENT-GATEWAY-ID"
+export KONNECT_GATEWAY_CLUSTER_ID="YOUR-EVENT-GATEWAY-ID"
 ```
