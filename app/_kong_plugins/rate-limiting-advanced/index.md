@@ -152,6 +152,14 @@ You must provide the same number of windows and limits
 ```
 {:.no-copy-code}
 
+## Namespace
+
+The namespace field is auto-generated for the plugin instance, it's optional when configuring the plugin through the Admin API or decK
+
+If you are managing {{site.base_gateway}} with decK or running {{site.base_gateway}} in DB-less mode, set the namespace explicitly in your declarative configuration.
+Otherwise the field will be regenerated automatically with every update.
+
+
 ## Strategies
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
