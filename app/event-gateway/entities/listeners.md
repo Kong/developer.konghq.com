@@ -78,10 +78,14 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 {% navtab "Terraform" %}
 TODO
 ```sh
-resource "konnect_gateway_backend-cluster" "my_backend-cluster" {
-  addresses = ["0.0.0.0"]
-  ports = ["19092"]
-
+resource "konnect_gateway_listener" "my_listener" {
+  name = "listener-localhost"
+  addresses = [
+    "0.0.0.0"
+  ]
+  ports = [
+    "19092"
+  ]
   control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
 }
 ```
