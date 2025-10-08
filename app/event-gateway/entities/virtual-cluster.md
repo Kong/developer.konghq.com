@@ -41,7 +41,7 @@ Virtual clusters are the primary way clients interact with the {{site.event_gate
 They allow you to isolate clients from each other when connecting to the same [backend cluster](/event-gateway/entities/backend-clusters/), 
 and provide each client with modified view while still appearing as a standard Kafka cluster.
 
-Here's how it works:
+The virtual cluster workflow operates as follows:
 1. The Kafka client produces an event.
 1. A listener forwards it to the correct virtual cluster.
 1. The virtual cluster applies policies and proxies the modified event data to the backend cluster.
@@ -81,8 +81,9 @@ rows:
 
   - use_case: "Authentication and mediation"
     description: |
-      Manage client authentication to the proxy with authentication mediation. 
-      {{site.event_gateway_short}} can validate client credentials (like an OAuth token) before using separate credentials to connect to the upstream backend cluster.
+    Use authentication mediation to control access between clients and backend clusters. 
+    {{site.event_gateway_short}} authenticates clients (for example, with OAuth tokens) 
+    and re-authenticates separately when forwarding requests to the backend.
 
   - use_case: "Topic and cluster virtualization"
     description: |
@@ -103,7 +104,7 @@ rows:
 
 You will need to increase the number of virtual clusters if you want to create multiple environments or products on top of the same physical cluster.
 
-Here are some examples:
+Here are some common patterns:
 
 * **Environment isolation**: You can create isolated `dev`, `test`, and `prod` namespaces on top of the same physical Kafka cluster.
 If you have a topic named `orders` in each virtual cluster, it can map to different backend topics: `dev-orders`, `test-orders`, and `prod-orders`. 
@@ -120,7 +121,7 @@ For instance, a single `orders` topic can be exposed through separate virtual cl
 Authentication on the virtual cluster is used to authenticate clients to the proxy. 
 The virtual cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters.
 
-The following auth methods are supported:
+Supported methods:
 
 {% table %}
 columns:
@@ -177,12 +178,9 @@ With namespaces, you can preserve any naming systems that you have in place, and
 Namespaces let you:
 * Rewrite and enforce topic and consumer group names with a consistent prefix
 * Expose topics and consumer groups through the virtual cluster
-
-### Examples
-
 The following examples provide some common use cases for namespaces and show how to set them up.
 
-#### Apply prefixes automatically
+### Apply prefixes automatically
 
 The most common use case for namespaces is to automatically prefix `read` and `create` operations when interacting with topics and consumer groups. 
 This helps avoid overlapping from multiple tenants.
@@ -208,12 +206,12 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-In this example, the prefix `my-prefix` will be used for all consumer group and topics that connect via this virtual cluster.
+In this example, the prefix `my-prefix` will be used for all consumer group and topics that connect to this virtual cluster.
 
-#### Applying prefixes to additional topics
+### Applying prefixes to additional topics
 
 Along with topics owned by a specific team, you can apply prefixes to a select group of additional topics.
-You might do this to:
+This is useful when you want to:
 * Consume topics owned by other teams
 * Gradually migrate to a namespace while still using old topics temporarily
 
@@ -262,11 +260,10 @@ You can also pass an exact list of topics as an array:
 ]
 ```
 
-#### Applying prefixes to additional consumer groups
+### Applying prefixes to additional consumer groups
 
-You can apply prefixes to existing consumer groups to avoid migrating offsets.
+You can apply prefixes to existing consumer groups to avoid migrating offsets:
 
-For example:
 
 <!--vale off-->
 {% konnect_api_request %}
