@@ -80,8 +80,10 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 {% navtab "Terraform" %}
 TODO
 ```sh
-resource "konnect_gateway_backend-cluster" "my_backend-cluster" {
-  bootstrap_servers = ["kafka:9092"]
+resource "konnect_gateway_backend_cluster" "my_backend_cluster" {
+  bootstrap_servers = [
+    "kafka:9092"
+  ]
   authentication = {
     type = "anonymous"
   }
@@ -89,7 +91,8 @@ resource "konnect_gateway_backend-cluster" "my_backend-cluster" {
   tls = {
     insecure_skip_verify = false
   }
-
+  name = "example-backend-cluster"
+  metadata_update_interval_seconds = 60
   control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
 }
 ```
