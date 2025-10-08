@@ -1,5 +1,5 @@
 ---
-title: "{{site.event_gateway}} Listeners"
+title: "Listeners"
 content_type: reference
 layout: reference
 
@@ -39,7 +39,7 @@ schema:
     path: /schemas/Listener
 ---
 
-## What is a Listener?
+## What is a listener?
 
 A listeners represents hostname-port or IP-port combinations that connect to TCP sockets. A listener can have policies that enforce TLS certificates and perform SNI routing. The listener runs at Layer 4 of the network stack.
 
