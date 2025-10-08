@@ -52,22 +52,23 @@ no_wrap: true
 ---
 
 Insomnia for Windows offers two installers:
-- **Desktop Install**: Run the NSIS .exe file and follow the steps in the installation window.
-- **Silent Install**: Run the NSIS .exe file with the `/S` argument and optional parameters to install or uninstall without user interaction.
+- **Desktop Install**: Run the installation application and follow the steps in the installation wizard.
+- **Silent Install**: Run the application from the command line with the `/S` argument and optional parameters to install without user interaction.
 
 ## Install Insomnia
+
 {% navtabs "windows install" %}
 {% navtab "Desktop install" %}
 
-Before you install, close any open Insomnia applications. The NSIS installer can't update files that are actively in use.
+Before you install, close any open Insomnia applications. The installer can't update files that are actively in use.
 
 1. Go to the [latest Insomnia release](https://github.com/Kong/insomnia/releases/tag/core%40{{ site.data.insomnia_latest.version }}) on GitHub.
-1. From the **Assets** section, click `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` to download the NSIS installer.
+1. From the **Assets** section, click `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` to download the installer.
 1. From your downloads folder, select the `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
 1. Click **Yes** to run the installer.
 {% endnavtab %}
 {% navtab "Silent install" %}
-After installing the NSIS installer, run the installer with the `/S` flag to perform a silent installation:
+After installing the installer, run the installer with the `/S` flag to perform a silent installation:
 
 ```powershell
 Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S
