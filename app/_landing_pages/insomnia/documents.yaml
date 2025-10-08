@@ -102,10 +102,6 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {:.warning}
-                    > **Notice:** Unit tests are planned for deprecation in a future release.
-                    > [Learn about scripts](/insomnia/scripts/)
-                    
                     Documents bundle all API testing ability together.
 
                 - type: unordered_list
@@ -118,6 +114,16 @@ rows:
               align: left
               text: Learn more about testing APIs
               url: /insomnia/test/
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {:.info}
+                      > Unit tests are planned for deprecation in a future release.
+                      > [Migrate to scripts](/insomnia/scripts/)
+
+
 
   - header:
       type: h3
