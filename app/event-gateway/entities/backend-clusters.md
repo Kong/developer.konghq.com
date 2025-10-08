@@ -1,5 +1,5 @@
 ---
-title: "{{site.event_gateway}} Backend Clusters"
+title: "Backend clusters"
 content_type: reference
 
 description: |
@@ -38,7 +38,7 @@ schema:
     path: /schemas/BackendCluster
 ---
 
-## What is a Backend Cluster?
+## What is a backend cluster?
 
 A backend cluster in {{site.konnect_short_name}} is an abstraction a real Kafka cluster that runs in your environment. The backend cluster contains the connection details to the Kafka cluster proxied by {{site.event_gateway}}.
 
@@ -48,7 +48,7 @@ There can be multiple Kafka clusters proxied through the same gateway. {{site.ev
 
 {% entity_schema %}
 
-## Set up a Backend Cluster
+## Set up a backend cluster
 
 {% navtabs "backend-cluster" %}
 
@@ -99,7 +99,7 @@ resource "konnect_event_gateway_backend_cluster" "my_eventgatewaybackendcluster"
 {% endnavtab %}
 
 {% navtab "UI" %}
-The following creates a new Backend Cluster called **example-backend-cluster** with basic configuration:
+The following creates a new backend cluster called **example-backend-cluster** with basic configuration:
 1. In {{site.konnect_short_name}}, navigate to [**Event Gateway**](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click your event gateway.
 1. Navigate to **Backend Clusters** in the sidebar.
