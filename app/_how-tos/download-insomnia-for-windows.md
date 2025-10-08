@@ -1,13 +1,9 @@
 ---
-title: Download Insomnia on Windows with NSIS installer
-
+title: Install Insomnia on Windows
 content_type: how_to
-
 products:
 - insomnia
-
-description: Learn how to install Insomnia on a Windows device with the NSIS installer.
-
+description: Learn how to install Insomnia on a Windows device.
 tags:
   - insomnia
   - install
@@ -29,32 +25,20 @@ prereqs:
 
 tldr:
   q: How do I download Insomnia on a Windows device?
-  a: Go to the [latest Insomnia release](https://github.com/Kong/insomnia/releases/tag/core%40{{ site.data.insomnia_latest.version }}) on GitHub and download the `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
+  a: Go to the [latest Insomnia release](https://github.com/Kong/insomnia/releases/tag/core%40{{ site.data.insomnia_latest.version }}) on GitHub and download `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
 faqs:
-  - q: How do I uninstall Insomnia from my Windows device?
-    a: |
-      1. Before you uninstall, close any open Insomnia windows. If any are left open, Insomnia won't uninstall completely.
-      1. On your Windows device, go to **Settings > Apps > Installed apps**.
-      1. Find Insomnia in the list of installed applications and select the ellipsis (⋯).
-      1. Click **Uninstall**.
-      1. Click **Finish**.
-
-      To uninstall Insomnia silently, run the uninstaller with the /S flag:
-      ```powershell
-      "%ProgramFiles%\Insomnia\Uninstall.exe" /S
-      ```
   - q: How do I specify a custom directory during a silent install?
     a: |
       To specify a custom directory, add `/D=path`:
       ```powershell
       Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D=C:\Insomnia
       ```
-  - q: Is the `/D="C:\Program Files\Insomnia"` needed to run the installer?
+  - q: How do I change the default installation path? 
     a: |
-      No. You only need to include the `/D=` option if you want to change the default installation path.  
-      If not specified, Insomnia installs to the default location for your installation type: 
+      You can use the `/D=` flag if you want to change the default installation path.  
+      If not specified, Insomnia installs to the following directories:
       - **System-wide installation**: `C:\Program Files\Insomnia`  
-      - **Per-user installation**: `C:\Users\<username>\AppData\Local\Programs\Insomnia`  
+      - **Per-user installation**: `C:\Users\$USERNAME\AppData\Local\Programs\Insomnia`  
       
       Use `/D=your_path` only when you want to specify a custom installation directory.
      
@@ -67,56 +51,65 @@ next_steps:
 no_wrap: true    
 ---
 
-Insomnia for Windows includes two installers: Nullsoft Scriptable Install System (NSIS) and Squirrel. Use this page to install Insomnia using the NSIS installer.
+Insomnia for Windows offers two installers:
 - **Desktop Install**: Run the NSIS .exe file and follow the steps in the installation window.
-- **Silent Install**: Run the NSIS .exe file with the /S argument and optional parameters to install or uninstall without user interaction.
+- **Silent Install**: Run the NSIS .exe file with the `/S` argument and optional parameters to install or uninstall without user interaction.
 
+## Install Insomnia
 {% navtabs "windows install" %}
-{% navtab "Desktop Install" %}
+{% navtab "Desktop install" %}
 
-## Download the installer
-Before you install, close any open Insomnia windows. The NSIS installer can't update files that are actively in use.
+Before you install, close any open Insomnia applications. The NSIS installer can't update files that are actively in use.
 
 1. Go to the [latest Insomnia release](https://github.com/Kong/insomnia/releases/tag/core%40{{ site.data.insomnia_latest.version }}) on GitHub.
 1. From the **Assets** section, click `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` to download the NSIS installer.
-
-## Run the installer
 1. From your downloads folder, select the `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
-2. Click **Yes** to run the installer.
-
-## Follow the setup wizard
-
-Once you've run the installer, you can use the Insomnia setup wizard to complete the installation.
-
-1. Select your preference for the distribution of software, and then select **Next**.
-2. In the **Destination Folder** field, enter the install location of the Insomnia file.
-3. Click **Install**.
-4. Click **Finish**.
-
+1. Click **Yes** to run the installer.
 {% endnavtab %}
-{% navtab "Silent Install" %}
-
-## Run the installer
+{% navtab "Silent install" %}
 After installing the NSIS installer, run the installer with the `/S` flag to perform a silent installation:
+
 ```powershell
 Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S
 ```
-{:.info}
-> Silent installs use default options unless specifically overridden. To specify a custom directory, add `/D=path`: 
+
+Silent installs use default options unless specifically overridden. 
+To specify a custom directory, add `/D=path`: 
+
 ```powershell
 Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D=C:\Insomnia
 ```
 
 {% endnavtab %}
-{% navtab "Admin Deployment" %}
-
-## Run the installer
+{% navtab "Admin install" %}
 
 For system-wide installations, run the installer with administrator privileges:
+
 ```powershell
 Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D="C:\Program Files\Insomnia"
 ```
+{% endnavtab %}
+{% endnavtabs %}
+
+
+## Uninstall Insomnia
+Before uninstalling, make sure all Insomnia windows are closed.
+If the app is still running, the uninstallation may not complete successfully.
+
+{% navtabs "Uninstall" %}
+{% navtab "Uninstall via settings" %}
+
+1. On your Windows device, go to **Settings > Apps > Installed apps**.
+1. Find Insomnia in the list of installed applications and select the ellipsis (⋯).
+1. Click **Uninstall**.
+1. Click **Finish**.
 
 {% endnavtab %}
+{% navtab "Uninstall silently (optional)" %}
+To uninstall Insomnia silently, run the uninstaller with the /S flag:
 
+```powershell
+"%ProgramFiles%\Insomnia\Uninstall.exe" /S
+```
+{% endnavtab %}
 {% endnavtabs %}
