@@ -189,27 +189,24 @@ This helps avoid overlapping from multiple tenants.
 
 You can do this by setting a prefix on the virtual cluster:
 
-```sh
-curl -i -v -X POST https://us.api.konghq.com/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  -H "Content-Type: application/json" \
-  --data '{
-    "name": "example-virtual-cluster",
-    "destination": {
-      "name": "example-backend-cluster"
-    },
-    "authentication": [
-      {
-        "type": "anonymous"
-      }
-    ],
-    "namespace": {
-      "mode": "hide_prefix",
-      "prefix": "my-prefix"
-    },
-    "dns_label": "vcluster-1",
-  }'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
+status_code: 201
+method: POST
+body:
+  name: example-virtual-cluster
+  destination:
+    name: example-backend-cluster
+  authentication:
+    - type: anonymous
+  dns_label: virtual-cluster-1
+  acl_mode: enforce_on_gateway
+  namespace:
+    mode: hide_prefix
+    prefix: "my-prefix"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 In this example, the prefix `my-prefix` will be used for all consumer group and topics that connect via this virtual cluster.
 
@@ -222,82 +219,96 @@ You might do this to:
 
 Here's an example configuration using an exact list of topics:
 
-```sh
-curl -i -v -X POST https://us.api.konghq.com/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  -H "Content-Type: application/json" \
-  --data '{
-    "name": "example-virtual-cluster",
-    "destination": {
-      "name": "example-backend-cluster"
-    },
-    "authentication": [
-      {
-        "type": "anonymous"
-      }
-    ],
-    "namespace": {
-      "mode": "hide_prefix",
-      "prefix": "my-prefix",
-      "additional": {
-        "topics": [
-          {
-            "type": "exact_list",
-            "list": [
-              {
-                "backend": "allowed_topic"
-              }
-            ],
-            "conflict": "warn"
-          }
-        ]
-      }
-    },
-    "dns_label": "vcluster-1",
-  }'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
+status_code: 201
+method: POST
+body:
+  name: example-virtual-cluster
+  destination:
+    name: example-backend-cluster
+  authentication:
+    - type: anonymous
+  dns_label: virtual-cluster-1
+  acl_mode: enforce_on_gateway
+  namespace:
+    mode: hide_prefix
+    prefix: "my-prefix"
+    additional:
+      topics:
+        - type: glob
+          glob: "my-topic-*"
+          conflict: warn
+{% endkonnect_api_request %}
+<!--vale on-->
 
 These topics are accessed using their full unmodified names.
 
-You could also use a glob expression to capture topics using name patterns.
+This example uses a glob expression to capture topics using name patterns. 
+You can also pass an exact list of topics as an array:
+
+```sh
+"topics": [
+  {
+    "type": "exact_list",
+    "list": [
+      {
+        "backend": "allowed_topic",
+        "backend": "another_allowed_topic"
+      }
+    ]
+  }
+]
+```
 
 #### Applying prefixes to additional consumer groups
 
 You can apply prefixes to existing consumer groups to avoid migrating offsets.
 
 For example:
-```sh
-curl -i -v -X POST https://us.api.konghq.com/v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  -H "Content-Type: application/json" \
-  --data '{
-    "name": "example-virtual-cluster",
-    "destination": {
-      "name": "example-backend-cluster"
-    },
-    "authentication": [
-      {
-        "type": "anonymous"
-      }
-    ],
-    "namespace": {
-      "mode": "hide_prefix",
-      "prefix": "my-prefix",
-      "additional": {
-        "consumer_groups": [
-          {
-            "type": "glob",
-            "glob": "glob"
-          }
-        ]
-      }
-    },
-    "dns_label": "vcluster-1",
-  }'
-```
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
+status_code: 201
+method: POST
+body:
+  name: example-virtual-cluster
+  destination:
+    name: example-backend-cluster
+  authentication:
+    - type: anonymous
+  dns_label: virtual-cluster-1
+  acl_mode: enforce_on_gateway
+  namespace:
+    mode: hide_prefix
+    prefix: "my-prefix"
+    additional:
+      consumer_groups:
+        - type: glob
+          glob: "my-app-*"
+          conflict: warn
+{% endkonnect_api_request %}
+<!--vale on-->
 End users of this virtual cluster can use their existing, unnamespaced consumer groups. 
 
-You could also use a glob expression to capture consumer groups using name patterns.
+This example uses a glob expression to capture consumer groups using name patterns. 
+You can also pass an exact list of consumer groups as an array:
+
+```sh
+"consumer_groups": [
+  {
+    "type": "exact_list",
+    "list": [
+      {
+        "value": "foo",
+        "value": "bar"
+      }
+    ]
+  }
+]
+```
 
 ## Virtual cluster policies
 
@@ -329,6 +340,7 @@ body:
   authentication:
     - type: anonymous
   dns_label: virtual-cluster-1
+  acl_mode: enforce_on_gateway
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -352,7 +364,62 @@ At this point, you can choose to add a policy, or exit out and add a policy late
 {% endnavtab %}
 {% navtab "Terraform" %}
 
-TO DO
+Add the following to your Terraform configuration to create a virtual cluster:
+
+```hcl
+resource "konnect_event_gateway_virtual_cluster" "my_eventgatewayvirtualcluster" {
+  provider    = konnect-beta
+  acl_mode    = "enforce_on_gateway"
+  authentication = [
+    {
+      sasl_plain = {
+        mediation = "passthrough"
+        principals = [
+          {
+            password = "${env['MY_SECRET']}"
+            username = "example_username"
+          }
+        ]
+      }
+    }
+  ]
+  description = "This is my virtual cluster"
+  destination = {
+    name = "example-backend-cluster"
+  }
+  dns_label  = "vcluster-1"
+  gateway_id = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
+  labels = {
+    key = "value"
+  }
+  name = "my-example-virtual-cluster"
+  namespace = {
+    additional = {
+      consumer_groups = [
+        {
+          glob = {
+            glob = "my-topic-*"
+          }
+        }
+      ]
+      topics = [
+        {
+          exact_list = {
+            conflict = "warn"
+            exact_list = [
+              {
+                backend = "example-backend"
+              }
+            ]
+          }
+        }
+      ]
+    }
+    mode   = "hide_prefix"
+    prefix = "my-prefix"
+  }
+}
+```
 
 {% endnavtab %}
 {% endnavtabs %}
