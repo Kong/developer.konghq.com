@@ -25,8 +25,8 @@ icon: graph.svg
 policy_target: virtual_cluster
 
 related_resources:
-  - text: Virtual cluster
-    url: /event-gateway/entities/virtual-clusters/
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
 ---
 
 The ACLs (access control lists) policy allows you to manage authorization for your [virtual cluster](/event-gateway/entities/virtual-cluster/). You can define the actions that an authenticated principal can perform on your resources.
