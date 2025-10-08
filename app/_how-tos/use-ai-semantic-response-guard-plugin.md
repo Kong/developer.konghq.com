@@ -153,9 +153,9 @@ variables:
 Once configured, test prompts that should yield allowed responses versus disallowed ones. Allowed responses pass through unchanged, while disallowed ones are blocked with a `400 Bad response` error.
 
 {% navtabs "semantic-response-guard-tests" %}
-{% navtab "Allowed: Secure coding" %}
+{% navtab "Allowed: Productivity tools" %}
 
-This prompt asks for secure coding best practices and should be allowed:
+This prompt asks for advice about good tools for productivity:
 
 {% validation request-check %}
 url: /anything
@@ -165,7 +165,7 @@ headers:
 body:
   messages:
     - role: user
-      content: What are common secure coding practices to prevent SQL injection and cross-site scripting?
+      content: "Tell me about good tools for productivity"
 {% endvalidation %}
 
 {% endnavtab %}
