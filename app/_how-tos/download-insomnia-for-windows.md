@@ -95,7 +95,8 @@ Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D="C:\Program
 
 ## Uninstall Insomnia
 Before uninstalling, make sure all Insomnia windows are closed.
-If the app is still running, the uninstallation may not complete successfully.
+
+If the app is still running, the uninstall may not complete successfully.
 
 {% navtabs "Uninstall" %}
 {% navtab "Uninstall via settings" %}
