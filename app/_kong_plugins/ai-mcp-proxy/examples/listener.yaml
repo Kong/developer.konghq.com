@@ -1,0 +1,32 @@
+description: 'Generate an MCP server from {{ site.base_gateway }} services'
+
+title: 'Generate an MCP server using listener mode'
+
+extended_description: |
+  Listener mode works together with `conversion-only` mode.
+  - Configure one or more Routes with the plugin in `conversion-only` mode.
+    Each `conversion-only` Route defines tools and assigns them a `tags` value.
+  - Configure a separate Route with the plugin in `listener` mode (shown below).
+    The listener uses [`config.server.tag`](/plugins/ai-mcp-proxy/reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server.
+
+weight: 900
+
+requirements:
+- "At least one Route with the plugin in `conversion-only` mode, tagged with the same value as `server.tag`"
+
+config:
+  mode: listener
+  server:
+    tag: weather-tools
+    timeout: 45000
+  logging:
+    log_statistics: true
+    log_payloads: false
+  max_request_body_size: 32768
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

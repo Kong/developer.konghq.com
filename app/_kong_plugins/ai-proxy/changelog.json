@@ -1,4 +1,81 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added `time_to_first_token` and `request_mode` for observability.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Anthropic provider mapped the wrong `stop_reason` to Chat and Completions responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Anthropic provider failed to stream function call responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Anthropic provider could truncate tokens in streaming responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI chat completion's `tool_choice` was not converted to Anthropic's.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `model` field was incorrect in Gemini responses when a variable was used as the model name.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `model` field was missing in OpenAI-format Gemini responses in some situations.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the Gemini provider did not properly handle multiple tool calls across different turns.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where an empty array was encoded as an empty object in structured output.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS stream parser didn't parse correctly when the frame was incomplete.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where JSON array data wasn't correctly parsed.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with Azure Managed Identity credentials causing improper request balancing.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock did not properly handle image editing requests through the `image/v1/images/edits` route.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock streaming requests would panic when the ai-semantic-cache plugin was enabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the resource was not being passed correctly when using Azure as the provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where large request payload was not logged.\n",
@@ -96,6 +173,40 @@
     },
     {
       "message": "Fixed an issue where resource was not being passed correctly when using Azure as provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.3": [
+    {
+      "message": "Fixed an issue where the Anthropic provider mapped the wrong stop_reason to Chat and Completions responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where JSON array data is not correctly parsed.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with Azure Managed Identity credentials causing improper request balancing.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock did not properly handle image editing requests through the `image/v1/images/edits` route.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fix panic in LLM observability when populating token usage for AI Proxy token usage details\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.4": [
+    {
+      "message": "Fixed an issue when empty array in structured output was encoded as empty object.",
       "type": "bugfix",
       "scope": "Plugin"
     }

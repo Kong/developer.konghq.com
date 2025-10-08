@@ -1,0 +1,42 @@
+description: |
+  Configure the AI Azure Content Safety plugin to check requests and responses, and block content matching harm categories defined by Azure.
+
+extended_description: |
+  Configure the plugin to block request and response content matching the `Hate` and `Violence` categories [defined by Azure](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=warning).
+
+title: Block request and response content in predefined categories
+
+weight: 900
+
+requirements:
+  - You have an Azure subscription and access to Azure AI Content Safety.
+  - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+
+variables:
+  content_safety_url:
+    value: $CONTENT_SAFETY_URL
+    description: The full URL of the Azure AI Content Safety instance.
+  content_safety_key:
+    value: $CONTENT_SAFETY_KEY
+    description: The API key to access the Azure AI Content Safety instance.
+  
+
+config: 
+  content_safety_url: ${content_safety_url}
+  content_safety_key: ${content_safety_key}
+  categories:
+  - name: Hate
+    rejection_level: 2
+  - name: Violence
+    rejection_level: 2
+  guarding_mode: BOTH
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.12'

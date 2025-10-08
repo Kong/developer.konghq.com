@@ -44,6 +44,7 @@ prereqs:
       export FORWARD_ZONES='example.internal.dev,example2.internal.dev'
       ```
 
+automated_tests: false
 ---
 
 

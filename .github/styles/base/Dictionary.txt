@@ -122,6 +122,8 @@ Collectd
 Collectd
 config
 config_hash
+configMap
+configMaps
 configs
 configurability
 Conjur
@@ -180,6 +182,7 @@ dereferencing
 deserialization
 deserialize
 deserialized
+destructuring
 dev
 Dex
 Dex
@@ -429,6 +432,7 @@ KPIs
 ksearch
 kubeconfig
 kubectl
+kubectx
 kubelet
 kubernetes
 Kuma
@@ -500,6 +504,7 @@ minify
 minifying
 minikube
 minio
+misconfiguration
 misconfigurations
 misconfigured
 Mockbin
@@ -714,6 +719,7 @@ serverless
 serviceaccounts
 serviceless
 shm
+show_in_api
 Sigstore
 slas
 slsa
@@ -805,6 +811,7 @@ tls
 TLSRoute
 TLSRoutes
 toolchain
+tooltip
 tproxy
 traceable
 Traefik
@@ -829,6 +836,7 @@ uid
 UIs
 UIs
 ulimit
+ulimits
 unary
 unassign
 uncheck

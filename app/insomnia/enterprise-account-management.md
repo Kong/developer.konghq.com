@@ -19,6 +19,8 @@ related_resources:
     url: /insomnia/enterprise/
   - text: Enterprise user management
     url: /insomnia/enterprise-user-management/
+  - text: Get started with Insomnia Enterprise
+    url: /insomnia/enterprise-onboarding/
 ---
 
 ## Enable Enterprise membership
@@ -26,6 +28,13 @@ related_resources:
 To upgrade your account to the Enterprise plan:
 1. Contact the [sales team](https://insomnia.rest/pricing/contact) to get an activation code.
 1. Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update), select the Enterprise plan, and enter your activation code.
+
+{:.info}
+> **Notes**:
+> * Activation codes are single-use. The first user who enters the activation code activates the Enterprise plan for the account and then consequently becomes the [Owner](/insomnia/terminology/#user-roles).
+> * You can only use one activation at a time. If you've received more than one code, always use the newest one. If you have any issues, reach out to your Customer Success Manager.
+
+If you have requested to increase the number of seats in your instance, you should get a new activation code. Follow the same steps to update your instances with the new seats.
 
 ## Add domains
 

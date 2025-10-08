@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.26
+  version: 3.0.28
   description: The management API for Portals
   contact:
     name: Kong
@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v3'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v3'
+    description: Singapore Production region
 paths:
   /portals:
     get:
@@ -1619,7 +1621,7 @@ paths:
             type: object
             properties:
               type:
-                $ref: '#/components/schemas/schemas-StringFieldEqualsFilter'
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
           style: deepObject
       responses:
         '200':
@@ -1802,6 +1804,23 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Audit Logs
+    delete:
+      operationId: delete-portal-audit-log-webhook
+      summary: Delete Portal Audit Log Webhook
+      description: 'Removes configuration for the audit log webhook. The destination ID is set to empty, and the webhook enabled field is set to false'
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
       tags:
         - Portal Audit Logs
   '/portals/{portalId}/audit-log-webhook/status':
@@ -3103,10 +3122,10 @@ components:
             email: john.developer@example.com
             full_name: John Dev
           - id: 6cd9feff-b4da-4a9f-ba49-cbe83c75ff22
-            email: john.developer@example.com
+            email: jim.developer@example.com
             full_name: Jim Dev
           - id: 7cd9feff-b4da-4a9f-ba49-cbe83c75ff22
-            email: john.developer@example.com
+            email: jan.developer@example.com
             full_name: Jan Dev
       additionalProperties: false
       required:
@@ -3955,6 +3974,7 @@ components:
             - au
             - me
             - in
+            - sg
             - '*'
       example:
         role_name: API Viewer
@@ -4195,6 +4215,7 @@ components:
             - au
             - me
             - in
+            - sg
             - '*'
       example:
         id: 1a3c2169-27f8-4594-926b-41df3432d5dc
@@ -5372,10 +5393,6 @@ components:
         - api
         - api_package
       title: Entity Type
-    schemas-StringFieldEqualsFilter:
-      description: Filter a string value by exact match.
-      type: string
-      title: StringFieldEqualsFilter
     IdentityProviderType:
       description: Specifies the type of identity provider.
       type: string
@@ -5385,7 +5402,7 @@ components:
         - saml
     IdentityProviderEnabled:
       description: |
-        Indicates whether the identity provider is enabled. 
+        Indicates whether the identity provider is enabled.
         Only one identity provider can be active at a time, such as SAML or OIDC.
       type: boolean
       example: true
@@ -6193,10 +6210,10 @@ components:
             email: john.developer@example.com
             full_name: John Dev
           - id: 6cd9feff-b4da-4a9f-ba49-cbe83c75ff22
-            email: john.developer@example.com
+            email: jim.developer@example.com
             full_name: Jim Dev
           - id: 7cd9feff-b4da-4a9f-ba49-cbe83c75ff22
-            email: john.developer@example.com
+            email: jan.developer@example.com
             full_name: Jan Dev
     ListApplicationRegistrationsExample1:
       value:
@@ -6867,7 +6884,7 @@ components:
               - me
               - in
               - '*'
-            reason: 'must be one of [us, eu, au, me, in, *]'
+            reason: 'must be one of [us, eu, au, me, in, sg, *]'
             source: body
     ListDevelopersBadRequestExample1:
       value:

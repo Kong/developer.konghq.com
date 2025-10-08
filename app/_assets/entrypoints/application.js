@@ -8,12 +8,14 @@ import "~/stylesheets/index.css";
 
 import { datadogRum } from "@datadog/browser-rum";
 import mermaid from "mermaid";
+import Dropdowns from "@/javascripts/components/dropdown";
 import EntityExample from "@/javascripts/components/entity_example";
 import Tabs from "@/javascripts/components/tabs";
 import TopNav from "@/javascripts/components/top_nav";
+import ToggleSwitchManager from "@/javascripts/components/switch";
 import "@/javascripts/anchor_links";
 import "@/javascripts/accordion";
-import "@/javascripts/copy_code_snippet";
+import "@/javascripts/banner";
 import "@/javascripts/how_to";
 import "@/javascripts/mode";
 import "@/javascripts/dropdowns";
@@ -21,11 +23,15 @@ import "@/javascripts/toc";
 import "@/javascripts/search_modal";
 import "@/javascripts/mesh_service_switcher";
 import "@/javascripts/feedback";
+import "@/javascripts/clipboard_copy";
+import "@github/clipboard-copy-element";
 
 document.addEventListener("DOMContentLoaded", function () {
   new TopNav();
   new EntityExample();
   new Tabs();
+  new Dropdowns();
+  new ToggleSwitchManager();
 });
 
 if (import.meta.env.PROD) {

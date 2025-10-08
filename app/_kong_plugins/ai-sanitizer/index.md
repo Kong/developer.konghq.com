@@ -1,13 +1,14 @@
 ---
-title: 'AI Sanitizer'
-name: 'AI Sanitizer'
+title: 'AI PII Sanitizer'
+name: 'AI PII Sanitizer'
 
 content_type: plugin
 
 tier: ai_gateway_enterprise
 publisher: kong-inc
-description: Protect sensitive information in client request bodies before they reach upstream services
+description: Protect sensitive information in client request or response bodies before they reach upstream services or clients
 
+show_in_api: true
 
 products:
     - gateway
@@ -33,33 +34,69 @@ topologies:
 icon: ai-sanitizer.png
 
 categories:
-    - ai
-tags:
   - ai
 
-
+tags:
+  - ai
 
 related_resources:
   - text: Use AI to protect sensitive information in requests
     url: /how-to/protect-sensitive-information-with-ai/
 ---
 
-The AI Sanitizer plugin for {{site.base_gateway}} helps protect sensitive information in client request bodies before they reach upstream services.
+The AI PII Sanitizer plugin for {{site.base_gateway}} helps protect sensitive information in client request bodies before they reach upstream services, or in LLM response bodies before they reach the client.
+
 By integrating with an external PII service, the plugin ensures compliance with data privacy regulations while preserving the usability of request data.
 It supports multiple sanitization modes, including replacing sensitive information with fixed placeholders or generating synthetic replacements that retain category-specific characteristics.
 
-Additionally, AI Sanitizer offers an optional restoration feature, allowing the original data to be reinstated in responses when needed.
+Additionally, AI PII Sanitizer offers an optional restoration feature, allowing the original request data to be reinstated in responses when needed.
 
 {% include plugins/ai-plugins-note.md %}
 
-The AI Sanitizer plugin uses the AI PII Anonymizer Service, which can run in a Docker container, to detect and sanitize sensitive data. See the [tutorial on configuring the AI Sanitizer plugin](/how-to/protect-sensitive-information-with-ai/) for more information on how to configure the plugin with the AI PII Anonymizer Service.
+The AI PII Sanitizer plugin uses the AI PII Anonymizer Service, which can run in a Docker container, to detect and sanitize sensitive data. See the [tutorial on configuring the AI PII Sanitizer plugin](/how-to/protect-sensitive-information-with-ai/) for more information on how to configure the plugin with the AI PII Anonymizer Service.
 
 ## How it works
 
+The AI PII Sanitizer plugin can be applied to:
+* Input data (requests)
+* Output data (responses) {% new_in 3.12 %}
+* Both input and output data {% new_in 3.12 %}
+
+Here's how it works if you apply it to both requests and responses:
+
 1. The plugin intercepts the request body and sends it to the external PII service.
-1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
+   1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
 1. The sanitized request is forwarded upstream with the AI Proxy or AI Proxy Advanced plugin.
-1. If restoration is enabled, the plugin restores original data in responses before returning them to the client.
+1. On the way back, the plugin intercepts the response body and sends it to the external PII service. {% new_in 3.12 %}
+   1. The PII service detects sensitive data and applies the chosen sanitization method (placeholders or synthetic replacements).
+1. (_Only applies to input data sanitization_) If restoration is enabled, the plugin restores the original request data in responses before returning them to the client.
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    autonumber
+    participant Client
+    participant Plugin as AI PII Sanitizer
+    participant PII as PII Service
+    participant Proxy as AI Proxy/Advanced
+    participant AI as Upstream AI Service
+    
+    Client->>Plugin: Send request
+    Plugin->>PII: Intercept & send request body
+    PII->>PII: Detect sensitive data in request
+    PII->>Plugin: Return sanitized request<br/>(placeholders/synthetic data)
+    Plugin->>Proxy: Forward sanitized request
+    Proxy->>AI: Process sanitized request    
+    AI->>Proxy: Return AI response
+    Proxy->>Plugin: Forward response
+    Plugin->>PII: Intercept & send response body
+    PII->>PII: Detect sensitive data in response
+    PII->>Plugin: Return sanitized response<br/>(placeholders/synthetic data)
+    Plugin->>Client: Return sanitized response
+{% endmermaid %}
+<!--vale on-->
+
+> _Figure 1: Diagram showing the request and response flow with the AI PII Sanitizer plugin._
 
 ## AI PII Anonymizer service
 
@@ -75,7 +112,7 @@ Kong provides several [AI PII Anonymizer service](https://cloudsmith.io/~kong/re
 
 ### Access the Docker images
 
-Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access. 
+Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
 
 #### Authenticate with the private Cloudsmith registry
 

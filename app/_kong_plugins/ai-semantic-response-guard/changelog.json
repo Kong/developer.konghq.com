@@ -1,0 +1,14 @@
+{
+  "3.12.0.0": [
+    {
+      "message": "Introduced the AI Semantic Response Guard plugin, enabling you to guard LLM responses against semantic content.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the deletion of guard instances and improved error handling.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}

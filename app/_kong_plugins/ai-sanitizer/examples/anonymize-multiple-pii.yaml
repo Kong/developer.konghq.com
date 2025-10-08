@@ -1,0 +1,36 @@
+description: Configure the plugin to anonymize multiple PII types in requests, including email addresses, phone numbers, SSNs, and dates.
+
+title: Anonymize multiple PII categories
+
+weight: 910
+
+requirements:
+  - You have enabled the [AI Proxy or AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - You have pulled and run an [AI PII Anonymizer service image](/plugins/ai-sanitizer/#ai-pii-anonymizer-service)
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+  port:
+    description: The sanitizer service's port
+    value: $SANITIZER_SERVICE_PORT
+
+config:
+  anonymize:
+      - email
+      - phone
+      - ssn
+      - date
+  port: ${port}
+  host: ${host}
+  redact_type: synthetic
+  stop_on_error: true
+  recover_redacted: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

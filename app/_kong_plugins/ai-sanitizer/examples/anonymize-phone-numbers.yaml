@@ -1,11 +1,12 @@
-description: Configure the plugin to use your sanitizer service to anonymize phone numbers in requests before they reach the upstream service.
+description: Configure the AI Sanitizer plugin to use your sanitizer service to anonymize phone numbers in requests before they reach the upstream service.
 
-title: Anonymize phone numbers
+title: Explicitly anonymize phone numbers in requests
 
 weight: 900
 
 requirements:
-  - You have enabled the AI Proxy or AI Proxy Advanced plugin
+  - You have enabled the [AI Proxy or AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - You have pulled and run an [AI PII Anonymizer service image](/plugins/ai-sanitizer/#ai-pii-anonymizer-service)
 
 variables:
   host:
@@ -16,7 +17,7 @@ variables:
     value: $SANITIZER_SERVICE_PORT
 
 
-config: 
+config:
   anonymize:
       - phone
   port: ${port}
