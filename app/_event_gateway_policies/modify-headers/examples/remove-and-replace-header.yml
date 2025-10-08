@@ -3,23 +3,22 @@ title: Remove and replace a header
 description: Remove a header and replace it with another header.
 
 extended_description: |
-  The following example removes a header named `example-header1` and replaces it with `example-header2`.
+  The following example removes a header named `example-header1` and replaces it with `example-header2: example`.
 
 weight: 900
 
-name: modify-headers
+name: remove-and-replace-header
+type: modify_headers
 config:
-  policies:
-    - name: modify-headers
-      type: modify_headers
-      spec:
-        actions:
-        - type: remove
-          remove:
-          - key: example-header
-          set:
-          - key: example-header2
-            value: example
+  actions:
+    - op: remove
+      key: example-header1
+    - op: set
+      key: example-header2
+      value: example
+
+tools:
+  - konnect-api
 
 tools:
   - konnect-api
