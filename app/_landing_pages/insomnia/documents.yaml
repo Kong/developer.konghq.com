@@ -103,7 +103,8 @@ rows:
                 - type: text
                   text: |
                     {:.warning}
-                    > **Deprecation advisory**: In 2026, we will deprecate unit tests. To create new tests or maintain existing tests, we recommend that users migrate to pre-request and after-response [scripts](/insomnia/scripts/).
+                    > **Notice:** Unit tests are planned for deprecation in a future release.
+                    > [Learn about scripts](/insomnia/scripts/)
                     
                     Documents bundle all API testing ability together.
 
