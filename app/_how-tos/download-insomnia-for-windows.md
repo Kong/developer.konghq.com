@@ -1,5 +1,5 @@
 ---
-title: Download Insomnia on Windows
+title: Download Insomnia on Windows with NSIS installer
 
 content_type: how_to
 
@@ -31,8 +31,6 @@ tldr:
   q: How do I download Insomnia on a Windows device?
   a: Go to the [latest Insomnia release](https://github.com/Kong/insomnia/releases/tag/core%40{{ site.data.insomnia_latest.version }}) on GitHub and download the `Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe` file.
 faqs:
-  - q: What installer does Insomnia use to install on Windows devices?
-    a: Starting in version 11.3.0, Insomnia for Windows provides the Nullsoft Scriptable Install System (NSIS) installer. This update gives you more control over your setup by allowing you to choose the installation directory that best suits your system.
   - q: How do I uninstall Insomnia from my Windows device?
     a: |
       1. Before you uninstall, close any open Insomnia windows. If any are left open, Insomnia won't uninstall completely.
@@ -40,6 +38,26 @@ faqs:
       1. Find Insomnia in the list of installed applications and select the ellipsis (⋯).
       1. Click **Uninstall**.
       1. Click **Finish**.
+
+      To uninstall Insomnia silently, run the uninstaller with the /S flag:
+      ```powershell
+      "%ProgramFiles%\Insomnia\Uninstall.exe" /S
+      ```
+  - q: How do I specify a custom directory during a silent install?
+    a: |
+      To specify a custom directory, add `/D=path`:
+      ```powershell
+      Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D=C:\Insomnia
+      ```
+  - q: Is the `/D="C:\Program Files\Insomnia"` needed to run the installer?
+    a: |
+      No. You only need to include the `/D=` option if you want to change the default installation path.  
+      If not specified, Insomnia installs to the default location for your installation type: 
+      - **System-wide installation**: `C:\Program Files\Insomnia`  
+      - **Per-user installation**: `C:\Users\<username>\AppData\Local\Programs\Insomnia`  
+      
+      Use `/D=your_path` only when you want to specify a custom installation directory.
+     
 next_steps:
   - text: Get started with documents
     url: /insomnia/documents/
@@ -77,7 +95,7 @@ Once you've run the installer, you can use the Insomnia setup wizard to complete
 {% navtab "Silent install" %}
 
 ## Run the installer
-1. After installing the NSIS installer, run the installer with the `/S` flag to perform a silent installation:
+After installing the NSIS installer, run the installer with the `/S` flag to perform a silent installation:
 ```powershell
 Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S
 ```
@@ -98,22 +116,5 @@ Insomnia.Core-nsis-{{ site.data.insomnia_latest.version }}.exe /S /D="C:\Program
 ```
 
 {% endnavtab %}
-{% navtab "Uninstall" %}
 
-## GUI uninstall
-
-1. In the Windows Start menu, click **Settings**.
-2. Click **Apps**.
-3. Click  **Installed**.
-4. Click the more icon (⋯) next to Insomnia.
-5. Click **Uninstall**.
-6. Click **Confirm**.
-
-## Silent uninstall
-
-To remove Insomnia without prompts, run the uninstaller with the /S flag:
-```powershell
-"%ProgramFiles%\Insomnia\Uninstall.exe" /S
-```
-{% endnavtab %}
 {% endnavtabs %}
