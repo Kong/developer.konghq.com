@@ -6,7 +6,7 @@ content_type: how_to
 products:
 - insomnia
 
-description: Use natural language to auto-generate a mock server in your Insomnia project. This feature is powered by AI and can be disabled.
+description: Use natural language to auto-generate a mock server in your Insomnia project.
 
 tags:
 - mock-servers
