@@ -137,12 +137,12 @@ entities:
 
     ```json
     {
-      "mcpServers": {
-          "weather": {
-              "url": "http://localhost:8000/weather"
-          }
-      }
-    }
+     "mcpServers": {
+       "marketplace": {
+         "url": "http://localhost:8000/marketplace"
+       }
+     }
+   }
   ```
 
 1. Return to the **Cursor settings** tab. You should now see the weather MCP server with one tool available:
