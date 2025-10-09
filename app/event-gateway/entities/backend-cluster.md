@@ -40,9 +40,13 @@ schema:
 
 ## What is a backend cluster?
 
-A backend cluster in {{site.konnect_short_name}} is an abstraction a real Kafka cluster that runs in your environment. The backend cluster contains the connection details to the Kafka cluster proxied by {{site.event_gateway}}.
+A backend cluster is an abstraction of a real Kafka cluster. It stores the connection and configuration details required for {{site.event_gateway}} to proxy traffic to Kafka.
 
-There can be multiple Kafka clusters proxied through the same gateway. {{site.event_gateway}} control planes store information about how to authenticate to Kafka clusters, whether or not to verify the cluster’s TLS certificates, and how often to fetch metadata from the clusters. 
+Multiple Kafka clusters can be proxied through a single {{site.event_gateway}}. The Event Gateway control plane manages information such as:
+
+* Authentication credentials for connecting to Kafka clusters
+* TLS verification preferences
+* Metadata refresh intervals for fetching cluster information
 
 ## Schema
 
@@ -78,24 +82,46 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 {% endnavtab %}
 
 {% navtab "Terraform" %}
-TODO
+
 ```sh
 resource "konnect_event_gateway_backend_cluster" "my_eventgatewaybackendcluster" {
-  bootstrap_servers = [
-    "kafka:9092"
+provider    = konnect-beta
+  acl_mode    = "enforce_on_gateway"
+  authentication = [
+    {
+      sasl_plain = {
+        mediation = "passthrough"
+        principals = [
+          {
+            password = "${env['MY_SECRET']}"
+            username = "example_username"
+          }
+        ]
+      }
+    }
   ]
-  authentication = {
-    type = "anonymous"
-  }
-  insecure_allow_anonymous_virtual_cluster_auth = true
-  tls = {
-    insecure_skip_verify = false
-  }
-  name = "example-backend-cluster"
-  metadata_update_interval_seconds = 60
-  gateway_id = konnect_event_gateway.my_eventgateway.id
+    }
+    bootstrap_servers = [
+    "host:9092"
+  ]
+    description = "This is my backend cluster"
+    gateway_id = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
+    insecure_allow_anonymous_virtual_cluster_auth = false
+    labels = {
+        key = "value"
+    }
+    metadata_update_interval_seconds = 22808
+    name = "example-backend-cluster"
+    tls = {
+            ca_bundle = "example-ca-bundle"
+        insecure_skip_verify = false
+        tls_versions = [
+            "tls12"
+        ]
+    }
 }
 ```
+
 {% endnavtab %}
 
 {% navtab "UI" %}
@@ -105,7 +131,7 @@ The following creates a new backend cluster called **example-backend-cluster** w
 1. Navigate to **Backend Clusters** in the sidebar.
 1. Click **New backend cluster**.
 1. In the **Name** field, enter `example-backend-cluster`.
-1. In the **Bootstrap servers** field, enter `kafka:9092`.
+1. In the **Bootstrap servers** field, enter `host:9092`.
 1. From the **Authentication** dropdown menu, select "Anonymous"
 1. Select the **Allow anonymous authentication from virtual clusters** checkbox.
 1. Click **Save**.
