@@ -154,7 +154,7 @@ You must provide the same number of windows and limits
 
 ## Namespace
 
-The namespace field is auto-generated for the plugin instance, it's optional when configuring the plugin through the Admin API or decK
+The namespace field is auto-generated for the plugin instance. It's optional when configuring the plugin through API commands or decK.
 
 If you are managing {{site.base_gateway}} with decK or running {{site.base_gateway}} in DB-less mode, set the namespace explicitly in your declarative configuration.
 Otherwise the field will be regenerated automatically with every update.
