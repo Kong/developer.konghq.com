@@ -4,7 +4,7 @@
 ## Capture standards
 
 Use the following capture checklist to include a screenshot into a document:
-- [ ] Capture with [**shotscraper** ](link to the section for this) 
+- [ ] Capture with [**shotscraper** ](#shotscraper) 
 - [ ] Set resolution to **1500 × 845**  
 - [ ] Crop to the relevant panel; omit the cursor  
 - [ ] If needed, add a thin rectangular highlight in #0788ad; avoid annotations  
@@ -32,6 +32,3 @@ Use [shotscraper](https://github.com/Kong/developer.konghq.com/tree/main/tools/s
 **Introduce → show → explain**: captions are optional but alt text is **required**. Write a lead sentence that sets context and ends with a colon, then the image, and then alt text.  
 **Why:** Keeps narrative coherent and images purposeful; supports accessibility and localization.  
 
-| Do | Don't |
-| :---- | :---- |
-| Write: “From the **Menu** tab, click **Add menu item:**” | Drop a screenshot without introduction: ![Add menu](/assets/images/docs/add-menu.png) |
