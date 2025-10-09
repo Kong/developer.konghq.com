@@ -107,7 +107,7 @@ See the following examples of UI how-to instructions:
 
 ## Minimum-viable UI instruction examples
 
-A **minimum-viable UI example** shows the UI path to the feature without creating a full tutorial. Use minimum-viable UI when automation is the norm. When other methods (like API or Terraform) are supported, include nav tabs with minimum-viable instructions for each method.
+A **minimum-viable UI example** shows the UI path to the feature without creating a full tutorial. Use minimum-viable UI whenever possible.
 
 See the following examples of minimum-viable UI instructions:
 * [Dev Portal APIs](https://developer.konghq.com/dev-portal/apis/)
