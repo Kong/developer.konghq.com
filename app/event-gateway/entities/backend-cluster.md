@@ -8,18 +8,19 @@ related_resources:
   - text: "{{site.event_gateway}} Policy Hub"
     url: /event-gateway/policies/
   - text: "Policies"
-    url: /event-gateway/entities/policy/
-  - text: "Virtual clusters"
+    url: /event-gateway/entities/policies/
+  - text: "Backend Clusters"
     url: /event-gateway/entities/virtual-cluster/
   - text: "Listeners"
-    url: /event-gateway/entities/listener/
+    url: /event-gateway/entities/listeners/
 
 tools:
     - konnect-api
     - terraform
-
-entities:
- - backend-cluster
+tags: 
+  - policy
+works_on:
+  - konnect
 
 # schema:
 #     api: event-gateway/
@@ -30,7 +31,8 @@ entities:
 
 products:
     - event-gateway
-
+api_specs:
+    - event-gateway/knep
 layout: gateway_entity
 
 schema:
@@ -83,7 +85,7 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 
 {% navtab "Terraform" %}
 
-```sh
+```hcl
 resource "konnect_event_gateway_backend_cluster" "my_eventgatewaybackendcluster" {
 provider    = konnect-beta
   acl_mode    = "enforce_on_gateway"
