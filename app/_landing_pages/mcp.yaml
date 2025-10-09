@@ -88,7 +88,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Expose any remote MCP server that calls LLM models through Kong AI Gateway using the AI Proxy plugin, giving clients control, observability, and security at the edge.
+                    Expose any remote MCP server that calls LLM models through the AI Proxy plugin, enforcing observability, and security at the edge.
 
                     Considerations for production use:
 
