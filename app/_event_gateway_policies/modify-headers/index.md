@@ -12,7 +12,7 @@ tags:
 
 schema:
   api: event-gateway/knep
-  path: /schemas/ModifyHeadersPolicy
+  path: /schemas/EventGatewayModifyHeadersPolicy
 
 api_specs:
   - event-gateway/knep

@@ -12,7 +12,7 @@ tags:
 
 schema:
   api: event-gateway/knep
-  path: /schemas/EventGatewayListenerPolicyModify
+  path: /schemas/ForwardToVirtualClusterPolicy
 
 api_specs:
   - event-gateway/knep

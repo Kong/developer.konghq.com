@@ -12,7 +12,7 @@ tags:
 
 schema:
   api: event-gateway/knep
-  path: /schemas/EncryptPolicy
+  path: /schemas/EventGatewayEncryptPolicy
 
 api_specs:
   - event-gateway/knep

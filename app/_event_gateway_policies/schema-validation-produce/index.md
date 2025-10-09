@@ -12,8 +12,7 @@ tags:
 
 schema:
   api: event-gateway/knep
-  path: /schemas/SchemaValidationPolicy
-  # path: /schemas/EventGatewayProduceSchemaValidationPolicy - replace with this path
+  path: /schemas/EventGatewayProduceSchemaValidationPolicy
 
 api_specs:
   - event-gateway/knep
