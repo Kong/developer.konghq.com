@@ -15,7 +15,7 @@ Use the following capture checklist to include a screenshot into a document:
 | Question | Answer |
 | :---- | :---- |
 | What size should I use? | 1500 × 845 |
-| Where do I save files? | `app/_assets/images/docs/...` (lowercase-with-dashes filenames). |
+| Where do I save files? | `app/assets/images/...` (lowercase-with-dashes filenames). |
 | How do I name files? | `product-version-feature-goal.png`. For example, `konnect-v2-1-dev-portal-menu.png`. |
 | Can I use screenshots in how-to guides? | Yes, only when text is insufficient. |
 | What can’t I screenshot? | Third-party UIs, real customer data/PII, volatile content, or anything that harms performance or localization. |
