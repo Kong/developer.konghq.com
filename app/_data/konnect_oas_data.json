@@ -288,21 +288,21 @@
     ]
   },
   {
-    "id": "f8ebf955-6f09-40f6-b020-1feb80b4a773",
+    "id": "aebbfc48-963f-40cd-b1b9-1a8308121323",
     "title": "Kong Native Event Proxy (Beta)",
     "latestVersion": {
-      "name": "v0",
-      "id": "ec9ee3d9-6a31-4497-9166-bde4fe2adbeb"
+      "name": "v1",
+      "id": "16f6f9db-547e-4222-a345-40b420edcd26"
     },
     "description": "A proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
       {
-        "id": "ec9ee3d9-6a31-4497-9166-bde4fe2adbeb",
+        "id": "16f6f9db-547e-4222-a345-40b420edcd26",
         "created_at": "2025-05-05T20:59:18.970Z",
         "updated_at": "2025-05-07T16:26:12.925Z",
-        "name": "v0",
+        "name": "v1",
         "deprecated": false,
         "registration_configs": []
       }
