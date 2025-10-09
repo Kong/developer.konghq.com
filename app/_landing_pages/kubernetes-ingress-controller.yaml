@@ -145,7 +145,7 @@ rows:
               {{ site.kic_product_name }} integrates  {{ site.base_gateway }} with Kubernetes by translating Kubernetes resources into {{ site.base_gateway }} configuration.
               Feature support differs depending on the operational model:
               - **Standalone (KIC only)**: You provision and manage  {{ site.base_gateway }} yourself, and {{ site.kic_product_name }} applies configuration using Kubernetes resources.
-              - **With Kong Gateway Operator (KO/KGO)**: The Operator provisions and manages {{ site.base_gateway }} deployments declaratively, while {{ site.kic_product_name }} handles configuration. 
+              - **With Kong Gateway Operator (KO/KGO)**: The Operator provisions and manages {{ site.base_gateway }} deployments declaratively. 
               
               To compare feature support in each model, use the following table:
               
@@ -169,7 +169,7 @@ rows:
                     Activate gates like  `FillIDs`, `RewriteURIs`, and `CombinedServicesFromDifferentHTTPRoutes` with `CONTROLLER_FEATURE_GATES`.
                     - `FillIDs` can cause UUID collisions across workspaces with identical Consumers.
                     - Deactivate `CombinedRoutes` if you require per-route plugin configuration.
-                  hybrid: "Identical feature gate support and constraints. No change between models."
+                  hybrid: "Identical feature gate support and constraints declared through CRDs. No change between models."
                 - feature: "**Fallback configuration**"
                   kic: "Applies valid configuration while skipping invalid objects to maintain cluster stability."
                   hybrid: "Behaves similarly where fallback configuration is supported, but specific operator‑driven behavior may vary and should be tested."
@@ -196,7 +196,7 @@ rows:
                     - Custom plugins must be installed on both CP and DPs.
                 - feature: "**Licensing**"
                   kic: "Enterprise license must be valid. In DB-less deployments, expired licenses block new nodes and restarts."
-                  hybrid: "Enterprise license must be valid. Operator adds declarative license management with the `KongLicense` CRD or environment variables."                   
+                  hybrid: "Enterprise license must be valid. Operator adds declarative license management with the `KongLicense` CRD."                   
               {% endtable %}
 
               {:.info}
