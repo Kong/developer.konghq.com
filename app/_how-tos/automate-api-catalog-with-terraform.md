@@ -10,9 +10,9 @@ works_on:
   - konnect
 
 products:
-    - catalog
+    - gateway    
     - dev-portal
-    - gateway
+    - catalog
 
 entities: []
 

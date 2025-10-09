@@ -4,9 +4,9 @@ description: Learn how to automate your API catalog in Dev Portal using Konnect 
 content_type: how_to
 automated_tests: false
 products:
-    - catalog
     - gateway
     - dev-portal
+    - catalog
 works_on:
     - konnect
 
