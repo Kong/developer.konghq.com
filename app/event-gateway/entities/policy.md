@@ -90,21 +90,23 @@ Some policies require the record to be marshalled, while others can act on marsh
 
 {% feature_table %}
 columns:
+  - title: "Policy"
+    key: "policy"
   - title: Can act on parsed record?
     key: parsed
     center: true
 features:
-  - title: "[Kafka ACL](/event-gateway/policies/acl/)"
+  - policy: "[Kafka ACL](/event-gateway/policies/acl/)"
     parsed: No
-  - title: "[Encrypt](/event-gateway/policies/encrypt/)"
+  - policy: "[Encrypt](/event-gateway/policies/encrypt/)"
     parsed: No
-  - title: "[Decrypt](/event-gateway/policies/decrypt/)"
+  - policy: "[Decrypt](/event-gateway/policies/decrypt/)"
     parsed: No
-  - title: "[Schema validation](/event-gateway/policies/schema-validation/)"
+  - policy: "[Schema validation](/event-gateway/policies/schema-validation/)"
     parsed: No
-  - title: "[Modify headers](/event-gateway/policies/modify-headers/)"
+  - policy: "[Modify headers](/event-gateway/policies/modify-headers/)"
     parsed: Yes
-  - title: "[Skip records](/event-gateway/policies/skip-records/)"
+  - policy: "[Skip records](/event-gateway/policies/skip-records/)"
     parsed: Yes
 {% endfeature_table %}
 
@@ -179,7 +181,7 @@ body:
 {% navtabs 'ui' %}
 {% navtab "New Virtual Cluster" %}
 
-If you don't have a virtual cluster yet:
+If you don't have an existing Virtual Cluster, create one: 
 
 1. Click **New Virtual Cluster**.
 1. Configure your virtual cluster.
@@ -204,7 +206,7 @@ If you already have a virtual cluster and want to apply a policy to it:
 {% endnavtabs %}
 {% endcapture %}
 
-If you don't have a virtual cluster:
+If you don't have an existing Virtual Cluster, create one: 
 
 1. In the sidebar, navigate to **Event Gateway**.
 
@@ -417,7 +419,7 @@ resource "konnect_event_gateway_listener_policy_forward_to_virtual_cluster" "my_
 ## Conditions
 
 Policies have a condition field that determines whether the policy executes or not. 
-By writing conditions using CEL (Common Expression Language), you can access dynamic configuration from the execution context.
+By writing conditions using [Expressions](/gateway/routing/expressions/), you can access dynamic configuration from the execution context.
 
 For example, you can create a condition that selects all topics that end with the suffix `my_suffix`:
 
