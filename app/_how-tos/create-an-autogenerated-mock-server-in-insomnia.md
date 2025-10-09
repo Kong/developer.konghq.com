@@ -1,5 +1,5 @@
 ---
-title: Create an auto-generated mock server with natural language in Insomnia
+title: Create an auto-generated mock server
 
 content_type: how_to
 
