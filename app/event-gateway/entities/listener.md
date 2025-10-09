@@ -1,7 +1,6 @@
 ---
 title: "{{site.event_gateway_short}} listeners"
 content_type: reference
-layout: reference
 
 description: |
     Listeners represent the network interface for Kafka client connections over TCP.
@@ -18,7 +17,8 @@ related_resources:
 tools:
     - konnect-api
     - terraform
-
+works_on:
+  - konnect
 tags:
   - policy
 
@@ -41,9 +41,13 @@ schema:
 
 ## What is a listener?
 
-A listeners represents hostname-port or IP-port combinations that connect to TCP sockets. A listener can have policies that enforce TLS certificates and perform SNI routing. The listener runs at Layer 4 of the network stack.
+A listeners represents hostname-port or IP-port combinations that connect to TCP sockets. Listeners need at least as many ports as backend brokers. Ports can be expressed as a single port or range. Addresses can be IPv4, IPv6, or hostnames.
 
-In {{site.event_gateway}}, listeners first take in the connection and then route the TCP connection to a [virtual cluster](/event-gateway/entities/virtual-cluster/) based on conditions defined in [listener policies](/event-gateway/entities/policy/#listener-policies).
+A listener can have policies that enforce TLS certificates and perform SNI routing. The listener runs at Layer 4 of the network stack. In {{site.event_gateway}}, listeners first take in the connection and then route the TCP connection to a [virtual cluster](/event-gateway/entities/virtual-cluster/) based on conditions defined in [listener policies](/event-gateway/entities/policy/#listener-policies).
+
+Listeners can have one or more policies that define how the TCP connection is handled:
+* **TLS Server Policy:** Enforces encryption, provides a certificate, and can use SNI to route connections by hostname.
+* **Forward to Virtual Cluster Policy:** Routes the connection to a specific virtual cluster. Only one forward policy is allowed per listener.
 
 
 ## Schema
@@ -55,40 +59,41 @@ In {{site.event_gateway}}, listeners first take in the connection and then route
 {% navtabs "listener" %}
 
 {% navtab "Konnect API" %}
+Create a listener using the {{site.event_gateway_short}} control plane API:
+{% konnect_api_request %}
+url: /v1/event-gateways/{controlPlaneId}/listeners
+status_code: 201
+method: POST
+body:
+    name: listener-localhost
+    addresses:
+    - 0.0.0.0
+    ports:
+    - 19092
+{% endkonnect_api_request %}
 
-```sh
-curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/listeners \
-    --header "accept: application/json" \
-    --header "Content-Type: application/json" \
-    --header "Authorization: Bearer $KONNECT_TOKEN" \
-    --data '
-    {
-       "name": "listener-localhost",
-       "addresses": [
-         "0.0.0.0"
-       ],
-       "ports": [
-         "19092"
-       ]
-     }
-    '
-```
 {% endnavtab %}
 
 {% navtab "Terraform" %}
-TODO
-```sh
+Add the following to your Terraform configuration to create a listener:
+```hcl
 resource "konnect_event_gateway_listener" "my_eventgatewaylistener" {
-  name = "listener-localhost"
+  provider = konnect-beta
   addresses = [
     "0.0.0.0"
   ]
+  description = "My listener"
+  gateway_id  = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
+  labels = {
+    key = "value"
+  }
+  name = "example-listener"
   ports = [
     "19092"
   ]
-  gateway_id = konnect_event_gateway.my_eventgateway.id
 }
 ```
+
 {% endnavtab %}
 
 {% navtab "UI" %}
@@ -101,7 +106,7 @@ The following creates a new Listener called **example-backend-cluster** with bas
 1. In the **Addresses** field, enter `0.0.0.0`.
 1. In the **Ports** field, enter `19092`.
 1. Click **Save and add policy next**.
-1. Click **Mayber later** to create a listener without a policy.
+1. Click **Maybe later** to create a listener without a policy.
 {% endnavtab %}
 
 {% endnavtabs %}
