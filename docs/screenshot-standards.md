@@ -4,7 +4,7 @@
 ## Capture standards
 
 Use the following capture checklist to include a screenshot into a document:
-- [ ] Capture with **shotscraper**  
+- [ ] Capture with [**shotscraper** ](link to the section for this) 
 - [ ] Set resolution to **1500 × 845**  
 - [ ] Crop to the relevant panel; omit the cursor  
 - [ ] If needed, add a thin rectangular highlight in #0788ad; avoid annotations  
