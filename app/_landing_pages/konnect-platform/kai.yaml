@@ -1,7 +1,7 @@
 metadata:
   title: "Konnect AI assistant"
   content_type: landing_page
-  description: Learn how to use {{site.konnect_short_name}}'s AI assistant, KAi.
+  description: Learn how to use Kong's AI assistant, KAi.
   products:
     - konnect
   breadcrumbs: 
@@ -15,8 +15,8 @@ rows:
 
   - header:
       type: h1
-      text: "Konnect AI assistant"
-      sub_text: Use {{site.konnect_short_name}}'s AI assistant, KAi, to detect issues and suggest fixes.
+      text: "Kong AI assistant"
+      sub_text: Use Kong's AI assistant, KAi, to detect issues and suggest fixes.
   
   - columns:
       - blocks:
@@ -25,17 +25,19 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}}'s AI assistant, KAi, can detect issues, suggest remediations, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
-                    You can enable KAi by contacting your Kong account manager. 
+                    Kong's AI assistant, KAi, can detect issues, suggest remediation, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
+                    is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. 
+                    KAi is always disabled by default for Enterprise accounts. 
+                    Enterprise accounts can enable it by contacting their Kong account manager.
 
                     KAi can help you do the following:
-                    * Investigate why an API is slow
-                    * See which Consumer has the highest usage for the API
-                    * With your permission, modify {{site.konnect_short_name}}'s configuration to fix any detected issues
+                    * Run a debug session to analyze API performance issues
+                    * Provides recommendations to improve API performance
+                    * Answer any {{site.konnect_short_name}} questions using the Kong Docs
           - type: button
             config:
               text: "Try KAi in {{site.konnect_short_name}}"
-              url: https://cloud.konghq.com/dr-who-agent/welcome
+              url: https://cloud.konghq.com?agent=true
       - blocks:
           - type: image
             config:
@@ -49,9 +51,9 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Is the KAi AI assistant disabled by default?
-              a: Yes. You can enable it by contacting your Kong account manager.
+            - q: Is the KAi AI assistant enabled by default?
+              a: It is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. KAi is always disabled by default for Enterprise accounts. Enterprise accounts can enable it by contacting their Kong account manager.
             - q: Does KAi automatically modify {{site.konnect_short_name}} configuration when it finds an issue?
               a: No. KAi will ask for your permission before making any changes to {{site.konnect_short_name}} configuration. You can also approve modifications on a per session basis.
-            - q: Can all users see and modify the same resources with the AI assistant KAi?
-              a: No. Users can only see and modify {{site.konnect_short_name}} entities in KAi that they have permissions to via [teams and roles](/konnect-platform/teams-and-roles/). For example, if a user is a Portal Admin, they can see and modify Dev Portal entities, but they can't ask KAi about control planes or modify control planes.
+            - q: Can all users see the same resources with the AI assistant KAi?
+              a: No. Users can only see the {{site.konnect_short_name}} entities in KAi that they have permissions to via [teams and roles](/konnect-platform/teams-and-roles/). For example, if a user is a Portal Admin, they can see Dev Portal entities, but they can't ask KAi about control planes.
