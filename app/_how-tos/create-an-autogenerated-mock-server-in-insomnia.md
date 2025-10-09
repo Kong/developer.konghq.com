@@ -38,17 +38,6 @@ You can create a fully configured mock server in Insomnia using a natural langua
 
 The mock server opens and is ready for testing and editing.
 
-## (Optional) Deactivate AI-generated mock servers
-
-You can deactivate the AI feature:
-
-- In Insomnia, go to **Preferences → AI Features**.
-- Toggle off **Enable AI-generated mocks**.
-
-When deactivated, the **Auto Generate** option no longer appears in the mock creation menu. You can still create mocks manually or from a URL.
-
-> {:.info}
-> AI generation is optional and fully local to your project. Deactivating the feature removes access to natural language input but does not affect existing mocks.
 
 ## Validate and test your mock server
 
