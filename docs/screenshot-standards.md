@@ -1,26 +1,26 @@
 # Screenshot standards
 
-Use this page to capture clear, consistent screenshots that stay accurate and easy to maintain.
+
+## Capture standards
+
+Use the following capture checklist to include a screenshot into a document:
+- [ ] Capture with **shotscraper**  
+- [ ] Set resolution to **1500 × 845**  
+- [ ] Crop to the relevant panel; omit the cursor  
+- [ ] If needed, add a thin rectangular highlight in #0788ad; avoid annotations  
+
+
+### FAQ
 
 | Question | Answer |
 | :---- | :---- |
 | What size should I use? | 1500 × 845 |
 | Where do I save files? | `app/_assets/images/docs/...` (lowercase-with-dashes filenames). |
 | How do I name files? | `product-version-feature-goal.png`. For example, `konnect-v2-1-dev-portal-menu.png`. |
-| Can I use screenshots in how-to guides? | Yes, only when text is insufficient; otherwise use a small, focused screenshot or a wireframe. |
+| Can I use screenshots in how-to guides? | Yes, only when text is insufficient. |
 | What can’t I screenshot? | Third-party UIs, real customer data/PII, volatile content, or anything that harms performance or localization. |
-| What is shot-scraper? | A Playwright-based CLI that automates repeatable screenshots for documents. |
 
-## Capture standards
 
-Before including screenshots, write the document first. Add a screenshot only when words are not enough to explain the state, layout, or focus. Prefer a small, cropped image over a full-screen capture. For conceptual layouts, use a simple wireframe instead.
-
-Use the following capture checklist to include a screenshot into a document:
-- [ ] Capture with **shotscraper**  
-- [ ] Set resolution to **1500 × 845**  
-- [ ] Crop to the relevant panel; omit the cursor  
-- [ ] If needed, add a thin rectangular highlight in #0788ad; avoid heavy annotations  
-- [ ] Apply the `image-border` class when a surrounding border improves contrast  
 - [ ] Save images at **≤2 MB**; do not use GIFs  
 - [ ] Store files in `app/assets/images/...` with lowercase, hyphenated names
 
