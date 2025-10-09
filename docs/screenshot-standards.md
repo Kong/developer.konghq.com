@@ -21,7 +21,7 @@ Use the following capture checklist to include a screenshot into a document:
 | What can’t I screenshot? | Third-party UIs, real customer data/PII, volatile content, or anything that harms performance or localization. |
 
 
-- [ ] Save images at **≤2 MB**; do not use GIFs  
+- [ ] do not use GIFs  
 - [ ] Store files in `app/assets/images/...` with lowercase, hyphenated names
 
 ## Shotscraper
