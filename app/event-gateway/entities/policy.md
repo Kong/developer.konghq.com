@@ -46,13 +46,13 @@ There are two main types of policies:
 
 ## Virtual cluster policies 
 
-Virtual cluster policies are applied to Kafka traffic via [virtual clusters](/event-gateway/entities/virtual-clusters/), letting you do things like modify headers, encrypt and decrypt records, validate record schemas, and much more.
+Virtual cluster policies are applied to Kafka traffic via [virtual clusters](/event-gateway/entities/virtual-clusters/). They let you modify headers, encrypt or decrypt records, validate schemas, and more.
 
 See the {{site.event_gateway}} policy hub for [all available virtual cluster policies](/event-gateway/policies/?policy-target=virtual_cluster).
 
 ### Phases
 
-Virtual cluster policies execute in specific phases. Phases are stages of a record's lifecycle.
+Virtual cluster policies run during specific phases, which represent stages in a record's lifecycle.
 
 {% table %}
 columns:
@@ -84,9 +84,10 @@ rows:
 
 ### Record serialization
 
-Some policies require the record to be marshalled, while others can act on marshaled records or parsed records.
-* Marshaled records are serialized, raw data
-* Parsed records are deserialized back into a structured format
+Some policies operate on marshaled (serialized) records, while others require parsed (deserialized) records.
+
+* **Marshaled records** are raw, serialized data.  
+* **Parsed records** are deserialized into a structured format.
 
 {% feature_table %}
 columns:
