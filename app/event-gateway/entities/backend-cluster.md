@@ -50,6 +50,45 @@ Multiple Kafka clusters can be proxied through a single {{site.event_gateway}}. 
 * TLS verification preferences
 * Metadata refresh intervals for fetching cluster information
 
+## Authentication
+
+Authentication on the backend cluster is used to authenticate clients to the proxy. 
+The backend cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters.
+
+Supported methods:
+
+{% table %}
+columns:
+  - title: "Auth method (`authentication.type`)"
+    key: auth
+  - title: Description
+    key: description
+  - title: "Credential mediation types (`authentication.mediation`)"
+    key: credential
+rows:
+  - auth: "Anonymous"
+    description: "Doesn't require clients to provide any authentication when connecting to the proxy."
+    credential: None
+  - auth: "SASL/PLAIN"
+    description: |
+      Requires clients to provide a username and password.
+      <br><br>
+      Accepts a hardcoded list of usernames and passwords, either as strings or environment variables.
+    credential: |
+      `passthrough`, `terminate`
+  - auth: "SASL/SCRAM-SHA-256"
+    description: |
+      Requires clients to provide a username and password using SCRAM-SHA-256 hashing.
+    credential: |
+      `passthrough` 
+  - auth: "SASL/SCRAM-SHA-512"
+    description: |
+      Requires clients to provide a username and password using SCRAM-SHA-512 hashing.
+    credential: |
+      `passthrough`
+{% endtable %}
+
+
 ## Schema
 
 {% entity_schema %}
