@@ -249,14 +249,19 @@ my-test-topic      1              1
 Let's also test that our Modify Headers policy is applying the header `My-New-Header`.
 First, produce a message:
 
-```sh
+```shell
 kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
 ```
 
 Then consume it while passing the `--print-headers` flag:
 
-```sh
+```shell
 kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers
 ```
 
+The output should contain your new header:
+```shell
+headers:
+  My-New-Header: header_value
+```
 You now have a Kafka cluster running with an {{site.event_gateway_short}} proxy in front, and the proxy is applying your custom policies. 
