@@ -22,7 +22,7 @@ Use the following capture checklist to include a screenshot into a document:
 - [ ] If needed, add a thin rectangular highlight in #0788ad; avoid heavy annotations  
 - [ ] Apply the `image-border` class when a surrounding border improves contrast  
 - [ ] Save images at **≤2 MB**; do not use GIFs  
-- [ ] Store files in `app/_assets/images/docs/...` with lowercase, hyphenated names
+- [ ] Store files in `app/assets/images/...` with lowercase, hyphenated names
 
 ## Shotscraper screenshot workflow
 
