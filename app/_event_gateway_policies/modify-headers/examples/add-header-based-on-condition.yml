@@ -1,0 +1,23 @@
+title: Add header based on a condition
+
+description: Add a header to a record if it meets a specific condition.
+
+extended_description: |
+  Add a header to a record if it meets a specific condition.
+
+  In the following example, if a record's topic name ends with `my_suffix`, the policy adds a header named `example-header` with the value `example`.
+
+weight: 900
+
+name: set-header-based-on-condition
+type: modify_headers
+condition: |
+  context.topic.name.endsWith('my_suffix')
+config:
+  actions:
+  - op: set
+    key: example-header
+    value: example
+
+tools:
+  - konnect-api
