@@ -10,6 +10,7 @@ works_on:
   - konnect
 
 products:
+    - catalog
     - dev-portal
     - gateway
 
@@ -27,7 +28,7 @@ tldr:
     * `konnect_api_publication`
 
 related_resources:
-    - text: "{{site.konnect_short_name}} beta Terraform provider repository"
+    - text: "{{site.konnect_short_name}} Terraform provider repository"
       url: https://github.com/Kong/terraform-provider-konnect
     - text: Catalog APIs reference
       url: /catalog/apis/

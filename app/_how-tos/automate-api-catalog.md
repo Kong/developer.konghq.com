@@ -4,6 +4,7 @@ description: Learn how to automate your API catalog in Dev Portal using Konnect 
 content_type: how_to
 automated_tests: false
 products:
+    - catalog
     - gateway
     - dev-portal
 works_on:
@@ -68,7 +69,7 @@ next_steps:
 
 ## Create an API
 
-In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/)along with a document and spec, associating it with a Gateway Service, and finally publishing it to a [Dev Portal](/dev-portal/). 
+In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a Gateway Service, and finally publishing it to a [Dev Portal](/dev-portal/). 
 
 First, [create an API](/api/konnect/api-builder/v3/#/operations/create-api) using the `/v3/apis` endpoint:
 

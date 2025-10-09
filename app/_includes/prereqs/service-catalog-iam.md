@@ -27,7 +27,7 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
 {% endcapture %}
 {{ permissions-policy | indent: 3}}
 1. Click **Next**.
-1. In the **Policy name** field, enter `konnect-service-catalog-permissions`.
+1. In the **Policy name** field, enter `konnect-catalog-permissions`.
 1. Click **Create policy**.
 1. In the IAM sidebar, click **Roles**.
 1. Click **Create role**.
@@ -39,12 +39,12 @@ If you want to use the AWS console UI, follow the steps in Amazon's Creating an 
 1. Select the **Require external ID** checkbox.
 1. In the **External ID** field, enter your {{site.konnect_short_name}} organization ID. You can find this by sending a [GET request to `/organizations/me`](/api/konnect/identity/#/operations/get-organizations-me) or in the {{site.konnect_short_name}} UI by navigating to your account in the top right and clicking the copy icon next to your organization name.
 1. Click **Next**.
-1. From the Permissions policies list, select **konnect-service-catalog-permissions**. 
+1. From the Permissions policies list, select **konnect-catalog-permissions**. 
 1. Click **Next**.
-1. In the **Role name** field, enter `konnect-service-catalog-integration`. 
+1. In the **Role name** field, enter `konnect-catalog-integration`. 
 1. Click **Create role**.
 
-View the `konnect-service-catalog-integration` you just created and copy the ARN.
+View the `konnect-catalog-integration` you just created and copy the ARN.
 {% endnavtab %}
 {% navtab "AWS CLI" %}
 1. Get your {{site.konnect_short_name}} org ID:
@@ -77,7 +77,7 @@ region: global
 {% capture iam-role %}
 ```sh
 aws iam create-role \
-  --role-name konnect-service-catalog-integration \
+  --role-name konnect-catalog-integration \
   --assume-role-policy-document '{
     "Version": "2012-10-17",
     "Statement": [
@@ -98,8 +98,8 @@ aws iam create-role \
 {% capture cli-permissions-policy %}
 ```sh
 aws iam put-role-policy \
-  --role-name konnect-service-catalog-integration \
-  --policy-name konnect-service-catalog-permissions \
+  --role-name konnect-catalog-integration \
+  --policy-name konnect-catalog-permissions \
   --policy-document '{
     "Version": "2012-10-17",
     "Statement": [
