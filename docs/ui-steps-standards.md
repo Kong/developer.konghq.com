@@ -1,210 +1,123 @@
 # UI writing standards
 
-Use this page to write clear, consistent UI instructions.
+When an action can be done in the UI, we need to provide some UI instructions. What type of UI instructions we provide depends on if the UI is the or one of the primary ways the user will configure something:
 
-## Prioritize workflows
+* **Primary:** Create a UI how-to guide. Provide navigation, actions, and a validation step. Like all how-tos, always provide a validation step at the end.
+* **Secondary:** Add UI instructions to a reference guide or landing page as minimum viable UI documentation. Provide a navigation path to the feature at a minimum.
 
-Explain the end-to-end task that a user finishes in the UI in a workflow format. Use “pure CRUD” format only when it’s a known pain point, for example, in troubleshooting.
+**Important**: If the UI is unclear, raise an issue with PM/Design. We avoid using documentation as a UI bandaid. Still document the UI if a release requires it.
 
-- **Workflow**: A sequence of goal-oriented steps that guides a user through a process in a clear, repeatable order.
-- **CRUD**: A method based on the four main user interface operations: Create, Read, Update, and Delete. These operations let users add, view, change, or remove information.
+## UI steps standards
 
-| Workflow | CRUD |
-| ----- | ----- |
-| **Purpose:** Guide the user through a full, end-to-end task that they want to achieve. **Structure:** Write step-by-step instructions with action verbs. Use an ordered list. Shape it like a “How-to” or “Quickstart.” **When to use:** Use this when users need to complete something: “set up X,” “deploy Y,” “configure Z.” **Value:** Users complete tasks without switching contexts; validation at the end proves success. **Example:** [Get started with Kong Gateway](https://developer.konghq.com/gateway/get-started/) | **Purpose:** List what actions are possible (create, read, update, delete) or what fields exist, without placing them in the context of a full task. **Structure:** Present bullets or a table of operations or schema. Keep the tone neutral and reference-style. **When to use:** Use this on reference pages, schema docs, API endpoints, or plugin configs. Basically anywhere that users just need to know what can be done. **Value:** Fast lookup for parameters, options, and limits without narrative overhead. **Example:** [Gateway configuration reference](https://developer.konghq.com/gateway/configuration/) |
+Regardless of what page the UI is documented on or if it's the primary or secondary method of configuring a feature, all UI instructions must adhere to the following guidelines. These ensure consistency and predictability for UI automated tests. Our standards are constructed in a way to match these best practices:
+* Write each step to contain only one action. One action per step makes the workflow easier to follow and ensures UI automation tests can target a single control at a time.
+* Tell the user the location of a component before telling them the action to perform on the component.
+* All actions are documented. Do not skip steps like **Save** or **Next**. Do not provide a deep link to a UI location without providing the path to get to that location.
+* Provide real values to enter or select from fields. If you can’t provide a real value, provide an example value and make it clear the user needs to replace it with a real value.
+* Always use the exact label that is present in the UI. Clear naming helps users find controls quickly and ensures that the documentation matches the product.
 
-## UI verbs cheat-sheet
-| UI component | Verbs | Example |
-| :---- | :---- | :---- |
-| Field | Enter | Enter \`my-secret\` in the **Key** field. |
-| Checkbox | Select | Select the **Enable setting** checkbox. |
-| Radio button | Select | Select **OIDC**. |
-| Toggle | Enable/Disable | Enable **Role-based access control (RBAC)**. |
-| Button | Click | Click **Save**. |
-| Tab | Click | Click the **General** tab. |
-| Dropdown | Select | Select “Edit” from the **Actions** dropdown menu. |
-| Sidebar link | Click | In **Konnect**, navigate to **Dev Portal** in the sidebar. |
-| List (of control planes, Dev Portals, etc.) | Click | Click **quickstart**. |
+The following sections describe how to write steps for each UI component.
 
-# Scope the amount of UI documentation
+### Field
 
-Match the level of UI documentation to the way users actually configure and use the feature. Don't document the UI in abstract or exhaustive detail, like a 'menu map'; instead, tailor the steps and explanations to reflect how users really perform the task in the product.
+**Format:** In the \**{field name}** field, enter \`{value}\`.
 
-* **Full UI how-to:** Use when the UI is the **primary workflow**. Provide navigation, actions, and a validation step. Always validate at the end of a full UI workflow.
-* **Minimum-viable UI:** Use when automation is the **dominant workflow**. Provide a short pointer path with one key action, and then pair it with automation examples using tabs. Always give a navigation path for minimum-viable UI.
+**Examples:** In the **Key** field, enter \`my-secret\`.
 
-**Important**: If the UI is unclear, raise an issue with PM/Design. Still document the UI if a release requires it.
+### Checkbox
 
-## Full UI how-to
+**Format:** Select the \**{checkbox name}** checkbox.
 
-Use a full UI how-to when the UI is the main way to configure or use the feature, for example:
+**Examples:** Select the **Enable setting** checkbox.
 
-* Set up an integration
-* Configure the Dev Portal
-* Manage Service Catalog flows
+### Toggle
 
-When creating UI how-to documentation, remember to:
+**Format:**
+* Enable \**{toggle name}**.
+* Disable \**{toggle name}**.
 
-- [ ] Write a clear **title and purpose**: “Set up ServiceNow integration in Kong Manager”.  
-- [ ] Provide exact **navigation steps**: “In Kong Manager, go to **Integrations** > **ServiceNow**”.  
-- [ ] Use **imperative verbs** for every action: “Click **Save**”, “Select a Service”, “Enable the Plugin”.  
-- [ ] Show **sequential order** with numbered steps.  
-- [ ] Add a **validation step** at the end: “Send a request to confirm the Plugin applies to the Route”.
+**Examples:**
+* Enable **Role-based access control (RBAC)**.
+* Disable **Role-based access control (RBAC)**.
 
-To avoid confusing or misleading users:
+### Radio button
 
-* Don’t stop at configuration. Instead, always show the validation step.  
-* Don’t use vague cues like “go to the screen.” Be exact. 
-* Don’t duplicate full workflows across multiple pages. Link to the canonical how-to if needed.
+**Format:** Select \**{radio button name}**.
 
-[Configure OpenID Connect with the authorization code flow](/how-to/configure-oidc-with-auth-code-flow/) is an example that shows clear tasks, exact navigation, and validation.
+**Examples:** Select **OIDC**.
 
-## Minimum-viable UI
+### Button
 
-A **minimum-viable UI example** shows the UI path without creating a full tutorial. It is a pointer, not a workflow, and appears side-by-side with automation methods. Don’t bury UI instructions inside automation sections; instead always separate them clearly and give UI its own tab or block.
+**Format:** Click \**{button name}**.
 
-Use minimum-viable UI when **automation is the norm**. For example:
+**Examples:** Click **Save**.
 
-* [Managing configuration with decK](https://developer.konghq.com/deck/gateway/konnect-configuration/)  
-* [Provisioning with Terraform](https://developer.konghq.com/custom-dashboards/)  
-* [Performing operations with the Admin API](https://developer.konghq.com/api/gateway/admin-ee/3.11/)
+Omit the + in UI instructions for buttons.
 
-Minimum-viable UI documentation checklist:
+### Tab
 
-- [ ] Provide the **navigation path**: “Go to **Services** > **Add Service**”.  
-- [ ] Include the **single key action**: “Click **Create**”.  
-- [ ] Pair with automation steps using [**tabs**](/contributing/#tab-groups) or a **side-by-side layout**: UI / decK / Terraform / Admin API.  
-- [ ] Keep it short. Do not expand into a full workflow.
+**Format:** Click the \**{tab name}** tab.
 
-## Format UI steps
+**Examples:** Click the **General** tab.
 
-Format UI steps to tell users *where they need to be first*, then *what action they take*. Always finish on the action. Users need orientation before being asked to act. Without knowing where they are, they may get lost or make errors because of cognitive load.
+### Dropdown
 
-**Formula**: `[Navigation context], [UI control/location reference] + Action verb + Target.`
+**Format:** From the \**{menu name}** dropdown menu, select “{value}”.
 
-| Do | Don’t |
-| :---- | :---- |
-| From the **sidebar**, select **Organizations**. | Select **Organizations** without telling the user where to start. |
-| In **Kong Manager**, go to **Services** > **Add Service**, then click **Create**. | Click **Create** with no navigation context. |
+**Examples:** From the **Actions** dropdown menu, select “Edit”.
 
-Use the following UI-step checklist: 
-- [ ] A navigation context: where the user is or should go to begin
-- [ ] A UI control or location reference: sidebar, menu, tab
-- [ ] A precise action verb + target: Click, Select, Enter 
+### Main sidebar item (L1)
 
-## Write UI steps
+**Format:** In the {{site.konnect_short_name}} sidebar, click \[\**{L1 sidebar name}**](/link).
 
-Use the following rules to write instructions for the Kong UI so that users follow them easily and automation tests work reliably.
+**Examples:** In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](/link).
 
-### Include one action in each step
+### Secondary sidebar item (L2)
 
-Write each step to contain only one action. One action per step makes the workflow easier to follow and ensures UI automation tests can target a single control at a time.
+**Format:** In the {L1 sidebar name} sidebar, click \[\**{L2 sidebar name}**](/link).
 
-| Do | Don't |
-| :---- | :---- |
-| In the Key field, enter `my-secret`. | In the Key field, enter `my-secret`, and then click Save. | 
+**Examples:** In the Service Catalog sidebar, click [**Integrations**](/link).
 
-### Name and point to controls accurately
+### List
 
-Always use the exact label that is present in the UI. Clear naming helps users find controls quickly and ensures that the documentation matches the product. Helpful conventions to follow are:
+**Format:** Click \**{value}**.
 
-* Use icon descriptions when needed: *Click the Settings (cog) icon.*  
-* Use carets to show menu navigation: *Service actions \> Add new version.*   
-* Write button labels in full, not as symbols. For example, write *New Plugin*, not *\+*.
+**Examples:** Click **quickstart**.
 
-| Do | Don't |
-| :---- | :---- |
-| From the **Menu** tab, click **Add menu item.** | From the tab, click the item button for the menu. |
+### Icon
 
-### Give real, selectable values
+**Format:** Click the {icon name} icon.
 
-Use real values that can be selected or entered in fields. If you can’t provide a real value, provide an example value and make it clear the user needs to replace it with a real value. Real examples reduce ambiguity and give users confidence that they are entering data in the correct format. They also support reliable test cases.
-* Replace *portal.example.com* with the Kong domain. 
-* Use numerals for numbers; users scan them faster and they reduce ambiguity for online readers.
+**Examples:** 
+* Click the settings icon.
+* Click the edit icon.
+* Click the action menu icon.
 
-| Do | Don't |
-| :---- | :---- |
-| In the **Key** field, enter \`my-secret\`. | Enter a secret in the **Key** field. |
-| In the **URL** field, enter \`https://konghq.com/\`. | Enter your Dev Portal URL in the **URL** field. |
-| Set `Retries` to `3`. | Set retries to three. |
+## UI instruction how-tos
 
+A UI how-to provides all possible steps in UI instructions. They should be written like all other how-tos where there are no hidden prerequisites and we assume the user starts from scratch. Like all how-tos, always provide a validation step at the end.
 
-### Bold UI component names
+**Do not** provide tabs in how-tos for other methods. For example, a how-to must not have a tab for UI and API steps in the body of the how-to. This complicates automated tests and makes it more difficult for users as steps between methods don't always align.
 
-Use bold text for visible UI labels such as fields, tabs, buttons, dropdowns, and sidebar links. Bold formatting matches the user’s visual experience, reduces scanning effort, and highlights actionable elements; overall reducing cognitive load.
+See the following examples of UI how-to instructions:
+* [Discover and govern APIs with Service Catalog](https://developer.konghq.com/how-to/discover-and-govern-apis-with-service-catalog/)
+* [Discover AWS Gateway APIs in Service Catalog with the Konnect UI](https://developer.konghq.com/how-to/discover-aws-gateway-apis-using-konnect-ui/)
+* [Create a dashboard from a template](https://developer.konghq.com/how-to/create-custom-dashboards/)
+* [Write a pre-request script to add an environment variable in Insomnia](https://developer.konghq.com/how-to/write-pre-request-scripts/)
 
-| Do | Don't |
-| :---- | :---- |
-| In Konnect, navigate to **Dev Portal** in the **sidebar** | In Konnect, navigate to Dev Portal in the sidebar. |
-| In the **URL** field, enter \`https://konghq.com/\`. | Enter your Dev Portal URL in the **URL** field. |
+## Minimum-viable UI instruction examples
 
-### Dropdown selection formatting
+A **minimum-viable UI example** shows the UI path to the feature without creating a full tutorial. Use minimum-viable UI when automation is the norm. When other methods (like API or Terraform) are supported, include nav tabs with minimum-viable instructions for each method.
 
-When the user must select an option from a dropdown menu, put the selected option in quotation marks to distinguish it from menus and other UI nouns. It clarifies which part is static (menu) and which part is dynamic (item).
+See the following examples of minimum-viable UI instructions:
+* [Dev Portal APIs](https://developer.konghq.com/dev-portal/apis/)
+* [Service Catalog services](https://developer.konghq.com/service-catalog/services/)
 
-| Do | Don't |
-| :---- | :---- |
-| From the **Actions** menu, select “Edit”. | From the **Actions** menu, select Edit. |
-| In **Role**, select “Admin”. | Choose Admin from the role. |
+## Third-party instructions
 
-**Example:** In [Dev Portal APIs](https://developer.konghq.com/dev-portal/apis/), dropdown actions are described clearly, e.g. *Select “New API”*.
+We document third-party instructions in the following conditions:
+* The third-party product must be configured in a specific way for our product to work. Common examples would be SSO or transit gateways. Example: [AWS configuration for Transit Gateway peering](https://developer.konghq.com/dedicated-cloud-gateways/transit-gateways/#aws-configuration-for-transit-gateway-peering)
+* The same rules apply to third-party instructions as our own. We write each step the same way we write ours and we provide documentation for all the primary ways a user interacts with the third-party (for example, CLI, UI, or API). Example: [Configure an IAM role in AWS for Service Catalog](https://developer.konghq.com/service-catalog/integrations/aws-api-gateway/#configure-an-iam-role-in-aws-for-service-catalog)
+* If a user needs an entity from the third-party as a prerequisite, but it doesn't require a special configuration for Kong, you can link to third-party instructions instead. Example: [AWS configuration for Vaults](https://developer.konghq.com/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/#aws-configuration) 
 
-### Field entry formatting
-
-When the user must enter specific text into a field, wrap the literal entry in backticks. 
-
-| Do | Don't |
-| :---- | :---- |
-| In the **Key** field, enter `my-secret`. | In the **Key** field, enter “my-secret”. |
-| In **Role**, enter `Admin`. | Choose Admin from the role. |
-| In the Username field, enter `alice`. | In the Username box, type alice without marks. |
-
-
-### Accessibility & inclusivity
-
-Some users operate assistive technology or translation; idioms do not translate, keyboard users follow focus order and labels. Construct documentation to include all users with the accessibility checklist:
-
-- [ ] Include descriptive alt text for images.
-- [ ] Avoid idioms and slang so translated content remains clear.
-
-| Do | Don't |
-| :---- | :---- |
-| Click **Save**, then press Enter. | Hit the button to lock it in. |
-| Add alt text: “Analytics line chart that shows a spike on July 10.” | Add alt text: Useful chart.” |
-
-
-### Add a step for saving the configuration
-
-Always include a separate step for saving settings or configuration changes. Do not assume that the user knows to save.
-
-| Do | Don't |
-| :---- | :---- |
-| Click **Save**. | Save the configuration. |
-| Click **Apply**, then click **Save**. | Apply and it should save. |
-
-### Minimum-viable tooling parity (UI \+ decK \+ API \+ Terraform)
-
-For features that support automation, show automation options next to UI steps with `{% navtabs %}`, for example, UI, decK, API, Terraform. Provide a minimal working example or link to the exact reference for each method.
-
-| Do | Don't |
-| :---- | :---- |
-| Warn that `deck gateway sync` removes unmanaged config and show tag-based partial apply. | Reference decK without noting destructive behavior. |
-| Link to Terraform provider resources and a focused how-to. | Say “Use Terraform” with no resource or example. |
-
-**Examples on Kong Docs that demonstrate parity:**
-
-* [Deploy Kong Mesh with Terraform + Konnect](https://developer.konghq.com/mesh/deploy-with-terraform-konnect/) provides concrete Terraform resources, variables, and `terraform apply`.  
-* [Import Konnect Mesh deployment to Terraform](https://developer.konghq.com/mesh/import-konnect-deployment-to-terraform/) shows how to bring an existing deployment under IaC control.  
-* [decK gateway sync](https://developer.konghq.com/deck/gateway/sync/) documents declarative sync behavior and cautions.  
-* [Terraform providers for Kong](https://developer.konghq.com/terraform/) gives resource examples and how-to links.
-
-### Third-party UIs
-
-We don’t document 3rd party UIs. Avoid step-by-step screenshots of third-party products; deep-link to vendor docs instead. This keeps Kong docs maintainable, reduces staleness risk, and focuses our effort on what Kong controls.
-
-| Do | Don't |
-| :---- | :---- |
-| To configure SSO with Okta, see Okta’s documentation. | Click **Applications**, click **Create App Integration**, select **“OIDC”…** |
-| Explain where third-party settings appear in Kong and link out for details. | Replicate the vendor’s entire wizard with screenshots. |
-
-**Example:** “[Supported third-party dependencies](https://developer.konghq.com/gateway/third-party-support/)” lists verified external tools and versions; it does not include third-party UI walkthroughs. 
+ 
