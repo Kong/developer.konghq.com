@@ -1,6 +1,6 @@
 ---
 title: "Geographic regions"
-description: '{{site.konnect_short_name}} allows you to host and operate your cloud instance in a geographic region that you specify. This is important for data privacy and regulatory compliance for you organization.'
+description: '{{site.konnect_short_name}} allows you to host and operate your cloud instance in a geographic region that you specify. This is important for data privacy and regulatory compliance for your organization.'
 content_type: reference
 layout: reference
 products:
