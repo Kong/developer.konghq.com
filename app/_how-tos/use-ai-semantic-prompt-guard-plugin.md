@@ -121,15 +121,6 @@ entities:
         rules:
           match_all_conversation_history: true
           allow_prompts:
-            - Network troubleshooting and diagnostics
-            - Cloud infrastructure management (AWS, Azure, GCP)
-            - Cybersecurity best practices and incident response
-            - DevOps workflows and automation
-            - Programming concepts and language usage
-            - IT policy and compliance guidance
-            - Software development lifecycle and CI/CD
-            - Documentation writing and technical explanation
-            - System administration and configuration
             - Productivity and collaboration tools usage
           deny_prompts:
             - Hacking techniques or penetration testing without authorization
