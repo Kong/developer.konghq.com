@@ -37,7 +37,7 @@ tags:
 
 tldr:
   q: How do I govern LLM responses using semantic filtering?
-  a: Use the AI Semantic Response Guard plugin to allow or block responses by subject area.
+  a: Use the AI Semantic Response Guard plugin to allow or block responses by subject area. Use the `config.rules.allow_responses` parameter to list allowed response subjects and `config.rules.deny_responses` to list response subjects that aren't allowed.
 
 tools:
   - deck
@@ -187,7 +187,7 @@ body:
 
 {% endnavtab %}
 
-{% navtab "Denied: Impersonation / hhishing" %}
+{% navtab "Denied: Impersonation / phishing" %}
 
 This request could cause the LLM to generate content that assists impersonation or phishing, which is blocked:
 
