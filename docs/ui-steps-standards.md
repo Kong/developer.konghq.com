@@ -22,7 +22,7 @@ The following sections describe how to write steps for each UI component.
 
 **Format:** In the \**{field name}** field, enter \`{value}\`.
 
-**Examples:** In the **Key** field, enter \`my-secret\`.
+**Examples:** In the **Key** field, enter `my-secret`.
 
 ### Checkbox
 
