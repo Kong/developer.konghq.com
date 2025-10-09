@@ -54,6 +54,8 @@ related_resources:
     url: /plugins/ai-semantic-cache/
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
+  - text: Embedding-based similarity matching in Kong AI Gateway plugins
+    url: /ai-gateway/semantic-similarity/
 
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
@@ -67,9 +69,9 @@ faqs:
       failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
       ```
 
-      This means that the hardcoded MemoryDB instance limit has been reached. 
+      This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
- 
+
 next_steps:
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
