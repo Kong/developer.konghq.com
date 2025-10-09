@@ -69,20 +69,22 @@ and much more.
 
 Now, let's configure a proxy and test your first virtual cluster setup.
 
-## Create an Event Gateway in {{site.konnect_short_name}}
+## Create an {{site.event_gateway_short}} in {{site.konnect_short_name}}
 
-{% include knep/konnect-create-cp.md name='KNEP getting started' %}
+Run the [quickstart script](https://get.konghq.com/event-gateway) to automatically provision an {{site.base_gateway}} control plane and data plane, and configure your environment:
 
-## Create a data plane node
+```bash
+curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN
+```
 
-1. In {{site.konnect_short_name}}, navigate to [**Event Gateway**](https://cloud.konghq.com/event-gateway/) in the sidebar.
-1. Click your event gateway.
-1. Navigate to **Data Plane Nodes** in the sidebar.
-1. Click **Configure data plane**.
-1. In the **Platform** dropdown, select your platform.
-1. Click **Generate Certificate**.
-1. Click the **Copy** button to copy the command.
-1. Run the command in your terminal.
+This sets up an {{site.base_gateway}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
+
+```bash
+export EVENT_GATEWAY_ID=your-gateway-id
+```
+
+Copy and paste this into your terminal to configure your session.
+
 
 ## Add a backend cluster
 
@@ -93,14 +95,14 @@ url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
 status_code: 201
 method: POST
 body:
-  name: kafka-localhostkafka:9092
+  name: kafka-localhostkafka:9094
   bootstrap_servers:
-    - kafka:9092
+    - kafka1:9092
+    - kafka2:9092
+    - kafka3:9093
   authentication:
     type: anonymous
   insecure_allow_anonymous_virtual_cluster_auth: true
-  tls:
-    insecure_skip_verify: false
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -121,7 +123,7 @@ body:
   name: example.mycompany.com
   destination:
     id: $BACKEND_CLUSTER_ID
-  dns_label: vc1
+  dns_label: vcluster-1
   authentication:
     - type: anonymous
   acl_mode: passthrough
@@ -146,7 +148,7 @@ body:
   addresses:
     - 0.0.0.0
   ports:
-    - '19092'
+    - 19092-19101
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -169,9 +171,9 @@ body:
   name: forward
   config:
     type: port_mapping
-    advertised_host: 0.0.0.0
+    advertised_host: localhost
     destination: 
-      name: example.mycompany.com
+      id: $VIRTUAL_CLUSTER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -201,42 +203,26 @@ Set up the `kafkactl` config file:
 ```shell
 cat <<EOF > kafkactl.yaml
 contexts:
-  direct:
-    brokers:
-      - localhost:9092
   backend:
     brokers:
-      - localhost:9092
-  knep:
+      - localhost:9094
+  vc:
     brokers:
       - localhost:19092
-  secured:
-    brokers:
-      - localhost:29092
-  team-a:
-    brokers:
-      - localhost:19092
-  team-b:
-    brokers:
-      - localhost:29092
-current-context: direct
 EOF
 ```
-This file defines several configuration profiles. We're going to switch between these profiles as we test different features.
+This file defines two configuration profiles. We're going to switch between these profiles as we test different features.
 
 ## Validate the cluster
 
-Let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. 
-You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
-
-You can also use the `kafkactl` command to check the cluster. 
-Let's check the Kafka cluster directly:
+Let's check that the cluster works using `kafkactl`.
+First, check the Kafka cluster directly:
 
 ```shell
-kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
-kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"
+kafkactl -C kafkactl.yaml --context backend create topic my-test-topic --print-headers
+kafkactl -C kafkactl.yaml --context backend produce my-test-topic --value="Hello World"
 ```
-It'll use the `direct` context, which is this case is a direct connection to our Kafka cluster.
+It'll use the `backend` context, which is this case is a direct connection to our Kafka cluster.
 
 You should see the following response:
 ```shell
@@ -246,10 +232,10 @@ message produced (partition=0	offset=0)
 {:.no-copy-code}
 
 Now let's check the Kafka cluster through the {{site.event_gateway_short}} proxy.
-By passing the `knep` context, `kafkactl` will connect to Kafka through the proxy port `19092`:
+By passing the `vc` context, `kafkactl` will connect to Kafka through the proxy port `19092`:
 
 ```shell
-kafkactl -C kafkactl.yaml --context knep list topics
+kafkactl -C kafkactl.yaml --context vc list topics --print-headers
 ```
 
 You should see a list of the topics you just created:
@@ -260,4 +246,17 @@ my-test-topic      1              1
 ```
 {:.no-copy-code}
 
-You now have a Kafka cluster running with an {{site.event_gateway_short}} proxy in front. 
+Let's also test that our Modify Headers policy is applying the header `My-New-Header`.
+First, produce a message:
+
+```sh
+kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
+```
+
+Then consume it while passing the `--print-headers` flag:
+
+```sh
+kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers
+```
+
+You now have a Kafka cluster running with an {{site.event_gateway_short}} proxy in front, and the proxy is applying your custom policies. 
