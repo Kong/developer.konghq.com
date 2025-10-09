@@ -65,29 +65,3 @@ Insert the screenshot with standard Markdown:
 | Do | Don't |
 | :---- | :---- |
 | Write: “From the **Menu** tab, click **Add menu item:**” | Drop a screenshot without introduction: ![Add menu](/assets/images/docs/add-menu.png) |
-
-## File storage and naming
-
-Store images under `app/_assets/images/docs/...` and name them predictably using `product-version-feature-goal.png.` format that reflects keyboard-navigatable labels. This pattern improves search, swap-outs, and translation at scale.
-
-| Do | Don't |
-| :---- | :---- |
-| Save to `app/_assets/images/docs/konnect-v2-1-dev-portal-menu.png.` | Reference decK without noting destructive behavior. |
-| Use lowercase and dashes: `mesh-v1-overview-tabs.png.` | Mix cases and spaces: `Mesh Overview Tabs.PNG.` |
-
-## Legal and privacy
-
-Never expose real data. Use realistic fakes and consistent redaction. For example, ACME accounts and seeded IDs. This protects confidentiality and compliance while keeping the UI intelligible.
-
-| Do | Don't |
-| :---- | :---- |
-| Show username as `acme-admin@example.com`. | Show real identifiers: `cora.byrne@konghq.com`. |
-| Replace domain with `example.com.`. | Use production hostname like `kong-internal.prod.`. |
-
-## Automation
-Use **Shot-scraper** to make captures reproducible. It drives a headless browser through Playwright, sets width/height, and crops to CSS selectors. Try to use simple `shots.yml` so any writer can refresh images in one step.
-
-| Do | Don't |
-| :---- | :---- |
-| `shot-scraper https://example.konghq.com/docs --width 1500 --height 845 -s '#sidebar' -o app/_assets/images/docs/konnect-menu.png.`. | Manually take a screenshot, drag it into a doc, and save as `Screenshot (5).png.`. |
-| Add a `shots.yml` file for batch refresh. | Capture ad hoc each time, making updates inconsistent. |
