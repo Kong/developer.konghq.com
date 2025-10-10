@@ -9,11 +9,11 @@ related_resources:
   - text: "{{site.event_gateway_short}} Policy Hub"
     url: /event-gateway/policies/
   - text: "Virtual clusters"
-    url: /event-gateway/entities/virtual-clusters/
+    url: /event-gateway/entities/virtual-cluster/
   - text: "Backend clusters"
-    url: /event-gateway/entities/backend-clusters/
+    url: /event-gateway/entities/backend-cluster/
   - text: "Listeners"
-    url: /event-gateway/entities/listeners/
+    url: /event-gateway/entities/listener/
 
 tools:
     - konnect-api
@@ -84,31 +84,42 @@ rows:
 
 ### Record serialization
 
-Some policies operate on marshaled (serialized) records, while others require parsed (deserialized) records.
+Some policies operate on parsed records, while others work with raw serialized data.
 
-* **Marshaled records** are raw, serialized data.  
-* **Parsed records** are deserialized into a structured format.
+* **Parsed records**: Deserialized into a structured format (for example, JSON objects or Avro records).
+* **Non-parsed records**: Raw, serialized byte data.
+
+Records are deserialized on produce and re-serialized on consume.
 
 {% feature_table %}
 columns:
   - title: "Policy"
     key: "policy"
-  - title: Can act on parsed record?
+  - title: Can act on parsed (deserialized) record?
     key: parsed
+    center: true
+  - title: Can act on non-parsed (serialized) record?
+    key: nonparsed
     center: true
 features:
   - policy: "[Kafka ACL](/event-gateway/policies/acl/)"
     parsed: No
+    nonparsed: Yes
   - policy: "[Encrypt](/event-gateway/policies/encrypt/)"
     parsed: No
+    nonparsed: Yes
   - policy: "[Decrypt](/event-gateway/policies/decrypt/)"
     parsed: No
+    nonparsed: Yes
   - policy: "[Schema validation](/event-gateway/policies/schema-validation/)"
     parsed: No
+    nonparsed: Yes
   - policy: "[Modify headers](/event-gateway/policies/modify-headers/)"
     parsed: Yes
+    nonparsed: Yes
   - policy: "[Skip records](/event-gateway/policies/skip-records/)"
     parsed: Yes
+    nonparsed: Yes
 {% endfeature_table %}
 
 ### Set up a virtual cluster policy
@@ -420,7 +431,20 @@ resource "konnect_event_gateway_listener_policy_forward_to_virtual_cluster" "my_
 ## Conditions
 
 Policies have a condition field that determines whether the policy executes or not. 
-By writing conditions using [Expressions](/gateway/routing/expressions/), you can access dynamic configuration from the execution context.
+By writing conditions using expressions, you can access dynamic configuration from the execution context.
+
+For policy conditions and template strings, {{site.event_gateway}} supports a subset of JavaScript operators and expressions:
+
+* Logical operators: `&&`, `||`, `!`
+* Comparison operators: `==`, `!=`, `<`, `<=`, `>`, `>=`
+* Concatenation operator: `+`
+* Functions: the following string functions:
+  * `includes`
+  * `startsWith` 
+  * `endsWith`
+  * `substring`
+
+<!-- To do when info exists: create separate reference page for expressions -->
 
 For example, you can create a condition that selects all topics that end with the suffix `my_suffix`:
 
