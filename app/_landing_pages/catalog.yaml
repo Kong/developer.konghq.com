@@ -24,7 +24,7 @@ rows:
                 - type: text
                   text: |
                     {{site.konnect_catalog}} provides a centralized catalog of all services and APIs running in your organization. 
-                    By integrating with internal applications (like Gateway Manager and Mesh Manager) and external tools (like GitHub and PagerDuty), 
+                    By integrating with internal applications, like Gateway Manager and Mesh Manager, and external tools, like GitHub and PagerDuty, 
                     it offers a 360-degree overview of your services, including:
                 - type: unordered_list
                   items:
@@ -43,8 +43,8 @@ rows:
           config:
             title: APIs
             description: |
-              Create APIs with Catalog.
-              Catalog APIs serve as a repository for your API specifications and documentation.
+              Create, discover, and govern APIs and specs.
+              Catalog serves as a central repository for your APIs, services, and the documentation files associated with them.
             icon: /assets/icons/api.svg
             ctas:
               - text: APIs reference
@@ -55,6 +55,16 @@ rows:
                 url: "/how-to/automate-api-catalog-with-terraform/"
               - text: Discover and govern APIs
                 url: /how-to/discover-and-govern-apis-with-service-catalog/
+      - blocks:
+          - type: card
+            config:
+              title: "Services"
+              description: |
+                Discover the systems that power your APIs—like microservices or backends—and centralize them for a complete view of your API infrastructure.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about {{site.konnect_catalog}} services
+                url: /catalog/services/
       - blocks:
           - type: card
             config:
@@ -75,16 +85,6 @@ rows:
               cta:
                 text: Learn about scorecards
                 url: /catalog/scorecards/
-      - blocks:
-          - type: card
-            config:
-              title: "{{site.konnect_catalog}} services"
-              description: |
-                Map resources to a {{site.konnect_catalog}} service.
-              icon: /assets/icons/linked-services.svg
-              cta:
-                text: Learn about {{site.konnect_catalog}} services
-                url: /catalog/services/
   - header:
       type: h2
       text: "Frequently asked questions"
@@ -92,8 +92,6 @@ rows:
       - blocks:
           - type: faqs
             config:
-              - q: "How do {{site.konnect_catalog}} services map to API products?"
-                a: "{{site.konnect_catalog}} services do not directly map to API products. However, a Gateway Service can be linked to a {{site.konnect_catalog}} service, which can then be associated with an API product."
               - q: "How do I view service health and status?"
                 a: "Go to **Services** in the {{site.konnect_catalog}} and select a service to view detailed health and status information."
               - q: "How can I identify available resources for mapping?"

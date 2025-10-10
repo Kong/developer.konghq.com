@@ -98,7 +98,6 @@ rows:
             title: Create an API catalog
             description: |
               Create and publish APIs to Dev Portal.
-              Catalog APIs serve as a repository for your API specifications and documentation.
             icon: /assets/icons/api.svg
             ctas:
               - text: With the {{site.konnect_short_name}} API
