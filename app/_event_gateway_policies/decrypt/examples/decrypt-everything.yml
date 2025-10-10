@@ -20,6 +20,9 @@ extended_description: |
 
 weight: 900
 
+requirements: 
+ - "A corresponding [Encrypt policy](/event-gateway/policies/encrypt/examples/encrypt-everything/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
+
 type: decrypt
 name: decrypt-using-aws
 config:

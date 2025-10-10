@@ -3,7 +3,8 @@ title: Decrypt a specific key
 description: Decrypt a specific key.
 
 # where do we define the key source? is this still necessary?
-
+requirements: 
+ - "A corresponding [Encrypt policy](/event-gateway/policies/encrypt/examples/encrypt-a-key/). Event Gateway uses the key ID from the Encrypt policy along with the actual key in the Decrypt policy to successfully decrypt."
 weight: 900
 
 variables:

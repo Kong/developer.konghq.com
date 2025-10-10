@@ -17,7 +17,8 @@ extended_description: |
   ``` 
 
 # where do we define the key source? 
-
+requirements: 
+ - "A corresponding [Decrypt policy](/event-gateway/policies/encrypt/examples/decrypt-everything/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
 weight: 900
 
 type: encrypt
@@ -26,10 +27,11 @@ config:
   failure_mode: passthrough
   key_sources:
     - type: aws
-  decrypt:
+  encrypt:
     - part_of_record: key
       key_id: ${key_id}
     - part_of_record: value
+      key_id: ${key_id}
 
 variables:
   key_id:

@@ -6,6 +6,9 @@ description: Encrypt a specific key.
 
 weight: 900
 
+requirements: 
+ - "A corresponding [Decrypt policy](/event-gateway/policies/encrypt/examples/encrypt-a-key/). Event Gateway uses the key ID from the Encrypt policy along with the actual key in the Decrypt policy to successfully decrypt."
+ 
 variables:
   key_source_id: 
     description: |
@@ -20,15 +23,20 @@ type: encrypt
 name: encrypt-static-key
 config:
   failure_mode: error
+  encrypt:
+    - part_of_record: value
+      key_id: ${key_id}
+    - part_of_record: key
+      key_id: ${key_id}
   key_sources:
     - type: static
       keys:
-        - id: ${key_source_id}
-          key: "${env['MY_SECRET']}"
-  encrypt:
-    - part_of_record: key
-      key_id: ${key_id}
-    - part_of_record: value
+        - id: ${key_id}
+          key: ${env["MY_SECRET"]}
+    - type: static
+      keys:
+        - id: ${key_id}
+          key: ${env["MY_SECRET"]}
 
 tools:
   - konnect-api
