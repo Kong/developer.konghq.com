@@ -4,6 +4,7 @@ description: Map listener ports to forward messages from a Kafka client to a vir
 
 requirements:
   - A matching mapping port for each broker on the backend cluster.
+  - A [virtual cluster](/event-gateway/entities/virtual-cluster/)
 
 weight: 900
 
