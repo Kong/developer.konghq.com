@@ -20,8 +20,8 @@ condition: |
   context.topic.name.endsWith('my_suffix')
 config:
   certificates:
-    - certificate: certificate
-      key: "${env['MY_SECRET']}"
+    - certificate: /path/here
+      key: "${env[\"MY_SECRET\"]}"
   versions:
     min: TLSv1.2
     max: TLSv1.2

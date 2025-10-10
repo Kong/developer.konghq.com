@@ -6,12 +6,9 @@ weight: 900
 name: forward
 type: forward_to_virtual_cluster
 config:
-  advertised_host: 0.0.0.0
-  bootstrap_port: at_start
-  destination:
-    name: example-virtual-cluster
-  min_broker_id: 1
-  type: port_mapping
+  type: sni
+  sni_suffix: example.mycompany.com
+  advertised_port: 0000
 
 tools:
   - konnect-api
