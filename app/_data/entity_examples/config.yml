@@ -87,10 +87,10 @@ formats:
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
     policy_endpoints:
-      consume:  '/virtual-clusters/{virtual_cluster}/consume-policies/'
-      produce:  '/virtual-clusters/{virtual_cluster}/produce-policies/'
-      cluster:  '/virtual-clusters/{virtual_cluster}/cluster-policies/'
-      listener: '/listeners/{event_gateway_listener}/policies/'
+      consume:  '/virtual-clusters/{virtual_cluster}/consume-policies'
+      produce:  '/virtual-clusters/{virtual_cluster}/produce-policies'
+      cluster:  '/virtual-clusters/{virtual_cluster}/cluster-policies'
+      listener: '/listeners/{event_gateway_listener}/policies'
     variables:
       <<: *konnect_variables
       control_plane:
