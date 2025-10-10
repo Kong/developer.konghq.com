@@ -1,0 +1,21 @@
+title: Validate all messages for a topic
+
+description: Ensure that all messages consumed from topics with a specific suffix are validated against a schema, and reject any messages that don't conform.
+
+weight: 900
+
+requirements:
+  - A [schema registry](/event-gateway/policies/schema-validation-consume/#schema-registry) configured in the {{site.event_gateway_short}} control plane.
+
+name: validate-all-messages
+type: schema_validation
+condition: "context.topic.name.endsWith('my_suffix')"
+config:
+  type: confluent_schema_registry
+  schema_registry:
+    name: my-schema-registry
+  key_validation_action: reject
+  value_validation_action: reject
+
+tools:
+  - konnect-api
