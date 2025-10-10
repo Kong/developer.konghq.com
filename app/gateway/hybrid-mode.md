@@ -221,7 +221,7 @@ in the `kong/charts` repository.
 
 Depending on where you're running hybrid mode, the following CP/DP versioning compatibility applies:
 
-* **Kong-managed in {{site.konnect_short_name}}:** Control planes only allow connections from Data Planes with the exact same version of the Control Plane.
+* **Kong-managed data planes in {{site.konnect_short_name}}:** For Kong-managed data planes like [Dedicated Cloud Gateways](/dedicated-cloud-gateways/), control planes only allow connections from data planes with the exact same version of the control plane.
 * **Self-managed in {{site.base_gateway}}:** Control planes only allow connections from Data Planes with the same major version. Control planes won't allow connections from Data Planes with newer minor versions.
 
 For example, a {{site.base_gateway}} v3.9.0.1 Control Plane:
