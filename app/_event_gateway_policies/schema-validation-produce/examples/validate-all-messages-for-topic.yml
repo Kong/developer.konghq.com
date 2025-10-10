@@ -9,7 +9,8 @@ requirements:
 
 name: validate-all-messages
 type: schema_validation
-condition: "context.topic.name.endsWith('my_suffix')"
+condition: >
+  context.topic.name.endsWith("my_suffix")
 config:
   type: confluent_schema_registry
   schema_registry:
