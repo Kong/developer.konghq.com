@@ -49,7 +49,6 @@ Listeners can have one or more policies that define how the TCP connection is ha
 * **TLS Server Policy:** Enforces encryption, provides a certificate, and can use SNI to route connections by hostname.
 * **Forward to Virtual Cluster Policy:** Routes the connection to a specific virtual cluster. Only one forward policy is allowed per listener.
 
-
 ## Schema
 
 {% entity_schema %}
@@ -100,7 +99,7 @@ resource "konnect_event_gateway_listener" "my_eventgatewaylistener" {
 The following creates a new Listener called **example-backend-cluster** with basic configuration:
 1. In {{site.konnect_short_name}}, navigate to [**Event Gateway**](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click your event gateway.
-1. Navigate to **Listeners** in the sidebar.
+1. In the Event Gateway sidebar, click **Listeners**.
 1. Click **New listener**.
 1. In the **Name** field, enter `listener-localhost`.
 1. In the **Addresses** field, enter `0.0.0.0`.
