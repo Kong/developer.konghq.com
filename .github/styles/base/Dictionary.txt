@@ -253,6 +253,7 @@ full_name
 Gateway
 GatewayClass
 gatewayclass
+gateway_entity
 gcloud
 gcp
 geo
