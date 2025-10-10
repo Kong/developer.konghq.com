@@ -1,0 +1,18 @@
+title: Skip processing a record based on a condition
+
+description: Skip processing a record if it meets a specific condition.
+
+extended_description: |
+  Skip processing a record if it meets a specific condition.
+
+  In the following example, if a record's topic name ends with `my_suffix`, the record will be skipped, and no other policies will be applied to it.
+
+weight: 900
+
+name: skip-record-based-on-condition
+type: skip_record
+condition: |
+  context.topic.name.endsWith('my_suffix')
+
+tools:
+  - konnect-api
