@@ -8,7 +8,7 @@ type: forward_to_virtual_cluster
 config:
   type: sni
   sni_suffix: example.mycompany.com
-  advertised_port: 0000
+  advertised_port: 19095
 
 tools:
   - konnect-api
