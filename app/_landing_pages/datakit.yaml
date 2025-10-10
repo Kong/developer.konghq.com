@@ -29,6 +29,7 @@ rows:
                     Datakit is a {{site.base_gateway}} plugin that lets you define workflows connecting multiple APIs, transforming their responses, and building dynamic data pipelines—without custom code.
 
                     It can:
+                    - Set up internal auth within your ecosystem
                     - Call and combine third-party APIs
                     - Modify and transform request or response bodies
                     - Interact with {{site.base_gateway}} runtime data
@@ -179,15 +180,15 @@ rows:
                   text: |
                     Datakit provides a flexible set of node types that form the building blocks of any workflow:
 
-                    - `branch`: Execute different nodes based on input conditions  
-                    - `cache`: Store and fetch data from cache  
-                    - `call`: Send HTTP requests to external APIs  
-                    - `jq`: Transform data and cast variables using `jq`  
-                    - `exit`: Return directly to the client  
-                    - `property`: Read and write {{site.base_gateway}} properties  
-                    - `static`: Define static input values  
+                    - [`branch`](/plugins/datakit/#branch-node): Execute different nodes based on input conditions  
+                    - [`cache`](/plugins/datakit/#cache-node): Store and fetch data from cache  
+                    - [`call`](/plugins/datakit/#call-node): Send HTTP requests to external APIs  
+                    - [`jq`](/plugins/datakit/#jq-node): Transform data and cast variables using `jq`  
+                    - [`exit`](/plugins/datakit/#exit-node): Return directly to the client  
+                    - [`property`](/plugins/datakit/#property-node): Read and write {{site.base_gateway}} properties  
+                    - [`static`](/plugins/datakit/#static-node): Define static input values  
                     
-                    Datakit also supports implicit nodes such as `request`, `response`, `vault`, and `service_request`, which represent gateway lifecycle events.
+                    Datakit also supports [implicit nodes](/plugins/datakit/#implicit-nodes) such as `request`, `response`, `vault`, and `service_request`, which represent gateway lifecycle events.
       - blocks:
           - type: image
             config:
