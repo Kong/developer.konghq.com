@@ -107,9 +107,9 @@ The following creates a new SNI with basic configuration:
     {{ include.presenter.data['name'] }}
     ```
 1. In the **SSL Certificate ID** field, enter the ID for an existing Certificate:
-    ```
-    {{ include.presenter.data['certificate']['id'] }}
-    ```
+   ```
+   {{ include.presenter.data['certificate']['id'] }}
+   ```
 1. Click **Save**.
 {% when 'workspace' %}
 The following creates a new Workspace:
