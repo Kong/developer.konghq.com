@@ -60,7 +60,7 @@ rows:
             config:
               diagram: |
                 flowchart TD
-                A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; Service Catalog)
+                A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; Catalog)
                 B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane
                 #40;Kong Gateway instance#41;)
                 B2(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane 

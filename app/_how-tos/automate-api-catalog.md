@@ -1,11 +1,12 @@
 ---
-title: Automate your API catalog with Dev Portal
+title: Automate your API catalog with the Konnect API
 description: Learn how to automate your API catalog in Dev Portal using Konnect APIs.
 content_type: how_to
 automated_tests: false
 products:
     - gateway
     - dev-portal
+    - catalog
 works_on:
     - konnect
 
@@ -19,7 +20,7 @@ search_aliases:
     - API catalog
 
 tldr:
-    q: How do I automate the creation and publication of my API catalog in Dev Portal?
+    q: How do I automate the creation and publication of my API catalog in Catalog and Dev Portal?
     a: You can automate the creation and publication of APIs to your Dev Portal API catalog using the {{site.konnect_short_name}} API. Create an API (`/v3/apis`), optionally associate a document (`/v3/apis/{apiId}/documents`) or spec (`/v3/apis/{apiId}/versions`) with the API, then associate the API with a Gateway Service (`/v3/apis/{apiId}/implementations`). Finally, publish it by sending a `PUT` request to the `/v3/apis/{apiId}/publications/{portalId}` endpoint.
 
 prereqs:
@@ -42,8 +43,8 @@ cleanup:
 min_version:
     gateway: '3.4'
 related_resources:
-  - text: Dev Portal APIs reference
-    url: /dev-portal/apis/
+  - text: Catalog APIs reference
+    url: /catalog/apis/
   - text: Self-service developer and application registration
     url: /dev-portal/application-registration/
   - text: Application authentication strategies
@@ -60,7 +61,7 @@ faqs:
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
   - q: How does {{site.konnect_short_name}} manage authentication and authorization on Gateway Services that are linked to my APIs?
     a: |
-      When a Gateway Service is linked to an API, {{site.konnect_short_name}} automatically adds the [{{site.konnect_short_name}} Application Auth (KAA) plugin](/dev-portal/apis/#allow-developers-to-consume-your-api) to your Service. The KAA plugin applies authentication and authorization to the Service. This is a {{site.konnect_short_name}}-managed plugin that you can't directly modify, you can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/). 
+      When a Gateway Service is linked to an API, {{site.konnect_short_name}} automatically adds the [{{site.konnect_short_name}} Application Auth (KAA) plugin](/catalog/apis/#allow-developers-to-consume-your-api) to your Service. The KAA plugin applies authentication and authorization to the Service. This is a {{site.konnect_short_name}}-managed plugin that you can't directly modify, you can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/). 
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
@@ -68,7 +69,7 @@ next_steps:
 
 ## Create an API
 
-In this tutorial, you'll automate your API catalog by creating an API along with a document and spec, associating it with a Gateway Service, and finally publishing it to a Dev Portal. 
+In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a Gateway Service, and finally publishing it to a [Dev Portal](/dev-portal/). 
 
 First, [create an API](/api/konnect/api-builder/v3/#/operations/create-api) using the `/v3/apis` endpoint:
 
@@ -110,7 +111,7 @@ body:
 
 ## Create and associate an API document 
 
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API documents to each other with a parent document and child documents.
+An [API document](/catalog/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API documents to each other with a parent document and child documents.
 
 [Create and associate an API document](/api/konnect/api-builder/v3/#/operations/create-api-document) using the `/v3/apis/{apiId}/documents` endpoint:
 

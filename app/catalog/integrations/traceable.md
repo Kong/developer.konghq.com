@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
     - gateway
 
 tags:
@@ -12,34 +12,35 @@ tags:
   - traceable
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
-
+  - /catalog/
+  - /catalog/integrations/
+search_aliases:
+  - service catalog
 works_on:
     - konnect
-description: The Traceable integration lets you connect Traceable entities directly to your Service Catalog services.
+description: The Traceable integration lets you connect Traceable entities directly to your {{site.konnect_catalog}} services.
 
 related_resources:
-  - text: "Service Catalog"
-    url: /service-catalog/
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
   - text: Traceable plugin
     url: /plugins/traceable/
-  - text: Import and map Traceable resources in Service Catalog
+  - text: Import and map Traceable resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-traceable-resources/
 discovery_support: true
 bindable_entities: "Traceable Service"
 ---
 
-The Traceable integration lets you connect Traceable Services directly to your Service Catalog services.
-{% include /service-catalog/multi-resource.md %}
+The Traceable integration lets you connect Traceable Services directly to your {{site.konnect_catalog}} services.
+{% include /catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Traceable resources in Service Catalog](/how-to/install-and-map-traceable-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Traceable resources in {{site.konnect_catalog}}](/how-to/install-and-map-traceable-resources/).
 
 ## Authenticate the Traceable integration
 
 {% navtabs "traceable-integration" %}
 {% navtab "UI" %}
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Select **Add Traceable Instance**.
 3. Configure the instance, add authorization and name the instance. 
 {% endnavtab %}
@@ -94,7 +95,7 @@ rows:
 
 <!-- vale off-->
 
-{% include_cached service-catalog/service-catalog-discovery.html 
+{% include_cached catalog/service-catalog-discovery.html 
    discovery_support=page.discovery_support
    discovery_default=page.discovery_default
    bindable_entities=page.bindable_entities

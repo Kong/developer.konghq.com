@@ -1,23 +1,25 @@
 ---
-title: Install and map GitHub resources in Service Catalog
+title: Install and map GitHub resources in Catalog
 content_type: how_to
 description: Learn how to connect a GitHub repository to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
   - konnect-api
+search_aliases:
+  - service catalog
 tags:
   - integrations
   - github
 related_resources:
-  - text: Service Catalog
-    url: /service-catalog/
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: GitHub reference
-    url: /service-catalog/integrations/github/
+    url: /catalog/integrations/github/
 automated_tests: false
 tldr:
   q: How do I connect a GitHub repository to my {{site.konnect_catalog}} service?
@@ -29,7 +31,7 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: GitHub access
       content: |
-        To integrate GitHub with Service Catalog, you need the following:
+        To integrate GitHub with {{site.konnect_catalog}}, you need the following:
         * Sufficient permissions in GitHub to authorize third-party applications and install the {{site.konnect_short_name}} GitHub App
         * A GitHub organization
         * A repository that you want to pull in to {{site.konnect_short_name}}. You can grant access to either all repositories or selected repositories during the authorization process. 
@@ -40,14 +42,14 @@ prereqs:
 
 ## Install and authorize the GitHub integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Click **GitHub**, then click **Add GitHub Instance**.
 3. Authorize the GitHub integration. This will take you to GitHub, where you can grant {{site.konnect_short_name}} access to either **All Repositories** or **Select repositories**. 
 1. Enter `github` as your instance name.
 
 The {{site.konnect_short_name}} application can be managed from GitHub as a [GitHub Application](https://docs.github.com/en/apps/using-github-apps/authorizing-github-apps).
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
 Create a service that you'll map to your GitHub resources:
 
@@ -71,7 +73,7 @@ export GITHUB_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List GitHub resources
 
-Before you can map your GitHub resources to a service in Service Catalog, you first need to find the resources that are pulled in from GitHub:
+Before you can map your GitHub resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from GitHub:
 
 <!--vale off-->
 {% konnect_api_request %}

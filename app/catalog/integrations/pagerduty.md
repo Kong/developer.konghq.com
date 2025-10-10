@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
     - gateway
 
 tags:
@@ -12,31 +12,32 @@ tags:
   - pagerduty
 
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
-
+  - /catalog/
+  - /catalog/integrations/
+search_aliases:
+  - service catalog
 works_on:
     - konnect
 description: The PagerDuty integration allows you to provide a way to alert on information about current open incidents to consumers of the service directory.
 related_resources:
-  - text: "Service Catalog"
-    url: /service-catalog/
-  - text: Import and map PagerDuty resources in Service Catalog
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
+  - text: Import and map PagerDuty resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-pagerduty-resources/
 discovery_support: true
 bindable_entities: "PagerDuty Service"
 ---
 
 The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory.
-{% include /service-catalog/multi-resource.md %}
+{% include /catalog/multi-resource.md %}
 
-For each linked PagerDuty service, a summary will be provided on the Service Catalog service's details page, showing current unresolved incidents and the current on-call user.
+For each linked PagerDuty service, a summary will be provided on the {{site.konnect_catalog}} service's details page, showing current unresolved incidents and the current on-call user.
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map PagerDuty resources in Service Catalog](/how-to/install-and-map-pagerduty-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map PagerDuty resources in {{site.konnect_catalog}}](/how-to/install-and-map-pagerduty-resources/).
 
 ## Authenticate the PagerDuty integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Select **Add PagerDuty Instance**
 3. Configure the **Region**, add **authorization**, and name the instance `pagerduty`. PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. Both Read and Write scopes are required.
 
@@ -62,7 +63,7 @@ rows:
 
 <!-- vale off-->
 
-{% include_cached service-catalog/service-catalog-discovery.html 
+{% include_cached catalog/service-catalog-discovery.html 
    discovery_support=page.discovery_support
    discovery_default=page.discovery_default
    bindable_entities=page.bindable_entities

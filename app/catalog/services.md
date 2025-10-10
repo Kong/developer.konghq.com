@@ -1,62 +1,63 @@
 ---
-title: "Service Catalog services"
+title: "{{site.konnect_catalog}} services"
 content_type: reference
 layout: reference
 
 products:
-    - service-catalog
+    - catalog
 works_on:
   - konnect
 
-description: Learn about services in Service Catalog and how to configure them.
+description: Learn about services in {{site.konnect_catalog}} and how to configure them.
 
 breadcrumbs:
-  - /service-catalog/
-
+  - /catalog/
+search_aliases:
+  - service catalog
 related_resources:
-  - text: "Service Catalog"
-    url: /service-catalog/
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
   - text: Scorecards
-    url: /service-catalog/scorecards/
+    url: /catalog/scorecards/
   - text: Traceable integration
-    url: /service-catalog/integrations/traceable/
+    url: /catalog/integrations/traceable/
   - text: GitHub integration
-    url: /service-catalog/integrations/github/
+    url: /catalog/integrations/github/
   - text: GitLab integration
-    url: /service-catalog/integrations/gitlab/
+    url: /catalog/integrations/gitlab/
   - text: SwaggerHub integration
-    url: /service-catalog/integrations/swaggerhub/
+    url: /catalog/integrations/swaggerhub/
   - text: Datadog integration
-    url: /service-catalog/integrations/datadog/
+    url: /catalog/integrations/datadog/
   - text: PagerDuty integration
-    url: /service-catalog/integrations/pagerduty/
+    url: /catalog/integrations/pagerduty/
 faqs:
-  - q: What's the difference between a Gateway Service and a Service Catalog service?
+  - q: What's the difference between a Gateway Service and a {{site.konnect_catalog}} service?
     a: |
-      A [Gateway Service](/gateway/entities/service/) is a {{site.base_gateway}} entity that represents an upstream service in your system and is the business logic component that's responsible for responding to requests. A Service Catalog service is a collection of one or more resources from Service Catalog integrations.
+      A [Gateway Service](/gateway/entities/service/) is a {{site.base_gateway}} entity that represents an upstream service in your system and is the business logic component that's responsible for responding to requests. A {{site.konnect_catalog}} service is a collection of one or more resources from {{site.konnect_catalog}} integrations.
 ---
 
-A Service Catalog service is a collection of one or more resources from integrations.
+A {{site.konnect_catalog}} service is a collection of one or more resources from integrations.
 
-A Service Catalog service represents the following:
+A {{site.konnect_catalog}} service represents the following:
 * A unit of software that is typically owned by a single team
 * Exposes one or more APIs 
-* May be dependent on other Service Catalog services (as either upstream or downstream)  
+* May be dependent on other {{site.konnect_catalog}} services (as either upstream or downstream)  
 
-Service Catalog services allow you to gain visibility into all resources in your organization, including what teams or people own them. 
+{{site.konnect_catalog}} services allow you to gain visibility into all resources in your organization, including what teams or people own them. 
 
-To create a Service Catalog service, do one of the following:
+To create a {{site.konnect_catalog}} service, do one of the following:
 
 {% navtabs "service" %}
 {% navtab "UI" %}
-1. In the {{site.konnect_short_name}} UI, navigate to **Service Catalog** > **Services** in the sidebar. 
+1. In the {{site.konnect_short_name}} UI, navigate to **Catalog** > **Services** in the sidebar. 
 1. Click **New service** and configure the details about your service. 
 1. Map the service to an integration: 
    1. Click the service.
    1.  Select "Map resources" from the **Action** dropdown menu.
 {% endnavtab %}
 {% navtab "API" %}
-1. Create a Service Catalog service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
+1. Create a {{site.konnect_catalog}} service by sending a POST request to the [`/catalog-services` endpoint](/api/konnect/service-catalog/v1/#/operations/create-catalog-service):
 <!--vale off-->
 {% capture service %}
 {% konnect_api_request %}

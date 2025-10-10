@@ -5,34 +5,35 @@ layout: reference
 icon: /assets/icons/plugins/datadog.png
 
 products:
-    - service-catalog
+    - catalog
     - gateway
 
 tags:
   - integrations
   - datadog
-
+search_aliases:
+  - service catalog
 breadcrumbs:
-  - /service-catalog/
-  - /service-catalog/integrations/
+  - /catalog/
+  - /catalog/integrations/
 
 works_on:
     - konnect
-description: The Datadog integration lets you connect Datadog entities directly to your Service Catalog services.
+description: The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} services.
 discovery_support: true
 bindable_entities: "Datadog Monitor, Datadog Dashboard"
 
 related_resources:
-  - text: "Service Catalog"
-    url: /service-catalog/
-  - text: Import and map Datadog resources in Service Catalog
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
+  - text: Import and map Datadog resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-datadog-resources/
 ---
 
-The Datadog integration lets you connect Datadog entities directly to your Service Catalog services.
-{% include /service-catalog/multi-resource.md %}
+The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} services.
+{% include /catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Datadog resources in Service Catalog](/how-to/install-and-map-datadog-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Datadog resources in {{site.konnect_catalog}}](/how-to/install-and-map-datadog-resources/).
 
 ## Prerequisites
 
@@ -47,7 +48,7 @@ Your Datadog instance application key must either have no scopes or the followin
 
 {% navtabs "datadog-integration" %}
 {% navtab "UI" %}
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
 1. Select **Add Datadog Instance**.
 1. Select your Datadog region and enter your [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/). 
 1. Select **Authorize**. 
@@ -112,7 +113,7 @@ rows:
 
 <!-- vale off-->
 
-{% include_cached service-catalog/service-catalog-discovery.html 
+{% include_cached catalog/service-catalog-discovery.html 
    discovery_support=page.discovery_support
    discovery_default=page.discovery_default
    bindable_entities=page.bindable_entities

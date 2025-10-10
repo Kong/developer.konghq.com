@@ -13,7 +13,7 @@ sections:
   - title: Konnect Applications
     items:
       - path: /dev-portal/
-      - path: /service-catalog/
+      - path: /catalog/
       - path: /advanced-analytics/
       - path: /ai-manager/
       - path: /gateway-manager/
