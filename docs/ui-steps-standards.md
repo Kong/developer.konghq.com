@@ -95,9 +95,8 @@ Omit the + in UI instructions for buttons.
 
 ## UI instruction how-tos
 
-A UI how-to provides all possible steps in UI instructions. They should be written like all other how-tos where there are no hidden prerequisites and we assume the user starts from scratch. Like all how-tos, always provide a validation step at the end.
+A UI how-to provides all possible steps in UI instructions. They should be written like all other how-tos with prerequisites and every page is page one. Like all how-tos, always provide a validation step at the end.
 
-**Do not** provide tabs in how-tos for other methods. For example, a how-to must not have a tab for UI and API steps in the body of the how-to. This complicates automated tests and makes it more difficult for users as steps between methods don't always align.
 
 See the following examples of UI how-to instructions:
 * [Discover and govern APIs with Service Catalog](https://developer.konghq.com/how-to/discover-and-govern-apis-with-service-catalog/)
