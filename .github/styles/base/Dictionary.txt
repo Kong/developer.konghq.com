@@ -516,6 +516,8 @@ moesif
 MongoDB
 MongoDB
 multimodal
+multitenant
+multitenancy
 mutex
 nameserver
 nameservers
