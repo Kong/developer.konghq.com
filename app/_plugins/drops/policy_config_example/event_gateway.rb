@@ -19,8 +19,8 @@ module Jekyll
         def data
           @data ||= {
             'name' => example.fetch('name'),
-            'type' => @plugin.slug,
-            'condition' => example['condition'],
+            'type' => example.fetch('type'),
+            'condition' => example['condition']&.chomp,
             'config' => config
           }.compact
         end

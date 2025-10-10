@@ -15,8 +15,9 @@ variables:
     description: "The ID defined in the list of static keys. This key will be used for decryption. For example: `static://static-key-named-in-source`."
     value: $KEY_ID
 
+
+name: decrypt-static-key
 type: decrypt
-name: name
 config:
   failure_mode: error
   key_sources:
