@@ -8,7 +8,30 @@ permissions:
   contents: read
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
+      - name: Check if manual review has been performed
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        id: labels
+        with:
+          result-encoding: string
+          script: |
+            const { data: labels } = await github.rest.issues.listLabelsOnIssue({
+              ...context.repo,
+              issue_number: context.issue.number
+            });
+            return labels.map(l => l.name).includes('ci:manual-approve:missing-redirects')
+    outputs:
+      result: ${{ steps.labels.outputs.result }}
   redirects:
+    needs: check
+    if: needs.check.outputs.result == 'false'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
