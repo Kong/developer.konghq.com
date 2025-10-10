@@ -16,7 +16,7 @@ rows:
   - header:
       type: h1
       text: "Kong AI assistant"
-      sub_text: Use Kong's AI assistant, KAi, to detect issues and suggest fixes.
+      sub_text: KAi is Kong's AI assistant that can help you detect issues and suggest fixes.
   
   - columns:
       - blocks:
@@ -26,7 +26,7 @@ rows:
                 - type: text
                   text: |
                     Kong's AI assistant, KAi, can detect issues, suggest remediation, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
-                    is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. 
+                   KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. 
                     KAi is always disabled by default for Enterprise accounts. 
                     Enterprise accounts can enable it by contacting their Kong account manager.
 
