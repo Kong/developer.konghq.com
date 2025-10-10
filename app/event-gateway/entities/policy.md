@@ -93,8 +93,6 @@ Records are deserialized on produce and re-serialized on consume.
 
 {% feature_table %}
 columns:
-  - title: "Policy"
-    key: "policy"
   - title: Can act on parsed (deserialized) record?
     key: parsed
     center: true
@@ -102,22 +100,22 @@ columns:
     key: nonparsed
     center: true
 features:
-  - policy: "[Kafka ACL](/event-gateway/policies/acl/)"
+  - title: "[Kafka ACL](/event-gateway/policies/acl/)"
     parsed: No
     nonparsed: Yes
-  - policy: "[Encrypt](/event-gateway/policies/encrypt/)"
+  - title: "[Encrypt](/event-gateway/policies/encrypt/)"
     parsed: No
     nonparsed: Yes
-  - policy: "[Decrypt](/event-gateway/policies/decrypt/)"
+  - title: "[Decrypt](/event-gateway/policies/decrypt/)"
     parsed: No
     nonparsed: Yes
-  - policy: "[Schema validation](/event-gateway/policies/schema-validation/)"
+  - title: "[Schema validation](/event-gateway/policies/schema-validation/)"
     parsed: No
     nonparsed: Yes
-  - policy: "[Modify headers](/event-gateway/policies/modify-headers/)"
+  - title: "[Modify headers](/event-gateway/policies/modify-headers/)"
     parsed: Yes
     nonparsed: Yes
-  - policy: "[Skip records](/event-gateway/policies/skip-records/)"
+  - title: "[Skip records](/event-gateway/policies/skip-records/)"
     parsed: Yes
     nonparsed: Yes
 {% endfeature_table %}
