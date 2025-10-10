@@ -183,7 +183,7 @@ For SCRAM authentication, this method is required because the salt has to be cal
 
 With namespaces, you can preserve any naming systems that you have in place, and ensure they remain consistent.
 Namespaces let you:
-* Rewrite and enforce topics, consumer groups, and transactionIds with a consistent prefix
+* Rewrite and enforce topics, consumer groups, and transaction IDs with a consistent prefix
 * Expose topics and consumer groups through the virtual cluster
 
 This allows you to expose clean, simple names to clients while maintaining organization on the backend.
