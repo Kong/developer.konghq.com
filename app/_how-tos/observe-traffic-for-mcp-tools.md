@@ -70,6 +70,8 @@ cleanup:
     - title: Clean up {{site.konnect_short_name}} environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Reconfigure the AI MCP Proxy plugin

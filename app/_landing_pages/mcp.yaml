@@ -30,11 +30,11 @@ rows:
               Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
 
               Learn how to:
-              - [Use any external MCP server with Kong AI Gateway](./#use-any-external-mcp-server)
-              - [Autogenerate and secure MCP tools from any API](./#expose-any-api-as-a-secure-mcp-server)
+              - [Autogenerate and secure MCP tools from any API](./#autogenerate-mcp-servers-vusingia-ai-mcp-proxy)
+              - [Use any external MCP server with Kong AI Gateway](./#connect-external-mcp-servers-with-llm-models-and-ai-proxy)
               - [Use Kong's {{site.konnect_product_name}} built-in MCP server](./#kong-s-kong-konnect-built-in-mcp-server)
               - [Observe MCP traffic logs and metrics](./#mcp-traffic-observability)
-              - [Leverage Kong's AI Gateway for MCP traffic using how-to guides](/mcp/#mcp-how-to-guides)
+              - [Leverage {{site.base_gateway}} for MCP traffic using how-to guides](/mcp/#mcp-how-to-guides)
       - blocks:
           - type: image
             config:
@@ -51,76 +51,89 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Kong AI Gateway lets you either connect any external MCP server or autogenerate MCP tools from your APIs. Both approaches can be combined to integrate APIs and workflows into MCP-driven AI assistants while maintaining security, observability, and traffic control.
+                  {{site.base_gateway}} supports two ways to integrate MCP functionality:
+
+                  1. **Autogenerate MCP tools from APIs**: Autogenerate secure, serverless MCP endpoints directly from any API schema without needing an LLM model.
+                  2. **Connect external MCP endpoints with LLM models and AI Proxy**: Proxy remote or hosted MCP endpoints that call LLM models while enforcing control at the edge.
+
   - header:
     columns:
       - blocks:
-          - type: structured_text
-            config:
-              header:
-                type: h4
-                text: "Use any external MCP server"
-              blocks:
-                - type: text
-                  text: |
-                    For production environments, you can expose any remote MCP server to AI Gateway. This setup gives AI clients access to internal systems while enforcing strict control at the edge.
+        - type: structured_text
+          config:
+            header:
+              type: h4
+              text: "Autogenerate MCP servers using AI MCP Proxy"
+            blocks:
+              - type: text
+                text: |
+                  Automatically turn any API into a secure MCP server using the AI MCP Proxy plugin. This approach does **not require an LLM** and provides full control over production workloads.
 
-                    Use Kong AI Gateway plugins to:
+                  Considerations for production use:
+                  - Security and compliance can be fully managed since endpoints run under your control.
+                  - Traffic can be monitored and scaled using {{site.base_gateway}} features.
+                  - Costs are predictable because you control the underlying services.
 
-                    - **Secure access** with plugins like OpenID Connect or Key Auth.
-                    - **Govern usage** through rate limiting and traffic shaping.
-                    - **Enforce quotas** based on tokens or user-level constraints.
-                    - **Monitor behavior** using logging and distributed tracing with OpenTelemetry.
-
+                  Use {{site.base_gateway}} plugins to:
+                  - **Secure access** with the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2) or other authentication methods.
+                  - **Govern usage** with [rate limiting](/gateway/rate-limiting/) and [traffic control](/plugins/?category=traffic-control) {{site.base_gateway}} plugins.
+                  - **Monitor behavior** using [{{site.base_gateway}} logging and monitoring tools](/plugins/?category=analytics-monitoring&category=logging).
+                  - **Integrate APIs** directly into MCP workflows and AI assistants.
       - blocks:
           - type: structured_text
             config:
               header:
                 type: h4
-                text: "Expose any API as a secure MCP server"
+                text: "Connect external MCP servers with LLM models and AI Proxy"
               blocks:
                 - type: text
                   text: |
-                    With Kong AI Gateway, you can also expose any API as an MCP server, auto-generate tools from its schema, and enforce OAuth-based access at the edge.
+                    Expose any remote MCP server that calls LLM models through the AI Proxy plugin, enforcing observability, and security at the edge.
 
-                    Use them to:
-                    - Turn any API into an MCP server without writing custom code.
-                    - Secure MCP endpoints with OAuth while keeping consistent access policies.
-                    - Apply rate limiting, logging, and monitoring to MCP traffic.
-                    - Integrate your APIs directly into MCP workflows and AI assistants.
+                    Considerations for production use:
 
+                    - Security, compliance, and data handling must be assessed for external MCPs.
+                    - Latency, reliability, and versioning depend on the external LLM provider.
+                    - Cost can grow quickly depending on request volume and model pricing.
+
+                    Use Kong AI Gateway plugins to:
+                    - **Secure access** with [{{site.base_gateway}} plugins](/plugins/?category=authentication&category=security).
+                    - **Govern usage** with [AI rate limiting](/plugins/ai-rate-limiting-advanced/) and [AI guardrails](/ai-gateway/#guardrails-and-content-safety).
+                    - **Enforce load balancing** based on [tokens, cost, or LLM accuracy](/ai-gateway/load-balancing/).
+                    - **Monitor behavior** using [logging](/ai-gateway/ai-audit-log-reference/) and [monitoring](/ai-gateway/monitor-ai-llm-metrics/) tools.
 
   - columns:
-    - blocks:
-      - type: card
-        config:
-          icon: /assets/icons/mcp.svg
-          title: Secure and govern your MCP traffic
-          description: |
-            Follow the tutorials below to learn how to secure, govern, and observe your MCP traffic using Kong AI Gateway.
-          ctas:
-            - text: Secure MCP traffic
-              url: "/mcp/secure-mcp-traffic/"
-            - text: Govern MCP traffic
-              url: "/mcp/govern-mcp-traffic/"
-            - text: Observe MCP traffic
-              url: "/mcp/observe-mcp-traffic/"
-    - blocks:
-      - type: card
-        config:
-          icon: /assets/icons/deployment.svg
-          title: Autogenerate secure MCP servers and tools
-          description: |
-            Explore guides and examples to auto-generate MCP servers and tools without custom code.
-          ctas:
-            - text: Proxy and observe MCP Traffic with the AI MCP Proxy plugin
-              url: "/plugins/ai-mcp-proxy/"
-            - text: Secure your MCP servers with the AI MCP OAuth2 plugin
-              url: "/plugins/ai-mcp-oauth2/"
-            - text: Autogenerate a serverless MCP
-              url: "/mcp/autogenerate-mcp-tools/"
-            - text: Autogenerate MCP tools from any API schema
-              url: "/mcp/autogenerate-mcp-tools-for-weather-api/"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/deployment.svg
+            title: Autogenerate MCP tools from any API using AI MCP plugins
+            description: |
+              Explore guides and examples to auto-generate MCP servers and tools without custom code.
+            ctas:
+              - text: Proxy and observe MCP Traffic with the AI MCP Proxy plugin
+                url: "/plugins/ai-mcp-proxy/"
+              - text: Secure your MCP servers with the AI MCP OAuth2 plugin
+                url: "/plugins/ai-mcp-oauth2/"
+              - text: Autogenerate a serverless MCP
+                url: "/mcp/autogenerate-mcp-tools/"
+              - text: Autogenerate MCP tools from any API schema
+                url: "/mcp/autogenerate-mcp-tools-for-weather-api/"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/mcp.svg
+            title: Secure and govern your MCP traffic via AI Proxy
+            description: |
+              Follow the tutorials below to learn how to secure, govern, and observe your MCP traffic using Kong AI Gateway and AI Proxy.
+            ctas:
+              - text: Secure MCP traffic
+                url: "/mcp/secure-mcp-traffic/"
+              - text: Govern MCP traffic
+                url: "/mcp/govern-mcp-traffic/"
+              - text: Observe MCP traffic
+                url: "/mcp/observe-mcp-traffic/"
+
 
   - header:
       type: h3
