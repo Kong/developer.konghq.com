@@ -19,6 +19,7 @@ extended_description: |
 weight: 900
 
 name: decrypt-everything
+type: decrypt
 config:
   policies:
   - name: decrypt-everything

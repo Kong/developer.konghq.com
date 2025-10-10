@@ -18,6 +18,3 @@ config:
 
 tools:
   - konnect-api
-
-tools:
-  - konnect-api

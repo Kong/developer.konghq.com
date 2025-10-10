@@ -6,6 +6,7 @@ description: Encrypt a specific key.
 weight: 900
 
 name: encrypt-keys
+type: encrypt
 config:
   policies:
   - name: encrypt-keys
