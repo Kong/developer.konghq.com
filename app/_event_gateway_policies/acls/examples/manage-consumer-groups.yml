@@ -8,6 +8,7 @@ extended_description: Allow the authenticated principal to create and delete con
 weight: 900
 
 name: read-only-topic
+type: acls
 config:
   policies:
     - name: name
