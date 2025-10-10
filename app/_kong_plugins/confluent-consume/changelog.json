@@ -12,5 +12,12 @@
       "type": "known-issues",
       "scope": "Plugin"
     }
+  ],
+  "3.10.0.6": [
+    {
+      "message": "Fixed an issue where the plugin would fail to connect using mTLS.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }
