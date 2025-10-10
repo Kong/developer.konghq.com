@@ -53,8 +53,8 @@ rows:
                 text: |
                   {{site.base_gateway}} supports two ways to integrate MCP functionality:
 
-                  1. **Autogenerate MCP tools from APIs** – autogenerate secure, serverless MCP endpoints directly from any API schema without needing an LLM model.
-                  2. **Connect external MCP endpoints with LLM models and AI Proxy** – proxy remote or hosted MCP endpoints that call LLM models while enforcing control at the edge.
+                  1. **Autogenerate MCP tools from APIs**: Autogenerate secure, serverless MCP endpoints directly from any API schema without needing an LLM model.
+                  2. **Connect external MCP endpoints with LLM models and AI Proxy**: Proxy remote or hosted MCP endpoints that call LLM models while enforcing control at the edge.
 
   - header:
     columns:
@@ -76,7 +76,7 @@ rows:
 
                   Use {{site.base_gateway}} plugins to:
                   - **Secure access** with the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2) or other authentication methods.
-                  - **Govern usage** with rate limiting and traffic controls [{{site.base_gateway}} plugins](/plugins/).
+                  - **Govern usage** with [rate limiting](/gateway/rate-limiting/) and [traffic control](/plugins/?category=traffic-control) {{site.base_gateway}} plugins.
                   - **Monitor behavior** using [{{site.base_gateway}} logging and monitoring tools](/plugins/?category=analytics-monitoring&category=logging).
                   - **Integrate APIs** directly into MCP workflows and AI assistants.
       - blocks:
