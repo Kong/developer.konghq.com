@@ -42,10 +42,10 @@ They allow you to isolate clients from each other when connecting to the same [b
 and provide each client with modified view while still appearing as a standard Kafka cluster.
 
 The virtual cluster workflow operates as follows:
-1. The Kafka client produces an event.
+1. The Kafka client produces a request.
 1. A listener forwards it to the correct virtual cluster.
-1. The virtual cluster applies policies and proxies the modified event data to the backend cluster.
-1. The backend cluster, representing a Kafka cluster, receives data and sends a response.
+1. The virtual cluster applies policies and proxies the modified request to the backend cluster.
+1. The backend cluster, representing a Kafka cluster, receives the request and sends a response.
 
 {% mermaid %}
 flowchart LR
@@ -67,7 +67,7 @@ flowchart LR
 ## Why use a virtual cluster?
 
 Virtual clusters let you apply governance and security features to event streams.
-This way, a single Kafka cluster can to be sliced into multiple endpoints, each with its own security policy.
+This way, a single Kafka cluster can be sliced into multiple access points, each with its own security policy.
 
 <!--vale off-->
 {% table %}
@@ -92,12 +92,11 @@ rows:
   
   - use_case: "Namespacing and topic rewriting"
     description: |
-      Virtual clusters support Namespaces, which rewrite and enforce consistent prefixes for topic and consumer group names, exposing specific topics and consumer groups. 
-      For example, a virtual cluster might expose a topic named `orders`, which internally maps to a physical topic like `dev-orders` or `prod-orders` on the backend cluster.
-  
-  - use_case: Cost optimization
+      Virtual clusters support [namespaces](#namespaces), which rewrite and enforce consistent prefixes for topic and consumer group names. 
+      This allows you to expose clean, simple names to clients while maintaining organization on the backend.
+  - use_case: "Infrastructure planning"
     description: |
-      Through logical isolation, virtual clusters help organizations reduce Kafka infrastructure costs, as they eliminate the need to maintain multiple physical Kafka clusters for environment separation.
+      Through logical isolation, virtual clusters help organizations reduce Kafka infrastructure costs, as they eliminate the need to maintain multiple physical Kafka clusters for environment or team separation.
 {% endtable %}
 <!--vale on-->
 
@@ -108,8 +107,15 @@ You will need to increase the number of virtual clusters if you want to create m
 Here are some common patterns:
 
 * **Environment isolation**: You can create isolated `dev`, `test`, and `prod` namespaces on top of the same physical Kafka cluster.
-If you have a topic named `orders` in each virtual cluster, it can map to different backend topics: `dev-orders`, `test-orders`, and `prod-orders`. 
+If you have a topic named `orders` in each virtual cluster, this will map transparently to different backend topics: `dev-orders`, `test-orders`, and `prod-orders`. 
 This provides isolation and automatic name resolution per environment.
+
+* **Environment isolation**: You can create isolated `dev`, `test`, and `prod` namespaces on top of the same physical Kafka cluster.
+If you have a topic named `orders` in each virtual cluster, this will map transparently to different backend topics: `dev-orders`, `test-orders`, and `prod-orders`. 
+This provides isolation and automatic name resolution per environment.
+
+   When clients create new topics through a virtual cluster using Kafka's `CreateTopics` request, the namespace prefix is automatically applied, 
+   ensuring that clients always stay within their designated namespace.
 
 * **External partner isolation**: You can expose the same backend topic to different external partners with data filtering. 
 For instance, a single `orders` topic can be exposed through separate virtual clusters (`customer-a`, `customer-b`, `customer-c`), with each customer seeing only their own orders.
@@ -177,8 +183,15 @@ For SCRAM authentication, this method is required because the salt has to be cal
 
 With namespaces, you can preserve any naming systems that you have in place, and ensure they remain consistent.
 Namespaces let you:
-* Rewrite and enforce topic and consumer group names with a consistent prefix
+* Rewrite and enforce topics, consumer groups, and transactionIds with a consistent prefix
 * Expose topics and consumer groups through the virtual cluster
+
+This allows you to expose clean, simple names to clients while maintaining organization on the backend.
+
+For example, a virtual cluster exposes a topic named `orders` to the client.
+Behind the scenes, this maps to `team-a-orders` on the actual Kafka cluster. The client doesn't need to know about or manage the `team-a-` prefix.
+This enables transparent multitenancy, where multiple teams can share the same Kafka cluster without needing to manually prefix every topic and consumer group name in their applications.
+
 The following examples provide some common use cases for namespaces and show how to set them up.
 
 ### Apply prefixes automatically
@@ -200,7 +213,7 @@ body:
   authentication:
     - type: anonymous
   dns_label: virtual-cluster-1
-  acl_mode: enforce_on_gateway
+  acl_mode: passthrough
   namespace:
     mode: hide_prefix
     prefix: "my-prefix"
@@ -209,14 +222,14 @@ body:
 
 In this example, the prefix `my-prefix` will be used for all consumer group and topics that connect to this virtual cluster.
 
-### Applying prefixes to additional topics
+### Access additional topics
 
-Along with topics owned by a specific team, you can apply prefixes to a select group of additional topics.
+Along with topics owned by a specific team, you can pull in a select group of additional topics.
 This is useful when you want to:
 * Consume topics owned by other teams
 * Gradually migrate to a namespace while still using old topics temporarily
 
-Here's an example configuration using an exact list of topics:
+Here's an example configuration using a glob pattern:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -230,7 +243,7 @@ body:
   authentication:
     - type: anonymous
   dns_label: virtual-cluster-1
-  acl_mode: enforce_on_gateway
+  acl_mode: passthrough
   namespace:
     mode: hide_prefix
     prefix: "my-prefix"
@@ -261,10 +274,9 @@ You can also pass an exact list of topics as an array:
 ]
 ```
 
-### Applying prefixes to additional consumer groups
+### Access additional consumer groups
 
-You can apply prefixes to existing consumer groups to avoid migrating offsets:
-
+You can access existing consumer groups to avoid migrating offsets:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -278,7 +290,7 @@ body:
   authentication:
     - type: anonymous
   dns_label: virtual-cluster-1
-  acl_mode: enforce_on_gateway
+  acl_mode: passthrough
   namespace:
     mode: hide_prefix
     prefix: "my-prefix"
@@ -338,7 +350,7 @@ body:
   authentication:
     - type: anonymous
   dns_label: virtual-cluster-1
-  acl_mode: enforce_on_gateway
+  acl_mode: passthrough
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -367,7 +379,7 @@ Add the following to your Terraform configuration to create a virtual cluster:
 ```hcl
 resource "konnect_event_gateway_virtual_cluster" "my_eventgatewayvirtualcluster" {
   provider    = konnect-beta
-  acl_mode    = "enforce_on_gateway"
+  acl_mode    = "passthrough"
   authentication = [
     {
       sasl_plain = {
