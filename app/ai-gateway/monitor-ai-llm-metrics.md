@@ -64,6 +64,8 @@ dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
 
 ## Available metrics
 
+The following sections describe the AI metrics that are available.
+
 {% include /ai-gateway/llm-metrics.md %}
 
 ## Overview
