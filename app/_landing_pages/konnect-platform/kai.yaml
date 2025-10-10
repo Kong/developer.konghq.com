@@ -57,7 +57,7 @@ rows:
                   KAi is made up of a series of components running inside {{site.konnect_short_name}}. 
                   The agent can perform smart orchestration and analysis of {{site.konnect_short_name}} data and entities. 
                   You can interact with the agent in the following ways:
-                  * Use the chat in the {{site.konnect_short_name}} UI by clicking the sparkle icon <span><img src="/assets/icons/sparkle.svg" alt="sparkle icon" style="height:1em;vertical-align:middle;margin:0 .15em;" /></span> on the top right.
+                  * Use the chat in the {{site.konnect_short_name}} UI by clicking the sparkle icon <span style="opacity:0.5">✨</span> on the top right.
                   * Use the `kongctl` command-line tool with the `kongctl kai` command.
 
                   The KAi agent uses backend LLMs for reasoning and natural language tasks. It also uses a {{site.konnect_short_name}} MCP server to provide information about {{site.konnect_short_name}} and the user's entities and data. 
@@ -101,7 +101,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  To start a chat with KAi, click the sparkle icon <img src="/assets/icons/sparkle.svg" alt="sparkle icon" style="max-height:20px"> on the top right of the {{site.konnect_short_name}} UI.
+                  To start a chat with KAi, click the sparkle icon <span style="opacity:0.5">✨</span> on the top right of the {{site.konnect_short_name}} UI.
 
                   KAi is context-sensitive, so if you navigate to a control plane or Gateway Service, KAi will use that entity context to answer questions. 
                   You can create a new session from the **Active session** dropdown menu by selecting "New conversation". Each user is limited to three sessions. To delete a session, click the action menu icon next to the session and click **Delete**.
