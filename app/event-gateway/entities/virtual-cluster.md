@@ -174,8 +174,7 @@ and reuse existing credentials and principals defined on the backend cluster.
 Use the virtual cluster `authentication.mediation` setting to configure a mediation mode. 
 Choose the mode based on your security requirements and backend cluster configuration:
 
-* Passthrough (`passthrough`): Authentication from the client passes through the proxy to the backend without validation. 
-For SCRAM authentication, this method is required because the salt has to be calculated across the entirety of the TCP connection.
+* Passthrough (`passthrough`): Authentication from the client passes through the proxy to the backend without validation. This method is required for SCRAM authentication.
 * Terminate (`terminate`): Checks whether the client’s connection is authorized based on their credential, and then terminates the authentication. Then, a new authentication session starts with the backend cluster. 
 * Validate and forward (`validate_forward`): The client’s OAuth token is first validated by the proxy, and then sent to the backend as-is. This will “fail fast” if the token is invalid before sending it to the backend.
 
