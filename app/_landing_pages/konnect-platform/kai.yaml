@@ -25,10 +25,10 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong's AI assistant, KAi, can detect issues, suggest remediation, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
+                    Kong's AI assistant, KAi, can detect issues, suggest fixes, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
                     KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. 
                     KAi is always disabled by default for Enterprise accounts. 
-                    Enterprise accounts can enable it by contacting their Kong account manager.
+                    Enterprise accounts can enable KAi by contacting their Kong account manager.
 
                     KAi can help you do the following:
                     * Run a debug session to analyze API performance issues
@@ -54,10 +54,10 @@ rows:
             blocks:
               - type: text
                 text: |
-                  KAi is a series of components running inside {{site.konnect_short_name}}. 
-                  The main component is an agent, which is can perform smart orchestration and analysis of {{site.konnect_short_name}} data and entities. 
+                  KAi is made up of a series of components running inside {{site.konnect_short_name}}. 
+                  The agent can perform smart orchestration and analysis of {{site.konnect_short_name}} data and entities. 
                   You can interact with the agent in the following ways:
-                  * Use the chat in the {{site.konnect_short_name}} UI by clicking sparkle icon <span><img src="/assets/icons/sparkle.svg" alt="sparkle icon" style="height:1em;vertical-align:middle;margin:0 .15em;" /></span> on the top right.
+                  * Use the chat in the {{site.konnect_short_name}} UI by clicking the sparkle icon <span><img src="/assets/icons/sparkle.svg" alt="sparkle icon" style="height:1em;vertical-align:middle;margin:0 .15em;" /></span> on the top right.
                   * Use the `kongctl` command-line tool with the `kongctl kai` command.
 
                   The KAi agent uses backend LLMs for reasoning and natural language tasks. It also uses a {{site.konnect_short_name}} MCP server to provide information about {{site.konnect_short_name}} and the user's entities and data. 
