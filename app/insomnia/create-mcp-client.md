@@ -33,7 +33,7 @@ faqs:
       
       Insomnia refreshes all tools, prompts, and resources from the connected MCP Server.  
 ---
-Use Insomnia to cpnnect external **Model Context Protocol (MCP)** Servers to access AI-ready tools, prompts, and resource. An **MCP Client** defines this connection and stores authentication and configuration details.
+Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to access AI-ready tools, prompts, and resource. An **MCP Client** defines this connection and stores authentication and configuration details.
 
 {:.warning}
 > You must have an MCP Server ready, and supportive of **HTTP JSON-RPC transport**.
