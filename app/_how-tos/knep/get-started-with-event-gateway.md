@@ -203,8 +203,10 @@ Set up the `kafkactl` config file:
 ```shell
 cat <<EOF > kafkactl.yaml
 contexts:
-  backend:
+  direct:
     brokers:
+      - localhost:9095
+      - localhost:9096
       - localhost:9094
   vc:
     brokers:
@@ -216,13 +218,16 @@ This file defines two configuration profiles. We're going to switch between thes
 ## Validate the cluster
 
 Let's check that the cluster works using `kafkactl`.
-First, check the Kafka cluster directly:
+First, create a topic using the `direct` context, which is a direct connection to our Kafka cluster:
 
 ```shell
-kafkactl -C kafkactl.yaml --context backend create topic my-test-topic --print-headers
-kafkactl -C kafkactl.yaml --context backend produce my-test-topic --value="Hello World"
+kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
 ```
-It'll use the `backend` context, which is this case is a direct connection to our Kafka cluster.
+
+Produce a message to make sure it worked:
+```shell
+kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"
+```
 
 You should see the following response:
 ```shell
@@ -231,37 +236,25 @@ message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
 
-Now let's check the Kafka cluster through the {{site.event_gateway_short}} proxy.
-By passing the `vc` context, `kafkactl` will connect to Kafka through the proxy port `19092`:
+Now let's test that our Modify Headers policy is applying the header `My-New-Header`.
+By passing the `vc` context, `kafkactl` will connect to Kafka through the proxy port `19092`.
 
-```shell
-kafkactl -C kafkactl.yaml --context vc list topics --print-headers
-```
-
-You should see a list of the topics you just created:
-```shell
-TOPIC              PARTITIONS     REPLICATION FACTOR
-_schemas           1              1
-my-test-topic      1              1
-```
-{:.no-copy-code}
-
-Let's also test that our Modify Headers policy is applying the header `My-New-Header`.
 First, produce a message:
 
 ```shell
 kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
 ```
 
-Then consume it while passing the `--print-headers` flag:
+In a new terminal window, consume the `my-test-topic` from the beginning while passing the `--print-headers` flag:
 
 ```shell
-kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers
+kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers --from-beginning
 ```
 
 The output should contain your new header:
 ```shell
-headers:
-  My-New-Header: header_value
+My-New-Header: header_value
 ```
+{:.no-copy-code}
+
 You now have a Kafka cluster running with an {{site.event_gateway_short}} proxy in front, and the proxy is applying your custom policies. 
