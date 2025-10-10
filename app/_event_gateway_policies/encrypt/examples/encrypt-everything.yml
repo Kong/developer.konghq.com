@@ -18,7 +18,7 @@ extended_description: |
 
 # where do we define the key source? 
 requirements: 
- - "A corresponding [Decrypt policy](/event-gateway/policies/encrypt/examples/decrypt-everything/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
+ - "A corresponding [Decrypt policy]([/event-gateway/policies/decrypt/examples/decrypt-everything/](https://deploy-preview-3136--kongdeveloper.netlify.app/event-gateway/policies/decrypt/examples/decrypt-everything/)). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
 weight: 900
 
 type: encrypt
