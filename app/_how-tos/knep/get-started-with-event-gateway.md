@@ -50,8 +50,8 @@ faqs:
     a: |
       Check the following:
       * Verify all services are running with `docker ps`
-      * Check if ports are available (in this how-to guide, we use 9192 for the proxy, 9092 for Kafka)
-      * Ensure that all `KONNECT` environment variables are set correctly
+      * Check if ports are available (in this how-to guide, we use 19092 for the proxy, 9092-9095 for Kafka)
+      * Ensure that all environment variables are set correctly
   - q: When I run `list topics`, topics aren't visible.
     a: |
       Troubleshoot your setup by doing the following:
@@ -95,14 +95,16 @@ url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
 status_code: 201
 method: POST
 body:
-  name: kafka-localhostkafka:9094
+  name: default_backend_cluster
   bootstrap_servers:
     - kafka1:9092
     - kafka2:9092
-    - kafka3:9093
+    - kafka3:9092
   authentication:
     type: anonymous
   insecure_allow_anonymous_virtual_cluster_auth: true
+  tls:
+    enabled: false
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -120,7 +122,7 @@ url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
 status_code: 201
 method: POST
 body:
-  name: example.mycompany.com
+  name: example_virtual_cluster
   destination:
     id: $BACKEND_CLUSTER_ID
   dns_label: vcluster-1
@@ -144,11 +146,11 @@ url: /v1/event-gateways/$EVENT_GATEWAY_ID/listeners
 status_code: 201
 method: POST
 body:
-  name: listener-localhost
+  name: example_listener
   addresses:
     - 0.0.0.0
   ports:
-    - 19092-19101
+    - 19092-19095
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -245,7 +247,7 @@ First, produce a message:
 kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
 ```
 
-In a new terminal window, consume the `my-test-topic` from the beginning while passing the `--print-headers` flag:
+Consume the `my-test-topic` from the beginning while passing the `--print-headers` flag:
 
 ```shell
 kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers --from-beginning
