@@ -70,7 +70,7 @@ You might encounter:
 
 ### Verify that the server supports OAuth 2.0
 
-1. From the MCP Servers window, in the middle pasne, click the **Auth** tab.  
+1. From the MCP Servers window, in the middle pane, click the **Auth** tab.  
 2. Check the **Authorization Type** list for **OAuth 2.0 → MCP Auth Flow**.  
 3. If it’s missing, your server may only support personal tokens or basic authentication.  
 4. (Optional) Check the server’s metadata for an `authorization_endpoint` and `token_endpoint`.
