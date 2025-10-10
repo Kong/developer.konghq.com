@@ -5,6 +5,7 @@ description: Decrypt a specific key.
 weight: 900
 
 name: decrypt-key
+type: decrypt
 config:
   policies:
     - name: decrypt-key

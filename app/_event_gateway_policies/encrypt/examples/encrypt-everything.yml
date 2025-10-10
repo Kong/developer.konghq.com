@@ -19,6 +19,7 @@ extended_description: |
 weight: 900
 
 name: encrypt-everything
+type: encrypt
 config:
   policies:
     - name: encrypt-everything

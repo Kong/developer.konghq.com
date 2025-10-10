@@ -11,8 +11,8 @@ weight: 900
 
 name: set-header-based-on-condition
 type: modify_headers
-condition: |
-  context.topic.name.endsWith('my_suffix')
+condition: >
+  context.topic.name.endsWith("my_suffix")
 config:
   actions:
   - op: set
