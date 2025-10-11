@@ -140,7 +140,7 @@
 
     <div class="flex flex-col gap-3 px-5 md:px-8 2xl:mx-auto flex-1 w-full {% if layout.api_spec == true %} 2xl:px-16 {% else %} max-w-screen-2xl  2xl:px-[156px] {% endif %}">
       {% unless layout.api_spec == true %}
-        {% include_cached breadcrumbs_and_links.html breadcrumbs=page.breadcrumbs edit_and_issue_links=page.edit_and_issue_links layout=page.layout edit_link=page.edit_link %}
+        {% include_cached breadcrumbs_and_links.html breadcrumbs=page.breadcrumbs edit_and_issue_links=page.edit_and_issue_links layout=page.layout edit_link=page.edit_link no_edit_link=page.no_edit_link %}
       {% endunless%}
 
       {{ content }}
