@@ -1,5 +1,5 @@
 ---
-title: "Mesh Manager"
+title: "Service Mesh integration"
 content_type: reference
 layout: reference
 
@@ -16,10 +16,10 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: Map Mesh Services from {{site.konnet_short_name}} Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones.
+description: Map Mesh Services from {{site.konnect_short_name}} to visualize how configuration and policies are distributed across mesh deployments in multiple zones.
 
 related_resources:
-  - text: Map Mesh Manager services in Service Catalog
+  - text: Map {{site.mesh_product_name}} services in Service Catalog
     url: /how-to/map-mesh-manager-resources/
   - text: "Service Catalog"
     url: /service-catalog/
@@ -30,15 +30,13 @@ bindable_entities: "Mesh Service"
 
 The {{site.konnect_short_name}} Mesh integration allows users gain visibility into how their service is deployed across meshes and zones, determine whether their deployment is healthy, and (if used in conjunction with other built-in integrations) to identify links between their mesh services and other {{site.konnect_short_name}} resources.
 
-## Authorize the Mesh Manager integration
+## Authorize the Service Mesh integration
 
-The Mesh Manager integration is built directly into Service Catalog. No additional authorization is required. As new Mesh Services are created in Mesh Manager, they are automatically discovered by Service Catalog and surfaced as Resources.
-
-
+The Service Mesh integration is built directly into Service Catalog. No additional authorization is required. As new Mesh Services are created in {{site.mesh_product_name}}, they are automatically discovered by Service Catalog and surfaced as Resources.
 
 ## Resources
 
-Available Mesh Manager entities:
+Available Service Mesh entities:
 
 {% table %}
 columns:
