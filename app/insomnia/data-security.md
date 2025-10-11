@@ -35,7 +35,7 @@ faqs:
   - q: Is local data on Scratch Pad encrypted?
     a: Local data is not encrypted on disk. Insomnia currently stores application project data locally on disk in raw form. E2EE only applies to project data that is transmitted over the network. It is still possible for malicious software to access the project data stored on your machine. Please take the usual precautions to keep your local project data safe.
   - q: Is AI data in Insomnia encrypted?
-    a: No. Insomnia allows you to choose if you want to use AI for certain features, like generating tests. Data you provide to use these AI tools are not end-to-end encrypted and so this document does not apply to such data.
+    a: No. Data sent to AI features is not end-to-end encrypted, and therefore is not covered by this document. Organization administrators can disable specific AI features for all users. Individual users can disable available features in **Preferences → AI Features**. When a feature is disabled at the organization level, its option appears greyed with a tooltip explaining that it has been turned off by an administrator.
   - q: What is a resource group in Insomnia and how are they securely shared?
     a: The ability to share Resource Groups is the reason that every Resource Group needs its own key, and every account needs a public/private key-pair to securely share said key. Here’s an example involving two users, Jane and Bob. For Jane to share a Resource Group with Bob, she must encrypt the Resource Group’s key with Bob’s public key and store it on the server (M_Link). Now, Bob can use his account’s private key to decrypt the Resource Group’s key and gain access to the data. This is a classic example of the Diffie-Hellman key exchange being put to good use.
 ---
