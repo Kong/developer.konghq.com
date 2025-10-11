@@ -7,7 +7,7 @@ description: Encrypt a specific key.
 weight: 900
 
 requirements: 
- - "A corresponding [Decrypt policy](/event-gateway/policies/encrypt/examples/encrypt-a-key/). Event Gateway uses the key ID from the Encrypt policy along with the actual key in the Decrypt policy to successfully decrypt."
+ - "A corresponding [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-a-key/). Event Gateway uses the key ID from the Encrypt policy along with the actual key in the Decrypt policy to successfully decrypt."
  
 variables:
   key_source_id: 
