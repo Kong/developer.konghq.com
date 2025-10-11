@@ -2,22 +2,33 @@ title: Decrypt a specific key
 
 description: Decrypt a specific key.
 
+# where do we define the key source? is this still necessary?
+requirements: 
+ - "A corresponding [Encrypt policy](/event-gateway/policies/encrypt/examples/encrypt-a-key/). Event Gateway uses the key ID from the Encrypt policy along with the actual key in the Decrypt policy to successfully decrypt."
 weight: 900
 
-name: decrypt-key
+variables:
+  key_source_id: 
+    description: "A list of static, user-provided keys. Each one must be 128 bits long. For example: `static://static-key-named-in-source`."
+    value: $KEY_SOURCE
+  key_id:
+    description: "The ID defined in the list of static keys. This key will be used for decryption. For example: `static://static-key-named-in-source`."
+    value: $KEY_ID
+
+
+name: decrypt-static-key
 type: decrypt
 config:
-  policies:
-    - name: decrypt-key
-      type: decrypt
-      spec:
-        failure:
-          mode: error
-        key_sources:
-        - type: ref_name
-          ref_name: ref_name
-        decrypt:
-        - type: key
+  failure_mode: error
+  key_sources:
+    - type: static
+      keys:
+        - id: ${key_source_id}
+          key: "${env['MY_SECRET']}"
+  decrypt:
+    - part_of_record: key
+      key_id: ${key_id}
+    - part_of_record: value
 
 tools:
   - konnect-api

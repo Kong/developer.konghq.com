@@ -16,10 +16,6 @@ module Jekyll
           end
         end
 
-        def variables
-          @variables ||= example.fetch('variables', {})
-        end
-
         def data
           @data ||= {
             'name' => example.fetch('name'),

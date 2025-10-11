@@ -85,6 +85,13 @@ module Jekyll
           end
 
           class EventGatewayPolicy < Base
+            def data
+              @data ||= Utils::VariableReplacer::Data.run(
+                data: @example_drop.data,
+                variables: variables
+              )
+            end
+
             def default_variables
               @default_variables ||= formats['konnect-api']['event_gateway_variables']
             end

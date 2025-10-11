@@ -12,6 +12,10 @@ module Jekyll
           @entity_type ||= 'event_gateway_policy'
         end
 
+        def variables
+          @variables ||= @example.raw_variables
+        end
+
         def target
           @target ||= PluginTarget.new(
             target: OpenStruct.new(key: @options[:target], value: @options[:target])
