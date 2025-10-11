@@ -27,6 +27,11 @@ works_on:
 prereqs:
   show_works_on: false
   skip_product: true
+  expand_accordion: false
+  inline:
+  - title: "Install Cert Manager (Optional)"
+    include_content: prereqs/kubernetes/cert-manager
+  
 
 tldr:
   q: How do I install {{ site.gateway_operator_product_name }} with {{ site.kic_product_name }} using Helm?
