@@ -17,8 +17,6 @@ schema:
 api_specs:
   - event-gateway/knep
 
-beta: true
-
 icon: graph.svg
 
 phases:
@@ -32,6 +30,9 @@ related_resources:
 ---
 
 This policy can be used to encrypt portions of Kafka records.
+Use this policy to enforce standards for encryption across {{site.event_gateway}} clients. 
+
+The Encrypt policy uses AES-128-GCM for encryption, therefore keys must be 128 bits long.
 
 ## Use cases
 
@@ -49,7 +50,11 @@ rows:
     description: Decrypt a key based on a specific key reference name.
 
   - use_case: "[Encrypt all keys](/event-gateway/policies/encrypt/examples/encrypt-everything/)"
-    description: Define a static key source and encrypt all keys that come from that source.
+    description: Define an AWS key source and encrypt all keys that come from that source.
 
 {% endtable %}
 <!--vale on-->
+
+## Key sources
+
+{% include_cached /knep/key-sources.md name=page.name %}
