@@ -30,7 +30,7 @@ related_resources:
 ---
 
 This policy can be used to encrypt portions of Kafka records.
-Use this policy to enforce standards for encryption across {{site.event_gateway}} clients.
+Use this policy to enforce standards for encryption across {{site.event_gateway}} clients. 
 
 The Encrypt policy uses AES-128-GCM for encryption, therefore keys must be 128 bits long.
 
