@@ -1,9 +1,9 @@
-title: Enrypt everything
+title: Encrypt everything from an AWS key vault
 
-description: Encrypt everything that comes from a specific key source.
+description: Encrypt everything that comes from an specific AWS key vault.
 
 extended_description: |
-  Encrypt everything that comes from a specific key source.
+  Encrypt everything that comes from a specific AWS key vault.
 
   This example requires a key source defined in a root `key_sources` section:
 
@@ -16,31 +16,28 @@ extended_description: |
         type: env
   ``` 
 
+# where do we define the key source? 
+requirements: 
+ - "A corresponding [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-everything/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
 weight: 900
 
-name: encrypt-everything
 type: encrypt
+name: encrypt-using-aws
 config:
-  policies:
-    - name: encrypt-everything
-      type: encrypt
-      spec:
-        failure:
-          mode: passthrough # | error
-        key_sources:
-          - type: static
-            static:
-              id: "user-chosen-id"
-              source:
-                type: string # | file
-                string: |
-                  cT4Q34DDB25hU9lumzrXtw==...
-          - type: ref_name
-            ref_name: aws
-        encrypt:
-        - type: keys
-          id: "aws://arn:aws:kms:us-east-1:123456789012:key/password-key-id"
-        - type: values
-          id: "static://user-chosen-id"
+  failure_mode: passthrough
+  key_sources:
+    - type: aws
+  encrypt:
+    - part_of_record: key
+      key_id: ${key_id}
+    - part_of_record: value
+      key_id: ${key_id}
+
+variables:
+  key_id:
+    description: |
+      A KMS key ARN in the following format: `arn:aws:kms:REGION:ACCOUNT_ID:key/KEY_ID`
+    value: "$AWS_KEY_ID"
+
 tools:
   - konnect-api
