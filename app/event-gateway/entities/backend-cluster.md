@@ -99,48 +99,41 @@ rows:
 
 {% navtab "Konnect API" %}
 
-```sh
-curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/backend-clusters \
-    --header "accept: application/json" \
-    --header "Content-Type: application/json" \
-    --header "Authorization: Bearer $KONNECT_TOKEN" \
-    --data '
-    {
-      "name": "example",
-      "bootstrap_servers": [
-        "host:9092"
-      ],
-      "authentication": {
-        "type": "anonymous"
-      },
-      "insecure_allow_anonymous_virtual_cluster_auth": true,
-      "tls": {
-        "insecure_skip_verify": false
-      }
-    }
-    '
-```
+Create a backend cluster using the [{{site.event_gateway_short}} control plane API](/):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
+status_code: 201
+method: POST
+body:
+  name: example-backend-cluster
+  bootstrap_servers:
+    - host:9092
+  authentication:
+    type: anonymous
+  insecure_allow_anonymous_virtual_cluster_auth: true
+  tls:
+    insecure_skip_verify: false
+{% endkonnect_api_request %}
+<!--vale on-->
+
 {% endnavtab %}
 
 {% navtab "Terraform" %}
 
+Add the following to your Terraform configuration to create a backend cluster:
+
 ```hcl
 resource "konnect_event_gateway_backend_cluster" "my_eventgatewaybackendcluster" {
 provider    = konnect-beta
-  authentication = [
-    {
-      sasl_plain = {
-        mediation = "passthrough"
-        principals = [
-          {
-            password = "${env['MY_SECRET']}"
-            username = "example_username"
-          }
-        ]
-      }
+  authentication = {
+    sasl_scram = {
+    algorithm = "sha256"
+    password = "${env['MY_SECRET']}"
+    username = "example-username"
     }
-  ]
-    }
+  }
     bootstrap_servers = [
     "host:9092"
   ]
