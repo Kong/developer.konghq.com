@@ -106,7 +106,7 @@ rows:
               icon: /assets/icons/service-document.svg
               cta:
                 text: Learn about virtual clusters
-                url: /event-gateway/entities/virtual-clusters/
+                url: /event-gateway/entities/virtual-cluster/
                 align: end
       - blocks:
           - type: card
