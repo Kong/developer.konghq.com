@@ -127,7 +127,6 @@ curl -X POST https://{region}.api.konghq.com/v1/event-gateways/{controlPlaneId}/
 ```hcl
 resource "konnect_event_gateway_backend_cluster" "my_eventgatewaybackendcluster" {
 provider    = konnect-beta
-  acl_mode    = "enforce_on_gateway"
   authentication = [
     {
       sasl_plain = {
