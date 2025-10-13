@@ -7,10 +7,6 @@ breadcrumbs:
 
 permalink: /event-gateway/get-started/topic-filtering/
 
-series:
-  id: event-gateway-get-started
-  position: 3
-
 beta: true
 
 products:
@@ -74,6 +70,10 @@ faqs:
       * Team-b can only see topics prefixed with `b-`
       
       Topics without the correct prefix (like `fourth-topic`) won't be visible through either proxy.
+
+published: false 
+# Needs to be updated for GA
+
 ---
 
 Topic filtering lets you automatically prefix and filter topics based on virtual clusters. 
