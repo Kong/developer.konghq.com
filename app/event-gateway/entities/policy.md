@@ -41,8 +41,15 @@ products:
 Policies control how Kafka protocol traffic is modified between the client and the backend cluster.
 
 There are two main types of policies:
-* [Virtual cluster policies](#virtual-cluster-policies)
-* [Listener policies](#listener-policies)
+* [Virtual cluster policies](#virtual-cluster-policies): Transformation and validation policies applied to Kafka messages. 
+Virtual cluster policies break down further into cluster, consume, and produce policies.
+* [Listener policies](#listener-policies): Routing policies that pass traffic to the virtual cluster.
+
+## How do policies work?
+
+Policies execute in chains. The order in which {{site.event_gateway}} applies policies to modify messages depends on the policy type, and whether the message is a request or response.
+
+<!-- Need more info here -->
 
 ## Virtual cluster policies 
 
@@ -52,7 +59,7 @@ See the {{site.event_gateway}} policy hub for [all available virtual cluster pol
 
 ### Phases
 
-Virtual cluster policies run during specific phases, which represent stages in a record's lifecycle.
+Virtual cluster policies run during specific phases, which represent stages in a record's lifecycle: cluster, consume, and produce.
 
 {% table %}
 columns:
