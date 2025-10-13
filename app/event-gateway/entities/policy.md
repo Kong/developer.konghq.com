@@ -123,7 +123,7 @@ features:
 ### Set up a virtual cluster policy
 
 {{site.event_gateway}} has a few built-in virtual cluster policies, all of which have their own specific configurations and examples. 
-See all [{{site.event_gateway_short}} policies](/event-gateway/policies/#virtual-cluster-policies) for their individual configurations.
+See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=virtual_cluster) for their individual configurations.
 
 {% navtabs 'virtual-cluster' %}
 {% navtab "Konnect API" %}
@@ -321,7 +321,7 @@ See the {{site.event_gateway}} policy hub for [all available listener policies](
 ### Set up a listener policy
 
 {{site.event_gateway}} has a few built-in listener policies, all of which have their own specific configurations and examples. 
-See all [{{site.event_gateway_short}} policies](/event-gateway/policies/#listener-policies) for their individual configurations.
+See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=listener) for their individual configurations.
 
 {% navtabs 'listener-policy' %}
 {% navtab "Konnect API" %}
