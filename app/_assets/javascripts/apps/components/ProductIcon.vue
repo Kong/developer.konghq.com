@@ -16,7 +16,7 @@ import mesh from '@/icons/products/mesh.svg'
 import catalog from '@/icons/products/catalog.svg'
 import eventGateway from '@/icons/products/event-gateway.svg'
 import konnect from '@/icons/products/konnect.svg'
-import referencePlatform from '@/icons/products/reference-platform.svg'
+import referencePlatform from '@/icons/products/konnect-reference-platform.svg'
 
 const productIcons = {
   'advanced-analytics': advancedAnalytics,
