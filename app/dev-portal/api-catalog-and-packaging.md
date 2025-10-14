@@ -98,7 +98,7 @@ flowchart LR
 
 Packaging APIs involves the following steps:
 1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
-1. Link a control plane (or control planes) for to allow developer consumption. 
+1. Link a control plane to allow developer consumption. 
 1. Apply the Access Control Enforcement (ACE) plugin globally.
 1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user Gateway Manager permissions needs to perform an action.
 
@@ -187,7 +187,7 @@ This guide shows you how to create an API package in the {{site.konnect_short_na
 
 To package APIs with Dev Portal, you need:
 * A v3 Dev Portal created in {{site.konnect_short_name}}
-* A [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and/or [Route](/gateway/entities/route/#set-up-a-route) added to your control plane
+* A [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and/or [Route](/gateway/entities/route/#set-up-a-route) added to your control plane ({{site.base_gateway}} 3.12 or later)
 * The following roles:
   * Editor role for APIs
   * Publisher role for the API and API package
