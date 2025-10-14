@@ -5,7 +5,7 @@ permalink: /konnect-reference-platform/how-to/
 description: "How to deploy the {{site.konnect_short_name}} Reference Platform"
 
 products:
-  - reference-platform
+  - konnect-reference-platform
 
 works_on:
   - konnect
