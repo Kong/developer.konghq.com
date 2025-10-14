@@ -65,32 +65,70 @@ Test out Datakit by combining responses from two third-party API calls, then ret
 entities:
   plugins:
     - name: datakit
-      service: example-service
-      config:
-        nodes:
-        - name: CAT_FACT
-          type: call
-          url: https://catfact.ninja/fact
-        - name: DOG_FACT
-          type: call
-          url: https://dogapi.dog/api/v1/facts
-        - name: JOIN
-          type: jq
-          inputs:
-            cat: CAT_FACT.body
-            dog: DOG_FACT.body
-          jq: |
-            {
-              cat_fact: .cat.fact,
-              dog_fact: .dog.facts[0],
-            }
-        - name: EXIT
-          type: exit
-          inputs:
-            body: JOIN
-          status: 200
+    service: example-service
+    config:
+      nodes:
+      - name: ROUTE_LIST
+        type: call
+        url: http://localhost:8001/routes
+      - name: SERVICE_LIST
+        type: call
+        url: http://localhost:8001/services
+      - name: JOIN
+        type: jq
+        inputs:
+          route: ROUTE_LIST.body
+          service: SERVICE_LIST.body
+        jq: |
+          {
+            routes: .route.data[0],
+            services: .service.data[0],
+          }
+      - name: TOKEN
+        type: static
+        values:
+          headers:
+            Authorization: Bearer $KONNECT_TOKEN
+      - name: EXIT
+        type: exit
+        status: 200
 {% endentity_examples %}
-<!--vale on -->
+{: data-deployment-topology="konnect" }
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: datakit
+    service: example-service
+    config:
+      nodes:
+      - name: ROUTE_LIST
+        type: call
+        url: http://localhost:8001/routes
+      - name: SERVICE_LIST
+        type: call
+        url: http://localhost:8001/services
+      - name: JOIN
+        type: jq
+        inputs:
+          route: ROUTE_LIST.body
+          service: SERVICE_LIST.body
+        jq: |
+          {
+            routes: .route.data[0],
+            services: .service.data[0],
+          }
+      - name: TOKEN
+        type: static
+        values:
+          headers:
+            Authorization: Bearer $KONNECT_TOKEN
+      - name: EXIT
+        type: exit
+        status: 200
+{% endentity_examples %}
+{: data-deployment-topology="on-prem" }
+<!--vale on-->
 
 ## Validate
 
