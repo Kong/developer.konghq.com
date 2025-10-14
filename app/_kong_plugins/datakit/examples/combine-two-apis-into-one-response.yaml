@@ -5,9 +5,9 @@ extended_description: |
   Make requests to multiple APIs and combine their responses into one response.
 
   This example contains the following nodes:
-  1. The node `CAT_FACT` makes a `GET` request to the cat facts API at `https://catfact.ninja/fact`.
-  2. The node `DOG_FACT` makes a `GET` request to the dog facts API at `https://dogapi.dog/api/v1/facts`.
-  3. The node `JOIN` combines the JSON response bodies of `CAT_FACT` and `DOG_FACT` into a single JSON object.
+  1. The node `FIRST_API` makes a `GET` request to the API at `https://example-api.com/fact`.
+  2. The node `DOG_FACT` makes a `GET` request to the API at `https://second-example-api.com/facts`.
+  3. The node `JOIN` combines the JSON response bodies of `FIRST_API` and `SECOND_APIT` into a single JSON object.
   4. The node `EXIT` sends a response to the client with the combined API response data. 
   This terminates the request instead of proxying it upstream.
 
@@ -16,23 +16,23 @@ weight: 900
 
 config:
   nodes:
-  - name: CAT_FACT
+  - name: FIRST_API
     type: call
-    url:  https://catfact.ninja/fact
+    url:  https://example-api.com/fact
 
-  - name: DOG_FACT
+  - name: SECOND_API
     type: call
-    url:  https://dogapi.dog/api/v1/facts
+    url:  https://second-example-api.com/facts
 
   - name: JOIN
     type: jq
     inputs:
-      cat: CAT_FACT.body
-      dog: DOG_FACT.body
+      api1: FIRST_API.body
+      api2: SECOND_API.body
     jq: |
       {
-        cat_fact: .cat.fact,
-        dog_fact: .dog.facts[0],
+        api1_fact: .api1.data,
+        api2_fact: .api1.data[0],
       }
 
   - name: EXIT
