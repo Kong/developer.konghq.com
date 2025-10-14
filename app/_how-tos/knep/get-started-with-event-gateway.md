@@ -7,12 +7,6 @@ breadcrumbs:
 
 permalink: /event-gateway/get-started/
 
-series:
-  id: event-gateway-get-started
-  position: 1
-
-beta: true
-
 products:
     - event-gateway
 
@@ -29,20 +23,19 @@ description: Use this tutorial to get started with {{site.event_gateway}}.
 tldr: 
   q: How can I get started with {{site.event_gateway}}?
   a: | 
-    Get started with {{site.event_gateway}} ({{site.event_gateway_short}}) by setting up a {{site.konnect_short_name}} control plane and a Kafka cluster, then configuring the control plane using the `/declarative_config` endpoint of the Control Plane Config API.
+    Get started with {{site.event_gateway}} by setting up a {{site.konnect_short_name}} control plane and data plane, then configuring a backend cluster, virtual cluster, listener, and policy with the {{site.event_gateway}} API.
 
 tools:
     - konnect-api
   
 prereqs:
   inline:
-    - title: Sign up for the {{site.event_gateway_short}} beta
-      content: |
-        If you're an existing Kong customer or prospect, please fill out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.
-
     - title: Install kafkactl
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
+    
+    - title: Start a local Kafka cluster
+      include_content: knep/docker-compose-start
 
 automated_tests: false
 related_resources:
@@ -57,8 +50,8 @@ faqs:
     a: |
       Check the following:
       * Verify all services are running with `docker ps`
-      * Check if ports are available (in this how-to guide, we use 9192 for the proxy, 9092 for Kafka)
-      * Ensure that all `KONNECT` environment variables are set correctly
+      * Check if ports are available (in this how-to guide, we use 19092 for the proxy, 9092-9095 for Kafka)
+      * Ensure that all environment variables are set correctly
   - q: When I run `list topics`, topics aren't visible.
     a: |
       Troubleshoot your setup by doing the following:
@@ -76,61 +69,135 @@ and much more.
 
 Now, let's configure a proxy and test your first virtual cluster setup.
 
-## Create a Control Plane in {{site.konnect_short_name}}
+## Create an {{site.event_gateway_short}} in {{site.konnect_short_name}}
 
-{% include knep/konnect-create-cp.md name='KNEP getting started' %}
+Run the [quickstart script](https://get.konghq.com/event-gateway) to automatically provision an {{site.base_gateway}} control plane and data plane, and configure your environment:
 
-## Start a local Kafka cluster
-
-{% include knep/docker-compose-start.md %}
-
-Let's look at the logs of the KNEP container to see if it started correctly:
-```shell
-docker compose logs knep
+```bash
+curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN
 ```
 
-You should see something like this:
-```
-knep  | 2025-04-30T08:59:58.004076Z  WARN tokio-runtime-worker ThreadId(09) add_task{task_id="konnect_watch_config"}:task_run:check_dataplane_config{cp_config_url="/v2/control-planes/c6d325ec-0bd6-4fbc-b2c1-6a56c0a3edb0/declarative-config/native-event-proxy"}: knep::konnect: src/konnect/mod.rs:218: Konnect API returned 404, is the control plane ID correct?
-```
-{:.no-copy-code}
+This sets up an {{site.base_gateway}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
 
-This is expected, as we haven't configured the Control Plane yet. We'll do this in the next step.
-
-## Configure {{site.event_gateway}} control plane with a passthrough cluster 
-
-Create the configuration file for the Control Plane. This file will define the backend cluster and the virtual cluster:
-
-```shell
-cat <<EOF > knep-config.yaml
-backend_clusters:
-  - name: kafka-localhost
-    bootstrap_servers:
-      - kafka:9092
-
-listeners:
-  port:
-    - listen_address: 0.0.0.0
-      listen_port_start: 19092
-      advertised_host: localhost
-
-virtual_clusters:
-  - name: team-a
-    backend_cluster_name: kafka-localhost
-    route_by:
-      type: port
-      port:
-        min_broker_id: 1
-    authentication:
-      - type: anonymous
-        mediation:
-          type: anonymous
-EOF
+```bash
+export EVENT_GATEWAY_ID=your-gateway-id
 ```
 
-## Update the control plane and data plane
+Copy and paste this into your terminal to configure your session.
 
-{% include_cached /knep/update.md %}
+
+## Add a backend cluster
+
+Run the following command to create a new backend cluster linked to the local Kafka server we created in the [prerequisites](#start-a-local-kafka-server):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
+status_code: 201
+method: POST
+body:
+  name: default_backend_cluster
+  bootstrap_servers:
+    - kafka1:9092
+    - kafka2:9092
+    - kafka3:9092
+  authentication:
+    type: anonymous
+  insecure_allow_anonymous_virtual_cluster_auth: true
+  tls:
+    enabled: false
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the backend cluster ID to your environment:
+```sh
+export BACKEND_CLUSTER_ID="YOUR-BACKEND-CLUSTER-ID"
+```
+
+## Add a virtual cluster
+
+Run the following command to create a new virtual cluster associated with our backend cluster:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
+status_code: 201
+method: POST
+body:
+  name: example_virtual_cluster
+  destination:
+    id: $BACKEND_CLUSTER_ID
+  dns_label: vcluster-1
+  authentication:
+    - type: anonymous
+  acl_mode: passthrough
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the virtual cluster ID to your environment:
+```sh
+export VIRTUAL_CLUSTER_ID="YOUR-VIRTUAL-CLUSTER-ID"
+```
+
+## Add a listener
+
+Run the following command to create a new listener:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/listeners
+status_code: 201
+method: POST
+body:
+  name: example_listener
+  addresses:
+    - 0.0.0.0
+  ports:
+    - 19092-19095
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the listener ID to your environment:
+```sh
+export LISTENER_ID="YOUR-LISTENER-ID"
+```
+
+## Add a listener policy
+
+Run the following command to add a listener policy that forwards messages to our virtual cluster:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/listeners/$LISTENER_ID/policies
+status_code: 201
+method: POST
+body:
+  type: forward_to_virtual_cluster
+  name: forward
+  config:
+    type: port_mapping
+    advertised_host: localhost
+    destination: 
+      id: $VIRTUAL_CLUSTER_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+
+## Add a virtual cluster policy
+
+Run the following command to add a consume policy that adds a new header on the virtual cluster:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
+status_code: 201
+method: POST
+body:
+  type: modify_headers
+  name: new-header
+  config:
+    actions:
+      - op: set
+        key: My-New-Header
+        value: header_value
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Configure the cluster
 
@@ -140,40 +207,29 @@ cat <<EOF > kafkactl.yaml
 contexts:
   direct:
     brokers:
-      - localhost:9092
-  backend:
-    brokers:
-      - localhost:9092
-  knep:
-    brokers:
-      - localhost:19092
-  secured:
-    brokers:
-      - localhost:29092
-  team-a:
+      - localhost:9095
+      - localhost:9096
+      - localhost:9094
+  vc:
     brokers:
       - localhost:19092
-  team-b:
-    brokers:
-      - localhost:29092
-current-context: direct
 EOF
 ```
-This file defines several configuration profiles. We're going to switch between these profiles as we test different features.
+This file defines two configuration profiles. We're going to switch between these profiles as we test different features.
 
 ## Validate the cluster
 
-Let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. 
-You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
-
-You can also use the `kafkactl` command to check the cluster. 
-Let's check the Kafka cluster directly:
+Let's check that the cluster works using `kafkactl`.
+First, create a topic using the `direct` context, which is a direct connection to our Kafka cluster:
 
 ```shell
 kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
+```
+
+Produce a message to make sure it worked:
+```shell
 kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"
 ```
-It'll use the `direct` context, which is this case is a direct connection to our Kafka cluster.
 
 You should see the following response:
 ```shell
@@ -182,19 +238,25 @@ message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
 
-Now let's check the Kafka cluster through the {{site.event_gateway_short}} proxy.
-By passing the `knep` context, `kafkactl` will connect to Kafka through the proxy port `19092`:
+Now let's test that our Modify Headers policy is applying the header `My-New-Header`.
+By passing the `vc` context, `kafkactl` will connect to Kafka through the proxy port `19092`.
+
+First, produce a message:
 
 ```shell
-kafkactl -C kafkactl.yaml --context knep list topics
+kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
 ```
 
-You should see a list of the topics you just created:
+Consume the `my-test-topic` from the beginning while passing the `--print-headers` flag:
+
 ```shell
-TOPIC              PARTITIONS     REPLICATION FACTOR
-_schemas           1              1
-my-test-topic      1              1
+kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers --from-beginning
+```
+
+The output should contain your new header:
+```shell
+My-New-Header: header_value
 ```
 {:.no-copy-code}
 
-You now have a Kafka cluster running with a {{site.event_gateway_short}} proxy in front. 
+You now have a Kafka cluster running with an {{site.event_gateway_short}} proxy in front, and the proxy is applying your custom policies. 
