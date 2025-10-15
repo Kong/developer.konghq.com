@@ -52,82 +52,42 @@ related_resources:
   - text: Datakit plugin
     url: /plugins/datakit/
 
-# temporary setting; will remove once the guide is reworked
-automated_tests: false 
 ---
 
 ## Enable Datakit
 
 Test out Datakit by combining responses from two third-party API calls, then returning the result directly back to the client:
 
-<!--vale off -->
+<!-- vale off-->
 {% entity_examples %}
 entities:
   plugins:
     - name: datakit
-    service: example-service
-    config:
-      nodes:
-      - name: ROUTE_LIST
-        type: call
-        url: http://localhost:8001/routes
-      - name: SERVICE_LIST
-        type: call
-        url: http://localhost:8001/services
-      - name: JOIN
-        type: jq
-        inputs:
-          route: ROUTE_LIST.body
-          service: SERVICE_LIST.body
-        jq: |
-          {
-            routes: .route.data[0],
-            services: .service.data[0],
-          }
-      - name: TOKEN
-        type: static
-        values:
-          headers:
-            Authorization: Bearer $KONNECT_TOKEN
-      - name: EXIT
-        type: exit
-        status: 200
+      service: example-service
+      config:
+        nodes:
+        - name: AUTHOR
+          type: call
+          url: https://httpbin.konghq.com/json
+        - name: UUID
+          type: call
+          url: https://httpbin.konghq.com/uuid
+        - name: JOIN
+          type: jq
+          inputs:
+            input1: AUTHOR.body
+            input2: UUID.body
+          jq: |
+            {
+              author: .input1.slideshow.author,
+              uuid: .input2.uuid,
+            }
+        - name: EXIT
+          type: exit
+          inputs:
+            body: JOIN
+          status: 200
 {% endentity_examples %}
-{: data-deployment-topology="konnect" }
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: datakit
-    service: example-service
-    config:
-      nodes:
-      - name: ROUTE_LIST
-        type: call
-        url: http://localhost:8001/routes
-      - name: SERVICE_LIST
-        type: call
-        url: http://localhost:8001/services
-      - name: JOIN
-        type: jq
-        inputs:
-          route: ROUTE_LIST.body
-          service: SERVICE_LIST.body
-        jq: |
-          {
-            routes: .route.data[0],
-            services: .service.data[0],
-          }
-      - name: TOKEN
-        type: static
-        values:
-          headers:
-            Authorization: Bearer $KONNECT_TOKEN
-      - name: EXIT
-        type: exit
-        status: 200
-{% endentity_examples %}
-{: data-deployment-topology="on-prem" }
 <!--vale on-->
 
 ## Validate
@@ -143,12 +103,8 @@ display_headers: true
 {% endvalidation %}
 <!-- vale on -->
 
-You should get a `200` response with a random fact from each fact generator called in the config:
-
+You should get a `200` response with a UUID and a slideshow author:
 ```json
-{
-    "cat_fact": "The longest living cat on record according to the Guinness Book belongs to the late Creme Puff of Austin, Texas who lived to the ripe old age of 38 years and 3 days!",
-    "dog_fact": "Greyhounds can reach a speed of up to 45 miles per hour."
-}
+{"uuid":"cfa1e3f8-6618-4d1f-89f0-da97490d7caa","author":"Yours Truly"}
 ```
 {:.no-copy-code}
