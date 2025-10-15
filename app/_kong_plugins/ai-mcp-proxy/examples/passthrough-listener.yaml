@@ -6,15 +6,15 @@ extended_description: |
   Generate an MCP server from {{ site.base_gateway }} services.
 
   {:.warning}
-  > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+  > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
   > ```yaml
   > services:
-  > - name: weather-service
-  >   url: https://api.weatherapi.com/v1/current.json
+  > - name: mcp-service
+  >   url: http://host.docker.internal:3000
   >   routes:
-  >   - name: weather-route
+  >   - name: mcp-route
   >     paths:
-  >     - /weather
+  >     - /marketplace
   > ```
 
 weight: 900
