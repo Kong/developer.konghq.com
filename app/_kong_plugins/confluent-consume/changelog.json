@@ -15,6 +15,11 @@
   ],
   "3.10.0.6": [
     {
+      "message": "Added `enforce_latest_offset_reset` flag to fix incorrect `latest` offset behavior. When `false` (default), maintains backwards compatibility where `latest` acts like `earliest`. When `true`, `latest` correctly starts from end of topic. Also fixed offset commit bug when no records are consumed, preventing feedback loop with true latest behavior.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
       "message": "Fixed an issue where the plugin would fail to connect using mTLS.\n",
       "type": "bugfix",
       "scope": "Plugin"
