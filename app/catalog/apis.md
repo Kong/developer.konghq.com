@@ -57,7 +57,7 @@ Additionally, you can link your API to a Gateway Service to allow developers to 
 To create an API, do one of the following:
 {% navtabs "create-api" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create).
+Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create).
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis` endpoint](/api/konnect/api-builder/v3/#/operations/create-api):
@@ -104,7 +104,7 @@ Each API is identified using the combination of `name+version`. For example, if 
 To version an API, do one of the following:
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
+Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
