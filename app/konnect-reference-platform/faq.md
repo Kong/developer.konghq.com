@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-  - reference-platform
+  - konnect-reference-platform
 
 works_on:
   - konnect
@@ -56,7 +56,7 @@ consideration before proceeding with your Konnect implementation. Here are some 
 <u>Single Organization</u>:
 
 * One organization allows Konnect applications full visibility across your businesses usage of the platform enabling deeper insights, analytics, and capabilities
-* A single Konnect Service Catalog allows for a true central catalog of service applications running across your business
+* A single Konnect {{site.konnect_catalog}} allows for a true central catalog of service applications running across your business
 * Data and analytics cannot be shared across organizations. A single organization provides a single accurate view of your businesses usage of the Konnect platform
 * A single organization provides better visibility into your businesses usage of the platform which will provide better 
   information regarding billing and contractual usage of the platform

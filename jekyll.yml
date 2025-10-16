@@ -118,6 +118,7 @@ operator_product_name: Kong Operator
 operator_product_name_short: KO
 event_gateway: Kong Native Event Proxy
 event_gateway_short: KNEP
+konnect_catalog: Catalog
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com

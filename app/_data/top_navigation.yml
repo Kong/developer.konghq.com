@@ -68,7 +68,7 @@ platform:
           product: advanced-analytics
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
-          url: /service-catalog/scorecards/
+          url: /catalog/scorecards/
           color: red
         - text: API Security & Access Control
           icon: /assets/icons/monochrome/security.svg
@@ -79,9 +79,9 @@ platform:
         - text: Developer Portal
           url: /dev-portal/
           product: dev-portal
-        - text: Service Catalog
-          url: /service-catalog/
-          product: service-catalog
+        - text: "Catalog"
+          url: /catalog/
+          product: catalog
 
 how_tos:
     - text: API Gateway
@@ -108,9 +108,9 @@ how_tos:
     - text: Dev Portal
       url: /how-to/?products=dev-portal
       product: dev-portal
-    - text: Service Catalog
-      url: /how-to/?products=service-catalog
-      product: service-catalog
+    - text: "Catalog"
+      url: /how-to/?products=catalog
+      product: catalog
 
 support:
   - text: Community

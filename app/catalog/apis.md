@@ -1,9 +1,10 @@
 ---
-title: Dev Portal APIs
+title: API catalog
 content_type: reference
 layout: reference
 
 products:
+    - catalog
     - dev-portal
 
 breadcrumbs: 
@@ -19,10 +20,11 @@ search_aliases:
   - postman
   - publish API specs
   - konnect-application-auth
+  - service catalog
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:
-  - text: Automate your API catalog with Dev Portal
+  - text: Automate your API catalog with the Konnect API
     url: /how-to/automate-api-catalog/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
@@ -40,12 +42,12 @@ faqs:
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
     a: |
-      [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/).
+      [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
 ---
 
 {:.success}
 > This is a reference guide, you can also follow along with our tutorials: 
->* [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/)
+>* [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/)
 >* [Automate your API catalog with Terraform](/how-to/automate-api-catalog-with-terraform/)
 
 An API is the interface that you publish to your end customer. They can, and should, include an OpenAPI or AsyncAPI specification or additional documentation to help users get started with your API. 
@@ -55,7 +57,7 @@ Additionally, you can link your API to a Gateway Service to allow developers to 
 To create an API, do one of the following:
 {% navtabs "create-api" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Dev Portal > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create).
+Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create).
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis` endpoint](/api/konnect/api-builder/v3/#/operations/create-api):
@@ -102,7 +104,7 @@ Each API is identified using the combination of `name+version`. For example, if 
 To version an API, do one of the following:
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Dev Portal > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/portals/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
+Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
@@ -141,7 +143,7 @@ All API specification files are validated during upload, although invalid specif
 To upload a spec to an API, do one of the following:
 {% navtabs "api-specs" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
@@ -190,7 +192,7 @@ resource "konnect_api_version" "my_apiversion" {
 
 API documentation is content in Markdown that you can use to provide additional information about your API.
 
-While you are creating or editing an API document, you can also choose to publish it and make it available in your Dev Portal (assuming all parent pages are published as well). Keep the following in mind:
+While you are creating or editing an API document, you can also choose to publish it and make it available in your [Dev Portal](/dev-portal/) (assuming all parent pages are published as well). Keep the following in mind:
 * The visibility of an API document is inherited from the API's visibility and access controls. 
 * If a parent page is unpublished, all child pages will also be unpublished. 
 * If no parent pages are published, no API documentation will be visible, and the APIs list will navigate directly to generated specifications.
@@ -198,7 +200,7 @@ While you are creating or editing an API document, you can also choose to publis
 To create a new API document, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document):
@@ -249,8 +251,8 @@ For example, if you had a document configured like the following:
 * **Page 2:** `info`, parent `about`
 
 Based on this data, you get the following generated URLs:
-* Generated URL for `about` page: `/apis/routes-v3}/docs/about`
-* Generated URL for `info` page: `/apis/routes-v3}/docs/about/info`
+* Generated URL for `about` page: `/apis/routes-v3/docs/about`
+* Generated URL for `info` page: `/apis/routes-v3/docs/about/info`
 
 ## Allow developers to consume your API
 
@@ -291,7 +293,7 @@ If you want the Gateway Service to restrict access to the API, [configure develo
 To link your API to a Gateway Service, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
@@ -328,7 +330,7 @@ resource "konnect_api_implementation" "my_apiimplementation" {
 
 ## Publish your API to Dev Portal
 
-Publishing an API makes it available to one or more Dev Portals. Publishing an API in the Dev Portal involves several steps:
+Publishing an API makes it available to one or more [Dev Portals](/dev-portal/). Publishing an API in the Dev Portal involves several steps:
 
 1. Create a new API, including the [API version](#api-versioning).
 2. Upload an OpenAPI spec and/or markdown documentation (one of these is required to generate API docs).
@@ -391,7 +393,7 @@ rows:
 To publish your API, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Dev Portal > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Portals** tab, and then click **Publish API**.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Portals** tab, and then click **Publish API**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal):
@@ -421,7 +423,7 @@ resource "konnect_api_publication" "my_apipublication" {
 {% endnavtab %}
 {% endnavtabs %}
 
-Once published, the API appears in the selected Portal. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
+Once published, the API appears in the selected Dev Portal. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
 
 ### Allow developers to try requests from the Dev Portal spec renderer
 

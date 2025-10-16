@@ -6839,6 +6839,11 @@ components:
           description: Unix epoch when the resource was created.
           type: number
           nullable: true
+        failover:
+          description: Whether to use this target only as backup or not.
+          type: boolean
+          default: false
+          nullable: true
         id:
           description: A string representing a UUID (universally unique identifier).
           type: string
@@ -6890,6 +6895,11 @@ components:
           description: Unix epoch when the resource was created.
           type: number
           nullable: true
+        failover:
+          description: Whether to use this target only as backup or not.
+          type: boolean
+          default: false
+          nullable: true
         id:
           description: A string representing a UUID (universally unique identifier).
           type: string
@@ -6926,6 +6936,7 @@ components:
           nullable: true
       example:
         id: 089292a7-ba3d-4d88-acf0-97b4b2e2621a
+        failover: true
         target: 203.0.113.42
         weight: 100
       additionalProperties: false

@@ -17367,7 +17367,11 @@
       {
         "message": "**kafka-consume, confluent-consume**: Added `enforce_latest_offset_reset` flag to fix incorrect `latest` offset behavior. When `false` (default), maintains backwards compatibility where `latest` acts like `earliest`. When `true`, `latest` correctly starts from end of topic. Also fixed offset commit bug when no records are consumed, preventing feedback loop with true latest behavior.\n",
         "type": "bugfix",
-        "scope": "Plugin"
+        "scope": "Plugin",
+        "plugins": [
+          "kafka-consume",
+          "confluent-consume"
+        ]
       },
       {
         "message": "**ldap-auth-advanced**: Fixed group validation issue where LDAP group names containing asterisk (*) characters were incorrectly marked as invalid during Kong Manager RBAC authentication. Group names with asterisk characters (such as \"*Dev - EXAMPLE - TOP\") now properly validate and allow role mapping.\n",

@@ -36,7 +36,7 @@ rows:
         - type: text
           config: |
             You should use the {{site.konnect_short_name}} APIs if one or more of the following is true:
-            - You want to manage resources on the Konnect platform and its apps (such as Dev Portal and Service Catalog) programmatically
+            - You want to manage resources on the Konnect platform and its apps (such as Dev Portal and {{site.konnect_catalog}}) programmatically
             - You need low-level, flexible, and direct integration or automation
   - columns:
     - blocks:
