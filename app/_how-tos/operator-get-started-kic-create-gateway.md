@@ -1,6 +1,6 @@
 ---
 title: Create a Gateway
-description: "Configure {{ site.gateway_operator_product_name }}, {{ site.kic_product_name }}, and {{ site.base_gateway }} using open standards."
+description: "Configure {{ site.operator_product_name }}, {{ site.kic_product_name }}, and {{ site.base_gateway }} using open standards."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/create-gateway/
@@ -26,7 +26,7 @@ works_on:
 entities: []
 
 tldr:
-  q: How can I create a Gateway with {{ site.gateway_operator_product_name }} and {{ site.kic_product_name }}?
+  q: How can I create a Gateway with {{ site.operator_product_name }} and {{ site.kic_product_name }}?
   a: Create a `GatewayConfiguration` object, the. create`GatewayClass` instance and a `Gateway` resource.
 
 prereqs:
@@ -44,7 +44,7 @@ prereqs:
 
 {% assign gatewayApiVersion = "v1" %}
 
-Creating `GatewayClass` and `Gateway` resources in Kubernetes causes {{ site.gateway_operator_product_name }} to create a {{ site.kic_product_name }} and {{ site.base_gateway }} deployment.
+Creating `GatewayClass` and `Gateway` resources in Kubernetes causes {{ site.operator_product_name }} to create a {{ site.kic_product_name }} and {{ site.base_gateway }} deployment.
 
 You can customize your {{ site.kic_product_name }} and {{ site.base_gateway }} deployments using the `GatewayConfiguration` CRD. This allows you to control the image being used, and set any required environment variables.
 

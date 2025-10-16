@@ -1,6 +1,6 @@
 ---
-title: Deploy custom plugins with {{ site.gateway_operator_product_name }}
-description: "Package and deploy custom Kong plugins as OCI images using the {{ site.gateway_operator_product_name }} and reference them in {{site.base_gateway}} resources."
+title: Deploy custom plugins with {{ site.operator_product_name }}
+description: "Package and deploy custom Kong plugins as OCI images using the {{ site.operator_product_name }} and reference them in {{site.base_gateway}} resources."
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/deploy-custom-plugins/
@@ -35,7 +35,7 @@ prereqs:
       - kongplugininstallation
 
 tldr:
-  q: How can I deploy a custom plugin using the {{ site.gateway_operator_product_name }}?
+  q: How can I deploy a custom plugin using the {{ site.operator_product_name }}?
   a: |
     Build and push a plugin as a container image, then use a `KongPluginInstallation`
     to register it with the operator. Reference it in your `GatewayConfiguration` to
@@ -44,7 +44,7 @@ tldr:
 
 ## Plugin distribution using an OCI registry
 
-{{ site.gateway_operator_product_name }} can install Kong custom plugins packaged as container images. This guide shows how to package, install, and use a custom plugin in {{site.base_gateway}} instances managed by the {{ site.gateway_operator_product_name }}.
+{{ site.operator_product_name }} can install Kong custom plugins packaged as container images. This guide shows how to package, install, and use a custom plugin in {{site.base_gateway}} instances managed by the {{ site.operator_product_name }}.
 
 {% include_cached plugins/custom-plugin-example.md is_optional=true %}
 
@@ -70,7 +70,7 @@ Build the image:
 docker build -t myheader:1.0.0 .
 ```
 
-Next, push the image to a public or private registry available to the Kubernetes cluster where {{ site.gateway_operator_product_name }} is running.
+Next, push the image to a public or private registry available to the Kubernetes cluster where {{ site.operator_product_name }} is running.
 
 ```bash
 docker tag myheader:1.0.0 $YOUR_REGISTRY_ADDRESS/myheader:1.0.0

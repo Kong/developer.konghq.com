@@ -32,7 +32,7 @@ related_resources:
     url: /dedicated-cloud-gateways/azure-peering/
   - text: Private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
-  - text: Create a Transit Gateway with {{ site.gateway_operator_product_name }} and AWS
+  - text: Create a Transit Gateway with {{ site.operator_product_name }} and AWS
     url: /how-to/create-transit-gateway-with-operator-and-aws/
   - text: Use AWS workload identities
     url: /dedicated-cloud-gateways/reference/#aws-workload-identities

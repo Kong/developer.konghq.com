@@ -1,8 +1,8 @@
 metadata:
-  title: Install Kong Gateway Operator
+  title: Install {{ site.operator_product_name }}
   content_type: landing_page
   description: |
-    Install {{ site.gateway_operator_product_name }} using Helm
+    Install {{ site.operator_product_name }} using Helm
   products:
     - operator
   breadcrumbs:
@@ -11,11 +11,11 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Install {{site.gateway_operator_product_name}} (KGO)"
+      text: "Install {{site.operator_product_name}} ({{site.operator_product_name_short}})"
 
   - header:
       type: h2
-      text: How do I install {{site.gateway_operator_product_name}}?
+      text: How do I install {{site.operator_product_name}}?
     columns:
       - blocks:
           - type: text
@@ -44,7 +44,7 @@ rows:
 
           - type: faqs
             config:
-              - q: Can {{ site.gateway_operator_product_name }} be installed with Kustomize or any other tools?
+              - q: Can {{ site.operator_product_name }} be installed with Kustomize or any other tools?
                 a: Helm is the only officially supported installation method.
               - q: How to I customize which controllers I want to run?
                 a: |
