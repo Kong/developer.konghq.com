@@ -3,19 +3,28 @@ description: 'Generate an MCP server from {{ site.base_gateway }} Service'
 title: 'Generate an MCP server in conversion-listener mode'
 
 extended_description: |
-  Generate an MCP server from {{ site.base_gateway }} Services. 
+  Generate an MCP server from {{ site.base_gateway }} Services.
 
   {:.warning}
   > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
   > ```yaml
   > services:
-  > - name: weather-service
-  >   url: https://api.weatherapi.com/v1/current.json
+  > - name: mcp-service
+  >   url: http://host.docker.internal:3000
   >   routes:
-  >   - name: weather-route
+  >   - name: mcp-route
   >     paths:
-  >     - /weather
+  >     - /marketplace
   > ```
+
+  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you’ll need an upstream HTTP API to expose.
+  Use this mock API to test the plugin without relying on an external service; it simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+
+  ```bash
+  curl -s -o api.js "https://gist.githubusercontent.com/subnetmarco/5ddb23876f9ce7165df17f9216f75cce/raw/a44a947d69e6f597465050cc595b6abf4db2fbea/api.js"
+  npm install express
+  node api.js
+  ```
 
   This example uses [`config.tools.annotations.title`](/plugins/ai-mcp-proxy/reference/#schema--config-tools-annotations-title) to add a meaningful name to the tool to simplify human debugging.
 
@@ -27,36 +36,34 @@ requirements:
 config:
   mode: conversion-listener
   tools:
-  - description: Get current weather for a location
+  - description: Get users
     method: GET
-    path: /v1/current.json
+    path: /marketplace/users
+    annotations:
+      title: Get users
     parameters:
-    - name: key
+    - name: id
       in: query
-      description: Your WeatherAPI key
-      required: true
-      schema:
-        type: string
-    - name: q
-      in: query
-      description: Location query (city name, ZIP/postal, IP, or lat/long)
-      required: true
-      schema:
-        type: string
-    - name: aqi
-      in: query
-      description: Include air quality data (yes/no)
       required: false
       schema:
         type: string
+      description: Optional user ID
+  - description: Get orders for a user
+    method: GET
+    path: /marketplace/orders
     annotations:
-      title: Current weather
+      title: Get users orders
+    parameters:
+    - name: userid
+      in: query
+      required: true
+      schema:
+        type: string
+      description: User ID to filter orders
   server:
     timeout: 60000
-  logging:
-    log_statistics: true
-    log_payloads: false
   max_request_body_size: 8192
+
 
 tools:
   - deck
