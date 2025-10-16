@@ -18,7 +18,15 @@ extended_description: |
     >     - /mcp-listener
     > ```
 
-    The listener uses [`config.server.tag`](/plugins/ai-mcp-proxy/reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server based on `tags[]` defined in the `conversion-only` plugin(s) defined on the plugin level.
+    Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you’ll need an upstream HTTP API to expose.
+    Use this mock API to test the plugin without relying on an external service; it simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+
+    ```bash
+    curl -s -o api.js "https://gist.githubusercontent.com/subnetmarco/5ddb23876f9ce7165df17f9216f75cce/raw/a44a947d69e6f597465050cc595b6abf4db2fbea/api.js"
+    npm install express
+    node api.js
+    ```
+    The `listener` uses [`config.server.tag`](/plugins/ai-mcp-proxy/reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server based on `tags[]` defined in the `conversion-only` plugin(s) defined on the plugin level.
 
 weight: 900
 
