@@ -34,11 +34,13 @@ requirements:
 - "A running and exposed API"
 
 config:
-  mode: conversion-only
+  mode: conversion-listener
   tools:
   - description: Get users
     method: GET
     path: /marketplace/users
+    annotations:
+      title: Get users
     parameters:
     - name: id
       in: query
@@ -49,6 +51,8 @@ config:
   - description: Get orders for a user
     method: GET
     path: /marketplace/orders
+    annotations:
+      title: Get users orders
     parameters:
     - name: userid
       in: query
@@ -56,10 +60,9 @@ config:
       schema:
         type: string
       description: User ID to filter orders
-  logging:
-    log_statistics: false
-    log_payloads: false
-  max_request_body_size: 16384
+  server:
+    timeout: 60000
+  max_request_body_size: 8192
 
 
 tools:
