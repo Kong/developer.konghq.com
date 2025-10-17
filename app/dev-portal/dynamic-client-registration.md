@@ -30,6 +30,8 @@ related_resources:
     url: /how-to/auth0-dcr/
   - text: Configure Dynamic Client Registration with Azure
     url: /how-to/azure-dcr/
+  - text: Configure Dynamic Client Registration with Kong Identity
+    url: /how-to/kong-identity-dcr/
   - text: About OIDC Dynamic Client Registration
     url: https://openid.net/specs/openid-connect-registration-1_0.html
   - text: About Dev Portal OIDC authentication
@@ -48,8 +50,87 @@ faqs:
 ---
 Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal allows an application in the Dev Portal to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. Dev Portal DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
 
-In Dev Portal, you can create and use multiple DCR configurations.
+In Dev Portal, you can create and use multiple DCR configurations. You can configure DCR by doing the following:
 
+{% navtabs "configure-dcr" %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
+1. In the Dev Portal sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
+1. Click the **DCR provider** tab.
+1. Click **New provider**.
+1. In the **Name** field, enter the name for your DCR provider.
+1. In the **Provider Type** dropdown menu, select your DCR provider.
+1. In the **Auth Server** field, select your auth server.
+1. Click **Create**.
+1. Click the **Authentication strategy** tab.
+1. Click **New authentication strategy**.
+1. In the **Name** field, enter a name for your auth strategy.
+1. In the **Display name** field, enter a name for your auth strategy.
+1. In the **Authentication Type** dropdown menu, select "DCR".
+1. In the **DCR Provider** dropdown menu, select your DCR provider.
+1. In the **Scopes** field, enter your scopes.
+1. In the **Credential Claims** field, enter your claims.
+1. In the **Auth Methods** dropdown menu, select your auth methods. 
+1. Click **Create**.
+{% endnavtab %}
+{% navtab "API" %}
+1. Configure your DCR provider by sending a POST request to the [`/dcr-providers` endpoint](/api/konnect/application-auth-strategies/#/operations/create-dcr-provider):
+{% capture provider %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/dcr-providers
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "Okta"
+  provider_type: "okta"
+  issuer: "$ISSUER_URL"
+  dcr_config:
+    dcr_token: "$DCR_TOKEN"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ provider | indent: 3 }}
+   
+   {:.info}
+   > **Note:** The `DCR_TOKEN` is the token from your IdP.
+
+1. Export your DCR provider ID:
+   ```sh
+   export DCR_PROVIDER='YOUR-DCR-PROVIDER-ID'
+   ```
+1. Create an authentication strategy for your DCR provider by sending a POST request to the [`/application-auth-strategies` endpoint](/api/konnect/application-auth-strategies/#/operations/create-app-auth-strategy):
+{% capture strategy %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/application-auth-strategies
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "Okta"
+  display_name: "Okta"
+  strategy_type: "openid_connect"
+  configs:
+    openid-connect:
+        issuer: "$ISSUER_URL"
+        credential_claim:
+        - client_id
+        scopes:
+        - my-scope
+        auth_methods:
+        - client_credentials
+        - bearer
+  dcr_provider_id: "$DCR_PROVIDER"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ strategy | indent: 3 }}
+{% endnavtab %}
+{% endnavtabs %}
 
 ## How does DCR work in Dev Portal?
 
@@ -82,6 +163,7 @@ Each method is available when using the following DCR identity providers:
 * [Curity](/how-to/curity-dcr/)
 * [Azure](/how-to/azure-ad-dcr/)
 * [Auth0](/how-to/auth0-dcr/)
+* [Kong Identity](/how-to/kong-identity-dcr/)
 
 {:.info}
 > **Note:** When using DCR, each application automatically receives a client ID and secret. These credentials can be used to authenticate directly with services using the client credentials grant, or to obtain an access token from the identity provider when using the bearer token authentication method.
@@ -114,6 +196,9 @@ rows:
   - vendor: "Azure"
     endpoint: "POST `https://login.microsoftonline.com/$YOUR_TENANT_ID/oauth2/v2.0/token`"
     body: '`{ "grant_type": "client_credentials", "scope": "https://graph.microsoft.com/.default" }`'
+  - vendor: "Kong Identity"
+    endpoint: "POST `https://$YOUR_KONNECT_DOMAIN.us.identity.konghq.com/oauth2/v1/`"
+    body: '`{ "grant_type": "client_credentials", "scope": "openid" }`'
 {% endtable %}
 <!--vale on-->
 
@@ -130,6 +215,7 @@ After successfully authenticating using either client credentials or a bearer ac
 * Azure
 * Curity
 * Okta
+* Kong Identity
 
 If your third-party IdP is not on this list, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the Dev Portal. When a developer creates a DCR application in the Dev Portal, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP.
 
