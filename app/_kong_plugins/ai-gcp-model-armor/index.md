@@ -58,6 +58,10 @@ faqs:
       ```
       This means the plugin is conflicting with settings configured in GCP Vertex.
       We recommend disabling the GCP Model Armor Floor in GCP, as this setting fails in some modes (for example, streaming response mode), and blocks all analytics.
+
+next_steps:
+  - text: Use the AI GCP Model Armor plugin
+    url: /how-to/use-ai-gcp-model-armor-plugin/
 ---
 
 The **GCP Model Armor** plugin integrates Kong AI Gateway with [Google Cloud’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
