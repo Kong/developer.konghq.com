@@ -156,3 +156,4 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+/api/konnect/api-builder/   /api/konnect/api-catalog/
