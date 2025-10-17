@@ -106,7 +106,7 @@ export AUTH_STRATEGY_ID='YOUR-AUTH-STRATEGY-ID'
 
 ## Apply the key auth strategy to an API
 
-Now that the application auth strategy is configured, you can [apply it to an API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
+Now that the application auth strategy is configured, you can [apply it to an API](/api/konnect/api-catalog/v3/#/operations/publish-api-to-portal) using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}

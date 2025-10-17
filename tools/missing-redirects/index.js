@@ -98,6 +98,10 @@ function fileToUrl(file) {
       .replace("app/_event_gateway_policies/", "/event-gateway/policies/")
       .replace(ext, "/");
   } else if (file.startsWith("app/_api")) {
+    return file
+      .replace("app/_api/", "/api/")
+      .replace(`_index${ext}`, "");P
+  } else if (file.startsWith("app/_api")) {
     return file.replace("app/_api/", "/api/").replace(`_index${ext}`, "");
   }
 
@@ -146,7 +150,7 @@ function patternToRegex(pattern) {
       }
 
       const oldUrl = fileToUrl(filePath);
-      if (oldUrl && !redirects.some((r) => patternToRegex(r).test(oldUrl))) {
+      if (oldUrl && !redirects.some((r) => new RegExp("^" + oldUrl + "(?:\\*|:splat)?\\s").test(r))) {
         missingRedirects.push({ path: filePath, url: oldUrl, status });
       }
     }

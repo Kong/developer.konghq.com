@@ -62,7 +62,7 @@ Review the following Dev Portal breaking changes and make any necessary updates 
 
 ### API specifications deprecated in favor of API versions
 
-The [API specification endpoint](/api/konnect/api-builder/v3/#/operations/create-api-spec) is being deprecated on October 1, 2025 in favor of the [API versions endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version). 
+The [API specification endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-spec) is being deprecated on October 1, 2025 in favor of the [API versions endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-version). 
 Moving to the `/apis/{id}/versions` endpoints allows you to support additional versions of a spec. 
 Existing automation with specifications operations should work in parallel during this transition. 
 Each existing specification will be mapped one-to-one with a wrapping version entity.
