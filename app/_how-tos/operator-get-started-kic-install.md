@@ -1,6 +1,6 @@
 ---
-title: Install {{ site.gateway_operator_product_name }} with {{ site.kic_product_name }}
-description: "Learn how to install {{ site.gateway_operator_product_name }} with {{ site.kic_product_name }} using Helm"
+title: Install {{ site.operator_product_name }} with {{ site.kic_product_name }}
+description: "Learn how to install {{ site.operator_product_name }} with {{ site.kic_product_name }} using Helm"
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/install/
@@ -16,7 +16,7 @@ breadcrumbs:
     group: Gateway Deployment
     section: "Get Started"
 min_version:
-  kgo: '1.6.1'
+  operator: '1.6.1'
 products:
   - operator
 
@@ -29,8 +29,8 @@ prereqs:
   skip_product: true
 
 tldr:
-  q: How do I install {{ site.gateway_operator_product_name }} with {{ site.kic_product_name }} using Helm?
-  a: Update the Helm repository and use Helm to install {{ site.gateway_operator_product_name }} with {{ site.kic_product_name }}.
+  q: How do I install {{ site.operator_product_name }} with {{ site.kic_product_name }} using Helm?
+  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }} with {{ site.kic_product_name }}.
 ---
 {% assign gwapi_version = "1.3.0" %}
 
@@ -42,12 +42,12 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {% include k8s/kong-namespace.md %}
 
-## Install {{ site.gateway_operator_product_name }}
+## Install {{ site.operator_product_name }}
 
-{% include prereqs/products/operator.md raw=true v_maj=1 %}
+{% include prereqs/products/operator.md raw=true v_maj=2 %}
 
 
-## Wait for {{ site.gateway_operator_product_name }} to be ready
+## Wait for {{ site.operator_product_name }} to be ready
 
 {% validation custom-command %}
 command: |
