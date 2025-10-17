@@ -137,7 +137,7 @@ curl -i -X POST \
 
 You can also use [jq](https://jqlang.org/) to pass your schema directly from the file instead of manually escaping it:
 ```sh
---data "{\"lua_schema\": $(jq -Rs './schema.lua')}"
+--data "{\"lua_schema\": $(jq -Rs . './schema.lua')}"
 ```
 
 Check that your schema was uploaded using the following request:
