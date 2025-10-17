@@ -33,7 +33,7 @@ faqs:
       To close a Plus or Enterprise account, you can:
       * Go to [**My Account**](https://cloud.konghq.com/global/account) > **Delete Account**.
       * Go to Organization > Settings > General > **Deactivate Organization**
-      * Request deactivation from [Kong Support](https://support.konghq.com/).
+      * Request deactivation from Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
   - q: When is my free account deactivated?
     a: |
       A free {{site.konnect_short_name}} organization is automatically deactivated after 30
@@ -62,7 +62,7 @@ faqs:
       nodes will keep running until manually stop them.
   - q: How do I deactivate or reactivate an org?
     a: |
-      Contact [Kong Support](https://support.konghq.com/) to do any of the following:
+      Contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com) to do any of the following:
       * Deactivate an organization that you registered
       * Reactivate an organization that has been deactivated
       * Unlock an email for use with another organization
@@ -82,8 +82,15 @@ faqs:
       
       To change the Owner:
       1. Ensure that the new Owner is already a member of the [Organization Admin pre-defined team](/konnect-platform/teams-and-roles/#predefined-teams).
-      2. Open a [Kong support ticket](https://support.konghq.com/).
+      2. Open a Kong Support ticket by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
       3. In your support ticket, specify the current organization, the current Owner, and the user that you want to designate as the new Owner.
+  - q: How can I create a support case in {{site.konnect_short_name}}?
+    a: |
+      If you're an org admin with an Enterprise account, you can create a support case in {{site.konnect_short_name}} by navigating to the **?** icon on the top right menu and clicking **Create support case**.
+
+      This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity. If you enable **Enable advanced support access**, this allows Kong engineers to update configurations for your org with audited log permissions to expedite a resolution. 
+
+      You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
