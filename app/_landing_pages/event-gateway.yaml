@@ -173,10 +173,10 @@ rows:
               title: "{{site.event_gateway_short}} policy hub"
               description: All available virtual cluster policies for {{site.event_gateway}}
               icon: /assets/icons/plug.svg
-              cta:
-                text: See all policies
-                url: /event-gateway/policies/
-                align: end
+              ctas:
+                - text: See all policies
+                  url: /event-gateway/policies/
+                  align: end
       - blocks:
         - type: card
           config:
@@ -184,10 +184,13 @@ rows:
             description: |
               Flexible authentication for both virtual cluster client connections and backend cluster access
             icon: /assets/icons/security.svg
-            cta:
-              text: Configure authentication
-              url: /event-gateway/authentication/
-              align: end
+            ctas:
+              - text: Authentication for backend clusters
+                url: /event-gateway/entities/backend-cluster/#authentication
+                align: end
+              - text: Authentication for virtual clusters
+                url: /event-gateway/entities/virtual-cluster/#authentication
+                align: end
       - blocks:
         - type: card
           config:
@@ -195,10 +198,10 @@ rows:
             description: |
               Map gateway servers to upstream Kafka brokers using port mapping or SNI routing
             icon: /assets/icons/load-balance.svg
-            cta:
-              text: Understand hostname mapping
-              url: /event-gateway/hostname-mapping/
-              align: end
+            ctas:
+              - text: Understand hostname mapping
+                url: /event-gateway/architecture/#hostname-mapping
+                align: end
       - blocks:
           - type: card
             config:
@@ -206,10 +209,10 @@ rows:
               description: |
                 Explore the reference documentation for all {{ site.event_gateway }} APIs
               icon: /assets/icons/data-object.svg
-              cta:
-                text: Event Gateway API reference
-                url: /api/event-gateway/
-                align: end
+              ctas:
+                - text: Event Gateway API reference
+                  url: /api/event-gateway/
+                  align: end
       
   - header:
       type: h2

@@ -54,9 +54,9 @@ rows:
       The gateway admin can define policies on the virtual clusters that can, for example, define which topics are exposed to which clients, what actions can be taken on the backend cluster, and how records are serialized when the client fetches them. As of now, there can only be one backend cluster exposed through a single virtual cluster.
 
     links: |
-      * [Listener entity reference](/event-gateway/entities/virtual-cluster/)
+      * [Virtual cluster entity reference](/event-gateway/entities/virtual-cluster/)
       * [API reference](/api/knep/)
-      * [Listener policies](/event-gateway/policies/?policy-target=virtual-cluster)
+      * [Virtual cluster policies](/event-gateway/policies/?policy-target=virtual-cluster)
   - entity: Policy
     description: |
       Listeners represent hostname-port or IP-port combinations that connect to TCP sockets. 
