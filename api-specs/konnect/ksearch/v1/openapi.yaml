@@ -25,7 +25,7 @@ paths:
   /search:
     get:
       operationId: get-search
-      summary: Search Konnect
+      summary: List Konnect Entities via Search
       description: Retrieves a list of Konnect entities matching the search query provided.
       parameters:
         - $ref: '#/components/parameters/PageSize'

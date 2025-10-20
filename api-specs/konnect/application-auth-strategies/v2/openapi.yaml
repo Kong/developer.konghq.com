@@ -79,7 +79,7 @@ paths:
       - $ref: '#/components/parameters/DcrProviderId'
     get:
       operationId: get-dcr-provider
-      summary: Fetch DCR provider
+      summary: Get a DCR provider
       description: Returns a DCR provider.
       responses:
         '200':
