@@ -28,7 +28,7 @@ columns:
   - title: Description
     key: description
   - title: References
-    key: Links
+    key: links
 rows:
   - entity: Listener
     description: |
@@ -45,7 +45,7 @@ rows:
       <br><br>
       There can be multiple clusters proxied through the same gateway. Event Gateway control planes store information about how to authenticate to backend clusters, whether or not to verify the cluster’s TLS certificates, and how often to fetch metadata from the cluster. 
     links: |
-      * [Backend cluster entity reference](/event-gateway/entities/backend-cluster/)
+      * [Backend cluster entity reference](/event-gateway/entities/backend-cluster/) <br><br>
       * [API reference](/api/knep/)
   - entity: Virtual cluster
     description: |
@@ -77,10 +77,10 @@ The bootstrap server informs the Kafka client about all the brokers in the clust
 To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname metadata from the backend cluster and maps each hostname from the cluster to a hostname that it serves. There are two ways to do with this: with port mapping, or using SNIs.
 
 For example, let's say that there are three brokers in the cluster: `kafka1`, `kafka2`, and `kafka3`.
-Each broker exposes port 9092, and the proxy runs on `my-event-gateway`. 
+Each broker exposes port `9092`, and the proxy runs on `my-event-gateway`. 
 The proxy exposes three different servers for each host in the cluster. Depending on your use requirements, you can expose the brokers to the proxy in the following ways:
 
-* **Port mapping**: The proxy could expose exactly three configurable ports: 
+* **Port mapping**: The proxy can expose exactly three configurable ports: 
 
   ```
   kafka1:9092 → my-event-gateway:9092
