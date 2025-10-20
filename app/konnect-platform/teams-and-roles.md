@@ -101,13 +101,13 @@ rows:
       Users can create and manage API products, including publishing API product versions to Dev Portal and enabling application registration.
 
       {:.warning}
-      > **Important:** API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#catalog-apis) instead.
+      > API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#catalog-apis) instead.
   - team: API Product Developer
     description: |
       Users can create and manage versions of API products.
 
       {:.warning}
-      > **Important:** API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#catalog-apis) instead.
+      > API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#catalog-apis) instead.
   - team: Control Plane Admin
     description: Users can create and manage Control Planes.
 {% endtable %} 
@@ -388,7 +388,7 @@ rows:
       * Create, edit, delete, read, and list teams
       * Add and remove a role to teams, list roles in teams
       * Add, remove, and list developers from teams
-      * Create, edit, delete, read, and list PPVs
+      * Create, edit, delete, read, and list API versions
       * Publish to Dev Portal
   - role: "`Appearance Maintainer`"
     description: Access the Portal instance and edit its appearance.
@@ -404,14 +404,14 @@ rows:
       * Read and list Dev Portals
       * List, read, edit, and delete applications
       * List and read developers
-      * Create, edit, delete, read, and list PPVs
+      * Create, edit, delete, read, and list API versions
       * Edit Dev Portal appearance
       * Publish to Dev Portal
   - role: "`Product Publisher`"
     description: Manage publishing products to a Dev Portal.
     permissions: |
       * Read and list Dev Portals
-      * Create, edit, delete, read, and list PPVs
+      * Create, edit, delete, read, and list API versions
       * Publish to Dev Portal
   - role: "`Viewer`"
     description: Read-only access to Dev Portal developers and applications.
@@ -419,7 +419,7 @@ rows:
       * Read and list Dev Portals
       * List and read applications
       * List and read developers
-      * List and read PPVs
+      * List and read API versions
   - role: "`Content Editor`"
     description: Edits Dev Portal pages, snippets, and customization.
     permissions: |
