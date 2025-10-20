@@ -95,6 +95,26 @@ rows:
       - blocks:
         - type: card
           config:
+            title: Define Dev Portal teams and roles
+            description: |
+              Before you can start using your Dev Portal, a {{site.konnect_short_name}} or Dev Portal admin must assign users to teams and roles. This allows users to access their respective features in Dev Portal.
+            icon: /assets/icons/rbac.svg
+            ctas:
+              - text: Pre-defined Dev Portal teams
+                url: "/konnect-platform/teams-and-roles/#predefined-teams"
+              - text: Dev Portal teams for common use cases
+                url: "/konnect-platform/teams-and-roles/#dev-portal-custom-teams"
+              - text: Catalog API roles
+                url: "/konnect-platform/teams-and-roles/#catalog-apis"
+              - text: Dev Portal roles
+                url: "/konnect-platform/teams-and-roles/#dev-portal"
+              - text: Auth strategy roles
+                url: "/konnect-platform/teams-and-roles/#application-auth-strategies"
+              - text: DCR provider roles
+                url: "/konnect-platform/teams-and-roles/#dcr"
+      - blocks:
+        - type: card
+          config:
             title: Create an API catalog
             description: |
               Create and publish APIs to Dev Portal.
