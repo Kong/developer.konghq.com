@@ -518,6 +518,8 @@ moesif
 MongoDB
 MongoDB
 multimodal
+multitenant
+multitenancy
 mutex
 nameserver
 nameservers
@@ -858,6 +860,7 @@ Unicode
 unix
 unmanaged
 unmarshalled
+unnamespaced
 unnormalized
 unpackage
 unparsed
