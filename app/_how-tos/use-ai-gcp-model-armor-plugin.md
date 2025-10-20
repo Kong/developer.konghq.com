@@ -66,7 +66,7 @@ prereqs:
            ```
 
         3. **Install the gcloud CLI:**
-           Follow the installation guide at [cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install).
+           Follow the installation guide at [cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install). You'll need version 538.0.0 or later of the CLI to use model armor. To update your CLI, execute `gcloud components update`.
 
         4. **Authenticate with gcloud:**
            Log in and set your active project:
@@ -84,18 +84,22 @@ prereqs:
             Your service account must have the [`roles/modelarmor.admin`](https://cloud.google.com/iam/docs/roles-permissions/modelarmor) IAM role.
 
             2. Create the `modelarmor-admin` service account in your GCP by executing the following command in your terminal:
+            {% capture modelarmor-admin %}
             ```bash
             gcloud iam service-accounts create modelarmor-admin \
                 --description="Service account for Model Armor administration" \
                 --display-name="Model Armor Admin" \
                 --project=$DECK_GCP_PROJECT_ID
             ```
+             {% endcapture %}
+             {{ modelarmor-admin | indent: 3}}
 
             Here’s your revised step with the new instruction included:
 
 
             3. Create and activate a service account key file by executing the following commands:
 
+             {% capture service-account %}
             ```bash
             gcloud iam service-accounts keys create modelarmor-admin-key.json \
                 --iam-account=modelarmor-admin@$DECK_GCP_PROJECT_ID.iam.gserviceaccount.com
@@ -103,6 +107,8 @@ prereqs:
             gcloud auth activate-service-account \
                 --key-file=modelarmor-admin-key.json
             ```
+            {% endcapture %}
+            {{ service-account | indent: 3}}
 
             After creating the key, convert the contents of `modelarmor-admin-key.json` into a **single-line JSON string**.
             Escape all necessary characters — quotes (`"`) and newlines (`\n`) — so that it becomes a valid one-line JSON string.
@@ -113,12 +119,15 @@ prereqs:
             ```
 
 
-            4. **Enable the Model Armor API by execute the following commands:
+            4. Enable the Model Armor API:
 
+            {% capture enable-model-armor %}
             ```bash
             gcloud config set api_endpoint_overrides/modelarmor "https://modelarmor.$DECK_GCP_LOCATION_ID.rep.googleapis.com/"
             gcloud services enable modelarmor.googleapis.com --project=$DECK_GCP_PROJECT_ID
             ```
+            {% endcapture %}
+            {{ enable-model-armor | indent: 3}}
 
             5. Create a Model Armor template with strict guardrails. This template blocks **hate speech, harassment, and sexually explicit content** at medium confidence or higher, enforces PI/jailbreak and malicious URI filters, and logs all inspection events. Execute the following command to create the template:
 
@@ -140,11 +149,11 @@ prereqs:
             ```
 
 
-                6. **Export the template ID:**
-                Execute the following command:
-                ```bash
-                export DECK_GCP_TEMPLATE_ID="strict-guardrails"
-                ```
+                6. Export the template ID:
+                
+                   ```bash
+                   export DECK_GCP_TEMPLATE_ID="strict-guardrails"
+                   ```
       icon_url: /assets/icons/gcp-cloud-armor.svg
 
   entities:
@@ -208,7 +217,7 @@ entities:
         gcp_service_account_json: ${gcp_service_account_json}
         reveal_failure_categories: true
         request_failure_message: "Your request was blocked by content policies."
-        response_failure_message: "The model's response was filtered for safety."
+        response_failure_message: "The model response was filtered for safety."
         timeout: 15000
         response_buffer_size: 4096
         text_source: "last_message"
