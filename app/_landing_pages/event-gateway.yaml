@@ -135,20 +135,20 @@ rows:
 
   - header:
     columns:
-      - header:
-          type: h2
-          text: "Common use cases"
-        blocks:
-        - type: structured_text
-          config:
-            blocks:
-            - type: unordered_list
-              items:
-                - "[Productizing Kafka topics](/how-to/event-gateway/productize-kafka-topics/): Create virtual clusters to expose and isolate topics for different environments and customers."
-                - "[Rewriting topics](/how-to/event-gateway/rewrite-kafka-topics/): Use the topic rewrite policy to map topics between clients and backend clusters."
-                - "[Using SNIs for hostname mapping](/how-to/event-gateway/sni-hostname-mapping/): Route client connections to different backend clusters based on the SNI hostname."
-                - "[Setting up Kong Identity for OAuth](/how-to/event-gateway/kong-identity-oauth/): Secure client connections with OAuth 2.0 using Kong Identity as the authorization server."
-                - "[Using ACLs for topic-level access control](/how-to/event-gateway/acls/): Control which topics clients can access using allow and deny lists."
+      # - header:
+      #     type: h2
+      #     text: "Common use cases"
+      #   blocks:
+      #   - type: structured_text
+      #     config:
+      #       blocks:
+      #       - type: unordered_list
+      #         items:
+      #           - "[Productizing Kafka topics](/how-to/event-gateway/productize-kafka-topics/): Create virtual clusters to expose and isolate topics for different environments and customers."
+      #           - "[Rewriting topics](/how-to/event-gateway/rewrite-kafka-topics/): Use the topic rewrite policy to map topics between clients and backend clusters."
+      #           - "[Using SNIs for hostname mapping](/how-to/event-gateway/sni-hostname-mapping/): Route client connections to different backend clusters based on the SNI hostname."
+      #           - "[Setting up Kong Identity for OAuth](/how-to/event-gateway/kong-identity-oauth/): Secure client connections with OAuth 2.0 using Kong Identity as the authorization server."
+      #           - "[Using ACLs for topic-level access control](/how-to/event-gateway/acls/): Control which topics clients can access using allow and deny lists."
 
       - header:
           type: h2
