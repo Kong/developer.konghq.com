@@ -5,17 +5,22 @@ description: 'Configure a chat route using Azure OpenAI Service with the latest 
 extended_description: |
   Configure a chat route using Azure OpenAI Service with the GPT-4o model, and authenticate using an Azure Managed Identity.
 
-  To connect to Azure AI, you'll need two key values from your Azure OpenAI resource:
+  To connect to Azure AI, you'll need three values from your Azure OpenAI resource:
 
   1. **Deployment ID** — The unique name of your deployed model.
-     - In the Azure Portal, go to:
-       **Azure Portal → Azure OpenAI Resource → Model deployments → Deployment name** column.
+     - In the Azure AI Foundry Portal's sidebar, go to:
+       **Shared Resources > Deployments → Model deployments** and click the deployment name.
      - You can also see the deployment ID in the Azure OpenAI URL when calling the API, for example:
        `https://{AZURE_INSTANCE_NAME}.openai.azure.com/openai/deployments/{AZURE_DEPLOYMENT_ID}/...`
 
   2. **Instance name** — The name of your Azure OpenAI resource.
      - This is the prefix in your API endpoint URL, for example:
        `https://{AZURE_INSTANCE_NAME}.openai.azure.com`
+
+  3. **API Key** — The key used to authenticate requests to your Azure OpenAI deployment.
+     - In the Azure Portal, go to:
+       **Shared Resources → Deployments → Model deployments**, then click the deployment name.
+     - The API key is visible in the **Endpoint** tile.
 
 show_in_api: true
 weight: 900
