@@ -127,7 +127,7 @@ To create and configure a custom team:
 
 #### Dev Portal custom teams
 
-some text here about how you can use Dev Portal roles to create a custom team for common Dev Portal personas.
+You can use custom {{site.konnect_short_name}} to create Dev Portal teams for common Dev Portal personas. The following table details the Dev Portal roles you can assign to each custom team:
 
 <!--vale off-->
 {% table %}
@@ -144,63 +144,63 @@ rows:
       An API Platform Owner has full access to create, configure, and delete resources related to APIs, Portals, and Applications.
     roles: |
       * Portal Creator
-      * Portal Admin *
+      * Portal Admin 
       * Application Auth Strategy Creator
-      * Application Auth Strategy Maintainer *
+      * Application Auth Strategy Maintainer 
       * DCR Provider Creator
-      * DCR Provider Maintainer *
+      * DCR Provider Maintainer 
       * API Creator
-      * API Admin *
-      * API Publisher *
+      * API Admin 
+      * API Publisher 
   - persona: "API Security Owner"
     description: |
       An API Security Owner can create, update, and delete auth strategies used between APIs and Applications.
     roles: |
       * Application Auth Strategy Creator
-      * Application Auth Strategy Maintainer *
+      * Application Auth Strategy Maintainer 
       * DCR Provider Creator
-      * DCR Provider Maintainer *
+      * DCR Provider Maintainer 
   - persona: Portal Owner
     description: |
       A Portal Owner has full access to configure a Dev Portal and manage applications in a Dev Portal.
     roles: |
-      * Portal Admin {portalId}
-      * Application Auth Strategy Viewer {authStrategyId}
-      * API Viewer {apiId} (for APIs they can approve access to)
-      * (optional) API Publisher {apiId}
+      * Portal Admin for a specific Dev Portal 
+      * Application Auth Strategy Viewer for a specific auth strategy
+      * API Viewer for APIs they can approve access to
+      * (optional) API Publisher for specific APIs
   - persona: Portal Maintainer
     description: |
       A Portal Maintainer has full access to configure a Dev Portal and manage applications in a Dev Portal. 
       They cannot delete the Dev Portal.
     roles: |
-      * Portal Admin {portalId}
-      * Application Auth Strategy Viewer {authStrategyId}
-      * API Viewer {apiId} (for APIs they can approve access to)
-      * (optional) API Publisher {apiId}
+      * Portal Admin for a specific Dev Portal
+      * Application Auth Strategy Viewer for a specific auth strategy
+      * API Viewer for APIs they can approve access to
+      * (optional) API Publisher for specific APIs
   - persona: API Owner
     description: |
       An API Owner has full access to define, configure, and publish an API to Dev Portal(s) and approve registrations for the API.
     roles: |
-      * Application Auth Strategy Viewer {authStrategyId}
-      * API Admin {apiId}
-      * API Publisher {apiId}
-      * API Approver {apiId}
+      * Application Auth Strategy Viewer for a specific auth strategy
+      * API Admin for specific APIs
+      * API Publisher for specific APIs
+      * API Approver for specific APIs
       * Portal Viewer {portalId} (for Dev Portals they can publish or approve registrations in)
   - persona: API Maintainer
     description: |
       An API Maintainer has full access to define, configure, and publish an API to Dev Portal(s) and approve registrations for the API.
       They cannot delete the API.
     roles: |
-      * Application Auth Strategy Viewer {authStrategyId}
-      * API Maintainer {apiId}
-      * API Publisher {apiId}
-      * API Approver {apiId}
-      * Portal Viewer {portalId}
+      * Application Auth Strategy Viewer for a specific auth strategy
+      * API Maintainer for specific APIs
+      * API Publisher for specific APIs
+      * API Approver for specific APIs
+      * Portal Viewer for a specific Dev Portal
   - persona: Portal Content Editor
     description: |
       The Portal Content Editor can create, update, and delete pages and other content in a Dev Portal.
     roles: |
-      Portal Content Editor {portalId}
+      Portal Content Editor for a specific Dev Portal
 {% endtable %}
 <!--vale on-->
 
