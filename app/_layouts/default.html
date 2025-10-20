@@ -136,6 +136,7 @@
 
     <div class="min-h-full flex flex-col">
       {% include_cached header.html api_spec=layout.api_spec %}
+      {% include_cached banner.html %}
 
     <div class="flex flex-col gap-3 px-5 md:px-8 2xl:mx-auto flex-1 w-full {% if layout.api_spec == true %} 2xl:px-16 {% else %} max-w-screen-2xl  2xl:px-[156px] {% endif %}">
       {% unless layout.api_spec == true %}
