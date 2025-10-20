@@ -128,8 +128,6 @@ For instance, a single `orders` topic can be exposed through separate virtual cl
 Authentication on the virtual cluster is used to authenticate clients to the proxy. 
 The virtual cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters.
 
-Supported methods:
-
 {% table %}
 columns:
   - title: "Auth method (`authentication.type`)"
