@@ -54,7 +54,7 @@ faqs:
     a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page.
   - q: How do I allow developers to view multiple versions of an API in the Dev Portal?
     a: |
-      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the Dev Portal spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
+      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-catalog/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the Dev Portal spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
       
       There are two exceptions when the underlying implementation should match the selected version:
       * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
@@ -71,7 +71,7 @@ next_steps:
 
 In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a Gateway Service, and finally publishing it to a [Dev Portal](/dev-portal/). 
 
-First, [create an API](/api/konnect/api-builder/v3/#/operations/create-api) using the `/v3/apis` endpoint:
+First, [create an API](/api/konnect/api-catalog/v3/#/operations/create-api) using the `/v3/apis` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -92,7 +92,7 @@ export API_ID='YOUR-API-ID'
 
 ## Create and associate an API spec and version
 
-[Create and associate a spec and version](/api/konnect/api-builder/v3/#/operations/create-api-version) with your API using the `/v3/apis/{apiId}/versions` endpoint:
+[Create and associate a spec and version](/api/konnect/api-catalog/v3/#/operations/create-api-version) with your API using the `/v3/apis/{apiId}/versions` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -113,7 +113,7 @@ body:
 
 An [API document](/catalog/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API documents to each other with a parent document and child documents.
 
-[Create and associate an API document](/api/konnect/api-builder/v3/#/operations/create-api-document) using the `/v3/apis/{apiId}/documents` endpoint:
+[Create and associate an API document](/api/konnect/api-catalog/v3/#/operations/create-api-document) using the `/v3/apis/{apiId}/documents` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -166,7 +166,7 @@ Export the ID of the `example-service`:
 export SERVICE_ID='YOUR-GATEWAY-SERVICE-ID'
 ```
 
-[Associate the API with a Service](/api/konnect/api-builder/v3/#/operations/create-api-implementation) using the `/v3/apis/{apiId}/implementations` endpoint:
+[Associate the API with a Service](/api/konnect/api-catalog/v3/#/operations/create-api-implementation) using the `/v3/apis/{apiId}/implementations` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -182,7 +182,7 @@ body:
 
 ## Publish the API to Dev Portal
 
-Now you can [publish the API](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
+Now you can [publish the API](/api/konnect/api-catalog/v3/#/operations/publish-api-to-portal) to your Dev Portal using the `/v3/apis/{apiId}/publications/{portalId}` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
