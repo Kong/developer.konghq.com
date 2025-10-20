@@ -146,6 +146,7 @@ To secure access to the MCP server, attach the AI MCP OAuth2 plugin to the same 
 entities:
   plugins:
     - name: ai-mcp-oauth2
+      route: mcp-route
       config:
         resource: ${mcp_auth_url}
         authorization_servers:
@@ -153,6 +154,7 @@ entities:
         introspection_endpoint: ${keycloak_introspection_url}
         client_id: ${client_id}
         client_secret: ${client_secret}
+        metadata_endpoint: /.well-known/oauth-protected-resource/marketplace
         claim_to_header:
           - claim: "sub"
             header: "X-User-Id"
