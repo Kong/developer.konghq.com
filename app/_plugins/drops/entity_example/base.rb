@@ -11,7 +11,7 @@ module Jekyll
 
         attr_reader :example
 
-        def_delegators :@example, :variables, :headers
+        def_delegators :@example, :variables, :headers, :tags
 
         def initialize(example:)
           @example = example

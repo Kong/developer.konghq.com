@@ -208,9 +208,9 @@ rows:
     description: Access to read-only permissions to networks.
 {% endtable %}
 
-#### Service Catalog
+#### {{site.konnect_catalog}}
 
-The following describes the predefined roles for Service Catalog:
+The following describes the predefined roles for {{site.konnect_catalog}}:
  
 {% table %}
 columns:
@@ -226,12 +226,12 @@ rows:
   - role: "`Scorecard Viewer`"
     description: Access read-only permissions related to Scorecards.
   - role: "`Scorecard Admin`"
-    description: Can view and edit a select list of Service Catalog services, map resources to those services, manage all resources, and has read-only access to all integrations and integration instances.
+    description: Can view and edit a select list of {{site.konnect_catalog}} services, map resources to those services, manage all resources, and has read-only access to all integrations and integration instances.
   - role: "`Service Admin`"
     description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
   - role: "`Service Creator`"
     description: |
-      Can create new Service Catalog services, becomes the Service Admin for any service they create, and can view and edit all resources. 
+      Can create new {{site.konnect_catalog}} services, becomes the Service Admin for any service they create, and can view and edit all resources. 
       Includes read-only access to all integrations and integration instances.
       <br><br>This role does not grant access to _existing_ services or their configurations. See the `Service Admin` role. 
       <br><br>This role does not grant write access to integration instances. See the `Integration Admin` role.

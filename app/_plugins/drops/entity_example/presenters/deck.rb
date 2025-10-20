@@ -55,6 +55,7 @@ module Jekyll
               plugin = { 'name' => @example_drop.data.fetch('name') }
               plugin.merge!(target.key => target_value) if target.key != 'global'
               plugin.merge!('partials' => partials) unless partials.empty?
+              plugin.merge!('tags' => @example_drop.tags) unless @example_drop.tags.empty?
               config_field = @example_drop.data.fetch('config', {})
               plugin.merge!('config' => config_field) unless config_field.empty?
               plugin.merge!('ordering' => ordering) unless ordering.nil?

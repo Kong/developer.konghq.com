@@ -1,33 +1,35 @@
 ---
-title: Map {{site.konnect_short_name}} Analytics reports in Service Catalog
+title: Map Konnect Analytics reports in Catalog
 content_type: how_to
-description: Learn how to map {{site.konnect_short_name}} Analytics resources in Service Catalog to visualize Analytics Reports.
+description: Learn how to map {{site.konnect_short_name}} Analytics resources in {{site.konnect_catalog}} to visualize Analytics Reports.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 entities: []
+search_aliases:
+  - service catalog
 tldr:
-  q: How do I map {{site.konnect_short_name}} Analytics reports in Service Catalog?
-  a: Create a Service Catalog service and associate it with your {{site.konnect_short_name}} Analytics resources to visualize Analytics Reports.
+  q: How do I map {{site.konnect_short_name}} Analytics reports in {{site.konnect_catalog}}?
+  a: Create a {{site.konnect_catalog}} service and associate it with your {{site.konnect_short_name}} Analytics resources to visualize Analytics Reports.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} Analytics reports"
       content: |
-        You'll need a [{{site.konnect_short_name}} Analytics report](https://cloud.konghq.com/analytics/reports) to ingest in Service Catalog as resources.
+        You'll need a [{{site.konnect_short_name}} Analytics report](https://cloud.konghq.com/analytics/reports) to ingest in {{site.konnect_catalog}} as resources.
       icon_url: /assets/icons/analytics.svg
 related_resources:
   - text: "{{site.konnect_short_name}} Analytics integration"
-    url: /service-catalog/integrations/konnect-analytics/
-  - text: Service Catalog
-    url: /service-catalog/
-  - text: Service Catalog integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/konnect-analytics/
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
+  - text: "{{site.konnect_catalog}} integrations"
+    url: /catalog/integrations/
 ---
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
-In this tutorial, you'll map Reports from {{site.konnect_short_name}} Analytics to a service in Service Catalog. Because the {{site.konnect_short_name}} Analytics integration is built-in, you don't need to install or authorize it like other Service Catalog integrations. 
+In this tutorial, you'll map Reports from {{site.konnect_short_name}} Analytics to a service in {{site.konnect_catalog}}. Because the {{site.konnect_short_name}} Analytics integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
 
 Create a service that you'll map to your {{site.konnect_short_name}} Analytics resources:
 
@@ -43,7 +45,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Export the Service Catalog service ID:
+Export the {{site.konnect_catalog}} service ID:
 
 ```sh
 export SERVICE_ID='YOUR-SERVICE-ID'
@@ -51,7 +53,7 @@ export SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List {{site.konnect_short_name}} Analytics resources
 
-Before you can map a resource to Service Catalog, you first need to find the resources that are pulled in from {{site.konnect_short_name}} Analytics:
+Before you can map a resource to {{site.konnect_catalog}}, you first need to find the resources that are pulled in from {{site.konnect_short_name}} Analytics:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -68,7 +70,7 @@ Export the resource ID you want to map to the service:
 export ANALYTICS_RESOURCE_ID='YOUR-RESOURCE-ID'
 ```
 
-## Map resources to a Service Catalog service
+## Map resources to a {{site.konnect_catalog}} service
 
 Now, you can map the {{site.konnect_short_name}} Analytics resource to the service:
 

@@ -18,6 +18,8 @@ const lines = diffOutput.trim().split("\n").filter(Boolean);
 const redirects = fs
   .readFileSync("../../app/_redirects", "utf8")
   .split("\n")
+  .filter((line) => line && !line.startsWith("#"))
+  .map((line) => line.split(/\s+/)[0])
   .filter(Boolean);
 
 const collectionPermalinks = (function () {
@@ -95,6 +97,8 @@ function fileToUrl(file) {
     return file
       .replace("app/_event_gateway_policies/", "/event-gateway/policies/")
       .replace(ext, "/");
+  } else if (file.startsWith("app/_api")) {
+    return file.replace("app/_api/", "/api/").replace(`_index${ext}`, "");
   }
 
   const pathWithoutExtension = file.replace(ext, "/").replace("app", "");
@@ -121,6 +125,14 @@ function ignoreFile(file) {
   ].some((folder) => file.startsWith(folder));
 }
 
+function patternToRegex(pattern) {
+  let regex = pattern
+    .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*/g, ".*")
+    .replace(/:([A-Za-z0-9_]+)/g, "[^/]+");
+  return new RegExp(`^${regex}$`);
+}
+
 (async function () {
   let missingRedirects = [];
 
@@ -134,7 +146,7 @@ function ignoreFile(file) {
       }
 
       const oldUrl = fileToUrl(filePath);
-      if (oldUrl && !redirects.some((r) => r.startsWith(oldUrl + " "))) {
+      if (oldUrl && !redirects.some((r) => patternToRegex(r).test(oldUrl))) {
         missingRedirects.push({ path: filePath, url: oldUrl, status });
       }
     }

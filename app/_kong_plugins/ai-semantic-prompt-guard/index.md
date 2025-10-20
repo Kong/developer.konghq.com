@@ -54,6 +54,8 @@ related_resources:
     url: /plugins/ai-semantic-cache/
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
+  - text: Embedding-based similarity matching in Kong AI Gateway plugins
+    url: /ai-gateway/semantic-similarity/
 
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
