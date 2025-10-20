@@ -1,9 +1,9 @@
-title: Decrypt everything
+title: Decrypt everything from an AWS key vault
 
-description: Decrypt everything that comes from a specific key source.
+description: Decrypt everything that comes from an specific AWS key vault.
 
 extended_description: |
-  Decrypt everything that comes from a specific key source.
+  Decrypt everything that comes from a specific AWS key vault.
 
   This example requires a key source defined in a root `key_sources` section:
 
@@ -16,30 +16,29 @@ extended_description: |
         type: env
   ``` 
 
+# where do we define the key source? is this still necessary? How does this even work?
+
 weight: 900
 
-name: decrypt-everything
+requirements: 
+ - "A corresponding [Encrypt policy](/event-gateway/policies/encrypt/examples/encrypt-everything/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
+
 type: decrypt
+name: decrypt-using-aws
 config:
-  policies:
-  - name: decrypt-everything
-    type: decrypt
-    spec:
-      failure:
-        mode: passthrough # | error
-      key_sources:
-        - type: static
-          static:
-            id: "user-chosen-id"
-            source:
-              type: file # | string
-              file: /var/key
-        - type: aws
-          aws:
-            # AWS API auth info
-      decrypt:
-       - type: keys
-       - type: values
+  failure_mode: passthrough
+  key_sources:
+    - type: aws
+  decrypt:
+    - part_of_record: key
+      key_id: ${key_id}
+    - part_of_record: value
+
+variables:
+  key_id:
+    description: |
+      A KMS key ARN in the following format: `arn:aws:kms:REGION:ACCOUNT_ID:key/KEY_ID`
+    value: $AWS_KEY_ID
 
 tools:
   - konnect-api
