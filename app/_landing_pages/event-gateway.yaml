@@ -95,7 +95,7 @@ rows:
               icon: /assets/icons/linked-services.svg
               cta:
                 text: Learn about backend clusters
-                url: /event-gateway/entities/backend-clusters/
+                url: /event-gateway/entities/backend-cluster/
                 align: end
       - blocks:
           - type: card
@@ -117,7 +117,7 @@ rows:
               icon: /assets/icons/plug.svg
               cta:
                 text: Learn about listeners
-                url: /event-gateway/entities/listeners/
+                url: /event-gateway/entities/listener/
                 align: end
       
       - blocks:
