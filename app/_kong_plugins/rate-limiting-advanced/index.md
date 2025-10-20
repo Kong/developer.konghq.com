@@ -191,6 +191,8 @@ You can see an example of this in the guide on [enforcing rate limiting tiers wi
 
 In {{site.base_gateway}} 3.12 or later, you can enable request throttling using the Rate Limiting Advanced plugin to improve clients' experience and protect upstream origin servers from being overwhelmed by traffic spikes. With throttling, requests that exceed the rate limit threshold can be delayed and retried, rather than immediately rejected with a `429` status code. 
 
+Also note that for the sliding window type, if you set `disable_penalty` to `false`, all requests, including denied ones, will still be counted toward the rate limit. This can lead to a situation where every subsequent window immediately reaches the limit, causing all requests to be denied. In this case, the throttling mechanism will not take effect, because there are no accepted requests left to throttle. 
+
 Throttled rate limits work like the following:
 1. When a request hits the rate limit, it's placed into a "waiting room" or queue. The client's connection is held during this delay.
    * This queue uses local, Redis, or cluster strategies to manage the queue of throttled requests using a counter-based approach.
