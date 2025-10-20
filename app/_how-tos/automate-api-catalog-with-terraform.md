@@ -10,13 +10,14 @@ works_on:
   - konnect
 
 products:
+    - gateway    
     - dev-portal
-    - gateway
+    - catalog
 
 entities: []
 
 tldr:
-  q: How do I automate my API catalog in Dev Portal using Terraform?
+  q: How do I automate my API catalog in Catalog and Dev Portal using Terraform?
   a: |
     Create the following resources using Terraform:
 
@@ -27,10 +28,10 @@ tldr:
     * `konnect_api_publication`
 
 related_resources:
-    - text: "{{site.konnect_short_name}} beta Terraform provider repository"
+    - text: "{{site.konnect_short_name}} Terraform provider repository"
       url: https://github.com/Kong/terraform-provider-konnect
-    - text: Dev Portal APIs reference
-      url: /dev-portal/apis/
+    - text: Catalog APIs reference
+      url: /catalog/apis/
     - text: Self-service developer and application registration
       url: /dev-portal/application-registration/
     - text: Application authentication strategies
@@ -102,7 +103,7 @@ faqs:
 
   - q: How does {{site.konnect_short_name}} manage authentication and authorization on Gateway Services that are linked to my APIs?
     a: |
-      When a Gateway Service is linked to an API, {{site.konnect_short_name}} automatically adds the [{{site.konnect_short_name}} Application Auth (KAA) plugin](/dev-portal/apis/#allow-developers-to-consume-your-api) to your Service. The KAA plugin applies authentication and authorization to the Service. This is a {{site.konnect_short_name}}-managed plugin that you can't directly modify, you can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/). 
+      When a Gateway Service is linked to an API, {{site.konnect_short_name}} automatically adds the [{{site.konnect_short_name}} Application Auth (KAA) plugin](/catalog/apis/#allow-developers-to-consume-your-api) to your Service. The KAA plugin applies authentication and authorization to the Service. This is a {{site.konnect_short_name}}-managed plugin that you can't directly modify, you can only modify it by configuring JSON in the advanced configuration for your [application auth strategy](/dev-portal/auth-strategies/). 
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
@@ -110,7 +111,7 @@ next_steps:
 
 ## Create an API
 
-In this tutorial, you'll automate your API catalog by creating an API along with a document and spec, associating it with a Gateway Service, and finally publishing it to a Dev Portal. 
+In this tutorial, you'll automate your API catalog by creating an API in [Catalog](/service-catalog/) along with a document and spec, associating it with a Gateway Service, and finally publishing it to a [Dev Portal](/dev-portal/). 
 
 First, create an API:
 
@@ -167,7 +168,7 @@ resource "konnect_api_version" "my_api_spec" {
 
 ## Create and associate an API document 
 
-An [API document](/dev-portal/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf).
+An [API document](/catalog/apis/#documentation) is Markdown documentation for your API that displays in the Dev Portal. You can link multiple API Documents to each other with a [parent document and child documents](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_document.tf).
 
 Create and associate an API document:
 

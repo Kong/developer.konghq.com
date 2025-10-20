@@ -1,4 +1,4 @@
-title: All Konnect Platform Documentation
+title: Konnect Platform Documentation
 sections:
   - title: About Konnect
     items:
@@ -13,7 +13,7 @@ sections:
   - title: Konnect Applications
     items:
       - path: /dev-portal/
-      - path: /service-catalog/
+      - path: /catalog/
       - path: /advanced-analytics/
       - path: /ai-manager/
       - path: /gateway-manager/
@@ -55,7 +55,7 @@ sections:
       - title: Access logs
         description: Access logs include information about create, update, and delete requests to the Konnect API.
         url: /konnect-platform/audit-logs/#access-logs
-  - title: Konnect IDP
+  - title: Kong Identity
     items: 
       - path: /konnect-platform/kong-identity/
       - path: /how-to/configure-kong-identity-oauth-introspection/

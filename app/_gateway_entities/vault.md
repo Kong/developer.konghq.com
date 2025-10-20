@@ -149,7 +149,7 @@ You can add secrets to Vaults in one of the following ways:
 
 You can store and reference the following as secrets in a Vault:
 
-* All [`kong.conf` values](/gateway/manage-kong-conf/)<sup>1</sup>. For example:
+* All [values](/gateway/manage-kong-conf/)<sup>1</sup> set in `kong.conf` are referenceable. For example:
   * Data store usernames and passwords, used with PostgreSQL and Redis
   * Private X.509 certificates
 * Certificates and keys stored in the [Certificate {{site.base_gateway}} entity](/gateway/entities/certificate/)

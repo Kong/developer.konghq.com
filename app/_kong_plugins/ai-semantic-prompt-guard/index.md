@@ -54,10 +54,23 @@ related_resources:
     url: /plugins/ai-semantic-cache/
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
+  - text: Embedding-based similarity matching in Kong AI Gateway plugins
+    url: /ai-gateway/semantic-similarity/
 
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
     a: Yes, the AI Semantic Prompt Guard plugin supports multilingual input—depending on the capabilities of the configured [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The plugin sends raw UTF-8 text to the embedding provider supported by AI Gateway (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional plugin configuration.
+  - q: |
+      How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
+    a: |
+      If you see the following error in the logs:
+
+      ```sh
+      failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
+      ```
+
+      This means that the hardcoded MemoryDB instance limit has been reached.
+      To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 
 next_steps:
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
@@ -78,3 +91,6 @@ The matching behavior is as follows:
 * If any `allow` prompts are set and the request matches one of the `allow` prompts, the request passes through to the LLM.
 * If there are both `deny` and `allow` prompts set, the `deny` condition takes precedence over `allow`. Any request that matches a prompt in the `deny` list will return a 400 response, even if it also matches a prompt in the `allow` list. If the request doesn't match a prompt in the `deny` list, then it must match a prompt in the `allow` list to be passed through to the LLM.
 
+## Vector databases
+
+{% include_cached /plugins/ai-vector-db.md name=page.name %}

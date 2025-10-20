@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /api-products:
     post:
@@ -90,7 +92,7 @@ paths:
           example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     get:
       operationId: get-api-product
-      summary: Fetch API product
+      summary: Get an API product
       description: Returns an API product.
       responses:
         '200':
@@ -233,7 +235,7 @@ paths:
           example: de5c9818-be5c-42e6-b514-e3d4bc30ddeb
     get:
       operationId: get-api-product-document
-      summary: Fetch API Product Document
+      summary: Get an API Product Document
       description: Returns a document for the API product.
       responses:
         '200':
@@ -380,7 +382,7 @@ paths:
           example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
     get:
       operationId: get-api-product-version
-      summary: Fetch API Product Version
+      summary: Get an API Product Version
       description: Returns a version of an API product.
       responses:
         '200':
@@ -490,7 +492,7 @@ paths:
         - API Product Version Specification
     get:
       operationId: get-many-api-product-version-spec
-      summary: Fetch API Product Version Specifications
+      summary: List API Product Version Specifications
       description: |
         Returns a list of specification for the version of an API product.
         **Note:** You can only have one specification for a product version.
@@ -533,7 +535,7 @@ paths:
           example: 742ff9f1-fb89-4aeb-a599-f0e278c7aeaa
     get:
       operationId: get-api-product-version-spec
-      summary: Fetch API Product Version Specification
+      summary: Get an API Product Version Specification
       description: Returns a specification for the version of an API product.
       responses:
         '200':

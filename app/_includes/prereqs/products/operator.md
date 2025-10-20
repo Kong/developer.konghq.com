@@ -1,4 +1,4 @@
-{% assign summary='{{site.operator_product_name}} running' %}
+{% assign summary='{{site.gateway_operator_product_name}} running' %}
 
 {% if prereqs.enterprise %}
 {% assign summary = summary | append:' (with an Enterprise license)' %}
@@ -12,21 +12,30 @@
    helm repo update
    ```
 
-1. Create a `kong` namespace:
+1. Install {{ site.gateway_operator_product_name }} using Helm:
+
+{% if prereqs.v_maj == 1 %}
 
    ```bash
-   kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
-   ```
-
-1. Install {{ site.kic_product_name }} using Helm:
-
-   ```bash
-   helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
-     --set image.tag={{ site.data.operator_latest.release }} \
-     --set kubernetes-configuration-crds.enabled=true \
+   helm upgrade --install kgo kong/gateway-operator -n kong-system \
+     --create-namespace \
      --set env.ENABLE_CONTROLLER_KONNECT=true{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
      --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
    ```
+
+{% else %}
+
+   ```bash
+   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+     --create-namespace \
+     --set image.tag={{ site.data.operator_latest.release }} \
+     --set env.ENABLE_CONTROLLER_KONNECT=true{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
+     --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+   ```
+
+{% endif %}
+
+{% include k8s/cert-manager.md %}
 
 
 {% if prereqs.enterprise %}

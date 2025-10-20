@@ -59,7 +59,7 @@ paths:
   '/api/v3/apis/{apiIdOrSlug}':
     get:
       operationId: fetch-api
-      summary: Fetch API
+      summary: Get API
       description: Gets the details for an existing published API.
       parameters:
         - $ref: '#/components/parameters/ApiIdOrSlug'
@@ -82,7 +82,7 @@ paths:
       - $ref: '#/components/parameters/ApiIdOrSlug'
     get:
       operationId: get-api-actions
-      summary: Fetch API Actions
+      summary: List API Actions
       description: Get a set of actions that the current developer is allowed to perform on an API.
       responses:
         '200':
@@ -144,7 +144,7 @@ paths:
   '/api/v3/apis/{apiIdOrSlug}/documents/{documentIdOrSlug}':
     get:
       operationId: fetch-api-document
-      summary: Fetch API Doc
+      summary: Get API Doc
       description: Returns the specified document from the API's document tree.
       parameters:
         - name: Accept
@@ -192,7 +192,7 @@ paths:
   '/api/v3/apis/{apiIdOrSlug}/specifications/{specId}':
     get:
       operationId: fetch-api-spec
-      summary: Fetch API Spec
+      summary: Get API Spec
       description: Returns an API specification document (OpenAPI or AsyncAPI) for an API.
       parameters:
         - $ref: '#/components/parameters/ApiIdOrSlug'
@@ -213,7 +213,7 @@ paths:
   '/api/v3/apis/{apiIdOrSlug}/specifications/{specId}/raw':
     get:
       operationId: fetch-api-spec-raw
-      summary: Fetch Raw API Spec
+      summary: Get Raw API Spec
       description: Returns an API specification content (OpenAPI or AsyncAPI) for an API.
       parameters:
         - $ref: '#/components/parameters/ApiIdOrSlug'
@@ -255,7 +255,7 @@ paths:
   '/api/v3/apis/{apiIdOrSlug}/versions/{versionId}':
     get:
       operationId: fetch-api-version-spec
-      summary: Fetch API Version Spec
+      summary: Get API Version Spec
       description: Returns an API version specification document (OpenAPI or AsyncAPI) for an API.
       parameters:
         - $ref: '#/components/parameters/ApiIdOrSlug'
@@ -275,7 +275,7 @@ paths:
   '/api/v3/apis/{apiIdOrSlug}/versions/{versionId}/raw':
     get:
       operationId: fetch-api-version-spec-raw
-      summary: Fetch Raw API Version Spec
+      summary: Get Raw API Version Spec
       description: Returns an API version specification content (OpenAPI or AsyncAPI) for an API.
       parameters:
         - $ref: '#/components/parameters/ApiIdOrSlug'
@@ -295,7 +295,7 @@ paths:
   /api/v3/application-auth-strategies:
     get:
       operationId: list-application-auth-strategies
-      summary: Available Auth Strategies
+      summary: List Available Auth Strategies
       description: |
         Retrieve the auth strategies on this portal.
         An auth strategy represents the way your application provides credentials to authenticate with an API.
@@ -367,7 +367,7 @@ paths:
   '/api/v3/applications/{applicationId}':
     get:
       operationId: get-application
-      summary: Fetch Application
+      summary: Get an Application
       description: Gets the details for an existing application. You need only supply the unique application identifier that was returned upon application creation or by the list-applications endpoint.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
@@ -618,7 +618,7 @@ paths:
   '/api/v3/applications/{applicationId}/registrations/{registrationId}':
     get:
       operationId: get-application-registration
-      summary: Fetch App Registration
+      summary: Get an App Registration
       description: Retrieves the specified API registration for an application.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
@@ -655,7 +655,7 @@ paths:
   /api/v3/assets/favicon:
     get:
       operationId: get-portal-favicon
-      summary: Favicon Asset
+      summary: Get Portal Favicon
       description: Gets favicon of the developer portal.
       responses:
         '200':
@@ -667,7 +667,7 @@ paths:
   /api/v3/assets/logo:
     get:
       operationId: get-portal-logo
-      summary: Logo Asset
+      summary: Get Portal Logo
       description: Gets logo of the developer portal.
       responses:
         '200':
@@ -679,7 +679,7 @@ paths:
   /api/v3/customization:
     get:
       operationId: get-portal-customization
-      summary: Settings
+      summary: Get Portal Customization Settings
       description: Returns the portal's custom settings.
       responses:
         '200':
@@ -740,7 +740,7 @@ paths:
   /api/v3/developer/authenticate/sso:
     get:
       operationId: authenticate-sso
-      summary: SSO Login
+      summary: Get Authentication via SSO
       description: This endpoint allows a developer to authenticate to their portal using an external IdP.
       responses:
         '302':
@@ -784,7 +784,7 @@ paths:
   /api/v3/developer/me:
     get:
       operationId: get-developer-me
-      summary: Retrieve My Account
+      summary: Get My Account
       description: Returns info about the current developer.
       responses:
         '200':
@@ -878,7 +878,7 @@ paths:
   '/api/v3/pages/{pagePath}':
     get:
       operationId: get-portal-page-by-name
-      summary: Fetch Page
+      summary: Get a Page
       description: 'Returns a single page for the portal. Each page has a slug, title, and content. Public pages will be returned for non-authenticated users, while both private and public pages will be returned for authenticated users.'
       parameters:
         - $ref: '#/components/parameters/pagePath'
@@ -908,7 +908,7 @@ paths:
   /api/v3/search:
     get:
       operationId: search-portal
-      summary: Search Portal
+      summary: List Portal Entities via Search
       description: Returns paginated search results for all entities with the given search parameters.
       parameters:
         - $ref: '#/components/parameters/PortalSearchQuery'
@@ -953,7 +953,7 @@ paths:
   '/api/v3/snippets/{snippetName}':
     get:
       operationId: get-portal-snippet-by-name
-      summary: Fetch Snippet
+      summary: Get a Snippet
       description: 'Returns a single snippet for the portal. Each snippet has a name, title, and content. Public snippets will be returned for non-authenticated users, while both private and public snippets will be returned for authenticated users.'
       parameters:
         - $ref: '#/components/parameters/snippetName'
@@ -1013,7 +1013,7 @@ paths:
   /api/v3/stats/config:
     get:
       operationId: get-application-analytics-config
-      summary: Application Analytics Config
+      summary: Get Application Analytics Config
       description: Get config for application analytics
       responses:
         '200':
@@ -1302,6 +1302,14 @@ components:
       schema:
         type: integer
         example: 1
+    pagePath:
+      name: pagePath
+      in: path
+      required: true
+      description: 'Targeted page, url-encoded.'
+      example: '%2Fmypage'
+      schema:
+        type: string
     PageSize:
       name: 'page[size]'
       description: The maximum number of items to include per page. The last page of a collection may include fewer items.
@@ -1351,6 +1359,14 @@ components:
           type: string
           description: Comma-separated list of selected values for this attribute key
       style: deepObject
+    snippetName:
+      name: snippetName
+      in: path
+      required: true
+      description: 'Targeted snippet, url-encoded. Must not start with /.'
+      example: mysnippet
+      schema:
+        type: string
     SortPortalPages:
       name: sort
       description: |
@@ -1393,22 +1409,6 @@ components:
       schema:
         type: string
         format: uuid
-    pagePath:
-      name: pagePath
-      in: path
-      required: true
-      description: 'Targeted page, url-encoded.'
-      example: '%2Fmypage'
-      schema:
-        type: string
-    snippetName:
-      name: snippetName
-      in: path
-      required: true
-      description: 'Targeted snippet, url-encoded. Must not start with /.'
-      example: mysnippet
-      schema:
-        type: string
   schemas:
     QueryApplicationAnalytics:
       type: object
@@ -3034,6 +3034,7 @@ components:
           description: URL to redirect to after completing an OIDC auth flow
           type: string
           format: uri
+          nullable: true
         description:
           description: A brief description of the application
           type: string

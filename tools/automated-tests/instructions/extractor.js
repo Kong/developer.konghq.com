@@ -124,20 +124,24 @@ export async function extractInstructionsFromURL(uri, config, context) {
     console.log(`Extracting instructions from: ${url}`);
     await page.goto(url.toString(), { waitUntil: "domcontentloaded" });
 
-    const dropdown = await page.locator(
-      "aside select.deployment-topology-switch"
-    );
-    const platforms = await dropdown
-      .locator("option")
-      .evaluateAll((options) => options.map((option) => option.value));
+    let worksOn = await page
+      .locator('meta[name="algolia:works_on"]')
+      .getAttribute("content");
+
+    const platforms = worksOn.split(",").sort();
 
     for (const platform of platforms) {
-      await page
-        .locator("aside select.deployment-topology-switch")
-        .selectOption(platform);
-
       const title = await page.locator("h1").textContent();
       const howToUrl = `${config.productionUrl}${url.pathname}`;
+
+      const toggleSwitch = await page.locator("aside .switch__slider");
+
+      if ((await toggleSwitch.count()) > 0) {
+        const option = page.locator(`aside .switch input[value="${platform}"]`);
+        if (!(await option.isChecked())) {
+          await page.locator("aside .switch__slider").click();
+        }
+      }
 
       const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);

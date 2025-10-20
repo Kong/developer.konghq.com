@@ -20,7 +20,18 @@ tldr:
   q: How do I install {{ site.base_gateway }} in Konnect with Helm?
   a: |
     Create a Control Plane in {{ site.konnect_short_name }}, populate a `values.yaml` file with the Control Plane details, and run `helm install kong kong/kong --values ./values.yaml -n kong --create-namespace`.
+faqs:
+  - q: Can I install {{ site.base_gateway }} via Helm without cluster permissions?
+    a: |
+      Yes. Using the `kong` chart, set `ingressController.rbac.enableClusterRoles` to false. 
 
+      {:.danger}
+      > **Warning:** Some resources require a ClusterRole for reconciliation because the controllers need to watch cluster scoped resources. Disabling ClusterRoles causes them fail, so you need to disable the controllers when setting it to `false`. These resources include:
+      > - All Gateway API resources
+      > - `IngressClass`
+      > - `KNative/Ingress` (KIC 2.x only)
+      > - `KongClusterPlugin`
+      > - `KongVault`, `KongLicense` (KIC 3.1 and above)
 prereqs:
   skip_product: true
 
@@ -30,6 +41,8 @@ next_steps:
     url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
   - text: Enable key authentication on a Gateway Service
     url: /how-to/authenticate-consumers-with-key-auth-enc/
+
+automated_tests: false
 ---
 
 ## Konnect setup

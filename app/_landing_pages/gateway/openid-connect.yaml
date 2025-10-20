@@ -186,6 +186,11 @@ rows:
                     You can use {{site.base_gateway}} [Consumers](/gateway/entities/consumer/) for authorization and to dynamically map claim values to Consumers. 
                   example: "[Consumer-based authorization example](/plugins/openid-connect/examples/consumer-auth/)"
                   howto: "[OpenID Connect and Keycloak with Consumers](/how-to/configure-oidc-with-consumers/)"
+                - auth: Consumer Group-based authorization
+                  description: |
+                    You can use {{site.base_gateway}} [Consumer Groups](/gateway/entities/consumer-group/) for authorization and to dynamically map claim values to Consumer Groups. 
+                  example: "[Consumer-based authorization example](/plugins/openid-connect/examples/consumer-group-auth/)"
+                  howto: "[OpenID Connect and Keycloak with Consumer Groups](/how-to/configure-oidc-with-consumer-groups/)"
 
   - header:
       type: h2

@@ -43,11 +43,19 @@ min_version:
 ---
 
 ## What is a Partial?
-Some entities in {{site.base_gateway}} share common configuration settings that often need to be repeated. For example, multiple [plugins](/gateway/entities/plugin/) that connect to Redis may require the same connection settings. Without Partials, you would need to replicate this configuration across all plugins. If the settings change, you would need to update each plugin individually.
 
-Partials address this issue by allowing you to extract shared configurations into reusable entities that can be linked to multiple plugins. To ensure validation and consistency, Partials have defined types. 
+Partials allow you to reuse shared Redis configurations across [plugins](/gateway/entities/plugin/).
 
-{{site.base_gateway}} supports the following types of Partials, `redis-ce` and `redis-ee`. `redis-ce` has a shorter and simpler configuration, whereas `redis-ee` provides options for configuring Redis Sentinel or Redis Cluster connections. Each plugin that supports Partials only supports one of these types.
+Some plugins in {{site.base_gateway}} share common Redis configuration settings that often need to be repeated. 
+Partials allow you to extract those shared configurations into reusable entities that can be linked to multiple plugins.
+Without Partials, you would need to replicate this configuration across all plugins. If the settings change, you would need to update each plugin individually.
+
+To ensure validation and consistency, Partials have defined types.
+{{site.base_gateway}} supports the following types of Partials; each plugin supports only one type:
+- `redis-ce`: A short and simple configuration.
+- `redis-ee`: A configuration with support for Redis Sentinel or Redis Cluster connections.
+
+Any plugin that supports Redis configuration can reference those settings using Partial entities, enabling shared configuration across plugin instances.
 
 {:.info}
 > In {{site.konnect_short_name}}, Partials are only supported for bundled {{site.konnect_short_name}} plugins. Custom plugins don't support Partials.
@@ -69,6 +77,57 @@ data:
 {% endentity_example %}
 
 ## Use Partials
+
+ By defining a Redis Partial once and then referencing it across these plugins, you avoid repeating connection details, reduce configuration errors, and ensure consistent Redis behaviour throughout your gateway. The following plugins use Redis for storing counters, sessions, or cached data:
+
+{% table %}
+columns:
+  - title: Plugin Name
+    key: Name
+  - title: Redis Usage (What’s Stored)
+    key: Redis
+  - title: Partial type
+    key: Partial  
+  - title: Benefit of using a Partial
+    key: Benefit
+rows:
+  - Name: "[ACME](/plugins/acme/)"
+    Redis: "Certificate state (Let’s Encrypt ACME data)"
+    Partial: "`redis-ce`"
+    Benefit: "Keep certificate state storage consistent across environments by reusing one Redis config."
+  - Name: "[GraphQL Proxy Caching Advanced](/plugins/graphql-proxy-cache-advanced/)"
+    Redis: "Cached GraphQL responses"
+    Partial: "`redis-ee`"
+    Benefit: "Apply the same Redis configuration to multiple GraphQL caches for easier management."
+  - Name: "[GraphQL Rate Limiting Advanced](/plugins/graphql-rate-limiting-advanced/)"
+    Redis: "GraphQL request counters"
+    Partial: "`redis-ee`"
+    Benefit: "Standardise Redis-based GraphQL rate limiting across endpoints with one Partial."
+  - Name: "[OpenID Connect](/plugins/openid-connect/)"
+    Redis: "Sessions and tokens"
+    Partial: "`redis-ee`"
+    Benefit: "Reuse Redis settings for session storage, avoiding redundant configs across identity flows."
+  - Name: "[Proxy Caching Advanced](/plugins/proxy-cache-advanced/)"
+    Redis: "Cached API responses"
+    Partial: "`redis-ee`"
+    Benefit: "Reuse a single Redis definition to simplify and stabilise cache behaviour."
+  - Name: "[Rate Limiting](/plugins/rate-limiting/)"
+    Redis: "Request counters"
+    Partial: "`redis-ce`"
+    Benefit: "Apply the same Redis setup across multiple rate limiting policies without duplication."
+  - Name: "[Rate Limiting Advanced](/plugins/rate-limiting-advanced/)"
+    Redis: "Request counters (supports Sentinel/Cluster)"
+    Partial: "`redis-ee`"
+    Benefit: "Centralize complex Redis HA configuration so all services use it reliably."
+  - Name: "[Response Rate Limiting](/plugins/response-ratelimiting/)"
+    Redis: "Response counters"
+    Partial: "`redis-ce`"
+    Benefit: "Ensure consistent Redis-backed throttling rules across different services."
+  - Name: "[SAML](/plugins/saml/)"
+    Redis: "Session data"
+    Partial: "`redis-ee`"
+    Benefit: "Centralize session handling so all SAML flows share the same Redis configuration."              
+{% endtable %}
 
 The following examples describe how to use Partials with plugins.
 

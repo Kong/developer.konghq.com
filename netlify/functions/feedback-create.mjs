@@ -46,7 +46,7 @@ export async function handler(event, context) {
   let id = uuidv4();
 
   try {
-    const { pageUrl, vote } = JSON.parse(event.body);
+    const { pageUrl, vote, feedbackId } = JSON.parse(event.body);
 
     if (!pageUrl || typeof vote !== "boolean") {
       return {
@@ -54,6 +54,10 @@ export async function handler(event, context) {
         body: JSON.stringify({ message: "Invalid input" }),
         headers: { "Content-Type": "application/json" },
       };
+    }
+
+    if (feedbackId) {
+      id = feedbackId;
     }
 
     const url = new URL(pageUrl);

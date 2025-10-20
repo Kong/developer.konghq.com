@@ -104,6 +104,10 @@ rows:
         - type: plugin
           config:
             slug: solace-upstream
+      - blocks:
+        - type: plugin
+          config:
+            slug: solace-consume
   - header:
       type: h2
       text: Get started with {{site.event_gateway_short}} (Beta)

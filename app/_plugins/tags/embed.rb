@@ -35,7 +35,10 @@ module Jekyll
 
     def file_path(release)
       if @versioned
-        File.join('app/assets/mesh/', release, 'raw', @file)
+        [
+          File.join('app/assets/mesh/', release, 'raw', @file),
+          File.join('app/assets/mesh/', "#{release}.x", 'raw', @file)
+        ].find { |full_path| File.exist?(full_path) }
       else
         File.join('app/assets/mesh/raw/', @file)
       end
