@@ -1,8 +1,8 @@
-title: 'Chat route with Azure OpenAI Service'
-description: 'Configure a chat route using Azure OpenAI Service with the GPT-4o model.'
+title: 'Authenticate to Azure OpenAI Service with an Azure Managed Identity'
+description: 'Configure a chat route using Azure OpenAI Service with the latest GPT-4o model, and authenticate using an Azure Managed Identity.'
 
 extended_description: |
-  Configure a chat route using Azure OpenAI Service with the GPT-4o model.
+  Configure a chat route using Azure OpenAI Service with the GPT-4o model, and authenticate using an Azure Managed Identity.
 
   To connect to Azure AI, you'll need two key values from your Azure OpenAI resource:
 
@@ -22,8 +22,7 @@ config:
   targets:
     - route_type: llm/v1/chat
       auth:
-        header_name: api-key
-        header_value: ${key}
+        azure_use_managed_identity: true
       model:
         provider: azure
         name: gpt-4o

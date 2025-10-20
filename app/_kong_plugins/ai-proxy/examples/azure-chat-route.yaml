@@ -1,25 +1,36 @@
-
 title: 'Chat route with Azure OpenAI Service'
-description: 'Configure a chat route using Azure OpenAI Service with the latest GPT-3.5 Turbo model and version 2023-01-01 of the Azure API.'
+description: 'Configure a chat route using Azure OpenAI Service with the GPT-4o model.'
+
+extended_description: |
+  Configure a chat route using Azure OpenAI Service with the GPT-4o model.
+
+  To connect to Azure AI, you'll need two key values from your Azure OpenAI resource:
+
+  1. **Deployment ID** — The unique name of your deployed model.
+     - In the Azure Portal, go to:
+       **Azure Portal → Azure OpenAI Resource → Model deployments → Deployment name** column.
+     - You can also see the deployment ID in the Azure OpenAI URL when calling the API, for example:
+       `https://{AZURE_INSTANCE_NAME}.openai.azure.com/openai/deployments/{AZURE_DEPLOYMENT_ID}/...`
+
+  2. **Instance name** — The name of your Azure OpenAI resource.
+     - This is the prefix in your API endpoint URL, for example:
+       `https://{AZURE_INSTANCE_NAME}.openai.azure.com`
 
 weight: 900
 
-requirements:
-- Azure OpenAI instance
-- Azure OpenAI model deployment
-
 config:
-  route_type: llm/v1/chat
-  auth:
-    header_name: api-key
-    header_value: ${key}
-  model:
-    provider: azure
-    name: gpt-35-turbo
-    options:
-      azure_api_version: "2023-01-01"
-      azure_instance: ${instance}
-      azure_deployment_id: ${deployment}
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: api-key
+        header_value: ${key}
+      model:
+        provider: azure
+        name: gpt-4o
+        options:
+          azure_api_version: "2023-01-01"
+          azure_instance: ${instance}
+          azure_deployment_id: ${deployment}
 
 variables:
   instance:
