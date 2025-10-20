@@ -97,9 +97,17 @@ rows:
   - team: Portal Admin
     description: Users can fully manage all Dev Portal content, which includes {{site.konnect_short_name}} service pages and supporting content, as well as Dev Portal configuration and Service connections. <br> To manage app registration requests, members must also be assigned to the Admin or Maintainer roles for the corresponding Services.
   - team: API Product Admin
-    description: Users can create and manage API products, including publishing API product versions to Dev Portal and enabling application registration.
+    description: |
+      Users can create and manage API products, including publishing API product versions to Dev Portal and enabling application registration.
+
+      {:.warning}
+      > **Important:** API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#catalog-apis) instead.
   - team: API Product Developer
-    description: Users can create and manage versions of API products.
+    description: |
+      Users can create and manage versions of API products.
+
+      {:.warning}
+      > **Important:** API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#catalog-apis) instead.
   - team: Control Plane Admin
     description: Users can create and manage Control Planes.
 {% endtable %} 
@@ -207,7 +215,7 @@ rows:
 ## Roles
 
 Roles predefine access to a particular resource, or
-instances of a particular resource type (for example, API product roles can be scoped to a particular API product or all API products while Control Plane roles can be scoped to a particular Control Plane or all Control Planes).
+instances of a particular resource type (for example, Catalog API roles can be scoped to a particular API or all APIs while Control Plane roles can be scoped to a particular Control Plane or all Control Planes).
 
 You can manage a user's roles by navigating to [**Organization**](https://cloud.konghq.com/organization/) > **Users** in {{site.konnect_short_name}} and clicking the **Role Assignments** tab for a user.
 
@@ -419,8 +427,12 @@ rows:
       * Edit pages
       * Edit snippets
       * Edit customization
-  - role: "`Application Registration Approver`"
-    description: Can approve Dev Portal application registrations.
+  - role: "`API Registration Approver`"
+    description: |
+      Can approve Dev Portal application registrations.
+
+      {:.info}
+      > This role also requires the Dev Portal Viewer role to list APIs. 
     permissions: |
       * Read and list APIs (permission is granted per API)
       * Grant API access
