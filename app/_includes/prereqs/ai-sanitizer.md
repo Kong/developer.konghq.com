@@ -3,7 +3,7 @@ Kong provides **AI PII Anonymizer service Docker images** in a private repositor
 To pull images, first authenticate with the token provided by Support:
 
 ```bash
-docker login docker.cloudsmith.io
+docker login docker.cloudsmith.io/kong/pii-service
 ```
 
 Docker will then prompt you to enter a username and password:
