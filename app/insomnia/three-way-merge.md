@@ -13,9 +13,9 @@ min_version:
   insomnia: '12.0'
 
 related_resources:
-  - text: Version control in Insomnia
+  - text: Version control
     url: /insomnia/version-control/
-  - text: Storage options in Insomnia
+  - text: Storage options
     url: /insomnia/storage/
 
 faqs:
