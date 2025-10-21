@@ -58,7 +58,7 @@ related_resources:
 
 Test out Datakit by combining responses from two third-party API calls, then returning the result directly back to the client:
 
-<!--vale off -->
+<!-- vale off-->
 {% entity_examples %}
 entities:
   plugins:
@@ -66,21 +66,21 @@ entities:
       service: example-service
       config:
         nodes:
-        - name: CAT_FACT
+        - name: AUTHOR
           type: call
-          url: https://catfact.ninja/fact
-        - name: DOG_FACT
+          url: https://httpbin.konghq.com/json
+        - name: UUID
           type: call
-          url: https://dogapi.dog/api/v1/facts
+          url: https://httpbin.konghq.com/uuid
         - name: JOIN
           type: jq
           inputs:
-            cat: CAT_FACT.body
-            dog: DOG_FACT.body
+            input1: AUTHOR.body
+            input2: UUID.body
           jq: |
             {
-              cat_fact: .cat.fact,
-              dog_fact: .dog.facts[0],
+              author: .input1.slideshow.author,
+              uuid: .input2.uuid,
             }
         - name: EXIT
           type: exit
@@ -88,7 +88,7 @@ entities:
             body: JOIN
           status: 200
 {% endentity_examples %}
-<!--vale on -->
+<!--vale on-->
 
 ## Validate
 
@@ -103,12 +103,8 @@ display_headers: true
 {% endvalidation %}
 <!-- vale on -->
 
-You should get a `200` response with a random fact from each fact generator called in the config:
-
+You should get a `200` response with a UUID and a slideshow author:
 ```json
-{
-    "cat_fact": "The longest living cat on record according to the Guinness Book belongs to the late Creme Puff of Austin, Texas who lived to the ripe old age of 38 years and 3 days!",
-    "dog_fact": "Greyhounds can reach a speed of up to 45 miles per hour."
-}
+{"uuid":"cfa1e3f8-6618-4d1f-89f0-da97490d7caa","author":"Yours Truly"}
 ```
 {:.no-copy-code}

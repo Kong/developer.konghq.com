@@ -135,16 +135,18 @@ You may have to consider customization of both `kong.conf` and {{site.base_gatew
     Provision the new cluster Y with the same-sized resource capacity as that of 
     the current cluster X.
 
-2. Install a new database of the same version.
+1. Install a new database of the same version.
 
-3. [Restore the backup data](/gateway/upgrade/backup-and-restore/#restore-gateway-entities)
+1. [Restore the backup data](/gateway/upgrade/backup-and-restore/#restore-gateway-entities)
 to the new database.
 
-4. Configure the new cluster Y to point to the new database.
+1. Configure the new cluster Y to point to the new database.
 
-5. Start cluster Y.
+1. Start cluster Y.
 
-6. Perform staging tests against version Y to make sure it works for all use cases. 
+1. _(LTS upgrades or 2.x to 3.x upgrades only)_ Using the decK file created during backup, [convert](/deck/file/convert/) your entity configuration and sync the converted file to your newly installed version.
+
+1. Perform staging tests against version Y to make sure it works for all use cases. 
 
     For example, does the Key Authentication plugin authenticate requests properly?
     

@@ -136,7 +136,7 @@
       "scope": "Admin API"
     },
     {
-      "message": "**Beta** : OpenAPI specs are now available for the Kong Gateway Admin API: \n- [Kong Gateway Admin API - OSS spec](https://docs.konghq.com/gateway/api/admin-oss/3.3.x/)\n- [Kong Gateway Admin API - Enterprise spec](https://docs.konghq.com/gateway/api/admin-ee/3.3.0.x/)",
+      "message": "**Beta** : OpenAPI specs are now available for the Kong Gateway Admin API: [Kong Gateway Admin API - Enterprise spec](https://developer.konghq.com/api/gateway/admin-ee/)",
       "type": "feature",
       "scope": "Admin API"
     },

@@ -37,7 +37,7 @@ rows:
         - type: tabs
           tab_group: install-on-os
           config:
-            - title: MacOS
+            - title: macOS
               include_content: tools/insomnia/install/osx
             - title: Windows
               include_content: tools/insomnia/install/windows
@@ -102,7 +102,7 @@ rows:
             icon:  /assets/icons/profile.svg
             cta:
               text: Learn more
-              url: /inso-cli/
+              url: /insomnia/manage-insomnia/
       - blocks:
         - type: card
           config:
@@ -292,4 +292,6 @@ rows:
           config:
             - q: Where can I find the Insomnia changelog?
               a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
+            - q: How often does Insomnia release updates?
+              a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog). 
             

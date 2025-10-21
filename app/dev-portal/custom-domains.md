@@ -66,6 +66,7 @@ To add a custom URL to Dev Portal, you need:
 * A domain and access to configure the domain's DNS `CNAME` records
 * Your organization's auto-generated default Dev Portal URL
 * A [CAA DNS](https://datatracker.ietf.org/doc/html/rfc6844) record that only allows `pki.goog` if any pre-existing CAA DNS records are present on the domain
+* Optional: Your custom domain SSL certificate chain and private key
 
 ## Configure DNS
 
@@ -95,14 +96,30 @@ To add a custom URL to Dev Portal:
 
 1. In {{site.konnect_short_name}}, select your Dev Portal and click **Settings**.
 
-1. Select **Custom hosted domain**.
+1. Click the **Custom domains** tab.
 
 2. Enter the fully qualified domain name (FQDN) including the subdomain, if applicable, into the **Custom Domain** field.
    Don't include a path or protocol (e.g. `https://`).
 
-3. Click **Save Changes**.
+1. Optional: If you're using a custom domain certificate, select **Self-managed certificate** and enter your SSL certificate chain and PEM key.
 
-4. CNAME status and SSL status will show `Pending`, while the DNS record TTL expires and SSL is configured. The status of these changes will update as they have been completed.
+   {:.warning}
+   > **Note on certificate validation**
+   >
+   > When you upload a custom domain certificate, the certificate chain is checked against public trust stores to confirm it is valid and trusted.
+   >
+   > If your certificate is issued by a private or internal Certificate Authority (CA), the validation may fail even though the certificate is correct for your environment.  
+   >
+   > In these cases, you can enable the **Skip Certificate Authority check (Skip CA check)** option.
+   > This allows you to bypass validation against public trust stores when your certificate is signed by a private or internal CA.  
+   >
+   > Use this option only if:  
+   > * You are managing your own private CA or self-signed certificates.  
+   > * You have verified that your certificate and key pair are correct and secure.
+
+3. Click **Save**.
+
+CNAME status and SSL status will show `Pending`, while the DNS record TTL expires and SSL is configured. The status of these changes will update as they have been completed.
 
 ## Domain name restrictions
 

@@ -61,7 +61,7 @@ Each section uses the format:
 - [Dev Portal Overview](https://developer.konghq.com/dev-portal/): Documentation portal for onboarding API consumers and managing access.
 - [Access & Approval](https://developer.konghq.com/dev-portal/access-and-approval/): Grant access to portal users and review approval workflows.
 - [Analytics](https://developer.konghq.com/dev-portal/analytics/): View API usage insights by developer or app.
-- [APIs](https://developer.konghq.com/dev-portal/apis/): List and publish APIs available through the developer portal.
+- [APIs](https://developer.konghq.com/catalog/apis/): List and publish APIs available through the developer portal.
 - [Application Registration](https://developer.konghq.com/dev-portal/application-registration/): Register and manage consumer apps, including credentials.
 - [Auth Strategies](https://developer.konghq.com/dev-portal/auth-strategies/): Configure OAuth2, API key, and custom auth for your portal.
 - [Breaking Changes](https://developer.konghq.com/dev-portal/breaking-changes/): How to handle backward-incompatible API changes.
@@ -109,14 +109,14 @@ Each section uses the format:
 
 ## Service Catalog
 
-- [Service Catalog Overview](https://developer.konghq.com/service-catalog/): Repository of services, dependencies, and metadata for internal APIs.
-- [Service Catalog - Datadog Integration](https://developer.konghq.com/service-catalog/integrations/datadog/): Link Datadog monitors and dashboards to services.
-- [Service Catalog - GitHub Integration](https://developer.konghq.com/service-catalog/integrations/github/): Link GitHub repos to service records for ownership and CI/CD metadata.
-- [Service Catalog - GitLab Integration](https://developer.konghq.com/service-catalog/integrations/gitlab/): Sync GitLab projects and activity to the service registry.
-- [Service Catalog - PagerDuty Integration](https://developer.konghq.com/service-catalog/integrations/pagerduty/): Link on-call schedules and incident metadata to services.
-- [Service Catalog - SwaggerHub Integration](https://developer.konghq.com/service-catalog/integrations/swaggerhub/): Associate API documentation directly with SwaggerHub definitions.
-- [Service Catalog - Traceable Integration](https://developer.konghq.com/service-catalog/integrations/traceable/): Integrate service metadata with Traceable AI observability.
-- [Scorecards](https://developer.konghq.com/service-catalog/scorecards/): Configurable quality/security checks and compliance evaluations for services.
+- [Catalog Overview](https://developer.konghq.com/catalog/): Repository of services, dependencies, and metadata for internal APIs.
+- [Catalog - Datadog Integration](https://developer.konghq.com/catalog/integrations/datadog/): Link Datadog monitors and dashboards to services.
+- [Catalog - GitHub Integration](https://developer.konghq.com/catalog/integrations/github/): Link GitHub repos to service records for ownership and CI/CD metadata.
+- [Catalog - GitLab Integration](https://developer.konghq.com/catalog/integrations/gitlab/): Sync GitLab projects and activity to the service registry.
+- [Catalog - PagerDuty Integration](https://developer.konghq.com/catalog/integrations/pagerduty/): Link on-call schedules and incident metadata to services.
+- [Catalog - SwaggerHub Integration](https://developer.konghq.com/catalog/integrations/swaggerhub/): Associate API documentation directly with SwaggerHub definitions.
+- [Catalog - Traceable Integration](https://developer.konghq.com/catalog/integrations/traceable/): Integrate service metadata with Traceable AI observability.
+- [Scorecards](https://developer.konghq.com/catalog/scorecards/): Configurable quality/security checks and compliance evaluations for services.
 
 ---
 

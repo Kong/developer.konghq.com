@@ -1,4 +1,5 @@
 name: Insomnia
+icon: /_assets/icons/products/insomnia.svg
 
 tiers:
   hobby:
@@ -26,4 +27,6 @@ releases:
     version: "11.4.0"
   - release: "11.5"
     version: "11.5.0"
+  - release: "11.6"
+    version: "11.6.0"
     latest: true

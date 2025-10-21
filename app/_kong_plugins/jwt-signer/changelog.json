@@ -1,4 +1,26 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added support for additional claim validations, including `notbefore`, `issuer`, `subject`, and `audience`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added new options to support claim existence verification: `access_channel_token_(introspection_)required_claims.` The specified claims must be present in the token payload.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added new options to support optional claim verification: `access_channel_token_(introspection_)optional_claims.` The specified claims are verified only if they are present.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added new options `access_token_signing` and `channel_token_signing` to quickly turn on and off token signing or re-signing.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where data planes didn't use the keys passed from the control plane to sign/re-sign.",

@@ -7,7 +7,6 @@ permalink: /gateway/install/kubernetes/on-prem/
 breadcrumbs:
   - /gateway/
   - /gateway/install/
-
 series:
   id: gateway-k8s-on-prem-install
   position: 1
@@ -22,7 +21,18 @@ works_on:
 entities: []
 
 tldr: null
+faqs:
+  - q: Can I install {{ site.base_gateway }} via Helm without cluster permissions?
+    a: |
+      Yes. Using the `kong` chart, set `ingressController.rbac.enableClusterRoles` to false. 
 
+      {:.danger}
+      > **Warning:** Some resources require a ClusterRole for reconciliation because the controllers need to watch cluster scoped resources. Disabling ClusterRoles causes them fail, so you need to disable the controllers when setting it to `false`. These resources include:
+      > - All Gateway API resources
+      > - `IngressClass`
+      > - `KNative/Ingress` (KIC 2.x only)
+      > - `KongClusterPlugin`
+      > - `KongVault`, `KongLicense` (KIC 3.1 and above)
 prereqs:
   skip_product: true
 
@@ -76,6 +86,51 @@ kubectl create secret generic kong-enterprise-license --from-file=license=licens
    kubectl create secret tls kong-cluster-cert --cert=./tls.crt --key=./tls.key -n kong
    ```
 
+## Postgres database
+
+If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Cloud Native Postgres operator within your cluster.
+
+```sh
+helm repo add cnpg https://cloudnative-pg.github.io/charts
+helm upgrade --install cnpg \
+  --namespace cnpg \
+  --create-namespace \
+  cnpg/cloudnative-pg
+```
+
+Once the operator is installed, create the database as well as a secret for the database:
+
+```sh
+echo 'apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: kong-cp-db
+  namespace: kong
+spec:
+  instances: 1
+
+  bootstrap:
+    initdb:
+      database: kong
+      owner: kong
+      secret:
+        name: kong-db-secret
+
+  storage:
+    size: 10Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kong-db-secret
+  namespace: kong
+type: Opaque
+stringData:
+  username: kong
+  password: demo123' | kubectl apply -f -
+```
+
+
 ## Create a Control Plane
 
 The control plane contains all {{ site.base_gateway }} configurations. The configuration is stored in a PostgreSQL database.
@@ -85,13 +140,14 @@ The control plane contains all {{ site.base_gateway }} configurations. The confi
 {% capture values_file %}
 
 ```yaml
+echo '
 # Do not use {{ site.kic_product_name }}
 ingressController:
   enabled: false
 
 image:
   repository: kong/kong-gateway
-  tag: "{{ site.data.gateway_latest.release }}"
+  tag: "'{{ site.data.gateway_latest.release }}'"
 
 # Mount the secret created earlier
 secretVolumes:
@@ -110,8 +166,9 @@ env:
   pg_database: kong
   pg_user: kong
   pg_password: demo123
-  pg_host: kong-cp-postgresql.kong.svc.cluster.local
+  pg_host: kong-cp-db-rw.kong.svc.cluster.local
   pg_ssl: "on"
+  pg_ssl_version: tlsv1_3        # <- this is KONG_PG_SSL_VERSION
 
   # Kong Manager password
   password: kong_admin_password
@@ -144,26 +201,14 @@ manager:
 # These roles will be served by different Helm releases
 proxy:
   enabled: false
+' > values-cp.yaml
 ```
 
 {% endcapture %}
 
 {{ values_file | indent }}
 
-1. _(Optional)_ If you want to deploy a Postgres database within the cluster for testing purposes, add the following to the bottom of `values-cp.yaml`.
-
-   ```yaml
-   # This is for testing purposes only
-   # DO NOT DO THIS IN PRODUCTION
-   # Your cluster needs a way to create PersistentVolumeClaims
-   # if this option is enabled
-   postgresql:
-     enabled: true
-     auth:
-       password: demo123
-   ```
-
-1. Update the database connection values in `values-cp.yaml`.
+1. If you are using an existing, or external Postgres database (recommended), update the database connection values in `values-cp.yaml`.
 
    - `env.pg_database`: The database name to use
    - `env.pg_user`: Your database username
@@ -197,7 +242,8 @@ The {{ site.base_gateway }} data plane is responsible for processing incoming tr
 
 {% capture values_file %}
 
-```yaml
+```sh
+echo '
 # Do not use {{ site.kic_product_name }}
 ingressController:
   enabled: false
@@ -239,6 +285,7 @@ admin:
 
 manager:
   enabled: false
+' > ./values-dp.yaml
 ```
 
 {% endcapture %}

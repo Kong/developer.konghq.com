@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-  - reference-platform
+  - konnect-reference-platform
 
 description: Provides details on how the {{site.konnect_short_name}} Reference Platform uses APIOps
 

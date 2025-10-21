@@ -39,6 +39,7 @@ entities:
 tags:
   - ai
   - openai
+  - mcp
 
 tldr:
   q: How can I secure my MCP traffic using {{ site.base_gateway }}?
@@ -82,6 +83,8 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
 
 ## Configure the AI Proxy Advanced plugin

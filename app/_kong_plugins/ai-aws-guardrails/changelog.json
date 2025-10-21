@@ -1,4 +1,16 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Add support for AWS IAM role to the ai-aws-guardrails plugin.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the plugin to work with multi-modal content.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added a new AI plugin that can protect requests and responses to/from AI LLM.\n",
@@ -7,6 +19,13 @@
     },
     {
       "message": "Fixed an issue where the plugin did not support inspecting responses in non-stream mode.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.3": [
+    {
+      "message": "Fixed the plugin to work with multi-modal content.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed a group validation issue where LDAP group names containing asterisk (`*`) characters were incorrectly marked as invalid during Kong Manager RBAC authentication. Group names with asterisk characters (such as `*Dev - EXAMPLE - TOP`) now properly validate and allow role mapping.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue that caused browsers to automatically pop up dialog boxes when authentication failed while `ldap-auth-advanced` was enabled in the Kong Manager.\n",
@@ -9,6 +16,13 @@
   "3.10.0.0": [
     {
       "message": "Fixed an issue where binary string was truncated at the first null character.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.6": [
+    {
+      "message": "Fixed group validation issue where LDAP group names containing asterisk (*) characters were incorrectly marked as invalid during Kong Manager RBAC authentication. Group names with asterisk characters (such as \"*Dev - EXAMPLE - TOP\") now properly validate and allow role mapping.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -148,6 +162,13 @@
     {
       "message": "support decoding non-standard asn1 integer and enumerated encoded with redundant leading padding",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.21": [
+    {
+      "message": "Fixed an issue where an empty sequence or set represented in long form length couldn't be decoded.",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],

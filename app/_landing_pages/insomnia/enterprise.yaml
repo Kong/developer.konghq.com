@@ -23,6 +23,7 @@ rows:
                     You can configure Insomnia's end-to-end-encryption (E2EE), storage control, and strong access governance rules on the Enterprise plan.
 
                     To compare plans, see the [pricing page](https://insomnia.rest/pricing).
+                    To learn how to set up your Insomnia Enterprise instance, see [Get started with Insomnia Enterprise](/insomnia/enterprise-onboarding/).
   - columns:
       - blocks:
         - type: card

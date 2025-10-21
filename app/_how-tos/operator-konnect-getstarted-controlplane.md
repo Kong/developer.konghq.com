@@ -46,11 +46,12 @@ Apply the following configuration to define a Control Plane named `gateway-contr
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
-apiVersion: konnect.konghq.com/v1alpha1
+apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:
   name: gateway-control-plane
 spec:
-  name: gateway-control-plane
+  createControlPlaneRequest:
+    name: gateway-control-plane
   konnect:
     authRef:
       name: konnect-api-auth
@@ -67,7 +68,7 @@ To finalize the connection between your cluster and the {{site.konnect_short_nam
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectExtension
-apiVersion: konnect.konghq.com/v1alpha1
+apiVersion: konnect.konghq.com/{{ site.operator_konnectextension_api_version }}
 metadata:
   name: my-konnect-config
   namespace: kong

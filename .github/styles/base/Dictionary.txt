@@ -58,6 +58,7 @@ autoscalers
 autoscales
 autoscaling
 aws
+AZs
 backfilled
 Backfilling
 backfilling
@@ -95,6 +96,7 @@ callees
 CAs
 callout
 callouts
+cef
 certificate_admin
 charset
 chatbot
@@ -122,6 +124,8 @@ Collectd
 Collectd
 config
 config_hash
+configMap
+configMaps
 configs
 configurability
 Conjur
@@ -180,6 +184,7 @@ dereferencing
 deserialization
 deserialize
 deserialized
+destructuring
 dev
 Dex
 Dex
@@ -429,6 +434,7 @@ KPIs
 ksearch
 kubeconfig
 kubectl
+kubectx
 kubelet
 kubernetes
 Kuma
@@ -500,9 +506,11 @@ minify
 minifying
 minikube
 minio
+misconfiguration
 misconfigurations
 misconfigured
 Mockbin
+modelarmor
 Moesif
 Moesif
 moesif
@@ -806,6 +814,7 @@ tls
 TLSRoute
 TLSRoutes
 toolchain
+tooltip
 tproxy
 traceable
 Traefik
@@ -830,6 +839,7 @@ uid
 UIs
 UIs
 ulimit
+ulimits
 unary
 unassign
 uncheck

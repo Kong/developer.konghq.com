@@ -20,8 +20,16 @@ export async function testeableUrlsFromFiles(config, files) {
 
     if (isTesteable) {
       const skipHowTo =
-        content.includes("@todo") || frontmatter.automated_tests === false;
-      const howToUrl = `/how-to/${fileToUrl(file)}`;
+        content.includes("@todo") ||
+        frontmatter.automated_tests === false ||
+        frontmatter.published === false;
+
+      let howToUrl;
+      if (frontmatter.permalink) {
+        howToUrl = frontmatter.permalink;
+      } else {
+        howToUrl = `/how-to/${fileToUrl(file)}`;
+      }
 
       if (skipHowTo) {
         const relativeFilePath = file.replace("../../", "");

@@ -311,6 +311,72 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+## {{site.base_gateway}} configuration
+
+The {{site.base_gateway}} configuration for your data plane nodes can be customized using environment variables.
+
+The following table lists the environment variables that you can set while creating a Dedicated Cloud Gateway.
+
+<!--vale off -->
+{% kong_config_table env %}
+config:
+  - name: log_level
+    description: |
+      Log level of the data plane node.
+      
+      The logs are available in {{site.konnect_short_name}}, in the **Logs** tab of the data plane node.
+  - name: request_debug_token
+  - name: tracing_instrumentations
+  - name: tracing_sampling_rate
+  - name: untrusted_lua_sandbox_requires
+  - name: allow_debug_header
+  - name: header_upstream
+    description: |
+      Comma-separated list of headers Kong should inject in requests to upstream.
+
+      At this time, the only accepted value is:
+
+      * `X-Kong-Request-Id`: Unique identifier of the request.
+
+      In addition, this value can be set to `off`, which prevents Kong from injecting the above header. Note that this does not prevent plugins from injecting headers of their own.
+  - name: server_tokens
+    description: Removes the Kong version information from the HTTP response headers.
+  - name: latency_tokens
+    description: Removes the latency information from the HTTP response headers.
+  - name: real_ip_recursive
+  - name: real_ip_header
+  - name: headers
+  - name: trusted_ips
+{% endkong_config_table %}
+<!--vale on -->
+
+### How do I set environment variables?
+
+In the {{site.konnect_short_name}} UI, you can add environment variables to a Dedicated Cloud Gateway when you create the data plane node. Navigate to your Dedicated Cloud Gateway control plane and from the **Actions** dropdown menu, select "Edit or Resize Cluster". Click **Advanced options** and enter the environment variable key and value pairs you want to use.
+
+You can add environment variables using the Cloud Gateways API. When you [create a Dedicated Cloud Gateway Data Plane](#how-do-i-provision-a-control-plane) with a `PUT` request to the [`/cloud-gateways/configurations`](/api/konnect/cloud-gateways/#/operations/create-configuration) endpoint, add the `environment` array containing the `name` and `value` of each variable:
+<!--vale off -->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/configurations
+region: global
+status_code: 201
+method: PUT
+body:
+  control_plane_id: $CONTROL_PLANE_ID
+  version: "3.11"
+  control_plane_geo: us
+  dataplane_groups:
+    - provider: aws
+      region: us-east-2
+      cloud_gateway_network_id: $CLOUD_GATEWAY_NETWORK_ID
+      autoscale:
+        kind: autopilot
+        base_rps: 100
+      environment:
+        - name: KONG_TRACING_SAMPLING_RATE
+          value: "0.01"
+{% endkonnect_api_request %}
+<!-- vale on -->
 
 ## Securing backend communication
 

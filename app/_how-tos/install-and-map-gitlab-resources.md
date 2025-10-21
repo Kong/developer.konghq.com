@@ -1,9 +1,9 @@
 ---
-title: Install and map self-hosted GitLab resources in Service Catalog
+title: Install and map self-hosted GitLab resources in Catalog
 content_type: how_to
-description: Learn how to connect a GitLab project to your Service Catalog service in {{site.konnect_short_name}}.
+description: Learn how to connect a GitLab project to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,19 +11,21 @@ tools:
 tags:
   - integrations
   - gitlab
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Service Catalog
-    url: /service-catalog/
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: GitLab reference
-    url: /service-catalog/integrations/gitlab/
-  - text: Install and map SaaS GitLab resources in Service Catalog
+    url: /catalog/integrations/gitlab/
+  - text: Install and map SaaS GitLab resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-gitlab-saas-resources/
 automated_tests: false
 tldr:
-  q: How do I view a self-hosted GitLab project in Service Catalog?
-  a: Authorize the GitLab integration in the {{site.konnect_short_name}} UI using self-hosted setup. Create a Service Catalog service and associate it with your project resource to display metadata and enable event tracking.
+  q: How do I view a self-hosted GitLab project in {{site.konnect_catalog}}?
+  a: Authorize the GitLab integration in the {{site.konnect_short_name}} UI using self-hosted setup. Create a {{site.konnect_catalog}} service and associate it with your project resource to display metadata and enable event tracking.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -60,7 +62,7 @@ prereqs:
 
 Once authorized, resources from your GitLab account will be discoverable in the UI.
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
 Create a service that you'll map to your GitLab resources:
 
@@ -84,7 +86,7 @@ export GITLAB_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List GitLab resources
 
-Before you can map your GitLab resources to a service in Service Catalog, you first need to find the resources that are pulled in from GitLab:
+Before you can map your GitLab resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from GitLab:
 
 <!--vale off-->
 {% konnect_api_request %}

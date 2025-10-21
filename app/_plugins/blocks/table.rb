@@ -13,6 +13,15 @@ module Jekyll
 
       config = YAML.load(contents)
 
+      # Convert code errors to use 'id'
+      config['rows'] = config['rows'].map do |row|
+        if row['code']
+          row['id'] = row['code'] unless row['id']
+          row['code'] = "`#{row['code']}`"
+        end
+        row
+      end
+
       context.stack do
         context['include'] =
           { 'columns' => config['columns'], 'rows' => config['rows'] }

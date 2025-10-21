@@ -127,6 +127,23 @@ This separation lets developers focus on the business logic within their applica
 Unlike other authentication types like Key Auth and Basic Auth, with OpenID Connect you don't need to manage user credentials directly. 
 Instead, you can offload the task to a trusted identity provider of your choice.
 
+## Discovery cache
+When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC plugin stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
+
+{{site.base_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
+- Discovery data is stored in the **{{site.base_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
+- The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default. You can also clear it manually using the relevant [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
+- If a request requires discovery information that isn't in the cache, the plugin attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
+- If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the plugin falls back to using any sufficient discovery information that remains in the cache.
+
+### Manually clear discovery cache
+
+To manually clear discovery cache entries, you can use the Admin API DELETE endpoints for the OpenID Connect plugin. These endpoints let you:
+* Delete a JWKS
+* Delete all caches or a specific cache
+
+Refer to the [OIDC API reference](/plugins/openid-connect/api/) for details.
+
 ## Supported flows and grants
 
 The OpenID Connect plugin suits many different use cases and extends other plugins 
@@ -282,6 +299,7 @@ The OpenID Connect plugin has several options for performing coarse-grained auth
 1. [Claims-based authorization](#claims-based-authorization)
 2. [ACL plugin authorization](#acl-plugin-authorization)
 3. [Consumer authorization](#consumer-authorization)
+4. [Consumer Group authorization](#consumer-group-authorization) {% new_in 3.12 %}
 
 #### Claims-based authorization
 
@@ -400,6 +418,15 @@ Consumers can have ACL groups attached to them and be further authorized with th
 Set up Consumer auth:
 * [Plugin configuration example](/plugins/openid-connect/examples/consumer-auth/)
 * [Consumer auth tutorial with Keycloak](/how-to/configure-oidc-with-consumers/)
+
+#### Consumer Group authorization {% new_in 3.12 %}
+
+You can use {{site.base_gateway}} [Consumer Groups](/gateway/entities/consumer-group/) for authorization and dynamically map claim values to Consumer Groups. 
+This means that we restrict the access to only those that do have a matching Consumer Group. 
+
+Set up Consumer Group auth:
+* [Plugin configuration example](/plugins/openid-connect/examples/consumer-group-auth/)
+* [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
 
 ### Client authentication
 

@@ -916,6 +916,7 @@ components:
         - au
         - me
         - in
+        - sg
       title: Control-Plane Geo
     GatewayVersion:
       description: Supported gateway version.
@@ -939,6 +940,7 @@ components:
     ApiAccess:
       description: Type of API access data-plane groups will support for a configuration.
       type: string
+      example: private+public
       default: private+public
       enum:
         - private
@@ -1061,7 +1063,7 @@ components:
         $ref: '#/components/schemas/ProviderRegion'
       title: Provider Regions
     ServerlessV1ProviderRegions:
-      description: List of available regions to run serverless v1 cloud gateway instances  on for a given cloud provider.
+      description: List of available regions to run serverless v1 cloud gateway instances on for a given cloud provider.
       type: array
       items:
         $ref: '#/components/schemas/ServerlessV1ProviderRegion'
