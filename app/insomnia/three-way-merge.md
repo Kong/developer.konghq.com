@@ -10,7 +10,7 @@ products:
   - insomnia
 
 min_version:
-  insomnia: '3.12'
+  insomnia: '12.0'
 
 related_resources:
   - text: Version control in Insomnia
