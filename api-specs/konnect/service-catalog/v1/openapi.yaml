@@ -1004,6 +1004,11 @@ components:
               example:
                 - read
                 - write
+            scope_delimiter:
+              description: |
+                A string used to separate multiple scopes in the `scope` parameter.
+              type: string
+              default: ' '
             rolling_refresh_exp_seconds:
               description: |
                 Number of seconds before the refresh token grant can no longer be used to mint
