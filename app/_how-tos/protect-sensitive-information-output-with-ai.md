@@ -60,7 +60,7 @@ min_version:
 
 automated_tests: false
 ---
-## Start the Kong AI PII Anonymizer service
+## Start the Kong AI PII Sanitizer service
 
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
@@ -94,9 +94,9 @@ variables:
     description: The API key to connect to OpenAI.
 {% endentity_examples %}
 
-## Enable the AI Sanitizer plugin for output
+## Enable the AI PII Sanitizer plugin for output
 
-Configure the AI Sanitizer plugin to sanitize **all sensitive data in responses**, using placeholders in the output, pointing to your local Docker host where the PII Sanitizer service container works:
+Configure the AI PII Sanitizer plugin to sanitize **all sensitive data in responses**, using placeholders in the output, pointing to your local Docker host where the PII Sanitizer service container works:
 
 {% entity_examples %}
 entities:

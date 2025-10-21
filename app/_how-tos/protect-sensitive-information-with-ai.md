@@ -60,7 +60,7 @@ min_version:
 automated_tests: false
 ---
 
-## Start the Kong AI PII Anonymizer service
+## Start the Kong AI PII Sanitizer service
 
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
