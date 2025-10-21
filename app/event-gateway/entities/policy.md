@@ -53,7 +53,7 @@ Policies execute in chains. The order in which {{site.event_gateway}} applies po
 
 ## Virtual cluster policies 
 
-Virtual cluster policies are applied to Kafka traffic via [virtual clusters](/event-gateway/entities/virtual-clusters/). They let you modify headers, encrypt or decrypt records, validate schemas, and more.
+Virtual cluster policies are applied to Kafka traffic via [virtual clusters](/event-gateway/entities/virtual-cluster/). They let you modify headers, encrypt or decrypt records, validate schemas, and more.
 
 See the {{site.event_gateway}} policy hub for [all available virtual cluster policies](/event-gateway/policies/?policy-target=virtual_cluster).
 
@@ -87,7 +87,7 @@ rows:
         - [Decrypt](/event-gateway/policies/decrypt/)
         - [Schema validation](/event-gateway/policies/schema-validation/)
         - [Modify headers](/event-gateway/policies/modify-headers/)
-        - [Skip records](/event-gateway/policies/skip-records/)
+        - [Skip records](/event-gateway/policies/skip-record/)
 {% endtable %}
 <!-- vale on -->
 
@@ -125,7 +125,7 @@ features:
   - title: "[Modify headers](/event-gateway/policies/modify-headers/)"
     parsed: Yes
     nonparsed: Yes
-  - title: "[Skip records](/event-gateway/policies/skip-records/)"
+  - title: "[Skip records](/event-gateway/policies/skip-record/)"
     parsed: Yes
     nonparsed: Yes
 {% endfeature_table %}
@@ -133,7 +133,7 @@ features:
 
 ### Set up a virtual cluster policy
 
-{{site.event_gateway}} has a few built-in virtual cluster policies, all of which have their own specific configurations and examples. 
+{{site.event_gateway}} has a few built-in virtual cluster policies, all of which have their own specific configurations and examples.
 See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=virtual_cluster) for their individual configurations.
 
 {% navtabs 'virtual-cluster' %}
@@ -324,7 +324,7 @@ resource "konnect_event_gateway_consume_policy_decrypt" "my_eventgatewayconsumep
 
 ## Listener policies
 
-Listener policies are applied to layer 4 TCP traffic on [listeners](/event-gateway/entities/listeners/), 
+Listener policies are applied to layer 4 TCP traffic on [listeners](/event-gateway/entities/listener/), 
 for example to enforce TLS, select a certificate for the TLS connection, or to route to a specific virtual cluster.
 
 See the {{site.event_gateway}} policy hub for [all available listener policies](/event-gateway/policies/?policy-target=listener).

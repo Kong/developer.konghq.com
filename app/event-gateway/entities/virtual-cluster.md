@@ -9,11 +9,11 @@ related_resources:
   - text: "{{site.event_gateway}} Policy Hub"
     url: /event-gateway/policies/
   - text: "Policies"
-    url: /event-gateway/entities/policies/
+    url: /event-gateway/entities/policy/
   - text: "Backend Clusters"
-    url: /event-gateway/entities/backend-clusters/
+    url: /event-gateway/entities/backend-cluster/
   - text: "Listeners"
-    url: /event-gateway/entities/listeners/
+    url: /event-gateway/entities/listener/
 
 tools:
     - konnect-api
@@ -37,8 +37,8 @@ products:
 
 ## What is a virtual cluster?
 
-Virtual clusters are the primary way clients interact with the {{site.event_gateway_short}} proxy. 
-They allow you to isolate clients from each other when connecting to the same [backend cluster](/event-gateway/entities/backend-clusters/), 
+Virtual clusters are the primary way clients interact with the {{site.event_gateway_short}} proxy.q
+They allow you to isolate clients from each other when connecting to the same [backend cluster](/event-gateway/entities/backend-cluster/),
 and provide each client with modified view while still appearing as a standard Kafka cluster.
 
 The virtual cluster workflow operates as follows:
@@ -322,12 +322,12 @@ You can also pass an exact list of consumer groups as an array:
 Virtual clusters can be modified by policies, which let you do things like modify headers, encrypt and decrypt records, validate record schemas, and much more.
 
 To learn more, see:
-* [Policy entity reference](/event-gateway/entities/policies/)
+* [Policy entity reference](/event-gateway/entities/policy/)
 * [All {{site.event_gateway_short}} policies](/event-gateway/policies/)
 
 ## Set up a virtual cluster
 
-Before setting up a virtual cluster, make sure you have a [backend cluster](/event-gateway/entities/backend-clusters/) configured. 
+Before setting up a virtual cluster, make sure you have a [backend cluster](/event-gateway/entities/backend-cluster/) configured.
 A virtual cluster must connect to an existing backend cluster.
 
 {% navtabs 'virtual-cluster' %}

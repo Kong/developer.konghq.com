@@ -8,11 +8,11 @@ related_resources:
   - text: "{{site.event_gateway}} Policy Hub"
     url: /event-gateway/policies/
   - text: "Policies"
-    url: /event-gateway/entities/policies/
+    url: /event-gateway/entities/policy/
   - text: "Backend Clusters"
     url: /event-gateway/entities/virtual-cluster/
   - text: "Listeners"
-    url: /event-gateway/entities/listeners/
+    url: /event-gateway/entities/listener/
 
 tools:
     - konnect-api
