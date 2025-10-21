@@ -21,23 +21,34 @@ related_resources:
 tldr:
   q: How do I auto-generate a mock server using natural language?
   a: From the **Mocks** tab in Insomnia, click **+ → Auto Generate**, choose **Natural Language**, enter your prompt, and click **Generate**. To disable AI generation, go to **Preferences → AI Features**.
+
+prereqs:
+  inline:
+    - title: Configure AI preferences
+      content: |
+        Before creating a mock server using natural language, enable AI features:
+        1. In Insomnia, go to Preferences → AI Features.
+        2. Activate AI-powered generation for mock servers.
 ---
 
 You can create a fully configured mock server in Insomnia using a natural language description. Powered by AI, this feature generates routes, sample responses, and mock configuration from your prompt.
 
+{:.info}
+> When you auto-generate a mock server with AI, Insomnia supports only the Self-hosted hosting option. Cloud Mock is not available for AI-generated mock servers.
+
 ## Create a mock server
 
-1. In your Insomnia project, from the **Mocks** tab, click **+**.
-2. Click **Auto Generate**.
-3. Select an input type.
-4. In the prompt box, enter a description of your mock server.  
-   Example: `My API is for products. I want to be able to create, update, delete, get, and list products. Products should have a name, a price, and a quantity.`   
-5. Indicate if you mock server uses dynamic responses.
+1. In your Insomnia project, click **Create**.
+2. Click **Mock Server**.
+3. Click **Autogenerate**.
+3. From the **Input type** dropdown menu, select a source format.
+4. In the prompt box, enter a description of the mock server.  
+   Example: `My API is for products. I want to be able to create, update, delete, get, and list products. Products should have a name, a price, and a quantity.` 
+5. If you require dynamic content on your mock server, select the **Enable dynamic responses** checkbox.
 6. (Optional) To add additional files to your prompt, click **+ Add Files**.
 7. Click **Create**.
 
-The mock server opens and is ready for testing and editing.
-
+The mock server opens and is then ready for testing and editing.
 
 ## Validate and test your mock server
 
