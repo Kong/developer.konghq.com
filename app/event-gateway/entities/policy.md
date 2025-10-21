@@ -34,6 +34,9 @@ api_specs:
 
 products:
     - event-gateway
+
+breadcrumbs:
+  - /event-gateway/
 ---
 
 ## What is an {{site.event_gateway_short}} policy?

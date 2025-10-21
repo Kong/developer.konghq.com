@@ -33,6 +33,9 @@ api_specs:
 
 products:
     - event-gateway
+
+breadcrumbs:
+  - /event-gateway/
 ---
 
 ## What is a virtual cluster?

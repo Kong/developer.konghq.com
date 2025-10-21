@@ -11,6 +11,9 @@ related_resources:
 
 products:
     - event-gateway
+
+breadcrumbs:
+  - /event-gateway/
 ---
 
 {{site.event_gateway}} is a Kafka proxy that uses the Kafka protocol. 

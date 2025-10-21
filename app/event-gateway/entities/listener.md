@@ -37,6 +37,9 @@ layout: gateway_entity
 schema:
     api: event-gateway/knep
     path: /schemas/Listener
+
+breadcrumbs:
+  - /event-gateway/
 ---
 
 ## What is a listener?
