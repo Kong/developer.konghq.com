@@ -57,6 +57,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avro
 aws
 AZs
 backfilled

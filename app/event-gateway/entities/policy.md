@@ -61,6 +61,7 @@ See the {{site.event_gateway}} policy hub for [all available virtual cluster pol
 
 Virtual cluster policies run during specific phases, which represent stages in a record's lifecycle: cluster, consume, and produce.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Phase
@@ -88,6 +89,7 @@ rows:
         - [Modify headers](/event-gateway/policies/modify-headers/)
         - [Skip records](/event-gateway/policies/skip-records/)
 {% endtable %}
+<!-- vale on -->
 
 ### Record serialization
 
@@ -98,6 +100,7 @@ Some policies operate on parsed records, while others work with raw serialized d
 
 Records are deserialized on produce and re-serialized on consume.
 
+<!-- vale off -->
 {% feature_table %}
 columns:
   - title: Can act on parsed (deserialized) record?
@@ -126,6 +129,7 @@ features:
     parsed: Yes
     nonparsed: Yes
 {% endfeature_table %}
+<!-- vale on -->
 
 ### Set up a virtual cluster policy
 
