@@ -1,8 +1,8 @@
 ---
-title: Use AI PII Sanitizer plugin to protect sensitive information in responses
+title: Use AI PII Sanitizer plugin to protect sensitive data in responses
 content_type: how_to
 
-description: Use the AI Sanitizer plugin to protect sensitive information in responses from a Mistral LLM model.
+description: Use the AI PII Sanitizer plugin to protect sensitive information in responses from a Mistral LLM model.
 
 entities:
   - certificate
@@ -30,7 +30,7 @@ tags:
 
 tldr:
   q: How can I anonymize sensitive information in API responses using AI?
-  a: Enable the AI Proxy and then AI Sanitizer plugin in OUTPUT mode to automatically redact or replace sensitive data in the responses from your service. Then, use the Key File log plugin to audit what PII data was sanitized
+  a: Enable the [AI Proxy](/plugins/ai-proxy/) and then [AI PII Sanitizer](/plugins/ai-sanitizer) plugin in `OUTPUT` mode to automatically redact or replace sensitive data in the responses from your service. Then, use [File Log](/plugins/file-log) plugin to audit what PII data was sanitized
 
 prereqs:
   entities:
@@ -115,7 +115,7 @@ entities:
 
 ## Configure the File Log plugin
 
-To see exactly what the AI Sanitizer plugin redacts, we can configure the [File Log](/plugins/file-log/) plugin. It records each sanitization event, including the original sensitive items, how they were replaced, and the number of occurrences. This makes it easy to audit what was sanitized and verify the AI PII Sanitizer plugin’s behavior.
+To inspect what the AI PII Sanitizer plugin redacts, we can configure the [File Log](/plugins/file-log/) plugin. It records each sanitization event, including the original sensitive items, how they were replaced, and the number of occurrences. This makes it easy to audit what was sanitized and verify the AI PII Sanitizer plugin’s behavior.
 
 {% entity_examples %}
 entities:
@@ -144,14 +144,14 @@ body:
           content: "My name is John Doe, my phone number is 123-456-7890."
 {% endvalidation %}
 
-If configured correctly, the response should have sensitive data replaced with placeholders:
+If configured correctly, the response should have sensitive output data replaced with placeholders:
 
 ```
 Your name is PLACEHOLDER1, and your phone number is PLACEHOLDER2.
 ```
 {:.no-copy-code}
 
-We can also check our `file.json` to inspect the collected logs and see what PII has been sanitized by the plugin. Enter the following in your terminal to access the log file within your Docker container:
+We can also check `file.json` to inspect the collected logs and see what PII data has been sanitized by the plugin. To do this, enter the following command in your terminal to access the log file within your Docker container:
 
 ```sh
 docker exec kong-quickstart-gateway cat /tmp/file.json
