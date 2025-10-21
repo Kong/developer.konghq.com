@@ -8,6 +8,10 @@ content_type: reference
 layout: reference
 products:
   - insomnia
+
+min_version:
+  insomnia: '3.12'
+
 related_resources:
   - text: Version control in Insomnia
     url: /insomnia/version-control/
