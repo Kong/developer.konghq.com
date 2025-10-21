@@ -1,5 +1,5 @@
 ---
-title: Use AI PII Sanitize to protect sensitive data in requests
+title: Use AI PII Sanitizer to protect sensitive data in requests
 content_type: how_to
 
 description: Use the AI Sanitizer plugin to protect sensitive information in requests.
