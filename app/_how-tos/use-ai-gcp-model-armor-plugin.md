@@ -51,34 +51,7 @@ prereqs:
 
     - title: GCP Account and gcloud CLI
       content: |
-        To complete this tutorial, you’ll need a Google Cloud account and access to the **gcloud** CLI.
-
-        1. **GCP Account:**
-           Sign in or register at [console.cloud.google.com](https://console.cloud.google.com/).
-
-        2. **Set environment variables:**
-           Find your **Project ID** on the [GCP Console Dashboard](https://console.cloud.google.com/home/dashboard) under your project name.
-           Your **location** (for example, `us-central1` or `europe-west1`) depends on where your Model Armor resources are deployed.
-           Export both as environment variables:
-           ```bash
-           export DECK_GCP_PROJECT_ID='YOUR_GCP_PROJECT_ID'
-           export DECK_GCP_LOCATION_ID='YOUR_GCP_LOCATION_ID'
-           ```
-
-        3. **Install the gcloud CLI:**
-           Follow the installation guide at [cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install). You'll need version 538.0.0 or later of the CLI to use model armor. To update your CLI, execute `gcloud components update`.
-
-        4. **Authenticate with gcloud:**
-           Log in and set your active project:
-           ```bash
-           gcloud auth login
-           gcloud auth application-default login
-           gcloud config set project $DECK_GCP_PROJECT_ID
-           ```
-      icon_url: /assets/icons/gcp.svg
-    - title: Model Armor Service Account and Template
-      content: |
-            To use the AI GCP Model Armor plugin, you need a service account with **Model Armor Admin** permissions and a configured Model Armor template:
+        To use the AI GCP Model Armor plugin, you need a service account with **Model Armor Admin** permissions and a configured Model Armor template:
 
             1. **Check your IAM permissions:**
             Your service account must have the [`roles/modelarmor.admin`](https://cloud.google.com/iam/docs/roles-permissions/modelarmor) IAM role.
@@ -91,15 +64,12 @@ prereqs:
                 --display-name="Model Armor Admin" \
                 --project=$DECK_GCP_PROJECT_ID
             ```
-             {% endcapture %}
-             {{ modelarmor-admin | indent: 3}}
-
-            Here’s your revised step with the new instruction included:
-
+            {% endcapture %}
+            {{ modelarmor-admin | indent: 3}}
 
             3. Create and activate a service account key file by executing the following commands:
 
-             {% capture service-account %}
+            {% capture service-account %}
             ```bash
             gcloud iam service-accounts keys create modelarmor-admin-key.json \
                 --iam-account=modelarmor-admin@$DECK_GCP_PROJECT_ID.iam.gserviceaccount.com
@@ -110,14 +80,13 @@ prereqs:
             {% endcapture %}
             {{ service-account | indent: 3}}
 
-            After creating the key, convert the contents of `modelarmor-admin-key.json` into a **single-line JSON string**.
-            Escape all necessary characters — quotes (`"`) and newlines (`\n`) — so that it becomes a valid one-line JSON string.
-            Then export it as an environment variable:
+               After creating the key, convert the contents of `modelarmor-admin-key.json` into a **single-line JSON string**.
+               Escape all necessary characters — quotes (`"`) and newlines (`\n`) — so that it becomes a valid one-line JSON string.
+               Then export it as an environment variable:
 
-            ```bash
-            export DECK_GCP_SERVICE_ACCOUNT_JSON="<single-line-escaped-json>"
-            ```
-
+               ```bash
+               export DECK_GCP_SERVICE_ACCOUNT_JSON="<single-line-escaped-json>"
+               ```
 
             4. Enable the Model Armor API:
 
@@ -130,7 +99,7 @@ prereqs:
             {{ enable-model-armor | indent: 3}}
 
             5. Create a Model Armor template with strict guardrails. This template blocks **hate speech, harassment, and sexually explicit content** at medium confidence or higher, enforces PI/jailbreak and malicious URI filters, and logs all inspection events. Execute the following command to create the template:
-
+            {% capture model-armor-template %}
             ```bash
             gcloud model-armor templates create strict-guardrails \
                 --project=$DECK_GCP_PROJECT_ID \
@@ -147,13 +116,15 @@ prereqs:
                 --template-metadata-log-operations \
                 --template-metadata-log-sanitize-operations
             ```
+            {% endcapture %}
+            {{ model-armor-template | indent: 3}}
 
 
-                6. Export the template ID:
+            6. Export the template ID:
                 
-                   ```bash
-                   export DECK_GCP_TEMPLATE_ID="strict-guardrails"
-                   ```
+               ```bash
+               export DECK_GCP_TEMPLATE_ID="strict-guardrails"
+               ```
       icon_url: /assets/icons/gcp-cloud-armor.svg
 
   entities:
