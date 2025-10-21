@@ -5,6 +5,10 @@ content_type: how_to
 related_resources:
   - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
+  - text: Recover {{site.konnect_short_name}} audit logs
+    url: /how-to/recover-konnect-org-audit-logs/
+  - text: Configure an HTTPS data collection endpoint in SumoLogic
+    url: https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source
   - text: Collect Dev Portal audit logs
     url: /how-to/collect-dev-portal-audit-logs/
 automated_tests: false
@@ -33,7 +37,7 @@ tldr:
 prereqs:
   inline:
     - title: SumoLogic SIEM provider
-      include_content: /prereqs/sumologic-siem
+      include_content: /prereqs/sumologic-siem-for-konnect-api
 
 tools:
   - konnect-api
