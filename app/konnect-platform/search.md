@@ -21,7 +21,7 @@ related_resources:
     url: /api/konnect/ksearch/
 ---
 
-{{site.konnect_short_name}} Search allows you to perform simple and advanced searches across all {{site.konnect_short_name}} entities within an organization. 
+{{site.konnect_short_name}} Search allows you to perform basic and advanced searches across all {{site.konnect_short_name}} entities within an organization. 
 You can access search using the search bar (_Command+K_) at the top of every page in {{site.konnect_short_name}} or using the [{{site.konnect_short_name}} Search API](/api/konnect/ksearch/).
 
 The {{site.konnect_short_name}} Search API is available in global and regional locations with regional-awareness, ensuring that returned entities are relevant to their geographical location. 
@@ -38,7 +38,7 @@ columns:
 rows:
   - use_case: Navigate to a specific entity that you know exists
     method: |
-      You search for the name or keywords of the entity in the {{site.konnect_short_name}} search bar to quickly navigate the various pages in {{site.konnect_short_name}}.
+      Click the **Basic** tab and search for the name or keywords of the entity in the {{site.konnect_short_name}} search bar to quickly navigate the various pages in {{site.konnect_short_name}}.
   - use_case: |
       Find entities that are "not compliant"
     method: |
@@ -48,11 +48,12 @@ rows:
 
 ## Query syntax
 
-The {{site.konnect_short_name}} Search API provides selectors, reserved characters, and logical operators that you can use to narrow your entity search. 
-By combining these selectors, reserved characters, and logical operators, you can construct complex and precise queries to effectively use the {{site.konnect_short_name}} Search API.
+{{site.konnect_short_name}} Search provides selectors, reserved characters, and logical operators that you can use to narrow your entity search. 
+By combining these selectors, reserved characters, and logical operators, you can construct complex and precise queries to effectively use {{site.konnect_short_name}} Search.
 
-To perform a simple search, you can just search by the name of an entity, like a Service, API product, or name of a team. 
-You can also perform an advanced search using {{site.konnect_short_name}}'s query syntax to get more granular results.
+To perform a basic search, click the **Basic** tab. You can search for a known entity, like a Service, API, or team, using basic search. 
+
+You can also perform an advanced search by clicking the **Advanced** tab and using {{site.konnect_short_name}}'s query syntax to get more granular results.
 
 The following is an example advanced search query syntax:
 
