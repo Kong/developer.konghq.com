@@ -26,7 +26,7 @@ tldr:
 prereqs:
   inline:
     - title: "{{site.konnect_product_name}} roles"
-      content: prereqs/dev-portal-automated-api-catalog-roles
+      content: prereqs/dev-portal-automate-api-catalog-roles
       icon_url: /assets/icons/gateway.svg
     - title: Dev Portal
       include_content: prereqs/api-catalog

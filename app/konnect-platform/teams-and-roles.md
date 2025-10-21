@@ -241,6 +241,9 @@ schema: api_products
 {% endkonnect_roles_table %}
 <!-- vale on -->
 
+{:.info}
+> **Note:** To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
+
 #### Control Planes
 
 The following describes the predefined roles for Control Planes:
