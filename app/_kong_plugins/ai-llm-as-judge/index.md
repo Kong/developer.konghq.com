@@ -75,7 +75,7 @@ rows:
 ## How it works
 
 1. The plugin sends the user prompt and response to the configured LLM as a judge.
-2. The LLM evaluates the response and returns a numeric score between `1` (ideal) and `100` (wrong or irrelevant).
+2. The LLM evaluates the response and returns a numeric score between `100` (ideal) and `1` (wrong or irrelevant).
 3. This score can be used in downstream workflows, such as automated grading, feedback systems, or learning pipelines.
 
 The following sequence diagram illustrates this simplified flow:
