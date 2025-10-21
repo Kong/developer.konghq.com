@@ -74,9 +74,7 @@ faqs:
 
 next_steps:
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
-    url: /how-to/use-ai-semantic-prompt-guard-plugin/
-  - text: Use AI Prompt Guard plugin to govern your LLM traffic
-    url: /how-to/use-ai-prompt-guard-plugin/
+    url: /how-to/use-ai-gcp-model-armor-plugin/
 ---
 
 The AI Semantic Prompt Guard plugin extends the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
