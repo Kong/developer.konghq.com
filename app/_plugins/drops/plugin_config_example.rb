@@ -72,6 +72,10 @@ module Jekyll
         @weight ||= example.fetch('weight')
       end
 
+      def tags
+        @tags ||= example.fetch('tags', [])
+      end
+
       def min_version
         @min_version ||= example['min_version'] || @plugin.send(:min_version)
       end
@@ -84,7 +88,8 @@ module Jekyll
               'data' => {
                 'name' => plugin_slug,
                 target => nil,
-                'config' => config
+                'config' => config,
+                'tags' => tags,
               },
               'formats' => formats,
               'variables' => example.fetch('variables', {})

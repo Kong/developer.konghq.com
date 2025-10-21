@@ -1,0 +1,181 @@
+metadata:
+  title: "{{site.konnect_catalog}} integrations"
+  content_type: landing_page
+  products:
+    - catalog
+  breadcrumbs:
+    - /catalog/
+  description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
+  tags:
+    - integrations
+    - beta
+  beta: true
+  search_aliases:
+    - service catalog
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_catalog}} Integrations"
+      sub_text: "Integrate third-party applications into your {{site.konnect_short_name}} organization."
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **Integrations** are applications—either {{site.konnect_short_name}}-internal or external—that extend the functionality of the {{site.konnect_catalog}}.
+
+                    When enabled, an integration allows you to:
+                    - **Discover new resources** from connected systems
+                    - **Create new services** based on existing resources
+                    - **View key events** associated with the integration
+                    
+                    
+                    > You can configure multiple instances of any third-party integration (such as Datadog or GitLab), including multiple instances of the same type.
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/konnect/container.png
+            alt_text: Image of the integration dashboard
+
+
+  - header:
+      type: h2
+      text: "Third-party integrations"
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: PagerDuty
+            description: Alert service teams via PagerDuty alerts and provide information on current open incidents.
+            icon: /assets/icons/third-party/pagerduty.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/pagerduty/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-pagerduty-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: GitHub
+            description: Associate a service to one or more GitHub repositories.
+            icon: /assets/icons/third-party/github.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/github/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-github-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: Traceable
+            description: Manage and secure services that Traceable discovers by analyzing API traffic.
+            icon: /assets/icons/third-party/traceable.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/traceable/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-traceable-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: GitLab
+            description: Associate a {{site.konnect_catalog}} Service to one or more GitLab projects
+            icon: /assets/icons/third-party/gitlab.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/gitlab/"
+              - text: Self-managed tutorial
+                url: "/how-to/install-and-map-gitlab-resources/"
+              - text: SaaS tutorial
+                url: "/how-to/install-and-map-gitlab-saas-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: SwaggerHub
+            description: Expand {{site.konnect_catalog}} functionality with SwaggerHub to visualize OpenAPI specs.
+            icon: /assets/icons/third-party/swaggerhub.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/swaggerhub/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-swaggerhub-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: Datadog
+            description: View the performance and health of your services by ingesting Datadog monitors and dashboards.
+            icon: /assets/icons/third-party/datadog.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/datadog/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-datadog-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: Slack
+            description: Expand Konnect {{site.konnect_catalog}} functionality with features from Slack.
+            icon: /assets/icons/third-party/slack.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/slack/"
+              - text: Tutorial
+                url: "/how-to/install-and-map-slack-resources/"
+      - blocks:
+        - type: card
+          config:
+            title: AWS API Gateway
+            description: View AWS API Gateway APIs in {{site.konnect_catalog}}.
+            icon: /assets/icons/aws.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/aws-api-gateway/"
+              - text: Tutorial ({{site.konnect_short_name}} API)
+                url: "/how-to/discover-aws-gateway-apis-using-konnect-api/"
+              - text: Tutorial ({{site.konnect_short_name}} UI)
+                url: "/how-to/discover-aws-gateway-apis-using-konnect-ui/"
+  
+  - header:
+      type: h2
+      text: "Built-in Integrations"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Gateway Manager
+              description: "Map Gateway Services from {{site.konnect_short_name}} Gateway Manager to visualize services across multiple Control Planes."
+              icon: /assets/icons/gateway.svg
+              ctas:
+                - text: Reference
+                  url: "/catalog/integrations/gateway-manager/"
+                - text: Tutorial
+                  url: "/how-to/map-gateway-manager-resources/"
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.konnect_short_name}} Analytics"
+              description: View real-time, highly contextual analytics to gain insight into API health, performance, and usage.
+              icon: /assets/icons/analytics.svg
+              ctas:
+                - text: Reference
+                  url: "/catalog/integrations/konnect-analytics/"
+                - text: Tutorial
+                  url: "/how-to/map-analytics-resources/"
+      - blocks:
+          - type: card
+            config:
+              title: Mesh Manager
+              description: "Map Mesh Services from {{site.konnect_short_name}} Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones."
+              icon: /assets/icons/mesh.svg
+              ctas:
+                - text: Reference
+                  url: "/catalog/integrations/mesh-manager/"
+                - text: Tutorial
+                  url: "/how-to/map-mesh-manager-resources/"
+      

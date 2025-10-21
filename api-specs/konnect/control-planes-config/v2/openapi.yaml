@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   contact:
     email: support@konghq.com
@@ -31,7 +31,7 @@ paths:
   '/control-planes/{controlPlaneId}/expected-config-hash':
     get:
       operationId: get-expected-config-hash
-      summary: Fetch Expected Config Hash
+      summary: Get an Expected Config Hash
       description: Retrieve the expected config hash for this control plane. The expected config hash can be used to verify if the config hash of a data plane node is up to date with the control plane. The config hash will be the same if they are in sync.
       responses:
         '200':
@@ -83,7 +83,7 @@ paths:
       - $ref: '#/components/parameters/DataPlaneCertificateId'
     get:
       operationId: get-dataplane-certificate
-      summary: Fetch DP Client Certificate
+      summary: Get a DP Client Certificate
       description: Retrieve a pinned dataplane client certificate associated to this control plane. A pinned dataplane certificate allows dataplanes configured with the certificate and corresponding private key to establish connection with this control plane.
       responses:
         '200':
@@ -147,7 +147,7 @@ paths:
       - $ref: '#/components/parameters/nodeId'
     get:
       operationId: get-nodes-node_id
-      summary: Fetch Data Plane Node Record
+      summary: Get a Data Plane Node Record
       description: Retrieve a specific data plane node record associated to this control plane. A data plane node record contains all the metadata information of the Kong Gateway dataplane.
       parameters:
         - $ref: '#/components/parameters/pagination-size'
@@ -218,7 +218,7 @@ paths:
           example: myplugin
     get:
       operationId: get-plugin-schema
-      summary: Fetch custom plugin schema
+      summary: Get a custom plugin schema
       description: Returns information about a custom plugin from a given name.
       responses:
         '200':
@@ -322,7 +322,7 @@ paths:
       - $ref: '#/components/parameters/configStoreId'
     get:
       operationId: get-config-store
-      summary: Fetch Config Store
+      summary: Get a Config Store
       description: Returns a Config Store
       responses:
         '200':
@@ -462,7 +462,7 @@ paths:
           example: ConfigStoreSecretKey
     get:
       operationId: get-config-store-secret
-      summary: Fetch Config Store Secret
+      summary: Get a Config Store Secret
       description: Returns the secret entity for the Config Store. Secret values once stored cannot be retrieved.
       responses:
         '200':
@@ -554,7 +554,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/acls/{ACLId}':
     get:
       operationId: get-acl
-      summary: Fetch an ACL
+      summary: Get an ACL
       description: Get an ACL using ID.
       responses:
         '200':
@@ -606,7 +606,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/basic-auths/{BasicAuthId}':
     get:
       operationId: get-basic-auth
-      summary: Fetch a Basic-auth credential
+      summary: Get a Basic-auth credential
       description: Get a Basic-auth credential using ID.
       responses:
         '200':
@@ -693,7 +693,7 @@ paths:
         - CA Certificates
     get:
       operationId: get-ca_certificate
-      summary: Fetch a CA Certificate
+      summary: Get a CA Certificate
       description: Get a CA Certificate using ID.
       responses:
         '200':
@@ -802,7 +802,7 @@ paths:
         - Certificates
     get:
       operationId: get-certificate
-      summary: Fetch a Certificate
+      summary: Get a Certificate
       description: Get a Certificate using ID.
       responses:
         '200':
@@ -909,7 +909,7 @@ paths:
         - SNIs
     get:
       operationId: get-sni-with-certificate
-      summary: Fetch an SNI associated with a Certificate
+      summary: Get an SNI associated with a Certificate
       description: Get an SNI associated with a Certificate using ID or name.
       parameters:
         - $ref: '#/components/parameters/CertificateId'
@@ -1019,7 +1019,7 @@ paths:
         - Consumer Groups
     get:
       operationId: get-consumer_group
-      summary: Fetch a Consumer Group
+      summary: Get a Consumer Group
       description: Get a Consumer Group using ID.
       responses:
         '200':
@@ -1218,7 +1218,7 @@ paths:
         - Plugins
     get:
       operationId: get-plugin-with-consumer_group
-      summary: Fetch a Plugin associated with a Consumer Group
+      summary: Get a Plugin associated with a Consumer Group
       description: Get a Plugin associated with a Consumer Group using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerGroupId'
@@ -1328,7 +1328,7 @@ paths:
         - Consumers
     get:
       operationId: get-consumer
-      summary: Fetch a Consumer
+      summary: Get a Consumer
       description: Get a Consumer using ID or username.
       responses:
         '200':
@@ -1524,7 +1524,7 @@ paths:
         - ACLs
     get:
       operationId: get-acl-with-consumer
-      summary: Fetch an ACL associated with a Consumer
+      summary: Get an ACL associated with a Consumer
       description: Get an ACL associated with a Consumer using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
@@ -1632,7 +1632,7 @@ paths:
         - Basic-auth credentials
     get:
       operationId: get-basic-auth-with-consumer
-      summary: Fetch a Basic-auth credential associated with a Consumer
+      summary: Get a Basic-auth credential associated with a Consumer
       description: Get a Basic-auth credential associated with a Consumer using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
@@ -1740,7 +1740,7 @@ paths:
         - HMAC-auth credentials
     get:
       operationId: get-hmac-auth-with-consumer
-      summary: Fetch a HMAC-auth credential associated with a Consumer
+      summary: Get a HMAC-auth credential associated with a Consumer
       description: Get a HMAC-auth credential associated with a Consumer using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
@@ -1847,7 +1847,7 @@ paths:
         - JWTs
     get:
       operationId: get-jwt-with-consumer
-      summary: Fetch a JWT associated with a Consumer
+      summary: Get a JWT associated with a Consumer
       description: Get a JWT associated with a Consumer using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
@@ -1953,7 +1953,7 @@ paths:
         - API-keys
     get:
       operationId: get-key-auth-with-consumer
-      summary: Fetch an API-key associated with a Consumer
+      summary: Get an API-key associated with a Consumer
       description: Get an API-key associated with a Consumer using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
@@ -2060,7 +2060,7 @@ paths:
         - MTLS-auth credentials
     get:
       operationId: get-mtls-auth-with-consumer
-      summary: Fetch a MTLS-auth credential associated with a Consumer
+      summary: Get a MTLS-auth credential associated with a Consumer
       description: Get a MTLS-auth credential associated with a Consumer using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
@@ -2168,7 +2168,7 @@ paths:
         - Plugins
     get:
       operationId: get-plugin-with-consumer
-      summary: Fetch a Plugin associated with a Consumer
+      summary: Get a Plugin associated with a Consumer
       description: Get a Plugin associated with a Consumer using ID.
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
@@ -2290,7 +2290,7 @@ paths:
         - CustomPlugins
     get:
       operationId: get-custom-plugin
-      summary: Fetch a CustomPlugin
+      summary: Get a CustomPlugin
       description: |-
         **Pre-release Endpoint**
         This endpoint is currently in beta and is subject to change.
@@ -2372,7 +2372,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/degraphql_routes/{Degraphql_routeId}':
     get:
       operationId: get-degraphql_route
-      summary: Fetch a Degraphql_route
+      summary: Get a Degraphql_route
       description: Get a Degraphql_route using ID or name.
       responses:
         '200':
@@ -2424,7 +2424,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/hmac-auths/{HMACAuthId}':
     get:
       operationId: get-hmac-auth
-      summary: Fetch a HMAC-auth credential
+      summary: Get a HMAC-auth credential
       description: Get a HMAC-auth credential using ID.
       responses:
         '200':
@@ -2476,7 +2476,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/jwts/{JWTId}':
     get:
       operationId: get-jwt
-      summary: Fetch a JWT
+      summary: Get a JWT
       description: Get a JWT using ID.
       responses:
         '200':
@@ -2528,7 +2528,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/key-auths/{KeyAuthId}':
     get:
       operationId: get-key-auth
-      summary: Fetch an API-key
+      summary: Get an API-key
       description: Get an API-key using ID.
       responses:
         '200':
@@ -2614,7 +2614,7 @@ paths:
         - KeySets
     get:
       operationId: get-key-set
-      summary: Fetch a KeySet
+      summary: Get a KeySet
       description: Get a KeySet using ID or name.
       responses:
         '200':
@@ -2720,7 +2720,7 @@ paths:
         - Keys
     get:
       operationId: get-key-with-key-set
-      summary: Fetch a Key associated with a KeySet
+      summary: Get a Key associated with a KeySet
       description: Get a Key associated with a KeySet using ID or name.
       parameters:
         - $ref: '#/components/parameters/KeySetId'
@@ -2830,7 +2830,7 @@ paths:
         - Keys
     get:
       operationId: get-key
-      summary: Fetch a Key
+      summary: Get a Key
       description: Get a Key using ID or name.
       responses:
         '200':
@@ -2904,7 +2904,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/mtls-auths/{MTLSAuthId}':
     get:
       operationId: get-mtls-auth
-      summary: Fetch a MTLS-auth credential
+      summary: Get a MTLS-auth credential
       description: Get a MTLS-auth credential using ID.
       responses:
         '200':
@@ -2991,7 +2991,7 @@ paths:
         - Partials
     get:
       operationId: get-partial
-      summary: Fetch a Partial
+      summary: Get a Partial
       description: Get a Partial using ID.
       responses:
         '200':
@@ -3134,7 +3134,7 @@ paths:
         - Plugins
     get:
       operationId: get-plugin
-      summary: Fetch a Plugin
+      summary: Get a Plugin
       description: Get a Plugin using ID.
       responses:
         '200':
@@ -3243,7 +3243,7 @@ paths:
         - Routes
     get:
       operationId: get-route
-      summary: Fetch a Route
+      summary: Get a Route
       description: Get a Route using ID or name.
       responses:
         '200':
@@ -3350,7 +3350,7 @@ paths:
         - Plugins
     get:
       operationId: get-plugin-with-route
-      summary: Fetch a Plugin associated with a Route
+      summary: Get a Plugin associated with a Route
       description: Get a Plugin associated with a Route using ID.
       parameters:
         - $ref: '#/components/parameters/RouteId'
@@ -3419,7 +3419,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/schemas/partials/{partialType}':
     get:
       operationId: fetch-partial-schema
-      summary: Fetch partial schema
+      summary: Get partial schema
       description: Get the schema for a partial
       responses:
         '200':
@@ -3437,7 +3437,7 @@ paths:
   '/control-planes/{controlPlaneId}/core-entities/schemas/plugins/{pluginName}':
     get:
       operationId: fetch-plugin-schema
-      summary: Fetch plugin schema
+      summary: Get plugin schema
       description: Get the schema for a plugin
       responses:
         '200':
@@ -3521,7 +3521,7 @@ paths:
         - Services
     get:
       operationId: get-service
-      summary: Fetch a Service
+      summary: Get a Service
       description: Get a Service using ID or name.
       responses:
         '200':
@@ -3628,7 +3628,7 @@ paths:
         - Degraphql_routes
     get:
       operationId: get-degraphql_route-with-service
-      summary: Fetch a Degraphql_route associated with a Service
+      summary: Get a Degraphql_route associated with a Service
       description: Get a Degraphql_route associated with a Service using ID or name.
       parameters:
         - $ref: '#/components/parameters/ServiceId'
@@ -3736,7 +3736,7 @@ paths:
         - Plugins
     get:
       operationId: get-plugin-with-service
-      summary: Fetch a Plugin associated with a Service
+      summary: Get a Plugin associated with a Service
       description: Get a Plugin associated with a Service using ID.
       parameters:
         - $ref: '#/components/parameters/ServiceId'
@@ -3844,7 +3844,7 @@ paths:
         - Routes
     get:
       operationId: get-route-with-service
-      summary: Fetch a Route associated with a Service
+      summary: Get a Route associated with a Service
       description: Get a Route associated with a Service using ID or name.
       parameters:
         - $ref: '#/components/parameters/ServiceId'
@@ -3954,7 +3954,7 @@ paths:
         - SNIs
     get:
       operationId: get-sni
-      summary: Fetch an SNI
+      summary: Get an SNI
       description: Get an SNI using ID or name.
       responses:
         '200':
@@ -4063,7 +4063,7 @@ paths:
         - Upstreams
     get:
       operationId: get-upstream
-      summary: Fetch an Upstream
+      summary: Get an Upstream
       description: Get an Upstream using ID or name.
       responses:
         '200':
@@ -4170,7 +4170,7 @@ paths:
         - Targets
     get:
       operationId: get-target-with-upstream
-      summary: Fetch a Target associated with an Upstream
+      summary: Get a Target associated with an Upstream
       description: Get a Target associated with an Upstream using ID or target.
       parameters:
         - $ref: '#/components/parameters/UpstreamIdForTarget'
@@ -4280,7 +4280,7 @@ paths:
         - Vaults
     get:
       operationId: get-vault
-      summary: Fetch a Vault
+      summary: Get a Vault
       description: Get a Vault using ID or prefix.
       responses:
         '200':
@@ -4354,6 +4354,15 @@ components:
       required: true
       schema:
         type: string
+    configStoreId:
+      schema:
+        type: string
+        format: uuid
+        example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+      name: configStoreId
+      in: path
+      required: true
+      description: Config Store identifier
     ConsumerGroupId:
       description: ID of the Consumer Group to lookup
       example: ''
@@ -4386,6 +4395,15 @@ components:
       required: true
       schema:
         type: string
+    controlPlaneId:
+      name: controlPlaneId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 9524ec7d-36d9-465d-a8c5-83a3c9390458
+      description: The UUID of your control plane. This variable is available in the Konnect manager.
     CustomPluginId:
       description: ID of the CustomPlugin to lookup
       example: ''
@@ -4456,6 +4474,15 @@ components:
       required: true
       schema:
         type: string
+    nodeId:
+      schema:
+        type: string
+        format: uuid
+        example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+      name: nodeId
+      in: path
+      required: true
+      description: Node identifier
     PageAfter:
       name: 'page[after]'
       description: 'Request the next page of data, starting with the item after this parameter.'
@@ -4474,6 +4501,22 @@ components:
       schema:
         type: integer
         example: 10
+    pagination-size:
+      description: Number of resources to be returned.
+      in: query
+      name: size
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+        minimum: 1
+    pagination-tags-filter:
+      description: 'A list of tags to filter the list of resources on. Multiple tags can be concatenated using '','' to mean AND or using ''/'' to mean OR.'
+      example: 'tag1,tag2'
+      in: query
+      name: tags
+      schema:
+        type: string
     PaginationOffset:
       allowEmptyValue: true
       description: Offset from which to return the next set of resources. Use the value of the 'offset' field from the response of a list operation as input here to paginate through all the resources
@@ -4522,19 +4565,19 @@ components:
       required: true
       schema:
         type: string
-    SNIId:
-      description: ID of the SNI to lookup
-      example: 64c17a1a-b7d7-4a65-a5a4-42e4a7016e7f
-      in: path
-      name: SNIId
-      required: true
-      schema:
-        type: string
     ServiceId:
       description: ID of the Service to lookup
       example: 7fca84d6-7d37-4a74-a7b0-93e576089a41
       in: path
       name: ServiceId
+      required: true
+      schema:
+        type: string
+    SNIId:
+      description: ID of the SNI to lookup
+      example: 64c17a1a-b7d7-4a65-a5a4-42e4a7016e7f
+      in: path
+      name: SNIId
       required: true
       schema:
         type: string
@@ -4568,49 +4611,6 @@ components:
       in: path
       name: VaultId
       required: true
-      schema:
-        type: string
-    configStoreId:
-      schema:
-        type: string
-        format: uuid
-        example: d32d905a-ed33-46a3-a093-d8f536af9a8a
-      name: configStoreId
-      in: path
-      required: true
-      description: Config Store identifier
-    controlPlaneId:
-      name: controlPlaneId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 9524ec7d-36d9-465d-a8c5-83a3c9390458
-      description: The UUID of your control plane. This variable is available in the Konnect manager.
-    nodeId:
-      schema:
-        type: string
-        format: uuid
-        example: d32d905a-ed33-46a3-a093-d8f536af9a8a
-      name: nodeId
-      in: path
-      required: true
-      description: Node identifier
-    pagination-size:
-      description: Number of resources to be returned.
-      in: query
-      name: size
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-        minimum: 1
-    pagination-tags-filter:
-      description: 'A list of tags to filter the list of resources on. Multiple tags can be concatenated using '','' to mean AND or using ''/'' to mean OR.'
-      example: 'tag1,tag2'
-      in: query
-      name: tags
       schema:
         type: string
   schemas:
@@ -4796,6 +4796,8 @@ components:
           nullable: true
         password:
           type: string
+          writeOnly: true
+          x-encrypted: true
         tags:
           description: A set of strings representing tags.
           type: array
@@ -4835,6 +4837,8 @@ components:
           nullable: true
         password:
           type: string
+          writeOnly: true
+          x-encrypted: true
         tags:
           description: A set of strings representing tags.
           type: array
@@ -4903,10 +4907,12 @@ components:
         cert:
           description: 'PEM-encoded public certificate chain of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
           type: string
+          x-referenceable: true
         cert_alt:
           description: 'PEM-encoded public certificate chain of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
           type: string
           nullable: true
+          x-referenceable: true
         created_at:
           description: Unix epoch when the resource was created.
           type: integer
@@ -4918,10 +4924,14 @@ components:
         key:
           description: 'PEM-encoded private key of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
           type: string
+          x-encrypted: true
+          x-referenceable: true
         key_alt:
           description: 'PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).'
           type: string
           nullable: true
+          x-encrypted: true
+          x-referenceable: true
         snis:
           type: array
           items:
@@ -5390,6 +5400,8 @@ components:
           description: A JSON Web Key represented as a string.
           type: string
           nullable: true
+          x-encrypted: true
+          x-referenceable: true
         kid:
           description: A unique identifier for a key.
           type: string
@@ -5404,8 +5416,11 @@ components:
           properties:
             private_key:
               type: string
+              x-encrypted: true
+              x-referenceable: true
             public_key:
               type: string
+              x-referenceable: true
         set:
           description: The id (an UUID) of the key-set with which to associate the key.
           type: object
@@ -5564,6 +5579,8 @@ components:
           description: A JSON Web Key represented as a string.
           type: string
           nullable: true
+          x-encrypted: true
+          x-referenceable: true
         kid:
           description: A unique identifier for a key.
           type: string
@@ -5578,8 +5595,11 @@ components:
           properties:
             private_key:
               type: string
+              x-encrypted: true
+              x-referenceable: true
             public_key:
               type: string
+              x-referenceable: true
         set:
           description: The id (an UUID) of the key-set with which to associate the key.
           type: object
@@ -5747,6 +5767,8 @@ components:
             password:
               description: 'Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.'
               type: string
+              x-encrypted: true
+              x-referenceable: true
             port:
               description: 'An integer representing a port number between 0 and 65535, inclusive.'
               type: integer
@@ -5773,6 +5795,7 @@ components:
             username:
               description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.'
               type: string
+              x-referenceable: true
         created_at:
           description: Unix epoch when the resource was created.
           type: integer
@@ -5875,6 +5898,8 @@ components:
             password:
               description: 'Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.'
               type: string
+              x-encrypted: true
+              x-referenceable: true
             port:
               description: 'An integer representing a port number between 0 and 65535, inclusive.'
               type: integer
@@ -5916,6 +5941,8 @@ components:
             sentinel_password:
               description: 'Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.'
               type: string
+              x-encrypted: true
+              x-referenceable: true
             sentinel_role:
               description: Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel.
               type: string
@@ -5926,6 +5953,7 @@ components:
             sentinel_username:
               description: 'Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won''t be performed. This requires Redis v6.2.0+.'
               type: string
+              x-referenceable: true
             server_name:
               description: A string representing an SNI (server name indication) value for TLS.
               type: string
@@ -5940,6 +5968,7 @@ components:
             username:
               description: 'Username to use for Redis connections. If undefined, ACL authentication won''t be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.'
               type: string
+              x-referenceable: true
         created_at:
           description: Unix epoch when the resource was created.
           type: integer
@@ -6839,6 +6868,11 @@ components:
           description: Unix epoch when the resource was created.
           type: number
           nullable: true
+        failover:
+          description: Whether to use this target only as backup or not.
+          type: boolean
+          default: false
+          nullable: true
         id:
           description: A string representing a UUID (universally unique identifier).
           type: string
@@ -6889,6 +6923,11 @@ components:
         created_at:
           description: Unix epoch when the resource was created.
           type: number
+          nullable: true
+        failover:
+          description: Whether to use this target only as backup or not.
+          type: boolean
+          default: false
           nullable: true
         id:
           description: A string representing a UUID (universally unique identifier).
@@ -7026,10 +7065,95 @@ components:
         healthchecks:
           description: The array of healthchecks.
           type: object
+          default:
+            active:
+              concurrency: 10
+              healthy:
+                http_statuses:
+                  - 200
+                  - 302
+                interval: 0
+                successes: 0
+              http_path: /
+              https_verify_certificate: true
+              timeout: 1
+              type: http
+              unhealthy:
+                http_failures: 0
+                http_statuses:
+                  - 429
+                  - 404
+                  - 500
+                  - 501
+                  - 502
+                  - 503
+                  - 504
+                  - 505
+                interval: 0
+                tcp_failures: 0
+                timeouts: 0
+            passive:
+              healthy:
+                http_statuses:
+                  - 200
+                  - 201
+                  - 202
+                  - 203
+                  - 204
+                  - 205
+                  - 206
+                  - 207
+                  - 208
+                  - 226
+                  - 300
+                  - 301
+                  - 302
+                  - 303
+                  - 304
+                  - 305
+                  - 306
+                  - 307
+                  - 308
+                successes: 0
+              type: http
+              unhealthy:
+                http_failures: 0
+                http_statuses:
+                  - 429
+                  - 500
+                  - 503
+                tcp_failures: 0
+                timeouts: 0
           nullable: true
           properties:
             active:
               type: object
+              default:
+                concurrency: 10
+                healthy:
+                  http_statuses:
+                    - 200
+                    - 302
+                  interval: 0
+                  successes: 0
+                http_path: /
+                https_verify_certificate: true
+                timeout: 1
+                type: http
+                unhealthy:
+                  http_failures: 0
+                  http_statuses:
+                    - 429
+                    - 404
+                    - 500
+                    - 501
+                    - 502
+                    - 503
+                    - 504
+                    - 505
+                  interval: 0
+                  tcp_failures: 0
+                  timeouts: 0
               properties:
                 concurrency:
                   type: integer
@@ -7045,6 +7169,12 @@ components:
                     type: array
                 healthy:
                   type: object
+                  default:
+                    http_statuses:
+                      - 200
+                      - 302
+                    interval: 0
+                    successes: 0
                   properties:
                     http_statuses:
                       type: array
@@ -7091,6 +7221,20 @@ components:
                     - tcp
                 unhealthy:
                   type: object
+                  default:
+                    http_failures: 0
+                    http_statuses:
+                      - 429
+                      - 404
+                      - 500
+                      - 501
+                      - 502
+                      - 503
+                      - 504
+                      - 505
+                    interval: 0
+                    tcp_failures: 0
+                    timeouts: 0
                   properties:
                     http_failures:
                       type: integer
@@ -7129,9 +7273,63 @@ components:
                       minimum: 0
             passive:
               type: object
+              default:
+                healthy:
+                  http_statuses:
+                    - 200
+                    - 201
+                    - 202
+                    - 203
+                    - 204
+                    - 205
+                    - 206
+                    - 207
+                    - 208
+                    - 226
+                    - 300
+                    - 301
+                    - 302
+                    - 303
+                    - 304
+                    - 305
+                    - 306
+                    - 307
+                    - 308
+                  successes: 0
+                type: http
+                unhealthy:
+                  http_failures: 0
+                  http_statuses:
+                    - 429
+                    - 500
+                    - 503
+                  tcp_failures: 0
+                  timeouts: 0
               properties:
                 healthy:
                   type: object
+                  default:
+                    http_statuses:
+                      - 200
+                      - 201
+                      - 202
+                      - 203
+                      - 204
+                      - 205
+                      - 206
+                      - 207
+                      - 208
+                      - 226
+                      - 300
+                      - 301
+                      - 302
+                      - 303
+                      - 304
+                      - 305
+                      - 306
+                      - 307
+                      - 308
+                    successes: 0
                   properties:
                     http_statuses:
                       type: array
@@ -7175,6 +7373,14 @@ components:
                     - tcp
                 unhealthy:
                   type: object
+                  default:
+                    http_failures: 0
+                    http_statuses:
+                      - 429
+                      - 500
+                      - 503
+                    tcp_failures: 0
+                    timeouts: 0
                   properties:
                     http_failures:
                       type: integer

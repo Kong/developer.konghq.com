@@ -88,7 +88,7 @@ paths:
           example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     get:
       operationId: get-control-plane
-      summary: Fetch Control Plane
+      summary: Get a Control Plane
       description: Returns information about an individual control plane.
       responses:
         '200':
@@ -285,7 +285,7 @@ paths:
           type: string
     get:
       operationId: get-control-planes-id-group-member-status
-      summary: Control Plane Group Member Status
+      summary: Get Control Plane Group Member Status
       description: Determines the group membership status of a control plane.
       responses:
         '200':

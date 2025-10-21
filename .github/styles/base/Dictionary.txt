@@ -58,6 +58,7 @@ autoscalers
 autoscales
 autoscaling
 aws
+AZs
 backfilled
 Backfilling
 backfilling
@@ -95,6 +96,7 @@ callees
 CAs
 callout
 callouts
+cef
 certificate_admin
 charset
 chatbot
@@ -508,6 +510,7 @@ misconfiguration
 misconfigurations
 misconfigured
 Mockbin
+modelarmor
 Moesif
 Moesif
 moesif

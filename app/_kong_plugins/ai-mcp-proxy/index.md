@@ -183,12 +183,11 @@ rows:
       [`conversion-only`](./examples/conversion-only/)
     description: |
       Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
-      This mode requires [`config.server.tag`](./reference/#schema--config-server-tag) in the plugin configuration, but does not define a server.
+      This mode defines one or more [`tags[]`](/gateway/entities/plugin/#schema-plugin-tags) at the plugin level, which are used by listener plugins to discover and bind these tools.
   - mode:  |
       [`listener`](./examples/listener/)
     description: |
-      Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` tools using the [`config.server.tag`](./reference/#schema--config-server-tag) property.
-      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.
+      Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` plugins using their [`tags[]`](/gateway/entities/plugin/#schema-plugin-tags).
 {% endtable %}
 <!-- vale on -->
 

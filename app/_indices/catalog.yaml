@@ -1,0 +1,20 @@
+title: "Catalog Documentation"
+sections:
+  - title: Overview
+    items:
+      - path: /catalog/
+  - title: APIs
+    items:
+      - path: /service-catalog/apis/
+      - path: /how-to/automate-api-catalog/
+      - path: /how-to/automate-api-catalog-with-terraform/
+      - path: /how-to/discover-and-govern-apis-with-service-catalog/
+  - title: Services and scorecards
+    items:
+      - path: /catalog/scorecards/
+      - path: /catalog/services/
+  - title: Integrations
+    items:
+      - path: /catalog/integrations/
+      - path: /catalog/integrations/**/*
+    auto_exclude: true

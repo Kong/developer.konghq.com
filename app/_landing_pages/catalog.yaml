@@ -1,0 +1,102 @@
+metadata:
+  title: "{{site.konnect_short_name}} {{site.konnect_catalog}}"
+  content_type: landing_page
+  products:
+    - catalog
+  description: Learn how to track and manage services across your organization with the {{site.konnect_short_name}} {{site.konnect_catalog}}.
+  tags:
+    - service-catalog
+    - governance
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_short_name}} {{site.konnect_catalog}}"
+      sub_text: "A centralized catalog of all services running in your {{site.konnect_short_name}} organization"
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What is the {{site.konnect_short_name}} {{site.konnect_catalog}}?"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_catalog}} provides a centralized catalog of all services and APIs running in your organization. 
+                    By integrating with internal applications, like Gateway Manager and Mesh Manager, and external tools, like GitHub and PagerDuty, 
+                    it offers a 360-degree overview of your services, including:
+                - type: unordered_list
+                  items:
+                    - Service ownership details
+                    - Upstream and downstream dependencies
+                    - Associated code repositories and CI/CD pipelines
+                    - API gateway and service mesh mappings
+                    - Comprehensive API catalog
+
+  - header:
+        type: h2
+        text: "Explore key features"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: APIs
+            description: |
+              Create, discover, and govern APIs and specs.
+              Catalog serves as a central repository for your APIs, services, and the documentation files associated with them.
+            icon: /assets/icons/api.svg
+            ctas:
+              - text: APIs reference
+                url: "/catalog/apis/"
+              - text: Create an API catalog with the {{site.konnect_short_name}} API
+                url: "/how-to/automate-api-catalog/"
+              - text: Create an API catalog with Terraform
+                url: "/how-to/automate-api-catalog-with-terraform/"
+              - text: Discover and govern APIs
+                url: /how-to/discover-and-govern-apis-with-service-catalog/
+      - blocks:
+          - type: card
+            config:
+              title: "Services"
+              description: |
+                Discover the systems that power your APIs—like microservices or backends—and centralize them for a complete view of your API infrastructure.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about {{site.konnect_catalog}} services
+                url: /catalog/services/
+      - blocks:
+          - type: card
+            config:
+              title: Integrations
+              description: |
+                Connect external tools like GitHub, PagerDuty, and CI/CD pipelines to map services, dependencies, and metadata.
+              icon: /assets/icons/plug.svg
+              cta:
+                text: See all integrations
+                url: /catalog/integrations/
+      - blocks:
+          - type: card
+            config:
+              title: Scorecards
+              description: |
+                Monitor compliance, security, and best practices across services using automated scorecards.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Learn about scorecards
+                url: /catalog/scorecards/
+  - header:
+      type: h2
+      text: "Frequently asked questions"
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: "How do I view service health and status?"
+                a: "Go to **Services** in the {{site.konnect_catalog}} and select a service to view detailed health and status information."
+              - q: "How can I identify available resources for mapping?"
+                a: "Visit the **Resources** page in the {{site.konnect_catalog}} to see all available ingested resources."
+              - q: "What if I notice discrepancies in {{site.konnect_catalog}} data?"
+                a: "Check integration settings, verify connected tools, and ensure data synchronization is working correctly."
+              - q: "Can I control access to specific {{site.konnect_catalog}} data?"
+                a: "Yes, access can be managed through [teams and roles](/konnect-platform/teams-and-roles/)."

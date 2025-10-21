@@ -19,6 +19,7 @@ series:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.12'
@@ -58,8 +59,9 @@ prereqs:
       - mcp-service
     routes:
       - mcp-route
-
-automated_tests: false
+  konnect:
+    - name: KONG_STATUS_LISTEN
+      value: '0.0.0.0:8100'
 ---
 ## Install mock API Server
 
@@ -123,35 +125,33 @@ entities:
           timeout: 60000
 {% endentity_examples %}
 
-## Configure Cursor
-
 1. Open your Cursor desktop app.
 
-2. Navigate to **Cursor > Settings**.
+1. Navigate to **Settings** in the top right corner.
 
-3. In the **Settings** tab, go to **Tools & integrations** in the left sidebar.
+1. In the **Cursor Settings** tab, go to **Tools & MCP** in the left sidebar.
 
-4. In the **MCP Tools** section, click **Add Custom MCP**.
+1. In the **Installed MCP Servers** section, click **New MCP Server**.
 
-5. Paste the following JSON configuration into the newly opened `mcp.json` tab:
+1. Paste the following JSON configuration into the newly opened `mcp.json` tab:
 
-   ```json
-   {
+    ```json
+    {
      "mcpServers": {
        "marketplace": {
          "url": "http://localhost:8000/marketplace"
        }
      }
    }
-   ```
+  ```
 
-6. Return to the **Cursor settings** tab. You should now see the Marketplace MCP server with two tools available:
+1. Return to the **Cursor settings** tab. You should now see the weather MCP server with one tool available:
 
    ![Tools exposed in Cursor](/assets/images/ai-gateway/cursor-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
 
-7. To open a new Cursor chat, click <kbd>cmd</kbd> + <kbd>L</kbd> if you're on Mac, or <kbd>ctrl</kbd> + <kbd>L</kbd> if you're on Windows.
+1. To open a new Cursor chat, click <kbd>cmd</kbd> + <kbd>L</kbd> if you're on Mac, or <kbd>ctrl</kbd> + <kbd>L</kbd> if you're on Windows.
 
-8. In the Cursor chat tab, click **@ Add Context** and select `mcp.json`:
+1. In the Cursor chat tab, click **@ Add Context** and select `mcp.json`:
 
 ![Add context in Cursor chat](/assets/images/ai-gateway/cursor-add-context.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
 

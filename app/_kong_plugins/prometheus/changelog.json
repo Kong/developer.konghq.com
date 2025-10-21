@@ -83,6 +83,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.6": [
+    {
+      "message": "Fixed an issue where Prometheus metrics would show empty consumer identifiers when consumers don't have a username. The plugin now falls back to using the consumer's custom_id when username is not available, ensuring consumer identification in metrics.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Bumped KONG_LATENCY_BUCKETS bucket's maximal capacity to 6000",
