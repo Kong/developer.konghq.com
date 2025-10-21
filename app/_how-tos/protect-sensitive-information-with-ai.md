@@ -57,6 +57,12 @@ cleanup:
 min_version:
   gateway: '3.10'
 
+related_resources:
+  - text: Use AI PII Sanitizer plugin to protect sensitive information in responses
+    url: /how-to/protect-sensitive-information-output-with-ai/
+  - text: AI PII Sanitizer
+    url: /plugins/ai-sanitizer/
+
 automated_tests: false
 ---
 
