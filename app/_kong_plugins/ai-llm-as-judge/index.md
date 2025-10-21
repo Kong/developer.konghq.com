@@ -42,8 +42,8 @@ related_resources:
 ---
 The **AI LLM as Judge** plugin enables automated evaluation of prompt-response pairs using a dedicated LLM. The plugin assigns a numerical score to LLM responses from 1 to 100, where:
 
-* `1`: Perfect or ideal response
-* `100`: Completely incorrect or irrelevant response
+* `1`: Completely incorrect or irrelevant response
+* `100`: Perfect or ideal response
 
 This plugin is part of the [**AI plugin suite**](/plugins/?category=ai), making it easy to integrate LLM-based evaluation workflows into your API pipelines.
 

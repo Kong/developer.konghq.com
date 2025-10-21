@@ -143,7 +143,7 @@ All API specification files are validated during upload, although invalid specif
 To upload a spec to an API, do one of the following:
 {% navtabs "api-specs" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
@@ -200,7 +200,7 @@ While you are creating or editing an API document, you can also choose to publis
 To create a new API document, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **Documentation** tab, and then click **New document**. You can either upload your documentation as an existing a Markdown file or create a new document.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/documents` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-document):
@@ -293,7 +293,7 @@ If you want the Gateway Service to restrict access to the API, [configure develo
 To link your API to a Gateway Service, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
@@ -393,7 +393,7 @@ rows:
 To publish your API, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/portals/apis) in the sidebar and click your API. Click the **Portals** tab, and then click **Publish API**.
+Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **Portals** tab, and then click **Publish API**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal):
