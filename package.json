@@ -23,6 +23,7 @@
     "@kong/kongponents": "^9.14.24",
     "@kong/sdk-portal-js": "^2.15.2",
     "@kong/spec-renderer": "^1.95.8",
+    "@netlify/blobs": "^10.2.0",
     "@tailwindcss/forms": "^0.5.10",
     "@vitejs/plugin-vue": "^5.1.2",
     "algoliasearch": "^5.20.0",
