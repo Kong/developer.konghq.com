@@ -268,7 +268,7 @@ features:
 
 
 {:.info}
->When using Vault references in plugin configs to **add headers** ensure that the secret value stored in your Vault follows the **`key:value` format**. The entire header definition both name and value needs to be provided by the resolved secret.
+>When using Vault references in plugin configs to **add headers**, ensure that the secret value stored in your Vault follows the **`key:value` format**. The entire header definition, both name and value, needs to be provided by the resolved secret.
 
 ## Secret rotation in Vaults
 
