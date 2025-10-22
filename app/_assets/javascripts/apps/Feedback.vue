@@ -16,12 +16,16 @@
         </button>
       </div>
 
-      <p v-if="vote !== null" class="feedback__reply text-sm text-terciary flex">
+      <p v-if="vote !== null && !isRateLimited" class="feedback__reply text-sm text-terciary flex">
         Thank you! We received your feedback.
       </p>
 
+      <p v-if="isRateLimited" class="feedback__reply text-sm text-terciary flex">
+        {{ rateLimitMessage }}
+      </p>
+
       <form
-        v-if="vote === false"
+        v-if="vote === false && !isRateLimited"
         class="flex flex-col gap-2 w-full"
         @submit.prevent="handleSubmit"
       >
@@ -49,30 +53,43 @@
   const message = ref('');
   const feedbackId = ref(null);
   const isSubmitting = ref(false);
+  const isRateLimited = ref(false);
+  const rateLimitMessage = ref('');
 
-  function handleVote(val) {
+  async function handleVote(val) {
     if (isSubmitting.value) { return };
 
     vote.value = val;
     isSubmitting.value = true;
 
-    fetch('/.netlify/functions/feedback-create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        pageUrl: window.location.href,
-        feedbackId: feedbackId.value,
-        vote: val
+
+    try {
+      const res = await fetch('/.netlify/functions/feedback-create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pageUrl: window.location.href,
+          feedbackId: feedbackId.value,
+          vote: val,
+        }),
       })
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        feedbackId.value ||= data.feedbackId;
-        console.log('create callback')
-        console.log(`id: ${feedbackId.value}`)
-      })
-      .catch((err) => console.error('Feedback error:', err))
-      .finally(() => { isSubmitting.value = false; });
+
+      if (res.status === 429) {
+        const data = await res.json()
+        isRateLimited.value = true
+        rateLimitMessage.value = data.error || 'Too many requests. Please wait.'
+        return
+      }
+
+      const data = await res.json()
+      feedbackId.value ||= data.feedbackId
+      isRateLimited.value = false
+      rateLimitMessage.value = ''
+    } catch (err) {
+      console.error('Feedback error:', err)
+    } finally {
+      isSubmitting.value = false;
+    }
   }
 
   function handleSubmit() {

@@ -23,6 +23,26 @@ async function sendDataToSlack(url, vote, id, webhookUrl) {
   }
 }
 
+const recentSubmissions = new Map();
+const RATE_LIMIT_MS = 60 * 1_000;
+const MAX_SUBMISSIONS = 4;
+
+function isRateLimited(id, now) {
+  for (const [submissionId, timestamps] of recentSubmissions) {
+    const validTimestamps = timestamps.filter(
+      (time) => now - time <= RATE_LIMIT_MS
+    );
+    if (validTimestamps.length === 0) {
+      recentSubmissions.delete(submissionId);
+    } else {
+      recentSubmissions.set(submissionId, validTimestamps);
+    }
+  }
+
+  const timestamps = recentSubmissions.get(id) || [];
+  return timestamps.length >= MAX_SUBMISSIONS;
+}
+
 export async function handler(event, context) {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
   let connection;
@@ -59,6 +79,26 @@ export async function handler(event, context) {
     if (feedbackId) {
       id = feedbackId;
     }
+
+    const now = Date.now();
+    if (isRateLimited(id, now)) {
+      const timestamps = recentSubmissions.get(id) || [];
+      const oldestSubmission = Math.min(...timestamps);
+      const remaining = Math.ceil(
+        (RATE_LIMIT_MS - (now - oldestSubmission)) / 1000
+      );
+      return {
+        statusCode: 429,
+        body: JSON.stringify({
+          error: `Rate limit exceeded. Try again in ${remaining} seconds.`,
+        }),
+        headers: { "Content-Type": "application/json" },
+      };
+    }
+
+    const timestamps = recentSubmissions.get(id) || [];
+    timestamps.push(now);
+    recentSubmissions.set(id, timestamps);
 
     const url = new URL(pageUrl);
     url.hash = "";
