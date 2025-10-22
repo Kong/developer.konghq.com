@@ -24,7 +24,9 @@ related_resources:
 {{site.konnect_short_name}} Search allows you to perform basic and advanced searches across all {{site.konnect_short_name}} entities within an organization. 
 You can access search using the search bar (_Command+K_) at the top of every page in {{site.konnect_short_name}} or using the [{{site.konnect_short_name}} Search API](/api/konnect/ksearch/).
 
-The {{site.konnect_short_name}} Search API is available in global and regional locations with regional-awareness, ensuring that returned entities are relevant to their geographical location. 
+The {{site.konnect_short_name}} Search, by default, searches for both global and regional entities (with regional-awareness for the [currently selected region](/konnect-platform/geos/)). This ensures that returned entities are relevant to their geographical location. By default, every search performs:
+* A global resources fetch for global {{site.konnect_short_name}} entities, such as users, teams, and networks
+* A geo-scoped fetch, searching through [entities](/gateway/entities/) in the current {{site.konnect_short_name}} geo. For example, if you've selected the US geo, {{site.konnect_short_name}} search will only search for entities in the US geo.
 
 Here are a few example use cases where you can use the {{site.konnect_short_name}} Search capabilities:
 
