@@ -168,7 +168,7 @@ columns:
     key: mode
   - title: Description
     key: description
-  - title: Typical use case
+  - title: Use cases
     key: usecase
 rows:
   - mode: |
