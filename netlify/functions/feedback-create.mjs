@@ -27,19 +27,19 @@ const recentSubmissions = new Map();
 const RATE_LIMIT_MS = 60 * 1_000;
 const MAX_SUBMISSIONS = 4;
 
-function isRateLimited(id, now) {
-  for (const [submissionId, timestamps] of recentSubmissions) {
+function isRateLimited(ip, now) {
+  for (const [key, timestamps] of recentSubmissions) {
     const validTimestamps = timestamps.filter(
       (time) => now - time <= RATE_LIMIT_MS
     );
     if (validTimestamps.length === 0) {
-      recentSubmissions.delete(submissionId);
+      recentSubmissions.delete(key);
     } else {
-      recentSubmissions.set(submissionId, validTimestamps);
+      recentSubmissions.set(key, validTimestamps);
     }
   }
 
-  const timestamps = recentSubmissions.get(id) || [];
+  const timestamps = recentSubmissions.get(ip) || [];
   return timestamps.length >= MAX_SUBMISSIONS;
 }
 
@@ -65,6 +65,9 @@ export async function handler(event, context) {
 
   let id = uuidv4();
 
+  const rawIp = event.headers["x-forwarded-for"] || "";
+  const clientIp = rawIp.split(",")[0].trim() || "unknown";
+
   try {
     const { pageUrl, vote, feedbackId } = JSON.parse(event.body);
 
@@ -81,8 +84,8 @@ export async function handler(event, context) {
     }
 
     const now = Date.now();
-    if (isRateLimited(id, now)) {
-      const timestamps = recentSubmissions.get(id) || [];
+    if (isRateLimited(clientIp, now)) {
+      const timestamps = recentSubmissions.get(clientIp) || [];
       const oldestSubmission = Math.min(...timestamps);
       const remaining = Math.ceil(
         (RATE_LIMIT_MS - (now - oldestSubmission)) / 1000
@@ -96,9 +99,9 @@ export async function handler(event, context) {
       };
     }
 
-    const timestamps = recentSubmissions.get(id) || [];
+    const timestamps = recentSubmissions.get(clientIp) || [];
     timestamps.push(now);
-    recentSubmissions.set(id, timestamps);
+    recentSubmissions.set(clientIp, timestamps);
 
     const url = new URL(pageUrl);
     url.hash = "";
