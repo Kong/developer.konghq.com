@@ -64,7 +64,7 @@
 
 
     try {
-      const res = await fetch('/.netlify/functions/feedback-create', {
+      const res = await fetch('/feedback/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,7 +97,7 @@
 
     isSubmitting.value = true;
 
-    fetch('/.netlify/functions/feedback-update', {
+    fetch('/feedback/update', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
