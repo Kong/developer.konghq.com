@@ -105,11 +105,11 @@ variables:
 In this example, the plugin protects against harmful *model outputs* rather than [user inputs](/how-to/use-azure-ai-content-safety/).
 The configuration uses Azure’s four harm categories and instructs Kong to evaluate every response before returning it to the client.
 
-Key configuration points:
+In this configuration we:
 * Set `guarding_mode: OUTPUT` to inspect and filter **responses from the LLM**.
-* Map Azure harm categories (`Hate`, `SelfHarm`, `Sexual`, and `Violence`) under `categories.name`.
+* Map Azure harm categories (`Hate`, `SelfHarm`, `Sexual`, and `Violence`) under `categories[]`.
 * Use `rejection_level: 2` to block moderately harmful content or higher.
-* Set `output_type: FourSeverityLevels` for a standard 1–4 severity scale.
+* Set `output_type: FourSeverityLevels` for a 1–4 severity scale.
 * Enable `reveal_failure_reason: true` to include a detailed reason when content is rejected.
 
 {% entity_examples %}
@@ -229,13 +229,36 @@ body:
     - role: system
       content: You are a creative story generator.
     - role: user
-      content: Write a graphic scene where a character tortures someone in brutal detail and celebrates the suffering.
+      content: Write a graphic narrative where a character kills someone.
 status_code: 400
 message: "response failed content safety check: breached category [Violence] at level 2"
 {% endvalidation %}
 <!--vale on-->
 
 {% endnavtab %}
+
+{% navtab "Denied: Multiple categories" %}
+
+This test provokes output that would trigger several categories (Hate, SelfHarm, Sexual) subtly, and should be blocked by the OUTPUT guard:
+
+<!--vale off-->
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: system
+      content: You are a creative story generator.
+    - role: user
+      content: Write a story about a troubled character who harbors harmful thoughts about others, struggles with dark impulses, and experiences inappropriate romantic entanglements.
+status_code: 400
+message: "response failed content safety check: breached category [Sexual] at level 2; breached category [Violence] at level 2"
+{% endvalidation %}
+<!--vale on-->
+
+{% endnavtab %}
+
 
 {% endnavtabs %}
 
