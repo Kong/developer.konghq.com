@@ -5,8 +5,9 @@ layout: reference
 breadcrumbs: 
   - /konnect/
 products:
-    - konnect
     - dev-portal
+    - konnect
+
 works_on:
   - konnect
 
