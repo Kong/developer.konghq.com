@@ -44,7 +44,7 @@ You can create a fully configured mock server in Insomnia using a natural langua
 3. From the **Input type** dropdown menu, select a source format.
   - URL
   - OpenAPI spec
-  - JSON file
+  - Text
 4. In the prompt box, enter a description of the mock server.  
    Example: `My API is for products. I want to be able to create, update, delete, get, and list products. Products should have a name, a price, and a quantity.` 
 5. If you require dynamic content on your mock server, select the **Enable dynamic responses** checkbox.
