@@ -2,18 +2,85 @@ title: AI Gateway Documentation
 sections:
   - title: Overview
     items:
-      - title: AI Gateway Overview
-        description: Overview of AI gateway capabilities
-        url: /ai-gateway/
-      - title: Quickstart
-        description: Get started quickly with AI Gateway setup and usage.
-        url: /ai-gateway/#quickstart
-      - title: AI Gateway Capabilities
-        description: Learn about the core capabilities of AI Gateway.
-        url: /ai-gateway/#ai-gateway-capabilities
-      - title: AI providers
-        description: Learn about the various providers supported by AI Gateway.
-        url: /ai-gateway/ai-providers/
+      items:
+        - path: /ai-gateway/
+        - path: /ai-gateway/get-started/
+        - title: AI Gateway Capabilities
+          description: Learn about the core capabilities of AI Gateway.
+  - title: Concepts
+    items:
+      - path: /ai-gateway/ai-providers/
+      - title: Streaming
+        description: Learn how AI Proxy streaming works.
+        url: /ai-gateway/streaming/
+      - title: Advanced Analytics
+        url: /advanced-analytics/
+  - title: AI Gateway plugins
+    items:
+      - path: /plugins/?category=ai
+      - path: /plugins/ai-azure-content-safety/
+      - path: /plugins/ai-prompt-decorator/
+      - path: /plugins/ai-prompt-guard/
+      - path: /plugins/ai-prompt-template/
+      - path: /plugins/ai-proxy/
+      - path: /plugins/ai-proxy-advanced/
+      - path: /plugins/ai-rag-injector/
+      - path: /plugins/ai-rate-limiting-advanced/
+      - path: /plugins/ai-request-transformer/
+      - path: /plugins/ai-response-transformer/
+      - path: /plugins/ai-semantic-prompt-guard/
+      - path: /plugins/ai-sanitizer/
+      - path: /plugins/ai-prompt-compressor/
+      - path: /plugins/ai-aws-guardrails/
+  - title: AI load balancing
+    items:
+      - title: Load balancing with AI Proxy Advanced
+        description: Overview of load balancing and retry and fallback strategies in the AI Proxy Advanced plugin.
+        url: /ai-gateway/load-balancing/
+      - title: Consistent Hashing - AI Proxy Advanced
+        description: Set up consistent hashing for load balancing.
+        url: /plugins/ai-proxy-advanced/examples/consistent-hashing/
+      - title: Lowest Latency - AI Proxy Advanced
+        description: Configure load balancing based on the lowest latency.
+        url: /plugins/ai-proxy-advanced/examples/lowest-latency/
+      - title: Lowest Usage - AI Proxy Advanced
+        description: Set up load balancing based on the lowest usage.
+        url: /plugins/ai-proxy-advanced/examples/lowest-usage/
+      - title: Priority - AI Proxy Advanced
+        description: Configure priority-based load balancing.
+        url: /plugins/ai-proxy-advanced/examples/priority/
+      - title: Round Robin - AI Proxy Advanced
+        description: Set up round-robin load balancing.
+        url: /plugins/ai-proxy-advanced/examples/round-robin/
+      - title: Semantic - AI Proxy Advanced
+        description: Set up semantic load balancing.
+        url: /plugins/ai-proxy-advanced/examples/semantic/
+  - title: MCP traffic gateway
+    items:
+      - path: /mcp/
+      - title: Secure MCP traffic
+        description: Secure GitHub MCP Server traffic with Kong Gateway and Kong AI Gateway
+        url: /mcp/secure-mcp-traffic/
+      - title: Govern MCP traffic
+        description: Use Kong AI Gateway to govern GitHub MCP traffic
+        url: /mcp/govern-mcp-traffic
+      - title: Observe MCP traffic
+        description: Observe GitHub MCP traffic with Kong AI Gateway
+        url: /mcp/observe-mcp-traffic
+      - title: "{{site.konnect_product_name}} MCP Server"
+        description: Get started with {{site.konnect_product_name}} MCP Server
+        url: /mcp/kong-mcp/get-started/
+      - title: "{{site.konnect_product_name}} MCP Server tools"
+        description: Check available {{site.konnect_product_name}} MCP Server tools
+        url: /mcp/kong-mcp/tools/
+  - title: How-tos # maybe cap the amount here? 
+    items:
+      - type: how-to
+        products:
+          - ai-gateway
+
+  - title: Overview-ignore
+    items:
       - title: AI Usage Governance
         description: Understand how to manage and govern AI usage effectively.
         url: /ai-gateway/#ai-usage-governance
@@ -41,66 +108,4 @@ sections:
       - title: Advanced Analytics
         description: Access advanced analytics features in AI Gateway.
         url: /advanced-analytics/
-  - title: AI Gateway plugins
-    items:
-      - path: /plugins/?category=ai
-      - path: /plugins/ai-azure-content-safety/
-      - path: /plugins/ai-prompt-decorator/
-      - path: /plugins/ai-prompt-guard/
-      - path: /plugins/ai-prompt-template/
-      - path: /plugins/ai-proxy/
-      - path: /plugins/ai-proxy-advanced/
-      - path: /plugins/ai-rag-injector/
-      - path: /plugins/ai-rate-limiting-advanced/
-      - path: /plugins/ai-request-transformer/
-      - path: /plugins/ai-response-transformer/
-      - path: /plugins/ai-semantic-prompt-guard/
-      - path: /plugins/ai-sanitizer/
-      - path: /plugins/ai-prompt-compressor/
-      - path: /plugins/ai-aws-guardrails/
-  - title: MCP traffic gateway
-    items:
-      - path: /mcp/
-      - title: Secure MCP traffic
-        description: Secure GitHub MCP Server traffic with Kong Gateway and Kong AI Gateway
-        url: /mcp/secure-mcp-traffic/
-      - title: Govern MCP traffic
-        description: Use Kong AI Gateway to govern GitHub MCP traffic
-        url: /mcp/govern-mcp-traffic
-      - title: Observe MCP traffic
-        description: Observe GitHub MCP traffic with Kong AI Gateway
-        url: /mcp/observe-mcp-traffic
-      - title: "{{site.konnect_product_name}} MCP Server"
-        description: Get started with {{site.konnect_product_name}} MCP Server
-        url: /mcp/kong-mcp/get-started/
-      - title: "{{site.konnect_product_name}} MCP Server tools"
-        description: Check available {{site.konnect_product_name}} MCP Server tools
-        url: /mcp/kong-mcp/tools/
-  - title: AI load balancing
-    items:
-      - title: Load balancing with AI Proxy Advanced
-        description: Overview of load balancing and retry and fallback strategies in the AI Proxy Advanced plugin.
-        url: /ai-gateway/load-balancing/
-      - title: Consistent Hashing - AI Proxy Advanced
-        description: Set up consistent hashing for load balancing.
-        url: /plugins/ai-proxy-advanced/examples/consistent-hashing/
-      - title: Lowest Latency - AI Proxy Advanced
-        description: Configure load balancing based on the lowest latency.
-        url: /plugins/ai-proxy-advanced/examples/lowest-latency/
-      - title: Lowest Usage - AI Proxy Advanced
-        description: Set up load balancing based on the lowest usage.
-        url: /plugins/ai-proxy-advanced/examples/lowest-usage/
-      - title: Priority - AI Proxy Advanced
-        description: Configure priority-based load balancing.
-        url: /plugins/ai-proxy-advanced/examples/priority/
-      - title: Round Robin - AI Proxy Advanced
-        description: Set up round-robin load balancing.
-        url: /plugins/ai-proxy-advanced/examples/round-robin/
-      - title: Semantic - AI Proxy Advanced
-        description: Set up semantic load balancing.
-        url: /plugins/ai-proxy-advanced/examples/semantic/
-  - title: How-tos
-    items:
-      - type: how-to
-        products:
-          - ai-gateway
+  
