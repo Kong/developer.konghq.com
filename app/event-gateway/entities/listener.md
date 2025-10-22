@@ -49,11 +49,7 @@ Listeners can have one or more policies that define how the TCP connection is ha
 * **TLS Server Policy:** Enforces encryption, provides a certificate, and can use SNI to route connections by hostname.
 * **Forward to Virtual Cluster Policy:** Routes the connection to a specific virtual cluster. Only one forward policy is allowed per listener.
 
-## Schema
-
-{% entity_schema %}
-
-## Set up a Listener
+## Set up a listener
 
 {% navtabs "listener" %}
 
@@ -109,3 +105,7 @@ The following creates a new Listener called **example-backend-cluster** with bas
 {% endnavtab %}
 
 {% endnavtabs %}
+
+## Schema
+
+{% entity_schema %}

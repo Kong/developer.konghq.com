@@ -1,6 +1,5 @@
 ---
 title: Get started with {{site.event_gateway}}
-short_title: Install {{site.event_gateway_short}}
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
@@ -24,6 +23,11 @@ tldr:
   q: How can I get started with {{site.event_gateway}}?
   a: | 
     Get started with {{site.event_gateway}} by setting up a {{site.konnect_short_name}} control plane and data plane, then configuring a backend cluster, virtual cluster, listener, and policy with the {{site.event_gateway}} API.
+
+    {:.info}
+    > **Note:**
+    > This quickstart runs a pre-configured demo Docker container to explore {{ site.base_gateway }}'s capabilities. 
+    If you want to run {{ site.base_gateway }} as a part of a production-ready platform, start with the [Install](/event-gateway/#install) page.
 
 tools:
     - konnect-api
@@ -49,15 +53,16 @@ faqs:
       I'm getting the error `Connection refused` when trying to access my Kafka cluster through {{site.event_gateway_short}}.
     a: |
       Check the following:
-      * Verify all services are running with `docker ps`
-      * Check if ports are available (in this how-to guide, we use 19092 for the proxy, 9092-9095 for Kafka)
-      * Ensure that all environment variables are set correctly
+      * Verify all services are running with `docker ps`.
+      * Check if ports are available (in this how-to guide, we use 19092 for the proxy, 9092-9095 for Kafka).
+      * Ensure that all environment variables are set correctly.
   - q: When I run `list topics`, topics aren't visible.
     a: |
       Troubleshoot your setup by doing the following:
-      * Verify that your Kafka broker is healthy
-      * Check if you're using the correct `kafkactl` context
-      * Ensure that the proxy is properly connected to the backend cluster
+      * Verify that your Kafka broker is healthy.
+      * Check if you're using the correct `kafkactl` context.
+      * Ensure that the proxy is properly connected to the backend cluster.
+      * Ensure that `acl_mode` is set to `passthrough` in the virtual cluster. If set to `enforce_on_gateway`, you won't see any topics listed without an ACL policy.
 ---
 
 {{site.event_gateway}} lets you configure virtual clusters, which act as a proxy interface between the client and the Kafka cluster.
@@ -71,7 +76,7 @@ Now, let's configure a proxy and test your first virtual cluster setup.
 
 ## Create an {{site.event_gateway_short}} in {{site.konnect_short_name}}
 
-Run the [quickstart script](https://get.konghq.com/event-gateway) to automatically provision an {{site.base_gateway}} control plane and data plane, and configure your environment:
+Run the [quickstart script](https://get.konghq.com/event-gateway) to automatically provision a demo {{site.base_gateway}} control plane and data plane, and configure your environment:
 
 ```bash
 curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN
@@ -85,6 +90,9 @@ export EVENT_GATEWAY_ID=your-gateway-id
 
 Copy and paste this into your terminal to configure your session.
 
+{:.info}
+> This quickstart script is meant for demo purposes only, therefore it runs locally with default parameters and a small number of exposed ports.
+If you want to run {{ site.base_gateway }} as a part of a production-ready platform, start with the [Install](/event-gateway/#install) page.
 
 ## Add a backend cluster
 
@@ -199,9 +207,10 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Configure the cluster
+## Configure the Kafka cluster
 
-Set up the `kafkactl` config file:
+Set up the `kafkactl` config file for your Kafka cluster:
+
 ```shell
 cat <<EOF > kafkactl.yaml
 contexts:

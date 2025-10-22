@@ -48,6 +48,46 @@ rows:
 
   - header:
       type: h2
+      text: "Install {{ site.event_gateway_short }}"
+    columns:
+      - blocks:
+        - type: text
+          config: |
+            You can configure {{site.event_gateway_short}} using {{site.konnect_short_name}}.
+
+            Before deploying {{site.event_gateway_short}}, ensure that you have a Kafka cluster.
+        - type: tabs
+          tab_group: run-event-gateway
+          config:
+            - title: Quickstart
+              content: |
+                You can use the [quickstart script](https://get.konghq.com/event-gateway) to get a demo instance of Event Gateway running almost instantly:
+                
+                This command requires a [Konnect Access Token](https://cloud.konghq.com/global/account/tokens).
+
+                ```sh
+                curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN
+                ```
+
+                The script creates an Event Gateway control plane in Konnect and deploys a local data plane using Docker.
+
+                All licensing is handled automatically by Konnect.
+            - title: Konnect UI
+              content: |
+                To install Event Gateway using the Konnect UI, use the following steps:
+                1. Sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/).
+                1. In the menu, navigate to **Event Gateway**.
+                1. Click **New Gateway**.
+                1. Fill in the required fields.
+                1. Click **Create** to save.
+                1. Select a platform for your data plane.
+                1. Click **Generate Certificate**.
+                1. Copy the generated command.
+                1. Run the command on your data plane host to start the data plane.
+                1. After the data plane is connected and the control plane recognizes it, click **Done**.
+            
+  - header:
+      type: h2
       text: "Get started with {{site.event_gateway}}"
     columns:
       - blocks:
