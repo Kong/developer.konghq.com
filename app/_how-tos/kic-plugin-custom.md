@@ -117,7 +117,7 @@ The {{ site.kic_product_name }} Helm chart automatically configures all the envi
 {: data-deployment-topology="konnect" }
 ## Register the plugin schema in Konnect
 
-To see your custom plugin in Konnect, you need to register the schema with your Control Plane: 
+To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane: 
 
 ```sh
 curl -X POST \
