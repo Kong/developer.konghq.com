@@ -97,7 +97,7 @@ rows:
           config:
             title: Define Dev Portal teams and roles
             description: |
-              Before you can start using your Dev Portal, a {{site.konnect_short_name}} or Dev Portal admin must assign users to teams and roles. This allows users to access their respective features in Dev Portal.
+              Before you can start using your Dev Portal, a {{site.konnect_short_name}} or Dev Portal admin must assign users to {{site.konnect_short_name}} teams and roles. This allows {{site.konnect_short_name}} users to access their respective features in Dev Portal.
             icon: /assets/icons/rbac.svg
             ctas:
               - text: Pre-defined Dev Portal teams
@@ -108,10 +108,6 @@ rows:
                 url: "/konnect-platform/teams-and-roles/#catalog-apis"
               - text: Dev Portal roles
                 url: "/konnect-platform/teams-and-roles/#dev-portal"
-              - text: Auth strategy roles
-                url: "/konnect-platform/teams-and-roles/#application-auth-strategies"
-              - text: DCR provider roles
-                url: "/konnect-platform/teams-and-roles/#dcr"
       - blocks:
         - type: card
           config:
@@ -161,8 +157,8 @@ rows:
                 url: "/dev-portal/self-service/#developer-and-application-approvals"
               - text: Authentication strategies
                 url: "/dev-portal/auth-strategies/"
-              - text: Dynamic Client Registration
-                url: "/dev-portal/dynamic-client-registration/"
+              - text: Developer RBAC
+                url: "/dev-portal/developer-rbac/"
 
 
   - header:
@@ -193,6 +189,14 @@ rows:
                 Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal.
               cta:
                 url: "/dev-portal/team-mapping/"
+      - blocks:
+          - type: card
+            config:
+              title: Developer RBAC
+              description: |
+                Learn about pre-defined developer teams and roles for RBAC.
+              cta:
+                url: /dev-portal/developer-rbac/
 
   - header:
       type: h2
