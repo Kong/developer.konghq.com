@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect API Builder
-  version: 3.0.24
+  version: 3.0.25
   description: The management API for building APIs for Konnect Dev Portals.
   contact:
     name: Kong
