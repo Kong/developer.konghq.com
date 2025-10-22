@@ -9,13 +9,16 @@
           :class="{ 'feedback__button--active': vote === option }"
           :aria-label="option ? 'Yes' : 'No'"
           :value="option"
+          :disabled="isSubmitting"
           @click="handleVote(option)"
         >
           {{ option ? 'Yes' : 'No' }}
         </button>
       </div>
 
-      <p v-if="vote !== null" class="feedback__reply text-sm text-terciary flex">Thank you! We received your feedback.</p>
+      <p v-if="vote !== null" class="feedback__reply text-sm text-terciary flex">
+        Thank you! We received your feedback.
+      </p>
 
       <form
         v-if="vote === false"
@@ -27,12 +30,13 @@
           id="feedback-message"
           v-model="message"
           class="bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3"
+          :disabled="isSubmitting"
         ></textarea>
         <div class="flex gap-3 justify-end">
-          <button type="button" class="button button--secondary" @click="handleCancel">
+          <button type="button" class="button button--secondary" @click="handleCancel"  :disabled="isSubmitting">
             Cancel
           </button>
-          <button type="submit" class="button button--primary">Send</button>
+          <button type="submit" class="button button--primary" :disabled="isSubmitting">Send</button>
         </div>
       </form>
     </div>
@@ -44,9 +48,14 @@
   const vote = ref(null);
   const message = ref('');
   const feedbackId = ref(null);
+  const isSubmitting = ref(false);
 
   function handleVote(val) {
+    if (isSubmitting.value) { return };
+
     vote.value = val;
+    isSubmitting.value = true;
+
     fetch('/.netlify/functions/feedback-create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -59,11 +68,18 @@
       .then((res) => res.json())
       .then((data) => {
         feedbackId.value ||= data.feedbackId;
+        console.log('create callback')
+        console.log(`id: ${feedbackId.value}`)
       })
-      .catch((err) => console.error('Feedback error:', err));
+      .catch((err) => console.error('Feedback error:', err))
+      .finally(() => { isSubmitting.value = false; });
   }
 
   function handleSubmit() {
+    if (isSubmitting.value) { return };
+
+    isSubmitting.value = true;
+
     fetch('/.netlify/functions/feedback-update', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -75,7 +91,7 @@
     })
       .then((res) => res.json())
       .catch((err) => console.error('Feedback error:', err))
-
+      .finally(() => { isSubmitting.value = false; });
     resetForm();
   }
 
@@ -88,3 +104,9 @@
     vote.value = null;
   }
 </script>
+
+<style scoped>
+.feedback__button:disabled {
+  @apply !text-gray-500;
+}
+</style>
