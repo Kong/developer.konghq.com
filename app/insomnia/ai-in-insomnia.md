@@ -53,7 +53,7 @@ faqs:
       3. Save your changes.
       
       - **Defaults:** Features are activated by default for **Essentials** and **Pro** plans, and deactivated by default for **Enterprise** plans.
-      - **Effect on users:** When deactivated at the instance level, AI-supported features do not appear in the main app UI and the toggles in **Preferences → AI Settings** display an error explaination.
+      - **Effect on users:** When deactivated at the instance level, AI-supported features do not appear in the main app UI and the toggles in **Preferences → AI Settings** display an error explanation.
       - **User setup still required:** Even when activated at the instance level, each user must **activate a model** in **Preferences → AI Settings** before they can turn on feature toggles. 
 ---
 
