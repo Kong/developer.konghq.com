@@ -72,6 +72,8 @@ paths:
                 $ref: '#/components/examples/VerticalBarDashboardExample'
               'Single Tile, Donut (LLM datasource)':
                 $ref: '#/components/examples/DonutDashboardExample'
+              'Single Tile, Choropleth Map':
+                $ref: '#/components/examples/ChoroplethMapDashboardExample'
               'Single Tile, Single Value':
                 $ref: '#/components/examples/SingleValueDashboardExample'
               Multiple tiles and preset filters:
@@ -146,6 +148,8 @@ paths:
                 $ref: '#/components/examples/VerticalBarDashboardExample'
               'Single Tile, Donut (LLM datasource)':
                 $ref: '#/components/examples/DonutDashboardExample'
+              'Single Tile, Choropleth Map':
+                $ref: '#/components/examples/ChoroplethMapDashboardExample'
               'Single Tile, Single Value':
                 $ref: '#/components/examples/SingleValueDashboardExample'
               Multiple tiles and preset filters:
@@ -256,6 +260,7 @@ components:
               - consumer
               - control_plane
               - control_plane_group
+              - country_code
               - data_plane_node
               - data_plane_node_version
               - gateway_service
@@ -1075,6 +1080,42 @@ components:
             - operator
             - field
       title: Filter by control_plane_group
+    MetricsCountryCodeFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - country_code
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - country_code
+          required:
+            - operator
+            - field
+      title: Filter by country_code
     MetricsDataPlaneNodeFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -1491,6 +1532,7 @@ components:
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+            country_code: '#/components/schemas/MetricsCountryCodeFilterByField'
             data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
             data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
             gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
@@ -1510,6 +1552,7 @@ components:
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsCountryCodeFilterByField'
           - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
           - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
           - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
@@ -2020,6 +2063,25 @@ components:
       required:
         - type
       title: Single value chart
+    ChoroplethMapChart:
+      description: |
+        A chart that displays data on a world map. Each region on the map is colored based on the metric value.
+        This chart works only with the `api_usage` datasource and requires a single metric and a single dimension of `country_code`.
+        No additional dimensions are supported.
+      type: object
+      properties:
+        chart_title:
+          description: 'The title of the chart, which is displayed in the tile''s header.'
+          type: string
+          nullable: false
+        type:
+          type: string
+          enum:
+            - choropleth_map
+      additionalProperties: false
+      required:
+        - type
+      title: Choropleth map chart
     Chart:
       description: The type of chart to render.
       discriminator:
@@ -2031,11 +2093,13 @@ components:
           horizontal_bar: '#/components/schemas/BarChart'
           vertical_bar: '#/components/schemas/BarChart'
           single_value: '#/components/schemas/SingleValueChart'
+          choropleth_map: '#/components/schemas/ChoroplethMapChart'
       oneOf:
         - $ref: '#/components/schemas/DonutChart'
         - $ref: '#/components/schemas/TimeseriesChart'
         - $ref: '#/components/schemas/BarChart'
         - $ref: '#/components/schemas/SingleValueChart'
+        - $ref: '#/components/schemas/ChoroplethMapChart'
     AllFilterItems:
       discriminator:
         propertyName: field
@@ -2051,6 +2115,7 @@ components:
           consumer: '#/components/schemas/MetricsConsumerFilterByField'
           control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
           control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+          country_code: '#/components/schemas/MetricsCountryCodeFilterByField'
           data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
           data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
           gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
@@ -2077,6 +2142,7 @@ components:
         - $ref: '#/components/schemas/MetricsConsumerFilterByField'
         - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
         - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+        - $ref: '#/components/schemas/MetricsCountryCodeFilterByField'
         - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
         - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
         - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
@@ -2341,6 +2407,34 @@ components:
                   filters:
                     - operator: in
                       field: gateway_service
+                      value:
+                        - '00000000-0000-0000-0000-000000000000:00000000-0000-0000-0000-000000000000'
+    ChoroplethMapDashboardExample:
+      value:
+        name: 'Single Tile, Choropleth Map'
+        definition:
+          tiles:
+            - type: chart
+              layout:
+                size:
+                  cols: 3
+                  rows: 2
+                position:
+                  col: 0
+                  row: 0
+              definition:
+                chart:
+                  type: choropleth_map
+                  chart_title: Latency by country for a sample route
+                query:
+                  metrics:
+                    - response_latency_p99
+                  datasource: api_usage
+                  dimensions:
+                    - country_code
+                  filters:
+                    - operator: in
+                      field: route
                       value:
                         - '00000000-0000-0000-0000-000000000000:00000000-0000-0000-0000-000000000000'
     SingleValueDashboardExample:
