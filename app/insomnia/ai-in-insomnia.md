@@ -103,7 +103,7 @@ Activate features by choosing and uploading an LLM in **Preferences → AI Setti
 4. Click **Activate**.
 
 {:.decorative}
-> **Tip**: For Local type LLM, add `.gguf` model files to your **LLMs** folder, and then select the **Refresh** icon to rescan and make them available in the **Model** list.
+> **Tip**: For Local type LLM, add `.gguf` model files to your **LLMs** folder, and then select the **Refresh** icon to re-scan and make them available in the **Model** list.
 
 Once an LLM is successfully uploaded to Insomnia, the feature toggles **Auto-generate Mock Servers from natural language** and **Suggest comments and grouping for Commits** are now activated and can be turned on or off as required.
 
