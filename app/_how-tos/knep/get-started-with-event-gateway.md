@@ -54,7 +54,7 @@ faqs:
     a: |
       Check the following:
       * Verify all services are running with `docker ps`.
-      * Check if ports are available (in this how-to guide, we use 19092 for the proxy, 9092-9095 for Kafka).
+      * Check if ports are available (in this how-to guide, we use 19092 for the proxy, 9092-9095 for Kafka). For example, on a Unix-based system, you could use `lsof -i -P | grep 909`.
       * Ensure that all environment variables are set correctly.
   - q: When I run `list topics`, topics aren't visible.
     a: |
