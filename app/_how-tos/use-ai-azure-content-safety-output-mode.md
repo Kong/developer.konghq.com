@@ -9,6 +9,8 @@ related_resources:
     url: /plugins/ai-azure-content-safety/
   - text: AI Gateway
     url: /ai-gateway/
+  - text: Use AI Azure Content Safety plugin to moderate LLM requests
+    url: /how-to/use-azure-ai-content-safety/
 
 description: Learn how to use the Azure AI Content Safety plugin to analyze and block harmful model outputs.
 
@@ -59,6 +61,9 @@ prereqs:
           export DECK_AZURE_CONTENT_SAFETY_KEY='YOUR-CONTENT-SAFETY-KEY'
           export DECK_AZURE_CONTENT_SAFETY_URL='YOUR-CONTENT-SAFETY-URL'
           ```
+          
+          {:.warning}
+          > Ensure that `$DECK_AZURE_CONTENT_SAFETY_URL` points to the `/contentsafety/text:analyze` endpoint.
       icon_url: /assets/icons/azure.svg
   entities:
     services:
@@ -171,7 +176,7 @@ message: "response failed content safety check: breached category [Hate] at leve
 
 {% endnavtab %}
 
-{% navtab "Denied: SelfHarm" %}
+{% navtab "Denied: Self Harm" %}
 
 This test provokes an instructive self-harm response and should be blocked by the OUTPUT guard:
 
@@ -239,7 +244,7 @@ message: "response failed content safety check: breached category [Violence] at 
 
 {% navtab "Denied: Multiple categories" %}
 
-This test provokes output that would trigger several categories (Hate, SelfHarm, Sexual) subtly, and should be blocked by the OUTPUT guard:
+This test provokes output that would trigger several categories (Hate, Self Harm, Sexual) subtly, and should be blocked by the OUTPUT guard:
 
 <!--vale off-->
 {% validation request-check %}
