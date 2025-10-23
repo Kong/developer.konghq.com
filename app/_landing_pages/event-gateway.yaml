@@ -26,9 +26,10 @@ rows:
                 - type: text
                   text: |
                    {{ site.event_gateway }} is a lightweight, fast, and flexible cloud-native event streaming proxy. 
-                    It sits between native consumers and producers, and backend Kafka clusters. 
+                    It sits between Kafka clients and backend Kafka clusters. 
 
-                    With its extensible policy engine, you can adapt Kafka to your requirements—transforming, encrypting, and monitoring messages to optimize performance and strengthen security.
+                    With its extensible policy engine, you can adapt Kafka to your requirements-transforming, encrypting, and monitoring 
+                    messages through a central proxy to add governance, enable multi-tenancy, and strengthen security.
                     
                     {{ site.event_gateway }} runs in front of any Kafka cluster and can be extended through policies and plugins. 
 
@@ -61,7 +62,7 @@ rows:
           config:
             - title: Quickstart
               content: |
-                You can use the [quickstart script](https://get.konghq.com/event-gateway) to get a demo instance of Event Gateway running almost instantly:
+                You can use the [quickstart script](https://get.konghq.com/event-gateway) to get a demo instance of Event Gateway running almost instantly.
                 
                 This command requires a [Konnect Access Token](https://cloud.konghq.com/global/account/tokens).
 
@@ -74,7 +75,7 @@ rows:
                 All licensing is handled automatically by Konnect.
             - title: Konnect UI
               content: |
-                To install Event Gateway using the Konnect UI, use the following steps:
+                To set up Event Gateway using the Konnect UI, use the following steps:
                 1. Sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/).
                 1. In the menu, navigate to **Event Gateway**.
                 1. Click **New Gateway**.
