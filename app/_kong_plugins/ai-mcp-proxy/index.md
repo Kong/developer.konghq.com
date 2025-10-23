@@ -191,7 +191,7 @@ rows:
       [`conversion-only`](./examples/conversion-only/)
     description: |
       Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
-      This mode requires [`config.server.tag`](./reference/#schema--config-server-tag) in the plugin configuration, but does not define a server.
+      `tags` can be defined at the plugin level and are used by `listener` plugins to expose the tools. This mode does not define a server.
     usecase: |
       Use when you want to define reusable tool specifications without serving them.
       Suitable for teams that maintain a shared library of tool definitions for other listener plugins.
