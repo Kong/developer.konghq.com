@@ -8,6 +8,8 @@ breadcrumbs:
   - /insomnia/mcp-servers/
 products:
   - insomnia
+min_version:
+    insomnia: '12.0'  
 
 related_resources:
   - text: Learn more about MCP Servers
@@ -35,24 +37,22 @@ faqs:
 ---
 Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to access AI-ready tools, prompts, and resource. An **MCP Client** defines this connection and stores authentication and configuration details.
 
-{:.warning}
-> You must have an MCP Server ready, and supportive of **HTTP JSON-RPC transport**.
-
 ## Overview
 
-An MCP Server is an HTTP JSON-RPC endpoint that advertises callable **Tools**, available **Prompts**, and structured **Resources**. The MCP Client in Insomnia discovers these elements, allowing you to test, query, or invoke them directly within the app. Each workspace can contain multiple MCP Clients.
+An MCP Server is an HTTP JSON-RPC endpoint that advertises callable **Tools**, available **Prompts**, and structured **Resources**. The MCP Client in Insomnia discovers these elements, which allows you to test, query, or invoke them directly within the app. Each workspace can contain multiple MCP Clients.
 
 ## Create the MCP client
 To create a new MCP Client, complete the following:
-1. From the **Personal Workspace** sidebar, select **MCP Clients**.  
-2. Enter the **Server URL**.  
-3. Click **Discover**.
-4. In the left pane, confirm that discovered Tools, Prompts, and Resources appear.
+1. From your Insomnia project, click **Create**.
+2. In the **Name** box, type a name for the MCP Client.
+3. Click **Create** 
+4. To connect your MCP client to an MCP server, click **Connect**.
+5. In the left pane, confirm that discovered Tools, Prompts, and Resources appear.
 
 ## Explore the interface
-- In the **Left pane**, view discovered tools, resources, and prompts from the discovered MPC server. If the MPC server publishes a new version, click **Resync**.
+- In the **Right pane**, view discovered tools, resources, and prompts from the discovered MPC server. If the MPC server publishes a new version.
 - In the **Middle pane**, review parameters and request fields. To send JSON requests, click **Send**.
-- In the **Right pane**, click the **Preview** or **Console** tab to see output and logs.   
+- To see output and logs, click **Console** tab.   
 
 ## Authentication flow
 
@@ -73,16 +73,14 @@ If the authorization server does not support [Dynamic Client Registration](/dev-
 - Register your own **OAuth application**, then enter the Client ID and Secret in Insomnia.
 
 ## Manage requests and authentication
-1. To add required parameters, click the **Params** tab.  
-2. To enter your JSON payload, click the **Body** tab.  
-3. To configure authentication credentials, click the **Auth** tab.  
-4. Click **Save**.  
-5. Confirm that parameters and credentials are stored correctly.
+1. To add required parameters, click the **Params** tab.   
+2. To configure authentication credentials, click the **Auth** tab.  
+3. Click **Save**.  
+4. Confirm that parameters and credentials are stored correctly.
 
 ## Limitations and considerations
 
 - MCP Servers must support **HTTP JSON-RPC transport**.  
 - Dynamic Client Registration is optional and not universally supported.  
 - If an MCP Server is unreachable, Insomnia displays cached resources until the next sync.  
-- AI-assisted actions are optional and can be disabled in **Preferences → AI Features**.  
 

@@ -8,6 +8,8 @@ breadcrumbs:
   - /insomnia/mcp-servers/
 products:
   - insomnia
+min_version:
+    insomnia: '12.0'  
 related_resources:
   - text: Create an MCP Client
     url: /how-to/create-mcp-client/

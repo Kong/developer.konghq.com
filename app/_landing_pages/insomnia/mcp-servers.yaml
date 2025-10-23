@@ -6,6 +6,8 @@ metadata:
     - /insomnia/
   products:
     - insomnia
+min_version:
+    insomnia: '12.0'    
 rows:
   - header:
       type: h1
@@ -19,14 +21,14 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    MCP Servers are external endpoints that expose domain-specific operations like `tools/call`, `resources/read`, and `prompts/get` through a **JSON-RPC interface**.  
-                    When you connect to a server, Insomnia creates an **MCP Client** which behaves like a request type but appears as a top-level entity for visibility.  
-                    Use MCP Clients to explore, test, and sync the capabilities your MCP Server provides.
-                - type: unordered_list
-                  items:
-                    - "[Create an MCP Client](#create-an-mcp-client)"
-                    - "[Sync with a discovered server](#sync-content)"
-                    - "[Manage AI feature access](#disable-ai-features)"
+                    MCP Servers are external endpoints that expose domain-specific operations like `tools/CALL`, `resources/READ`, and `prompts/GET` through a **JSON-RPC interface**.
+
+                    When you connect to a server, Insomnia creates an **MCP Client** which behaves like a request type but appears as a top-level entity for visibility.
+
+                    Now that Insomnia supports MCP Clients, you can test and interact with MCP Servers the same way that you test APIs: 
+                      - Explore callable tools
+                      - Read structured resources
+                      - Experiment with dynamic prompts
 
   - header:
       type: h2
@@ -39,15 +41,15 @@ rows:
                 - type: text
                   text: |
                     To connect Insomnia to a server endpoint, create an MCP Client:
-                    1. Navigate to **Create menu** -> **MCP Client**.  
-                    2. Enter the **Server URL**.  
-                    3. Click **Discover** to retrieve a list of Tools, Prompts, and Resources associated with the server.
+                    1. From your Insomnia project, click **Create**.
+                    2. In the **Name** box, type a name for the MCP Client.
+                    3. Click **Create** 
+                    4. To connect your MCP client to an MCP server, click **Connect**.
           - type: button
             config:
               text: Learn how to create an MCP Client
               url: /how-to/create-mcp-client/
               align: left
-
   - header:
       type: h2
       text: "Operations and transports"
@@ -58,10 +60,10 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    MCP Clients communicate with servers through **JSON-RPC**, executing specific operation types:
-                    - **Tools / call**: Execute a server-defined function on the server.  
-                    - **Resources / read**: Retrieve structured data objects.  
-                    - **Prompts / get**: Retrieve dynamic or AI-driven prompt templates.
+                    MCP Clients communicate with servers by executing specific operation types, a small example:
+                    - **Tools / CALL**: Execute a server-defined function on the server.  
+                    - **Resources / READ**: Retrieve structured data objects.  
+                    - **Prompts / GET**: Retrieve dynamic or AI-driven prompt templates.
                     
                     Supported transports:
                     <!-- vale off -->
@@ -80,18 +82,6 @@ rows:
                           Click **Resync** to update discovered Tools, Prompts, and Resources from the server. The server remains the **source of truth**.
                     {% endtable %}
                     <!-- vale on -->
-  - header:
-      type: h2
-      text: "Deactivate AI features"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    From **Preferences → AI Features**, organization **admins** can manage which AI-powered features are available to users. Each user activates or deactivates permitted features.  
-                    If an admin disables a feature globally, the option appears greyed out with the tooltip: *“Your Insomnia administrator has disabled this feature for your organization.”*
 
   - header:
       text: "Frequently asked questions"
@@ -108,17 +98,10 @@ rows:
               - q: Can I use Insomnia offline with an MCP Client?
                 a: |
                   You can view previously synced content offline, but discovery and resync require an active connection to the MCP Server.
-              - q: How do I disable AI features for my workspace?
-                a: |
-                  Go to **Preferences → AI Features**, then clear the checkboxes for any feature you want to disable.  
-                  If an option is locked, your organization administrator has disabled it globally.
               - q: Does Insomnia support both HTTP and STDIO transports?
                 a: |
                   HTTP transport is supported in the first release.  
                   STDIO transport will be added later after security review.
               - q: Can MCP Clients use Git Sync or import/export?
                 a: |
-                  Not yet. MCP Clients are pure client entities in v1 and do not support Git Sync or import/export.
-              - q: What replaces scripts in MCP Clients?
-                a: |
-                  MCP Clients include **Response History** and **Notifications** tabs instead of Scripts.    
+                  Not yet. MCP Clients are purely local storage in v1 and do not support Git Sync or import/export.
