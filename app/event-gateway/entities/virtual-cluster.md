@@ -66,6 +66,7 @@ flowchart LR
 
 {:.info}
 > **Note**: Each virtual cluster can only expose one backend cluster, but you can have multiple virtual clusters connected to one backend.
+In other words, a single virtual cluster can't aggregate data from multiple backend clusters.
 
 ## Why use a virtual cluster?
 
@@ -130,7 +131,9 @@ For instance, a single `orders` topic can be exposed through separate virtual cl
 
 Authentication on the virtual cluster is used to authenticate clients to the proxy. 
 The virtual cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters.
+See [Backend cluster authentication](/event-gateway/entities/backend-cluster/#authentication) to learn more.
 
+Virtual clusters support the following auth methods:
 {% table %}
 columns:
   - title: "Auth method (`authentication.type`)"

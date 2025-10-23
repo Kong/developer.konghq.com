@@ -26,9 +26,10 @@ rows:
                 - type: text
                   text: |
                    {{ site.event_gateway }} is a lightweight, fast, and flexible cloud-native event streaming proxy. 
-                    It sits between native consumers and producers, and backend Kafka clusters. 
+                    It sits between Kafka clients and backend Kafka clusters. 
 
-                    With its extensible policy engine, you can adapt Kafka to your requirements—transforming, encrypting, and monitoring messages to optimize performance and strengthen security.
+                    With its extensible policy engine, you can adapt Kafka to your requirements-transforming, encrypting, and monitoring 
+                    messages through a central proxy to add governance, enable multi-tenancy, and strengthen security.
                     
                     {{ site.event_gateway }} runs in front of any Kafka cluster and can be extended through policies and plugins. 
 
@@ -46,6 +47,46 @@ rows:
                     <img src="/assets/images/event-gateway/event-gateway-light.svg" alt="Diagram of how {{ site.base_gateway }} works" class="flex dark:hidden">
                     <img src="/assets/images/event-gateway/event-gateway-dark.svg" alt="Diagram of how {{ site.base_gateway }} works" class="hidden dark:flex">
 
+  - header:
+      type: h2
+      text: "Install {{ site.event_gateway_short }}"
+    columns:
+      - blocks:
+        - type: text
+          config: |
+            You can configure {{site.event_gateway_short}} using {{site.konnect_short_name}}.
+
+            Before deploying {{site.event_gateway_short}}, ensure that you have a Kafka cluster.
+        - type: tabs
+          tab_group: run-event-gateway
+          config:
+            - title: Quickstart
+              content: |
+                You can use the [quickstart script](https://get.konghq.com/event-gateway) to get a demo instance of Event Gateway running almost instantly.
+                
+                This command requires a [Konnect Access Token](https://cloud.konghq.com/global/account/tokens).
+
+                ```sh
+                curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN
+                ```
+
+                The script creates an Event Gateway control plane in Konnect and deploys a local data plane using Docker.
+
+                All licensing is handled automatically by Konnect.
+            - title: Konnect UI
+              content: |
+                To set up Event Gateway using the Konnect UI, use the following steps:
+                1. Sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/).
+                1. In the menu, navigate to **Event Gateway**.
+                1. Click **New Gateway**.
+                1. Fill in the required fields.
+                1. Click **Create** to save.
+                1. Select a platform for your data plane.
+                1. Click **Generate Certificate**.
+                1. Copy the generated command.
+                1. Run the command on your data plane host to start the data plane.
+                1. After the data plane is connected and the control plane recognizes it, click **Done**.
+            
   - header:
       type: h2
       text: "Get started with {{site.event_gateway}}"

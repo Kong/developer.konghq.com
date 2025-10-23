@@ -55,10 +55,12 @@ Multiple Kafka clusters can be proxied through a single {{site.event_gateway}}. 
 
 ## Authentication
 
-Authentication on the backend cluster is used to authenticate clients to the proxy. 
-The backend cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters.
+Authentication on the backend cluster defines how the proxy connects to the backend for capturing metadata (topics, consumer groups, and so on).
 
-Supported methods:
+The backend cluster supports multiple authentication methods and can mediate authentication between clients and backend clusters. 
+See [Virtual cluster authentication](/event-gateway/entities/virtual-cluster/#authentication) to learn more.
+
+Backend clusters support the following auth methods:
 
 {% table %}
 columns:
@@ -90,11 +92,6 @@ rows:
     credential: |
       `passthrough`
 {% endtable %}
-
-
-## Schema
-
-{% entity_schema %}
 
 ## Set up a backend cluster
 
@@ -174,3 +171,7 @@ The following creates a new backend cluster called **example-backend-cluster** w
 {% endnavtab %}
 
 {% endnavtabs %}
+
+## Schema
+
+{% entity_schema %}
