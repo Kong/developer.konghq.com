@@ -59,7 +59,8 @@
     <!-- OneTrust Cookies Consent Notice end for konghq.com -->
     {% endif %}
 
-    {% if jekyll.environment == "production" %}
+    {% if jekyll.environment == "production" and page.url != '/search/' %}
+    <!-- Disable Segment on /search/ for now -->
     <!-- Segment start for konghq.com -->
      {% assign category = "'" | append: page.content_type | append: "'" %}
     <script>
