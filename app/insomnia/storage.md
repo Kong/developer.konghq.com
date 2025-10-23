@@ -34,7 +34,14 @@ faqs:
   - q: Can I bulk import across multiple Cloud Sync projects?
     a: |
       {% new_in 11.5 %} Yes. Enterprise users can activate this feature by contacting [support](https://insomnia.rest/support) to enable the feature flag on their account.
-      Once activated, go to **Insomnia → Preferences → Data** and select the **Import projects to Org** option. 
+      Once activated, go to **Insomnia → Preferences → Data** and select the **Import projects to Org** option.
+- q: What are the user and Git Sync limits for the Essentials plan?  
+  a: |
+     On the **Essentials** plan, you can choose one of two configurations:
+    - Activate **Git Sync** with a limit of up to **3 users** per organization.
+    - Deactivate **Git Sync** and allow **unlimited users**.
+
+    You can change your selection at any time. If you reach the user limit, Insomnia will prompt you in the app, and guide you through resolving the issue.
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 
