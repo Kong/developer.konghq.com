@@ -19,6 +19,8 @@ related_resources:
     url: /insomnia/mock-servers/
   - text: Create a cloud-hosted mock server
     url: /how-to/create-a-cloud-hosted-mock-server/
+  - text: Auto-generate a self-hosted mock server
+    url: /insomnia/ai-in-insomnia/#Use AI to auto-generate a mock server
 ---
 
 Insomnia allows Enterprise users to create self-hosted mock servers.
