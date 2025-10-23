@@ -112,11 +112,11 @@ Activate features by choosing and uploading an LLM in **Preferences → AI Setti
 {:.decorative}
 > **Tip**: For Local type LLM, add `.gguf` model files to your **LLMs** folder, and then select the **Refresh** icon to re-scan and make them available in the **Model** list.
 
-Once an LLM is successfully uploaded to Insomnia, the feature toggles **Auto-generate Mock Servers from natural language** and **Suggest comments and grouping for Commits** are now activated and can be turned on or off as required.
+Once a LLM is successfully uploaded to Insomnia, the toggles for the **Auto-generate Mock Servers from natural language** toggle and the **Suggest comments and grouping for Commits** toggle are now activated and can be turned on or off as required.
 
 ## Use AI to auto-generate a mock server
 
-Use Insomnia’s AI-assisted mock generation to take a short description, or an existing API source, and create a working **self-hosted mock**. Instead of hand-building dozens of endpoints, Insomnia scaffolds routes, example responses, and base configuration to help you prototype faster and unblock teams.
+Use Insomnia’s AI-assisted mock server generation to transform a short description, or an existing API source into a working **self-hosted mock server**. Instead of hand-building dozens of endpoints, Insomnia scaffolds routes, example responses, and base configuration to help you prototype faster and unblock teams.
 
 Generate a mock server from one of the following:
 - **URL**: Generate from a live endpoint response.  
@@ -146,9 +146,9 @@ Insomnia can suggest commit messages and grouping for staged changes in **Git Sy
 ### Suggest commit messages
 
 1. Open the **Git Sync** interface.  
-2. Click the **Suggest comments and grouping for Commits** button.  
+2. Click **Suggest comments and grouping for Commits**.  
 3. Review the suggested commit groups and messages.  
-4. (Optional) To edit a message inline, Double-click it.  
+4. (Optional) To edit a message inline, double-click the message.  
 5. Drag and drop files between commit groups, or exclude files.  
 6. Click **Commit** or **Commit & Push**.
 
