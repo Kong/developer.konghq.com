@@ -5,8 +5,6 @@ layout: reference
 
 products:
  - insomnia
-works_on:
- - insomnia
 
 tags:
 - mock-servers
