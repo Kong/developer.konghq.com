@@ -23,7 +23,7 @@ tldr:
 
 ## Create the mock server
 
-In your Insomnia project, from the **Mocks** sidebar tab, click **+**. In the dialog box, enter a name for the server, select **Cloud Mock**, and click **Create**.
+In your Insomnia project, click **Create** > **Mock Server**. In the dialog box, enter a name for the server, select **Cloud Mock**, and click **Create**.
 
 The mock server opens and you can start adding routes.
 
