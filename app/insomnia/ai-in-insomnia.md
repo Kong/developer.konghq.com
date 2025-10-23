@@ -132,7 +132,7 @@ Generate a mock server from one of the following:
 2. Click **Mock Server**.  
 3. Click **Auto-Generate**.  
 4. Click **URL**, or **OpenAPI spec**, or **Text**. 
-5. (Optional) Select the **Enable dynamic responses** checkbox.  
+5. (Optional) Select the [**Enable dynamic responses**](/insomnia/dynamic-mocking/) checkbox.  
 6. (Optional) Click **+ Add Files** to upload extra JSON files or YAML files.
 7. Type an example URL.
 8. Click **Create**.
