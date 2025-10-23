@@ -37,7 +37,7 @@ tldr:
 prereqs:
   inline:
     - title: "{{site.konnect_product_name}} roles"
-      content: prereqs/dev-portal-audit-log-roles
+      include_content: prereqs/dev-portal-audit-log-roles
       icon_url: /assets/icons/gateway.svg
     - title: Dev Portal
       content: |

@@ -113,7 +113,7 @@ rows:
           config:
             title: Create an API catalog
             description: |
-              Create and publish APIs to Dev Portal.
+              Create and publish APIs to Dev Portal manually or with automation. Discover and govern APIs from third-parties with {{site.konnect_catalog}}.
             icon: /assets/icons/api.svg
             ctas:
               - text: With the {{site.konnect_short_name}} API
@@ -122,6 +122,8 @@ rows:
                 url: "/how-to/automate-api-catalog-with-terraform/"
               - text: Create and publish APIs
                 url: "/catalog/apis/"
+              - text: Discover and govern APIs
+                url: /how-to/discover-and-govern-apis-with-service-catalog/
   
       - blocks:
         - type: card

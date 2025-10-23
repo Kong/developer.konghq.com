@@ -46,7 +46,7 @@ prereqs:
       include_content: prereqs/products/konnect-terraform
       icon_url: /assets/icons/gateway.svg
     - title: "{{site.konnect_product_name}} roles"
-      content: prereqs/dev-portal-automate-api-catalog-roles
+      include_content: prereqs/dev-portal-automate-api-catalog-roles
       icon_url: /assets/icons/gateway.svg
     - title: Required entities
       content: |
