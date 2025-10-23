@@ -20,9 +20,10 @@ related_resources:
 
 faqs:
   - q: Why don’t I always see the merge view?
-    a: After you **Commit**, when you **Pull** or **Push**, Insomnia checks for conflicting changes between your local work and the remote branch.  
-    If conflicts exist, Insomnia opens the 3-way merge so you can review and reconcile them.  
-    If there are no conflicts, sync completes without opening the merge view. For more information, see [Version control](/insomnia/version-control/).
+    a: |
+      After you **Commit**, when you **Pull** or **Push**, Insomnia checks for conflicting changes between your local work and the remote branch.  
+      If conflicts exist, Insomnia opens the 3-way merge so you can review and reconcile them.  
+      If there are no conflicts, sync completes without opening the merge view. For more information, see [Version control](/insomnia/version-control/).
   - q: Does Git sync split each request into a separate file?
     a: No. Insomnia provides conflict resolution within your project when you sync with Git; you still commit and push with standard Git actions from Insomnia.
   - q: Does Insomnia respect my repository’s branch protections when using Git sync?
