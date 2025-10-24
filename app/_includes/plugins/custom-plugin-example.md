@@ -40,5 +40,5 @@ myheader
 ├── handler.lua
 └── schema.lua
 
-0 directories, 2 files
+1 directory, 2 files
 ```

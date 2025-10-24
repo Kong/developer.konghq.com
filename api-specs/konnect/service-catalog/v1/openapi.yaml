@@ -1004,6 +1004,11 @@ components:
               example:
                 - read
                 - write
+            scope_delimiter:
+              description: |
+                A string used to separate multiple scopes in the `scope` parameter.
+              type: string
+              default: ' '
             rolling_refresh_exp_seconds:
               description: |
                 Number of seconds before the refresh token grant can no longer be used to mint
@@ -2893,6 +2898,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
