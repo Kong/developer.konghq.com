@@ -154,3 +154,7 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+
+# Cloud Gateways
+
+/dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301

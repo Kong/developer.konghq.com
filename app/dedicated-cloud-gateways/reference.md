@@ -68,15 +68,10 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
-  - text: Dedicated Cloud Gateway domain breaking changes
-    url: /dedicated-cloud-gateways/breaking-changes/
 
 tags:
   - dedicated-cloud-gateways
 ---
-
-{:.warning}
-> **Dedicated Cloud Gateways domain breaking changes:** [Review domain breaking changes](/dedicated-cloud-gateways/breaking-changes/) for Dedicated Cloud Gateways and migrate to the new domain before September 30, 2025.
 
 ## How do Dedicated Cloud Gateways work? 
 
