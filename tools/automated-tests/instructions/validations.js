@@ -26,8 +26,8 @@ export class ValidationError extends Error {
   }
 }
 
-async function processHeaders(config, runtimeConfig) {
-  const env = await runtimeEnvironment(runtimeConfig);
+async function processHeaders(config, container) {
+  const env = await getLiveEnv(container);
   let headers = {};
   if (config.headers) {
     config.headers.forEach((header) => {
@@ -85,9 +85,10 @@ async function fetchWithOptionalJar(url, options = {}, jarName) {
   return fetch(url, options);
 }
 
-async function executeRequest(config, runtimeConfig, onResponse) {
-  const headers = await processHeaders(config, runtimeConfig);
-  const env = await runtimeEnvironment(runtimeConfig);
+async function executeRequest(config, runtimeConfig, container, onResponse) {
+  const headers = await processHeaders(config, container);
+  const env = await getLiveEnv(container);
+
   if (config.user) {
     const auth = Buffer.from(replaceEnvVars(config.user, env)).toString(
       "base64"
@@ -130,11 +131,17 @@ async function executeRequest(config, runtimeConfig, onResponse) {
   if (config.extract_headers) {
     for (const header of config.extract_headers) {
       if (header.name === "Set-Cookie") {
-        runtimeConfig.env[header.variable] = getSessionFromCookieHeader(
-          response.headers.get(header.name)
+        await setEnvVariable(
+          container,
+          header.variable,
+          getSessionFromCookieHeader(response.headers.get(header.name))
         );
       } else {
-        runtimeConfig.env[header.variable] = response.headers.get(header.name);
+        await setEnvVariable(
+          container,
+          header.variable,
+          response.headers.get(header.name)
+        );
       }
     }
   }
@@ -146,18 +153,23 @@ async function executeRequest(config, runtimeConfig, onResponse) {
       if (field.strip_bearer) {
         value = value.replace(/bearer\s*/i, "");
       }
-
-      runtimeConfig.env[field.variable] = value;
+      await setEnvVariable(container, field.variable, value);
     }
   }
 
   return onResponse(response, body);
 }
 
-async function validateRequest(validationName, config, runtimeConfig, checks) {
+async function validateRequest(
+  validationName,
+  config,
+  runtimeConfig,
+  container,
+  checks
+) {
   const assertions = [];
 
-  await executeRequest(config, runtimeConfig, (response, body) => {
+  await executeRequest(config, runtimeConfig, container, (response, body) => {
     for (const check of checks) {
       const { assert, message } = check(response, body);
       assertions.push(message);
@@ -171,7 +183,7 @@ async function validateRequest(validationName, config, runtimeConfig, checks) {
   return assertions;
 }
 
-async function rateLimit(validationName, config, runtimeConfig) {
+async function rateLimit(validationName, config, runtimeConfig, container) {
   let assertions = [];
 
   for (let i = 0; i < config.iterations; i++) {
@@ -183,6 +195,7 @@ async function rateLimit(validationName, config, runtimeConfig) {
       validationName,
       config,
       runtimeConfig,
+      container,
       [
         (response) => ({
           assert: response.status === expectedStatus,
@@ -204,8 +217,8 @@ async function rateLimit(validationName, config, runtimeConfig) {
   return assertions;
 }
 
-async function requestCheck(validationName, config, runtimeConfig) {
-  return validateRequest(validationName, config, runtimeConfig, [
+async function requestCheck(validationName, config, runtimeConfig, container) {
+  return validateRequest(validationName, config, runtimeConfig, container, [
     (response) => ({
       assert: response.status === config.status_code,
       message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
@@ -213,8 +226,13 @@ async function requestCheck(validationName, config, runtimeConfig) {
   ]);
 }
 
-async function unauthorizedCheck(validationName, config, runtimeConfig) {
-  return validateRequest(validationName, config, runtimeConfig, [
+async function unauthorizedCheck(
+  validationName,
+  config,
+  runtimeConfig,
+  container
+) {
+  return validateRequest(validationName, config, runtimeConfig, container, [
     (response) => ({
       assert: response.status === config.status_code,
       message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
@@ -237,10 +255,15 @@ async function envVariables(config, runtimeConfig, container) {
   return [];
 }
 
-async function controlPlaneRequest(validationName, config, runtimeConfig) {
+async function controlPlaneRequest(
+  validationName,
+  config,
+  runtimeConfig,
+  container
+) {
   const statusCode =
     config.status_code !== undefined ? config.status_code : 200;
-  return validateRequest(validationName, config, runtimeConfig, [
+  return validateRequest(validationName, config, runtimeConfig, container, [
     (response) => ({
       assert: response.status === statusCode,
       message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
@@ -251,17 +274,29 @@ async function controlPlaneRequest(validationName, config, runtimeConfig) {
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
   const result = await executeCommand(container, config.command);
-  if (returnCode !== result) {
-    logAndError(
-      validationName,
-      message,
-      `Expected: command to have return code ${returnCode}, got: ${result}`
-    );
+
+  if (returnCode !== result.exitCode) {
+    logAndError(validationName, "Failed to execute command", [
+      `Expected: command to have return code ${returnCode}, got: ${result.exitCode}`,
+    ]);
+  } else if (
+    config.expected.message &&
+    result.output &&
+    !result.output.includes(config.expected.message)
+  ) {
+    logAndError(validationName, "Command failed", [
+      `Expected: the command's output to include ${config.expected.message}, got: ${result.output}`,
+    ]);
   }
   return [];
 }
 
-async function trafficGenerator(validationName, config, runtimeConfig) {
+async function trafficGenerator(
+  validationName,
+  config,
+  runtimeConfig,
+  container
+) {
   let assertions = [];
 
   for (let i = 0; i < config.iterations; i++) {
@@ -273,6 +308,7 @@ async function trafficGenerator(validationName, config, runtimeConfig) {
       validationName,
       config,
       runtimeConfig,
+      container,
       [
         (response) => ({
           assert: response.status === expectedStatus,
@@ -295,21 +331,25 @@ export async function validate(container, validation, runtimeConfig) {
       result = await rateLimit(
         validation.name,
         validation.config,
-        runtimeConfig
+        runtimeConfig,
+        container
       );
       break;
     case "request-check":
+    case "konnect-api-request":
       result = await requestCheck(
         validation.name,
         validation.config,
-        runtimeConfig
+        runtimeConfig,
+        container
       );
       break;
     case "unauthorized-check":
       result = await unauthorizedCheck(
         validation.name,
         validation.config,
-        runtimeConfig
+        runtimeConfig,
+        container
       );
       break;
     case "env-variables":
@@ -319,7 +359,8 @@ export async function validate(container, validation, runtimeConfig) {
       result = await controlPlaneRequest(
         validation.name,
         validation.config,
-        runtimeConfig
+        runtimeConfig,
+        container
       );
       break;
     case "custom-command":
@@ -334,7 +375,8 @@ export async function validate(container, validation, runtimeConfig) {
       result = await trafficGenerator(
         validation.name,
         validation.config,
-        runtimeConfig
+        runtimeConfig,
+        container
       );
       break;
     default:

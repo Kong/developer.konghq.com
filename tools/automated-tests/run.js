@@ -15,12 +15,27 @@ import {
 import { stopContainer, removeContainer } from "./docker-helper.js";
 import {
   instructionFileFromConfig,
-  groupInstructionFilesByRuntime,
+  groupInstructionFilesByProductAndRuntime,
 } from "./instructions-file.js";
 
 const docker = new Dockerode({
   socketPath: "/var/run/docker.sock",
 });
+
+function checkEnvVariables() {
+  if (!process.env.KONG_LICENSE_DATA) {
+    console.error("Missing env variable KONG_LICENSE_DATA");
+    process.exit(1);
+  }
+  if (!process.env.PRODUCT) {
+    console.error("Missing env variable PRODUCT");
+    process.exit(1);
+  }
+  if (process.env.PRODUCT === "gateway" && !process.env.PRODUCT) {
+    console.error("Missing env variable RUNTIME");
+    process.exit(1);
+  }
+}
 
 export async function loadConfig() {
   const configFile = "./config/tests.yaml";
@@ -44,36 +59,45 @@ export async function loadConfig() {
     } else {
       files = await instructionFileFromConfig(testsConfig);
     }
-    if (!process.env.KONG_LICENSE_DATA) {
-      console.error("Missing env variable KONG_LICENSE_DATA");
-      process.exit(1);
-    }
-    const filesByRuntime = await groupInstructionFilesByRuntime(files);
 
-    for (const [runtime, instructionFiles] of Object.entries(filesByRuntime)) {
-      if (process.env.RUNTIME && process.env.RUNTIME !== runtime) {
+    checkEnvVariables();
+
+    const filesByProductAndRuntime =
+      await groupInstructionFilesByProductAndRuntime(files);
+
+    for (const [product, instructionFilesByRuntime] of Object.entries(
+      filesByProductAndRuntime
+    )) {
+      if (process.env.PRODUCT !== product) {
         continue;
       }
 
-      const runtimeConfig = await getRuntimeConfig(runtime);
-      console.log(`Running ${runtime} tests...`);
+      for (const [runtime, instructionFiles] of Object.entries(
+        instructionFilesByRuntime
+      )) {
+        if (process.env.RUNTIME && process.env.RUNTIME !== runtime) {
+          continue;
+        }
 
-      container = await setupRuntime(runtimeConfig, docker);
+        const runtimeConfig = await getRuntimeConfig(runtime);
+        console.log(`Running ${product} tests on ${runtime}...`);
 
-      await beforeAll(testsConfig, container);
+        container = await setupRuntime(runtimeConfig, product, docker);
 
-      for (const instructionFile of instructionFiles) {
-        await resetRuntime(runtimeConfig, container);
-        const result = await runInstructionsFile(
-          instructionFile,
-          runtimeConfig,
-          container
-        );
-        logResult(result);
-        results.push(result);
+        await beforeAll(testsConfig, container);
+
+        for (const instructionFile of instructionFiles) {
+          await resetRuntime(runtimeConfig, product, container);
+          const result = await runInstructionsFile(
+            instructionFile,
+            runtimeConfig,
+            container
+          );
+          logResult(result);
+          results.push(result);
+        }
+        await cleanupRuntime(runtimeConfig, product, container);
       }
-
-      await cleanupRuntime(runtimeConfig, container);
     }
     await afterAll(testsConfig, container);
     await stopContainer(container);
