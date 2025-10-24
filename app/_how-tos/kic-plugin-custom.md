@@ -76,7 +76,7 @@ kubectl create configmap kong-plugin-myheader-migrations --from-file=myheader/mi
 
 ## Deploy your custom plugin
 
-Kong provides a way to deploy custom plugins using both {{ site.gateway_operator_product_name }} and the {{ site.kic_product_name }} Helm chart. This guide shows how to use the Helm chart, but we recommend using {{ site.gateway_operator_product_name }} if possible. See [Kong custom plugin distribution with KongPluginInstallation](/operator/dataplanes/how-to/deploy-custom-plugins/) for more information.
+Kong provides a way to deploy custom plugins using both {{ site.operator_product_name }} and the {{ site.kic_product_name }} Helm chart. This guide shows how to use the Helm chart, but we recommend using {{ site.operator_product_name }} if possible. See [Kong custom plugin distribution with KongPluginInstallation](/operator/dataplanes/how-to/deploy-custom-plugins/) for more information.
 
 The {{ site.kic_product_name }} Helm chart automatically configures all the environment variables required based on the plugins you inject.
 
