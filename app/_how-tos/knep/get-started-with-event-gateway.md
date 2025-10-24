@@ -116,6 +116,9 @@ body:
   insecure_allow_anonymous_virtual_cluster_auth: true
   tls:
     enabled: false
+extract_body:
+  - name: id
+    variable: BACKEND_CLUSTER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -152,6 +155,9 @@ body:
   authentication:
     - type: anonymous
   acl_mode: passthrough
+extract_body:
+  - name: id
+    variable: VIRTUAL_CLUSTER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -183,6 +189,9 @@ body:
     - 0.0.0.0
   ports:
     - 19092-19095
+extract_body:
+  - name: id
+    variable: LISTENER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -247,19 +256,23 @@ Now that we've configured the proxy, let's make sure the Kafka cluster is ready.
 
 In your local environment, set up the `kafkactl.yaml` config file for your Kafka cluster:
 
-```shell
-cat <<EOF > kafkactl.yaml
-contexts:
-  direct:
-    brokers:
-      - localhost:9095
-      - localhost:9096
-      - localhost:9094
-  vc:
-    brokers:
-      - localhost:19092
-EOF
-```
+{% validation custom-command %}
+command: |
+  cat <<EOF > kafkactl.yaml
+  contexts:
+    direct:
+      brokers:
+        - localhost:9095
+        - localhost:9096
+        - localhost:9094
+    vc:
+      brokers:
+        - localhost:19092
+  EOF
+expected:
+  return_code: 0
+{% endvalidation %}
+
 This file defines two configuration profiles:
 * `direct`: Connection addresses to all of the bootstrap servers you launched in the prerequisites, and configured in the backend cluster. 
 Accessing the `direct` context will bypass the {{site.event_gateway}} proxy and connect directly to your Kafka cluster.
@@ -272,14 +285,22 @@ We're going to switch between these profiles as we test different features.
 Let's check that the cluster works using `kafkactl`.
 First, create a topic using the `direct` context, which is a direct connection to our Kafka cluster:
 
-```shell
-kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
-```
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
+expected:
+  return_code: 0
+{% endvalidation %}
+
 
 Produce a message to make sure it worked:
-```shell
-kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"
-```
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"
+expected:
+  return_code: 0
+{% endvalidation %}
+
 
 You should see the following response:
 ```shell
