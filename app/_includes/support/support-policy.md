@@ -1,3 +1,40 @@
+### Kong Mesh release policy
+
+Kong adopts a structured approach to versioning its products. Kong Mesh follow a pattern of {MAJOR}.{MINOR}.{PATCH}.
+
+{:.info}
+> **Long Term Support Policy Update**
+> <br><br>
+> Beginning in October 2025, we plan to release 4 minor versions per year, every year: one in January, one in April, one in July, and the last one in October. 
+> Each year, the first version we release will become an LTS release. 
+> Starting from 2.13, we will have 1 LTS release every year, in November* of that year.
+> <br><br>
+> Example of planned LTS schedule for next 4 years:
+> <table>
+>  <thead>
+>    <th>LTS Version</th>
+>    <th>Planned release date</th>
+>  </thead>
+>  <tbody>
+>    <tr>
+>      <td>2.13</td>
+>      <td>November 2025</td>
+>    </tr>
+>    <tr>
+>      <td>2.17</td>
+>      <td>November 2026</td>
+>    </tr>
+>    <tr>
+>      <td>2.21</td>
+>      <td>November 2027</td>
+>    </tr>
+>  </tbody>
+> </table>
+> Each LTS is supported for 2 years from the date of release. 
+> This will allow adjacent LTS releases to have a support overlap of 1 year in which customers can plan their upgrades.
+> <br><br>
+> _* Release timeframes are subject to change._
+
 
 ### Bug fix guidelines
 Unfortunately, all software is susceptible to bugs. Kong seeks to remedy bugs through a structured protocol as follows:
