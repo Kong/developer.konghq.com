@@ -31,6 +31,42 @@ next_steps:
   - text: Scripts
     url: /insomnia/scripts/
 
+faqs:
+  - q: What happens when my trial ends?
+    a: |
+      The trial expires automatically after 14 days and reverts to your previous plan. 
+      You do not need to cancel manually.
+  - q: Who can access organization data after downgrade?
+    a: |
+      Only the **Organization Owner** can access exported data from inactive organizations. 
+      Co-owners and members lose access.
+  - q: Can I upgrade from a trial to a paid plan before it ends?
+    a: |
+      No. Trials cannot be converted mid-cycle. 
+      When the trial ends, you can upgrade to a paid plan from your organization settings.
+  - q: How many seats are available during the trial?
+    a: Each Enterprise trial includes **50 seats**.
+  - q: How can I restore Git Sync if I reach the Essentials plan limit?
+    a: |
+      Reduce the number of active users to three or fewer, 
+      or disable Git Sync to continue adding users.
+  - q: What data access do I have after I downgrade?
+    a: |
+      When an Enterprise or Trial subscription ends:
+      1. The organization is marked as **inactive**.
+      2. Only the **Organization Owner** can access exported data from inactive organizations.  
+        Co-owners and other members lose access to that data.
+      3. All advanced operations for inactive organizations are disabled.
+
+      Organization data is retained according to Kong’s data retention policies 
+      but cannot be modified until reactivated under a supported plan.
+  - q: What happens if I downgrade?
+    a: |
+      Insomnia supports both **manual** and **automatic** downgrades, depending on subscription and renewal status.
+      When a paid plan expires without renewal:
+      - **Enterprise** downgrades to **Essentials**  
+      - **Pro** downgrades to **Essentials**  
+      - **Trial** downgrades to the **previous plan** 
 ---
 
 If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance in [**Insomnia Admin**](https://app.insomnia.rest/).
