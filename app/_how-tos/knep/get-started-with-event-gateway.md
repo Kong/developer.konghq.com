@@ -41,7 +41,6 @@ prereqs:
     - title: Start a local Kafka cluster
       include_content: knep/docker-compose-start
 
-automated_tests: false
 related_resources:
   - text: "{{site.event_gateway_short}} configuration schema"
     url: /api/event-gateway/knep/
