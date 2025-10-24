@@ -191,7 +191,9 @@ rows:
       [`conversion-only`](./examples/conversion-only/)
     description: |
       Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
-      This mode requires [`config.server.tag`](./reference/#schema--config-server-tag) in the plugin configuration, but does not define a server.
+      `tags` can be defined at the plugin level and are used by `listener` plugins to expose the tools. This mode does not define a server.<br/><br/>
+
+      This mode must be used together with other AI MCP Proxy plugins configured with the `listener` mode.
     usecase: |
       Use when you want to define reusable tool specifications without serving them.
       Suitable for teams that maintain a shared library of tool definitions for other listener plugins.
@@ -199,12 +201,15 @@ rows:
       [`listener`](./examples/listener/)
     description: |
       Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` tools using the [`config.server.tag`](./reference/#schema--config-server-tag) property.
-      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.
+      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.<br/><br/>
+
+      This mode must be used together with other AI MCP Proxy plugins configured with the `conversion-only` mode.
     usecase: |
       Use when you need a single MCP endpoint that aggregates tools from multiple `conversion-only` plugins.
       Typical in multi-service or multi-team environments that expose a unified MCP interface.
 {% endtable %}
 <!-- vale on -->
+
 
 
 ## Scope of support

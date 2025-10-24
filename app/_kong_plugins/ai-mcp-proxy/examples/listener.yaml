@@ -1,6 +1,6 @@
-description: 'Generate an MCP server from {{ site.base_gateway }} services'
+description: 'Aggregate MCP tools from conversion-only mode plugins'
 
-title: 'Generate an MCP server using listener mode'
+title: 'Aggregate MCP tools from conversion-only mode plugins'
 
 extended_description: |
   Listener mode works together with [`conversion-only`](/plugins/ai-mcp-proxy/examples/conversion-only/) mode:
