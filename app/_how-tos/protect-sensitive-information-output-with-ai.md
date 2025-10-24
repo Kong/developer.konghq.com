@@ -30,7 +30,7 @@ tags:
 
 tldr:
   q: How can I anonymize sensitive information in API responses using AI?
-  a: Enable the [AI Proxy](/plugins/ai-proxy/) and then [AI PII Sanitizer](/plugins/ai-sanitizer) plugin in `OUTPUT` mode to automatically redact or replace sensitive data in the responses from your service. Then, use [File Log](/plugins/file-log) plugin to audit what PII data was sanitized
+  a: Enable the [AI Proxy](/plugins/ai-proxy/) and then [AI PII Sanitizer](/plugins/ai-sanitizer) plugin in `OUTPUT` mode to automatically redact or replace sensitive data in the responses from your service. Then, use [File Log](/plugins/file-log) plugin to audit what PII data was sanitized.
 
 prereqs:
   entities:
@@ -91,8 +91,8 @@ entities:
           provider: mistral
           name: mistral-tiny
           options:
-          mistral_format: openai
-          upstream_url: https://api.mistral.ai/v1/chat/completions
+            mistral_format: openai
+            upstream_url: https://api.mistral.ai/v1/chat/completions
 
 variables:
   key:
@@ -160,7 +160,7 @@ Your name is PLACEHOLDER1, and your phone number is PLACEHOLDER2.
 We can also check `file.json` to inspect the collected logs and see what PII data has been sanitized by the plugin. To do this, enter the following command in your terminal to access the log file within your Docker container:
 
 ```sh
-docker exec kong-quickstart-gateway cat /tmp/file.json
+docker exec kong-quickstart-gateway cat /tmp/file.json | jq
 ```
 
 This should give you the following output:
