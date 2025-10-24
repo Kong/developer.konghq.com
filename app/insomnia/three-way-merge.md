@@ -42,11 +42,12 @@ faqs:
 
 ## When 3-way merge appears
 
-Insomnia shows the merge view when both of the following are true:
+Insomnia opens the merge view only when both of the following are true:
 - Your local changes and the remote branch modify the same content.
 - You perform a **Pull** or **Push** sync action.
 
-If no conflicts exist, then Insomnia completes the sync without opening the merge view.
+If no conflicts exist, Insomnia tries to resolve differences automatically and completes the sync without opening the merge view.
+The merge view appears only if manual input is required.
 
 ## How to use the 3-way merge view 
 
