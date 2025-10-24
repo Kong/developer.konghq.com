@@ -25,6 +25,6 @@
 
 {% policy_yaml namespace=page.example.namespace use_meshservice=page.example.use_meshservice %}
 ```yaml
-{{page.example.config}}
+{{page.example.yaml_config}}
 ```
 {% endpolicy_yaml %}

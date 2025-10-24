@@ -13,8 +13,9 @@ module Jekyll
 
         def_delegators :@example, :variables, :headers, :tags
 
-        def initialize(example:)
+        def initialize(example:, **options)
           @example = example
+          @options = options
         end
 
         def entity_type

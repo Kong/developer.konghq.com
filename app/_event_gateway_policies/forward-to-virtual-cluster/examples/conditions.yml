@@ -1,0 +1,29 @@
+title: Using conditions
+
+description: Forward messages from a Kafka client to a virtual cluster based on a set of conditions.
+
+extended_description: |
+  Forward messages from a Kafka client to a virtual cluster based on a set of conditions.
+
+  In this case, the policy will only forward messages for topics that end with a specific suffix.
+
+requirements:
+  - A matching port for each broker on the backend cluster.
+  - A [virtual cluster](/event-gateway/entities/virtual-cluster/)
+
+weight: 900
+
+name: forward
+type: forward_to_virtual_cluster
+condition: >
+  context.topic.name.endsWith('my_suffix')
+config:
+  advertised_host: 0.0.0.0
+  bootstrap_port: at_start
+  destination:
+    name: example-virtual-cluster
+  min_broker_id: 1
+  type: port_mapping
+
+tools:
+  - konnect-api

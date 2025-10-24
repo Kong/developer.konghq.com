@@ -113,6 +113,7 @@
 ## Event gateway
 
 /knep/get-started/  /event-gateway/get-started/
+/event-gateway/policies/schema-validation/* /event-gateway/policies/
 
 ## Dev Portal
 

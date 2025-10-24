@@ -26,9 +26,6 @@ hashicorp-vault-llms:
 custom-dashboards:
   title: Create custom dashboards with {{site.konnect_short_name}} analytics
   url: /how-to/create-custom-dashboards/
-event-gateway-get-started:
-  title: Get started with {{site.event_gateway}}
-  url: /event-gateway/get-started/
 mcp-conversion:
   title: Autogenerate and observe MCP tools from any RESTful API
   url: /mcp/autogenerate-mcp-tools/
