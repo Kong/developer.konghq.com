@@ -314,15 +314,23 @@ By passing the `vc` context, `kafkactl` will connect to Kafka through the proxy 
 
 First, produce a message:
 
-```shell
-kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
-```
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
+expected:
+  return_code: 0
+{% endvalidation %}
+
 
 Consume the `my-test-topic` from the beginning while passing the `--print-headers` flag:
 
-```shell
-kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers --from-beginning
-```
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers --from-beginning --exit
+expected:
+  return_code: 0
+{% endvalidation %}
+
 
 The output should contain your new header:
 ```shell
