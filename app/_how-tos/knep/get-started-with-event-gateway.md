@@ -289,6 +289,7 @@ First, create a topic using the `direct` context, which is a direct connection t
 command: |
   kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
 expected:
+  message: "topic created: my-test-topic"
   return_code: 0
 {% endvalidation %}
 
@@ -298,6 +299,7 @@ Produce a message to make sure it worked:
 command: |
   kafkactl -C kafkactl.yaml --context direct produce my-test-topic --value="Hello World"
 expected:
+  message: "message produced (partition=0	offset=0)"
   return_code: 0
 {% endvalidation %}
 
@@ -318,6 +320,7 @@ First, produce a message:
 command: |
   kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
 expected:
+  message: "message produced (partition=0	offset=1)"
   return_code: 0
 {% endvalidation %}
 
@@ -328,6 +331,7 @@ Consume the `my-test-topic` from the beginning while passing the `--print-header
 command: |
   kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers --from-beginning --exit
 expected:
+  message: "My-New-Header: header_value"
   return_code: 0
 {% endvalidation %}
 
