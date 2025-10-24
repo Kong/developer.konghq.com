@@ -31,6 +31,10 @@ prereqs:
 tldr:
   q: How do I install {{ site.gateway_operator_product_name }} with {{ site.kic_product_name }} using Helm?
   a: Update the Helm repository and use Helm to install {{ site.gateway_operator_product_name }} with {{ site.kic_product_name }}.
+
+tags:
+  - install
+  - helm
 ---
 {% assign gwapi_version = "1.3.0" %}
 

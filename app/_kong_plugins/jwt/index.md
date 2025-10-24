@@ -7,6 +7,7 @@ content_type: plugin
 description: Verify and authenticate JSON Web Tokens
 tags:
     - authentication
+    - jwt
 
 products:
     - gateway
@@ -35,6 +36,7 @@ search_aliases:
 
 min_version:
   gateway: '1.0'
+
 ---
 
 The JWT plugin lets you verify requests containing HS256 or RS256 signed JSON Web Tokens, as specified in [RFC 7519](https://tools.ietf.org/html/rfc7519).

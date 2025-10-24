@@ -11,6 +11,8 @@ layout: reference
 related_resources:
   - text: Stages of software availability
     url: /stages-of-software-availability/
+tags:
+  - glossary
 ---
 
 Common terms used across Kong.

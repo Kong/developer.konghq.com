@@ -20,7 +20,6 @@ breadcrumbs:
 
 tags:
   - declarative-config
-  - plugins
 
 related_resources:
   - text: Kong Plugin Hub
