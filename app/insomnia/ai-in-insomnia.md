@@ -24,9 +24,9 @@ related_resources:
   - text: "Version control in Insomnia"
     url: /insomnia/version-control/
 faqs:
-  - q: Can I deactivate AI features in Insomnia?
+  - q: Can I deactivate AI features for myself in Insomnia?
     a: |
-      Yes. To turn off AI features in the app:
+      Yes. To turn off AI features in the application:
 
       1. Click **Preferences**.
       2. Click the **AI Settings** tab.
@@ -55,14 +55,9 @@ faqs:
       - **Defaults:** Features are activated by default for **Essentials** and **Pro** plans, and deactivated by default for **Enterprise** plans.
       - **Effect on users:** When deactivated at the instance level, AI-supported features do not appear in the main app UI and the toggles in **Preferences → AI Settings** display an error explanation.
       - **User setup still required:** Even when activated at the instance level, each user must **activate a model** in **Preferences → AI Settings** before they can turn on feature toggles.
-  - q: What telemetry events record AI enablement changes?
-    a: |
-      Insomnia records:
-      - `ai_feature_enabled`
-      - `ai_feature_disabled`
-      
-      Each event includes the **level** of change (`user` or `instance`).    
 ---
+{:.decorative}
+> As of Insomnia v12, AI features are currently free to use however, this may change in the future.
 
 Insomnia includes AI features that help you generate mock servers from natural language and improve Git commit hygiene. AI in Insomnia is powered by Large Language Models (LLMs) that you activate in **Preferences → AI Settings**. 
 
@@ -72,8 +67,9 @@ Choose from four provider types:
 - OpenAI
 - Gemini
 
-{:.decorative}
-> As of Insomnia v12, AI features are currently free to use however, this may change in the future.
+If you use a local LLM, it keeps all code and data on the your machine and allows complete control over where data is processed. However, local models may perform slower and generate less refined results than hosted models.
+
+Different models can produce variable outputs for the same input. Results depend on the provider, model version, and prompt context. Insomnia does not guarantee deterministic or identical results across models. You must evaluate model behavior and review all generated content before use.
 
 ## AI features
 
