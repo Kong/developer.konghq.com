@@ -27,6 +27,7 @@ categories:
 
 tags:
   - authentication
+  - jwt
 
 search_aliases:
   - json web tokens

@@ -9,6 +9,7 @@ products:
   - mesh
 tags: 
   - zones
+  - failover
 works_on:
   - on-prem
   - konnect

@@ -8,7 +8,6 @@ metadata:
     - /insomnia/
   tags:
     - design-apis
-    - api
   search_aliases:
     - postman
 rows:

@@ -5,7 +5,6 @@ products:
 - insomnia
 description: Learn how to install Insomnia on a Windows device.
 tags:
-  - insomnia
   - install
   - windows
 

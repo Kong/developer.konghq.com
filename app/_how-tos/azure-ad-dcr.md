@@ -17,7 +17,7 @@ tags:
     - application-registration
     - openid-connect
     - authentication
-    - azure-ad
+    - azure
 search_aliases:
     - dcr
     - OpenID Connect

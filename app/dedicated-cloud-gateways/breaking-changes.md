@@ -11,7 +11,7 @@ works_on:
     - konnect
 
 tags:
-    - upgrades
+    - upgrade
     - versioning
 
 description: "Review domain breaking changes for Dedicated Cloud Gateways."

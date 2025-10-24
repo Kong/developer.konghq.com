@@ -42,6 +42,9 @@ next_steps:
     url: /gateway/db-less-mode/
 
 automated_tests: false
+
+tags:
+  - install
 ---
 
 ## Create a `kong.yml` configuration file

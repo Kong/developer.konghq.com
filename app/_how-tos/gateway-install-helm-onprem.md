@@ -39,6 +39,10 @@ prereqs:
 topology_switcher: page
 
 automated_tests: false
+
+tags:
+  - install
+  - helm
 ---
 
 These instructions configure {{ site.base_gateway }} to use separate control plane and data plane deployments. This is the recommended production installation method.

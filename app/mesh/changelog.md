@@ -9,8 +9,7 @@ breadcrumbs:
     - /mesh/
 
 tags:
-    - release-notes
-
+    - changelog
 search_aliases:
     - features
     - known issues

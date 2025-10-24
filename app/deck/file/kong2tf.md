@@ -22,7 +22,7 @@ related_resources:
 
 tags:
   - terraform
-  - declarative-configuration
+  - declarative-config
 ---
 
 The `kong2tf` command converts a {{ site.base_gateway }} declarative configuration file in to Terraform manifests that can be used with [terraform-provider-konnect](https://github.com/kong/terraform-provider-konnect/).

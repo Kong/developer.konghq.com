@@ -42,6 +42,7 @@ search_aliases:
   - intelligence
   - language
   - model
+  - caching
 
 related_resources:
   - text: Get started with AI Gateway

@@ -20,7 +20,7 @@ works_on:
 tags:
   - kong-manager
   - security
-  - openid connect
+  - openid-connect
 
 search_aliases:
   - group mapping

@@ -24,6 +24,7 @@ entities:
 
 tags:
     - security
+    - opa
 
 tldr:
     q: How can I set up a policy with OPA in {{site.base_gateway}}?

@@ -30,7 +30,6 @@ entities:
 tags:
     - ai
     - openai
-    - ai-gateway
 
 tldr:
     q: How can I use LiteLLM integrations with AI Gateway?

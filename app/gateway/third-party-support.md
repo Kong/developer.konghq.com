@@ -10,8 +10,8 @@ breadcrumbs:
   - /gateway/
 
 tags:
-  - policy
-  - support
+  - support-policy
+
 search_aliases:
   - browsers
   - data stores

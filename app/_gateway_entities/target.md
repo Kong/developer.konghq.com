@@ -40,6 +40,10 @@ search_aliases:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - load-balancing
+  - failover
 ---
 
 ## What is a Target?

@@ -41,6 +41,10 @@ related_resources:
 
 min_version:
   gateway: '1.0'
+
+tags:
+  - ldap
+  - authentication
 ---
 
 {% include /plugins/ldap/description.md %}

@@ -8,7 +8,7 @@ description: |
 breadcrumbs:
   - /konnect/
 tags:
-  - serverless-gateway
+  - serverless-gateways
   - hybrid-mode
   - data-plane
 products:

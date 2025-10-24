@@ -7,7 +7,7 @@ metadata:
     Provides a complete guide for platform builders to integrate {{site.konnect_saas}} into their engineering 
     organization and API delivery process. 
   tags:
-    - konnect
+    - kongair
     - automation
     - apiops
   breadcrumbs: 

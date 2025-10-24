@@ -15,7 +15,7 @@ related_resources:
     url: /how-to/generate-a-collection-from-a-design-document/
 
 tags:
-    - documents
+    - insomnia-documents
     - collections
     - design-apis
 

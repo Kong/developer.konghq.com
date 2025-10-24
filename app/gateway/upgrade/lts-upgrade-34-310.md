@@ -14,7 +14,7 @@ works_on:
 search_aliases:
   - lts
 tags:
-    - upgrades
+    - upgrade
     - versioning
 
 description: This guide walks you through upgrade paths for {{site.base_gateway}} 3.4 LTS to 3.10 LTS and helps you prepare for an upgrade.

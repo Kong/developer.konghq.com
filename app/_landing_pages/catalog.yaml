@@ -5,8 +5,9 @@ metadata:
     - catalog
   description: Learn how to track and manage services across your organization with the {{site.konnect_short_name}} {{site.konnect_catalog}}.
   tags:
-    - service-catalog
     - governance
+  search_aliases:
+    - service catalog
 
 rows:
   - header:

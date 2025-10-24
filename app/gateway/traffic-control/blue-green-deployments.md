@@ -36,6 +36,7 @@ breadcrumbs:
 
 tags:
     - load-balancing
+    - blue-green
 ---
 
 Blue-green deployments work by having two identical environments, allowing you to completely switch from one environment to another. 

@@ -11,7 +11,6 @@ breadcrumbs:
 tags:
   - support-policy
   - versioning
-  - lifecycle
 
 works_on:
   - on-prem

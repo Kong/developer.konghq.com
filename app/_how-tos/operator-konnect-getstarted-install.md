@@ -30,6 +30,9 @@ tldr:
   q: How do I install {{site.operator_product_name}}?
   a: Use Helm and Kong's `kong-operator` chart.
 
+tags:
+  - install
+  - helm
 ---
 
 ## Install {{site.operator_product_name}}

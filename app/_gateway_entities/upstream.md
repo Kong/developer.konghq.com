@@ -70,6 +70,9 @@ faqs:
       ensuring consistent routing even if Targets change. Consistent hashing relies on hash inputs
       (like IP or header values) and can re-balance if Targets are added or removed, without guaranteeing session stickiness.
 
+tags:
+  - load-balancing
+  - failover
 ---
 
 ## What is an Upstream?
