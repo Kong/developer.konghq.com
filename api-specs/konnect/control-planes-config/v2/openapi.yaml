@@ -5819,6 +5819,7 @@ components:
           type: string
           enum:
             - redis-ce
+          x-terraform-transform-const: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -5992,6 +5993,7 @@ components:
           type: string
           enum:
             - redis-ee
+          x-terraform-transform-const: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
