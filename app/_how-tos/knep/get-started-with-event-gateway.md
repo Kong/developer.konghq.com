@@ -331,14 +331,14 @@ Consume the `my-test-topic` from the beginning while passing the `--print-header
 command: |
   kafkactl -C kafkactl.yaml --context vc consume my-test-topic --print-headers --from-beginning --exit
 expected:
-  message: "My-New-Header: header_value"
+  message: "My-New-Header:header_value#test message"
   return_code: 0
 {% endvalidation %}
 
 
 The output should contain your new header:
 ```shell
-My-New-Header: header_value
+My-New-Header:header_value
 ```
 {:.no-copy-code}
 
