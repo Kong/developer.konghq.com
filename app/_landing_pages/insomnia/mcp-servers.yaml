@@ -100,8 +100,7 @@ rows:
                   You can view previously synced content offline, but discovery and resync require an active connection to the MCP Server.
               - q: Does Insomnia support both HTTP and STDIO transports?
                 a: |
-                  HTTP transport is supported in the first release.  
-                  STDIO transport will be added later after security review.
+                  Yes. Both HTTP transport and STDIO transport are supported.
               - q: Can MCP Clients use Git Sync or import/export?
                 a: |
                   Not yet. MCP Clients are purely local storage in v1 and do not support Git Sync or import/export.
