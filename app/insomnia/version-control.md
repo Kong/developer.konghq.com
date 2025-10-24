@@ -67,3 +67,24 @@ You can perform the following version control actions from Insomnia:
 Version control is managed from the bottom left of the sidebar.
 
 ![Version control sidebar menu location](/assets/images/insomnia/version-control-menu.png)
+
+### AI‑powered Commit Suggestions
+
+To streamline your commit workflow, Insomnia includes **AI commit suggestions**. Use this feature to improve commit clarity and reduce manual effort when writing messages.
+
+To use the feature:
+- Click **///** in the commit dialog.
+- Insomnia analyzes your staged changes and suggests logical groupings and commit messages.
+- You can drag and drop files between groups, edit the suggested messages inline, or exclude files from AI grouping.
+- Double-click a message or use the edit icon to change it.
+- The interface hides manual options while suggestions load, and brings them back if you switch modes.
+
+### **Disabling AI Commit Suggestions**
+
+Administrators or users can disable this feature from the Insomnia preferences under `****************`.  
+When you deactivated:
+- The **///** button is hidden.
+- No AI functionality is used during the commit process.
+- Manual staging, commenting, and commit flows remain unchanged.
+
+---
