@@ -18,13 +18,6 @@ related_resources:
     url: /how-to/create-a-cloud-hosted-mock-server/
 
 faqs:
-  - q: Can I deactivate AI features?
-    a: |
-      Yes. If AI-assisted features appear in your workspace and you want to turn them off:
-      1. Go to **Preferences → AI Features**.  
-      2. Clear the checkboxes for **Mock Servers – Auto Generate with Natural Language** or **Git – Recommend Commits & Comments**.  
-      
-      Locked options indicate org-level restrictions.
   - q: What happens when authentication fails?
     a: |
       If the MCP Server responds with **401 Unauthorized**, Insomnia automatically looks for OAuth metadata and applies the **MCP Auth Flow**.  
