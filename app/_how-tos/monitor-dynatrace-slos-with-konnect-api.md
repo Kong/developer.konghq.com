@@ -1,5 +1,5 @@
 ---
-title: Monitor Dynatrace SLOs in Catalog with the Konnect API
+title: Monitor Dynatrace classic SLOs in Catalog with the Konnect API
 content_type: how_to
 description: Learn how to connect an Dynatrace classic SLO to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the API.
 products:
@@ -22,7 +22,7 @@ related_resources:
     url: /catalog/integrations/
   - text: Dynatrace reference
     url: /catalog/integrations/dynatrace/
-  - text: "Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI"
+  - text: "Monitor Dynatrace classic SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI"
     url: /how-to/monitor-dynatrace-slos-with-konnect-ui/
   - text: Set up Dynatrace with OpenTelemetry
     url: /how-to/set-up-dynatrace-with-otel/
@@ -37,10 +37,19 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: Dynatrace
       content: |
-        You need to configure the following in Dynatrace:
+        You need to configure the following in Dynatrace SaaS:
         * A [classic service-level object in Dynatrace](https://docs.dynatrace.com/docs/deliver/service-level-objectives-classic/configure-and-monitor-slo). This will be ingested by {{site.konnect_short_name}}.
         * Your Dynatrace URL. For example: `https://whr42363.apps.dynatrace.com`
         * A [Dynatrace personal access token](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/access-tokens/personal-access-token) with read SLO (`slo.read`) permissions.
+
+        Export your Dynatrace URL and personal access token:
+        ```sh
+        export DYNATRACE_URL='YOUR DYNATRACE URL'
+        export DYNATRACE_PAT='YOUR DYNATRACE PERSONAL ACCESS TOKEN'
+        ```
+
+        {:.warning}
+        > Dynatrace ActiveGate isn't supported.
       icon_url: /assets/icons/third-party/dynatrace.png
 ---
 
@@ -61,7 +70,7 @@ body:
   name: dynatrace
   display_name: Dynatrace
   config:
-    include_inactive: false
+    base_url: $DYNATRACE_URL
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -75,7 +84,7 @@ Next, authorize the Dynatrace integration with your Dynatrace personal access to
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/integration-instances/$TRACEABLE_INTEGRATION_ID/auth-credential
+url: /v1/integration-instances/$DYNATRACE_INTEGRATION_ID/auth-credential
 method: POST
 status_code: 201
 region: us
@@ -109,7 +118,7 @@ body:
 Export the service ID:
 
 ```sh
-export AWS_SERVICE_ID='YOUR-SERVICE-ID'
+export DYNATRACE_SERVICE_ID='YOUR-SERVICE-ID'
 ```
 
 ## List Dynatrace resources
@@ -146,7 +155,7 @@ status_code: 201
 region: us
 body:
   service: billing
-  resource: $AWS_RESOURCE_ID
+  resource: $DYNATRACE_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -157,7 +166,7 @@ To confirm that the Dynatrace resource is now mapped to the intended service, li
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/catalog-services/$AWS_SERVICE_ID/resources
+url: /v1/catalog-services/$DYNATRACE_SERVICE_ID/resources
 method: GET
 status_code: 200
 region: us

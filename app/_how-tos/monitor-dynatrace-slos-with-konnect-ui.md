@@ -1,13 +1,11 @@
 ---
-title: Monitor Dynatrace SLOs in Catalog with the Konnect UI
+title: Monitor Dynatrace classic SLOs in Catalog with the Konnect UI
 content_type: how_to
 description: Learn how to connect an Dynatrace classic SLO to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the UI.
 products:
   - catalog
 works_on:
   - konnect
-tools:
-  - konnect-api
 tags:
   - integrations
   - dynatrace
@@ -22,7 +20,7 @@ related_resources:
     url: /catalog/integrations/
   - text: Dynatrace reference
     url: /catalog/integrations/dynatrace/
-  - text: "Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
+  - text: "Monitor Dynatrace classic SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
     url: /how-to/monitor-dynatrace-slos-with-konnect-api/
   - text: Set up Dynatrace with OpenTelemetry
     url: /how-to/set-up-dynatrace-with-otel/
@@ -37,10 +35,13 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: Dynatrace
       content: |
-        You need to configure the following in Dynatrace:
+        You need to configure the following in Dynatrace SaaS:
         * A [classic service-level object in Dynatrace](https://docs.dynatrace.com/docs/deliver/service-level-objectives-classic/configure-and-monitor-slo). This will be ingested by {{site.konnect_short_name}}.
         * Your Dynatrace URL. For example: `https://whr42363.apps.dynatrace.com`
         * A [Dynatrace personal access token](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/access-tokens/personal-access-token) with read SLO (`slo.read`) permissions.
+
+        {:.warning}
+        > Dynatrace ActiveGate isn't supported.
       icon_url: /assets/icons/third-party/dynatrace.png
 ---
 

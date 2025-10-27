@@ -43,10 +43,13 @@ For a complete tutorial, see the following:
 
 ## Prerequisites
 
-You need to configure the following in Dynatrace:
+You need to configure the following in Dynatrace SaaS:
 * A [classic service-level object in Dynatrace](https://docs.dynatrace.com/docs/deliver/service-level-objectives-classic/configure-and-monitor-slo). This will be ingested by {{site.konnect_short_name}}.
 * Your Dynatrace URL. For example: `https://whr42363.apps.dynatrace.com`
 * A [Dynatrace personal access token](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/access-tokens/personal-access-token) with read SLO (`slo.read`) permissions.
+
+{:.warning}
+> Dynatrace ActiveGate isn't supported.
 
 ## Authenticate the Datadog integration
 
@@ -62,6 +65,47 @@ You need to configure the following in Dynatrace:
 1. In the **Instance name** field, enter a unique identifier for your Dynatrace instance.
 1. Click **Save**.
 {% endnavtab %}
+{% navtab "API" %}
+First, install the Dynatrace integration:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/integration-instances
+method: POST
+status_code: 201
+region: us
+body:
+  integration_name: dynatrace
+  name: dynatrace
+  display_name: Dynatrace
+  config:
+    base_url: $DYNATRACE_URL
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the ID of your Dynatrace integration:
+
+```sh
+export DYNATRACE_INTEGRATION_ID='YOUR-INTEGRATION-ID'
+```
+
+Next, authorize the Dynatrace integration with your Dynatrace personal access token:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/integration-instances/$DYNATRACE_INTEGRATION_ID/auth-credential
+method: POST
+status_code: 201
+region: us
+body:
+  type: multi_key_auth
+  config:
+    headers:
+      - name: authorization
+        key: $DYNATRACE_PAT
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
 {% navtab "Terraform" %}
 Use the [`konnect_integration_instance`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/integration_instance.tf) and [`konnect_integration_instance_auth_credential`](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/integration_instance_auth_credential.tf) resources:
 ```hcl
@@ -72,8 +116,7 @@ resource "konnect_integration_instance" "my_integrationinstance" {
 
   integration_name = "dynatrace"
   config = jsonencode({
-    datadog_region       = "'$DATADOG_REGION'"
-    datadog_webhook_name = "konnect-service-catalog"
+    base_url = "'$DYNATRACE_URL'"
   })
 }
 
@@ -83,12 +126,8 @@ resource "konnect_integration_instance_auth_credential" "my_integrationinstancea
     config = {
       "headers": [
         {
-          "name": "DD-API-KEY",
-          "key": "'$DATADOG_API_KEY'"
-        },
-        {
-          "name": "DD-APPLICATION-KEY",
-          "key": "'$DATADOG_APPLICATION_KEY'"
+          "name": "authorization",
+          "key": "'$DYNATRACE_PAT'"
         }
       ]
     }
