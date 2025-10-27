@@ -27,12 +27,14 @@ related_resources:
     url: /insomnia/template-tags/     
 ---
 
-Dynamic mocking lets Insomnia mock servers return responses that can reference request context and include random test data using template tags. You configure routes in Insomnia and serve them from  Self-hosted mock servers.
+Dynamic mocking extends Insomnia’s existing mock server feature by evaluating templates at request time so responses can change based on the incoming request or defined template logic. You configure routes in Insomnia and serve them from Self-hosted mock servers.
+
+Traditional mocks return static, predefined payloads, while in comparison dynamic mocks produce context-aware and variable output.
 
 For adding random values, Insomnia provides [**Faker template tags**](/insomnia/template-tags/) that you can insert anywhere that tags are supported.
 
 Use Dynamic mocking to:
-- **Serve request-aware responses**: Configure a mock route and shape the response based on the incoming request. For example, echoing identifiers or switching fields. Manage this per route.
+- **Serve request-aware responses**: Configure a mock route that adapts to request headers and shape the response based on the incoming request. For example, echoing identifiers or switching fields. You manage this for each route.
 - **Insert random data with template tags**: Use Insomnia’s Faker template tags to generate values such as names, emails, timestamps, and UUIDs.
 
 {:.info}
@@ -40,50 +42,50 @@ Use Dynamic mocking to:
 
 ## Dynamic capabilities
 
-<!--vale off-->
+<!-- vale off -->
 {% table %}
 columns:
-  - title: Capability
-    key: cap
-  - title: What it enables
-    key: what
-  - title: Example
-    key: example
+  - title: Use case
+    key: option
+  - title: Description
+    key: description
 rows:
-  - cap: Use request data
-    what: Echo or branch on headers, query params, path segments, or parsed body fields
-    example: |
-      ```liquid
-      {
-        "ct": "{{ req.headers['Content-Type'] }}",
-        "user": "{{ req.queryParams.user_id }}",
-        "id": "{{ req.pathSegments[2] }}",
-        "name": "{{ req.body.name | default: "unknown" }}"
-      }
-      ```
-  - cap: Generate fake data
-    what: Insert realistic values like names, emails, or timestamps with Faker template tags
-    example: |
-      ```liquid
-      {
-        "fullName": "{{ faker.randomFullName }}",
-        "email": "{{ faker.randomEmail }}",
-        "timestamp": "{{ faker.unixTime }}"
-      }
-      ```
-  - cap: Apply simple logic
-    what: Shape the response with a limited subset of Liquid tags (no loops)
-    example: |
+  - option: Use request data
+    description: |
+      Access details from the incoming request and reflect them in the mock response.  
+      For example, echo a query parameter or include a field from the request body.  
+      This makes the mock behave more like a live API.
+  - option: Apply conditional logic
+    description: |
+      Use simple Liquid conditions to vary the response based on the request.  
+      For example:
       ```liquid
       {% assign region = req.queryParams.region | default: "us" %}
       {% if region == "ca" %}
       { "greeting": "Bonjour" }
-      {% unless region == "ca" %}
+      {% else %}
       { "greeting": "Hello" }
-      {% endunless %}
+      {% endif %}
       ```
+      Only a limited set of Liquid tags are supported for safety.
+  - option: Generate fake data
+    description: |
+      Insert random but realistic data, such as names, emails, or timestamps.  
+      Use [**Faker template tags**](/insomnia/template-tags/) anywhere template tags are supported.  
+      For example:
+      ```liquid
+      {
+        "name": "{{ faker.randomFullName }}",
+        "email": "{{ faker.randomEmail }}",
+        "timestamp": "{{ faker.unixTime }}"
+      }
+      ```
+  - option: Combine request and fake data
+    description: |
+      Mix request data with generated values for realistic scenarios.  
+      For example, include the requester’s ID with random profile data.
 {% endtable %}
-<!--vale on-->
+<!-- vale on -->
 
 - Faker usage follows Insomnia’s template tag model. See **Template tags** for Faker details.
 - Liquid behavior follows the LiquidJS docs; Insomnia enables a **subset** (for example, `assign`, `if`, `unless`, `raw`) for mocks.
