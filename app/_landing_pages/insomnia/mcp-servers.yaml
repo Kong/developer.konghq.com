@@ -47,7 +47,7 @@ rows:
                     4. To connect your MCP client to an MCP server, click **Connect**.
           - type: button
             config:
-              text: Learn how to create an MCP Client
+              text: Learn about MCP clients
               url: /how-to/create-mcp-client/
               align: left
   - header:
