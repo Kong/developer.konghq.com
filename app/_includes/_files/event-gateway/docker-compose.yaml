@@ -2,7 +2,7 @@ name: kafka_cluster
 
 networks:
   kafka:
-    name: kafka_event_gateaway_kafka
+    name: kafka_event_gateway
 
 services:
   kafka1:

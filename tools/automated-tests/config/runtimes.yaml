@@ -62,14 +62,23 @@ konnect:
     reset:
       commands: []
 
+  ai-gateway:
+    setup:
+      commands: []
+
+    cleanup:
+      commands: []
+
+    reset:
+      commands: []
+
   event-gateway:
     setup:
       commands:
         - docker compose -f /files/event-gateway/docker-compose.yaml up -d
         - sleep 5
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway_kakfa | tail -1 >> /env-vars.sh
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway | tail -1 >> /env-vars.sh
         - sleep 5
-
 
     cleanup:
       commands:
