@@ -130,9 +130,9 @@ In this example, we'll create two different consumer namespaces, and apply diffe
        - targetRef:
            kind: MeshService
            name: demo-app
-       default:
+         default:
            http:
-           requestTimeout: 1s" | kubectl apply -f -
+             requestTimeout: 1s" | kubectl apply -f -
    ```
 
 1. Run the following command to inspect the policy labels:
@@ -163,11 +163,15 @@ Send requests to the demo app using both consumer namespaces with the `x-set-res
 
 ```sh
 kubectl exec -n first-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
+```
+
+```sh
 kubectl exec -n second-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
 ```
 
-You should get the following response:
+You should get the following response for both:
 ```sh
+upstream request timeout
 ```
 {:.no-copy-code}
 
@@ -204,22 +208,39 @@ You should get the following response:
    You should get the following result:
 
    ```sh
-   
+   {
+       "k8s.kuma.io/namespace": "first-consumer",
+       "kuma.io/env": "kubernetes",
+       "kuma.io/mesh": "default",
+       "kuma.io/origin": "zone",
+       "kuma.io/policy-role": "consumer",
+       "kuma.io/zone": "default"
+   }
    ```
    {:.no-copy-code}
 
    {{site.mesh_product_name}} adds custom labels to the policy. The `kuma.io/policy-role` label set to `consumer` indicates the policy applies to the consumer namespace, `first-consumer` in this example. This overrides the producer policy.
 
-1. Send the same requests to the demo app as in the previous step:
+1. Send a request to the demo app using the first consumer namespace:
 
    ```sh
-   echo "First consumer:"
    kubectl exec -n first-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
-   echo "Second consumer:"
+   ```
+   
+   Since we've increased the timeout for the first consumer, you should get this response:
+
+   ```sh
+   {
+       "counter": 1,
+       "zone": ""
+   }
+   ```
+   {:.no-copy-code}
+
+   If you send a request to the second consumer, you should still get a timeout:
+
+   ```sh
    kubectl exec -n second-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
    ```
 
-   Since we've increased the timeout for the first consumer, you should get an actual response, while the request with the second consumer still results in a timeout:
-   ```sh
-   ```
-   {:.no-copy-code}
+   
