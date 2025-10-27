@@ -29,7 +29,7 @@ related_resources:
 
 Dynamic mocking extends Insomnia’s existing mock server feature by evaluating templates at request time so responses can change based on the incoming request or defined template logic. You configure routes in Insomnia and serve them from Self-hosted mock servers.
 
-Traditional mocks return static, predefined payloads, while in comparison dynamic mocks produce context-aware and variable output.
+Traditional mocks return static, predefined payloads, while dynamic mocks generate context-aware, variable outputs.
 
 For adding random values, Insomnia provides [**Faker template tags**](/insomnia/template-tags/) that you can insert anywhere that tags are supported.
 
@@ -58,28 +58,11 @@ rows:
   - option: Apply conditional logic
     description: |
       Use simple Liquid conditions to vary the response based on the request.  
-      For example:
-      ```liquid
-      {% assign region = req.queryParams.region | default: "us" %}
-      {% if region == "ca" %}
-      { "greeting": "Bonjour" }
-      {% else %}
-      { "greeting": "Hello" }
-      {% endif %}
-      ```
       Only a limited set of Liquid tags are supported for safety.
   - option: Generate fake data
     description: |
       Insert random but realistic data, such as names, emails, or timestamps.  
-      Use [**Faker template tags**](/insomnia/template-tags/) anywhere template tags are supported.  
-      For example:
-      ```liquid
-      {
-        "name": "{{ faker.randomFullName }}",
-        "email": "{{ faker.randomEmail }}",
-        "timestamp": "{{ faker.unixTime }}"
-      }
-      ```
+      Use [**Faker template tags**](/insomnia/template-tags/) anywhere template tags are supported.
   - option: Combine request and fake data
     description: |
       Mix request data with generated values for realistic scenarios.  
@@ -87,8 +70,8 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-- Faker usage follows Insomnia’s template tag model. See **Template tags** for Faker details.
-- Liquid behavior follows the LiquidJS docs; Insomnia enables a **subset** (for example, `assign`, `if`, `unless`, `raw`) for mocks.
+- Faker usage follows Insomnia’s template tag model. To see Faker details, go to **Template tags**.
+- Liquid behavior follows the LiquidJS docs; Insomnia enables a **subset**. For example, `assign`, `if`, `unless`, `raw` for mocks.
 
 ## Enable dynamic mocking
 
