@@ -1,8 +1,8 @@
 ---
-title: MCP Servers in Insomnia
+title: Create an MCP client in Insomnia
 content_type: reference
 layout: reference
-description: Learn about MCP servers in insomnia, connect Insomnia to an MCP Server, and discover available Tools, Prompts, and Resources.
+description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Server, and discover available Tools, Prompts, and Resources.
 breadcrumbs:
   - /insomnia/
   - /insomnia/mcp-servers/
@@ -60,7 +60,7 @@ An MCP Server is a HTTP JSON-RPC endpoint that advertises callable operations:
 The Insomnia **MCP Client** discovers these elements, enabling you to invoke, query, or test them directly in the app.  
 Each workspace can include multiple MCP Clients.
 
-### Create the MCP client
+### Create a MCP client
 To create a new MCP Client, complete the following:
 1. From your Insomnia project, click **Create**.
 1. In the **Name** box, type a name for the MCP Client.
