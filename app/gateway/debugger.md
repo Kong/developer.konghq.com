@@ -17,7 +17,7 @@ faqs:
   - q: Will the {{site.konnect_short_name}} Debugger impact latency?
     a: Under normal conditions, the Debugger adds negligible latency. However, under heavy load, the Debugger may impact the throughput of data planes being traced.
   - q: How is data localization enforced in Debugger?
-    a: The entire infrastructure is regionally deployed. All logs, traces, and payload captures are stored within the local geographic region. To see a list of supported geos, visit: [Supported Geos](/konnect-platform/geos/#supported-geos)
+    a: "The entire infrastructure is regionally deployed. All logs, traces, and payload captures are stored within the local geographic region. To see a list of supported geos, visit: [Supported Geos](/konnect-platform/geos/#supported-geos)"
     
 tags:
   - tracing
