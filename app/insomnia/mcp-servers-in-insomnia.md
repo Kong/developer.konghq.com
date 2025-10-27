@@ -60,7 +60,7 @@ An MCP Server is a HTTP JSON-RPC endpoint that advertises callable operations:
 The Insomnia **MCP Client** discovers these elements, enabling you to invoke, query, or test them directly in the app.  
 Each workspace can include multiple MCP Clients.
 
-## Create the MCP client
+### Create the MCP client
 To create a new MCP Client, complete the following:
 1. From your Insomnia project, click **Create**.
 1. In the **Name** box, type a name for the MCP Client.
@@ -85,7 +85,7 @@ rows:
     description: "View output and logs for each operation."
 {% endtable %}
 
-## Authentication flow
+## Authentication
 
 {:.info}
 > Insomnia uses your system’s default browser for OAuth sign-in.
