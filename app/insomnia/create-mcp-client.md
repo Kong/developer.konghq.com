@@ -47,7 +47,7 @@ To create a new MCP Client, complete the following:
 - In the **Middle pane**, review parameters and request fields. To send JSON requests, click **Send**.
 - To see output and logs, click **Console** tab.   
 
-## Authentication flow
+## Authentication
 
 {:.info}
 > Insomnia uses your system’s default browser for OAuth sign-in.
