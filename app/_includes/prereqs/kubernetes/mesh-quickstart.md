@@ -196,8 +196,6 @@
        - name: ca-1
          type: builtin
        enabledBackend: ca-1
-     annotations:
-       kubectl.kubernetes.io/last-applied-configuration: ""
    ---
    apiVersion: kuma.io/v1alpha1
    kind: MeshTrafficPermission
