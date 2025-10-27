@@ -156,6 +156,11 @@ This can be [adjusted dynamically](#dynamic-plugin-ordering) using the plugin's 
 You can override the [priority](#plugin-priority) for any {{site.base_gateway}} plugin using each plugin’s `ordering` configuration parameter. 
 This determines plugin ordering during the [`access` phase](#plugin-contexts), and lets you create dynamic dependencies between plugins.
 
+{:.warning}
+> **Important**: Dynamic plugin ordering **does not** work with Consumers or Consumer Groups.
+> If you have any Consumers or Consumer Groups in your environment, do not use dynamic plugin ordering, as the plugins **will not trigger**.
+> See the [limitations](#known-limitations-of-dynamic-plugin-ordering) of this feature for more detail.
+
 You can choose to run a particular plugin `before` or `after` a specified plugin or list of plugins.
 
 The configuration looks like this:
@@ -206,10 +211,12 @@ data:
 
 #### Known limitations of dynamic plugin ordering
 
-If using dynamic ordering, manually test all configurations, and handle this feature with care. 
+If using dynamic ordering, manually test all configurations, and handle this feature with care.
+
 There are a number of considerations that can affect your environment:
 
-* **Consumer and Consumer Group scoping**: If you have [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or Control Plane, you can't use dynamic plugin ordering. 
+* **Consumer and Consumer Group scoping**: If you have [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, you can't use dynamic plugin ordering.
+  If you attempt to apply dynamic ordering in this case, your plugins **will not work**.
 
   Consumer mapping and dynamic plugin ordering both run in the `access` phase, but the order of the  plugins must be determined after Consumer mapping has happened.
   {{site.base_gateway}} can't reliably change the order of the plugins in relation to mapped Consumers or Consumer Groups.
@@ -219,7 +226,7 @@ There are a number of considerations that can affect your environment:
 * **Performance**: Dynamic plugin ordering requires sorting plugins during a request, which adds latency to the request. 
 In some cases, this might be compensated for when you run rate limiting before an expensive authentication plugin.
     
-  Re-ordering _any_ plugin in a Workspace or Control Plane has performance implications to all other plugins within the same environment. 
+  Re-ordering _any_ plugin in a Workspace or control plane has performance implications to all other plugins within the same environment. 
   If possible, consider offloading plugin ordering to a separate environment.
 
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
