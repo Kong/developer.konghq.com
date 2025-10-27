@@ -33,13 +33,6 @@ next_steps:
   - text: Scripts
     url: /insomnia/scripts/
 
-faqs:
-  - q: Do I need an activation code to start using Insomnia Enterprise?  
-    a: |
-      Subscriptions that are paid for by credit card are called **Self-serve Enterprise** subscriptions and don't require an activation code.  
-      Access is granted automatically once payment is completed.  
-    
-      If you purchased Enterprise through the **sales team**, you will receive an activation code as part of the onboarding process.
 ---
 
 If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance in [**Insomnia Admin**](https://app.insomnia.rest/).
