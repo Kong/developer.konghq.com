@@ -114,7 +114,7 @@ In this example, we'll create two different consumer namespaces, and apply diffe
 
 ## Add a MeshTimeout producer policy
 
-1. Add a [MeshTimeout](/mesh/policies/meshtimeout/) producer policy with a one second tiemout:
+1. Add a [MeshTimeout](/mesh/policies/meshtimeout/) producer policy with a one second timeout:
 
    ```sh
    echo "apiVersion: kuma.io/v1alpha1
