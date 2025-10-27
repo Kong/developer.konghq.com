@@ -26,7 +26,7 @@ topologies:
 
 tags:
   - traffic-control
-  - upgrades
+  - upgrade
 
 icon: canary.png
 

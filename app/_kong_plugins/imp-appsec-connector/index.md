@@ -18,7 +18,6 @@ works_on:
 
 tags:
   - monitoring
-  - service-discovery
 
 third_party: true
 

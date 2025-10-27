@@ -31,6 +31,9 @@ works_on:
 
 prereqs:
   skip_product: true
+
+tags:
+  - caching
 ---
 
 ## About the Proxy Cache plugin

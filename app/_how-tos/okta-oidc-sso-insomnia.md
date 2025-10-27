@@ -23,7 +23,7 @@ tier: enterprise
 tags:
   - sso
   - okta
-  - oidc
+  - openid-connect
   - authentication
   - security
 

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect API Builder
-  version: 3.0.24
+  version: 3.0.25
   description: The management API for building APIs for Konnect Dev Portals.
   contact:
     name: Kong
@@ -119,8 +119,8 @@ paths:
           example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
     get:
       operationId: fetch-api
-      summary: Fetch API
-      description: Fetches an API.
+      summary: Get an API
+      description: Get an API.
       responses:
         '200':
           $ref: '#/components/responses/ApiResponse'
@@ -275,7 +275,7 @@ paths:
       - $ref: '#/components/parameters/DocumentId'
     get:
       operationId: fetch-api-document
-      summary: Fetch API Document
+      summary: Get an API Document
       description: Returns a document for the API.
       responses:
         '200':
@@ -420,7 +420,7 @@ paths:
       - $ref: '#/components/parameters/SpecId'
     get:
       operationId: fetch-api-spec
-      summary: Fetch API Specification
+      summary: Get API Specification
       description: |
         Fetches the specification (OpenAPI or AsyncAPI) of an API.
         **Note:** This endpoint is deprecated and will be removed: use /versions instead.
@@ -548,7 +548,7 @@ paths:
       - $ref: '#/components/parameters/VersionId'
     get:
       operationId: fetch-api-version
-      summary: Fetch API Version
+      summary: Get an API Version
       description: Fetches the version (OpenAPI or AsyncAPI) of an API.
       responses:
         '200':
@@ -632,7 +632,7 @@ paths:
         - API Publication
     get:
       operationId: fetch-publication
-      summary: Fetch Publication
+      summary: Get a Publication
       description: |
         Retrieve an API's publication in a portal.
         If the API is not published to the portal, a 404 response is returned.
@@ -728,7 +728,7 @@ paths:
       - $ref: '#/components/parameters/ImplementationId'
     get:
       operationId: fetch-api-implementation
-      summary: Fetch API Implementation
+      summary: Get an API Implementation
       description: Retrieve a gateway implementation for this API
       responses:
         '200':
@@ -2025,6 +2025,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

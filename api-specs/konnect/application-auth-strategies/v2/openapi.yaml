@@ -79,7 +79,7 @@ paths:
       - $ref: '#/components/parameters/DcrProviderId'
     get:
       operationId: get-dcr-provider
-      summary: Fetch DCR provider
+      summary: Get a DCR provider
       description: Returns a DCR provider.
       responses:
         '200':
@@ -1554,6 +1554,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

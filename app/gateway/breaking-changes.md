@@ -11,7 +11,7 @@ works_on:
     - on-prem
 
 tags:
-    - upgrades
+    - upgrade
     - versioning
 
 

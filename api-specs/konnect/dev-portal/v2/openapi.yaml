@@ -448,7 +448,7 @@ paths:
   /api/v2/developer/authenticate/sso:
     get:
       operationId: authenticate-sso
-      summary: Authenticate SSO
+      summary: Get Developer Authentication via SSO
       description: This endpoint allows a developer to authenticate to their portal using an external IdP.
       responses:
         '302':
@@ -492,7 +492,7 @@ paths:
   /api/v2/developer/me:
     get:
       operationId: get-developer-me
-      summary: Retrieve My Account
+      summary: Get My Account
       description: Returns info about the current developer.
       responses:
         '200':
@@ -575,7 +575,7 @@ paths:
   /api/v2/portal/appearance:
     get:
       operationId: get-portal-appearance
-      summary: Portal Appearance Details
+      summary: Get Portal Appearance Details
       description: Gets appearance configuration object for the portal. This object is set in Konnect.
       responses:
         '200':
@@ -587,7 +587,7 @@ paths:
   /api/v2/portal/catalog-cover:
     get:
       operationId: get-portal-catalog-cover
-      summary: Portal Catalog Cover Banner
+      summary: Get Portal Catalog Cover Banner
       description: Gets cover banner for the developer portal. This object is set in Konnect.
       responses:
         '200':
@@ -599,7 +599,7 @@ paths:
   /api/v2/portal/logo:
     get:
       operationId: get-portal-logo
-      summary: Portal Logo
+      summary: Get Portal Logo
       description: Gets logo of the developer portal. This object is set in Konnect.
       responses:
         '200':
@@ -867,7 +867,7 @@ paths:
   '/api/v2/search/{indices}':
     get:
       operationId: search-portal-entities
-      summary: Search Portal Entities
+      summary: List Portal Entities via Search
       description: Returns paginated search results from the specified entities with the given search parameters.
       parameters:
         - $ref: '#/components/parameters/SearchIndices'
@@ -933,7 +933,7 @@ paths:
   /api/v2/stats/config:
     get:
       operationId: get-application-analytics-config
-      summary: Application Analytics Config
+      summary: Get Application Analytics Config
       description: Get config for application analytics
       responses:
         '200':
@@ -1835,6 +1835,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

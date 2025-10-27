@@ -9,8 +9,7 @@ description: 'Invoke and manage AWS Lambda functions from {{site.base_gateway}}'
 
 tags:
   - serverless
-  - AWS
-  - request
+  - aws
 
 products:
     - gateway

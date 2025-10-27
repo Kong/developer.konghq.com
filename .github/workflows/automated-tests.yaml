@@ -47,7 +47,7 @@ jobs:
         run: bundle install --jobs 4 --retry 3
 
       # Configure Node to build assets
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
         with:
           node-version: "22"
       - name: Cache node modules
@@ -91,7 +91,7 @@ jobs:
           DEBUG=tests:*,debug npm run run-tests
 
       - name: Publish Test Report
-        uses: ctrf-io/github-test-reporter@646f98cfc16c6f7a0e1f6100cabe2deb95dd2eef # v1
+        uses: ctrf-io/github-test-reporter@9bd31188517cfb3ff683f135041cc3bfbb0c78b3 # v1
         with:
           report-path: './tools/automated-tests/testReport.json'
           summary-report: true

@@ -69,7 +69,7 @@ paths:
           example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
     get:
       operationId: fetch-catalog-service
-      summary: Fetch Service
+      summary: Get a Service
       description: Fetches a service.
       responses:
         '200':
@@ -195,7 +195,7 @@ paths:
           example: 3f51fa25-310a-421d-bd1a-007f859021a3
     get:
       operationId: fetch-integration-instance
-      summary: Fetch Integration Instance
+      summary: Get an Integration Instance
       description: Fetches a integration instance.
       responses:
         '200':
@@ -400,7 +400,7 @@ paths:
           example: AflTNLY0tTQhv2my
     get:
       operationId: fetch-resource
-      summary: Fetch Resource
+      summary: Get a Resource
       description: Fetches a resource by ID.
       responses:
         '200':
@@ -531,7 +531,7 @@ paths:
           example: d277faad-ed4e-4c56-a0fb-acce065dee34
     get:
       operationId: fetch-resource-mapping
-      summary: Fetch Resource Mapping
+      summary: Get a Resource Mapping
       description: Fetches a resource mapping by ID.
       responses:
         '200':
@@ -1004,6 +1004,11 @@ components:
               example:
                 - read
                 - write
+            scope_delimiter:
+              description: |
+                A string used to separate multiple scopes in the `scope` parameter.
+              type: string
+              default: ' '
             rolling_refresh_exp_seconds:
               description: |
                 Number of seconds before the refresh token grant can no longer be used to mint
@@ -2893,6 +2898,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

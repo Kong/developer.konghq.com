@@ -40,8 +40,10 @@ tags:
   - ai
 
 related_resources:
-  - text: Use AI to protect sensitive information in requests
+  - text: Use AI PII Sanitizer plugin to protect sensitive information in requests
     url: /how-to/protect-sensitive-information-with-ai/
+  - text: Use AI PII Sanitizer plugin to protect sensitive information in responses
+    url: /how-to/protect-sensitive-information-output-with-ai/
 ---
 
 The AI PII Sanitizer plugin for {{site.base_gateway}} helps protect sensitive information in client request bodies before they reach upstream services, or in LLM response bodies before they reach the client.
@@ -80,13 +82,13 @@ sequenceDiagram
     participant PII as PII Service
     participant Proxy as AI Proxy/Advanced
     participant AI as Upstream AI Service
-    
+
     Client->>Plugin: Send request
     Plugin->>PII: Intercept & send request body
     PII->>PII: Detect sensitive data in request
     PII->>Plugin: Return sanitized request<br/>(placeholders/synthetic data)
     Plugin->>Proxy: Forward sanitized request
-    Proxy->>AI: Process sanitized request    
+    Proxy->>AI: Process sanitized request
     AI->>Proxy: Return AI response
     Proxy->>Plugin: Forward response
     Plugin->>PII: Intercept & send response body

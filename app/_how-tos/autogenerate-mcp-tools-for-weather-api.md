@@ -37,7 +37,6 @@ entities:
 tags:
   - ai
   - mcp
-  - weather
 
 tldr:
   q: How do I automatically generate an MCP API for weather data?

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.28
+  version: 3.0.29
   description: The management API for Portals
   contact:
     name: Kong
@@ -101,7 +101,7 @@ paths:
           format: uuid
     get:
       operationId: get-portal
-      summary: Fetch Portal
+      summary: Get a Portal
       description: 'Returns the configuration for a single developer portal, including the current visibility, access, and domain settings.'
       responses:
         '200':
@@ -502,7 +502,7 @@ paths:
   '/portals/{portalId}/pages/{pageId}':
     get:
       operationId: get-portal-page
-      summary: Fetch Page
+      summary: Get a Page
       description: 'Returns the configuration of a single custom page for this portal. Custom pages can be used to display static content, documentation, or other information to developers.'
       parameters:
         - $ref: '#/components/parameters/PortalId'
@@ -662,7 +662,7 @@ paths:
   '/portals/{portalId}/snippets/{snippetId}':
     get:
       operationId: get-portal-snippet
-      summary: Fetch Snippet
+      summary: Get a Snippet
       description: 'Returns the configuration of a single custom snippet for this portal. Custom snippets can be used to display static content, documentation, or other information to developers.'
       parameters:
         - $ref: '#/components/parameters/PortalId'
@@ -799,7 +799,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     get:
       operationId: get-application
-      summary: Fetch Application by Portal
+      summary: Get an Application by Portal
       description: 'Returns the configuration of a single application in this portal. If an application is linked to a DCR Provider, the `dcr_provider.id` and `client_id` can be used to correlate it. An application manages a set of credentials and registrations for specific APIs.'
       responses:
         '200':
@@ -880,7 +880,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     get:
       operationId: get-application-unscoped
-      summary: Fetch Application
+      summary: Get an Application
       description: 'Returns the configuration of a single application in any portal. If an application is linked to a DCR Provider, the `dcr_provider.id` and `client_id` can be used to correlate it. An application manages a set of credentials and registrations for specific APIs.'
       responses:
         '200':
@@ -999,7 +999,7 @@ paths:
       - $ref: '#/components/parameters/RegistrationId'
     get:
       operationId: get-application-registration
-      summary: Fetch Registration
+      summary: Get a Registration
       description: Returns information about an application's registration status for a particular API.
       responses:
         '200':
@@ -1510,7 +1510,7 @@ paths:
       - $ref: '#/components/parameters/DeveloperId'
     get:
       operationId: get-developer
-      summary: Fetch Developer
+      summary: Get a Developer
       description: 'Returns information about a single developer in this portal. Each developer manages a set applications, providing them credentials to access registered APIs. Developer registration access can be limited to specific APIs using RBAC.'
       responses:
         '200':
@@ -1605,7 +1605,7 @@ paths:
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-portal-identity-providers
-      summary: Retrieve Identity Providers
+      summary: List Identity Providers
       description: |-
         **Pre-release Endpoint**
         This endpoint is currently in beta and is subject to change.
@@ -1943,7 +1943,7 @@ paths:
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-email-delivery
-      summary: Retrieve the email delivery for the portal
+      summary: Get the email delivery for the portal
       description: Retrieve the email delivery for the portal
       responses:
         '200':
@@ -2014,7 +2014,7 @@ paths:
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-email-config
-      summary: Retrieve the email config for the portal
+      summary: Get the email config for the portal
       description: Retrieve the email config for the portal
       responses:
         '200':
@@ -2430,19 +2430,6 @@ components:
       required: false
       schema:
         type: string
-    SortPortalSnippets:
-      name: sort
-      description: |
-        Sorts a collection of portal snippets. Supported sort attributes are:
-          - created_at
-          - updated_at
-          - name
-          - title
-          - visibility
-      in: query
-      required: false
-      schema:
-        type: string
     SortPortals:
       name: sort
       description: |
@@ -2457,6 +2444,19 @@ components:
           - canonical_domain
           - created_at
           - updated_at
+      in: query
+      required: false
+      schema:
+        type: string
+    SortPortalSnippets:
+      name: sort
+      description: |
+        Sorts a collection of portal snippets. Supported sort attributes are:
+          - created_at
+          - updated_at
+          - name
+          - title
+          - visibility
       in: query
       required: false
       schema:
@@ -3568,6 +3568,23 @@ components:
           $ref: '#/components/schemas/PortalCustomDomainVerificationStatus'
         validation_errors:
           $ref: '#/components/schemas/PortalCustomDomainValidationErrors'
+        uploaded_at:
+          description: An ISO-8601 timestamp representation of the ssl certificate upload date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        expires_at:
+          description: An ISO-8601 timestamp representation of the ssl certificate expiration date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        skip_ca_check:
+          description: |
+            True when the provided certificate chain is served as-is without validation against a public trust store.
+          type: boolean
+          readOnly: true
       additionalProperties: false
       required:
         - domain_verification_method
@@ -3592,6 +3609,11 @@ components:
         custom_private_key:
           description: Custom certificate private key to be used for the SSL termination.
           type: string
+        skip_ca_check:
+          description: |
+            Advanced option. If true, the custom certificate is served exactly as provided, without attempting to bundle against a public trust store. Required for certificates issued by an internal/private CA.
+          type: boolean
+          default: false
       additionalProperties: false
       required:
         - domain_verification_method
@@ -4850,6 +4872,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

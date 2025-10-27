@@ -5,7 +5,7 @@ title: 'Generate an MCP server in conversion-listener mode'
 extended_description: |
   Generate an MCP server from {{ site.base_gateway }} Services.
 
-  {:.warning}
+  {:.info}
   > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
   > ```yaml
   > services:
