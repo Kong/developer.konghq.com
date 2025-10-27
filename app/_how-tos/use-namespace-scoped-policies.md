@@ -189,14 +189,14 @@ upstream request timeout
         kuma.io/mesh: default
         kuma.io/origin: zone
    spec:
-    to:
-      - targetRef:
-          kind: MeshService
-          labels:
-            k8s.kuma.io/service-name: demo-app
-        default:
-          http:
-            requestTimeout: 3s" | kubectl apply -f -
+     to:
+       - targetRef:
+           kind: MeshService
+           labels:
+             k8s.kuma.io/service-name: demo-app
+         default:
+           http:
+             requestTimeout: 3s" | kubectl apply -f -
     ```
 
 1. Run the following command to inspect the policy labels:
