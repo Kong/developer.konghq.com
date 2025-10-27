@@ -11,7 +11,6 @@ products:
 breadcrumbs:
   - /insomnia/
 tags:
-  - insomnia
   - migration
   - account-management
 
