@@ -43,7 +43,7 @@ To create a new MCP Client, complete the following:
 1. In the left pane, confirm that discovered Tools, Prompts, and Resources appear.
 
 ## Explore the interface
-- In the **Right pane**, view discovered tools, resources, and prompts from the discovered MPC server. If the MPC server publishes a new version.
+- In the **Right pane**, view discovered tools, resources, and prompts from the discovered MPC server. 
 - In the **Middle pane**, review parameters and request fields. To send JSON requests, click **Send**.
 - To see output and logs, click **Console** tab.   
 
