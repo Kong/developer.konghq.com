@@ -42,7 +42,7 @@ columns:
 rows:
   - use_case: Navigate to a specific entity that you know exists
     method: |
-      Click the **Basic** tab and search for the name, ID, description, or keywords of the entity in the {{site.konnect_short_name}} search bar to quickly navigate the entity page in {{site.konnect_short_name}}.
+      Click the **Basic** tab and search for the name, ID, description, or keywords of the entity in the {{site.konnect_short_name}} search bar to quickly navigate to the entity page in {{site.konnect_short_name}}.
   - use_case: |
       Find entities that match specific criteria
     method: |
