@@ -19,8 +19,8 @@ min_version:
   mesh: "2.9"
 
 tldr:
-  q: ""
-  a: ""
+  q: "How can I scope a {{site.mesh_product_name}} policy to a specific consumer?"
+  a: "Create a deploy a consumer namespace with sidecar injection enabled, then create your policy within that consumer namespace."
 
 prereqs:
   inline:
@@ -38,7 +38,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
+## Add MeshTrafficPermission
 
+Add a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow access to the mesh we created in the [prerequisites](#install-kong-mesh-with-demo-configuration):
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -56,134 +58,168 @@ spec:
         action: Allow" | kubectl apply -f -
 ```
 
-```sh
-echo "apiVersion: v1
-kind: Namespace
-metadata:
-  name: first-consumer
-  labels:
-    kuma.io/sidecar-injection: enabled
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: second-consumer
-  labels:
-    kuma.io/sidecar-injection: enabled" | kubectl apply -f -
-```
+## Create consumer namespaces
 
-```sh
-kubectl run consumer --image nicolaka/netshoot -n first-consumer --command -- /bin/bash -c "ping -i 60 localhost"
-```
+In this example, we'll create two different consumer namespaces, and apply different policies to them.
 
-```sh
-kubectl run consumer --image nicolaka/netshoot -n second-consumer --command -- /bin/bash -c "ping -i 60 localhost"
-```
+1. Create the first consumer namespace:
 
-Wait a few seconds:
+   ```sh
+   echo "apiVersion: v1
+   kind: Namespace
+   metadata:
+     name: first-consumer
+     labels:
+       kuma.io/sidecar-injection: enabled" | kubectl apply -f -
+   ```
 
-```sh
-kubectl exec -n first-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter
-```
+1. Deploy the first namespace:
 
-```sh
-{
-    "counter": 1,
-    "zone": ""
-}
-```
-{:.no-copy-code}
+   ```sh
+   kubectl run consumer --image nicolaka/netshoot -n first-consumer --command -- /bin/bash -c "ping -i 60 localhost"
+   ```
 
-```sh
-echo "apiVersion: kuma.io/v1alpha1
-kind: MeshTimeout
-metadata:
-  name: producer-timeout
-  namespace: kong-mesh-demo
-  labels:
-    kuma.io/mesh: default
-    kuma.io/origin: zone
-spec:
-  to:
-    - targetRef:
-        kind: MeshService
-        name: demo-app
-      default:
-        http:
-          requestTimeout: 1s" | kubectl apply -f -
-```
 
-```sh
-kubectl get meshtimeout -n kong-mesh-demo producer-timeout -o jsonpath='{.metadata.labels}'
-```
+1. Create the second consumer namespace:
+   ```sh
+   echo "apiVersion: v1
+   kind: Namespace
+   metadata:
+     name: second-consumer
+     labels:
+       kuma.io/sidecar-injection: enabled" | kubectl apply -f -
+   ```
 
-```sh
-{
-    "k8s.kuma.io/namespace": "kong-mesh-demo",
-    "kuma.io/env": "kubernetes",
-    "kuma.io/mesh": "default",
-    "kuma.io/origin": "zone",
-    "kuma.io/policy-role": "producer",
-    "kuma.io/zone": "default"
-}
-```
-{:.no-copy-code}
+1. Deploy the second namespace:
 
-```sh
-kubectl exec -n first-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
-```
+    ```sh
+    kubectl run consumer --image nicolaka/netshoot -n second-consumer --command -- /bin/bash -c "ping -i 60 localhost"
+    ```
 
-```sh
-upstream request timeout
-```
-{:.no-copy-code}
+1. Send a request to the first consumer to validate that it's working:
 
-```sh
-kubectl exec -n second-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
-```
+   ```sh
+   kubectl exec -n first-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter
+   ```
+   
+   You should get the following response:
 
-```sh
-upstream request timeout
-```
-{:.no-copy-code}
+   ```sh
+   {
+       "counter": 1,
+       "zone": ""
+   }
+   ```
+   {:.no-copy-code}
 
-```sh
-echo "apiVersion: kuma.io/v1alpha1
-kind: MeshTimeout
-metadata:
-  name: consumer-timeout
-  namespace: first-consumer
-  labels:
-    kuma.io/mesh: default
-    kuma.io/origin: zone
-spec:
-  to:
-    - targetRef:
-        kind: MeshService
-        labels:
-          k8s.kuma.io/service-name: demo-app
-      default:
-        http:
-          requestTimeout: 3s" | kubectl apply -f -
-```
+## Add a MeshTimeout producer policy
+
+1. Add a [MeshTimeout](/mesh/policies/meshtimeout/) producer policy with a one second tiemout:
+
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshTimeout
+   metadata:
+     name: producer-timeout
+     namespace: kong-mesh-demo
+     labels:
+       kuma.io/mesh: default
+       kuma.io/origin: zone
+   spec:
+     to:
+       - targetRef:
+           kind: MeshService
+           name: demo-app
+       default:
+           http:
+           requestTimeout: 1s" | kubectl apply -f -
+   ```
+
+1. Run the following command to inspect the policy labels:
+
+   ```sh
+   kubectl get meshtimeout -n kong-mesh-demo producer-timeout -o jsonpath='{.metadata.labels}'
+   ```
+
+   You should get the following result:
+
+   ```sh
+   {
+       "k8s.kuma.io/namespace": "kong-mesh-demo",
+       "kuma.io/env": "kubernetes",
+       "kuma.io/mesh": "default",
+       "kuma.io/origin": "zone",
+       "kuma.io/policy-role": "producer",
+       "kuma.io/zone": "default"
+   }
+   ```
+   {:.no-copy-code}
+
+   {{site.mesh_product_name}} adds custom labels to the policy. The `kuma.io/policy-role` label set to `producer` indicates the policy applies to the same namespace as the MeshService it targets in `spec.to`. In this example the targeted MeshService is `demo-app`, which is in the `kong-mesh-demo` namespace.
+
+## Validate the MeshTimeout policy
+
+Send requests to the demo app using both consumer namespaces with the `x-set-response-delay-ms` header to simulate delays:
 
 ```sh
 kubectl exec -n first-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
-```
-
-```sh
-{
-    "counter": 2,
-    "zone": ""
-}
-```
-{:.no-copy-code}
-
-```sh
 kubectl exec -n second-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
 ```
 
+You should get the following response:
 ```sh
-upstream request timeout
 ```
 {:.no-copy-code}
+
+## Add a MeshTimeout consumer policy
+
+1. Add a MeshTimeout consumer policy with a three second timeout, scoped to the first consumer:
+
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshTimeout
+   metadata:
+    name: consumer-timeout
+    namespace: first-consumer
+    labels:
+        kuma.io/mesh: default
+        kuma.io/origin: zone
+   spec:
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            k8s.kuma.io/service-name: demo-app
+        default:
+          http:
+            requestTimeout: 3s" | kubectl apply -f -
+    ```
+
+1. Run the following command to inspect the policy labels:
+
+   ```sh
+   kubectl get meshtimeout -n first-consumer consumer-timeout -o jsonpath='{.metadata.labels}'
+   ```
+
+   You should get the following result:
+
+   ```sh
+   
+   ```
+   {:.no-copy-code}
+
+   {{site.mesh_product_name}} adds custom labels to the policy. The `kuma.io/policy-role` label set to `consumer` indicates the policy applies to the consumer namespace, `first-consumer` in this example. This overrides the producer policy.
+
+1. Send the same requests to the demo app as in the previous step:
+
+   ```sh
+   echo "First consumer:"
+   kubectl exec -n first-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
+   echo "Second consumer:"
+   kubectl exec -n second-consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
+   ```
+
+   Since we've increased the timeout for the first consumer, you should get an actual response, while the request with the second consumer still results in a timeout:
+   ```sh
+   ```
+   {:.no-copy-code}
