@@ -112,6 +112,9 @@ In this example, we'll create two different consumer namespaces, and apply diffe
    ```
    {:.no-copy-code}
 
+   {:.info}
+   > If you get a `container not found` error, it may be because the consumer pod takes a few seconds to initialize. Wait a few seconds and try again.
+
 ## Add a MeshTimeout producer policy
 
 1. Add a [MeshTimeout](/mesh/policies/meshtimeout/) producer policy with a one second timeout:
@@ -155,7 +158,7 @@ In this example, we'll create two different consumer namespaces, and apply diffe
    ```
    {:.no-copy-code}
 
-   {{site.mesh_product_name}} adds custom labels to the policy. The `kuma.io/policy-role` label set to `producer` indicates the policy applies to the same namespace as the MeshService it targets in `spec.to`. In this example the targeted MeshService is `demo-app`, which is in the `kong-mesh-demo` namespace.
+   {{site.mesh_product_name}} adds custom labels to the policy. The `kuma.io/policy-role` label set to `producer` indicates that the policy applies to the same namespace as the MeshService it targets in `spec.to`. In this example the targeted MeshService is `demo-app`, which is associated with the `kong-mesh-demo` namespace.
 
 ## Validate the MeshTimeout policy
 
@@ -219,7 +222,7 @@ upstream request timeout
    ```
    {:.no-copy-code}
 
-   {{site.mesh_product_name}} adds custom labels to the policy. The `kuma.io/policy-role` label set to `consumer` indicates the policy applies to the consumer namespace, `first-consumer` in this example. This overrides the producer policy.
+   The `kuma.io/policy-role` label set to `consumer` indicates the policy applies to the consumer namespace, `first-consumer` in this example. This overrides the producer policy.
 
 1. Send a request to the demo app using the first consumer namespace:
 
@@ -231,7 +234,7 @@ upstream request timeout
 
    ```sh
    {
-       "counter": 1,
+       "counter": 2,
        "zone": ""
    }
    ```
