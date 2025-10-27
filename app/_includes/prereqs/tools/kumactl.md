@@ -9,7 +9,4 @@
    brew install kumactl
    ```
 
-1. Add Kuma binaries to your path:
-   ```sh
-   export PATH=$(pwd)/kuma-{{site.data.mesh_latest.version}}/bin:$PATH
-   ```
+1. Add the Kuma binaries directory to your path. By default, the directory is `/kuma-{{site.data.mesh_latest.version}}/bin`.
