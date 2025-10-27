@@ -37,10 +37,10 @@ An MCP Server is an HTTP JSON-RPC endpoint that advertises callable **Tools**, a
 ## Create the MCP client
 To create a new MCP Client, complete the following:
 1. From your Insomnia project, click **Create**.
-2. In the **Name** box, type a name for the MCP Client.
-3. Click **Create** 
-4. To connect your MCP client to an MCP server, click **Connect**.
-5. In the left pane, confirm that discovered Tools, Prompts, and Resources appear.
+1. In the **Name** box, type a name for the MCP Client.
+1. Click **Create** 
+1. To connect your MCP client to an MCP server, click **Connect**.
+1. In the left pane, confirm that discovered Tools, Prompts, and Resources appear.
 
 ## Explore the interface
 - In the **Right pane**, view discovered tools, resources, and prompts from the discovered MPC server. If the MPC server publishes a new version.
