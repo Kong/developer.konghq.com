@@ -2,7 +2,7 @@
 title: MCP clients in Insomnia
 content_type: reference
 layout: reference
-description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Server, and discover available Tools, Prompts, and Resources.
+description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Server, and discover available tools, prompts, and resources.
 breadcrumbs:
   - /insomnia/
   - /insomnia/mcp-servers/
