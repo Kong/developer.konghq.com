@@ -194,8 +194,8 @@ rows:
           - type: feature_table
             config:
               columns:
-                - title: Hobby
-                  key: hobby
+                - title: Essentials
+                  key: essentials
                 - title: Pro
                   key: pro
                 - title: Enterprise
@@ -203,49 +203,49 @@ rows:
               features:
                 - title: |
                     [Local storage](/insomnia/storage/#local-vault)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [API testing](/insomnia/test/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Cloud-hosted mock server](/insomnia/mock-servers/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Automated API testing](/inso-cli/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [End-to-End Encryption](/insomnia/end-to-end-encryption/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Cloud Sync](/insomnia/storage/#cloud-sync)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Git Sync](/insomnia/storage/#git-sync)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: true
                   ee: true
                 - title: |
                     [Enterprise SSO (SAML, OIDC)](/insomnia/sso/)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: false
                   ee: true
                 - title: |
                     [Enterprise support](/insomnia/enterprise/)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: false
                   ee: true
