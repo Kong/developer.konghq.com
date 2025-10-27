@@ -154,7 +154,7 @@ For example, to capture all requests with a 503 response:
 ```sh
 http.response.status_code==503
 ```
-The list of all possible sampling expressions are captured here [Sampling Rules](https://developer.konghq.com/gateway/routing/expressions/)
+The list of all possible sampling expressions are captured here [Sampling Rules](/gateway/routing/expressions/)
 
 A sample trace is shown below. By inspecting the spans, you can see that the bulk of the latency occurs in the pre-function plugin during the access phase.
 
