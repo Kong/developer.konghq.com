@@ -1,7 +1,8 @@
-name: kafka_knep
+name: kafka_cluster
 
 networks:
   kafka:
+    name: kafka_event_gateaway_kafka
 
 services:
   kafka1:
