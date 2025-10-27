@@ -40,7 +40,7 @@ faqs:
 - **[Git sync](/insomnia/storage/#git-sync)** stores your Insomnia project in your third-party Git repository so you can use standard Git workflows, for example GitHub, GitLab, or Bitbucket. Your project data lives in your Git provider’s repository, not Insomnia Cloud.
 - **3-way merge** is the conflict-resolution UI that appears during Git sync when conflicting edits are detected. You select which changes to keep, and you can perform and combine incoming and local manual edits where supported to stay in full control of the result.
 
-## When 3-way merge appears
+## How it works
 
 Insomnia opens the merge view only when both of the following are true:
 - Your local changes and the remote branch modify the same content.
