@@ -1,8 +1,8 @@
 ---
-title: Create an MCP Client
+title: MCP Servers in Insomnia
 content_type: reference
 layout: reference
-description: Connect Insomnia to an MCP Server and discover available Tools, Prompts, and Resources.
+description: Learn about MCP servers in insomnia, connect Insomnia to an MCP Server, and discover available Tools, Prompts, and Resources.
 breadcrumbs:
   - /insomnia/
   - /insomnia/mcp-servers/
