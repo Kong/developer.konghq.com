@@ -187,7 +187,7 @@
    apiVersion: kuma.io/v1alpha1
    kind: Mesh
    metadata:
-     name: kong-mesh-demo
+     name: default
    spec:
      meshServices:
        mode: Exclusive
