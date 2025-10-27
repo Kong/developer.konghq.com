@@ -34,7 +34,7 @@ Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to acc
 
 An MCP Server is an HTTP JSON-RPC endpoint that advertises callable **Tools**, available **Prompts**, and structured **Resources**. The MCP Client in Insomnia discovers these elements, which allows you to test, query, or invoke them directly within the app. Each workspace can contain multiple MCP Clients.
 
-## Create the MCP client
+### Create the MCP client
 To create a new MCP Client, complete the following:
 1. From your Insomnia project, click **Create**.
 1. In the **Name** box, type a name for the MCP Client.
