@@ -40,7 +40,7 @@ breadcrumbs:
 
 ## What is a virtual cluster?
 
-Virtual clusters are the primary way clients interact with the {{site.event_gateway_short}} proxy.q
+Virtual clusters are the primary way clients interact with the {{site.event_gateway_short}} proxy.
 They allow you to isolate clients from each other when connecting to the same [backend cluster](/event-gateway/entities/backend-cluster/),
 and provide each client with modified view while still appearing as a standard Kafka cluster.
 
@@ -109,10 +109,6 @@ rows:
 You will need to increase the number of virtual clusters if you want to create multiple environments or products on top of the same physical cluster.
 
 Here are some common patterns:
-
-* **Environment isolation**: You can create isolated `dev`, `test`, and `prod` namespaces on top of the same physical Kafka cluster.
-If you have a topic named `orders` in each virtual cluster, this will map transparently to different backend topics: `dev-orders`, `test-orders`, and `prod-orders`. 
-This provides isolation and automatic name resolution per environment.
 
 * **Environment isolation**: You can create isolated `dev`, `test`, and `prod` namespaces on top of the same physical Kafka cluster.
 If you have a topic named `orders` in each virtual cluster, this will map transparently to different backend topics: `dev-orders`, `test-orders`, and `prod-orders`. 
