@@ -51,6 +51,20 @@ gateway:
       commands:
         - deck gateway reset -f
 
+  ai-gateway:
+    setup:
+      commands:
+        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
+        - sleep 5
+
+    cleanup:
+      commands:
+        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
+
+    reset:
+      commands:
+        - deck gateway reset -f
+
 konnect:
   gateway:
     setup:
