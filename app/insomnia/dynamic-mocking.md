@@ -93,8 +93,8 @@ rows:
 Use dynamic templates when defining a mock route’s response body:
 
 1. Create or open a mock server and add a **route**.
-2. In **Response body**, enter a **Liquid** template that reads `req.*` and/or `faker.*`.
-3. (Optional) Set **Status** and **Headers** for the route.
-4. Send a request to the mock route and verify the rendered output.
+1. In **Response body**, enter a **Liquid** template that reads `req.*` and/or `faker.*`.
+1. (Optional) Set **Status** and **Headers** for the route.
+1. Send a request to the mock route and verify the rendered output.
 
 > Self-hosted mocks run the published container image from the repository.
