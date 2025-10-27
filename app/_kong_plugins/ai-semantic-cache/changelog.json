@@ -67,6 +67,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where the DELETE /ai-semantic-cache returned 500 even deletion was successful, when using pgvector as vectordb.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the DELETE /ai-semantic-cache with non-existent key returned incorrect status 204.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI inference requests to non-OpenAI providers in the stream mode were not supported.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where AI upstream URL trailing would be empty.",

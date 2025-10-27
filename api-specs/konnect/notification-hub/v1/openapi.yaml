@@ -228,6 +228,14 @@ components:
       schema:
         $ref: '#/components/schemas/ConfigurationFilterParameters'
       style: deepObject
+    eventId:
+      name: eventId
+      in: path
+      required: true
+      description: Formatted string ID of the notification event.
+      schema:
+        type: string
+        example: invoice-ready
     NotificationFilter:
       name: filter
       description: Filters a collection of notifications.
@@ -236,6 +244,13 @@ components:
       schema:
         $ref: '#/components/schemas/NotificationFilterParameters'
       style: deepObject
+    notificationId:
+      name: notificationId
+      in: path
+      required: true
+      description: ID of the notification.
+      schema:
+        type: string
     PageAfter:
       name: 'page[after]'
       description: 'Request the next page of data, starting with the item after this parameter.'
@@ -254,21 +269,6 @@ components:
       schema:
         type: string
         example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
-    eventId:
-      name: eventId
-      in: path
-      required: true
-      description: Formatted string ID of the notification event.
-      schema:
-        type: string
-        example: invoice-ready
-    notificationId:
-      name: notificationId
-      in: path
-      required: true
-      description: ID of the notification.
-      schema:
-        type: string
     subscriptionId:
       name: subscriptionId
       in: path
@@ -673,6 +673,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
