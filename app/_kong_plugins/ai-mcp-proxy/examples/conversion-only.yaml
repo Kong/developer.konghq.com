@@ -5,7 +5,7 @@ title: 'Define reusable MCP tool specifications without serving them.'
 extended_description: |
   Define reusable MCP tool specifications without serving them.
 
-  AI MCP Proxy plugins with conversion-only mode does not serve requests themselves. They must be paired with a `listener` plugin that references their tags. For an example, see[listener](/plugins/ai-mcp-proxy/examples/conversion-only/) example for details.
+  AI MCP Proxy plugins running in conversion-only mode don't serve requests themselves. They must be paired with a `listener` plugin that references their tags. See the [listener](/plugins/ai-mcp-proxy/examples/conversion-only/) example for details.
 
   {:.info}
   > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
