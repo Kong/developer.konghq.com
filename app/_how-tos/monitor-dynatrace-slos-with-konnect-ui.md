@@ -67,9 +67,10 @@ Now that your integration is configured, you can create a {{site.konnect_catalog
 > In this tutorial, we'll refer to your ingested Dynatrace SLO as `billing-slo`.
 
 1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
+1. In the Catalog sidebar, click **Services**.
 1. Click **New service**.
 1. In the **Display Name** field, enter `Billing Service`.
-1. In the **Name** field, enter `billing`.
+1. In the **Name** field, enter `billing-service`.
 1. Click **Create**.
 1. Click **Map Resources**.
 1. Select `billing-slo`. 
@@ -86,7 +87,7 @@ To confirm that the Dynatrace resource is now mapped to the intended service, na
 
 1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
-1. Click the **APIs** service.
+1. Click the **Billing Service** service.
 1. Click the **Resources** tab.
 
 You should see the `billing-slo` resource listed.
