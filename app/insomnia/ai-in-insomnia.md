@@ -44,7 +44,7 @@ faqs:
       3. From the LLM type you want to deactivate, click **Deactivate**.
 
       Once deactivated, the Insomnia AI feature toggles are deactivated until a new LLM is configured.
-  - q: How do I manage the AI features across my Organization?
+  - q: How do I manage the AI features across my organization?
     a: |
       1. In **Insomnia Admin**, open the **AI Settings** page.
       2. In **AI Features**, turn the following features **on** or **off** at the instance level:
