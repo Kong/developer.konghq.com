@@ -58,6 +58,7 @@ autoscalers
 autoscales
 autoscaling
 aws
+AZs
 backfilled
 Backfilling
 backfilling
@@ -95,6 +96,7 @@ callees
 CAs
 callout
 callouts
+cef
 certificate_admin
 charset
 chatbot
@@ -432,6 +434,7 @@ KPIs
 ksearch
 kubeconfig
 kubectl
+kubectx
 kubelet
 kubernetes
 Kuma
@@ -503,9 +506,11 @@ minify
 minifying
 minikube
 minio
+misconfiguration
 misconfigurations
 misconfigured
 Mockbin
+modelarmor
 Moesif
 Moesif
 moesif

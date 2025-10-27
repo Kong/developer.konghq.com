@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /audit-log-replay-job:
     put:
@@ -419,6 +421,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

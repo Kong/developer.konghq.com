@@ -24,6 +24,8 @@ module Jekyll
         end
 
         def title
+          return page_title if @page.url == '/api/errors/'
+
           case @page.data['content_type']
           when 'api'
             page_title

@@ -1,21 +1,30 @@
-description: 'Generate an MCP server from {{ site.base_gateway }} Service'
+description: 'Configure AI Gateway passthrough for existing MCP Servers'
 
-title: 'Generate an MCP server in passthrough-listener mode'
+title: 'Configure AI Gateway passthrough for existing MCP Servers'
 
 extended_description: |
-  Generate an MCP server from {{ site.base_gateway }} services.
+  Configure AI Gateway passthrough for existing MCP Servers to enable proxying and observability.
 
   {:.warning}
-  > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+  > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
   > ```yaml
   > services:
-  > - name: weather-service
-  >   url: https://api.weatherapi.com/v1/current.json
+  > - name: mcp-service
+  >   url: http://host.docker.internal:3000
   >   routes:
-  >   - name: weather-route
+  >   - name: mcp-route
   >     paths:
-  >     - /weather
+  >     - /marketplace
   > ```
+
+  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you’ll need an upstream HTTP API to expose.
+  Use this mock API to test the plugin without relying on an external service; it simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+
+  ```bash
+  curl -s -o api.js "https://gist.githubusercontent.com/subnetmarco/5ddb23876f9ce7165df17f9216f75cce/raw/a44a947d69e6f597465050cc595b6abf4db2fbea/api.js"
+  npm install express
+  node api.js
+  ```
 
 weight: 900
 
@@ -24,10 +33,7 @@ requirements:
 
 config:
   mode: passthrough-listener
-  logging:
-    log_statistics: true
-    log_payloads: false
-  max_request_body_size: 16384
+  max_request_body_size: 1048576
 
 tools:
   - deck

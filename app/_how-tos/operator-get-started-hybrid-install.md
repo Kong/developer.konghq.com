@@ -35,6 +35,10 @@ tldr:
 prereqs:
   show_works_on: false
   skip_product: true
+
+tags:
+  - install
+  - helm
 ---
 
 {% assign gwapi_version = "1.3.0" %}
@@ -54,8 +58,6 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 ## Install {{ site.operator_product_name }}
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
-
-{% include k8s/cert-manager.md %}
 
 ## Validate
 

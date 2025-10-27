@@ -1,0 +1,221 @@
+metadata:
+  title: Datakit
+  content_type: landing_page
+  description: |
+    Datakit is a Kong Gateway plugin and workflow engine for interacting with third-party APIs. 
+    It allows you to combine API responses, transform data, manage secrets, and build powerful request-processing pipelines.
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+  breadcrumbs:
+    - /gateway/
+rows:
+  - header:
+      type: h1
+      text: "Datakit"
+      sub_text: "A workflow engine for interacting with external APIs and transforming request and response data"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing Datakit"
+              blocks:
+                - type: text
+                  text: |
+                    Datakit is a {{site.base_gateway}} plugin that lets you define workflows connecting multiple APIs, transforming their responses, and building dynamic data pipelines—without custom code.
+
+                    It can:
+                    - Set up internal auth within your ecosystem
+                    - Call and combine third-party APIs
+                    - Modify and transform request or response bodies
+                    - Interact with {{site.base_gateway}} runtime data
+                    - Return custom responses directly to clients
+                    - Integrate with Vault and caching systems
+
+                    Datakit is ideal for complex API integrations, data transformations, and building lightweight backends directly at the edge.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/datakit-flow-editor-node.png
+              alt_text: "Kong Datakit flow editor overview"
+
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Get started with Datakit
+              description: |
+                Learn how to configure Datakit to combine responses from two third-party APIs and return the result directly to the client.
+              icon: /assets/icons/rocket.svg
+              cta:
+                text: See tutorial
+                url: /how-to/get-started-with-datakit/
+      - blocks:
+          - type: card
+            config:
+              title: Datakit plugin reference
+              description: |
+                Explore the detailed reference for all Datakit node types, configurations, and connection rules.
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: See reference
+                url: /plugins/datakit/
+      - blocks:
+          - type: card
+            config:
+              title: Flow editor
+              description: |
+                Use the {{site.konnect_short_name}} visual flow editor to drag and drop nodes, visualize connections, and build Datakit workflows.
+              icon: /assets/icons/graph.svg
+              cta:
+                text: Learn more
+                url: /plugins/datakit/#datakit-flow-editor
+
+  - header:
+      type: h2
+      text: "How Datakit works"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Datakit executes workflows as sequences of **nodes**—each node represents a specific operation such as making an HTTP call, transforming data, or retrieving a property from the gateway.
+
+                    You can link nodes together to create execution flows where the output of one node feeds into another. 
+                    This makes it easy to build sophisticated integrations that pull, merge, and enrich data from multiple sources.
+
+                    Examples include:
+                    - Merging responses from two APIs
+                    - Dynamically updating request headers
+                    - Injecting data from Vault secrets
+                    - Returning a custom API response directly from the gateway
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                sequenceDiagram
+                  actor Client
+                  participant Datakit
+                  participant CatFacts
+                  participant DogFacts
+
+                  Client->>Datakit: Request /animal-fact
+                  Datakit->>CatFacts: Fetch cat fact
+                  Datakit->>DogFacts: Fetch dog fact
+                  CatFacts->>Datakit: Return fact
+                  DogFacts->>Datakit: Return fact
+                  Datakit->>Client: Merge & return combined JSON response
+
+  - header:
+      type: h2
+      text: "Common use cases"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Third-party authentication
+              description: |
+                Inject authentication headers dynamically before proxying requests to external APIs.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: View example
+                url: /plugins/datakit/examples/authenticate-third-party/
+      - blocks:
+          - type: card
+            config:
+              title: Bundle API responses
+              description: |
+                Combine multiple third-party API responses into a single client response.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: View example
+                url: /plugins/datakit/examples/combine-two-apis-into-one-response/
+      - blocks:
+          - type: card
+            config:
+              title: Authenticate with vault secrets
+              description: |
+                Securely authenticate to third-party APIs using secrets managed in Vault.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: View example
+                url: /plugins/datakit/examples/authenticate-with-vault-secret/
+      - blocks:
+          - type: card
+            config:
+              title: Conditional cache manipulation
+              description: |
+                Use the `cache` and `branch` nodes to conditionally fetch or store cached responses.
+              icon: /assets/icons/code.svg
+              cta:
+                text: View example
+                url: /plugins/datakit/examples/conditionally-store-cached-items/
+      - blocks:
+          - type: card
+            config:
+              title: Manipulate request headers
+              description: |
+                Adjust or enrich requests and responses dynamically using the `jq` node.
+              icon: /assets/icons/code.svg
+              cta:
+                text: View example
+                url: /plugins/datakit/examples/manipulate-request-headers/
+
+  - header:
+      type: h2
+      text: "Node types"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Datakit provides a flexible set of node types that form the building blocks of any workflow:
+
+                    - [`branch`](/plugins/datakit/#branch-node): Execute different nodes based on input conditions  
+                    - [`cache`](/plugins/datakit/#cache-node): Store and fetch data from cache  
+                    - [`call`](/plugins/datakit/#call-node): Send HTTP requests to external APIs  
+                    - [`jq`](/plugins/datakit/#jq-node): Transform data and cast variables using `jq`  
+                    - [`exit`](/plugins/datakit/#exit-node): Return directly to the client  
+                    - [`property`](/plugins/datakit/#property-node): Read and write {{site.base_gateway}} properties  
+                    - [`static`](/plugins/datakit/#static-node): Define static input values  
+                    
+                    Datakit also supports [implicit nodes](/plugins/datakit/#implicit-nodes) such as `request`, `response`, `vault`, and `service_request`, which represent gateway lifecycle events.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/datakit-code-editor.png
+              alt_text: Datakit code editor view
+
+  - header:
+      type: h2
+      text: "Debugging and development"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Datakit includes built-in debugging and execution tracing features to make it easier to troubleshoot node connections and data flow.
+
+                    - Enable the `debug` option to expose node execution errors in responses.
+                    - Add the `X-DataKit-Debug-Trace` header to get a full node execution trace, including timing, dependencies, and failures.
+                    - Trace reports include node status (`NODE_ERROR`, `NODE_COMPLETE`, etc.) and dependency chains for in-depth analysis.
+      - blocks:
+          - type: card
+            config:
+              title: Debugging
+              description: Learn more about Datakit’s debug and tracing modes.
+              icon: /assets/icons/monitor.svg
+              cta:
+                text: See debugging section
+                url: /plugins/datakit/#debugging

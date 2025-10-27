@@ -43,7 +43,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": ["ai-gateway", "gateway", "insomnia", "mesh", "kic", "service-catalog", "advanced-analytics", "dev-portal", "operator", "konnect", "event-gateway", "reference-platform"]
+        "enum": ["ai-gateway", "gateway", "insomnia", "mesh", "kic", "catalog", "advanced-analytics", "dev-portal", "operator", "konnect", "event-gateway", "konnect-reference-platform"]
       }
     },
     "tools": {

@@ -59,7 +59,8 @@
     <!-- OneTrust Cookies Consent Notice end for konghq.com -->
     {% endif %}
 
-    {% if jekyll.environment == "production" %}
+    {% if jekyll.environment == "production" and page.url != '/search/' %}
+    <!-- Disable Segment on /search/ for now -->
     <!-- Segment start for konghq.com -->
      {% assign category = "'" | append: page.content_type | append: "'" %}
     <script>
@@ -91,7 +92,7 @@
       data-project-color="#121418"
       data-modal-header-bg-color="#121418"
       data-modal-title-color="#ffffff"
-      data-modal-override-open-id="ask-ai-button"
+      data-modal-override-open-selector=".ask-ai-button"
       data-kapa-branding-hide="true"
       data-project-logo="https://developer.konghq.com/assets/logos/konglogo-gradient-secondary.svg"
     ></script>

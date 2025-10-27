@@ -1,23 +1,42 @@
-description: 'Generate an MCP server from {{ site.base_gateway }} services'
+description: 'Aggregate MCP tools from conversion-only mode plugins'
 
-title: 'Generate an MCP server using listener mode'
+title: 'Aggregate MCP tools from conversion-only mode plugins'
 
 extended_description: |
-  Listener mode works together with `conversion-only` mode.
+  Listener mode works together with [`conversion-only`](/plugins/ai-mcp-proxy/examples/conversion-only/) mode:
   - Configure one or more Routes with the plugin in `conversion-only` mode.
-    Each `conversion-only` Route defines tools and assigns them a `tags` value.
-  - Configure a separate Route with the plugin in `listener` mode (shown below).
-    The listener uses [`config.server.tag`](./reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server.
+    Each `conversion-only` Route defines tools and assigns them a `tags[]` value.
+  - Configure a separate Route for the plugin in the `listener` mode:
+
+    > ```yaml
+    > services:
+    > - name: mcp-service
+    >   url: http://host.docker.internal:3000
+    >   routes:
+    >   - name: mcp-listener
+    >     paths:
+    >     - /mcp-listener
+    > ```
+
+    Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you’ll need an upstream HTTP API to expose.
+    Use this mock API to test the plugin without relying on an external service; it simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+
+    ```bash
+    curl -s -o api.js "https://gist.githubusercontent.com/subnetmarco/5ddb23876f9ce7165df17f9216f75cce/raw/a44a947d69e6f597465050cc595b6abf4db2fbea/api.js"
+    npm install express
+    node api.js
+    ```
+    The `listener` uses [`config.server.tag`](/plugins/ai-mcp-proxy/reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server based on `tags[]` defined in the `conversion-only` plugin(s) defined on the plugin level.
 
 weight: 900
 
 requirements:
-- "At least one Route with the plugin in `conversion-only` mode, tagged with the same value as `server.tag`"
+- "At least one Route with the plugin in `conversion-only` mode, tagged at the plugin level with the same value as `config.server.tag`"
 
 config:
   mode: listener
   server:
-    tag: weather-tools
+    tag: marketplace-tools
     timeout: 45000
   logging:
     log_statistics: true

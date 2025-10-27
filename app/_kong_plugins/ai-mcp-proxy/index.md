@@ -168,27 +168,45 @@ columns:
     key: mode
   - title: Description
     key: description
+  - title: Use cases
+    key: usecase
 rows:
   - mode: |
       [`passthrough-listener`](./examples/passthrough-listener/)
     description: |
       Listens for incoming MCP requests and proxies them to the `upstream_url` of the Gateway Service.
       Generates MCP observability metrics for traffic, making it suitable for third-party MCP servers hosted by users.
-  - mode:  |
+    usecase: |
+      Use when you already operate an MCP server and want {{site.base_gateway}} to act as an authenticated, observable entrypoint for it.
+      Useful for exposing a third-party or internally hosted MCP service through {{site.base_gateway}}.
+  - mode: |
       [`conversion-listener`](./examples/conversion-listener/)
     description: |
       Converts RESTful API paths into MCP tools **and** accepts incoming MCP requests on the Route path.
       You can define tools directly in the plugin configuration and optionally set a server block.
-  - mode:  |
+    usecase: |
+      Use when you want to make an existing REST API available to MCP clients directly through {{site.base_gateway}}.
+      Common for services that both define and handle their own tools.
+  - mode: |
       [`conversion-only`](./examples/conversion-only/)
     description: |
       Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
-      This mode requires [`config.server.tag`](./reference/#schema--config-server-tag) in the plugin configuration, but does not define a server.
-  - mode:  |
+      `tags` can be defined at the plugin level and are used by `listener` plugins to expose the tools. This mode does not define a server.<br/><br/>
+
+      This mode must be used together with other AI MCP Proxy plugins configured with the `listener` mode.
+    usecase: |
+      Use when you want to define reusable tool specifications without serving them.
+      Suitable for teams that maintain a shared library of tool definitions for other listener plugins.
+  - mode: |
       [`listener`](./examples/listener/)
     description: |
       Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` tools using the [`config.server.tag`](./reference/#schema--config-server-tag) property.
-      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.
+      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.<br/><br/>
+
+      This mode must be used together with other AI MCP Proxy plugins configured with the `conversion-only` mode.
+    usecase: |
+      Use when you need a single MCP endpoint that aggregates tools from multiple `conversion-only` plugins.
+      Typical in multi-service or multi-team environments that expose a unified MCP interface.
 {% endtable %}
 <!-- vale on -->
 

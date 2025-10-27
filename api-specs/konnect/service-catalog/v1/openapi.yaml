@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v1'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v1'
+    description: Singapore Production region
 paths:
   /catalog-services:
     post:
@@ -67,7 +69,7 @@ paths:
           example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
     get:
       operationId: fetch-catalog-service
-      summary: Fetch Service
+      summary: Get a Service
       description: Fetches a service.
       responses:
         '200':
@@ -193,7 +195,7 @@ paths:
           example: 3f51fa25-310a-421d-bd1a-007f859021a3
     get:
       operationId: fetch-integration-instance
-      summary: Fetch Integration Instance
+      summary: Get an Integration Instance
       description: Fetches a integration instance.
       responses:
         '200':
@@ -398,7 +400,7 @@ paths:
           example: AflTNLY0tTQhv2my
     get:
       operationId: fetch-resource
-      summary: Fetch Resource
+      summary: Get a Resource
       description: Fetches a resource by ID.
       responses:
         '200':
@@ -529,7 +531,7 @@ paths:
           example: d277faad-ed4e-4c56-a0fb-acce065dee34
     get:
       operationId: fetch-resource-mapping
-      summary: Fetch Resource Mapping
+      summary: Get a Resource Mapping
       description: Fetches a resource mapping by ID.
       responses:
         '200':
@@ -1002,6 +1004,11 @@ components:
               example:
                 - read
                 - write
+            scope_delimiter:
+              description: |
+                A string used to separate multiple scopes in the `scope` parameter.
+              type: string
+              default: ' '
             rolling_refresh_exp_seconds:
               description: |
                 Number of seconds before the refresh token grant can no longer be used to mint
@@ -1600,6 +1607,7 @@ components:
         - $ref: '#/components/schemas/CreateOAuthCredential'
         - $ref: '#/components/schemas/CreateGitHubAppInstallationCredential'
         - $ref: '#/components/schemas/CreateMultiKeyAuthCredential'
+        - $ref: '#/components/schemas/CreateAWSRoleDelegationAuthCredential'
       title: CreateIntegrationInstanceAuthCredential
     IntegrationInstanceAuthCredential:
       description: Object containing metadata for an integration instance auth credential.
@@ -1607,6 +1615,7 @@ components:
         - $ref: '#/components/schemas/OAuthCredential'
         - $ref: '#/components/schemas/GitHubAppInstallationCredential'
         - $ref: '#/components/schemas/MultiKeyAuthCredential'
+        - $ref: '#/components/schemas/AWSRoleDelegationAuthCredential'
       title: IntegrationInstanceAuthCredential
     CreateOAuthCredential:
       description: Payload used to create an `OAuth` credential for an integration instance.
@@ -1719,6 +1728,30 @@ components:
         - type
         - config
       writeOnly: true
+    CreateAWSRoleDelegationAuthCredential:
+      description: Payload used to create an `AWS Role Delegation` credential for an integration instance.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - aws_role_delegation
+        config:
+          type: object
+          additionalProperties: false
+          properties:
+            role_arn:
+              description: |
+                The AWS Role ARN string
+              type: string
+              example: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
+          required:
+            - role_arn
+          title: CreateAWSRoleDelegationAuthCredentialConfig
+      additionalProperties: false
+      required:
+        - type
+        - config
     OAuthCredential:
       description: Represents a credential scoped to an integration instance that supports the `OAuth` authorization strategy.
       type: object
@@ -1869,6 +1902,60 @@ components:
         - created_at
         - type
       title: MultiKeyAuthCredential
+    AWSRoleDelegationAuthCredential:
+      description: Represents a credential scoped to an integration instance that supports the `AWS Role Delegation` authorization strategy.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        integration_instance:
+          $ref: '#/components/schemas/IntegrationInstanceRef'
+        missing_permissions:
+          description: List of detected missing permissions required to enable the full functionality of the given integration instance.
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingPermission'
+        tainted:
+          description: Indicates that the credential is no longer valid and must be replaced with a new valid credential.
+          type: boolean
+          example: false
+        expires_at:
+          description: |
+            Timestamp denoting when the when the credential will expire in RFC-3339 format with a "T" character separating date from time within the field value.
+            When expired, the credential must be replaced with a new valid credential to re-enable full functionality for the given integration instance.
+
+            A `null` value indicates no known expiration time.
+          type: string
+          format: date-time
+          example: '2025-04-01T07:20:50Z'
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        type:
+          type: string
+          enum:
+            - aws_role_delegation
+        config:
+          type: object
+          properties:
+            role_arn:
+              description: The Role ARN use for AWS Assume Role.
+              type: string
+          required:
+            - role_arn
+          title: AWSRoleDelegationAuthCredentialConfig
+      required:
+        - id
+        - integration_instance
+        - missing_permissions
+        - tainted
+        - expires_at
+        - created_at
+        - type
+        - config
+      title: AWSRoleDelegationAuthCredential
     MissingPermission:
       type: object
       properties:
@@ -2811,6 +2898,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -3513,6 +3601,25 @@ components:
           id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
           name: swaggerhub-internal
           display_name: SwaggerHub (Internal)
+    SampleCreateAWSRoleDelegationAuthPayload:
+      value:
+        type: aws_role_delegation
+        config:
+          role_arn: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
+    SampleCreateAWSRoleDelegationAuthResponse:
+      value:
+        id: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        type: aws_role_delegation
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2022-11-04T20:10:06.927Z'
+        integration_instance:
+          id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
+          name: swaggerhub-internal
+          display_name: SwaggerHub (Internal)
+        config:
+          role_arn: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
     GitLabSelfManagedAuthConfigPayload:
       value:
         type: oauth
@@ -3896,6 +4003,8 @@ components:
               $ref: '#/components/examples/SampleCreateDatadogMultiKeyAuthPayload'
             Traceable:
               $ref: '#/components/examples/SampleCreateTraceableMultiKeyAuthPayload'
+            AwsApiGateway:
+              $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthPayload'
     UpsertIntegrationInstanceAuthConfigRequest:
       required: true
       content:
@@ -4042,6 +4151,8 @@ components:
           examples:
             SwaggerHub:
               $ref: '#/components/examples/SampleCreateSwaggerHubMultiKeyAuthResponse'
+            AwsApiGateway:
+              $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthResponse'
     IntegrationInstanceAuthConfigResponse:
       description: A response containing integration instance auth config.
       content:

@@ -6,6 +6,20 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where the key_sets cache could not be invalidated correctly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.6": [
+    {
+      "message": "Fixed an issue where the key_sets cache could not be invalidated correctly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where an unnecessary warn log was printed.",

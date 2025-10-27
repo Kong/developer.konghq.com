@@ -6,7 +6,7 @@ products:
     - insomnia
 
 tags:
-  - documents
+  - insomnia-documents
   - collections
 
 tldr: 

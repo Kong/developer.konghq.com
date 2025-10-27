@@ -93,7 +93,7 @@ paths:
   /identity-providers:
     get:
       operationId: get-identity-providers
-      summary: Retrieve Identity Providers
+      summary: List Identity Providers
       description: |
         Retrieves the identity providers available within the organization. This operation provides information about 
         various identity providers for SAML or OIDC authentication integrations.
@@ -212,7 +212,7 @@ paths:
   /identity-provider:
     get:
       operationId: get-idp-configuration
-      summary: Fetch IdP Configuration
+      summary: Get the IdP Configuration
       description: Fetch the IdP configuration.
       responses:
         '200':
@@ -266,7 +266,7 @@ paths:
         - Auth Settings
     get:
       operationId: get-idp-team-mappings
-      summary: Fetch Team Mapping
+      summary: Get a Team Mapping
       description: Fetch the IdP group to Konnect team mapping.
       parameters:
         - $ref: '#/components/parameters/PageSize'
@@ -287,7 +287,7 @@ paths:
   /identity-provider/team-group-mappings:
     get:
       operationId: get-team-group-mappings
-      summary: Fetch Team Group Mappings
+      summary: Get a Team Group Mappings
       description: |-
         Retrieves the mappings between Konnect Teams and Identity Provider Groups.
         Returns a 400 error if an Identity Provider has not yet been configured.
@@ -455,7 +455,7 @@ paths:
           example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     get:
       operationId: get-team
-      summary: Fetch Team
+      summary: Get a Team
       description: Returns information about a team from a given team ID.
       responses:
         '200':
@@ -666,7 +666,7 @@ paths:
           example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     get:
       operationId: get-user
-      summary: Fetch User
+      summary: Get a User
       description: Returns the user object for the user ID specified as a path parameter.
       responses:
         '200':
@@ -882,7 +882,7 @@ paths:
   '/system-accounts/{accountId}':
     get:
       operationId: get-system-accounts-id
-      summary: Fetch System Account
+      summary: Get a System Account
       description: Returns the system account (SA) for the SA ID specified as a path parameter.
       responses:
         '200':
@@ -996,7 +996,7 @@ paths:
   '/system-accounts/{accountId}/access-tokens/{tokenId}':
     get:
       operationId: get-system-accounts-id-access-tokens-id
-      summary: Fetch System Account Access Token
+      summary: Get a System Account Access Token
       description: Returns the system account (SA) access token for the SA Access Token ID specified as a path parameter.
       responses:
         '200':
@@ -1066,7 +1066,7 @@ paths:
           type: string
     get:
       operationId: get-system-accounts-accountId-assigned-roles
-      summary: Fetch Assigned Roles for System Account
+      summary: List Assigned Roles for System Account
       description: Lists the roles belonging to a system account. Returns 400 if any filter parameters are invalid.
       parameters:
         - name: filter
@@ -1265,7 +1265,7 @@ paths:
   /users/me:
     get:
       operationId: get-users-me
-      summary: Retrieve My User Account
+      summary: Get My User Account
       description: Returns the user account for the user identified in the token of the request.
       responses:
         '200':
@@ -1280,7 +1280,7 @@ paths:
   /organizations/me:
     get:
       operationId: get-organizations-me
-      summary: Retrieve My Organization
+      summary: Get My Organization
       description: Returns the organization of the user identified in the token of the request.
       responses:
         '200':
@@ -1909,6 +1909,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -3044,6 +3045,8 @@ components:
               name:
                 description: Name of the system account access token.
                 type: string
+            required:
+              - name
     CreateSystemAccountAccessToken:
       content:
         application/json:
@@ -3055,6 +3058,9 @@ components:
               expires_at:
                 type: string
                 format: date-time
+            required:
+              - name
+              - expires_at
           examples:
             Sample Access Token:
               value:
@@ -4319,6 +4325,7 @@ components:
                 description: The token of the system account access token.
                 type: string
                 readOnly: true
+                x-sensitive: true
             example:
               id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
               name: Sample Access Token

@@ -7,7 +7,6 @@ metadata:
     {{site.konnect_saas}} authentication and authorization from your own identity
     provider.
   tags:
-    - konnect
     - authentication
   products:
     - konnect
@@ -35,7 +34,10 @@ rows:
                   * GitHub
                   * Microsoft
 
-                  **Multi-Factor Authentication (MFA)**: MFA is only required for {{site.konnect_short_name}} Plus and Enterprise users. {{site.konnect_short_name}} Plus and Enterprise users signing in with built-in authentication (i.e. using username and password) are prompted to set up MFA the first time that they sign in to {{site.konnect_short_name}}. New {{site.konnect_short_name}} signups using basic authentication can opt in to MFA during sign-up or later through the organization settings. MFA is recommended for all {{site.konnect_short_name}} organizations regardless of the organization tier as a security best practice. 
+                  **Multi-Factor Authentication (MFA)**: MFA is only required for {{site.konnect_short_name}} Plus and Enterprise users. 
+                  {{site.konnect_short_name}} Plus and Enterprise users signing in with built-in authentication (i.e. using username and password) are prompted to set up MFA the first time that they sign in to {{site.konnect_short_name}}. 
+                  New {{site.konnect_short_name}} signups using basic authentication can opt in to MFA during sign-up or later through the organization settings. 
+                  MFA is recommended for all {{site.konnect_short_name}} organizations regardless of the organization tier as a security best practice.  
                   If you need to reset your MFA, reach out to [Kong Support](https://support.konghq.com).
 
   - header:
