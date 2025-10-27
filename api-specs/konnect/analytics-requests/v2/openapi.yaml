@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /api-requests:
     post:
@@ -80,6 +82,7 @@ components:
               - $ref: '#/components/schemas/ConsumerFilterByField'
               - $ref: '#/components/schemas/ControlPlaneFilterByField'
               - $ref: '#/components/schemas/ControlPlaneGroupFilterByField'
+              - $ref: '#/components/schemas/CountryCodeFilterByField'
               - $ref: '#/components/schemas/DataPlaneNodeFilterByField'
               - $ref: '#/components/schemas/DataPlaneNodeVersionFilterByField'
               - $ref: '#/components/schemas/GatewayServiceFilterByField'
@@ -323,6 +326,10 @@ components:
             nullable: true
           control_plane_group:
             description: Control Plane Group ID associated with the request.
+            type: string
+            nullable: true
+          country_code:
+            description: Country code associated with the request.
             type: string
             nullable: true
           data_plane_node:
@@ -778,6 +785,22 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueUUID'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by control_plane_group
+    CountryCodeFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - country_code
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by country_code
     DataPlaneNodeFilterByField:
       allOf:
         - type: object
@@ -1784,6 +1807,7 @@ components:
             consumer: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:d69557ff-277c-4579-a821-4f8d158ae070'
             control_plane: d5ac5d88-efed-4e10-9dfe-0b0a6646c219
             control_plane_group: cafe2d4f-95ec-458c-8c88-62417018678d
+            country_code: CN
             data_plane_node: 'cafe2d4f-95ec-458c-8c88-62417018678d:122a0f86-029c-4292-82fd-f3b38e1cfa60'
             data_plane_node_version: 3.8.0.1
             gateway_service: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:523468b1-2e74-4b58-b30e-6f904e99e4d0'
@@ -1839,6 +1863,7 @@ components:
             consumer: null
             control_plane: d5ac5d88-efed-4e10-9dfe-0b0a6646c219
             control_plane_group: null
+            country_code: US
             data_plane_node: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:a3e0692c-2351-4c8e-acbe-e7a5185147de'
             data_plane_node_version: 3.8.0.1
             gateway_service: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:523468b1-2e74-4b58-b30e-6f904e99e4d0'

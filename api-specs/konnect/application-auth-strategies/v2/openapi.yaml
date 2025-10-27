@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.1
+  version: 2.0.2
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
@@ -17,6 +17,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v2'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v2'
+    description: Singapore Production region
 paths:
   /dcr-providers:
     post:
@@ -77,7 +79,7 @@ paths:
       - $ref: '#/components/parameters/DcrProviderId'
     get:
       operationId: get-dcr-provider
-      summary: Fetch DCR provider
+      summary: Get a DCR provider
       description: Returns a DCR provider.
       responses:
         '200':
@@ -1552,6 +1554,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

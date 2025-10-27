@@ -4,8 +4,6 @@ metadata:
   description: Customize the look, structure, and access of your Dev Portal with flexible page controls and branding options
   products:
     - dev-portal
-  tags:
-    - beta
 breadcrumbs:
   - /dev-portal/
 rows:

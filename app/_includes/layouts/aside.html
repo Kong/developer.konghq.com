@@ -2,14 +2,13 @@
     {% include releases_dropdown.html releases_dropdown=page.releases_dropdown release=page.release mobile=include.mobile %}
 {% endif %}
 
-{% ifhascontent controls %}
-    <div class="flex flex-col text-xs">
-        {% contentblock controls no-convert %}
-    </div>
-{% endifhascontent %}
-
 {% ifhascontent info_box %}
 <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
+{% comment %}XXX: Unfortunately, this needs to be here because contentblock caches the content.{% endcomment %}
+{% if page.content_type == 'how_to' %}
+    {% include_cached info_box/sections/controls.html works_on=page.works_on mobile=include.mobile %}
+{% endif %}
+
 {% contentblock info_box %}
 </div>
 {% endifhascontent %}

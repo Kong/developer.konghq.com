@@ -2,12 +2,12 @@ metadata:
   title: "{{site.konnect_short_name}} Reference Platform"
   content_type: landing_page
   products:
-    - reference-platform
+    - konnect-reference-platform
   description: |
     Provides a complete guide for platform builders to integrate {{site.konnect_saas}} into their engineering 
     organization and API delivery process. 
   tags:
-    - konnect
+    - kongair
     - automation
     - apiops
   breadcrumbs: 

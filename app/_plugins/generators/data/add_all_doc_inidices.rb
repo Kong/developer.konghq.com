@@ -15,11 +15,11 @@ module Jekyll
 
         @page.data['all_docs_indices'] = [product_index, tool_index].compact.map do |index|
           build_index_link(index)
-        end
+        end.uniq
       end
 
       def build_index_link(index)
-        { 'text' => index.data['title'], 'url' => index.url }
+        { 'text' => index.data['title'], 'url' => index.url, 'slug' => index.data['slug'] }
       end
 
       def product_index
@@ -45,8 +45,6 @@ module Jekyll
       end
 
       def product_expanded(product)
-        return 'kubernetes-ingress-controller' if product == 'kic'
-
         product
       end
     end

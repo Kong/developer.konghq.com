@@ -1,6 +1,4 @@
 import snowflake from "snowflake-sdk";
-import fs from "fs";
-import path from "path";
 
 snowflake.configure({
   logLevel: "ERROR",
@@ -22,7 +20,20 @@ export async function createFeedbackInSnowflake(
 
   const statementResult = await new Promise((resolve, reject) => {
     connection.execute({
-      sqlText: `INSERT INTO ${targetTableName} (id, url, sentiment, body, timestamp) VALUES (?, ?, ?, ?, ?)`,
+      sqlText: `
+        MERGE INTO ${targetTableName} AS t
+        USING (SELECT ? AS id, ? AS url, ? AS sentiment, ? AS body, ? AS timestamp) AS s
+          ON t.id = s.id
+        WHEN MATCHED THEN
+          UPDATE SET
+            url = s.url,
+            sentiment = s.sentiment,
+            body = s.body,
+            timestamp = s.timestamp
+        WHEN NOT MATCHED THEN
+          INSERT (id, url, sentiment, body, timestamp)
+          VALUES (s.id, s.url, s.sentiment, s.body, s.timestamp)
+      `,
       binds: [id, url.href, sentiment, body, new Date().toISOString()],
       complete: (err) => {
         if (err) {

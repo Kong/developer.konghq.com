@@ -98,16 +98,16 @@
     --color-kic-background: var(--color-semantic-blue-secondary);
     --color-mesh-brand: var(--color-semantic-orange-primary);
     --color-mesh-background: var(--color-semantic-orange-secondary);
-    --color-service-catalog-brand: var(--color-semantic-red-primary);
-    --color-service-catalog-background: var(--color-semantic-red-secondary);
+    --color-catalog-brand: var(--color-semantic-red-primary);
+    --color-catalog-background: var(--color-semantic-red-secondary);
     --color-dev-portal-brand: var(--color-semantic-teal-primary);
     --color-dev-portal-background: var(--color-semantic-teal-secondary);
-    --color-konnect-platform-brand: var(--color-semantic-grey-primary);
-    --color-konnect-platform-background: var(--color-semantic-grey-secondary);
-    --color-reference-platform-brand: var(--color-semantic-teal-primary);
-    --color-reference-platform-background: var(--color-semantic-teal-secondary);
-    --color-kgo-brand: var(--color-semantic-blue-primary);
-    --color-kgo-background: var(--color-semantic-blue-secondary);
+    --color-konnect-brand: var(--color-semantic-grey-primary);
+    --color-konnect-background: var(--color-semantic-grey-secondary);
+    --color-konnect-reference-platform-brand: var(--color-semantic-teal-primary);
+    --color-konnect-reference-platform-background: var(--color-semantic-teal-secondary);
+    --color-operator-brand: var(--color-semantic-blue-primary);
+    --color-operator-background: var(--color-semantic-blue-secondary);
     --color-api-products-brand: var(--color-semantic-orange-primary);
     --color-api-products-background: var(--color-semantic-orange-secondary);
   }
@@ -128,7 +128,7 @@
     --color-shadow-primary: 2, 20, 40, 0.08;
 
     --color-semantic-red-primary: 214, 67, 67;
-    --color-semantic-red-secondary: 79, 28, 28;
+    --color-semantic-red-secondary: 44, 17, 17;
 
     --color-semantic-yellow-primary: 255, 198, 115;
     --color-semantic-yellow-secondary: 64, 42, 10;
@@ -786,8 +786,47 @@
       @apply hover:border-white text-white hover:text-white;
     }
   }
-}
 
+  .switch {
+    @apply flex items-center;
+  }
+
+  .switch__option-label {
+    @apply cursor-pointer text-sm text-terciary;
+  }
+
+  .switch__options {
+    @apply flex items-center gap-2;
+  }
+
+  .switch__wrapper {
+    @apply relative inline-block w-7 h-4;
+
+    input {
+      @apply h-0 w-0 opacity-0;
+    }
+  }
+
+  .switch__slider {
+    @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-brand rounded-full;
+  }
+
+  .switch__slider:before {
+    @apply absolute content-[''] h-3 w-3 left-0.5 top-0.5 bg-white rounded-full transition-transform duration-300;
+  }
+
+  input:checked + .switch__slider:before {
+    @apply translate-x-[12px];
+  }
+
+  input:focus ~ .switch__slider {
+    @apply outline outline-2;
+
+    @supports (-webkit-appearance: none) {
+      outline-color: -webkit-focus-ring-color;
+    }
+  }
+}
 
 #ask-ai-button {
   @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;

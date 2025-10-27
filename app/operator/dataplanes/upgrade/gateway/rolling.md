@@ -37,7 +37,7 @@ The `GatewayConfiguration` API can be used to provide the image and the image ve
 
 ```yaml
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v1alpha1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong
   namespace: default
@@ -49,13 +49,6 @@ spec:
           containers:
           - name: proxy
             image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-  controlPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: controller
-            image: kong/kubernetes-ingress-controller:{{ site.data.kong_latest_KIC.version }}
 ```
 
 The above configuration will deploy all `DataPlane` resources connected to the

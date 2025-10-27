@@ -40,6 +40,11 @@ cleanup:
 next_steps:
   - text: Learn about DB-less mode
     url: /gateway/db-less-mode/
+
+automated_tests: false
+
+tags:
+  - install
 ---
 
 ## Create a `kong.yml` configuration file

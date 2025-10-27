@@ -84,7 +84,7 @@ In critical scenarios, having access to payload details can help identify and pi
 
 ### Prerequisites
 * Your organization has opted-in to use debugger's payload capture feature and signed the Advanced Features Addendum
-* data plane nodes are deployed with new telemetry endpoints that support the payload capture feature
+* Data plane nodes are deployed with new telemetry endpoints that support the payload capture feature
 * Customer firewall rules updated to allow for the new telemetry endpoints
 
 {:.info}
