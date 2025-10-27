@@ -93,10 +93,10 @@ In critical scenarios, having access to payload details can help identify and pi
 {:.info}
 > To use the payload capture during a debugging session, the data plane nodes have to be deployed with the following new telemetry endpoints:
 ```
-* `KONG_CLUSTER_CONTROL_PLANE=xxx.xx.cp.konghq.com:443` 
-* `KONG_CLUSTER_SERVER_NAME=xxx.xx.cp.konghq.com`
-* `KONG_CLUSTER_TELEMETRY_ENDPOINT=xxx.xx.tp.konghq.com:443` 
-* `KONG_CLUSTER_TELEMETRY_SERVER_NAME=xxx.xx.tp.konghq.com`
+* `KONG_CLUSTER_CONTROL_PLANE=xxx.us.cp.konghq.com:443` 
+* `KONG_CLUSTER_SERVER_NAME=xxx.us.cp.konghq.com`
+* `KONG_CLUSTER_TELEMETRY_ENDPOINT=xxx.us.tp.konghq.com:443` 
+* `KONG_CLUSTER_TELEMETRY_SERVER_NAME=xxx.us.tp.konghq.com`
 ```
 
 ### Payload collection and sanitization
