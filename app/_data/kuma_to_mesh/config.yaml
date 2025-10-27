@@ -16,18 +16,7 @@ links:
   '/features/?': '/mesh/enterprise/'
 
 pages:
-# Must for GA
-  -
-    path: app/_src/guides/consumer-producer-policies-kv.md
-    title: 'Producer and Consumer policies'
-    description: 'Understand how producer and consumer policies work in {{site.base_product}} to control traffic at the namespace level. This guide walks through setup, roles, and overrides using real examples with MeshService and MeshTimeout.'
-    url: /mesh/consumer-producer-policies/
-    related_resources:
-      - text: Mesh Policies
-        url: '/mesh/policies-introduction/'
-    min_version:
-      mesh: '2.9'
-      
+# Must for GA      
   -
     path: app/_src/production/secure-deployment/manage-control-plane-permissions-on-kubernetes.md
     title: 'Manage Control Plane permissions on Kubernetes'
