@@ -90,21 +90,21 @@ Each Consumer belongs to a group and uses a unique API key for authentication:
 {% entity_examples %}
 entities:
   consumers:
-    - username: Kai
+    - username: John
       groups:
         - name: Free
       keyauth_credentials:
-        - key: kai-key
-    - username: Rowan
+        - key: john-key
+    - username: Adam
       groups:
         - name: Basic
       keyauth_credentials:
-        - key: rowan-key
-    - username: Sasha
+        - key: adam-key
+    - username: Eve
       groups:
         - name: Premium
       keyauth_credentials:
-        - key: sasha-key
+        - key: eve-key
 {% endentity_examples %}
 
 ## Configure the AI Proxy
@@ -232,10 +232,9 @@ To test, send multiple chat requests via the AI Proxy endpoint with the correspo
 iterations: 8
 url: '/v1/ai/chat'
 headers:
-  - 'apikey:kai-key'
+  - 'apikey:john-key'
 method: POST
 body:
-  model: gpt-4
   messages:
     - role: user
       content: "Write a short haiku about the ocean."
@@ -247,10 +246,9 @@ body:
 iterations: 20
 url: '/v1/ai/chat'
 headers:
-  - 'apikey:rowan-key'
+  - 'apikey:adam-key'
 method: POST
 body:
-  model: gpt-4
   messages:
     - role: user
       content: "Summarize the impact of AI on education."
@@ -262,10 +260,9 @@ body:
 iterations: 60
 url: '/v1/ai/chat'
 headers:
-  - 'apikey:sasha-key'
+  - 'apikey:eve-key'
 method: POST
 body:
-  model: gpt-4
   messages:
     - role: user
       content: "Write a creative short story about a time traveler."
