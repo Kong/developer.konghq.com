@@ -16,6 +16,24 @@ to make sure the new spec is included in the "kong/developer.konghq.com" section
 
 1. Run the [Sync Konnect OAS data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) workflow and merge the generated PR.
 
+### Uploading API spec to Konnect
+
+If you need to upload a spec to Konnect:
+
+1. Download the latest generated `public.yaml` file from the platform-api org, or copy the file from this repo at `app/api-specs/<platform>/<your-product>/<version>/openapi.yaml`.
+
+1. Log into the Konnect Prod org through Okta ("The Konnect Org").
+
+1. In the side menu, navigate to **API Products**.
+
+1. Find your product and open it.
+
+1. From the sidebar, open **Product Versions**, then open your version.
+
+1. On the API Spec tab, open the **Edit** dropdown and click **Replace Spec**.
+
+1. Replace and save. If the version is already published to the portal, this will automatically replace the published spec with your new file.
+
 
 ## Updating a spec
 
