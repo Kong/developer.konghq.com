@@ -1,0 +1,24 @@
+title: Decrypt everything using an AWS key vault
+
+description: Decrypt everything using a specific AWS key vault.
+
+extended_description: |
+  Decrypt everything using a specific AWS key vault.
+
+weight: 900
+
+requirements: 
+ - "A corresponding [Encrypt policy](/event-gateway/policies/encrypt/examples/encrypt-with-aws/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
+
+type: decrypt
+name: decrypt-using-aws
+config:
+  failure_mode: passthrough
+  key_sources:
+    - type: aws
+  decrypt:
+    - part_of_record: key
+    - part_of_record: value
+
+tools:
+  - konnect-api

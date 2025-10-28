@@ -1,0 +1,29 @@
+title: Encrypt everything using an AWS key vault
+
+description: Encrypt everything in a message using a specific AWS key vault.
+
+requirements: 
+ - "A corresponding [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-with-aws/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
+ - "[An AWS KMS key ARN](https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain)."
+weight: 900
+
+type: encrypt
+name: encrypt-using-aws
+config:
+  failure_mode: passthrough
+  key_sources:
+    - type: aws
+  encrypt:
+    - part_of_record: key
+      key_id: ${key_id}
+    - part_of_record: value
+      key_id: ${key_id}
+
+variables:
+  key_id:
+    description: |
+      A KMS key ARN in the following format: `arn:aws:kms:REGION:ACCOUNT_ID:key/KEY_ID`
+    value: "$AWS_KEY_ID"
+
+tools:
+  - konnect-api

@@ -38,6 +38,8 @@ Use this policy to enforce standards for decryption across {{site.event_gateway}
 
 The Decrypt policy uses AES-128-GCM for decryption, therefore keys must be 128 bits long.
 
+Use this policy together with the [Encrypt policy](/event-gateway/policies/encrypt/), which encrypts portions of a message using the same referenced key.
+
 ## Use cases
 
 Common use cases for the Decrypt policy:
@@ -50,11 +52,11 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Decrypt a specific key from a source](/event-gateway/policies/decrypt/examples/decrypt-a-key/)"
-    description: Decrypt a key based on a specific key reference name.
+  - use_case: "[Decrypt using a static key](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/)"
+    description: Decrypt a key or value based on a key reference name.
 
-  - use_case: "[Decrypt all keys](/event-gateway/policies/decrypt/examples/decrypt-everything/)"
-    description: Define an AWS key source and decrypt all keys that come from that source.
+  - use_case: "[Decrypt using an AWS key source](/event-gateway/policies/decrypt/examples/decrypt-with-aws/)"
+    description: Decrypt a keys or value using an AWS key source.
 
 {% endtable %}
 <!--vale on-->
