@@ -1,0 +1,4 @@
+name: freecurrency-route
+paths:
+  - /currency
+service: freecurrency-service
