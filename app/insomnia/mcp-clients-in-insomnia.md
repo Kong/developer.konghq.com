@@ -56,8 +56,7 @@ An MCP Server is an HTTP JSON-RPC endpoint that advertises callable operations:
 - **Prompts** – Reusable prompt templates  
 - **Resources** – Structured contextual data 
 
-The Insomnia **MCP Client** discovers these elements, which enables you to invoke, query, or test them directly in the app.  
-Each workspace can include multiple MCP Clients.
+The Insomnia **MCP Client** discovers these elements, which enables you to invoke, query, or test them directly in the app. Each workspace can include multiple MCP Clients.
 
 ### Create a MCP client
 To create a new MCP Client:
