@@ -16,8 +16,7 @@ products:
 works_on:
   - on-prem
   - konnect
-tags:
-  - CLI
+
 tldr:
   q: How do I use the CLI components and communicate with {{site.mesh_product_name}}?
   a: "kumactl and kubectl can be used to communicate with the Mesh Control plane"

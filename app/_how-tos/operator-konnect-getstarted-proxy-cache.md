@@ -31,6 +31,9 @@ works_on:
 
 entities: []
 
+tags:
+  - caching
+
 ---
 
 ## Set up the `proxy-cache` plugin

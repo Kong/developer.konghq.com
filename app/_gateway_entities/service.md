@@ -27,9 +27,6 @@ tools:
     - deck
     - terraform
 
-tags:
-  - service-application
-
 search_aliases:
   - upstream service
 
