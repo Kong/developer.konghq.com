@@ -3,8 +3,6 @@ metadata:
   content_type: landing_page
   description: |
     About the {{site.konnect_short_name}} SaaS API platform
-  tags:
-    - konnect
   products:
     - konnect
     

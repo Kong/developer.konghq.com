@@ -13,7 +13,7 @@ tags:
   - mtls
   - vault
   - certificates
-  - hashicorp
+  - hashicorp-vault
 
 search_aliases:
   - HashiCorp Vault

@@ -21,6 +21,7 @@ entities:
 
 tags:
   - failover
+  - load-balancing
 search_aliases:
   - backup target
 

@@ -655,6 +655,7 @@ components:
         type: string
         format: uuid
       nullable: false
+      uniqueItems: true
     ClientId:
       description: The OAuth 2.0 client ID
       type: string

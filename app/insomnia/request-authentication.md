@@ -10,7 +10,7 @@ related_resources:
     url: /insomnia/authentication-authorization/
 
 tags:
-    - testing
+    - test-apis
     - authentication
 
 products:
