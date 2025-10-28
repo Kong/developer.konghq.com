@@ -19,7 +19,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). Insomnia offers cloud-hosted mock servers, but you can also deploy self-hosted mocks.           
+                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). They can be self-hosted or hosted on the cloud.
   - columns:
       - blocks:
           - type: structured_text
@@ -83,7 +83,7 @@ rows:
                   text: | 
                     Dynamic mocking expands Insomnia’s mock servers with templates that generate context-aware and realistic responses.  
                     Each response is rendered server-side by the mock server using  templates with a safe, restricted tag set.  
-                    Insomnia also provides **Faker template tags for generating random names, dates, and other test data at runtime.
+                    Insomnia also provides **Faker template tags** for generating random names, dates, and other test data at runtime.
 
                     Dynamic mocking is supported in **self-hosted** mock servers, and powered by the Insomnia **Mockbin** service.
                     [Learn more about Dynamic mocking](/insomnia/dynamic-mocking/)

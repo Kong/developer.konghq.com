@@ -9,7 +9,7 @@ products:
 tags:
 - mock-servers
 
-description: Use dynamic mocking in Insomnia mock servers to return request-aware responses and realistic fake data in self-hosted mocks.
+description: Use dynamic mocking in Insomnia mock servers to return request-aware responses and realistic mock data with self-hosted mocks.
 
 breadcrumbs:
   - /insomnia/
