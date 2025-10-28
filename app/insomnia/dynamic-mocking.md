@@ -113,16 +113,13 @@ You can access values from incoming requests and include them in your mock respo
 ```liquid
 {%- raw -%}
 {{ req.headers['Content-Type'] }}
-{{ req.body.name }}
-{%- endraw-%}
+{{ req.body.name }}{% endraw %}
 ```
 
 **Format to define a default value:**
 
 ```liquid
-{%- raw -%}
-{{ req.body.name | default: "George" }}
-{%- endraw-%}
+{% raw %}{{ req.body.name | default: "George" }}{% endraw %}
 ```
 
 **Available variables**
@@ -140,11 +137,10 @@ Use Faker template tags to generate random but realistic data in mock responses.
 **Format to output random data:**
 
 ```liquid
-{%- raw -%}
-{{ faker.randomFullName }}
-{%- endraw-%}
+{% raw %}{{ faker.randomFullName }}{% endraw %}
 ```
-{.info:}
+
+{:.info}
 > Self-hosted mocks run the published container image from the repository.
 
 ### Basic test options
