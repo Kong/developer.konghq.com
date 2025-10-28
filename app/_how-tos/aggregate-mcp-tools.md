@@ -275,7 +275,7 @@ First, let's run the MCP Inspector to see whether our listener AI MCP Proxy plug
 1. Execute the following command to run the MCP Inspector:
 
     ```sh
-    npx @modelcontextprotocol/inspector --mcp-url http://localhost:8000/mcp-listener node path/to/server/index.js
+    npx @modelcontextprotocol/inspector --mcp-url http://localhost:8000/mcp-listener
     ```
 
 1. If successful, you should see the following output in your terminal:
@@ -315,7 +315,7 @@ First, let's run the MCP Inspector to see whether our listener AI MCP Proxy plug
     ```json
     {
       "mcpServers": {
-          "weather": {
+          "mcp-listener": {
               "url": "http://localhost:8000/mcp-listener"
           }
       }
@@ -338,85 +338,85 @@ You can now test each exposed tool using Cursor.
 
 1. Enter the following question in the Cursor chat:
 
-  ```text
-  How many orders are there in my marketplace?
-  ```
+    ```text
+    How many orders are there in my marketplace?
+    ```
 
 2. You will notice that Cursor now makes a tool call to the exposed marketplace tools:
 
-  ```text
-  > Ran mcp-route-2
-  ```
-  {:.no-copy-code}
+    ```text
+    > Ran mcp-route-2
+    ```
+    {:.no-copy-code}
 
 3. When the agent finishes reasoning, you should see the following response in Cursor:
 
-  ```text
-  Based on the API responses, I can see that your marketplace currently has **27 total orders** across all users.
-  ```
-  {:.no-copy-code}
+    ```text
+    Based on the API responses, I can see that your marketplace currently has **27 total orders** across all users.
+    ```
+    {:.no-copy-code}
 
 {% endnavtab %}
 {% navtab "WeatherAPI tools" %}
 
 1. Enter the following question in the Cursor chat:
 
-  ```text
-  What is the current weather in London?
-  ```
+    ```text
+    What is the current weather in London?
+    ```
 
 2. You will notice that Cursor makes a tool call to the WeatherAPI tools we exposed through the AI MCP Proxy plugin:
 
-  ```text
-  > Ran weather-route-1
-  ```
-  {:.no-copy-code}
+    ```text
+    > Ran weather-route-1
+    ```
+    {:.no-copy-code}
 
 3. When the agent finishes reasoning, you should see the following response in Cursor:
 
-  ```text
-  Alexandria, Egypt right now:
+    ```text
+    Alexandria, Egypt right now:
 
-  - Temperature: 79°F (26.1°C), feels like 80°F (26.8°C)
-  - Condition: Sunny
-  - Wind: 7.4 mph NNW
-  - Humidity: 61%
-  - Pressure: 30.00 in
-  - Visibility: 6 miles
-  - UV Index: 5.4
+    - Temperature: 79°F (26.1°C), feels like 80°F (26.8°C)
+    - Condition: Sunny
+    - Wind: 7.4 mph NNW
+    - Humidity: 61%
+    - Pressure: 30.00 in
+    - Visibility: 6 miles
+    - UV Index: 5.4
 
-  Warm and sunny with light NNW winds.
-  ```
-  {:.no-copy-code}
+    Warm and sunny with light NNW winds.
+    ```
+    {:.no-copy-code}
 
 {% endnavtab %}
 {% navtab "Currency exchange tools" %}
 
 1. Enter the following question in the Cursor chat:
 
-  ```text
-  What's the current exchange rate of USD?
-  ```
+    ```text
+    What's the current exchange rate of USD?
+    ```
 
 2. You will notice that Cursor now makes a tool call to the exposed currency exchange tools:
 
-  ```text
-  > Ran freecurrency-route-1
-  ```
-  {:.no-copy-code}
+    ```text
+    > Ran freecurrency-route-1
+    ```
+    {:.no-copy-code}
 
 3. When the agent finishes reasoning, you should see the following response in Cursor:
 
-  ```text
-  Here are the current USD exchange rates:
-  USD Exchange Rates (as of now):
-  EUR (Euro): 1 USD = 0.858 EUR
-  GBP (British Pound): 1 USD = 0.750 GBP
-  JPY (Japanese Yen): 1 USD = 152.71 JPY
-  CAD (Canadian Dollar): 1 USD = 1.399 CAD
-  AUD (Australian Dollar): 1 USD = 1.525 AUD
-  ```
-  {:.no-copy-code}
+    ```text
+    Here are the current USD exchange rates:
+    USD Exchange Rates (as of now):
+    EUR (Euro): 1 USD = 0.858 EUR
+    GBP (British Pound): 1 USD = 0.750 GBP
+    JPY (Japanese Yen): 1 USD = 152.71 JPY
+    CAD (Canadian Dollar): 1 USD = 1.399 CAD
+    AUD (Australian Dollar): 1 USD = 1.525 AUD
+    ```
+    {:.no-copy-code}
 
 {% endnavtab %}
 {% endnavtabs %}
