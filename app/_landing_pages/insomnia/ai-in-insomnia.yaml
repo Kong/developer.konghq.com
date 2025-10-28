@@ -75,7 +75,7 @@ rows:
 
   - header:
       type: h2
-      text: "Configure and manage AI"
+      text: "Enable AI functionality"
     columns:
       - blocks:
           - type: structured_text
@@ -90,23 +90,14 @@ rows:
                     1. Click **Preferences**.  
                     2. Select the **AI Settings** tab.  
                     3. In the provider list, choose a LLM type: 
-                    - **Local LLM**: In the **Model** dropdown, click **Select a model**, and then choose a model.
-                    - **Claude**: Insert API key, and click **Load Models**.
-                    - **OpenAI**: Insert API key, and click **Load Models**.
-                    - **Gemini**: Insert API key, and click **Load Models**.
-                    4. Enter your credentials or local model path.  
+                    4. Enter your credentials or select a local model.
                     5. Click **Activate**.
 
-                    After activation, toggles for **Auto-generate Mock Servers** and **Suggest commit comments** become available.
+                    After activation you can toggle **Auto-generate Mock Servers** and **Suggest commit comments** from the **AI Features** panel
 
-                    {:.decorative}
-                    > **Tip**: For Local type LLM, add `.gguf` model files to your **LLMs** folder, and then select the **Refresh** icon to re-scan and make them available in the **Model** list.
+                    {:.info}
+                    > **Note**: Local LLMs require a `.gguf` file placed in the `/Insomnia/llms/` directory
 
-                    **Administrative controls:**
-                    - Instance-level AI settings are available in **Insomnia Admin > AI Settings**.  
-                    - **Essentials** and **Pro** plans: AI features are **enabled by default**.  
-                    - **Enterprise** plans: AI features are **disabled by default** but can be toggled on.  
-                    - Users must still activate a model locally before enabling feature toggles.
   - header:
       type: h2
       text: "MCP Servers and Clients"

@@ -5,7 +5,6 @@ layout: reference
 description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Server, and discover available Tools, Prompts, and Resources.
 breadcrumbs:
   - /insomnia/
-  - /insomnia/mcp-servers/
 products:
   - insomnia
 min_version:
