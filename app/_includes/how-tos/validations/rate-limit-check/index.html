@@ -1,12 +1,12 @@
 {% if page.works_on contains 'konnect' %}
 <div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}">
-  {% include how-tos/validations/rate-limit-check/snippet.md iterations=config.iterations url=config.konnect_url headers=config.headers sleep=config.sleep grep=config.grep output=config.output %}
+  {% include how-tos/validations/rate-limit-check/snippet.md iterations=config.iterations url=config.konnect_url headers=config.headers sleep=config.sleep grep=config.grep output=config.output body=config.body %}
 </div>
 {% endif %}
 
 {% if page.works_on contains 'on-prem' %}
 <div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ config.data_validate_on_prem | escape }}">
-  {% include how-tos/validations/rate-limit-check/snippet.md iterations=config.iterations url=config.on_prem_url headers=config.headers sleep=config.sleep grep=config.grep output=config.output %}
+  {% include how-tos/validations/rate-limit-check/snippet.md iterations=config.iterations url=config.on_prem_url headers=config.headers sleep=config.sleep grep=config.grep output=config.output body=config.body %}
 </div>
 {% endif %}
 
