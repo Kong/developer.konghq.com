@@ -39,8 +39,8 @@ prereqs:
       include_content: prereqs/helm
     - title: A running Kubernetes cluster with LoadBalancer support
       include_content: prereqs/kubernetes/mesh-cluster-lb
-   # - title: Install {{site.mesh_product_name}} with demo configuration
-    #  include_content: prereqs/kubernetes/mesh-quickstart
+    - title: Install {{site.mesh_product_name}} with demo configuration
+      include_content: prereqs/kubernetes/mesh-quickstart
 
 cleanup:
   inline:
