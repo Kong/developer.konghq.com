@@ -13,7 +13,7 @@ search_aliases:
 products:
   - kic
 tags: 
-  - custom-resources
+  - crd
 works_on:
   - on-prem
   - konnect

@@ -17,9 +17,7 @@ products:
 - insomnia
 
 tags:
-- insomnia
 - glossary
-- terminology
 ---
 ## User
 A user is any individual who uses Insomnia, either as a scratch pad user that works locally without signing in, or as a signed-in user with cloud/Git sync. Users design, test, debug, and document APIs by creating requests, mocking services, and running tests. They can choose where to store data; locally, in Git, or in the cloud. They can work independently or collaborate in shared projects and tools. 

@@ -9,7 +9,7 @@ breadcrumbs:
   - /mesh/
 
 tags:
-  - licensing
+  - license
   - multi-zone
 
 related_resources:

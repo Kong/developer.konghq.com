@@ -12,7 +12,7 @@ works_on:
     - on-prem
 
 tags:
-    - upgrades
+    - upgrade
     - versioning
     - blue-green
 search_aliases:

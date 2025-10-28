@@ -8,8 +8,6 @@ metadata:
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
     - integrations
-    - beta
-  beta: true
   search_aliases:
     - service catalog
 

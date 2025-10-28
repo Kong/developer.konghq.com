@@ -11,7 +11,7 @@ metadata:
 spec:
   createControlPlaneRequest:
     name: gateway-control-plane{% if include.config.control_plane == 'kic' %}
-    clusterType: CLUSTER_TYPE_K8S_INGRESS_CONTROLLER{% endif %}
+    cluster_type: CLUSTER_TYPE_K8S_INGRESS_CONTROLLER{% endif %}
   konnect:
     authRef:
       name: konnect-api-auth
