@@ -41,12 +41,6 @@ prereqs:
       include_content: prereqs/kubernetes/mesh-cluster-lb
     - title: Install {{site.mesh_product_name}} with demo configuration
       include_content: prereqs/kubernetes/mesh-quickstart
-
-cleanup:
-  inline:
-    - title: Clean up Mesh
-      include_content: cleanup/products/mesh
-      icon_url: /assets/icons/gateway.svg
 ---
 
 ## Enable the Gateway API
@@ -115,7 +109,7 @@ Since {{site.kic_product_name}} is installed outside of the mesh, we need to ena
 
    ```sh
    kubectl rollout restart -n kong deployment kong-gateway kong-controller
-   kubectl wait -n kong --for=condition=ready pod --selector=app=kong-controller --timeout=90s
+   kubectl wait -n kong --for=condition=ready pod --selector=app=kong-gateway --timeout=90s
    ```
 
 1. Check the pods' information:
@@ -200,6 +194,7 @@ url: '/api/counter'
 on_prem_url: $PROXY_IP
 status_code: 200
 display_headers: true
+method: POST
 {% endvalidation %}
 <!--vale on -->
 
