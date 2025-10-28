@@ -11,11 +11,11 @@ bread-crumbs:
   - /mesh/
 
 related_resources:
-  - text: Add a builtin gateway
-    url: '/mesh/add-builtin-gateway/'
+  - text: Add a built-in gateway
+    url: /mesh/add-builtin-gateway/
   - text: Deploy Kong Mesh on Kubernetes
     url: /mesh/kubernetes/
-  - text: About KIC
+  - text: "{{site.kic_product_name}}"
     url: /kubernetes-ingress-controller/
 
 min_version:
