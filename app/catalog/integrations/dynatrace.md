@@ -51,9 +51,9 @@ You need to configure the following in Dynatrace SaaS:
 {:.warning}
 > Dynatrace ActiveGate isn't supported.
 
-## Authenticate the Datadog integration
+## Authenticate the Dynatrace integration
 
-{% navtabs "datadog-integration" %}
+{% navtabs "dynatrace-integration" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
@@ -140,7 +140,7 @@ resource "konnect_integration_instance_auth_credential" "my_integrationinstancea
 
 ## Resources
 
-Available Datadog resources:
+Available Dynatrace resources:
 
 <!--vale off-->
 {% table %}
