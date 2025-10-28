@@ -1,6 +1,6 @@
 ### {{site.mesh_product_name}} release policy
 
-Kong adopts a structured approach to versioning its products. Kong Mesh follow a pattern of {MAJOR}.{MINOR}.{PATCH}.
+Kong adopts a structured approach to versioning its products. {{site.mesh_product_name}} follow a pattern of {MAJOR}.{MINOR}.{PATCH}.
 
 {:.info}
 > **Long Term Support Policy Update**
