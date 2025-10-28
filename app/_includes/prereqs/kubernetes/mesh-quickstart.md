@@ -6,12 +6,13 @@
      --create-namespace \
      --namespace kong-mesh-system \
      kong-mesh kong-mesh/kong-mesh
+   kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
    ```
 
-1. Create the demo configuration file:
+1. Apply the demo configuration:
 
    ```sh
-   cat <<EOF > kong-mesh-demo.yaml
+   echo "
    apiVersion: v1
    kind: Namespace
    metadata:
@@ -214,12 +215,5 @@
      targetRef:
        kind: Dataplane
        labels:
-         app: kv
-   EOF
-   ```
-
-1. Apply the demo configuration:
-
-   ```sh
-   kubectl apply -f kong-mesh-demo.yaml
+         app: kv" | kubectl apply -f -
    ```
