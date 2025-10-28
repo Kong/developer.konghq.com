@@ -119,6 +119,8 @@ rows:
                 url: "/mcp/autogenerate-mcp-tools/"
               - text: Autogenerate MCP tools from any API schema
                 url: "/mcp/autogenerate-mcp-tools-for-weather-api/"
+              - text: "Aggregate MCP tools from multiple AI MCP Proxy plugins"
+                url: /mcp/aggregate-mcp-tools/
       - blocks:
         - type: card
           config:
