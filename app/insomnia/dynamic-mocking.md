@@ -111,18 +111,18 @@ You can access values from incoming requests and include them in your mock respo
 **Format to output a variable:**
 
 ```liquid
-{% raw %}
+{%- raw -%}
 {{ req.headers['Content-Type'] }}
 {{ req.body.name }}
-{% endraw%}
+{%- endraw-%}
 ```
 
 **Format to define a default value:**
 
 ```liquid
-{% raw %}
+{%- raw -%}
 {{ req.body.name | default: "George" }}
-{% endraw%}
+{%- endraw-%}
 ```
 
 **Available variables**
@@ -140,9 +140,9 @@ Use Faker template tags to generate random but realistic data in mock responses.
 **Format to output random data:**
 
 ```liquid
-{% raw %}
+{%- raw -%}
 {{ faker.randomFullName }}
-{% endraw%}
+{%- endraw-%}
 ```
 
 ## Use dynamic mocking
