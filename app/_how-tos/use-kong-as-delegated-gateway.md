@@ -13,7 +13,7 @@ bread-crumbs:
 related_resources:
   - text: Add a built-in gateway
     url: /mesh/add-builtin-gateway/
-  - text: Deploy Kong Mesh on Kubernetes
+  - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
   - text: "{{site.kic_product_name}}"
     url: /kubernetes-ingress-controller/
