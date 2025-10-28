@@ -114,10 +114,10 @@ prereqs:
 
 ## Configure the first AI MCP Proxy plugin
 
-Let's configure the first AI MCP Proxy plugin to convert its endpoints as MCP tools.
+Let's configure the first AI MCP Proxy plugin to convert its endpoints to MCP tools.
 We configure the plugin in `conversion-only` mode because this instance only converts RESTful API paths into MCP tool definitions. It doesn’t handle incoming MCP requests directly. Later, we’ll aggregate these tools from multiple conversion-only instances using listener-mode plugins.
 
-In this configuration we define `tags[]` at the plugin level because listener AI MCP Proxy plugin will use them to discover, aggregate and expose the registered tools.
+In this configuration we define `tags[]` at the plugin level because listener AI MCP Proxy plugin will use them to discover, aggregate, and expose the registered tools.
 
 {% entity_examples %}
 entities:
@@ -217,12 +217,12 @@ entities:
             - apikey:${key}
 variables:
   key:
-    value: $FREECURRENCY_API_KEY
+    value: $FREECURRENCYAPI_API_KEY
 {% endentity_examples %}
 
 ### Step 2: Configure the AI MCP Proxy plugin
 
-As in the previous steps, this AI MCP Proxy instance converts the RESTful paths of [FreecurrencyAPI](https://freecurrencyapi.com/docs/currencies) into tool definitions only–they will be aggregated by the listener-mode plugin based on the `tags[]` field.
+As in the previous steps, this AI MCP Proxy instance converts the RESTful paths of [FreecurrencyAPI](https://freecurrencyapi.com/docs/currencies) into tool definitions only. They will be aggregated by the listener-mode plugin based on the `tags[]` field.
 
 {% entity_examples %}
 entities:
@@ -254,7 +254,7 @@ Now, let's configure another AI MCP Proxy plugin instance in listener mode to ag
 entities:
   plugins:
     - name: ai-mcp-proxy
-      route: mcp-listener
+      route: listener-route
       config:
         mode: listener
         server:
@@ -289,6 +289,7 @@ First, let's run the MCP Inspector to see whether our listener AI MCP Proxy plug
     🚀 MCP Inspector is up and running at:
       http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=<YOUR_TOKEN>
     ```
+   {:.no-copy-code}
 1. The script will automatically open a new browser window with MCP Inspector's UI:
 
     ![MCP Inspector's UI](/assets/images/ai-gateway/mcp-inspector.png){: style="display:block; margin-left:auto; margin-right:auto; width:70%; border-radius:10px" }
