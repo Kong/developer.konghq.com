@@ -17,6 +17,8 @@ related_resources:
     url: /insomnia/manage-insomnia/#security
   - text: SSO
     url: /insomnia/authentication-authorization/#set-up-sso
+  - text: Migrate from scratch pad to Enterprise
+    url: /insomnia/migrate-to-enterprise-from-scratchpad/  
 
 faqs:
   - q: What is the difference between local vault and scratch pad?

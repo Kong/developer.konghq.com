@@ -37,7 +37,7 @@ rows:
         - type: tabs
           tab_group: install-on-os
           config:
-            - title: MacOS
+            - title: macOS
               include_content: tools/insomnia/install/osx
             - title: Windows
               include_content: tools/insomnia/install/windows
@@ -102,7 +102,7 @@ rows:
             icon:  /assets/icons/profile.svg
             cta:
               text: Learn more
-              url: /inso-cli/
+              url: /insomnia/manage-insomnia/
       - blocks:
         - type: card
           config:

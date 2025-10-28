@@ -63,6 +63,7 @@
     "https://docs.devsite.com/*",
     "https://github.com/Kong/developer.konghq.com/issues/",
     "https://twitter.com/thekonginc",
+    "https://x.com/kong",
     "https://updates.insomnia.rest/*",
     "https://insomnia.rest/run/*",
     "https://www.linkedin.com/company/konghq",
@@ -106,5 +107,8 @@
     "https://konghq.com/legal/privacy-policy",
     "https://www.gnu.org/*",
     "https://konghq.com/pricing",
-    "https://docs.splunk.com/*"
+    "https://docs.splunk.com/*",
+    "https://konghq.com/compliance",
+    "https://developer.hashicorp.com/*",
+    "https://www.meetup.com/topics/kong/all/"
   ]

@@ -18,7 +18,7 @@ tldr:
 ## Create the plugin directory
 
 In order for Insomnia to recognize your plugin as an Insomnia plugin, create a folder in the Insomnia plugins directory:
-* `~/Library/Application Support/Insomnia/plugins/` on MacOS
+* `~/Library/Application Support/Insomnia/plugins/` on macOS
 * `%APPDATA%\Insomnia\plugins\` on Windows
 * `$XDG_CONFIG_HOME/Insomnia/plugins/` or `~/.config/Insomnia/plugins/` on Linux
 

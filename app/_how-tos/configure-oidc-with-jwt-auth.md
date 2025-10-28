@@ -49,6 +49,7 @@ prereqs:
 tags:
   - authentication
   - openid-connect
+  - jwt
 
 description: Set up OpenID Connect with JSON Web Token (JWT) auth, which uses a bearer token for authentication with the IdP.
 

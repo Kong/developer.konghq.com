@@ -1,6 +1,6 @@
 ---
 title: "Gateway configuration"
-description: "Customize your {{ site.kic_product_name }} and {{ site.base_gateway }} deployments when using the Gateway resource"
+description: "Customize your {{ site.base_gateway }} deployments when using the Gateway resource"
 content_type: reference
 layout: reference
 products:
@@ -24,4 +24,4 @@ See the following examples of how to use `GatewayConfiguration`:
 - [Customize the DataPlane image](/operator/dataplanes/how-to/set-dataplane-image/)
 - [Deploy a sidecar container](/operator/dataplanes/how-to/deploy-sidecars/)
 
-For more information about `GatewayConfiguration` see the [GatewayConfiguration CRD reference](/operator/reference/custom-resources/).
+For more information about `GatewayConfiguration` see the [GatewayConfiguration CRD reference](/operator/reference/custom-resources/#gatewayconfiguration).

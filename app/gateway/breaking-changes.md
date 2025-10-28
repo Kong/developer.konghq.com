@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} breaking changes"
+title: "{{site.base_gateway}} breaking changes and known issues"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -11,7 +11,7 @@ works_on:
     - on-prem
 
 tags:
-    - upgrades
+    - upgrade
     - versioning
 
 
@@ -32,6 +32,58 @@ affect your current installation.
 
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
+
+## 3.12.x breaking changes
+
+Review the [changelog](/gateway/changelog/#31200) for all the changes in this release.
+
+### 3.12.0.0
+
+Breaking changes in the 3.12.0.0 release.
+
+#### Kafka Consume plugin: removed support for Service scoping
+
+The [Kafka Consume plugin](/plugins/kafka-consume/) can no longer be applied to a Service. This plugin doesn't proxy to a Service, so attaching it to one causes issues.
+
+If you previously attached a Kafka Consume plugin to a Service, the plugin will no longer take effect. 
+* If there is an Upstream configured in the Service, requests will be proxied to the Upstream.
+* If there is no Upstream configured in the Service, requests will not be proxied, and the plugin won't take effect.
+
+#### Konnect Application Auth (internal, {{site.konnect_short_name}}-only plugin): priority change
+
+The priority of the [internal `konnect-application-auth` plugin](/catalog/apis/#allow-developers-to-consume-your-api) changed from 950 to 960. 
+This plugin is used for authentication inside {{site.konnect_short_name}} and can't be configured directly.
+This change ensures that the execution sequences of the `konnect-application-auth` plugin and the ACL plugin are correct.
+
+If you're using any custom plugins that have a dependency on the `konnect-application-auth` plugin and have a priority between 950 and 960, you may need to adjust the priorities of these custom plugins accordingly, or use dynamic plugin ordering.
+
+#### AI semantic plugins: cache invalidation
+
+The [AI Semantic Cache](/plugins/ai-semantic-cache/), [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/), and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins have been updated to use a separate column to store the namespace instead of including it in the table name to avoid truncation. 
+
+This change invalidates previous caches created by these plugins. If you are using a very long cache TTL, cache warmup is required after this change.
+
+#### Known issues in 3.12.0.0
+
+The following is a list of known issues in 3.12.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "Kong Manager: Schema registry configuration in Kafka and Confluent plugins"
+    description: |
+      When configuring the [Confluent Consume](/plugins/confluent-consume/), [Kafka Consume](/plugins/kafka-consume/), [Kafka Upstream](/plugins/kafka-upstream/), [Kafka Log](/plugins/kafka-log/), and [Confluent](/plugins/confluent/) plugins in Kong Manager, setting `schema_registry.confluent.authentication.mode` or `topics.schema_registry.confluent.authentication.mode` to `none` may not be saved after submission.
+      <br><br>
+      There is no workaround for this issue.
+    status: Not fixed
+{% endtable %}
+
 
 ## 3.11.x breaking changes
 
@@ -107,7 +159,7 @@ rows:
       **Workaround**: 
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
-    status: Not fixed
+    status: Fixed in 3.11.0.3
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
@@ -208,7 +260,7 @@ Review the [changelog](/gateway/changelog/#3900) for all the changes in this rel
 
 ### 3.9.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.9.0.0 release.
 
 #### Node ID deprecation in `kong.conf`
 
@@ -266,7 +318,7 @@ Review the [changelog](/gateway/changelog/#3800) for all the changes in this rel
 
 ### 3.8.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.8.0.0 release.
 
 #### `kong.logrotate` configuration file no longer overwritten during upgrade
 
@@ -346,7 +398,7 @@ Review the [changelog](/gateway/changelog/#3700) for all the changes in this rel
 
 ### 3.7.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.7.0.0 release.
 
 #### Configuration
 
@@ -409,7 +461,7 @@ Review the [changelog](/gateway/changelog/#3600) for all the changes in this rel
 
 ### 3.6.1.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.6.1.0 release.
 
 #### TLS changes
 
@@ -417,7 +469,7 @@ TLSv1.1 and lower is now disabled by default in OpenSSL 3.x.
 
 ### 3.6.0.0
 
-Breaking changes in the 3.10.0.0 release.
+Breaking changes in the 3.6.0.0 release.
 
 #### General
 

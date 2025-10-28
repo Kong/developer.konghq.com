@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         {% for row in include.rows %}
-        <tr>
+        <tr{% if row.id %} id="{{ row.id }}"{% endif %}>
             {% for column in include.columns %}
                 {% assign v = row[column.key] %}
                 <td{% if v == true or v == false %}{% endif %} style="vertical-align: top">

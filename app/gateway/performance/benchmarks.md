@@ -61,7 +61,72 @@ The performance tests cover a number of baseline configurations and common use c
 
 ### {{site.base_gateway}} performance benchmark results
 
+The following table lists all Gateway versions that have been tested using Kong's benchmark test suite. 
+
+{:.info}
+> **Note:** This table is not a guarantee of current support.
+> To see which {{site.base_gateway}} versions are currently supported by Kong, see the [{{site.base_gateway}} version support policy](/gateway/version-support-policy/).
+
 {% navtabs "gateway-version" %}
+
+{% navtab "3.12" %}
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 129920.5
+    p99: 6.35
+    p95: 3.55
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 124692.9
+    p99: 6.49
+    p95: 3.78
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 111872.7
+    p99: 8.09
+    p95: 4.03
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 106551.5
+    p99: 8.29
+    p95: 4.17
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 96570.3
+    p99: 9.71
+    p95: 4.80
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 90593.5
+    p99: 9.80
+    p95: 5.08
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 91341.7
+    p99: 9.86
+    p95: 5.40
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 86474.5
+    p99: 10.09
+    p95: 5.46
+{% endtable %}
+
+{% endnavtab %}
 
 {% navtab "3.11" %}
 

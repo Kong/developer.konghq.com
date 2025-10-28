@@ -30,7 +30,6 @@ entities:
 tags:
     - ai
     - openai
-    - ai-gateway
 
 tldr:
     q: How can use my LangChain integrations with AI Gateway?

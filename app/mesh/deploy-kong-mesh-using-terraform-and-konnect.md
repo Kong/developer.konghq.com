@@ -11,7 +11,6 @@ works_on:
   - konnect
 tags:
   - terraform
-  - konnect
   - automation
   - universal-mode
   - kubernetes
