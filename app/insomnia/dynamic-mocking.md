@@ -144,13 +144,7 @@ Use Faker template tags to generate random but realistic data in mock responses.
 {{ faker.randomFullName }}
 {%- endraw-%}
 ```
-
-## Use dynamic mocking
-
-1. In the body of your Mock route request, enter a **Liquid** template that reads `req.*` and/or `faker.*`.  
-2. (Optional) Set **Status** and **Headers** for the new mock route.  
-3. Click **Test**.
-
+{.info:}
 > Self-hosted mocks run the published container image from the repository.
 
 ### Basic test options
