@@ -13,6 +13,8 @@ min_version:
 related_resources:
   - text: Use mock servers
     url: /how-to/create-a-cloud-hosted-mock-server/
+  - text: "Introducing Model Context Protocol in Insomnia (Blog)"
+    url: https://mcp.deepwiki.com/mcp  
 
 faqs:
   - q: What happens when authentication fails?
@@ -61,26 +63,61 @@ Each workspace can include multiple MCP Clients.
 To create a new MCP Client:
 1. From the left pane of the Insomnia application, click **MCP Clients**.
 1. In the **Name** box, type a name for the MCP Client.
-1. Click **Create** 
-1. To connect your MCP client to an MCP server, click **Connect**.
-1. In the left pane, confirm that discovered tools, prompts, and resources appear.
+1. Click **Create**.
+1. In the **MCP Server URL** box, enter the full endpoint of your target server. For example:  
+   - `https://mcp.deepwiki.com/mcp` (DeepWiki)  
+1. To connect your MCP client to the MCP server, click **Connect**.
+1. (Optional) If the server requires authentication, follow the **MCP Auth Flow** to sign in or provide a token.  
+1. Once connected, in the left pane, confirm that discovered tools, prompts, and resources appear.
+
 
 ## Explore the interface
 
+The MCP Client interface in Insomnia provides multiple panes that display operations, parameters, and runtime details from connected MCP Servers.
+
+Use these panes to inspect discovered endpoints, configure request parameters, and validate outputs in real time.
+
+<!-- vale off -->
 {% table %}
 columns:
-  - title: Pane
+  - title: Tab
     key: pane
   - title: Description
     key: description
 rows:
-  - pane: "Right pane"
-    description: "View discovered Tools, Resources, and Prompts from the connected MCP Server. If the server publishes a new version, click **Resync** to update."
-  - pane: "Middle pane"
-    description: "Review parameters and request fields. To send JSON requests, click **Send**."
-  - pane: "Console tab"
-    description: "View output and logs for each operation."
+  - pane: "Params"
+    description: |
+      Define or edit input parameters for the selected MCP operation. Each field corresponds to the parameters advertised by the server’s JSON-RPC schema.
+  - pane: "Auth"
+    description: |
+      Configure authentication for requests.
+  - pane: "Headers"
+    description: |
+      Add or override request headers before sending a call to the server. Use for testing custom content types or authorization headers.
+  - pane: "Routes"
+    description: |
+      Displays available endpoints or callable tools exposed by the connected MCP Server. Use to select a route to load its parameters into the **Params** tab.
+  - pane: "Parameter Builder"
+    description: |
+      Auto-generate structured JSON payloads based on the selected operation’s input schema. Use to access an assisted form view for complex nested parameters.
+  - pane: "Parameter Overview"
+    description: |
+      Displays all defined parameters in read-only mode for quick validation before sending a request.
+  - pane: "Events"
+    description: |
+      Displays real-time server events such as discovery updates or authentication state changes during the MCP session.
+  - pane: "Notifications"
+    description: |
+      Lists informational or error messages returned by the MCP Server or Insomnia runtime. For example, sync success or OAuth errors.
+  - pane: "Headers"
+    description: |
+      Shows response headers returned from the MCP Server, including status and content type. Use to verify that the response matches expected metadata.
+  - pane: "Console"
+    description: |
+      Displays detailed JSON-RPC logs and operation results. Use this tab to inspect raw request and response payloads when troubleshooting MCP interactions.
 {% endtable %}
+<!-- vale on -->
+
 
 ## Authentication
 

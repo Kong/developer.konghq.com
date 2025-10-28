@@ -148,13 +148,13 @@ Generate a mock server from one of the following:
 
 **To create an AI-generated mock server:**
 1. In your Insomnia project, click **Create**.  
-2. Click **Mock Server**.  
-3. Click **Auto-Generate**.  
-4. Click **URL**, or **OpenAPI spec**, or **Text**. 
-5. (Optional) Select the **Enable dynamic responses** checkbox.  
-6. (Optional) Click **+ Add Files** to upload extra JSON files or YAML files.
-7. Type an example URL.
- 8. Click **Create**.
+1. Click **Mock Server**.  
+1. Click **Auto-Generate**.  
+1. Click **URL**, or **OpenAPI spec**, or **Text**. 
+1. (Optional) Select the **Enable dynamic responses** checkbox.  
+1. (Optional) Click **+ Add Files** to upload extra JSON files or YAML files.
+1. Type an example URL.
+1. Click **Create**.
 
 To verify, open the **Mock Tester** tab and send a request. Confirm that the response matches the generated configuration.
 
