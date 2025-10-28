@@ -291,13 +291,13 @@ First, let's run the MCP Inspector to see whether our listener AI MCP Proxy plug
     ```
 1. The script will automatically open a new browser window with MCP Inspector's UI:
 
-    ![MCP Inspector's UI](/assets/images/ai-gateway/mcp-inspector.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
+    ![MCP Inspector's UI](/assets/images/ai-gateway/mcp-inspector.png){: style="display:block; margin-left:auto; margin-right:auto; width:70%; border-radius:10px" }
 
 1. Click the **Connect** button on the left.
 
 1. In the **Tools** tile, click the **List tools** button. You should see the following tools available:
 
-    ![MCP tools in MCP Inspector](/assets/images/ai-gateway/mcp-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
+    ![MCP tools in MCP Inspector](/assets/images/ai-gateway/mcp-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:70%; border-radius:10px" }
 
 ### Configure Cursor
 
