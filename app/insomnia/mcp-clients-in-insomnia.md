@@ -32,9 +32,11 @@ faqs:
       Insomnia refreshes all Tools, Prompts, and Resources from the connected MCP Server.
   - q: Why do I see **401 Unauthorized** during MCP discovery?
     a: |
-      Many MCP Servers expect the client to discover their authorization server first.  
-      A typical pattern is: client contacts the server > server returns **401** with metadata > client follows metadata to obtain OAuth endpoints.  
-      If the provider doesn’t support Dynamic Client Registration (DCR), then automatic registration fails. Use a pre-registered client or a PAT.
+      Many MCP Servers expect the client to discover their authorization server first. A typical pattern is: client contacts the server > server returns **401** with metadata > client follows metadata to obtain OAuth endpoints. Some MCP Servers do not support Dynamic Client Registration (DCR); in this case, use a pre-registered client or PAT instead.
+  - q: Why can’t Insomnia connect to my MCP Server?
+    a: |
+      The MCP Server must support the **HTTP JSON-RPC transport** protocol. If a connection fails or no resources are discovered, confirm that your server exposes a valid MCP endpoint and is online.
+      If the server is temporarily unreachable, Insomnia displays cached resources until the next successful sync. 
   - q: Can I use a Personal Access Token (PAT) instead of OAuth?
     a: |
       Yes. Select **Auth > Bearer Token** and enter your PAT in the **Token** field.
@@ -142,9 +144,4 @@ If the authorization server does not support [Dynamic Client Registration](/dev-
 3. Click **Save**.  
 4. Confirm that parameters and credentials are stored correctly.
 
-## Limitations and considerations
-
-- MCP Servers must support **HTTP JSON-RPC transport**.  
-- Dynamic Client Registration is optional and not universally supported.  
-- If an MCP Server is unreachable, Insomnia displays cached resources until the next sync.  
 
