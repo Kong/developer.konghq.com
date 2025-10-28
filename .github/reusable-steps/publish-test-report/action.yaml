@@ -1,0 +1,15 @@
+name: Run Publish Tests Report
+description: Publishes tests report to github
+runs:
+  using: composite
+  steps:
+    - name: Publish Test Report
+      shell: bash
+      uses: ctrf-io/github-test-reporter@9bd31188517cfb3ff683f135041cc3bfbb0c78b3 # v1
+      with:
+        report-path: './tools/automated-tests/testReport.json'
+        summary-report: true
+        test-report: true
+        failed-folded-report: true
+        skipped-report: true
+        report-order: 'summary-report,test-report,failed-folded-report,skipped-report'
