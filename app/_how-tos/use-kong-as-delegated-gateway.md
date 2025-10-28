@@ -23,15 +23,17 @@ min_version:
 
 products:
   - mesh
+  - kic
 
 works_on:
   - on-prem
 
 tldr:
-  q: ""
-  a: ""
+  q: "How can I use {{site.base_gateway}} to export internal {{site.mesh_product_name}} services to external traffic?"
+  a: "Enable the Gateway API, [install {{site.kic_product_name}}](/kubernetes-ingress-controller/install/), enable sidecar injection on the namespace associated with {{site.kic_product_name_short}}, and restart the {{site.kic_product_name_short}} and {{site.base_gateway}} pods. Make sure that your mesh is configured to allow external traffic using a `MeshTrafficPermission` policy."
 
 prereqs:
+  skip_product: true
   inline:
     - title: Helm
       include_content: prereqs/helm
@@ -49,7 +51,9 @@ cleanup:
 
 ## Enable the Gateway API
 
-1. Install the Gateway API CRDs before installing {{ site.kic_product_name }}:
+In this example, we'll use [{{site.kic_product_name}}](/kubernetes-ingress-controller/) to manage {{site.base_gateway}}. Before installing {{site.kic_product_name_short}}, we need to enable the Kubernetes Gateway API.
+
+1. Install the Gateway API CRDs:
 
    ```sh
    kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
@@ -89,7 +93,9 @@ cleanup:
    " | kubectl apply -n kong -f -
    ```
 
-## Install {{ site.kic_product_name }}
+## Install {{site.kic_product_name}}
+
+Use the following command to install {{site.kic_product_name}} in a new `kong` namespace:
 
 ```sh
 helm install kong kong/ingress -n kong --create-namespace
@@ -97,26 +103,28 @@ helm install kong kong/ingress -n kong --create-namespace
 
 ## Enable sidecar injection
 
-1. 
+Since {{site.kic_product_name}} is installed outside of the mesh, we need to enable sidecar injection.
+
+1. Add the sidecar injection label to the `kong` namespace:
 
    ```sh
    kubectl label namespace kong kuma.io/sidecar-injection=enabled
    ```
 
-1. 
+1. Restart the {{site.kic_product_name}} and {{site.base_gateway}} pods:
 
    ```sh
    kubectl rollout restart -n kong deployment kong-gateway kong-controller
    kubectl wait -n kong --for=condition=ready pod --selector=app=kong-controller --timeout=90s
    ```
 
-1. 
+1. Check the pods' information:
    
    ```sh
    kubectl get pods -n kong
    ```
    
-
+   You should see two containers for each pod, one for the application and one for the sidecar:
    
    ```sh
    NAME                             READY   STATUS    RESTARTS      AGE
@@ -124,14 +132,16 @@ helm install kong kong/ingress -n kong --create-namespace
    kong-gateway-5d697cd486-4h55p      2/2     Running   0             49s
    ```
 
-1. 
+1. Export the gateway's public URL to your environment:
 
    ```sh
    export PROXY_IP=$(kubectl get svc -n kong kong-gateway-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
    echo $PROXY_IP
    ```
 
-## Add an HTTPRoute resource
+## Add a Route
+
+Use the `HTTPRoute` resource so add a [Route](/gateway/entities/route/) to your gateway:
 
 ```sh
 echo "apiVersion: gateway.networking.k8s.io/v1
@@ -157,6 +167,8 @@ spec:
 
 ## Add a MeshTrafficPermission policy
 
+The demo configuration we set in the [prerequisites](#install-kong-mesh-with-demo-configuration) applies restrictive permissions, so the gateway can't access the demo service. We need to add a `MeshTrafficPermission` policy to allow traffic from the `kong` namespace:
+
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
@@ -178,10 +190,20 @@ spec:
         action: Allow" | kubectl apply -f -
 ```
 
-```sh
-curl -i $PROXY_IP/api/counter -XPOST
-```
+## Validate
 
+Send a request to the proxy URL:
+
+<!--vale off -->
+{% validation request-check %}
+url: '/api/counter'
+on_prem_url: $PROXY_IP
+status_code: 200
+display_headers: true
+{% endvalidation %}
+<!--vale on -->
+
+You should get the following response:
 ```sh
 {
     "counter": 1,
