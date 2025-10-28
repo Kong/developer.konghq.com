@@ -1,5 +1,5 @@
 ---
-title: Create an MCP client in Insomnia
+title: MCP clients in Insomnia
 content_type: reference
 layout: reference
 description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Server, and discover available Tools, Prompts, and Resources.
@@ -12,8 +12,6 @@ min_version:
     insomnia: '12.0'  
 
 related_resources:
-  - text: Learn more about MCP Servers
-    url: /insomnia/mcp-servers/
   - text: Use mock servers
     url: /how-to/create-a-cloud-hosted-mock-server/
 
@@ -52,7 +50,7 @@ Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to acc
 
 ## Overview
 
-An MCP Server is a HTTP JSON-RPC endpoint that advertises callable operations:
+An MCP Server is an HTTP JSON-RPC endpoint that advertises callable operations:
 - **Tools** – Executable server functions  
 - **Prompts** – Reusable prompt templates  
 - **Resources** – Structured contextual data 
