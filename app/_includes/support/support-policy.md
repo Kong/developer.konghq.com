@@ -1,4 +1,4 @@
-### Kong Mesh release policy
+### {{site.mesh_product_name}} release policy
 
 Kong adopts a structured approach to versioning its products. Kong Mesh follow a pattern of {MAJOR}.{MINOR}.{PATCH}.
 
