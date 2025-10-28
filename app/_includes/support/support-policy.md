@@ -5,7 +5,7 @@ Kong adopts a structured approach to versioning its products. {{site.mesh_produc
 {:.info}
 > **Long Term Support Policy Update**
 > <br><br>
-> Beginning in Januray 2026, we plan to release 4 minor versions per year, every year: one in January, one in April, one in July, and the last one in October. 
+> Beginning in January 2026, we plan to release 4 minor versions per year, every year: one in January, one in April, one in July, and the last one in October. 
 > Each year, the first version we release will become an LTS release. 
 > Starting from 2.13, we will have 1 LTS release every year, in January of that year.
 > <br><br>
