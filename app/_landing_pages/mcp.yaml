@@ -30,9 +30,9 @@ rows:
               Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
 
               Learn how to:
-              - [Autogenerate and secure MCP tools from any API](./#autogenerate-mcp-servers-vusingia-ai-mcp-proxy)
+              - [Autogenerate and secure MCP tools from any API](./#autogenerate-mcp-servers-using-ai-mcp-proxy)
               - [Use any external MCP server with Kong AI Gateway](./#connect-external-mcp-servers-with-llm-models-and-ai-proxy)
-              - [Use Kong's {{site.konnect_product_name}} built-in MCP server](./#kong-s-kong-konnect-built-in-mcp-server)
+              - [Use Kong's {{site.konnect_product_name}} built-in MCP server](./#kong-konnect-built-in-mcp-server)
               - [Observe MCP traffic logs and metrics](./#mcp-traffic-observability)
               - [Leverage {{site.base_gateway}} for MCP traffic using how-to guides](/mcp/#mcp-how-to-guides)
       - blocks:
