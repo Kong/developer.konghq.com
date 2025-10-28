@@ -218,7 +218,7 @@ entities:
 {% endentity_examples %}
 
 This setup creates usage tiers as follows:
-* **Free:** Light usage, capped at 50 cost units per minute (around 5–10 small GPT-4 prompts).
+* **Free:** Light usage, capped at 50 cost units per minute (around 5–10 small GPT-4o prompts).
 * **Basic:** Moderate usage, capped at 200 cost units per minute.
 * **Premium:** High usage, capped at 1000 cost units per minute.
 
@@ -230,40 +230,40 @@ To test, send multiple chat requests via the AI Proxy endpoint with the correspo
 
 {% validation rate-limit-check %}
 iterations: 8
-url: '/v1/ai/chat'
+url: '/anything'
 headers:
   - 'apikey:john-key'
 method: POST
 body:
   messages:
     - role: user
-      content: "Write a short haiku about the ocean."
+      content: "Hello!"
 {% endvalidation %}
 
 **Basic tier test:**
 
 {% validation rate-limit-check %}
 iterations: 20
-url: '/v1/ai/chat'
+url: '/anything'
 headers:
   - 'apikey:adam-key'
 method: POST
 body:
   messages:
     - role: user
-      content: "Summarize the impact of AI on education."
+      content: "Hello!"
 {% endvalidation %}
 
 **Premium tier test:**
 
 {% validation rate-limit-check %}
 iterations: 60
-url: '/v1/ai/chat'
+url: '/anything'
 headers:
   - 'apikey:eve-key'
 method: POST
 body:
   messages:
     - role: user
-      content: "Write a creative short story about a time traveler."
+      content: "Hello!"
 {% endvalidation %}
