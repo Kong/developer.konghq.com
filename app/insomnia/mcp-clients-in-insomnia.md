@@ -2,7 +2,7 @@
 title: MCP clients in Insomnia
 content_type: reference
 layout: reference
-description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Server, and discover available Tools, Prompts, and Resources.
+description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Server, and discover available tools, prompts, and resources.
 breadcrumbs:
   - /insomnia/
 products:
@@ -88,22 +88,16 @@ columns:
 rows:
   - pane: "Params"
     description: |
-      Define or edit input parameters for the selected MCP operation. Each field corresponds to the parameters advertised by the server’s JSON-RPC schema.
+      Define or edit input parameters for the selected MCP operation. Each field corresponds to the parameters advertised by the server’s schema.
   - pane: "Auth"
     description: |
-      Configure authentication for requests.
+      Configure authentication information.
   - pane: "Headers"
     description: |
       Add or override request headers before sending a call to the server. Use for testing custom content types or authorization headers.
-  - pane: "Routes"
+  - pane: "Roots"
     description: |
-      Displays available endpoints or callable tools exposed by the connected MCP Server. Use to select a route to load its parameters into the **Params** tab.
-  - pane: "Parameter Builder"
-    description: |
-      Auto-generate structured JSON payloads based on the selected operation’s input schema. Use to access an assisted form view for complex nested parameters.
-  - pane: "Parameter Overview"
-    description: |
-      Displays all defined parameters in read-only mode for quick validation before sending a request.
+      Displays available endpoints or callable tools exposed by the connected MCP server. Use to select a route to load its parameters into the **Params** tab.
   - pane: "Events"
     description: |
       Displays real-time server events such as discovery updates or authentication state changes during the MCP session.
@@ -112,18 +106,15 @@ rows:
       Lists informational or error messages returned by the MCP Server or Insomnia runtime. For example, sync success or OAuth errors.
   - pane: "Headers"
     description: |
-      Shows response headers returned from the MCP Server, including status and content type. Use to verify that the response matches expected metadata.
+      Shows response headers returned from the MCP Server, including status and content type. Use to verify that the response matches expected headers.
   - pane: "Console"
     description: |
-      Displays detailed JSON-RPC logs and operation results. Use this tab to inspect raw request and response payloads when troubleshooting MCP interactions.
+      Displays detailed logs and operation results. Use this tab to inspect raw request and response payloads when troubleshooting MCP interactions.
 {% endtable %}
 <!-- vale on -->
 
 
-## Authentication
-
-{:.info}
-> Insomnia uses your system’s default browser for OAuth sign-in.
+## MCP Authentication
 
 When you connect to an MCP Server that requires authentication, Insomnia follows the **MCP Auth Flow**:
 
@@ -134,14 +125,8 @@ When you connect to an MCP Server that requires authentication, Insomnia follows
 3. If it’s not selected, Insomnia prompts you to switch to the discovered auth flow.  
    Confirm to proceed or cancel to remain on your current method.
 
-If the authorization server does not support [Dynamic Client Registration](/dev-portal/dynamic-client-registration/), you can:
+If the authorization server does not support Dynamic Client Registration, you can:
 - Use a **Personal Access Token (PAT)**, for example GitHub Copilot MCP Server.  
 - Register your own **OAuth application**, then enter the Client ID and Secret in Insomnia.
-
-## Manage requests and authentication
-1. To add required parameters, click the **Params** tab.   
-2. To configure authentication credentials, click the **Auth** tab.  
-3. Click **Save**.  
-4. Confirm that parameters and credentials are stored correctly.
 
 

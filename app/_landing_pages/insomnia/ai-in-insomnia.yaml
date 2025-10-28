@@ -75,7 +75,7 @@ rows:
 
   - header:
       type: h2
-      text: "Enable AI functionality"
+      text: "Get started"
     columns:
       - blocks:
           - type: structured_text
