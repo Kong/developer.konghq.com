@@ -327,77 +327,95 @@ First, let's run the MCP Inspector to see whether our listener AI MCP Proxy plug
 
 1. In the Cursor chat tab, click **@ Add Context** and select `mcp.json`.
 
+
 ### Validate aggregated MCP tools configuration
 
-Enter the following question in the Cursor chat:
+You can now test each exposed tool using Cursor.
 
-```text
-What is the current weather in London?
-```
+{% navtabs "validate-mcp-tools" %}
+{% navtab "Marketplace tools" %}
 
-You will notice that Cursor makes a tool call to the WeatherAPI tools we exposed through the AI MCP Proxy plugin:
+1. Enter the following question in the Cursor chat:
 
-```text
-I'll fetch the current weather for London.
-> Called weather-route-1
-```
-{:.no-copy-code}
+  ```text
+  How many orders are there in my marketplace?
+  ```
 
-When the agent finishes reasoning, you should see the following response in Cursor:
+2. You will notice that Cursor now makes a tool call to the exposed marketplace tools:
 
-```text
-London weather (now)
-- Condition: Overcast
-- Temperature: 17.2°C (63.0°F)
-- Feels like: 17.2°C (63.0°F)
-- Wind: 14.8 kph NE (gusts 18.8 kph)
-- Humidity: 83%
-- Pressure: 1016 mb
-- Visibility: 10 km
-- UV index: 0.1
-- Updated: 2025-08-19 07:45 (Europe/London)
-```
-{:.no-copy-code}
+  ```text
+  > Ran mcp-route-2
+  ```
+  {:.no-copy-code}
 
-Let's also check whether Cursor can also call our marketplace tools. Enter the following question in the Cursor chat:
+3. When the agent finishes reasoning, you should see the following response in Cursor:
 
-```text
-How many orders are there in my marketplace?
-```
+  ```text
+  Based on the API responses, I can see that your marketplace currently has **27 total orders** across all users.
+  ```
+  {:.no-copy-code}
 
-You will notice that Cursor now makes a tool call to the exposed marketplace tools:
+{% endnavtab %}
+{% navtab "WeatherAPI tools" %}
 
-```text
-> Ran mcp-route-2
-```
-{:.no-copy-code}
+1. Enter the following question in the Cursor chat:
 
-When the agent finishes reasoning, you should see the following response in Cursor:
+  ```text
+  What is the current weather in London?
+  ```
 
-```text
-Based on the API responses, I can see that your marketplace currently has **27 total orders** across all users.
-```
-{:.no-copy-code}
+2. You will notice that Cursor makes a tool call to the WeatherAPI tools we exposed through the AI MCP Proxy plugin:
 
-Let's also check if we can use the exposed currency exchange tools:
+  ```text
+  > Ran weather-route-1
+  ```
+  {:.no-copy-code}
 
-```text
-What's the current exchange rate of USD.
-```
-You will notice that Cursor now makes a tool call to the exposed currency exchange tools:
+3. When the agent finishes reasoning, you should see the following response in Cursor:
 
-```text
-> Ran freecurrency-route-`
-```
-When the agent finishes reasoning, you should see the following response in Cursor:
+  ```text
+  Alexandria, Egypt right now:
 
-```text
-Here are the current USD exchange rates:
-USD Exchange Rates (as of now):
-EUR (Euro): 1 USD = 0.858 EUR
-GBP (British Pound): 1 USD = 0.750 GBP
-JPY (Japanese Yen): 1 USD = 152.71 JPY
-CAD (Canadian Dollar): 1 USD = 1.399 CAD
-AUD (Australian Dollar): 1 USD = 1.525 AUD
-```
-{:.no-copy-code}
+  - Temperature: 79°F (26.1°C), feels like 80°F (26.8°C)
+  - Condition: Sunny
+  - Wind: 7.4 mph NNW
+  - Humidity: 61%
+  - Pressure: 30.00 in
+  - Visibility: 6 miles
+  - UV Index: 5.4
+
+  Warm and sunny with light NNW winds.
+  ```
+  {:.no-copy-code}
+
+{% endnavtab %}
+{% navtab "Currency exchange tools" %}
+
+1. Enter the following question in the Cursor chat:
+
+  ```text
+  What's the current exchange rate of USD?
+  ```
+
+2. You will notice that Cursor now makes a tool call to the exposed currency exchange tools:
+
+  ```text
+  > Ran freecurrency-route-1
+  ```
+  {:.no-copy-code}
+
+3. When the agent finishes reasoning, you should see the following response in Cursor:
+
+  ```text
+  Here are the current USD exchange rates:
+  USD Exchange Rates (as of now):
+  EUR (Euro): 1 USD = 0.858 EUR
+  GBP (British Pound): 1 USD = 0.750 GBP
+  JPY (Japanese Yen): 1 USD = 152.71 JPY
+  CAD (Canadian Dollar): 1 USD = 1.399 CAD
+  AUD (Australian Dollar): 1 USD = 1.525 AUD
+  ```
+  {:.no-copy-code}
+
+{% endnavtab %}
+{% endnavtabs %}
