@@ -4,7 +4,7 @@ First, we need to create a `docker-compose.yaml` file. This file will define the
 
 ```shell
 cat <<EOF > docker-compose.yaml
-{% include _files/event-gateway/docker-compose.yaml %}
+{% include_cached _files/event-gateway/docker-compose.yaml %}
 EOF
 ```
 
