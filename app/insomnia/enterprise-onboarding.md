@@ -80,7 +80,7 @@ faqs:
 If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance in [**Insomnia Admin**](https://app.insomnia.rest/).
 
 {:.decorative}
-> **Start a 14-day trial of Insomnia Enterprise:** Any Owner or Co-owner can start a 14-day trial to evaluate Enterprise features in Insomnia. To activate your trial, from the Insomnia application, click **Start 14 day trial** and then confirm. To learn more about Enterprise features, go to the [Insomnia pricing page](https://app.insomnia.rest/pricing/).
+> **Start a 14-day trial of Insomnia Enterprise:** Any Owner or Co-owner can start a 14-day trial to evaluate Enterprise features in Insomnia. To activate your trial, from the Insomnia application, click **Start 14 day trial** and then confirm. To learn more about Enterprise features, go to the [Insomnia pricing page](https://insomnia.rest/pricing/).
 
 ## 1. Activate your Enterprise membership
 
