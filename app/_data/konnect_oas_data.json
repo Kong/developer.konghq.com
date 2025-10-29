@@ -604,14 +604,14 @@
       "name": "v3",
       "id": "a050fe88-8946-4b2a-bd0b-b6d241edfe1c"
     },
-    "description": null,
+    "description": "Manage organizational level settings for Konnect",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
       {
         "id": "a050fe88-8946-4b2a-bd0b-b6d241edfe1c",
         "created_at": "2025-10-29T18:12:04.125Z",
-        "updated_at": "2025-10-29T18:12:21.636Z",
+        "updated_at": "2025-10-29T19:03:27.524Z",
         "name": "v3",
         "deprecated": false,
         "registration_configs": []
