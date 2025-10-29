@@ -39,7 +39,6 @@ entities:
 
 tags:
   - ai-gateway
-  - rate-limiting
 
 tldr:
   q: How do I limit AI model usage by Consumer tier?
