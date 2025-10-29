@@ -254,7 +254,18 @@ rows:
                 - text: Event Gateway API reference
                   url: /api/event-gateway/
                   align: end
-      
+      - blocks:
+          - type: card
+            config:
+              title: Data plane configuration reference
+              description: |
+                Explore the reference documentation for all {{ site.event_gateway }} data plane configuration parameters
+              icon: /assets/icons/document.svg
+              ctas:
+                - text: Data plane configuration reference
+                  url: /event-gateway/configuration/
+                  align: end
+
   - header:
       type: h2
       text: "Frequently asked questions about {{site.event_gateway}}"
