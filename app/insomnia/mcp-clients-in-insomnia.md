@@ -13,8 +13,6 @@ min_version:
 related_resources:
   - text: Use mock servers
     url: /how-to/create-a-cloud-hosted-mock-server/
-  - text: "Introducing Model Context Protocol in Insomnia"
-    url: https://konghq.com/blog/product-releases/trust-what-youre-shipping-with-insomnia-v12
 
 faqs:
   - q: What happens when authentication fails?
