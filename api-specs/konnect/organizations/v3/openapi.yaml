@@ -5,30 +5,28 @@ info:
   description: Konnect Organizations API.
   contact:
     name: Kong
-    url: https://konghq.com
+    url: 'https://konghq.com'
 servers:
-  - url: https://us.api.konghq.com/v3
+  - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
-  - url: https://eu.api.konghq.com/v3
+  - url: 'https://eu.api.konghq.com/v3'
     description: Europe Production region
-  - url: https://au.api.konghq.com/v3
+  - url: 'https://au.api.konghq.com/v3'
     description: Australia Production region
-  - url: https://me.api.konghq.com/v3
+  - url: 'https://me.api.konghq.com/v3'
     description: Middle-East Production region
-  - url: https://in.api.konghq.com/v3
+  - url: 'https://in.api.konghq.com/v3'
     description: India Production region
-  - url: https://sg.api.konghq.com/v3
+  - url: 'https://sg.api.konghq.com/v3'
     description: Singapore Production region
 paths:
-  /organizations/{organizationId}/personal-access-tokens:
+  '/organizations/{organizationId}/personal-access-tokens':
     parameters:
       - $ref: '#/components/parameters/OrganizationIdParameter'
     get:
       operationId: list-organizations-personal-access-tokens
       summary: List PATs
-      description: >-
-        List personal access tokens in your organization. Only organization
-        administrators are authorized  to perform this action.
+      description: List personal access tokens in your organization. Only organization administrators are authorized  to perform this action.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageBefore'
@@ -72,15 +70,13 @@ paths:
         - serviceAccessToken: []
       tags:
         - Personal Access Tokens
-  /organizations/{organizationId}/personal-access-token-settings:
+  '/organizations/{organizationId}/personal-access-token-settings':
     parameters:
       - $ref: '#/components/parameters/OrganizationIdParameter'
     get:
       operationId: get-organizations-personal-access-token-settings
       summary: Get personal access token policy settings
-      description: >-
-        Get personal access token policy settings. Only organization
-        administrators are authorized  to perform this action.
+      description: Get personal access token policy settings. Only organization administrators are authorized  to perform this action.
       responses:
         '200':
           $ref: '#/components/responses/PersonalAccessTokenSettingsResponse'
@@ -97,9 +93,7 @@ paths:
     patch:
       operationId: update-personal-access-token-settings
       summary: Update personal access token policy settings
-      description: >-
-        Update personal access token policy settings. Only organization
-        administrators are authorized  to perform this action.
+      description: Update personal access token policy settings. Only organization administrators are authorized  to perform this action.
       requestBody:
         $ref: '#/components/requestBodies/PersonalAccessTokenSettingsUpdateRequest'
       responses:
@@ -126,10 +120,8 @@ components:
       schema:
         $ref: '#/components/schemas/OrganizationId'
     PageAfter:
-      name: page[after]
-      description: >-
-        Request the next page of data, starting with the item after this
-        parameter.
+      name: 'page[after]'
+      description: 'Request the next page of data, starting with the item after this parameter.'
       required: false
       in: query
       allowEmptyValue: true
@@ -137,10 +129,8 @@ components:
         type: string
         example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
     PageBefore:
-      name: page[before]
-      description: >-
-        Request the next page of data, starting with the item before this
-        parameter.
+      name: 'page[before]'
+      description: 'Request the next page of data, starting with the item before this parameter.'
       required: false
       in: query
       allowEmptyValue: true
@@ -148,10 +138,8 @@ components:
         type: string
         example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
     PageSize:
-      name: page[size]
-      description: >-
-        The maximum number of items to include per page. The last page of a
-        collection may include fewer items.
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
       required: false
       in: query
       allowEmptyValue: true
@@ -312,11 +300,9 @@ components:
       type: object
       properties:
         status:
-          description: >
+          description: |
             The HTTP status code of the error. Useful when passing the response
-
-            body to child properties in a frontend UI. Must be returned as an
-            integer.
+            body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           readOnly: true
         title:
@@ -338,16 +324,10 @@ components:
           type: string
           readOnly: true
         detail:
-          description: >
-            A human readable explanation specific to this occurence of the
-            problem.
-
-            This field may contain request/entity data to help the user
-            understand
-
-            what went wrong. Enclose variable values in square brackets. Should
-            be
-
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
             provided as "Sentence case" for direct use in the UI.
           type: string
           readOnly: true
@@ -572,9 +552,9 @@ components:
             title:
               example: Unauthorized
             type:
-              example: https://httpstatuses.com/401
+              example: 'https://httpstatuses.com/401'
             instance:
-              example: kong:trace:1234567890
+              example: 'kong:trace:1234567890'
             detail:
               example: Invalid credentials
     ForbiddenError:
@@ -587,9 +567,9 @@ components:
             title:
               example: Forbidden
             type:
-              example: https://httpstatuses.com/403
+              example: 'https://httpstatuses.com/403'
             instance:
-              example: kong:trace:1234567890
+              example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
   examples:
@@ -616,22 +596,20 @@ components:
             updated_at: '2023-01-01T00:00:00.000Z'
             expires_at: '2023-02-01T00:00:00.000Z'
         meta:
-          next: >-
-            /organizations/me/personal-access-tokens?page[after]=ewogICJpZCI6ICJoZWysbyB3b3JsZCIKgZ
-          previous: >-
-            /organizations/me/personal-access-tokens?page[before]=efogICJpZCI6ICJoZWysbyB3b3JsZCIKgR
+          next: '/organizations/me/personal-access-tokens?page[after]=ewogICJpZCI6ICJoZWysbyB3b3JsZCIKgZ'
+          previous: '/organizations/me/personal-access-tokens?page[before]=efogICJpZCI6ICJoZWysbyB3b3JsZCIKgR'
           size: 10
     UnauthorizedExample:
       value:
         status: 401
         title: Unauthorized
-        instance: kong:trace:8347343766220159418
+        instance: 'kong:trace:8347343766220159418'
         detail: Unauthorized
     ForbiddenExample:
       value:
         status: 403
         title: Forbidden
-        instance: kong:trace:2723154947768991354
+        instance: 'kong:trace:2723154947768991354'
         detail: You do not have permission to perform this action
   requestBodies:
     PersonalAccessTokenSettingsUpdateRequest:
@@ -688,8 +666,7 @@ components:
               - meta
           examples:
             Personal Access Token List Response:
-              $ref: >-
-                #/components/examples/PersonalAccessTokenOrganizationListResponse
+              $ref: '#/components/examples/PersonalAccessTokenOrganizationListResponse'
     BadRequest:
       description: Bad Request
       content:
@@ -719,25 +696,17 @@ components:
       type: http
       scheme: bearer
       bearerFormat: Token
-      description: >
-        The personal access token is meant to be used as an alternative to
-        basic-auth when accessing Konnect via APIs.
-
-        You can generate a Personal Access Token (PAT) from the [personal access
-        token page](https://cloud.konghq.com/global/account/tokens/) in the
-        Konnect dashboard.
-
+      description: |
+        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
+        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
         The PAT token must be passed in the header of a request, for example:
-
-        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header
-        'Authorization: Bearer kpat_xgfT...'`
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
     konnectAccessToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: >
-        The Konnect access token is meant to be used by the Konnect dashboard
-        and the decK CLI authenticate with.
+      description: |
+        The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
     serviceAccessToken:
       type: http
       scheme: bearer
