@@ -16,6 +16,9 @@ works_on:
 faqs:
   - q: Will the {{site.konnect_short_name}} Debugger impact latency?
     a: Under normal conditions, the Debugger adds negligible latency. However, under heavy load, the Debugger may impact the throughput of data planes being traced.
+  - q: How is data localization enforced in Debugger?
+    a: "The entire infrastructure is regionally deployed. All logs, traces, and payload captures are stored within the local geographic region. To see a list of supported geos, visit: [Supported Geos](/konnect-platform/geos/#supported-geos)"
+    
 tags:
   - tracing
   - debugger
@@ -84,7 +87,7 @@ In critical scenarios, having access to payload details can help identify and pi
 
 ### Prerequisites
 * Your organization has opted-in to use debugger's payload capture feature and signed the Advanced Features Addendum
-* data plane nodes are deployed with new telemetry endpoints that support the payload capture feature
+* Data plane nodes are deployed with new telemetry endpoints that support the payload capture feature
 * Customer firewall rules updated to allow for the new telemetry endpoints
 
 {:.info}
@@ -116,6 +119,7 @@ To begin using the Debugger, ensure the following requirements are met:
 
 * Your data plane nodes are running {{site.base_gateway}} version 3.9.1 or later.
 * Logs require {{site.base_gateway}} version 3.11.0 or later.
+* You should either be a control plane admin or an org admin to use Debugger
 * Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't currently supported.
 * For version 3.9.x only: set the following environment variables in `kong.conf`:
   * `KONG_CLUSTER_RPC=on`
@@ -150,6 +154,7 @@ For example, to capture all requests with a 503 response:
 ```sh
 http.response.status_code==503
 ```
+The list of all possible sampling expressions are captured here [Sampling Rules](/gateway/routing/expressions/)
 
 A sample trace is shown below. By inspecting the spans, you can see that the bulk of the latency occurs in the pre-function plugin during the access phase.
 

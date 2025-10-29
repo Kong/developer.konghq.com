@@ -19,4 +19,5 @@ swap:
   utilize: use
   whitelist: allowlist
   'a HTTP': 'an HTTP'
+  MacOS : macOS
   

@@ -1,8 +1,47 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added caching support via a new `cache` node type.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for conditional execution via the `branch` node.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added vault support to the Datakit plugin. This unblocks common use cases such as storing secrets in Vault and retrieving them as tokens in Datakit.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed plugin config validation to catch more invalid usage of the `property` node.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where an invalid plugin instance could affect other plugins.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added new datakit plugin",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed implicit request node headers field to be correct type.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where an invalid plugin instance could affect other plugins.\n",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ]

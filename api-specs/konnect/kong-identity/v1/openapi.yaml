@@ -13,6 +13,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v1'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v1'
+    description: Singapore Production region
 paths:
   /auth-servers:
     get:
@@ -523,24 +525,6 @@ paths:
         - Auth Server Clients
 components:
   parameters:
-    PageNumber:
-      name: 'page[number]'
-      description: Determines which page of the entities to retrieve.
-      required: false
-      in: query
-      allowEmptyValue: true
-      schema:
-        type: integer
-        example: 1
-    PageSize:
-      name: 'page[size]'
-      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
-      required: false
-      in: query
-      allowEmptyValue: true
-      schema:
-        type: integer
-        example: 10
     authServerId:
       schema:
         type: string
@@ -566,6 +550,24 @@ components:
       in: path
       required: true
       description: The OAuth 2.0 client ID
+    PageNumber:
+      name: 'page[number]'
+      description: Determines which page of the entities to retrieve.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 1
+    PageSize:
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
     scopeId:
       schema:
         type: string
@@ -653,6 +655,7 @@ components:
         type: string
         format: uuid
       nullable: false
+      uniqueItems: true
     ClientId:
       description: The OAuth 2.0 client ID
       type: string
@@ -1179,6 +1182,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

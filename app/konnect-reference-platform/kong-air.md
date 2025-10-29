@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-  - reference-platform
+  - konnect-reference-platform
 
 works_on:
   - konnect

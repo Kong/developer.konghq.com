@@ -12,6 +12,7 @@ import Dropdowns from "@/javascripts/components/dropdown";
 import EntityExample from "@/javascripts/components/entity_example";
 import Tabs from "@/javascripts/components/tabs";
 import TopNav from "@/javascripts/components/top_nav";
+import ToggleSwitchManager from "@/javascripts/components/switch";
 import "@/javascripts/anchor_links";
 import "@/javascripts/accordion";
 import "@/javascripts/banner";
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
   new EntityExample();
   new Tabs();
   new Dropdowns();
+  new ToggleSwitchManager();
 });
 
 if (import.meta.env.PROD) {

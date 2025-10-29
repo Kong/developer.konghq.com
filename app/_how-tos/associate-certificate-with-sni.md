@@ -57,7 +57,6 @@ min_version:
     gateway: '3.4'
 
 tags:
-  - ssl
   - certificates
 
 published: false

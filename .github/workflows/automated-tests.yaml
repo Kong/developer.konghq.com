@@ -17,10 +17,10 @@ jobs:
     strategy:
       matrix:
         gateway:
-          - '3.11'
+          - '3.12'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
           egress-policy: audit
 
@@ -35,7 +35,7 @@ jobs:
           ruby-version: .ruby-version
 
       - name: Ruby gem cache
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ${{ github.workspace }}/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -47,11 +47,11 @@ jobs:
         run: bundle install --jobs 4 --retry 3
 
       # Configure Node to build assets
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
         with:
           node-version: "22"
       - name: Cache node modules
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         env:
           cache-name: cache-node-modules
         with:
@@ -91,7 +91,7 @@ jobs:
           DEBUG=tests:*,debug npm run run-tests
 
       - name: Publish Test Report
-        uses: ctrf-io/github-test-reporter@646f98cfc16c6f7a0e1f6100cabe2deb95dd2eef # v1
+        uses: ctrf-io/github-test-reporter@9bd31188517cfb3ff683f135041cc3bfbb0c78b3 # v1
         with:
           report-path: './tools/automated-tests/testReport.json'
           summary-report: true

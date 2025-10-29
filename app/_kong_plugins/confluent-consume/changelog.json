@@ -1,8 +1,34 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added `websocket` mode to the `confluent-consume` plugin.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where the plugin would fail to connect using mTLS.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "An error message appears in the logs about a missing cluster name, even when the name is specified.\n",
       "type": "known-issues",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.6": [
+    {
+      "message": "Added `enforce_latest_offset_reset` flag to fix incorrect `latest` offset behavior. When `false` (default), maintains backwards compatibility where `latest` acts like `earliest`. When `true`, `latest` correctly starts from end of topic. Also fixed offset commit bug when no records are consumed, preventing feedback loop with true latest behavior.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin would fail to connect using mTLS.\n",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ]

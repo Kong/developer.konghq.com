@@ -48,10 +48,10 @@ rows:
                        
                        For private Dev Portals, user authentication is enabled by default, and the default application auth strategy is key authentication.
                     1. Configure an [application authentication strategy](/dev-portal/auth-strategies/) by navigating to **Settings > Security**.
-                    1. Link an [API to a Gateway Service](/dev-portal/apis/#gateway-service-link).
+                    1. Link an [API to a Gateway Service](/catalog/apis/#gateway-service-link).
                        
                        This is required to enforce auth strategies.
-                    1. Publish an [API to a Dev Portal](/dev-portal/apis/#publish-your-api-to-dev-portal).
+                    1. Publish an [API to a Dev Portal](/catalog/apis/#publish-your-api-to-dev-portal).
                     1. Select an authentication strategy when publishing the API to a Dev Portal.
                     1. For public content with restricted access, use [visibility settings](/dev-portal/pages-and-content/#page-visibility-and-publishing) to show public pages or APIs to anonymous users while restricting actions to logged-in users.
   - header:
@@ -120,7 +120,7 @@ rows:
                   Developers use the credentials from the authentication strategy when they use an API from your Dev Portal.
                   You can define and reuse multiple authentication strategies for different APIs and Dev Portals.
                   
-                  When you select an [authentication strategy](/dev-portal/auth-strategies/) during [API publication](/dev-portal/apis/) to a Dev Portal, {{site.konnect_short_name}} automatically applies the strategy to the linked Gateway Service.
+                  When you select an [authentication strategy](/dev-portal/auth-strategies/) during [API publication](/catalog/apis/) to a Dev Portal, {{site.konnect_short_name}} automatically applies the strategy to the linked Gateway Service.
 
                   Dev Portal supports the following authentication strategies:
                   * [Key authentication (`key-auth`)](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)

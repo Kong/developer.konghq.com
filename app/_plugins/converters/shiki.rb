@@ -13,6 +13,7 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           "yaml",
           "fish",
           "json",
+          "powershell",
           "lua",
           "http",
           "python",

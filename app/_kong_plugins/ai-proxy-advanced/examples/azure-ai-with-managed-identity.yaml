@@ -1,0 +1,55 @@
+title: 'Authenticate to Azure OpenAI Service with an Azure Managed Identity'
+description: 'Configure a chat route using Azure OpenAI Service with the latest GPT-4o model, and authenticate using an Azure Managed Identity.'
+
+extended_description: |
+  Configure a chat route using Azure OpenAI Service with the GPT-4o model, and authenticate using an Azure Managed Identity.
+
+  To connect to Azure AI, you'll need three values from your Azure OpenAI resource:
+
+  1. **Deployment ID** — The unique name of your deployed model.
+     - In the [Azure AI Foundry Portal](https://ai.azure.com/?cid=learnDocs) sidebar, select a resource and go to:
+       **Shared Resources > Deployments > Model deployments** and click the deployment name.
+     - You can also see the deployment ID in the Azure OpenAI URL when calling the API, for example:
+       `https://{AZURE_INSTANCE_NAME}.openai.azure.com/openai/deployments/{AZURE_DEPLOYMENT_ID}/...`
+
+  2. **Instance name** — The name of your Azure OpenAI resource.
+     - This is the prefix in your API endpoint URL, for example:
+       `https://{AZURE_INSTANCE_NAME}.openai.azure.com`
+
+  3. **API Key** — The key used to authenticate requests to your Azure OpenAI deployment in Azure AI Foundry.
+     - In the [Azure AI Foundry Portal](https://ai.azure.com/?cid=learnDocs) sidebar, select a resource and go to:
+       **Shared Resources > Deployments > Model deployments**, then click the deployment name.
+     - The API key is visible in the **Endpoint** tile.
+
+weight: 900
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        azure_use_managed_identity: true
+      model:
+        provider: azure
+        name: gpt-4o
+        options:
+          azure_api_version: "2023-01-01"
+          azure_instance: ${instance}
+          azure_deployment_id: ${deployment}
+
+variables:
+  instance:
+    value: $AZURE_INSTANCE_NAME
+    description: The name of the Azure OpenAI instance.
+  deployment:
+    value: $AZURE_DEPLOYMENT_ID
+    description: The ID of the Azure OpenAI deployment.
+  key:
+    value: $AZURE_OPENAI_API_KEY
+    description: The API key to use to connect to Azure OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

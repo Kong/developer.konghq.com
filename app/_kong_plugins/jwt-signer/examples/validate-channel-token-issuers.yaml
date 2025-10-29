@@ -1,0 +1,19 @@
+description: Validates that the issuer present in a channel token is in the allowed list.
+
+title: 'Validate the issuer claim in a channel token'
+min_version:
+  gateway: '3.12' 
+weight: 900
+
+config:
+  verify_channel_token_issuer: true
+  channel_token_issuer_claim: 
+  - iss
+  channel_token_issuers_allowed:
+  - allowed_iss1
+  - allowed_iss2
+
+tools:
+  - deck
+  - admin-api
+  - kic

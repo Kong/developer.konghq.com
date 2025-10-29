@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added support for session binding (IP, scheme, and/or User-Agent header).\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added two boolean configuration fields `hash_subject` (default `false`) and `store_metadata` (default `false`) to store the session's metadata in the database.\n",

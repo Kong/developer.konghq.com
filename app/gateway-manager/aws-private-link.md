@@ -116,6 +116,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.us-east-1.vpce-svc-09e6e8ec26383e748
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.us-east-1.vpce-svc-0925688dce5416901
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.us-east-1.vpce-svc-0a701662e3ebe10b8
     dns: us.svc.konghq.com
@@ -144,6 +147,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.us-east-2.vpce-svc-0f1c86fb6399d4fe5
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.us-east-2.vpce-svc-05e1f7aec7fe36e70
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.us-east-2.vpce-svc-096fe7ba54ebc32db
     dns: us.svc.konghq.com
@@ -172,6 +178,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.us-west-2.vpce-svc-0fce4d5504650e9a3
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.us-west-2.vpce-svc-03d71f4a064877f2e
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.us-west-2.vpce-svc-0d2994122fea007ca
     dns: us.svc.konghq.com
@@ -200,6 +209,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.eu-central-1.vpce-svc-0e6497e6df9928a80
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.eu-central-1.vpce-svc-0c43e67226a4aa910
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.eu-central-1.vpce-svc-01d3dd232e277feeb
     dns: us.svc.konghq.com
@@ -228,6 +240,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.eu-west-1.vpce-svc-0978fbaf50bfc67d9
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.eu-west-1.vpce-svc-02451d65748600af6
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.eu-west-1.vpce-svc-01070d7c2137e0ee1
     dns: us.svc.konghq.com
@@ -256,6 +271,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.eu-west-2.vpce-svc-0ab99eeae8121c7d8
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.eu-west-2.vpce-svc-0646cf4c72df9e4fc
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.eu-west-2.vpce-svc-0c23345bb2ef7b298
     dns: us.svc.konghq.com
@@ -284,6 +302,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.ap-east-1.vpce-svc-09ca173aa8de2dd02
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.ap-east-1.vpce-svc-0b4d34906c77a8e29
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.ap-east-1.vpce-svc-02c00c62584350b46
     dns: us.svc.konghq.com
@@ -312,6 +333,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.ap-southeast-1.vpce-svc-00689717c9085d08a
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.ap-southeast-1.vpce-svc-06ec4681cc9fde9c9
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.ap-southeast-1.vpce-svc-0eeaa22ed2d6268eb
     dns: us.svc.konghq.com
@@ -340,6 +364,9 @@ rows:
   - geo: ME
     service: com.amazonaws.vpce.ap-southeast-2.vpce-svc-008f231c7501e72c2
     dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.ap-southeast-2.vpce-svc-0619b7120e5eb737b
+    dns: sg.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.ap-southeast-2.vpce-svc-0600dd84f39e7b12a
     dns: us.svc.konghq.com
