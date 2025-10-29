@@ -38,7 +38,7 @@ entities:
   - plugin
 
 tags:
-  - ai-gateway
+  - ai
 
 tldr:
   q: How do I limit AI model usage by Consumer tier?
