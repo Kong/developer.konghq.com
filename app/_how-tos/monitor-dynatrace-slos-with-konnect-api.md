@@ -1,7 +1,7 @@
 ---
 title: Monitor Dynatrace classic SLOs in Catalog with the Konnect API
 content_type: how_to
-description: Learn how to connect an Dynatrace classic SLO to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the API.
+description: Learn how to connect a Dynatrace classic SLO to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the API.
 products:
   - catalog
 works_on:
@@ -29,7 +29,7 @@ related_resources:
 automated_tests: false
 tldr:
   q: How do I monitor Dynatrace classic service-level objects in {{site.konnect_short_name}}?
-  a: Install the Dynatrace in {{site.konnect_short_name}} and authorize access with your Dynatrace URL and personal access token (with `slo.read` permissions), then link an SLO to your {{site.konnect_catalog}} service.
+  a: Install the Dynatrace integration in {{site.konnect_short_name}} and authorize access with your Dynatrace URL and personal access token (with `slo.read` permissions), then link an SLO to your {{site.konnect_catalog}} service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
