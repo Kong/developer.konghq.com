@@ -1,0 +1,189 @@
+metadata:
+  title: AI in Insomnia
+  content_type: landing_page
+  description: Explore AI features in Insomnia 12, including MCP Servers, AI-assisted mock servers, and commit suggestions. Learn how to connect, configure, and manage AI integrations across your workspace.
+  breadcrumbs:
+    - /insomnia/
+  products:
+    - insomnia
+  min_version:
+    insomnia: '12.0'  
+rows:
+  - header:
+      type: h1
+      text: "AI in Insomnia"
+      sub_text: Explore the AI features available in Insomnia and learn how they enhance automation, collaboration, and productivity.
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text:
+              blocks:
+                - type: text
+                  text: |
+                    {:.decorative}
+                    > As of Insomnia v12, AI features are free to use, though this may change in future releases.
+
+                    Insomnia 12 introduces a suite of **AI-driven capabilities** that make API development faster, smarter, and more collaborative. These include:
+                    - [**MCP Servers and Clients**](/insomnia/mcp-servers/#mcp-servers-and-clients), which connect to external AI-ready tools and resources.  
+                    - [**AI-assisted mock server generation**](/insomnia/self-hosted-mocks/#create-an-auto-generated-mock-server), which transforms prompts or API definitions into mock APIs.  
+                    - [**AI commit message suggestions**](/insomnia/ai-in-insomnia/#ai-driven-git-commits), which help maintain clear and atomic commit histories.
+
+                    Activate these features by enabling a **Large Language Model (LLM)** in **Preferences > AI Settings**.  
+                    Choose from one of the following providers:
+                    - **Local**
+                    - **Claude**
+                    - **OpenAI**
+                    - **Gemini**
+
+                    {:.info}
+                    > Local models keep processing fully on your machine for privacy and control, but may run slower and produce less-refined responses than hosted models.
+  - header:
+      type: h2
+      text: "AI features overview"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text:
+              blocks:
+                - type: text
+                  text: |
+                    Once an LLM is activated, Insomnia unlocks multiple AI features that are designed to automate repetitive workflows, generate content dynamically, and enhance collaboration.
+
+                    {% table %}
+                    columns:
+                      - title: Feature
+                        key: feature
+                      - title: Description
+                        key: description
+                      - title: Product context
+                        key: context
+                    rows:
+                      - feature: "Auto-generate Mock Servers from natural language"
+                        description: "Creates a mock server from a prompt, OpenAPI definition, or live URL response. Automatically scaffolds routes, responses, and configurations."
+                        context: "Available when creating **Self-hosted** mock servers. See [**Mock Servers**](/insomnia/mock-servers/)."
+                      - feature: "Suggest comments and grouping for Commits"
+                        description: "Analyzes staged Git changes and suggests logical commit groupings and draft messages."
+                        context: "Available in the **Git Sync** interface. See [**Version control in Insomnia**](/insomnia/version-control/)."
+                      - feature: "MCP Client operations"
+                        description: "Connect to MCP Servers that expose callable tools, prompts, and structured resources via JSON-RPC."
+                        context: "Manage connections under **MCP Servers** in Insomnia. See [**MCP clients in Insomnia**](/insomnia/mcp-clients-in-insomnia/)."
+                    {% endtable %}
+
+  - header:
+      type: h2
+      text: "Get started"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text:
+              blocks:
+                - type: text
+                  text: |
+                    Activate features by choosing and uploading an LLM in **Preferences > AI Settings**:
+
+                    1. Click **Preferences**.  
+                    1. Select the **AI Settings** tab.  
+                    1. In the provider list, choose a LLM type: 
+                    1. Enter your credentials or select a local model.
+                    1. Click **Activate**.
+
+                    After activation you can toggle **Auto-generate Mock Servers** and **Suggest commit comments** from the **AI Features** panel
+
+                    {:.info}
+                    > **Note**: Local LLMs require a `.gguf` file placed in the `/Insomnia/llms/` directory
+  - header:
+    type: h2
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "MCP Servers and Clients"
+              blocks:
+                - type: text
+                  text: |
+                    **Model Context Protocol (MCP)** Servers expose domain-specific operations through a **JSON-RPC interface**. For example:
+                      - `tools/CALL`
+                      - `resources/READ`
+                      - `prompts/GET`
+
+                    When you connect Insomnia to an MCP Server, Insomnia creates an **MCP Client** that acts like a synchronized request group. The client stays updated with tools, prompts, and resources published by the server. When offline, you will view cached data until you resync.
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    <p/><p/>
+                     **Use MCP Clients to:**
+                    - Discover and execute callable tools  
+                    - Retrieve structured resources  
+                    - Explore and test AI-driven prompts  
+                    - Resync data from the server as it changes 
+
+                    **Transports available:** HTTP and STDIO.  
+
+          - type: button
+            config:
+              text: Learn more about MCP Clients
+              url: /insomnia/mcp-clients-in-insomnia/
+              align: left
+  - header:
+    type: h2
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "AI-driven Git commits"
+              blocks:
+                - type: text
+                  text: |
+                    Insomnia’s **Suggest comments and grouping for Commits** feature analyzes staged changes and helps maintain consistent, meaningful Git histories. For Git concepts and workflows, go to [**Version control in Insomnia**](insomnia/version-control/).
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    <p/><p/>
+                    **To use commit suggestions:**
+                    1. Open the **Git Sync** interface.  
+                    1. Click **Suggest comments and grouping for Commits**.  
+                    1. Review the suggested commit groups and messages.  
+                    1. (Optional) To edit a message inline, double-click the message.  
+                    1. Drag and drop files between commit groups, or exclude files.  
+                    1. Click **Commit** or **Commit & Push**.
+ 
+  - header:
+      type: h2
+      text: "Frequently asked questions"
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: Can I disable AI features for myself?
+                a: |
+                  Yes. Go to **Preferences → AI Settings** and deactivate the toggles for **Auto-generate Mock Servers** and **Suggest commit comments**.  
+                  To stop using an LLM entirely, click **Deactivate** under the provider configuration.
+              - q: Why don’t I see AI features in the app?
+                a: |
+                  You must first configure and activate an LLM under **Preferences → AI Settings**.  
+                  If AI is deactivated at the instance level, the feature toggles will remain unavailable in the UI.
+              - q: How do I manage AI across my organization?
+                a: |
+                  Administrators can enable or disable AI features at the instance level from **Insomnia Admin → AI Settings**.  
+                  When deactivated, the desktop app shows an explanatory message.  
+                  When activated, each user must still activate a model before toggles become available.
+              - q: Which transports are supported for MCP Clients?
+                a: |
+                  Both **HTTP** and **STDIO** transports are supported for connecting to MCP Servers.
+              - q: Can MCP Clients use Git Sync or Import/Export?
+                a: |
+                  Not yet. MCP Clients are stored locally and currently do not support Git Sync or import/export.
