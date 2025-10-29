@@ -86,6 +86,8 @@ rows:
                 1. Copy the generated command.
                 1. Run the command on your data plane host to start the data plane.
                 1. After the data plane is connected and the control plane recognizes it, click **Done**.
+
+                You can adjust data plane node settings using bootstrap [configuration parameters](/event-gateway/configuration/) at start time.
             
   - header:
       type: h2
