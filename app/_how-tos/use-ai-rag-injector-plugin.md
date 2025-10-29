@@ -534,7 +534,7 @@ If you are running {{site.base_gateway}} in traditional mode, you can update con
 
 However, this won't work in hybrid mode or {{site.konnect_short_name}} because the control plane can't access the plugin's backend storage.
 
-To update content for ingesting in hybrid mode or {{site.konnect_short_name}}, you can use a script:
+To update content for ingesting in hybrid mode or {{site.konnect_short_name}}, you can use the below Python script for splitting content into chunks:
 
 1. Retrieve the ID of the AI RAG Injector plugin that you want to update.
 2. Copy and paste the following script to a local file, for example `ingest_update.lua`:
@@ -565,7 +565,7 @@ To update content for ingesting in hybrid mode or {{site.konnect_short_name}}, y
      -- vectordb driver init
      local vectordb_driver
      do
-         vectordb_driver, err = vectordb.new(conf.vectordb.strategy, conf.vectordb_namespace, conf.  vectordb)
+         vectordb_driver, err = vectordb.new(conf.vectordb.strategy, conf.vectordb_namespace, conf.vectordb, true)
          if err then
              return nil, "Failed to load the '" .. conf.vectordb.strategy .. "' vector database   driver: " .. err
          end
