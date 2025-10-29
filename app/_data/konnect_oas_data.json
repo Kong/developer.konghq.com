@@ -598,6 +598,27 @@
     ]
   },
   {
+    "id": "bdd4cbf0-f9a9-4fb6-b82a-b595e2d8e45f",
+    "title": "Konnect Organization Management",
+    "latestVersion": {
+      "name": "/v3",
+      "id": "a050fe88-8946-4b2a-bd0b-b6d241edfe1c"
+    },
+    "description": null,
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "a050fe88-8946-4b2a-bd0b-b6d241edfe1c",
+        "created_at": "2025-10-29T18:12:04.125Z",
+        "updated_at": "2025-10-29T18:12:21.636Z",
+        "name": "/v3",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "f99f0f29-be4e-4fc8-8cec-64e5d3511bff",
     "title": "Konnect Portal Management",
     "latestVersion": {
