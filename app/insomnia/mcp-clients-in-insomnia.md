@@ -13,8 +13,8 @@ min_version:
 related_resources:
   - text: Use mock servers
     url: /how-to/create-a-cloud-hosted-mock-server/
-  - text: "Introducing Model Context Protocol in Insomnia (Blog)"
-    url: https://mcp.deepwiki.com/mcp  
+  - text: "Introducing Model Context Protocol in Insomnia"
+    url: https://insomnia.rest/blog
 
 faqs:
   - q: What happens when authentication fails?
