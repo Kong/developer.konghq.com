@@ -210,7 +210,7 @@ This setup creates usage tiers for testing purposes:
 {:.info}
 > The following limits are intentionally small to demonstrate tiered rate limiting in a test scenario. In production, you would set these according to your actual model costs and usage quotas.
 >
-> In a producstion deployment, adjust these limits based on actual model pricing, token usage, and your product’s subscription plans. The numbers here are only for quickly demonstrating tiered rate limiting in a test scenario.
+> In a production deployment, adjust these limits based on actual model pricing, token usage, and your product’s subscription plans. The numbers here are only for quickly demonstrating tiered rate limiting in a test scenario.
 
 {% entity_examples %}
 entities:
