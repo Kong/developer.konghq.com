@@ -1,5 +1,5 @@
 ---
-title: Create AI usage tiers with {{site.base_gateway}}
+title: Create AI usage tiers for LLM providers to control usage cost
 content_type: how_to
 related_resources:
   - text: AI Proxy Advanced plugin
