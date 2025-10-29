@@ -14,11 +14,9 @@ requirements:
 weight: 900
 
 variables:
-  key_id:
-    description: |
-      A custom ID for a static key that will be used for encryption. 
-      For example, you can define a key source named `my-key-id`, and reference it as the `decrypt.key.id` for the part of the record you want to encrypt.
-    value: $KEY_ID
+  key_value:
+    description: A custom value for the static key `static://key` that will be used for encrypting the `value` and `key`` of the Kafka records.
+    value: $KEY_VALUE
 
 
 name: decrypt-static-key
@@ -28,13 +26,13 @@ config:
   key_sources:
     - type: static
       keys:
-        - id: ${key_id}
-          key: "${env['MY_SECRET']}"
+        - id: static://key
+          key: ${key_value}
   decrypt:
     - part_of_record: key
-      key_id: ${key_id}
+      key_id: static://key
     - part_of_record: value
-      key_id: ${key_id}
+      key_id: static://key
 
 tools:
   - konnect-api

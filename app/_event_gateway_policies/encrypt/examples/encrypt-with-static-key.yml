@@ -14,16 +14,12 @@ requirements:
  - "A corresponding [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/). Event Gateway uses the key ID from the Encrypt policy along with the actual key in the Decrypt policy to successfully decrypt."
  
 variables:
-  key_id1:
-    description: |
-      A custom ID for a static key that will be used for encryption. 
-      For example, you can define a key source named `my-key-id1`, and reference it as the `encrypt.key.id` for the part of the record you want to encrypt.
-    value: $KEY_ID1
-  key_id2:
-    description: |
-      Another custom ID for a static key that will be used for encryption. 
-      For example, you can define a key source named `my-key-id2`, and reference it as the `encrypt.key.id` for the part of the record you want to encrypt.
-    value: $KEY_ID2
+  key1_value:
+    description: A custom value for the static key `static://key-1` that will be used for encrypting the `value` of the Kafka records.
+    value: $KEY1_VALUE
+  key2_value:
+    description: A custom value for the static key `static://key-2` that will be used for encrypting the `key` of the Kafka records.
+    value: $KEY2_VALUE
 
 type: encrypt
 name: encrypt-static-key
@@ -31,18 +27,18 @@ config:
   failure_mode: error
   encrypt:
     - part_of_record: value
-      key_id: ${key_id1}
+      key_id: static://key-1
     - part_of_record: key
-      key_id: ${key_id2}
+      key_id: static://key-2
   key_sources:
     - type: static
       keys:
-        - id: ${key_id1}
-          key: ${env["MY_SECRET"]}
+        - id: static://key-1
+          key: ${key1_value}
     - type: static
       keys:
-        - id: ${key_id2}
-          key: ${env["MY_SECRET"]}
+        - id: static://key-2
+          key: ${key2_value}
 
 tools:
   - konnect-api
