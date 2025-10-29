@@ -33,13 +33,16 @@ plugins:
 entities:
   - consumer
   - consumer-group
+  - service
+  - route
+  - plugin
 
 tags:
   - ai-gateway
   - rate-limiting
 
 tldr:
-  q: How do I limit AI model usage by Consumer tier in {{site.base_gateway}}?
+  q: How do I limit AI model usage by Consumer tier?
   a: |
     You can apply different AI usage limits for Free, Basic, and Premium Consumers using the [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/).
     This plugin uses model cost data from [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to enforce cost-based usage caps per tier, ensuring fair access and predictable API costs.
@@ -47,6 +50,13 @@ tldr:
 faqs:
   - q: Why use cost-based rate limiting instead of token-based limits?
     a: Cost-based limits let you account for variable model pricing or response length. For example, a single GPT-4 completion could be expensive even if it uses few tokens, making cost-based quotas more predictable for multi-tier plans.
+
+prereqs:
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
 
 cleanup:
   inline:
@@ -128,8 +138,8 @@ entities:
               options:
                 max_tokens: 512
                 temperature: 1.0
-            input_cost: 0.05
-            output_cost: 0.10
+                input_cost: 50
+                output_cost: 50
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
@@ -197,7 +207,7 @@ entities:
         tokens_count_strategy: cost
         llm_providers:
           - name: openai
-            limit: [50]        # Up to 50 cost units per minute
+            limit: [10]        # Up to 50 cost units per minute
             window_size: [60]
 
     - name: ai-rate-limiting-advanced
@@ -231,7 +241,7 @@ To test, send multiple chat requests via the AI Proxy endpoint with the correspo
 **Free tier test:**
 
 {% validation rate-limit-check %}
-iterations: 8
+iterations: 15
 url: '/anything'
 headers:
   - 'apikey:john-key'
@@ -239,7 +249,12 @@ method: POST
 body:
   messages:
     - role: user
-      content: "Hello!"
+      content: |
+        "Write a detailed philosophical reflection on the nature of consciousness, free will, and artificial intelligence. Discuss how modern neuroscience intersects with classic philosophical debates, and explore the implications of large language models and generative AI on human cognition, creativity, and society. Compare the perspectives of Plato, Aristotle, Descartes, Kant, Nietzsche, and contemporary thinkers like Daniel Dennett, David Chalmers, and Nick Bostrom. Then evaluate whether machines can ever meaningfully possess subjective qualia or experience phenomenal consciousness, or whether they remain fundamentally symbolic and statistical processors of data with no internal awareness.
+
+        Provide multiple real-world examples, historical references, academic citations, and practical consequences of advanced AI development. Address concerns about alignment, agency, moral responsibility, digital personhood, and the role of emergent properties in complex computational systems. Include analogies to biology, evolution, mathematics, and quantum physics. Offer arguments both for and against the possibility of machine consciousness, then conclude with a balanced perspective on future co-evolution between humans and AI, covering governance, ethics, education, and public policy.
+
+        Include a short fictional vignette imagining a future where AI entities petition for civil rights, and humans debate whether to recognize their personhood. Ensure emotional nuance, internal dialogue, and societal realism."
 {% endvalidation %}
 
 **Basic tier test:**
