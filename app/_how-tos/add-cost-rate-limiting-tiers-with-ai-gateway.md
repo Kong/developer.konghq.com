@@ -121,7 +121,7 @@ entities:
           - route_type: llm/v1/chat
             auth:
               header_name: Authorization
-              header_value: Bearer key
+              header_value: Bearer ${openai_api_key}
             model:
               provider: openai
               name: gpt-4o
@@ -130,11 +130,13 @@ entities:
                 temperature: 1.0
             input_cost: 0.05
             output_cost: 0.10
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
 {% endentity_examples %}
 
 {:.info}
-> These cost values are relative units, not dollars. They let you model usage budgets per request or per token batch. Adjust them to reflect your expected GPT-4o pricing ratios or your own credit system.
-
+> These cost values are relative units. They let you model usage budgets per request or per token batch. Adjust them to reflect your expected GPT-4o pricing ratios or your own credit system.
 
 ## Designing cost units for your tiers
 
