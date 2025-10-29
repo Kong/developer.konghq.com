@@ -51,6 +51,13 @@ faqs:
     a: Cost-based limits let you account for variable model pricing or response length. For example, a single GPT-4 completion could be expensive even if it uses few tokens, making cost-based quotas more predictable for multi-tier plans.
 
 prereqs:
+  inline:
+    - title: OpenAI
+      include_content: prereqs/openai
+      icon_url: /assets/icons/openai.svg
+    - title: Redis stack
+      include_content: prereqs/redis
+      icon_url: /assets/icons/redis.svg
   entities:
     services:
         - example-service
