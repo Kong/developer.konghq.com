@@ -55,6 +55,12 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## How it works
+
+This policy runs in the [produce phase](/event-gateway/entities/policy/#phases).
+
+{% include_cached /knep/encrypt-decrypt-diagram.md %}
+
 ## Key sources
 
 {% include_cached /knep/key-sources.md name=page.name %}
