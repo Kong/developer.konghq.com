@@ -145,7 +145,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Insomnia’s **Suggest comments and grouping for Commits** feature analyzes staged changes and helps maintain consistent, meaningful Git histories. For Git concepts and workflows, go to [**Version control in Insomnia**](insomnia/version-control/).
+                    Insomnia’s **Suggest comments and grouping for Commits** feature analyzes staged changes and helps maintain consistent, meaningful Git histories. For Git concepts and workflows, go to [**Version control in Insomnia**](/insomnia/version-control/).
       - blocks:
           - type: structured_text
             config:
