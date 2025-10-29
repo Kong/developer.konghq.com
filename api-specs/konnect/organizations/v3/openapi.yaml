@@ -1,0 +1,749 @@
+openapi: 3.0.3
+info:
+  title: Konnect Organizations
+  version: 3.0.0
+  description: Konnect Organizations API.
+  contact:
+    name: Kong
+    url: https://konghq.com
+servers:
+  - url: https://us.api.konghq.com/v3
+    description: United-States Production region
+  - url: https://eu.api.konghq.com/v3
+    description: Europe Production region
+  - url: https://au.api.konghq.com/v3
+    description: Australia Production region
+  - url: https://me.api.konghq.com/v3
+    description: Middle-East Production region
+  - url: https://in.api.konghq.com/v3
+    description: India Production region
+  - url: https://sg.api.konghq.com/v3
+    description: Singapore Production region
+paths:
+  /organizations/{organizationId}/personal-access-tokens:
+    parameters:
+      - $ref: '#/components/parameters/OrganizationIdParameter'
+    get:
+      operationId: list-organizations-personal-access-tokens
+      summary: List PATs
+      description: >-
+        List personal access tokens in your organization. Only organization
+        administrators are authorized  to perform this action.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageBefore'
+        - $ref: '#/components/parameters/PageAfter'
+        - name: filter
+          in: query
+          description: Filters a collection of personal access tokens in an organization.
+          required: false
+          schema:
+            type: object
+            properties:
+              state:
+                description: State of the personal access token.
+                type: string
+                enum:
+                  - ACTIVE
+                  - REVOKED
+                  - EXPIRED
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              user_id:
+                description: User id to filter by.
+                type: string
+                format: uuid
+                example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+                readOnly: true
+            additionalProperties: false
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalAccessTokenOrganizationListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+        - serviceAccessToken: []
+      tags:
+        - Personal Access Tokens
+  /organizations/{organizationId}/personal-access-token-settings:
+    parameters:
+      - $ref: '#/components/parameters/OrganizationIdParameter'
+    get:
+      operationId: get-organizations-personal-access-token-settings
+      summary: Get personal access token policy settings
+      description: >-
+        Get personal access token policy settings. Only organization
+        administrators are authorized  to perform this action.
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalAccessTokenSettingsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+        - serviceAccessToken: []
+      tags:
+        - Personal Access Tokens
+    patch:
+      operationId: update-personal-access-token-settings
+      summary: Update personal access token policy settings
+      description: >-
+        Update personal access token policy settings. Only organization
+        administrators are authorized  to perform this action.
+      requestBody:
+        $ref: '#/components/requestBodies/PersonalAccessTokenSettingsUpdateRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalAccessTokenSettingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+      tags:
+        - Personal Access Tokens
+components:
+  parameters:
+    OrganizationIdParameter:
+      name: organizationId
+      in: path
+      description: UUID representing an organization.
+      required: true
+      schema:
+        $ref: '#/components/schemas/OrganizationId'
+    PageAfter:
+      name: page[after]
+      description: >-
+        Request the next page of data, starting with the item after this
+        parameter.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    PageBefore:
+      name: page[before]
+      description: >-
+        Request the next page of data, starting with the item before this
+        parameter.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    PageSize:
+      name: page[size]
+      description: >-
+        The maximum number of items to include per page. The last page of a
+        collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
+  schemas:
+    MaxPATExpirationPeriodDays:
+      type: integer
+      maximum: 365
+      minimum: 1
+    UUID:
+      description: Contains a unique identifier used for this resource.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      readOnly: true
+    OrganizationId:
+      description: UUID representing an organization.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      readOnly: true
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    UserId:
+      description: Contains a unique identifier used for a user.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      readOnly: true
+    PersonalAccessTokenState:
+      description: State of the personal access token.
+      type: string
+      enum:
+        - ACTIVE
+        - REVOKED
+        - EXPIRED
+    RevokedBy:
+      description: Contains a unique identifier used for the user that revoked this token.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      nullable: true
+      readOnly: true
+    CreatedAt:
+      description: An ISO-8601 timestamp representation of entity creation date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    UpdatedAt:
+      description: An ISO-8601 timestamp representation of entity update date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    LastUsedAt:
+      description: An ISO-8601 timestamp representation of entity last used date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+      readOnly: true
+    ExpiresAt:
+      description: An ISO-8601 timestamp representation of entity expiration date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+      readOnly: true
+    RevokedAt:
+      description: An ISO-8601 timestamp representation of entity revoked at date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+      readOnly: true
+    PersonalAccessToken:
+      description: Properties of a personal access token.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        user_id:
+          $ref: '#/components/schemas/UserId'
+        name:
+          type: string
+        state:
+          $ref: '#/components/schemas/PersonalAccessTokenState'
+        revoked_by:
+          $ref: '#/components/schemas/RevokedBy'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        last_used_at:
+          $ref: '#/components/schemas/LastUsedAt'
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        revoked_at:
+          $ref: '#/components/schemas/RevokedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - state
+        - user_id
+        - created_at
+        - updated_at
+        - expires_at
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: >
+            The HTTP status code of the error. Useful when passing the response
+
+            body to child properties in a frontend UI. Must be returned as an
+            integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: >
+            A human readable explanation specific to this occurence of the
+            problem.
+
+            This field may contain request/entity data to help the user
+            understand
+
+            what went wrong. Enclose variable values in square brackets. Should
+            be
+
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    InvalidRules:
+      description: invalid parameters rules
+      type: string
+      enum:
+        - required
+        - is_array
+        - is_base64
+        - is_boolean
+        - is_date_time
+        - is_integer
+        - is_null
+        - is_number
+        - is_object
+        - is_string
+        - is_uuid
+        - is_fqdn
+        - is_arn
+        - unknown_property
+        - missing_reference
+        - is_label
+        - matches_regex
+        - invalid
+        - is_supported_network_availability_zone_list
+        - is_supported_network_cidr_block
+        - is_supported_provider_region
+        - type
+      nullable: true
+      readOnly: true
+    InvalidParameterStandard:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          $ref: '#/components/schemas/InvalidRules'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+    InvalidParameterMinimumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_length
+            - min_digits
+            - min_lowercase
+            - min_uppercase
+            - min_symbols
+            - min_items
+            - min
+          nullable: false
+          readOnly: true
+        minimum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must have at least 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_length
+            - max_items
+            - max
+          nullable: false
+          readOnly: true
+        maximum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must not have more than 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
+    InvalidParameterChoiceItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - enum
+          nullable: false
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        choices:
+          type: array
+          items: {}
+          minItems: 1
+          nullable: false
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - choices
+    InvalidParameterDependentItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - dependent_fields
+          nullable: true
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        dependents:
+          type: array
+          items: {}
+          nullable: true
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - rule
+        - reason
+        - dependents
+    InvalidParameters:
+      description: invalid parameters
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/InvalidParameterStandard'
+          - $ref: '#/components/schemas/InvalidParameterMinimumLength'
+          - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterChoiceItem'
+          - $ref: '#/components/schemas/InvalidParameterDependentItem'
+      minItems: 1
+      nullable: false
+      uniqueItems: true
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - invalid_parameters
+          properties:
+            invalid_parameters:
+              $ref: '#/components/schemas/InvalidParameters'
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: https://httpstatuses.com/401
+            instance:
+              example: kong:trace:1234567890
+            detail:
+              example: Invalid credentials
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: https://httpstatuses.com/403
+            instance:
+              example: kong:trace:1234567890
+            detail:
+              example: Forbidden
+  examples:
+    PersonalAccessTokenSettingsResponse:
+      value:
+        pats_enabled: true
+        max_expiration_period_days: 365
+    PersonalAccessTokenOrganizationListResponse:
+      summary: List Personal Access Token Response
+      value:
+        data:
+          - id: 93f8380e-7798-4566-99e3-2edf2b57d289
+            name: Development Token
+            state: ACTIVE
+            user_id: 84f8380e-7798-4566-99e3-2edf2b57d288
+            created_at: '2023-01-01T00:00:00.000Z'
+            updated_at: '2023-01-01T00:00:00.000Z'
+            expires_at: '2024-01-01T00:00:00.000Z'
+          - id: 93f8380e-7798-4566-99e3-2edf2b57d289
+            name: Development Token
+            state: EXPIRED
+            user_id: 86f8380e-7798-4566-99e3-2edf2b57d288
+            created_at: '2023-01-01T00:00:00.000Z'
+            updated_at: '2023-01-01T00:00:00.000Z'
+            expires_at: '2023-02-01T00:00:00.000Z'
+        meta:
+          next: >-
+            /organizations/me/personal-access-tokens?page[after]=ewogICJpZCI6ICJoZWysbyB3b3JsZCIKgZ
+          previous: >-
+            /organizations/me/personal-access-tokens?page[before]=efogICJpZCI6ICJoZWysbyB3b3JsZCIKgR
+          size: 10
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: kong:trace:8347343766220159418
+        detail: Unauthorized
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: kong:trace:2723154947768991354
+        detail: You do not have permission to perform this action
+  requestBodies:
+    PersonalAccessTokenSettingsUpdateRequest:
+      description: Request body schema for updating personal access token settings.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              pats_enabled:
+                type: boolean
+              max_expiration_period_days:
+                $ref: '#/components/schemas/MaxPATExpirationPeriodDays'
+            minProperties: 1
+          examples:
+            Example Request Body:
+              $ref: '#/components/examples/PersonalAccessTokenSettingsResponse'
+  responses:
+    PersonalAccessTokenSettingsResponse:
+      description: Response containing personal access token settings.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              pats_enabled:
+                type: boolean
+                default: true
+              max_expiration_period_days:
+                $ref: '#/components/schemas/MaxPATExpirationPeriodDays'
+            additionalProperties: false
+            required:
+              - pats_enabled
+              - max_expiration_period_days
+          examples:
+            Personal Access Token Settings Response:
+              $ref: '#/components/examples/PersonalAccessTokenSettingsResponse'
+    PersonalAccessTokenOrganizationListResponse:
+      description: A list response for a collection of personal access tokens.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonalAccessToken'
+              meta:
+                $ref: '#/components/schemas/CursorMetaPage'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+          examples:
+            Personal Access Token List Response:
+              $ref: >-
+                #/components/examples/PersonalAccessTokenOrganizationListResponse
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: >
+        The personal access token is meant to be used as an alternative to
+        basic-auth when accessing Konnect via APIs.
+
+        You can generate a Personal Access Token (PAT) from the [personal access
+        token page](https://cloud.konghq.com/global/account/tokens/) in the
+        Konnect dashboard.
+
+        The PAT token must be passed in the header of a request, for example:
+
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header
+        'Authorization: Bearer kpat_xgfT...'`
+    konnectAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        The Konnect access token is meant to be used by the Konnect dashboard
+        and the decK CLI authenticate with.
+    serviceAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        The Service access token is meant to be used between internal services.
+tags: []
+security:
+  - serviceAccessToken: []
