@@ -3441,6 +3441,14 @@ components:
             total: 3
             size: 100
             number: 1
+    SampleInstanceCreateDynatracePayload:
+      value:
+        integration_name: dynatrace
+        name: dynatrace
+        display_name: Dynatrace
+        description: Ingest SLOs from your Dynatrace environment for a unified view of service health and reliability.
+        config:
+          base_url: 'https://id.live.dynatrace.com'
     SampleInstanceCreateTraceablePayload:
       value:
         integration_name: traceable
@@ -3620,6 +3628,25 @@ components:
           display_name: SwaggerHub (Internal)
         config:
           role_arn: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
+    SampleCreateDynatraceMultiKeyAuthPayload:
+      value:
+        type: multi_key_auth
+        config:
+          headers:
+            - name: authorization
+              key: dynatrace-api-key
+    SampleCreateDynatraceMultiKeyAuthResponse:
+      value:
+        id: 88c58c29-ff7d-4913-b3d7-8affc279dd56
+        type: multi_key_auth
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2022-11-04T20:10:06.927Z'
+        integration_instance:
+          id: 70ecc595-4280-4872-8b80-87b2e57dba3f
+          name: dynatrace
+          display_name: Dynatrace
     GitLabSelfManagedAuthConfigPayload:
       value:
         type: oauth
@@ -3981,6 +4008,8 @@ components:
               $ref: '#/components/examples/SampleInstanceCreateSlackPayload'
             Traceable:
               $ref: '#/components/examples/SampleInstanceCreateTraceablePayload'
+            Dynatrace:
+              $ref: '#/components/examples/SampleInstanceCreateDynatracePayload'
     UpdateIntegrationInstanceRequest:
       required: true
       content:
@@ -4005,6 +4034,8 @@ components:
               $ref: '#/components/examples/SampleCreateTraceableMultiKeyAuthPayload'
             AwsApiGateway:
               $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthPayload'
+            Dynatrace:
+              $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthPayload'
     UpsertIntegrationInstanceAuthConfigRequest:
       required: true
       content:
@@ -4153,6 +4184,8 @@ components:
               $ref: '#/components/examples/SampleCreateSwaggerHubMultiKeyAuthResponse'
             AwsApiGateway:
               $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthResponse'
+            Dynatrace:
+              $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthResponse'
     IntegrationInstanceAuthConfigResponse:
       description: A response containing integration instance auth config.
       content:

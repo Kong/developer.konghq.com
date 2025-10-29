@@ -1,8 +1,8 @@
 ---
-title: Release notes
+title: "{{site.mesh_product_name}} changelog"
 content_type: reference
 layout: reference
-description: "{{site.mesh_product_name}} release notes"
+description: "Changelog for supported {{site.mesh_product_name}} versions."
 products:
     - mesh
 breadcrumbs:
@@ -14,7 +14,7 @@ search_aliases:
     - features
     - known issues
     - bug fixes
-    - changelog
+    - release notes
 ---
 
 {% embed CHANGELOG.md %}

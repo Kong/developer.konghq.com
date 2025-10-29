@@ -746,6 +746,7 @@ status_code
 stderr
 stdin
 stdout
+Streamable
 stream_listen
 stringified
 Styra

@@ -28,6 +28,8 @@ extended_description: |
     ```
     The `listener` uses [`config.server.tag`](/plugins/ai-mcp-proxy/reference/#schema--config-server-tag) to bind all matching conversion-only tools into a single MCP server based on `tags[]` defined in the `conversion-only` plugin(s) defined on the plugin level.
 
+    Check the [Aggregate MCP tools from multiple AI MCP Proxy plugins](/mcp/aggregate-mcp-tools/) how-to for a detailed walkthrough.
+
 weight: 900
 
 requirements:

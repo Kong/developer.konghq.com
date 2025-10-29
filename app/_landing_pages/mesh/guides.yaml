@@ -145,7 +145,7 @@ rows:
               description: |
                 See new {{site.mesh_product_name}} features and bug fixes.
               cta:
-                text: View the release notes 
+                text: View the changelog
                 url: /mesh/changelog/
                 align: end
       - blocks:
