@@ -270,6 +270,7 @@ command: |
   EOF
 expected:
   return_code: 0
+render_output: false
 {% endvalidation %}
 
 This file defines two configuration profiles:
@@ -290,6 +291,7 @@ command: |
 expected:
   message: "topic created: my-test-topic"
   return_code: 0
+render_output: false
 {% endvalidation %}
 
 
@@ -300,6 +302,7 @@ command: |
 expected:
   message: "message produced (partition=0	offset=0)"
   return_code: 0
+render_output: false
 {% endvalidation %}
 
 
@@ -321,6 +324,7 @@ command: |
 expected:
   message: "message produced (partition=0	offset=1)"
   return_code: 0
+render_output: false
 {% endvalidation %}
 
 
@@ -332,6 +336,7 @@ command: |
 expected:
   message: "My-New-Header:header_value#test message"
   return_code: 0
+render_output: false
 {% endvalidation %}
 
 
