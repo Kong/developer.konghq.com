@@ -26,7 +26,7 @@ rows:
                     > As of Insomnia v12, AI features are free to use, though this may change in future releases.
 
                     Insomnia 12 introduces a suite of **AI-driven capabilities** that make API development faster, smarter, and more collaborative. These include:
-                    - [**MCP Servers and Clients**](/insomnia/mcp-servers/#mcp-servers-and-clients), which connect to external AI-ready tools and resources.  
+                    - [**MCP Servers and Clients**](/insomnia/ai-in-insomnia/#mcp-servers-and-clients), which connect to external AI-ready tools and resources.  
                     - [**AI-assisted mock server generation**](/insomnia/self-hosted-mocks/#create-an-auto-generated-mock-server), which transforms prompts or API definitions into mock APIs.  
                     - [**AI commit message suggestions**](/insomnia/ai-in-insomnia/#ai-driven-git-commits), which help maintain clear and atomic commit histories.
 
