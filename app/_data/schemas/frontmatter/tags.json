@@ -101,6 +101,8 @@
     "key-auth",
     "kong-manager",
     "kongair",
+    "kong-identity",
+    "konnect",
     "konnect-crd",
     "kubernetes",
     "labels",
