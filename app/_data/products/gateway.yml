@@ -13,7 +13,7 @@ topologies:
 
 tiers:
   enterprise:
-    text: Enterprise only
+    text: Konnect Plus
     url: /gateway/
   ai_gateway_enterprise:
     text: AI License Required
