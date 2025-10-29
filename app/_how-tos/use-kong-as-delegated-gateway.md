@@ -135,7 +135,7 @@ Since {{site.kic_product_name}} is installed outside of the mesh, we need to ena
 
 ## Add a Route
 
-Use the `HTTPRoute` resource so add a [Route](/gateway/entities/route/) to your gateway:
+Use the `HTTPRoute` resource to add a [Route](/gateway/entities/route/) to your gateway:
 
 ```sh
 echo "apiVersion: gateway.networking.k8s.io/v1
@@ -207,4 +207,4 @@ You should get the following response:
 ```
 
 {:.info}
-> If you get an `RBAC: access denied` error, it may be due to the configuration taking some time to be applied. Wait a few seconds and try again.
+> If you get an `RBAC: access denied` error, you may need to wait for the configuration to be applied. Wait a few seconds and try again.
