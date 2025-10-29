@@ -43,7 +43,7 @@ tags:
 tldr:
   q: How do I limit AI model usage by Consumer tier?
   a: |
-    You can apply different AI usage limits for Free, Basic, and Premium Consumers using the [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/).
+    Apply different AI usage limits for Free, Basic, and Premium Consumers using the [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/).
     This plugin uses model cost data from [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to enforce cost-based usage caps per tier, ensuring fair access and predictable API costs.
 
 faqs:
@@ -119,7 +119,12 @@ entities:
 ## Configure the AI Proxy
 
 Next, set up [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to route AI requests to OpenAI's GPT-4o model.
-This assigns relative “cost units” for input and output that the rate limiter will track:
+This assigns relative “cost units” for input and output that the AI Rate Limiting Advanced plugin will track per each defined usage tier.
+
+{:.info}
+> These cost values are relative units. They let you model usage budgets per request or per token batch. Adjust them to reflect your expected GPT-4o pricing ratios or your own credit system.
+>
+> These `input_cost` and `output_cost` values are intentionally high for demonstration purposes to quickly show how tiered rate limiting works. They are not intended for production use. In a real deployment, set these costs based on actual model pricing, expected token usage, or your own internal credit system.
 
 {% entity_examples %}
 entities:
@@ -137,15 +142,12 @@ entities:
               options:
                 max_tokens: 512
                 temperature: 1.0
-                input_cost: 50
-                output_cost: 50
+                input_cost: 5000
+                output_cost: 5000
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
-
-{:.info}
-> These cost values are relative units. They let you model usage budgets per request or per token batch. Adjust them to reflect your expected GPT-4o pricing ratios or your own credit system.
 
 ## Designing cost units for your tiers
 
@@ -153,6 +155,7 @@ The AI Gateway’s cost model is flexible — you can define your own **cost uni
 
 Here’s a practical way to design your values:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Parameter
@@ -181,6 +184,7 @@ rows:
     example: "`60` seconds"
     based_on: "Rate-limit period"
 {% endtable %}
+<!-- vale on -->
 
 Example mapping:
 - **Free tier:** 50 cost units ≈ $0.50/min usage
@@ -197,34 +201,61 @@ You can align these values to:
 
 Now, enable the [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/) for each tier, using the `tokens_count_strategy: cost` mode.
 
+This setup creates usage tiers for testing purposes:
+
+- Free: Light usage, capped at 5 cost units per minute.
+- Basic: Moderate usage, capped at 7 cost units per minute.
+- Premium: High usage, capped at 10 cost units per minute.
+
+{:.info}
+> The following limits are intentionally small to demonstrate tiered rate limiting in a test scenario. In production, you would set these according to your actual model costs and usage quotas.
+>
+> In a producstion deployment, adjust these limits based on actual model pricing, token usage, and your product’s subscription plans. The numbers here are only for quickly demonstrating tiered rate limiting in a test scenario.
+
 {% entity_examples %}
 entities:
   plugins:
     - name: ai-rate-limiting-advanced
       consumer_group: Free
       config:
+        strategy: redis
+        redis:
+          host: host.docker.internal
+          port: 16379
+        sync_rate: 0
         tokens_count_strategy: cost
         llm_providers:
           - name: openai
-            limit: [10]        # Up to 50 cost units per minute
+            limit: [5]
             window_size: [60]
+
 
     - name: ai-rate-limiting-advanced
       consumer_group: Basic
       config:
+        strategy: redis
+        redis:
+          host: host.docker.internal
+          port: 16379
+        sync_rate: 0
         tokens_count_strategy: cost
         llm_providers:
           - name: openai
-            limit: [200]       # Up to 200 cost units per minute
+            limit: [7]
             window_size: [60]
 
     - name: ai-rate-limiting-advanced
       consumer_group: Premium
       config:
+        strategy: redis
+        redis:
+          host: host.docker.internal
+          port: 16379
+        sync_rate: 0
         tokens_count_strategy: cost
         llm_providers:
           - name: openai
-            limit: [1000]      # Up to 1000 cost units per minute
+            limit: [15]
             window_size: [60]
 {% endentity_examples %}
 
@@ -239,8 +270,9 @@ To test, send multiple chat requests via the AI Proxy endpoint with the correspo
 
 **Free tier test:**
 
+<!-- vale off -->
 {% validation rate-limit-check %}
-iterations: 15
+iterations: 3
 url: '/anything'
 headers:
   - 'apikey:john-key'
@@ -249,17 +281,15 @@ body:
   messages:
     - role: user
       content: |
-        "Write a detailed philosophical reflection on the nature of consciousness, free will, and artificial intelligence. Discuss how modern neuroscience intersects with classic philosophical debates, and explore the implications of large language models and generative AI on human cognition, creativity, and society. Compare the perspectives of Plato, Aristotle, Descartes, Kant, Nietzsche, and contemporary thinkers like Daniel Dennett, David Chalmers, and Nick Bostrom. Then evaluate whether machines can ever meaningfully possess subjective qualia or experience phenomenal consciousness, or whether they remain fundamentally symbolic and statistical processors of data with no internal awareness.
-
-        Provide multiple real-world examples, historical references, academic citations, and practical consequences of advanced AI development. Address concerns about alignment, agency, moral responsibility, digital personhood, and the role of emergent properties in complex computational systems. Include analogies to biology, evolution, mathematics, and quantum physics. Offer arguments both for and against the possibility of machine consciousness, then conclude with a balanced perspective on future co-evolution between humans and AI, covering governance, ethics, education, and public policy.
-
-        Include a short fictional vignette imagining a future where AI entities petition for civil rights, and humans debate whether to recognize their personhood. Ensure emotional nuance, internal dialogue, and societal realism."
+        "Write a detailed philosophical reflection on the nature of consciousness, free will, and AI. Repeat this paragraph 3 times to increase token count significantly"
 {% endvalidation %}
+<!-- vale on -->
 
 **Basic tier test:**
 
+<!-- vale off -->
 {% validation rate-limit-check %}
-iterations: 20
+iterations: 5
 url: '/anything'
 headers:
   - 'apikey:adam-key'
@@ -267,13 +297,16 @@ method: POST
 body:
   messages:
     - role: user
-      content: "Hello!"
+      content: |
+        "Write a detailed philosophical reflection on the nature of consciousness, free will, and AI. Repeat this paragraph 3 times to increase token count significantly"
 {% endvalidation %}
+<!-- vale on -->
 
 **Premium tier test:**
 
+<!-- vale off -->
 {% validation rate-limit-check %}
-iterations: 60
+iterations: 7
 url: '/anything'
 headers:
   - 'apikey:eve-key'
@@ -281,5 +314,7 @@ method: POST
 body:
   messages:
     - role: user
-      content: "Hello!"
+      content: |
+        "Write a detailed philosophical reflection on the nature of consciousness, free will, and AI. Repeat this paragraph 3 times to increase token count significantly"
 {% endvalidation %}
+<!-- vale on -->
