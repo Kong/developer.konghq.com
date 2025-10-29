@@ -70,41 +70,44 @@ prereqs:
     - title: WeatherAPI account
       content: |
         1. Go to [WeatherAPI](https://www.weatherapi.com/).
-        2. Sign up for a free account.
-        3. Navigate to [your dashboard](https://www.weatherapi.com/my/) and copy your API key.
-        4. Export your API key by running the following command in your terminal:
+        1. Navigate to [your dashboard](https://www.weatherapi.com/my/) and copy your API key.
+        1. Export your API key by running the following command in your terminal:
            ```sh
            export DECK_WEATHERAPI_API_KEY='your-weatherapi-api-key'
            ```
     - title: FreecurrencyAPI account
       content: |
         1. Go to [FreecurrencyAPI](https://freecurrencyapi.com/).
-        2. Sign up for a free account.
-        3. Navigate to [your dashboard](https://app.freecurrencyapi.com/dashboard) and copy your API key.
-        4. Export your API key by running the following command in your terminal:
+        1. Sign up for a free account.
+        1. Navigate to [your dashboard](https://app.freecurrencyapi.com/dashboard) and copy your API key.
+        1. Export your API key by running the following command in your terminal:
            ```sh
            export DECK_FREECURRENCYAPI_API_KEY='your-freecurrencyapi-api-key'
            ```
 
     - title: MCP Inspector
       content: |
-        The MCP Inspector helps you explore and debug Model Context Protocol (MCP) servers.
-        Before installing, upgrade `npx` to the latest version to ensure compatibility:
-        ```sh
-        npm install -g npx
-        ```
-        Then, install the Inspector:
-        ```sh
-        npm install -g @modelcontextprotocol/inspector
-        ```
+          This tutorial uses the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) which helps you explore and debug MCP servers.
+
+          1. Ensure you have Node.js and npm installed. If needed, download them from https://nodejs.org.
+
+          1. Update `npx` to the latest version:
+              ```sh
+              npm install -g npx
+              ```
+          1. Then install the Inspector:
+              ```sh
+              npm install -g @modelcontextprotocol/inspector
+              ```
+
       icon_url: /assets/icons/mcp.svg
     - title: Cursor
       content: |
         This tutorial uses Cursor as an MCP client:
         1. Go to the [Cursor downloads](https://cursor.com/downloads) page.
-        2. Download the installer for your operating system.
-        3. Install Cursor on your machine.
-        4. Launch Cursor and sign in to your account or create a new account.
+        1. Download the installer for your operating system.
+        1. Install Cursor on your machine.
+        1. Launch Cursor and sign in to your account or create a new account.
       icon_url: /assets/icons/cursor.svg
   entities:
     services:
@@ -302,6 +305,9 @@ First, let's run the MCP Inspector to see whether our listener AI MCP Proxy plug
 
 1. Click the **Connect** button on the left.
 
+  {:.warning}
+  > Make sure that you use **Streamable HTTP** as **Transport Type** and that the URL points at `http://localhost:8000/mcp-listener`
+
 1. In the **Tools** tile, click the **List tools** button. You should see the following tools available:
 
     ![MCP tools in MCP Inspector](/assets/images/ai-gateway/mcp-tools.png){: style="display:block; margin-left:auto; margin-right:auto; width:70%; border-radius:10px" }
@@ -348,14 +354,14 @@ You can now test each exposed tool using Cursor.
     How many orders are there in my marketplace?
     ```
 
-2. You will notice that Cursor now makes a tool call to the exposed marketplace tools:
+1. You will notice that Cursor now makes a tool call to the exposed marketplace tools:
 
     ```text
     > Ran mcp-route-2
     ```
     {:.no-copy-code}
 
-3. When the agent finishes reasoning, you should see the following response in Cursor:
+1. When the agent finishes reasoning, you should see the following response in Cursor:
 
     ```text
     Based on the API responses, I can see that your marketplace currently has **27 total orders** across all users.
@@ -368,17 +374,17 @@ You can now test each exposed tool using Cursor.
 1. Enter the following question in the Cursor chat:
 
     ```text
-    What is the current weather in London?
+    What is the current weather in Alexandria?
     ```
 
-2. You will notice that Cursor makes a tool call to the WeatherAPI tools we exposed through the AI MCP Proxy plugin:
+1. You will notice that Cursor makes a tool call to the WeatherAPI tools we exposed through the AI MCP Proxy plugin:
 
     ```text
     > Ran weather-route-1
     ```
     {:.no-copy-code}
 
-3. When the agent finishes reasoning, you should see the following response in Cursor:
+1. When the agent finishes reasoning, you should see the following response in Cursor:
 
     ```text
     Alexandria, Egypt right now:
@@ -404,14 +410,14 @@ You can now test each exposed tool using Cursor.
     What's the current exchange rate of USD?
     ```
 
-2. You will notice that Cursor now makes a tool call to the exposed currency exchange tools:
+1. You will notice that Cursor now makes a tool call to the exposed currency exchange tools:
 
     ```text
     > Ran freecurrency-route-1
     ```
     {:.no-copy-code}
 
-3. When the agent finishes reasoning, you should see the following response in Cursor:
+1. When the agent finishes reasoning, you should see the following response in Cursor:
 
     ```text
     Here are the current USD exchange rates:
