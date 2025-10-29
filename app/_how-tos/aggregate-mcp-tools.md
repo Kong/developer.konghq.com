@@ -88,6 +88,12 @@ prereqs:
 
     - title: MCP Inspector
       content: |
+        The MCP Inspector helps you explore and debug Model Context Protocol (MCP) servers.
+        Before installing, upgrade `npx` to the latest version to ensure compatibility:
+        ```sh
+        npm install -g npx
+        ```
+        Then, install the Inspector:
         ```sh
         npm install -g @modelcontextprotocol/inspector
         ```
