@@ -44,3 +44,38 @@ rows:
     description: Identify records with a specific suffix and skip processing them.
 {% endtable %}
 <!--vale on-->
+
+## How it works
+
+This policy runs in the [consume phase](/event-gateway/entities/policy/#phases).
+
+1. {{site.event_gateway_short}} consumes messages from a Kafka broker.
+1. {{site.event_gateway_short}} checks records against a pattern.
+  * If the record matches a defined pattern, it skips processing the record and passes it on.
+  * If the record doesn't match the pattern, it applies further policies in the chain.
+
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+  autonumber
+  participant broker as Event broker
+  participant egw as {{site.event_gateway_short}}
+  participant client as Client
+
+
+  broker->>egw: consume message
+  egw->>egw: check message validity
+  
+  alt message matches name pattern
+
+  egw->>client: skip processing and pass to client
+
+  else message doesn't match name pattern
+  egw ->> egw: apply other policies
+  egw->>client: pass to client
+
+  end
+
+{% endmermaid %}
+<!--vale on-->
