@@ -6,6 +6,7 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@f169553775049169043e5d497b56349f9f22f021
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -3060,18 +3061,18 @@ components:
         title: Unauthorized
         instance: 'kong:trace:8347343766220159418'
         detail: Unauthorized
-    ForbiddenExample:
-      value:
-        status: 403
-        title: Forbidden
-        instance: 'kong:trace:2723154947768991354'
-        detail: You do not have permission to perform this action
     NotFoundExample:
       value:
         status: 404
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
   requestBodies:
     UpdateImpersonationSettingsRequest:
       content:
@@ -4851,12 +4852,6 @@ components:
           examples:
             Personal Access Token List Response:
               $ref: '#/components/examples/PersonalAccessTokenListResponse'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ConflictError'
     BadRequest:
       description: Bad Request
       content:
@@ -4872,15 +4867,6 @@ components:
           examples:
             UnauthorizedExample:
               $ref: '#/components/examples/UnauthorizedExample'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ForbiddenError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/ForbiddenExample'
     NotFound:
       description: Not Found
       content:
@@ -4890,6 +4876,21 @@ components:
           examples:
             NotFoundExample:
               $ref: '#/components/examples/NotFoundExample'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
   securitySchemes:
     systemAccountAccessToken:
       type: http
