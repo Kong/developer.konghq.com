@@ -44,52 +44,30 @@ related_resources:
     url: /dev-portal/customizations/dev-portal-customizations/
 ---
 
-Dev Portal UI customization settings can be found on the left sidebar when you select a Dev Portal.
-
-## Menu customization
-
-You can customize several options for Dev Portal menus. To customize menus in the {{site.konnect_short_name}} UI, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Customization** in the sidebar. From the **Menu** tab, you can select the menu you want to customize and click **Add menu item**.
-
-You can also add external links to all Dev Portal menu items either using the {{site.konnect_short_name}} UI or the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization).
-
-### Visibility
-
-All menu items have visibility controls, which determine which developers can see different menus. Visibility is `Private` by default, and will only be displayed to logged-in Developers. If `Public` is selected, the menu item will be available to all visitors to your Dev Portal.
-
-### Main menu
-
-Main menus are a flat list of links that will be added to the header of every page in your Dev Portal.
-These titles and links will be spaced evenly horizontally.
-
-### Footer menu sections
-
-Footer menus allow you to create a set of columns with links for global navigation. Select **Footer Sections Menu** from the dropdown list to begin creating your menus.
-
-Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side.
-We recommend creating your desired footer sections before creating footer menu items.
-
-Footer menu items are links to any URL you prefer, with a title to be displayed. Items must specify a footer menu section.
-
-### Footer bottom menu
-
-Footer bottom menu is a flat list of links that will be added to the bottom of every page.
-Footer bottom menus are placed below footer menu sections.
-
-## SEO customization
-
-To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly.
-
-## Portal editor
-
-The Portal Editor provides you with a variety of tools for creating highly customized content for your Dev Portal. Navigate to a specific Dev Portal, and select **Portal Editor** from the left sidebar.
+You can configure Dev Portal UI customization settings by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Portal Editor** in the sidebar. The Portal Editor provides you with a variety of tools for creating highly customized content for your Dev Portal.
 
 {:.info}
 > *Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).*
 
-### Appearance
+## Preview panel
+
+The preview will automatically show what your page should look like when developers view your Dev Portal. In the event that it fails to refresh after editing the page, there is a refresh button next to the generated URL at the bottom.
+
+There are three icons above **Preview** that allow you to test adaptive designs in some predefined viewports:
+* Desktop
+* Tablet
+* Mobile
+
+## Pages and content
+
+In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status. To configure pages and content, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar. In the Portal Editor sidebar, click the folder icon. 
+
+For more information, see [Dev Portal pages and content](/dev-portal/pages-and-content/).
+
+## Appearance
 
 Appearance settings are applied globally to all pages in your Dev Portal.
-You'll find the Appearance icon in the left sidebar of the Portal Editor.
+To configure appearance settings, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar. In the Portal Editor sidebar, click the paint bucket icon.
 
 Basic appearance settings quickly create basic styles for your default Portal template:
 
@@ -114,18 +92,61 @@ rows:
 
 For advanced needs, you can also create custom CSS that applies custom styles to your Dev Portal. Custom CSS provides global customization to all pages in Dev Portal.
 
-### Preview panel
+## Dev Portal navigation
 
-The preview will automatically show what your page should look like when developers view your Dev Portal. In the event that it fails to refresh after editing the page, there is a refresh button next to the generated URL at the bottom.
+You can configure the main menu, footer, and footer bottom navigation menus in your Dev Portal. To configure navigation settings, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar. In the Portal Editor sidebar, click the menu tree icon.
 
-There are three icons above **Preview** that allow you to test adaptive designs in some predefined viewports:
-* Desktop
-* Tablet
-* Mobile
+### Main menu
 
-### Generated URL
+Main menus are a flat list of links that will be added to the header of every page in your Dev Portal.
+These titles and links will be spaced evenly horizontally.
 
-Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page slugs. The generated URL is shown at the bottom of the preview pane.
+You can customize several options for Dev Portal menus. To customize menus in the {{site.konnect_short_name}} UI, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Customization** in the sidebar. From the **Menu** tab, you can select the menu you want to customize and click **Add menu item**.
+
+You can also add external links to all Dev Portal menu items either using the {{site.konnect_short_name}} UI or the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization).
+
+### Footer menu sections
+
+Footer menus allow you to create a set of columns with links for global navigation. Select **Footer Sections Menu** from the dropdown list to begin creating your menus.
+
+Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side.
+We recommend creating your desired footer sections before creating footer menu items.
+
+Footer menu items are links to any URL you prefer, with a title to be displayed. Items must specify a footer menu section.
+
+### Footer bottom menu
+
+Footer bottom menu is a flat list of links that will be added to the bottom of every page.
+Footer bottom menus are placed below footer menu sections.
+
+## API specification settings
+
+The API specification settings allow you to control how developers can interact with your API specs in your Dev Portal. To configure API spec settings, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar. In the Portal Editor sidebar, click the code brackets icon.
+
+The following table describes the API spec settings you can configure:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Description
+    key: description
+rows:
+  - setting: Show Try it
+    description: Enable in-browser testing for your APIs. All linked gateways must have the CORS plugin configured. For more information, see [Allow developers to try requests from the Dev Portal spec renderer](/catalog/apis/#allow-developers-to-try-requests-from-the-dev-portal-spec-renderer).
+  - setting: Show Try it in Insomnia
+    description: Enables users to open the API spec in [Insomnia](/insomnia/) to explore and send requests with the native client.
+  - setting: Continuous scroll
+    description: Display the full spec on a single, scrollable page. If disabled, documentation, endpoints, and schemas appear on separate pages.
+  - setting: Show schemas
+    description: Control whether schemas are visible in your API specs. When enabled, schemas appear in the side navigation below the endpoints.
+  - setting: Hide deprecated endpoints
+    description: Manage visibility of deprecated endpoints and models.
+  - setting: Hide internal endpoints
+    description: Manage visibility of internal endpoints and models.
+  - setting: Allow custom server URL
+    description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client_side only and is not saved.
+{% endtable %}
 
 ## Developer email customization
 
