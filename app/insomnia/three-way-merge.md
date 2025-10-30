@@ -46,7 +46,10 @@ Insomnia opens the merge view only when both of the following are true:
 - Your local changes and the remote branch modify the same content.
 - You perform a **Pull** or **Push** sync action.
 
-If no conflicts exist, Insomnia automatically resolves differences and completes the sync without opening the merge view. The merge view appears only when manual input is required to resolve conflicts.
+After committing your local changes, Insomnia syncs them with the remote repository when you **push** or **pull**. If no conflicts exist between your local and remote branches, the sync completes automatically.  
+When differences require reconciliation, Insomnia performs a **three-way comparison** between the local, remote, and base versions.  
+
+The **merge view** opens only when manual input is needed to resolve those conflicts.
 
 When the merge view appears:
 1. From the Insomnia application, in the version control panel, click **Pull**.  

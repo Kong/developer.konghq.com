@@ -96,7 +96,9 @@ rows:
                     After activation you can toggle **Auto-generate Mock Servers** and **Suggest commit comments** from the **AI Features** panel
 
                     {:.info}
-                    > **Note**: Local LLMs require a `.gguf` file placed in the `/Insomnia/llms/` directory
+                    > **Note**: Local LLMs require a `.gguf` file placed in the `/Insomnia/llms/` directory.
+
+                    Credentials for hosted LLM providers are stored securely on your local system by the Insomnia app and are never synced across accounts or devices.
   - header:
     type: h2
   - columns:
@@ -178,12 +180,18 @@ rows:
                   If AI is deactivated at the instance level, the feature toggles will remain unavailable in the UI.
               - q: How do I manage AI across my organization?
                 a: |
-                  Administrators can enable or disable AI features at the instance level from **Insomnia Admin → AI Settings**.  
+                  Enterprise administrators can activate or deactivate AI features at the instance level from **Insomnia Admin → AI Settings**.  
                   When deactivated, the desktop app shows an explanatory message.  
                   When activated, each user must still activate a model before toggles become available.
+                  This setting is available only for Enterprise plans.
               - q: Which transports are supported for MCP Clients?
                 a: |
                   Both **HTTP** and **STDIO** transports are supported for connecting to MCP Servers.
               - q: Can MCP Clients use Git Sync or Import/Export?
                 a: |
                   Not yet. MCP Clients are stored locally and currently do not support Git Sync or import/export.
+              - q: Why are commit suggestions less accurate when using a local LLM?
+                a: |
+                  Local LLMs with fewer than **10 billion parameters** may produce less accurate or inconsistent commit suggestions.  
+                  Smaller models have limited context understanding and token capacity compared to hosted providers. 
+    
