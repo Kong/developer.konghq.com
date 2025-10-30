@@ -91,9 +91,9 @@ For example:
 
 ```sh
 docker run \
-  -v /host/path:/container/path \
+  -v /host/path/bootstrap.yaml:/container/path/bootstrap.yaml \
   kong/kong-event-gateway:latest \
-  --bootstrap bootstrap.yaml
+  --bootstrap /container/path/bootstrap.yaml
 ```
 {% endnavtab %}
 {% endnavtabs %}
