@@ -1,4 +1,4 @@
-title: 'Batch route with Azure OpenAI Service'
+title: 'Batches route with Azure OpenAI Service'
 description: 'Configure a batch route using Azure OpenAI Service.'
 
 
@@ -36,10 +36,10 @@ config:
     header_value: Bearer ${azure_key}
   model:
     provider: azure
-  options:
-    azure_api_version: "2025-01-01-preview"
-    azure_instance: ${azure_instance}
-    azure_deployment_id: ${azure_deployment}
+    options:
+      azure_api_version: "2025-01-01-preview"
+      azure_instance: ${azure_instance}
+      azure_deployment_id: ${azure_deployment}
 variables:
   azure_key:
     value: "$AZURE_OPENAI_API_KEY"

@@ -33,13 +33,13 @@ tags:
   - azure
 
 tldr:
-  q: How can I efficiently send multiple requests to Azure OpenAI LLMs?
+  q: How can I run many Azure OpenAI LLM requests at once?
   a: |
-    Upload a batch file in JSONL format to the `/files` route, then create a batch request via the `/batches` route to process multiple LLM queries asynchronously, and finally retrieve the batched responses from the `/files` route. Batching requests allows you to reduce LLM usage costs by:
-    - Minimizing per-request overhead
-    - Avoiding rate-limit penalties
-    - Enabling efficient model usage
-    - Reducing wasted retries
+    Package your prompts into a JSONL file and upload it to the /files endpoint. Then launch a batch job with /batches to process everything asynchronously, and download the output from /files once the run completes. Batch execution reduces costs by:
+    - Cutting per-request overhead
+    - Preventing rate-limit backoffs
+    - Using model capacity more efficiently
+    - Lowering unnecessary retry traffic
 
 tools:
   - deck
@@ -122,10 +122,10 @@ entities:
           header_value: Bearer ${azure_key}
         model:
           provider: azure
-        options:
-          azure_api_version: "2025-01-01-preview"
-          azure_instance: ${azure_instance}
-          azure_deployment_id: ${azure_deployment}
+          options:
+            azure_api_version: "2025-01-01-preview"
+            azure_instance: ${azure_instance}
+            azure_deployment_id: ${azure_deployment}
 variables:
   azure_key:
     value: "$AZURE_OPENAI_API_KEY"
@@ -151,10 +151,10 @@ entities:
           header_value: Bearer ${azure_key}
         model:
           provider: azure
-        options:
-          azure_api_version: "2025-01-01-preview"
-          azure_instance: ${azure_instance}
-          azure_deployment_id: ${azure_deployment}
+          options:
+            azure_api_version: "2025-01-01-preview"
+            azure_instance: ${azure_instance}
+            azure_deployment_id: ${azure_deployment}
 variables:
   azure_key:
     value: "$AZURE_OPENAI_API_KEY"
