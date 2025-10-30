@@ -19,6 +19,9 @@ module Jekyll
 
           class Plugin < Base
           end
+
+          class EventGatewayPolicy < Base
+          end
         end
       end
     end

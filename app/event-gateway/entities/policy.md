@@ -143,191 +143,19 @@ features:
 {{site.event_gateway}} has a few built-in virtual cluster policies, all of which have their own specific configurations and examples.
 See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=virtual_cluster) for their individual configurations.
 
-{% navtabs 'virtual-cluster' %}
-{% navtab "Konnect API" %}
+Here's an example configuration for the Forward to Modify Headers policy:
 
-{% include_cached /knep/entity-example-token-api.md %}
-
-Create a virtual cluster policy using the [{{site.event_gateway_short}} control plane API](/).
-
-Here's an example configuration of the Encrypt produce policy:
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/produce-policies
-status_code: 201
-method: POST
-body:
-  name: example-encrypt-policy
-  type: encrypt
-  enabled: true
-  config:
-    failure_mode: error
-    key_sources:
-      - type: aws
-    encrypt:
-      - part_of_record: key
-        key_id: static://static-key-named-in-source
-{% endkonnect_api_request %}
-<!--vale on-->
-
-Here's an example configuration of the Decrypt consume policy:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/consume-policies
-status_code: 201
-method: POST
-body:
-  name: example-decrypt-policy
-  type: decrypt
-  enabled: true
-  config:
-    decrypt:
-      - part_of_record: key
-    failure_mode: error
-    key_sources:
-      - type: aws
-{% endkonnect_api_request %}
-<!--vale on-->
-
-
-<!-- For a cluster policy:
-
-{% konnect_api_request %}
-url: /v1/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/cluster-policies
-status_code: 201
-method: POST
-body:
-  name: example-name
-{% endkonnect_api_request %} -->
-
-
-{% endnavtab %}
-{% navtab "Konnect UI" %}
-
-{% capture ui %}
-{% navtabs 'ui' %}
-{% navtab "New Virtual Cluster" %}
-
-If you don't have an existing Virtual Cluster, create one: 
-
-1. Click **New Virtual Cluster**.
-1. Configure your virtual cluster.
-1. Click **Save and add policy**.
-1. Choose a policy.
-1. Configure the policy.
-1. Click **Save**.
-
-{% endnavtab %}
-{% navtab "Existing Virtual Cluster" %}
-If you already have a virtual cluster and want to apply a policy to it:
-
-1. Click a virtual cluster.
-1. Click the **Policies** tab.
-1. Click **New Policy**.
-1. Choose a policy phase and policy type.
-1. Click **Configure**.
-1. Configure the policy.
-1. Click **Save**.
-
-{% endnavtab %}
-{% endnavtabs %}
-{% endcapture %}
-
-If you don't have an existing Virtual Cluster, create one: 
-
-1. In the sidebar, navigate to **Event Gateway**.
-
-1. Click an {{site.event_gateway_short}}.
-
-1. In the Gateway's sidebar, navigate to **Virtual Clusters**.
-
-1. Configure the virtual cluster:
-
-{{ ui | indent: 4 }}
-
-
-{% endnavtab %}
-{% navtab "Terraform" %}
-
-{% include_cached /knep/entity-example-token-terraform.md %}
-
-Add the following to your Terraform configuration to create a virtual cluster policy.
-
-Here's an example configuration of the Encrypt produce policy:
-
-```hcl
-resource "konnect_event_gateway_produce_policy_encrypt" "my_eventgatewayproducepolicyencrypt" {
-  provider           = konnect-beta
-  condition          = "context.topic.name.endsWith('my_suffix')"
-  config = {
-    encrypt = [
-      {
-        key_id         = "static://static-key-named-in-source"
-        part_of_record = "value"
-      }
-    ]
-    failure_mode = "error"
-    key_sources = [
-      {
-        static = {
-          keys = [
-            {
-              id  = "...my_id..."
-              key = "${env['MY_SECRET']}"
-            }
-          ]
-        }
-      }
-    ]
-  }
-  description        = "...my_description..."
-  enabled            = true
-  gateway_id         = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
-  labels = {
-    key = "value"
-  }
-  name               = "...my_name..."
-  parent_policy_id   = "d360a229-0d2f-4566-9b8e-dad95ffde3d0"
-  virtual_cluster_id = "6ea3798e-38ca-4c28-a68e-1a577e478f2c"
-}
-```
-
-Here's an example configuration of the Decrypt consume policy:
-
-```hcl
-resource "konnect_event_gateway_consume_policy_decrypt" "my_eventgatewayconsumepolicydecrypt" {
-  provider           = konnect-beta
-  condition          = "context.topic.name.endsWith('my_suffix')"
-  config = {
-    decrypt = [
-      {
-        part_of_record = "key"
-      }
-    ]
-    failure_mode = "passthrough"
-    key_sources = [
-      {
-        aws = {
-          # ...
-        }
-      }
-    ]
-  }
-  description        = "...my_description..."
-  enabled            = false
-  gateway_id         = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
-  labels = {
-    key = "value"
-  }
-  name               = "...my_name..."
-  parent_policy_id   = "969447b3-1e41-42d8-a020-1ebc4e88a916"
-  virtual_cluster_id = "05c6c607-3c42-45e9-a9e8-3e6338120724"
-}
-```
-
-{% endnavtab %}
-{% endnavtabs %}
+{% entity_example %}
+type: event_gateway_policy
+policy_type: modify_headers
+target: virtual_cluster
+name: new-header
+data:
+  actions:
+    - op: set
+      key: My-New-Header
+      value: header_value
+{% endentity_example %}
 
 ## Listener policies
 
@@ -341,108 +169,21 @@ See the {{site.event_gateway}} policy hub for [all available listener policies](
 {{site.event_gateway}} has a few built-in listener policies, all of which have their own specific configurations and examples. 
 See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=listener) for their individual configurations.
 
-{% navtabs 'listener-policy' %}
-{% navtab "Konnect API" %}
+Here's an example configuration for the Forward to Virtual Cluster policy:
 
-{% include_cached /knep/entity-example-token-api.md %}
-
-Create a listener policy using the [{{site.event_gateway_short}} control plane API](/).
-For example, here's a configuration for the Forward to Virtual Cluster policy:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/listeners/policies
-status_code: 201
-method: POST
-body:
-  name: example-forward-policy
-  type: forward_to_virtual_cluster
-  enabled: true
-  config:
-    advertised_host: 127.0.0.1
-    bootstrap_port: at_start
-    destination:
-      id: 0199a6e2-eb23-7976-a595-e955b91843d5
-      name: example
-    min_broker_id: 1
-    type: port_mapping
-{% endkonnect_api_request %}
-<!--vale on-->
-
-{% endnavtab %}
-{% navtab "Konnect UI" %}
-
-1. In the sidebar, navigate to **Event Gateway**.
-
-1. Click an {{site.event_gateway_short}}.
-
-1. In the Gateway's sidebar, navigate to **Listeners**.
-
-1. Configure the virtual cluster:
-
-{% capture ui %}
-{% navtabs 'ui' %}
-{% navtab "New Listener" %}
-
-If you don't have a listener configured:
-
-1. Click **New Listener**.
-1. Configure your listener.
-1. Click **Save and add policy**.
-1. Choose a policy.
-1. Configure the policy.
-1. Click **Save**.
-
-{% endnavtab %}
-{% navtab "Existing Listener" %}
-
-If you already have a listener and want to apply a policy to it:
-
-1. Click a listener
-1. Click the **Policies** tab.
-1. Click **New Policy**.
-1. Choose a policy type.
-1. Click **Configure**.
-1. Configure the policy.
-1. Click **Save**.
-{% endnavtab %}
-{% endnavtabs %}
-{% endcapture %}
-
-{{ ui | indent: 4 }}
-
-{% endnavtab %}
-{% navtab "Terraform" %}
-
-{% include_cached /knep/entity-example-token-terraform.md %}
-
-Add the following to your Terraform configuration to create a listener policy.
-
-For example, here's how to create a Forward to Virtual Cluster policy:
-
-```hcl
-resource "konnect_event_gateway_listener_policy_forward_to_virtual_cluster" "my_eventgatewaylistenerpolicyforwardtovirtualcluster" {
-  provider  = konnect-beta
-  condition = "context.topic.name.endsWith('my_suffix')"
-  config = {
-    sni = {
-      advertised_port = 61579
-      sni_suffix      = ".example.com"
-    }
-  }
-  description               = "...my_description..."
-  enabled                   = false
-  event_gateway_listener_id = "6feda708-3b1b-4415-b1db-cf2694f34b09"
-  gateway_id                = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
-  labels = {
-    key = "value"
-  }
-  name = "...my_name..."
-}
-```
-
-{% endnavtab %}
-{% endnavtabs %}
+{% entity_example %}
+type: event_gateway_policy
+policy_type: forward_to_virtual_cluster
+target: listener
+name: forward
+data:
+  advertised_host: 0.0.0.0
+  bootstrap_port: at_start
+  destination:
+    name: example-virtual-cluster
+  min_broker_id: 1
+  type: port_mapping
+{% endentity_example %}
 
 ## Conditions
 
