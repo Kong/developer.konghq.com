@@ -56,4 +56,5 @@ Adopting existing entities is planned, but not yet available. Only resources cre
 
 ## How do I create a global plugin?
 
-It is not yet possible to create a global plugin. This is due to {{ site.konnect_short_name }} resources being namespaced in {{ site.operator_product_name }}, while global plugins are cluster scoped. We are investigating options in [#440](https://github.com/Kong/gateway-operator/issues/440)
+You can also attach a plugin globally to a Control Plane by setting the `spec.scope` field to `GlobalInControlPlane` in the `KongPluginBinding` CRD.
+Detailed guides are available in [Enable a global plugin](/operator/konnect/kongpluginbinding/#attaching-plugins-globally-to-a-control-plane).
