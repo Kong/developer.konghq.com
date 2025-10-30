@@ -265,6 +265,50 @@ The following creates a new Listener called **{{ include.presenter.data['name'] 
 4. Click **Save and add policy next**.
 5. Click **Maybe later** to create a listener without a policy.
 
+{% when 'event_gateway_policy' %}
+
+{% case include.presenter.policy_type %}
+{% when 'modify-headers' %}
+The following creates a new Modify Headers policy called **{{ include.presenter.data['name'] }}** to a Virtual Cluster with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Virtual Clusters** in the sidebar.
+1. Click on a Virtual Cluster.
+1. Click **Policies**.
+1. Click **New policy**.
+1. Click **Consume**.
+1. Choose **Modify Headers**.
+1. Click **Configure**
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. In the **Actions** sections:
+  {% assign action = include.presenter.data['config']['actions'] | first %}
+   1. In the **Header Key** field, enter `{{ action['key'] }}`.
+   2. In the **Header Value** field, enter `{{ action['value'] }}`.
+1.  Click **Save**.
+
+{% when 'forward-to-virtual-cluster' %}
+The following creates a new Forward to Virtual Cluster policy called **{{ include.presenter.data['name'] }}** to a Listener with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Listeners** in the sidebar.
+1. Click on a Listener.
+1. Click **Policies**.
+1. Click **New policy**.
+1. Choose **Forward to virtual cluster**.
+1. Click **Configure**
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. Choose **Port mapping**.
+1. In the **Target virtual cluster** field, enter `{{ include.presenter.data['config']['destination']['name'] }}`.
+1. In the **Advertised host** field, enter `{{ include.presenter.data['config']['advertised_host'] }}`.
+1. In the **Minimal broker Id** field, enter `{{ include.presenter.data['config']['min_broker_id'] }}`.
+1. Click **Save**.
+
+{% else %}
+Unsupported type {{include.presenter.policy_type}}.
+{% endcase %}
+
 {% else %}
 {% endcase %}
 {% endif %}

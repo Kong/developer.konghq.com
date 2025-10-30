@@ -147,8 +147,8 @@ Here's an example configuration for the Forward to Modify Headers policy:
 
 {% entity_example %}
 type: event_gateway_policy
-policy_type: modify_headers
-target: virtual_cluster
+policy_type: modify-headers
+phase: consume
 name: new-header
 data:
   actions:
@@ -173,8 +173,7 @@ Here's an example configuration for the Forward to Virtual Cluster policy:
 
 {% entity_example %}
 type: event_gateway_policy
-policy_type: forward_to_virtual_cluster
-target: listener
+policy_type: forward-to-virtual-cluster
 name: forward
 data:
   advertised_host: 0.0.0.0
