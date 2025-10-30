@@ -19,23 +19,15 @@ related_resources:
     url: /catalog/
   - text: "{{site.konnect_catalog}} services"
     url: /catalog/services/
-  - text: Traceable integration
-    url: /catalog/integrations/traceable/
-  - text: GitHub integration
-    url: /catalog/integrations/github/
-  - text: GitLab integration
-    url: /catalog/integrations/gitlab/
-  - text: SwaggerHub integration
-    url: /catalog/integrations/swaggerhub/
-  - text: Datadog integration
-    url: /catalog/integrations/datadog/
-  - text: PagerDuty integration
-    url: /catalog/integrations/pagerduty/
+  - text: Catalog integrations
+    url: /catalog/integrations/
 ---
 
 A {{site.konnect_catalog}} scorecard helps you evaluate services based on validation criteria. Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed. 
 
 From the scorecard view, you can view details on either a per-service or per-criteria basis.
+
+You can use a scorecard template that comes prepopulated with Kong or industry best practice criteria or create a custom scorecard with criteria that you choose. You can also combine the two and use some premade template criteria and some custom criteria.
 
 ## Scorecard templates
 
@@ -63,10 +55,15 @@ rows:
 ## Create a scorecard
 
 To enable a scorecard on a service:
-     
-1. From [Catalog](https://cloud.konghq.com/us/service-catalog/), click **Scorecard** in the sidebar.
-2. Select **New Scorecard**.
-3. Name the scorecard, configure scorecard criteria, and select which services you want the scorecard to apply to.
+
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. In the Catalog sidebar, click **[Scorecards](https://cloud.konghq.com/service-catalog/scorecards)**.
+1. Click **New Scorecard**.
+1. From the **Scorecard template** dropdown menu, select your template or select custom scorecard.
+1. (Optional) If you want to add an additional section or custom criteria, click **Add criteria** or **Add section**.
+1. Select which services you want to apply this scorecard to.
+1. In the **Name** field, enter a name for your scorecard.
+1. Click **Save**. 
 
 
 ## Service documentation linting
@@ -98,5 +95,13 @@ rows:
     recipe_rules: "[API Documentation Guidelines](https://apistylebook.stoplight.io/docs/documentation)"
 {% endtable %}
 <!--vale on-->
+
+## Custom scorecard criteria
+
+You can add custom criteria to a custom scorecard or a scorecard template. These allow you to further customize your scorecards.
+
+The following table details the different custom criteria you can specify:
+
+TABLE HERE
 
 
