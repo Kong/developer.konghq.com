@@ -167,7 +167,9 @@ to make sure the new spec is included. If not, add it the new spec to it.
 
 1. Ask a PM to upload the spec to Konnect
 
-1. Run the [Sync Konnect OAS data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) workflow and merge the generated PR.
+1. Run the [Sync Konnect OAS data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) workflow.
+1. In this PR, create a new directory in `app/_api/konnect/<product-name>` for the new spec with an `_index.md` file that contains the API product ID for the new spec.
+1. Merge the PR.
 
 1. Make sure the spec is added to [Kapa](#kapa).
 

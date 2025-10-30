@@ -27,6 +27,8 @@ related_resources:
     url: /how-to/configure-kong-identity-upstream-oauth/
   - text: Configure the OAuth 2.0 Introspection plugin with Kong Identity
     url: /how-to/configure-kong-identity-oauth-introspection/
+  - text: Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration
+    url: /how-to/kong-identity-dcr/
 
 description: |
   Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate and authorize API access. Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. 
@@ -38,6 +40,7 @@ description: |
 > * [Configure the OIDC plugin with Kong Identity](/how-to/configure-kong-identity-oidc/)
 > * [Configure the Upstream OAuth plugin with Kong Identity](/how-to/configure-kong-identity-upstream-oauth/)
 > * [Configure the OAuth 2.0 Introspection plugin with Kong Identity](/how-to/configure-kong-identity-oauth-introspection/)
+> * [Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration](/how-to/kong-identity-dcr/)
 
 Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
 Specifically, Kong Identity can be used for machine-to-machine authentication. 

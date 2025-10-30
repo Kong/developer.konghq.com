@@ -104,6 +104,7 @@ chatbots
 cidr
 cidrs
 cleartext
+client_credentials
 client_payload
 client_status
 clipanion
@@ -232,6 +233,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+example_service
 exfiltrate
 failover
 fapi
@@ -746,6 +748,7 @@ status_code
 stderr
 stdin
 stdout
+Streamable
 stream_listen
 stringified
 Styra
