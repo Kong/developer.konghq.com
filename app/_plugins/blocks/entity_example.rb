@@ -56,7 +56,7 @@ module Jekyll
 
     def formats(page, site)
       return page['tools'] unless page['layout'] == 'gateway_entity'
-      return page['tools'] if page['products']&.include?('event-gateway')
+      return page['tools'].dup << 'ui' if page['products']&.include?('event-gateway')
 
       supported_entities = site.data.dig('entity_examples', 'config', 'formats', 'ui', 'entities') || []
       return page['tools'] unless supported_entities.include?(page['entities'].first)

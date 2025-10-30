@@ -227,6 +227,44 @@ The following creates a new Partial called **{{ include.presenter.data['name'] }
 1. Enter the **Host** `{{ include.presenter.data['config']['host'] }}` and **Port** `{{ include.presenter.data['config']['port'] }}`.
 1. Click **Save**.
 
+{% when 'backend_cluster' %}
+The following creates a new Backend Cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Backend Clusters** in the sidebar.
+1. Click **New backend cluster**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. In the **Bootstrap servers** field, enter `{{ include.presenter.data['bootstrap_servers'] | first }}`.
+1. From the **Authentication** dropdown menu, select `{{ include.presenter.data['authentication']['type'] }}`
+1. Select the **Allow anonymous authentication from virtual clusters** checkbox.
+1. Click **Save**.
+
+{% when 'virtual-cluster' %}
+The following creates a new Virtual Cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+2. Click an {{site.event_gateway_short}}.
+3. Navigate to **Virtual Clusters** in the sidebar.
+4. Click **New Virtual Cluster**.
+5. Configure your virtual cluster.
+6. Click **Save and add policy**.
+
+At this point, you can choose to add a policy, or exit out and add a policy later.
+
+{% when 'listener' %}
+The following creates a new Listener called **{{ include.presenter.data['name'] }}** with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Listeners** in the sidebar.
+1. Click **New listener**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+2. In the **Addresses** field, enter `{{ include.presenter.data['addresses'] | first }}`.
+3. In the **Ports** field, enter `{{ include.presenter.data['ports'] | first }}`.
+4. Click **Save and add policy next**.
+5. Click **Maybe later** to create a listener without a policy.
+
 {% else %}
 {% endcase %}
 {% endif %}
