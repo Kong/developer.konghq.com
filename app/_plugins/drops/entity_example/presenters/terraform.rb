@@ -150,6 +150,27 @@ module Jekyll
               keys
             end
           end
+
+          class EventGatewayPolicy < Base
+            def entity_type
+              "#{@example_drop.policy_target}_policy_#{@example_drop.data['type']}"
+            end
+
+            def data
+              @data ||= Utils::VariableReplacer::TerraformData.run(
+                data: @example_drop.data,
+                variables: variables
+              )
+            end
+
+            def variable_names
+              keys = []
+              variables.each do |k, v|
+                keys = v['value'].gsub('$', '').downcase
+              end
+              keys
+            end
+          end
         end
       end
     end

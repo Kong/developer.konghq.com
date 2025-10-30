@@ -10,6 +10,8 @@ module Jekyll
 
         if example['type'] == 'plugin'
           Plugin.new(example:, product:)
+        elsif example['type'] == 'event_gateway_policy'
+          EventGatewayPolicy.new(example:, product:)
         else
           new(example:, product:)
         end
@@ -45,7 +47,11 @@ module Jekyll
       def to_drop
         Object.const_get(
           "Jekyll::Drops::EntityExample::#{self.class.name.split('::').last}"
-        ).new(example: self)
+        ).new(example: self, **options)
+      end
+
+      def options
+        {}
       end
 
       def validate!
