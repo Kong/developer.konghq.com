@@ -1,6 +1,6 @@
 ---
-title: Install {{ site.operator_product_name }} with {{ site.kic_product_name }}
-description: "Learn how to install {{ site.operator_product_name }} with {{ site.kic_product_name }} using Helm"
+title: Install {{ site.operator_product_name }} with self-managed Control Plane
+description: "Learn how to install {{ site.operator_product_name }} with self-managed Control Plane using Helm"
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/install/
@@ -29,8 +29,8 @@ prereqs:
   skip_product: true
 
 tldr:
-  q: How do I install {{ site.operator_product_name }} with {{ site.kic_product_name }} using Helm?
-  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }} with {{ site.kic_product_name }}.
+  q: How do I install {{ site.operator_product_name }} with self-managed Control Plane using Helm?
+  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }} with self-managed Control Plane.
 
 tags:
   - install
