@@ -70,6 +70,8 @@ import ApiService from '../services/api.js';
 import { KSkeleton, KSelect, KSlideout } from '@kong/kongponents';
 import { MenuIcon } from '@kong/icons'
 import '@kong/kongponents/dist/style.css';
+import axios from 'axios';
+
 
 function sortVersionsDescending(versions) {
   const isVPrefixed = versions[0].label.startsWith('v');
@@ -120,15 +122,13 @@ watch((specText), async (newSpecText, oldSpecText) => {
 })
 
 async function fetchSpec() {
-  let response = await versionsAPI.getProductVersionSpec({
-    productId: productId.value,
-    productVersionId: productVersionId.value,
-  }).catch(e => {
+  let response = await axios.get(`${import.meta.env.VITE_PORTAL_API_URL}api/v3/apis/${productId.value}/versions/${productVersionId.value}/`)
+  .catch(e => {
     console.log(e)
   }).finally(() => {
     loading.value = false;
   });
-  specText.value = response.data.content
+  specText.value = response.data.content || response.data.spec.content;
 }
 
 const onDocumentScroll = (path) => {

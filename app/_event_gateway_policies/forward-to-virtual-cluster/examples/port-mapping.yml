@@ -1,0 +1,22 @@
+title: Forward via port mapping
+
+description: Map listener ports to forward messages from a Kafka client to a virtual cluster.
+
+requirements:
+  - A matching mapping port for each broker on the backend cluster.
+  - A [virtual cluster](/event-gateway/entities/virtual-cluster/)
+
+weight: 900
+
+name: forward
+type: forward_to_virtual_cluster
+config:
+  advertised_host: 0.0.0.0
+  bootstrap_port: at_start
+  destination:
+    name: example-virtual-cluster
+  min_broker_id: 1
+  type: port_mapping
+
+tools:
+  - konnect-api

@@ -7,10 +7,6 @@ breadcrumbs:
 
 permalink: /event-gateway/get-started/topic-name-aliasing/
 
-series:
-  id: event-gateway-get-started
-  position: 2
-
 beta: true
 
 products:
@@ -60,6 +56,9 @@ faqs:
       * Verify the CEL expressions in the configuration
       * Check the mapping dictionary for the expected names
       * Ensure that bi-directional mappings are consistent
+
+published: false 
+# Needs to be updated for GA
 
 ---
 

@@ -57,6 +57,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avro
 aws
 AZs
 backfilled
@@ -255,6 +256,7 @@ full_name
 Gateway
 GatewayClass
 gatewayclass
+gateway_entity
 gcloud
 gcp
 geo
@@ -519,6 +521,8 @@ moesif
 MongoDB
 MongoDB
 multimodal
+multitenant
+multitenancy
 mutex
 nameserver
 nameservers
@@ -860,6 +864,7 @@ Unicode
 unix
 unmanaged
 unmarshalled
+unnamespaced
 unnormalized
 unpackage
 unparsed
