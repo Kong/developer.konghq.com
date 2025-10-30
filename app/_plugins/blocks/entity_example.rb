@@ -19,7 +19,7 @@ module Jekyll
               "Missing key `tools` in metadata, or `formats` in entity_example block on page #{@page['path']}"
       end
 
-      entity_example = EntityExampleBlock::Base.make_for(example: example)
+      entity_example = EntityExampleBlock::Base.make_for(example: example, product: product(@page))
       entity_example_drop = entity_example.to_drop
 
       template = File.read(entity_example_drop.template)
@@ -41,7 +41,6 @@ module Jekyll
           end
         end
 
-
         output = output.join("\n")
       end
 
@@ -57,11 +56,17 @@ module Jekyll
 
     def formats(page, site)
       return page['tools'] unless page['layout'] == 'gateway_entity'
+      return page['tools'] if page['products']&.include?('event-gateway')
 
       supported_entities = site.data.dig('entity_examples', 'config', 'formats', 'ui', 'entities') || []
       return page['tools'] unless supported_entities.include?(page['entities'].first)
 
       page['tools'].dup << 'ui'
+    end
+
+    def product(page)
+      products = page['products'] || []
+      products.include?('gateway') ? 'gateway' : products.first || 'gateway'
     end
   end
 end

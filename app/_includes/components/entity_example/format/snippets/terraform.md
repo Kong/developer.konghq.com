@@ -21,12 +21,25 @@ resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity
 }
 ```
 {% else %}
+{% case include.presenter.product %}
+{% when 'gateway' %}
 ```hcl
 resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity_type }}" {
   {{ include.presenter }}
   control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
 }
 ```
+{% when 'event-gateway' %}
+```hcl
+resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity_type | replace: "-", "_" }}" {
+  provider = konnect-beta
+  {{ include.presenter }}
+  gateway_id = konnect_event_gateway.my_event_gateway.id
+}
+```
+{% else %}
+Unsupported product {{include.presenter.product}}
+{% endcase %}
 {% endif %}
 
 {% if include.presenter.variable_names.size > 0 %}
