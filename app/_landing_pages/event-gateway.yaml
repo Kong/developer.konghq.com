@@ -31,7 +31,7 @@ rows:
                     With its extensible policy engine, you can adapt Kafka to your requirements-transforming, encrypting, and monitoring 
                     messages through a central proxy to add governance, enable multi-tenancy, and strengthen security.
                     
-                    {{ site.event_gateway }} runs in front of any Kafka cluster and can be extended through policies and plugins. 
+                    {{ site.event_gateway }} runs in front of any Kafka cluster and can be extended through policies. 
 
           - type: button
             config:
@@ -124,6 +124,16 @@ rows:
               url: /event-gateway/architecture/
               align: end
               text: Learn about {{site.event_gateway_short}}
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.event_gateway_short}} policy hub"
+            description: See all available virtual cluster and listener policies for {{site.event_gateway}}
+            icon: /assets/icons/plug.svg
+            cta:
+              text: See all policies
+              url: /event-gateway/policies/
+              align: end
 
   - header:
       type: h2
@@ -211,16 +221,6 @@ rows:
       text: Key references
   - columns:
       - blocks:
-          - type: card
-            config:
-              title: "{{site.event_gateway_short}} policy hub"
-              description: All available virtual cluster policies for {{site.event_gateway}}
-              icon: /assets/icons/plug.svg
-              ctas:
-                - text: See all policies
-                  url: /event-gateway/policies/
-                  align: end
-      - blocks:
         - type: card
           config:
             title: Authentication
@@ -244,6 +244,17 @@ rows:
             ctas:
               - text: Understand hostname mapping
                 url: /event-gateway/architecture/#hostname-mapping
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: Expressions language reference
+            description: |
+              Learn about the expressions language used in {{ site.event_gateway }} for conditional fields
+            icon: /assets/icons/document.svg
+            ctas:
+              - text: Event Gateway API reference
+                url: /event-gateway/expressions/
                 align: end
       - blocks:
           - type: card

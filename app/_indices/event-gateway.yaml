@@ -19,7 +19,6 @@ sections:
       - path: /event-gateway/entities/listener/
       - path: /event-gateway/entities/virtual-cluster/
       - path: /event-gateway/entities/policy/
-      - path: /event-gateway/get-started/*/**
   - title: "Event Gateway Policies"
     items:
       - path: /event-gateway/policies/*/**
@@ -29,3 +28,4 @@ sections:
         description: OpenAPI specification for the Kong Event Gateway Control Plane API.
         url: /api/event-gateway/knep/v0/
       - path: /event-gateway/configuration/
+      - path: /event-gateway/expressions/

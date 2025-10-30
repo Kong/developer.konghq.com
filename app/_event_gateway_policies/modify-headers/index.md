@@ -46,3 +46,36 @@ rows:
     description: If a record fits a specific condition, add a custom header of your choice.
 {% endtable %}
 <!--vale on-->
+
+## How it works
+
+This policy runs in the [produce or consume phase](/event-gateway/entities/policy/#phases).
+
+For produced messages:
+1. A Kafka client produces messages and sends them to {{site.event_gateway_short}}.
+1. {{site.event_gateway_short}} adjusts the headers before passing messages to the broker.
+
+For consumed messages:
+1. {{site.event_gateway_short}} consumes messages from a Kafka broker.
+1. {{site.event_gateway_short}} adjusts the headers before passing messages to the client.
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+  autonumber
+  participant client as Client
+  participant egw as {{site.event_gateway_short}}
+  participant broker as Event broker
+
+  client->>egw: produce message
+  egw->>egw: remove or add headers
+  
+  egw->>broker: send message
+
+  broker->>egw: consume message
+  egw->>egw: remove or add headers
+
+  egw->>client: pass message with new headers
+
+{% endmermaid %}
+<!--vale on-->

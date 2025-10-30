@@ -14,6 +14,8 @@ related_resources:
     url: /event-gateway/entities/backend-cluster/
   - text: "Listeners"
     url: /event-gateway/entities/listener/
+  - text: "Expressions reference"
+    url: /event-gateway/expressions/
 
 tools:
     - konnect-api
@@ -445,26 +447,13 @@ resource "konnect_event_gateway_listener_policy_forward_to_virtual_cluster" "my_
 Policies have a condition field that determines whether the policy executes or not. 
 By writing conditions using expressions, you can access dynamic configuration from the execution context.
 
-For policy conditions and template strings, {{site.event_gateway}} supports a subset of JavaScript operators and expressions:
-
-* Logical operators: `&&`, `||`, `!`
-* Comparison operators: `==`, `!=`, `<`, `<=`, `>`, `>=`
-* Concatenation operator: `+`
-* Functions: the following string functions:
-  * `includes`
-  * `startsWith` 
-  * `endsWith`
-  * `substring`
-
-<!-- To do when info exists: create separate reference page for expressions -->
-
 For example, you can create a condition that selects all topics that end with the suffix `my_suffix`:
 
 ```json
 "condition": "context.topic.name.endsWith('my_suffix')"
 ```
 
-Conditions must be between 1 and 1000 characters long.
+See the [expressions reference](/event-gateway/expressions/) for more information.
 
 ## Schema
 

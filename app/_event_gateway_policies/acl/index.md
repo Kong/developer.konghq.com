@@ -52,3 +52,34 @@ rows:
 
 {% endtable %}
 <!--vale on-->
+
+## How it works
+
+This policy runs in the [cluster phase](/event-gateway/entities/policy/#phases).
+
+1. A Kafka client produces a message and sends it to {{site.event_gateway_short}}.
+1. {{site.event_gateway_short}} checks the client's action against the configured ACL.
+  * If the action is allowed, it passes the message onward.
+  * If the action isn't allowed, the message is dropped.
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+  autonumber
+  participant client as Client
+  participant egw as {{site.event_gateway_short}}
+  participant broker as Event broker
+
+  client->>egw: message
+  egw->>egw: check action against ACL
+  
+  alt allowed action
+
+  egw->>broker: send message
+
+  else blocked action
+  egw -x client: forbidden
+  end
+
+{% endmermaid %}
+<!--vale on-->
