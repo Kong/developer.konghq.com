@@ -16,12 +16,29 @@ module Jekyll
             end
 
             def target
-              return nil if @example_drop.target.key == "global"
+              return nil if @example_drop.target.key == 'global'
+
               @example_drop.target.key
             end
 
+            def product
+              @product ||= @example_drop.product
+            end
+
+            def provider_source
+              @provider_source ||= if @example_drop.product == 'gateway'
+                                     'konnect'
+                                   else
+                                     'konnect-beta'
+                                   end
+            end
+
             def provider
-              "konnect_gateway"
+              @provider ||= if @example_drop.product == 'gateway'
+                              'konnect_gateway'
+                            else
+                              'konnect_event_gateway'
+                            end
             end
 
             def resource_name

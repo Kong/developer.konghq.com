@@ -39,14 +39,27 @@ module Jekyll
             private
 
             def default_variables
-              @default_variables ||= formats['konnect-api']['variables']
+              @default_variables ||=
+                if @example_drop.product == 'gateway'
+                  formats['konnect-api']['variables']
+                else
+                  formats['konnect-api']['event_gateway_variables']
+                end
             end
 
             def build_url
               [
-                formats['konnect-api']['base_url'],
+                base_url,
                 formats['konnect-api']['endpoints'][entity_type]
               ].join
+            end
+
+            def base_url
+              @base_url ||= if @example_drop.product == 'gateway'
+                              formats['konnect-api']['base_url']
+                            else
+                              formats['konnect-api']['event_gateway_base_url']
+                            end
             end
           end
 
@@ -78,7 +91,7 @@ module Jekyll
 
             def build_url
               [
-                formats['konnect-api']['base_url'],
+                base_url,
                 formats['konnect-api']['plugin_endpoints'][@example_drop.target.key]
               ].join
             end
@@ -97,7 +110,7 @@ module Jekyll
             end
 
             def build_url
-              segments = [formats['konnect-api']['event_gateway_base_url']]
+              segments = [base_url]
               segments << if @example_drop.policy_target == 'listener'
                             formats['konnect-api']['policy_endpoints']['listener']
                           else
