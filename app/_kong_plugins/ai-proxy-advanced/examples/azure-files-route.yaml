@@ -31,7 +31,7 @@ weight: 900
 config:
   model_name_header: false
   targets:
-    - route_type: llm/v1/batches
+    - route_type: llm/v1/files
       auth:
         header_name: Authorization
         header_value: Bearer ${azure_key}
