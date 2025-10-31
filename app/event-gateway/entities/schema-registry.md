@@ -18,11 +18,11 @@ works_on:
   - konnect
 
 schema:
-    api: event-gateway/knep
+    api: konnect/event-gateway
     path: /schemas/SchemaRegistry
 
 api_specs:
-    - event-gateway/knep
+    - konnect/event-gateway
 
 products:
     - event-gateway

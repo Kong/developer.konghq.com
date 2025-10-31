@@ -35,7 +35,7 @@ products:
 layout: gateway_entity
 
 schema:
-    api: event-gateway/knep
+    api: konnect/event-gateway
     path: /schemas/EventGatewayListener
 
 breadcrumbs:

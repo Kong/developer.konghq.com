@@ -11,11 +11,11 @@ tags:
     - event-gateway
 
 schema:
-  api: event-gateway/knep
+  api: konnect/event-gateway
   path: /schemas/EventGatewayEncryptPolicy
 
 api_specs:
-  - event-gateway/knep
+  - konnect/event-gateway
 
 icon: graph.svg
 
