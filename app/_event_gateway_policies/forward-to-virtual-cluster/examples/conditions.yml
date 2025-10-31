@@ -16,7 +16,7 @@ weight: 900
 name: forward
 type: forward_to_virtual_cluster
 condition: >
-  context.topic.name.endsWith('my_suffix')
+  context.topic.name.endsWith("my_suffix")
 config:
   advertised_host: 0.0.0.0
   bootstrap_port: at_start

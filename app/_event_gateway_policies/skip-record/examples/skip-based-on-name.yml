@@ -12,7 +12,7 @@ weight: 900
 name: skip-record-based-on-condition
 type: skip_record
 condition: >
-  context.topic.name.endsWith('my_suffix')
+  context.topic.name.endsWith("my_suffix")
 
 tools:
   - konnect-api

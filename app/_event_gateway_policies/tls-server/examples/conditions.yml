@@ -17,7 +17,7 @@ weight: 900
 name: tls
 type: tls_server
 condition: >
-  context.topic.name.endsWith('my_suffix')
+  context.topic.name.endsWith("my_suffix")
 config:
   certificates:
     - certificate: /path/here
