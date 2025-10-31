@@ -54,6 +54,7 @@ Virtual cluster policies break down further into cluster, consume, and produce p
 
 Policies execute in chains. The order in which {{site.event_gateway}} applies policies to modify messages depends on the policy type, and whether the message is a request or response.
 
+{% include_cached /knep/entities-diagram.md entity="policy" %}
 <!-- Need more info here -->
 
 ## Virtual cluster policies 

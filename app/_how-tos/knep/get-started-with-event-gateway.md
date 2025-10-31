@@ -14,7 +14,6 @@ works_on:
 
 tags:
     - get-started
-    - event-gateway
     - kafka
 
 description: Use this tutorial to get started with {{site.event_gateway}}.
@@ -42,7 +41,7 @@ prereqs:
       include_content: knep/docker-compose-start
 
 related_resources:
-  - text: "{{site.event_gateway_short}} configuration schema"
+  - text: "{{site.event_gateway_short}} Control Plane API"
     url: /api/event-gateway/knep/
   - text: Event Gateway
     url: /event-gateway/
@@ -63,15 +62,6 @@ faqs:
       * Ensure that the proxy is properly connected to the backend cluster.
       * Ensure that `acl_mode` is set to `passthrough` in the virtual cluster. If set to `enforce_on_gateway`, you won't see any topics listed without an ACL policy.
 ---
-
-{{site.event_gateway}} lets you configure virtual clusters, which act as a proxy interface between the Kafka client and the Kafka cluster.
-With virtual clusters, you can:
-* Apply transformations, filtering, and custom policies
-* Route messages based on specific rules to different Kafka clusters
-* Apply auth mediation and message encryption
-and much more.
-
-Now, let's configure a proxy and test your first virtual cluster setup.
 
 ## Create an {{site.event_gateway_short}} in {{site.konnect_short_name}}
 

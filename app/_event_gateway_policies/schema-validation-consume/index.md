@@ -14,6 +14,12 @@ schema:
   api: event-gateway/knep
   path: /schemas/EventGatewayConsumeSchemaValidationPolicy
 
+related_resources:
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
+  - text: Policies
+    url: /event-gateway/entities/policy/
+
 api_specs:
   - event-gateway/knep
 

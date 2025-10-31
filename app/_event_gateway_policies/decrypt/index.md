@@ -20,6 +20,10 @@ api_specs:
 related_resources:
   - text: Encrypt policy
     url: /event-gateway/policies/encrypt/
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
+  - text: Policies
+    url: /event-gateway/entities/policy/
 
 phases:
   - consume

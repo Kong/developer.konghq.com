@@ -17,6 +17,12 @@ schema:
 api_specs:
   - event-gateway/knep
 
+related_resources:
+  - text: Listeners
+    url: /event-gateway/entities/listener/
+  - text: Policies
+    url: /event-gateway/entities/policy/
+
 policy_target: listener
 
 icon: graph.svg

@@ -48,6 +48,8 @@ A listeners represents hostname-port or IP-port combinations that connect to TCP
 
 A listener can have policies that enforce TLS certificates and perform SNI routing. The listener runs at Layer 4 of the network stack. In {{site.event_gateway}}, listeners first take in the connection and then route the TCP connection to a [virtual cluster](/event-gateway/entities/virtual-cluster/) based on conditions defined in [listener policies](/event-gateway/entities/policy/#listener-policies).
 
+{% include_cached /knep/entities-diagram.md entity="B" %}
+
 Listeners can have one or more policies that define how the TCP connection is handled:
 * **TLS Server Policy:** Enforces encryption, provides a certificate, and can use SNI to route connections by hostname.
 * **Forward to Virtual Cluster Policy:** Routes the connection to a specific virtual cluster. Only one forward policy is allowed per listener.

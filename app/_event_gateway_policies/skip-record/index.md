@@ -17,6 +17,12 @@ schema:
 api_specs:
   - event-gateway/knep
 
+related_resources:
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
+  - text: Policies
+    url: /event-gateway/entities/policy/
+
 phases:
   - consume
 

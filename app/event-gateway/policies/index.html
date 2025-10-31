@@ -22,8 +22,8 @@ description: An overview of policies that work with {{site.event_gateway_short}}
       <div class="flex flex-col gap-2">
         <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Event Gateway Policies Hub</h1>
         <span class="leading-7">
-          Policies can be used to intercept client connections and transform messages between the client and the broker.
-          They can be used to do things like enforcing encryption strategies, validating schemas, and modifying message headers.
+          Policies control how Kafka protocol traffic is modified between the client and the backend cluster.
+          They can be used to do things like enforcing encryption strategies, validating schemas, modifying message headers, and more.
         </span>
         {% for index in page.all_docs_indices %}
           {% include_cached index_link.html index=index %}
