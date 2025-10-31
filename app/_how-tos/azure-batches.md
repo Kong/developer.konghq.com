@@ -67,7 +67,7 @@ prereqs:
            export DECK_AZURE_DEPLOYMENT_ID='YOUR_AZURE_OPENAI_DEPLOYMENT_NAME'```
     - title: Batch .jsonl file
       content: |
-        To complete this tutorial, create a `batch.jsonl` to generate asynchronous batched LLM responses. We use `/v1/chat/completions` because it handles chat-based generation requests, enabling the LLM to produce conversational completions in batch mode.
+        To complete this tutorial, create a `batch.jsonl` to generate asynchronous batched LLM responses. We use `/v1/chat/completions` because it handles chat-based generation requests, instructing the LLM to produce conversational completions in batch mode.
 
         Run the following command to create the file:
 
@@ -100,7 +100,7 @@ cleanup:
 
 automated_tests: false
 ---
-## Configure AI Proxy plugins for `llm/v1/files`
+## Configure AI Proxy plugins for /files route
 
 Let's create an AI Proxy plugin for the `llm/v1/files` route type. It will be used to handle the upload and retrieval of JSONL files containing batch input and output data. This plugin instance ensures that input data is correctly staged for batch processing and that the results can be downloaded once the batch job completes.
 
@@ -130,7 +130,7 @@ variables:
     value: "$AZURE_DEPLOYMENT_ID"
 {% endentity_examples %}
 
-## Configure AI Proxy plugins for
+## Configure AI Proxy plugins for /batches route
 
 Next, create an AI Proxy plugin for the `llm/v1/batches` route. This plugin manages the submission, monitoring, and retrieval of asynchronous batch jobs. It communicates with Azure OpenAI's batch deployment to process multiple LLM requests in a batch.
 
@@ -162,7 +162,7 @@ variables:
 
 ## Upload a .jsonl file for batching
 
-Now, let's use the following command to upload our [batching file](/#batch-jsonl-file) to the `/llm/v1/files` route
+Now, let's use the following command to upload our [batching file](/#batch-jsonl-file) to the `/llm/v1/files` route:
 
 ```bash
 curl localhost:8000/files -F purpose="batch" -F file="@batch.jsonl"
