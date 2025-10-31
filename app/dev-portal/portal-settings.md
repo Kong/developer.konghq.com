@@ -23,8 +23,6 @@ works_on:
 description: "Learn about the settings you can configure for Dev Portal."
 
 related_resources:
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: Security settings
@@ -71,6 +69,10 @@ This description is only displayed in {{site.konnect_short_name}}, and will not 
 
 To change the meta description and tags in pages, see the [pages reference](/dev-portal/pages-and-content/).
 
+## Visibility
+
+All menu items have visibility controls, which determine which developers can see different menus. Visibility is `Private` by default, and will only be displayed to logged-in Developers. If `Public` is selected, the menu item will be available to all visitors to your Dev Portal.
+
 ## Custom Domains
 
 You can customize the Dev Portal domain name. Learn more about configuring [custom domains](/dev-portal/custom-domains/).
@@ -78,3 +80,7 @@ You can customize the Dev Portal domain name. Learn more about configuring [cust
 ## Audit logs
 
 Dev Portal audit logs are set up and managed separately from org-wide {{site.konnect_short_name}} audit logs. For more information, see the [audit logs documentation](/gateway/audit-logs/).
+
+## SEO customization
+
+To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly.
