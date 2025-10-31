@@ -85,3 +85,7 @@ sequenceDiagram
 
 {% endmermaid %}
 <!--vale on-->
+
+## Nested policies 
+
+{% include_cached /knep/nested-policy.md name=page.name slug=page.slug %}
