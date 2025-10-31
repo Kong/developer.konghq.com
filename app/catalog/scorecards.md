@@ -56,6 +56,8 @@ rows:
 
 To enable a scorecard on a service:
 
+{% navtabs "scorecards" %}
+{% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **[Scorecards](https://cloud.konghq.com/service-catalog/scorecards)**.
 1. Click **New Scorecard**.
@@ -64,6 +66,47 @@ To enable a scorecard on a service:
 1. Select which services you want to apply this scorecard to.
 1. In the **Name** field, enter a name for your scorecard.
 1. Click **Save**. 
+{% endnavtab %}
+{% navtab "API" %}
+
+Create a scorecard by sending a POST request to the `/scorecards` endpoint: 
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/scorecards
+status_code: 201
+method: POST
+body:
+  name: Kong Best Practices
+  description: Best practices that we encourage users to follow when using other Konnect applications.
+  scorecard_template: kong_best_practices
+  criteria:
+    - enabled: true
+      template_name: gateway_manager_error_rate
+      template_parameters:
+        relative_window: 30d
+        threshold: 10
+      section_name: Gateway Observability
+    - enabled: true
+      template_name: gateway_manager_response_latency
+      template_parameters:
+        metric: response_latency_p95
+        relative_window: 30d
+        threshold: 30
+      section_name: Gateway Observability
+    - enabled: true
+      template_name: gateway_manager_has_plugin
+      template_parameters:
+        category: Authentication
+      section_name: Plugin Enforcement
+  entity_selector:
+    type: all
+    parameters: null
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
 
 
 ## Service documentation linting
