@@ -6,6 +6,7 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@f169553775049169043e5d497b56349f9f22f021
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -1315,6 +1316,156 @@ paths:
           $ref: '#/components/responses/IdentityUnauthenticated'
       tags:
         - Authentication
+  '/users/{userId}/access-tokens':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: list-users-personal-access-tokens
+      summary: List PATs
+      description: List personal access tokens for a user.
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalAccessTokenListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/responses-Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+        - serviceAccessToken: []
+      tags:
+        - Personal Access Tokens
+    post:
+      operationId: create-personal-access-token
+      summary: Create a new personal access token
+      description: Create a new personal access token. A maximum of 10 personal access tokens can be created.
+      requestBody:
+        $ref: '#/components/requestBodies/PersonalAccessTokenCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/PersonalAccessTokenCreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/responses-Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+      tags:
+        - Personal Access Tokens
+  '/users/{userId}/access-tokens/{tokenId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - name: tokenId
+        in: path
+        description: ID of the personal access token.
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+    get:
+      operationId: get-personal-access-token-details
+      summary: Get Personal Access Token details
+      description: Get Personal Access Token details.
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalAccessTokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/responses-Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+        - serviceAccessToken: []
+      tags:
+        - Personal Access Tokens
+    patch:
+      operationId: update-personal-access-token-details
+      summary: Update personal access token details
+      description: Update personal access token details.
+      requestBody:
+        $ref: '#/components/requestBodies/PersonalAccessTokenUpdateRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalAccessTokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/responses-Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+      tags:
+        - Personal Access Tokens
+    delete:
+      operationId: delete-personal-access-token
+      summary: Delete personal access token
+      description: Delete personal access token.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/responses-Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+      tags:
+        - Personal Access Tokens
+  '/users/{userId}/access-tokens/{tokenId}/revoke':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - name: tokenId
+        in: path
+        description: ID of the personal access token.
+        required: true
+        schema:
+          $ref: '#/components/schemas/UUID'
+    patch:
+      operationId: revoke-personal-access-token
+      summary: Revoke Personal Access Token
+      description: Revoke Personal Access Token.
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalAccessTokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/responses-Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - personalAccessToken: []
+        - konnectAccessToken: []
+        - serviceAccessToken: []
+      tags:
+        - Personal Access Tokens
 components:
   parameters:
     PageNumber:
@@ -1335,6 +1486,14 @@ components:
       schema:
         type: integer
         example: 10
+    userId:
+      name: userId
+      in: path
+      required: true
+      description: ID of the user.
+      x-go-name: userIdParam
+      schema:
+        $ref: '#/components/schemas/UUID'
   schemas:
     IdentityProviderType:
       description: Specifies the type of identity provider.
@@ -1842,6 +2001,52 @@ components:
         expires_at: '2022-12-31T12:52:23Z'
         last_used_at: '2022-10-24T13:05:42Z'
       title: System Account Access Token
+    PATName:
+      type: string
+      maxLength: 256
+      minLength: 1
+      pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.'']*[\p{L}\p{N}]$'
+    PersonalAccessTokenCreateResponse:
+      description: Details of the created personal access token.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        user_id:
+          $ref: '#/components/schemas/UserId'
+        name:
+          type: string
+        state:
+          description: State of the personal access token.
+          type: string
+          enum:
+            - ACTIVE
+            - REVOKED
+            - EXPIRED
+          readOnly: true
+        konnect_token:
+          description: The Konnect token used to authenticate with Konnect.
+          type: string
+        revoked_by:
+          $ref: '#/components/schemas/RevokedBy'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        last_used_at:
+          $ref: '#/components/schemas/LastUsedAt'
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        revoked_at:
+          $ref: '#/components/schemas/RevokedAt'
+      required:
+        - id
+        - name
+        - state
+        - konnect_token
+        - user_id
+        - created_at
+        - expires_at
     BaseError:
       description: standard error
       type: object
@@ -1909,6 +2114,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -2276,6 +2482,80 @@ components:
       maxProperties: 50
       nullable: true
       writeOnly: true
+    UserId:
+      description: Contains a unique identifier used for a user.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      readOnly: true
+    PersonalAccessTokenState:
+      description: State of the personal access token.
+      type: string
+      enum:
+        - ACTIVE
+        - REVOKED
+        - EXPIRED
+    RevokedBy:
+      description: Contains a unique identifier used for the user that revoked this token.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      nullable: true
+      readOnly: true
+    LastUsedAt:
+      description: An ISO-8601 timestamp representation of entity last used date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+      readOnly: true
+    ExpiresAt:
+      description: An ISO-8601 timestamp representation of entity expiration date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+      readOnly: true
+    RevokedAt:
+      description: An ISO-8601 timestamp representation of entity revoked at date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      nullable: true
+      readOnly: true
+    PersonalAccessToken:
+      description: Properties of a personal access token.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        user_id:
+          $ref: '#/components/schemas/UserId'
+        name:
+          type: string
+        state:
+          $ref: '#/components/schemas/PersonalAccessTokenState'
+        revoked_by:
+          $ref: '#/components/schemas/RevokedBy'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        last_used_at:
+          $ref: '#/components/schemas/LastUsedAt'
+        expires_at:
+          $ref: '#/components/schemas/ExpiresAt'
+        revoked_at:
+          $ref: '#/components/schemas/RevokedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - state
+        - user_id
+        - created_at
+        - updated_at
+        - expires_at
   examples:
     400-request-format-is-invalid:
       value:
@@ -2730,6 +3010,69 @@ components:
     UpdateIdentityProviderLoginPath:
       value:
         login_path: the-konnect-org
+    PersonalAccessTokenResponse:
+      value:
+        id: 83f8380e-7798-4566-99e3-2edf2b57d289
+        name: Development Token
+        state: ACTIVE
+        user_id: 84f8380e-7798-4566-99e3-2edf2b57d288
+        created_at: '2023-01-01T00:00:00.000Z'
+        updated_at: '2023-01-01T00:00:00.000Z'
+        expires_at: '2024-01-01T00:00:00.000Z'
+    PersonalAccessTokenCreateResponse:
+      value:
+        id: 83f8380e-7798-4566-99e3-2edf2b57d289
+        name: Development Token
+        state: ACTIVE
+        konnect_token: kpat_DoRQeLJVS6G7lwleKI77sypGi20qT5JXKBdnpHud1mOQk4Srv
+        user_id: 84f8380e-7798-4566-99e3-2edf2b57d288
+        created_at: '2023-01-01T00:00:00.000Z'
+        updated_at: '2023-01-01T00:00:00.000Z'
+        expires_at: '2024-01-01T00:00:00.000Z'
+    PersonalAccessTokenListResponse:
+      summary: List Personal Access Token Response
+      value:
+        meta:
+          number: 1
+          size: 2
+          total: 2
+        data:
+          - id: 93f8380e-7798-4566-99e3-2edf2b57d289
+            name: Development Token
+            state: ACTIVE
+            user_id: 84f8380e-7798-4566-99e3-2edf2b57d288
+            created_at: '2023-01-01T00:00:00.000Z'
+            updated_at: '2023-01-01T00:00:00.000Z'
+            expires_at: '2024-01-01T00:00:00.000Z'
+          - id: 84f8380e-7798-4566-99e3-2edf2b57d287
+            name: Development Token
+            state: EXPIRED
+            user_id: 84f8380e-7798-4566-99e3-2edf2b57d288
+            created_at: '2023-01-01T00:00:00.000Z'
+            updated_at: '2023-01-01T00:00:00.000Z'
+            expires_at: '2023-02-01T00:00:00.000Z'
+    CreatePersonalAccessTokenRequest:
+      value:
+        name: Token
+        expires_at: '2024-01-01T00:00:00.000Z'
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: Unauthorized
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
   requestBodies:
     UpdateImpersonationSettingsRequest:
       content:
@@ -3186,6 +3529,40 @@ components:
               $ref: '#/components/examples/UpdateSAMLIdentityProvider'
             Update Identity Provider Login Path:
               $ref: '#/components/examples/UpdateIdentityProviderLoginPath'
+    PersonalAccessTokenCreateRequest:
+      description: Request body schema for creating personal access tokens.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/PATName'
+              expires_at:
+                description: An ISO-8601 timestamp representation of entity expiration date.
+                type: string
+                format: date-time
+                example: '2022-11-04T20:10:06.927Z'
+                readOnly: false
+            required:
+              - name
+              - expires_at
+          examples:
+            Example Request Body:
+              $ref: '#/components/examples/CreatePersonalAccessTokenRequest'
+    PersonalAccessTokenUpdateRequest:
+      description: Request body schema for updating personal access tokens.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/PATName'
+            minProperties: 1
+          examples:
+            Example Request Body:
+              $ref: '#/components/examples/CreatePersonalAccessTokenRequest'
   responses:
     GetImpersonationSettingsResponse:
       description: Response for Get Impersonation Settings endpoint
@@ -4438,12 +4815,82 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/IdP'
+    PersonalAccessTokenResponse:
+      description: Response containing details of a personal access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PersonalAccessToken'
+          examples:
+            Personal Access Token Response:
+              $ref: '#/components/examples/PersonalAccessTokenResponse'
+    PersonalAccessTokenCreateResponse:
+      description: Response containing details of the created personal access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PersonalAccessTokenCreateResponse'
+          examples:
+            Personal Access Token Response:
+              $ref: '#/components/examples/PersonalAccessTokenCreateResponse'
+    PersonalAccessTokenListResponse:
+      description: A list response for a collection of personal access tokens.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PageMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonalAccessToken'
+            additionalProperties: false
+            required:
+              - data
+          examples:
+            Personal Access Token List Response:
+              $ref: '#/components/examples/PersonalAccessTokenListResponse'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    responses-Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
     Conflict:
       description: Conflict
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ConflictError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
   securitySchemes:
     systemAccountAccessToken:
       type: http
@@ -4489,6 +4936,7 @@ tags:
   - name: Me
   - name: Authentication
   - name: Impersonation Settings
+  - name: Personal Access Tokens
 security:
   - personalAccessToken: []
   - systemAccountAccessToken: []

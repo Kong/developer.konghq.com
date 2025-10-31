@@ -8,7 +8,7 @@ metadata:
     - insomnia
   tags:
     - test-apis
-    - documents
+    - insomnia-documents
 rows:
   - header:
       type: h1

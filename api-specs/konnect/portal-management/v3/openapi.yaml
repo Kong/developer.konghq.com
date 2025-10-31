@@ -4872,6 +4872,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -7384,6 +7385,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string
@@ -7472,6 +7474,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string
@@ -7955,6 +7958,7 @@ components:
                       type: string
                       maxLength: 255
                       minLength: 1
+                      nullable: false
                     description:
                       description: A description of the portal.
                       type: string
@@ -8054,6 +8058,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string

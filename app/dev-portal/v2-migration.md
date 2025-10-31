@@ -11,8 +11,8 @@ works_on:
     - konnect
 
 tags:
-    - upgrades
-    - migrating
+    - upgrade
+    - migration
 
 search_aliases:
     - Dev Portal v2

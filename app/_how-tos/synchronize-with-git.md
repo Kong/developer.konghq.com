@@ -8,7 +8,7 @@ products:
 - insomnia
 
 tags:
-- documents
+- insomnia-documents
 - collections
 - mock-servers
 - git

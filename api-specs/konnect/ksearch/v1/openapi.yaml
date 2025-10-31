@@ -287,6 +287,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -504,6 +505,12 @@ components:
               email: sonia.engineer@test.com
               preferred_name: ''
               updated_at: '2023-07-19T00:00:00.00Z'
+          - id: c0010105-e840-4824-b7ee-787f22267c39
+            type: system_account
+            name: System Account 1
+            attributes:
+              created_at: '2023-05-10T12:00:00.00Z'
+              updated_at: '2023-05-10T12:00:00.00Z'
         meta:
           page:
             size: 3

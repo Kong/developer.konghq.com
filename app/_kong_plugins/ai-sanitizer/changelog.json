@@ -40,6 +40,13 @@
       "type": "bugfix"
     }
   ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where responses could not be redacted correctly when there were multiple redact texts of different lengths sharing the same prefix.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added a new plugin that can sanitize the PII information in requests before the requests are proxied by the AI Proxy or AI Proxy Advanced plugin.\n",

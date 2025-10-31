@@ -7,8 +7,8 @@ sections:
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
-      - title: Mesh release notes
-        description: Release notes for supported Kong Mesh versions.
+      - title: Mesh changelog
+        description: Changelog for supported Kong Mesh versions.
         url: /mesh/changelog/
       - path: /mesh/enterprise/
 
