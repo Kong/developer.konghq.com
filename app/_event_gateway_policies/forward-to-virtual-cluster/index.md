@@ -46,8 +46,6 @@ rows:
     description: Forward to virtual clusters using port mapping.
   - use_case: "[SNI routing](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing/)"
     description: Forward to virtual clusters using SNI routing.
-  - use_case: "[Using conditions](/event-gateway/policies/forward-to-virtual-cluster/examples/conditions/)"
-    description: Only forward messages that conform to a specific condition.
 
 {% endtable %}
 <!--vale on-->
