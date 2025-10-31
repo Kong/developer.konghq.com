@@ -73,3 +73,15 @@ rows:
     description: |
       Simple JSON parsing without a schema.
 {% endtable %}
+
+## Nested policies
+
+This policy can serve as a parent policy. 
+{%- if include.phase == 'produce' %}
+You can nest [Modify Headers](/event-gateway/policies/modify-headers/examples/nested-policy/) policies within it.
+{%- elsif include.phase == 'consume' %}
+You can nest [Modify Headers](/event-gateway/policies/modify-headers/examples/nested-policy/) and [Skip Records](/event-gateway/policies/skip-record/examples/nested-policy/) policies within it.
+{% endif %}
+
+Nested policies are sorted into an index. You can re-order nested policies within the parent policy by adjusting this index. 
+See the reference for [nested policies](/event-gateway/entities/policy/#policy-nesting) for more detail.

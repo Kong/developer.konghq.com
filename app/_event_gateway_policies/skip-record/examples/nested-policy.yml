@@ -1,0 +1,25 @@
+title: Apply as a nested policy
+description: Apply a Skip Record policy as a nested policy within a Schema Validation policy.
+extended_description: |
+  Apply a Skip Record policy as a nested policy within a Schema Validation policy.
+
+  In the following example, the `parent_policy_id` determines the parent Schema Validation policy.
+
+weight: 900
+
+requirements:
+  - A parent [Schema Validation policy](/event-gateway/policies/?terms=schema%2520validation) to contain this nested policy.
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+name: skip-record-nested
+type: skip_record
+parent_policy_id: ${policy_id}
+condition: >
+  context.topic.name.endsWith('my_suffix')
+
+tools:
+  - konnect-api
