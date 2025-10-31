@@ -191,3 +191,34 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tierCheckboxes = document.querySelectorAll('input[name="tier"]');
+    const deploymentCheckboxes = document.querySelectorAll('input[name="deployment-topology"]');
+
+    tierCheckboxes.forEach(tierCheckbox => {
+      tierCheckbox.addEventListener('change', () => {
+        if (tierCheckbox.value === 'enterprise' && tierCheckbox.checked) {
+          deploymentCheckboxes.forEach(deploymentCheckbox => {
+            if (deploymentCheckbox.value === 'on-prem') {
+              deploymentCheckbox.checked = false;
+            }
+          });
+        }
+      });
+    });
+
+    deploymentCheckboxes.forEach(deploymentCheckbox => {
+      deploymentCheckbox.addEventListener('change', () => {
+        if (deploymentCheckbox.value === 'on-prem' && deploymentCheckbox.checked) {
+          tierCheckboxes.forEach(tierCheckbox => {
+            if (tierCheckbox.value === 'enterprise') {
+              tierCheckbox.checked = false;
+            }
+          });
+        }
+      });
+    });
+  });
+</script>
