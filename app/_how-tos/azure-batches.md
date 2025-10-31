@@ -37,7 +37,7 @@ tldr:
   a: |
     Package your prompts into a JSONL file and upload it to the /files endpoint. Then launch a batch job with /batches to process everything asynchronously, and download the output from /files once the run completes. Batch execution reduces costs by:
     - Cutting per-request overhead
-    - Preventing rate-limit backoffs
+    - Preventing rate-limit penalties
     - Using model capacity more efficiently
     - Lowering unnecessary retry traffic
 
