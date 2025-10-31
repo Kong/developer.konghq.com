@@ -112,6 +112,14 @@ module Jekyll
             def quote(input)
               return '' if input.nil?
 
+              # Replace patterns like ${env["MY_SECRET"]} or ${env['MY_SECRET']} with var.my_secret
+              if input.is_a?(String)
+                input = input.gsub(/\$\{env\[\s*["']([^"']+)["']\s*\]\}/) do
+                  var_name = Regexp.last_match(1).downcase
+                  "var.#{var_name}"
+                end
+              end
+
               return input if input.is_a?(String) && input.start_with?("var.")
 
               return input if ['true', 'false', true, false].include?(input)
