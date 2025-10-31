@@ -31,7 +31,7 @@ faqs:
     a: No. All changes are DNS or infrastructure-related. The {{site.konnect_short_name}} UI will automatically reflect domain mappings.
   - q: What if I use a custom domain with a Kong-managed certificate?
     a: |
-      Contact [Kong Support](https://support.konghq.com). This path is currently unsupported for seamless migration.
+      Contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com). This path is currently unsupported for seamless migration.
 ---
 
 The Dedicated Cloud Gateways domain structure is changing from `konghq.com` to `konggateway.com`. Kong is making this change to align with {{site.base_gateway}} runtimes. 
