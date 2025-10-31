@@ -83,6 +83,7 @@ formats:
       backend_cluster: '/backend-clusters'
       virtual_cluster: '/virtual-clusters'
       listener:        '/listeners'
+      schema_registry: '/schema-registries'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
