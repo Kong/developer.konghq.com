@@ -27,6 +27,6 @@ sections:
     items:
       - title: Event Gateway OpenAPI specification
         description: OpenAPI specification for the Kong Event Gateway Control Plane API.
-        url: /api/event-gateway/knep/v0/
+        url: /api/konnect/event-gateway/
       - path: /event-gateway/configuration/
       - path: /event-gateway/expressions/

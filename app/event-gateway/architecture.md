@@ -53,7 +53,7 @@ rows:
       The listener runs at Layer 4 of the network stack.
     links: |
       * [Listener entity reference](/event-gateway/entities/listener/)
-      * [API reference](/api/knep/)
+      * [API reference](/api/konnect/event-gateway/#/operations/list-event-gateway-listeners)
       * [Listener policies](/event-gateway/policies/?policy-target=listener)
   - entity: Backend cluster
     description: |
@@ -62,7 +62,7 @@ rows:
       There can be multiple clusters proxied through the same gateway. {{site.event_gateway_short}} control planes store information about how to authenticate to backend clusters, whether or not to verify the cluster’s TLS certificates, and how often to fetch metadata from the cluster. 
     links: |
       * [Backend cluster entity reference](/event-gateway/entities/backend-cluster/) <br><br>
-      * [API reference](/api/knep/)
+      * [API reference](/api/konnect/event-gateway/#/operations/list-event-gateway-backend-clusters)
   - entity: Virtual cluster
     description: |
       Virtual clusters expose a modified view of the backend cluster. From the client’s perspective, the virtual cluster is a real Kafka cluster. Virtual clusters are similar to routes in Kong API Gateway, but there are no HTTP semantics on a virtual cluster.
@@ -73,7 +73,7 @@ rows:
 
     links: |
       * [Virtual cluster entity reference](/event-gateway/entities/virtual-cluster/)
-      * [API reference](/api/knep/)
+      * [API reference](/api/konnect/event-gateway/#/operations/list-event-gateway-virtual-clusters)
       * [Virtual cluster policies](/event-gateway/policies/?policy-target=virtual-cluster)
   - entity: Policy
     description: |
@@ -86,7 +86,7 @@ rows:
       
     links: |
       * [Policy entity reference](/event-gateway/entities/policy/)
-      * [API reference](/api/knep/)
+      * [API reference](/api/konnect/event-gateway/#/operations/list-event-gateway-listener-policies)
       * [All {{site.event_gateway_short}} policies](/event-gateway/policies/)
 
 {% endtable %}
