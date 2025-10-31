@@ -240,13 +240,14 @@ The following creates a new Backend Cluster called **{{ include.presenter.data['
 1. Select the **Allow anonymous authentication from virtual clusters** checkbox.
 1. Click **Save**.
 
-{% when 'virtual-cluster' %}
+{% when 'virtual_cluster' %}
 The following creates a new Virtual Cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 2. Click an {{site.event_gateway_short}}.
 3. Navigate to **Virtual Clusters** in the sidebar.
 4. Click **New Virtual Cluster**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
 5. Configure your virtual cluster.
 6. Click **Save and add policy**.
 
@@ -264,6 +265,16 @@ The following creates a new Listener called **{{ include.presenter.data['name'] 
 3. In the **Ports** field, enter `{{ include.presenter.data['ports'] | first }}`.
 4. Click **Save and add policy next**.
 5. Click **Maybe later** to create a listener without a policy.
+
+{% when 'schema_registry' %}
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+3. Navigate to **Resources** in the sidebar.
+1. Click **New Schema Registry**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. Configure your schema registry.
+1. Click **Create**.
 
 {% when 'event_gateway_policy' %}
 
