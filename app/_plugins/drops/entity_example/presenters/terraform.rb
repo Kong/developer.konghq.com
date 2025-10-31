@@ -145,13 +145,25 @@ module Jekyll
             def variable_names
               keys = []
               variables.each do |k, v|
-                keys = v['value'].gsub("$","").downcase
+                keys = v['value'].gsub('$', '').downcase
               end
               keys
             end
           end
 
           class EventGatewayPolicy < Base
+            def terraform_resource_name
+              @terraform_resource_name ||= if policy_target == 'listener'
+                                             "konnect_event_gateway_#{policy_target}_policy_#{@example_drop.data['type']}"
+                                           else
+                                             "konnect_event_gateway_#{@example_drop.target.key}_policy_#{@example_drop.data['type']}"
+                                           end
+            end
+
+            def policy_target
+              @policy_target ||= @example_drop.policy_target
+            end
+
             def entity_type
               "#{@example_drop.policy_target}_policy_#{@example_drop.data['type']}"
             end

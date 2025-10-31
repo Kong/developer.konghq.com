@@ -27,3 +27,4 @@ config:
 
 tools:
   - konnect-api
+  - terraform
