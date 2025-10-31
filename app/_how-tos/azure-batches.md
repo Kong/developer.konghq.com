@@ -35,11 +35,7 @@ tags:
 tldr:
   q: How can I run many Azure OpenAI LLM requests at once?
   a: |
-    Package your prompts into a JSONL file and upload it to the /files endpoint. Then launch a batch job with /batches to process everything asynchronously, and download the output from /files once the run completes. Batch execution reduces costs by:
-    - Cutting per-request overhead
-    - Preventing rate-limit penalties
-    - Using model capacity more efficiently
-    - Lowering unnecessary retry traffic
+    Package your prompts into a JSONL file and upload it to the `/files` endpoint. Then launch a batch job with `/batches` to process everything asynchronously, and download the output from /files once the run completes.
 
 tools:
   - deck
@@ -75,12 +71,13 @@ prereqs:
 
         ```bash
         cat <<EOF > batch.jsonl
-        {"custom_id": "prod1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a compelling product description for a stainless steel water bottle suitable for outdoor activities."}], "max_tokens": 60}}
-        {"custom_id": "prod2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a product description for a pair of wireless noise-cancelling headphones with long battery life."}], "max_tokens": 60}}
-        {"custom_id": "prod3", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write an engaging product description for a stylish red leather wallet with multiple compartments."}], "max_tokens": 60}}
-        {"custom_id": "prod4", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a detailed product description for a Bluetooth wireless speaker with waterproof features."}], "max_tokens": 60}}
-        {"custom_id": "prod5", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a concise product description for a compact and durable travel backpack with laptop compartment."}], "max_tokens": 60}}
+        {"custom_id": "prod1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a compelling product description for a solar-powered smart garden light."}], "max_tokens": 60}}
+        {"custom_id": "prod2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a product description for an energy-efficient smart thermostat for home use."}], "max_tokens": 60}}
+        {"custom_id": "prod3", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write an engaging product description for a biodegradable bamboo kitchen utensil set."}], "max_tokens": 60}}
+        {"custom_id": "prod4", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a detailed product description for a water-saving smart shower head."}], "max_tokens": 60}}
+        {"custom_id": "prod5", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a concise product description for a compact indoor air purifier that uses natural filters."}], "max_tokens": 60}}
         EOF
+
         ```
   entities:
     services:
@@ -101,13 +98,9 @@ cleanup:
 
 automated_tests: false
 ---
+## Configure AI Proxy plugins for `llm/v1/files`
 
-
-## Configure AI Proxy plugins
-
-Create two separate AI Proxy plugins: one for `llm/v1/files` and one for `llm/v1/batches`. Replace your credentials with the environment variables defined above.
-
-**Files route plugin (`llm/v1/files`)**:
+Let's create an AI Proxy plugin for the `llm/v1/files` route type. It will be used to handle the upload and retrieval of JSONL files containing batch input and output data. This plugin instance ensures that input data is correctly staged for batch processing and that the results can be downloaded once the batch job completes.
 
 {% entity_examples %}
 entities:
@@ -135,8 +128,9 @@ variables:
     value: "$AZURE_DEPLOYMENT_ID"
 {% endentity_examples %}
 
+## Configure AI Proxy plugins for
 
-**Batches route plugin (`llm/v1/batches`)**:
+Next, create an AI Proxy plugin for the `llm/v1/batches` route. This plugin manages the submission, monitoring, and retrieval of asynchronous batch jobs. It communicates with Azure OpenAI's batch deployment to process multiple LLM requests in a batch.
 
 {% entity_examples %}
 entities:
@@ -166,11 +160,13 @@ variables:
 
 ## Upload a .jsonl file for batching
 
+Now, let's use the following command to upload our [batching file](/#batch-jsonl-file) to the `/llm/v1/files` route
+
 ```bash
 curl localhost:8000/files -F purpose="batch" -F file="@batch.jsonl"
 ```
 
-You will see a JSON response like this:
+Once processed, you will see a JSON response like this:
 
 ```json
 {
@@ -192,7 +188,7 @@ export FILE_ID=YOUR_FILE_ID
 
 ## Create a batching request
 
-Send a POST request to the `/batches` Route to create a batch using your uploaded file:
+Now, we can send a `POST` request to the `/batches` Route to create a batch using our uploaded file:
 
 {:.info}
 > The completion window must be set to `24h`, as it's the only value currently supported by the [OpenAI `/batches` API](https://platform.openai.com/docs/api-reference/batch/create).
@@ -224,7 +220,7 @@ You will receive a response similar to:
   "expires_at": 1761903959,
   "failed_at": null,
   "finalizing_at": null,
-  "id": "batch_379f1007-8057-4f43-be38-73f3d233c5da",
+  "id": "batch_379f1007-8057-4f43-be38-12f3d456c7da",
   "in_progress_at": null,
   "input_file_id": "file-da4364d8fd714dd9b29706b91236ab02",
   "errors": null,
@@ -271,13 +267,13 @@ A completed batch response looks like this:
   "expires_at": 1761903959,
   "failed_at": null,
   "finalizing_at": 1761817662,
-  "id": "batch_379f1007-8057-4f43-be38-73f3d233c5da",
+  "id": "batch_379f1007-8057-4f43-be38-12f3d456c7da",
   "in_progress_at": null,
   "input_file_id": "file-da4364d8fd714dd9b29706b91236ab02",
   "errors": null,
   "metadata": null,
   "object": "batch",
-  "output_file_id": "file-93d91f55-0418-422b-915f-81f4bb334951",
+  "output_file_id": "file-93d91f55-0418-abcd-1234-81f4bb334951",
   "request_counts": {
     "total": 5,
     "completed": 5,
@@ -314,9 +310,9 @@ The batched response file contains one JSON object per line, each representing a
 
 
 ```json
-{"custom_id": "prod3", "response": {"body": {"id": "chatcmpl-CWJXmqUroUxgUhqLZH51MAKNCSz0w", "object": "chat.completion", "created": 1761817658, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "Introducing the **Radiance Red Leather Wallet** – where timeless elegance meets modern functionality. Crafted from premium, supple leather with a rich crimson hue, this wallet effortlessly blends sophistication and practicality for those who value both style and substance.\n\nDesigned for the organized individual, this wallet boasts **multiple thoughtfully arranged compartments**", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}], "usage": {"completion_tokens": 60, "prompt_tokens": 32, "total_tokens": 92, "completion_tokens_details": {"accepted_prediction_tokens": 0, "audio_tokens": 0, "reasoning_tokens": 0, "rejected_prediction_tokens": 0}, "prompt_tokens_details": {"audio_tokens": 0, "cached_tokens": 0}}, "system_fingerprint": "fp_ee1d74bde0", "prompt_filter_results": [{"prompt_index": 0, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "jailbreak": {"filtered": false, "detected": false}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}]}, "request_id": "1e7c5640-266a-4257-84a1-acd6883e0155", "status_code": 200}, "error": null}
-{"custom_id": "prod5", "response": {"body": {"id": "chatcmpl-CWJXmtkylxCEKgv5J9WkPiHupqETG", "object": "chat.completion", "created": 1761817658, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "This compact and durable travel backpack is designed for modern adventurers. Featuring a padded laptop compartment, multiple organizer pockets, and water-resistant materials, it offers reliable protection for your essentials while staying lightweight and stylish. Perfect for commuting, exploring, or work trips, its ergonomic design ensures comfort on the go.", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}], "usage": {"completion_tokens": 60, "prompt_tokens": 33, "total_tokens": 93, "completion_tokens_details": {"accepted_prediction_tokens": 0, "audio_tokens": 0, "reasoning_tokens": 0, "rejected_prediction_tokens": 0}, "prompt_tokens_details": {"audio_tokens": 0, "cached_tokens": 0}}, "system_fingerprint": "fp_ee1d74bde0", "prompt_filter_results": [{"prompt_index": 0, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "jailbreak": {"filtered": false, "detected": false}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}]}, "request_id": "917858af-a6de-47bb-8037-dbe84e9e621c", "status_code": 200}, "error": null}
-{"custom_id": "prod1", "response": {"body": {"id": "chatcmpl-CWJXml27AnRMBbdsilDK1xGRI1AG6", "object": "chat.completion", "created": 1761817658, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Stay Hydrated Anywhere with the Ultimate Stainless Steel Water Bottle**\n\nElevate your outdoor adventures with the perfect companion: our premium stainless steel water bottle. Built for durability and designed for convenience, this bottle is your go-to choice for hiking, camping, and all your active pursuits.\n\nCrafted from high", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}], "usage": {"completion_tokens": 60, "prompt_tokens": 33, "total_tokens": 93, "completion_tokens_details": {"accepted_prediction_tokens": 0, "audio_tokens": 0, "reasoning_tokens": 0, "rejected_prediction_tokens": 0}, "prompt_tokens_details": {"audio_tokens": 0, "cached_tokens": 0}}, "system_fingerprint": "fp_ee1d74bde0", "prompt_filter_results": [{"prompt_index": 0, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "jailbreak": {"filtered": false, "detected": false}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}]}, "request_id": "416a869e-42fc-4b91-9a14-0527db68259e", "status_code": 200}, "error": null}
-{"custom_id": "prod4", "response": {"body": {"id": "chatcmpl-CWJXm0SK0SSzBwNUZNsbhb5GS82i0", "object": "chat.completion", "created": 1761817658, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Product Description: UltimateSound AquaWave Bluetooth Wireless Speaker**\n\nExperience unparalleled sound quality and portability with the UltimateSound AquaWave Bluetooth Wireless Speaker, your ideal companion for adventure, relaxation, and everything in between. Packed with innovative features, this waterproof speaker is designed to elevate your audio experience wherever life takes you", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}], "usage": {"completion_tokens": 60, "prompt_tokens": 31, "total_tokens": 91, "completion_tokens_details": {"accepted_prediction_tokens": 0, "audio_tokens": 0, "reasoning_tokens": 0, "rejected_prediction_tokens": 0}, "prompt_tokens_details": {"audio_tokens": 0, "cached_tokens": 0}}, "system_fingerprint": "fp_ee1d74bde0", "prompt_filter_results": [{"prompt_index": 0, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "jailbreak": {"filtered": false, "detected": false}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}]}, "request_id": "c84babdb-a9f5-413f-8582-85a1eecfae00", "status_code": 200}, "error": null}
-{"custom_id": "prod2", "response": {"body": {"id": "chatcmpl-CWJXm4JBpFXUecJqkPiTyeurKVmLZ", "object": "chat.completion", "created": 1761817658, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Ultimate Sound Freedom: Wireless Noise-Cancelling Headphones**\n\nExperience unparalleled audio performance with our premium wireless noise-cancelling headphones designed to deliver crystal-clear sound and immersive silence. Whether you're on a long-haul flight, commuting, or relaxing at home, these headphones let you focus on what matters", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}], "usage": {"completion_tokens": 60, "prompt_tokens": 36, "total_tokens": 96, "completion_tokens_details": {"accepted_prediction_tokens": 0, "audio_tokens": 0, "reasoning_tokens": 0, "rejected_prediction_tokens": 0}, "prompt_tokens_details": {"audio_tokens": 0, "cached_tokens": 0}}, "system_fingerprint": "fp_ee1d74bde0", "prompt_filter_results": [{"prompt_index": 0, "content_filter_results": {"hate": {"filtered": false, "severity": "safe"}, "jailbreak": {"filtered": false, "detected": false}, "self_harm": {"filtered": false, "severity": "safe"}, "sexual": {"filtered": false, "severity": "safe"}, "violence": {"filtered": false, "severity": "safe"}}}]}, "request_id": "2c6e23da-f8c6-49e9-84c2-890720daea19", "status_code": 200}, "error": null}
+{"custom_id": "prod4", "response": {"body": {"id": "chatcmpl-AB12CD34EF56GH78IJ90KL12MN", "object": "chat.completion", "created": 1761909664, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**EcoFlow Smart Shower Head: Revolutionize Your Daily Routine While Saving Water**\n\nExperience the perfect blend of luxury, sustainability, and smart technology with the **EcoFlow Smart Shower Head** — a cutting-edge solution for modern households looking to conserve water without compromising on comfort. Designed to elevate your shower experience", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null}], "usage": {"completion_tokens": 60, "prompt_tokens": 30, "total_tokens": 90}, "system_fingerprint": "fp_random1234"},"request_id": "req-111aaa22-bb33-cc44-dd55-ee66ff778899", "status_code": 200}, "error": null}
+{"custom_id": "prod3", "response": {"body": {"id": "chatcmpl-ZX98YW76VU54TS32RQ10PO98LK", "object": "chat.completion", "created": 1761909664, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Eco-Friendly Elegance: Biodegradable Bamboo Kitchen Utensil Set**\n\nElevate your cooking experience while making a positive impact on the planet with our **Biodegradable Bamboo Kitchen Utensil Set**. Crafted from 100% natural, sustainably sourced bamboo, this set combines durability, functionality", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null}], "usage": {"completion_tokens": 60, "prompt_tokens": 31, "total_tokens": 91}, "system_fingerprint": "fp_random1234"},"request_id": "req-222bbb33-cc44-dd55-ee66-ff7788990011", "status_code": 200}, "error": null}
+{"custom_id": "prod1", "response": {"body": {"id": "chatcmpl-MN34OP56QR78ST90UV12WX34YZ", "object": "chat.completion", "created": 1761909664, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**Illuminate Your Garden with Brilliance: The Solar-Powered Smart Garden Light**  \n\nTransform your outdoor space into a haven of sustainable beauty with the **Solar-Powered Smart Garden Light**—a perfect blend of modern innovation and eco-friendly design. Powered entirely by the sun, this smart light delivers effortless", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null}], "usage": {"completion_tokens": 60, "prompt_tokens": 30, "total_tokens": 90}, "system_fingerprint": "fp_random1234"},"request_id": "req-333ccc44-dd55-ee66-ff77-889900112233", "status_code": 200}, "error": null}
+{"custom_id": "prod5", "response": {"body": {"id": "chatcmpl-AQ12WS34ED56RF78TG90HY12UJ", "object": "chat.completion", "created": 1761909664, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "Breathe easy with our compact indoor air purifier, designed to deliver fresh and clean air using natural filters. This eco-friendly purifier quietly removes allergens, dust, and odors without synthetic materials, making it perfect for any small space. Stylish, efficient, and sustainable—experience pure air, naturally.", "refusal": null, "annotations": []}, "finish_reason": "stop", "logprobs": null}], "usage": {"completion_tokens": 59, "prompt_tokens": 33, "total_tokens": 92}, "system_fingerprint": "fp_random1234"},"request_id": "req-444ddd55-ee66-ff77-8899-001122334455", "status_code": 200}, "error": null}
+{"custom_id": "prod2", "response": {"body": {"id": "chatcmpl-PO98LK76JI54HG32FE10DC98VB", "object": "chat.completion", "created": 1761909664, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**EcoSmart Pro Wi-Fi Thermostat: Energy Efficiency Meets Smart Technology**  \n\nUpgrade your home’s comfort and save energy with the EcoSmart Pro Wi-Fi Thermostat. Designed for modern living, this sleek and intuitive thermostat lets you take control of your heating and cooling while minimizing energy waste. Whether you're", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null}], "usage": {"completion_tokens": 60, "prompt_tokens": 31, "total_tokens": 91}, "system_fingerprint": "fp_random1234"},"request_id": "req-555eee66-ff77-8899-0011-223344556677", "status_code": 200}, "error": null}
 ```
