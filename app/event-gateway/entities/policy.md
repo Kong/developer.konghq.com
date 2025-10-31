@@ -138,6 +138,60 @@ features:
 {% endfeature_table %}
 <!-- vale on -->
 
+### Policy nesting
+
+Certain policies can serve as parent policies. You can nest policies within a parent policy to process the record content.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parent policy
+    key: parent
+  - title: Possible nested child policies
+    key: nested
+rows:
+  - parent: "[Schema Validation produce](/event-gateway/policies/schema-validation-produce/)"
+    nested: |
+      * [Modify Headers](/event-gateway/policies/modify-headers/)
+  - parent: "[Schema Validation consume](/event-gateway/policies/schema-validation-consume/)"
+    nested: |
+      * [Modify Headers](/event-gateway/policies/modify-headers/)
+      * [Skip Records](/event-gateway/policies/skip-record/)
+    
+{% endtable %}
+<!--vale on-->
+
+Nested policies are sorted into an index. You can re-order nested policies within the parent policy by adjusting this index.
+
+{% navtabs 'reorder' %}
+{% navtab "Konnect API" %}
+
+To re-order policies using the {{site.konnect_short_name}} Control Plane API, use the `/move` endpoint. For example, to move a produce policy:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/produce-policies/{policyID}/move
+status_code: 201
+method: POST
+body:
+  index: 2
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "Konnect UI" %}
+
+To re-order policies using the {{site.konnect_short_name}} UI:
+1. In your {{site.event_gateway_short}}, navigate to **Virtual Clusters** in the sidebar.
+1. Select a virtual cluster.
+1. Click the **Policies** tab.
+1. Click either **Produce** or **Consume** to find a Schema Validation policy with nested policies. You'll see nested policies displayed as children.
+1. Click the parent policy.
+1. In the list of nested policies, drag and drop the policies to re-order them.
+
+{% endnavtab %}
+{% endnavtabs %}
+
 ### Set up a virtual cluster policy
 
 {{site.event_gateway}} has a few built-in virtual cluster policies, all of which have their own specific configurations and examples.
