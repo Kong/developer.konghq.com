@@ -391,6 +391,7 @@ jwt
 jwts
 kafka
 kafkactl
+KAi
 kbps
 kds
 keepalive
