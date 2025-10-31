@@ -31,9 +31,17 @@ resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity
 ```
 {% when 'event-gateway' %}
 ```hcl
-resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity_type | replace: "-", "_" }}" {
+resource "{{ include.presenter.terraform_resource_name }}" "my_{{ include.presenter.entity_type | replace: "-", "_" }}" {
   provider = konnect-beta
   {{ include.presenter }}
+
+  {%- case include.presenter.policy_target -%}
+  {% when 'listener' %}
+  event_gateway_listener_id = konnect_event_gateway_listener.my_listener.id
+  {%- when 'virtual_cluster' %}
+  virtual_cluster_id = konnect_event_gateway_virtual_cluster.my_virtual_cluster.id
+  {%- endcase %}
+
   gateway_id = konnect_event_gateway.my_event_gateway.id
 }
 ```

@@ -16,3 +16,4 @@ condition: >
 
 tools:
   - konnect-api
+  - terraform
