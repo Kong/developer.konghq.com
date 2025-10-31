@@ -1,5 +1,5 @@
 ---
-title: "{{site.event_gateway_short}} backend clusters"
+title: "Backend clusters"
 content_type: reference
 
 description: |
@@ -41,6 +41,7 @@ schema:
 
 breadcrumbs:
   - /event-gateway/
+  - /event-gateway/entities/
 ---
 
 ## What is a backend cluster?

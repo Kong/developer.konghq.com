@@ -1,5 +1,5 @@
 ---
-title: "{{site.event_gateway_short}} Policies"
+title: "Policies"
 content_type: reference
 layout: gateway_entity
 
@@ -39,6 +39,7 @@ products:
 
 breadcrumbs:
   - /event-gateway/
+  - /event-gateway/entities/
 ---
 
 ## What is an {{site.event_gateway_short}} policy?

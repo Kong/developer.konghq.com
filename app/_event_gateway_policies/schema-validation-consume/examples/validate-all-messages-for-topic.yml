@@ -5,7 +5,7 @@ description: Ensure that all messages consumed from topics with a specific suffi
 weight: 900
 
 requirements:
-  - A [schema registry](/event-gateway/policies/schema-validation-consume/#schema-registry) configured in the {{site.event_gateway_short}} control plane.
+  - A [schema registry](/event-gateway/entities/schema-registry/) configured in the {{site.event_gateway_short}} control plane.
 
 name: validate-all-messages
 type: schema_validation

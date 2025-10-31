@@ -5,7 +5,7 @@ description: Ensure that every produced topic is validated against a Conflent Sc
 weight: 900
 
 requirements:
-  - A [schema registry](/event-gateway/policies/schema-validation-produce/#schema-registry) configured in the {{site.event_gateway_short}} control plane.
+  - A [schema registry](/event-gateway/entities/schema-registry/) configured in the {{site.event_gateway_short}} control plane.
 
 name: validate-all-topics
 type: schema_validation
