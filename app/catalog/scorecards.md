@@ -27,7 +27,7 @@ A {{site.konnect_catalog}} scorecard helps you evaluate services based on valida
 
 From the scorecard view, you can view details on either a per-service or per-criteria basis.
 
-You can use a scorecard template that comes prepopulated with Kong or industry best practice criteria or create a custom scorecard with criteria that you choose. You can also combine the two and use some premade template criteria and some custom criteria.
+You can use a scorecard template that comes prepopulated with Kong or industry best practice criteria or create a custom scorecard with criteria that you choose. You can also combine the two and use some premade template criteria and some criteria.
 
 ## Scorecard templates
 
@@ -60,7 +60,7 @@ To enable a scorecard on a service:
 1. In the Catalog sidebar, click **[Scorecards](https://cloud.konghq.com/service-catalog/scorecards)**.
 1. Click **New Scorecard**.
 1. From the **Scorecard template** dropdown menu, select your template or select custom scorecard.
-1. (Optional) If you want to add an additional section or custom criteria, click **Add criteria** or **Add section**.
+1. (Optional) If you want to add an additional section or criteria, click **Add criteria** or **Add section**.
 1. Select which services you want to apply this scorecard to.
 1. In the **Name** field, enter a name for your scorecard.
 1. Click **Save**. 
@@ -98,10 +98,85 @@ rows:
 
 ## Custom scorecard criteria
 
-You can add custom criteria to a custom scorecard or a scorecard template. These allow you to further customize your scorecards.
+You can add criteria to a custom scorecard or a scorecard template. These allow you to further customize your scorecards.
 
-The following table details the different custom criteria you can specify:
+You can list all available criteria by sending a GET request to the `/criteria-templates` endpoint:
 
-TABLE HERE
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/criteria-templates
+status_code: 201
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The following table details the different criteria you can specify:
+
+{% table %}
+columns:
+  - title: Criteria
+    key: criteria
+  - title: Description
+    key: description
+rows:
+  - criteria: Gateway Service Error Rate
+    description: |
+      Ensures gateway error rate stays below a defined threshold over a selected time window.
+  - criteria: Gateway Service Response Latency
+    description: |
+      Ensures gateway response latency stays below a defined threshold over a selected time window.
+  - criteria: Gateway Service Has Plugin
+    description: |
+      Ensures all mapped Gateway Service resources have at least one Plugin installed from the selected category.
+  - criteria: Has API Specs
+    description: |
+      Ensures the service has the required number of API specifications attached.
+  - criteria: Has Service Docs
+    description: |
+      Ensures the service has the required number of documentation files attached.
+  - criteria: Lint API Specs
+    description: |
+      Ensures all attached API specifications pass [selected lint rulesets](#service-documentation-linting).
+  - criteria: Has Resources
+    description: |
+      Ensures the service has the required number of mapped resources of the specified type.
+  - criteria: Incident Limit
+    description: |
+      Ensures the number of triggered incidents stays below a defined threshold over a selected time window.
+  - criteria: On Call Engineer Assigned
+    description: |
+      Ensures an on-call engineer is assigned to the service.
+  - criteria: PagerDuty Service status is enabled
+    description: |
+      Ensures the service has an active PagerDuty configuration.
+  - criteria: Time Before Failure
+    description: |
+      Ensures time between failures exceeds a minimum threshold over a selected time window.
+  - criteria: Time to Acknowledge
+    description: |
+      Ensures time to acknowledge incidents stays below a maximum threshold over a selected time window.
+  - criteria: Time to Restore
+    description: |
+      Ensures time to restore the service stays below a maximum threshold over a selected time window.
+  - criteria: MInimum Pull Request Approving Reviews
+    description: |
+      Ensures all merged PRs have at least the required number of approving reviews.
+  - criteria: Stale Pull Request Limit
+    description: |
+      Ensures the number of open PRs older than a defined age stays below the specified threshold.
+  - criteria: Time to Approve Pull Request
+    description: |
+      Ensures PRs are approved within a defined threshold over a selected time window.
+  - criteria: Time to Merge
+    description: |
+      Ensures PRs are merged within a defined threshold over a selected time window.
+  - criteria: Time to Workflow Completion
+    description: |
+      Ensures CI workflow runs complete within a defined threshold over a selected time window.
+  - criteria: Open Vulnerability Limit
+    description: |
+      Ensures the number of open vulnerabilities higher than the selected severity stays below the defined threshold.
+{% endtable %}
+<!--vale on-->
 
 
