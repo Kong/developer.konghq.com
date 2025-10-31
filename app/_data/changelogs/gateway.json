@@ -17267,6 +17267,11 @@
         "message": "**Kong Manager**: In the Confluent Consume, Kafka Consume, Kafka Upstream, Kafka Log, and Confluent plugins, \nsetting `schema_registry.confluent.authentication.mode` or `topics.schema_registry.confluent.authentication.mode` to `none` may not be saved after submission.\n",
         "type": "known-issues",
         "scope": "Kong Manager"
+      },
+      {
+        "message": "**ai-gcp-model-armor**: Added a new `GCP Model Armor` plugin that can protect requests and responses to/from AI LLM.\n",
+        "scope": "Plugin",
+        "type": "feature"
       }
     ],
     "kong-manager-ee": [
