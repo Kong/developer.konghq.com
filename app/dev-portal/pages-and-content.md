@@ -80,8 +80,6 @@ faqs:
 related_resources:
   - text: Dev Portal Markdown components reference
     url: https://portaldocs.konghq.com/
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
   - text: Custom domains
     url: /dev-portal/custom-domains/
   - text: About Dev Portal customizations

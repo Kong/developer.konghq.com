@@ -23,8 +23,6 @@ works_on:
 description: "Learn about the settings you can configure for Dev Portal."
 
 related_resources:
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: Security settings
