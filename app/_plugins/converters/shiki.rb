@@ -21,6 +21,7 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           "javascript",
           "sql",
           "dockerfile",
+          "liquid",
           "go",
           "terraform",
           "nginx",

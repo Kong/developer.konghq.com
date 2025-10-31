@@ -30,6 +30,15 @@ rows:
                     - Test complex workflows by chaining the responses from requests together
                     - Execute unlimited test runs simultaneously 
                     - Import your tests from Postman
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {:.info}
+                      > Unit tests are planned for deprecation in a future release.
+                      > [Migrate to scripts](/insomnia/scripts/)
+                
       - blocks:
           - type: image
             config:
