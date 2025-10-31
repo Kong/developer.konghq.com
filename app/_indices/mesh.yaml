@@ -91,6 +91,7 @@ sections:
     items:
       - path: /mesh/ingress-gateway-delegated/
       - path: /mesh/using-mesh/managing-ingress-traffic/delegated
+      - path: /mesh/gateway-delegated/
 
   - title: Authentication and Authorization
     items:
