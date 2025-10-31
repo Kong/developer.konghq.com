@@ -27,6 +27,10 @@ policy_target: virtual_cluster
 related_resources:
   - text: Decrypt policy
     url: /event-gateway/policies/decrypt/
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
+  - text: Policies
+    url: /event-gateway/entities/policy/
 ---
 
 This policy can be used to encrypt portions of Kafka records.

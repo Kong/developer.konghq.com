@@ -14,6 +14,14 @@ schema:
   api: event-gateway/knep
   path: /schemas/ForwardToVirtualClusterPolicy
 
+related_resources:
+  - text: Listeners
+    url: /event-gateway/entities/listener/
+  - text: Virtual clusters
+    url: /event-gateway/entities/virtual-cluster/
+  - text: Policies
+    url: /event-gateway/entities/policy/
+
 api_specs:
   - event-gateway/knep
 

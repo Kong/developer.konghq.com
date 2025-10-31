@@ -8,6 +8,16 @@ description: |
 related_resources:
   - text: "{{site.event_gateway}}"
     url: /event-gateway/
+  - text: "Listeners"
+    url: /event-gateway/entities/listener/
+  - text: "Backend clusters"
+    url: /event-gateway/entities/backend-cluster/
+  - text: "Virtual clusters"
+    url: /event-gateway/entities/virtual-cluster/
+  - text: "Policies"
+    url: /event-gateway/entities/policy/
+  - text: "{site.event_gateway}} policy hub"
+    url: /event-gateway/policies/
 
 products:
     - event-gateway

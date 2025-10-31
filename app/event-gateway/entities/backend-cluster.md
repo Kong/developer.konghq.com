@@ -9,7 +9,7 @@ related_resources:
     url: /event-gateway/policies/
   - text: "Policies"
     url: /event-gateway/entities/policy/
-  - text: "Backend Clusters"
+  - text: "Virtual clusters"
     url: /event-gateway/entities/virtual-cluster/
   - text: "Listeners"
     url: /event-gateway/entities/listener/
@@ -52,6 +52,8 @@ Multiple Kafka clusters can be proxied through a single {{site.event_gateway}}. 
 * Authentication credentials for connecting to Kafka clusters
 * TLS verification preferences
 * Metadata refresh intervals for fetching cluster information
+
+{% include_cached /knep/entities-diagram.md entity="D" %}
 
 ## Authentication
 

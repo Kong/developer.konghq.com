@@ -10,7 +10,7 @@ related_resources:
     url: /event-gateway/policies/
   - text: "Policies"
     url: /event-gateway/entities/policy/
-  - text: "Backend Clusters"
+  - text: "Backend clusters"
     url: /event-gateway/entities/backend-cluster/
   - text: "Listeners"
     url: /event-gateway/entities/listener/
@@ -50,19 +50,7 @@ The virtual cluster workflow operates as follows:
 1. The virtual cluster applies policies and proxies the modified request to the backend cluster.
 1. The backend cluster, representing a Kafka cluster, receives the request and sends a response.
 
-{% mermaid %}
-flowchart LR
-    A[Kafka client] --> B[Listener
-    + listener policies]
-    B --> C[Virtual cluster
-    + consume, produce, and cluster policies]
-    C --> D[Backend 
-    cluster]
-
-    D --> C --> B --> A
-
-    style C stroke:#86e2cc
-{% endmermaid %}
+{% include_cached /knep/entities-diagram.md entity="C" %}
 
 {:.info}
 > **Note**: Each virtual cluster can only expose one backend cluster, but you can have multiple virtual clusters connected to one backend.
