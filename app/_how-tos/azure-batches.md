@@ -57,8 +57,10 @@ prereqs:
            ```
         6. Deploy your model in [Azure AI Foundry](https://ai.azure.com/):
            1. Go to **My assets → Models and deployments → Deploy model**.
-           {:.warning}
-           > Standard deployments (`GlobalStandard`) like `gpt-4o` or `gpt-4o-mini` **cannot process batch files**. Use a `globalbatch` or `datazonebatch` deployment for batch operations.
+
+            {:.warning}
+            > Use a `globalbatch` or `datazonebatch` deployment type for batch operations since standard deployments (`GlobalStandard`) cannot process batch files.
+
            2. Export the API key and deployment ID:
            ```bash
            export DECK_AZURE_OPENAI_API_KEY='YOUR_AZURE_OPENAI_MODEL_API_KEY'
