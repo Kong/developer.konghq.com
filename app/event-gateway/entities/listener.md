@@ -36,7 +36,7 @@ layout: gateway_entity
 
 schema:
     api: event-gateway/knep
-    path: /schemas/Listener
+    path: /schemas/EventGatewayListener
 
 breadcrumbs:
   - /event-gateway/
