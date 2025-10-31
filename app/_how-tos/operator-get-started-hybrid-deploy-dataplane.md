@@ -1,6 +1,6 @@
 ---
 title: Deploy a DataPlane
-description: "Deploy a DataPlane using {{ site.gateway_operator_product_name }}."
+description: "Deploy a DataPlane using {{ site.operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
@@ -25,7 +25,7 @@ works_on:
 entities: []
 
 tldr:
-  q: How can I deploy a DataPlane with {{ site.gateway_operator_product_name }}?
+  q: How can I deploy a DataPlane with {{ site.operator_product_name }}?
   a: Create a `DataPlane` object and use the `KonnectExtension` reference.
 
 prereqs:

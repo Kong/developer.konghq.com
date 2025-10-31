@@ -20,7 +20,7 @@ works_on:
   - on-prem
 
 tldr:
-  q: How do I customize the image used for {{ site.base_gateway }} with {{ site.gateway_operator_product_name }}?
+  q: How do I customize the image used for {{ site.base_gateway }} with {{ site.operator_product_name }}?
   a: Use PodTemplateSpec to customize the container spec and specify an `image` name for the `proxy` container.
 
 ---
@@ -42,7 +42,7 @@ dataplane:
 
 ## Validation
 
-To validate that the correct image was used, fetch the pod created by {{ site.gateway_operator_product_name }} and check the `.spec.containers[].image` value:
+To validate that the correct image was used, fetch the pod created by {{ site.operator_product_name }} and check the `.spec.containers[].image` value:
 
 <!--vale off-->
 {% validation kubernetes-resource-property %}

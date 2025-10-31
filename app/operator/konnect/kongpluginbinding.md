@@ -13,7 +13,7 @@ breadcrumbs:
     group: Konnect
     section: Key Concepts
 related_resources:
-  - text: "Enable a Plugin with KGO"
+  - text: "Enable a Plugin with {{ site.operator_product_name_short }}"
     url: /operator/konnect/crd/gateway/plugin/
 
 ---
