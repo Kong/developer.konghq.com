@@ -47,7 +47,7 @@ cleanup:
 automated_tests: false
 related_resources:
   - text: "{{site.event_gateway_short}} configuration schema"
-    url: /api/event-gateway/knep/
+    url: /api/konnect/event-gateway/
   - text: Event Gateway
     url: /event-gateway/
 
@@ -145,9 +145,6 @@ In this configuration file, we use:
 * Original topic names are preserved in the client view
 * This provides transparent prefix handling for clients
 
-## Update the control plane and data plane
-
-{% include_cached /knep/update.md %}
 
 ## Validate topic filtering
 

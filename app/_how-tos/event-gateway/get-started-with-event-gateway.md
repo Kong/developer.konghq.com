@@ -42,7 +42,7 @@ prereqs:
 
 related_resources:
   - text: "{{site.event_gateway_short}} Control Plane API"
-    url: /api/event-gateway/knep/
+    url: /api/konnect/event-gateway/
   - text: Event Gateway
     url: /event-gateway/
 
