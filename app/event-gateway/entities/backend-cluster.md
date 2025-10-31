@@ -32,11 +32,11 @@ works_on:
 products:
     - event-gateway
 api_specs:
-    - event-gateway/knep
+    - konnect/event-gateway
 layout: gateway_entity
 
 schema:
-    api: event-gateway/knep
+    api: konnect/event-gateway
     path: /schemas/BackendCluster
 
 breadcrumbs:

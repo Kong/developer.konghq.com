@@ -37,7 +37,7 @@ prereqs:
 automated_tests: false
 related_resources:
   - text: "{{site.event_gateway_short}} configuration schema"
-    url: /api/event-gateway/knep/
+    url: /api/konnect/event-gateway/
   - text: Event Gateway
     url: /event-gateway/
   - text: Common Expression Language Specification
@@ -116,9 +116,6 @@ In this configuration file, we use:
 * Fallback to original name if no mapping exists
 * Transparent transformation for clients
 
-## Update the control plane and data plane
-
-{% include_cached /knep/update.md %}
 
 ## Validate topic name aliasing
 

@@ -11,7 +11,7 @@ tags:
     - event-gateway
 
 schema:
-  api: event-gateway/knep
+  api: konnect/event-gateway
   path: /schemas/EventGatewayModifyHeadersPolicy
 
 related_resources:
@@ -21,7 +21,7 @@ related_resources:
     url: /event-gateway/entities/policy/
 
 api_specs:
-  - event-gateway/knep
+  - konnect/event-gateway
 
 phases:
   - produce

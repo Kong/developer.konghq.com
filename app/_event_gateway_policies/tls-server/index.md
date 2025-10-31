@@ -11,11 +11,11 @@ tags:
     - event-gateway
 
 schema:
-  api: event-gateway/knep
+  api: konnect/event-gateway
   path: /schemas/EventGatewayTLSListenerPolicy
 
 api_specs:
-  - event-gateway/knep
+  - konnect/event-gateway
 
 related_resources:
   - text: Listeners
