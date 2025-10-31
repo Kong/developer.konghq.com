@@ -21,12 +21,33 @@ resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity
 }
 ```
 {% else %}
+{% case include.presenter.product %}
+{% when 'gateway' %}
 ```hcl
 resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity_type }}" {
   {{ include.presenter }}
   control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
 }
 ```
+{% when 'event-gateway' %}
+```hcl
+resource "{{ include.presenter.terraform_resource_name }}" "my_{{ include.presenter.entity_type | replace: "-", "_" }}" {
+  provider = konnect-beta
+  {{ include.presenter }}
+
+  {%- case include.presenter.policy_target -%}
+  {% when 'listener' %}
+  event_gateway_listener_id = konnect_event_gateway_listener.my_listener.id
+  {%- when 'virtual_cluster' %}
+  virtual_cluster_id = konnect_event_gateway_virtual_cluster.my_virtual_cluster.id
+  {%- endcase %}
+
+  gateway_id = konnect_event_gateway.my_event_gateway.id
+}
+```
+{% else %}
+Unsupported product {{include.presenter.product}}
+{% endcase %}
 {% endif %}
 
 {% if include.presenter.variable_names.size > 0 %}

@@ -321,17 +321,9 @@ To learn more, see:
 Before setting up a virtual cluster, make sure you have a [backend cluster](/event-gateway/entities/backend-cluster/) configured.
 A virtual cluster must connect to an existing backend cluster.
 
-{% navtabs 'virtual-cluster' %}
-{% navtab "Konnect API" %}
-
-Create a virtual cluster using the [{{site.event_gateway_short}} control plane API](/):
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
-status_code: 201
-method: POST
-body:
+{% entity_example %}
+type: virtual-cluster
+data:
   name: example-name
   destination:
     name: example-backend-cluster
@@ -339,88 +331,7 @@ body:
     - type: anonymous
   dns_label: virtual-cluster-1
   acl_mode: passthrough
-{% endkonnect_api_request %}
-<!--vale on-->
-
-{% endnavtab %}
-{% navtab "Konnect UI" %}
-
-1. In the sidebar, navigate to **Event Gateway**.
-
-1. Click an {{site.event_gateway_short}}.
-
-1. In the Gateway's sidebar, navigate to **Virtual Clusters**.
-
-1. Click **New Virtual Cluster**.
-
-1. Configure your virtual cluster.
-
-1. Click **Save and add policy**.
-
-At this point, you can choose to add a policy, or exit out and add a policy later.
-
-{% endnavtab %}
-{% navtab "Terraform" %}
-
-Add the following to your Terraform configuration to create a virtual cluster:
-
-```hcl
-resource "konnect_event_gateway_virtual_cluster" "my_eventgatewayvirtualcluster" {
-  provider    = konnect-beta
-  acl_mode    = "passthrough"
-  authentication = [
-    {
-      sasl_plain = {
-        mediation = "passthrough"
-        principals = [
-          {
-            password = "${env['MY_SECRET']}"
-            username = "example_username"
-          }
-        ]
-      }
-    }
-  ]
-  description = "This is my virtual cluster"
-  destination = {
-    name = "example-backend-cluster"
-  }
-  dns_label  = "vcluster-1"
-  gateway_id = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
-  labels = {
-    key = "value"
-  }
-  name = "my-example-virtual-cluster"
-  namespace = {
-    additional = {
-      consumer_groups = [
-        {
-          glob = {
-            glob = "my-topic-*"
-          }
-        }
-      ]
-      topics = [
-        {
-          exact_list = {
-            conflict = "warn"
-            exact_list = [
-              {
-                backend = "example-backend"
-              }
-            ]
-          }
-        }
-      ]
-    }
-    mode   = "hide_prefix"
-    prefix = "my-prefix"
-  }
-}
-```
-
-{% endnavtab %}
-{% endnavtabs %}
+{% endentity_example %}
 
 ## Schema
 

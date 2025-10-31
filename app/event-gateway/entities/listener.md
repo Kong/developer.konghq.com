@@ -57,60 +57,15 @@ Listeners can have one or more policies that define how the TCP connection is ha
 
 ## Set up a listener
 
-{% navtabs "listener" %}
-
-{% navtab "Konnect API" %}
-Create a listener using the {{site.event_gateway_short}} control plane API:
-{% konnect_api_request %}
-url: /v1/event-gateways/{controlPlaneId}/listeners
-status_code: 201
-method: POST
-body:
+{% entity_example %}
+type: listener
+data:
     name: listener-localhost
     addresses:
     - 0.0.0.0
     ports:
     - 19092
-{% endkonnect_api_request %}
-
-{% endnavtab %}
-
-{% navtab "Terraform" %}
-Add the following to your Terraform configuration to create a listener:
-```hcl
-resource "konnect_event_gateway_listener" "my_eventgatewaylistener" {
-  provider = konnect-beta
-  addresses = [
-    "0.0.0.0"
-  ]
-  description = "My listener"
-  gateway_id  = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
-  labels = {
-    key = "value"
-  }
-  name = "example-listener"
-  ports = [
-    "19092"
-  ]
-}
-```
-
-{% endnavtab %}
-
-{% navtab "UI" %}
-The following creates a new Listener called **example-backend-cluster** with basic configuration:
-1. In {{site.konnect_short_name}}, navigate to [**Event Gateway**](https://cloud.konghq.com/event-gateway/) in the sidebar.
-1. Click your event gateway.
-1. In the Event Gateway sidebar, click **Listeners**.
-1. Click **New listener**.
-1. In the **Name** field, enter `listener-localhost`.
-1. In the **Addresses** field, enter `0.0.0.0`.
-1. In the **Ports** field, enter `19092`.
-1. Click **Save and add policy next**.
-1. Click **Maybe later** to create a listener without a policy.
-{% endnavtab %}
-
-{% endnavtabs %}
+{% endentity_example %}
 
 ## Schema
 

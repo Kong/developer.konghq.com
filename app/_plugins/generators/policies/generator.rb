@@ -20,8 +20,6 @@ module Jekyll
       end
 
       def run # rubocop:disable Metrics/AbcSize
-        return if skip?
-
         Dir.glob(File.join(site.source, "#{self.class.policies_folder}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{self.class.policies_folder}/", '').chomp('/')
 
@@ -31,6 +29,9 @@ module Jekyll
 
       def generate_pages(policy)
         generate_overview_page(policy)
+
+        return if skip?
+
         generate_reference_page(policy)
         generate_example_pages(policy)
       end

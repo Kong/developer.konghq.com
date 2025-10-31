@@ -32,7 +32,8 @@ module Jekyll
               },
               'formats' => formats,
               'variables' => example.fetch('variables', {})
-            }
+            },
+            product: 'gateway'
           ).to_drop
         end
       end

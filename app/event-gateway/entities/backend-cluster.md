@@ -98,18 +98,9 @@ rows:
 
 ## Set up a backend cluster
 
-{% navtabs "backend-cluster" %}
-
-{% navtab "Konnect API" %}
-
-Create a backend cluster using the [{{site.event_gateway_short}} control plane API](/):
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
-status_code: 201
-method: POST
-body:
+{% entity_example %}
+type: backend_cluster
+data:
   name: example-backend-cluster
   bootstrap_servers:
     - host:9092
@@ -118,62 +109,7 @@ body:
   insecure_allow_anonymous_virtual_cluster_auth: true
   tls:
     insecure_skip_verify: false
-{% endkonnect_api_request %}
-<!--vale on-->
-
-{% endnavtab %}
-
-{% navtab "Terraform" %}
-
-Add the following to your Terraform configuration to create a backend cluster:
-
-```hcl
-resource "konnect_event_gateway_backend_cluster" "my_eventgatewaybackendcluster" {
-provider    = konnect-beta
-  authentication = {
-    sasl_scram = {
-    algorithm = "sha256"
-    password = "${env['MY_SECRET']}"
-    username = "example-username"
-    }
-  }
-    bootstrap_servers = [
-    "host:9092"
-  ]
-    description = "This is my backend cluster"
-    gateway_id = "9524ec7d-36d9-465d-a8c5-83a3c9390458"
-    insecure_allow_anonymous_virtual_cluster_auth = false
-    labels = {
-        key = "value"
-    }
-    metadata_update_interval_seconds = 22808
-    name = "example-backend-cluster"
-    tls = {
-            ca_bundle = "example-ca-bundle"
-        insecure_skip_verify = false
-        tls_versions = [
-            "tls12"
-        ]
-    }
-}
-```
-
-{% endnavtab %}
-
-{% navtab "UI" %}
-The following creates a new backend cluster called **example-backend-cluster** with basic configuration:
-1. In {{site.konnect_short_name}}, navigate to [**Event Gateway**](https://cloud.konghq.com/event-gateway/) in the sidebar.
-1. Click your event gateway.
-1. Navigate to **Backend Clusters** in the sidebar.
-1. Click **New backend cluster**.
-1. In the **Name** field, enter `example-backend-cluster`.
-1. In the **Bootstrap servers** field, enter `host:9092`.
-1. From the **Authentication** dropdown menu, select "Anonymous"
-1. Select the **Allow anonymous authentication from virtual clusters** checkbox.
-1. Click **Save**.
-{% endnavtab %}
-
-{% endnavtabs %}
+{% endentity_example %}
 
 ## Schema
 

@@ -45,8 +45,5 @@ columns:
 rows:
   - use_case: "[TLS connections](/event-gateway/policies/tls-server/examples/tls-connection/)"
     description: "Allow clients to connect to {{site.event_gateway_short}} over TLS."
-  - use_case: "[TLS connections based on a condition](/event-gateway/policies/tls-server/examples/conditions/)"
-    description: "Allow clients to connect to {{site.event_gateway_short}} over TLS, but only processes messages from topics that fit a certain condition."
-
 {% endtable %}
 <!--vale on-->

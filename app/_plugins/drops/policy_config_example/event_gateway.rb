@@ -10,6 +10,10 @@ module Jekyll
 
         def_delegators :@plugin, :policy_target
 
+        def product
+          'event-gateway'
+        end
+
         def examples
           @examples ||= targets.map do |target|
             EntityExample::EventGatewayPolicy.new(example: self, target:)
