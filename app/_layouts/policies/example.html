@@ -16,7 +16,7 @@ layout: policies/without_aside
     </div>
   </nav>
   <div class="flex md:hidden bg-secondary rounded-md justify-between py-2 px-4 gap-2 w-full shadow-primary items-center">
-    <select id="plugin-example-dropdown" class="bg-secondary grow">
+    <select id="plugin-example-dropdown" class="bg-secondary grow max-w-full">
       {% for example in page.examples %}
           <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
       {% endfor %}
