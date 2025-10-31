@@ -19,6 +19,7 @@ sections:
       - path: /event-gateway/entities/listener/
       - path: /event-gateway/entities/virtual-cluster/
       - path: /event-gateway/entities/policy/
+      - path: /event-gateway/entities/schema-registry/
   - title: "Event Gateway Policies"
     items:
       - path: /event-gateway/policies/*/**

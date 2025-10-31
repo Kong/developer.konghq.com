@@ -53,10 +53,7 @@ Here's how schema validation gets applied:
 
 {% include_cached /knep/schema-validation-diagram-{{include.phase}}.md %}
 
-## Schema registry
-
-The {{include.name}} policy uses a schema registry for validation. 
-You'll need to create a schema registry before enabling this policy. 
+## Validation types
 
 The {{page.name}} policy supports the following validation options:
 
@@ -70,29 +67,9 @@ rows:
   - validation: "`confluent_schema_registry`" 
     description: |
       Validates messages against the [Confluent schema registry](https://docs.confluent.io/platform/current/schema-registry/index.html).
+
+      To use a Confluent schema registry for validation, first [create a schema registry resource](/event-gateway/entities/schema-registry/), then reference it in this policy.
   - validation: "`json`"
     description: |
       Simple JSON parsing without a schema.
 {% endtable %}
-
-To create a schema registry, make a POST request to the `/schema-registries` endpoint of the {{site.event_gateway_short}} control plane API.
-For example, to create a Confluent schema registry:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/schema-registries
-status_code: 201
-method: POST
-body:
-  name: my-schema-registry
-  type: confluent
-  config:
-    schema_type: avro
-    endpoint: endpoint
-    timeout_seconds: 10
-    authentication:
-      type: basic
-      username: username
-      password: "${env[\"MY_SECRET\"]}"
-{% endkonnect_api_request %}
-<!--vale on-->

@@ -1,5 +1,5 @@
 ---
-title: "{{site.event_gateway_short}} listeners"
+title: "Listeners"
 content_type: reference
 
 description: |
@@ -40,6 +40,7 @@ schema:
 
 breadcrumbs:
   - /event-gateway/
+  - /event-gateway/entities/
 ---
 
 ## What is a listener?

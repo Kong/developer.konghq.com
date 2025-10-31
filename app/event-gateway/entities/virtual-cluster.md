@@ -36,6 +36,7 @@ products:
 
 breadcrumbs:
   - /event-gateway/
+  - /event-gateway/entities/
 ---
 
 ## What is a virtual cluster?

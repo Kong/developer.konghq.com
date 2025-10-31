@@ -219,7 +219,8 @@ rows:
   - header:
       type: h2
       text: Key references
-  - columns:
+  - column_count: 3
+    columns:
       - blocks:
         - type: card
           config:
@@ -278,6 +279,17 @@ rows:
                 - text: Data plane configuration reference
                   url: /event-gateway/configuration/
                   align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Entities and resources"
+            description: |
+              See all the entities that make up {{site.event_gateway}} and its ecosystem
+            icon: /assets/icons/linked-services.svg
+            ctas:
+              - text: See reference
+                url: /event-gateway/entities/
+                align: end
 
   - header:
       type: h2
