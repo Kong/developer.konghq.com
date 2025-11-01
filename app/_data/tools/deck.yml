@@ -2,9 +2,9 @@ name: deck
 
 releases:
   - release: "1.52"
-    version: "1.52.0"
+    version: "1.52.1"
     latest: true
-    released: 2025-09-30
+    released: 2025-10-29
   - release: "1.51"
     version: "1.51.1"
     released: 2025-09-23
