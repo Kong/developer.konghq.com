@@ -2,6 +2,8 @@ openapi: 3.0.3
 info:
   title: Konnect Sliver
   version: 0.0.1
+  x-oas-source: kong/platform-api@42c5c73c8aabdc81dfc9bfc37018d28e1e86cfbc
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/42c5c73c8aabdc81dfc9bfc37018d28e1e86cfbc'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region

@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@55bfd545560fac477803f80ef40cf7ed067c450b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/55bfd545560fac477803f80ef40cf7ed067c450b'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region

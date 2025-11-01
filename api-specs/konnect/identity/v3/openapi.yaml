@@ -7,6 +7,7 @@ info:
     name: Kong
     url: 'https://konghq.com'
   x-oas-source: kong/platform-api@f169553775049169043e5d497b56349f9f22f021
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f169553775049169043e5d497b56349f9f22f021'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
