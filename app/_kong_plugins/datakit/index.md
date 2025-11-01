@@ -702,7 +702,7 @@ See [Conditionally fetching or storing cache data](/plugins/datakit/examples/con
 
 ### cache node {% new_in 3.12 %}
 
-Stored data into cache and fetch cached data from cache.
+Store data into cache and fetch cached data from cache.
 
 Inputs:
 
@@ -846,7 +846,7 @@ invalid dependency (node #1 (CALL) -> node service_response): circular dependenc
 ```
 {:.no-copy-code}
 
-### jq node type
+### jq node
 
 The `jq` node executes a jq script for processing JSON. See the official
 [jq docs](https://jqlang.org/) for more details.
