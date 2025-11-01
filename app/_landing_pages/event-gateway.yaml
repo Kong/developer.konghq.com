@@ -135,6 +135,30 @@ rows:
               url: /event-gateway/policies/
               align: end
 
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "{{site.event_gateway}} in the {{site.konnect_short_name}} UI"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} lets you manage, connect to, and monitor 
+                    the status of all {{site.event_gateway}} control planes (CPs) and data plane nodes (DPs) in one place.
+                    
+                    Key features include:
+                    - Manage control planes and their configurations
+                    - Deploy and monitor data plane nodes
+                    - Find backend clusters, virtual clusters, listeners, and resources directly in a control plane's sidebar
+                    - Create and manage policies through the **Virtual Clusters** and **Listeners** sections
+                    
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/event-gateway-virtual-cluster.png
+              alt_text: "Virtual Clusters in the {{site.konnect_short_name}} UI"
   - header:
       type: h2
       text: "{{site.event_gateway}} entities"
