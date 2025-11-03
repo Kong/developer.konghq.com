@@ -254,7 +254,7 @@ The following creates a new Virtual Cluster called **{{ include.presenter.data['
 At this point, you can choose to add a policy, or exit out and add a policy later.
 
 {% when 'listener' %}
-The following creates a new Listener called **{{ include.presenter.data['name'] }}** with basic configuration:
+The following creates a new listener called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
