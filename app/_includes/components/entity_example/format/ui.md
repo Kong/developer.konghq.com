@@ -280,7 +280,7 @@ The following creates a new listener called **{{ include.presenter.data['name'] 
 
 {% case include.presenter.policy_type %}
 {% when 'modify-headers' %}
-The following creates a new Modify Headers policy called **{{ include.presenter.data['name'] }}** to a Virtual Cluster with basic configuration:
+The following creates a new Modify Headers policy called **{{ include.presenter.data['name'] }}** to a virtual cluster with basic configuration:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
