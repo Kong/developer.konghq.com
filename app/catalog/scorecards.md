@@ -201,7 +201,7 @@ rows:
   - criteria: Time to Restore
     description: |
       Ensures time to restore the service stays below a maximum threshold over a selected time window.
-  - criteria: MInimum Pull Request Approving Reviews
+  - criteria: Minimum Pull Request Approving Reviews
     description: |
       Ensures all merged PRs have at least the required number of approving reviews.
   - criteria: Stale Pull Request Limit
