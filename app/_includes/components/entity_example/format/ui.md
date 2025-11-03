@@ -228,7 +228,7 @@ The following creates a new Partial called **{{ include.presenter.data['name'] }
 1. Click **Save**.
 
 {% when 'backend_cluster' %}
-The following creates a new Backend Cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
+The following creates a new backend cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
