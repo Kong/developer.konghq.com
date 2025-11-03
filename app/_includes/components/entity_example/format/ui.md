@@ -285,7 +285,7 @@ The following creates a new Modify Headers policy called **{{ include.presenter.
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
 1. Navigate to **Virtual Clusters** in the sidebar.
-1. Click on a Virtual Cluster.
+1. Click on a virtual cluster.
 1. Click **Policies**.
 1. Click **New policy**.
 1. Click **Consume**.
