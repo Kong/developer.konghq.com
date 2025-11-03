@@ -241,7 +241,7 @@ The following creates a new backend cluster called **{{ include.presenter.data['
 1. Click **Save**.
 
 {% when 'virtual_cluster' %}
-The following creates a new Virtual Cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
+The following creates a new virtual cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 2. Click an {{site.event_gateway_short}}.
