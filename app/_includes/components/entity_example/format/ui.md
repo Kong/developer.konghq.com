@@ -299,7 +299,7 @@ The following creates a new Modify Headers policy called **{{ include.presenter.
 1.  Click **Save**.
 
 {% when 'forward-to-virtual-cluster' %}
-The following creates a new Forward to Virtual Cluster policy called **{{ include.presenter.data['name'] }}** to a Listener with basic configuration:
+The following creates a new Forward to Virtual Cluster policy called **{{ include.presenter.data['name'] }}** to a listener with basic configuration:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
