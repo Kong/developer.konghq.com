@@ -228,7 +228,20 @@ config:
 ### Re-enable a Target disabled by a passive health check
 
 Passive health checks have the advantage of not producing extra traffic, but they are unable to automatically mark a Target as healthy again. 
-Once the problem with a Target is solved and it is ready to receive traffic, you have to manually inform the health checker that the Target's status is `healthy`:
+Once the problem with a Target is solved and it is ready to receive traffic, you have to manually inform the health checker that the Target's status is `healthy`.
+
+{% navtabs "Re-enable" %}
+{% navtab "Hybrid Mode" %}
+For Hybrid mode deployments both with {{site.konnect_short_name}} and on-prem, you can configure **active health checks** on your Upstream to re-enable a disabled target.
+You can do this in the {{site.konnect_short_name}} UI: 
+1. Select **Upstreams**, then select the desired Upstream.
+1. From the **Actions** menu, click **Edit Configuration**. 
+1. Enable **Active Health Checks**
+1. Click **Save**.
+{% endnavtab %}
+{% navtab "Traditional Mode" %}
+
+In traditional {{site.base_gateway}} deployments, you can manually mark a Target as healthy using the Admin API. This method is not available in {{site.konnect_short_name}} or hybrid mode.
 
 ```bash
 curl -i -X PUT http://localhost:8001/upstreams/example-upstream/targets/10.1.2.3:1234/healthy
@@ -236,6 +249,9 @@ curl -i -X PUT http://localhost:8001/upstreams/example-upstream/targets/10.1.2.3
 
 This command broadcasts a cluster-wide message so that the `healthy` status is propagated to the whole {{site.base_gateway}} cluster. 
 This resets the health counters of the health checkers running in all workers of the {{site.base_gateway}} node, allowing the ring balancer to route traffic to the Target again.
+{% endnavtab %}
+{% endnavtabs %}
+
 
 ### Disable passive health checks
 
