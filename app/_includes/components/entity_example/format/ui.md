@@ -304,7 +304,7 @@ The following creates a new Forward to Virtual Cluster policy called **{{ includ
 1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
 1. Click an {{site.event_gateway_short}}.
 1. Navigate to **Listeners** in the sidebar.
-1. Click on a Listener.
+1. Click on a listener.
 1. Click **Policies**.
 1. Click **New policy**.
 1. Choose **Forward to virtual cluster**.
