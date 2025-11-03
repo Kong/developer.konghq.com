@@ -22,7 +22,7 @@ Kong adopts a structured approach to versioning its products. {{site.mesh_produc
 >    </tr>
 >    <tr>
 >      <td>2.17</td>
->      <td>November 2026</td>
+>      <td>January 2027</td>
 >    </tr>
 >    <tr>
 >      <td>2.21</td>
