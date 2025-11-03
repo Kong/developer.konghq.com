@@ -143,7 +143,7 @@ features:
 {{site.event_gateway}} has a few built-in virtual cluster policies, all of which have their own specific configurations and examples.
 See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=virtual_cluster) for their individual configurations.
 
-Here's an example configuration for the Forward to Modify Headers policy:
+Here's an example configuration for the Modify Headers consume policy:
 
 {% entity_example %}
 type: event_gateway_policy
