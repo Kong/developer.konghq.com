@@ -80,20 +80,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/guides/gateway-delegated-kv.md
-    title: 'Use Kong as a delegated Gateway'
-    description: 'Set up {{site.base_gateway}} as a delegated gateway for {{site.base_product}} to expose internal services to external traffic. This guide covers installing the Kong Ingress Controller, enabling sidecar injection, creating routes, configuring permissions with MeshTrafficPermission, and verifying traffic access.'
-    url: /mesh/gateway-delegated/
-    related_resources:
-      - text: Add a builtin gateway
-        url: '/mesh/add-builtin-gateway/'
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: About KIC
-        url: /kubernetes-ingress-controller/
-    min_version:
-      mesh: '2.6'
-  -
     path: app/_src/guides/migration-to-the-new-policies.md
     title: 'Migration to the new policies'
     description: 'Migrate from old to new policies in {{site.mesh_product_name}} to improve flexibility and transparency.'
