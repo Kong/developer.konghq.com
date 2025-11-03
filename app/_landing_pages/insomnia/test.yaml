@@ -133,3 +133,15 @@ rows:
               text: Learn more
               url: /how-to/write-data-type-tests/
               align: end
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Does Insomnia support all assertions in the Chai Assertions Library?
+              a: |
+                Insomnia supports the full range of **Chai assertions** in both testing modes.  
+                However, minor differences exist between **Post-request tests** and **Unit tests** in the Inso CLI. For detailed examples of supported syntax, go to the [**Chai Assertions documentation**](https://www.chaijs.com/api/assert/).
+         

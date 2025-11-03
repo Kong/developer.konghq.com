@@ -19,6 +19,7 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           "python",
           "hcl",
           "javascript",
+          "liquid",
           "sql",
           "dockerfile",
           "go",
