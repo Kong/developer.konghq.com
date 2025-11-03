@@ -32,6 +32,7 @@ module Jekyll
         @data ||= {
           'name' => @example.fetch('name'),
           'type' => @example.fetch('policy_type'),
+          'parent_policy_id' => @example['parent_policy_id'],
           'condition' => @example['condition']&.chomp,
           'config' => @example.fetch('data')
         }.compact
