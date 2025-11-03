@@ -199,9 +199,6 @@ To completely disable active health checks for an Upstream, set `healthchecks.ac
 
 ## Passive health checks (circuit breakers)
 
-{:.info}
-> **Note:** This feature is not supported in {{site.konnect_short_name}} or hybrid mode.
-
 Passive health checks, also known as circuit breakers, are checks performed based on the requests proxied by {{site.base_gateway}} (HTTP/HTTPS/TCP) with no additional traffic generated.
 When a Target becomes unresponsive, the passive health checker detects that and marks the Target unhealthy. 
 The ring balancer starts skipping this Target and doesn't route any more traffic to it.
