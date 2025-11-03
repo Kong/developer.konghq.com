@@ -45,6 +45,10 @@ module Jekyll
               "#{provider}_#{entity_type}"
             end
 
+            def terraform_resource_name
+              @terraform_resource_name ||= resource_name.gsub('-', '_')
+            end
+
             def render
               tfData = data.clone
               tfData.delete("name")
@@ -165,7 +169,7 @@ module Jekyll
                                              "konnect_event_gateway_#{policy_target}_policy_#{@example_drop.data['type']}"
                                            else
                                              "konnect_event_gateway_#{@example_drop.target.key}_policy_#{@example_drop.data['type']}"
-                                           end
+                                           end.gsub('-', '_')
             end
 
             def policy_target
