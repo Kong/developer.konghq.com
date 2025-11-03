@@ -36,7 +36,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/dev-portal/dev-portal-editor.png
+              url: /assets/images/dev-portal/kongair-example.png
               alt_text: "KongAir Dev Portal"
   - header:
       type: h2
@@ -123,7 +123,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/dev-portal/dev-portal-editor.png
+              url: /assets/images/dev-portal/dev-portal-appearance.png
               alt_text: "KongAir Dev Portal"
   - header:
       type: h2
@@ -145,7 +145,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/dev-portal/dev-portal-editor.png
+              url: /assets/images/dev-portal/dev-portal-navigation.png
               alt_text: "KongAir Dev Portal"
   
   - header:
