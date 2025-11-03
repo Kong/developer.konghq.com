@@ -22,12 +22,8 @@ works_on:
 tags:
   - policy
 
-# schema:
-#     api: event-gateway/
-#     path: /schemas/
-
-# api_specs:
-#     - konnect/event-gateway
+api_specs:
+    - konnect/event-gateway
 
 products:
     - event-gateway
