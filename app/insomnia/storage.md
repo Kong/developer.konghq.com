@@ -17,6 +17,8 @@ related_resources:
     url: /insomnia/manage-insomnia/#security
   - text: SSO
     url: /insomnia/authentication-authorization/#set-up-sso
+  - text: Migrate from scratch pad to Enterprise
+    url: /insomnia/migrate-to-enterprise-from-scratchpad/  
 
 faqs:
   - q: What is the difference between local vault and scratch pad?
@@ -32,7 +34,16 @@ faqs:
   - q: Can I bulk import across multiple Cloud Sync projects?
     a: |
       {% new_in 11.5 %} Yes. Enterprise users can activate this feature by contacting [support](https://insomnia.rest/support) to enable the feature flag on their account.
-      Once activated, go to **Insomnia → Preferences → Data** and select the **Import projects to Org** option. 
+      Once activated, go to **Insomnia → Preferences → Data** and select the **Import projects to Org** option.
+  - q: What are the user and Git Sync limits for the Essentials plan?  
+    a: |
+      On the **Essentials** plan, you can choose one of two configurations:
+      - Activate **Git Sync** with a limit of up to **3 users** per organization.
+      - Deactivate **Git Sync** and allow **unlimited users**.
+
+      You can switch between configurations at any time.  
+      When you reach the limit, Insomnia automatically flags it in the application. For example, if you try to add a fourth user while Git Sync is activated, or activate Git Sync when more than three users are already active.  
+      In either case, you can reduce users or disable Git Sync to continue
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 

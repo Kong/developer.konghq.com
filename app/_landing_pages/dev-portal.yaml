@@ -98,7 +98,6 @@ rows:
             title: Create an API catalog
             description: |
               Create and publish APIs to Dev Portal.
-              Dev Portal APIs serve as a repository for your API specifications and documentation.
             icon: /assets/icons/api.svg
             ctas:
               - text: With the {{site.konnect_short_name}} API
@@ -106,7 +105,7 @@ rows:
               - text: With Terraform
                 url: "/how-to/automate-api-catalog-with-terraform/"
               - text: Create and publish APIs
-                url: "/dev-portal/apis/"
+                url: "/catalog/apis/"
   
       - blocks:
         - type: card

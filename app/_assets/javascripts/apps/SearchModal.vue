@@ -150,17 +150,9 @@ export default {
   },
   mounted() {
     window.addEventListener("keydown", this.handleKeyPress);
-    const homepageSearchInput = document.getElementById("homepage-search-input");
-    if (homepageSearchInput) {
-      homepageSearchInput.addEventListener("click", this.openModal);
-    }
   },
   beforeUnmount() {
     window.removeEventListener("keydown", this.handleKeyPress);
-    const homepageSearchInput = document.getElementById("homepage-search-input");
-    if (homepageSearchInput) {
-      homepageSearchInput.removeEventListener("click", this.openModal);
-    }
   },
   setup(props) {
     const inputElement = ref(null);

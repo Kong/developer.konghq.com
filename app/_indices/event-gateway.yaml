@@ -1,4 +1,4 @@
-title: Event Gateway Documentation Index
+title: Event Gateway Documentation
 sections:
   - title: Overview
     items:
@@ -10,6 +10,7 @@ sections:
       - path: /plugins/kafka-upstream/
       - path: /plugins/confluent/
       - path: /plugins/confluent-consume/
+      - path: /plugins/solace-consume/
       - path: /plugins/solace-upstream/
     auto_exclude: true
   - title: "Kafka Native Event Proxy (KNEP)"

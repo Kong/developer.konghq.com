@@ -23,19 +23,19 @@ breadcrumbs:
 description: "Learn about how to use API Products with classic Dev Portals (v2) to create and publish APIs."
 faqs:
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
-    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/). 
+    a: API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/). 
   - q: I have the `API Products Publisher` role for the API product I want to publish, why don't I see any classic Dev Portals that I can publish to?
     a: To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
 related_resources:
   - text: Create and publish APIs in new Dev Portals (v3)
-    url: /dev-portal/apis/
+    url: /catalog/apis/
   - text: Migrate your classic Dev Portal (v2) Terraform resource
     url: /dev-portal/migrate-classic-dev-portal-resource-with-terraform/
 ---
 
 {:.warning}
 > **API Products are only available with classic Dev Portals (v2)** <br>
-> The new Dev Portal (v3) provides a more modern approach to API creation and publishing. See [Automate your API catalog with Dev Portal](/how-to/automate-api-catalog/) for a complete tutorial about how to create and publish APIs in v3 Dev Portal.
+> The new Dev Portal (v3) provides a more modern approach to API creation and publishing. See [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/) for a complete tutorial about how to create and publish APIs in v3 Dev Portal.
 
 API Products bundles and manages multiple Gateway Services. Each API product consists of at least one API product version, and each API product version is connected to a Gateway Service. You can document your Services and publish API products to a classic Dev Portal (v2) for consumption.
 

@@ -4,6 +4,12 @@ content_type: how_to
 related_resources:
   - text: Kong Premium Partners
     url: /premium-partners/
+  - text: "{{site.konnect_catalog}} Dynatrace integration reference"
+    url: /catalog/integrations/dynatrace/
+  - text: "Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI"
+    url: /how-to/monitor-dynatrace-slos-with-konnect-ui/
+  - text: "Monitor Dynatrace SLOs {{site.konnect_catalog}} with the {{site.konnect_short_name}} API"
+    url: /how-to/monitor-dynatrace-slos-with-konnect-api/
 
 breadcrumbs:
   - /premium-partners/

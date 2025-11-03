@@ -1,6 +1,6 @@
 ---
-title: Create a Route with {{ site.operator_product_name }}
-description: "Create a {{ site.base_gateway }} Service and Route using {{ site.operator_product_name }}."
+title: Create a Route with {{ site.gateway_operator_product_name }}
+description: "Create a {{ site.base_gateway }} Service and Route using {{ site.gateway_operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/create-route/
@@ -26,7 +26,7 @@ works_on:
   - konnect
 
 tldr:
-  q: How can I create a Route with {{ site.operator_product_name }}?
+  q: How can I create a Route with {{ site.gateway_operator_product_name }}?
   a: Create a `KongService` object , then create a `KongRoute` and associate it to the `KongService`.
 next_steps:
   - text: Learn about Custom resource definitions (CRDs)

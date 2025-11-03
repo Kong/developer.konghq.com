@@ -9,7 +9,6 @@ breadcrumbs:
   - /gateway/
 tags:
   - certificates
-  - ssl
 
 works_on:
    - on-prem

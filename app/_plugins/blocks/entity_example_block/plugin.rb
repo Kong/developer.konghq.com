@@ -13,6 +13,10 @@ module Jekyll
       def ordering
         @ordering ||= @example.dig('data', 'ordering')
       end
+
+      def tags
+        @tags ||= @example.dig('data', 'tags') || []
+      end
     end
   end
 end

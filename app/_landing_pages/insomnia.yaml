@@ -37,7 +37,7 @@ rows:
         - type: tabs
           tab_group: install-on-os
           config:
-            - title: MacOS
+            - title: macOS
               include_content: tools/insomnia/install/osx
             - title: Windows
               include_content: tools/insomnia/install/windows
@@ -102,7 +102,7 @@ rows:
             icon:  /assets/icons/profile.svg
             cta:
               text: Learn more
-              url: /inso-cli/
+              url: /insomnia/manage-insomnia/
       - blocks:
         - type: card
           config:
@@ -194,8 +194,8 @@ rows:
           - type: feature_table
             config:
               columns:
-                - title: Hobby
-                  key: hobby
+                - title: Essentials
+                  key: essentials
                 - title: Pro
                   key: pro
                 - title: Enterprise
@@ -203,49 +203,49 @@ rows:
               features:
                 - title: |
                     [Local storage](/insomnia/storage/#local-vault)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [API testing](/insomnia/test/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Cloud-hosted mock server](/insomnia/mock-servers/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Automated API testing](/inso-cli/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [End-to-End Encryption](/insomnia/end-to-end-encryption/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Cloud Sync](/insomnia/storage/#cloud-sync)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Git Sync](/insomnia/storage/#git-sync)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: true
                   ee: true
                 - title: |
                     [Enterprise SSO (SAML, OIDC)](/insomnia/sso/)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: false
                   ee: true
                 - title: |
                     [Enterprise support](/insomnia/enterprise/)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: false
                   ee: true
@@ -293,5 +293,5 @@ rows:
             - q: Where can I find the Insomnia changelog?
               a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
             - q: How often does Insomnia release updates?
-              a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog). 
+              a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog).
             

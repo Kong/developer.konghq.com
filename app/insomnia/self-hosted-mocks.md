@@ -4,28 +4,30 @@ description: Insomnia allows Enterprise users to create self-hosted mock servers
 
 content_type: reference
 layout: reference
-breadcrumbs: 
+breadcrumbs:
   - /insomnia/
   - /insomnia/mock-servers/
 products:
-    - insomnia
+  - insomnia
 
 tier: enterprise
 tags:
-- mock-servers
+  - mock-servers
 
 related_resources:
   - text: Mocks
     url: /insomnia/mock-servers/
   - text: Create a cloud-hosted mock server
     url: /how-to/create-a-cloud-hosted-mock-server/
+  - text: Auto-generate a self-hosted mock server
+    url: /insomnia/ai-in-insomnia/#Use-ai-to-auto-generate-a-mock-server
 ---
 
 Insomnia allows Enterprise users to create self-hosted mock servers.
 
-[Configuration details](https://github.com/Kong/insomnia-mockbin) and a [Docker image](https://github.com/kong/insomnia-mockbin/pkgs/container/insomnia-mockbin) can be found on GitHub.
+Find [Configuration details](https://github.com/Kong/insomnia-mockbin/tree/self-hosted) and a [Docker image](https://github.com/Kong/insomnia-mockbin/pkgs/container/insomnia-mockbin-self-hosted/versions) on GitHub.
 
-You can run it [locally](https://github.com/Kong/insomnia-mockbin?tab=readme-ov-file#installation) with NodeJS or Docker, or you can use Kubernetes.
+To run it [locally](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#installation), use NodeJS, Docker, or Kubernetes.
 
 ## Create a self-hosted mock server with Kubernetes
 
@@ -52,7 +54,7 @@ echo "
       spec:
         containers:
         - name: insomnia-mock
-          image: ghcr.io/kong/insomnia-mockbin:master
+          image: ghcr.io/kong/insomnia-mockbin-self-hosted:latest
           ports:
           - containerPort: 9080
           env:
@@ -61,9 +63,9 @@ echo "
 " | kubectl apply -f -
 ```
 
-### Configure the service 
+### Configure the service
 
-Run the following command create a service to expose Mockbin internally in the cluster:
+To create a service that exposes the Mockbin internally to the cluster, run the following command:
 
 ```sh
 echo "
@@ -83,18 +85,18 @@ echo "
 " | kubectl apply -f -
 ```
 
-### Configure the Ingress 
+### Configure the Ingress
 
-Run the following command to configure the Ingress to manage external access. This configuration will depend on your specific domain and TLS requirements. 
+To configure the Ingress to manage external access, first set your domain and TLS secret, and then apply the manifest. Your domain and TLS settings determine the host and secret of the configuration.
 
-For this example, you'll need to export a domain and a TLS secret name as environment variables:
+To export a domain and a TLS secret name as environment variables, run the following command:
 
 ```sh
 export DOMAIN='your-domain'
 export SECRET_NAME='your-tls-secret-name'
 ```
 
-Then run the following command:
+To apply the Ingress manifest, run the following command:
 
 ```sh
 echo "
@@ -133,4 +135,30 @@ kubectl get services -n mock
 kubectl get ingress -n mock
 ```
 
-Once your mock is deployed, you can point your front-end application to the mock URL.
+Once you deploy your mock, point your front-end application to the mock URL.
+
+## Create an auto-generated mock server
+Use Insomnia’s AI-assisted mock server generation to transform a short description, or an existing API source into a working self-hosted mock server.
+
+You can generate a mock server from any of the following: 
+- **URL**: Generate from a live endpoint response.  
+- **OpenAPI**: Generate from a spec.  
+- **Text**: Generate by providing a description of the API endpoints.
+                    
+{:.info}
+> **Note**: AI-generated mock servers are only supported with self-hosted mocks.
+
+**To create an AI-generated mock server:**
+1. In your Insomnia project, click **Create**.  
+1. Click **Mock Server**.  
+1. Click **Auto-Generate**.  
+1. Select either **URL**, **OpenAPI spec**, or **Text**.
+1. (Optional) Select the **Enable dynamic responses** checkbox.  
+1. (Optional) Click **+ Add Files** to upload extra JSON files or YAML files.
+1. Insert an example mock-server URL.
+1. Click **Create**.
+
+
+**AI-assisted mocks and dynamic mocking**: AI generation focuses on creating a complete mock structure from your input prompt or source. [Dynamic mocking](/insomnia/dynamic-mocking/) extends those generated mocks by making them **request-aware**. 
+                    
+Together, they enable rapid creation of realistic, responsive test environments without manual setup.

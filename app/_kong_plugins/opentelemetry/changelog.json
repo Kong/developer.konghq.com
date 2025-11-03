@@ -1,4 +1,11 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added the `peer.service` attribute to the balancer span to link multiple services together. This allows for better tracing of requests that span multiple services.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added a new configuration field `sampling_strategy` to the plugin. The field allowed you to specify the sampling strategies for OTLP `traces`.\nSet `parent_drop_probability_fallback` if you want parent-based sampling when the parent span contains a `false` sampled flag, and fallback to probability-based sampling otherwise.\nSet `parent_probability_fallback` if you want parent-based sampling when the parent span contains a valid sampled flag (`true` or `false`), and fallback to probability-based sampling otherwise.\nThe default value is `parent_drop_probability_fallback` and keeps the instrumentation, sampling and exporting behaviour as before.",

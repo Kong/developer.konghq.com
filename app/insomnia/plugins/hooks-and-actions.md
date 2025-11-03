@@ -14,7 +14,7 @@ breadcrumbs:
 - /insomnia/plugins/
 
 tags:
-- plugins
+- insomnia-plugins
 
 search_aliases:
   - Insomnia plugins

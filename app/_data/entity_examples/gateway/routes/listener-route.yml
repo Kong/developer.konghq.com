@@ -1,0 +1,3 @@
+name: listener-route
+paths:
+  - /mcp-listener

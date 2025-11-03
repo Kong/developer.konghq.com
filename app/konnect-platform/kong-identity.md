@@ -27,6 +27,8 @@ related_resources:
     url: /how-to/configure-kong-identity-upstream-oauth/
   - text: Configure the OAuth 2.0 Introspection plugin with Kong Identity
     url: /how-to/configure-kong-identity-oauth-introspection/
+  - text: Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration
+    url: /how-to/kong-identity-dcr/
 
 description: |
   Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate and authorize API access. Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. 
@@ -38,6 +40,7 @@ description: |
 > * [Configure the OIDC plugin with Kong Identity](/how-to/configure-kong-identity-oidc/)
 > * [Configure the Upstream OAuth plugin with Kong Identity](/how-to/configure-kong-identity-upstream-oauth/)
 > * [Configure the OAuth 2.0 Introspection plugin with Kong Identity](/how-to/configure-kong-identity-oauth-introspection/)
+> * [Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration](/how-to/kong-identity-dcr/)
 
 Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate, and authorize API access. 
 Specifically, Kong Identity can be used for machine-to-machine authentication. 
@@ -99,14 +102,14 @@ In the authorization code flow:
 5. The client exchanges this code at the `/oauth/token` endpoint for access tokens.
 6. The client uses the access token to call protected APIs.
 
-<!--
-For Consumer Group-scoped plugins:
-- Create a consumer per client in the respective control plane.
-- No need to migrate the client credential to a consumer credential.
-- The OIDC plugin maps clients to consumers using claims.
-- Create the required consumer groups and apply the plugin at the consumer group scope.
-- Add each consumer to the appropriate consumer group in the control plane.
--->
+## Kong Consumer Group claim authorization flow
+When using plugins scoped to Consumer Groups:
+1. In **{{site.konnect_short_name}} > API Gateway > Consumers**, the client creates the Consumer. Each user that needs access is represented as a Consumer.
+
+   {:.info}
+   > If using OIDC, you don’t need to manually map credentials. The OIDC plugin automatically maps clients to Consumers based on token claims.
+2. The client defines the required Consumer Groups in {{site.konnect_short_name}}, and then applies the desired plugin at the Consumer Group scope.
+3. The client assigns each Consumer to the appropriate Consumer Group. Once assigned, the plugin configuration at the group level automatically applies to the Consumer.
 
 ## Dynamic claim templates
 

@@ -1,6 +1,6 @@
 ---
-title: Create a Route with {{ site.operator_product_name }} and {{ site.kic_product_name }}
-description: "Learn how to configure a Route using {{ site.operator_product_name }} and {{ site.kic_product_name }}."
+title: Create a Route with {{ site.gateway_operator_product_name }} and {{ site.kic_product_name }}
+description: "Learn how to configure a Route using {{ site.gateway_operator_product_name }} and {{ site.kic_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/create-route/
@@ -26,7 +26,7 @@ works_on:
 entities: []
 
 tldr:
-  q: How can I create a Route with {{ site.operator_product_name }} and {{ site.kic_product_name }}?
+  q: How can I create a Route with {{ site.gateway_operator_product_name }} and {{ site.kic_product_name }}?
   a: Create a Service, then create an `HTTPRoute`.
 
 prereqs:
