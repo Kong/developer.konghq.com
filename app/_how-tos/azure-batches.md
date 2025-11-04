@@ -164,9 +164,16 @@ variables:
 
 Now, let's use the following command to upload our [batching file](/#batch-jsonl-file) to the `/llm/v1/files` route:
 
-```bash
-curl localhost:8000/files -F purpose="batch" -F file="@batch.jsonl"
-```
+{% validation request-check %}
+url: "/files"
+status_code: 200
+form_data:
+  purpose: "batch"
+  file: "@batch.jsonl"
+extract_body:
+  - name: 'id'
+    variable: FILE_ID
+{% endvalidation %}
 
 Once processed, you will see a JSON response like this:
 
@@ -198,15 +205,17 @@ Now, we can send a `POST` request to the `/batches` Route to create a batch usin
 > In this example we use the `/v1/chat/completions` route for batching because we are sending multiple structured chat-style prompts in OpenAI's chat completions format to be processed in bulk.
 
 
-```bash
-curl http://localhost:8000/batches \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"input_file_id\": \"$FILE_ID\",
-    \"endpoint\": \"/v1/chat/completions\",
-    \"completion_window\": \"24h\"
-  }"
-```
+{% validation request-check %}
+url: '/batches'
+status_code: 201
+body:
+  input_file_id: $FILE_ID
+  endpoint: "/v1/chat/completions"
+  completion_window: "24h"
+extract_body:
+  - name: 'id'
+    variable: BATCH_ID
+{% endvalidation %}
 
 You will receive a response similar to:
 
@@ -253,6 +262,9 @@ Wait for a moment for the batching request to be completed, then check the statu
 
 {% validation request-check %}
 url: /batches/$BATCH_ID
+extract_body:
+  - name: 'output_file_id'
+    variable: OUTPUT_FILE_ID
 {% endvalidation %}
 
 A completed batch response looks like this:
