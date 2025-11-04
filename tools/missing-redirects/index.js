@@ -3,6 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import yaml from "js-yaml";
+import minimist from "minimist";
+
+const argv = minimist(process.argv.slice(2));
+const DEFAULT_URL = "http://localhost:8888";
 
 const baseBranch = process.env.GITHUB_BASE_REF || "main";
 
@@ -108,6 +112,13 @@ function fileToUrl(file) {
   return pathWithoutExtension;
 }
 
+async function fetchExistingUrls(baseUrl) {
+  const response = await fetch(`${baseUrl}/sources_urls_mapping.json`);
+
+  let body = await response.json();
+  return Object.values(body).flat();
+}
+
 function ignoreFile(file) {
   if (!file.startsWith("app/")) {
     return true;
@@ -135,6 +146,8 @@ function patternToRegex(pattern) {
 
 (async function () {
   let missingRedirects = [];
+  const baseUrl = argv.base_url || DEFAULT_URL;
+  const existingUrls = await fetchExistingUrls(baseUrl);
 
   for (const line of lines) {
     const [status, ...files] = line.split(/\s+/);
@@ -146,7 +159,11 @@ function patternToRegex(pattern) {
       }
 
       const oldUrl = fileToUrl(filePath);
-      if (oldUrl && !redirects.some((r) => patternToRegex(r).test(oldUrl))) {
+      if (
+        oldUrl &&
+        !redirects.some((r) => patternToRegex(r).test(oldUrl)) &&
+        !existingUrls.includes(oldUrl)
+      ) {
         missingRedirects.push({ path: filePath, url: oldUrl, status });
       }
     }
