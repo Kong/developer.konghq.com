@@ -231,7 +231,10 @@ Once the problem with a Target is solved and it is ready to receive traffic, you
 {% navtab "Hybrid Mode" %}
 For Hybrid mode deployments both with {{site.konnect_short_name}} and on-prem, you can configure **active health checks** on your Upstream to re-enable a disabled target.
 You can do this in the {{site.konnect_short_name}} UI: 
-1. Select **Upstreams**, then select the desired Upstream.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Select your control plane.
+1. In the API Gateway sidebar, click **Upstreams**.
+1. Select the desired Upstream.
 1. From the **Actions** menu, click **Edit Configuration**. 
 1. Enable **Active Health Checks**
 1. Click **Save**.
