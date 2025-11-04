@@ -290,7 +290,7 @@ rows:
               icon: /assets/icons/data-object.svg
               ctas:
                 - text: Event Gateway API reference
-                  url: /api/event-gateway/
+                  url: /api/konnect/event-gateway/
                   align: end
       - blocks:
           - type: card
