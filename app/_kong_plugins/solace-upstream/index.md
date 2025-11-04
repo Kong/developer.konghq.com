@@ -19,7 +19,6 @@ tags:
   - traffic-control
   - events
   - solace
-  - beta
 
 min_version:
   gateway: '3.11'

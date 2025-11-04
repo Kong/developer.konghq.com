@@ -8,7 +8,7 @@ products:
 description: Import an API specification into Insomnia from a file, URL, or your clipboard.
 
 tags:
-  - documents
+  - insomnia-documents
 
 tldr: 
   q: How do I create a design document from an existing API spec?

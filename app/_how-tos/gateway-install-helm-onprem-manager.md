@@ -40,6 +40,9 @@ next_steps:
     url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
   - text: Enable key authentication on a Gateway Service
     url: /how-to/authenticate-consumers-with-key-auth-enc/
+
+tags:
+  - install
 ---
 
 Kong Manager is the graphical user interface (GUI) for {{ site.base_gateway }}. It uses the Kong Admin API under the hood to administer and control {{ site.base_gateway }}.

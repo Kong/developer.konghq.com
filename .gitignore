@@ -32,3 +32,5 @@ tools/automated-tests/.automated-tests
 tools/automated-tests/testReport.json
 tools/automated-tests/testReportFull.json
 tools/automated-tests/input/
+
+.idea/*

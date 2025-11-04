@@ -43,6 +43,10 @@ next_steps:
     url: /how-to/authenticate-consumers-with-key-auth-enc/
 
 automated_tests: false
+
+tags:
+  - install
+  - helm
 ---
 
 ## Konnect setup

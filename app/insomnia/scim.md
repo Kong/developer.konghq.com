@@ -19,6 +19,10 @@ related_resources:
     url: /insomnia/enterprise-user-management/
   - text: Enterprise account management
     url: /insomnia/enterprise-account-management/
+faqs:
+  - q: How long are SCIM connector tokens valid?
+    a: |
+      SCIM connector tokens in Insomnia are valid for **90 days**. After 90 days, generate a new token and update it in your Identity Provider to keep synchronization active. 
 ---
 
 System for Cross-domain Identity Management (SCIM) allows Insomnia to provision Enterprise member accounts and teams using an Identity Provider configured for [Single Sign-On](/insomnia/sso/). 

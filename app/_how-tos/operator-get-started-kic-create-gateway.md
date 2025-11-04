@@ -27,7 +27,7 @@ entities: []
 
 tldr:
   q: How can I create a Gateway with {{ site.gateway_operator_product_name }} and {{ site.kic_product_name }}?
-  a: Create a `GatewayConfiguration` object, the. create`GatewayClass` instance and a `Gateway` resource.
+  a: Create a `GatewayConfiguration` object, then create a `GatewayClass` instance and a `Gateway` resource.
 
 prereqs:
   show_works_on: true

@@ -8,7 +8,7 @@ products:
   - insomnia
 tags:
   - external-vaults
-  - secret-management
+  - secrets-management
 breadcrumbs:
   - /insomnia/
 search_aliases:

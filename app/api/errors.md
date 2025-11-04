@@ -7,8 +7,7 @@ products:
   - konnect
 
 tags:
-  - api
-
+  - errors
 breadcrumbs:
   - /api/
 description: "Documentation on common API errors when working with Kong products"

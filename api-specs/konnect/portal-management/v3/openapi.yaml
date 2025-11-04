@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.28
+  version: 3.0.29
   description: The management API for Portals
   contact:
     name: Kong
@@ -3568,6 +3568,23 @@ components:
           $ref: '#/components/schemas/PortalCustomDomainVerificationStatus'
         validation_errors:
           $ref: '#/components/schemas/PortalCustomDomainValidationErrors'
+        uploaded_at:
+          description: An ISO-8601 timestamp representation of the ssl certificate upload date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        expires_at:
+          description: An ISO-8601 timestamp representation of the ssl certificate expiration date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        skip_ca_check:
+          description: |
+            True when the provided certificate chain is served as-is without validation against a public trust store.
+          type: boolean
+          readOnly: true
       additionalProperties: false
       required:
         - domain_verification_method
@@ -3592,6 +3609,11 @@ components:
         custom_private_key:
           description: Custom certificate private key to be used for the SSL termination.
           type: string
+        skip_ca_check:
+          description: |
+            Advanced option. If true, the custom certificate is served exactly as provided, without attempting to bundle against a public trust store. Required for certificates issued by an internal/private CA.
+          type: boolean
+          default: false
       additionalProperties: false
       required:
         - domain_verification_method
@@ -4850,6 +4872,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -7362,6 +7385,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string
@@ -7450,6 +7474,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string
@@ -7933,6 +7958,7 @@ components:
                       type: string
                       maxLength: 255
                       minLength: 1
+                      nullable: false
                     description:
                       description: A description of the portal.
                       type: string
@@ -8032,6 +8058,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string
