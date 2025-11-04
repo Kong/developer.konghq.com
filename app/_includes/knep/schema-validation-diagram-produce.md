@@ -5,21 +5,25 @@ sequenceDiagram
   participant client as Client
   participant egw as {{site.event_gateway_short}}
   participant schema as Schema registry
-  participant broker as Event broker
+  participant broker as Kafka broker
 
-  client ->> egw: produce message
-  alt well formatted data
-  egw ->> schema: #123; "username": "johndoe",<br/>"age": 30 #125;
+  client->>egw: Produce message
 
-  schema->>schema: check against schema
-  schema->>egw: successful validation
-  egw->>broker: pass message
+  opt Schema not cached
+    egw->>schema: Fetch schema
+    schema-->>egw: Return schema
+  end
 
-  else bad data
-  egw ->> schema: "#123; bad-data #125;"
-  schema->>schema: check against schema
-  schema -x egw: failed validation
-  egw->>client: warning or error
+  egw->>egw: Validate payload against schema
+
+  alt Validation passed
+    egw->>broker: Forward
+  else Validation failed
+    alt Failure mode: reject
+      egw -x client: Reject the message
+    else Failure mode: mark
+      egw->>broker: Forward (marked invalid)
+    end
   end
 
 {% endmermaid %}
