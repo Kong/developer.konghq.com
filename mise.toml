@@ -1,0 +1,6 @@
+[settings]
+idiomatic_version_file_enable_tools = ["ruby", "node"] # Use idiomatic version file to ensure netlify uses the same version as dev
+[env]
+VITE_PORTAL_API_URL="https://developer.konghq.com/"
+[tools]
+"npm:netlify-cli" = "16.5.1"
