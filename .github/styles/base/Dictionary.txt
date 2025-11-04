@@ -360,6 +360,7 @@ io
 ip
 ips
 iptables
+IPinfo
 Istio
 Istio
 Istio's
@@ -683,6 +684,7 @@ resourceVersion
 Resty
 Resty
 resty
+Resync
 retryOn
 reusability
 rockspec
