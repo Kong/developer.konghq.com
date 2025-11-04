@@ -34,22 +34,22 @@ document.addEventListener("DOMContentLoaded", function () {
   new ToggleSwitchManager();
 });
 
-if (import.meta.env.PROD) {
-  datadogRum.init({
-    applicationId: "cd1c65ad-3e37-401e-8f35-4cb60b9e8b31",
-    clientToken: "pub979ff3cfe46e8ced39f17c739a7b9388",
-    // `site` refers to the Datadog site parameter of your organization
-    // see https://docs.datadoghq.com/getting_started/site/
-    site: "datadoghq.com",
-    service: "developer.konghq.com",
-    env: "prod",
-    // Specify a version number to identify the deployed version of your application in Datadog
-    // version: '1.0.0',
-    sessionSampleRate: 100,
-    sessionReplaySampleRate: 20,
-    defaultPrivacyLevel: "mask-user-input",
-  });
-}
+// if (import.meta.env.PROD) {
+//   datadogRum.init({
+//     applicationId: "cd1c65ad-3e37-401e-8f35-4cb60b9e8b31",
+//     clientToken: "pub979ff3cfe46e8ced39f17c739a7b9388",
+//     // `site` refers to the Datadog site parameter of your organization
+//     // see https://docs.datadoghq.com/getting_started/site/
+//     site: "datadoghq.com",
+//     service: "developer.konghq.com",
+//     env: "prod",
+//     // Specify a version number to identify the deployed version of your application in Datadog
+//     // version: '1.0.0',
+//     sessionSampleRate: 100,
+//     sessionReplaySampleRate: 20,
+//     defaultPrivacyLevel: "mask-user-input",
+//   });
+// }
 
 mermaid.initialize({
   startOnLoad: true,
