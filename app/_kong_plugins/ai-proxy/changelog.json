@@ -238,6 +238,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.6": [
+    {
+      "message": "Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",

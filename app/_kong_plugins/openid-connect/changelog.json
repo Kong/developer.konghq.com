@@ -33,6 +33,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.6": [
+    {
+      "message": "Fixed an issue where for incremental sync, consumer related caches may not be properly invalidated, causing stale data to be served.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where forbidden requests were redirected to `unauthorized_redirect_uri` if configured. After the fix, forbidden requests will be redirected to `forbidden_redirect_uri` if configured.\n",
