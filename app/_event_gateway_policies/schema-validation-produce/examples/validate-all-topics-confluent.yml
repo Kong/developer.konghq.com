@@ -1,6 +1,6 @@
-title: Validate all topics against a Confluent Schema Registry
+title: Validate messages against a Confluent Schema Registry
 
-description: Ensure that every produced topic is validated against a Conflent Schema Registry, and mark any messages that don't conform.
+description: Ensure that messages produced to any topic are validated against a Conflent Schema Registry, and mark messages that don't conform.
 
 weight: 900
 

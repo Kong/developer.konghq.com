@@ -1,15 +1,16 @@
-title: Validate all topics against JSON
+title: Validate messages against JSON for subset of topics
 
-description: Ensure that every produced topic is validated against an inferred JSON schema.
+description: Ensure that messages produced to topics with a specific prefix are valid JSONs, and reject messages that don't conform.
 
 weight: 900
 
 name: validate-all-topics
 type: schema_validation
+condition: >
+  context.topic.name.startsWith("my_prefix")
 config:
   type: json
-  key_validation_action: mark
-  value_validation_action: mark
+  value_validation_action: reject
 
 tools:
   - konnect-api

@@ -1,11 +1,11 @@
-title: Validate all topics against a Confluent Schema Registry
+title: Validate messages against a Confluent Schema Registry
 
-description: Ensure that every consumed topic is validated against a Confluent Schema Registry, and mark any messages that don't conform.
+description: Ensure that all messages consumed from any topic are validated against a Conflent Schema Registry, and mark messages that don't conform.
+
+weight: 900
 
 requirements:
   - A [schema registry](/event-gateway/entities/schema-registry/) configured in the {{site.event_gateway_short}} control plane.
-
-weight: 900
 
 name: validate-all-topics
 type: schema_validation
