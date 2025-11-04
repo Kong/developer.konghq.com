@@ -52,11 +52,11 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Encrypt portions of a message based on a static key](/event-gateway/policies/encrypt/examples/encrypt-with-static-key/)"
-    description: Encrypt a specific key or value based on a key reference name.
+  - use_case: "[Encrypt a message using a static key](/event-gateway/policies/encrypt/examples/encrypt-with-static-key/)"
+    description: Encrypt a message value using a static key.
 
   - use_case: "[Encrypt a message using an AWS key source](/event-gateway/policies/encrypt/examples/encrypt-with-aws/)"
-    description: Encrypt all defined keys or values using an AWS key source.
+    description: Encrypt a message value using an AWS key source.
 
 {% endtable %}
 <!--vale on-->

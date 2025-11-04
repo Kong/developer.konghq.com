@@ -1,9 +1,9 @@
-title: Decrypt everything using an AWS key vault
+title: Decrypt using an AWS key vault
 
-description: Decrypt everything using a specific AWS key vault.
+description: Decrypt a message value using a specific AWS key vault.
 
 extended_description: |
-  Decrypt everything using a specific AWS key vault.
+  Decrypt a message value using a specific AWS key vault.
 
 weight: 900
 
@@ -22,3 +22,4 @@ config:
 
 tools:
   - konnect-api
+  - terraform

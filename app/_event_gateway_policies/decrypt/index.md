@@ -53,10 +53,10 @@ columns:
     key: description
 rows:
   - use_case: "[Decrypt using a static key](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/)"
-    description: Decrypt a key or value based on a key reference name.
+    description: Decrypt a message value based on a key reference name.
 
   - use_case: "[Decrypt using an AWS key source](/event-gateway/policies/decrypt/examples/decrypt-with-aws/)"
-    description: Decrypt a keys or value using an AWS key source.
+    description: Decrypt a message value using an AWS key source.
 
 {% endtable %}
 <!--vale on-->
