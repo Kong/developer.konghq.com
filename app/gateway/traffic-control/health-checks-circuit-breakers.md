@@ -74,9 +74,6 @@ Active health checks are dynamic and can disable and re-enable Targets based on 
 
 * [**Passive checks**](#passive-health-checks-circuit-breakers) (also known as **circuit breakers**): {{site.base_gateway}} analyzes the ongoing traffic being proxied and determines the health of Targets based on their behavior.
 Passive health checks can only disable unhealthy Targets, they never re-enable Targets automatically.
-  
-{:.info}
-> **Note:** Passive health checks are not available in {{site.konnect_short_name}} or hybrid mode.
 
 You can also combine the two modes. 
 For example, you could enable passive health checks to monitor Target health based solely on its traffic, then use active health checks while the Target is unhealthy to re-enable it automatically.
