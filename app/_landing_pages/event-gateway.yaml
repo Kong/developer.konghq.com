@@ -278,7 +278,7 @@ rows:
               Learn about the expressions language used in {{ site.event_gateway }} for conditional fields
             icon: /assets/icons/document.svg
             ctas:
-              - text: Event Gateway API reference
+              - text: Expressions language reference
                 url: /event-gateway/expressions/
                 align: end
       - blocks:
