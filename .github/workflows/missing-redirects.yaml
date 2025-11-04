@@ -2,7 +2,7 @@ name: Missing Redirects
 
 on:
   pull_request:
-    branches: ["**"]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   contents: read
@@ -18,8 +18,16 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
+
+      - name: Wait for Netlify site to be ready
+        uses: jakepartusch/wait-for-netlify-action@f1e137043864b9ab9034ae3a5adc1c108e3f1a48 # v1.4
+        id: waitForNetlify
+        with:
+          site_name: "kongdeveloper"
+          max_timeout: 900
+
       - name: Check for missing redirects
         run: |
           cd tools/missing-redirects
           npm ci
-          node index.js
+          node index.js --base_url https://deploy-preview-${{ github.event.pull_request.number }}--kongdeveloper.netlify.app
