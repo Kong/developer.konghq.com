@@ -391,6 +391,7 @@ render_output: false
 
 Get a list of topics from the `analytics` virtual cluster:
 
+<!--vale off-->
 {% validation custom-command %}
 command: |
   kafkactl -C namespaced-clusters.yaml --context  analytics list topics
@@ -414,12 +415,13 @@ pageviews        1              1
 user_actions     1              1
 ```
 {:.no-copy-code}
+<!--vale on-->
 
 You can access all the topics prefixed with `analytics_` and the `user_action` topic. The `analytics_` prefix is hidden since we set the namespace mode to `hide_prefix`.
 
 
 Get a list of topics from the `payments` virtual cluster:
-
+<!--vale off-->
 {% validation custom-command %}
 command: |
   kafkactl -C namespaced-clusters.yaml --context  payments list topics
@@ -444,6 +446,7 @@ user_actions     1              1
 ```
 {:.no-copy-code}
 
+<!--vale on-->
 
 Now let's try to write to `user_actions`:
 
