@@ -35,12 +35,10 @@ related_resources:
     url: /event-gateway/entities/static-key/
 ---
 
-This policy can be used to encrypt portions of Kafka messages.
-Use this policy to enforce standards for encryption across {{site.event_gateway}} clients. 
-
+This encrypt policy is used to encrypt portions of Kafka messages.
 The Encrypt policy uses AES-256-GCM for encryption, therefore keys must be 256 bits long.
 
-Use this policy together with the [Decrypt policy](/event-gateway/policies/decrypt/), which decrypts portions of a message using the same referenced key.
+Use this policy together with the [Decrypt policy](/event-gateway/policies/decrypt/), which decrypts portions of a message using the same referenced key, to enforce standards for encryption across {{site.event_gateway}} clients. 
 
 ## Use cases
 
@@ -65,12 +63,12 @@ rows:
 
 ## How it works
 
-This policy runs in the [produce phase](/event-gateway/entities/policy/#phases).
+This policy runs during the [produce phase](/event-gateway/entities/policy/#phases).
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
 {% include_cached /knep/how-encrypt-works.md %}
 
-## Key sources
+### Key sources
 
 {% include_cached /knep/key-sources.md name=page.name %}

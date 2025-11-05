@@ -31,7 +31,7 @@ breadcrumbs:
   - /event-gateway/entities/
 ---
 
-## What is a static key?
+## Static keys
 
 Static keys are resources that you can use in the [Encrypt](/event-gateway/policies/encrypt) and [Decrypt](/event-gateway/policies/decrypt) policies to encrypt and decrypt messages.
 

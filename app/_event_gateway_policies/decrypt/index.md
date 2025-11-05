@@ -35,10 +35,10 @@ policy_target: virtual_cluster
 icon: graph.svg
 ---
 
-The Decrypt policy decrypts portions of Kafka messages that were previously encrypted using the referenced key.
-Use this policy to enforce standards for decryption across {{site.event_gateway}} clients.
+The Decrypt policy decrypts portions of Kafka messages that were previously encrypted using a referenced key.  
+Use this policy to enforce consistent decryption standards across {{site.event_gateway}} clients.
 
-The Decrypt policy uses AES-256-GCM for decryption, therefore keys must be 256 bits long.
+This policy uses **AES-256-GCM** for decryption, which requires keys to be **256 bits** in length.
 
 Use this policy together with the [Encrypt policy](/event-gateway/policies/encrypt/), which encrypts portions of a message using the same referenced key.
 
@@ -65,13 +65,13 @@ rows:
 
 ## How it works
 
-This policy runs in the [consume phase](/event-gateway/entities/policy/#phases).
+This policy runs during the [consume phase](/event-gateway/entities/policy/#phases).
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
 {% include_cached /knep/how-encrypt-works.md %}
 
-## Key sources
+### Key sources
 
 {% include_cached /knep/key-sources.md name=page.name %}
 

@@ -1,5 +1,5 @@
-The Encrypt policy adds the `kong/enc` header to the message, referencing the key used to encrypt it by id, e.g., when using a [static key](/event-gateway/entities/static-key/)
-the resulting message should look like:
+The Encrypt policy appends a `kong/enc` header to each message. This header identifies the encryption key by its ID for example when using a [static key](/event-gateway/entities/static-key/)
+the resulting message appears as follows:
 
 ```json
 {
@@ -12,4 +12,5 @@ the resulting message should look like:
 }
 ```
 
-When decrypting a message, the Decrypt policy uses the referenced key in the `kong/enc` header and looks for it in [key_sources](/event-gateway/policies/decrypt/reference/#schema-event-gateway-decrypt-policy-config-key-sources) to obtain the key’s value and uses it to decrypt the message.
+When decryptying, the Decrypt policy reads the key reference from the `kong/enc` header. It then retrieves the corresponding key from the configured [key sources](/event-gateway/policies/decrypt/reference/#schema-event-gateway-decrypt-policy-config-key-sources) and uses it to decrypt the message.
+
