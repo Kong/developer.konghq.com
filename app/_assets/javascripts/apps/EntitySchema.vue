@@ -15,7 +15,7 @@
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
-import axios from 'axios';
+
 import { SchemaRenderer, parseSpecDocument, parsedDocument } from '@kong/spec-renderer'
 import ApiService from '../services/api.js'
 
@@ -48,11 +48,13 @@ watch((specText), async (newSpecText, oldSpecText) => {
 })
 
 async function fetchSpec() {
-  let response = await axios.get(`${import.meta.env.VITE_PORTAL_API_URL}api/v3/apis/${productId.value}/versions/${productVersionId.value}/`)
-  .catch(e => {
+  let response = await versionsAPI.getProductVersionSpec({
+    productId: productId.value,
+    productVersionId: productVersionId.value,
+  }).catch(e => {
     console.log(e)
   })
-  specText.value = response.data.content || response.data.spec.content
+  specText.value = response.data.content
 }
 </script>
 
