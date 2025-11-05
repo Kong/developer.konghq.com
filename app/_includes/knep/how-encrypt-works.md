@@ -12,5 +12,5 @@ the resulting message appears as follows:
 }
 ```
 
-When decryptying, the Decrypt policy reads the key reference from the `kong/enc` header. It then retrieves the corresponding key from the configured [key sources](/event-gateway/policies/decrypt/reference/#schema-event-gateway-decrypt-policy-config-key-sources) and uses it to decrypt the message.
+When decrypting, the Decrypt policy reads the key reference from the `kong/enc` header. It then retrieves the corresponding key from the configured [key sources](/event-gateway/policies/decrypt/reference/#schema-event-gateway-decrypt-policy-config-key-sources) and uses it to decrypt the message.
 
