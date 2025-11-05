@@ -375,6 +375,7 @@ orders           1              1
 pageviews        1              1
 user_actions     1              1
 ```
+{.no-copy-code}
 
 You can access all the topics prefixed with `analytics_` and the `user_action` topic. The `analytics_` prefix is hidden since we set the namespace mode to `hide_prefix`.
 
@@ -391,6 +392,8 @@ Now let's try to write to `user_actions`:
    ```sh
    message produced (partition=0 offset=1)
    ```
+   {.no-copy-code}
+
 1. From the `payments` virtual cluster:
 
    ```sh
@@ -402,3 +405,4 @@ Now let's try to write to `user_actions`:
    ```sh
    Failed to produce message: kafka server: The client is not authorized to access this topic
    ```
+   {.no-copy-code}
