@@ -29,9 +29,11 @@ tools:
 prereqs:
   inline:
     - title: Install kafkactl
+      position: before
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
     - title: Start a local Kafka cluster
+      position: before
       include_content: knep/docker-compose-start
 
 automated_tests: false
