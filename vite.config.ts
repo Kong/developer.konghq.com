@@ -63,17 +63,12 @@ export default ({ command, mode }) => {
     server: {
       cors: { origin: 'http://localhost:8888' },
       proxy: {
-        '/api/v2/products': {
+        '^/api': {
           changeOrigin: true,
           target: portalApiUrl,
           configure: (proxy, options) => {
             mutateCookieAttributes(proxy)
             setHostHeader(proxy)
-          },
-          rewrite: (path) => {
-            return path
-            .replace(/^\/api\/v2\/products/, '/api/v3/apis')
-            .replace(/\/spec$/, '');
           }
         }
       }
