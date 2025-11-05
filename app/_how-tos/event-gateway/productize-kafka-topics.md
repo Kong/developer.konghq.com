@@ -362,7 +362,7 @@ body:
 ## Add Kafka configuration
 
 Use the following Kafka configuration to access your Kafka resources from the virtual clusters:
-
+<!--vale off-->
 {% validation custom-command %}
 command: |
   cat <<EOF > namespaced-clusters.yaml
@@ -386,7 +386,7 @@ expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
-
+<!--vale on-->
 ## Validate
 
 Get a list of topics from the `analytics` virtual cluster:
