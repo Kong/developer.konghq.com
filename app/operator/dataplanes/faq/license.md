@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-{{ site.gateway_operator_product_name }} can enable enterprise features using the `KongLicense` CRD or by providing your license as an environment variable to your DataPlane pods.
+{{ site.operator_product_name }} can enable enterprise features using the `KongLicense` CRD or by providing your license as an environment variable to your DataPlane pods.
 
 ## KongLicense
 
