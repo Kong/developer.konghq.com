@@ -451,7 +451,7 @@ user_actions     1              1
 Now let's try to write to `user_actions`:
 
 1. From the `analytics` virtual cluster:
-
+<!--vale off-->
 {% capture analytics_produce %}
 {% validation custom-command %}
 command: |
@@ -490,3 +490,4 @@ render_output: false
    Failed to produce message: kafka server: The client is not authorized to access this topic
    ```
    {:.no-copy-code}
+<!--vale on-->
