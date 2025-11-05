@@ -31,12 +31,14 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Static keys
+    url: /event-gateway/entities/static-key/
 ---
 
-This policy can be used to encrypt portions of Kafka records.
-Use this policy to enforce standards for encryption across {{site.event_gateway}} clients. 
+This encrypt policy is used to encrypt portions of Kafka messages.
+The Encrypt policy uses AES-256-GCM for encryption, therefore keys must be 256 bits long.
 
-The Encrypt policy uses AES-128-GCM for encryption, therefore keys must be 128 bits long.
+Use this policy together with the [Decrypt policy](/event-gateway/policies/decrypt/), which decrypts portions of a message using the same referenced key, to enforce standards for encryption across {{site.event_gateway}} clients. 
 
 ## Use cases
 
@@ -50,21 +52,23 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Encrypt a specific key from a source](/event-gateway/policies/encrypt/examples/encrypt-a-key/)"
-    description: Decrypt a key based on a specific key reference name.
+  - use_case: "[Encrypt a message using a static key](/event-gateway/policies/encrypt/examples/encrypt-with-static-key/)"
+    description: Encrypt a message value using a static key.
 
-  - use_case: "[Encrypt all keys](/event-gateway/policies/encrypt/examples/encrypt-everything/)"
-    description: Define an AWS key source and encrypt all keys that come from that source.
+  - use_case: "[Encrypt a message using an AWS key source](/event-gateway/policies/encrypt/examples/encrypt-with-aws/)"
+    description: Encrypt a message value using an AWS key source.
 
 {% endtable %}
 <!--vale on-->
 
 ## How it works
 
-This policy runs in the [produce phase](/event-gateway/entities/policy/#phases).
+This policy runs during the [produce phase](/event-gateway/entities/policy/#phases).
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
-## Key sources
+{% include_cached /knep/how-encrypt-works.md %}
+
+### Key sources
 
 {% include_cached /knep/key-sources.md name=page.name %}

@@ -287,6 +287,18 @@ The following creates a new listener called **{{ include.presenter.data['name'] 
 1. Configure your schema registry.
 1. Click **Create**.
 
+{% when 'static_key' %}
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Resources** in the sidebar.
+1. Click **Static keys**
+1. Click **New Static key**.
+1. In the **Key name** field, enter `{{ include.presenter.data['name'] }}`.
+1. In the **Value** field, enter `{{ include.presenter.data['value'] }}`.
+1. Click **Save**.
+
+
 {% when 'event_gateway_policy' %}
 
 {% case include.presenter.policy_type %}

@@ -24,6 +24,8 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Static keys
+    url: /event-gateway/entities/static-key/
 
 phases:
   - consume
@@ -33,10 +35,12 @@ policy_target: virtual_cluster
 icon: graph.svg
 ---
 
-The Decrypt policy decrypts portions of Kafka messages that were previously encrypted using the referenced key.
-Use this policy to enforce standards for decryption across {{site.event_gateway}} clients.
+The Decrypt policy decrypts portions of Kafka messages that were previously encrypted using a referenced key.  
+Use this policy to enforce consistent decryption standards across {{site.event_gateway}} clients.
 
-The Decrypt policy uses AES-128-GCM for decryption, therefore keys must be 128 bits long.
+This policy uses **AES-256-GCM** for decryption, which requires keys to be **256 bits** in length.
+
+Use this policy together with the [Encrypt policy](/event-gateway/policies/encrypt/), which encrypts portions of a message using the same referenced key.
 
 ## Use cases
 
@@ -50,22 +54,24 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Decrypt a specific key from a source](/event-gateway/policies/decrypt/examples/decrypt-a-key/)"
-    description: Decrypt a key based on a specific key reference name.
+  - use_case: "[Decrypt using a static key](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/)"
+    description: Decrypt a message value based on a key reference name.
 
-  - use_case: "[Decrypt all keys](/event-gateway/policies/decrypt/examples/decrypt-everything/)"
-    description: Define an AWS key source and decrypt all keys that come from that source.
+  - use_case: "[Decrypt using an AWS key source](/event-gateway/policies/decrypt/examples/decrypt-with-aws/)"
+    description: Decrypt a message value using an AWS key source.
 
 {% endtable %}
 <!--vale on-->
 
 ## How it works
 
-This policy runs in the [consume phase](/event-gateway/entities/policy/#phases).
+This policy runs during the [consume phase](/event-gateway/entities/policy/#phases).
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
-## Key sources
+{% include_cached /knep/how-encrypt-works.md %}
+
+### Key sources
 
 {% include_cached /knep/key-sources.md name=page.name %}
 
