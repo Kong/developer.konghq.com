@@ -3,7 +3,7 @@ title: Set up {{site.event_gateway}} with Kong Identity OAuth
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
-
+beta: true
 products:
     - event-gateway
 
@@ -14,15 +14,15 @@ tags:
     - event-gateway
     - kafka
 
-description: ""
+description: "Learn how to secure Kafka traffic in Event Gateway with Kong Identity."
 
 tldr: 
-  q: ""
+  q: "How do I secure Kafka traffic in Event Gateway with Kong Identity?"
   a: | 
-    ""
+    "Create an auth server (`konnect_auth_server`), scope (`konnect_auth_server_scopes`), and clients (`konnect_auth_server_clients`) resources with Terraform. Then, create a Event Gateway with ACL (`konnect_event_gateway_virtual_cluster`) and record filtering policies. Each Kafka client authenticates with an access token from Kong Identity, and the Event Gateway enforces topic-level access based on the token’s `client_id` claim."
 
 tools:
-    - konnect-api
+    - terraform
   
 prereqs:
   skip_product: true
@@ -52,110 +52,102 @@ Before you can configure the authentication plugin, you must first create an aut
 
 Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers
-status_code: 200
-method: POST
-body:
-  name: "Kafka Dev"
-  audience: "http://kafka.dev"
-  description: "Auth server for the Kafka dev environment"
-{% endkonnect_api_request %}
-
-Export the auth server ID and issuer URL:
-```sh
-export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
-export ISSUER_URL='YOUR-ISSUER-URL'
+```hcl
+echo '
+resource "konnect_auth_server" "kafka_auth_server" {
+  provider    = konnect-beta
+  name        = "Kafka Dev"
+  audience    = "http://kafka.dev"
+  description = "Auth server for the Kafka dev environment"
+}
+' >> main.tf
 ```
 
 ## Configure the auth server with scopes 
 
-Configure a scope in your auth server using the [`/v1/auth-servers/$AUTH_SERVER_ID/scopes` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerScope):
+Configure a scope in your auth server:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/scopes 
-status_code: 200
-method: POST
-body:
-  name: "kafka"
-  description: "Scope to test Kong Identity"
-  default: false
-  include_in_metadata: false
-  enabled: true
-{% endkonnect_api_request %}
-<!--vale on-->
+```hcl
+echo '
+resource "konnect_auth_server_scopes" "kafka_scope" {
+  provider            = konnect-beta
+  auth_server_id      = konnect_auth_server.kafka_auth_server.id
+  name                = "kafka"
+  description         = "Scope to test Kong Identity"
+  default             = false
+  include_in_metadata = false
+  enabled             = true
 
-Export your scope ID:
-```sh
-export SCOPE_ID='YOUR-SCOPE-ID'
+  depends_on = [konnect_auth_server.kafka_auth_server]
+}
+' >> main.tf
 ```
 
-## Create a client in the auth server
+## Create clients in the auth server
 
 The client is the machine-to-machine credential. In this tutorial, {{site.konnect_short_name}} will autogenerate the client ID and secret, but you can alternatively specify one yourself. 
 
-Configure the client using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient):
+Configure Client 1:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/auth-servers/$AUTH_SERVER_ID/clients
-status_code: 201
-method: POST
-body:
-  name: Client
-  grant_types:
-    - client_credentials
-  allow_all_scopes: false
-  allow_scopes:
-    - $SCOPE_ID
-  access_token_duration: 3600
-  id_token_duration: 3600
-  response_types:
-    - id_token
-    - token
-{% endkonnect_api_request %}
-<!--vale on-->
+```hcl
+echo '
+resource "konnect_auth_server_clients" "kafka_client_1" {
+  provider              = konnect-beta
+  auth_server_id        = konnect_auth_server.kafka_auth_server.id
+  name                  = "Client1"
+  grant_types           = ["client_credentials"]
+  allow_all_scopes      = false
+  allow_scopes          = [konnect_auth_server_scopes.kafka_scope.id]
+  access_token_duration = 3600
+  id_token_duration     = 3600
+  response_types        = ["id_token", "token"]
 
-Export your client secret and client ID:
-```sh
-export CLIENT_SECRET='YOUR-CLIENT-SECRET'
-export CLIENT_ID='YOUR-CLIENT-ID'
+  depends_on = [konnect_auth_server.kafka_auth_server]
+}
+' >> main.tf
+```
+
+Configure Client 2:
+
+```hcl
+echo '
+resource "konnect_auth_server_clients" "kafka_client_2" {
+  provider              = konnect-beta
+  auth_server_id        = konnect_auth_server.kafka_auth_server.id
+  name                  = "Client2"
+  grant_types           = ["client_credentials"]
+  allow_all_scopes      = false
+  allow_scopes          = [konnect_auth_server_scopes.kafka_scope.id]
+  access_token_duration = 3600
+  id_token_duration     = 3600
+  response_types        = ["id_token", "token"]
+
+  depends_on = [konnect_auth_server.kafka_auth_server]
+}
+' >> main.tf
 ```
 
 ## Deploy Event Gateway with Terraform
 
-Now that Kong Identity is set up, you can deploy the Event Gateway using Terraform.
-
-The Terraform configuration creates the following resources:
-
-1. **Event Gateway** (`konnect_event_gateway.event_gateway_terraform`)
-   - Main Event Gateway instance
-
-2. **Backend Cluster** (`konnect_event_gateway_backend_cluster.backend_cluster`)
-   - Connects to Confluent Cloud
-   - SASL_PLAIN authentication with TLS
-
-3. **Virtual Cluster** (`konnect_event_gateway_virtual_cluster.virtual_cluster`)
-   - Namespace with `my-` prefix
-   - SASL_PLAIN and OAuth Bearer authentication
-   - ACL enforcement mode
-
-4. **Listener** (`konnect_event_gateway_listener.listener`)
-   - Listens on `0.0.0.0:19092-19192`
-
-5. **Forwarding Policy** (`konnect_event_gateway_listener_policy_forward_to_virtual_cluster.forward_to_vcluster`)
-   - Routes traffic to virtual cluster
+Now that Kong Identity is set up, you can deploy the Event Gateway using Terraform:
 
 ```hcl
 echo '
 resource "konnect_event_gateway" "event_gateway_terraform" {
   provider = konnect-beta
-  name     = event_gateway_terraform
+  name     = "event_gateway_terraform"
+
+  depends_on = [
+    konnect_auth_server.kafka_auth_server,
+    konnect_auth_server_scopes.kafka_scope
+  ]
 }
 ' >> main.tf
 ```
+
+## Create the backend cluster
+
+Create the backend cluster that connects to Kafka:
 
 ```hcl
 echo '
@@ -166,7 +158,7 @@ resource "konnect_event_gateway_backend_cluster" "backend_cluster" {
   gateway_id  = konnect_event_gateway.event_gateway_terraform.id
 
   authentication = {
-    type = "anonymous"
+    anonymous = {}
   }
 
   bootstrap_servers = [
@@ -186,6 +178,10 @@ resource "konnect_event_gateway_backend_cluster" "backend_cluster" {
 ' >> main.tf
 ```
 
+## Create the virtual cluster
+
+Configure the virtual cluster that enforces ACL and has a namespace with `my-` prefix:
+
 ```hcl
 echo '
 resource "konnect_event_gateway_virtual_cluster" "virtual_cluster" {
@@ -198,7 +194,7 @@ resource "konnect_event_gateway_virtual_cluster" "virtual_cluster" {
     id = konnect_event_gateway_backend_cluster.backend_cluster.id
   }
 
-  acl_mode  = "enforce_on_gateway"
+  acl_mode = "enforce_on_gateway"
   dns_label = "vcluster"
 
   namespace = {
@@ -208,7 +204,7 @@ resource "konnect_event_gateway_virtual_cluster" "virtual_cluster" {
       consumer_groups = [{}]
       topics = [{
         exact_list = {
-          conflict  = "warn"
+          conflict = "warn"
           exact_list = [{
             backend = "extra_topic"
           }]
@@ -217,23 +213,26 @@ resource "konnect_event_gateway_virtual_cluster" "virtual_cluster" {
     }
   }
 
-  authentication = [{
-    oauth_bearer = {
-      mediation = "terminate"
-      jwks = {
-        endpoint = "https://YOUR-ISSUER-HERE.us.identity.konghq.com/auth/.well-known/jwks"
-        timeout  = "1s"
+  authentication = [
+    {
+      oauth_bearer = {
+        mediation = "terminate"
+        jwks = {
+          endpoint = "${konnect_auth_server.kafka_auth_server.issuer}/.well-known/jwks"
+          timeout  = "1s"
+        }
       }
     }
-  }]
-
-  depends_on = [
-    konnect_event_gateway.event_gateway_terraform,
-    konnect_event_gateway_backend_cluster.backend_cluster
   ]
+
+  depends_on = [konnect_event_gateway.event_gateway_terraform, konnect_event_gateway_backend_cluster.backend_cluster]
 }
 ' >> main.tf
 ```
+
+## Create a listener
+
+Configure a listener that listens on `0.0.0.0:19092-19192`:
 
 ```hcl
 echo '
@@ -250,6 +249,10 @@ resource "konnect_event_gateway_listener" "listener" {
 }
 ' >> main.tf
 ```
+
+## Create the forwarding policy
+
+Configure the forwarding policy to route traffic to the virtual cluster:
 
 ```hcl
 echo '
@@ -271,27 +274,25 @@ resource "konnect_event_gateway_listener_policy_forward_to_virtual_cluster" "for
     }
   }
 
-  depends_on = [
-    konnect_event_gateway.event_gateway_terraform,
-    konnect_event_gateway_virtual_cluster.virtual_cluster
-  ]
+  depends_on = [konnect_event_gateway.event_gateway_terraform, konnect_event_gateway_virtual_cluster.virtual_cluster]
 }
 ' >> main.tf
 ```
 
-Add ACL policy for user1:
+## Create ACL policies for clients
+
+Add the ACL policy for Client 1:
+
 ```hcl
-echo '
-resource "konnect_event_gateway_cluster_policy_acls" "acl_topic_policy_producer" {
+cat >> main.tf <<'HCL'
+resource "konnect_event_gateway_cluster_policy_acls" "acl_topic_policy_u1" {
   provider           = konnect-beta
-  name               = "acl_topic_policy_producer"
-  description        = "Producer client: full topic access"
+  name               = "acl_topic_policy1"
+  description        = "ACL policy for ensuring access to topics based on principals"
   gateway_id         = konnect_event_gateway.event_gateway_terraform.id
   virtual_cluster_id = konnect_event_gateway_virtual_cluster.virtual_cluster.id
 
-  # Replace with the actual client id that gets the token
-  condition = "context.auth.claims.client_id == '${CLIENT_ID}'"
-
+  condition = "context.auth.principal.name == '${konnect_auth_server_clients.kafka_client_1.id}'"
   config = {
     rules = [
       {
@@ -302,95 +303,231 @@ resource "konnect_event_gateway_cluster_policy_acls" "acl_topic_policy_producer"
           { name = "write" }
         ]
         resource_type = "topic"
-        resource_names = [{ match = "*" }]
+        resource_names = [{
+          match = "*"
+        }]
       }
     ]
   }
 }
-' >> main.tf
+HCL
 ```
 
-Add ACL policy for user2:
+Add the ACL policy for Client 2:
+
 ```hcl
-echo '
-resource "konnect_event_gateway_cluster_policy_acls" "acl_topic_policy_reader" {
+cat >> main.tf <<'HCL'
+resource "konnect_event_gateway_cluster_policy_acls" "acl_topic_policy_u2" {
   provider           = konnect-beta
-  name               = "acl_topic_policy_reader"
-  description        = "Reader client: describe + read"
+  name               = "acl_topic_policy2"
+  description        = "ACL policy for ensuring access to topics based on principals"
   gateway_id         = konnect_event_gateway.event_gateway_terraform.id
   virtual_cluster_id = konnect_event_gateway_virtual_cluster.virtual_cluster.id
 
-  condition = "context.auth.claims.client_id == reader-app"
-
+  condition = "context.auth.principal.name == '${konnect_auth_server_clients.kafka_client_2.id}'"
   config = {
     rules = [
       {
-        action         = "allow"
-        operations     = [{ name = "describe" }]
-        resource_type  = "topic"
-        resource_names = [
-          { match = "topic" },
-          { match = "topic-encrypted" },
-          { match = "extra_topic" }
+        action = "allow"
+        operations = [
+          { name = "describe" }
         ]
-      },
-      {
-        action         = "allow"
-        operations     = [{ name = "read" }]
-        resource_type  = "topic"
-        resource_names = [{ match = "topic" }]
+        resource_type = "topic"
+        resource_names = [{
+          match = "topic"
+          }, {
+          match = "topic-encrypted"
+          }, {
+          match = "extra_topic"
+        }]
+        }, {
+        action = "allow"
+        operations = [
+          { name = "read" }
+        ]
+        resource_type = "topic"
+        resource_names = [{
+          match = "topic"
+        }]
       }
     ]
   }
 }
-' >> main.tf
+HCL
 ```
 
-## Initialize and Apply Terraform
+Add skip record policy on orders topic based on header and principal:
 
-```sh
-terraform init
-terraform plan
-terraform apply
+```hcl
+cat >> main.tf <<'HCL'
+resource "konnect_event_gateway_consume_policy_skip_record" "skip_record" {
+  provider           = konnect-beta
+  name               = "skip_records"
+  description        = "skip records"
+  gateway_id         = konnect_event_gateway.event_gateway_terraform.id
+  virtual_cluster_id = konnect_event_gateway_virtual_cluster.virtual_cluster.id
+
+  condition = "record.headers['internal'] == 'true' && context.auth.principal.name != '${konnect_auth_server_clients.kafka_client_1.id}'"
+}
+HCL
 ```
 
-This will create:
-- Event Gateway instance
-- Backend cluster connection to Confluent Cloud
-- Virtual cluster with namespace configuration
-- ACL policies for user1 and user2
-- Skip record policy for filtering
-- Listener on localhost:19092-19192
-- Forwarding policy to virtual cluster
+## Create outputs 
 
-## Generate an Access Token
+Create an `outputs.tf` file with your token endpoint, client IDs, and client secrets:
 
-The Gateway Service requires an access token from the client to access the Service. Generate a token for the client by making a call to the issuer URL:
+```hcl
+echo '
+output "token_endpoint" {
+  value = "${konnect_auth_server.kafka_auth_server.issuer}/oauth/token"
+}
+
+output "client_id_1" {
+  value = konnect_auth_server_clients.kafka_client_1.id
+}
+
+output "client_secret_1" {
+  value     = konnect_auth_server_clients.kafka_client_1.client_secret
+  sensitive = true
+}
+
+output "client_id_2" {
+  value = konnect_auth_server_clients.kafka_client_2.id
+}
+
+output "client_secret_2" {
+  value     = konnect_auth_server_clients.kafka_client_2.client_secret
+  sensitive = true
+}
+' >> outputs.tf
+```
+
+## Create the resources
+
+Create all of the defined resources using Terraform:
+
+```bash
+terraform apply -auto-approve
+```
+
+You will see five resources created:
+
+```text
+Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
+```
+{:.no-copy-code}
+
+## Generate Access Tokens
+
+After Terraform deployment, generate OAuth tokens for each client.
+
+Get the token endpoint from your Terraform output:
 
 ```sh
-curl -X POST "$ISSUER_URL/oauth/token" \
+export TOKEN_ENDPOINT=$(terraform output -raw token_endpoint)
+```
+
+Generate the access token for Client 1 (full access):
+
+```sh
+export CLIENT_ID_1=$(terraform output -raw client_id_1)
+export CLIENT_SECRET_1=$(terraform output -raw client_secret_1)
+
+curl -X POST "$TOKEN_ENDPOINT" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=client_credentials" \
-  -d "client_id=$CLIENT_ID" \
-  -d "client_secret=$CLIENT_SECRET" \
+  -d "client_id=$CLIENT_ID_1" \
+  -d "client_secret=$CLIENT_SECRET_1" \
   -d "scope=kafka"
 ```
 
-Export your access token:
+Export the Client 1's access token:
 
 ```sh
-export ACCESS_TOKEN='YOUR-ACCESS-TOKEN'
+export ACCESS_TOKEN_CLIENT1='YOUR-ACCESS-TOKEN-FROM-RESPONSE'
 ```
 
-## Connect with OAuth Bearer Token
+Generate the access token for Client 2 (limited access):
+
+```sh
+export CLIENT_ID_2=$(terraform output -raw client_id_2)
+export CLIENT_SECRET_2=$(terraform output -raw client_secret_2)
+
+curl -X POST "$TOKEN_ENDPOINT" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=$CLIENT_ID_2" \
+  -d "client_secret=$CLIENT_SECRET_2" \
+  -d "scope=kafka"
+```
+
+Export the Client 2's access token:
+
+```sh
+export ACCESS_TOKEN_CLIENT2='YOUR-ACCESS-TOKEN-FROM-RESPONSE'
+```
+
+## Validate
+
+Run the following to validate your configuration.
+
+### Connect with OAuth Bearer Token (Client 1 - Full Access)
+
+Produce messages to any topic:
+
+```sh
+kafka-console-producer --bootstrap-server localhost:19092 \
+  --topic test-topic \
+  --producer-property security.protocol=SASL_PLAINTEXT \
+  --producer-property sasl.mechanism=OAUTHBEARER \
+  --producer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT1'";' \
+  --producer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
+```
+
+Consume messages from any topic:
 
 ```sh
 kafka-console-consumer --bootstrap-server localhost:19092 \
-  --topic my-test-topic \
+  --topic test-topic \
   --consumer-property security.protocol=SASL_PLAINTEXT \
   --consumer-property sasl.mechanism=OAUTHBEARER \
-  --consumer-property "sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token=\"$ACCESS_TOKEN\";" \
+  --consumer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT1'";' \
   --consumer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
 ```
+
+### Connect with OAuth Bearer Token (Client 2 - Limited Access)
+
+Client2 can only read from the `topic` topic:
+
+```sh
+kafka-console-consumer --bootstrap-server localhost:19092 \
+  --topic topic \
+  --consumer-property security.protocol=SASL_PLAINTEXT \
+  --consumer-property sasl.mechanism=OAUTHBEARER \
+  --consumer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT2'";' \
+  --consumer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
+```
+{:.info}
+> **Note**: Client 2 cannot produce messages or read from other topics due to ACL restrictions.
+
+### Test Record Filtering
+
+Client 1 can see all records, including those with `internal=true` header:
+
+```sh
+# Produce a record with internal header (as Client1)
+echo "internal-data" | kafka-console-producer --bootstrap-server localhost:19092 \
+  --topic test-topic \
+  --property "parse.key=false" \
+  --property "key.separator=:" \
+  --property "header.separator=|" \
+  --property "headers=internal:true" \
+  --producer-property security.protocol=SASL_PLAINTEXT \
+  --producer-property sasl.mechanism=OAUTHBEARER \
+  --producer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT1'";' \
+  --producer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
+```
+
+Client 2 will NOT see records with `internal=true` header due to the skip record policy.
 
 
