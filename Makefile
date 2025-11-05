@@ -7,14 +7,12 @@ RUBY_MATCH := $(shell [[ "$(shell ruby -v)" =~ "ruby $(shell cat .ruby-version)"
 .PHONY: ruby-version-check scaffold-plugin
 ruby-version-check:
 ifndef RUBY_MATCH
-	$(error ruby $(RUBY_VERSION_REQUIRED) is required. Found $(RUBY_VERSION). $(newline)Run `rbenv install $(RUBY_VERSION_REQUIRED)`)$(newline)
+	$(error ruby $(RUBY_VERSION_REQUIRED) is required. Found $(RUBY_VERSION). $(newline)Run 'mise activate' or prefix you make command with 'mise x --' see README.md for more information)$(newline)
 endif
 
-install-prerequisites:
-	npm install -g netlify-cli@16.5.1
-
 # Installs npm packages and gems.
-install: ruby-version-check
+install:
+	mise install
 	git submodule update --init
 	npm ci
 	bundle install
