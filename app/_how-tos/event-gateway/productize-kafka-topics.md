@@ -76,6 +76,7 @@ We'll have an `analytics` category and a `payments` category, and both of these 
 
 First, we need to create these sample topics in the Kafka cluster we created in the [prerequisites](#start-a-local-kakfa-cluster):
 
+<!--vale off-->
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context direct create topic analytics_pageviews
@@ -89,10 +90,11 @@ expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!--vale on-->
 
 ## Create a backend cluster
 
-Use the following command to create a [backend cluster](/event-gateway/entities/backend-cluster/) that points to the Kafka servers we created:
+Use the following command to create a [backend cluster](/event-gateway/entities/backend-cluster/) that connects to the Kafka servers you set up:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -122,7 +124,7 @@ export BACKEND_CLUSTER_ID="YOUR-BACKEND-CLUSTER-ID"
 
 ## Create an analytics virtual cluster
 
-Use the following command to create a first virtual cluster for the `analytics` category:
+Use the following command to create the first virtual cluster for the `analytics` category:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -156,16 +158,17 @@ extract_body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-This virtual cluster will be used to access topics with the `analytics_` prefix, and the `user_actions` topic.
+This virtual cluster provides access to topics with the `analytics_` prefix, and the `user_actions` topic.
 
 Export the virtual cluster ID to your environment:
+
 ```sh
 export ANALYTICS_VC_ID="YOUR-ANALYTICS-VIRTUAL-CLUSTER-ID"
 ```
 
 ## Create a payments virtual cluster
 
-Now let's create the `payments` virtual cluster:
+Now create the `payments` virtual cluster:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -208,7 +211,8 @@ export PAYMENTS_VC_ID="YOUR-PAYMENTS-VIRTUAL-CLUSTER-ID"
 
 ## Create an analytics listener with a policy
 
-For testing purposes, we'll use port forwarding to route to each virtual cluster. In production, you should use SNI routing instead.
+For testing purposes, we'll use **port forwarding** to route traffic to each virtual cluster.  
+In production environments, you should use **SNI routing** instead.
 
 Use the following command to create the listener for the `analytics` category:
 
