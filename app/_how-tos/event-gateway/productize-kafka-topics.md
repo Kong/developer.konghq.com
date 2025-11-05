@@ -35,11 +35,27 @@ prereqs:
       position: before
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
+    - title: Define a context for kafkactl
+      position: before
+      content: |
+        Let's define a context we can use to create Kafka topics.
+
+        ```bash
+        cat <<EOF > kafkactl.yaml
+        contexts:
+          direct:
+            brokers:
+              - localhost:9095
+              - localhost:9096
+              - localhost:9094
+        EOF
+        ```
+        {: data-test-prereqs="block" }
+
     - title: Start a local Kafka cluster
       position: before
       include_content: knep/docker-compose-start
 
-automated_tests: false
 related_resources:
   - text: Event Gateway
     url: /event-gateway/
@@ -60,15 +76,19 @@ We'll have an `analytics` category and a `payments` category, and both of these 
 
 First, we need to create these sample topics in the Kafka cluster we created in the [prerequisites](#start-a-local-kakfa-cluster):
 
-```sh
-docker-compose exec kafka1 opt/kafka/bin/kafka-topics.sh --create --topic analytics_pageviews --partitions 1 --replication-factor 1 --bootstrap-server kafka1:9092
-docker-compose exec kafka1 opt/kafka/bin/kafka-topics.sh --create --topic analytics_clicks --partitions 1 --replication-factor 1 --bootstrap-server kafka1:9092
-docker-compose exec kafka1 opt/kafka/bin/kafka-topics.sh --create --topic analytics_orders --partitions 1 --replication-factor 1 --bootstrap-server kafka1:9092
-docker-compose exec kafka1 opt/kafka/bin/kafka-topics.sh --create --topic payments_transactions --partitions 1 --replication-factor 1 --bootstrap-server kafka1:9092
-docker-compose exec kafka1 opt/kafka/bin/kafka-topics.sh --create --topic payments_refunds --partitions 1 --replication-factor 1 --bootstrap-server kafka1:9092
-docker-compose exec kafka1 opt/kafka/bin/kafka-topics.sh --create --topic payments_orders --partitions 1 --replication-factor 1 --bootstrap-server kafka1:9092
-docker-compose exec kafka1 opt/kafka/bin/kafka-topics.sh --create --topic user_actions --partitions 1 --replication-factor 1 --bootstrap-server kafka1:9092
-```
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context direct create topic analytics_pageviews
+  kafkactl -C kafkactl.yaml --context direct create topic analytics_clicks
+  kafkactl -C kafkactl.yaml --context direct create topic analytics_orders
+  kafkactl -C kafkactl.yaml --context direct create topic payments_transactions
+  kafkactl -C kafkactl.yaml --context direct create topic payments_refunds
+  kafkactl -C kafkactl.yaml --context direct create topic payments_orders
+  kafkactl -C kafkactl.yaml --context direct create topic user_actions
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 ## Create a backend cluster
 
@@ -339,33 +359,47 @@ body:
 
 Use the following Kafka configuration to access your Kafka resources from the virtual clusters:
 
-```sh
-cat <<EOF > kafkactl.yaml
-contexts:
-  analytics:
-    brokers:
-      - localhost:19092
-    sasl:
-      enabled: true
-      username: analytics_user
-      password: analytics_password
-  payments:
-    brokers:
-      - localhost:19096
-    sasl:
-      enabled: true
-      username: payments_user
-      password: payments_password
-EOF
-```
+{% validation custom-command %}
+command: |
+  cat <<EOF > namespaced-clusters.yaml
+  contexts:
+    analytics:
+      brokers:
+        - localhost:19092
+      sasl:
+        enabled: true
+        username: analytics_user
+        password: analytics_password
+    payments:
+      brokers:
+        - localhost:19096
+      sasl:
+        enabled: true
+        username: payments_user
+        password: payments_password
+  EOF
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 ## Validate
 
 Get a list of topics from the `analytics` virtual cluster:
 
-```sh
-docker run --network kafka_event_gateway -v $HOME/kafkactl.yaml:/etc/kafkactl/config.yml deviceinsight/kafkactl:latest --context analytics get topics
-```
+{% validation custom-command %}
+command: |
+  kafkactl -C namespaced-clusters.yaml --context  analytics list topics
+expected:
+  return_code: 0
+  message: |
+    TOPIC            PARTITIONS     REPLICATION FACTOR
+    clicks           1              1
+    orders           1              1
+    pageviews        1              1
+    user_actions     1              1
+render_output: false
+{% endvalidation %}
 
 You should see the following result:
 ```sh
@@ -375,34 +409,77 @@ orders           1              1
 pageviews        1              1
 user_actions     1              1
 ```
-{.no-copy-code}
+{:.no-copy-code}
 
 You can access all the topics prefixed with `analytics_` and the `user_action` topic. The `analytics_` prefix is hidden since we set the namespace mode to `hide_prefix`.
+
+
+Get a list of topics from the `payments` virtual cluster:
+
+{% validation custom-command %}
+command: |
+  kafkactl -C namespaced-clusters.yaml --context  payments list topics
+expected:
+  return_code: 0
+  message: |
+    TOPIC            PARTITIONS     REPLICATION FACTOR
+    orders           1              1
+    refunds          1              1
+    transactions     1              1
+    user_actions     1              1
+render_output: false
+{% endvalidation %}
+
+You should see the following result:
+```sh
+TOPIC            PARTITIONS     REPLICATION FACTOR
+orders           1              1
+refunds          1              1
+transactions     1              1
+user_actions     1              1
+```
+{:.no-copy-code}
+
 
 Now let's try to write to `user_actions`:
 
 1. From the `analytics` virtual cluster:
 
-   ```sh
-   docker run --network kafka_event_gateway -v $HOME/kafkactl.yaml:/etc/kafkactl/config.yml deviceinsight/kafkactl:latest --context analytics produce user_actions --value='kafka record'
-   ```
+{% capture analytics_produce %}
+{% validation custom-command %}
+command: |
+  kafkactl -C namespaced-clusters.yaml --context  analytics produce user_actions --value='kafka record'
+expected:
+  return_code: 0
+  message: message produced (partition=0 offset=0)
+render_output: false
+{% endvalidation %}
+{% endcapture %}
+{{analytics_produce | indent: 3}}
 
    You should get the following result:
 
    ```sh
-   message produced (partition=0 offset=1)
+   message produced (partition=0 offset=0)
    ```
-   {.no-copy-code}
+   {:.no-copy-code}
 
 1. From the `payments` virtual cluster:
-
-   ```sh
-   docker run --network kafka_event_gateway -v $HOME/kafkactl.yaml:/etc/kafkactl/config.yml deviceinsight/kafkactl:latest --context payments produce user_actions --value='kafka record'
-   ```
+{% capture payments_produce %}
+{% validation custom-command %}
+command: |
+  kafkactl -C namespaced-clusters.yaml --context  payments produce user_actions --value='kafka record'
+expected:
+  return_code: 0
+  message: "Failed to produce message: kafka server: The client is not authorized to access this topic"
+render_output: false
+{% endvalidation %}
+{% endcapture %}
+{{analytics_produce | indent: 3}}
 
    Since we denied write access to the `user_actions` topic from the `payments` virtual cluster, you should get the following result:
-   
+
    ```sh
    Failed to produce message: kafka server: The client is not authorized to access this topic
    ```
-   {.no-copy-code}
+   {:.no-copy-code}
