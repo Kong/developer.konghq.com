@@ -7,18 +7,18 @@ extended_description: |
 
 weight: 900
 
-requirements: 
- - "A corresponding [Encrypt policy](/event-gateway/policies/encrypt/examples/encrypt-with-aws/). Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
+requirements:
+ - "A corresponding [Encrypt policy](/event-gateway/policies/encrypt/examples/encrypt-with-aws/).
+   Event Gateway uses the AWS ARN from the Encrypt policy to find the key for the Decrypt policy."
 
 type: decrypt
 name: decrypt-using-aws
 config:
   failure_mode: passthrough
+  part_of_record:
+    - value
   key_sources:
     - type: aws
-  decrypt:
-    - part_of_record: key
-    - part_of_record: value
 
 tools:
   - konnect-api

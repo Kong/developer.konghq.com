@@ -11,17 +11,17 @@ type: encrypt
 name: encrypt-using-aws
 config:
   failure_mode: passthrough
-  key_sources:
-    - type: aws
-  encrypt:
-    - part_of_record: value
-      key_id: ${key_id}
+  part_of_record:
+    - value
+  encryption_key:
+    type: aws
+    arn: ${key_id}
 
 variables:
   key_id:
     description: |
       A KMS key ARN in the following format: `arn:aws:kms:REGION:ACCOUNT_ID:key/KEY_ID`
-    value: "$AWS_KEY_ID"
+    value: "$AWS_KEY_ARN"
 
 tools:
   - konnect-api

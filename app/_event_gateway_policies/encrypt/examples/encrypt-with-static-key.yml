@@ -5,32 +5,25 @@ description: Encrypt a message value using a static key.
 extended_description: |
   Encrypt a message value using a static key.
 
-  The key must be a secret reference to a 128-bit (16-byte) base64-encoded string, or the key itself as a string.
+  The [static key](/event-gateway/entities/static-key/) must be a secret reference to a 256-bit (32-byte) base64-encoded string, or the key itself as a string.
   We recommend using secret references to avoid exposing sensitive data in your configuration.
 
 weight: 900
 
 requirements:
- - "A corresponding [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/). Event Gateway uses the key ID from the Encrypt policy along with the actual key in the Decrypt policy to successfully decrypt."
-
-variables:
-  key:
-    description: A custom value for the static key `static://key` that will be used for encrypting the `value` of the Kafka records.
-    value: $KEY
+ - "A [static key](/event-gateway/entities/static-key/) named `my-static-key`."
+ - "A corresponding [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/)."
 
 type: encrypt
 name: encrypt-static-key
 config:
   failure_mode: error
-  encrypt:
-    - part_of_record: value
-      key_id: static://key
-
-  key_sources:
-    - type: static
-      keys:
-        - id: static://key
-          key: ${key}
+  part_of_record:
+    - value
+  encryption_key:
+    type: static
+    key:
+      name: my-static-key
 
 tools:
   - konnect-api
