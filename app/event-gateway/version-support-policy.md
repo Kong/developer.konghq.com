@@ -1,6 +1,6 @@
 ---
 title: "{{site.event_gateway}} version support policy"
-content_type: reference
+content_type: policy
 layout: reference
 
 products:
@@ -100,7 +100,7 @@ Kong follows a structured process for addressing bugs:
 * **Other bugs and feature requests:**  
   Assessed for severity and impact. Fixes are generally applied only to the **latest minor version** of the **latest major release**.
 
-> Customers with Platinum or higher subscriptions may request special-case fixes outside this process; such requests are evaluated at Kong’s discretion.
+> Customers with Enterprise Platinum or higher subscriptions may request special-case fixes outside this process; such requests are evaluated at Kong’s discretion.
 
 
 
@@ -112,9 +112,9 @@ From time to time, Kong may deprecate or remove product features as part of {{si
 * Less or no notice may be given if the change is required for **security or legal reasons** (rare).  
 * Notices may appear in:
   * Documentation
-  * release notes
-  * product update emails, or
-  * in-product notifications
+  * Release notes
+  * Product update emails
+  * In-product notifications
 
 Once a feature is announced as deprecated, it will not receive new enhancements or extensions.
 
@@ -124,7 +124,7 @@ This policy is a **summary** and is qualified by the broader [Kong Support and M
 
 
 ## Release timeline
-
+<!--vale off-->
 {% table %}
 columns:
   - title: Version
@@ -141,3 +141,4 @@ rows:
     full_support: "2026-11-06"
     sunset: "2027-11-06"
 {% endtable %}
+<!--vale on-->
