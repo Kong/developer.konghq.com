@@ -84,6 +84,7 @@ formats:
       virtual_cluster: '/virtual-clusters'
       listener:        '/listeners'
       schema_registry: '/schema-registries'
+      static_key:      '/static-keys'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'

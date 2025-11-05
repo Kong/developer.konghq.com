@@ -76,3 +76,13 @@ rows:
                 text: See reference
                 url: /event-gateway/entities/schema-registry/
                 align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Static keys"
+            description: |
+              Manage static encryption keys for use by Encrypt and Decrypt policies
+            cta:
+              text: See reference
+              url: /event-gateway/entities/static-key/
+              align: end
