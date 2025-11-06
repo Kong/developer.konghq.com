@@ -280,7 +280,7 @@ message produced (partition=0	offset=0)
 ```
 {:.no-copy-code}
 
-Now let's verify that the messsage was encrypted, by consuming the message directly.
+Now let's verify that the message was encrypted, by consuming the message directly.
 
 {% validation custom-command %}
 command: |
@@ -303,9 +303,9 @@ You should see the following response:
 ```
 {:.no-copy-code}
 
-The Encrypt policy appends a kong/enc header to each message. This header identifies the encryption key by its ID.
+The Encrypt policy appends a `kong/enc` header to each message. This header identifies the encryption key by its ID.
 
-Now let's verify that the Decrypt policy worksby consuming the message through the virtual cluster.
+Now let's verify that the Decrypt policy works by consuming the message through the virtual cluster.
 
 {% validation custom-command %}
 command: |
