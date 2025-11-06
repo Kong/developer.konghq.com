@@ -458,7 +458,7 @@ command: |
   kafkactl -C namespaced-clusters.yaml --context  analytics produce user_actions --value='kafka record'
 expected:
   return_code: 0
-  message: message produced (partition=0 offset=0)
+  message: "message produced (partition=0	offset=0)"
 render_output: false
 {% endvalidation %}
 {% endcapture %}
@@ -482,7 +482,7 @@ expected:
 render_output: false
 {% endvalidation %}
 {% endcapture %}
-{{analytics_produce | indent: 3}}
+{{payments_produce | indent: 3}}
 
    Since we denied write access to the `user_actions` topic from the `payments` virtual cluster, you should get the following result:
 
