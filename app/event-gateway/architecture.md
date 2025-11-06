@@ -97,7 +97,7 @@ rows:
 When a Kafka client connects to the {{site.event_gateway_short}} proxy, the proxy acts as the Kafka bootstrap server. 
 The bootstrap server informs the Kafka client about all the brokers in the cluster, and the client then handles balancing requests to all brokers.
 
-To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname metadata from the backend cluster and maps each hostname from the cluster to a hostname that it serves. There are two ways to do with this: with port mapping, or using TLS with SNI. You configure both options on a [listener](/event-gateway/entities/listener/).
+To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname metadata from the backend cluster and maps each hostname from the cluster to a hostname that it serves. There are two ways to do this: port mapping, or using TLS with SNI. You configure both options on a [listener](/event-gateway/entities/listener/).
 
 For example, let's say that there are three brokers in the cluster: `kafka1`, `kafka2`, and `kafka3`.
 Each broker exposes port `9092`, and the proxy is listening on the IP `10.0.0.1`.
