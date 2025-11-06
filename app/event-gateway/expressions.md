@@ -53,6 +53,9 @@ rows:
   - type: "Concatenation operator"
     details: |
       `+`
+  - type: "Relational operator"
+    details: |
+      `in`
   - type: "[String functions](#string-functions)"
     details: |
       `includes`, `startsWith`, `endsWith`, `substring`, `match`
