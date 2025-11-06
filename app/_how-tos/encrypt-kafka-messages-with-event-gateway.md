@@ -34,6 +34,12 @@ prereqs:
       position: before
       include_content: knep/docker-compose-start
 
+cleanup:
+  inline:
+    - title: Clean up {{site.event_gateway}} resources
+      include_content: cleanup/products/event-gateway
+      icon_url: /assets/icons/gateway.svg
+
 related_resources:
   - text: "{{site.event_gateway_short}} Control Plane API"
     url: /api/konnect/event-gateway/
