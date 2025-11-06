@@ -114,13 +114,10 @@ body:
 extract_body:
   - name: id
     variable: BACKEND_CLUSTER_ID
+capture: BACKEND_CLUSTER_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export the backend cluster ID to your environment:
-```sh
-export BACKEND_CLUSTER_ID="YOUR-BACKEND-CLUSTER-ID"
-```
 
 ## Create an analytics virtual cluster
 
@@ -155,16 +152,12 @@ body:
 extract_body:
   - name: id
     variable: ANALYTICS_VC_ID
+capture: ANALYTICS_VC_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
 This virtual cluster provides access to topics with the `analytics_` prefix, and the `user_actions` topic.
-
-Export the virtual cluster ID to your environment:
-
-```sh
-export ANALYTICS_VC_ID="YOUR-ANALYTICS-VIRTUAL-CLUSTER-ID"
-```
 
 ## Create a payments virtual cluster
 
@@ -199,15 +192,12 @@ body:
 extract_body:
   - name: id
     variable: PAYMENTS_VC_ID
+capture: PAYMENTS_VC_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
 This virtual cluster will be used to access topics with the `payments_` prefix, and the `user_actions` topic.
-
-Export the virtual cluster ID to your environment:
-```sh
-export PAYMENTS_VC_ID="YOUR-PAYMENTS-VIRTUAL-CLUSTER-ID"
-```
 
 ## Create an analytics listener with a policy
 
@@ -230,13 +220,10 @@ body:
 extract_body:
   - name: id
     variable: ANALYTICS_LISTENER_ID
+capture: ANALYTICS_LISTENER_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export the listener ID to your environment:
-```sh
-export ANALYTICS_LISTENER_ID="YOUR-ANALYTICS-LISTENER-ID"
-```
 
 Create the [port mapping policy](/event-gateway/policies/forward-to-virtual-cluster/):
 
@@ -274,13 +261,11 @@ body:
 extract_body:
   - name: id
     variable: PAYMENTS_LISTENER_ID
+capture: PAYMENTS_LISTENER_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Export the listener ID to your environment:
-```sh
-export PAYMENTS_LISTENER_ID="YOUR-PAYMENTS-LISTENER-ID"
-```
 Create the port mapping policy:
 
 <!--vale off-->
