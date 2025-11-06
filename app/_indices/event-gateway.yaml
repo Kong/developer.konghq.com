@@ -30,3 +30,4 @@ sections:
         url: /api/konnect/event-gateway/
       - path: /event-gateway/configuration/
       - path: /event-gateway/expressions/
+      - path: /event-gateway/known-limitations/
