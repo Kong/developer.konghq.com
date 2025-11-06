@@ -107,7 +107,7 @@ export async function executeCommand(container, cmd) {
         Failed to run command ${cmd}
         Got:
         ${result}`;
-        reject({ message });
+        reject({ exitCode: execInfo.ExitCode, output: result, message });
       }
     } catch (error) {
       throw error;

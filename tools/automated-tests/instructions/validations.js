@@ -273,8 +273,12 @@ async function controlPlaneRequest(
 
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
-  const result = await executeCommand(container, config.command);
-
+  let result;
+  try {
+    result = await executeCommand(container, config.command);
+  } catch (error) {
+    result = error;
+  }
   if (returnCode !== result.exitCode) {
     logAndError(validationName, "Failed to execute command", [
       `Expected: command to have return code ${returnCode}, got: ${result.exitCode}`,
@@ -282,7 +286,7 @@ async function customCommand(validationName, config, runtimeConfig, container) {
   } else if (
     config.expected.message &&
     result.output &&
-    !result.output.includes(config.expected.message)
+    !result.output.trimStart().includes(config.expected.message)
   ) {
     logAndError(validationName, "Command failed", [
       `Expected: the command's output to include ${config.expected.message}, got: ${result.output}`,
