@@ -16,7 +16,7 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: "Policies"
     url: /event-gateway/entities/policy/
-  - text: "{site.event_gateway}} policy hub"
+  - text: "{{site.event_gateway_short}} policy hub"
     url: /event-gateway/policies/
 
 products:
