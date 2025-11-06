@@ -61,6 +61,11 @@ faqs:
       * Check if you're using the correct `kafkactl` context.
       * Ensure that the proxy is properly connected to the backend cluster.
       * Ensure that `acl_mode` is set to `passthrough` in the virtual cluster. If set to `enforce_on_gateway`, you won't see any topics listed without an ACL policy.
+next_steps:
+  - text: Productize Kafka topics with {{site.event_gateway}}
+    url: /event-gateway/productize-kafka-topics/
+  - text: "{{site.event_gateway}} policies"
+    url: /event-gateway/entities/policy/
 ---
 
 ## Create an {{site.event_gateway_short}} in {{site.konnect_short_name}}

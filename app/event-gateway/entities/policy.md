@@ -110,25 +110,25 @@ Records are deserialized on produce and re-serialized on consume.
 <!-- vale off -->
 {% feature_table %}
 columns:
-  - title: Can act on parsed (deserialized) record?
-    key: parsed
-    center: true
   - title: Can act on non-parsed (serialized) record?
     key: nonparsed
     center: true
+  - title: Can act on parsed (deserialized) record?
+    key: parsed
+    center: true
 features:
   - title: "[Kafka ACL](/event-gateway/policies/acl/)"
-    parsed: No
     nonparsed: Yes
+    parsed: No
   - title: "[Encrypt](/event-gateway/policies/encrypt/)"
-    parsed: No
     nonparsed: Yes
+    parsed: No
   - title: "[Decrypt](/event-gateway/policies/decrypt/)"
-    parsed: No
     nonparsed: Yes
+    parsed: No
   - title: "[Schema validation](/event-gateway/policies/schema-validation/)"
-    parsed: No
     nonparsed: Yes
+    parsed: No
   - title: "[Modify headers](/event-gateway/policies/modify-headers/)"
     parsed: Yes
     nonparsed: Yes
