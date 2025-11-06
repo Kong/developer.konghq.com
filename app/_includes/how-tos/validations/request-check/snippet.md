@@ -9,7 +9,8 @@
 ```bash
 {% if include.capture -%}
 {{include.capture}}=$({% endif %}{% if include.sleep %}sleep {{include.sleep}} && {% endif %}{% if count > 1%}for _  in {1..{{count}}}; do
-{% endif %} curl {% if include.insecure %}-k {% endif %}{% if include.display_headers %}-i {% endif %}{% if include.method %}-X {{include.method}} {% endif %}{% if include.mtls%}-k --key key.pem --cert cert.pem {% endif %}"{% if is_https %}https://{% endif %}{{ include.url }}"{% if include.headers %} \{%- endif -%}{% for header in include.headers %}
+{% endif %} curl  {% if include.insecure %}-k {% endif %}{% if include.display_headers %}-i {% endif %}{% if include.method %}-X {{include.method}} {% endif %}{% if include.mtls%}-k --key key.pem --cert cert.pem {% endif %}"{% if is_https %}https://{% endif %}{{ include.url }}" \
+     --no-progress-meter --fail-with-body {% if include.headers %} \{%- endif -%}{% for header in include.headers %}
      -H "{{header}}" {%- unless forloop.last -%} \{% endunless %}{%- endfor %}{% if include.user %} \
      -u {{include.user}}{%- endif %}{% if include.cookie_jar %} \
      --cookie-jar {{include.cookie_jar}}{%- endif %}{% if include.cookie %} \
