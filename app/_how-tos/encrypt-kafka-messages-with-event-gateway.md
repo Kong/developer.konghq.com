@@ -1,5 +1,5 @@
 ---
-title: Encrypt and decrypt Kafka messages with with {{site.event_gateway}}
+title: Encrypt and decrypt Kafka messages with  {{site.event_gateway}}
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
@@ -70,6 +70,7 @@ render_output: false
 
 Run the following command to create a new backend cluster:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
 status_code: 201
@@ -91,6 +92,7 @@ extract_body:
 capture: BACKEND_CLUSTER_ID
 jq: ".id"
 {% endkonnect_api_request %}
+<!--vale on-->
 
 ## Add a virtual cluster
 
