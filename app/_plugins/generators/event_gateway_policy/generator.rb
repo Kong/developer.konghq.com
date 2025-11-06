@@ -18,7 +18,7 @@ module Jekyll
       end
 
       def skip?
-        site.config.dig('skip', 'even_gateway_policy')
+        site.config.dig('skip', 'event_gateway_policy')
       end
     end
   end
