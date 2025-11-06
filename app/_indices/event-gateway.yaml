@@ -24,6 +24,9 @@ sections:
   - title: "Event Gateway Policies"
     items:
       - path: /event-gateway/policies/*/**
+  - title: "How-tos"
+    items:
+      - path: /event-gateway/productize-kafka-topics/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
