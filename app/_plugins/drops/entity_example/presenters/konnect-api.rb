@@ -36,6 +36,10 @@ module Jekyll
               end
             end
 
+            def product
+              @product ||= @example_drop.product
+            end
+
             private
 
             def default_variables
