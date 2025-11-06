@@ -8,7 +8,7 @@ extended_description: |
   The key value must be a reference to a secret.
 
 requirements:
-  - A certificate and key pair. The key must be stored as an environment variable.
+  - A certificate and key pair. The key must be stored as an environment variable. The certificate can be a literal value or a refernece to a secret.
 
 
 weight: 900
@@ -17,7 +17,7 @@ name: tls
 type: tls_server
 config:
   certificates:
-    - certificate: /path/here
+    - certificate: "${env[\"MY_CERTIFICATE\"]}"
       key: "${env[\"MY_SECRET\"]}"
   versions:
     min: TLSv1.2
