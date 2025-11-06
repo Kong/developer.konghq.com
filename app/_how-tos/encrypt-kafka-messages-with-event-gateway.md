@@ -1,5 +1,5 @@
 ---
-title: Encrypt and decrypt Kafka messages with  {{site.event_gateway}}
+title: Encrypt and decrypt Kafka messages with {{site.event_gateway}}
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
@@ -18,7 +18,7 @@ description: Use this tutorial to encrypt and decrypt Kafka messages with {{site
 tldr: 
   q: How can I encrypt and decrypt Kafka messages with {{site.event_gateway}}?
   a: | 
-    Create a [static key](/event-gateway/entities/static-key/), [Encrypt](/event-gateway/policies/encrypt/) and [Decrypt](/event-gateway/policies/decrypt/) policies
+    Generate a key and create a [static key](/event-gateway/entities/static-key/) entity, then create [Encrypt](/event-gateway/policies/encrypt/) and [Decrypt](/event-gateway/policies/decrypt/) policies to enable message encryption and decryption.
 
 tools:
     - konnect-api
@@ -39,6 +39,12 @@ related_resources:
     url: /api/konnect/event-gateway/
   - text: Event Gateway
     url: /event-gateway/
+  - text: Static keys
+    url: /event-gateway/entities/static-key/
+  - text: Encrypt policy
+    url: /event-gateway/policies/encrypt/
+  - text: Decrypt policy
+    url: /event-gateway/policies/decrypt/
 ---
 
 
@@ -172,29 +178,9 @@ body:
 For demo purposes, we're using port mapping, which assigns each Kafka broker to a dedicated port on the {{site.event_gateway_short}}. 
 In production, we recommend using [SNI routing](/event-gateway/architecture/#hostname-mapping) instead.
 
-
-## Add a virtual cluster policy
-
-Now, let's add a policy the virtual cluster so we can test our proxy. 
-For this example, let's add a [Modify Headers](/event-gateway/policies/modify-headers/) policy, which lets you set or remove headers on requests:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
-status_code: 201
-method: POST
-body:
-  type: modify_headers
-  name: new-header
-  config:
-    actions:
-      - op: set
-        key: My-New-Header
-        value: header_value
-{% endkonnect_api_request %}
-<!--vale on-->
-
 ## Generate a key
+
+Use OpenSSL to generate the key that will be used to encrypt and decrypt messages:
 
 {% validation custom-command %}
 command: |
@@ -206,7 +192,7 @@ render_output: false
 
 ## Add a static key
 
-Run the following command to create a new static key named `my-key` for encrypting/decrypting the messages:
+Run the following command to create a new [static key](/event-gateway/entities/static-key/) named `my-key` with the key we generated:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/static-keys
@@ -219,6 +205,8 @@ body:
 <!--vale on-->
 
 ## Add an Encrypt policy
+
+Use the following command to create an [Encrypt policy](/event-gateway/policies/encrypt/) to enable encryption of messages:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -241,6 +229,8 @@ body:
 
 
 ## Add a Decrypt policy
+
+Use the following command to create a [Decrypt policy](/event-gateway/policies/decrypt/) to enable decryption of messages:
 
 <!--vale off-->
 {% konnect_api_request %}
