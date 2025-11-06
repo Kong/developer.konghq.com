@@ -6,6 +6,10 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
+  - text: AI Request Transformer
+    url: /plugins/ai-request-transformer/
+  - text: File Log
+    url: /plugins/file-log/
 
 description: Configure AI Gateway to proxy OpenAI Codex CLI traffic using AI Proxy Advanced.
 
@@ -22,6 +26,8 @@ min_version:
 
 plugins:
   - ai-proxy-advanced
+  - ai-request-transformer
+  - file-log
 
 entities:
   - service
