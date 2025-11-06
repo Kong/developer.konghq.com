@@ -477,7 +477,7 @@ render_output: false
 command: |
   kafkactl -C namespaced-clusters.yaml --context  payments produce user_actions --value='kafka record'
 expected:
-  return_code: 0
+  return_code: 1
   message: "Failed to produce message: kafka server: The client is not authorized to access this topic"
 render_output: false
 {% endvalidation %}
