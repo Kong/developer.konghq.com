@@ -19,7 +19,7 @@ name: skip-record-nested
 type: skip_record
 parent_policy_id: ${policy_id}
 condition: >
-  context.topic.name.endsWith("my_suffix")
+  record.value.content["name"].endsWith("my_suffix")
 
 tools:
   - konnect-api
