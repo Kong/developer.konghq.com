@@ -20,6 +20,7 @@ sections:
       - path: /event-gateway/entities/virtual-cluster/
       - path: /event-gateway/entities/policy/
       - path: /event-gateway/entities/schema-registry/
+      - path: /event-gateway/entities/static-key/
   - title: "Event Gateway Policies"
     items:
       - path: /event-gateway/policies/*/**
