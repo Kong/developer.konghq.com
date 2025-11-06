@@ -32,12 +32,15 @@ tools:
     - konnect-api
   
 prereqs:
+  skip_product: true
   inline:
     - title: Install kafkactl
+      position: before
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
-    
+
     - title: Start a local Kafka cluster
+      position: before
       include_content: knep/docker-compose-start
 
 related_resources:
@@ -108,6 +111,8 @@ body:
 extract_body:
   - name: id
     variable: BACKEND_CLUSTER_ID
+capture: BACKEND_CLUSTER_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -115,11 +120,6 @@ In this example configuration:
 * `bootstrap_servers`: Points the backend cluster to the three bootstrap servers that we launched in the prerequisites. 
 * `authentication` and `insecure_allow_anonymous_virtual_cluster_auth`: For demo purposes, we're allowing insecure `anonymous` connections, which means no authentication required. 
 * `tls`: TLS is disabled so that we can easily test the connection.
-
-Export the backend cluster ID to your environment:
-```sh
-export BACKEND_CLUSTER_ID="YOUR-BACKEND-CLUSTER-ID"
-```
 
 ## Add a virtual cluster
 
@@ -147,6 +147,8 @@ body:
 extract_body:
   - name: id
     variable: VIRTUAL_CLUSTER_ID
+capture: VIRTUAL_CLUSTER_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -155,11 +157,6 @@ In this example:
 * `acl_mode`: The setting `passthrough` means that all clients are allowed and don't have to match a defined ACL. 
 In a production environment, you would set this to `enforce_on_gateway` and define an ACL policy.
 * `name` is an internal name for the configuration object, while the `dns_label` is necessary for SNI routing.
-
-Export the virtual cluster ID to your environment:
-```sh
-export VIRTUAL_CLUSTER_ID="YOUR-VIRTUAL-CLUSTER-ID"
-```
 
 ## Add a listener
 
@@ -181,13 +178,10 @@ body:
 extract_body:
   - name: id
     variable: LISTENER_ID
+capture: LISTENER_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export the listener ID to your environment:
-```sh
-export LISTENER_ID="YOUR-LISTENER-ID"
-```
 
 ## Add a listener policy
 
