@@ -27,6 +27,7 @@ sections:
   - title: "How-tos"
     items:
       - path: /event-gateway/productize-kafka-topics/
+      - path: /how-to/encrypt-kafka-messages-with-event-gateway/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
