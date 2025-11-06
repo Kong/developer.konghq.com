@@ -88,16 +88,18 @@ konnect:
 
   event-gateway:
     setup:
-      commands:
-        - docker compose -f /files/event-gateway/docker-compose.yaml up -d
-        - sleep 5
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway | tail -1 >> /env-vars.sh
-        - sleep 5
+      commands: []
 
     cleanup:
       commands:
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -d
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
         - docker compose -f /files/event-gateway/docker-compose.yaml down
 
     reset:
-      commands: []
+      commands:
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
+        - docker compose -f /files/event-gateway/docker-compose.yaml down
+        - docker compose -f /files/event-gateway/docker-compose.yaml up -d
+        - sleep 5
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart | tail -1 >> /env-vars.sh
+        - sleep 5
