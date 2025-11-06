@@ -1,5 +1,5 @@
 ---
-title: "Static key"
+title: "Static keys"
 content_type: reference
 layout: gateway_entity
 
