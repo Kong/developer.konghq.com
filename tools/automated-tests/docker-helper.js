@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const debugLog = debug("debug");
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export async function fetchImage(docker, imageName, runtime, log) {
+export async function fetchImage(docker, imageName, log) {
   log(`Fetching the image '${imageName}'...`);
   try {
     const image = await docker.getImage(imageName);
@@ -21,7 +21,7 @@ export async function fetchImage(docker, imageName, runtime, log) {
     log(`Image '${imageName}' not found, building it...`);
 
     return new Promise((resolve, reject) => {
-      const dockerContext = join(__dirname, "docker", runtime);
+      const dockerContext = join(__dirname, "docker");
 
       docker.buildImage(
         {
@@ -101,13 +101,13 @@ export async function executeCommand(container, cmd) {
       const execInfo = await execCommand.inspect();
 
       if (execInfo.ExitCode === 0) {
-        resolve(execInfo.ExitCode);
+        resolve({ exitCode: execInfo.ExitCode, output: result });
       } else {
         const message = `
         Failed to run command ${cmd}
         Got:
         ${result}`;
-        reject({ message });
+        reject({ exitCode: execInfo.ExitCode, output: result, message });
       }
     } catch (error) {
       throw error;
@@ -129,12 +129,16 @@ export async function removeContainer(container) {
 
 export async function setEnvVariable(container, name, value) {
   const writeEnvVar = await container.exec({
-    Cmd: ["bash", "-c", `echo "export ${name}=${value}" >> /env-vars.sh`],
+    Cmd: [
+      "bash",
+      "-c",
+      `echo 'export ${name}="${value}"' | cat >> /env-vars.sh`,
+    ],
     AttachStdout: true,
     AttachStderr: true,
   });
 
-  const result = await new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     writeEnvVar.start((err, stream) => {
       if (err) return reject(err);
 
@@ -183,14 +187,19 @@ export async function getLiveEnv(container) {
       stream.on("error", reject);
     });
   });
-  return output;
+
+  const env = {};
+  for (const envVar of output.split("\n")) {
+    const [name, ...rest] = envVar.split("=");
+    env[name] = rest.join("=");
+  }
+  return env;
 }
 
 export async function addEnvVariablesFromContainer(container, runtimeConfig) {
   const envVars = await getLiveEnv(container);
 
-  for (const envVar of envVars.split("\n")) {
-    const [name, value] = envVar.split("=");
+  for (var [name, value] of Object.entries(envVars)) {
     runtimeConfig.env[name] = value;
   }
 }

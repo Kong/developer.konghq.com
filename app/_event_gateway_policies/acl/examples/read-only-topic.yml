@@ -1,0 +1,27 @@
+title: Allow read-only access to a topic
+
+description: Allow the authenticated principal to consume messages for a specific topic. 
+
+extended_description: Allow the authenticated principal to consume messages for a specific topic. 
+
+
+weight: 900
+
+name: read-only-topic
+type: acls
+config:
+  policies:
+    - name: name
+      type: acls
+      config:
+        rules:
+          - resource_type: topic
+            action: allow
+            operations:
+              - name: read
+            resource_names:
+              - match: my_resource
+
+tools:
+  - konnect-api
+  - terraform

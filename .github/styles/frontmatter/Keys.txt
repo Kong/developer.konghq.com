@@ -46,3 +46,7 @@ discovery_default
 examples_groups
 basic_examples
 wasm
+policy_target
+gateway_entity
+plugin_schema
+no_edit_link

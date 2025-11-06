@@ -46,6 +46,7 @@ related_resources:
 
 search_aliases:
   - kafka
+  - protocol mediation
 
 premium_partner: true
 ---

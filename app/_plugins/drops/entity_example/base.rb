@@ -11,10 +11,11 @@ module Jekyll
 
         attr_reader :example
 
-        def_delegators :@example, :variables, :headers, :tags
+        def_delegators :@example, :variables, :headers, :tags, :product
 
-        def initialize(example:)
+        def initialize(example:, **options)
           @example = example
+          @options = options
         end
 
         def entity_type
