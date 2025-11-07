@@ -25,6 +25,10 @@ module Jekyll
         end
       end
 
+      def data_validate_konnect
+        JSON.dump({ name: 'konnect-api-request', config: config.merge(url: url) })
+      end
+
       def url
         "https://#{self['region']}.api.konghq.com#{@yaml['url']}"
       end
@@ -36,7 +40,7 @@ module Jekyll
       end
 
       def config
-        @config ||= @yaml 
+        @config ||= @yaml.merge('headers' => headers)
       end
 
       def template_file

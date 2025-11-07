@@ -238,6 +238,111 @@ The following creates a new Partial called **{{ include.presenter.data['name'] }
 1. Enter the **Host** `{{ include.presenter.data['config']['host'] }}` and **Port** `{{ include.presenter.data['config']['port'] }}`.
 1. Click **Save**.
 
+{% when 'backend_cluster' %}
+The following creates a new backend cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Backend Clusters** in the sidebar.
+1. Click **New backend cluster**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. In the **Bootstrap servers** field, enter `{{ include.presenter.data['bootstrap_servers'] | first }}`.
+1. From the **Authentication** dropdown menu, select `{{ include.presenter.data['authentication']['type'] }}`
+1. Select the **Allow anonymous authentication from virtual clusters** checkbox.
+1. Click **Save**.
+
+{% when 'virtual_cluster' %}
+The following creates a new virtual cluster called **{{ include.presenter.data['name'] }}** with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+2. Click an {{site.event_gateway_short}}.
+3. Navigate to **Virtual Clusters** in the sidebar.
+4. Click **New Virtual Cluster**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+5. Configure your virtual cluster.
+6. Click **Save and add policy**.
+
+At this point, you can choose to add a policy, or exit out and add a policy later.
+
+{% when 'listener' %}
+The following creates a new listener called **{{ include.presenter.data['name'] }}** with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Listeners** in the sidebar.
+1. Click **New listener**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+2. In the **Addresses** field, enter `{{ include.presenter.data['addresses'] | first }}`.
+3. In the **Ports** field, enter `{{ include.presenter.data['ports'] | first }}`.
+4. Click **Save and add policy next**.
+5. Click **Maybe later** to create a listener without a policy.
+
+{% when 'schema_registry' %}
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+3. Navigate to **Resources** in the sidebar.
+1. Click **New Schema Registry**.
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. Configure your schema registry.
+1. Click **Create**.
+
+{% when 'static_key' %}
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Resources** in the sidebar.
+1. Click **Static keys**
+1. Click **New Static key**.
+1. In the **Key name** field, enter `{{ include.presenter.data['name'] }}`.
+1. In the **Value** field, enter `{{ include.presenter.data['value'] }}`.
+1. Click **Save**.
+
+
+{% when 'event_gateway_policy' %}
+
+{% case include.presenter.policy_type %}
+{% when 'modify-headers' %}
+The following creates a new Modify Headers policy called **{{ include.presenter.data['name'] }}** to a virtual cluster with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Virtual Clusters** in the sidebar.
+1. Click on a virtual cluster.
+1. Click **Policies**.
+1. Click **New policy**.
+1. Click **Consume**.
+1. Choose **Modify Headers**.
+1. Click **Configure**
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. In the **Actions** sections:
+  {% assign action = include.presenter.data['config']['actions'] | first %}
+   1. In the **Header Key** field, enter `{{ action['key'] }}`.
+   2. In the **Header Value** field, enter `{{ action['value'] }}`.
+1.  Click **Save**.
+
+{% when 'forward-to-virtual-cluster' %}
+The following creates a new Forward to Virtual Cluster policy called **{{ include.presenter.data['name'] }}** to a listener with basic configuration:
+
+1. In {{site.konnect_short_name}}, navigate to [{{site.event_gateway_short}}](https://cloud.konghq.com/event-gateway/) in the sidebar.
+1. Click an {{site.event_gateway_short}}.
+1. Navigate to **Listeners** in the sidebar.
+1. Click on a listener.
+1. Click **Policies**.
+1. Click **New policy**.
+1. Choose **Forward to virtual cluster**.
+1. Click **Configure**
+1. In the **Name** field, enter `{{ include.presenter.data['name'] }}`.
+1. Choose **Port mapping**.
+1. In the **Target virtual cluster** field, enter `{{ include.presenter.data['config']['destination']['name'] }}`.
+1. In the **Advertised host** field, enter `{{ include.presenter.data['config']['advertised_host'] }}`.
+1. In the **Minimal broker Id** field, enter `{{ include.presenter.data['config']['min_broker_id'] }}`.
+1. Click **Save**.
+
+{% else %}
+Unsupported type {{include.presenter.policy_type}}.
+{% endcase %}
+
 {% else %}
 {% endcase %}
 {% endif %}

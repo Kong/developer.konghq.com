@@ -19,6 +19,12 @@ module Jekyll
 
           class Plugin < Base
           end
+
+          class EventGatewayPolicy < Base
+            def policy_type
+              @policy_type ||= @example_drop.data['type']
+            end
+          end
         end
       end
     end
