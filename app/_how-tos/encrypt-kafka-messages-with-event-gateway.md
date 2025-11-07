@@ -188,9 +188,11 @@ In production, we recommend using [SNI routing](/event-gateway/architecture/#hos
 
 Use OpenSSL to generate the key that will be used to encrypt and decrypt messages:
 
+<!--vale off-->
 {% env_variables %}
 MY_KEY: $(openssl rand -base64 32)
 {% endenv_variables %}
+<!--vale on-->
 
 ## Add a static key
 
