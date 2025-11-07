@@ -2,13 +2,13 @@
 ```hcl
 terraform {
   required_providers {
-    konnect = {
-      source  = "kong/konnect"
+    {{include.presenter.provider_source}} = {
+      source  = "kong/{{include.presenter.provider_source}}"
     }
   }
 }
 
-provider "konnect" {
+provider "{{include.presenter.provider_source}}" {
   personal_access_token = "${{site.data.entity_examples.config.konnect_variables.pat.placeholder}}"
   server_url            = "https://us.api.konghq.com/"
 }

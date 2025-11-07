@@ -37,7 +37,7 @@ categories:
 search_aliases:
   - kafka-upstream
   - events
-  - event gateway
+  - protocol mediation
 
 min_version:
   gateway: '1.3'

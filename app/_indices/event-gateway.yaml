@@ -3,24 +3,36 @@ sections:
   - title: Overview
     items:
       - path: /event-gateway/
-    auto_exclude: true
-  - title: Protocol Mediation in Kong Gateway
-    items:
-      - path: /plugins/kafka-consume/
-      - path: /plugins/kafka-upstream/
-      - path: /plugins/confluent/
-      - path: /plugins/confluent-consume/
-      - path: /plugins/solace-consume/
-      - path: /plugins/solace-upstream/
-    auto_exclude: true
-  - title: "Kafka Native Event Proxy (KNEP)"
-    items:
-      - path: /event-gateway/get-started/
-      - path: /event-gateway/get-started/*/**
+      - path: /event-gateway/architecture/
       - path: /event-gateway/policies/
-      - title: KNEP OpenAPI specification
-        description: Configuration schema for the Kong Native Event Proxy
-        url: /api/event-gateway/knep/v0/
-  - title: "KNEP Policies"
+    auto_exclude: true
+  - title: Getting started
+    items:
+      - title: Get started with Event Gateway
+        description: |
+          Get started with {{site.event_gateway}} by setting up a demo {{site.konnect_short_name}} control plane and data plane, 
+          then configuring a backend cluster, virtual cluster, listener, and policies with the {{site.event_gateway}} API.
+        url: /event-gateway/get-started/
+  - title: "Event Gateway Entities"
+    items:
+      - path: /event-gateway/entities/backend-cluster/
+      - path: /event-gateway/entities/listener/
+      - path: /event-gateway/entities/virtual-cluster/
+      - path: /event-gateway/entities/policy/
+      - path: /event-gateway/entities/schema-registry/
+      - path: /event-gateway/entities/static-key/
+  - title: "Event Gateway Policies"
     items:
       - path: /event-gateway/policies/*/**
+  - title: "How-tos"
+    items:
+      - path: /event-gateway/productize-kafka-topics/
+      - path: /how-to/encrypt-kafka-messages-with-event-gateway/
+  - title: "References"
+    items:
+      - title: Event Gateway OpenAPI specification
+        description: OpenAPI specification for the Kong Event Gateway Control Plane API.
+        url: /api/konnect/event-gateway/
+      - path: /event-gateway/configuration/
+      - path: /event-gateway/expressions/
+      - path: /event-gateway/known-limitations/

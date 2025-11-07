@@ -1,6 +1,7 @@
 import debug from "debug";
 import fs from "fs/promises";
 import yaml from "js-yaml";
+import dotenv from "dotenv";
 import { executeCommand, fetchImage, setEnvVariable } from "./docker-helper.js";
 import path from "path";
 import { dirname } from "path";
@@ -10,19 +11,28 @@ const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Only load .env when running locally
+if (process.env.GITHUB_ACTIONS !== "true") {
+  dotenv.config();
+}
+
 export async function getRuntimeConfig(runtime) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
   const configs = yaml.load(fileContent);
-  const imageName = `automated-tests:${runtime}`;
+  const imageName = `automated-tests`;
 
   if (configs[runtime]) {
     let config = { ...configs[runtime], runtime, imageName };
 
-    const versionFromEnv = process.env[`${runtime.toUpperCase()}_VERSION`];
-    if (versionFromEnv) {
-      config["version"] = versionFromEnv;
-    } else {
-      throw new Error(`Missing env variable ${runtime.toUpperCase()}_VERSION`);
+    if (configs[runtime].versions) {
+      const versionFromEnv = process.env[`${runtime.toUpperCase()}_VERSION`];
+      if (versionFromEnv) {
+        config["version"] = versionFromEnv;
+      } else {
+        throw new Error(
+          `Missing env variable ${runtime.toUpperCase()}_VERSION`
+        );
+      }
     }
 
     return config;
@@ -38,6 +48,18 @@ export async function runtimeEnvironment(runtimeConfig) {
   for (const [key, value] of Object.entries({ ...runtimeConfig.env })) {
     environment[`DECK_${key}`] = value;
   }
+
+  Object.entries(process.env)
+    .filter(([key]) => key.startsWith("TESTS"))
+    .forEach(([key, value]) => {
+      const variable = key.replace("TESTS_", "");
+
+      if (runtimeConfig.runtime !== "konnect" && variable === "KONNECT_TOKEN") {
+        return;
+      }
+      environment[`DECK_${variable}`] = value;
+      environment[variable] = value;
+    });
 
   if (version) {
     let versionConfig = runtimeConfig["versions"].find(
@@ -66,9 +88,9 @@ export async function runtimeEnvironment(runtimeConfig) {
   return environment;
 }
 
-export async function setupRuntime(runtimeConfig, docker) {
+export async function setupRuntime(runtimeConfig, product, docker) {
   const runtime = runtimeConfig.runtime;
-  await fetchImage(docker, runtimeConfig.imageName, runtime, log);
+  await fetchImage(docker, runtimeConfig.imageName, log);
 
   const environment = await runtimeEnvironment(runtimeConfig);
   // Add gateway license
@@ -90,8 +112,7 @@ export async function setupRuntime(runtimeConfig, docker) {
     __dirname,
     "./config/keycloak-realms"
   );
-
-  env["REALM_PATH"] = exportedRealmHostPath;
+  const filesHostPath = path.resolve(__dirname, "../../app/_includes/_files");
 
   const container = await docker.createContainer({
     Image: runtimeConfig.imageName,
@@ -101,6 +122,7 @@ export async function setupRuntime(runtimeConfig, docker) {
       Binds: [
         "/var/run/docker.sock:/var/run/docker.sock",
         `${exportedRealmHostPath}:/realms`,
+        `${filesHostPath}:/files`,
       ],
       NetworkMode: "host",
     },
@@ -110,9 +132,17 @@ export async function setupRuntime(runtimeConfig, docker) {
 
   await setEnvVariable(container, "REALM_PATH", exportedRealmHostPath);
 
+  for (const variable of env) {
+    const [name, value] = variable.split("=");
+    if (name === "KONG_LICENSE_DATA") {
+      continue;
+    }
+    await setEnvVariable(container, name, value);
+  }
+
   log("Setting things up...");
-  if (runtimeConfig.setup.commands) {
-    for (const command of runtimeConfig.setup.commands) {
+  if (runtimeConfig[product].setup.commands) {
+    for (const command of runtimeConfig[product].setup.commands) {
       await executeCommand(container, command);
     }
   }
@@ -120,19 +150,19 @@ export async function setupRuntime(runtimeConfig, docker) {
   return container;
 }
 
-export async function cleanupRuntime(runtimeConfig, container) {
+export async function cleanupRuntime(runtimeConfig, product, container) {
   log("Cleaning up...");
-  if (runtimeConfig.cleanup.commands) {
-    for (const command of runtimeConfig.cleanup.commands) {
+  if (runtimeConfig[product].cleanup.commands) {
+    for (const command of runtimeConfig[product].cleanup.commands) {
       await executeCommand(container, command);
     }
   }
 }
 
-export async function resetRuntime(runtimeConfig, container) {
+export async function resetRuntime(runtimeConfig, product, container) {
   log("Resetting...");
-  if (runtimeConfig.reset.commands) {
-    for (const command of runtimeConfig.reset.commands) {
+  if (runtimeConfig[product].reset.commands) {
+    for (const command of runtimeConfig[product].reset.commands) {
       await executeCommand(container, command);
     }
   }
