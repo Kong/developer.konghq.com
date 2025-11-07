@@ -10,7 +10,7 @@ works_on:
     - on-prem
 
 min_version:
-    gateway: 3.8.x
+    gateway: '3.12'
 
 tags:
     - performance
@@ -152,12 +152,14 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-Model streaming increases CPU cost per output token. Plan capacity using token throughput, not RPS.
+{:.success}
+> Model streaming increases CPU cost per output token. Plan capacity using token throughput, not RPS.
 
 ## Baseline benchmark results
 
 These baseline throughput numbers reflect typical single-worker token processing under streaming LLM workloads. Use them as directional guidance only — always benchmark in your environment and with your model mix.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Benchmark dimension
@@ -182,13 +184,14 @@ rows:
     value: |
       ~4.2:1 – 5.6:1
 {% endtable %}
+<!-- vale on -->
 
-{:.note}
+{:.info}
 > Throughput depends on the provider, model, and prompt/response token shape. Benchmark with your real workloads.
 
 ## Capacity planning formula
 
-```
+```text
 equivalent_output_load = I_peak / R + O_peak
 required_workers ≈ equivalent_output_load / O_w
 ```
@@ -209,6 +212,7 @@ Use redundancy factor **2×–4×*- to handle burst, tokenization, and provider 
 
 Inference requests often include large prompts and streamed output. Buffer sizing determines whether payloads are processed in memory or spill to disk, so tune memory settings based on prompt size and workload profile.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Traffic profile
@@ -245,11 +249,13 @@ rows:
     buf: |
       2–4 MiB
 {% endtable %}
+<!-- vale on -->
 
 ## Instance recommendations - TBD
 
 AI Gateway benefits from high clock speed, dedicated CPU, and non-burstable compute classes. Select instance families optimized for consistent CPU throughput and avoid throttled instance types.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Cloud
@@ -294,11 +300,13 @@ rows:
     notes: |
       CPU-optimized dedicated compute
 {% endtable %}
+<!-- vale on -->
 
 ## Deployment sizing tiers
 
 Cluster size depends on configured entities and sustained token throughput. Smaller environments serve team-level workloads; larger footprints handle multi-tenant platforms and enterprise AI adoption at scale.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Size
@@ -343,3 +351,4 @@ rows:
     use_cases: |
       Enterprise AI platform, multi-tenant environments
 {% endtable %}
+<!-- vale on -->
