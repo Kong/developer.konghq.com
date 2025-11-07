@@ -75,7 +75,7 @@ LLM requests may include large JSON payloads (up to several MiB). To avoid disk 
 - Tune Nginx `client_body_buffer_size` to typical size (e.g., 1MiB).
 - Ensure clients send `Content‑Length` where possible.
 
-If clients omit `Content‑Length`, Nginx may preallocate full buffers or write to disk.
+If clients omit `Content‑Length`, Nginx may pre-allocate full buffers or write to disk.
 
 ## Deployment guidance
 
