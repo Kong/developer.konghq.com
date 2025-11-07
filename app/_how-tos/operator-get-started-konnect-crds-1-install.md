@@ -2,7 +2,7 @@
 title: Install {{site.operator_product_name}}
 description: Install the {{site.operator_product_name}} with Helm and enable {{ site.konnect_short_name }} CRD support.
 content_type: how_to
-permalink: /operator/konnect/get-started/install/
+permalink: /operator/get-started/konnect-crds/install/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,7 +12,7 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
+  id: operator-get-started-konnect-crds
   position: 1
 
 products:
