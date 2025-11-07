@@ -2,7 +2,7 @@
 title: Create a Service and Route
 description: Provision a service and route in Konnect using Kubernetes CRDs.
 content_type: how_to
-permalink: /operator/konnect/get-started/service-and-route/
+permalink: /operator/get-started/konnect-crds/service-and-route/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,7 +12,7 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
+  id: operator-get-started-konnect-crds
   position: 4
 
 tldr:
