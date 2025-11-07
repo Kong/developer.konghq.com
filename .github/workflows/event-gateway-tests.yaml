@@ -39,6 +39,12 @@ jobs:
       - name: Generate instruction files
         uses: './.github/reusable-steps/generate-instruction-files'
 
+      - name: Download Kong License
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
       - name: Run tests
         working-directory: tools/automated-tests
         shell: bash
