@@ -121,6 +121,9 @@ When you connect to an MCP Server that requires authentication, Insomnia follows
 3. If it’s not selected, Insomnia prompts you to switch to the discovered auth flow.  
    Confirm to proceed or cancel to remain on your current method.
 
+{:.info}
+> Not all MCP-compatible servers handle authentication the same way. Because this standard evolves quickly, some setups may need manual tweaks to work as expected. Insomnia shows you every request and response so you can check what succeeded or failed.
+
 If the authorization server does not support Dynamic Client Registration, you can:
 - Use a **Personal Access Token (PAT)**, for example GitHub Copilot MCP Server.  
 - Register your own **OAuth application**, then enter the Client ID and Secret in Insomnia.
