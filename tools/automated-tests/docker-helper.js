@@ -195,11 +195,3 @@ export async function getLiveEnv(container) {
   }
   return env;
 }
-
-export async function addEnvVariablesFromContainer(container, runtimeConfig) {
-  const envVars = await getLiveEnv(container);
-
-  for (var [name, value] of Object.entries(envVars)) {
-    runtimeConfig.env[name] = value;
-  }
-}

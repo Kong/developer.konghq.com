@@ -4,10 +4,8 @@ import https from "https";
 import tough from "tough-cookie";
 import fetchCookie from "fetch-cookie";
 
-import { runtimeEnvironment } from "../runtimes.js";
 import {
   setEnvVariable,
-  addEnvVariablesFromContainer,
   executeCommand,
   getLiveEnv,
 } from "../docker-helper.js";
@@ -251,7 +249,7 @@ async function envVariables(config, runtimeConfig, container) {
     }
     await setEnvVariable(container, key, value);
   }
-  await addEnvVariablesFromContainer(container, runtimeConfig);
+
   return [];
 }
 
