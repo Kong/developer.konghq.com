@@ -32,7 +32,7 @@ icon: graph.svg
 ---
 
 The Skip Records policy ensures that only valid and relevant records continue through the policy execution chain. 
-If the record is skipped, it won't be processed any further.
+If the record is skipped, it is dropped from the message and not forwarded to the client or the cluster.
 
 ## Use cases
 
@@ -47,7 +47,7 @@ columns:
     key: description
 rows:
   - use_case: "[Skip records with a specific name pattern](/event-gateway/policies/skip-record/examples/skip-based-on-name/)"
-    description: Identify records with a specific suffix and skip processing them.
+    description: Identify records with a specific suffix and skip forwarding them.
 {% endtable %}
 <!--vale on-->
 
@@ -57,7 +57,7 @@ This policy runs in the [consume phase](/event-gateway/entities/policy/#phases).
 
 1. {{site.event_gateway_short}} consumes messages from a Kafka broker.
 1. {{site.event_gateway_short}} checks records against a pattern.
-  * If the record matches a defined pattern, it skips processing the record and passes it on.
+  * If the record matches a defined pattern, it does not forward the message.
   * If the record doesn't match the pattern, it applies further policies in the chain.
 
 
@@ -75,7 +75,7 @@ sequenceDiagram
   
   alt message matches name pattern
 
-  egw->>client: skip processing and pass to client
+  egw--xclient: skip passing to client
 
   else message doesn't match name pattern
   egw ->> egw: apply other policies
