@@ -46,14 +46,14 @@ faqs:
       The MCP Server’s metadata may not include a valid authorization endpoint. Use a **Personal Access Token (PAT)** or **Basic Auth** instead.
   - q: Can I re-test MCP authentication?
     a: |
-      Yes. To re-start the **MCP Auth Flow**, remove the existing token and reconnect:
+      Yes. To re-start the **MCP Authentication Flow**, remove the existing token and reconnect:
 
       1. Open the **Authentication** tab.
       1. Disconnect from the server.
       1. Delete the current access token value.
       1. Reconnect or send a request to trigger the flow again.
 
-      Insomnia only restarts the MCP Auth Flow when the server responds with `401 Unauthorized`.
+      Insomnia only restarts the MCP Authentication Flow when the server responds with `401 Unauthorized`.
 
       > **Note:** You can't re-run individual MCP Auth calls. Only the full flow can be restarted manually.
         
