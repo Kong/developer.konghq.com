@@ -1,8 +1,8 @@
 title: Allow read-only access to a topic
 
-description: Allow the authenticated principal to consume messages for a specific topic. 
+description: Allow the principal to consume messages for a specific topic.
 
-extended_description: Allow the authenticated principal to consume messages for a specific topic. 
+extended_description: Allow the principal to consume messages for a specific topic.
 
 
 weight: 900
