@@ -1,10 +1,9 @@
 name: Run Publish Tests Report
 description: Publishes tests report to github
 runs:
-  using: composite
+  using: "composite"
   steps:
     - name: Publish Test Report
-      shell: bash
       uses: ctrf-io/github-test-reporter@024bc4b64d997ca9da86833c6b9548c55c620e40 # v1
       with:
         report-path: './tools/automated-tests/testReport.json'
