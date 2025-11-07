@@ -35,12 +35,12 @@ groups:
       - title: Get Started
         allow_duplicates: true
         items:
-          - title: Deploy Hybrid DataPlanes
-            url: /operator/dataplanes/get-started/hybrid/install/
-            description: Deploy {{ site.base_gateway }} data planes using {{ site.operator_product_name }}
-          - title: Deploy self-managed Control Plane
-            url: /operator/dataplanes/get-started/kic/install/
-            description: Use Kubernetes resources like `Gateway` to configure {{ site.kic_product_name }} and {{ site.base_gateway }}
+          - title: "Manage {{ site.base_gateway }} in Kubernetes through the {{ site.operator_product_name }} and Gateway API"
+            description: Deploy and configure {{ site.base_gateway }} in Kubernetes using the standard Gateway API resources.
+            url: /operator/get-started/gateway-api/install/
+          - title: "Manage {{ site.base_gateway }} in Kubernetes through the {{ site.operator_product_name }} and the Konnect CRDs"
+            description: Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs) provided by {{ site.operator_product_name }}.
+            url: /operator/get-started/konnect-crds/install/
       - title: Key Concepts
         items:
           - path: /operator/dataplanes/gateway-api/
@@ -85,8 +85,7 @@ groups:
     sections:
       - title: Get Started
         items:
-          - path: /operator/konnect/get-started/**/*
-          - path: /operator/konnect/crd/adoption/gateway
+          - path: /operator/get-started/**/*
       - title: Key Concepts
         items:
           - path: /operator/konnect/reconciliation-loop/
