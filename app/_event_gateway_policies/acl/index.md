@@ -31,7 +31,7 @@ related_resources:
     url: /event-gateway/entities/policy/
 ---
 
-The ACL (Access Control List) policy manages authorization for your [virtual cluster](/event-gateway/entities/virtual-cluster/) by defining which actions authenticated principals can perform on specific resources.
+The ACL (Access Control List) policy manages authorization for your [virtual cluster](/event-gateway/entities/virtual-cluster/) by defining which actions principals can perform on specific resources.
 
 By default, when ACLs are enabled, principals have no access. You must explicitly define access rules through ACL policies.
 
@@ -48,9 +48,9 @@ columns:
     key: description
 rows:
   - use_case: "[Allow read-only access to a topic](./examples/read-only-topic/)"
-    description: Allow the authenticated principal to consume messages for a specific topic.
+    description: Allow the principal to consume messages for a specific topic.
   - use_case: "[Allow consumer group management](./examples/manage-consumer-groups/)"
-    description: Allow the authenticated principal to create and delete consumer groups.
+    description: Allow the principal to create and delete consumer groups.
 
 {% endtable %}
 <!--vale on-->

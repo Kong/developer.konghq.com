@@ -1,8 +1,8 @@
 title: Allow consumer group management
 
-description: Allow the authenticated principal to create and delete consumer groups.
+description: Allow the principal to create and delete consumer groups.
 
-extended_description: Allow the authenticated principal to create and delete consumer groups.
+extended_description: Allow the principal to create and delete consumer groups.
 
 
 weight: 900
