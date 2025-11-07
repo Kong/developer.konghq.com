@@ -64,8 +64,8 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-Model streams output tokens in Server‑Sent Events (SSE). Processing streamed output is more expensive per token than input, so capacity planning must treat input and output tokens differently.
-
+{:.info}
+> Model streams output tokens in Server‑Sent Events (SSE). Processing streamed output is more expensive per token than input, so capacity planning must treat input and output tokens differently.
 
 ## Buffering and memory considerations
 
