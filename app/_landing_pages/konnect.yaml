@@ -157,7 +157,7 @@ rows:
     - blocks:
           - type: card
             config:
-              title: Event Gateway (Beta)
+              title: Event Gateway
               description: |
                 {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters. 
                 It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads and keys.
