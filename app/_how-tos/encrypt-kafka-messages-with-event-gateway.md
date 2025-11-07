@@ -188,13 +188,9 @@ In production, we recommend using [SNI routing](/event-gateway/architecture/#hos
 
 Use OpenSSL to generate the key that will be used to encrypt and decrypt messages:
 
-{% validation custom-command %}
-command: |
-  export MY_KEY=$(openssl rand -base64 32)
-expected:
-    return_code: 0
-render_output: false
-{% endvalidation %}
+{% env_variables %}
+MY_KEY: $(openssl rand -base64 32)
+{% endenv_variables %}
 
 ## Add a static key
 
@@ -292,6 +288,7 @@ Now let's verify that the message was encrypted, by consuming the message direct
 command: |
   kafkactl -C kafkactl.yaml --context direct consume my-test-topic --exit --output json --from-beginning --print-headers
 expected:
+  message: '"kong/enc": "\u0000\u0001\u0000-static://'
   return_code: 0
 render_output: false
 {% endvalidation %}
