@@ -1,8 +1,13 @@
 ---
-title: Provision a Hybrid Gateway
-description: "Provision a Hybrid Gateway in {{site.konnect_short_name}} using the Gateway API CRDs."
+title: Provision a Gateway
+description: "Provision a Hybrid Gateway in {{site.konnect_short_name}} using the Gateway API."
 content_type: how_to
-permalink: /operator/konnect/crd/gateway/hybrid
+
+permalink: /operator/get-started/gateway-api/deploy-gateway/
+series:
+  id: operator-get-started-gateway-api
+  position: 2
+  
 breadcrumbs:
   - /operator/
   - index: operator
@@ -11,12 +16,12 @@ breadcrumbs:
     group: Konnect
     section: "Konnect CRDs: Hybrid Gateway"
 
-
 products:
   - operator
 
 works_on:
   - konnect
+  - on-prem
 
 entities: []
 search_aliases:
@@ -29,6 +34,7 @@ tldr:
   a: Fill Konnect related fields in `GatewayConfiguration` for `GatewayClass` that will be used for Hybrid Gateways.
 
 prereqs:
+  skip_product: true
   operator:
     konnect:
       auth: true

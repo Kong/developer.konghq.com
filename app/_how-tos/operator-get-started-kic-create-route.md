@@ -1,12 +1,13 @@
 ---
-title: Create a Route with {{ site.operator_product_name }} with self-managed Control Plane
+title: Create a Route 
 description: "Learn how to configure a Route using {{ site.operator_product_name }} with self-managed Control Plane."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/create-route/
-series:
-  id: operator-get-started-kic
-  position: 3
+
+# series:
+#   id: operator-get-started-kic
+#   position: 3
 
 breadcrumbs:
   - /operator/
@@ -20,7 +21,6 @@ products:
   - operator
 
 works_on:
-  - konnect
   - on-prem
 
 entities: []
