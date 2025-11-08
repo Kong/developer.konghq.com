@@ -85,8 +85,8 @@ rows:
 
                 User(("User"))
 
-                backends --> kai
-                kai --> User
+                User --> kai
+                kai --> backends
 
                 style backends fill:#E3F2FD,stroke:#90CAF9,stroke-width:1px
                 style kai fill:#E8F5E9,stroke:#81C784,stroke-width:1px
@@ -117,25 +117,28 @@ rows:
               - type: text
                 text: |
                   The following are the latest changes in KAi:
-                  * item 1
-                  * item 2
+                  * KAi internal release
 
                   For a complete changelog of all KAi releases, see the [KAi changelog](/konnect-platform/kai/changelog/).
       - blocks:
         - type: table
           config:
             columns:
-              - title: Product
+              - title: Product Area
                 key: product
               - title: Supported?
                 key: supported
+              - title: Sub-Features
+                key: features
             rows:
               - product: Gateway Control Planes
                 supported: true
-              - product: Gateway Configuration
+                features: All
+              - product: Gateway Configurations
                 supported: true
+                features: Services, Routes, Vaules, Consumers, Debugger
               - product: Dedicated Cloud Gateways
-                supported: Partial Support
+                supported: Planned
               - product: Kong Mesh
                 supported: Planned
               - product: Developer Portal
@@ -146,7 +149,7 @@ rows:
                 supported: Planned
               - product: Team Management
                 supported: Planned
-              - product: Organization Configuration
+              - product: Organizations
                 supported: Planned
   
   - header:
@@ -157,7 +160,7 @@ rows:
         - type: faqs
           config:
             - q: Is the KAi AI assistant enabled by default?
-              a: It is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. KAi is always disabled by default for Enterprise accounts. Enterprise accounts can enable it by contacting their Kong account manager.
+              a: It is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. Only organization owners can choose to enable or disable KAi for an organization. KAi is always disabled by default for Enterprise accounts. Enterprise accounts can enable it by contacting their Kong account manager.
             - q: Does KAi automatically modify {{site.konnect_short_name}} configuration when it finds an issue?
               a: No. KAi will ask for your permission before making any changes to {{site.konnect_short_name}} configuration. You can also approve modifications on a per session basis.
             - q: Can all users see the same resources with the AI assistant KAi?
@@ -166,3 +169,5 @@ rows:
               a: During the Beta period, access to KAi is included in your existing Plus and Trial plans. Enterprise users should contact their Kong account manager.
             - q: Does KAi train on any of my data?
               a: No. Neither Kong nor any downstream LLMs that KAi uses train on user data.
+            - q: What models does KAi use?
+              a: We currently use Anthropic Claude provided by AWS Bedrock. Review the Terms for Anthropic on the [AWS Third-Party Models page](https://aws.amazon.com/legal/bedrock/third-party-models/).
