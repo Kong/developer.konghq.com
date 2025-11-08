@@ -135,8 +135,12 @@ rows:
                 supported: true
                 features: All
               - product: Gateway Configurations
-                supported: true
-                features: Services, Routes, Vaules, Consumers, Debugger
+                supported: Partial
+                features: Services, Routes, Vaults, Consumers, Debugger
+              - product: Event Gateways
+                supported: Planned
+              - product: AI Gateway
+                support: Planned
               - product: Dedicated Cloud Gateways
                 supported: Planned
               - product: Kong Mesh
@@ -145,12 +149,14 @@ rows:
                 supported: Planned
               - product: Service Catalog
                 supported: Planned
+              - product: OpenMeter
+                supported: Planned (~Q1'26)
               - product: Analytics
-                supported: Planned
+                supported: Planned (~Q1'26))
               - product: Team Management
-                supported: Planned
+                supported: Planned (~Q4'25)
               - product: Organizations
-                supported: Planned
+                supported: Planned (~Q4'25)
   
   - header:
       text: "Frequently asked questions"
@@ -169,5 +175,5 @@ rows:
               a: During the Beta period, access to KAi is included in your existing Plus and Trial plans. Enterprise users should contact their Kong account manager.
             - q: Does KAi train on any of my data?
               a: No. Neither Kong nor any downstream LLMs that KAi uses train on user data.
-            - q: What models does KAi use?
+            - q: Which models does KAi use?
               a: We currently use Anthropic Claude provided by AWS Bedrock. Review the Terms for Anthropic on the [AWS Third-Party Models page](https://aws.amazon.com/legal/bedrock/third-party-models/).
