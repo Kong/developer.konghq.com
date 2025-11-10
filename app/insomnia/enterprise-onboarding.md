@@ -92,7 +92,7 @@ If you're new to Insomnia Enterprise, this document will guide you through the f
 
 ## 1. Activate your Enterprise membership
 
-Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code. Already upgraded? If you're already an **Owner** or **Co-owner** of an upgraded Enterprise workspace, skip this step.
+Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code. If you're already an **Owner** or **Co-owner** of an upgraded Enterprise workspace, skip this step.
 
 To activate the code you'll need to follow these steps:
 
