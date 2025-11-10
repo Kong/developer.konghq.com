@@ -5,6 +5,7 @@ layout: reference
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -15,9 +16,10 @@ min_version:
 tags:
     - performance
     - deployment-checklist
+    - ai
 
 breadcrumbs:
-    - /gateway/
+    - /ai-gateway/
 
 description: "Review Kong's AI Gateway recommended resource allocation sizing guidelines for {{site.base_gateway}} based on configuration and traffic patterns."
 
@@ -66,16 +68,6 @@ rows:
 
 {:.info}
 > Model streams output tokens in Server‑Sent Events (SSE). Processing streamed output is more expensive per token than input, so capacity planning must treat input and output tokens differently.
-
-## Buffering and memory considerations
-
-LLM requests may include large JSON payloads (up to several MiB). To avoid disk I/O during streaming:
-
-- Set `max_request_body_size` to max expected prompt size (e.g., 8MiB).
-- Tune Nginx `client_body_buffer_size` to typical size (e.g., 1MiB).
-- Ensure clients send `Content‑Length` where possible.
-
-If clients omit `Content‑Length`, Nginx may pre-allocate full buffers or write to disk.
 
 ## Deployment guidance
 
@@ -186,7 +178,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-{:.info}
+{:.success}
 > Throughput depends on the provider, model, and prompt/response token shape. Benchmark with your real workloads.
 
 ## Capacity planning formula
