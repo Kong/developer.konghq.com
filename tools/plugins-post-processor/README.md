@@ -1,8 +1,14 @@
 # plugins-post-processor
 
-Post-process plugin JSON schemas to add documentation annotations for referenceable and encrypted fields.
+A collection of tools for processing Kong Gateway plugin JSON schemas.
 
-## How it works
+## Tools
+
+### 1. `run.js` - Schema Post-processor
+
+Post-processes plugin JSON schemas to add documentation annotations for referenceable and encrypted fields.
+
+#### How it works
 
 The tool reads JSON schema files and recursively processes them to enhance field descriptions with documentation links:
 
@@ -12,9 +18,22 @@ The tool reads JSON schema files and recursively processes them to enhance field
 
 The processed schemas are then written to the appropriate version directory under `app/_schemas/gateway/plugins/`.
 
-## How to run it
+### 2. `referenceable-fields.js` - Referenceable Fields Extractor
 
-### Install dependencies
+Extracts all referenceable fields from plugin schemas and generates a JSON file mapping plugins to their referenceable fields.
+
+#### How referenceable-fields.js works
+
+The tool reads processed plugin JSON schema files and:
+
+1. **Recursively parses schemas**: Traverses the entire schema structure to find referenceable fields
+2. **Detects referenceable fields**: Identifies fields that contain `[referenceable]` text in their descriptions or have the `x-referenceable` property
+3. **Converts plugin names**: Automatically converts PascalCase filenames to kebab-case plugin names
+4. **Generates output**: Creates a JSON file mapping each plugin to its referenceable field paths
+
+The output is saved to `app/_data/plugins/referenceable_fields/<version>.json`.
+
+## Installation
 
 From the tool directory:
 
@@ -23,40 +42,61 @@ cd tools/plugins-post-processor
 npm ci
 ```
 
-### Running the script
+## Usage
 
-The script accepts input schemas and processes them for a specific Gateway version. It supports multiple argument formats:
+### Schema Post-processor (`run.js`)
 
+Process plugin schemas to add documentation annotations for referenceable and encrypted fields.
 
-#### Named arguments
+#### Command formats
 
 ```bash
 node run.js --schemas-path <path> --version <version>
 ```
 
-Example:
+#### Examples
 
 ```bash
 node run.js --schemas-path ./input-schemas --version 3.12
 ```
 
-### Parameters
+#### Parameters
 
 - `schemasPath`: Path to the directory containing input JSON schema files (relative to the script location)
 - `version`: Gateway version string (e.g., "3.12", "3.11") - determines the output directory
 
-### Output
+#### Output
 
 Processed schemas are written to: `app/_schemas/gateway/plugins/<version>/`
 
-The script will:
+### Referenceable Fields Extractor (`referenceable-fields.js`)
 
-- Create the output directory if it doesn't exist
-- Process all `.json` files in the input directory
-- Display progress information for each processed file
-- Report any errors encountered during processing
+Extract referenceable fields from processed plugin schemas and generate a mapping file.
 
-## Schema Processing Details
+#### Referenceable fields command formats
+
+```bash
+node referenceable-fields.js --version <version>
+```
+
+#### Referenceable fields examples
+
+#### Referenceable fields parameters
+
+- `version`: Gateway version string (e.g., "3.12", "3.11") - determines which schema directory to process
+
+#### Referenceable fields output
+
+Generated mapping file is saved to: `app/_data/plugins/referenceable_fields/<version>.json`
+
+The output format is a JSON object where:
+
+- Keys are plugin names in kebab-case (e.g., "aws-lambda", "openid-connect")
+- Values are arrays of referenceable field paths (e.g., "config.client_secret", "config.redis.password")
+
+## Technical Details
+
+### Schema Post-processor
 
 The script looks for these special properties in JSON schemas:
 
@@ -64,3 +104,12 @@ The script looks for these special properties in JSON schemas:
 - `x-encrypted`: Adds text indicating the field is encrypted using the gateway keyring
 
 The added documentation text includes markdown links to the relevant documentation sections.
+
+### Referenceable Fields Extractor
+
+The script identifies referenceable fields by:
+
+- Looking for `[referenceable]` text in field descriptions (for processed schemas)
+- Checking for the `x-referenceable` property (for unprocessed schemas)
+- Converting PascalCase plugin filenames to kebab-case names programmatically
+- Recursively traversing complex schema structures including nested objects and arrays
