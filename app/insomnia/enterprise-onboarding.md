@@ -81,7 +81,7 @@ faqs:
 
       - Look for the **Enterprise** badge in the top-right corner of the app.
 
-      If you don’t see the badge, you're either not part of an Enterprise workspace, or you don't have an **Owner** or **Co-owner** role. 
+      If you don’t see the badge, you're either not part of an Enterprise workspace, or you don't have an **Owner** or **Co-owner** role. If you require support, reach out to **Insomnia Support** at support@insomnia.rest or [https://support.konghq.com/support/s/](https://support.konghq.com/support/s/).
     
 ---
 
