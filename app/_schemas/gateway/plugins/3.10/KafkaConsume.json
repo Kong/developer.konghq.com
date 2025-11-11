@@ -1,0 +1,203 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "authentication": {
+          "properties": {
+            "mechanism": {
+              "description": "The SASL authentication mechanism.  Supported options: `PLAIN` or `SCRAM-SHA-256`.",
+              "enum": [
+                "PLAIN",
+                "SCRAM-SHA-256",
+                "SCRAM-SHA-512"
+              ],
+              "type": "string"
+            },
+            "password": {
+              "description": "Password for SASL authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+              "type": "string",
+              "x-encrypted": true,
+              "x-referenceable": true
+            },
+            "strategy": {
+              "description": "The authentication strategy for the plugin, the only option for the value is `sasl`.",
+              "enum": [
+                "sasl"
+              ],
+              "type": "string"
+            },
+            "tokenauth": {
+              "description": "Enable this to indicate `DelegationToken` authentication",
+              "type": "boolean"
+            },
+            "user": {
+              "description": "Username for SASL authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+              "type": "string",
+              "x-encrypted": true,
+              "x-referenceable": true
+            }
+          },
+          "type": "object"
+        },
+        "auto_offset_reset": {
+          "default": "latest",
+          "description": "The offset to start from when there is no initial offset in the consumer group.",
+          "enum": [
+            "earliest",
+            "latest"
+          ],
+          "type": "string"
+        },
+        "bootstrap_servers": {
+          "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format.",
+          "items": {
+            "properties": {
+              "host": {
+                "description": "A string representing a host name, such as example.com.",
+                "type": "string"
+              },
+              "port": {
+                "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                "maximum": 65535,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "host",
+              "port"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "cluster_name": {
+          "description": "An identifier for the Kafka cluster.",
+          "type": "string"
+        },
+        "commit_strategy": {
+          "default": "auto",
+          "description": "The strategy to use for committing offsets.",
+          "enum": [
+            "auto",
+            "off"
+          ],
+          "type": "string"
+        },
+        "enforce_latest_offset_reset": {
+          "default": false,
+          "description": "When true, 'latest' offset reset behaves correctly (starts from end). When false (default), maintains backwards compatibility where 'latest' acts like 'earliest'.",
+          "type": "boolean"
+        },
+        "message_deserializer": {
+          "default": "noop",
+          "description": "The deserializer to use for the consumed messages.",
+          "enum": [
+            "json",
+            "noop"
+          ],
+          "type": "string"
+        },
+        "mode": {
+          "default": "http-get",
+          "description": "The mode of operation for the plugin.",
+          "enum": [
+            "http-get",
+            "server-sent-events"
+          ],
+          "type": "string"
+        },
+        "security": {
+          "properties": {
+            "certificate_id": {
+              "description": "UUID of certificate entity for mTLS authentication.",
+              "type": "string"
+            },
+            "ssl": {
+              "description": "Enables TLS.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "topics": {
+          "description": "The Kafka topics and their configuration you want to consume from.",
+          "items": {
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "minLength": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "bootstrap_servers",
+        "topics"
+      ],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
