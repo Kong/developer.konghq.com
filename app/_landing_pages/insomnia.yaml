@@ -68,6 +68,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: MCP Clients
+            description: Use MCP clients to connect Insomnia to Konnect for mocking, validating, and protecting requests in real time.
+            icon: /assets/icons/network.svg
+            cta:
+              text: Learn more
+              url: /insomnia/mcp-clients-in-insomnia/       
+      - blocks:
+        - type: card
+          config:
             title: Mock servers
             description: Use mock servers to simulate API endpoints when building features.
             icon: /assets/icons/server.svg
@@ -83,7 +92,19 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/environments/
+      - blocks:
+        - type: card
+          config:
+            title: Inso CLI
+            description: Include Inso CLI in your CI/CD pipelines to automate Insomnia tasks.
+            icon:  /assets/icons/terminal.svg
+            cta:
+              text: Learn more
+              url: /inso-cli/        
 
+  - header:
+      type: h2
+      text: Account management      
   - columns:
       - blocks:
         - type: card
@@ -103,15 +124,6 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/manage-insomnia/
-      - blocks:
-        - type: card
-          config:
-            title: Inso CLI
-            description: Include Inso CLI in your CI/CD pipelines to automate Insomnia tasks.
-            icon:  /assets/icons/terminal.svg
-            cta:
-              text: Learn more
-              url: /inso-cli/
       - blocks:
         - type: card
           config:
