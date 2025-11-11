@@ -62,13 +62,7 @@ faqs:
       ```liquid
       {% raw %}https://api.example.com/users/{{ user_id }}{% endraw %}
       ```  
-      For detailed usage examples, see [**Requests**](/insomnia/requests/#faqs) and [**Pre-request scripts**](/how-to/write-pre-request-scripts/).
-  - q: In a request, what does the **Path Parameters** section do?
-    a: |
-      The **Path Parameters** section defines dynamic values that replace variables in a request URL path.  
-      For example, if a request URL is `https://api.example.com/users/{id}`, and you set `id = 123` in **Path Parameters**, then Insomnia sends the request to `https://api.example.com/users/123`.  
-      
-      Use this feature to test endpoints with variable path segments without manually editing the full URL.  
+      For detailed usage examples, go to [**Pre-request scripts**](/how-to/write-pre-request-scripts/). 
 ---
 
 ## How do I create requests in Insomnia?
@@ -110,6 +104,9 @@ rows:
     steps: Select an HTTP method in the dropdown list, or add a custom method.
   - element: Endpoint
     steps: Enter a URL, and use environment variables and template tags if needed.
+  - element: Path parameters
+    steps: >-
+      Define dynamic values that replace variables in the request path. For example, in **Path Parameters**, if the URL is `https://api.example.com/users/{id}` and you set `id = 123`, Insomnia sends the request to `https://api.example.com/users/123`.
   - element: Query parameters
     steps: >-
       In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multi-line text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.

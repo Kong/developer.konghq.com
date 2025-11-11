@@ -76,6 +76,5 @@ rows:
                 The generated endpoint will contain the response body, headers, and status.
             - q: Are Mock request available on local Scratch Pad?
               a: |
-                No. Mock servers are not available in the local **Scratch Pad**. To use mock servers, sign up for an Insomnia account.  
-                Hosted mock requests include usage limits, which are detailed on the [**Insomnia pricing page**](https://insomnia.rest/pricing).
+                No. Mock servers are not available in the local **Scratch Pad**. To use mock servers, sign up for an Insomnia account.
 
