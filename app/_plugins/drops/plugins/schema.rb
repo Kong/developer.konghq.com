@@ -55,8 +55,8 @@ module Jekyll
         def kong_schema_file_path
           @kong_schema_file_path ||= File.join(
             site.config['plugin_schemas_path'],
-            plugin_slug,
-            "#{@release.number}.json"
+            release.number,
+            "#{plugin_slug.split('-').map(&:capitalize).join}.json"
           )
         end
 

@@ -112,7 +112,7 @@ repos:
   developer_raw: https://raw.githubusercontent.com/Kong/developer.konghq.com
   docs: https://github.com/Kong/docs.konghq.com
 
-plugin_schemas_path: app/.repos/kong-plugins/json_schemas
+plugin_schemas_path: app/_schemas/gateway/plugins
 plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
 plugin_priorities_path: app/.repos/kong-plugins/data/priorities/ee
 
