@@ -104,8 +104,8 @@ entities:
           tokens_count_strategy: "total-tokens"
           latency_strategy: "tpot"
           retries: 3
-          targets:
-            - route_type: llm/v1/responses
+      targets:
+      - route_type: llm/v1/responses
         auth:
           header_name: Authorization
           header_value: Bearer ${openai_api_key}
@@ -210,7 +210,8 @@ Let's test our Codex CLI set up now:
      /model - choose what model and reasoning effort to use
      /review - review any changes and find issues
    ```
-
+   {.no-copy-code}
+   
 1. Run a simple command to call Codex using the gpt-4o model:
 
    ```sh
@@ -230,7 +231,8 @@ Let's test our Codex CLI set up now:
      2. Yes, and don't ask again for this command
      3. No, and tell Codex what to do differently
    ```
-
+   {.no-copy-code}
+   
    Select **Yes, proceed** and press <kbd>Enter</kbd>.
 
    Expected output:
@@ -247,7 +249,8 @@ Let's test our Codex CLI set up now:
 
    • codex exec --model gpt-4o "Hello" returned: “Hi there! How can I assist you today?”
    ```
-
+   {.no-copy-code}
+   
 1. Check that LLM traffic went through Kong AI Gateway:
 
    ```sh
