@@ -3,4 +3,4 @@ idiomatic_version_file_enable_tools = ["ruby", "node"] # Use idiomatic version f
 [env]
 _.file = '.env'
 [tools]
-"npm:netlify-cli" = "16.5.1"
+"npm:netlify-cli" = "16.9.3"
