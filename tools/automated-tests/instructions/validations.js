@@ -199,6 +199,14 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
           assert: response.status === expectedStatus,
           message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
         }),
+        ...(config.expected_headers
+          ? config.expected_headers.map((header) => (response) => ({
+              assert: response.headers.has(header),
+              message: `Expected: request ${requestNumber} to have header '${header}', got: '${response.headers.get(
+                header
+              )}'.`,
+            }))
+          : []),
         ...(requestNumber === config.iterations
           ? [
               (response, body) => ({
