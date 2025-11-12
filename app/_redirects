@@ -113,6 +113,10 @@
 ## Event gateway
 
 /knep/get-started/  /event-gateway/get-started/
+/event-gateway/policies/schema-validation/* /event-gateway/policies/
+/event-gateway/get-started/topic-filtering/ /event-gateway/policies/skip-record/
+/event-gateway/get-started/topic-name-aliasing/ /event-gateway/entities/virtual-cluster/#namespaces
+/api/event-gateway/knep/*   /api/konnect/event-gateway/
 
 ## Dev Portal
 

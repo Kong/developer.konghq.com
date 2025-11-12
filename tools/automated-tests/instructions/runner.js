@@ -132,12 +132,12 @@ export async function runInstructions(instructions, runtimeConfig, container) {
     }
 
     if (rbac) {
-      for (const command of runtimeConfig.setup.rbac.commands) {
+      for (const command of runtimeConfig.gateway.setup.rbac.commands) {
         await executeCommand(container, command);
       }
     }
     if (wasm) {
-      for (const command of runtimeConfig.setup.wasm.commands) {
+      for (const command of runtimeConfig.gateway.setup.wasm.commands) {
         await executeCommand(container, command);
       }
     }
@@ -162,7 +162,7 @@ export async function runInstructions(instructions, runtimeConfig, container) {
   }
 
   if (rbac || wasm) {
-    for (const command of runtimeConfig.setup.commands) {
+    for (const command of runtimeConfig.gateway.setup.commands) {
       await executeCommand(container, command);
     }
   }
