@@ -91,9 +91,9 @@ prereqs:
 
            In this example, we're running {{site.base_gateway}} locally in a Docker container, so the host is `host.docker.internal`:
 
-           ```sh
-           export DECK_OLLAMA_UPSTREAM_URL='http://host.docker.internal:11434/api/chat'
-           ```
+           {% env_variables %}
+           DECK_OLLAMA_UPSTREAM_URL: 'http://host.docker.internal:11434/api/chat'
+           {% endenv_variables %}
       icon_url: /assets/icons/ollama.svg
 
   entities:
@@ -111,7 +111,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 ## Configure the AI Proxy Advanced plugin
