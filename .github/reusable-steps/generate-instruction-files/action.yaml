@@ -1,0 +1,12 @@
+name: Generate Instruction Files
+description: Generates the instruction files for the automated tests
+runs:
+  using: composite
+  steps:
+    - name: Generate instruction files
+      shell: bash
+      working-directory: tools/automated-tests
+      run: |
+        npm ci
+        npx playwright install --with-deps chromium
+        npm run generate-instruction-files

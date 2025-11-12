@@ -646,6 +646,7 @@ For example, you can have H1 > H2 > H3 > H2 > H3, but not H1 > H3 > H2.
   - header:
       type: h2
       text: "Traditional mode"
+```
 
 ### Structured text
 

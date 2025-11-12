@@ -43,7 +43,20 @@ faqs:
       The MCP Auth Flow uses your system’s default browser. Ensure that Insomnia can open URLs using your system browser. The MCP Auth Flow only supports browser-based OAuth.
   - q: Why is MCP Auth Flow not listed under OAuth 2.0?
     a: |
-      The MCP Server’s metadata may not include a valid authorization endpoint. Use a **Personal Access Token (PAT)** or **Basic Auth** instead.     
+      The MCP Server’s metadata may not include a valid authorization endpoint. Use a **Personal Access Token (PAT)** or **Basic Auth** instead.
+  - q: Can I re-test MCP authentication?
+    a: |
+      Yes. To re-start the **MCP Authentication Flow**, remove the existing token and reconnect:
+
+      1. Open the **Authentication** tab.
+      1. Disconnect from the server.
+      1. Delete the current access token value.
+      1. Reconnect or send a request to trigger the flow again.
+
+      Insomnia only restarts the MCP Authentication Flow when the server responds with `401 Unauthorized`.
+
+      > **Note:** You can't re-run individual MCP Auth calls. Only the full flow can be restarted manually.
+        
 ---
 Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to access AI-ready tools, prompts, and resource. An **MCP Client** defines this connection and stores authentication and configuration details.
 
@@ -120,6 +133,9 @@ When you connect to an MCP Server that requires authentication, Insomnia follows
    Insomnia requests a token through that flow.
 3. If it’s not selected, Insomnia prompts you to switch to the discovered auth flow.  
    Confirm to proceed or cancel to remain on your current method.
+
+{:.info}
+> Not all MCP-compatible servers handle authentication the same way. Because this standard evolves quickly, some setups may need manual tweaks to work as expected. Insomnia shows you every request and response so you can check what succeeded or failed.
 
 If the authorization server does not support Dynamic Client Registration, you can:
 - Use a **Personal Access Token (PAT)**, for example GitHub Copilot MCP Server.  

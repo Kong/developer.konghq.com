@@ -2,13 +2,36 @@ name: Missing Redirects
 
 on:
   pull_request:
-    branches: ["**"]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   contents: read
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
+      - name: Check if manual review has been performed
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        id: labels
+        with:
+          result-encoding: string
+          script: |
+            const { data: labels } = await github.rest.issues.listLabelsOnIssue({
+              ...context.repo,
+              issue_number: context.issue.number
+            });
+            return labels.map(l => l.name).includes('ci:manual-approve:missing-redirects')
+    outputs:
+      result: ${{ steps.labels.outputs.result }}
   redirects:
+    needs: check
+    if: needs.check.outputs.result == 'false'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -18,8 +41,16 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
+
+      - name: Wait for Netlify site to be ready
+        uses: jakepartusch/wait-for-netlify-action@f1e137043864b9ab9034ae3a5adc1c108e3f1a48 # v1.4
+        id: waitForNetlify
+        with:
+          site_name: "kongdeveloper"
+          max_timeout: 900
+
       - name: Check for missing redirects
         run: |
           cd tools/missing-redirects
           npm ci
-          node index.js
+          node index.js --base_url https://deploy-preview-${{ github.event.pull_request.number }}--kongdeveloper.netlify.app

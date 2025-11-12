@@ -1,3 +1,3 @@
-<div data-deployment-topology="konnect" markdown="1" data-test-step="block">
+<div data-deployment-topology="konnect" markdown="1" data-test-step="block" data-test-step="{{ config.data_validate_konnect | escape }}">
   {% include how-tos/validations/request-check/snippet.md url=config.url headers=config.headers capture=config.capture body_cmd=config.body_cmd body=config.body method=config.method jq=config.jq %}
 </div>

@@ -59,8 +59,7 @@ The [Prometheus plugin](/plugins/prometheus/) records and exposes metrics at the
 server will need to discover all Kong nodes via a service discovery mechanism,
 and consume data from each node's configured `/metrics` endpoint.
 
-AI metrics exported by the plugin can be graphed in Grafana using a [drop-in
-dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
+AI metrics exported by the plugin can be graphed in Grafana using [Kong AI Gateway Dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
 
 ## Available metrics
 
