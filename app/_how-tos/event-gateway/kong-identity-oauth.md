@@ -413,7 +413,7 @@ terraform apply -auto-approve
 You will see five resources created:
 
 ```text
-Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 ```
 {:.no-copy-code}
 
@@ -481,7 +481,7 @@ kafka-console-producer --bootstrap-server localhost:19092 \
   --producer-property security.protocol=SASL_PLAINTEXT \
   --producer-property sasl.mechanism=OAUTHBEARER \
   --producer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT1'";' \
-  --producer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
+  --producer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler
 ```
 
 Consume messages from any topic:
@@ -492,7 +492,7 @@ kafka-console-consumer --bootstrap-server localhost:19092 \
   --consumer-property security.protocol=SASL_PLAINTEXT \
   --consumer-property sasl.mechanism=OAUTHBEARER \
   --consumer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT1'";' \
-  --consumer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
+  --consumer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler
 ```
 
 ### Connect with OAuth Bearer Token (Client 2 - Limited Access)
@@ -505,7 +505,7 @@ kafka-console-consumer --bootstrap-server localhost:19092 \
   --consumer-property security.protocol=SASL_PLAINTEXT \
   --consumer-property sasl.mechanism=OAUTHBEARER \
   --consumer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT2'";' \
-  --consumer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
+  --consumer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler
 ```
 {:.info}
 > **Note**: Client 2 cannot produce messages or read from other topics due to ACL restrictions.
@@ -525,7 +525,7 @@ echo "internal-data" | kafka-console-producer --bootstrap-server localhost:19092
   --producer-property security.protocol=SASL_PLAINTEXT \
   --producer-property sasl.mechanism=OAUTHBEARER \
   --producer-property sasl.jaas.config='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required oauth.access.token="'$ACCESS_TOKEN_CLIENT1'";' \
-  --producer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler
+  --producer-property sasl.login.callback.handler.class=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler
 ```
 
 Client 2 will NOT see records with `internal=true` header due to the skip record policy.
