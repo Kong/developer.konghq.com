@@ -107,10 +107,10 @@ To check that the response transformation is working, send a request:
 
 {% validation request-check %}
 url: /anything
-status_code: 200
+status_code: 201
 headers:
     - 'Accept: application/json'
 display_headers: true
+expected_headers:
+  - "new-header: header-value"
 {% endvalidation %}
-
-The response should contain the new header: `new-header: header-value`.
