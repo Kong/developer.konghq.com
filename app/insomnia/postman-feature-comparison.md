@@ -9,12 +9,21 @@ products:
   - insomnia
 
 description: Compare Insomnia and Postman feature by feature, focusing on Insomnia’s open-source flexibility, extensibility, and workflow advantages.
+
 related_resources:
-  - text: Requests in Insomnia
-    url: /insomnia/requests/
+  - text: Enterprise
+    url: /insomnia/enterprise/
+
+next_steps:
+  - text: Documents
+    url: /insomnia/documents/
+  - text: Collections
+    url: /insomnia/collections/
   - text: Environments
     url: /insomnia/environments/
-  - text: Scripting
+  - text: Mock servers
+    url: /insomnia/mock-servers/
+  - text: Scripts
     url: /insomnia/scripts/
 ---
 
@@ -70,7 +79,7 @@ rows:
   - feature: Plugin ecosystem
     insomnia: Extends and customizes functionality through community plugins
   - feature: Kong ecosystem integration
-    insomnia: Connects design and testing directly with Kong Gateway
+    insomnia: Connects design and testing directly with {{site.base_gateway}}
   - feature: Offline mode
     insomnia: Operates fully without login or network connection
   - feature: Resource efficiency
