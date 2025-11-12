@@ -28,6 +28,7 @@ You should see the following response:
 ```text
 {{ include.message }}
 ```
+{:.no-copy-code}
 {% endif %}
 
 
