@@ -104,16 +104,16 @@ entities:
           tokens_count_strategy: "total-tokens"
           latency_strategy: "tpot"
           retries: 3
-      targets:
-      - route_type: llm/v1/responses
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${openai_api_key}
-        logging:
-          log_payloads: false
-          log_statistics: true
-        model:
-          provider: "openai"
+        targets:
+        - route_type: llm/v1/responses
+          auth:
+            header_name: Authorization
+            header_value: Bearer ${openai_api_key}
+          logging:
+            log_payloads: false
+            log_statistics: true
+          model:
+            provider: "openai"
 
 variables:
   openai_api_key:
