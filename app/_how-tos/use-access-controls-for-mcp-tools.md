@@ -262,7 +262,7 @@ entities:
 
 ## Validate the configuration
 
-Now, let's use Insomnia's MCP Client feature to validate our ACL configuration:
+Let's use Insomnia's MCP Client feature to validate our ACL configuration:
 
 1. Go to the Insomnia app.
 1. Click **Create MCP Client** in the left sidebar.
