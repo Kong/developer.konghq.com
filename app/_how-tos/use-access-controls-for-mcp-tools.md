@@ -16,6 +16,10 @@ products:
 
 permalink: /mcp/use-access-controls-for-mcp-tools/
 
+series:
+  id: mcp-acls
+  position: 1
+
 works_on:
   - on-prem
   - konnect
@@ -78,6 +82,15 @@ prereqs:
         http://localhost:3001/mcp
         ```
       icon_url: /assets/icons/github.svg
+    - title: ChatWise Desktop App
+      content: |
+        Download and install ChatWise (available at https://chatwise.app/) for your OS.
+
+        After installation:
+        1. Launch the app.
+        2. In Settings > Providers, configure your AI provider endpoint and API key.
+      icon_url: /assets/icons/chatwise.png
+
   entities:
     services:
       - mcp-acl-service

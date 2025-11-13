@@ -102,6 +102,7 @@ certificate_admin
 charset
 chatbot
 chatbots
+chatwise
 cidr
 cidrs
 cleartext
