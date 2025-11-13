@@ -34,9 +34,11 @@ module Jekyll
       end
 
       def headers
-        h = @yaml['headers'] || []
-        h.unshift('Authorization: Bearer $KONNECT_TOKEN')
-        h
+        @headers ||= begin
+          h = @yaml['headers'] || []
+          h.unshift('Authorization: Bearer $KONNECT_TOKEN')
+          h.uniq
+        end
       end
 
       def config
