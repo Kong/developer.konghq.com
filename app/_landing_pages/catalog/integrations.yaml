@@ -186,7 +186,7 @@ rows:
               icon: /assets/icons/mesh.svg
               ctas:
                 - text: Reference
-                  url: "/catalog/integrations/mesh-manager/"
+                  url: "/catalog/integrations/service-mesh/"
                 - text: Tutorial
                   url: "/how-to/map-mesh-manager-resources/"
       
