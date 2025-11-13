@@ -95,6 +95,7 @@ Let's configure authentication so the "{{site.base_gateway}}" can identify each 
 entities:
   plugins:
     - name: key-auth
+      route: mcp-acl-route
       config:
         key_names:
           - apikey
@@ -193,71 +194,42 @@ entities:
     - name: ai-mcp-proxy
       route: mcp-acl-route
       config:
-        mode: conversion-listener
+        mode: passthrough-listener
         include_consumer_groups: true
-
         global_acl:
           allow:
             - "developer"
             - "admin"
           deny:
             - "suspended"
-
         logging:
-          log_payloads: true
+          log_payloads: false
           log_statistics: true
           log_audits: true
-
         tools:
           - description: List users
             name: list_users
-            method: GET
-            path: "/marketplace/users"
-            parameters: []
             acl:
               allow: ["admin", "eason"]
               deny: ["developer"]
-
           - description: Get user
-            annotations:
-                title: Get user
             name: get_user
-            method: GET
-            path: "/marketplace/users"
-            parameters:
-              - name: id
-                in: query
-                required: true
-                schema:
-                  type: string
-                  description: User ID
             acl:
               allow: ["admin", "developer"]
-
           - description: List orders
             name: list_orders
-            annotations:
-                title: List orders
-            method: GET
-            path: "/marketplace/orders"
-            parameters: []
+            acl:
+              allow: ["admin", "developer"]
+          - description: List orders for users
+            name: list_orders_for_user
             acl:
               allow: ["admin", "developer"]
 
-          - description: List orders for users
-            annotations:
-                title: List orders of users
-            name: list_orders_for_user
-            method: GET
-            path: "/marketplace/orders"
-            parameters:
-              - name: userid
-                in: query
-                required: true
-                schema:
-                  type: string
-            acl:
-              allow: ["admin", "developer"]
+          # - description: Search orders by name (case-insensitive substring)
+          #   name: search_orders
+          #   acl:
+          #     allow: ["admin"]
+          #     deny: ["developer"]
 {% endentity_examples %}
 
 ## Validate the configuration
