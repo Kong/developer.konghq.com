@@ -2,6 +2,9 @@
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
 
+# Plugin examples
+/plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
+
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
 /gateway/latest/plan-and-deploy/security/secrets-management/reference-format /gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault
@@ -114,6 +117,10 @@
 ## Event gateway
 
 /knep/get-started/  /event-gateway/get-started/
+/event-gateway/policies/schema-validation/* /event-gateway/policies/
+/event-gateway/get-started/topic-filtering/ /event-gateway/policies/skip-record/
+/event-gateway/get-started/topic-name-aliasing/ /event-gateway/entities/virtual-cluster/#namespaces
+/api/event-gateway/knep/*   /api/konnect/event-gateway/
 
 ## Dev Portal
 
@@ -121,7 +128,7 @@
 /dev-portal/snippets/   /dev-portal/pages-and-content/
 /dev-portal/application-registration/   /dev-portal/self-service/
 /dev-portal/access-and-approval/    /dev-portal/self-service/
-/dev-portal/publishing/ /dev-portal/apis/
+/dev-portal/publishing/ /catalog/apis/
 
 
 # Gateway LTS
@@ -148,3 +155,14 @@
 
 /operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
 
+# Service Catalog rename
+
+/service-catalog/*   /catalog/:splat   301
+/service-catalog     /catalog          301
+/dev-portal/apis/ /catalog/apis/
+/index/service-catalog/ /index/catalog/
+/index/reference-platform/ /index/konnect-reference-platform/
+
+# Cloud Gateways
+
+/dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301

@@ -1,4 +1,21 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Added support for sanitizing LLM responses.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added a `block_if_detected` option to reject requests containing PII data instead of sanitizing them. When `block_if_detected` is enabled, requests with detected PII will be blocked with a 400 response containing details about the identified PII types and count.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where responses could not be redacted correctly when there were multiple redact texts of different lengths sharing the same prefix.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Blocked plugins to execute retry logic. Also improve testing functions\n",
@@ -19,6 +36,13 @@
   "3.11.0.1": [
     {
       "message": "Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where responses could not be redacted correctly when there were multiple redact texts of different lengths sharing the same prefix.\n",
       "scope": "Plugin",
       "type": "bugfix"
     }

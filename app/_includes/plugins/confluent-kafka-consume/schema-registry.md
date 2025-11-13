@@ -85,8 +85,11 @@ autonumber
 
 To configure Schema Registry with the {{include.name}} plugin, use the [`config.schema_registry`](./reference/#schema--config-schema-registry) parameter in your plugin configuration. 
 
-See the [schema registry configuration example](./examples/schema-registry/) for sample configuration values.
-
+For sample configuration values, see:
+* [Schema registry configuration example](./examples/schema-registry/)
+{% if include.slug == 'confluent-consume' %}
+* [Schema registry with OAuth2 configuration example](./examples/schema-registry-oauth2/) {% new_in 3.12 %}
+{% endif %}
 
 
 

@@ -41,8 +41,7 @@ related_resources:
     url: /gateway/authentication/
 
 notes: |
-  The time-to-live (ttl) does not work in Konnect or hybrid mode. This setting
-  determines the length of time a credential remains valid.
+  This setting determines the length of time a credential remains valid.
 
 min_version:
   gateway: '1.0'

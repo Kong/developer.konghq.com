@@ -8,7 +8,7 @@ products:
 - insomnia
 
 tags:
-  - documents
+  - insomnia-documents
   - linting
 
 related_resources:

@@ -21,7 +21,7 @@ support_url: https://www.impart.security/get-started
 icon: impart.png
 
 tags:
-  - impart
+  - impart-security
   - security
 
 search_aliases:

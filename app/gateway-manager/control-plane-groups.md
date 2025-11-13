@@ -14,7 +14,7 @@ tools:
 min_version:
     gateway: '3.5'
 tags:
-  - control-plane-group
+  - control-plane
   - gateway-manager
 
 description: A Control Plane Group is a read-only Control Plane that combines configuration from its members, which are standard Control Planes.

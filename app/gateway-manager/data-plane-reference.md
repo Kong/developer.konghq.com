@@ -78,8 +78,8 @@ columns:
   - title: Platforms
     key: platforms
 rows:
-  - type: Standard setup
-    platforms: macOS (ARM), macOS (Intel), Windows, Linux (Docker)
+  - type: Standard setup (Docker)
+    platforms: macOS (ARM), macOS (Intel), Windows, Linux
   - type: Advanced setup
     platforms: Linux, Kubernetes
 {% endtable %}

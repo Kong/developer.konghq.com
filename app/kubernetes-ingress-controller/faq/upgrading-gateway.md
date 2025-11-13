@@ -14,6 +14,7 @@ products:
   - kic
 tags: 
   - helm
+  - upgrade
 search_aliases: 
   - upgrade gateway helm
 works_on:

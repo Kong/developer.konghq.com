@@ -11,8 +11,8 @@ works_on:
     - konnect
 
 tags:
-    - upgrades
-    - migrating
+    - upgrade
+    - migration
 
 search_aliases:
     - Dev Portal v2
@@ -33,7 +33,7 @@ related_resources:
 
 With the GA release of the new Dev Portal (v3) in June 2025, you can migrate from classic Dev Portals (v2) to the new Dev Portal. 
 
-Dev Portal v3 provides additional features such as a streamlined [API creation and publishing process](/dev-portal/apis/) and enhanced [Dev Portal customization](/dev-portal/customizations/dev-portal-customizations/) with Markdown components and snippets.
+Dev Portal v3 provides additional features such as a streamlined [API creation and publishing process](/catalog/apis/) and enhanced [Dev Portal customization](/dev-portal/customizations/dev-portal-customizations/) with Markdown components and snippets.
 
 ## Migrate manually
 

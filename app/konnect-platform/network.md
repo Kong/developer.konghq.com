@@ -125,6 +125,7 @@ The following [geographic regions](/konnect-platform/geos/) and their hostname r
 * EU (Europe): `eu`
 * ME (Middle East): `me`
 * IN (India): `in`
+* SG (Singapore) (beta): `sg`
 * US (United States): `us`
 
 Depending on the regions your organization uses, you'll need to allowlist the hostnames and include the region-specific identifier in the hostname in place of `{region}`:

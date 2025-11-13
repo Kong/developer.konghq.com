@@ -85,4 +85,4 @@ In contrast to other plugins that use queues, all HTTP Log plugin instances that
 
 ## Custom fields by Lua
 
-{% include /plugins/logging/log-custom-fields-by-lua.md %}
+{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.custom_fields_by_lua' custom_fields_by_lua_slug='config-custom-fields-by-lua' name=page.name slug=page.slug %}

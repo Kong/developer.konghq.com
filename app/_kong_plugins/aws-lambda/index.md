@@ -9,8 +9,7 @@ description: 'Invoke and manage AWS Lambda functions from {{site.base_gateway}}'
 
 tags:
   - serverless
-  - AWS
-  - request
+  - aws
 
 products:
     - gateway
@@ -59,14 +58,14 @@ The AWS Lambda plugin will automatically fetch the IAM role credential according
 precedence order:
 1. Fetch from the credentials defined in the [`config.aws_key`](./reference/#schema--config-aws_key) and [`config.aws_secret`](./reference/#schema--config-aws_secret) parameters in the plugin configuration.
 
-  {:.info}
-  > By default, cURL sends payloads with an
-  `application/x-www-form-urlencoded` MIME type, which will naturally be URL-decoded by {{site.base_gateway}}. 
-  To ensure special characters that are likely to appear in
-  your AWS key or secret (like `+`) are correctly decoded, you must
-  URL-encode them with `--data-urlencode`.
-  Alternatives to this approach would be to send your payload with a
-  different MIME type (like `application/json`), or to use a different HTTP client.
+   {:.info}
+   > By default, cURL sends payloads with an
+   `application/x-www-form-urlencoded` MIME type, which will naturally be URL-decoded by {{site.base_gateway}}. 
+   To ensure special characters that are likely to appear in
+   your AWS key or secret (like `+`) are correctly decoded, you must
+   URL-encode them with `--data-urlencode`.
+   Alternatives to this approach would be to send your payload with a
+   different MIME type (like `application/json`), or to use a different HTTP client.
 
 1. Fetch from the credentials defined in the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
 1. Fetch from the profile and credential file, defined by `AWS_PROFILE` and `AWS_SHARED_CREDENTIALS_FILE`.

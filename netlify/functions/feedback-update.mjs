@@ -4,20 +4,19 @@ import {
   connectSnowflake,
 } from "../utils/snowflake";
 
-export async function handler(event, context) {
+export default async (req, context) => {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
   let connection;
 
-  if (event.httpMethod !== "PUT") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: "Method Not Allowed" }),
+  if (req.method !== "PUT") {
+    return new Response(JSON.stringify({ message: "Method Not Allowed" }), {
+      status: 405,
       headers: { "Content-Type": "application/json" },
-    };
+    });
   }
 
   try {
-    const { pageUrl, feedbackId, message } = JSON.parse(event.body);
+    const { pageUrl, feedbackId, message } = await req.json();
 
     const url = new URL(pageUrl);
     url.hash = "";
@@ -26,7 +25,7 @@ export async function handler(event, context) {
       text: `Update feedback received:\n• Page: ${url}\n• Feedback Id: ${feedbackId}\n• Message: ${message}`,
     };
 
-    const response = await fetch(webhookUrl, {
+    await fetch(webhookUrl, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: { "Content-Type": "application/json" },
@@ -37,18 +36,16 @@ export async function handler(event, context) {
 
     await updateFeedbackInSnowflake(connection, feedbackId, message);
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Feedback updated" }),
+    return new Response(JSON.stringify({ message: "Feedback updated" }), {
+      status: 200,
       headers: { "Content-Type": "application/json" },
-    };
+    });
   } catch (error) {
     console.log(error.message);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: "Server error" }),
+    return new Response(JSON.stringify({ message: "Server error" }), {
+      status: 500,
       headers: { "Content-Type": "application/json" },
-    };
+    });
   } finally {
     if (connection) {
       connection.destroy((err) => {
@@ -58,4 +55,14 @@ export async function handler(event, context) {
       });
     }
   }
-}
+};
+
+export const config = {
+  path: "/feedback/update",
+  method: "PUT",
+  rateLimit: {
+    windowLimit: 4,
+    windowSize: 60,
+    aggregateBy: ["ip", "domain"],
+  },
+};

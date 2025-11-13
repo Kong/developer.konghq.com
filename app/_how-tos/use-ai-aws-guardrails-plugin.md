@@ -35,7 +35,6 @@ entities:
 tags:
   - ai
   - openai
-  - ai-gateway
   - azure
 
 tldr:

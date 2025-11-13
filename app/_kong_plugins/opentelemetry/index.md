@@ -157,8 +157,12 @@ The OpenTelemetry plugin is built on top of the {{site.base_gateway}} tracing PD
 
    ```lua
    -- Modify the root span
-   local root_span = kong.tracing.active_span()
+   local root_span = kong.tracing.get_root_span()
    root_span:set_attribute("custom.attribute", "custom value")
+
+   -- Modify the active span
+   local active_span = kong.tracing.active_span()
+   active_span:set_attribute("custom.attribute", "custom value")
 
    -- Create a custom span
    local span = kong.tracing.start_span("custom-span")

@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -17,6 +19,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v1'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v1'
+    description: Singapore Production region
 paths:
   /catalog-services:
     post:
@@ -67,7 +71,7 @@ paths:
           example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
     get:
       operationId: fetch-catalog-service
-      summary: Fetch Service
+      summary: Get a Service
       description: Fetches a service.
       responses:
         '200':
@@ -193,7 +197,7 @@ paths:
           example: 3f51fa25-310a-421d-bd1a-007f859021a3
     get:
       operationId: fetch-integration-instance
-      summary: Fetch Integration Instance
+      summary: Get an Integration Instance
       description: Fetches a integration instance.
       responses:
         '200':
@@ -398,7 +402,7 @@ paths:
           example: AflTNLY0tTQhv2my
     get:
       operationId: fetch-resource
-      summary: Fetch Resource
+      summary: Get a Resource
       description: Fetches a resource by ID.
       responses:
         '200':
@@ -529,7 +533,7 @@ paths:
           example: d277faad-ed4e-4c56-a0fb-acce065dee34
     get:
       operationId: fetch-resource-mapping
-      summary: Fetch Resource Mapping
+      summary: Get a Resource Mapping
       description: Fetches a resource mapping by ID.
       responses:
         '200':
@@ -994,7 +998,7 @@ components:
                 - url
             scope:
               description: |
-                A list of permission scopes requested by the integration. 
+                A list of permission scopes requested by the integration.
                 Defines what level of access the token will grant.
               type: array
               items:
@@ -1002,6 +1006,11 @@ components:
               example:
                 - read
                 - write
+            scope_delimiter:
+              description: |
+                A string used to separate multiple scopes in the `scope` parameter.
+              type: string
+              default: ' '
             rolling_refresh_exp_seconds:
               description: |
                 Number of seconds before the refresh token grant can no longer be used to mint
@@ -1022,8 +1031,8 @@ components:
         - config
     MultiKeyAuth:
       description: |
-        Defines an authentication strategy based on one or more API keys passed via HTTP headers. 
-        This strategy supports integrations that require custom headers for credential-based access, 
+        Defines an authentication strategy based on one or more API keys passed via HTTP headers.
+        This strategy supports integrations that require custom headers for credential-based access,
         allowing flexibility across providers with different authentication header requirements.
       type: object
       properties:
@@ -1037,7 +1046,7 @@ components:
           properties:
             headers:
               description: |
-                A list of header definitions used to transmit API credentials to the integration's external API. 
+                A list of header definitions used to transmit API credentials to the integration's external API.
                 Each header represents a unique key required by the provider.
               type: array
               items:
@@ -1265,7 +1274,7 @@ components:
         When specified, the platform will restrict updates to this field unless the integration
         meets the given condition.
 
-        For example, setting `mutable_condition: unauthorized` means the field can only be 
+        For example, setting `mutable_condition: unauthorized` means the field can only be
         changed while the integration is in an unauthorized state.
       type: string
       enum:
@@ -1279,7 +1288,7 @@ components:
           - Values are objects describing metadata about the resource type.
 
         This declaration enables the platform to understand the structure, identity, and behavior of resources discovered by the integration.
-        By registering resource types, integrations communicate the kinds of entities they will ingest and maintain, 
+        By registering resource types, integrations communicate the kinds of entities they will ingest and maintain,
         allowing the catalog to enforce consistency, validation, and visibility across all integrations.
       type: object
       example:
@@ -1600,6 +1609,7 @@ components:
         - $ref: '#/components/schemas/CreateOAuthCredential'
         - $ref: '#/components/schemas/CreateGitHubAppInstallationCredential'
         - $ref: '#/components/schemas/CreateMultiKeyAuthCredential'
+        - $ref: '#/components/schemas/CreateAWSRoleDelegationAuthCredential'
       title: CreateIntegrationInstanceAuthCredential
     IntegrationInstanceAuthCredential:
       description: Object containing metadata for an integration instance auth credential.
@@ -1607,6 +1617,7 @@ components:
         - $ref: '#/components/schemas/OAuthCredential'
         - $ref: '#/components/schemas/GitHubAppInstallationCredential'
         - $ref: '#/components/schemas/MultiKeyAuthCredential'
+        - $ref: '#/components/schemas/AWSRoleDelegationAuthCredential'
       title: IntegrationInstanceAuthCredential
     CreateOAuthCredential:
       description: Payload used to create an `OAuth` credential for an integration instance.
@@ -1719,6 +1730,30 @@ components:
         - type
         - config
       writeOnly: true
+    CreateAWSRoleDelegationAuthCredential:
+      description: Payload used to create an `AWS Role Delegation` credential for an integration instance.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - aws_role_delegation
+        config:
+          type: object
+          additionalProperties: false
+          properties:
+            role_arn:
+              description: |
+                The AWS Role ARN string
+              type: string
+              example: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
+          required:
+            - role_arn
+          title: CreateAWSRoleDelegationAuthCredentialConfig
+      additionalProperties: false
+      required:
+        - type
+        - config
     OAuthCredential:
       description: Represents a credential scoped to an integration instance that supports the `OAuth` authorization strategy.
       type: object
@@ -1869,6 +1904,60 @@ components:
         - created_at
         - type
       title: MultiKeyAuthCredential
+    AWSRoleDelegationAuthCredential:
+      description: Represents a credential scoped to an integration instance that supports the `AWS Role Delegation` authorization strategy.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        integration_instance:
+          $ref: '#/components/schemas/IntegrationInstanceRef'
+        missing_permissions:
+          description: List of detected missing permissions required to enable the full functionality of the given integration instance.
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingPermission'
+        tainted:
+          description: Indicates that the credential is no longer valid and must be replaced with a new valid credential.
+          type: boolean
+          example: false
+        expires_at:
+          description: |
+            Timestamp denoting when the when the credential will expire in RFC-3339 format with a "T" character separating date from time within the field value.
+            When expired, the credential must be replaced with a new valid credential to re-enable full functionality for the given integration instance.
+
+            A `null` value indicates no known expiration time.
+          type: string
+          format: date-time
+          example: '2025-04-01T07:20:50Z'
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        type:
+          type: string
+          enum:
+            - aws_role_delegation
+        config:
+          type: object
+          properties:
+            role_arn:
+              description: The Role ARN use for AWS Assume Role.
+              type: string
+          required:
+            - role_arn
+          title: AWSRoleDelegationAuthCredentialConfig
+      required:
+        - id
+        - integration_instance
+        - missing_permissions
+        - tainted
+        - expires_at
+        - created_at
+        - type
+        - config
+      title: AWSRoleDelegationAuthCredential
     MissingPermission:
       type: object
       properties:
@@ -2042,55 +2131,83 @@ components:
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
     CatalogResourceConfigFieldFilter:
-      description: |
-        Filters on the resource's `config` field. Filters must use dot-notation to identify
-        the property that will be used to filter the results. For example:
-          - `filter[config.control_plane_id]`
-          - `filter[config.gateway_service_id][neq]=cedbd134-fc5c-4d44-9e38-ccd2a0c6e0ae`
+      description: 'Filter using **one** of the following operators: `oeq`, `neq`, `contains`, `ocontains`'
+      type: object
+      properties:
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
+        ocontains:
+          description: The field contains any of the provided values.
+          type: string
+          example: '?filter[field_name_here][ocontains]=foo,bar'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+      additionalProperties: false
       oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: CatalogResourceConfigFieldFilter
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       x-examples:
-        example-1: equals-some-value
+        example-1:
+          contains: some-value
+          ocontains: 'this-value,or-that-value'
+          oeq: 'some-value,some-other-value'
+          neq: not-this-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
     CatalogResourceIntegrationDataFieldFilter:
-      description: |
-        Filters on the resource's `integration_data` field. Filters must use dot-notation to identify
-        the property that will be used to filter the results. For example:
-          - `filter[integration_data.control_plane.id]=760562c3-fedd-43e4-b742-fc1663fef188`
-          - `filter[integration_data.gateway_service.name][contains]=legacy`
+      description: 'Filter using **one** of the following operators: `oeq`, `neq`, `contains`, `ocontains`'
+      type: object
+      properties:
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
+        ocontains:
+          description: The field contains any of the provided values.
+          type: string
+          example: '?filter[field_name_here][ocontains]=foo,bar'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+      additionalProperties: false
       oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: CatalogResourceIntegrationDataFieldFilter
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       x-examples:
-        example-1: equals-some-value
+        example-1:
+          contains: some-value
+          ocontains: 'this-value,or-that-value'
+          oeq: 'some-value,some-other-value'
+          neq: not-this-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
     CatalogResource:
       description: Information about a catalog resource.
       type: object
@@ -2416,8 +2533,19 @@ components:
         - type
         - config
         - integration
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `oeq`, `neq`'
+      type: object
+      properties:
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+      additionalProperties: false
       oneOf:
         - type: string
         - type: object
@@ -2428,99 +2556,51 @@ components:
               type: string
           required:
             - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        oeq:
-          type: string
-      additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
       x-examples:
         example-1:
           oeq: 'some-value,some-other-value'
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
           neq: not-this-value
-    UuidFieldFilter:
-      description: Filters on the given UUID field value by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: UuidFieldFilter
-      x-examples:
-        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
         example-2:
-          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-3:
-          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-4:
-          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
+          eq: some-value
+    StringFieldFilter:
+      description: 'Filter using **one** of the following operators: `oeq`, `neq`, `contains`, `ocontains`'
       type: object
       properties:
         contains:
+          description: The field contains the provided value.
           type: string
+          example: '?filter[field_name_here][contains]=foo'
+        ocontains:
+          description: The field contains any of the provided values.
+          type: string
+          example: '?filter[field_name_here][ocontains]=foo,bar'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
       additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       x-examples:
         example-1:
           contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        ocontains:
-          type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
           ocontains: 'this-value,or-that-value'
-    StringFieldFilter:
-      description: Filters on the given string field value by either exact or fuzzy match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilter
-      x-examples:
-        example-1: equals-some-value
+          oeq: 'some-value,some-other-value'
+          neq: not-this-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
     BooleanFieldFilter:
       description: Filter by a boolean value (true/false).
       type: boolean
@@ -2811,6 +2891,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -3085,20 +3166,34 @@ components:
           type: string
           example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
     StringFieldFilterExact:
-      description: Filters on the given string field value by exact match.
+      description: 'Filter using **one** of the following operators: `oeq`, `neq`'
+      type: object
+      properties:
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+      additionalProperties: false
       oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilterExact
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       x-examples:
-        example-1: equals-some-value
+        example-1:
+          oeq: 'some-value,some-other-value'
+          neq: not-this-value
         example-2:
           eq: some-value
-        example-3:
-          oeq: 'some-potential,value'
-        example-4:
-          neq: not-this-value
     CursorMetaPage:
       type: object
       properties:
@@ -3353,6 +3448,29 @@ components:
             total: 3
             size: 100
             number: 1
+    SampleInstanceCreateSonarQubePayload:
+      value:
+        integration_name: sonarqube
+        name: sonarqube
+        display_name: SonarQube
+        description: 'View SonarQube Projects directly in Catalog, giving teams a seamless view of code quality and security insights alongside their services.'
+        config: {}
+    SampleInstanceCreateAzureApiManagementPayload:
+      value:
+        integration_name: azure-api-management
+        name: azure-api-management
+        display_name: Azure API Management
+        description: Expand Service Catalog functionality with Azure to visualize API Management services and their APIs.
+        config:
+          subscription_id: 00000000-0000-0000-0000-000000000000
+    SampleInstanceCreateDynatracePayload:
+      value:
+        integration_name: dynatrace
+        name: dynatrace
+        display_name: Dynatrace
+        description: Ingest SLOs from your Dynatrace environment for a unified view of service health and reliability.
+        config:
+          base_url: 'https://id.live.dynatrace.com'
     SampleInstanceCreateTraceablePayload:
       value:
         integration_name: traceable
@@ -3513,6 +3631,82 @@ components:
           id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
           name: swaggerhub-internal
           display_name: SwaggerHub (Internal)
+    SampleCreateAWSRoleDelegationAuthPayload:
+      value:
+        type: aws_role_delegation
+        config:
+          role_arn: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
+    SampleCreateAWSRoleDelegationAuthResponse:
+      value:
+        id: 4f535923-ec24-456c-b4e5-e67f65c8c208
+        type: aws_role_delegation
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2022-11-04T20:10:06.927Z'
+        integration_instance:
+          id: e0f2388b-2efe-42a3-a9e4-86f12d3e8c77
+          name: swaggerhub-internal
+          display_name: SwaggerHub (Internal)
+        config:
+          role_arn: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
+    SampleCreateDynatraceMultiKeyAuthPayload:
+      value:
+        type: multi_key_auth
+        config:
+          headers:
+            - name: authorization
+              key: dynatrace-api-key
+    SampleCreateDynatraceMultiKeyAuthResponse:
+      value:
+        id: 88c58c29-ff7d-4913-b3d7-8affc279dd56
+        type: multi_key_auth
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2022-11-04T20:10:06.927Z'
+        integration_instance:
+          id: 70ecc595-4280-4872-8b80-87b2e57dba3f
+          name: dynatrace
+          display_name: Dynatrace
+    SampleCreateSonarQubeMultiKeyAuthPayload:
+      value:
+        type: multi_key_auth
+        config:
+          headers:
+            - name: authorization
+              key: sonarqube-api-key
+    SampleCreateSonarQubeMultiKeyAuthResponse:
+      value:
+        id: 1a048e2f-bb24-49b9-bcb3-8a4855cb4d44
+        type: multi_key_auth
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2022-11-04T20:10:06.927Z'
+        integration_instance:
+          id: f0f2725e-051d-48fd-a63f-e1e76d5fec34
+          name: sonarqube
+          display_name: SonarQube
+    AzureApiManagementAuthConfigPayload:
+      value:
+        type: oauth
+        config:
+          grant_type: authorization_code
+          code: Yzk5ZDczMzRlNDEwY
+          redirect_uri: 'https://cloud.konghq.com/us/servicehub/integrations/azure-api-management/oauth'
+    AzureApiManagementAuthConfigResponse:
+      value:
+        id: 2b7e1516-28ae-4d6c-8c2f-1e2b3c4d5e6f
+        type: oauth
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2022-11-04T20:10:06.927Z'
+        integration_instance:
+          id: 3c9e2f1a-4b5d-6e7f-8a9b-0c1d2e3f4a5b
+          name: azure-api-management
+          display_name: Azure API Management
     GitLabSelfManagedAuthConfigPayload:
       value:
         type: oauth
@@ -3874,6 +4068,12 @@ components:
               $ref: '#/components/examples/SampleInstanceCreateSlackPayload'
             Traceable:
               $ref: '#/components/examples/SampleInstanceCreateTraceablePayload'
+            Dynatrace:
+              $ref: '#/components/examples/SampleInstanceCreateDynatracePayload'
+            SonarQube:
+              $ref: '#/components/examples/SampleInstanceCreateSonarQubePayload'
+            azureApiManagement:
+              $ref: '#/components/examples/SampleInstanceCreateAzureApiManagementPayload'
     UpdateIntegrationInstanceRequest:
       required: true
       content:
@@ -3896,6 +4096,14 @@ components:
               $ref: '#/components/examples/SampleCreateDatadogMultiKeyAuthPayload'
             Traceable:
               $ref: '#/components/examples/SampleCreateTraceableMultiKeyAuthPayload'
+            AwsApiGateway:
+              $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthPayload'
+            Dynatrace:
+              $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthPayload'
+            SonarQube:
+              $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthPayload'
+            azureApiManagement:
+              $ref: '#/components/examples/AzureApiManagementAuthConfigPayload'
     UpsertIntegrationInstanceAuthConfigRequest:
       required: true
       content:
@@ -4042,6 +4250,14 @@ components:
           examples:
             SwaggerHub:
               $ref: '#/components/examples/SampleCreateSwaggerHubMultiKeyAuthResponse'
+            AwsApiGateway:
+              $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthResponse'
+            Dynatrace:
+              $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthResponse'
+            SonarQube:
+              $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthResponse'
+            azureApiManagement:
+              $ref: '#/components/examples/AzureApiManagementAuthConfigResponse'
     IntegrationInstanceAuthConfigResponse:
       description: A response containing integration instance auth config.
       content:

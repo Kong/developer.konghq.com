@@ -40,6 +40,10 @@ search_aliases:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - load-balancing
+  - failover
 ---
 
 ## What is a Target?
@@ -63,6 +67,10 @@ For example, let's say you add `api.host.com:123` with `weight=100`:
 
 The balancer honors the DNS record's `ttl` setting. Upon expiry, it queries the nameserver and updates the balancer. 
 When a DNS record has `ttl=0`, the hostname is added as a single target, with the specified weight. The nameserver is queried for every request, adding latency to the request.
+
+## Managing failover Targets {% new_in 3.12 %}
+
+{% include_cached /gateway/failover-targets.md %}
 
 ## Schema
 

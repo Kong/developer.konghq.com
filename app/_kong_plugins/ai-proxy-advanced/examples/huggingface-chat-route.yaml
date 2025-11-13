@@ -18,7 +18,7 @@ config:
         name: HuggingFaceTB/SmolVLM-Base
 
 variables:
-  key:
+  token:
     value: $HUGGINGFACE_TOKEN
     description: The token to use to connect to Hugging Face.
 

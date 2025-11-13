@@ -1,9 +1,14 @@
+{% if include.icon %}
+  {% assign icon = include.icon %}
+{% else %}
+  {% if include.product %}{% assign icon = site.data.products[include.product].icon %}{% endif %}
+{% endif %}
 <a href="{{include.url}}" class="flex gap-2 items-center w-full {{include.css_classes}}">
     <span
      class="navbar-item__icon {% if include.product %}product-icon product-icon--background {% if include.product == 'kic' or include.product == 'operator' %} product-icon--bordered {% endif %}{% endif %} {% if include.color %} bg-semantic-{{include.color}}-secondary text-semantic-{{include.color}}-primary {% endif %}"
      {% if include.product %} style="background-color: rgb(var(--color-{{include.product}}-background));" {% endif %}
     >
-      {% include_svg include.icon height="12" width="12" %}
+      {% include_svg icon height="12" width="12" %}
     </span>
     <span class="text-base lg:text-sm text-primary">{{include.text}} {% unless include.no_arrow %} &rarr;{% endunless %}</span>
 </a>

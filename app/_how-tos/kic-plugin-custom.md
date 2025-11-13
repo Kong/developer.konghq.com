@@ -76,11 +76,11 @@ kubectl create configmap kong-plugin-myheader-migrations --from-file=myheader/mi
 
 ## Deploy your custom plugin
 
-Kong provides a way to deploy custom plugins using both {{ site.gateway_operator_product_name }} and the {{ site.kic_product_name }} Helm chart. This guide shows how to use the Helm chart, but we recommend using {{ site.gateway_operator_product_name }} if possible. See [Kong custom plugin distribution with KongPluginInstallation](/operator/dataplanes/how-to/deploy-custom-plugins/) for more information.
+Kong provides a way to deploy custom plugins using both {{ site.operator_product_name }} and the {{ site.kic_product_name }} Helm chart. This guide shows how to use the Helm chart, but we recommend using {{ site.operator_product_name }} if possible. See [Kong custom plugin distribution with KongPluginInstallation](/operator/dataplanes/how-to/deploy-custom-plugins/) for more information.
 
 The {{ site.kic_product_name }} Helm chart automatically configures all the environment variables required based on the plugins you inject.
 
-1. Create a `values.yaml` file in your current directory with the following contents. Ensure that you add in other configuration values you might need for your installation to be successful.
+1. Update your `values.yaml` file with the following contents. Ensure that you add in other configuration values you might need for your installation to be successful.
 
     ```yaml
     gateway:
@@ -113,6 +113,19 @@ The {{ site.kic_product_name }} Helm chart automatically configures all the envi
     ```bash
     helm upgrade --install kong kong/ingress -n kong --create-namespace --values values.yaml
     ```
+
+{: data-deployment-topology="konnect" }
+## Register the plugin schema in Konnect
+
+To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane: 
+
+```sh
+curl -X POST \
+  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+  --header 'Content-Type: application/json' \
+  --header "Authorization: Bearer $KONNECT_TOKEN" \
+  --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+```
 
 ## Using custom plugins
 

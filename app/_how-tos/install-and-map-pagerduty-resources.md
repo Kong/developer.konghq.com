@@ -1,9 +1,9 @@
 ---
-title: Import and map PagerDuty resources in Service Catalog
+title: Import and map PagerDuty resources in Catalog
 content_type: how_to
 description: Learn how to connect PagerDuty services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,17 +11,19 @@ tools:
 tags:
   - integrations
   - pagerduty
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Service Catalog
-    url: /service-catalog/
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: PagerDuty reference
-    url: /service-catalog/integrations/pagerduty/
+    url: /catalog/integrations/pagerduty/
 automated_tests: false
 tldr:
-  q: How do I view PagerDuty services in Service Catalog?
-  a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a Service Catalog service and associate it with your PagerDuty services to display metadata and enable event tracking. 
+  q: How do I view PagerDuty services in {{site.konnect_catalog}}?
+  a: Install the PagerDuty integration in {{site.konnect_short_name}} and authorize it with both read and write scopes. Create a {{site.konnect_catalog}} service and associate it with your PagerDuty services to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -35,14 +37,14 @@ prereqs:
 
 ## Authenticate the PagerDuty integration
 
-1. From the **Service Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
 2. Click **PagerDuty**, and then click **Add PagerDuty Instance**.
 3. Configure the region, grant authorization, and name the instance. 
    PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. **Both Read and Write scopes are required.**
 
 Once authorized, resources from your PagerDuty account will be discoverable in the UI.
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
 Create a service that you'll map to your PagerDuty resources:
 
@@ -66,7 +68,7 @@ export PAGERDUTY_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List PagerDuty resources
 
-Before you can map your PagerDuty resources to a service in Service Catalog, you first need to find the resources that are pulled in from PagerDuty:
+Before you can map your PagerDuty resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from PagerDuty:
 
 <!--vale off-->
 {% konnect_api_request %}

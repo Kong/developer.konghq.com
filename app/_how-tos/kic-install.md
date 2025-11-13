@@ -51,6 +51,10 @@ faqs:
   - q: I'm using AWS CDK, can I manage Kong resources with CDK instead of {{ site.kic_product_name }}?
     a: |
       Currently, you can't manage Kong resources via AWS CDK. We recommend managing Kong configurations by [deploying decK](/deck/) or custom automation (for example, Lambda functions) through CDK that interact with the [Admin API](/admin-api/). 
+
+tags:
+  - install
+  - helm
 ---
 
 {: data-deployment-topology="konnect" }

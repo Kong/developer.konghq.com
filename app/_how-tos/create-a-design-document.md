@@ -7,8 +7,7 @@ products:
 breadcrumbs:
   - /insomnia/test/
 tags:
-  - documents
-  - api
+  - insomnia-documents
 related_resources:
   - text: About Insomnia
     url: /insomnia/

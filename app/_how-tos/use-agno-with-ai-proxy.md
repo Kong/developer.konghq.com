@@ -36,7 +36,6 @@ entities:
 
 tags:
   - ai
-  - ai-gateway
 
 tools:
   - deck

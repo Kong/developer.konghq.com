@@ -25,6 +25,8 @@ Flags:
                                                             thus gaining some performance with large configs.
                                                             Usage of this flag without apt select-tags and default-lookup-tags can be problematic.
                                                             This flag is not valid with Konnect.
+      --skip-hash-for-basic-auth                            do not sync hash for basic auth credentials.
+                                                            This flag is only valid with Konnect.
   -w, --workspace string                                    Sync configuration to a specific workspace (Kong Enterprise only).
                                                             This takes precedence over _workspace fields in state files.
       --yes yes                                             assume yes to prompts and run non-interactively.

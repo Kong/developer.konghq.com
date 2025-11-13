@@ -32,7 +32,7 @@ related_resources:
     url: /gateway/upgrade/lts-upgrade-28-34/
 tags:
   - versioning
-  - upgrades
+  - upgrade
 ---
 
 This guide walks you through preparing for a {{site.base_gateway}} upgrade, helps you determine which upgrade path to use, and helps you decide on the best strategy for each {{site.base_gateway}} deployment mode.

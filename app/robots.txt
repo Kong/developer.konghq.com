@@ -7,6 +7,9 @@ Allow: *
 User-agent: Screaming Frog SEO Spider
 Allow: *
 
+User-agent: Baiduspider-render
+Disallow: /
+
 User-agent: *
 {% unless jekyll.environment == "production" %}
 Disallow: /

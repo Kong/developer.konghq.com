@@ -1,4 +1,4 @@
-title: All decK Documentation
+title: decK Documentation
 sections:
   - title: Overview
     items:
@@ -12,7 +12,7 @@ sections:
       - title: Install decK on Windows
         description: Install a binary package on Windows
         url: /deck/?tab=windows#install-deck
-      - title: Install decK on MacOS
+      - title: Install decK on macOS
         description: Use Homebrew to install decK
         url: /deck/?tab=macos#install-deck
       - title: Install decK on Linux

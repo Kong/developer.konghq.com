@@ -1,0 +1,19 @@
+description: Disables signing or re-signing access and channel tokens.
+
+extended_description: |
+  Disables signing or re-signing access and channel tokens. 
+  This can be useful when the token is just validated by {{site.base_gateway}} and doesn't need to be passed to the upstream.
+min_version: 
+  gateway: '3.12' 
+title: 'Disable signing or re-signing tokens'
+
+weight: 900
+
+config:
+  channel_token_signing: false
+  access_token_signing: false
+
+tools:
+  - deck
+  - admin-api
+  - kic

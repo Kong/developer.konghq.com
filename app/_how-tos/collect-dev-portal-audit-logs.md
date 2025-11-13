@@ -5,10 +5,16 @@ content_type: how_to
 related_resources:
   - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
-  - text: Collect Konnect audit logs
+  - text: Collect {{site.konnect_short_name}} audit logs
     url: /how-to/collect-audit-logs/
   - text: About Dev Portal
     url: /dev-portal/
+  - text: Recover Dev Portal audit logs
+    url: /how-to/recover-dev-portal-audit-logs/
+  - text: Recover {{site.konnect_short_name}} audit logs
+    url: /how-to/recover-konnect-org-audit-logs/
+  - text: Configure an HTTPS data collection endpoint in SumoLogic
+    url: https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source
 automated_tests: false
 products:
     - gateway
@@ -25,7 +31,7 @@ tags:
 tldr:
     q: How do I send Dev Portal audit logs to a SIEM provider?
     a: |
-        Create an HTTPS data collection endpoint and access key in the provider and save their values. Configure an [audit log destination](/api/konnect/audit-logs/v2/#/operations/create-audit-log-destination) in {{site.konnect_short_name}} with the SIEM endpoint (`endpoint`), the access key (`authorization`), and set the log format `log_format: cef`. Then create the webhook for your Dev Portal with the [`/portals/{portalId}/audit-log-webhook`](/api/konnect/portal-management/v3/#/operations/update-portal-audit-log-webhook).
+        Create an HTTPS data collection endpoint and access key in the provider and save their values. Configure an [audit log destination](/api/konnect/audit-logs/#/operations/create-audit-log-destination) in {{site.konnect_short_name}} with the SIEM endpoint (`endpoint`), the access key (`authorization`), and set the log format `log_format: cef`. Then create the webhook for your Dev Portal with the [`/portals/{portalId}/audit-log-webhook`](/api/konnect/portal-management/#/operations/update-portal-audit-log-webhook).
 
         This tutorial uses SumoLogic, but you can apply the same steps to your provider.
 prereqs:
@@ -42,7 +48,7 @@ prereqs:
         1. [Register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in). You can do this by navigating to your Dev Portal URL and clicking **Sign up**.
       icon_url: /assets/icons/dev-portal.svg
     - title: SumoLogic SIEM provider
-      include_content: /prereqs/sumologic-siem
+      include_content: /prereqs/sumologic-siem-for-konnect-api
 
 tools:
   - konnect-api
@@ -56,19 +62,23 @@ cleanup:
 
 ## Set up the audit log destination
 
-Create an audit log destination by sending a `POST` request to the [`/audit-log-destinations`](/api/konnect/audit-logs/v2/#/operations/create-audit-log-destination) endpoint with the connection details for your SIEM vendor:
+Create an audit log destination by sending a `POST` request to the [`/audit-log-destinations`](/api/konnect/audit-logs/#/operations/create-audit-log-destination) endpoint with the connection details for your SIEM vendor:
 
-```sh
-curl -i -X POST https://global.api.konghq.com/v2/audit-log-destinations \
---header "Content-Type: application/json" \
---header "Authorization: Bearer $KONNECT_TOKEN" \
---json '{
-    "endpoint": "'$SIEM_ENDPOINT'",
-    "authorization": "'$SIEM_TOKEN'",
-    "log_format": "cef",
-    "name": "Example destination"
-}'
-```
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v3/audit-log-destinations
+status_code: 201
+method: POST
+region: global
+headers:
+  - 'Content-Type: application/json'
+body:
+    endpoint: $SIEM_ENDPOINT
+    authorization: $SIEM_TOKEN
+    log_format: cef
+    name: Example destination
+{% endkonnect_api_request %}
+<!-- vale on -->
 
 Export the ID of the new destination to your environment:
 
@@ -78,7 +88,7 @@ export DESTINATION_ID='YOUR DESTINATION ID'
 
 ## Enable the webhook on your Dev Portal
 
-Create a webhook by sending a `PATCH` request to the [`/portals/{portalId}/audit-log-webhook`](/api/konnect/portal-management/v3/#/operations/update-portal-audit-log-webhook) endpoint with the audit log destination:
+Create a webhook by sending a `PATCH` request to the [`/portals/{portalId}/audit-log-webhook`](/api/konnect/portal-management/#/operations/update-portal-audit-log-webhook) endpoint with the audit log destination:
 
 <!--vale off-->
 {% konnect_api_request %}

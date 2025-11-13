@@ -1,9 +1,9 @@
 ---
-title: Import and map Traceable resources in Service Catalog
+title: Import and map Traceable resources in Catalog
 content_type: how_to
 description: Learn how to connect Traceable services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:
-  - service-catalog
+  - catalog
 works_on:
   - konnect
 tools:
@@ -11,19 +11,21 @@ tools:
 tags:
   - integrations
   - traceable
+search_aliases:
+  - service catalog
 related_resources:
-  - text: Service Catalog
-    url: /service-catalog/
+  - text: "{{site.konnect_catalog}}"
+    url: /catalog/
   - text: Integrations
-    url: /service-catalog/integrations/
+    url: /catalog/integrations/
   - text: Traceable plugin
     url: /plugins/traceable/
   - text: Traceable reference
-    url: /service-catalog/integrations/traceable/
+    url: /catalog/integrations/traceable/
 automated_tests: false
 tldr:
-  q: How do I view Traceable services in Service Catalog?
-  a: Install the Traceable integration in {{site.konnect_short_name}} and authorize it with your Traceable API key. Create a Service Catalog service and associate it with your Traceable services to display metadata and enable event tracking. 
+  q: How do I view Traceable services in {{site.konnect_catalog}}?
+  a: Install the Traceable integration in {{site.konnect_short_name}} and authorize it with your Traceable API key. Create a {{site.konnect_catalog}} service and associate it with your Traceable services to display metadata and enable event tracking. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -86,7 +88,7 @@ body:
 
 Once authorized, resources from your Traceable account will be discoverable in the UI.
 
-## Create a service in Service Catalog
+## Create a service in {{site.konnect_catalog}}
 
 Create a service that you'll map to your Traceable resources:
 
@@ -110,7 +112,7 @@ export TRACEABLE_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List Traceable resources
 
-Before you can map your Traceable resources to a service in Service Catalog, you first need to find the resources that are pulled in from Traceable:
+Before you can map your Traceable resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from Traceable:
 
 <!--vale off-->
 {% konnect_api_request %}

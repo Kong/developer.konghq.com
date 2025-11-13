@@ -5,7 +5,6 @@ entities:
   - key
 
 tags:
-  - key
   - secrets-management
 
 products:

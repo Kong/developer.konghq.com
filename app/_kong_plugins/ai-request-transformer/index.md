@@ -59,6 +59,13 @@ It also uses the same configuration and tuning parameters as the AI Proxy plugin
 The AI Request Transformer plugin runs **before** all of the [AI prompt](/plugins/?terms=ai%2520prompt) plugins and the
 AI Proxy plugin, allowing it to also transform requests before sending them to a different LLM.
 
+{:.warning}
+> **Known failure mode: AI Request Transformer with AI Proxy**
+>
+> Chaining AI Request Transformer with AI Proxy or AI Proxy Advanced may fail for some providers, even though the same setup works with others.
+>
+> The reason is that the AI Request Transformer plugin forwards raw model output, and if the model does not produce strict JSON, the proxy chain cannot function correctly. This is not a bug in Kong AI Gateway but a limitation of LLM behavior.
+
 ## How it works
 
 {% include plugins/ai-transformer-diagram.md %}

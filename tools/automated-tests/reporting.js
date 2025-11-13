@@ -117,12 +117,7 @@ function buildTestList(results) {
 }
 
 export async function logResults(results, start, stop) {
-  const skippedInstructions = yaml.load(
-    await fs.readFile("./.automated-tests", "utf-8")
-  );
-  const { passed, failed, skipped } = categorizeResults(
-    results.concat(skippedInstructions)
-  );
+  const { passed, failed, skipped } = categorizeResults(results);
   const { expectedCount, failedCount } = summarizeFailures(failed);
 
   const resultObject = {

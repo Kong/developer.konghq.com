@@ -1,4 +1,16 @@
 {
+  "3.12.0.0": [
+    {
+      "message": "Fixed a high memory usage issue caused by caching negative introspection responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where authentication failures did not log messages in the error logs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.3": [
     {
       "message": "Fixed an issue where authentication failures did not log messages in the error logs.",

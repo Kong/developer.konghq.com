@@ -16,7 +16,9 @@ export async function testeableUrlsFromFiles(config, files) {
     const { data: frontmatter, content } = matter.read(file);
 
     const isTesteable =
-      frontmatter.products && frontmatter.products.includes("gateway");
+      frontmatter.products &&
+      (frontmatter.products.includes("gateway") ||
+        frontmatter.products.includes("event-gateway"));
 
     if (isTesteable) {
       const skipHowTo =
@@ -71,13 +73,23 @@ export async function instructionFileFromConfig(config) {
   return files.map((f) => path.join(config.instructionsDir, f));
 }
 
-export async function groupInstructionFilesByRuntime(files) {
+export async function groupInstructionFilesByProductAndRuntime(files) {
   const groupedFiles = {};
 
   for (const file of files) {
-    const runtime = path.basename(file, path.extname(file));
-    groupedFiles[runtime] = groupedFiles[runtime] || [];
-    groupedFiles[runtime].push(file);
+    const data = yaml.load(await fs.readFile(`./${file}`, "utf-8"));
+
+    const products = data.products;
+    let mainProduct = products[0];
+    if (products.includes("ai-gateway") && mainProduct !== "ai-gateway") {
+      mainProduct = "ai-gateway";
+    }
+    let runtime = path.basename(file, path.extname(file));
+
+    groupedFiles[mainProduct] = groupedFiles[mainProduct] || {};
+    groupedFiles[mainProduct][runtime] =
+      groupedFiles[mainProduct][runtime] || [];
+    groupedFiles[mainProduct][runtime].push(file);
   }
 
   return groupedFiles;

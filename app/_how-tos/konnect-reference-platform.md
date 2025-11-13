@@ -5,7 +5,7 @@ permalink: /konnect-reference-platform/how-to/
 description: "How to deploy the {{site.konnect_short_name}} Reference Platform"
 
 products:
-  - reference-platform
+  - konnect-reference-platform
 
 works_on:
   - konnect
@@ -44,7 +44,7 @@ prereqs:
         The [{{site.konnect_short_name}} Orchestrator](/konnect-reference-platform/orchestrator) (or `koctl`) is the 
         command line tool included in the {{site.konnect_short_name}} Reference Platform.
         
-        * On MacOS, install `koctl` using Homebrew
+        * On macOS, install `koctl` using Homebrew
 
           ```shell
           brew install kong/konnect-orchestrator/koctl

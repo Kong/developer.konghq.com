@@ -6,4 +6,4 @@
     ```bash
     inso --version
     ```
-You can also install it by downloading and extracting the [zip](https://updates.insomnia.rest/downloads/mac/latest?app=com.insomnia.inso&channel=stable) file for MacOS.
+You can also install it by downloading and extracting the [zip](https://updates.insomnia.rest/downloads/mac/latest?app=com.insomnia.inso&channel=stable) file for macOS.

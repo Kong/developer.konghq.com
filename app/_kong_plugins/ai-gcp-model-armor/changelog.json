@@ -1,0 +1,9 @@
+{
+  "3.12.0.0": [
+    {
+      "message": "Added a new `GCP Model Armor` plugin that can protect requests and responses to/from AI LLM.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    }
+  ]
+}

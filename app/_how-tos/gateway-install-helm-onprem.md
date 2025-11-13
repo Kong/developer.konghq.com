@@ -21,13 +21,28 @@ works_on:
 entities: []
 
 tldr: null
+faqs:
+  - q: Can I install {{ site.base_gateway }} via Helm without cluster permissions?
+    a: |
+      Yes. Using the `kong` chart, set `ingressController.rbac.enableClusterRoles` to false. 
 
+      {:.danger}
+      > **Warning:** Some resources require a ClusterRole for reconciliation because the controllers need to watch cluster scoped resources. Disabling ClusterRoles causes them fail, so you need to disable the controllers when setting it to `false`. These resources include:
+      > - All Gateway API resources
+      > - `IngressClass`
+      > - `KNative/Ingress` (KIC 2.x only)
+      > - `KongClusterPlugin`
+      > - `KongVault`, `KongLicense` (KIC 3.1 and above)
 prereqs:
   skip_product: true
 
 topology_switcher: page
 
 automated_tests: false
+
+tags:
+  - install
+  - helm
 ---
 
 These instructions configure {{ site.base_gateway }} to use separate control plane and data plane deployments. This is the recommended production installation method.
@@ -77,42 +92,48 @@ kubectl create secret generic kong-enterprise-license --from-file=license=licens
 
 ## Postgres database
 
-If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Developer use only (Do not use in Production) Bitnami Postgres Helm chart to store your configuration.
-
-Create a Helm values file with the following:
-
-```yaml
-echo '
-auth:
-    username: kong
-    password: demo123
-    database: kong
-service:
-  ports:
-    postgresql: "5432"
-primary:
-  annotations:
-    "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
-  podSecurityContext:
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-  containerSecurityContext:
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-      - ALL
-' > values-database.yaml 
-```
-
-And install the PostgreSQL Helm chart:
+If you want to deploy a Postgres database within the cluster for testing purposes, you can install the Cloud Native Postgres operator within your cluster.
 
 ```sh
-helm install kong-cp-db --namespace kong oci://registry-1.docker.io/bitnamicharts/postgresql --values ./values-database.yaml
+helm repo add cnpg https://cloudnative-pg.github.io/charts
+helm upgrade --install cnpg \
+  --namespace cnpg \
+  --create-namespace \
+  cnpg/cloudnative-pg
 ```
+
+Once the operator is installed, create the database as well as a secret for the database:
+
+```sh
+echo 'apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: kong-cp-db
+  namespace: kong
+spec:
+  instances: 1
+
+  bootstrap:
+    initdb:
+      database: kong
+      owner: kong
+      secret:
+        name: kong-db-secret
+
+  storage:
+    size: 10Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kong-db-secret
+  namespace: kong
+type: Opaque
+stringData:
+  username: kong
+  password: demo123' | kubectl apply -f -
+```
+
 
 ## Create a Control Plane
 
@@ -149,8 +170,9 @@ env:
   pg_database: kong
   pg_user: kong
   pg_password: demo123
-  pg_host: kong-cp-db-postgresql.kong.svc.cluster.local
+  pg_host: kong-cp-db-rw.kong.svc.cluster.local
   pg_ssl: "on"
+  pg_ssl_version: tlsv1_3        # <- this is KONG_PG_SSL_VERSION
 
   # Kong Manager password
   password: kong_admin_password

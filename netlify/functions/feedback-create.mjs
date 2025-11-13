@@ -23,41 +23,34 @@ async function sendDataToSlack(url, vote, id, webhookUrl) {
   }
 }
 
-export async function handler(event, context) {
+export default async function handler(request, context) {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
   let connection;
 
   if (!webhookUrl) {
-    console.log("Missing Slack webhook URL.");
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Missing Slack webhook URL" }),
-    };
+    return new Response(
+      JSON.stringify({ error: "Missing Slack webhook URL" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: "Method Not Allowed" }),
+  if (request.method !== "POST") {
+    return new Response(JSON.stringify({ message: "Method Not Allowed" }), {
+      status: 405,
       headers: { "Content-Type": "application/json" },
-    };
+    });
   }
 
   let id = uuidv4();
 
   try {
-    const { pageUrl, vote, feedbackId } = JSON.parse(event.body);
+    const { pageUrl, vote } = await request.json();
 
     if (!pageUrl || typeof vote !== "boolean") {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ message: "Invalid input" }),
+      return new Response(JSON.stringify({ message: "Invalid input" }), {
+        status: 400,
         headers: { "Content-Type": "application/json" },
-      };
-    }
-
-    if (feedbackId) {
-      id = feedbackId;
+      });
     }
 
     const url = new URL(pageUrl);
@@ -67,25 +60,22 @@ export async function handler(event, context) {
 
     connection = createSnowflakeConnection();
     await connectSnowflake(connection);
-
     await createFeedbackInSnowflake(connection, id, url, vote, null);
 
-    return {
-      statusCode: 201,
-      body: JSON.stringify({
+    return new Response(
+      JSON.stringify({
         message: "Feedback received",
         feedbackId: id,
         vote,
       }),
-      headers: { "Content-Type": "application/json" },
-    };
+      { status: 201, headers: { "Content-Type": "application/json" } }
+    );
   } catch (error) {
-    console.log(error.message);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: "Server error" }),
+    console.error(error);
+    return new Response(JSON.stringify({ message: "Server error" }), {
+      status: 500,
       headers: { "Content-Type": "application/json" },
-    };
+    });
   } finally {
     if (connection) {
       connection.destroy((err) => {
@@ -96,3 +86,12 @@ export async function handler(event, context) {
     }
   }
 }
+
+export const config = {
+  path: "/feedback/create",
+  rateLimit: {
+    windowLimit: 4,
+    windowSize: 60,
+    aggregateBy: ["ip", "domain"],
+  },
+};

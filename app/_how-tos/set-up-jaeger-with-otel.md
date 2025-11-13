@@ -29,7 +29,7 @@ entities:
 tags:
     - analytics
     - monitoring
-    - plugins
+    - dynatrace
 
 prereqs:
   entities:

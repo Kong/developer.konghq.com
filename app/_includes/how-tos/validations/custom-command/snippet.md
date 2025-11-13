@@ -5,6 +5,7 @@
 {{ command | strip }}
 ```
 
+{% unless include.config.render_output == false %}
 {% if expected.stdout %}
 You should see the following content on `stdout`:
 
@@ -30,3 +31,4 @@ if [[ $? -ne {{ expected.return_code }} ]]; then
 fi
 ```
 {% endif %}
+{% endunless %}

@@ -83,6 +83,8 @@ cleanup:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+  - text: What can be stored as a secret?
+    url: /gateway/entities/vault/#what-can-be-stored-as-a-secret
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
     url: /how-to/rotate-secrets-in-google-cloud-secret/
 
@@ -114,5 +116,5 @@ value: 'secret'
 
 If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://gcp-sm-vault/test-secret}` to reference the secret in any referenceable field.
 
-
+For more information about supported secret types, see [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret). 
     

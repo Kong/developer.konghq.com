@@ -18,6 +18,13 @@
       "type": "bugfix"
     }
   ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",

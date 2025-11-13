@@ -2,6 +2,8 @@ openapi: 3.0.3
 info:
   title: Konnect Sliver
   version: 0.0.1
+  x-oas-source: kong/platform-api@3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -13,6 +15,8 @@ servers:
     description: Middle-East Production region
   - url: 'https://in.api.konghq.com/v1'
     description: India Production region
+  - url: 'https://sg.api.konghq.com/v1'
+    description: Singapore Production region
 paths:
   /auth-servers:
     get:
@@ -523,24 +527,6 @@ paths:
         - Auth Server Clients
 components:
   parameters:
-    PageNumber:
-      name: 'page[number]'
-      description: Determines which page of the entities to retrieve.
-      required: false
-      in: query
-      allowEmptyValue: true
-      schema:
-        type: integer
-        example: 1
-    PageSize:
-      name: 'page[size]'
-      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
-      required: false
-      in: query
-      allowEmptyValue: true
-      schema:
-        type: integer
-        example: 10
     authServerId:
       schema:
         type: string
@@ -566,6 +552,24 @@ components:
       in: path
       required: true
       description: The OAuth 2.0 client ID
+    PageNumber:
+      name: 'page[number]'
+      description: Determines which page of the entities to retrieve.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 1
+    PageSize:
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
     scopeId:
       schema:
         type: string
@@ -653,6 +657,7 @@ components:
         type: string
         format: uuid
       nullable: false
+      uniqueItems: true
     ClientId:
       description: The OAuth 2.0 client ID
       type: string
@@ -1040,25 +1045,30 @@ components:
         example-1: equals-some-value
         example-2:
           eq: some-value
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `contains`'
       type: object
       properties:
         contains:
+          description: The field contains the provided value.
           type: string
+          example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
+      oneOf:
+        - type: string
+        - type: object
+          title: StringFieldEqualsComparison
+          additionalProperties: false
+          properties:
+            eq:
+              type: string
+          required:
+            - eq
       x-examples:
         example-1:
           contains: some-value
-    LegacyStringFieldFilter:
-      description: Filter a string value field either by exact match or partial contains.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-      title: StringFieldFilter
+        example-2:
+          eq: some-value
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -1179,6 +1189,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

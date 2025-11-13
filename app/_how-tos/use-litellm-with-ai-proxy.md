@@ -30,7 +30,6 @@ entities:
 tags:
     - ai
     - openai
-    - ai-gateway
 
 tldr:
     q: How can I use LiteLLM integrations with AI Gateway?
@@ -58,6 +57,8 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+published: false
 
 automated_tests: false
 ---

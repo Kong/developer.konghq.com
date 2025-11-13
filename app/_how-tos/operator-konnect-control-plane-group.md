@@ -67,7 +67,7 @@ metadata:
 spec:
   createControlPlaneRequest:
     name: control-plane-group
-    clusterType: CLUSTER_TYPE_CONTROL_PLANE_GROUP
+    cluster_type: CLUSTER_TYPE_CONTROL_PLANE_GROUP
   members:
     - name: gateway-control-plane
   konnect:

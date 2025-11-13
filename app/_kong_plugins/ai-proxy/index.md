@@ -61,6 +61,8 @@ examples_groups:
     text: Multimodal route types for OpenAI
   - slug: openai-processing
     text: Other OpenAI processing routes
+  - slug: azure-processing
+    text: Azure processing routes
   - slug: native-routes
     text: Native routes
 

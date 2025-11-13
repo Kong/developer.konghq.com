@@ -40,6 +40,14 @@ faqs:
 
         1. Confirm that all of the entities are now available on your {{site.ee_product_name}} node.
         1. (Optional) [Upgrade](/gateway/upgrade/) to your desired version of {{site.ee_product_name}}. 
+  - q: "How do I install {{site.base_gateway}} on Windows?"
+    a: |
+      To install {{site.base_gateway}} on Windows, use [Docker](#docker). Kong does not provide a native Windows install method for {{site.base_gateway}}.
+  - q: Where can I find all supported platforms and packaging options? 
+    a: |
+      To find all supported platforms and package types for {{site.base_gateway}}, see the [supported platforms and versions](/gateway/version-support-policy/#supported-versions) in the {{site.base_gateway}} version support policy.
+      
+      If you don't see your {{site.base_gateway}} version here, it has reached end of life and Kong no longer publishes any packages or images for it.
 
 no_wrap: true
 versioned: true

@@ -148,7 +148,7 @@ rows:
 {% endtable %}
 > _Table 3: Unsupported versions of {{site.kic_product_name}}_
 
-{% include kong-support-policy.md %}
+{% include support/support-policy.md %}
 
 ## Helm chart compatibility
 

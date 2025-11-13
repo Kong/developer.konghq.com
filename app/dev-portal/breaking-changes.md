@@ -11,7 +11,7 @@ works_on:
     - konnect
 
 tags:
-    - upgrades
+    - upgrade
     - versioning
 
 description: "Review breaking changes from Dev Portal v3 beta to GA."

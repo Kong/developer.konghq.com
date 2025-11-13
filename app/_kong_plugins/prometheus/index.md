@@ -48,17 +48,17 @@ faqs:
   - q: If I have multiple Data Plane nodes with the Prometheus plugin enabled, does the metrics data reflect the status of a single node or the aggregated status across all nodes?
     a: Metrics data is reported per-node (each Data Plane) per-subsystem (HTTP or TCP).
 
-notes: | 
-   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or 
-   Serverless Cloud Gateways because it depends on the Admin API and the Status API, which aren't 
+notes: |
+   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or
+   Serverless Cloud Gateways because it depends on the Admin API and the Status API, which aren't
    accessible in that setup.
 
 min_version:
   gateway: '1.0'
 ---
 
-Expose metrics related to {{site.base_gateway}} and proxied upstream services in 
-[Prometheus](https://prometheus.io/docs/introduction/overview/) 
+Expose metrics related to {{site.base_gateway}} and proxied upstream services in
+[Prometheus](https://prometheus.io/docs/introduction/overview/)
 exposition format, which can be scraped by a Prometheus Server.
 
 Metrics tracked by this plugin are available on both the [Admin API](/api/gateway/admin-ee/) and [Status API](/api/gateway/status/#/paths/metrics/get) at the `/metrics`
@@ -125,20 +125,7 @@ When [`config.upstream_health_metrics`](/plugins/prometheus/reference/#schema--c
 stream and HTTP listeners are enabled, targets' health will appear twice. Health metrics
 have a `subsystem` label to indicate which subsystem the metric refers to.
 
-#### AI LLM metrics {% new_in 3.8 %}
-
-All the following AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
-
-When [`config.ai_metrics`](/plugins/prometheus/reference/#schema--config-ai-metrics) is set to true:
-- **AI Requests**: AI request sent to LLM providers.
-- **AI Cost**: AI Cost charged by LLM providers.
-- **AI Tokens**: AI Tokens counted by LLM providers.
-  These are also available per token type in addition to the options listed previously.
-- **AI LLM Latency**: Time taken to return a response by LLM providers.
-- **AI Cache Fetch Latency**: Time taken to return a response from the cache.
-- **AI Cache Embeddings Latency**: Time taken to generate embedding during the cache.
-
-For more details, see [AI Metrics](/ai-gateway/monitor-ai-llm-metrics/).
+{% include /ai-gateway/llm-metrics.md %}
 
 ## Accessing the metrics
 
@@ -175,7 +162,7 @@ Access-Control-Allow-Origin: *
 
 # HELP kong_control_plane_connected Kong connected to control plane, 0 is unconnected
 # TYPE kong_control_plane_connected gauge
-kong_control_plane_connected{instance="localhost:8100", job="kong"}	
+kong_control_plane_connected{instance="localhost:8100", job="kong"}	1
 # HELP kong_data_plane_cluster_cert_expiry_timestamp Unix timestamp of Data Plane's cluster_cert expiry time
 # TYPE kong_data_plane_cluster_cert_expiry_timestamp gauge
 kong_data_plane_cluster_cert_expiry_timestamp 2068058801

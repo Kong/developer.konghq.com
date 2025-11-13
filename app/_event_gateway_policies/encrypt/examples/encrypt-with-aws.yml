@@ -1,0 +1,29 @@
+title: Encrypt with AWS Key Vault
+
+description: Use an AWS Key Vault to encrypt message values.
+
+requirements:
+ - "A [Decrypt policy](/event-gateway/policies/decrypt/examples/decrypt-with-aws/) to pair with this Encrypt policy. The AWS ARN links the Encrypt and Decrypt policies."
+ - "An [AWS KMS key ARN](https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain)."
+
+weight: 900
+
+type: encrypt
+name: encrypt-using-aws
+config:
+  failure_mode: passthrough
+  part_of_record:
+    - value
+  encryption_key:
+    type: aws
+    arn: ${key_id}
+
+variables:
+  key_id:
+    description: |
+      The KMS key ARN in this format: `arn:aws:kms:REGION:ACCOUNT_ID:key/KEY_ID`
+    value: "$AWS_KEY_ARN"
+
+tools:
+  - konnect-api
+  - terraform

@@ -1,0 +1,22 @@
+title: Remove and replace a header
+
+description: Remove a header and replace it with another header.
+
+extended_description: |
+  The following example removes a header named `example-header1` and replaces it with `example-header2: example`.
+
+weight: 900
+
+name: remove-and-replace-header
+type: modify_headers
+config:
+  actions:
+    - op: remove
+      key: example-header1
+    - op: set
+      key: example-header2
+      value: example
+
+tools:
+  - konnect-api
+  - terraform

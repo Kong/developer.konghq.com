@@ -42,12 +42,25 @@ search_aliases:
   - intelligence
   - language
   - model
+  - caching
 
 related_resources:
   - text: Get started with AI Gateway
     url: /ai-gateway/get-started/
   - text: Embedding-based similarity matching in Kong AI gateway plugins
     url: /ai-gateway/semantic-similarity/
+faqs:
+  - q: |
+      How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
+    a: |
+      If you see the following error in the logs:
+
+      ```sh
+      failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
+      ```
+
+      This means that the hardcoded MemoryDB instance limit has been reached. 
+      To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 ---
 
 The AI Semantic Cache plugin stores user requests to an LLM in a vector database based on semantic meaning. When a similar query is made, it uses these embeddings to retrieve relevant cached requests efficiently.
@@ -111,9 +124,7 @@ sequenceDiagram
 
 ### Vector databases
 
-A vector database can be used to store vector embeddings, or numerical representations, of data items. For example, a response would be converted to a numerical representation and stored in the vector database so that it can compare new requests against the stored vectors to find relevant cached items.
-
-The AI Semantic Cache plugin supports Redis as a vector database.
+{% include_cached /plugins/ai-vector-db.md name=page.name %}
 
 ### Cache management
 

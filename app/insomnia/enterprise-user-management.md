@@ -28,6 +28,17 @@ related_resources:
 faqs:
   - q: Why is there not a new free seat in my account after removing a user from my organization?
     a: Removing a user from an organization is not enough to free their seat, you need to remove the user from the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page.
+  - q: Can my organization’s IT department centrally manage Insomnia software updates?
+    a: |
+      Yes. In Enterprise deployments, an organization’s IT department can centrally manage Insomnia software updates instead of allowing users to install them individually.  
+      
+      To deactivate automatic updates across managed devices, set the following environment variable:
+      ```bash
+      INSOMNIA_DISABLE_AUTOMATIC_UPDATES=true
+      ```
+
+      Configure this variable through your organization’s device management system. When active, this setting prevents Insomnia from performing automatic updates and allows your IT department to control rollout and version management through its standard deployment process.
+  
 ---
 
 ## Insomnia teams

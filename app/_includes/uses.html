@@ -28,7 +28,7 @@
                 {% capture url %}/konnect/{% endcapture %}
             {% else %}
             {% elsif product == 'reference-platform' %}
-                {% capture url %}/index/reference-platform/{% endcapture %}
+                {% capture url %}/index/konnect-reference-platform/{% endcapture %}
             {% endif %}
             {% include badge.html url=url text=product_info.name %}
         {% endfor %}

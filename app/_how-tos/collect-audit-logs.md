@@ -5,6 +5,12 @@ content_type: how_to
 related_resources:
   - text: "{{site.konnect_short_name}} audit logs"
     url: /konnect-platform/audit-logs/
+  - text: Recover {{site.konnect_short_name}} audit logs
+    url: /how-to/recover-konnect-org-audit-logs/
+  - text: Configure an HTTPS data collection endpoint in SumoLogic
+    url: https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source
+  - text: Collect Dev Portal audit logs
+    url: /how-to/collect-dev-portal-audit-logs/
 automated_tests: false
 products:
     - gateway
@@ -24,14 +30,14 @@ tags:
 tldr:
     q: How do I send {{site.konnect_short_name}} audit logs to a SIEM provider?
     a: |
-        Create an HTTPS data collection endpoint and access key in your SIEM provider and save their values. Configure the audit log webhook endpoint (`/v2/audit-log-webhook`) in {{site.konnect_short_name}} with the provider endpoint (`endpoint`), the access key (`authorization`), and set `log_format: cef` and `enabled: true`. 
+        Create an HTTPS data collection endpoint and access key in your SIEM provider and save their values. Configure the audit log webhook endpoint (`/audit-log-webhook`) in {{site.konnect_short_name}} with the provider endpoint (`endpoint`), the access key (`authorization`), and set `log_format: cef` and `enabled: true`. 
 
         This tutorial uses SumoLogic, but you can apply the same steps to your provider.
 
 prereqs:
   inline:
     - title: SumoLogic SIEM provider
-      include_content: /prereqs/sumologic-siem
+      include_content: /prereqs/sumologic-siem-for-konnect-api
 
 tools:
   - konnect-api
@@ -46,22 +52,46 @@ min_version:
     gateway: '3.4'
 ---
 
-## Set up the audit log webhook
+## Set up the audit log destination
 
 Now that you have an external endpoint and authorization credentials, you can set up a webhook in {{site.konnect_short_name}}.
 
-Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/audit-logs/v2/#/operations/update-audit-log-webhook) endpoint with the connection details for your SIEM vendor:
+Create an audit log destination by sending a `POST` request to the [`/audit-log-destinations`](/api/konnect/audit-logs/#/operations/create-audit-log-destination) endpoint with the connection details for your SIEM vendor:
+
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v3/audit-log-destinations
+status_code: 201
+method: POST
+region: global
+headers:
+  - 'Content-Type: application/json'
+body:
+    endpoint: $SIEM_ENDPOINT
+    authorization: $SIEM_TOKEN
+    log_format: cef
+    name: Example destination
+{% endkonnect_api_request %}
+<!-- vale on -->
+
+Export the ID of the new destination to your environment:
+
+```sh
+export DESTINATION_ID='YOUR DESTINATION ID'
+```
+
+## Enable the webhook on Konnect
+
+Create a webhook by sending a `PATCH` request to the [`/audit-log-webhook`](/api/konnect/audit-logs/#/operations/update-audit-log-webhook) endpoint with the audit log destination:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/audit-log-webhook
+url: /v3/audit-log-webhook
 status_code: 201
 method: PATCH
 body:
-    endpoint: $SIEM_ENDPOINT
+    audit_log_destination_id: $DESTINATION_ID
     enabled: true
-    authorization: "Bearer $SIEM_TOKEN"
-    log_format: cef
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -72,6 +102,7 @@ Webhooks are triggered via an HTTPS request using the following retry rules:
 - Maximum number of retries: 4
 
 A retry is performed on a connection error, server error (`500` HTTP status code), or too many requests (`429` HTTP status code).
+
 
 ## Validate
 

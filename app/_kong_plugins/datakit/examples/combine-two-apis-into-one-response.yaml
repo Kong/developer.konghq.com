@@ -5,9 +5,9 @@ extended_description: |
   Make requests to multiple APIs and combine their responses into one response.
 
   This example contains the following nodes:
-  1. The node `CAT_FACT` makes a `GET` request to the cat facts API at `https://catfact.ninja/fact`.
-  2. The node `DOG_FACT` makes a `GET` request to the dog facts API at `https://dogapi.dog/api/v1/facts`.
-  3. The node `JOIN` combines the JSON response bodies of `CAT_FACT` and `DOG_FACT` into a single JSON object.
+  1. The node `AUTHOR` makes a `GET` request to the API at `https://httpbin.konghq.com/json`.
+  2. The node `UUID` makes a `GET` request to the API at `https://httpbin.konghq.com/uuid`.
+  3. The node `JOIN` combines the JSON response bodies of `AUTHOR` and `UUID` into a single JSON object.
   4. The node `EXIT` sends a response to the client with the combined API response data. 
   This terminates the request instead of proxying it upstream.
 
@@ -16,31 +16,27 @@ weight: 900
 
 config:
   nodes:
-  - name: CAT_FACT
+  - name: AUTHOR
     type: call
-    url:  https://catfact.ninja/fact
-
-  - name: DOG_FACT
+    url: https://httpbin.konghq.com/json
+  - name: UUID
     type: call
-    url:  https://dogapi.dog/api/v1/facts
-
+    url: https://httpbin.konghq.com/uuid
   - name: JOIN
     type: jq
     inputs:
-      cat: CAT_FACT.body
-      dog: DOG_FACT.body
+      input1: AUTHOR.body
+      input2: UUID.body
     jq: |
       {
-        cat_fact: .cat.fact,
-        dog_fact: .dog.facts[0],
+        author: .input1.slideshow.author,
+        uuid: .input2.uuid,
       }
-
   - name: EXIT
     type: exit
     inputs:
       body: JOIN
     status: 200
-
 tools:
   - deck
   - admin-api

@@ -3,6 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import yaml from "js-yaml";
+import minimist from "minimist";
+
+const argv = minimist(process.argv.slice(2));
+const DEFAULT_URL = "http://localhost:8888";
 
 const baseBranch = process.env.GITHUB_BASE_REF || "main";
 
@@ -18,6 +22,8 @@ const lines = diffOutput.trim().split("\n").filter(Boolean);
 const redirects = fs
   .readFileSync("../../app/_redirects", "utf8")
   .split("\n")
+  .filter((line) => line && !line.startsWith("#"))
+  .map((line) => line.split(/\s+/)[0])
   .filter(Boolean);
 
 const collectionPermalinks = (function () {
@@ -95,6 +101,8 @@ function fileToUrl(file) {
     return file
       .replace("app/_event_gateway_policies/", "/event-gateway/policies/")
       .replace(ext, "/");
+  } else if (file.startsWith("app/_api")) {
+    return file.replace("app/_api/", "/api/").replace(`_index${ext}`, "");
   }
 
   const pathWithoutExtension = file.replace(ext, "/").replace("app", "");
@@ -102,6 +110,13 @@ function fileToUrl(file) {
     return path.dirname(pathWithoutExtension);
   }
   return pathWithoutExtension;
+}
+
+async function fetchExistingUrls(baseUrl) {
+  const response = await fetch(`${baseUrl}/sources_urls_mapping.json`);
+
+  let body = await response.json();
+  return Object.values(body).flat();
 }
 
 function ignoreFile(file) {
@@ -121,8 +136,18 @@ function ignoreFile(file) {
   ].some((folder) => file.startsWith(folder));
 }
 
+function patternToRegex(pattern) {
+  let regex = pattern
+    .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*/g, ".*")
+    .replace(/:([A-Za-z0-9_]+)/g, "[^/]+");
+  return new RegExp(`^${regex}$`);
+}
+
 (async function () {
   let missingRedirects = [];
+  const baseUrl = argv.base_url || DEFAULT_URL;
+  const existingUrls = await fetchExistingUrls(baseUrl);
 
   for (const line of lines) {
     const [status, ...files] = line.split(/\s+/);
@@ -134,7 +159,11 @@ function ignoreFile(file) {
       }
 
       const oldUrl = fileToUrl(filePath);
-      if (oldUrl && !redirects.some((r) => r.startsWith(oldUrl + " "))) {
+      if (
+        oldUrl &&
+        !redirects.some((r) => patternToRegex(r).test(oldUrl)) &&
+        !existingUrls.includes(oldUrl)
+      ) {
         missingRedirects.push({ path: filePath, url: oldUrl, status });
       }
     }

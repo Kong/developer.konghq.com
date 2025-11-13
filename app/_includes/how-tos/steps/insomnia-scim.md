@@ -4,3 +4,4 @@ Follow the instructions in the modal that opens to generate the connector URL an
 
 {:.warning}
 > The token will only be visible once in Insomnia. Make sure to store it in a secure location so you can retrieve it if needed.
+

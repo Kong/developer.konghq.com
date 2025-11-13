@@ -12,7 +12,6 @@ min_version:
 tags:
   - slsa
   - provenance
-  - binaries
   - supply-chain
   - security
 

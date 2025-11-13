@@ -13,7 +13,7 @@ works_on:
     - on-prem
 
 tags:
-    - upgrades
+    - upgrade
     - backup
     - restore
 
@@ -84,8 +84,9 @@ If you're running {{site.base_gateway}} as a Control Plane in {{site.konnect_sho
 Review the list of [entities managed by decK](/deck/reference/entities/) to see what can be backed up using this method.
 
 {:.info}
-> **Note:** This method only backs up Control Plane configurations from {{site.konnect_short_name}}.
-It does not back up Dev Portal, API Products, Service Catalog, and so on. 
+> **Note:** This method only backs up Control Plane configurations in {{site.konnect_short_name}}.
+It does not back up Dev Portal, API Products, {{site.konnect_catalog}}, and so on.
+
 Data stored in these applications, such as API specs and documents, must be manually backed up.
 
 ### Back up a {{site.konnect_short_name}} Control Plane

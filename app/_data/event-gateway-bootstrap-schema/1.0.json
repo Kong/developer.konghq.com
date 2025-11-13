@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BootstrapConfig",
+  "type": "object",
+  "properties": {
+    "config_poll_interval": {
+      "description": "The interval at which to poll for configuration updates\n\nEnvironment variable: `KEG__CONFIG_POLL_INTERVAL`",
+      "type": "string",
+      "default": "5s",
+      "examples": [
+        "5s",
+        "100ms",
+        "1h30m"
+      ],
+      "pattern": "^\\d+(\\.\\d+)?(ns|us|µs|ms|s|m|h)$"
+    },
+    "enable_debug_endpoints": {
+      "description": "Enables debug endpoints:\n\n- /debug/pprof/allocs endpoint\n  Additionally, you need to enable jemalloc profiling like this `MALLOC_CONF=\"prof:true,prof_active:true,lg_prof_sample:19\"`\n\nEnvironment variable: `KEG__ENABLE_DEBUG_ENDPOINTS`",
+      "type": "boolean",
+      "default": false
+    },
+    "konnect": {
+      "type": "object",
+      "properties": {
+        "api_request_timeout": {
+          "description": "The timeout for API requests to Konnect\n\nEnvironment variable: `KONNECT_API_REQUEST_TIMEOUT` or `KEG__KONNECT__API_REQUEST_TIMEOUT`",
+          "type": "string",
+          "default": "5s",
+          "examples": [
+            "5s",
+            "100ms",
+            "1h30m"
+          ],
+          "pattern": "^\\d+(\\.\\d+)?(ns|us|µs|ms|s|m|h)$"
+        },
+        "client_cert": {
+          "description": "An inline PEM-encoded client certificate for mTLS authentication with Konnect\n\nEnvironment variable: `KONNECT_CLIENT_CERT` or `KEG__KONNECT__CLIENT_CERT`",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "client_cert_path": {
+          "description": "A path to a PEM-encoded client certificate for mTLS authentication with Konnect\n\nEnvironment variable: `KONNECT_CLIENT_CERT_PATH` or `KEG__KONNECT__CLIENT_CERT_PATH`",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "client_key": {
+          "description": "An inline PEM-encoded private key for mTLS authentication with Konnect\n\nEnvironment variable: `KONNECT_CLIENT_KEY` or `KEG__KONNECT__CLIENT_KEY`",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "client_key_path": {
+          "description": "A path to a PEM-encoded private key for mTLS authentication with Konnect\n\nEnvironment variable: `KONNECT_CLIENT_KEY_PATH` or `KEG__KONNECT__CLIENT_KEY_PATH`",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "domain": {
+          "description": "The Konnect domain to connect to (e.g., konghq.com)\n\nEnvironment variable: `KONNECT_DOMAIN` or `KEG__KONNECT__DOMAIN`",
+          "type": "string",
+          "default": "konghq.com"
+        },
+        "gateway_cluster_id": {
+          "description": "The Gateway Cluster ID\n\nEnvironment variable: `KONNECT_GATEWAY_CLUSTER_ID` or `KEG__KONNECT__GATEWAY_CLUSTER_ID`",
+          "type": "string"
+        },
+        "insecure_skip_verify": {
+          "description": "Whether to skip TLS certificate verification when connecting to Konnect\nThis is a highly insecure option and should only be used for testing purposes.\n\nEnvironment variable: `KONNECT_INSECURE_SKIP_VERIFY` or `KEG__KONNECT__INSECURE_SKIP_VERIFY`",
+          "type": "boolean",
+          "default": false
+        },
+        "region": {
+          "description": "The Konnect region to connect to\n\nEnvironment variable: `KONNECT_REGION` or `KEG__KONNECT__REGION`",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "required": [
+                "client_cert"
+              ]
+            },
+            {
+              "required": [
+                "client_cert_path"
+              ]
+            }
+          ]
+        },
+        {
+          "oneOf": [
+            {
+              "required": [
+                "client_key"
+              ]
+            },
+            {
+              "required": [
+                "client_key_path"
+              ]
+            }
+          ]
+        }
+      ],
+      "required": [
+        "region",
+        "gateway_cluster_id"
+      ]
+    },
+    "observability": {
+      "description": "Observability configuration",
+      "type": "object",
+      "properties": {
+        "log_flags": {
+          "description": "Configure the log level. Possible levels are: \"trace\", \"debug\", \"info\", \"warn\", \"error\"\n\nThe format is a comma-separated list of log levels for different modules, e.g., `info,keg=debug,my_module=trace`\nIf only a single level is provided, it applies to all modules.\n\nEnvironment variable: `KEG__OBSERVABILITY__LOG_FLAGS`",
+          "type": "string",
+          "default": "info"
+        },
+        "log_format": {
+          "description": "Configure the log format.\n\nEnvironment variable: `KEG__OBSERVABILITY__LOG_FORMAT`",
+          "type": "string",
+          "enum": [
+            "ansi",
+            "text",
+            "json"
+          ]
+        },
+        "metrics_rollup_allow_map": {
+          "description": "Configure the metrics rollup allow map, this is to avoid high cardinality metrics for example `api_kind`, `topic` or `partition`.\nThe format is `<label_key>=<allowed_value1>,<allowed_value2>|<label_key2>=<allowed_value3>,<allowed_value4>`\nNon-allowed values will be mapped to \"other\"\n\nEnvironment variable: `KEG__OBSERVABILITY__METRICS_ROLLUP_ALLOW_MAP`",
+          "type": "string",
+          "default": "api_kind=produce,fetch"
+        },
+        "otlp": {
+          "description": "open telemetry specific configuration.\n\nThis configuration is mostly to enable or disable OTLP exporters.\nAny further configuration of the exporter should use standard OTLP environment variables\nas defined in the [OpenTelemetry specification](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/exporter.md).",
+          "type": "object",
+          "properties": {
+            "tracing": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "description": "Whether to export OTLP for traces.\n\nEnvironment variable: `KEG__OBSERVABILITY__OTLP__TRACING__ENABLED`",
+                  "type": "boolean",
+                  "default": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtime": {
+      "description": "Runtime configuration",
+      "type": "object",
+      "properties": {
+        "drain_duration": {
+          "description": "Duration to wait for existing connections to drain. It is the time between\n\nEnvironment variable: `KEG__RUNTIME__DRAIN_DURATION`",
+          "type": "string",
+          "default": "5s",
+          "examples": [
+            "5s",
+            "100ms",
+            "1h30m"
+          ],
+          "pattern": "^\\d+(\\.\\d+)?(ns|us|µs|ms|s|m|h)$"
+        },
+        "health_listener_address_port": {
+          "description": "Address and port for the health listener.\n\nEnvironment variable: `KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT`",
+          "type": "string",
+          "default": "localhost:8080"
+        },
+        "shutdown_timeout": {
+          "description": "Timeout for graceful shutdown. It is the time between sending the shutdown\nsignal and forcefully terminating the process.\n\nEnvironment variable: `KEG__RUNTIME__SHUTDOWN_TIMEOUT`",
+          "type": "string",
+          "default": "10s",
+          "examples": [
+            "5s",
+            "100ms",
+            "1h30m"
+          ],
+          "pattern": "^\\d+(\\.\\d+)?(ns|us|µs|ms|s|m|h)$"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "konnect"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "3.12.0.0": [
+    {
+      "message": "Introduced the AI MCP OAuth2 plugin, which protects the MCP traffic with OAuth2.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Dropped the `enabled` field, as we already have one in plugin table.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

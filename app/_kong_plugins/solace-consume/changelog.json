@@ -1,0 +1,9 @@
+{
+  "3.12.0.0": [
+    {
+      "message": "**Solace Consume** Added the `solace-consume` plugin, which adds Solace consumption capabilities to Kong.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

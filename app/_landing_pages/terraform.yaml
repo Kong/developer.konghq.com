@@ -2,6 +2,8 @@ metadata:
   title: Terraform providers for Kong
   content_type: landing_page
   description: This page is an introduction to the Terraform providers for {{site.konnect_short_name}}, {{site.base_gateway}} and {{ site.mesh_product_name }}.
+  tags:
+    - terraform
 
 rows:
   - header:

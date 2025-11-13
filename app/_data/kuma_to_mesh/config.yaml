@@ -16,18 +16,7 @@ links:
   '/features/?': '/mesh/enterprise/'
 
 pages:
-# Must for GA
-  -
-    path: app/_src/guides/consumer-producer-policies-kv.md
-    title: 'Producer and Consumer policies'
-    description: 'Understand how producer and consumer policies work in {{site.base_product}} to control traffic at the namespace level. This guide walks through setup, roles, and overrides using real examples with MeshService and MeshTimeout.'
-    url: /mesh/consumer-producer-policies/
-    related_resources:
-      - text: Mesh Policies
-        url: '/mesh/policies-introduction/'
-    min_version:
-      mesh: '2.9'
-      
+# Must for GA      
   -
     path: app/_src/production/secure-deployment/manage-control-plane-permissions-on-kubernetes.md
     title: 'Manage Control Plane permissions on Kubernetes'
@@ -77,20 +66,6 @@ pages:
         url: '/mesh/gateway-delegated/'
       - text: Deploy Kong Mesh on Kubernetes
         url: /mesh/kubernetes/
-    min_version:
-      mesh: '2.6'
-  -
-    path: app/_src/guides/gateway-delegated-kv.md
-    title: 'Use Kong as a delegated Gateway'
-    description: 'Set up {{site.base_gateway}} as a delegated gateway for {{site.base_product}} to expose internal services to external traffic. This guide covers installing the Kong Ingress Controller, enabling sidecar injection, creating routes, configuring permissions with MeshTrafficPermission, and verifying traffic access.'
-    url: /mesh/gateway-delegated/
-    related_resources:
-      - text: Add a builtin gateway
-        url: '/mesh/add-builtin-gateway/'
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: About KIC
-        url: /kubernetes-ingress-controller/
     min_version:
       mesh: '2.6'
   -
@@ -803,4 +778,16 @@ pages:
         url: /mesh/universal/
     tags:
       - get-started
+  -
+    path: app/_src/guides/meshidentity-spire-guide.md
+    title: 'Issue identity with MeshIdentity Spire provider'
+    description: 'Learn how to issue identities using Spire provider and how to use them to encrypt traffic in mesh.'
+    url: '/mesh/meshidentity-spire/'
+    related_resources:
+      - text: Data plane proxy
+        url: '/mesh/data-plane-proxy/'
+    tags:
+      - security
+    min_version:
+      mesh: '2.12'
 
