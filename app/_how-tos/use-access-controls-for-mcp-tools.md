@@ -271,6 +271,8 @@ Now, let's use Insomnia's MCP Client feature to validate our ACL configuration:
 1. Go to the **Auth** tab.
 1. Select **API Key** from the Auth type dropdown.
 
+Now let's verify access for each user by connecting with their API key:
+
 {% navtabs "validate-mcp-access" %}
 {% navtab "Alice (admin group)" %}
 
