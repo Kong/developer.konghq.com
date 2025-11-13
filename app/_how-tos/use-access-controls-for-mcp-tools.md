@@ -271,6 +271,7 @@ Now let's verify access for each user by connecting with their API key:
    get_user
    list_orders
    list_orders_for_user
+   search_orders
    ```
 
    Alice belongs to the **admin** group and has access to all tools.
@@ -288,6 +289,7 @@ Now let's verify access for each user by connecting with their API key:
    get_user
    list_orders
    list_orders_for_user
+   search_orders
    ```
 
    Bob belongs to the **developer** group and is denied access to `list_users`.
@@ -313,6 +315,7 @@ Now let's verify access for each user by connecting with their API key:
 
    ```
    list_users
+   search_orders
    ```
 
    Eason is not part of any group but is explicitly allowed access to `list_users` in the tool’s ACL.
