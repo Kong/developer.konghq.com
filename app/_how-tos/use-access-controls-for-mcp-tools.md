@@ -146,7 +146,7 @@ entities:
 
 Let's configure the AI MCP Proxy plugin to enforce tool-level access rules. The plugin allows you to control which users or AI agents can see or call each MCP tool. Access is determined by **Consumer Groups** and individual **Consumers** via `allow` and `deny` lists.
 
-The table below summarizes the permissions for the below cofngiuration:
+The table below summarizes the permissions for the below configuration:
 
 <!-- vale off -->
 {% table %}
