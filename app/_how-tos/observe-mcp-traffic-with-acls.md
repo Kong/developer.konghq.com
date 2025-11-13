@@ -7,7 +7,7 @@ related_resources:
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
 
-description: Learn how to configure MCP tools in Chatwise, enable the File Log plugin, and verify tool usage and audit logs in a Docker environment.
+description: Learn how to configure MCP tools in Chatwise, enable the File Log plugin, and verify tool usage via audit logs.
 
 
 products:
@@ -52,7 +52,6 @@ tools:
   - deck
 
 prereqs:
-
   entities:
     services:
       - mcp-acl-service
@@ -68,23 +67,22 @@ prereqs:
 1. Open Chatwise and go to **Settings > MCP**:
 
    1. Choose **HTTP server (http)** from the **Type** dropdown.
-   2. Enter a user-friendly name in the **Name** field.
-   3. Enter `http://localhost:8000/mcp` in the **URL** field.
-   4. Enable the **Run tools automatically** option.
-   5. Click **+** next to the **HTTP headers** section and add:
+   1. Enter a user-friendly name in the **Name** field.
+   1. Enter `http://localhost:8000/mcp` in the **URL** field.
+   1. Enable the **Run tools automatically** option.
+   1. Click **+** next to the **HTTP headers** section and add:
 
       - **KEY**: `api-key`
       - **VALUE**: `alice-key`
-   6. Click the **Verify (view tools)** button. You should see the following tools:
+   1. Click the **Verify (view tools)** button. You should see the following tools:
 
       - `list_users`
       - `get_user`
       - `list_orders`
       - `list_orders_for_user`
       - `search_orders`
-   7. Close **Settings**.
-   8. In the chat window, click the hammer icon to enable tools. You should see `1` next to the icon. Clicking it will show the name of your MCP server and the number of available tools.
----
+   1. Close **Settings**.
+   1. In the chat window, click the hammer icon to enable tools. You should see `1` next to the icon. Clicking it will show the name of your MCP server and the number of available tools.
 
 ## Configure the File Log plugin
 
