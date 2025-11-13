@@ -188,5 +188,5 @@ rows:
                 - text: Reference
                   url: "/catalog/integrations/service-mesh/"
                 - text: Tutorial
-                  url: "/how-to/map-mesh-manager-resources/"
+                  url: "/how-to/map-service-mesh-resources/"
       
