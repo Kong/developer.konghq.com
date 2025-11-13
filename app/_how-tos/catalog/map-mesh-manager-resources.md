@@ -21,7 +21,7 @@ prereqs:
       icon_url: /assets/icons/mesh.svg
 related_resources:
   - text: "Service Mesh integration"
-    url: /catalog/integrations/mesh-manager/
+    url: /catalog/integrations/service-mesh/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
   - text: "{{site.konnect_catalog}} integrations"
