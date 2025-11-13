@@ -70,6 +70,8 @@ export EXTERNAL_IP=host.minikube.internal
 kubectl --context mesh-zone port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
 ```
 
+New terminal:
+
 ```sh
 export ZONE_USER_ADMIN_TOKEN=$(kubectl --context mesh-zone get secrets -n kong-mesh-system admin-user-token -o json | jq -r .data.value | base64 -d)
 kumactl config control-planes add \
@@ -79,4 +81,51 @@ kumactl config control-planes add \
   --overwrite  
   
 kumactl export --profile federation-with-policies --format kubernetes > resources.yaml
+```
+
+```sh
+kubectl apply --context mesh-global -f resources.yaml
+```
+
+```sh
+helm upgrade --kube-context mesh-zone --namespace kong-mesh-system \
+--set controlPlane.mode=zone \
+--set controlPlane.zone=zone-1 \
+--set ingress.enabled=true \
+--set controlPlane.kdsGlobalAddress=grpcs://${KDS_IP}:5685 \
+--set controlPlane.tls.kdsZoneClient.skipVerify=true \
+kong-mesh kong-mesh/kong-mesh
+```
+
+```sh
+kubectl --context mesh-global port-forward svc/kong-mesh-control-plane -n kong-mesh-system 15681:5681
+```
+
+```sh
+echo "apiVersion: kuma.io/v1alpha1
+kind: MeshCircuitBreaker
+metadata:
+  name: demo-app-to-redis
+  namespace: kong-mesh-demo
+  labels:
+    kuma.io/mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: demo-app
+  to:
+  - targetRef:
+      kind: MeshService
+      name: kv
+    default:
+      connectionLimits:
+        maxConnections: 2
+        maxPendingRequests: 8
+        maxRetries: 2
+        maxRequests: 2" | kubectl --context mesh-global apply -f -
+```
+
+```sh
+kubectl get --context mesh-zone meshcircuitbreakers -A
 ```
