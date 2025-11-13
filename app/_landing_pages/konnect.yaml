@@ -294,7 +294,7 @@ rows:
               icon: /assets/icons/deployment.svg
               cta:
                 text: "{{site.konnect_short_name}} data plane reference"
-                url: /gateway-manager/data-plane-reference/
+                url: /gateway/data-plane-reference/
                 align: end
       - blocks:
           - type: card

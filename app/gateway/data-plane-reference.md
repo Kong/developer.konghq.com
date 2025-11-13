@@ -59,7 +59,7 @@ breadcrumbs:
 
 
 A Data Plane node is a single instance of {{site.base_gateway}} that acts as a proxy and serves traffic.
-In {{site.konnect_short_name}}, Data Plane nodes are managed by [Control Planes](/gateway-manager/control-plane-groups/). 
+In {{site.konnect_short_name}}, Data Plane nodes are managed by [Control Planes](/gateway/control-plane-groups/). 
 Control Planes manage and store configurations in {{site.konnect_short_name}}, and they distribute those configurations to Data Planes nodes. 
 Data Plane nodes don't manage their own configurations.
 
@@ -265,7 +265,7 @@ rows:
 
 ## Custom Data Plane labels
 
-Labels are commonly used for metadata information. Set anything that you need to identify your Data Plane nodes -- deployment type, region, size, the team that the node belongs to, the purpose it serves, or any other identifiable information. For more information, review the [{{site.konnect_short_name}} labels](/gateway-manager/konnect-labels/) documentation.
+Labels are commonly used for metadata information. Set anything that you need to identify your Data Plane nodes -- deployment type, region, size, the team that the node belongs to, the purpose it serves, or any other identifiable information. For more information, review the [{{site.konnect_short_name}} labels](/konnect-platform/konnect-labels/) documentation.
 
 ## Troubleshoot Data Plane nodes
 

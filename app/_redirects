@@ -1,6 +1,13 @@
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 # Renames
+/gateway-manager/aws-private-link/ /gateway/aws-private-link/
+/gateway-manager/data-plane-reference/ /gateway/data-plane-reference/
+/gateway-manager/control-plane-groups/ /gateway/control-plane-groups/
+/gateway-manager/control-plane-resource-limits/ /gateway/control-resource-limits/
+/gateway-manager/konnect-labels/ /konnect-platform/konnect-labels/
+/gateway-manager/version-compatibility/ /gateway/data-plane-version-compatibility/
+/gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
 

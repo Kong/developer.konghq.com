@@ -24,7 +24,7 @@ description: Configure Data Plane resilience in case of a Control Plane outage.
 
 related_resources:
   - text: "{{site.konnect_short_name}} Data Plane nodes"
-    url: /gateway-manager/data-plane-reference/
+    url: /gateway/data-plane-reference/
   - text: "{{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
 

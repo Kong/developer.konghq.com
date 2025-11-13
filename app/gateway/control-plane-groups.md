@@ -167,7 +167,7 @@ There are some special cases and behaviors to note for [Gateway entities](/gatew
 
 All entities in a Control Plane Group must have unique names and IDs. 
 For example, if two members of a Control Plane Group both have a Service named `example_service`, 
-it will cause a [conflict](/gateway-manager/control-plane-groups/#control-plane-conflicts/) which must be resolved to restore function.
+it will cause a [conflict](/gateway/control-plane-groups/#control-plane-conflicts/) which must be resolved to restore function.
 
 A number of {{site.base_gateway}} entities can be associated with each other.
 Based on the type of association, the behavior of these associated entities in a Control Plane Group follows one of these patterns:
