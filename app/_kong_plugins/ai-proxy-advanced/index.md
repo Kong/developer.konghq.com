@@ -212,6 +212,15 @@ For example, load balancers with the following target combinations are supported
 > * Additional HTTP error codes, like `http_429` or `http_502`
 > * The `non_idempotent` setting, as most AI services accept POST requests
 
+## Health check and circuit breaker {% new_in 3.13 %}
+
+The [load balancer](/ai-gateway/load-balancing/) supports health checks and circuit breakers to improve reliability. If the number of unsuccessful attempt to a target reaches [`config.balancer.max_fails`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-max-fails), the load balancer will stop sending requests to that target until it is reconsidered after the period of time defined by [`config.balancer.fail_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-fail-timeout). The diagram below illustrates how it works:
+
+![Circuit breaker](/assets/images/ai-gateway/circuit-breaker.jpg)
+
+Say [`config.balancer.max_fails`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-max-fails) is 3 and [`config.balancer.fail_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-fail-timeout) is 10 seconds. When the number of failed requests for a certain target reaches 3, the target is marked as unhealthy and the load balancer will stop sending requests to it. After 10 seconds, the target is reconsidered. If the request to this target still fails, the target remains unhealthy and the load balancer will continue to not send requests to it. If the request succeeds, the target is marked as healthy again and recover from the circuit breaker.
+If the number of failed requests never reaches [`config.balancer.max_fails`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-max-fails), the counter will be reset by a successful request 10 seconds after the last failed request.
+
 ## Templating {% new_in 3.7 %}
 
 {% include plugins/ai-proxy-advanced/templating.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
