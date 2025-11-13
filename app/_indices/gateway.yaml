@@ -45,7 +45,7 @@ sections:
     - path: /gateway/topology-hosting-options/
     - title: Choose a hosting strategy
       description: Decide which data plane node strategy to use based on your use case.
-      url: /gateway-manager/data-plane-reference/#choose-a-data-plane-node-hosting-strategy
+      url: /gateway/data-plane-reference/#choose-a-data-plane-node-hosting-strategy
     - title: Serverless Gateways
       description: Lightweight API gateways, where the control plane is hosted by Konnect and data plane nodes are automatically provisioned. 
       url: /gateway/topology-hosting-options/#serverless-gateways
@@ -79,7 +79,7 @@ sections:
       url: /konnect-platform/geos/#dedicated-cloud-gateways
     - title: Upgrade data planes
       description: Upgrade data plane nodes in a Dedicated Cloud Gateway.
-      url: /gateway-manager/data-plane-reference/#upgrade-data-planes
+      url: /gateway/data-plane-reference/#upgrade-data-planes
     - title: Cloud Gateways API
       description: Konnect API for managing Dedicated Cloud Gateways infrastructure.
       url: /api/konnect/cloud-gateways/
@@ -259,10 +259,14 @@ sections:
           - kong-manager
   - title: "API Gateway in {{site.konnect_short_name}}"
     items:
-      - path: /gateway-manager/**/*
+      - path: /gateway/data-plane-reference/
+      - path: /gateway/data-plane-version-compatibility/
+      - path: /gateway/control-plane-groups/
+      - path: /gateway/control-plane-resource-limits/
+      - path: /gateway/aws-private-link/
       - title: Troubleshoot data plane nodes
         description: Learn how to resolve some common issues with data plane nodes
-        url: /gateway-manager/data-plane-reference/#troubleshoot-data-plane-nodes
+        url: /gateway/data-plane-reference/#troubleshoot-data-plane-nodes
 
   - title: Reference
     allow_duplicates: true

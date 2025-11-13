@@ -28,7 +28,7 @@ We recommend running one major version (2.x or 3.x) of a Data Plane node per Con
 If you mix major Data Plane node versions, the Control Plane will support the least common subset of configurations across all the versions connected to the {{site.konnect_short_name}} Control Plane.
 For example, if you are running 2.8.1.3 on one Data Plane node and 3.0.0.0 on another, the Control Plane will only push configurations that can be used by the 2.8.1.3 Data Plane node.
 
-If you experience compatibility errors, [upgrade your Data Plane nodes](/gateway-manager/data-plane-reference/#upgrade-data-planes) to match the version of the highest-versioned Data Plane node in your Control Plane.
+If you experience compatibility errors, [upgrade your Data Plane nodes](/gateway/data-plane-reference/#upgrade-data-planes) to match the version of the highest-versioned Data Plane node in your Control Plane.
 
 The following table defines the possible compatibility errors with {{site.konnect_short_name}} Data Plane nodes:
 

@@ -121,7 +121,7 @@ rows:
               icon: /assets/icons/gateway.svg
               cta:
                 text: Set up nodes
-                url: /gateway-manager/data-plane-reference/
+                url: /gateway/data-plane-reference/
       - blocks:
           - type: card
             config:

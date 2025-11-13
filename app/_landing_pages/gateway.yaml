@@ -113,12 +113,12 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "{{site.base_gateway}} in {{site.konnect_short_name}}"
+                text: "API Gateway in {{site.konnect_short_name}}"
               blocks:
                 - type: text
                   text: |
                     {{site.konnect_short_name}} lets you catalog, connect to, and monitor 
-                    the status of all control planes (CPs) and data plane nodes (DPs) in one place.
+                    the status of all API Gateway control planes (CPs) and data plane nodes (DPs) in one place.
                     
                     Key features include:
                     - Manage control planes and their configurations
