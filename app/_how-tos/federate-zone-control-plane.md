@@ -61,16 +61,22 @@ kong-mesh kong-mesh/kong-mesh
 
 We'll skip the default mesh creation since we'll bring the mesh from the zone control plane in the next steps.
 
-Export the 
-```sh
-export EXTERNAL_IP=host.minikube.internal
-```
+
 
 ```sh
 kubectl --context mesh-zone port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
 ```
 
 New terminal:
+
+Export the 
+```sh
+export EXTERNAL_IP=host.minikube.internal
+```
+
+```sh
+export PATH=$PATH:$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin
+```
 
 ```sh
 export ZONE_USER_ADMIN_TOKEN=$(kubectl --context mesh-zone get secrets -n kong-mesh-system admin-user-token -o json | jq -r .data.value | base64 -d)
@@ -92,7 +98,7 @@ helm upgrade --kube-context mesh-zone --namespace kong-mesh-system \
 --set controlPlane.mode=zone \
 --set controlPlane.zone=zone-1 \
 --set ingress.enabled=true \
---set controlPlane.kdsGlobalAddress=grpcs://${KDS_IP}:5685 \
+--set controlPlane.kdsGlobalAddress=grpcs://$EXTERNAL_IP:5685 \
 --set controlPlane.tls.kdsZoneClient.skipVerify=true \
 kong-mesh kong-mesh/kong-mesh
 ```
@@ -100,6 +106,9 @@ kong-mesh kong-mesh/kong-mesh
 ```sh
 kubectl --context mesh-global port-forward svc/kong-mesh-control-plane -n kong-mesh-system 15681:5681
 ```
+
+Wait a few minutes
+
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
