@@ -63,20 +63,6 @@ prereqs:
       value: '0.0.0.0:8100'
 ---
 
-## Configure the File Log plugin
-
-Now, let's configure the File Log plugin:
-
-{% entity_examples %}
-plugins:
-
-* name: file-log
-  config:
-  path: /tmp/mcp.json
-  {% endentity_examples %}
-
----
-
 ## Configure MCP tools in Chatwise
 
 1. Open Chatwise and go to **Settings > MCP**:
@@ -156,7 +142,7 @@ You should see output similar to:
           "action": "allow",
           "consumer": {
             "name": "admin",
-            "id": "e6b415a7-4823-4143-9b69-d86324780e06",
+            "id": "e6b415a7-4823-abcd-1234-d86324780e06",
             "identifier": "consumer_group"
           },
           "scope": "primitive"
@@ -165,7 +151,7 @@ You should see output similar to:
           "action": "allow",
           "consumer": {
             "name": "admin",
-            "id": "e6b415a7-4823-4143-9b69-d86324780e06",
+            "id": "e6b415a7-4823-abcd-1234-d86324780e06",
             "identifier": "consumer_group"
           },
           "scope": "global"
@@ -174,7 +160,7 @@ You should see output similar to:
       "rpc": [
         {
           "method": "tools/call",
-          "id": "2",
+          "id": "1",
           "latency": 3,
           "tool_name": "list_users",
           "response_body_size": 1375
