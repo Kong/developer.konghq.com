@@ -22,7 +22,7 @@ prereqs:
         - example-service
 related_resources:
   - text: API Gateway integration
-    url: /catalog/integrations/gateway-manager/
+    url: /catalog/integrations/api-gateway/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
   - text: "{{site.konnect_catalog}} integrations"

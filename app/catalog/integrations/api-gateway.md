@@ -15,13 +15,14 @@ breadcrumbs:
   - /catalog/integrations/
 search_aliases:
   - service catalog
+  - gateway manager integration
 works_on:
     - konnect
 description: The API Gateway integration is built directly into {{site.konnect_catalog}}, so no additional authorization is needed.
 
 related_resources:
   - text: Map API Gateway Services in {{site.konnect_catalog}}
-    url: /how-to/map-gateway-manager-resources/
+    url: /how-to/map-api-gateway-resources/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
 discovery_support: true

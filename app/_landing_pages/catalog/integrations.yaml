@@ -164,9 +164,9 @@ rows:
               icon: /assets/icons/gateway.svg
               ctas:
                 - text: Reference
-                  url: "/catalog/integrations/gateway-manager/"
+                  url: "/catalog/integrations/api-gateway/"
                 - text: Tutorial
-                  url: "/how-to/map-gateway-manager-resources/"
+                  url: "/how-to/map-api-gateway-resources/"
       - blocks:
           - type: card
             config:
