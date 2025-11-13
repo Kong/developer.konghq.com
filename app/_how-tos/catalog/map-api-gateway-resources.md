@@ -1,5 +1,6 @@
 ---
 title: Map API Gateway Services in Catalog
+permalink: /how-to/map-gateway-manager-resources/
 content_type: how_to
 description: Learn how to map Gateway Services from {{site.konnect_short_name}} API Gateway in {{site.konnect_catalog}} to visualize services across multiple Control Planes.
 products:
@@ -22,7 +23,7 @@ prereqs:
         - example-service
 related_resources:
   - text: API Gateway integration
-    url: /catalog/integrations/gateway-manager/
+    url: /catalog/integrations/api-gateway/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
   - text: "{{site.konnect_catalog}} integrations"
