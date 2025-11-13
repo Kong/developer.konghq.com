@@ -21,8 +21,6 @@ breadcrumbs:
 related_resources:
   - text: "{{site.base_gateway}}"
     url: /gateway/
-  - text: "Mesh Manager"
-    url: /mesh-manager/
   - text: "decK"
     url: /deck/
   - text: "Plugins"
@@ -56,7 +54,7 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 ## {{site.mesh_product_name}} compatibility
 
-To use [Mesh Manager](/mesh-manager/), you must also use a compatible version of {{site.mesh_product_name}}:
+To use Service Mesh in {{site.konnect_short_name}}, you must use a compatible version of {{site.mesh_product_name}}:
 
 {% feature_table %}
 item_title: "{{site.mesh_product_name}} version"

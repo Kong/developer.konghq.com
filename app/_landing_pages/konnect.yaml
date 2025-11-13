@@ -148,7 +148,7 @@ rows:
                 url: /mesh/
                 align: end
               - text: Get started
-                url: /mesh-manager/service-mesh/
+                url: /mesh/konnect-global-control-plane/
                 align: end
     
     - blocks:

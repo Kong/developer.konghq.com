@@ -1,6 +1,9 @@
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 # Renames
+/mesh-manager/federate-zone/  /mesh/federate-zone/
+/mesh-manager/migrate-zone/  /mesh/migrate-zone/
+/mesh-manager/service-mesh/  /mesh/konnect-global-control-plane/
 /mesh-manager/ /mesh/
 
 # API spec links (delete when fixed)

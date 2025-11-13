@@ -35,7 +35,7 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 
 * A Kubernetes or universal cluster with a zone Control Plane connected to a self-managed global Control Plane
 * [`kumactl`](/mesh/#install-kong-mesh) installed and configured
-* A [global Control Plane in {{site.konnect_short_name}}](/mesh-manager/service-mesh/)
+* A [global Control Plane in {{site.konnect_short_name}}](/mesh/konnect-global-control-plane/)
 * [`yq`](https://github.com/mikefarah/yq) installed
 
 ## Transfer resources from the self-managed global Control Plane
@@ -98,7 +98,7 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 
 ## Connect the zone Control Plane to {{site.konnect_short_name}}
 
-1. [Create a new zone](/mesh-manager/service-mesh/#create-a-zone-in-the-global-control-plane) in {{site.konnect_short_name}}.
+1. [Create a new zone](/mesh/konnect-global-control-plane/#create-a-zone-in-the-global-control-plane) in {{site.konnect_short_name}}.
 
 
    Use the same name as the existing zone. Replace your current zone's `values.yaml` with the config provided by the UI wizard.
