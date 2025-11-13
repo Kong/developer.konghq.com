@@ -22,6 +22,7 @@ breadcrumbs:
 
 * [Queues for Kafka](https://cwiki.apache.org/confluence/display/KAFKA/KIP-932%3A+Queues+for+Kafka) are not supported
 * The new [consumer rebalance protocol](https://cwiki.apache.org/confluence/display/KAFKA/KIP-848%3A+The+Next+Generation+of+the+Consumer+Rebalance+Protocol) is not supported
+* [Client metrics and observability for clients](https://cwiki.apache.org/confluence/display/KAFKA/KIP-714%3A+Client+metrics+and+observability) is not supported (you may need to set `enable.metrics.push=false` on recent java clients).
 
 ## Untested features
 
