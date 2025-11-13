@@ -20,7 +20,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.12'
+  gateway: '3.13'
 
 plugins:
   - ai-mcp-proxy
@@ -259,6 +259,74 @@ entities:
 
 ## Validate the configuration
 
-Now, let's use the Insomnia's MCP Client feature to validate our configuration:
-1. Go to Insomnia app.
-1. Click the "Create MCP Client".
+Now, let's use Insomnia's MCP Client feature to validate our ACL configuration:
+
+1. Go to the Insomnia app.
+1. Click **Create MCP Client** in the left sidebar.
+1. Enter the preferred name and click **Create**.
+1. In the `HTTP` field enter `http://localhost:8000/mcp`.
+1. Go to the **Auth** tab.
+1. Select **API Key** from the Auth type dropdown.
+
+{% navtabs "validate-mcp-access" %}
+{% navtab "Alice (admin group)" %}
+
+1. Enter `apikey` in the Key field.
+1. Enter `alice-key` in the Value field.
+1. Click the **Connect** button.
+1. Once connected, Insomnia should list these tools in the sidebar:
+
+   ```text
+   list_users
+   get_user
+   list_orders
+   list_orders_for_user
+   ```
+
+   Alice belongs to the **admin** group and has access to all tools.
+1. Click **Disconnect** to switch to another user.
+
+{% endnavtab %}
+{% navtab "Bob (developer group)" %}
+
+1. Enter `apikey` in the Key field.
+1. Enter `bob-key` in the Value field.
+1. Click the **Connect** button.
+1. Once connected, Insomnia should list these tools in the sidebar:
+
+   ```text
+   get_user
+   list_orders
+   list_orders_for_user
+   ```
+
+   Bob belongs to the **developer** group and is denied access to `list_users`.
+1. Click **Disconnect** to update the key for the next user.
+
+{% endnavtab %}
+{% navtab "Carol (suspended group)" %}
+
+1. Enter `apikey` in the Key field.
+1. Enter `carol-key` in the Value field.
+1. Click the **Connect** button.
+1. The connection should fail with a **403 Forbidden** response.<br/>
+   Carol belongs to the **suspended** group, which is globally denied access to all tools.
+1. Click **Disconnect** to switch to another user.
+
+{% endnavtab %}
+{% navtab "Eason (no group)" %}
+
+1. Enter `apikey` in the Key field.
+1. Enter `eason-key` in the Value field.
+1. Click the **Connect** button.
+1. Once connected, Insomnia should list this tool in the sidebar:
+
+   ```
+   list_users
+   ```
+
+   Eason is not part of any group but is explicitly allowed access to `list_users` in the tool’s ACL.
+1. Click **Disconnect** after validation.
+
+{% endnavtab %}
+{% endnavtabs %}
