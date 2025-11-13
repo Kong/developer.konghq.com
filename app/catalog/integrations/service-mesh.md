@@ -21,7 +21,7 @@ search_aliases:
   - service catalog
 related_resources:
   - text: Map Service Mesh services in {{site.konnect_catalog}}
-    url: /how-to/map-mesh-manager-resources/
+    url: /how-to/map-service-mesh-resources/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
 discovery_support: true
