@@ -1,5 +1,5 @@
 ---
-title: Draft
+title: Control MCP tool access with Consumer and Consumer Group ACLs
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -7,7 +7,8 @@ related_resources:
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
 
-description: Learn how to
+description: Learn how to use the AI MCP Proxy plugin to restrict access to specific MCP tools based on Kong Consumers and Consumer Groups. Configure global and per-tool ACLs, define user roles, and validate access behavior using Insomnia’s MCP Client.
+
 products:
   - gateway
   - ai-gateway
@@ -38,7 +39,9 @@ tags:
 tldr:
   q: How do I enforce control access to MCP tools using Kong AI Gateway?
   a: |
-    Use the AI MCP Proxy plugin to enforce tool-level access by configuring `global_acl` rules and per-tool `acl` lists. Assign users to Consumers and Consumer Groups to manage who can call each MCP tool. Denied requests return 403 and are logged for audit.
+    Use the AI MCP Proxy plugin to control access to MCP tools with global and
+    per-tool ACLs based on Consumers and Consumer Groups. Use Insomnia’s MCP
+    Client feature to test and validate which tools each user can access.
 
 tools:
   - deck
@@ -179,9 +182,9 @@ rows:
 
 From this table:
 
-- **`list_users`**: Only the `admin` group and the `eason` consumer can access. The `developer` group is explicitly denied.
-- **`get_user`**: Accessible to both `admin` and `developer` groups. The `suspended` group cannot use it.
-- **`list_orders` and `list_orders_for_user`**: Both tools are accessible to `admin` and `developer` groups, while `suspended` users are blocked.
+- `list_users`: Only the `admin` group and the `eason` consumer can access. The `developer` group is explicitly denied.
+- `get_user`: Accessible to both `admin` and `developer` groups. The `suspended` group cannot use it.
+- `list_orders` and `list_orders_for_user`: Both tools are accessible to `admin` and `developer` groups, while `suspended` users are blocked.
 
 
 {% entity_examples %}
