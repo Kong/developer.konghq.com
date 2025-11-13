@@ -310,6 +310,19 @@ spec:
 ```
 
 ```sh
+kubectl --context mesh-zone port-forward svc/kuma-control-plane -n kuma-system 5681:5681
+```
+
+```sh
+export ZONE_USER_ADMIN_TOKEN=$(kubectl --context mesh-zone get secrets -n kong-mesh-system admin-user-token -o json | jq -r .data.value | base64 -d)
+kumactl config control-planes add \
+  --address http://localhost:5681 \
+  --headers "authorization=Bearer $ZONE_USER_ADMIN_TOKEN" \
+  --name "new-cp" \
+  --overwrite
+```
+
+```sh
 DATAPLANE_NAME=$(kumactl get dataplanes -ojson | jq '.items[] | select(.networking.inbound[0].tags["kuma.io/service"] == "redis_kong-mesh-demo_svc_6379") | .name')
 kumactl inspect dataplane ${DATAPLANE_NAME} --type=config --shadow --include=diff | jq '.diff' | jd -t patch2jd
 ```
