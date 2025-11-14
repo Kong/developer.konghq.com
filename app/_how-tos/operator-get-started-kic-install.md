@@ -1,12 +1,13 @@
 ---
-title: Install {{ site.operator_product_name }} with self-managed Control Plane
-description: "Learn how to install {{ site.operator_product_name }} with self-managed Control Plane using Helm"
+title: Install {{ site.operator_product_name }}
+description: "Learn how to install {{ site.operator_product_name }}"
 content_type: how_to
 
-permalink: /operator/dataplanes/get-started/kic/install/
-series:
-  id: operator-get-started-kic
-  position: 1
+permalink: /operator/get-started/on-prem/install/
+
+# series:
+#   id: operator-get-started-gateway-api
+#   position: 1
 
 breadcrumbs:
   - /operator/
@@ -21,7 +22,6 @@ products:
   - operator
 
 works_on:
-  - konnect
   - on-prem
 
 prereqs:
@@ -49,7 +49,6 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 ## Install {{ site.operator_product_name }}
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
-
 
 ## Wait for {{ site.operator_product_name }} to be ready
 

@@ -4,9 +4,10 @@ description: "Configure {{ site.operator_product_name }}, self-managed Control P
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/create-gateway/
-series:
-  id: operator-get-started-kic
-  position: 2
+
+# series:
+#   id: operator-get-started-kic
+#   position: 2
 
 breadcrumbs:
   - /operator/
@@ -20,7 +21,6 @@ products:
   - operator
 
 works_on:
-  - konnect
   - on-prem
 
 entities: []
@@ -32,12 +32,6 @@ tldr:
 prereqs:
   show_works_on: true
   skip_product: true
-  operator:
-    konnect:
-      auth: true
-      control_plane: kic
-      konnectextension: true
-
 ---
 
 ## ControlPlane and DataPlane resources
@@ -48,10 +42,7 @@ Creating `GatewayClass` and `Gateway` resources in Kubernetes causes {{ site.ope
 
 You can customize your {{ site.base_gateway }} deployments and the self-managed Control Plane configuration using the `GatewayConfiguration` CRD. This allows you to control the image being used, and set any required environment variables.
 
-{:data-deployment-topology='konnect'}
 ## Create the GatewayConfiguration
-
-In order to specify the `KonnectExtension` in `Gateway`'s configuration you need to create a `GatewayConfiguration` object which will hold the `KonnectExtension` reference.
 
 ```bash
 echo '
@@ -136,10 +127,6 @@ You should see the following output:
 NAME   CLASS   ADDRESS        PROGRAMMED   AGE
 kong   kong    172.18.0.102   True         9m5s
 ```
-
-## Check the Programmed status
-
-If the `Gateway` has `Programmed` condition set to `True`, you can visit {{site.konnect_short_name}} and see your configuration being synced by the self-managed Control Plane.
 
 <!-- vale off -->
 {% validation kubernetes-resource %}

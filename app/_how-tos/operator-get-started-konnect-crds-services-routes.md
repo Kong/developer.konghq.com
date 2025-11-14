@@ -2,7 +2,7 @@
 title: Create a Service and Route
 description: Provision a service and route in Konnect using Kubernetes CRDs.
 content_type: how_to
-permalink: /operator/konnect/get-started/service-and-route/
+permalink: /operator/get-started/konnect-crds/service-and-route/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,8 +12,8 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
-  position: 4
+  id: operator-get-started-konnect-crds
+  position: 3
 
 tldr:
   q: How do I expose an upstream service using Konnect CRDs?

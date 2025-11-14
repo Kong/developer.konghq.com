@@ -85,7 +85,7 @@ groups:
     sections:
       - title: Get Started
         items:
-          - path: /operator/konnect/get-started/**/*
+          - path: /operator/get-started/**/*
       - title: Key Concepts
         items:
           - path: /operator/konnect/reconciliation-loop/
