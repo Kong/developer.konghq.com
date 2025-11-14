@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28'
+  x-oas-source: kong/platform-api@03247bd540dfeec5c6c83580c0f32ca7d4fe4baf
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/03247bd540dfeec5c6c83580c0f32ca7d4fe4baf'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3448,6 +3448,14 @@ components:
             total: 3
             size: 100
             number: 1
+    SampleInstanceCreateAzureDevopsPayload:
+      value:
+        integration_name: azure-devops
+        name: azure-devops
+        display_name: Azure DevOps
+        description: Expand Konnect Service Catalog functionality by importing repositories from Azure DevOps.
+        config:
+          organization: organization_name
     SampleInstanceCreateSonarQubePayload:
       value:
         integration_name: sonarqube
@@ -3669,6 +3677,25 @@ components:
           id: 70ecc595-4280-4872-8b80-87b2e57dba3f
           name: dynatrace
           display_name: Dynatrace
+    SampleCreateAzureDevopsMultiKeyAuthPayload:
+      value:
+        type: multi_key_auth
+        config:
+          headers:
+            - name: authorization
+              key: azure-devops-personal-access-token
+    SampleCreateAzureDevopsMultiKeyAuthResponse:
+      value:
+        id: 7c91b6d3-8e2f-4e2a-9a53-f3b47eac912b
+        type: multi_key_auth
+        missing_permissions: []
+        tainted: false
+        expires_at: null
+        created_at: '2024-07-18T15:42:29.314Z'
+        integration_instance:
+          id: b4f3d2c9-7a25-43bb-8c47-d7bfa2f91a8e
+          name: azure-devops
+          display_name: Azure DevOps
     SampleCreateSonarQubeMultiKeyAuthPayload:
       value:
         type: multi_key_auth
@@ -4074,6 +4101,8 @@ components:
               $ref: '#/components/examples/SampleInstanceCreateSonarQubePayload'
             azureApiManagement:
               $ref: '#/components/examples/SampleInstanceCreateAzureApiManagementPayload'
+            AzureDevops:
+              $ref: '#/components/examples/SampleInstanceCreateAzureDevopsPayload'
     UpdateIntegrationInstanceRequest:
       required: true
       content:
@@ -4104,6 +4133,8 @@ components:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthPayload'
             azureApiManagement:
               $ref: '#/components/examples/AzureApiManagementAuthConfigPayload'
+            azureDevops:
+              $ref: '#/components/examples/SampleCreateAzureDevopsMultiKeyAuthPayload'
     UpsertIntegrationInstanceAuthConfigRequest:
       required: true
       content:
@@ -4258,6 +4289,8 @@ components:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthResponse'
             azureApiManagement:
               $ref: '#/components/examples/AzureApiManagementAuthConfigResponse'
+            azureDevops:
+              $ref: '#/components/examples/SampleCreateAzureDevopsMultiKeyAuthResponse'
     IntegrationInstanceAuthConfigResponse:
       description: A response containing integration instance auth config.
       content:
