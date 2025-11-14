@@ -1,8 +1,7 @@
-import fetch from "node-fetch";
 import debug from "debug";
-import https from "https";
 import tough from "tough-cookie";
 import fetchCookie from "fetch-cookie";
+import { Agent } from "undici";
 
 import {
   setEnvVariable,
@@ -96,6 +95,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
   const options = {
     method: config.method || "GET",
     headers,
+    credentials: "include",
     redirect: "manual",
   };
 
@@ -104,9 +104,9 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
     headers["Content-Type"] = headers["Content-Type"] || "application/json";
   }
 
-  const agent = new https.Agent({ rejectUnauthorized: false });
+  const agent = new Agent({ connect: { rejectUnauthorized: false } });
   if (config.insecure) {
-    options["agent"] = agent;
+    options.dispatcher = agent;
   }
 
   const url = replaceEnvVars(config.url, env);
