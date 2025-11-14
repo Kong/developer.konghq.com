@@ -210,7 +210,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## ACL MCP tool control {% new_in 3.13 %}
+## ACL tool control {% new_in 3.13 %}
 
 The AI MCP Proxy plugin provides per-tool and per-server access control for MCP traffic. The plugin determines whether an authenticated Consumer or Consumer Group can:
 
@@ -227,7 +227,11 @@ Supported identifier types:
 * `custom_id`
 * `consumer_group`
 
-## ACL tool control request flow
+### ACL tool control request flow
+
+### ACL tool control request flow
+
+The AI MCP Proxy enforces ACLs for MCP traffic. The steps below summarize how requests are evaluated, authenticated, and logged.
 
 1. MCP client requests the list of available tools.
 2. AI MCP Proxy evaluates the global ACL for the Consumer or Consumer Group.
@@ -285,14 +289,14 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-## ACL Evaluation Logic
+### ACL evaluation logic
 
 ACL rules may define `allow` and `deny` lists. Each entry can reference a Consumer or Consumer Group using any supported identifier type. Evaluation follows this order:
 
-1. **Deny list**: If the subject matches any `deny` entry, the request is rejected (`403`).
-2. **Allow list (optional)**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`403`).
-3. **Only deny configured**: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
-4. **No ACL configuration**: If neither list exists, the request is allowed.
+1. Deny list: If the subject matches any `deny` entry, the request is rejected (`403`).
+2. Allow list (optional): If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`403`).
+3. Only deny configured: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
+4. No ACL configuration: If neither list exists, the request is allowed.
 
 The table below summarizes the possible ACL configurations and their outcomes.
 
@@ -318,7 +322,6 @@ rows:
     proxy: Yes
     response: 200
 {% endtable %}
-
 
 ## Scope of support
 
@@ -363,6 +366,3 @@ features:
     supported: false
 {% endfeature_table %}
 <!-- vale on -->
-
-
-

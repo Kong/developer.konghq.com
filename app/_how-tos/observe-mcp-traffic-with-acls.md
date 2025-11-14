@@ -7,7 +7,7 @@ related_resources:
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
 
-description: Learn how to configure MCP tools in Chatwise, enable the File Log plugin, and verify tool usage via audit logs.
+description: Learn how to observe MCP tool activity after you apply access controls. Enable file-based logging, then review audit entries to confirm permitted tools and RPC calls.
 
 
 products:
@@ -44,9 +44,7 @@ tags:
 tldr:
   q: How do I observe MCP tool usage with Kong AI Gateway?
   a: |
-    Use the File Log plugin to capture MCP tool activity in a log file. You can
-    then inspect these logs to monitor which tools each Consumer or Consumer
-    Group accessed and review RPC calls made by Chatwise’s MCP Client.
+    Use the File Log plugin to write MCP tool activity to a local file. Inspect the entries to see which tools each Consumer or Consumer Group accessed. Confirm the RPC calls that Chatwise sends to your MCP server.
 
 tools:
   - deck
