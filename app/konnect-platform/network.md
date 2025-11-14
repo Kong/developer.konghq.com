@@ -171,9 +171,20 @@ Org Admins can specify an IP address or a range of IP addresses that can connect
 {:.warning}
 > **Important:** If the source IP goes down and IP restriction is configured, you won't be able to access {{site.konnect_short_name}}.
 
-To configure IP restriction for {{site.konnect_short_name}}, do the following:
+To configure IP restriction for {{site.konnect_short_name}}, send a PATCH request to the `/source-ip-restriction` endpoint:
 
-UI INSTRUCTIONS HERE
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/source-ip-restriction
+status_code: 201
+method: PATCH
+body:
+    enabled: true
+    allowed_ips:
+    - 192.168.1.1
+    - 192.168.1.0/22
+{% endkonnect_api_request %}
+<!--vale on-->
 
 
 
