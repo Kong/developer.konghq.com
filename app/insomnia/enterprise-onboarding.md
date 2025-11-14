@@ -77,9 +77,7 @@ faqs:
       If you purchased Enterprise through the **sales team**, you will receive an activation code as part of the onboarding process.
   - q: How do I know that I have successfully upgraded to Insomnia Enterprise?
     a: |
-      Check the Insomnia app interface to confirm that your Enterprise upgrade is active:
-
-      - Look for the **Enterprise** badge in the top-right corner of the app.
+      Look for the **Enterprise** badge in the top-right corner of the app.
 
       If you don’t see the badge, you're either not part of an Enterprise workspace, or you don't have an **Owner** or **Co-owner** role. If you require support, reach out to **Insomnia Support** at support@insomnia.rest or [https://support.konghq.com/support/s/](https://support.konghq.com/support/s/).
     
