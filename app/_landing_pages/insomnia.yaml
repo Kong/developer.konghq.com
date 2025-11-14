@@ -46,6 +46,7 @@ rows:
   - header:
       type: h2
       text: Get started
+  - column_count: 3  
     columns:
       - blocks:
         - type: card
