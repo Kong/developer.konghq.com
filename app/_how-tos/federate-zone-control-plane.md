@@ -54,8 +54,8 @@ Run the following command to deploy a global control plane:
 
 ```sh
 helm install --kube-context mesh-global --create-namespace --namespace kong-mesh-system \
---set controlPlane.mode=global \
---set controlPlane.defaults.skipMeshCreation=true \
+--set kuma.controlPlane.mode=global \
+--set kuma.controlPlane.defaults.skipMeshCreation=true \
 kong-mesh kong-mesh/kong-mesh
 ```
 
@@ -95,11 +95,11 @@ kubectl apply --context mesh-global -f resources.yaml
 
 ```sh
 helm upgrade --kube-context mesh-zone --namespace kong-mesh-system \
---set controlPlane.mode=zone \
---set controlPlane.zone=zone-1 \
---set ingress.enabled=true \
---set controlPlane.kdsGlobalAddress=grpcs://$EXTERNAL_IP:5685 \
---set controlPlane.tls.kdsZoneClient.skipVerify=true \
+--set kuma.controlPlane.mode=zone \
+--set kuma.controlPlane.zone=zone-1 \
+--set kuma.ingress.enabled=true \
+--set kuma.controlPlane.kdsGlobalAddress=grpcs://$EXTERNAL_IP:5685 \
+--set kuma.controlPlane.tls.kdsZoneClient.skipVerify=true \
 kong-mesh kong-mesh/kong-mesh
 ```
 
@@ -108,6 +108,8 @@ kubectl --context mesh-global port-forward svc/kong-mesh-control-plane -n kong-m
 ```
 
 Wait a few minutes
+
+[http://127.0.0.1:15681/gui/]()
 
 ```sh
 kubectl --context mesh-global create namespace kong-mesh-demo
@@ -141,3 +143,11 @@ spec:
 ```sh
 kubectl get --context mesh-zone meshcircuitbreakers -A
 ```
+
+```sh
+NAMESPACE          NAME                                                TARGETREF KIND   TARGETREF NAME
+kong-mesh-system   demo-app-to-redis-65xb45x2xfd5bf7f                  Dataplane        
+kong-mesh-system   mesh-circuit-breaker-all-default                    Mesh             
+kong-mesh-system   mesh-circuit-breaker-all-default-d6zfxc24v7449xfv   Mesh             
+```
+{:.no-copy-code}
