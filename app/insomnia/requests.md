@@ -55,6 +55,14 @@ faqs:
       3. Find the offending request and clear its `body` field.
       4. Search for any other uses of the same request ID and clear those `body` fields as well.
       5. Save and relaunch Insomnia.
+  - q: Can I use variables in request paths?
+    a: |
+      Yes. Insomnia supports variables in request paths through **template tags** and **environment variables**.  
+      Define variables in your environment, then reference them directly in a request URL using Liquid syntax, for example:  
+      ```liquid
+      {% raw %}https://api.example.com/users/{{ user_id }}{% endraw %}
+      ```  
+      For detailed usage examples, go to [**Pre-request scripts**](/how-to/write-pre-request-scripts/). 
 ---
 
 ## How do I create requests in Insomnia?
@@ -96,6 +104,9 @@ rows:
     steps: Select an HTTP method in the dropdown list, or add a custom method.
   - element: Endpoint
     steps: Enter a URL, and use environment variables and template tags if needed.
+  - element: Path parameters
+    steps: >-
+      Define dynamic values that replace variables in the request path. For example, in **Path Parameters**, if the URL is `https://api.example.com/users/{id}` and you set `id = 123`, Insomnia sends the request to `https://api.example.com/users/123`.
   - element: Query parameters
     steps: >-
       In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multi-line text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.

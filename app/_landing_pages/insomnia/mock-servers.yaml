@@ -101,3 +101,7 @@ rows:
                 Yes, you can generate a mock endpoint from a request response. 
                 After sending a request, go to the **Mock** tab in the right panel and select or create a new mock server and route.
                 The generated endpoint will contain the response body, headers, and status.
+            - q: Are Mock request available on local Scratch Pad?
+              a: |
+                No. Mock servers are not available in the local **Scratch Pad**. To use mock servers, sign up for an Insomnia account.
+
