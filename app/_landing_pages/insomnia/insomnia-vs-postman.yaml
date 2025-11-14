@@ -12,14 +12,6 @@ metadata:
     - test-apis
     - postman
 
-  related_resources:
-    - text: Design APIs with Insomnia
-      url: /insomnia/design/
-    - text: Import content from Postman to multiple Insomnia projects
-      url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
-    - text: Migrate collections and environments from Postman to Insomnia
-      url: /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/  
-
 rows:
   - header:
       type: h1
