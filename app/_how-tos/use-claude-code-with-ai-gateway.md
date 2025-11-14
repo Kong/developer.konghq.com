@@ -49,7 +49,7 @@ prereqs:
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
     - title: Claude Code CLI
-      icon_url: /assets/icons/claude.svg
+      icon_url: /assets/icons/third-party/claude.svg
       content: |
         1. Install Claude:
 
@@ -141,7 +141,6 @@ Finally, to inspect the LLM traffic between Claude and the AI Gateway, let's ena
 entities:
   plugins:
     - name: file-log
-      service: codex-service
       config:
         path: "/tmp/claude.json"
 {% endentity_examples %}
@@ -187,8 +186,7 @@ Stokes' theorem is a fundamental result in vector calculus that generalizes seve
 
 Statement
 
-For a smooth oriented surface S bounded by a simple closed curve C, and a
-  vector field F that is continuously differentiable on S:
+For a smooth oriented surface S bounded by a simple closed curve C, and a vector field F that is continuously differentiable on S:
 
   ∮_C F · dr = ∬_S (∇ × F) · n dS
 
@@ -206,4 +204,42 @@ Now, let's inspect traffic through AI Gateway:
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
 ```
 
-Look for entries showing upstream requests to Claude, including `route_type` and `provider: anthropic`.
+You should see the following output in the logs:
+
+```json
+{
+    ...
+    "headers": {
+      ...
+      "user-agent": "claude-cli/2.0.37 (external, cli)",
+      "content-type": "application/json",
+      ...
+    },
+    "method": "POST"
+  },
+
+  "ai": {
+    "proxy": {
+      "usage": {
+        "prompt_tokens": 119,
+        "prompt_tokens_details": {},
+        "completion_tokens": 29,
+        "total_tokens": 148,
+        "cost": 0,
+        "time_per_token": 48.793103448276,
+        "time_to_first_token": 1286,
+        "completion_tokens_details": {}
+      },
+      "meta": {
+        "request_model": "claude-haiku-4-5-20251001",
+        "response_model": "claude-haiku-4-5-20251001",
+        "llm_latency": 1415,
+        "plugin_id": "7705ed4d-2423-444f-b635-b5f5bb4b3331",
+        "request_mode": "stream",
+        "provider_name": "anthropic"
+      }
+    }
+  },
+ ...
+}
+```
