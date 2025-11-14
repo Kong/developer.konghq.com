@@ -109,6 +109,9 @@ kubectl --context mesh-global port-forward svc/kong-mesh-control-plane -n kong-m
 
 Wait a few minutes
 
+```sh
+kubectl --context mesh-global create namespace kong-mesh-demo
+```
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
