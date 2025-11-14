@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28'
+  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
 servers:
   - url: 'https://global.api.konghq.com/v1'
     description: Global Base URL
@@ -526,24 +526,18 @@ components:
         - ids
         - status
     LegacyStringFieldFilter:
-      description: 'Filter using **one** of the following operators: `contains`'
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
       properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
         contains:
           description: The field contains the provided value.
           type: string
           example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
       x-examples:
         example-1:
           contains: some-value
