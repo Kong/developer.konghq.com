@@ -61,8 +61,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy plugin
@@ -129,6 +127,7 @@ This prompt matches `allow_patterns` and should succeed:
 
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -147,6 +146,7 @@ This prompt matches `deny_patterns` and should return an error:
 
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -166,6 +166,7 @@ This prompt isn't related to work and should also be blocked:
 
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
