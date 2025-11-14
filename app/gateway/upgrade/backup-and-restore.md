@@ -84,8 +84,9 @@ If you're running {{site.base_gateway}} as a Control Plane in {{site.konnect_sho
 Review the list of [entities managed by decK](/deck/reference/entities/) to see what can be backed up using this method.
 
 {:.info}
-> **Note:** This method only backs up Control Plane configurations in Gateway Manager. 
-It does not back up Dev Portal, API Products, {{site.konnect_catalog}}, and so on. 
+> **Note:** This method only backs up Control Plane configurations in {{site.konnect_short_name}}.
+It does not back up Dev Portal, API Products, {{site.konnect_catalog}}, and so on.
+
 Data stored in these applications, such as API specs and documents, must be manually backed up.
 
 ### Back up a {{site.konnect_short_name}} Control Plane
@@ -143,7 +144,7 @@ a Control Plane:
    ```
 
 Check your Control Plane in {{site.konnect_short_name}} to make sure the sync worked. 
-Open [Gateway Manager](https://cloud.konghq.com/gateway-manager/), select your Control Plane, and check through the configured entities.
+Open [**API Gateway**](https://cloud.konghq.com/gateway-manager/), select your Control Plane, and check through the configured entities.
 
 ## Back up and restore Gateway entities in a self-managed deployment
 

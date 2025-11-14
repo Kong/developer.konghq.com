@@ -25,8 +25,8 @@ related_resources:
     url: /how-to/?query=consumer
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
-  - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+  - text: "{{site.konnect_short_name}} control plane resource limits"
+    url: /gateway/control-plane-resource-limits/
 
 faqs:
   - q: What are credentials, and why do I need them?
@@ -167,16 +167,16 @@ rows:
 
 ## Centrally-managed Consumers {% new_in 3.10 %}
 
-Consumers can be scoped to a {{site.konnect_short_name}} region and managed centrally, or be scoped to a Control Plane in Gateway Manager.
+Consumers can be scoped to a {{site.konnect_short_name}} region and managed centrally, or be scoped to a control plane.
 
 Centralized Consumer management provides the following benefits:
-* **Set up a Consumer identity centrally**: Only define a Consumer once, instead of defining it in multiple Control Planes.
-* **Avoid conflicts from duplicate Consumer configuration**: Users don't need to replicate changes to Consumer identity in multiple Control Planes and Consumer configuration doesn't conflict.
-* **Reduce configuration sync issues between the Control Plane and the Data Planes**: Consumers that are managed centrally aren't part of the configuration that is pushed down from the Control Plane to the Data Planes, so it reduces config size and latency. 
+* **Set up a Consumer identity centrally**: Only define a Consumer once, instead of defining it in multiple control planes.
+* **Avoid conflicts from duplicate Consumer configuration**: Users don't need to replicate changes to Consumer identity in multiple control planes and Consumer configuration doesn't conflict.
+* **Reduce configuration sync issues between the control plane and the data planes**: Consumers that are managed centrally aren't part of the configuration that is pushed down from the control plane to the data planes, so it reduces config size and latency. 
 
-Centrally managed Consumers exist outside of Control Planes, so they can be used across Control Planes.
+Centrally managed Consumers exist outside of control planes, so they can be used across control planes.
 
-Use the following table to help you determine if you should use centrally-managed Consumers or Consumers scoped to Control Planes:
+Use the following table to help you determine if you should use centrally-managed Consumers or Consumers scoped to control planes:
 
 <!--vale off-->
 {% feature_table %} 
@@ -184,12 +184,12 @@ columns:
   - title: "Centrally-managed Consumers"
     key: central
     center: true
-  - title: Control Plane scoped Consumer
+  - title: Control plane scoped Consumer
     key: cp_consumer
     center: true
 
 features:
-  - title: "Share Consumer identity in more than one Control Plane"
+  - title: "Share Consumer identity in more than one control plane"
     central: true
     cp_consumer: false
   - title: "Supported authentication strategies"
@@ -205,7 +205,7 @@ features:
 <!--vale on-->
 
 You can manage Consumers centrally using the [{{site.konnect_short_name}} Consumers API](/api/konnect/consumers/v1/). 
-Only Org Admins and Control Plane Admins have CRUD permissions for these Consumers. 
+Only Org Admins and control plane Admins have CRUD permissions for these Consumers. 
 
 When you create a Consumer centrally, you must assign it to a realm. A realm groups Consumers around an identity, defined by organizational boundaries, such as a production realm or a development realm. 
 Realms are connected to a [geographic region](/konnect-platform/geos/) in {{site.konnect_short_name}}. Additionally, centrally managed Consumers must have a [specific Key Authentication configuration](/plugins/key-auth/examples/identity-realms/) set up to allow these Consumers to authenticate.
@@ -213,7 +213,7 @@ Realms are connected to a [geographic region](/konnect-platform/geos/) in {{site
 For a complete tutorial, see [Create a centrally-managed Consumer in {{site.konnect_short_name}}](/how-to/create-centrally-managed-consumer/).
 
 {:.info}
-> **Note:** If you are using KIC to manage your Data Plane nodes in {{site.konnect_short_name}}, ensure that you configure the [`cluster_telemetry_endpoint`](/gateway/configuration/#cluster-telemetry-endpoint)  in the Data Plane. You can find your specific `cluster_telemetry_endpoint` in [Gateway Manager](https://cloud.konghq.com/gateway-manager/), in the Data Plane node setup instructions.
+> **Note:** If you are using KIC to manage your data plane nodes in {{site.konnect_short_name}}, ensure that you configure the [`cluster_telemetry_endpoint`](/gateway/configuration/#cluster-telemetry-endpoint) in the data plane. You can find your specific `cluster_telemetry_endpoint` when setting up a data plane node.
 
 ## Consumer schema
 

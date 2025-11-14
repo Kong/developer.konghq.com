@@ -88,7 +88,7 @@ This process includes three main steps:
 
 ### Konnect configuration for VNET peering
 
-To configure peering in {{site.konnect_short_name}} you need to input the following values from Azure into the {{site.konnect_short_name}} [Gateway Manager](https://cloud.konghq.com/gateway-manager/) UI for your Dedicated Cloud Gateway:
+To configure peering in {{site.konnect_short_name}} you need to input the following values from Azure into the {{site.konnect_short_name}} UI for your Dedicated Cloud Gateway:
 
 * Azure Tenant ID  
 * Azure VNET Subscription ID  

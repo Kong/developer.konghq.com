@@ -22,7 +22,7 @@ related_resources:
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"
-    url: /gateway-manager/konnect-logs/
+    url: /dedicated-cloud-gateways/konnect-logs/
   - text: "{{site.konnect_short_name}} platform audit logs"
     url: /konnect-platform/audit-logs/
   - text: Logging plugins

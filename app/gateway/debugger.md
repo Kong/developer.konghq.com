@@ -2,7 +2,7 @@
 title: "Troubleshooting with {{site.konnect_short_name}} Debugger"
 description: "The Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes."
 breadcrumbs:
-  - /gateway-manager/
+  - /gateway/
 content_type: reference
 layout: reference
 search_aliases: 

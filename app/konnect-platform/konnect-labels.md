@@ -3,7 +3,7 @@ title: '{{site.konnect_short_name}} labels'
 content_type: reference
 layout: reference
 breadcrumbs:
-  - /gateway-manager/
+  - /konnect/
 products:
     - gateway
 
@@ -19,7 +19,7 @@ description: Learn about labels in {{site.konnect_short_name}}
 
 related_resources:
   - text: Data Plane reference
-    url: /gateway-manager/data-plane-reference/
+    url: /gateway/data-plane-reference/
 
 ---
 

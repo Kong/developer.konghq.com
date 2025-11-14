@@ -50,7 +50,7 @@ After Gateway is available on Konnect:
 
 There are a few items that we expect to come from engineering teams with each release:
 * [Performance benchmark update](https://developer.konghq.com/gateway/performance/benchmarks/)
-* [Konnect compatibility errors reference](https://developer.konghq.com/gateway-manager/version-compatibility/)
+* [Konnect compatibility errors reference](https://developer.konghq.com/gateway/data-plane-version-compatibility/)
 
 ### Patch releases 
 

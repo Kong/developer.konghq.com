@@ -97,7 +97,7 @@ This process includes three main steps:
     1. Open the **Resource Access Manager**, and select **Create Resource Share**.
     1. Choose **Transit Gateways** as the resource type and select the newly created gateway.
     1. Name the resource share and retain default managed permission settings.
-    1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**Gateway Manager > Networks**).
+    1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**API Gateway > Networks**).
     1. Create the resource share and save the resulting **RAM Share ARN**.
 
 2. Accept the Transit Gateway Attachment in AWS:
@@ -113,7 +113,9 @@ This process includes three main steps:
 
 To finish setup in {{site.konnect_short_name}}:
 
-1. Go to **[Gateway Manager](https://cloud.konghq.com/gateway-manager/), select your Dedicated Cloud Gateway, and click **Networks** in the sidebar.
+1. In the {{site.konnect_short_name}} menu, navigate to **[API Gateway](https://cloud.konghq.com/gateway-manager/)**.
+1. Click your Dedicated Cloud Gateway.
+1. In the sidebar, navigate to **Networks**.
 1. Select your network and click **Attach Transit Gateway**.
 1. Provide the following information:
   * Transit Gateway Name

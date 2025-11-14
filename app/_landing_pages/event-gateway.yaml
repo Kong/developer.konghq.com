@@ -324,12 +324,12 @@ rows:
           config:
             - q: How is {{site.event_gateway}} deployed?
               a: |
-                The {{site.event_gateway}} data planes are self-managed and deployed by you, the user. 
+                The {{site.event_gateway}} data planes are self-managed and deployed by you, the user.
                 The {{site.event_gateway}} control plane is part of the {{site.konnect_product_name}} platform.
-            
+
             - q: Does {{site.event_gateway}} run on-prem?
               a: No, {{site.event_gateway}} is only available through the {{site.konnect_product_name}} platform.
-            
+
             - q: Can I proxy multiple Kafka clusters?
               a: |
                 Yes, the gateway can proxy multiple backend clusters, though only one can currently be proxied in a single client connection.

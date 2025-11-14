@@ -39,7 +39,7 @@ rows:
                     - Automatic scaling with Autopilot mode.
                     - Support for AWS, Azure, and GCP in multiple [regions](/konnect-platform/geos/).
 
-                    You can manage your Dedicated Cloud Gateway nodes in [Gateway Manager](https://cloud.konghq.com/gateway-manager/).
+                    You can manage your Dedicated Cloud Gateway nodes in the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/).
           - type: button
             config:
               align: left
@@ -121,7 +121,7 @@ rows:
               icon: /assets/icons/gateway.svg
               cta:
                 text: Set up nodes
-                url: /gateway-manager/data-plane-reference/
+                url: /gateway/data-plane-reference/
       - blocks:
           - type: card
             config:

@@ -14,7 +14,7 @@
   {% for section in group.sections %}{% unless section.hidden %}
     <div class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
       {% if section.title %}
-      <h3 id="{% if group.title %}{{ group.title | slugify }}--{% endif %}{{ section.title | slugify }}" class="always-link mb-2" data-skip-process-heading-id="true">{{ section.title | liquify }}</h3>
+      <h3 id="{% if group.title %}{{ group.title | liquify | slugify }}--{% endif %}{{ section.title | liquify | slugify }}" class="always-link mb-2" data-skip-process-heading-id="true">{{ section.title | liquify }}</h3>
       {% endif %}
 
       <div class="content">
