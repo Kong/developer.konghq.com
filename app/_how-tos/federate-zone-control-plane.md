@@ -75,37 +75,70 @@ kong-mesh kong-mesh/kong-mesh
 
 We'll skip the default mesh creation since we'll bring the mesh from the zone control plane in the next steps.
 
+## Set up kumactl
 
+Before we start migrating, we need to set up kumactl, which we'll use to export resources.
 
-```sh
-kubectl --context mesh-zone port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
-```
+1. Run the following command to expose the control plane's API server. We'll need this to access kumactl:
 
-New terminal:
+   ```sh
+   kubectl --context mesh-zone port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
+   ```
 
-Export the 
-```sh
-export EXTERNAL_IP=host.minikube.internal
-```
+1. In a new terminal, check that kumactl is installed and that its directory is in your path:
 
-```sh
-export PATH=$PATH:$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin
-```
+   ```sh
+   kumactl
+   ```
 
-```sh
-export ZONE_USER_ADMIN_TOKEN=$(kubectl --context mesh-zone get secrets -n kong-mesh-system admin-user-token -o json | jq -r .data.value | base64 -d)
-kumactl config control-planes add \
-  --address http://localhost:5681 \
-  --headers "authorization=Bearer $ZONE_USER_ADMIN_TOKEN" \
-  --name "my-cp" \
-  --overwrite  
-  
-kumactl export --profile federation-with-policies --format kubernetes > resources.yaml
-```
+   If the command is not found:
 
-```sh
-kubectl apply --context mesh-global -f resources.yaml
-```
+   1. Make sure that kumactl is [installed](#install-kumactl)
+   1. Add the {{site.mesh_product_name}} binaries directory to your path:
+
+      ```sh
+      export PATH=$PATH:$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin
+      ```
+
+1. Export your admin token and add your control plane:
+
+   ```sh
+   export ZONE_USER_ADMIN_TOKEN=$(kubectl --context mesh-zone get secrets -n kong-mesh-system admin-user-token -o json | jq -r .data.value | base64 -d)
+   kumactl config control-planes add \
+     --address http://localhost:5681 \
+     --headers "authorization=Bearer $ZONE_USER_ADMIN_TOKEN" \
+     --name "my-cp" \
+     --overwrite
+   ```
+
+## Copy resources from the zone control plane to the global control plane
+
+1. Export the external IP to use to access the global control plane:
+   ```sh
+   export EXTERNAL_IP=host.minikube.internal
+   ```
+
+   If you are not using minikube, you can find your external IP using this command:
+
+   ```sh
+   export EXTERNAL_IP=$(kubectl --context mesh-global get svc -n kong-mesh-system kong-mesh-global-zone-sync -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+   ```
+
+1. Export the zone control plane resources:
+
+   ```sh  
+   kumactl export --profile federation-with-policies --format kubernetes > resources.yaml
+   ```
+
+1. Apply the resources to the global control plane:
+
+   ```sh
+   kubectl apply --context mesh-global -f resources.yaml
+   ```
+
+## Connect the control planes
+
+Update the zone control plane's Helm deployment to configure the connection to the global control plane:
 
 ```sh
 helm upgrade --kube-context mesh-zone --namespace kong-mesh-system \
@@ -117,51 +150,67 @@ helm upgrade --kube-context mesh-zone --namespace kong-mesh-system \
 kong-mesh kong-mesh/kong-mesh
 ```
 
-```sh
-kubectl --context mesh-global port-forward svc/kong-mesh-control-plane -n kong-mesh-system 15681:5681
-```
+## Validate
 
-Wait a few minutes
+1. To validate the federation, start by port-forwarding the API service from the global control plane to port 15681 to avoid collision with previous port-forward:
 
-[http://127.0.0.1:15681/gui/]()
+   ```sh
+   kubectl --context mesh-global port-forward svc/kong-mesh-control-plane -n kong-mesh-system 15681:5681
+   ```
 
-```sh
-kubectl --context mesh-global create namespace kong-mesh-demo
-```
+1. In a browser, go to [http://127.0.0.1:15681/gui/]() to see the GUI.
+   
+   You should see:
 
-```sh
-echo "apiVersion: kuma.io/v1alpha1
-kind: MeshCircuitBreaker
-metadata:
-  name: demo-app-to-redis
-  namespace: kong-mesh-demo
-  labels:
-    kuma.io/mesh: default
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: demo-app
-  to:
-  - targetRef:
-      kind: MeshService
-      name: kv
-    default:
-      connectionLimits:
-        maxConnections: 2
-        maxPendingRequests: 8
-        maxRetries: 2
-        maxRequests: 2" | kubectl --context mesh-global apply -f -
-```
+   * A zone in list of zones
+   * Policies, including the `MeshTrafficPermission` that we applied in the [prerequisites](#install-kong-mesh-with-demo-configuration)
+   * Data plane proxies for the demo application that we installed in the [prerequisites](#install-kong-mesh-with-demo-configuration)
 
-```sh
-kubectl get --context mesh-zone meshcircuitbreakers -A
-```
+   It can take some time for these to appear, if you don't see them immediately, wait a few minutes and try again.
 
-```sh
-NAMESPACE          NAME                                                TARGETREF KIND   TARGETREF NAME
-kong-mesh-system   demo-app-to-redis-65xb45x2xfd5bf7f                  Dataplane        
-kong-mesh-system   mesh-circuit-breaker-all-default                    Mesh             
-kong-mesh-system   mesh-circuit-breaker-all-default-d6zfxc24v7449xfv   Mesh             
-```
-{:.no-copy-code}
+1. Create the `kong-mesh-demo` namespace in the global control plane:
+
+   ```sh
+   kubectl --context mesh-global create namespace kong-mesh-demo
+   ```
+
+1. Apply a policy on the global control plane:
+
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshCircuitBreaker
+   metadata:
+     name: demo-app-to-redis
+     namespace: kong-mesh-demo
+     labels:
+       kuma.io/mesh: default
+   spec:
+     targetRef:
+       kind: Dataplane
+       labels:
+         app: demo-app
+     to:
+     - targetRef:
+         kind: MeshService
+         name: kv
+       default:
+         connectionLimits:
+           maxConnections: 2
+           maxPendingRequests: 8
+           maxRetries: 2
+           maxRequests: 2" | kubectl --context mesh-global apply -f -
+   ```
+
+1. Check that the policy is applied on the zone control plane:
+   ```sh
+   kubectl get --context mesh-zone meshcircuitbreakers -A
+   ```
+
+   You should get the following result:
+   ```sh
+   NAMESPACE          NAME                                                TARGETREF KIND   TARGETREF NAME
+   kong-mesh-system   demo-app-to-redis-65xb45x2xfd5bf7f                  Dataplane        
+   kong-mesh-system   mesh-circuit-breaker-all-default                    Mesh             
+   kong-mesh-system   mesh-circuit-breaker-all-default-d6zfxc24v7449xfv   Mesh             
+   ```
+   {:.no-copy-code}
