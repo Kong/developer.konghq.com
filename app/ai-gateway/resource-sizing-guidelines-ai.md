@@ -36,79 +36,6 @@ The Kong AI Gateway is designed to handle high‑volume inference workloads and 
 
 ## Scaling dimensions
 
-AI Gateway performance differs from traditional API or microservice proxying. Instead of focusing only on RPS, AI inference gateways also measure throughput in tokens per second.
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Performance dimension
-    key: dimension
-  - title: Measured in
-    key: measured_in
-  - title: "Performance limited by..."
-    key: performance
-  - title: Description
-    key: description
-rows:
-  - dimension: Latency
-    measured_in: Milliseconds
-    performance: |
-      *Latency is dominated by upstream model TTFT and TPOT*<br>
-      Gateway overhead is typically small relative to model inference time.
-    description: |
-      Time to first token (TTFT) and time per output token (TPOT) from the model dominate end-to-end latency. Gateway latency typically adds < 10ms.
-  - dimension: Throughput
-    measured_in: Tokens per second (input and output)
-    performance: |
-      *CPU-bound*<br>
-      Scale workers horizontally for higher token/s throughput.
-    description: Maximum sustained input and output tokens/s processed across all requests.
-{% endtable %}
-<!--vale on-->
-
-{:.info}
-> Model streams output tokens in Server‑Sent Events (SSE). Processing streamed output is more expensive per token than input, so capacity planning must treat input and output tokens differently.
-
-## Deployment guidance
-
-AI Gateway scales primarily through **horizontal worker expansion**, not vertical tuning. Treat **token throughput*- as the core capacity metric, and validate performance against real LLM latency profiles. Synthetic or low-latency backends will overstate capacity.
-
-### Scale horizontally for token throughput
-
-AI Gateway performance is CPU-bound on token processing. Adding workers increases sustained throughput **only when concurrency and streaming behavior scale correctly**.
-
-- Add workers and nodes to increase throughput
-- Validate scaling efficiency as concurrency grows
-- Benchmark against real model latency and token cadence
-
-### Allocate CPU and memory for LLM workloads
-
-Compute sizing is dictated by **token processing**, not request count. Memory supports configuration and streaming buffers; persistent storage demand is minimal.
-
-- CPU determines maximum tokens per second
-- Memory must support configuration and in-memory stream buffers
-- Disk and database usage is low compared to traditional gateway traffic
-
-### Use dedicated compute instance classes
-
-Consistent CPU performance is critical for LLM token streaming. Burstable or credit-based instances can introduce token delay spikes and unstable throughput.
-
-- Prefer dedicated compute families (for example, AWS `c5`, `c6g`)
-- Avoid burstable instances (AWS `t`, GCP `e2`, Azure `B` series)
-
-
-## Operational best practices
-
-Effective scaling requires testing with realistic model behavior, applying safety margins, and accommodating upstream model differences.
-
-- Benchmark with your model mix and prompt sizes
-- Size for token/s, not just RPS
-- Apply redundancy factor 2×–4×
-- Consider provider differences (OpenAI vs Gemini)
-- Test multi‑node scaling before production
-
-## Scaling dimensions
-
 AI inference performance depends on both token streaming latency and sustained token throughput. Unlike traditional API traffic, most latency comes from upstream models, so the gateway must be evaluated on its ability to pass through tokens efficiently.
 
 <!--vale off-->
@@ -145,7 +72,43 @@ rows:
 <!--vale on-->
 
 {:.success}
-> Model streaming increases CPU cost per output token. Plan capacity using token throughput, not RPS.
+> Model streams output tokens in Server‑Sent Events (SSE). Processing streamed output is more expensive per token than input, so capacity planning must treat input and output tokens differently.
+
+## Deployment guidance
+
+AI Gateway scales primarily through **horizontal worker expansion**, not vertical tuning. Treat **token throughput*- as the core capacity metric, and validate performance against real LLM latency profiles. Synthetic or low-latency backends will overstate capacity.
+
+### Scale horizontally for token throughput
+
+AI Gateway performance is CPU-bound on token processing. Adding workers increases sustained throughput **only when concurrency and streaming behavior scale correctly**.
+
+- Add workers and nodes to increase throughput
+- Validate scaling efficiency as concurrency grows
+- Benchmark against real model latency and token cadence
+
+### Allocate CPU and memory for LLM workloads
+
+Compute sizing is dictated by **token processing**, not request count. Memory supports configuration and streaming buffers; persistent storage demand is minimal.
+
+- CPU determines maximum tokens per second
+- Memory must support configuration and in-memory stream buffers
+
+### Use dedicated compute instance classes
+
+Consistent CPU performance is critical for LLM token streaming. Burstable or credit-based instances can introduce token delay spikes and unstable throughput.
+
+- Prefer dedicated compute families (for example, AWS `c5`, `c6g`)
+- Avoid burstable instances (AWS `t`, GCP `e2`, Azure `B` series)
+
+## Operational best practices
+
+Effective scaling requires testing with realistic model behavior, applying safety margins, and accommodating upstream model differences.
+
+- Benchmark with your model mix and prompt sizes
+- Size for token/s, not just RPS
+- Apply redundancy factor 2×–4×
+- Consider provider differences (OpenAI vs Gemini)
+- Test multi‑node scaling before production
 
 ## Baseline benchmark results
 
@@ -160,17 +123,14 @@ columns:
     key: value
 rows:
   - metric: |
-      Output tokens/s (OpenAI-compatible path)
+      Output tokens/s
     value: |
-      ~1.05M tokens/s
-  - metric: |
-      Output tokens/s (Gemini-compatible path)
-    value: |
-      ~0.78M tokens/s
+      OpenAI path: ~1.05M tokens/s
+      Gemini path: ~0.78M tokens/s
   - metric: |
       Input tokens/s
     value: |
-      ~4.4M tokens/s
+      ~4.4M tokens/s (similar for both OpenAI and Gemini)
   - metric: |
       Input:output ratio
     value: |
@@ -187,6 +147,7 @@ rows:
 equivalent_output_load = I_peak / R + O_peak
 required_workers ≈ equivalent_output_load / O_w
 ```
+{:.no-copy-code}
 
 Use redundancy factor **2×–4×*- to handle burst, tokenization, and provider variability.
 
@@ -199,6 +160,7 @@ Use redundancy factor **2×–4×*- to handle burst, tokenization, and provider 
 (80M / 4 + 10M) / 1M = 30 workers
 → 60–120 workers w/ redundancy
 ```
+{:.no-copy-code}
 
 ## Buffer and memory guidance
 
