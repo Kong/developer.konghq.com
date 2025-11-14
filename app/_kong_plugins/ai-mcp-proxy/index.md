@@ -210,6 +210,114 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+## ACL MCP tool control {% new_in 3.13 %}
+
+The AI MCP Proxy plugin provides per-tool and per-server access control for MCP traffic. The plugin determines whether an authenticated Consumer or Consumer Group can:
+
+* View tools returned by an MCP server during *List Tools*
+* Invoke a specific MCP tool
+* Access an MCP server through the proxy
+
+ACL rules attach to each tool entry in the plugin configuration. Rules may define allow-lists, deny-lists, and the identifier types used for matching. All access attempts (allowed or denied) are written to the plugin’s audit log. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/), or OIDC flows), and the resulting Consumer identity is used for ACL checks.
+
+Supported identifier types:
+
+* `username`
+* `consumer_id`
+* `custom_id`
+* `consumer_group`
+
+## ACL tool control request flow
+
+1. MCP client requests the list of available tools.
+2. AI MCP Proxy evaluates the global ACL for the Consumer or Consumer Group.
+3. Plugin returns only tools the subject is allowed to access.
+4. MCP client requests a specific tool with the API key.
+5. Kong AuthN plugin validates the key and identifies the Consumer.
+6. Plugin loads the Consumer’s group memberships.
+7. Plugin evaluates the tool-specific ACL.
+8. Plugin logs the access attempt (allowed or denied).
+9. Plugin returns `403 Forbidden` if denied, or forwards the request upstream if allowed.
+
+The following sequence diagram illustrates the ACL evaluation flow for listing and invoking MCP tools through the AI MCP Proxy plugin:
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+  participant Client as MCP Client
+  participant Kong as Kong Gateway
+  participant Auth as AuthN Plugin
+  participant ACL as ai-mcp-proxy (ACL/Audit)
+  participant Up as Upstream MCP Server
+  participant Log as Audit Sink
+
+  %% ----- List Tools -----
+  rect
+    note over Client,Kong: List Tools (Global ACL)
+    Client->>Kong: GET /tools
+    Kong->>Auth: Authenticate
+    Auth-->>Kong: Consumer identity
+    Kong->>ACL: Evaluate global ACL
+    ACL-->>Log: Audit entry
+    alt Allowed
+      Kong-->>Client: Filtered tool list
+    else Denied
+      Kong-->>Client: 403 Forbidden
+    end
+  end
+
+  %% ----- Tool Invocation -----
+  rect
+    note over Client,Up: Tool Invocation (Per-tool ACL)
+    Client->>Kong: POST /tools/{tool}
+    Kong->>Auth: Authenticate
+    Auth-->>Kong: Consumer identity
+    Kong->>ACL: Evaluate per-tool ACL
+    ACL-->>Log: Audit entry
+    alt Allowed
+      Kong->>Up: Forward request
+      Up-->>Kong: Response
+      Kong-->>Client: Response
+    else Denied
+      Kong-->>Client: 403 Forbidden
+    end
+  end
+{% endmermaid %}
+<!-- vale on -->
+
+## ACL Evaluation Logic
+
+ACL rules may define `allow` and `deny` lists. Each entry can reference a Consumer or Consumer Group using any supported identifier type. Evaluation follows this order:
+
+1. **Deny list**: If the subject matches any `deny` entry, the request is rejected (`403`).
+2. **Allow list (optional)**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`403`).
+3. **Only deny configured**: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
+4. **No ACL configuration**: If neither list exists, the request is allowed.
+
+The table below summarizes the possible ACL configurations and their outcomes.
+
+{% table %}
+columns:
+  - title: Condition
+    key: condition
+  - title: "Proxied to upstream service?"
+    key: proxy
+  - title: Response code
+    key: response
+rows:
+  - condition: "Subject matches any `deny` rule"
+    proxy: No
+    response: 403
+  - condition: "`allow` list exists and subject is not in it"
+    proxy: No
+    response: 403
+  - condition: "Only `deny` list exists and subject is not in it"
+    proxy: Yes
+    response: 200
+  - condition: "No ACL rules configured"
+    proxy: Yes
+    response: 200
+{% endtable %}
 
 
 ## Scope of support

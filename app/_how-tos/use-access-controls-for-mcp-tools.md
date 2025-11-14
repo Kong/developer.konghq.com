@@ -82,14 +82,13 @@ prereqs:
         http://localhost:3001/mcp
         ```
       icon_url: /assets/icons/github.svg
-    - title: ChatWise Desktop App
+    - title: ChatWise desktop application
       content: |
         Download and install ChatWise (available at https://chatwise.app/) for your OS.
 
         After installation:
         1. Launch the app.
         2. In Settings > Providers, configure your AI provider endpoint and API key.
-      icon_url: /assets/icons/chatwise.png
 
   entities:
     services:
@@ -163,43 +162,52 @@ entities:
 
 Let's configure the AI MCP Proxy plugin to enforce tool-level access rules. The plugin allows you to control which users or AI agents can see or call each MCP tool. Access is determined by **Consumer Groups** and individual **Consumers** via `allow` and `deny` lists.
 
-The table below summarizes the permissions for the below configuration:
+The table matrix below summarizes the permissions for the our configuration of the AI MCP Proxy plugin:
 
 <!-- vale off -->
 {% table %}
 columns:
   - title: MCP Tool
     key: tool
-  - title: Allowed Users/Groups
-    key: allow
-  - title: Denied Users/Groups
-    key: deny
+  - title: Admin group
+    key: admin
+  - title: Developer group
+    key: developer
+  - title: Eason consumer
+    key: eason
+  - title: Suspended group
+    key: suspended
+
 rows:
-  - tool: |
-        `list_users`
-    allow: "admin group, eason consumer"
-    deny: "developer group"
-  - tool: |
-        `get_user`
-    allow: "admin group, developer group"
-    deny: "suspended group"
-  - tool: |
-        `list_orders`
-    allow: "admin group, developer group"
-    deny: "suspended group"
-  - tool: |
-        `list_orders_for_user`
-    allow: "admin group, developer group"
-    deny: "suspended group"
+  - tool: "`list_users`"
+    admin: Yes
+    developer: No
+    eason: Yes
+    suspended: No
+  - tool: "`get_user`"
+    admin: Yes
+    developer: Yes
+    eason: No
+    suspended: No
+  - tool: "`list_orders`"
+    admin: Yes
+    developer: Yes
+    eason: No
+    suspended: No
+  - tool: "`list_orders_for_user`"
+    admin: Yes
+    developer: Yes
+    eason: No
+    suspended: No
+  - tool: "`search_orders`"
+    admin: Yes
+    developer: No
+    eason: No
+    suspended: No
 {% endtable %}
 <!-- vale on -->
 
-From this table:
-
-- `list_users`: Only the `admin` group and the `eason` consumer can access. The `developer` group is explicitly denied.
-- `get_user`: Accessible to both `admin` and `developer` groups. The `suspended` group cannot use it.
-- `list_orders` and `list_orders_for_user`: Both tools are accessible to `admin` and `developer` groups, while `suspended` users are blocked.
-
+The following plugin configuration applies the ACL rules for the MCP tools shown in the table above:
 
 {% entity_examples %}
 entities:
@@ -238,11 +246,11 @@ entities:
             acl:
               allow: ["admin", "developer"]
 
-          # - description: Search orders by name (case-insensitive substring)
-          #   name: search_orders
-          #   acl:
-          #     allow: ["admin"]
-          #     deny: ["developer"]
+          - description: Search orders by name (case-insensitive substring)
+            name: search_orders
+            acl:
+              allow: ["admin"]
+              deny: ["developer"]
 {% endentity_examples %}
 
 ## Validate the configuration
