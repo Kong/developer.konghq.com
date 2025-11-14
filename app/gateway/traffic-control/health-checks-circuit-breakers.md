@@ -74,9 +74,6 @@ Active health checks are dynamic and can disable and re-enable Targets based on 
 
 * [**Passive checks**](#passive-health-checks-circuit-breakers) (also known as **circuit breakers**): {{site.base_gateway}} analyzes the ongoing traffic being proxied and determines the health of Targets based on their behavior.
 Passive health checks can only disable unhealthy Targets, they never re-enable Targets automatically.
-  
-{:.info}
-> **Note:** Passive health checks are not available in {{site.konnect_short_name}} or hybrid mode.
 
 You can also combine the two modes. 
 For example, you could enable passive health checks to monitor Target health based solely on its traffic, then use active health checks while the Target is unhealthy to re-enable it automatically.
@@ -199,9 +196,6 @@ To completely disable active health checks for an Upstream, set `healthchecks.ac
 
 ## Passive health checks (circuit breakers)
 
-{:.info}
-> **Note:** This feature is not supported in {{site.konnect_short_name}} or hybrid mode.
-
 Passive health checks, also known as circuit breakers, are checks performed based on the requests proxied by {{site.base_gateway}} (HTTP/HTTPS/TCP) with no additional traffic generated.
 When a Target becomes unresponsive, the passive health checker detects that and marks the Target unhealthy. 
 The ring balancer starts skipping this Target and doesn't route any more traffic to it.
@@ -231,7 +225,23 @@ config:
 ### Re-enable a Target disabled by a passive health check
 
 Passive health checks have the advantage of not producing extra traffic, but they are unable to automatically mark a Target as healthy again. 
-Once the problem with a Target is solved and it is ready to receive traffic, you have to manually inform the health checker that the Target's status is `healthy`:
+Once the problem with a Target is solved and it is ready to receive traffic, you have to manually inform the health checker that the Target's status is `healthy`.
+
+{% navtabs "Re-enable" %}
+{% navtab "Hybrid Mode" %}
+For Hybrid mode deployments both with {{site.konnect_short_name}} and on-prem, you can configure **active health checks** on your Upstream to re-enable a disabled target.
+You can do this in the {{site.konnect_short_name}} UI: 
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Select your control plane.
+1. In the API Gateway sidebar, click **Upstreams**.
+1. Select the desired Upstream.
+1. From the **Actions** menu, click **Edit Configuration**. 
+1. Enable **Active Health Checks**
+1. Click **Save**.
+{% endnavtab %}
+{% navtab "Traditional Mode" %}
+
+In traditional {{site.base_gateway}} deployments, you can manually mark a Target as healthy using the Admin API. This method is not available in {{site.konnect_short_name}} or hybrid mode.
 
 ```bash
 curl -i -X PUT http://localhost:8001/upstreams/example-upstream/targets/10.1.2.3:1234/healthy
@@ -239,6 +249,9 @@ curl -i -X PUT http://localhost:8001/upstreams/example-upstream/targets/10.1.2.3
 
 This command broadcasts a cluster-wide message so that the `healthy` status is propagated to the whole {{site.base_gateway}} cluster. 
 This resets the health counters of the health checkers running in all workers of the {{site.base_gateway}} node, allowing the ring balancer to route traffic to the Target again.
+{% endnavtab %}
+{% endnavtabs %}
+
 
 ### Disable passive health checks
 

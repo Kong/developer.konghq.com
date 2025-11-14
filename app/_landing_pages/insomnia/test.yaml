@@ -31,6 +31,14 @@ rows:
                     - Execute unlimited test runs simultaneously 
                     - Import your tests from Postman
                     - Use the full range of [Chai `assert` assertions](https://www.chaijs.com/api/assert/) in both post-request and unit test scripts  
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {:.info}
+                      > Unit tests are planned for deprecation in a future release.
+                      > [Migrate to scripts](/insomnia/scripts/)
       - blocks:
           - type: image
             config:

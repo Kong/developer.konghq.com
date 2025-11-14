@@ -23,29 +23,24 @@ extended_description: |
 weight: 900
 
 config:
-  targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: api-key
-        header_value: ${key}
-      model:
-        provider: azure
-        name: gpt-4o
-        options:
-          azure_api_version: "2023-01-01"
-          azure_instance: ${instance}
-          azure_deployment_id: ${deployment}
-
+  model_name_header: false
+  route_type: llm/v1/batches
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${azure_key}
+  model:
+    provider: azure
+  options:
+    azure_api_version: "2025-01-01-preview"
+    azure_instance: ${azure_instance}
+    azure_deployment_id: ${azure_deployment}
 variables:
-  instance:
-    value: $AZURE_INSTANCE_NAME
-    description: The name of the Azure OpenAI instance.
-  deployment:
-    value: $AZURE_DEPLOYMENT_ID
-    description: The ID of the Azure OpenAI deployment.
-  key:
-    value: $AZURE_OPENAI_API_KEY
-    description: The API key to use to connect to Azure OpenAI.
+  azure_key:
+    value: "$AZURE_OPENAI_API_KEY"
+  azure_instance:
+    value: "$AZURE_INSTANCE_NAME"
+  azure_deployment:
+    value: "$AZURE_DEPLOYMENT_ID"
 
 tools:
   - deck

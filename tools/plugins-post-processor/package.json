@@ -1,0 +1,12 @@
+{
+    "name": "plugins-post-processor",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {},
+    "type": "module",
+    "keywords": [],
+    "license": "MIT",
+    "dependencies": {
+        "minimist": "^1.2.8"
+    }
+}

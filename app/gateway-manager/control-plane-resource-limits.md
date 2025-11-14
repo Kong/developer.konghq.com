@@ -21,7 +21,6 @@ related_resources:
 
 In [Gateway Manager](/gateway-manager/), every {{site.konnect_short_name}} Control Plane has a default resource limit per [Gateway entity](/gateway/entities/).
 
-You can't edit these limits directly. 
 If you need any of the {{site.konnect_short_name}} entity resource limits increased, contact [Kong Support](https://support.konghq.com). 
 
 <!--vale off-->

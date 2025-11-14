@@ -1,32 +1,12 @@
 # frozen_string_literal: true
 
+require_relative '../../policies/pages/reference'
+
 module Jekyll
   module MeshPolicyPages
     module Pages
-      class Reference < Base # rubocop:disable Style/Documentation
-        def self.url(policy)
-          if policy.unreleased?
-            "/mesh/policies/#{policy.slug}/reference/#{policy.min_release}/"
-          else
-            "/mesh/policies/#{policy.slug}/reference/"
-          end
-        end
-
-        def content
-          ''
-        end
-
-        def data
-          super
-            .except('faqs')
-            .merge(
-              'content_type' => 'reference',
-              'reference?' => true,
-              'toc' => false,
-              'versioned' => true,
-              'schema' => @policy.schema
-            )
-        end
+      class Reference < Base
+        include Policies::Pages::Reference
 
         def layout
           'mesh_policies/reference'

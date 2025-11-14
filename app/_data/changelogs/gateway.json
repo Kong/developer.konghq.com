@@ -17605,5 +17605,65 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.11.0.6": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "**balancer**: Fixed an issue where the dns query not stopped when related upstream deleted.\n",
+        "type": "bugfix",
+        "scope": "Configuration"
+      },
+      {
+        "message": "Fixed an issue where for incremental sync, consumer group renaming may not be properly populated, causing stale data to be served.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**OpenID-Connect**: Fixed an issue where for incremental sync, consumer related caches may not be properly invalidated, causing stale data to be served.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**event-hooks**: Fixed an issue where the event_hook crud events cannot be handled in traditional cluster mode.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-consume, confluent-consume**: Added `enforce_latest_offset_reset` flag to fix incorrect `latest` offset behavior. When `false` (default), maintains backwards compatibility where `latest` acts like `earliest`. When `true`, `latest` correctly starts from end of topic. Also fixed offset commit bug when no records are consumed, preventing feedback loop with true latest behavior.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Key-Auth-Enc**: Fixed an issue where for incremental sync, caches may not be properly invalidated, causing stale data to be served.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenID-Connect**: Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the data plane did not stop the health checker before cleaning up old configurations, which could lead to resource leaks.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "**Confluent/Kafka plugins**: Fixed issues where Kafka plugins did not work when configured via Kong Manager.",
+        "type": "bugfix",
+        "githubs": [
+          4092
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }

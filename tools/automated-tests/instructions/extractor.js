@@ -102,6 +102,7 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
   if (runtime === "on-prem") {
     runtime = "gateway";
   }
+
   const instructionsFile = path.join(
     config.instructionsDir,
     url.pathname,
@@ -123,6 +124,15 @@ export async function extractInstructionsFromURL(uri, config, context) {
   try {
     console.log(`Extracting instructions from: ${url}`);
     await page.goto(url.toString(), { waitUntil: "domcontentloaded" });
+
+    const productsString = await page
+      .locator("[data-test-products]")
+      .getAttribute("data-test-products");
+
+    const products = productsString
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item !== "");
 
     let worksOn = await page
       .locator('meta[name="algolia:works_on"]')
@@ -154,6 +164,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
         {
           name,
           setup,
+          products,
           prereqs,
           steps,
         }

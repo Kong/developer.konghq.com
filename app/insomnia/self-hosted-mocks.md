@@ -19,6 +19,8 @@ related_resources:
     url: /insomnia/mock-servers/
   - text: Create a cloud-hosted mock server
     url: /how-to/create-a-cloud-hosted-mock-server/
+  - text: Auto-generate a self-hosted mock server
+    url: /insomnia/ai-in-insomnia/#Use-ai-to-auto-generate-a-mock-server
 ---
 
 Insomnia allows Enterprise users to create self-hosted mock servers.
@@ -134,3 +136,29 @@ kubectl get ingress -n mock
 ```
 
 Once you deploy your mock, point your front-end application to the mock URL.
+
+## Create an auto-generated mock server
+Use Insomnia’s AI-assisted mock server generation to transform a short description, or an existing API source into a working self-hosted mock server.
+
+You can generate a mock server from any of the following: 
+- **URL**: Generate from a live endpoint response.  
+- **OpenAPI**: Generate from a spec.  
+- **Text**: Generate by providing a description of the API endpoints.
+                    
+{:.info}
+> **Note**: AI-generated mock servers are only supported with self-hosted mocks.
+
+**To create an AI-generated mock server:**
+1. In your Insomnia project, click **Create**.  
+1. Click **Mock Server**.  
+1. Click **Auto-Generate**.  
+1. Select either **URL**, **OpenAPI spec**, or **Text**.
+1. (Optional) Select the **Enable dynamic responses** checkbox.  
+1. (Optional) Click **+ Add Files** to upload extra JSON files or YAML files.
+1. Insert an example mock-server URL.
+1. Click **Create**.
+
+
+**AI-assisted mocks and dynamic mocking**: AI generation focuses on creating a complete mock structure from your input prompt or source. [Dynamic mocking](/insomnia/dynamic-mocking/) extends those generated mocks by making them **request-aware**. 
+                    
+Together, they enable rapid creation of realistic, responsive test environments without manual setup.

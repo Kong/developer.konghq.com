@@ -57,6 +57,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avro
 aws
 AZs
 backfilled
@@ -255,6 +256,7 @@ full_name
 Gateway
 GatewayClass
 gatewayclass
+gateway_entity
 gcloud
 gcp
 geo
@@ -360,6 +362,7 @@ io
 ip
 ips
 iptables
+IPinfo
 Istio
 Istio
 Istio's
@@ -396,6 +399,7 @@ kds
 keepalive
 keps
 ketama
+key_sources
 Keycloak
 Keycloak
 keyless
@@ -519,6 +523,8 @@ moesif
 MongoDB
 MongoDB
 multimodal
+multitenant
+multitenancy
 mutex
 nameserver
 nameservers
@@ -653,6 +659,8 @@ readme
 readonly
 real_ip_header
 real_ip_recursive
+rebalance
+render_output
 Realtime
 realtime
 reconverge
@@ -683,6 +691,7 @@ resourceVersion
 Resty
 Resty
 resty
+Resync
 retryOn
 reusability
 rockspec
@@ -860,6 +869,7 @@ Unicode
 unix
 unmanaged
 unmarshalled
+unnamespaced
 unnormalized
 unpackage
 unparsed
@@ -909,6 +919,7 @@ Valero
 validator
 validators
 vararg
+vc
 viewport
 viewports
 vms
