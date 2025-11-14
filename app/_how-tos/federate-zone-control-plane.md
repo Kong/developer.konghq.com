@@ -34,6 +34,20 @@ prereqs:
       include_content: prereqs/kubernetes/mesh-cluster
     - title: Install {{site.mesh_product_name}} with demo configuration
       include_content: prereqs/kubernetes/mesh-quickstart
+
+cleanup:
+  inline:
+    - title: Clean up kumactl control plane
+      include_content: cleanup/products/kumactl
+    - title: Clean up {{site.mesh_product_name}} resources
+      content: |
+        To clean up your environment, remove the Docker containers, network, temporary directory, and the control plane configuration. Run the following command:
+
+        ```sh
+        minikube delete --profile mesh-zone
+        minikube delete --profile mesh-global
+        ```
+    
 ---
 
 ## Start a new Kubernetes cluster for the global control plane
@@ -83,7 +97,7 @@ export ZONE_USER_ADMIN_TOKEN=$(kubectl --context mesh-zone get secrets -n kong-m
 kumactl config control-planes add \
   --address http://localhost:5681 \
   --headers "authorization=Bearer $ZONE_USER_ADMIN_TOKEN" \
-  --name "zone-cp" \
+  --name "my-cp" \
   --overwrite  
   
 kumactl export --profile federation-with-policies --format kubernetes > resources.yaml
