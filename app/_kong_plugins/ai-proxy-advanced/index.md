@@ -64,6 +64,8 @@ examples_groups:
     text: Multimodal route types for OpenAI
   - slug: openai-processing
     text: Other OpenAI processing routes
+  - slug: azure-processing
+    text: Azure processing routes
   - slug: native-routes
     text: Native routes
 
@@ -143,7 +145,7 @@ faqs:
       failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
       ```
 
-      This means that the hardcoded MemoryDB instance limit has been reached. 
+      This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 
 ---

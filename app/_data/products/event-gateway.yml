@@ -6,6 +6,3 @@ releases:
     version: "1.0.0"
     name: "v1"
     latest: true
-  - release: "0.1"
-    version: "0.1.0-beta"
-    name: "v0"

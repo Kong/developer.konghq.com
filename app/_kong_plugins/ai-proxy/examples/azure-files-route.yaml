@@ -1,10 +1,14 @@
-title: 'Chat route with Azure OpenAI Service'
-description: 'Configure a chat route using Azure OpenAI Service with the GPT-4o model.'
+title: 'Files route with Azure OpenAI Service'
+description: 'Configure a files route using Azure OpenAI Service.'
+
 
 extended_description: |
-  Configure a chat route using Azure OpenAI Service with the GPT-4o model.
+  Configure a batch route using Azure OpenAI Service.
 
   To connect to Azure AI, you'll need three values from your Azure OpenAI resource:
+
+  {:.warning}
+  > Make sure to use a `globalbatch` or `datazonebatch` deployment for files and batch operations. Standard deployments (`GlobalStandard`) **cannot process batch and file operations**.
 
   1. **Deployment ID** — The unique name of your deployed model.
      - In the [Azure AI Foundry Portal](https://ai.azure.com/?cid=learnDocs) sidebar, select a resource and go to:
@@ -20,6 +24,8 @@ extended_description: |
        **Shared Resources > Deployments > Model deployments**, then click the deployment name.
      - The API key is visible in the **Endpoint** tile.
 
+  {:.info}
+  > Check the [Send batch requests to Azure OpenAI LLMs](/how-to/azure-batches/) tutorial for a step-by-step walkthrough.
 weight: 900
 
 config:
@@ -30,10 +36,10 @@ config:
     header_value: Bearer ${azure_key}
   model:
     provider: azure
-  options:
-    azure_api_version: "2025-01-01-preview"
-    azure_instance: ${azure_instance}
-    azure_deployment_id: ${azure_deployment}
+    options:
+      azure_api_version: "2025-01-01-preview"
+      azure_instance: ${azure_instance}
+      azure_deployment_id: ${azure_deployment}
 variables:
   azure_key:
     value: "$AZURE_OPENAI_API_KEY"
@@ -48,3 +54,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: azure-processing
