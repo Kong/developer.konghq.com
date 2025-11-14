@@ -120,7 +120,6 @@ prereqs:
 
 
         6. Export the template ID:
-            
            ```bash
            export DECK_GCP_TEMPLATE_ID="strict-guardrails"
            ```
@@ -140,8 +139,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the plugin
