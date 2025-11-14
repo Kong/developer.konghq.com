@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b6321606a76ff4d736b45a17640baf5021adc6c6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b6321606a76ff4d736b45a17640baf5021adc6c6'
+  x-oas-source: kong/platform-api@b5b586c089e7650d9ba0424adccd6d652902cc3f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b5b586c089e7650d9ba0424adccd6d652902cc3f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -177,6 +177,7 @@ components:
       description: Number of requests to be returned.
       type: integer
       default: 100
+      maximum: 1000
     FilterOffset:
       description: Number of requests to be skipped when returning results.
       type: integer
@@ -274,6 +275,7 @@ components:
           description: Number of requests returned.
           type: integer
           default: 100
+          maximum: 1000
         offset:
           description: Number of requests skipped when returning results.
           type: integer
