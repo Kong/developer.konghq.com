@@ -741,6 +741,7 @@ slos
 SLT_Enc
 sni
 snis
+sonarqube
 Splunk
 Splunk
 ssl

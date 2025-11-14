@@ -35,7 +35,7 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: SonarQube
       content: |
-        You need to configure the following in SonarQube SaaS:
+        You need to configure the following in [SonarQube Cloud](https://www.sonarsource.com/products/sonarcloud/):
         * A [SonarQube personal access token](https://docs.sonarsource.com/sonarqube-cloud/managing-your-account/managing-tokens).
 
         {:.warning}
@@ -45,9 +45,6 @@ prereqs:
         ```sh
         export SONARQUBE_PAT='YOUR SONARQUBE PERSONAL ACCESS TOKEN'
         ```
-
-        {:.warning}
-        > SonarQube Server isn't supported.
       icon_url: /assets/icons/third-party/sonarqube.svg
 ---
 
@@ -67,7 +64,7 @@ body:
   integration_name: sonarqube
   name: sonarqube
   display_name: SonarQube
-  config:
+  config: {}
 {% endkonnect_api_request %}
 <!--vale on-->
 
