@@ -77,7 +77,7 @@ When shipping data to {{site.konnect_short_name}} you must include the subject w
 
 ## Schema
 
-Insert Schema here
+[Insert Schema here](https://openmeter.io/docs/api/cloud#tag/subjects)
 
 ## Set up a Route
 
