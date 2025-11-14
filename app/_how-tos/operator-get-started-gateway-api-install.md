@@ -23,9 +23,6 @@ works_on:
   - konnect
   - on-prem
 
-min_version:
-  ko: '2.1'
-
 entities: []
 
 tldr:

@@ -30,19 +30,20 @@ search_aliases:
   - konnect hybrid gateway
 
 tldr:
-  q: How do I configure a Hybrid Gateway in {{site.konnect_short_name}}?
-  a: Fill Konnect related fields in `GatewayConfiguration` for `GatewayClass` that will be used for Hybrid Gateways.
+  q: How can I create a Gateway with {{ site.operator_product_name }} with self-managed Control Plane?
+  a: Create a `GatewayConfiguration` object, then create a `GatewayClass` instance and a `Gateway` resource.
 
 prereqs:
-  skip_product: true
+  skip_product: false
   operator:
     konnect:
       auth: true
 
 ---
 
-## Create a `GatewayClass` for a Hybrid Gateway
+## Create a `GatewayConfiguration`
 
+{: data-deployment-topology="konnect" }
 Use the `GatewayConfiguration` resource to configure a `GatewayClass` for Hybrid Gateways. `GatewayConfiguration` is for Hybrid Gateways when field `spec.konnect.authRef` is set.
 
 <!-- vale off -->
@@ -50,7 +51,7 @@ Use the `GatewayConfiguration` resource to configure a `GatewayClass` for Hybrid
 kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/v2beta1
 metadata:
-  name: hybrid-configuration
+  name: gateway-configuration
   namespace: kong
 spec:
   konnect:
@@ -66,49 +67,75 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-Next configure respective `GatewayClass` to use the above `GatewayConfiguration`.
+{: data-deployment-topology="on-prem" }
+Use the `GatewayConfiguration` resource to configure a `GatewayClass` for on-premise Gateways.
 
 <!-- vale off -->
-{% konnect_crd %}
+{% on_prem_crd %}
+kind: GatewayConfiguration
+apiVersion: gateway-operator.konghq.com/v2beta1
+metadata:
+  name: kong-configuration
+  namespace: kong
+spec:
+  dataPlaneOptions:
+    deployment:
+      podTemplateSpec:
+        spec:
+          containers:
+          - name: proxy
+            image: kong/kong-gateway:3.12
+{% endon_prem_crd %}
+<!-- vale on -->
+
+## Create a `GatewayClass`
+
+Next configure respective `GatewayClass` to use the above `GatewayConfiguration`.
+
+```yaml
 kind: GatewayClass
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
-  name: hybrid-class
+  name: kong
 spec:
   controllerName: konghq.com/gateway-operator
   parametersRef:
     group: gateway-operator.konghq.com
     kind: GatewayConfiguration
-    name: hybrid-configuration
+    name: kong-configuration
     namespace: kong
-{% endkonnect_crd %}
-<!-- vale on -->
+```
 
 ## Create a `Gateway` Resource
 
 Now create a `Gateway` resource that references the `GatewayClass` you just created.
 
-<!-- vale off -->
-{% konnect_crd %}
+```yaml
 kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
-  name: hybrid-gateway
+  name: kong
   namespace: kong
 spec:
-  gatewayClassName: hybrid-class
+  gatewayClassName: kong
   listeners:
   - name: http
     protocol: HTTP
     port: 80
-{% endkonnect_crd %}
-<!-- vale on -->
+```
 
 ## Validation
 
 {% validation kubernetes-resource %}
 kind: Gateway
-name: hybrid-gateway
+name: kong
+namespace: kong
 {% endvalidation %}
 
-The respective `DataPlane` and `KonnectGatewayControlPlane` are created automatically by the Gateway Operator.
+{: data-deployment-topology="konnect" }
+The respective `DataPlane`, `KonnectExtension`, and `KonnectGatewayControlPlane` are created automatically by the Gateway Operator.
+{: data-deployment-topology="konnect" }
+
+{: data-deployment-topology="on-prem" }
+The respective `DataPlane` and `ControlPlane` are created automatically by the Gateway Operator.
+{: data-deployment-topology="on-prem" }
