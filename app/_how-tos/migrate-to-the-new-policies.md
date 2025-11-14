@@ -33,9 +33,14 @@ prereqs:
 ---
 
 ```sh
-helm repo add kong-mesh https://kumahq.github.io/charts
-helm repo update
-helm install --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh/kong-mesh --set "controlPlane.defaults.skipMeshCreation=true"
+helm upgrade \
+  --install \
+  --create-namespace \
+  --namespace kong-mesh-system \
+  kong-mesh kong-mesh/kong-mesh \
+  --set "controlPlane.defaults.skipMeshCreation=true"
+
+kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
 ``` 
 
 ```sh
@@ -45,7 +50,7 @@ kubectl get meshes
 ```sh
 No resources found
 ```
-{.no-copy-code}
+{:.no-copy-code}
 
 ```sh
 echo 'apiVersion: kuma.io/v1alpha1
@@ -60,7 +65,7 @@ spec:
 
 
 ```sh
-echo "
+echo '
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -85,14 +90,14 @@ spec:
     spec:
       containers:
         - name: redis
-          image: 'redis'
+          image: "redis"
           ports:
             - name: tcp
               containerPort: 6379
           lifecycle:
             preStop: # delay shutdown to support graceful mesh leave
               exec:
-                command: ['/bin/sleep', '30']
+                command: ["/bin/sleep", "30"]
             postStart:
               exec:
                 command:
@@ -106,7 +111,7 @@ spec:
                       fi
                       sleep 1
                     done
-                    echo 'Redis not ready after 30s, skipping postStart'
+                    echo "Redis not ready after 30s, skipping postStart"
                     exit 0
 ---
 apiVersion: v1
@@ -140,16 +145,16 @@ spec:
     spec:
       containers:
         - name: demo-app
-          image: 'kumahq/kong-mesh-demo'
+          image: "kumahq/kuma-demo"
           env:
             - name: REDIS_HOST
-              value: 'redis.kong-mesh-demo.svc.cluster.local'
+              value: "redis.kong-mesh-demo.svc.cluster.local"
             - name: REDIS_PORT
-              value: '6379'
+              value: "6379"
             - name: APP_VERSION
-              value: '1.0'
+              value: "1.0"
             - name: APP_COLOR
-              value: '#efefef'
+              value: "#efefef"
           ports:
             - name: http
               containerPort: 5000
@@ -167,7 +172,7 @@ spec:
   ports:
   - protocol: TCP
     appProtocol: http
-    port: 5000" | kubectl apply -f -
+    port: 5000' | kubectl apply -f -
 
 kubectl wait -n kong-mesh-demo --for=condition=ready pod --selector=app=demo-app --timeout=90s
 ```
@@ -175,6 +180,10 @@ kubectl wait -n kong-mesh-demo --for=condition=ready pod --selector=app=demo-app
 ```sh
 kubectl port-forward svc/demo-app -n kong-mesh-demo 5000:5000
 ```
+
+http://127.0.0.1:5000/
+
+New terminal:
 
 ```sh
 echo 'apiVersion: kuma.io/v1alpha1
@@ -310,8 +319,15 @@ spec:
 ```
 
 ```sh
-kubectl --context mesh-zone port-forward svc/kuma-control-plane -n kuma-system 5681:5681
+kubectl --context mesh-zone port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
 ```
+
+New terminal:
+
+```sh
+export PATH=$PATH:$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin
+```
+
 
 ```sh
 export ZONE_USER_ADMIN_TOKEN=$(kubectl --context mesh-zone get secrets -n kong-mesh-system admin-user-token -o json | jq -r .data.value | base64 -d)
@@ -328,9 +344,12 @@ kumactl inspect dataplane ${DATAPLANE_NAME} --type=config --shadow --include=dif
 ```
 
 ```sh
-
+@ ["type.googleapis.com/envoy.config.listener.v3.Listener","inbound:10.244.0.7:6379","filterChains",0,"filters",0,"typedConfig","rules","policies","app-to-redis"]
+- {"permissions":[{"any":true}],"principals":[{"authenticated":{"principalName":{"exact":"spiffe://default/demo-app_kong-mesh-demo_svc_5000"}}}]}
+@ ["type.googleapis.com/envoy.config.listener.v3.Listener","inbound:10.244.0.7:6379","filterChains",0,"filters",0,"typedConfig","rules","policies","MeshTrafficPermission"]
++ {"permissions":[{"any":true}],"principals":[{"authenticated":{"principalName":{"exact":"spiffe://default/demo-app_kong-mesh-demo_svc_5000"}}}]}
 ```
-{.no-copy-code}
+{:.no-copy-code}
 
 ```sh
 kubectl label -n kong-mesh-system meshtrafficpermission app-to-redis kuma.io/effect-
@@ -378,9 +397,34 @@ kumactl inspect dataplane ${DATAPLANE_NAME} --type=config --shadow --include=dif
 ```
 
 ```sh
-
+@ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","demo-app_kong-mesh-demo_svc_5000","connectTimeout"]
+- "5s"
++ "21s"
+@ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","demo-app_kong-mesh-demo_svc_5000","typedExtensionProtocolOptions","envoy.extensions.upstreams.http.v3.HttpProtocolOptions","commonHttpProtocolOptions","idleTimeout"]
+- "3600s"
++ "22s"
+@ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","demo-app_kong-mesh-demo_svc_5000","typedExtensionProtocolOptions","envoy.extensions.upstreams.http.v3.HttpProtocolOptions","commonHttpProtocolOptions","maxStreamDuration"]
+- "0s"
++ "26s"
+@ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","localhost:6379","connectTimeout"]
+- "5s"
++ "10s"
+@ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","redis_kong-mesh-demo_svc_6379","connectTimeout"]
+- "5s"
++ "21s"
+@ ["type.googleapis.com/envoy.config.listener.v3.Listener","inbound:10.244.0.7:6379","filterChains",0,"filters",1,"typedConfig","idleTimeout"]
+- "3600s"
++ "7200s"
+@ ["type.googleapis.com/envoy.config.listener.v3.Listener","outbound:10.102.33.12:5000","filterChains",0,"filters",0,"typedConfig","routeConfig","virtualHosts",0,"routes",0,"route","idleTimeout"]
++ "25s"
+@ ["type.googleapis.com/envoy.config.listener.v3.Listener","outbound:10.102.33.12:5000","filterChains",0,"filters",0,"typedConfig","requestHeadersTimeout"]
++ "0s"
+@ ["type.googleapis.com/envoy.config.listener.v3.Listener","outbound:240.0.0.0:80","filterChains",0,"filters",0,"typedConfig","routeConfig","virtualHosts",0,"routes",0,"route","idleTimeout"]
++ "25s"
+@ ["type.googleapis.com/envoy.config.listener.v3.Listener","outbound:240.0.0.0:80","filterChains",0,"filters",0,"typedConfig","requestHeadersTimeout"]
++ "0s"
 ```
-{.no-copy-code}
+{:.no-copy-code}
 
 ```sh
 kubectl label -n kong-mesh-system meshtimeout timeout-global kuma.io/effect-
@@ -435,6 +479,13 @@ spec:
 
 ```sh
 kumactl inspect dataplane ${DATAPLANE_NAME} --type=config --shadow --include=diff | jq '.diff' | jd -t patch2jd
+```
+
+```sh
+@ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","demo-app_kong-mesh-demo_svc_5000","circuitBreakers","thresholds",0,"trackRemaining"]
++ true
+@ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","redis_kong-mesh-demo_svc_6379","circuitBreakers","thresholds",0,"trackRemaining"]
++ true
 ```
 
 ```sh
