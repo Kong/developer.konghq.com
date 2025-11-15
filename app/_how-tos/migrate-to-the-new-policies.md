@@ -210,7 +210,7 @@ spec:
    kubectl port-forward svc/demo-app -n kong-mesh-demo 5000:5000
    ```
 
-1. In a browser, go to [http://127.0.0.1:5000/]() and increment the counter to make sure the service is running correctly.
+1. In a browser, go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) and increment the counter to make sure the service is running correctly.
 
 ## Deploy old policies
 
