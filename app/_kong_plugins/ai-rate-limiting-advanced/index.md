@@ -50,6 +50,8 @@ related_resources:
     url: /how-to/use-custom-function-for-ai-rate-limiting/
   - text: Use Kong AI Gateway to govern GitHub MCP traffic
     url: /mcp/govern-mcp-traffic/
+  - text: Create AI usage tiers for LLM providers to control usage cost
+    url: /how-to/add-cost-rate-limiting-tiers-with-ai-gateway/
 
 ---
 
