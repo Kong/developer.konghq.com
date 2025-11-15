@@ -1,5 +1,5 @@
 ---
-title: 'Federate zone control plane'
+title: 'Federate a zone control plane'
 description: 'Learn how to federate a {{site.base_product}} zone control plane into a multi-zone deployment. This guide walks through setting up a global control plane, copying resources, connecting zones, and verifying policy synchronization.'
     
 content_type: how_to
@@ -21,8 +21,11 @@ products:
   - mesh
 
 tldr:
-  q: ""
-  a: ""
+  q: How can I federate a zone control plane in a multi-zone deployment?
+  a: |
+    1. Create a zone control plane and a global control plane in separate Kubernetes clusters.
+    1. Copy resources from the zone control plane to the global control plane.
+    1. Connect the two control planes by updating the zone control plane's Helm deployment.
 
 prereqs:
   inline:
