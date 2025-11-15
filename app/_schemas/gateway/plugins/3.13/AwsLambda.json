@@ -1,0 +1,218 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "aws_assume_role_arn": {
+          "description": "The target AWS IAM role ARN used to invoke the Lambda function. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "aws_imds_protocol_version": {
+          "default": "v1",
+          "description": "Identifier to select the IMDS protocol version to use: `v1` or `v2`.",
+          "enum": [
+            "v1",
+            "v2"
+          ],
+          "type": "string"
+        },
+        "aws_key": {
+          "description": "The AWS key credential to be used when invoking the function. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "aws_region": {
+          "description": "A string representing a host name, such as example.com.",
+          "type": "string"
+        },
+        "aws_role_session_name": {
+          "default": "kong",
+          "description": "The identifier of the assumed role session.",
+          "type": "string"
+        },
+        "aws_secret": {
+          "description": "The AWS secret credential to be used when invoking the function.  \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "aws_sts_endpoint_url": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "awsgateway_compatible": {
+          "default": false,
+          "description": "An optional value that defines whether the plugin should wrap requests into the Amazon API gateway.",
+          "type": "boolean"
+        },
+        "awsgateway_compatible_payload_version": {
+          "default": "1.0",
+          "description": "An optional value that defines which version will be used to generate the AWS API Gateway compatible payload. The default will be `1.0`.",
+          "enum": [
+            "1.0",
+            "2.0"
+          ],
+          "type": "string"
+        },
+        "base64_encode_body": {
+          "default": true,
+          "description": "An optional value that Base64-encodes the request body.",
+          "type": "boolean"
+        },
+        "disable_https": {
+          "default": false,
+          "type": "boolean"
+        },
+        "empty_arrays_mode": {
+          "default": "legacy",
+          "description": "An optional value that defines whether Kong should send empty arrays (returned by Lambda function) as `[]` arrays or `{}` objects in JSON responses. The value `legacy` means Kong will send empty arrays as `{}` objects in response",
+          "enum": [
+            "correct",
+            "legacy"
+          ],
+          "type": "string"
+        },
+        "forward_request_body": {
+          "default": false,
+          "description": "An optional value that defines whether the request body is sent in the request_body field of the JSON-encoded request. If the body arguments can be parsed, they are sent in the separate request_body_args field of the request. ",
+          "type": "boolean"
+        },
+        "forward_request_headers": {
+          "default": false,
+          "description": "An optional value that defines whether the original HTTP request headers are sent as a map in the request_headers field of the JSON-encoded request.",
+          "type": "boolean"
+        },
+        "forward_request_method": {
+          "default": false,
+          "description": "An optional value that defines whether the original HTTP request method verb is sent in the request_method field of the JSON-encoded request.",
+          "type": "boolean"
+        },
+        "forward_request_uri": {
+          "default": false,
+          "description": "An optional value that defines whether the original HTTP request URI is sent in the request_uri field of the JSON-encoded request.",
+          "type": "boolean"
+        },
+        "function_name": {
+          "description": "The AWS Lambda function to invoke. Both function name and function ARN (including partial) are supported.",
+          "type": "string"
+        },
+        "host": {
+          "description": "A string representing a host name, such as example.com.",
+          "type": "string"
+        },
+        "invocation_type": {
+          "default": "RequestResponse",
+          "description": "The InvocationType to use when invoking the function. Available types are RequestResponse, Event, DryRun.",
+          "enum": [
+            "DryRun",
+            "Event",
+            "RequestResponse"
+          ],
+          "type": "string"
+        },
+        "is_proxy_integration": {
+          "default": false,
+          "description": "An optional value that defines whether the response format to receive from the Lambda to this format.",
+          "type": "boolean"
+        },
+        "keepalive": {
+          "default": 60000,
+          "description": "An optional value in milliseconds that defines how long an idle connection lives before being closed.",
+          "type": "number"
+        },
+        "log_type": {
+          "default": "Tail",
+          "description": "The LogType to use when invoking the function. By default, None and Tail are supported.",
+          "enum": [
+            "None",
+            "Tail"
+          ],
+          "type": "string"
+        },
+        "port": {
+          "default": 443,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "proxy_url": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "qualifier": {
+          "description": "The qualifier to use when invoking the function.",
+          "type": "string"
+        },
+        "skip_large_bodies": {
+          "default": true,
+          "description": "An optional value that defines whether Kong should send large bodies that are buffered to disk",
+          "type": "boolean"
+        },
+        "timeout": {
+          "default": 60000,
+          "description": "An optional timeout in milliseconds when invoking the function.",
+          "type": "number"
+        },
+        "unhandled_status": {
+          "description": "The response status code to use (instead of the default 200, 202, or 204) in the case of an Unhandled Function Error.",
+          "maximum": 999,
+          "minimum": 100,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
