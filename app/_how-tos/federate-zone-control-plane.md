@@ -158,7 +158,7 @@ kong-mesh kong-mesh/kong-mesh
    kubectl --context mesh-global port-forward svc/kong-mesh-control-plane -n kong-mesh-system 15681:5681
    ```
 
-1. In a browser, go to [http://127.0.0.1:15681/gui/]() to see the GUI.
+1. In a browser, go to [http://127.0.0.1:15681/gui/](http://127.0.0.1:15681/gui/) to see the GUI.
    
    You should see:
 
