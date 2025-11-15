@@ -26,8 +26,7 @@ config:
     inputs:
       static: HEADERS
       request: request.headers
-    jq: |
-      .static * (.request | with_entries(.key = "X-Request-" + .key))
+    jq: ".static * (.request | with_entries(.key = \"X-Request-\" + .key))"
 
   - name: API
     type: call
