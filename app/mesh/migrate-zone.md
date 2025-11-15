@@ -4,15 +4,14 @@ content_type: reference
 description: 'Move your existing {{site.mesh_product_name}} zone Control Planes from a self-managed global Control Plane to a managed global Control Plane in {{site.konnect_short_name}}.'
 layout: reference
 breadcrumbs:
-  - /mesh-manager/
+  - /mesh/
 products:
   - mesh
 tags:
-  - mesh-manager
   - service-mesh
 ---
 
-If you already have zone Control Planes in {{site.mesh_product_name}}, you can migrate them to {{site.konnect_short_name}} using [Mesh Manager](/mesh-manager/).
+If you already have zone Control Planes in {{site.mesh_product_name}}, you can migrate them to {{site.konnect_short_name}}.
 
 Here are a few benefits of managing your service mesh in {{site.konnect_short_name}}:
 
@@ -36,7 +35,7 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 
 * A Kubernetes or universal cluster with a zone Control Plane connected to a self-managed global Control Plane
 * [`kumactl`](/mesh/#install-kong-mesh) installed and configured
-* A [global Control Plane in {{site.konnect_short_name}}](/mesh-manager/service-mesh/)
+* A [global Control Plane in {{site.konnect_short_name}}](/mesh/konnect-global-control-plane/)
 * [`yq`](https://github.com/mikefarah/yq) installed
 
 ## Transfer resources from the self-managed global Control Plane
@@ -99,7 +98,7 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 
 ## Connect the zone Control Plane to {{site.konnect_short_name}}
 
-1. [Create a new zone](/mesh-manager/service-mesh/#create-a-zone-in-the-global-control-plane) in {{site.konnect_short_name}}.
+1. [Create a new zone](/mesh/konnect-global-control-plane/#create-a-zone-in-the-global-control-plane) in {{site.konnect_short_name}}.
 
 
    Use the same name as the existing zone. Replace your current zone's `values.yaml` with the config provided by the UI wizard.
