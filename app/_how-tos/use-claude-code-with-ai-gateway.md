@@ -115,7 +115,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, let's configure the AI Proxy plugin for the Antropic provider. This setup uses the default llm/v1/chat route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+First, let's configure the AI Proxy plugin for the Anthropic provider. This setup uses the default llm/v1/chat route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
 
 {% entity_examples %}
 entities:
@@ -199,7 +199,7 @@ Where:
 ```
 {:.no-copy-code}
 
-Next, inspect the Gateway logs:
+Next, inspect the Kong AI Gateway logs to verify that the traffic was proxied through it:
 
 ```sh
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
@@ -209,14 +209,14 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 
 ```json
 {
-  ...
+  "...": "...",
   "headers": {
     ...
     "user-agent": "claude-cli/2.0.37 (external, cli)",
     "content-type": "application/json",
     ...
   },
-  "method": "POST"
+  "method": "POST",
   ...
   "ai": {
     "proxy": {
