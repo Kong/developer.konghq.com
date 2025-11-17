@@ -10,10 +10,6 @@ products:
 tools:
   - inso-cli
 
-tags:
-  - export-data
-  - run-collections
-
 related_resources:
   - text: Collections
     url: /insomnia/collections/
