@@ -32,6 +32,9 @@ faqs:
     a: The expressions router provides more routing flexibility, including fast exact matching that is not available in the traditional router.
   - q: When should I keep using the traditional router over expressions?
     a: If you are working with APIOps pipelines that manipulate the route using `deck file patch`, we recommend using the JSON format used by the traditional router.
+  - q: Does Workspace route collision detection work with the expressions router?
+    a: |
+      [Workspace route collision detection](/gateway/entities/workspace/#how-does-kong-gateway-resolve-entity-conflicts-between-workspaces) **does not** work with expression-based routing.
 
 works_on:
   - on-prem
