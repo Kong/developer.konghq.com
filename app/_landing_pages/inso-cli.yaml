@@ -131,16 +131,7 @@ rows:
                         - script-name
                         - --env
                         - environment-id
-  - header:
-      type: h2
-      text: Request timeout support
-    columns:
-      - blocks:
-          - type: text
-            config: |
-              Use the **Request timeout (ms)** setting to manage network operations. This capability is now also available in the Inso CLI.
-
-              Use the `--request-timeout <milliseconds>` flag to control how long Inso CLI waits before failing a request during collection and test runs. You can also set a default timeout in your `.insorc` configuration file.               
+              
   - header:
       type: h2
       text: How-to Guides
