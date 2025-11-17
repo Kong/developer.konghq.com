@@ -115,7 +115,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, let's configure the AI Proxy plugin for Claude. In this setup, we use the default route because the Claude CLI sends requests there. We specify the anthropic provider and model version in the plugin. We also increase the maximum request body size to 512 KB to handle larger prompts.
+First, let's configure the AI Proxy plugin for the Antropic provider. This setup uses the default llm/v1/chat route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
 
 {% entity_examples %}
 entities:
@@ -135,7 +135,7 @@ entities:
 
 ## Configure the File Log plugin
 
-Finally, to inspect the LLM traffic between Claude and the AI Gateway, let's enable the File Log plugin on the service. This creates a local log file so we can review requests and responses as Claude runs through Kong.
+Now, let's enable the File Log plugin on the service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local log file `claude.json` so we can review requests and responses as Claude runs through the AI Gateway.
 
 {% entity_examples %}
 entities:
@@ -147,7 +147,7 @@ entities:
 
 ## Verify traffic through Kong
 
-Run a test query in Claude:
+Now, we can start a Claude Code session that points it to the local AI Gateway endpoint:
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/anything \
@@ -155,69 +155,69 @@ ANTHROPIC_MODEL=claude-sonnet-4-20250514 \
 claude
 ```
 
-Claude Code will then prompt you to give permission:
-
+Claude Code asks for permission before it runs tools or interacts with files:
 
 ```text
- I'll need permission to work with your files.
+I'll need permission to work with your files.
 
- This means I can:
- - Read any file in this folder
- - Create, edit, or delete files
- - Run commands (like npm, git, tests, ls, rm)
- - Use tools defined in .mcp.json
+This means I can:
+- Read any file in this folder
+- Create, edit, or delete files
+- Run commands (like npm, git, tests, ls, rm)
+- Use tools defined in .mcp.json
 
- Learn more ( https://docs.claude.com/s/claude-code-security )
+Learn more ( https://docs.claude.com/s/claude-code-security )
 
- ❯ 1. Yes, continue
-   2. No, exit
+❯ 1. Yes, continue
+2. No, exit
 ```
+{:.no-copy-code}
 
-Enter Yes. Let's generate some traffic over Claude code:
+Choose **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach the Gateway.
 
 ```text
 What's the Stokes' theorem?
 ```
 
-Claude Code should produce the following output:
+Claude Code responds with a complete explanation of the theorem. This confirms that the CLI can reach your proxy endpoint and that the model works as expected:
 
 ```text
-Stokes' theorem is a fundamental result in vector calculus that generalizes several important theorems and provides a relationship between surface integrals and line integrals.
+Stokes' theorem is a fundamental result in vector calculus thatgeneralizes several important theorems and provides a relationship between surface integrals and line integrals.
 
 Statement
 
-For a smooth oriented surface S bounded by a simple closed curve C, and a vector field F that is continuously differentiable on S:
+For a smooth oriented surface S bounded by a simple closed curve C, and avector field F that is continuously differentiable on S:
 
   ∮_C F · dr = ∬_S (∇ × F) · n dS
 
 Where:
-  - The left side is a line integral around the boundary curve C
-  - The right side is a surface integral over the surface S
-  - ∇ × F is the curl of the vector field F
-  - n is the unit normal vector to the surface S
-  - The orientation of C and S must be consistent (right-hand rule)
+- The left side is a line integral around the boundary curve C
+- The right side is a surface integral over the surface S
+- ∇ × F is the curl of the vector field F
+- n is the unit normal vector to the surface S
+- The orientation of C and S must be consistent (right-hand rule)
 ```
+{:.no-copy-code}
 
-Now, let's inspect traffic through AI Gateway:
+Next, inspect the Gateway logs:
 
-``` sh
+```sh
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
 ```
 
-You should see the following output in the logs:
+You should find an entry that shows the upstream request made by Claude Code. A typical log record looks like this:
 
 ```json
 {
+  ...
+  "headers": {
     ...
-    "headers": {
-      ...
-      "user-agent": "claude-cli/2.0.37 (external, cli)",
-      "content-type": "application/json",
-      ...
-    },
-    "method": "POST"
+    "user-agent": "claude-cli/2.0.37 (external, cli)",
+    "content-type": "application/json",
+    ...
   },
-
+  "method": "POST"
+  ...
   "ai": {
     "proxy": {
       "usage": {
@@ -239,7 +239,10 @@ You should see the following output in the logs:
         "provider_name": "anthropic"
       }
     }
-  },
- ...
+  }
+  ...
 }
 ```
+{:.no-copy-code}
+
+This output confirms that Claude Code routed the request through Kong AI Gateway using the `claude-haiku` model.
