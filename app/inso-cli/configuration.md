@@ -48,6 +48,31 @@ Any options specified in this file will apply to all scripts and manual commands
 1. Configuration file options
 1. Default options
 
+## Request timeout
+
+Use the request-timeout option to control how long Inso CLI waits before failing a network request during collection and test execution.
+
+### Command line
+
+Set the timeout for an individual command:
+
+```bash
+inso run collection wrk_123 --request-timeout 30000
+```
+
+### Configuration file
+
+Set a default timeout for all commands by adding the corresponding option to your `.insorc` file.  
+The configuration key is derived from the flag name by removing `--` and converting kebab-case to camelCase.
+
+```yaml
+# .insorc.yaml
+options:
+  requestTimeout: 30000
+```
+
+Timeout values are expressed in **milliseconds** in both the CLI and configuration file.
+
 ## Inso CLI scripts
 
 Scripts in the Inso CLI configuration file can have any name and can be nested. Scripts must be prefixed with `inso`.
@@ -71,3 +96,11 @@ scripts:
 
   lint: inso lint spec Demo # must be invoked as `inso script lint`
 ```
+
+## Request timeout setting
+
+Insomnia Desktop v12.1.0 adds a **Request timeout (ms)** preference that controls how long the application waits for network operations.
+
+The Inso CLI does not currently support configuring a request timeout through CLI flags or the `options` section in `.insorc`.
+
+This page will be updated when request-timeout support is added to the CLI in a future release. For details on the Desktop preference, see the Insomnia application documentation.

@@ -56,7 +56,7 @@ rows:
 
             You can use the `--workingDir` or `--src` options to specify a different data source. For more information, see the [Inso CLI reference](/inso-cli/reference/).
 
-            You can also configure Inso CLI to integrate with external vaults. For more information, see [External vaults](/insomnia/external-vault/).
+            You can also configure Inso CLI to integrate with external vaults. For more information, see [External vaults](/insomnia/external-vault/).           
 
   - header:
       text: "What can Inso CLI do?"
@@ -131,7 +131,16 @@ rows:
                         - script-name
                         - --env
                         - environment-id
-                
+  - header:
+      type: h2
+      text: Request timeout support
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Use the **Request timeout (ms)** setting to manage network operations. This capability is now also available in the Inso CLI.
+
+              Use the `--request-timeout <milliseconds>` flag to control how long Inso CLI waits before failing a request during collection and test runs. You can also set a default timeout in your `.insorc` configuration file.               
   - header:
       type: h2
       text: How-to Guides
