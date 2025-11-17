@@ -205,7 +205,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## Instance recommendations - TBD
+## Instance recommendations
 
 AI Gateway benefits from high clock speed, dedicated CPU, and non-burstable compute classes. Select instance families optimized for consistent CPU throughput and avoid throttled instance types.
 
