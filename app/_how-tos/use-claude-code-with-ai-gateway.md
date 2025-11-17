@@ -173,29 +173,40 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Choose **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach the Gateway.
+Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach the Gateway.
 
 ```text
-What's the Stokes' theorem?
+Tell me about Madrid Skylitzes manuscript.
 ```
 
-Claude Code responds with a complete explanation of the theorem. This confirms that the CLI can reach your proxy endpoint and that the model works as expected:
+Claude Code might prompt you approve its web search for answering the question. When you select **Yes** Claude will produce a full-length response to your request:
 
 ```text
-Stokes' theorem is a fundamental result in vector calculus thatgeneralizes several important theorems and provides a relationship between surface integrals and line integrals.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine manuscript that represents one of the most important surviving examples of medieval historical documentation. Here are the key details:
 
-Statement
+What it is
 
-For a smooth oriented surface S bounded by a simple closed curve C, and avector field F that is continuously differentiable on S:
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
 
-  ∮_C F · dr = ∬_S (∇ × F) · n dS
+Artistic Significance
 
-Where:
-- The left side is a line integral around the boundary curve C
-- The right side is a surface integral over the surface S
-- ∇ × F is the curl of the vector field F
-- n is the unit normal vector to the surface S
-- The orientation of C and S must be consistent (right-hand rule)
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
 
@@ -218,31 +229,31 @@ You should find an entry that shows the upstream request made by Claude Code. A 
   },
   "method": "POST",
   ...
-  "ai": {
+   "ai": {
     "proxy": {
       "usage": {
-        "prompt_tokens": 119,
-        "prompt_tokens_details": {},
-        "completion_tokens": 29,
-        "total_tokens": 148,
+        "prompt_tokens": 1,
+        "completion_tokens_details": {},
+        "completion_tokens": 85,
+        "total_tokens": 86,
         "cost": 0,
-        "time_per_token": 48.793103448276,
-        "time_to_first_token": 1286,
-        "completion_tokens_details": {}
+        "time_per_token": 38.941176470588,
+        "time_to_first_token": 2583,
+        "prompt_tokens_details": {}
       },
       "meta": {
-        "request_model": "claude-haiku-4-5-20251001",
-        "response_model": "claude-haiku-4-5-20251001",
-        "llm_latency": 1415,
+        "request_model": "claude-sonnet-4-20250514",
+        "response_model": "claude-sonnet-4-20250514",
+        "llm_latency": 3310,
         "plugin_id": "7705ed4d-2423-444f-b635-b5f5bb4b3331",
         "request_mode": "stream",
         "provider_name": "anthropic"
       }
     }
-  }
+  },
   ...
 }
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through Kong AI Gateway using the `claude-haiku` model.
+This output confirms that Claude Code routed the request through Kong AI Gateway using the `claude-sonnet-4` model we selected while starting Claude Code session.
