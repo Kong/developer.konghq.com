@@ -47,7 +47,7 @@ faqs:
 
     - q: Where do I find the request timeout setting in Insomnia?
       a: |
-       Go to **Preferences > General > Request / Response → Request timeout (ms)**.
+       Go to **Preferences > General > Request / Response > Request timeout (ms)**.
 
        Enter the timeout value in milliseconds. The default value is **30000 ms**.
 
