@@ -182,7 +182,9 @@ Tell me about Madrid Skylitzes manuscript.
 Claude Code might prompt you approve its web search for answering the question. When you select **Yes** Claude will produce a full-length response to your request:
 
 ```text
-The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine manuscript that represents one of the most important surviving examples of medieval historical documentation. Here are the key details:
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
 
 What it is
 
