@@ -16,7 +16,7 @@ breadcrumbs:
   - /konnect/
   - /konnect-platform/kai/
 permalink: /konnect-platform/kai/changelog/
-
+beta: true
 related_resources:
   - text: "About Kong's AI assistant"
     url: /konnect-platform/kai/
@@ -26,7 +26,6 @@ related_resources:
 
 Changelog for KAi.
 
-## Week of 2025-10-13
+## Week of 2025-11-17
 
-* List changes here
-* more changes
+* Public beta
