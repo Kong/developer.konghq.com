@@ -191,7 +191,7 @@ rows:
       Ensures an on-call engineer is assigned to the service.
   - criteria: PagerDuty Service status is enabled
     description: |
-      Ensures the service has an active PagerDuty configuration.
+      Ensures the service has a PagerDuty resource mapped that has the active status.
   - criteria: Time Before Failure
     description: |
       Ensures time between failures exceeds a minimum threshold over a selected time window.
@@ -218,7 +218,7 @@ rows:
       Ensures CI workflow runs complete within a defined threshold over a selected time window.
   - criteria: Open Vulnerability Limit
     description: |
-      Ensures the number of open vulnerabilities higher than the selected severity stays below the defined threshold.
+      Ensures the number of Dependabot-detected open vulnerabilities higher than the selected severity stays below the defined threshold.
 {% endtable %}
 <!--vale on-->
 
