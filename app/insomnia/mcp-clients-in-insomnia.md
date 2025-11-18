@@ -56,7 +56,7 @@ faqs:
       Insomnia only restarts the MCP Authentication Flow when the server responds with `401 Unauthorized`.
 
       > **Note:** You can't re-run individual MCP Auth calls. Only the full flow can be restarted manually.
-  - q: My MCP request is running for a long time. What should I do?
+  - q: What should I do if an MCP request is taking a long time to run?
     a: |
       From the **Events** tab, click the cancel icon beside the request that is currently running. This ends the current MCP task and returns control to the app.
     
