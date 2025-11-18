@@ -26,6 +26,7 @@ tools:
     - deck
   
 prereqs:
+  skip_product: true
   inline:
     - title: cURL
       content: |
