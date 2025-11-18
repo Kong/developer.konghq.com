@@ -72,15 +72,15 @@ rows:
 <!--vale on-->
 
 {:.success}
-> Model streams output tokens in Server‑Sent Events (SSE). Processing streamed output is more expensive per token than input, so capacity planning must treat input and output tokens differently.
+> Model streams output tokens in server‑sent events (SSE). Processing streamed output is more expensive per token than input, so capacity planning must treat input and output tokens differently.
 
 ## Deployment guidance
 
-AI Gateway scales primarily through **horizontal worker expansion**, not vertical tuning. Treat **token throughput*- as the core capacity metric, and validate performance against real LLM latency profiles. Synthetic or low-latency backends will overstate capacity.
+AI Gateway scales primarily through **horizontal worker expansion**, not vertical tuning. Treat **token throughput** as the core capacity metric, and validate performance against real LLM latency profiles. Synthetic or low-latency backends will overstate capacity.
 
 ### Scale horizontally for token throughput
 
-AI Gateway performance is CPU-bound on token processing. Adding workers increases sustained throughput **only when concurrency and streaming behavior scale correctly**.
+Kong AI Gateway performance is CPU-bound on token processing. Adding workers increases sustained throughput **only when concurrency and streaming behavior scale correctly**.
 
 - Add workers and nodes to increase throughput
 - Validate scaling efficiency as concurrency grows
