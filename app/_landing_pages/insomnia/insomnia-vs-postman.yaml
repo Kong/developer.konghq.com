@@ -29,8 +29,8 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/insomnia/insomnia-brand-mark.png
-              alt_text: Insomnia vs Postman comparison preview
+              url: /assets/images/insomnia/insomnia-breakdown.png
+              alt_text: Insomnia feature breakdown
               width: 200px
 
   - header:
