@@ -50,7 +50,7 @@ Any options specified in this file will apply to all scripts and manual commands
 
 ## Request timeout
 
-Use the request-timeout option to control how long Inso CLI waits before failing a network request during collection and test execution.
+Use the request-timeout option to control how long Inso CLI waits before failing a network request during collection and test execution:
 
 ### Command line
 
@@ -62,16 +62,18 @@ inso run collection wrk_123 --request-timeout 30000
 
 ### Configuration file
 
-Set a default timeout for all commands by adding the corresponding option to your `.insorc` file.  
-The configuration key is derived from the flag name by removing `--` and converting kebab-case to camelCase.
+Inso CLI loads configuration from several supported files. The most common is the `.insorc` file. Set a default timeout for all Inso CLI commands by adding the timeout option to your `.insorc` file.
+
+Configuration keys in `.insorc` follow a simple rule:  
+start with the flag name, remove `--`, then convert kebab-case to camelCase.
+
+For the `--request-timeout` flag, the configuration key becomes `requestTimeout`:
 
 ```yaml
 # .insorc.yaml
 options:
   requestTimeout: 30000
 ```
-
-Timeout values are expressed in **milliseconds** in both the CLI and configuration file.
 
 ## Inso CLI scripts
 
