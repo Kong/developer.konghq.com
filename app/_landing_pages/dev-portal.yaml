@@ -11,16 +11,6 @@ rows:
       type: h1
       text: "Dev Portal"
       sub_text: Empower API consumers with self-service API documentation and developer tools
-
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {:.warning}
-                    > **Review domain breaking changes for Dev Portal v3 and migrate to the new domain before October 1, 2025.** [Review breaking changes](/dev-portal/breaking-changes/)
   
   - columns:
       - blocks:
