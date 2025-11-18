@@ -13,15 +13,15 @@ min_version:
 config:
   brute_force_protection:
     strategy: redis
-      redis:
-        host: 127.0.0.1
-        port: 6379
-        database: 0
-        connect_timeout: 2000
-        timeout: 2000
-        password: your-redis-password
-        ssl: false
-        ssl_verify: false
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      connect_timeout: 2000
+      timeout: 2000
+      password: your-redis-password
+      ssl: false
+      ssl_verify: false
 
 tools:
   - deck
