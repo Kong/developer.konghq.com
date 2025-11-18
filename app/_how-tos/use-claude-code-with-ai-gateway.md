@@ -45,9 +45,6 @@ tools:
 
 prereqs:
   inline:
-    - title: OpenAI
-      include_content: prereqs/openai
-      icon_url: /assets/icons/openai.svg
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
       content: |
