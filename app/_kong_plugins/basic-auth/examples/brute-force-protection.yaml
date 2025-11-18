@@ -8,7 +8,7 @@ weight: 900
 requirements: 
 - "A [Consumer](/gateway/entities/consumer/) with a username and password"
 min_version:
-    gateway: '3.12'
+    gateway: '3.13'
 
 config:
   brute_force_protection:
