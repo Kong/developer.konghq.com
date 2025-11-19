@@ -166,18 +166,18 @@ rows:
                 - WSDL files
             - q: Can I run collections in CI/CD environments?
               a: Yes, you can use the [`inso run collection`](/inso-cli/reference/run_collection/) command in Inso CLI to run a collection automatically.
-            - q: Can I set authentication headers at the collection level so I do not repeat them on every request?
+            - q: Can I set authentication headers at the collection level so I don't repeat them on every request?
               a: |
                 No. As a workaround, group the relevant requests in a **folder** and then set authentication at the folder level for that group to avoid duplicating headers on each request.
             - q: How do I export collection run results as JSON?
               a: |
-                Use the Inso CLI to export collection run results. Metadata export does not include bodies or headers:
+                Use the [Inso CLI](/inso-cli/) to export collection run results. Metadata export doesn't include bodies or headers:
 
                 ```sh
                 inso run collection "My Collection" --env "Base Environment" --output results.json
                 ```
 
-                To export full request and response data, set a mode with `--includeFullData` and accept the security warning:
+                To export full request and response data, set the export mode with `--includeFullData` and accept the security warning:
 
                 ```sh
                 inso run collection "My Collection" \

@@ -23,13 +23,13 @@ The Inso CLI exports JSON reports for Insomnia collection runs. JSON output foll
 
 Run the following command to export:
 
-```
+```sh
 inso run collection <collection name> --env <environment> --output <file>
 ```
 
 ## Export modes
 
-The Inso CLI supports two export modes.
+The Inso CLI supports the following export modes:
 
 {% table %}
 columns:
@@ -39,21 +39,20 @@ columns:
     key: description
 rows:
   - mode: Metadata only
-    description: "Exports identifiers, timings, status codes, and test results. Does not include headers, bodies, authentication fields, or environment data."
+    description: "Exports identifiers, timings, status codes, and test results. Doesn't include headers, bodies, authentication fields, or environment data."
   - mode: Full data
-    description: "Exports complete request and response information. Requires an includeFullData mode and an explicit acceptance flag for security."
+    description: "Exports complete request and response information. Requires the `includeFullData` mode flag and an explicit acceptance flag for security."
 {% endtable %}
 
 ### Metadata-only export
 
 Metadata reports include:
 
-- request identifiers  
-- timestamps  
-- response status codes  
-- execution timings  
-- test results  
-
+- Request identifiers  
+- Timestamps  
+- Response status codes  
+- Execution timings  
+- Test results  
 Example:
 
 ```
@@ -64,15 +63,15 @@ inso run collection "My Collection" \
 
 ### Full data export
 
-Full export includes:
+A full data export includes:
 
-- request headers  
-- authentication fields  
-- query parameters and request bodies  
-- response headers  
-- response bodies  
-- execution timings  
-- environment data (redacted or plaintext depending on mode)  
+- Request headers  
+- Authentication fields  
+- Query parameters and request bodies  
+- Response headers  
+- Response bodies  
+- Execution timings  
+- Environment data (redacted or plaintext depending on mode)  
 
 To prevent accidental exposure of secure credentials, full export requires:
 
@@ -96,7 +95,7 @@ rows:
 
 ### Example: redact mode
 
-```
+```sh
 inso run collection "My Collection" \
   --env "Base Environment" \
   --includeFullData=redact \
@@ -106,7 +105,7 @@ inso run collection "My Collection" \
 
 ### Example: plaintext mode
 
-```
+```sh
 inso run collection "My Collection" \
   --env "Base Environment" \
   --includeFullData=plaintext \
@@ -154,7 +153,7 @@ To prevent oversized output, Inso truncates large fields.
 
 Override the limit with `--maxDataSize` (bytes):
 
-```
+```sh
 inso run collection "My Collection" \
   --env "Base Environment" \
   --includeFullData=redact \
