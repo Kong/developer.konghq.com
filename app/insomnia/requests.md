@@ -191,7 +191,7 @@ You can also add documentation about the folder.
 
 ## Request timeout (ms)
 
-Use the **Request timeout (ms)** preference that controls how long the application waits before failing a network request.
+Use the **Request timeout (ms)** preference to control how long the application waits before failing a network request.
 
 Go to **Preferences > General > Request / Response > Request timeout (ms)**.
 

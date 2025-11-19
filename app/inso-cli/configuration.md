@@ -50,7 +50,7 @@ Any options specified in this file will apply to all scripts and manual commands
 
 ## Request timeout
 
-Use the request-timeout option to control how long Inso CLI waits before failing a network request during collection and test execution:
+Use `requestTimeout` to control how long Inso CLI waits before failing a network request during collection and test execution:
 
 ### Command line
 
@@ -99,10 +99,3 @@ scripts:
   lint: inso lint spec Demo # must be invoked as `inso script lint`
 ```
 
-## Request timeout setting
-
-Insomnia Desktop v12.1.0 adds a **Request timeout (ms)** preference that controls how long the application waits for network operations.
-
-The Inso CLI does not currently support configuring a request timeout through CLI flags or the `options` section in `.insorc`.
-
-This page will be updated when request-timeout support is added to the CLI in a future release. For details on the Desktop preference, see the Insomnia application documentation.
