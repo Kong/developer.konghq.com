@@ -134,7 +134,7 @@ rows:
 
 ## Review redaction behaviour
 
-When using `includeFullData=redact`, Insomnia Insomnia keeps keys visible and replaces sensitive values with:
+When using `includeFullData=redact`, Insomnia keeps keys visible and replaces sensitive values with:
 
 ```
 <Redacted by Insomnia>
