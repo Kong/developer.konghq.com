@@ -76,6 +76,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.1": [
+    {
+      "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed integration with HuggingFace by adding support for the new serverless API, ensuring seamless compatibility.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where extra inputs were not permitted for huggingface inference provider\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where large request payload was not logged.\n",
