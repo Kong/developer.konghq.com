@@ -178,7 +178,6 @@ This method allows you to send raw CSV files directly in the request payload.
 
 Insomnia provides [template tags](/insomnia/template-tags/) that allow you to generate random data. Add a template tag in a request URL, query parameters, body, or authentication by pressing `Control+Space` and selecting a **Faker** tag. You can generate random timestamps, dates, text, and passwords.
 
-
 ## What can I do with folders in a request collection?
 
 Folders can be used to organize requests, but you can also add configuration to be used by all requests in the folder:
@@ -189,3 +188,17 @@ Folders can be used to organize requests, but you can also add configuration to 
 * Environment variables
 
 You can also add documentation about the folder.
+
+## Request timeout (ms)
+
+Use the **Request timeout (ms)** preference to control how long the application waits before failing a network request.
+
+Go to **Preferences > General > Request / Response > Request timeout (ms)**.
+
+Enter the timeout value in milliseconds. The default is **30000 ms**. This value determines how long Insomnia allows a request to remain active before timing out during execution.
+
+To configure request timeout behaviour for automated or CI-based workflows, use the Inso CLI.  
+See the following pages for the CLI flag and configuration options:
+
+- [Inso CLI overview](/inso-cli/)
+- [Inso CLI configuration](/inso-cli/configuration/)
