@@ -42,7 +42,7 @@ prereqs:
 
 ## Configure the SonarQube integration
 
-Before you can discover projects in {{site.konnect_catalog}}, you must configure the SonarQube integration.
+Before you can discover [SonarQube projects](https://docs.sonarsource.com/sonarqube-cloud/managing-your-projects) in {{site.konnect_catalog}}, you must configure the SonarQube integration.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
@@ -55,7 +55,7 @@ Before you can discover projects in {{site.konnect_catalog}}, you must configure
 
 ## Create a {{site.konnect_catalog}} service and map the SLO resources
 
-Now that your integration is configured, you can create a {{site.konnect_catalog}} service to map the ingested SLOs.
+Now that your integration is configured, you can create a {{site.konnect_catalog}} service to map the ingested projects.
 
 {:.info}
 > In this tutorial, we'll refer to your ingested SonarQube project as `billing-project`.

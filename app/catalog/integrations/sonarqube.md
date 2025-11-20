@@ -32,7 +32,7 @@ related_resources:
     url: /how-to/monitor-sonarqube-projects-with-konnect-api/
 ---
 
-The SonarQube integration lets you connect SonarQube projects directly to your {{site.konnect_catalog}} services.
+The SonarQube integration lets you connect [SonarQube projects](https://docs.sonarsource.com/sonarqube-cloud/managing-your-projects) directly to your {{site.konnect_catalog}} services.
 {% include /catalog/multi-resource.md %}
 
 For a complete tutorial, see the following:

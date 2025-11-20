@@ -12,8 +12,7 @@ tags:
   - integrations
   - sonarqube
 search_aliases:
-  - classic service-level object
-  - SLO
+  - projects
   - service catalog
 related_resources:
   - text: "{{site.konnect_catalog}}"
@@ -50,7 +49,7 @@ prereqs:
 
 ## Configure the SonarQube integration
 
-Before you can discover projects in {{site.konnect_catalog}}, you must configure the SonarQube integration.
+Before you can discover [SonarQube projects](https://docs.sonarsource.com/sonarqube-cloud/managing-your-projects) in {{site.konnect_catalog}}, you must configure the SonarQube integration.
 
 First, install the SonarQube integration:
 
