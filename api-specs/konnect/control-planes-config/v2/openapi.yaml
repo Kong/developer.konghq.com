@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 2.0.0
-  x-oas-source: kong/platform-api@9fd4f498974b497729f37be0ad8d0ed598bb75f4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9fd4f498974b497729f37be0ad8d0ed598bb75f4'
+  x-oas-source: kong/platform-api@875fd1ffb3d0a25b8579863b2c14f2382dfaae64
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/875fd1ffb3d0a25b8579863b2c14f2382dfaae64'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -1225,6 +1225,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ConsumerGroupId'
         - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/ExpandPartials'
       responses:
         '200':
           description: Successfully fetched Plugin
@@ -1270,6 +1271,9 @@ paths:
         - $ref: '#/components/parameters/PaginationSize'
         - $ref: '#/components/parameters/PaginationOffset'
         - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/CustomId'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
       responses:
         '200':
           description: A successful response listing Consumers
@@ -2175,6 +2179,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
         - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/ExpandPartials'
       responses:
         '200':
           description: Successfully fetched Plugin
@@ -3076,6 +3081,8 @@ paths:
         - $ref: '#/components/parameters/PaginationSize'
         - $ref: '#/components/parameters/PaginationOffset'
         - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
       responses:
         '200':
           description: A successful response listing Plugins
@@ -3138,6 +3145,8 @@ paths:
       operationId: get-plugin
       summary: Get a Plugin
       description: Get a Plugin using ID.
+      parameters:
+        - $ref: '#/components/parameters/ExpandPartials'
       responses:
         '200':
           description: Successfully fetched Plugin
@@ -3185,6 +3194,8 @@ paths:
         - $ref: '#/components/parameters/PaginationSize'
         - $ref: '#/components/parameters/PaginationOffset'
         - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
       responses:
         '200':
           description: A successful response listing Routes
@@ -3357,6 +3368,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/RouteId'
         - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/ExpandPartials'
       responses:
         '200':
           description: Successfully fetched Plugin
@@ -3446,6 +3458,7 @@ paths:
           $ref: '#/components/responses/GetPluginSchemaResponse'
       tags:
         - Plugins
+      x-keep-sdk: true
     parameters:
       - name: pluginName
         in: path
@@ -3463,6 +3476,8 @@ paths:
         - $ref: '#/components/parameters/PaginationSize'
         - $ref: '#/components/parameters/PaginationOffset'
         - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
       responses:
         '200':
           description: A successful response listing Services
@@ -3743,6 +3758,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ServiceId'
         - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/ExpandPartials'
       responses:
         '200':
           description: Successfully fetched Plugin
@@ -4406,6 +4422,13 @@ components:
         format: uuid
         example: 9524ec7d-36d9-465d-a8c5-83a3c9390458
       description: The UUID of your control plane. This variable is available in the Konnect manager.
+    CustomId:
+      description: Filter consumers by their custom_id.
+      example: my-custom-id
+      in: query
+      name: custom_id
+      schema:
+        type: string
     CustomPluginId:
       description: ID of the CustomPlugin to lookup
       example: ''
@@ -4428,6 +4451,13 @@ components:
       required: true
       schema:
         type: string
+    ExpandPartials:
+      description: Expand partials for the plugin.
+      example: true
+      in: query
+      name: expand_partials
+      schema:
+        type: boolean
     HMACAuthId:
       description: ID of the HMAC-auth credential to lookup
       example: 70e7b00b-72f2-471b-a5ce-9c4171775360
@@ -4474,6 +4504,20 @@ components:
       in: path
       name: MTLSAuthId
       required: true
+      schema:
+        type: string
+    NameContainsFilter:
+      description: Filter routes by a substring of the name.
+      example: john
+      in: query
+      name: 'filter[name][contains]'
+      schema:
+        type: string
+    NameEqualsFilter:
+      description: Filter routes by their name.
+      example: john
+      in: query
+      name: 'filter[name][eq]'
       schema:
         type: string
     nodeId:
