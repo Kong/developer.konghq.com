@@ -29,9 +29,6 @@ related_resources:
   - text: Cluster reference
     url: /gateway/traditional-mode/#about-kong-gateway-clusters
 ---
-
-# AI Gateway performance and sizing guide
-
 The Kong AI Gateway is designed to handle high‑volume inference workloads and forward requests to large language model (LLM) providers with predictable latency. This guide explains performance dimensions, capacity planning methodology, and baseline sizing guidance for AI inference traffic.
 
 ## Scaling dimensions
@@ -55,7 +52,7 @@ rows:
     measured_in: |
       Milliseconds
     performance: |
-      *LLM TTFT and token streaming bound*<br>
+      LLM TTFT and token streaming bound<br>
       Gateway overhead typically low relative to model time
     description: |
       Time to first token (TTFT) and per-token streaming latency (TPOT) dominate end-to-end latency. Gateway overhead typically adds < 10ms.
@@ -64,7 +61,7 @@ rows:
     measured_in: |
       Input/output tokens per second
     performance: |
-      *CPU-bound*<br>
+      CPU-bound<br>
       Scale workers horizontally for higher sustained token throughput
     description: |
       Maximum sustained input and output tokens per second processed across all requests.
@@ -88,7 +85,7 @@ Kong AI Gateway performance is CPU-bound on token processing. Adding workers inc
 
 ### Allocate CPU and memory for LLM workloads
 
-Compute sizing is dictated by **token processing**, not request count. Memory supports configuration and streaming buffers; persistent storage demand is minimal.
+Compute sizing is dictated by **token processing**, not request count. Memory supports configuration and streaming buffers. Persistent storage demand is minimal.
 
 - CPU determines maximum tokens per second
 - Memory must support configuration and in-memory stream buffers
@@ -98,7 +95,7 @@ Compute sizing is dictated by **token processing**, not request count. Memory su
 Consistent CPU performance is critical for LLM token streaming. Burstable or credit-based instances can introduce token delay spikes and unstable throughput.
 
 - Prefer dedicated compute families (for example, AWS `c5`, `c6g`)
-- Avoid burstable instances (AWS `t`, GCP `e2`, Azure `B` series)
+- Avoid burstable instances (for example, AWS `t`, GCP `e2`, Azure `B` series)
 
 ## Operational best practices
 
@@ -112,7 +109,7 @@ Effective scaling requires testing with realistic model behavior, applying safet
 
 ## Baseline benchmark results
 
-These baseline throughput numbers reflect typical single-worker token processing under streaming LLM workloads. Use them as directional guidance only — always benchmark in your environment and with your model mix.
+These baseline throughput numbers reflect typical single-worker token processing under streaming LLM workloads. Use these numbers as general guidance only. Benchmark performance in your own environment and with your specific model mix.
 
 <!-- vale off -->
 {% table %}
@@ -139,7 +136,7 @@ rows:
 <!-- vale on -->
 
 {:.success}
-> Throughput depends on the provider, model, and prompt/response token shape. Benchmark with your real workloads.
+> Throughput depends on the provider, the model, and the size and structure of your prompts and responses. Benchmark with your real workload to measure accurate throughput and avoid relying on synthetic or idealized figures.
 
 ## Capacity planning formula
 
@@ -149,12 +146,12 @@ required_workers ≈ equivalent_output_load / O_w
 ```
 {:.no-copy-code}
 
-Use redundancy factor **2×–4×*- to handle burst, tokenization, and provider variability.
+Use redundancy factor 2×–4x- to handle burst, tokenization, and provider variability.
 
 ### Quick estimate rule of thumb
 
-- **4:1 input:output ratio**
-- **~1M output tokens/s per vCPU worker**
+- 4:1 input:output ratio
+- ~1M output tokens/s per vCPU worker
 
 ```
 (80M / 4 + 10M) / 1M = 30 workers
