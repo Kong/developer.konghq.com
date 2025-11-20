@@ -52,8 +52,6 @@ Any options specified in this file will apply to all scripts and manual commands
 
 Use `requestTimeout` to control how long Inso CLI waits before failing a network request during collection and test execution:
 
-### Command line
-
 Set the timeout for an individual command:
 
 ```bash
