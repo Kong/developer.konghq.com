@@ -57,7 +57,6 @@ Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) using any o
 {% navtab "Debian" %}
 ```
 cat <<EOF > Dockerfile
-
 FROM debian:bookworm-slim
    
 COPY kong.deb /tmp/kong.deb
