@@ -3,13 +3,11 @@ description: 'Use MeshTrafficPermission to allow traffic to a specific MeshServi
 
 weight: 900
 
-namespace: kuma-demo
-use_meshservice: true
+namespace: kong-mesh-demo
 config:
   type: MeshTrafficPermission
   name: mtp
   mesh: default
-  namespace: kong-mesh-demo
   spec:
     targetRef:
       kind: MeshService
@@ -19,4 +17,3 @@ config:
           kind: Mesh
         default:
           action: Allow
-    
