@@ -33,7 +33,7 @@ releases:
     releaseDate: "2024-02-01"
     eol: "2025-02-01"
     branch: release-2.6
-  - version: 2.7.19
+  - version: 2.7.20
     release: "2.7"
     releaseDate: "2024-04-19"
     eol: "2026-10-19"
@@ -49,7 +49,7 @@ releases:
     releaseDate: "2024-10-22"
     eol: "2025-10-22"
     branch: release-2.9
-  - version: 2.10.8
+  - version: 2.10.9
     release: "2.10"
     releaseDate: "2025-03-20"
     eol: "2026-03-20"
