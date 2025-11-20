@@ -41,6 +41,10 @@ prereqs:
         - example-service
     routes:
         - example-route
+  inline:
+    - title: Redis stack
+      include_content: prereqs/redis
+      icon_url: /assets/icons/redis.svg
 
 cleanup:
   inline:
@@ -83,14 +87,19 @@ entities:
         brute_force_protection:
         strategy: redis
         redis:
-            host: 127.0.0.1
+            host: ${redis_host}
             port: 6379
             database: 0
             connect_timeout: 2000
             timeout: 2000
-            password: your-redis-password
+            password: ${redis_password}
             ssl: false
             ssl_verify: false
+variables:
+  redis_host:
+    value: $REDIS_HOST
+  redis_password:
+    value: $REDIS_PASSWORD
 {% endentity_examples %}
 
 ## Validate
