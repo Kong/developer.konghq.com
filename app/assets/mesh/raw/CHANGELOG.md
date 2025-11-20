@@ -19,6 +19,42 @@
 * fix(xds): set keepalive configuration for dpp to cpp connection (backport of #14912) [#14926](https://github.com/kumahq/kuma/pull/14926) @kumahq
 * perf(rules): optimize SubsetIter to enumerate only correct subsets (backport of #14862) [#14871](https://github.com/kumahq/kuma/pull/14871) @kumahq
 
+## v2.10.9
+> Released on 2025/11/20
+
+* chore(deps): bump github.com/containerd/containerd/v2 from 2.1.1 to 2.1.5 [#8660](https://github.com/Kong/kong-mesh/pull/8660) @renovate
+* chore(deps): bump kumahq/kuma from 2.10.8 to v2.10.9 [#8579](https://github.com/Kong/kong-mesh/pull/8579) [#8591](https://github.com/Kong/kong-mesh/pull/8591) [#8594](https://github.com/Kong/kong-mesh/pull/8594) [#8602](https://github.com/Kong/kong-mesh/pull/8602) [#8610](https://github.com/Kong/kong-mesh/pull/8610) [#8613](https://github.com/Kong/kong-mesh/pull/8613) [#8618](https://github.com/Kong/kong-mesh/pull/8618) [#8635](https://github.com/Kong/kong-mesh/pull/8635) [#8655](https://github.com/Kong/kong-mesh/pull/8655) [#8688](https://github.com/Kong/kong-mesh/pull/8688) [#8695](https://github.com/Kong/kong-mesh/pull/8695) [#8699](https://github.com/Kong/kong-mesh/pull/8699) [#8713](https://github.com/Kong/kong-mesh/pull/8713) [#8750](https://github.com/Kong/kong-mesh/pull/8750) [#8756](https://github.com/Kong/kong-mesh/pull/8756) @kong-mesh
+* chore(deps): prepare upgrade.mk for Kuma /v2 module path [#8630](https://github.com/Kong/kong-mesh/pull/8630) @bartsmykla
+* feat(deps)!: migrate module path to github.com/Kong/kong-mesh/v2 [#8720](https://github.com/Kong/kong-mesh/pull/8720) @bartsmykla
+
+### Includes [kumahq/kuma@v2.10.9](https://github.com/kumahq/kuma/releases/tag/v2.10.9) changelog
+
+* chore(deps): bump `go` to `1.24.9` [#14822](https://github.com/kumahq/kuma/pull/14822) @bartsmykla
+* chore(deps): bump golang.org/x/crypto from 0.40.0 to 0.43.0 [#14993](https://github.com/kumahq/kuma/pull/14993) @renovate
+* feat(deps)!: migrate module path to github.com/kumahq/kuma/v2 [#15010](https://github.com/kumahq/kuma/pull/15010) @bartsmykla
+* fix(MeshCircuitBreaker): properly configure inbounds with servicePort set (backport of #14875) [#14879](https://github.com/kumahq/kuma/pull/14879) @kumahq
+* fix(meshpassthrough): sort IP address to provide predictable order (backport of #14857) [#14864](https://github.com/kumahq/kuma/pull/14864) @kumahq
+* fix(xds): set keepalive configuration for dpp to cpp connection (backport of #14912) [#14925](https://github.com/kumahq/kuma/pull/14925) @kumahq
+* perf(rules): optimize SubsetIter to enumerate only correct subsets (backport of #14862) [#14869](https://github.com/kumahq/kuma/pull/14869) @kumahq
+
+
+## v2.7.20
+> Released on 2025/11/20
+
+* chore(deps): bump github.com/containerd/containerd from 1.7.27 to 1.7.29 [#8659](https://github.com/Kong/kong-mesh/pull/8659) @renovate
+* chore(deps): bump kumahq/kuma from 2.7.19 to v2.7.20 [#8578](https://github.com/Kong/kong-mesh/pull/8578) [#8590](https://github.com/Kong/kong-mesh/pull/8590) [#8595](https://github.com/Kong/kong-mesh/pull/8595) [#8603](https://github.com/Kong/kong-mesh/pull/8603) [#8614](https://github.com/Kong/kong-mesh/pull/8614) [#8634](https://github.com/Kong/kong-mesh/pull/8634) [#8654](https://github.com/Kong/kong-mesh/pull/8654) [#8689](https://github.com/Kong/kong-mesh/pull/8689) [#8700](https://github.com/Kong/kong-mesh/pull/8700) [#8714](https://github.com/Kong/kong-mesh/pull/8714) [#8725](https://github.com/Kong/kong-mesh/pull/8725) [#8746](https://github.com/Kong/kong-mesh/pull/8746) [#8758](https://github.com/Kong/kong-mesh/pull/8758) @kong-mesh
+* chore(deps): prepare upgrade.mk for Kuma /v2 module path [#8629](https://github.com/Kong/kong-mesh/pull/8629) @bartsmykla
+
+### Includes [kumahq/kuma@v2.7.20](https://github.com/kumahq/kuma/releases/tag/v2.7.20) changelog
+
+* chore(deps): bump `go` to `1.24.9` [#14821](https://github.com/kumahq/kuma/pull/14821) [#14825](https://github.com/kumahq/kuma/pull/14825) @bartsmykla
+* chore(deps): bump github.com/containerd/containerd from 1.7.27 to 1.7.29 [#14930](https://github.com/kumahq/kuma/pull/14930) @renovate
+* chore(deps): bump golang.org/x/crypto from 0.40.0 to 0.43.0 [#14996](https://github.com/kumahq/kuma/pull/14996) @renovate
+* feat(deps)!: migrate module path to github.com/kumahq/kuma/v2 [#15032](https://github.com/kumahq/kuma/pull/15032) @bartsmykla
+* fix(xds): set keepalive configuration for dpp to cpp connection (backport of #14912) [#14924](https://github.com/kumahq/kuma/pull/14924) @kumahq
+* perf(rules): optimize SubsetIter to enumerate only correct subsets (backport of #14862) [#14868](https://github.com/kumahq/kuma/pull/14868) @kumahq
+
+
 ## v2.11.8
 > Released on 2025/11/14
 
