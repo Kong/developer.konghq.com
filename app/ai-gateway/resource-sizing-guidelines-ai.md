@@ -21,7 +21,7 @@ tags:
 breadcrumbs:
     - /ai-gateway/
 
-description: "Review Kong's AI Gateway recommended resource allocation sizing guidelines for {{site.base_gateway}} based on configuration and traffic patterns."
+description: "Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns."
 
 related_resources:
   - text: Performance benchmarks
