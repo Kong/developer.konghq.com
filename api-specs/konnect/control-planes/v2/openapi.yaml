@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28'
+  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -725,20 +725,14 @@ components:
       type: object
       properties:
         id:
-          description: 'Filter using **one** of the following operators: `oeq`'
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`'
           type: object
           additionalProperties: false
-          oneOf:
-            - type: string
-            - type: object
-              title: StringFieldEqualsComparison
-              additionalProperties: false
-              properties:
-                eq:
-                  type: string
-              required:
-                - eq
           properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
             oeq:
               description: The field matches any of the provided values.
               type: string
@@ -749,20 +743,14 @@ components:
             example-2:
               eq: some-value
         name:
-          description: 'Filter using **one** of the following operators: `neq`, `contains`'
+          description: 'Filter using **one** of the following operators: `eq`, `neq`, `contains`'
           type: object
           additionalProperties: false
-          oneOf:
-            - type: string
-            - type: object
-              title: StringFieldEqualsComparison
-              additionalProperties: false
-              properties:
-                eq:
-                  type: string
-              required:
-                - eq
           properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
             contains:
               description: The field contains the provided value.
               type: string
@@ -778,20 +766,14 @@ components:
             example-2:
               eq: some-value
         cluster_type:
-          description: 'Filter using **one** of the following operators: `neq`'
+          description: 'Filter using **one** of the following operators: `eq`, `neq`'
           type: object
           additionalProperties: false
-          oneOf:
-            - type: string
-            - type: object
-              title: StringFieldEqualsComparison
-              additionalProperties: false
-              properties:
-                eq:
-                  type: string
-              required:
-                - eq
           properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
             neq:
               description: The field does not match the provided value.
               type: string
