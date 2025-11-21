@@ -1,5 +1,5 @@
 ---
-title: Monitor SonarQube projects in Catalog with the Konnect UI
+title: Monitor SonarQube projects in Catalog with the {{site.konnect_short_name}} UI
 content_type: how_to
 description: Learn how to connect a SonarQube project to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the UI.
 products:
@@ -73,7 +73,7 @@ Now that your integration is configured, you can create a {{site.konnect_catalog
 Your integration projects are now discoverable from one {{site.konnect_catalog}} service.
 
 {:.info}
-> You might need to manually sync your SonarQube integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the SonarQube integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.
+> You may need to manually sync your SonarQube integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the SonarQube integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.
 
 ## Validate the mapping
 
