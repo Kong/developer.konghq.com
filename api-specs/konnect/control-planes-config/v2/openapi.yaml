@@ -14,6 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 2.0.0
+  x-oas-source: kong/platform-api@9fd4f498974b497729f37be0ad8d0ed598bb75f4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9fd4f498974b497729f37be0ad8d0ed598bb75f4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -4796,7 +4798,6 @@ components:
           nullable: true
         password:
           type: string
-          writeOnly: true
           x-encrypted: true
         tags:
           description: A set of strings representing tags.
@@ -4837,7 +4838,6 @@ components:
           nullable: true
         password:
           type: string
-          writeOnly: true
           x-encrypted: true
         tags:
           description: A set of strings representing tags.
