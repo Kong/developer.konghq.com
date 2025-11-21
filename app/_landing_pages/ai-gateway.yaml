@@ -25,7 +25,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    As AI adoption accelerates, applications are evolving beyond basic LLM calls into complex, multi-actor systems—including user apps, agents, orchestration layers, and context servers—all interacting with foundation models in real time.
+                    As AI adoption accelerates, applications are evolving beyond basic LLM calls into complex, multi-actor systems-including user apps, agents, orchestration layers, and context servers that interact with foundation models in real time.
 
                     To support this shift, developers are adopting protocols like Model Context Protocol (MCP) and Agent2Agent (A2A) to standardize how components exchange tools, data, and decisions.
 
@@ -344,7 +344,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    As AI technologies see broader adoption, developers and organizations face new risks—most notably, the risk of sensitive data leaking to AI providers, exposing businesses and their customers to potential breaches and security threats.
+                    As AI technologies see broader adoption, developers and organizations face new risks: the risk of sensitive data leaking to AI providers, which exposes businesses and their customers to potential breaches and security threats.
 
                     Managing how data flows to and from AI models has become critical not just for security, but also for compliance and reliability. Without the right controls in place, organizations risk losing visibility into how AI is used across their systems.
 
@@ -489,7 +489,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    LLMs are only as reliable as the data they can access. When faced with incomplete information, they often produce confident yet incorrect responses—known as “hallucinations.” These hallucinations occur when LLMs lack the necessary domain knowledge.To address this, developers use the **Retrieval-augmented Generation (RAG)** approach, which enriches models with relevant data pulled from vector databases.
+                    LLMs are only as reliable as the data they can access. When faced with incomplete information, they often produce confident yet incorrect responses known as “hallucinations.” These hallucinations occur when LLMs lack the necessary domain knowledge.To address this, developers use the **Retrieval-augmented Generation (RAG)** approach, which enriches models with relevant data pulled from vector databases.
 
                     While standard RAG workflows are resource-heavy, as they require teams to generate embeddings and manually curate them in vector databases, Kong’s **AI RAG Injector** plugin automates this entire process. Instead of embedding RAG logic into every application individually, platform teams can inject vetted data into prompts directly at the gateway layer without any manual interventions.
   - columns:
@@ -539,7 +539,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The AI Gateway helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity—balancing performance and cost.
+                    The AI Gateway helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
 
   - columns:
       - blocks:
