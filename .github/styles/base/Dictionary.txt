@@ -97,6 +97,7 @@ callees
 CAs
 callout
 callouts
+camelCase
 cef
 certificate_admin
 charset
