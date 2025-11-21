@@ -23,9 +23,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Insomnia is an open-source desktop client for designing, testing, and documenting APIs. It is built for speed, simplicity, and supports offline work, and it connects directly to Kong Gateway and Konnect.
+                    Insomnia is an open-source desktop client for designing, testing, and documenting APIs. It is built for speed and simplicity, and it supports fully offline workflows.
 
-                    This page highlights where Insomnia provides broader, faster, or more flexible functionality than Postman.
+                    Insomnia helps developers review and validate what they ship, whether they work with traditional API endpoints or emerging agent-based patterns. It does not restrict where teams store their code or data, and it keeps control with the user. Work can remain local and private, or teams can choose to share it through Git or cloud sync.
+
+                    This page compares Insomnia and Postman across core functional areas to help teams understand their differences in workflow, storage models, and API development capabilities.
       - blocks:
           - type: image
             config:
@@ -61,13 +63,13 @@ rows:
                 - title: Plugin ecosystem
                   subtitle: Extend with community and custom plugins.
                   insomnia: true
-                  postman: false
-                - title: Kong ecosystem integration
-                  subtitle: Connect directly to Kong Gateway and Konnect for validation, mocking, and policy testing.
+                  postman: true
+                - title: Flexible integration
+                  subtitle: Work with local files, Git, and external tooling without required cloud dependencies.
                   insomnia: true
-                  postman: false
-                - title: Built-in Git workflows
-                  subtitle: Version requests, documents, and tests with native Git.
+                  postman: true
+                - title: Native Git workflows
+                  subtitle: Use Git-sync storage to version requests, specs, and test suites.
                   insomnia: true
                   postman: false
                 - title: Free core features
@@ -93,15 +95,15 @@ rows:
                   insomnia: true
                   postman: true
                 - title: Version control workflows
-                  subtitle: Use Git for history, branching, and rollbacks.
+                  subtitle: Use Git to version history, branches, and rollback.
                   insomnia: true
                   postman: false
                 - title: Private-by-default sharing
-                  subtitle: Keep work entirely local or private unless pushed to a remote repository.
+                  subtitle: Store projects locally or on Git by default, not in the cloud.
                   insomnia: true
                   postman: false
                 - title: Access control and SSO
-                  subtitle: Use domain restrictions and Enterprise SSO.
+                  subtitle: Apply domain restrictions and enterprise single-sign-on.
                   insomnia: true
                   postman: true
 
@@ -121,11 +123,15 @@ rows:
                 - title: Variable hierarchy
                   subtitle: Use global, collection, and folder-level variables with inheritance.
                   insomnia: true
-                  postman: false
-                - title: Secure environment storage
-                  subtitle: Encrypt environment data locally and connect to external vaults.
+                  postman: true
+                - title: Variable inheritance levels
+                  subtitle: Use variables at global, collection, and folder level.
                   insomnia: true
-                  postman: false
+                  postman: false  
+                - title: Secure environment storage
+                  subtitle: Encrypt environment data both locally and connect to external vaults.
+                  insomnia: true
+                  postman: true
                 - title: Dynamic data generation
                   subtitle: Use Faker.js template tags to generate realistic test data.
                   insomnia: true
@@ -133,11 +139,11 @@ rows:
                 - title: Response chaining and autocomplete
                   subtitle: Reference previous responses with type-ahead suggestions.
                   insomnia: true
-                  postman: false
+                  postman: true
                 - title: Environment switching
                   subtitle: Switch environments for each collection with inherited overrides.
                   insomnia: true
-                  postman: false
+                  postman: true
 
   - header:
       type: h2
@@ -161,15 +167,15 @@ rows:
                   insomnia: true
                   postman: true
                 - title: Parallel execution
-                  subtitle: Run multiple collections in parallel through separate windows or CLI processes.
+                  subtitle: Run collections in parallel through separate windows or CLI processes.
                   insomnia: true
-                  postman: false
+                  postman: true
                 - title: CLI-driven automation
                   subtitle: Use Inso CLI for testing, linting, and CI/CD.
                   insomnia: true
                   postman: true
-                - title: Git-driven workflows
-                  subtitle: Drive testing and versioning entirely through Git.
+                - title: Local Git-driven workflows
+                  subtitle: Drive editing, testing, and versioning directly through local Git.
                   insomnia: true
                   postman: false
 
@@ -193,19 +199,23 @@ rows:
                 - title: Real-time preview
                   subtitle: Update and preview API designs in a unified view.
                   insomnia: true
-                  postman: false
+                  postman: true
                 - title: Generate runnable requests
                   subtitle: Convert API specs directly into runnable collections.
                   insomnia: true
                   postman: true
+                - title: AsyncAPI and gRPC design support
+                  subtitle: Design and edit AsyncAPI and gRPC specifications alongside OpenAPI and GraphQL.
+                  insomnia: true
+                  postman: false  
                 - title: Documentation editing
                   subtitle: Write documentation within OpenAPI files or request descriptions.
                   insomnia: true
                   postman: true
                 - title: Export and publish
-                  subtitle: Export locally or publish through your own systems.
+                  subtitle: Export locally and publish through your own systems.
                   insomnia: true
-                  postman: false
+                  postman: true
 
   - header:
       type: h2
@@ -224,14 +234,18 @@ rows:
                   subtitle: Create cloud mocks with unlimited usage in Enterprise.
                   insomnia: true
                   postman: true
-                - title: Self-hosted mocks
-                  subtitle: Run mocks locally or in controlled environments with Inso CLI or Enterprise.
-                  insomnia: true
+                - title: Self-hosted mocks  
+                  subtitle: Host mock servers locally or on your own infrastructure.  
+                  insomnia: true  
                   postman: false
                 - title: Dynamic responses
-                  subtitle: Generate responses using template tags and Faker.
+                  subtitle: Generate mock responses with templates and Faker-style variables. 
                   insomnia: true
-                  postman: false
+                  postman: true
+                - title: Auto-generate mock servers from spec or text
+                  subtitle: Create mock server from an OpenAPI, URL or natural-language prompt and enable dynamic responses.
+                  insomnia: true
+                  postman: false  
   - header:
       type: h2
       text: ""
