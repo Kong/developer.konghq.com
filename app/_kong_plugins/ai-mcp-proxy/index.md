@@ -212,7 +212,7 @@ rows:
 
 ## ACL tool control {% new_in 3.13 %}
 
-The AI MCP Proxy plugin provides per-tool and per-server access control for MCP traffic. The plugin determines whether an authenticated Consumer or Consumer Group can:
+The AI MCP Proxy plugin provides per-tool and per-MCP-server access control for MCP traffic. The plugin determines whether an authenticated Consumer or Consumer group can:
 
 * View tools returned by an MCP server during *List Tools*
 * Invoke a specific MCP tool
@@ -221,7 +221,6 @@ The AI MCP Proxy plugin provides per-tool and per-server access control for MCP 
 ACL rules attach to each tool entry in the plugin configuration. Rules may define allow-lists, deny-lists, and the identifier types used for matching. All access attempts (allowed or denied) are written to the plugin’s audit log. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/), or OIDC flows), and the resulting Consumer identity is used for ACL checks.
 
 Supported identifier types:
-
 * `username`
 * `consumer_id`
 * `custom_id`
@@ -229,9 +228,7 @@ Supported identifier types:
 
 ### ACL tool control request flow
 
-### ACL tool control request flow
-
-The AI MCP Proxy enforces ACLs for MCP traffic. The steps below summarize how requests are evaluated, authenticated, and logged.
+The AI MCP Proxy enforces ACLs for MCP traffic. The steps below summarize how requests are evaluated, authenticated, and logged:
 
 1. MCP client requests the list of available tools.
 2. AI MCP Proxy evaluates the global ACL for the Consumer or Consumer Group.

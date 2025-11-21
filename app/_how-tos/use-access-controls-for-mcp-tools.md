@@ -101,7 +101,7 @@ prereqs:
 ---
 ## Set up Consumer authentication
 
-Let's configure authentication so the "{{site.base_gateway}}" can identify each caller. We use the Key Auth plugin so each user (or AI agent) presents an API key with requests:
+Let's configure authentication so the "{{site.base_gateway}}" can identify each caller. We'll use the [Key Auth](/plugins/key-auth/) plugin so each user (or AI agent) presents an API key with requests:
 
 {% entity_examples %}
 entities:
@@ -115,7 +115,7 @@ entities:
 
 ## Create Consumer Groups for each AI usage tier
 
-Now, let's configure Consumer Groups that reflect access levels. These groups govern MCP tool permissions:
+Now, let's configure Consumer groups that reflect access levels. These groups govern MCP tool permissions:
 - `admin` - full access
 - `developer` - limited access
 - `suspended` - blocked from MCP tools
@@ -130,7 +130,7 @@ entities:
 
 ## Create Consumers
 
-Let's configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions which will govern access to MCP tools:
+Let's configure individual Consumers and assign them to groups. Each Consumer will use a unique API key and inherits group permissions which will govern access to MCP tools:
 
 {% entity_examples %}
 entities:
@@ -160,7 +160,7 @@ entities:
 
 ## Configure the AI MCP Proxy plugin
 
-Let's configure the AI MCP Proxy plugin to enforce tool-level access rules. The plugin allows you to control which users or AI agents can see or call each MCP tool. Access is determined by **Consumer Groups** and individual **Consumers** via `allow` and `deny` lists.
+Now. let's configure the AI MCP Proxy plugin to enforce tool-level access rules. The plugin will allow you to control which users or AI agents can see or call each MCP tool. Access is determined by Consumer groups and individual Consumers through `allow` and `deny` lists.
 
 The table matrix below summarizes the permissions for the our configuration of the AI MCP Proxy plugin:
 
@@ -299,6 +299,7 @@ Now let's verify access for each user by connecting with their API key:
    list_orders_for_user
    search_orders
    ```
+   {:.no-copy-code}
 
    Bob belongs to the **developer** group and is denied access to `list_users`.
 1. Click **Disconnect** to update the key for the next user.
@@ -321,10 +322,11 @@ Now let's verify access for each user by connecting with their API key:
 1. Click the **Connect** button.
 1. Once connected, Insomnia should list this tool in the sidebar:
 
-   ```
+   ```text
    list_users
    search_orders
    ```
+  {:.no-copy-code}
 
    Eason is not part of any group but is explicitly allowed access to `list_users` in the tool’s ACL.
 1. Click **Disconnect** after validation.
