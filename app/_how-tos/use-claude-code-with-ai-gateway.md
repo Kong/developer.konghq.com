@@ -132,7 +132,7 @@ entities:
 
 ## Configure the File Log plugin
 
-Now, let's enable the File Log plugin on the service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local log file `claude.json` so we can review requests and responses as Claude runs through the AI Gateway.
+Now, let's enable the File Log plugin on the service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
 
 {% entity_examples %}
 entities:
