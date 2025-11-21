@@ -52,7 +52,8 @@ rows:
                   subtitle: Fully open source with an active contributor community.
                   insomnia: true
                   postman: false
-                - title: Works fully offline
+                - title: |
+                    [Works fully offline](/insomnia/storage/)
                   subtitle: Design and test APIs without login or network access.
                   insomnia: true
                   postman: false
