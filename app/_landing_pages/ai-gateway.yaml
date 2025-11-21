@@ -93,17 +93,23 @@ rows:
 
 
   - header:
-      type: h2
-      text: "Tools to manage AI Gateway"
     columns:
-      - blocks:
+      - header:
+          type: h2
+          text: Deployment checklist
+        blocks:
           - type: structured_text
             config:
               blocks:
-                - type: text
-                  text: |
-                    Kong AI Gateway, working alongside {{site.base_gateway}}, supports multiple tools for managing configuration and resources. Use the following tools to automate, integrate, or streamline AI Gateway operations in a way that best fits your deployment model.
-      - blocks:
+                - type: unordered_list
+                  items:
+                    - "[Kong AI Gateway resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for Kong AI Gateway."
+                    - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.base_gateway }}."
+                    - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
+      - header:
+          type: h2
+          text: "Tools to manage AI Gateway"
+        blocks:
           - type: structured_text
             config:
               blocks:
