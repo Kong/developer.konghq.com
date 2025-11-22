@@ -80,8 +80,6 @@ faqs:
 related_resources:
   - text: Dev Portal Markdown components reference
     url: https://portaldocs.konghq.com/
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
   - text: Custom domains
     url: /dev-portal/custom-domains/
   - text: About Dev Portal customizations
@@ -96,6 +94,8 @@ In your Dev Portal, you can create pages that contain content such as text, butt
 ## Pages
 
 You can create multiple pages in the Dev Portal, similar to how a website is structured. Pages can contain text and other objects, like containers and buttons. To get started creating pages, navigate to your Dev Portal and click **Portal Editor** in the sidebar. Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).
+
+Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page slugs. The generated URL is shown at the bottom of the preview pane.
 
 ### Page structure
 
