@@ -17,7 +17,7 @@ sections:
       - path: /advanced-analytics/
       - path: /ai-manager/
       - path: /gateway-manager/
-      - path: /mesh-manager/
+      - path: /mesh/
 
   - title: Org and Account Management
     items:
