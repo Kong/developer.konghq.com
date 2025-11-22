@@ -38,7 +38,6 @@ search_aliases:
   - OAuth2
   - MCP
 
-
 icon: ai-mcp-oauth2.png
 
 categories:
