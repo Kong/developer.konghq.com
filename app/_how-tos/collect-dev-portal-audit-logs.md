@@ -36,6 +36,9 @@ tldr:
         This tutorial uses SumoLogic, but you can apply the same steps to your provider.
 prereqs:
   inline:
+    - title: "{{site.konnect_product_name}} roles"
+      include_content: prereqs/dev-portal-audit-log-roles
+      icon_url: /assets/icons/gateway.svg
     - title: Dev Portal
       content: |
         For this tutorial, you’ll need a Dev Portal and some Dev Portal settings, like a published API, pre-configured. These settings are essential for Dev Portal to function but configuring them isn’t the focus of this guide. If you don't have these settings already configured, follow these steps to pre-configure them:
