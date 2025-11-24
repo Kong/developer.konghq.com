@@ -17926,5 +17926,57 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.4.3.22": {
+    "kong": [
+      {
+        "message": "Fixed an issue where the restart command read configuration multiple times and failed to stop nginx.\n",
+        "type": "bugfix",
+        "scope": "Configuration"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.1 to 2.7.3.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-ljsonschema to 1.2.0. Fixed UTF-8 string length calculation and added support for `null` in `enum` types.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `500` response status can occasionally occur during reconfiguration.",
+        "scope": "Core",
+        "type": "bugfix"
+      },
+      {
+        "message": "**OpenID-Connect**: Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenID Connect** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**response-transformer-advanced**: Fixed an issue where the failure occurred when Nginx gzip was enabled for upstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the data plane did not stop the health checker before cleaning up old configurations, which could lead to resource leaks.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Improved the performance of retrieving workspace entity counts.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
