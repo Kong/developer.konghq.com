@@ -58,6 +58,8 @@ For example:
 
 For more information, see **subject assignment** in the Metering and Billing documentation.
 
+{% include_cached /konnect/metering-and-billing/assigned-subjects.md %}
+
 ## Data ingestion
 
 When shipping data to {{site.konnect_short_name}} you must include the subject within the payload: 
@@ -73,6 +75,11 @@ When shipping data to {{site.konnect_short_name}} you must include the subject w
   "data": {...}
 }
 ```
+
+### One subject during beta
+
+During the billing beta, customers are limited to **one subject**.  
+Support for multiple subjects will be available in the future.
 
 
 ## Schema
