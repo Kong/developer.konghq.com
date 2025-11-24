@@ -108,7 +108,7 @@ rows:
                   insomnia: true
                   postman: false
                 - title: |
-                    [Private-by-default sharing]/insomnia/storage#local-vault)
+                    [Private-by-default sharing](/insomnia/storage#local-vault)
                   subtitle: Store projects locally or on Git by default, not in the cloud.
                   insomnia: true
                   postman: false
