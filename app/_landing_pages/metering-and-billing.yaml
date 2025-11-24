@@ -1,0 +1,14 @@
+metadata:
+  title: "Metering and Billing"
+  content_type: landing_page
+  description: Learn how to meter and bill for your features with Metering and Billing.
+  breadcrumbs:
+    - /metering-and-billing/
+  products:
+    - metering-and-billing
+
+rows:
+  - header:
+      type: h1
+      text: "Metering and Billing"
+      sub_text: Turn any events, logs, and metrics into revenue with usage-based metering and billing.
