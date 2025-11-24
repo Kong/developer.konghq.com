@@ -85,14 +85,12 @@ entities:
       config:
         hide_credentials: true
         brute_force_protection:
-        strategy: redis
-        redis:
+          strategy: redis
+          redis:
             host: ${redis_host}
             port: 6379
             database: 0
-            connect_timeout: 2000
             timeout: 2000
-            password: ${redis_password}
             ssl: false
             ssl_verify: false
 variables:
@@ -106,7 +104,7 @@ variables:
 
 When a Consumer authenticates with basic auth, the authorization header must be base64-encoded. For example, since we are using `jsmith` as the username and `my-password` as the password, then the field’s value is the base64 encoding of `jsmith:my-password`, or `anNtaXRoOm15LXBhc3N3b3Jk`.
 
-First, run the following to verify that unauthorized requests return an error:
+Run the following three times to verify that unauthorized requests return a `429` error after the third attempt:
 
 <!--vale off-->
 {% validation unauthorized-check %}
