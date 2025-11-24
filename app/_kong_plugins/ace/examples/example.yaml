@@ -1,0 +1,33 @@
+description: 'example' # Used for metadata and search; don't use markdown formatting
+
+# extended_description: '' # Displays on the page; can use any markdown formatting
+
+title: 'example'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  allow_unmatched_operations: true
+  redis: 
+    host: localhost
+    port: 6379
+  sync_rate: 1
+  anonymous: anonymous
+
+min_version:
+  gateway: '3.12'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
