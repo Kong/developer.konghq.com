@@ -22,7 +22,7 @@ tldr:
   a: |
     [Metering & Billing](/metering-and-billing/) provides flexible billing and metering for AI and DevTool companies. It also includes real-time insights and usage limit enforcement.
 
-    This tutorial will help you get started with Metering & Billing by setting up metering based on {{site.base_gateway}} API requests, productizing API usage with features and a premium plan tier, and starting subscriptions to assign to customers.
+    This tutorial will help you get started with Metering & Billing by setting up metering based on {{site.base_gateway}} API requests, turn raw API usage into billable product offerings by defining features and pricing plans, and start subscriptions to assign to customers.
 
 tools:
     - deck
@@ -68,53 +68,45 @@ In this guide, you'll:
 * Start subscriptions for a customer
 * Collect an invoice for a customer on the paid premium plan and see their API usage
 
-The following diagram shows how {{site.base_gateway}} entities and Metering & Billing entities are associated and the entities that make up metering and billing:
+The following diagram shows how {{site.base_gateway}} entities and Metering & Billing entities are associated:
 
 {% mermaid %}
 flowchart TB
-  subgraph gateway["Kong Gateway"]
+  subgraph gateway["<b>Kong Gateway</b>"]
     direction LR
         service["example-service"]
         route["example-route"]
         consumer1["Consumer-Kong Air"]
-        consumer2["Consumer-Kong Travel"]
   end
-  subgraph metering["Konnect Metering & Billing"]
+  subgraph metering["<b>Konnect Metering & Billing</b>"]
     direction LR
         meter["Meter"]
-    subgraph plan1["Free Plan"]
-      direction TD
-        feature1["Feature (example-service)"]
-        rate-card1["Rate card"]
-    end
-    subgraph plan2["Premium Plan"]
+    subgraph plan["Premium Plan"]
       direction LR
           feature2["Feature (example-service)"]
           rate-card2["Rate card"]
     end
-    subgraph subscription2["Free Suscription"]
+    subgraph subscription["Premium Subscription"]
       direction LR
-          customer2["Customer (Kong Air)"]
-    end
-    subgraph subscription1["Premium Suscription"]
-      direction LR
-          customer1["Customer (Kong Travel)"]
+          customer1["Customer (Kong Air)"]
     end
   end
     gateway --> metering
     service --> meter
-    meter --> feature1
     meter --> feature2
-    consumer1 --> customer2
-    consumer2 --> customer1
-    plan1 --> subscription2
-    plan2 --> subscription1
+    consumer1 --> customer1
+    subscription --> plan
+
+    style plan stroke:#000000,fill:#BBDEFB
+    style subscription fill:#C8E6C9
+    style gateway fill:#C8E6C9
+    style metering fill:#E1BEE7
 {% endmermaid %}
 
 
 ## Create a Consumer
 
-Before you configure metering and billing, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in Metering & Billing and assigning them to a Premium plan. 
+Before you configure metering and billing, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in Metering & Billing and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
 
 You're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
@@ -157,7 +149,9 @@ In this guide, you'll enable API Gateway requests for metering. This will meter 
 
 ## Create a feature
 
-Now that you're metering API consumption, you need to associate traffic from the `example-service` Gateway Service with a feature as something you want to price or govern. Features are customer-facing, and show up on the invoice for paid plans. Feature examples could include things like flight data requests, GPT-5 input tokens, or available LLM models. 
+Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering API consumption, you need to associate traffic from the `example-service` Gateway Service with a feature as something you want to price or govern. 
+
+Features are customer-facing, and show up on the invoice for paid plans. Feature examples could include things like flight data requests, GPT-5 input tokens, or available LLM models. 
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
 
@@ -166,7 +160,8 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. Click **Create Feature**.
 1. In the **Name** field, enter `example-service`.
 1. From the **Meter** dropdown menu, select "kong_konnect_api_request". 
-1. Click **Add group by filter**.
+1. Click **Add group by filter**. 
+   The group by filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs.
 1. From the **Group by** dropdown menu, select "service_name".
 1. From the **Operator** dropdown menu, select "Equals".
 1. From the **Value** dropdown menu, select "example-service".
@@ -237,4 +232,4 @@ This will generate six requests. Now, check the invoice that was created in Mete
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.
 
-You'll see in Lines that `example-service` is listed and was used six times.
+You'll see in Lines that `example-service` is listed and was used six times. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **Metering & Billing** > **Settings**.
