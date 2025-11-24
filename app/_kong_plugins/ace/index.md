@@ -1,0 +1,101 @@
+---
+title: 'ACE'
+name: 'ACE'
+
+content_type: plugin
+
+publisher: kong-inc
+description: 'placeholder'
+
+
+products:
+    - gateway
+
+works_on:
+    - konnect
+
+min_version:
+   gateway: '3.13'
+
+# topologies:
+#   on_prem:
+#     - hybrid
+#     - db-less
+#     - traditional
+#   konnect_deployments:
+#     - hybrid
+#     - cloud-gateways
+#     - serverless
+
+# tags:
+#   - traffic-control
+
+# search_aliases:
+#   - plugin-name-in-code eg rate-limiting-advanced
+#   - common aliases, eg OIDC or RLA
+#   - related terms, eg LLM for AI plugins
+  
+######## third-party plugin params, not needed for kong bundled plugins
+# third_party: true
+# source_code_url: ''
+# support_url: ''
+########
+
+# premium_partner: true # can be a kong plugin or a third-party plugin
+
+icon: ace.png # e.g. acme.svg or acme.png
+
+# categories:
+#    - traffic-control
+
+# related_resources:
+#   - text: How-to guide for the plugin
+#     url: /how-to/guide/
+---
+
+The ACE plugin manages developer access control to APIs published with Dev Portal.
+
+Previously, when you created an API catalog in Dev Portal and linked the APIs to a Gateway Service, {{site.konnect_short_name}} would automatically apply the {{site.konnect_short_name}} application auth (KAA) plugin automatically. API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services in those control planes.
+
+The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. For example, if you have Key Authentication configured and it rejects a request, the ACE plugin *will not* run. If you're using the `config.anonymous` ACE plugin configuration, the [plugin priority](/gateway/entities/plugin/#plugin-priority) needs to be set in such a way that it executes after all other authentication plugins. For example, you can set a provisional priority of 949 so the plugin runs after KAA (which has a priority  of 950).
+
+## Route matching policy
+
+When you configure the ACE plugin, you must set either `required` or `present` for `config.match_policy`. This determines how the ACE plugin will behave when a request doesn't match an existing Route.
+
+The following table describes what the `match_policy` values do and when to use each:
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Description
+    key: description
+  - title: Limitations
+    key: limitations
+  - title: Use cases
+    key: use-case
+rows:
+  - setting: |
+      `required`
+    description: |
+      Requires every incoming request to match a defined operation from an API or API package in Dev Portal. If a request doesn't match, ACE rejects the request outright with a 404. All traffic will be rejected except operations or Routes in published APIs linked to an ACE-enabled {{site.base_gateway}}. 
+
+      {:.danger}
+      > **Warning:** Setting the `match_policy` to `required` can **block all traffic with a 404**. Any undefined endpoints will be blocked. If you accidentally enable this in your control planes, this could cause a potential outage in production.
+    limitations: |
+      * Misconfigurations can overexpose unintended Routes.
+      * Shuts down all traffic outside of published Dev Portal APIs.
+      * If the plugin is improperly configured, potentially all traffic could be terminated.
+    use-case: |
+      * You want to lock down {{site.konnect_short_name}} so that only traffic that is part of an explicitly defined API operation is allowed through.
+      * You only plan to provide self-service access via your Dev Portal. 
+  - setting: |
+      `if_present`
+    description: |
+      The ACE plugin only engages with a request when it matches an operation. If a request doesn't match, ACE lets the request pass through untouched. This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
+    limitations: |
+      All traffic outside of published APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. Dev Portal will not be able to protect all operations.
+    use-case: |
+      * You have an environment where some Gateway Services or Routes are governed by Dev Portal–exposed APIs (with ACE), while others are regular Routes that should be left alone.
+      * You already have existing traffic and other access controls in place and want to avoid interruption.
+{% endtable %}
