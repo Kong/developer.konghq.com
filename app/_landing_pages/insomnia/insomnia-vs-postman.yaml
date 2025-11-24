@@ -48,17 +48,18 @@ rows:
                 - title: Postman
                   key: postman
               features:
-                - title: Open source (MIT license)
+                - title: |
+                    [Open source (MIT license)](/insomnia/accounts#what-software-license-does-insomnia-use)
                   subtitle: Fully open source with an active contributor community.
                   insomnia: true
                   postman: false
                 - title: |
-                    [Works fully offline](/insomnia/storage/#local-vault)
+                    [Works fully offline](/insomnia/storage#local-vault)
                   subtitle: Design and test APIs without login or network access.
                   insomnia: true
                   postman: false
                 - title: |
-                    [Broad protocol support](/insomnia/requests/#websocket-support-in-insomnia)
+                    [Broad protocol support](/insomnia/requests#websocket-support-in-insomnia)
                   subtitle: Supports REST, GraphQL, gRPC, WebSockets, SOAP, and event streams.
                   insomnia: true
                   postman: true
@@ -107,7 +108,7 @@ rows:
                   insomnia: true
                   postman: false
                 - title: |
-                    [Private-by-default sharing]/insomnia/storage/#local-vault)
+                    [Private-by-default sharing]/insomnia/storage#local-vault)
                   subtitle: Store projects locally or on Git by default, not in the cloud.
                   insomnia: true
                   postman: false
@@ -131,12 +132,12 @@ rows:
                   key: postman
               features:
                 - title: |
-                    [Variable hierarchy](/insomnia/environments/#variable-scope)
+                    [Variable hierarchy](/insomnia/environments#variable-scope)
                   subtitle: Use global, collection, and folder-level variables with inheritance.
                   insomnia: true
                   postman: true
                 - title: |
-                    [Variable inheritance levels](/insomnia/environments/#variable-scope)
+                    [Variable inheritance levels](/insomnia/environments#variable-scope)
                   subtitle: Use variables at global, collection, and folder level.
                   insomnia: true
                   postman: false  
@@ -194,7 +195,7 @@ rows:
                   insomnia: true
                   postman: true
                 - title: |
-                    [Local Git-driven workflows](/insomnia/storage/#git-sync)
+                    [Local Git-driven workflows](/insomnia/storage#git-sync)
                   subtitle: Drive editing, testing, and versioning directly through local Git.
                   insomnia: true
                   postman: false
@@ -213,17 +214,17 @@ rows:
                   key: postman
               features:
                 - title: |
-                    [Supported formats](/insomnia/api-specs/#what-api-spec-formats-are-supported-in-insomnia)
+                    [Supported formats](/insomnia/api-specs#what-api-spec-formats-are-supported-in-insomnia)
                   subtitle: Work with OpenAPI, GraphQL, gRPC, and AsyncAPI.
                   insomnia: true
                   postman: true
                 - title: |
-                    [Real-time preview](/insomnia/design/#design-and-preview-new-apis-with-openapi)
+                    [Real-time preview](/insomnia/design#design-and-preview-new-apis-with-openapi)
                   subtitle: Update and preview API designs in a unified view.
                   insomnia: true
                   postman: true
                 - title: |
-                    [Generate runnable requests](/inso-cli/#what-can-inso-cli-do)
+                    [Generate runnable requests](/inso-cli#what-can-inso-cli-do)
                   subtitle: Convert API specs directly into runnable collections.
                   insomnia: true
                   postman: true
@@ -257,12 +258,12 @@ rows:
                   key: postman
               features:
                 - title: |
-                    [Cloud mocks](/insomnia/mock-servers/#cloud-hosted-mocks)
+                    [Cloud mocks](/insomnia/mock-servers#cloud-hosted-mocks)
                   subtitle: Create cloud mocks with unlimited usage in Enterprise.
                   insomnia: true
                   postman: true
                 - title: |
-                    [Self-hosted mocks](/insomnia/mock-servers/#self-hosted-mocks) 
+                    [Self-hosted mocks](/insomnia/mock-servers#self-hosted-mocks) 
                   subtitle: Host mock servers locally or on your own infrastructure.  
                   insomnia: true  
                   postman: false
@@ -272,7 +273,7 @@ rows:
                   insomnia: true
                   postman: true
                 - title: |
-                    [Auto-generate mock servers from spec or text](/insomnia/mock-servers/#auto-generated-mocks)
+                    [Auto-generate mock servers from spec or text](/insomnia/mock-servers#auto-generated-mocks)
                   subtitle: Create mock server from an OpenAPI, URL or natural-language prompt and enable dynamic responses.
                   insomnia: true
                   postman: false  
