@@ -391,6 +391,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.22": [
+    {
+      "message": "Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.2.0": [
     {
       "message": "Fix the issue where `using_pseudo_issuer` does not work.",
