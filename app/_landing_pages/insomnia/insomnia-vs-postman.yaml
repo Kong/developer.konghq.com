@@ -185,7 +185,8 @@ rows:
                   subtitle: Use Mocha and Chai style syntax with Node.js modules.
                   insomnia: true
                   postman: true
-                - title: Parallel execution
+                - title: |
+                    [Parallel execution](/insomnia/collections/)
                   subtitle: Run collections in parallel through separate windows or CLI processes.
                   insomnia: true
                   postman: true
