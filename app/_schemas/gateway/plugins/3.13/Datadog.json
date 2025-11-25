@@ -155,6 +155,10 @@
           "description": "Number of times to retry when sending data to the upstream server.",
           "type": "integer"
         },
+        "route_name_tag": {
+          "description": "String to be attached as tag of the route name or ID.",
+          "type": "string"
+        },
         "service_name_tag": {
           "default": "name",
           "description": "String to be attached as the name of the service.",

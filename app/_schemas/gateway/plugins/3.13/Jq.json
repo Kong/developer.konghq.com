@@ -15,6 +15,7 @@
           "type": "string"
         },
         "request_jq_program_options": {
+          "default": {},
           "properties": {
             "ascii_output": {
               "default": false,
@@ -63,6 +64,7 @@
           "type": "string"
         },
         "response_jq_program_options": {
+          "default": {},
           "properties": {
             "ascii_output": {
               "default": false,

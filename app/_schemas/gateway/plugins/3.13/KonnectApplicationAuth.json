@@ -28,6 +28,7 @@
           "type": "string"
         },
         "v2_strategies": {
+          "default": {},
           "description": "The map of v2 strategies.",
           "properties": {
             "key_auth": {
@@ -478,6 +479,85 @@
                       },
                       "cluster_cache_redis": {
                         "properties": {
+                          "cloud_authentication": {
+                            "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance.",
+                            "properties": {
+                              "auth_provider": {
+                                "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "enum": [
+                                  "aws",
+                                  "azure",
+                                  "gcp"
+                                ],
+                                "type": "string",
+                                "x-referenceable": true
+                              },
+                              "aws_access_key_id": {
+                                "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "aws_assume_role_arn": {
+                                "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "aws_cache_name": {
+                                "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "type": "string",
+                                "x-referenceable": true
+                              },
+                              "aws_is_serverless": {
+                                "default": true,
+                                "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                                "type": "boolean"
+                              },
+                              "aws_region": {
+                                "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "type": "string",
+                                "x-referenceable": true
+                              },
+                              "aws_role_session_name": {
+                                "description": "The session name for the temporary credentials when assuming the IAM role. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "aws_secret_access_key": {
+                                "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "azure_client_id": {
+                                "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "azure_client_secret": {
+                                "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "azure_tenant_id": {
+                                "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "gcp_service_account_json": {
+                                "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              }
+                            },
+                            "type": "object"
+                          },
                           "cluster_max_redirections": {
                             "default": 5,
                             "description": "Maximum retry attempts for redirection.",
@@ -524,8 +604,9 @@
                           },
                           "host": {
                             "default": "127.0.0.1",
-                            "description": "A string representing a host name, such as example.com.",
-                            "type": "string"
+                            "description": "A string representing a host name, such as example.com. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                            "type": "string",
+                            "x-referenceable": true
                           },
                           "keepalive_backlog": {
                             "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.",
@@ -548,10 +629,11 @@
                           },
                           "port": {
                             "default": 6379,
-                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "description": "An integer representing a port number between 0 and 65535, inclusive. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                             "maximum": 65535,
                             "minimum": 0,
-                            "type": "integer"
+                            "type": "integer",
+                            "x-referenceable": true
                           },
                           "read_timeout": {
                             "default": 2000,
@@ -614,8 +696,9 @@
                             "x-referenceable": true
                           },
                           "server_name": {
-                            "description": "A string representing an SNI (server name indication) value for TLS.",
-                            "type": "string"
+                            "description": "A string representing an SNI (server name indication) value for TLS. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                            "type": "string",
+                            "x-referenceable": true
                           },
                           "ssl": {
                             "default": false,
@@ -1266,6 +1349,85 @@
                       },
                       "redis": {
                         "properties": {
+                          "cloud_authentication": {
+                            "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance.",
+                            "properties": {
+                              "auth_provider": {
+                                "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "enum": [
+                                  "aws",
+                                  "azure",
+                                  "gcp"
+                                ],
+                                "type": "string",
+                                "x-referenceable": true
+                              },
+                              "aws_access_key_id": {
+                                "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "aws_assume_role_arn": {
+                                "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "aws_cache_name": {
+                                "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "type": "string",
+                                "x-referenceable": true
+                              },
+                              "aws_is_serverless": {
+                                "default": true,
+                                "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                                "type": "boolean"
+                              },
+                              "aws_region": {
+                                "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "type": "string",
+                                "x-referenceable": true
+                              },
+                              "aws_role_session_name": {
+                                "description": "The session name for the temporary credentials when assuming the IAM role. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "aws_secret_access_key": {
+                                "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "azure_client_id": {
+                                "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "azure_client_secret": {
+                                "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "azure_tenant_id": {
+                                "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "gcp_service_account_json": {
+                                "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              }
+                            },
+                            "type": "object"
+                          },
                           "cluster_max_redirections": {
                             "default": 5,
                             "description": "Maximum retry attempts for redirection.",
@@ -1312,8 +1474,9 @@
                           },
                           "host": {
                             "default": "127.0.0.1",
-                            "description": "A string representing a host name, such as example.com.",
-                            "type": "string"
+                            "description": "A string representing a host name, such as example.com. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                            "type": "string",
+                            "x-referenceable": true
                           },
                           "keepalive_backlog": {
                             "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.",
@@ -1336,10 +1499,11 @@
                           },
                           "port": {
                             "default": 6379,
-                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "description": "An integer representing a port number between 0 and 65535, inclusive. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                             "maximum": 65535,
                             "minimum": 0,
-                            "type": "integer"
+                            "type": "integer",
+                            "x-referenceable": true
                           },
                           "prefix": {
                             "description": "The Redis session key prefix.",
@@ -1406,8 +1570,9 @@
                             "x-referenceable": true
                           },
                           "server_name": {
-                            "description": "A string representing an SNI (server name indication) value for TLS.",
-                            "type": "string"
+                            "description": "A string representing an SNI (server name indication) value for TLS. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                            "type": "string",
+                            "x-referenceable": true
                           },
                           "socket": {
                             "description": "The Redis unix socket path.",
