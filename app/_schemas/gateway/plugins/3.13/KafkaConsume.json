@@ -92,6 +92,11 @@
           "description": "Enables Dead Letter Queue. When enabled, if the message doesn't conform to the schema (from Schema Registry) or there's an error in the `message_by_lua_functions`, it will be forwarded to `dlq_topic` that can be processed later.",
           "type": "boolean"
         },
+        "enforce_latest_offset_reset": {
+          "default": false,
+          "description": "When true, 'latest' offset reset behaves correctly (starts from end). When false (default), maintains backwards compatibility where 'latest' acts like 'earliest'.",
+          "type": "boolean"
+        },
         "message_by_lua_functions": {
           "description": "The Lua functions that manipulates the message being sent to the client.",
           "items": {
