@@ -72,12 +72,12 @@
             },
             "tracing": {
               "default": false,
-              "description": "Enable or disable the tracing. This is primarily used for distributed tracing and log message correlation, especially in debugging or tracking log message flows across multiple systems.",
+              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
               "type": "boolean"
             },
             "tracing_sampled": {
               "default": false,
-              "description": "Indicates whether the log message should be included in distributed tracing (i.e., if it should be \"sampled\" for the tracing).",
+              "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
               "type": "boolean"
             },
             "ttl": {
@@ -104,6 +104,11 @@
                   "x-referenceable": true
                 },
                 "access_token_header": {
+                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field.",
+                  "type": "string"
+                },
+                "basic_auth_header": {
+                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields.",
                   "type": "string"
                 },
                 "id_token": {
@@ -113,6 +118,7 @@
                   "x-referenceable": true
                 },
                 "id_token_header": {
+                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field.",
                   "type": "string"
                 },
                 "password": {

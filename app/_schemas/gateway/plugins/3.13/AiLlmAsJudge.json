@@ -133,11 +133,15 @@
               },
               "type": "object"
             },
+            "description": {
+              "description": "The semantic description of the target, required if using semantic load balancing. Specially, setting this to 'CATCHALL' will indicate such target to be used when no other targets match the semantic threshold. Only used by ai-proxy-advanced.",
+              "type": "string"
+            },
             "logging": {
               "properties": {
                 "log_payloads": {
                   "default": false,
-                  "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.",
+                  "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.Furthermore if Opentelemetry instrumentation is enabled the traces will contain this data as well.",
                   "type": "boolean"
                 },
                 "log_statistics": {
@@ -147,6 +151,10 @@
                 }
               },
               "type": "object"
+            },
+            "metadata": {
+              "description": "For internal use only. ",
+              "type": "string"
             },
             "model": {
               "properties": {
@@ -200,6 +208,10 @@
                         "performance_config_latency": {
                           "description": "Force the client's performance configuration 'latency' for all requests. Leave empty to let the consumer select the performance configuration.",
                           "type": "string"
+                        },
+                        "video_output_s3_uri": {
+                          "description": "S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation.",
+                          "type": "string"
                         }
                       },
                       "type": "object"
@@ -220,6 +232,16 @@
                         },
                         "wait_for_model": {
                           "description": "Wait for the model if it is not ready",
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "dashscope": {
+                      "properties": {
+                        "international": {
+                          "default": true,
+                          "description": "        Two Dashscope endpoints are available, and the international endpoint will be used when this is set to `true`.\n        It is recommended to set this to `true` when using international version of dashscope.\n        ",
                           "type": "boolean"
                         }
                       },
@@ -327,12 +349,15 @@
                     "anthropic",
                     "azure",
                     "bedrock",
+                    "cerebras",
                     "cohere",
+                    "dashscope",
                     "gemini",
                     "huggingface",
                     "llama2",
                     "mistral",
-                    "openai"
+                    "openai",
+                    "xai"
                   ],
                   "type": "string"
                 }
@@ -358,9 +383,17 @@
                 "llm/v1/files",
                 "llm/v1/responses",
                 "preserve",
-                "realtime/v1/realtime"
+                "realtime/v1/realtime",
+                "video/v1/videos/generations"
               ],
               "type": "string"
+            },
+            "weight": {
+              "default": 100,
+              "description": "The weight this target gets within the upstream loadbalancer (1-65535). Only used by ai-proxy-advanced.",
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
             }
           },
           "required": [

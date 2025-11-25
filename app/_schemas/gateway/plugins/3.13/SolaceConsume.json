@@ -121,6 +121,11 @@
                   "x-referenceable": true
                 },
                 "access_token_header": {
+                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field.",
+                  "type": "string"
+                },
+                "basic_auth_header": {
+                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields.",
                   "type": "string"
                 },
                 "id_token": {
@@ -130,6 +135,7 @@
                   "x-referenceable": true
                 },
                 "id_token_header": {
+                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field.",
                   "type": "string"
                 },
                 "password": {

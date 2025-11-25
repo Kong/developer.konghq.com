@@ -109,6 +109,11 @@
           "description": "The protocol can be http and https",
           "type": "string"
         },
+        "skip_logging_sanitized_items": {
+          "default": false,
+          "description": "Whether to log sanitized items in the Kong log plugins. Turn it on if you want to hide sensitive data from logs.",
+          "type": "boolean"
+        },
         "stop_on_error": {
           "default": true,
           "description": "Stop processing if an error occurs.",
