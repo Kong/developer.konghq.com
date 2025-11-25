@@ -1,0 +1,119 @@
+name: Generate Gateway and Plugins Changelogs
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Gateway version to generate changelog for (e.g., 3.10.0.2). Leave empty to generate for all versions.'
+        required: true
+        type: string
+      kong_ee_branch:
+        description: 'Branch to use from kong-ee repository'
+        required: true
+        default: 'main'
+        type: string
+      release_date:
+        description: 'Release date for the version (YYYY/MM/DD format). Only used when version is specified.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-changelogs:
+    name: Generate Gateway and Plugins Changelogs
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout developer.konghq.com
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            tools/changelog-generator/package-lock.json
+            tools/plugins-changelog-generator/package-lock.json
+
+      - name: Install changelog generator dependencies
+        run: |
+          cd tools/changelog-generator
+          npm ci
+          cd ../plugins-changelog-generator
+          npm ci
+
+      - name: Checkout kong-ee repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          repository: 'Kong/kong-ee'
+          token: ${{ secrets.PAT }}
+          path: 'kong-ee'
+          ref: ${{ inputs.kong_ee_branch }}
+
+      - name: Clear temp directory
+        run: |
+          cd tools/changelog-generator
+          rm -rf tmp
+          mkdir -p tmp
+
+      - name: Generate changelog for specific version
+        if: ${{ inputs.version != '' }}
+        run: |
+          cd tools/changelog-generator
+          node run.js --path='../../kong-ee' --version='${{ inputs.version }}'
+
+      - name: Update release date in gateway.yml
+        run: |
+          sed -i "/^release_dates:/a\\  '${{ inputs.version }}': ${{ inputs.release_date }}" app/_data/products/gateway.yml
+
+      - name: Generate/update changelog file
+        run: |
+          cd tools/changelog-generator
+          node changelog.js
+
+      - name: Generate plugins changelogs
+        run: |
+          cd tools/plugins-changelog-generator
+          node run.js --version='${{ inputs.version }}'
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
+        with:
+          title: Generate Gateway and plugins changelogs for version ${{ inputs.version }}
+          commit-message: Generate Gateway and plugins changelogs for version ${{ inputs.version }}
+          body: |
+            **Changes:**
+            - Generated changelog entries for Gateway
+            - Generated changelog entries for plugins
+            ${{format('- Updated changelog for Gateway version {0}', inputs.version)}}
+            ${{format('- Set release date for version {0} to {1}', inputs.version, inputs.release_date)}}
+
+          labels: skip-changelog,review:general
+          token: ${{ secrets.PAT }}
+          branch: auto/generate-gateway-plugins-changelogs-${{ github.run_number }}
+
+      - name: No changes detected
+        if: steps.changes.outputs.changed == 'false'
+        run: |
+          echo "No changes detected in the changelog files. No pull request will be created."
