@@ -19,3 +19,4 @@ input/instructions/how-to/use-ai-prompt-guard-plugin/gateway.yaml: "Expected: re
 input/instructions/how-to/use-azure-ai-content-safety/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 400, got: 500."
 input/instructions/how-to/use-ai-semantic-response-guard-plugin/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 400."
 input/instructions/how-to/use-custom-function-for-ai-rate-limiting/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
+input/instructions/how-to/use-semantic-load-balancing/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
