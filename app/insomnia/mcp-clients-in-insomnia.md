@@ -141,4 +141,27 @@ If the authorization server does not support Dynamic Client Registration, you ca
 - Use a **Personal Access Token (PAT)**, for example GitHub Copilot MCP Server.  
 - Register your own **OAuth application**, then enter the Client ID and Secret in Insomnia.
 
+## Elicitation Responses
 
+Insomnia supports **Elicitation**, an MCP feature that allows servers to request additional information from a user while processing a request. When an MCP server returns an elicitation response, Insomnia displays a form in the response pane that lists the fields required by the server. The user enters the requested information, and Insomnia sends the collected values back to the server to continue processing the original request.
+
+Elicitation enables workflows where the server needs extra context or specific field values before it can complete an action. Insomnia manages the full round-trip flow: displaying the elicitation UI, collecting the user input, and returning the elicitation response to the server.
+
+### How Elicitation Works
+
+1. The MCP server returns an **elicitation request** while handling an operation.  
+2. Insomnia displays an **elicitation form** in the response pane based on the fields defined in the request.  
+3. The user enters the requested information.  
+4. Insomnia sends an **elicitation response** containing the submitted values back to the server.  
+5. The server continues processing using the new information.
+
+For more details, see the MCP client specification for elicitation:
+<https://modelcontextprotocol.io/specification/2025-06-18/client/sampling>
+
+### Elicitation Message Flow
+
+```sequence
+User->Client: Present elicitation UI
+Client->User: Provide requested information
+Client->Server: Return elicitation response
+Server->Client: Continue processing with new information
