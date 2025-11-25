@@ -1,12 +1,13 @@
 ---
-title: 'ai lakera plugin'
-name: 'schema of ai lakera plugin'
+title: 'AI Lakera Guard'
+name: 'AI Lakera Guard'
 
 content_type: plugin
 
 publisher: kong-inc
-description: 'schema of ai lakera plugin'
+description: 'Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs.'
 
+category: AI
 
 products:
     - gateway
@@ -38,7 +39,7 @@ search_aliases:
 
 premium_partner: true # can be a kong plugin or a third-party plugin
 
-icon: plugin-slug.png # e.g. acme.svg or acme.png
+icon: ai-lakera.png
 
 categories:
    - traffic-control
