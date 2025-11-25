@@ -157,6 +157,7 @@ This prompt asks for advice about good tools for productivity:
 
 {% validation request-check %}
 url: /anything
+method: POST
 status_code: 200
 headers:
   - 'Content-Type: application/json'
@@ -175,6 +176,8 @@ This prompt covers backup and recovery strategy — allowed:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -193,6 +196,8 @@ This request could cause the LLM to generate content that assists impersonation 
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -211,6 +216,8 @@ This request could produce a response that helps bypass licensing or DRM, which 
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
