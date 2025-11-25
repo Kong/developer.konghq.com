@@ -212,7 +212,7 @@ rows:
 
 ## ACL tool control {% new_in 3.13 %}
 
-When exposing MCP servers through Kong Gateway, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The AI MCP Proxy plugin's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions)
+When exposing MCP servers through {{site.base_gateway}}, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The AI MCP Proxy plugin's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions)
 
 This way consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/) or OIDC flows), and the resulting Consumer identity is used for ACL checks.
 
