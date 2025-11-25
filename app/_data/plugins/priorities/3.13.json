@@ -5,6 +5,7 @@
   "ai-aws-guardrails": 781,
   "ai-azure-content-safety": 774,
   "ai-gcp-model-armor": 783,
+  "ai-lakera-guard": 784,
   "ai-llm-as-judge": 767,
   "ai-mcp-oauth2": 1015,
   "ai-mcp-proxy": 820,
