@@ -55,6 +55,10 @@ related_resources:
   - text: Autogenerate MCP tools for Weather API
     url: /mcp/weather-mcp-api/
 
+examples_groups:
+  - slug: basic
+    text: Basic use cases
+
 search_aliases:
   - ai
   - llm
