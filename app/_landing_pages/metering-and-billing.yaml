@@ -1,7 +1,7 @@
 metadata:
   title: "Metering and Billing"
   content_type: landing_page
-  description: Learn about managing service meshes and control planes with Metering and Billing.
+  description: Learn how to meter and bill for your features with Metering and Billing.
   breadcrumbs:
     - /metering-and-billing/
   products:
@@ -11,4 +11,4 @@ rows:
   - header:
       type: h1
       text: "Metering and Billing"
-      sub_text: Manage all of your {{site.mesh_product_name}} service meshes in a single console
+      sub_text: Turn any events, logs, and metrics into revenue with usage-based metering and billing.
