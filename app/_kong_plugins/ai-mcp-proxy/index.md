@@ -368,7 +368,7 @@ For users already using the AI MCP Proxy plugin without ACL configuration, follo
 
 ## Scope of support
 
-The AI MCP Proxy plugin provides support for MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is fully supported and what is outside the current scope.
+The AI MCP Proxy plugin provides support for MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is supported and what is outside the current scope.
 
 <!-- vale off -->
 {% feature_table %}
