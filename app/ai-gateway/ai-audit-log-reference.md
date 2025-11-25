@@ -310,7 +310,7 @@ rows:
 
 ### AI MCP logs {% new_in 3.12 %}
 
-If you're using the [AI MCP plugin](/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, and tool usage.
+If you're using the [AI MCP plugin](/plugins/ai-mcp-proxy/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage and {% new_in 3.13 %} access control audit entries.
 
 {:.info}
 > **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an AI request.
@@ -347,6 +347,30 @@ rows:
     description: The error message if an error occurred during the request.
   - property: "`ai.mcp.rpc[].response_body_size`"
     description: The size of the JSON-RPC response body, in bytes.
+  - property: "`ai.mcp.audit`"
+    description: |
+      {% new_in 3.13 %} An array of access control audit entries. Each entry records whether access was allowed or denied for a specific MCP primitive or globally.
+  - property: "`ai.mcp.audit[].primitive_name`"
+    description: |
+      {% new_in 3.13 %} The name of the MCP primitive (for example, `list_users`).
+  - property: "`ai.mcp.audit[].primitive`"
+    description: |
+      {% new_in 3.13 %} The type of MCP primitive (for example, `tool`, `resource`, or `prompt`).
+  - property: "`ai.mcp.audit[].action`"
+    description: |
+      {% new_in 3.13 %} The access control decision: `allow` or `deny`.
+  - property: "`ai.mcp.audit[].consumer.name`"
+    description: |
+      {% new_in 3.13 %} The name of the consumer making the request.
+  - property: "`ai.mcp.audit[].consumer.id`"
+    description: |
+      {% new_in 3.13 %} The UUID of the consumer.
+  - property: "`ai.mcp.audit[].consumer.identifier`"
+    description: |
+      {% new_in 3.13 %} The type of consumer identifier (for example, `consumer_group`).
+  - property: "`ai.mcp.audit[].scope`"
+    description: |
+      {% new_in 3.13 %} The scope of the access control check: `primitive` for specific MCP primitives or `global` for server-wide access.
 {% endtable %}
 <!-- vale on -->
 
@@ -473,7 +497,29 @@ The following example shows an MCP log entry:
         "tool_name": "tool 1",
         "response_body_size": 100
       }
-    ]
+    ],
+    "audit": [
+    {
+      "primitive_name": "list_users",
+      "primitive": "tool",
+      "action": "allow",
+      "consumer": {
+        "name": "admin",
+        "id": "e6b415a7-4823-abcd-1234-d86324780e06",
+        "identifier": "consumer_group"
+      },
+      "scope": "primitive"
+    },
+    {
+      "action": "allow",
+      "consumer": {
+        "name": "admin",
+        "id": "e6b415a7-4823-abcd-1234-d86324780e06",
+        "identifier": "consumer_group"
+      },
+      "scope": "global"
+    }
+  ]
   }
 }
 ```

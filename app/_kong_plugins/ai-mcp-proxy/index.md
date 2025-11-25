@@ -212,35 +212,107 @@ rows:
 
 ## ACL tool control {% new_in 3.13 %}
 
-The AI MCP Proxy plugin provides per-tool and per-MCP-server access control for MCP traffic. The plugin determines whether an authenticated Consumer or Consumer group can:
+When exposing MCP servers through Kong Gateway, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The AI MCP Proxy plugin's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions)
 
-* View tools returned by an MCP server during *List Tools*
-* Invoke a specific MCP tool
-* Access an MCP server through the proxy
+This way consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/) or OIDC flows), and the resulting Consumer identity is used for ACL checks.
 
-ACL rules attach to each tool entry in the plugin configuration. Rules may define allow-lists, deny-lists, and the identifier types used for matching. All access attempts (allowed or denied) are written to the plugin’s audit log. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/), or OIDC flows), and the resulting Consumer identity is used for ACL checks.
+### Supported identifier types
 
-Supported identifier types:
-* `username`
-* `consumer_id`
-* `custom_id`
-* `consumer_group`
+ACL rules can reference [Consumers](/gateway/entities/consumer/) and [Consumer Groups](/gateway/entities/consumer-group/) using these identifier types in `allow` and `deny` lists:
+
+* [`username`](/gateway/entities/consumer/#schema-consumer-username): Consumer username
+* [`id`](/gateway/entities/consumer/#schema-consumer-username): Consumer UUID
+* [`custom_id`](/gateway/entities/consumer/#schema-consumer-custom-id): Custom Consumer identifier
+* [`consumer_groups.name`](/gateway/entities/consumer/#schema-consumer-custom-id): Consumer Group name
+
+The authenticated Consumer identity is matched against these identifiers. If the [Consumer](/gateway/entities/consumer/) or any of their [Consumer Groups](/gateway/entities/consumer-group/) match an ACL entry, the rule applies.
+
+### How default and per-tool ACLs work
+
+The plugin evaluates access using a two-tier system:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: ACL Type
+    key: type
+  - title: Configuration Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - type: Default ACL
+    field: "`default_acl`"
+    description: |
+      Baseline rules that apply to all tools unless overridden.
+  - type: Per-tool ACL
+    field: "`tools[].acl`"
+    description: |
+      When configured, these rules replace the default ACL for that specific tool. The per-tool ACL doesn't inherit or merge with `default_acl`—it is an all-or-nothing override.
+{% endtable %}
+<!-- vale on -->
+
+{:.info}
+> If a tool defines its own `acl`, the plugin ignores `default_acl` for that tool:
+>
+> - Tools with no `acl` configuration inherit the default rules (both `allow` and `deny` lists)
+> - Tools with an `acl` must explicitly list all allowed subjects (even if they were already in `default_acl`)
+
+### ACL evaluation logic
+
+Both default and per-tool ACLs use `allow` and `deny` lists. Evaluation follows this order:
+
+1. **Deny list**: If the subject matches any `deny` entry, the request is rejected (`403`).
+2. **Allow list (optional)**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`403`).
+3. **Only deny configured**: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
+4. **No ACL configuration**: If neither list exists, the request is allowed.
+
+All access attempts (allowed or denied) are written to the plugin's audit log.
+
+The table below summarizes the possible ACL configurations and their outcomes.
+
+{% table %}
+columns:
+  - title: Condition
+    key: condition
+  - title: "Proxied to upstream service?"
+    key: proxy
+  - title: Response code
+    key: response
+rows:
+  - condition: "Subject matches any `deny` rule"
+    proxy: No
+    response: 403
+  - condition: "`allow` list exists and subject is not in it"
+    proxy: No
+    response: 403
+  - condition: "Only `deny` list exists and subject is not in it"
+    proxy: Yes
+    response: 200
+  - condition: "No ACL rules configured"
+    proxy: Yes
+    response: 200
+{% endtable %}
 
 ### ACL tool control request flow
 
-The AI MCP Proxy enforces ACLs for MCP traffic. The steps below summarize how requests are evaluated, authenticated, and logged:
+The AI MCP Proxy evaluates ACLs for both tool discovery and tool invocation. These are two distinct operations with different behaviors:
 
-1. MCP client requests the list of available tools.
-2. AI MCP Proxy evaluates the global ACL for the Consumer or Consumer Group.
-3. Plugin returns only tools the subject is allowed to access.
-4. MCP client requests a specific tool with the API key.
-5. Kong AuthN plugin validates the key and identifies the Consumer.
-6. Plugin loads the Consumer’s group memberships.
-7. Plugin evaluates the tool-specific ACL.
-8. Plugin logs the access attempt (allowed or denied).
-9. Plugin returns `403 Forbidden` if denied, or forwards the request upstream if allowed.
+**Tool Discovery (List tools)**:
+1. MCP client requests the list of available tools
+2. Kong AuthN plugin validates the request and identifies the Consumer
+3. AI MCP Proxy loads the Consumer's group memberships
+4. Plugin evaluates the default ACL (`default_acl`) for each tool
+5. Plugin returns an HTTP 200 response with only the tools the Consumer is allowed to access (tools are filtered, not blocked)
+6. Plugin logs the discovery attempt
 
-The following sequence diagram illustrates the ACL evaluation flow for listing and invoking MCP tools through the AI MCP Proxy plugin:
+**Tool invocation**:
+1. MCP client invokes a specific tool
+2. Kong AuthN plugin validates the request and identifies the Consumer
+3. AI MCP Proxy loads the Consumer's group memberships
+4. Plugin evaluates the tool-specific ACL (if configured) or default ACL (if not configured)
+5. Plugin logs the access attempt (allowed or denied)
+6. Plugin returns `403 Forbidden` if denied, or forwards the request to the upstream MCP server if allowed
 
 <!-- vale off -->
 {% mermaid %}
@@ -254,11 +326,11 @@ sequenceDiagram
 
   %% ----- List Tools -----
   rect
-    note over Client,Kong: List Tools (Global ACL)
+    note over Client,Kong: List Tools (Default ACL Scope)
     Client->>Kong: GET /tools
     Kong->>Auth: Authenticate
     Auth-->>Kong: Consumer identity
-    Kong->>ACL: Evaluate global ACL
+    Kong->>ACL: Evaluate scoped default ACL
     ACL-->>Log: Audit entry
     alt Allowed
       Kong-->>Client: Filtered tool list
@@ -286,43 +358,17 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-### ACL evaluation logic
+## Migration path
 
-ACL rules may define `allow` and `deny` lists. Each entry can reference a Consumer or Consumer Group using any supported identifier type. Evaluation follows this order:
-
-1. Deny list: If the subject matches any `deny` entry, the request is rejected (`403`).
-2. Allow list (optional): If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`403`).
-3. Only deny configured: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
-4. No ACL configuration: If neither list exists, the request is allowed.
-
-The table below summarizes the possible ACL configurations and their outcomes.
-
-{% table %}
-columns:
-  - title: Condition
-    key: condition
-  - title: "Proxied to upstream service?"
-    key: proxy
-  - title: Response code
-    key: response
-rows:
-  - condition: "Subject matches any `deny` rule"
-    proxy: No
-    response: 403
-  - condition: "`allow` list exists and subject is not in it"
-    proxy: No
-    response: 403
-  - condition: "Only `deny` list exists and subject is not in it"
-    proxy: Yes
-    response: 200
-  - condition: "No ACL rules configured"
-    proxy: Yes
-    response: 200
-{% endtable %}
+For users already using the AI MCP Proxy plugin without ACL configuration, follow these steps to add ACL tool control:
+1. **Add an AuthN plugin**: Enable an authentication plugin such as [Key Auth](/plugins/key-auth/) to work with Consumers and Consumer Groups.
+2. **Add ACL fields to the plugin configuration**: Update the AI MCP Proxy plugin schema to include `default_acl` and per-tool `acl` fields.
+3. **Configure ACL rules**: Add `allow` and `deny` lists to control access at the default and per-tool levels.
+4. **Enable audit logging**: Set `logging.log_audits: true` to monitor access attempts and verify ACL enforcement.
 
 ## Scope of support
 
-The AI MCP Proxy plugin provides support for key MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is fully supported and what is outside the current scope.
+The AI MCP Proxy plugin provides support for MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The table below summarizes what is fully supported and what is outside the current scope.
 
 <!-- vale off -->
 {% feature_table %}

@@ -160,9 +160,9 @@ entities:
 
 ## Configure the AI MCP Proxy plugin
 
-Now. let's configure the AI MCP Proxy plugin to enforce tool-level access rules. The plugin will allow you to control which users or AI agents can see or call each MCP tool. Access is determined by Consumer groups and individual Consumers through `allow` and `deny` lists.
+Now, let's configure the AI MCP Proxy plugin to apply tool-level access rules. The plugin controls which users or AI agents can see or call each MCP tool. Access is determined by Consumer groups and individual Consumers using allow and deny lists. A tool ACL replaces the default rule when present.
 
-The table matrix below summarizes the permissions for the our configuration of the AI MCP Proxy plugin:
+The table below shows the effective permissions for the configuration:
 
 <!-- vale off -->
 {% table %}
@@ -217,12 +217,13 @@ entities:
       config:
         mode: passthrough-listener
         include_consumer_groups: true
-        global_acl:
-          allow:
-            - "developer"
-            - "admin"
-          deny:
-            - "suspended"
+        default_acl:
+          - scope: tools
+            allow:
+              - "developer"
+              - "admin"
+            deny:
+              - "suspended"
         logging:
           log_payloads: false
           log_statistics: true
@@ -245,7 +246,6 @@ entities:
             name: list_orders_for_user
             acl:
               allow: ["admin", "developer"]
-
           - description: Search orders by name (case-insensitive substring)
             name: search_orders
             acl:
