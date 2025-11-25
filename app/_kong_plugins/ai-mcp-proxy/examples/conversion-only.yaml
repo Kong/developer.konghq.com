@@ -73,3 +73,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: basic
