@@ -1,0 +1,125 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "custom_injections": {
+          "description": "Custom regexes to check for.",
+          "items": {
+            "properties": {
+              "name": {
+                "description": "A unique name for this injection.",
+                "type": "string"
+              },
+              "regex": {
+                "description": "The regex to match against.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "regex"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "enforcement_mode": {
+          "default": "block",
+          "description": "Enforcement mode of the security policy.",
+          "enum": [
+            "block",
+            "log_only"
+          ],
+          "type": "string"
+        },
+        "error_message": {
+          "default": "Bad Request",
+          "description": "The response message when validation fails",
+          "type": "string"
+        },
+        "error_status_code": {
+          "default": 400,
+          "description": "The response status code when validation fails.",
+          "maximum": 499,
+          "minimum": 400,
+          "type": "integer"
+        },
+        "injection_types": {
+          "default": [
+            "sql"
+          ],
+          "description": "The type of injections to check for.",
+          "items": {
+            "enum": [
+              "java_exception",
+              "js",
+              "sql",
+              "ssi",
+              "xpath_abbreviated",
+              "xpath_extended"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "locations": {
+          "default": [
+            "path_and_query"
+          ],
+          "description": "The locations to check for injection.",
+          "items": {
+            "enum": [
+              "body",
+              "headers",
+              "path",
+              "path_and_query",
+              "query"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
