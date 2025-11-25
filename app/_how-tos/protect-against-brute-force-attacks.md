@@ -83,21 +83,8 @@ entities:
   plugins:
     - name: basic-auth
       config:
-        hide_credentials: true
         brute_force_protection:
-          strategy: redis
-          redis:
-            host: ${redis_host}
-            port: 6379
-            database: 0
-            timeout: 2000
-            ssl: false
-            ssl_verify: false
-variables:
-  redis_host:
-    value: $REDIS_HOST
-  redis_password:
-    value: $REDIS_PASSWORD
+          strategy: memory
 {% endentity_examples %}
 
 ## Validate

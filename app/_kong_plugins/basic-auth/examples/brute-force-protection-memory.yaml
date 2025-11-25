@@ -1,7 +1,7 @@
-title: 'Brute force protection with Redis'
+title: 'Brute force protection in memory'
 description: 'Protect against brute force attacks.'
 extended_description: |
-  [Protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection` and the `redis` strategy.
+  [Protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection` and the `memory` strategy.
   This will return an `429 Too Many Requests` error after the third failed login attempt.
 weight: 900
 
@@ -12,14 +12,7 @@ min_version:
 
 config:
   brute_force_protection:
-    strategy: redis
-    redis:
-      host: ${redis_host}
-      port: 6379
-      database: 0
-      timeout: 2000
-      ssl: false
-      ssl_verify: false
+    strategy: memory
 variables:
   redis_host:
     value: $REDIS_HOST
