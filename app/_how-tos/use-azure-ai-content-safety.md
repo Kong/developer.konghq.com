@@ -77,8 +77,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy plugin
@@ -159,6 +157,8 @@ Using this configuration, send the following AI Chat request that violates the c
 <!--vale off-->
 {% validation request-check %}
 url: /anything
+status_code: 400
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
