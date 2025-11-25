@@ -61,8 +61,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy plugin
@@ -216,6 +214,7 @@ This request uses the `summarizer` template:
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
@@ -234,6 +233,7 @@ This request uses the `code-explainer` template:.
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
@@ -252,6 +252,7 @@ This request uses the `email-drafter` template:
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
@@ -271,6 +272,7 @@ This request describes a product using the `product-describer` template:
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
@@ -289,6 +291,7 @@ This requests uses the `qna` template:
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
@@ -309,6 +312,7 @@ All requests that don't use any of the configured templates will be automaticall
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
