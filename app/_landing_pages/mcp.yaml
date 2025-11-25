@@ -76,7 +76,7 @@ rows:
           config:
             header:
               type: h4
-              text: "Secure and govern MCP servers"
+              text: "Apply security, governance, and observability controls to MCP servers"
             blocks:
               - type: text
                 text: |
