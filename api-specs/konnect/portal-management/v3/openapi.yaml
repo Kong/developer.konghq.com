@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
+  x-oas-source: kong/platform-api@838b389a23a4384f3b8112eb63a3e9116d7f5902
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/838b389a23a4384f3b8112eb63a3e9116d7f5902'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1082,7 +1082,7 @@ paths:
         **Pre-release Endpoint**
         This endpoint is currently in beta and is subject to change.
 
-        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On (SSO) through an OIDC Identity Provider (IdP). Developers can be automatically assigned to teams by mapping claims from thier IdP account.
+        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
       requestBody:
         $ref: '#/components/requestBodies/UpdatePortalAuthenticationSettings'
       responses:
@@ -3705,46 +3705,25 @@ components:
       maxProperties: 3
       minProperties: 0
       title: PortalClaimMappings
-    PortalOIDCConfig:
-      description: Configuration properties for an OpenID Connect Identity Provider.
-      type: object
-      properties:
-        issuer:
-          type: string
-          example: 'https://identity.example.com/v2'
-        client_id:
-          type: string
-          example: x7id0o42lklas0blidl2
-        scopes:
-          type: array
-          items:
-            type: string
-            default: openid
-          example:
-            - email
-            - openid
-            - profile
-          default:
-            - email
-            - openid
-            - profile
-        claim_mappings:
-          $ref: '#/components/schemas/PortalClaimMappings'
-      example:
-        issuer: 'https://identity.example.com/v2'
-        client_id: x7id0o42lklas0blidl2
-        scopes:
-          - email
-          - openid
-          - profile
-        claim_mappings:
-          name: name
-          email: email
-          groups: custom-group-claim
-      required:
-        - issuer
-        - client_id
-      title: PortalOIDCConfig
+    OIDCAuthEnabled:
+      description: The portal has OIDC enabled or disabled.
+      type: boolean
+      example: false
+      deprecated: true
+    SAMLAuthEnabled:
+      description: A Konnect Identity Admin assigns teams to a developer.
+      type: boolean
+      example: false
+      deprecated: true
+    OIDCIdpMappingEnabled:
+      description: IdP groups determine the Portal Teams a developer has. Replaced by idp_mapping_enabled.
+      type: boolean
+      example: true
+      deprecated: true
+    IDPMappingEnabled:
+      description: Whether IdP groups determine the Konnect Portal teams a developer has.
+      type: boolean
+      example: true
     PortalAuthenticationSettingsResponse:
       description: The developer authentication settings for a portal.
       type: object
@@ -3754,27 +3733,58 @@ components:
           type: boolean
           example: true
         oidc_auth_enabled:
-          description: The portal has OIDC enabled or disabled.
-          type: boolean
-          example: false
+          $ref: '#/components/schemas/OIDCAuthEnabled'
         saml_auth_enabled:
-          description: The portal has SAML enabled or disabled.
-          type: boolean
-          example: false
+          $ref: '#/components/schemas/SAMLAuthEnabled'
         oidc_team_mapping_enabled:
-          description: IdP groups determine the Portal Teams a developer has.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/OIDCIdpMappingEnabled'
         idp_mapping_enabled:
-          description: IdP groups determine the Portal Teams a developer has. This will soon replace oidc_team_mapping_enabled.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/IDPMappingEnabled'
         konnect_mapping_enabled:
           description: A Konnect Identity Admin assigns teams to a developer.
           type: boolean
           example: false
         oidc_config:
-          $ref: '#/components/schemas/PortalOIDCConfig'
+          description: Configuration properties for an OpenID Connect Identity Provider.
+          type: object
+          example:
+            issuer: 'https://identity.example.com/v2'
+            client_id: x7id0o42lklas0blidl2
+            scopes:
+              - email
+              - openid
+              - profile
+            claim_mappings:
+              name: name
+              email: email
+              groups: custom-group-claim
+          deprecated: true
+          properties:
+            issuer:
+              type: string
+              example: 'https://identity.example.com/v2'
+            client_id:
+              type: string
+              example: x7id0o42lklas0blidl2
+            scopes:
+              type: array
+              items:
+                type: string
+                default: openid
+              example:
+                - email
+                - openid
+                - profile
+              default:
+                - email
+                - openid
+                - profile
+            claim_mappings:
+              $ref: '#/components/schemas/PortalClaimMappings'
+          required:
+            - issuer
+            - client_id
+          title: PortalOIDCConfig
       example:
         basic_auth_enabled: true
         oidc_auth_enabled: true
@@ -4015,32 +4025,37 @@ components:
           type: boolean
           example: true
         oidc_auth_enabled:
-          description: The organization has OIDC disabled.
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: boolean
           example: false
+          deprecated: true
         saml_auth_enabled:
-          description: The portal has SAML enabled or disabled.
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: boolean
           example: false
+          deprecated: true
         oidc_team_mapping_enabled:
-          description: Whether IdP groups determine the Konnect Portal teams a developer has.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/OIDCIdpMappingEnabled'
         konnect_mapping_enabled:
           description: Whether a Konnect Identity Admin assigns teams to a developer.
           type: boolean
           example: false
         idp_mapping_enabled:
-          description: Whether IdP groups determine the Konnect Portal teams a developer has. This will soon replace oidc_team_mapping_enabled.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/IDPMappingEnabled'
         oidc_issuer:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_client_id:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_client_secret:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_scopes:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: array
           items:
             type: string
@@ -4049,8 +4064,31 @@ components:
             - email
             - openid
             - profile
+          deprecated: true
         oidc_claim_mappings:
-          $ref: '#/components/schemas/PortalClaimMappings'
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
+          type: object
+          example:
+            name: name
+            email: email
+            groups: custom-group-claim
+          deprecated: true
+          maxProperties: 3
+          minProperties: 0
+          properties:
+            name:
+              type: string
+              example: name
+              default: name
+            email:
+              type: string
+              example: email
+              default: email
+            groups:
+              type: string
+              example: custom-group-claim
+              default: groups
+          title: PortalClaimMappings
       example:
         basic_auth_enabled: true
         oidc_auth_enabled: true
