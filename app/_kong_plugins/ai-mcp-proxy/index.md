@@ -296,7 +296,7 @@ rows:
 
 ### ACL tool control request flow
 
-The AI MCP Proxy evaluates ACLs for both tool discovery and tool invocation. These are two distinct operations with different behaviors:
+The AI MCP Proxy plugin evaluates ACLs for both tool discovery and tool invocation. These are two distinct operations with different behaviors:
 
 **Tool Discovery (List tools)**:
 1. MCP client requests the list of available tools
