@@ -2,6 +2,11 @@
   "properties": {
     "config": {
       "properties": {
+        "access_logs_endpoint": {
+          "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
         "batch_flush_delay": {
           "description": "The delay, in seconds, between two consecutive batches.",
           "type": "integer"
@@ -45,7 +50,7 @@
           "type": "string"
         },
         "logs_endpoint": {
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "description": "An HTTP URL endpoint where internal logs are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
           "type": "string",
           "x-referenceable": true
         },

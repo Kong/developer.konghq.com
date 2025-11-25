@@ -2,38 +2,11 @@
   "properties": {
     "config": {
       "properties": {
-        "allow_masking": {
-          "default": false,
-          "description": "Allow to masking the request/response instead of blocking it. Streaming will be disabled if this is enabled.",
-          "type": "boolean"
-        },
-        "aws_access_key_id": {
-          "description": "The AWS access key ID to use for authentication \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+        "api_key": {
+          "description": "API key for the Lakera Guard subscription. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
           "type": "string",
           "x-encrypted": true,
           "x-referenceable": true
-        },
-        "aws_assume_role_arn": {
-          "description": "The target AWS IAM role ARN used to access the guardrails service",
-          "type": "string"
-        },
-        "aws_region": {
-          "description": "The AWS region to use for the Bedrock API",
-          "type": "string"
-        },
-        "aws_role_session_name": {
-          "description": "The identifier of the assumed role session",
-          "type": "string"
-        },
-        "aws_secret_access_key": {
-          "description": "The AWS secret access key to use for authentication \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
-          "type": "string",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "aws_sts_endpoint_url": {
-          "description": "Override the STS endpoint URL when assuming a different role",
-          "type": "string"
         },
         "guarding_mode": {
           "default": "INPUT",
@@ -45,44 +18,63 @@
           ],
           "type": "string"
         },
-        "guardrails_id": {
-          "description": "The guardrail identifier used in the request to apply the guardrail",
-          "type": "string"
+        "lakera_service_url": {
+          "default": "https://api.lakera.ai/v2/guard",
+          "description": "The guard-operation URL of the Lakera Guard service. Defaults to the SaaS /v2/guard endpoint. It can be set to a locally hosted instance of Lakera Guard. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
         },
-        "guardrails_version": {
-          "description": "The guardrail version used in the request to apply the guardrail",
+        "project_id": {
+          "description": "Project ID to apply filters from. If null, it will use the subscription's default project. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
+        "request_failure_message": {
+          "default": "Request was filtered by Lakera Guard",
+          "description": "The message to return when a failure occurs on the request phase.",
           "type": "string"
         },
         "response_buffer_size": {
           "default": 100,
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrails service. This only applies to the response content guard.",
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the Lakera Guard service. This only applies to the response content guard.",
           "type": "number"
+        },
+        "response_failure_message": {
+          "default": "Response was filtered by Lakera Guard",
+          "description": "The message to return when a failure occurs on the response phase.",
+          "type": "string"
+        },
+        "reveal_failure_categories": {
+          "default": false,
+          "description": "Whether to reveal failure categories in the response to the caller. They will always be written to the gateway logs, even if set to false.",
+          "type": "boolean"
         },
         "stop_on_error": {
           "default": true,
-          "description": "Stop processing if an error occurs",
+          "description": "Stop processing if an error occurs.",
           "type": "boolean"
         },
         "text_source": {
           "default": "concatenate_all_content",
-          "description": "Select where to pick the 'text' for the Content Guard Services request.",
+          "description": "Select where to pick the 'text' for the Lakera Guard request (when text/generation is selected).",
           "enum": [
             "concatenate_all_content",
-            "concatenate_user_content"
+            "concatenate_user_content",
+            "last_message"
           ],
           "type": "string"
         },
         "timeout": {
           "default": 10000,
-          "description": "Connection timeout with the bedrock service",
+          "description": "Connection timeout with the Lakera Guard service",
           "type": "number"
+        },
+        "verify_ssl": {
+          "default": true,
+          "description": "Whether to verify the SSL certificate of the configured Lakera Guard endpoint.",
+          "type": "boolean"
         }
       },
-      "required": [
-        "aws_region",
-        "guardrails_id",
-        "guardrails_version"
-      ],
       "type": "object"
     },
     "consumer": {
@@ -144,8 +136,5 @@
       },
       "type": "object"
     }
-  },
-  "required": [
-    "config"
-  ]
+  }
 }
