@@ -227,7 +227,7 @@ This way consumers only interact with tools appropriate to their role, while mai
 >
 > Listener mode does not support direct ACL configuration. Instead, it inherits ACL rules from tagged conversion-listener or conversion-only plugins.
 >
-> To use ACLs with [`listener`](https://developer.konghq.com/gateway/entities/partial/) mode:
+> To use ACLs with [`listener`](/gateway/entities/partial/) mode:
 > 1. Configure conversion-listener or conversion-only plugins with ACL rules and tags
 > 2. Configure listener mode to aggregate tools by matching tags
 > 3. Listener mode enforces ACL rules from the conversion plugins.
