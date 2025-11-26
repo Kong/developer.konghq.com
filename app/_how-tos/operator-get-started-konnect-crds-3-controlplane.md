@@ -37,7 +37,7 @@ entities: []
 
 related_resources:
   - text: Deploy a DataPlane
-    url: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
+    url: /operator/konnect/crd/dataplane/hybrid/
 
 ---
 
