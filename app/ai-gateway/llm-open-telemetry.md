@@ -34,15 +34,17 @@ related_resources:
     url: /plugins/opentelemetry/
   - text: Zipkin plugin
     url: /plugins/zipkin/
-  - text: Kong Gateway tracing guide
+  - text: {{site.base_gateway}} tracing guide
     url: /gateway/tracing/
+  - text: Set up Jaeger with Gen AI OpenTelemetry
+    url: /how-to/set-up-jaeger-with-gen-ai-otel/
 
 works_on:
   - on-prem
   - konnect
 ---
 
-{% new_in 3.13 %} Kong AI Gateway supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in Kong AI Gateway, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [Kong Gateway tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions.
+{% new_in 3.13 %} Kong AI Gateway supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in Kong AI Gateway, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [{{site.base_gateway}} tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions.
 
 You can export these attributes via a supported backend such as [Jaeger](http://localhost:8888/how-to/set-up-jaeger-with-otel/) configured through Kong's [OpenTelemetry plugin](/plugins/opentelemetry) or the [Zipkin plugin](/plugins/zipkin) to:
 
