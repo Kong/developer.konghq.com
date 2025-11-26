@@ -85,15 +85,13 @@ Run `kubectl get gateway kong -n default` to get the IP address for the gateway 
 export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
 ```
 
-{:.info}
-> Note: if your cluster can not provision LoadBalancer type Services then the IP you receive may only be routable from within the cluster.
-
+Test your Service:
 {% validation request-check %}
 url: /echo
 status_code: 200
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-indent: 4
+display_headers: true
 {% endvalidation %}
 
 You should see the following message:
