@@ -5,39 +5,54 @@ providers:
     chat:
       supported: true
       streaming: true
-      upstream_path: 'Use the LLM <code>chat</code> upstream path'
+      upstream_path: 'Uses the <code>Converse</code> and <code>ConverseStream</code> API'
       route_type: 'llm/v1/chat'
       model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
       min_version: '3.8'
     completions:
       supported: true
       streaming: true
-      upstream_path: 'Use the LLM <code>completions</code> upstream path'
+      upstream_path: 'Uses the <code>Converse</code> and <code>ConverseStream</code> API'
       route_type: 'llm/v1/completions'
       model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
       min_version: '3.8'
     embeddings:
       supported: true
       streaming: false
-      upstream_path: 'Use the LLM <code>embeddings</code> upstream path'
+      upstream_path: 'Uses the <code>InvokeModel</code> and <code>InvokeWithResponseStream</code> API'
       route_type: 'llm/v1/embeddings'
       model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
       min_version: '3.11'
+    batches: # Native format from SDK only
+      supported: true
+      streaming: false
+      upstream_path: 'Uses the <code>ModelInvocationJob</code> API'
+      route_type: 'llm/v1/batches'
+      model_example: 'n/a'
+      min_version: '3.13'
     image:
       generations:
         supported: true
         streaming: false
-        upstream_path: 'Use the LLM <code>image/generations</code> upstream path'
+        upstream_path: 'Uses the <code>InvokeModel</code> API'
         route_type: 'image/v1/images/generations'
         model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
         min_version: '3.11'
       edits:
         supported: true
         streaming: false
-        upstream_path: 'Use the LLM <code>image/edits</code> upstream path'
+        upstream_path: 'Uses the <code>InvokeModel</code> API'
         route_type: 'image/v1/images/edits'
         model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
         min_version: '3.11'
+    video:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses the <code>StartAsyncInvoke</code> API'
+        route_type: 'video/v1/videos/generations'
+        model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
+        min_version: '3.13'
 
   - name: 'Anthropic'
     url_pattern: 'https://api.anthropic.com:443/{route_type_path}'
@@ -153,6 +168,25 @@ providers:
       route_type: 'realtime/v1/realtime'
       model_example: 'n/a'
       min_version: '3.11'
+    video:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: '/openai/v1/video/generations/jobs'
+        route_type: 'video/v1/videos/generations'
+        model_example: 'sora-2'
+        min_version: '3.13'
+
+  - name: 'Cerebras'
+    url_pattern: 'https://api.cerebras.ai/{route_type_path}'
+    min_version: '3.13'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '/v1/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'llama3.1-8b'
+      min_version: '3.13'
 
   - name: 'Cohere'
     url_pattern: 'https://api.cohere.com:443/{route_type_path}'
@@ -179,39 +213,100 @@ providers:
       model_example: 'embed-english-v3.0'
       min_version: '3.11'
 
+  - name: 'Dashscope'
+    url_pattern: 'https://dashscope.aliyuncs.com or https://dashscope-intl.aliyuncs.com'
+    min_version: '3.13'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '/compatible-mode/v1/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'qwen-plus'
+      min_version: '3.13'
+    embeddings:
+      supported: true
+      streaming: false
+      upstream_path: '/compatible-mode/v1/embeddings'
+      route_type: 'llm/v1/embeddings'
+      model_example: 'text-embedding-v1'
+      min_version: '3.13'
+    image:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: '/api/v1/services/aigc/multimodal-generation/generation'
+        route_type: 'image/v1/images/generations'
+        model_example: 'qwen-image-plus'
+        min_version: '3.13'
+      edits:
+        supported: true
+        streaming: false
+        upstream_path: '/api/v1/services/aigc/image2image/image-synthesis'
+        route_type: 'image/v1/images/edits'
+        model_example: 'qwen-image-plus'
+        min_version: '3.13'
+
   - name: 'Gemini'
     url_pattern: 'https://generativelanguage.googleapis.com'
     min_version: '3.8'
     chat:
       supported: true
       streaming: true
-      upstream_path: 'llm/v1/chat'
+      upstream_path: 'Uses <code>generateContent</code> API'
       route_type: 'llm/v1/chat'
       model_example: 'gemini-2.0-flash'
       min_version: '3.8'
-   
     embeddings:
       supported: true
       streaming: false
-      upstream_path: 'llm/v1/embeddings'
+      upstream_path: 'Uses <code>batchEmbedContents</code> API'
       route_type: 'llm/v1/embeddings'
       model_example: 'text-embedding-004'
       min_version: '3.11'
+    files: # Native format from SDK only
+      supported: true
+      streaming: false
+      upstream_path: 'Uses <code>uploadFile</code> and <code>files</code> API'
+      route_type: 'llm/v1/files'
+      model_example: 'n/a'
+      min_version: '3.13'
+    batches: # Native format from SDK only
+      supported: true
+      streaming: false
+      upstream_path: 'Uses <code>batches</code> API'
+      route_type: 'llm/v1/batches'
+      model_example: 'n/a'
+      min_version: '3.13'
     image:
       generations:
         supported: true
         streaming: false
-        upstream_path: 'image/v1/images/generations'
+        upstream_path: 'Uses <code>generateContent</code> API'
         route_type: 'image/v1/images/generations'
         model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
       edits:
         supported: true
         streaming: false
-        upstream_path: 'image/v1/images/edits'
+        upstream_path: 'Uses <code>generateContent</code> API'
         route_type: 'image/v1/images/edits'
         model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
+    realtime: # Native format from SDK only
+      supported: true
+      streaming: true
+      upstream_path: 'Uses <code>BidiGenerateContent</code> API'
+      route_type: 'realtime/v1/realtime'
+      model_example: 'gemini-live-2.5-flash-preview-native-audio-09-2025'
+      min_version: '3.13'
+    video:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses <code>predictLongRunning</code> API'
+        route_type: 'video/v1/videos/generations'
+        model_example: 'veo-3.1-generate-001'
+        min_version: '3.13'
 
   - name: 'Gemini Vertex'
     url_pattern: 'https://aiplatform.googleapis.com/'
@@ -219,39 +314,54 @@ providers:
     chat:
       supported: true
       streaming: true
-      upstream_path: 'llm/v1/chat'
+      upstream_path: 'Uses <code>generateContent</code> API'
       route_type: 'llm/v1/chat'
       model_example: 'gemini-2.0-flash'
       min_version: '3.8'
     completions:
       supported: true
       streaming: false
-      upstream_path: 'llm/v1/completions'
+      upstream_path: 'Uses <code>generateContent</code> API'
       route_type: 'llm/v1/completions'
       model_example: 'gemini-2.0-flash'
       min_version: '3.8'
     embeddings:
       supported: true
       streaming: false
-      upstream_path: 'llm/v1/embeddings'
+      upstream_path: 'Uses <code>generateContent</code> API'
       route_type: 'llm/v1/embeddings'
       model_example: 'text-embedding-004'
       min_version: '3.11'
+    batches: # Native format from SDK only
+      supported: true
+      streaming: false
+      upstream_path: 'Uses <code>batchPredictionJobs</code> API'
+      route_type: 'llm/v1/batches'
+      model_example: 'n/a'
+      min_version: '3.13'
     image:
       generations:
         supported: true
         streaming: false
-        upstream_path: 'image/v1/images/generations'
+        upstream_path: 'Uses <code>generateContent</code> API'
         route_type: 'image/v1/images/generations'
         model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
       edits:
         supported: true
         streaming: false
-        upstream_path: 'image/v1/images/edits'
+        upstream_path: 'Uses <code>generateContent</code> API'
         route_type: 'image/v1/images/edits'
         model_example: 'gemini-2.0-flash-preview-image-generation<sup>1</sup>'
         min_version: '3.11'
+    video:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: 'Uses <code>predictLongRunning</code> API'
+        route_type: 'video/v1/videos/generations'
+        model_example: 'veo-3.1-generate-001'
+        min_version: '3.13'
 
   - name: 'Hugging Face'
     url_pattern: 'https://api-inference.huggingface.co'
@@ -259,24 +369,25 @@ providers:
     chat:
       supported: true
       streaming: true
-      upstream_path: '/models/{model_provider}/{model_name}'
+      upstream_path: '/v1/chat/completions'
       route_type: 'llm/v1/chat'
-      model_example: '<a href="https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending">Use the model name for the specific LLM provider</a>'
-      min_version: '3.9'
-    completions:
-      supported: true
-      streaming: true
-      upstream_path: '/models/{model_provider}/{model_name}'
-      route_type: 'llm/v1/completions'
       model_example: '<a href="https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending">Use the model name for the specific LLM provider</a>'
       min_version: '3.9'
     embeddings:
       supported: true
       streaming: false
-      upstream_path: '/models/{model_provider}/{model_name}'
+      upstream_path: '/hf-inference/models/{model_name}/pipeline/feature-extraction'
       route_type: 'llm/v1/embeddings'
       model_example: '<a href="https://huggingface.co/models?pipeline_tag=feature-extraction">Use the embedding model name</a>'
       min_version: '3.11'
+    video:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: '/v1/videos'
+        route_type: 'video/v1/videos/generations'
+        model_example: '<a href="https://huggingface.co/models?pipeline_tag=video-generation">Use the video generation model name</a>'
+        min_version: '3.13'
 
   - name: 'Llama2'
     formats: 'supports Llama2 and Llama3 models and raw, OLLAMA, and OpenAI formats'
@@ -311,21 +422,14 @@ providers:
     chat:
       supported: true
       streaming: true
-      upstream_path: 'User-defined'
+      upstream_path: '/v1/chat/completions or user-defined'
       route_type: 'llm/v1/chat'
-      model_example: 'mistral-tiny'
-      min_version: '3.6'
-    completions:
-      supported: true
-      streaming: true
-      upstream_path: 'User-defined'
-      route_type: 'llm/v1/completions'
       model_example: 'mistral-tiny'
       min_version: '3.6'
     embeddings:
       supported: true
       streaming: false
-      upstream_path: 'User-defined'
+      upstream_path: '/v1/embeddings or user-defined'
       route_type: 'llm/v1/embeddings'
       model_example: 'mistral-embed'
       min_version: '3.11'
@@ -427,6 +531,40 @@ providers:
       route_type: 'realtime/v1/realtime'
       model_example: 'gpt-4o'
       min_version: '3.11'
+    video:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: 'Use the LLM <code>image/generations</code> upstream path'
+        route_type: 'video/v1/videos/generations'
+        model_example: 'sora-2'
+        min_version: '3.13'
+  
+  - name: 'xAI'
+    url_pattern: 'https://api.x.ai/{route_type_path}'
+    min_version: '3.13'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '/v1/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'grok-4-1-fast-reasoning'
+      min_version: '3.13'
+    responses:
+      supported: true
+      streaming: false
+      upstream_path: '/v1/responses'
+      route_type: 'llm/v1/responses'
+      model_example: 'grok-4-1-fast-reasoning'
+      min_version: '3.13'
+    image:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: '/v1/images/generations'
+        route_type: 'image/v1/images/generations'
+        model_example: 'grok-2-image-1212'
+        min_version: '3.13'
 
 parameters:
   provider: 'config.targets[].model.provider'
