@@ -80,7 +80,7 @@ prereqs:
 
 tldr:
     q: How do I send {{site.base_gateway}} traces to Jaeger?
-    a: You can use the OpenTelemetry plugin with Jaeger to send analytics and monitoring data to Jaeger dashboards. Set `KONG_TRACING_INSTRUMENTATIONS=all` and `KONG_TRACING_SAMPLING_RATE=1.0`. Enable the OTEL plugin with your Jaeger tracing endpoint, and specify the name you want to track the traces by in `resource_attributes.service.name`.
+    a: You can use the OpenTelemetry plugin with Jaeger to send [Gen AI analytics](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) and monitoring data to Jaeger dashboards. Set `KONG_TRACING_INSTRUMENTATIONS=all` and `KONG_TRACING_SAMPLING_RATE=1.0`. Enable the OTEL plugin with your Jaeger tracing endpoint, and specify the name you want to track the traces by in `resource_attributes.service.name`.
 
 tools:
     - deck
