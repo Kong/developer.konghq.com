@@ -15,7 +15,7 @@ tags:
     - kafka
     - troubleshooting
 
-description: ""
+description: "Export metrics and traces from {{site.event_gateway}} into your own observability systems using OpenTelemetry (OTEL)."
 
 tldr: 
   q: How do I set see metrics and traces for {{site.event_gateway}}?
@@ -26,9 +26,9 @@ tldr:
 tools:
     - konnect-api
 
-# faqs:
-#   - q: What metrics are available for {{site.event_gateway}}?
-#     a: You can find the list of metrics somewhere
+faqs:
+  - q: What metrics are available for {{site.event_gateway}}?
+    a: You can find the list of all available metrics in the [metrics reference](/event-gateway/metrics/).
   
 prereqs:
   skip_product: true
@@ -42,14 +42,11 @@ prereqs:
       position: before
       include_content: knep/docker-compose-start
 
-    - title: Create an {{site.event_gateway_short}} control plane
-      include_content: knep/docker-compose-start
-
 related_resources:
   - text: "{{site.event_gateway_short}} Control Plane API"
     url: /api/konnect/event-gateway/
-  - text: Event Gateway
-    url: /event-gateway/
+  - text: Event Gateway metrics reference
+    url: /event-gateway/metrics/
 
 ---
 
@@ -97,37 +94,23 @@ In this setup:
   * The Prometheus receiver ingests the Prometheus-compatible metrics directly from {{site.event_gateway_short}}.
 1. We export the data to our Prometheus instance using the OTLP/HTTP exporter, which sends metrics directly to Prometheus’ OTLP endpoint.
 
+## Create an {{site.event_gateway_short}} control plane and data plane
 
-## Create an {{site.event_gateway_short}} data plane
-
-First, let's launch an {{site.event_gateway_short}} data plane. 
-Make sure that you already have an Event Gateway control plane; 
-this example uses a control plane that we created in the [prerequisites](#prerequisites).
-
-<!-- What's the best way to do this? We need to do add some config parameters here, but I don't know how to set those with the quickstart -->
-
-Run the quickstart script to automatically provision a demo Kong Gateway control plane and data plane, and configure your environment:
+Run the quickstart script to automatically provision a demo {{site.event_gateway_short}} control plane and data plane, and configure your environment for sending metrics and traces:
 
 ```sh
 curl -Ls https://get.konghq.com/event-gateway | bash -s -- \
   -k $KONNECT_TOKEN \
   -N kafka_event_gateway \
   -e "KEG__OBSERVABILITY__OTLP__TRACING__ENABLED=true" \
+  -e "KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT=0.0.0.0:8080" \
   -e "OTEL_EXPORTER_OTLP_PROTOCOL=grpc" \
   -e "OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317" \
   -e "OTEL_EXPORTER_OTLP_TIMEOUT=10s" \
-  -e "OTEL_SERVICE_NAME=keg" \
-  -p 8080:8080 \
-  -p 19092-19095:19092-19095
+  -e "OTEL_SERVICE_NAME=eventgw"
 ```
-This sets up an Kong Gateway control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
 
-```
-export EVENT_GATEWAY_ID=your-gateway-id
-```
-Copy and paste this into your terminal to configure your session.
-
-As part of this launch, you also configured the following custom telemetry settings:
+Where you configure the following custom telemetry settings:
 
 {% table %}
 columns:
@@ -162,14 +145,28 @@ rows:
     desc: Max waiting time for the backend to process each metrics batch. We're not adjusting this for the tutorial, but you can adjust as needed for troubleshooting.
   - param: "`OTEL_SERVICE_NAME`"
     default: none
-    new: "`keg`"
-    desc: Name of the OTEL service identified in the observability tools. For example, metrics in Prometheus will be prefixed with `kong_keg_*`.
+    new: "`eventgw`"
+    desc: Name of the OTEL service identified in the observability tools. For example, metrics in Prometheus will be prefixed with `kong_eventgw_*`.
 {% endtable %}
 
+This sets up an {{site.event_gateway_short}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
+
+```
+export EVENT_GATEWAY_ID=your-gateway-id
+```
+
+Copy and paste this into your terminal to configure your session.
+
+{% include_cached /knep/quickstart-note.md %}
 
 ## Configure the OTEL collector and Prometheus
 
-Next, create two configuration files: one for the OTEL collector, and one for Prometheus.
+Next, we need to create two configuration files: one for the OTEL collector, and one for Prometheus.
+
+Open a new terminal window and create a directory for the configuration:
+```sh
+mkdir otel && cd otel
+```
 
 Create an OTEL collector configuration file:
 
@@ -243,34 +240,35 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-
 ## Launch OTEL collector stack
 
-Launch the OTEL stack, making sure that it communicates on the same network as your Kafka cluster and your {{site.event_gateway_short}} data plane:
+Now, let's run the OTEL collector stack with Jaeger and Prometheus.
 
+Run the following command to save a Docker compose file, making sure that it communicates on the same network as your Kafka cluster and your {{site.event_gateway_short}} data plane:
 ```yaml
 cat <<EOF > docker-compose.yaml
 
 name: otel-stack
 networks:
-  keg:
+  kafka_event_gateway:
     external: true
 
 services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     networks:
-      - keg
+      - kafka_event_gateway
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
-      - "4317:4317"     # OTLP gRPC receiver
-
+      - "4317:4317"  # OTLP gRPC receiver
+      - "18639:9090" # Use this for testing the scraping endpoint
+  
   jaeger:
     image: jaegertracing/all-in-one:latest
     networks:
-      - keg
+      - kafka_event_gateway
     ports:
       - "6831:6831/udp" # UDP port for Jaeger agent
       - "16686:16686"   # Web UI
@@ -279,7 +277,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     networks:
-      - keg
+      - kafka_event_gateway
     command:
       - '--config.file=/etc/prometheus/prometheus.yaml'
       - '--storage.tsdb.path=/prometheus'
@@ -291,6 +289,7 @@ services:
 EOF
 ```
 
+Launch the OTEL stack:
 ```sh
 docker compose up -d
 ```
@@ -323,4 +322,50 @@ render_output: false
 
 * backend cluster, listener, virtual cluster - can we shortcut this somehow?
 
-## Validate
+## Validate the cluster
+
+Create a topic using the `direct` context, which is a direct connection to our Kafka cluster:
+
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
+expected:
+  message: "topic created: my-test-topic"
+  return_code: 0
+render_output: false
+{% endvalidation %}
+
+Then produce a message through the virtual cluster:
+
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
+expected:
+  message: "message produced (partition=0	offset=1)"
+  return_code: 0
+render_output: false
+{% endvalidation %}
+
+You should see the following responses:
+```shell
+topic created: my-test-topic
+message produced (partition=0	offset=0)
+```
+{:.no-copy-code}
+
+## View metrics in Prometheus
+
+Now that we’ve configured the OTEL collector to scrape the metrics endpoint and send them to Prometheus, let’s look at what data is available in Prometheus. 
+If we go to the query tab, we will see the metrics populated:
+
+1. In your browser, open the Prometheus dashboard at `http://localhost:9090/`. 
+1. Search for `kong` to see the list of available metrics.
+1. Let's look at a sample metric: `kong_keg_kafka_backend_roundtrip_duration_seconds`. 
+This tells you how it takes for the {{site.event_gateway_short}} to reach the backend cluster.
+
+## View traces in Jaeger
+
+Let's go to Jaeger to see we can see the full trace generated by {{site.event_gateway_short}}.
+
+1. In your browser, open the Jaeger search dashboard at `http://localhost:16686/search`.
+1. Search for `eventgw`.
