@@ -54,6 +54,8 @@ related_resources:
     url: /mcp/autogenerate-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
     url: /mcp/weather-mcp-api/
+  - text: Control MCP tool access with Consumer and Consumer Group ACLs
+    url: /mcp/use-access-controls-for-mcp-tools/
 
 examples_groups:
   - slug: basic
@@ -78,6 +80,8 @@ next_steps:
     url: /mcp/autogenerate-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
     url: /mcp/autogenerate-mcp-tools-for-weather-api/
+  - text: Control MCP tool access with Consumer and Consumer Group ACLs
+    url: /mcp/use-access-controls-for-mcp-tools/
 ---
 The AI MCP Proxy plugin lets you connect any Kong-managed Service to the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can either call existing APIs or interact with upstream MCP servers through Kong.
 
@@ -160,7 +164,7 @@ sequenceDiagram
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
-> - An MCP-compatible client (such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
+> - An MCP-compatible client (such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/) is available to connect to Kong.
 > - The Kong AI Gateway instance supports the AI MCP Proxy plugin (is 3.12 or higher).
 
 ## Configuration modes
@@ -250,29 +254,27 @@ The plugin evaluates access using a two-tier system:
 <!-- vale off -->
 {% table %}
 columns:
-  - title: ACL Type
-    key: type
-  - title: Configuration Field
+  - title: ACL type
     key: field
   - title: Description
     key: description
 rows:
-  - type: Default ACL
-    field: "`default_acl`"
+  - field: |
+      [`default_acl`](./reference/#schema--config-default-acl)
     description: |
       Baseline rules that apply to all tools unless overridden.
-  - type: Per-tool ACL
-    field: "`tools[].acl`"
+  - field: |
+      [`tools[].acl`](./reference/#schema--config-tools-acl)
     description: |
       When configured, these rules replace the default ACL for that specific tool. The per-tool ACL doesn't inherit or merge with `default_acl`—it is an all-or-nothing override.
 {% endtable %}
 <!-- vale on -->
 
 {:.info}
-> If a tool defines its own `acl`, the plugin ignores `default_acl` for that tool:
+> If a tool defines its own ACL, the plugin ignores `default_acl` for that tool:
 >
-> - Tools with no `acl` configuration inherit the default rules (both `allow` and `deny` lists)
-> - Tools with an `acl` must explicitly list all allowed subjects (even if they were already in `default_acl`)
+> - Tools with no ACL configuration inherit the default rules (both `allow` and `deny` lists)
+> - Tools with an ACL must explicitly list all allowed subjects (even if they were already in `default_acl`)
 
 ### ACL evaluation logic
 
