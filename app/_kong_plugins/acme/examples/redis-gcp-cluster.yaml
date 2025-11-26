@@ -1,0 +1,54 @@
+title: ACME with Redis storage and Google Cloud Memorystore instance auth
+description: |
+  Configure the ACME plugin with Redis as a storage backend using Google Cloud Memorystore instance auth
+
+weight: 860
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+- A running Redis instance on an [Google Cloud Memorystore instance](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
+
+config:
+  account_email: ${email}
+  account_key:
+    key_id: ${key_id}
+    key_set: ${key_set}
+  domains:
+    - ${domain}
+  tos_accepted: true
+  storage: redis
+  storage_config:
+    redis:
+      cluster_nodes: ${cluster_address}
+      port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: ${service_account}
+
+variables:
+  email:
+    value: $EMAIL
+    description: The account identifier.
+  key_id:
+    value: $KEY_ID
+    description: The kid of a [Key](/gateway/entities/key/).
+  key_set:
+    value: $KEY_SET
+    description: The name of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
+  domain:
+    value: $DOMAIN
+    description: An array of strings representing hosts.
+  cluster_address:
+    value: $CLUSTER_ADDRESS
+    description: The Memorystore cluster address.
+  service_account:
+    value: $GCP_SERVICE_ACCOUNT
+    description: The GCP service account JSON.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
