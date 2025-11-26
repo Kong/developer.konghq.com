@@ -246,3 +246,5 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 ## Vector databases
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+{% include plugins/redis-cloud-auth.md %}
