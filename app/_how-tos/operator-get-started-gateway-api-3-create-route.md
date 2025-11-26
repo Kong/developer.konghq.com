@@ -40,7 +40,6 @@ next_steps:
 In order to route a request using {{ site.base_gateway }} we need a Service running in our cluster. Install an `echo` Service using the following command:
 
 ```bash
-kubectl create ns kong
 kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
 ```
 
@@ -51,7 +50,7 @@ Create an `HTTPRoute` to send any requests that start with `/echo` to the echo S
 ```yaml
 echo '
 kind: HTTPRoute
-apiVersion: gateway.networking.k8s.io/{{ gatewayApiVersion }}
+apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: echo
   namespace: kong
@@ -85,15 +84,13 @@ Run `kubectl get gateway kong -n default` to get the IP address for the gateway 
 export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
 ```
 
-{:.info}
-> Note: if your cluster can not provision LoadBalancer type Services then the IP you receive may only be routable from within the cluster.
-
+Test your Service:
 {% validation request-check %}
 url: /echo
 status_code: 200
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-indent: 4
+display_headers: true
 {% endvalidation %}
 
 You should see the following message:
