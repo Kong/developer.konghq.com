@@ -429,7 +429,6 @@ providers:
       min_version: '3.11'
 
   - name: 'xAI'
-    formats: ''
     url_pattern: 'https://api.x.ai:443/{route_type_path}'
     min_version: '3.13'
     chat:
