@@ -17,3 +17,4 @@
 [dev]
   autoLaunch = false
   targetPort = 4000
+  timeout = 30
