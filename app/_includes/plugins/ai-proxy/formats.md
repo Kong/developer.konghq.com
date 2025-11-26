@@ -107,7 +107,7 @@ rows:
       - `/v1beta/models/{model_name}:embedContent`
       - `/v1beta/models/{model_name}:batchEmbedContent`
       - `/v1beta/batches`
-      - `/upload/{file_id}/files
+      - `/upload/{file_id}/files`
       - `/v1beta/files`
   - llm_format: "[`gemini`](./examples/gemini-native-routes/)"
     provider: Vertex
