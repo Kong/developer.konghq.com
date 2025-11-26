@@ -5,52 +5,36 @@ name: 'ACE'
 content_type: plugin
 
 publisher: kong-inc
-description: 'placeholder'
-
+description: 'The ACE plugin manages developer access control to APIs published with Dev Portal.'
 
 products:
-    - gateway
+  - gateway
 
 works_on:
-    - konnect
+  - konnect
 
 min_version:
    gateway: '3.13'
 
-# topologies:
-#   on_prem:
-#     - hybrid
-#     - db-less
-#     - traditional
-#   konnect_deployments:
-#     - hybrid
-#     - cloud-gateways
-#     - serverless
+topologies:
+  on_prem:
+    - hybrid
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
-# tags:
-#   - traffic-control
+tags:
+  - traffic-control
 
-# search_aliases:
-#   - plugin-name-in-code eg rate-limiting-advanced
-#   - common aliases, eg OIDC or RLA
-#   - related terms, eg LLM for AI plugins
-  
-######## third-party plugin params, not needed for kong bundled plugins
-# third_party: true
-# source_code_url: ''
-# support_url: ''
-########
+icon: ace.png 
 
-# premium_partner: true # can be a kong plugin or a third-party plugin
+categories:
+  - traffic-control
 
-icon: ace.png # e.g. acme.svg or acme.png
-
-# categories:
-#    - traffic-control
-
-# related_resources:
-#   - text: How-to guide for the plugin
-#     url: /how-to/guide/
+related_resources:
+  - text: Dev Portal API packaging
+    url: /dev-portal/api-catalog-and-packaging/
 ---
 
 The ACE plugin manages developer access control to APIs published with Dev Portal.

@@ -1,0 +1,26 @@
+description: 'The ACE plugin skips processing entirely.'
+
+title: 'Skip processing'
+
+weight: 900
+
+requirements: 
+- "An API or API package in Dev Portal"
+
+config: 
+  match_policy: ignored
+  redis: 
+    host: localhost
+    port: 6379
+  sync_rate: 1
+  anonymous: anonymous
+
+min_version:
+  gateway: '3.13'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
