@@ -116,5 +116,5 @@ kubectl get konnectapiauthconfiguration konnect-api-auth -n kong -o jsonpath="{.
 Which should yield the follow
 
 ```json
-{"lastTransitionTime":"2025-10-16T11:46:28Z","message":"Token is valid","observedGeneration":1,"reason":"Valid","status":"True","type":"APIAuthValid"}%
+{"lastTransitionTime":"2025-10-16T11:46:28Z","message":"Token is valid","observedGeneration":1,"reason":"Valid","status":"True","type":"APIAuthValid"}
 ```
