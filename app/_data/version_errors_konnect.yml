@@ -3348,6 +3348,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |    
+    
   - ID: E999
     Severity: error
     Description: |
