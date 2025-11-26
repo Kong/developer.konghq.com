@@ -1,0 +1,30 @@
+description: 'Configure the AI Lakera Guard plugin to inspect reponses'
+
+# extended_description: '' # Displays on the page; can use any markdown formatting
+
+title: 'Inspect requests only with ai-lakera-guard to inspect responses'
+
+weight: 900
+
+requirements: 
+  - You have a Lakera account and an API key.
+
+variables:
+  lakera_api_key:
+    description: 'The API key for your Lakera account.'
+    value: LAKERA_API_KEY
+
+config:
+  api_key:  "${lakera_api_key}"
+  guarding_mode: "INPUT"
+
+
+min_version:
+  gateway: '3.12'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -34,18 +34,13 @@ tags:
   - ai
 
 search_aliases:
-  - plugin-name-in-code eg rate-limiting-advanced
-  - common aliases, eg OIDC or RLA
-  - related terms, eg LLM for AI plugins
-
-premium_partner: true # can be a kong plugin or a third-party plugin
+  - ai-lakera-guard
 
 icon: ai-lakera.png
 
 categories:
-   - traffic-control
+   - ai
 
-related_resources:
-  - text: How-to guide for the plugin
-    url: /how-to/guide/
 ---
+
+Hi Fabian
