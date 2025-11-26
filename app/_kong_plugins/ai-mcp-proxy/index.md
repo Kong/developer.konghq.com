@@ -58,6 +58,8 @@ related_resources:
 examples_groups:
   - slug: basic
     text: Basic use cases
+  - slug: mcp-acls
+    text: MCP ACLs
 
 search_aliases:
   - ai
@@ -219,6 +221,16 @@ rows:
 When exposing MCP servers through {{site.base_gateway}}, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The AI MCP Proxy plugin's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions)
 
 This way consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/) or OIDC flows), and the resulting Consumer identity is used for ACL checks.
+
+{:.info}
+> **ACL in `listener` Mode**
+>
+> Listener mode does not support direct ACL configuration. Instead, it inherits ACL rules from tagged conversion-listener or conversion-only plugins.
+>
+> To use ACLs with [`listener`](https://developer.konghq.com/gateway/entities/partial/) mode:
+> 1. Configure conversion-listener or conversion-only plugins with ACL rules and tags
+> 2. Configure listener mode to aggregate tools by matching tags
+> 3. Listener mode enforces ACL rules from the conversion plugins.
 
 ### Supported identifier types
 
