@@ -54,7 +54,7 @@ First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gate
 kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/v2beta1
 metadata:
-  name: gateway-configuration
+  name: kong-configuration
   namespace: kong
 spec:
   konnect:
@@ -95,8 +95,8 @@ spec:
 
 Next configure respective `GatewayClass` to use the above `GatewayConfiguration`.
 
-```yaml
-kind: GatewayClass
+```bash
+echo 'kind: GatewayClass
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: kong
@@ -107,13 +107,15 @@ spec:
     kind: GatewayConfiguration
     name: kong-configuration
     namespace: kong
+' | kubectl apply -f -
 ```
 
 ## Create a `Gateway` Resource
 
 Finally, create a `Gateway` resource that references the `GatewayClass` we just created:
 
-```yaml
+```bash
+echo '
 kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
@@ -125,6 +127,7 @@ spec:
   - name: http
     protocol: HTTP
     port: 80
+' | kubectl apply -f -
 ```
 
 {{site.operator_product_name}} automatically creates the `DataPlane` and `KonnectGatewayControlPlane` resources.
