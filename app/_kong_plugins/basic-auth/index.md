@@ -94,3 +94,5 @@ rows:
     description: "If you want users to authenticate before logging in to Kong Manager, you can configure basic authentication for the GUI."
 {% endtable %}
 <!--vale on-->
+
+{% include plugins/redis-cloud-auth.md %}
