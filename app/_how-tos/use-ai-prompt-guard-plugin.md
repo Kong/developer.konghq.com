@@ -129,8 +129,7 @@ This prompt matches `allow_patterns` and should succeed:
 url: /anything
 method: POST
 headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Content-Type:application/json'
 body:
   messages:
     - role: user
@@ -148,8 +147,7 @@ This prompt matches `deny_patterns` and should return an error:
 url: /anything
 method: POST
 headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Content-Type:application/json'
 body:
   messages:
     - role: user
@@ -168,8 +166,7 @@ This prompt isn't related to work and should also be blocked:
 url: /anything
 method: POST
 headers:
-  - 'Content-Type: application/json'
-  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  - 'Content-Type:application/json'
 body:
   messages:
     - role: user
