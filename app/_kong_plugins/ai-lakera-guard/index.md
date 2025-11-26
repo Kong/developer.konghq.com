@@ -11,13 +11,14 @@ category: AI
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
     - konnect
 
 min_version:
-    gateway: '3.4'
+    gateway: '3.13'
 
 topologies:
   on_prem:
@@ -30,7 +31,7 @@ topologies:
     - serverless
 
 tags:
-  - traffic-control
+  - ai
 
 search_aliases:
   - plugin-name-in-code eg rate-limiting-advanced
