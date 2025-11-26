@@ -1,5 +1,5 @@
 ---
-title: Set up Jaeger with OpenTelemetry
+title: Set up Jaeger with Gen AI OpenTelemetry
 content_type: how_to
 related_resources:
   - text: Set up Dynatrace with OpenTelemetry
@@ -10,6 +10,7 @@ description: Use the OpenTelemetry plugin to send {{site.base_gateway}} analytic
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -20,6 +21,7 @@ min_version:
 
 plugins:
   - opentelemetry
+  - ai-proxy
 
 entities:
   - service

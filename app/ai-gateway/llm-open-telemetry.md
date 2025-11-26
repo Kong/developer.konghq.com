@@ -34,7 +34,7 @@ related_resources:
     url: /plugins/opentelemetry/
   - text: Zipkin plugin
     url: /plugins/zipkin/
-  - text: {{site.base_gateway}} tracing guide
+  - text: "{{site.base_gateway}} tracing guide"
     url: /gateway/tracing/
   - text: Set up Jaeger with Gen AI OpenTelemetry
     url: /how-to/set-up-jaeger-with-gen-ai-otel/
