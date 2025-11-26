@@ -102,16 +102,35 @@ rows:
   - llm_format: "[`gemini`](./examples/gemini-native-routes/)"
     provider: Gemini
     apis: |
-      - `/generateContent`
-      - `/streamGenerateContent`
+      - `/v1beta/models/{model_name}:generateContent`
+      - `/v1beta/models/{model_name}:streamGenerateContent`
+      - `/v1beta/models/{model_name}:embedContent`
+      - `/v1beta/models/{model_name}:batchEmbedContent`
+      - `/v1beta/batches`
+      - `/upload/{file_id}/files
+      - `/v1beta/files`
+  - llm_format: "[`gemini`](./examples/gemini-native-routes/)"
+    provider: Vertex
+    apis: |
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:generateContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:streamGenerateContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:embedContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:batchEmbedContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:predictLongRunning`
+      - `/v1/projects/{project_id}/locations/{location}/rankingConfigs/{config_name}:rank`
+      - `/v1/projects/{project_id}/locations/{location}/batchPredictionJobs`
   - llm_format: "[`bedrock`](./examples/bedrock-native-routes/)"
     provider: Bedrock
     apis: |
-      - `/converse`
-      - `/converse-stream`
-      - `/retrieveAndGenerate`
-      - `/retrieveAndGenerateStream`
-      - `/rerank`
+      - `/model/{model_name}/converse`
+      - `/model/{model_name}/converse-stream`
+      - `/model/{model_name}/invoke`
+      - `/model/{model_name}/invoke-with-response-stream`
+      - `/model/{model_name}/retrieveAndGenerate`
+      - `/model/{model_name}/retrieveAndGenerateStream`
+      - `/model/{model_name}/rerank`
+      - `/model/{model_name}/async-invoke`
+      - `/model-invocations`
   - llm_format: "[`cohere`](./examples/cohere-native-routes/)"
     provider: Cohere
     apis: |
