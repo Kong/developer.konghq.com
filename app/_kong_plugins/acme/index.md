@@ -221,3 +221,6 @@ You can see what certificates {{site.base_gateway}} is currently is aware of usi
 The ACME plugin supports external account binding (EAB) with the [`config.eab_kid`](/plugins/acme/reference/#schema--config-eab-kid) and [`config.eab_hmac_key`](/plugins/acme/reference/#schema--config-eab-hmac-key) values.
 
 If you're using [ZeroSSL](https://zerossl.com/), the provider's external account can be registered automatically, without specifying the KID or HMAC key.
+
+
+{% include plugins/redis-cloud-auth.md %}

@@ -174,3 +174,5 @@ The plugin respects cache control headers to determine if requests and responses
 
 {:.info}
 > As most AI services always send `no-cache` in the response headers, setting `cache_control` to `true` will always result in a cache bypass. Only consider setting `no-cache` if you are using self-hosted services and have control over the response Cache Control headers.
+
+{% include plugins/redis-cloud-auth.md %}
