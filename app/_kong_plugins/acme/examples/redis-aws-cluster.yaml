@@ -51,7 +51,7 @@ variables:
     value: $CLUSTER_USERNAME
     description: The ElastiCache cluster username.
   aws_cache:
-    vale: $AWS_CACHE_NAME
+    value: $AWS_CACHE_NAME
     description: Name of your AWS ElastiCache instance.
   aws_region:
     value: $AWS_REGION 
