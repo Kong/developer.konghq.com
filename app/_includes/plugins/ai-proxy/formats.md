@@ -152,7 +152,7 @@ The following sections detail the provider and statistic logging limitations.
 
 * **Anthropic**: Does not support `llm/v1/completions` or `llm/v1/embeddings`.
 * **Llama2**: Raw format lacks support for `llm/v1/embeddings`.
-* **Bedrock** and **Gemini**: Only support `auth.allow_override = false`.
+* **Gemini**: Only support `auth.allow_override = false`.
 
 #### Statistics logging limitations
 
