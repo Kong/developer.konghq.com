@@ -1,6 +1,6 @@
 
 title: 'Chat route with DashScope'
-description: 'Configure a chat route using the OpenAI GPT-4 model.'
+description: "Configure a chat route using Alibaba Cloud's DashScope Qwen Plus model."
 
 weight: 900
 
