@@ -3267,9 +3267,9 @@ messages:
       support these fields. Plugin features that rely on these fields are not working
       as intended.
     Resolution: |
-      Please set the "enforce_latest_offset_reset" field to false.
+      Please set the `enforce_latest_offset_reset` field to false.
     DocumentationURL: |
-      
+
   - ID: D443
     Severity: error
     Description: |
@@ -3278,9 +3278,9 @@ messages:
       not support these fields. Plugin features that rely on these fields are not
       working as intended.
     Resolution: |
-      Please set the "enforce_latest_offset_reset" field to false.
+      Please set the `enforce_latest_offset_reset` field to false.
     DocumentationURL: |
-      
+
   - ID: D444
     Severity: error
     Description: |
@@ -3290,9 +3290,9 @@ messages:
       3.11.0.5, or >= 3.12.0.0 and < 3.12.0.1. The field has been removed in the data
       plane node.
     Resolution: |
-      Please set the "decrease_by_fractions_in_redis" field to false.
+      Please set the `decrease_by_fractions_in_redis` field to false.
     DocumentationURL: |
-      
+
   - ID: D447
     Severity: error
     Description: |
@@ -6077,11 +6077,11 @@ messages:
       `3.7.1.5` or above for the 3.7.x series, 3.8.1.1 or above for the 3.8.x series,
       3.9.1.0 or above for the 3.9.x series or newer than `3.10.0.0`.
     DocumentationURL: |
-      
+
   - ID: P999
     Severity: warning
     Description: |
-      For one or more of the following plugins `acme`, rate-limiting`, and
+      For one or more of the following plugins `acme`, `rate-limiting`, and
       `response-ratelimiting`, instance(s) have been configured with both redis-ce
       partial(s) and old redis fields. These two sets of redis fields have conflicting
       values. The old redis fields have been updated with values from the partials in
