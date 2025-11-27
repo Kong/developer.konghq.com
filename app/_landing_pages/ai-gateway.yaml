@@ -556,7 +556,7 @@ rows:
         - type: card
           config:
             title: Save LLM usage costs with semantic load balancing
-            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on [semantic similarity](/ai-gateway/semantic-similarity/).
+            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
             icon: /assets/icons/money.svg
             cta:
               url: /how-to/use-semantic-load-balancing
