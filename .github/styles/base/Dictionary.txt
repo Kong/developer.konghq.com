@@ -57,6 +57,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avro
 aws
 AZs
 backfilled
@@ -96,6 +97,8 @@ callees
 CAs
 callout
 callouts
+camelCase
+cef
 certificate_admin
 charset
 chatbot
@@ -103,6 +106,7 @@ chatbots
 cidr
 cidrs
 cleartext
+client_credentials
 client_payload
 client_status
 clipanion
@@ -231,6 +235,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+example_service
 exfiltrate
 failover
 fapi
@@ -252,6 +257,7 @@ full_name
 Gateway
 GatewayClass
 gatewayclass
+gateway_entity
 gcloud
 gcp
 geo
@@ -357,6 +363,7 @@ io
 ip
 ips
 iptables
+IPinfo
 Istio
 Istio
 Istio's
@@ -388,11 +395,13 @@ jwt
 jwts
 kafka
 kafkactl
+KAi
 kbps
 kds
 keepalive
 keps
 ketama
+key_sources
 Keycloak
 Keycloak
 keyless
@@ -509,12 +518,15 @@ misconfiguration
 misconfigurations
 misconfigured
 Mockbin
+modelarmor
 Moesif
 Moesif
 moesif
 MongoDB
 MongoDB
 multimodal
+multitenant
+multitenancy
 mutex
 nameserver
 nameservers
@@ -649,6 +661,8 @@ readme
 readonly
 real_ip_header
 real_ip_recursive
+rebalance
+render_output
 Realtime
 realtime
 reconverge
@@ -679,6 +693,7 @@ resourceVersion
 Resty
 Resty
 resty
+Resync
 retryOn
 reusability
 rockspec
@@ -744,6 +759,7 @@ status_code
 stderr
 stdin
 stdout
+Streamable
 stream_listen
 stringified
 Styra
@@ -811,6 +827,7 @@ tlds
 tls
 TLSRoute
 TLSRoutes
+tokenization
 toolchain
 tooltip
 tproxy
@@ -855,6 +872,7 @@ Unicode
 unix
 unmanaged
 unmarshalled
+unnamespaced
 unnormalized
 unpackage
 unparsed
@@ -904,6 +922,7 @@ Valero
 validator
 validators
 vararg
+vc
 viewport
 viewports
 vms

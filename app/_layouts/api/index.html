@@ -65,17 +65,6 @@ layout: default
         </div>
     </div>
 
-    <div class="flex flex-col gap-3">
-        <h2>{{ site.event_gateway }} (Beta)</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {% assign event_gateway_api_specs = api_pages | where_exp: "api_page", "api_page.namespace == 'event-gateway'" %}
-        {% for api_page in event_gateway_api_specs %}
-            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=api_page.title version=api_page.version description=api_page.description spec_url=api_page.url insomnia_link=api_page.insomnia_link %}
-        {% endfor %}
-        </div>
-    </div>
-
     {% assign deprecated_api_specs = site.data.ssg_api_pages | where_exp: "api_page", "api_page.api_spec.deprecated? == true" %}
     {% if deprecated_api_specs != empty %}
         <div class="flex flex-col gap-3">

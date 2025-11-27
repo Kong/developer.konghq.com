@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -88,7 +90,7 @@ paths:
           example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     get:
       operationId: get-control-plane
-      summary: Fetch Control Plane
+      summary: Get a Control Plane
       description: Returns information about an individual control plane.
       responses:
         '200':
@@ -285,7 +287,7 @@ paths:
           type: string
     get:
       operationId: get-control-planes-id-group-member-status
-      summary: Control Plane Group Member Status
+      summary: Get Control Plane Group Member Status
       description: Determines the group membership status of a control plane.
       responses:
         '200':
@@ -723,78 +725,68 @@ components:
       type: object
       properties:
         id:
-          oneOf:
-            - $ref: '#/components/schemas/StringFieldEqualsFilter'
-            - $ref: '#/components/schemas/StringFieldOEQFilter'
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+          x-examples:
+            example-1:
+              oeq: 'some-value,some-other-value'
+            example-2:
+              eq: some-value
         name:
-          oneOf:
-            - $ref: '#/components/schemas/StringFieldEqualsFilter'
-            - $ref: '#/components/schemas/StringFieldContainsFilter'
-            - $ref: '#/components/schemas/StringFieldNEQFilter'
+          description: 'Filter using **one** of the following operators: `eq`, `neq`, `contains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              neq: not-this-value
+            example-2:
+              eq: some-value
         cluster_type:
-          oneOf:
-            - $ref: '#/components/schemas/StringFieldEqualsFilter'
-            - $ref: '#/components/schemas/StringFieldNEQFilter'
+          description: 'Filter using **one** of the following operators: `eq`, `neq`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              neq: not-this-value
+            example-2:
+              eq: some-value
         cloud_gateway:
           $ref: '#/components/schemas/BooleanFieldFilter'
       additionalProperties: false
       title: ControlPlaneFilterParameters
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        oeq:
-          type: string
-      additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
-      x-examples:
-        example-1:
-          oeq: 'some-value,some-other-value'
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
-          type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
-          neq: not-this-value
     BooleanFieldFilter:
       description: Filter by a boolean value (true/false).
       type: boolean
@@ -903,6 +895,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

@@ -1,0 +1,145 @@
+---
+title: Event Gateway Policies
+layout: default
+hub: true
+no_edit_link: true
+products:
+  - event-gateway
+breadcrumbs:
+  - /event-gateway/
+
+works_on:
+  - konnect
+tags:
+  - kafka
+  - events
+description: An overview of policies that work with {{site.event_gateway_short}}.
+---
+
+<div class="flex flex-col gap-12 w-full">
+  <div class="flex justify-between gap-[60px]">
+    <div class="flex flex-col gap-6 py-24 self-center">
+      <div class="flex flex-col gap-2">
+        <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Event Gateway Policies Hub</h1>
+        <span class="leading-7">
+          Policies control how Kafka protocol traffic is modified between the client and the backend cluster.
+          They can be used to do things like enforcing encryption strategies, validating schemas, modifying message headers, and more.
+        </span>
+        {% for index in page.all_docs_indices %}
+          {% include_cached index_link.html index=index %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="hidden lg:flex pt-9 pr-9 ">
+      <svg class="hidden dark:inline" width="268" height="302" viewBox="0 0 268 302" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M234.5 150.25L234 150.25L234 150.75L234 183.75L168 183.75L168 150.75L168 150.25L167.5 150.25C158.421 150.25 150.662 147.023 144.194 140.556C137.727 134.088 134.5 126.329 134.5 117.25L134.5 67.4998L267.5 67.4998L267.5 117.25C267.5 126.329 264.273 134.088 257.806 140.556C251.338 147.023 243.579 150.25 234.5 150.25ZM151.25 49.7498L151.25 16.7498C151.25 12.1299 152.807 8.28103 155.919 5.16903C159.031 2.057 162.88 0.49984 167.5 0.49984C172.12 0.49984 175.969 2.057 179.081 5.16903C182.193 8.28103 183.75 12.1299 183.75 16.7498L183.75 49.7498L151.25 49.7498ZM218.25 49.7498L218.25 16.7498C218.25 12.1299 219.807 8.28103 222.919 5.16903C226.031 2.057 229.88 0.499837 234.5 0.499837C239.12 0.499837 242.969 2.057 246.081 5.16903C249.193 8.28103 250.75 12.1299 250.75 16.7498L250.75 49.7498L218.25 49.7498ZM217.25 234.5C217.25 252.791 210.743 268.437 197.715 281.465C184.687 294.493 169.041 301 150.75 301C132.459 301 116.813 294.493 103.785 281.465C90.757 268.437 84.25 252.791 84.25 234.5L84.25 209.375C84.25 202.265 81.7557 196.205 76.7754 191.224C71.7952 186.244 65.7353 183.75 58.625 183.75C51.5147 183.75 45.4548 186.244 40.4746 191.224C35.4943 196.205 33 202.265 33 209.375L33 268C33 272.62 31.4428 276.469 28.3308 279.581C25.2188 282.693 21.3699 284.25 16.75 284.25C12.1301 284.25 8.2812 282.693 5.16918 279.581C2.05716 276.469 0.499999 272.62 0.499999 268L0.499996 209.375C0.499995 193.316 6.17026 179.624 17.5223 168.272C28.8743 156.92 42.5659 151.25 58.625 151.25C74.6841 151.25 88.3757 156.92 99.7277 168.272C111.08 179.624 116.75 193.316 116.75 209.375L116.75 234.5C116.75 243.846 120.084 251.859 126.737 258.513C133.391 265.166 141.404 268.5 150.75 268.5C160.096 268.5 168.109 265.166 174.763 258.513C181.416 251.859 184.75 243.846 184.75 234.5L184.75 201.5L217.25 201.5L217.25 234.5Z"
+          fill="url(#paint0_linear_8041_13660)" stroke="url(#paint1_linear_8041_13660)" />
+        <defs>
+          <linearGradient id="paint0_linear_8041_13660" x1="146.5" y1="-0.250128" x2="146.5" y2="283.5"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0.015" stop-color="#0C3867" />
+            <stop offset="0.25" stop-color="#04284F" />
+            <stop offset="1" stop-color="#021428" />
+          </linearGradient>
+          <linearGradient id="paint1_linear_8041_13660" x1="158.5" y1="-0.250117" x2="158.5" y2="254"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#428CDC" stop-opacity="0.5" />
+            <stop offset="1" stop-color="#428CDC" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <svg class="inline dark:hidden" width="268" height="302" viewBox="0 0 268 302" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M234.5 150.25L234 150.25L234 150.75L234 183.75L168 183.75L168 150.75L168 150.25L167.5 150.25C158.421 150.25 150.662 147.023 144.194 140.556C137.727 134.088 134.5 126.329 134.5 117.25L134.5 67.5L267.5 67.5L267.5 117.25C267.5 126.329 264.273 134.088 257.806 140.556C251.338 147.023 243.579 150.25 234.5 150.25ZM151.25 49.75L151.25 16.75C151.25 12.13 152.807 8.28115 155.919 5.16915C159.031 2.05712 162.88 0.499962 167.5 0.499962C172.12 0.499962 175.969 2.05712 179.081 5.16915C182.193 8.28115 183.75 12.13 183.75 16.75L183.75 49.75L151.25 49.75ZM218.25 49.75L218.25 16.75C218.25 12.13 219.807 8.28115 222.919 5.16915C226.031 2.05712 229.88 0.499959 234.5 0.499959C239.12 0.499959 242.969 2.05712 246.081 5.16915C249.193 8.28115 250.75 12.13 250.75 16.75L250.75 49.75L218.25 49.75ZM217.25 234.5C217.25 252.791 210.743 268.437 197.715 281.465C184.687 294.493 169.041 301 150.75 301C132.459 301 116.813 294.493 103.785 281.465C90.757 268.437 84.25 252.791 84.25 234.5L84.25 209.375C84.25 202.265 81.7557 196.205 76.7754 191.225C71.7952 186.244 65.7353 183.75 58.625 183.75C51.5147 183.75 45.4548 186.244 40.4746 191.225C35.4943 196.205 33 202.265 33 209.375L33 268C33 272.62 31.4428 276.469 28.3308 279.581C25.2188 282.693 21.3699 284.25 16.75 284.25C12.1301 284.25 8.2812 282.693 5.16918 279.581C2.05716 276.469 0.499999 272.62 0.499999 268L0.499996 209.375C0.499995 193.316 6.17026 179.624 17.5223 168.272C28.8743 156.92 42.5659 151.25 58.625 151.25C74.6841 151.25 88.3757 156.92 99.7277 168.272C111.08 179.624 116.75 193.316 116.75 209.375L116.75 234.5C116.75 243.846 120.084 251.859 126.737 258.513C133.391 265.166 141.404 268.5 150.75 268.5C160.096 268.5 168.109 265.166 174.763 258.513C181.416 251.859 184.75 243.846 184.75 234.5L184.75 201.5L217.25 201.5L217.25 234.5Z"
+          fill="url(#paint0_linear_8041_28174)" stroke="url(#paint1_linear_8041_28174)" />
+        <defs>
+          <linearGradient id="paint0_linear_8041_28174" x1="167" y1="0.000148674" x2="167" y2="301"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0.015" stop-color="#D3E8FF" />
+            <stop offset="0.3" stop-color="#EEF6FF" />
+            <stop offset="1" stop-color="#F7FBFF" />
+          </linearGradient>
+          <linearGradient id="paint1_linear_8041_28174" x1="166.5" y1="0.00011014" x2="166.5" y2="296"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#428CDC" stop-opacity="0.5" />
+            <stop offset="1" stop-color="#428CDC" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
+    <div id="filters" class="filters md:flex">
+
+      <div class="mobile-drawer hidden md:flex">
+        <div
+          class="mobile-drawer__panel">
+          <div class="mobile-drawer__content">
+            <div class="flex flex-col gap-8 w-full">
+              <div class="flex flex-col gap-3">
+                <div class="text-sm text-brand font-semibold">Target</div>
+                <div class="flex flex-col gap-3">
+                  {% include checkbox.html value="virtual_cluster" name="policy-target" label="Virtual Cluster" %}
+                  {% include checkbox.html value="listener" name="policy-target" label="Listener" %}
+                </div>
+              </div>
+              <div class="flex flex-col gap-3">
+                <div class="text-sm text-brand font-semibold">Phase</div>
+                <div class="flex flex-col gap-3">
+                  {% include checkbox.html value="produce" name="phase" label="Produce" %}
+                  {% include checkbox.html value="consume" name="phase" label="Consume" %}
+                  {% include checkbox.html value="cluster" name="phase" label="Cluster" %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mobile-drawer__footer">
+            <button class="button button--secondary" id="clear-filters">
+              Clear Filters
+            </button>
+            <button id="see-results" class="button button--primary grow justify-center">
+              See Results
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchbox-results-container">
+      <div class="flex md:flex-col md:col-span-3  w-full justify-between gap-2">
+        <div class="flex flex-col gap-3 w-full">
+          <div class="filter-results-field">
+            <svg class="filter-results-field__image" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))"/>
+            </svg>
+            <input id="plugins-search" name="terms" type="search" class="filter-results-field__input" placeholder="Filter results">
+          </div>
+        </div>
+
+        <div class="flex md:hidden">
+          <button class="button button--secondary button--filters" id="toggle-filters-drawer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))" />
+            </svg>
+            Filters
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:col-span-3 w-full gap-16" id="plugin-cards">
+        <div class="flex flex-col gap-4">
+          <div class="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% assign policies = site.data.event_gateway_policies | where_exp: "policy", "policy.published != false" %}
+            {% for policy in policies %}
+            {% include cards/event_gateway_policy.html policy=policy %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

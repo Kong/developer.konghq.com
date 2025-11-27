@@ -25,7 +25,6 @@ plugins:
 
 tags:
   - traffic-control
-  - route-by-header
 search_aliases:
   - Route by Header plugin
 

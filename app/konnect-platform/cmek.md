@@ -42,6 +42,10 @@ CMEK currently applies to:
 
 * Payloads captured through [the {{site.konnect_short_name}} Debugger](/gateway/debugger/)
 * Request logs stored in Debugger workflows
+* Data stored in [{{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/). 
+   
+   {:.info}
+   > Note: Encryption keys must be uploaded before creating a control plane for the CMEK to encrypt the data stored in {{site.konnect_short_name}} Config Store vault.
 
 ## Configure CMEK
 

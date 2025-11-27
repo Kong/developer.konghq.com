@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -3132,11 +3134,28 @@ components:
         example-1:
           oeq: 'ready,initializing'
     IDFieldFilter:
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-      title: IDFieldFilter
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+      additionalProperties: false
+      x-examples:
+        example-1:
+          neq: not-this-value
+          oeq: 'some-value,some-other-value'
+        example-2:
+          eq: some-value
     ControlPlaneGeoFieldFilter:
       oneOf:
         - $ref: '#/components/schemas/ControlPlaneGeoFieldEqualsFilter'
@@ -3241,23 +3260,6 @@ components:
         - created_at
         - updated_at
       title: Default Resource Configuration
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
     StringFieldNEQFilter:
       description: Filters on the given string field value by exact match inequality.
       type: object
@@ -3377,6 +3379,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -3882,6 +3885,7 @@ components:
           schema:
             oneOf:
               - $ref: '#/components/schemas/AwsResourceEndpointGatewayResponse'
+              - $ref: '#/components/schemas/AwsTransitGatewayResponse'
     ListTransitGatewaysResponse:
       description: A paginated list for a collection of transit gateways for a network.
       content:

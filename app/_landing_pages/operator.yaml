@@ -43,12 +43,12 @@ rows:
         - type: card
           config:
             icon: /assets/icons/kubernetes.svg
-            title: Deploy {{ site.kic_product_name }}
+            title: Deploy self-managed Control Plane
             description: |
-              Deploy and manage {{ site.kic_product_name }} and {{ site.base_gateway }} automatically using Kubernetes
+              Deploy and manage {{ site.base_gateway }}, configure automatically a self-managed Control Plane using Kubernetes
               Gateway API resources such as `Gateway` and `HTTPRoute`
             cta:
-              text: Deploy {{ site.kic_product_name }}
+              text: Deploy self-managed Control Plane
               url: /operator/dataplanes/get-started/kic/install/
 
       - blocks:

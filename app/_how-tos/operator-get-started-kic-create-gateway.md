@@ -1,6 +1,6 @@
 ---
 title: Create a Gateway
-description: "Configure {{ site.operator_product_name }} and {{ site.base_gateway }} using open standards."
+description: "Configure {{ site.operator_product_name }}, self-managed Control Plane, and {{ site.base_gateway }} using open standards."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/create-gateway/
@@ -26,8 +26,8 @@ works_on:
 entities: []
 
 tldr:
-  q: How can I create a Gateway with {{ site.operator_product_name }}?
-  a: Create a `GatewayConfiguration` object, then create `GatewayClass` instance and a `Gateway` resource.
+  q: How can I create a Gateway with {{ site.operator_product_name }} with self-managed Control Plane?
+  a: Create a `GatewayConfiguration` object, then create a `GatewayClass` instance and a `Gateway` resource.
 
 prereqs:
   show_works_on: true
@@ -44,9 +44,9 @@ prereqs:
 
 {% assign gatewayApiVersion = "v1" %}
 
-Creating `GatewayClass` and `Gateway` resources in Kubernetes causes {{ site.operator_product_name }} to create a {{ site.base_gateway }} deployment and an in memory control plane.
+Creating `GatewayClass` and `Gateway` resources in Kubernetes causes {{ site.operator_product_name }} to create a {{ site.base_gateway }} deployment and manage its configuration with a self-managed Control Plane.
 
-You can customize your {{ site.base_gateway }} deployment and the control plane using the `GatewayConfiguration` CRD. This allows you to control the image being used, set any required environment variables or control which controllers are enabled on the control plane.
+You can customize your {{ site.base_gateway }} deployments and the self-managed Control Plane configuration using the `GatewayConfiguration` CRD. This allows you to control the image being used, and set any required environment variables.
 
 {:data-deployment-topology='konnect'}
 ## Create the GatewayConfiguration
@@ -139,7 +139,7 @@ kong   kong    172.18.0.102   True         9m5s
 
 ## Check the Programmed status
 
-If the `Gateway` has `Programmed` condition set to `True`, you can visit {{site.konnect_short_name}} and see your configuration being synced by {{ site.operator_product_name }}.
+If the `Gateway` has `Programmed` condition set to `True`, you can visit {{site.konnect_short_name}} and see your configuration being synced by the self-managed Control Plane.
 
 <!-- vale off -->
 {% validation kubernetes-resource %}

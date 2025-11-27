@@ -26,10 +26,29 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.1": [
+    {
+      "message": "Fixed implicit request node headers field to be correct type.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added new datakit plugin",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed implicit request node headers field to be correct type.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where an invalid plugin instance could affect other plugins.\n",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ]

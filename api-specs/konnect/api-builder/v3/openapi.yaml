@@ -1,11 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Builder
-  version: 3.0.24
+  version: 3.0.27
   description: The management API for building APIs for Konnect Dev Portals.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@db794d79217507e281f72d4b0b0df015b4800e2c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/db794d79217507e281f72d4b0b0df015b4800e2c'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -119,8 +121,8 @@ paths:
           example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
     get:
       operationId: fetch-api
-      summary: Fetch API
-      description: Fetches an API.
+      summary: Get an API
+      description: Get an API.
       responses:
         '200':
           $ref: '#/components/responses/ApiResponse'
@@ -275,7 +277,7 @@ paths:
       - $ref: '#/components/parameters/DocumentId'
     get:
       operationId: fetch-api-document
-      summary: Fetch API Document
+      summary: Get an API Document
       description: Returns a document for the API.
       responses:
         '200':
@@ -420,7 +422,7 @@ paths:
       - $ref: '#/components/parameters/SpecId'
     get:
       operationId: fetch-api-spec
-      summary: Fetch API Specification
+      summary: Get API Specification
       description: |
         Fetches the specification (OpenAPI or AsyncAPI) of an API.
         **Note:** This endpoint is deprecated and will be removed: use /versions instead.
@@ -531,6 +533,7 @@ paths:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
         - $ref: '#/components/parameters/ApiVersionFilters'
+        - $ref: '#/components/parameters/ApiVersionSort'
       responses:
         '200':
           $ref: '#/components/responses/ListApiVersionResponse'
@@ -548,7 +551,7 @@ paths:
       - $ref: '#/components/parameters/VersionId'
     get:
       operationId: fetch-api-version
-      summary: Fetch API Version
+      summary: Get an API Version
       description: Fetches the version (OpenAPI or AsyncAPI) of an API.
       responses:
         '200':
@@ -632,7 +635,7 @@ paths:
         - API Publication
     get:
       operationId: fetch-publication
-      summary: Fetch Publication
+      summary: Get a Publication
       description: |
         Retrieve an API's publication in a portal.
         If the API is not published to the portal, a 404 response is returned.
@@ -728,7 +731,7 @@ paths:
       - $ref: '#/components/parameters/ImplementationId'
     get:
       operationId: fetch-api-implementation
-      summary: Fetch API Implementation
+      summary: Get an API Implementation
       description: Retrieve a gateway implementation for this API
       responses:
         '200':
@@ -917,6 +920,15 @@ components:
       schema:
         $ref: '#/components/schemas/ApiVersionFilterParameters'
       style: deepObject
+    ApiVersionSort:
+      name: sort
+      description: |
+        Sorts a collection of API versions. Supported sort attributes are:
+          - created_at
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
     DocumentId:
       schema:
         type: string
@@ -1683,111 +1695,68 @@ components:
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
       title: API Attribute Filter Parameters
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
       properties:
-        oeq:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
       additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
       x-examples:
         example-1:
           oeq: 'some-value,some-other-value'
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
           neq: not-this-value
-    UuidFieldFilter:
-      description: Filters on the given UUID field value by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: UuidFieldFilter
-      x-examples:
-        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-2:
-          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-3:
-          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-4:
-          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
-          type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        ocontains:
-          type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
-          ocontains: 'this-value,or-that-value'
-    StringFieldFilter:
-      description: Filters on the given string field value by either exact or fuzzy match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilter
-      x-examples:
-        example-1: equals-some-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
+    StringFieldFilter:
+      oneOf:
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
+          type: string
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
     LabelsFieldFilter:
       allOf:
         - title: LabelsFieldFilter
@@ -2025,6 +1994,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:

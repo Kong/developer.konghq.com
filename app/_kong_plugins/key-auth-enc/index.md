@@ -42,12 +42,11 @@ search_aliases:
 
 
 notes: |
-  This plugin is not available in Konnect, and has limitations in hybrid mode:
-  - Konnect automatically encrypts key authentication credentials at rest, so 
-  encryption via this plugin is not necessary. 
+  This plugin is not available in Konnect:
+  - Konnect automatically encrypts key authentication credentials at rest, so
+  encryption via this plugin is not necessary.
   Use the regular [Key Auth](/plugins/key-auth/) plugin instead.
-  - The time-to-live (ttl) does not work in hybrid mode. This setting
-  determines the length of time a credential remains valid.
+  - This setting determines the length of time a credential remains valid.
 
 min_version:
   gateway: '1.0'

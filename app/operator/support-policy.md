@@ -1,6 +1,6 @@
 ---
 title: "{{site.operator_product_name}} version support policy"
-description: "Check if your version of {{site.operator_product_name}} is supported"
+description: "Check if your version of {{ site.operator_product_name }} is supported"
 content_type: reference
 layout: reference
 products:
@@ -23,7 +23,7 @@ LTS versions of {{site.operator_product_name}} are supported for 3 years after r
 
 > *Table 1: Version Support for {{site.operator_product_name}}*
 
-{% include kong-support-policy.md %}
+{% include support/support-policy.md %}
 
 ## Version compatibility with Kubernetes
 

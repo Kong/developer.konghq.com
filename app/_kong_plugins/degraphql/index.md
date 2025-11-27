@@ -92,6 +92,9 @@ The following sections define some common patterns for DeGraphQL routes.
 Only include the custom portion of the path that you want to configure. For example: `uri: /my-path`, but not `uri: /graphql/my-path`.
 > - The content in the `query` field should follow [the GraphQL query syntax](https://graphql.org/learn/queries/).
 
+Creating a `degraphql_route` requires access to the `/services/*/degraphql/routes` endpoint.  
+Because this endpoint does **not** appear in Kong Manager by default, users with **custom roles** must be explicitly granted permission to it.  
+
 ### GraphQL query variables on URIs
 
 GraphQL query variables can be applied on URIs.

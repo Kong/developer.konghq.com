@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -92,7 +94,7 @@ paths:
           example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     get:
       operationId: get-api-product
-      summary: Fetch API product
+      summary: Get an API product
       description: Returns an API product.
       responses:
         '200':
@@ -235,7 +237,7 @@ paths:
           example: de5c9818-be5c-42e6-b514-e3d4bc30ddeb
     get:
       operationId: get-api-product-document
-      summary: Fetch API Product Document
+      summary: Get an API Product Document
       description: Returns a document for the API product.
       responses:
         '200':
@@ -382,7 +384,7 @@ paths:
           example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
     get:
       operationId: get-api-product-version
-      summary: Fetch API Product Version
+      summary: Get an API Product Version
       description: Returns a version of an API product.
       responses:
         '200':
@@ -492,7 +494,7 @@ paths:
         - API Product Version Specification
     get:
       operationId: get-many-api-product-version-spec
-      summary: Fetch API Product Version Specifications
+      summary: List API Product Version Specifications
       description: |
         Returns a list of specification for the version of an API product.
         **Note:** You can only have one specification for a product version.
@@ -535,7 +537,7 @@ paths:
           example: 742ff9f1-fb89-4aeb-a599-f0e278c7aeaa
     get:
       operationId: get-api-product-version-spec
-      summary: Fetch API Product Version Specification
+      summary: Get an API Product Version Specification
       description: Returns a specification for the version of an API product.
       responses:
         '200':
@@ -1367,96 +1369,45 @@ components:
       required:
         - id
         - control_plane_id
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
+    StringFieldFilter:
       oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
           properties:
             eq:
+              description: The field exactly matches the provided value.
               type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
           type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        ocontains:
-          type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
-          ocontains: 'this-value,or-that-value'
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        oeq:
-          type: string
-      additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
-      x-examples:
-        example-1:
-          oeq: 'some-value,some-other-value'
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
-          neq: not-this-value
-    StringFieldFilter:
-      description: Filters on the given string field value by either exact or fuzzy match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
     SortQuery:
       description: |
         The `asc` suffix is optional as the default sort order is ascending.
@@ -1603,6 +1554,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -2243,20 +2195,28 @@ components:
         - checked
         - type
     UuidFieldFilter:
-      description: Filters on the given UUID field value by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: UuidFieldFilter
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+      additionalProperties: false
       x-examples:
-        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+        example-1:
+          oeq: 'some-value,some-other-value'
+          neq: not-this-value
         example-2:
-          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-3:
-          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-4:
-          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
+          eq: some-value
     ConflictError:
       allOf:
         - $ref: '#/components/schemas/BaseError'

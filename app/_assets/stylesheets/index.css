@@ -98,14 +98,14 @@
     --color-kic-background: var(--color-semantic-blue-secondary);
     --color-mesh-brand: var(--color-semantic-orange-primary);
     --color-mesh-background: var(--color-semantic-orange-secondary);
-    --color-service-catalog-brand: var(--color-semantic-red-primary);
-    --color-service-catalog-background: var(--color-semantic-red-secondary);
+    --color-catalog-brand: var(--color-semantic-red-primary);
+    --color-catalog-background: var(--color-semantic-red-secondary);
     --color-dev-portal-brand: var(--color-semantic-teal-primary);
     --color-dev-portal-background: var(--color-semantic-teal-secondary);
     --color-konnect-brand: var(--color-semantic-grey-primary);
     --color-konnect-background: var(--color-semantic-grey-secondary);
-    --color-reference-platform-brand: var(--color-semantic-teal-primary);
-    --color-reference-platform-background: var(--color-semantic-teal-secondary);
+    --color-konnect-reference-platform-brand: var(--color-semantic-teal-primary);
+    --color-konnect-reference-platform-background: var(--color-semantic-teal-secondary);
     --color-operator-brand: var(--color-semantic-blue-primary);
     --color-operator-background: var(--color-semantic-blue-secondary);
     --color-api-products-brand: var(--color-semantic-orange-primary);

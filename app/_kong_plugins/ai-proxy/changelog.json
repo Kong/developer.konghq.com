@@ -76,6 +76,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.1": [
+    {
+      "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed integration with HuggingFace by adding support for the new serverless API, ensuring seamless compatibility.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where extra inputs were not permitted for huggingface inference provider\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where large request payload was not logged.\n",
@@ -207,6 +229,40 @@
   "3.11.0.4": [
     {
       "message": "Fixed an issue when empty array in structured output was encoded as empty object.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where OpenAI chat completion's tool_choice was not converted to Anthropic's.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `model` field was incorrect in Gemini responses when a variable was used as the model name.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `model` field was missing in OpenAI format response from Gemini provider in some situations.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed integration with HuggingFace by adding support for the new serverless API, ensuring seamless compatibility.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where extra inputs were not permitted for huggingface inference provider\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.6": [
+    {
+      "message": "Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

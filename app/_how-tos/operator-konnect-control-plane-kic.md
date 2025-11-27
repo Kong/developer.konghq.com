@@ -47,7 +47,7 @@ metadata:
 spec:
   createControlPlaneRequest:
     name: kic-control-plane
-    clusterType: CLUSTER_TYPE_K8S_INGRESS_CONTROLLER
+    cluster_type: CLUSTER_TYPE_K8S_INGRESS_CONTROLLER
   konnect:
     authRef:
       name: konnect-api-auth

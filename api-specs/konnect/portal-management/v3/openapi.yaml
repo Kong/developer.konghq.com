@@ -1,11 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.28
+  version: 3.0.29
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@838b389a23a4384f3b8112eb63a3e9116d7f5902
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/838b389a23a4384f3b8112eb63a3e9116d7f5902'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -101,7 +103,7 @@ paths:
           format: uuid
     get:
       operationId: get-portal
-      summary: Fetch Portal
+      summary: Get a Portal
       description: 'Returns the configuration for a single developer portal, including the current visibility, access, and domain settings.'
       responses:
         '200':
@@ -502,7 +504,7 @@ paths:
   '/portals/{portalId}/pages/{pageId}':
     get:
       operationId: get-portal-page
-      summary: Fetch Page
+      summary: Get a Page
       description: 'Returns the configuration of a single custom page for this portal. Custom pages can be used to display static content, documentation, or other information to developers.'
       parameters:
         - $ref: '#/components/parameters/PortalId'
@@ -662,7 +664,7 @@ paths:
   '/portals/{portalId}/snippets/{snippetId}':
     get:
       operationId: get-portal-snippet
-      summary: Fetch Snippet
+      summary: Get a Snippet
       description: 'Returns the configuration of a single custom snippet for this portal. Custom snippets can be used to display static content, documentation, or other information to developers.'
       parameters:
         - $ref: '#/components/parameters/PortalId'
@@ -799,7 +801,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     get:
       operationId: get-application
-      summary: Fetch Application by Portal
+      summary: Get an Application by Portal
       description: 'Returns the configuration of a single application in this portal. If an application is linked to a DCR Provider, the `dcr_provider.id` and `client_id` can be used to correlate it. An application manages a set of credentials and registrations for specific APIs.'
       responses:
         '200':
@@ -880,7 +882,7 @@ paths:
       - $ref: '#/components/parameters/ApplicationId'
     get:
       operationId: get-application-unscoped
-      summary: Fetch Application
+      summary: Get an Application
       description: 'Returns the configuration of a single application in any portal. If an application is linked to a DCR Provider, the `dcr_provider.id` and `client_id` can be used to correlate it. An application manages a set of credentials and registrations for specific APIs.'
       responses:
         '200':
@@ -999,7 +1001,7 @@ paths:
       - $ref: '#/components/parameters/RegistrationId'
     get:
       operationId: get-application-registration
-      summary: Fetch Registration
+      summary: Get a Registration
       description: Returns information about an application's registration status for a particular API.
       responses:
         '200':
@@ -1080,7 +1082,7 @@ paths:
         **Pre-release Endpoint**
         This endpoint is currently in beta and is subject to change.
 
-        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On (SSO) through an OIDC Identity Provider (IdP). Developers can be automatically assigned to teams by mapping claims from thier IdP account.
+        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
       requestBody:
         $ref: '#/components/requestBodies/UpdatePortalAuthenticationSettings'
       responses:
@@ -1510,7 +1512,7 @@ paths:
       - $ref: '#/components/parameters/DeveloperId'
     get:
       operationId: get-developer
-      summary: Fetch Developer
+      summary: Get a Developer
       description: 'Returns information about a single developer in this portal. Each developer manages a set applications, providing them credentials to access registered APIs. Developer registration access can be limited to specific APIs using RBAC.'
       responses:
         '200':
@@ -1605,7 +1607,7 @@ paths:
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-portal-identity-providers
-      summary: Retrieve Identity Providers
+      summary: List Identity Providers
       description: |-
         **Pre-release Endpoint**
         This endpoint is currently in beta and is subject to change.
@@ -1943,7 +1945,7 @@ paths:
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-email-delivery
-      summary: Retrieve the email delivery for the portal
+      summary: Get the email delivery for the portal
       description: Retrieve the email delivery for the portal
       responses:
         '200':
@@ -2014,7 +2016,7 @@ paths:
       - $ref: '#/components/parameters/PortalId'
     get:
       operationId: get-email-config
-      summary: Retrieve the email config for the portal
+      summary: Get the email config for the portal
       description: Retrieve the email config for the portal
       responses:
         '200':
@@ -2430,19 +2432,6 @@ components:
       required: false
       schema:
         type: string
-    SortPortalSnippets:
-      name: sort
-      description: |
-        Sorts a collection of portal snippets. Supported sort attributes are:
-          - created_at
-          - updated_at
-          - name
-          - title
-          - visibility
-      in: query
-      required: false
-      schema:
-        type: string
     SortPortals:
       name: sort
       description: |
@@ -2457,6 +2446,19 @@ components:
           - canonical_domain
           - created_at
           - updated_at
+      in: query
+      required: false
+      schema:
+        type: string
+    SortPortalSnippets:
+      name: sort
+      description: |
+        Sorts a collection of portal snippets. Supported sort attributes are:
+          - created_at
+          - updated_at
+          - name
+          - title
+          - visibility
       in: query
       required: false
       schema:
@@ -3568,6 +3570,23 @@ components:
           $ref: '#/components/schemas/PortalCustomDomainVerificationStatus'
         validation_errors:
           $ref: '#/components/schemas/PortalCustomDomainValidationErrors'
+        uploaded_at:
+          description: An ISO-8601 timestamp representation of the ssl certificate upload date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        expires_at:
+          description: An ISO-8601 timestamp representation of the ssl certificate expiration date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        skip_ca_check:
+          description: |
+            True when the provided certificate chain is served as-is without validation against a public trust store.
+          type: boolean
+          readOnly: true
       additionalProperties: false
       required:
         - domain_verification_method
@@ -3592,6 +3611,11 @@ components:
         custom_private_key:
           description: Custom certificate private key to be used for the SSL termination.
           type: string
+        skip_ca_check:
+          description: |
+            Advanced option. If true, the custom certificate is served exactly as provided, without attempting to bundle against a public trust store. Required for certificates issued by an internal/private CA.
+          type: boolean
+          default: false
       additionalProperties: false
       required:
         - domain_verification_method
@@ -3681,46 +3705,25 @@ components:
       maxProperties: 3
       minProperties: 0
       title: PortalClaimMappings
-    PortalOIDCConfig:
-      description: Configuration properties for an OpenID Connect Identity Provider.
-      type: object
-      properties:
-        issuer:
-          type: string
-          example: 'https://identity.example.com/v2'
-        client_id:
-          type: string
-          example: x7id0o42lklas0blidl2
-        scopes:
-          type: array
-          items:
-            type: string
-            default: openid
-          example:
-            - email
-            - openid
-            - profile
-          default:
-            - email
-            - openid
-            - profile
-        claim_mappings:
-          $ref: '#/components/schemas/PortalClaimMappings'
-      example:
-        issuer: 'https://identity.example.com/v2'
-        client_id: x7id0o42lklas0blidl2
-        scopes:
-          - email
-          - openid
-          - profile
-        claim_mappings:
-          name: name
-          email: email
-          groups: custom-group-claim
-      required:
-        - issuer
-        - client_id
-      title: PortalOIDCConfig
+    OIDCAuthEnabled:
+      description: The portal has OIDC enabled or disabled.
+      type: boolean
+      example: false
+      deprecated: true
+    SAMLAuthEnabled:
+      description: A Konnect Identity Admin assigns teams to a developer.
+      type: boolean
+      example: false
+      deprecated: true
+    OIDCIdpMappingEnabled:
+      description: IdP groups determine the Portal Teams a developer has. Replaced by idp_mapping_enabled.
+      type: boolean
+      example: true
+      deprecated: true
+    IDPMappingEnabled:
+      description: Whether IdP groups determine the Konnect Portal teams a developer has.
+      type: boolean
+      example: true
     PortalAuthenticationSettingsResponse:
       description: The developer authentication settings for a portal.
       type: object
@@ -3730,27 +3733,58 @@ components:
           type: boolean
           example: true
         oidc_auth_enabled:
-          description: The portal has OIDC enabled or disabled.
-          type: boolean
-          example: false
+          $ref: '#/components/schemas/OIDCAuthEnabled'
         saml_auth_enabled:
-          description: The portal has SAML enabled or disabled.
-          type: boolean
-          example: false
+          $ref: '#/components/schemas/SAMLAuthEnabled'
         oidc_team_mapping_enabled:
-          description: IdP groups determine the Portal Teams a developer has.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/OIDCIdpMappingEnabled'
         idp_mapping_enabled:
-          description: IdP groups determine the Portal Teams a developer has. This will soon replace oidc_team_mapping_enabled.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/IDPMappingEnabled'
         konnect_mapping_enabled:
           description: A Konnect Identity Admin assigns teams to a developer.
           type: boolean
           example: false
         oidc_config:
-          $ref: '#/components/schemas/PortalOIDCConfig'
+          description: Configuration properties for an OpenID Connect Identity Provider.
+          type: object
+          example:
+            issuer: 'https://identity.example.com/v2'
+            client_id: x7id0o42lklas0blidl2
+            scopes:
+              - email
+              - openid
+              - profile
+            claim_mappings:
+              name: name
+              email: email
+              groups: custom-group-claim
+          deprecated: true
+          properties:
+            issuer:
+              type: string
+              example: 'https://identity.example.com/v2'
+            client_id:
+              type: string
+              example: x7id0o42lklas0blidl2
+            scopes:
+              type: array
+              items:
+                type: string
+                default: openid
+              example:
+                - email
+                - openid
+                - profile
+              default:
+                - email
+                - openid
+                - profile
+            claim_mappings:
+              $ref: '#/components/schemas/PortalClaimMappings'
+          required:
+            - issuer
+            - client_id
+          title: PortalOIDCConfig
       example:
         basic_auth_enabled: true
         oidc_auth_enabled: true
@@ -3991,32 +4025,37 @@ components:
           type: boolean
           example: true
         oidc_auth_enabled:
-          description: The organization has OIDC disabled.
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: boolean
           example: false
+          deprecated: true
         saml_auth_enabled:
-          description: The portal has SAML enabled or disabled.
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: boolean
           example: false
+          deprecated: true
         oidc_team_mapping_enabled:
-          description: Whether IdP groups determine the Konnect Portal teams a developer has.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/OIDCIdpMappingEnabled'
         konnect_mapping_enabled:
           description: Whether a Konnect Identity Admin assigns teams to a developer.
           type: boolean
           example: false
         idp_mapping_enabled:
-          description: Whether IdP groups determine the Konnect Portal teams a developer has. This will soon replace oidc_team_mapping_enabled.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/IDPMappingEnabled'
         oidc_issuer:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_client_id:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_client_secret:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_scopes:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: array
           items:
             type: string
@@ -4025,8 +4064,31 @@ components:
             - email
             - openid
             - profile
+          deprecated: true
         oidc_claim_mappings:
-          $ref: '#/components/schemas/PortalClaimMappings'
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
+          type: object
+          example:
+            name: name
+            email: email
+            groups: custom-group-claim
+          deprecated: true
+          maxProperties: 3
+          minProperties: 0
+          properties:
+            name:
+              type: string
+              example: name
+              default: name
+            email:
+              type: string
+              example: email
+              default: email
+            groups:
+              type: string
+              example: custom-group-claim
+              default: groups
+          title: PortalClaimMappings
       example:
         basic_auth_enabled: true
         oidc_auth_enabled: true
@@ -4615,109 +4677,76 @@ components:
         - example
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
         example-2:
           eq: some-value
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
       properties:
-        oeq:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
       additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
       x-examples:
         example-1:
           oeq: 'some-value,some-other-value'
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
           neq: not-this-value
-    UuidFieldFilter:
-      description: Filters on the given UUID field value by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: UuidFieldFilter
-      x-examples:
-        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-2:
-          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-3:
-          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-4:
-          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
-          type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        ocontains:
-          type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
-          ocontains: 'this-value,or-that-value'
-    StringFieldFilter:
-      description: Filters on the given string field value by either exact or fuzzy match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilter
-      x-examples:
-        example-1: equals-some-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
+    StringFieldFilter:
+      oneOf:
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
+          type: string
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
     BooleanFieldFilter:
       description: Filter by a boolean value (true/false).
       type: boolean
@@ -4850,6 +4879,7 @@ components:
         - is_supported_network_availability_zone_list
         - is_supported_network_cidr_block
         - is_supported_provider_region
+        - type
       nullable: true
       readOnly: true
     InvalidParameterStandard:
@@ -7362,6 +7392,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string
@@ -7450,6 +7481,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string
@@ -7933,6 +7965,7 @@ components:
                       type: string
                       maxLength: 255
                       minLength: 1
+                      nullable: false
                     description:
                       description: A description of the portal.
                       type: string
@@ -8032,6 +8065,7 @@ components:
                 type: string
                 maxLength: 255
                 minLength: 1
+                nullable: false
               description:
                 description: A description of the portal.
                 type: string

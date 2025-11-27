@@ -8,12 +8,10 @@ products:
 - insomnia
 
 tags:
-- documents
+- insomnia-documents
 - collections
 - mock-servers
 - git
-
-tier: pro
 
 min_version:
   insomnia: '11.0'

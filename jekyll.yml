@@ -35,8 +35,6 @@ include:
 collections:
   gateway_entities:
     output: true
-  event_gateway_policies:
-    output: true
   how-tos:
     output: true
   references:
@@ -62,17 +60,6 @@ defaults:
       breadcrumbs:
         - "/gateway/"
         - "/gateway/entities/"
-  - scope:
-      path: "_event_gateway_policies"
-      type: "event_gateway_policies"
-    values:
-      layout: "gateway_entity"
-      permalink: "/event-gateway/policies/:path/"
-      products:
-        - event-gateway
-      breadcrumbs:
-        - "/event-gateway/"
-        - "/event-gateway/policies/"
   - scope:
       path: "_references"
       type: "references"
@@ -116,8 +103,8 @@ konnect_saas: Kong Konnect
 gateway_operator_product_name: Kong Gateway Operator
 operator_product_name: Kong Operator
 operator_product_name_short: KO
-event_gateway: Kong Native Event Proxy
-event_gateway_short: KNEP
+event_gateway: Kong Event Gateway
+event_gateway_short: Event Gateway
 konnect_catalog: Catalog
 
 repos:
@@ -125,9 +112,7 @@ repos:
   developer_raw: https://raw.githubusercontent.com/Kong/developer.konghq.com
   docs: https://github.com/Kong/docs.konghq.com
 
-plugin_schemas_path: app/.repos/kong-plugins/json_schemas
-plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
-plugin_priorities_path: app/.repos/kong-plugins/data/priorities/ee
+plugin_schemas_path: app/_schemas/gateway/plugins
 
 mesh_policy_schemas_path: app/.repos/kuma/app/assets/
 
@@ -171,4 +156,4 @@ latest_gateway_oss_version: "3.9.1"
 operator_gatewayconfiguration_api_version: "v2beta1"
 operator_konnectgatewaycontrolplane_api_version: "v1alpha2"
 operator_konnectextension_api_version: "v1alpha2"
-render_banner: true
+render_banner: false

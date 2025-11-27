@@ -8,7 +8,7 @@ description: |
 breadcrumbs:
   - /konnect/
 tags:
-  - serverless-gateway
+  - serverless-gateways
   - hybrid-mode
   - data-plane
 products:
@@ -77,9 +77,9 @@ Provisioning a serverless gateway includes creating the serverless Control Plane
   status_code: 201
   method: POST
   headers:
+      - 'Authorization: Bearer $KONNECT_TOKEN'
       - 'Accept: application/json'
       - 'Content-Type: application/json'
-      - 'Authorization: Bearer $KONNECT_TOKEN'
   body:
 
       name: serverless-gateway-control-plane

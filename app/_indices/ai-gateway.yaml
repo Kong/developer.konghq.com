@@ -41,6 +41,9 @@ sections:
       - title: Advanced Analytics
         description: Access advanced analytics features in AI Gateway.
         url: /advanced-analytics/
+      - title: AI Gateway resource sizing guidelines
+        description: Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns.
+        url: /ai-gateway/resource-sizing-guidelines-ai/
   - title: AI Gateway plugins
     items:
       - path: /plugins/?category=ai

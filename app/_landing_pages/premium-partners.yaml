@@ -9,7 +9,6 @@ metadata:
     - catalog
   tags:
     - premium
-    - plugins
     - partnership
     - confluent
     - traceable
@@ -185,3 +184,20 @@ rows:
           cta:
             text: Set up Dynatrace with OpenTelemetry 
             url: "/how-to/set-up-dynatrace-with-otel/"
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                The Dynatrace integration lets you connect Dynatrace classic service-level objects directly to your {{site.konnect_catalog}} services.
+    - blocks:
+      - type: card
+        config:
+          title: Dynatrace integration in {{site.konnect_catalog}}
+      
+          icon: /assets/icons/third-party/dynatrace.png
+          cta:
+            text: Set up Dynatrace in the {{site.konnect_catalog}} 
+            url: "/catalog/integrations/dynatrace/"
