@@ -74,7 +74,7 @@ metadata:
   name: konnect-api-auth-secret
   namespace: kong
   labels:
-    konghq.com/secret: konnect
+    konghq.com/credential: konnect
 stringData:
   token: "'$KONNECT_TOKEN'"' | kubectl apply -f -
 ```
