@@ -53,7 +53,7 @@ rows:
   - header:
       type: h2
       text: "Next Steps"
-      sub_text: After installing KO, use one of the following tutorials to get started.
+      sub_text: After installing {{site.operator_product_name_short}}, use one of the following tutorials to get started.
     columns:
       - blocks:
         - type: card
