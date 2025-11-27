@@ -109,7 +109,6 @@ Kong may designate a specific minor version as a **Long-Term Support (LTS)** ver
 
 After the product hits the end of the support period, Kong will provide limited support to help the customer upgrade to a fully supported version of {{site.base_gateway}} for up to an additional 12 month sunset period. Kong will not provide patches for software covered by this sunset period. If there is an issue that requires a patch during this period, the customer will need to upgrade to a newer {{site.base_gateway}} version covered by active support.
 
-{% include_cached /support/support-policy.md %}
 
 ## Supported versions
 
@@ -156,3 +155,5 @@ These versions of {{site.ee_product_name}} have reached the end of full support.
 
 {:.info}
 > **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/compatibility/).
+
+{% include_cached /support/support-policy.md %}

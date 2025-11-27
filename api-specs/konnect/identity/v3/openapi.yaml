@@ -6,7 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@f169553775049169043e5d497b56349f9f22f021
+  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -2367,16 +2368,9 @@ components:
               example: Conflict
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
@@ -2423,25 +2417,24 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
       properties:
-        contains:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
       x-examples:
         example-1:
           contains: some-value
-    LegacyStringFieldFilter:
-      description: Filter a string value field either by exact match or partial contains.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-      title: StringFieldFilter
+        example-2:
+          eq: some-value
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -3100,6 +3093,7 @@ components:
                 description: The user's full name.
                 type: string
                 example: James C. Woods
+                maxLength: 250
                 pattern: '^[\w \W]+$'
                 writeOnly: true
               preferred_name:

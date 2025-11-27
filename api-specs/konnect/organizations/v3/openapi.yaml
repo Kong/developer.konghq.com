@@ -6,19 +6,11 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
 servers:
-  - url: 'https://us.api.konghq.com/v3'
-    description: United-States Production region
-  - url: 'https://eu.api.konghq.com/v3'
-    description: Europe Production region
-  - url: 'https://au.api.konghq.com/v3'
-    description: Australia Production region
-  - url: 'https://me.api.konghq.com/v3'
-    description: Middle-East Production region
-  - url: 'https://in.api.konghq.com/v3'
-    description: India Production region
-  - url: 'https://sg.api.konghq.com/v3'
-    description: Singapore Production region
+  - url: 'https://global.api.konghq.com/v3'
+    description: Global Base URL
 paths:
   '/organizations/{organizationId}/personal-access-tokens':
     parameters:
@@ -165,16 +157,9 @@ components:
       readOnly: true
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value

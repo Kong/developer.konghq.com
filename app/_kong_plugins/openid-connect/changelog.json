@@ -16,6 +16,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.1": [
+    {
+      "message": "Fixed an issue where for incremental sync, consumer related caches may not be properly invalidated, causing stale data to be served.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",
@@ -375,6 +387,18 @@
   "3.4.3.20": [
     {
       "message": "Fixed an `500` error caused by receiving a JSON `null` from the request body when parsing bearer tokens or client IDs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.22": [
+    {
+      "message": "Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
       "type": "bugfix",
       "scope": "Plugin"
     }
