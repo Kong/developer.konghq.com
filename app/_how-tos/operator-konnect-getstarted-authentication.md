@@ -67,16 +67,16 @@ spec:
 
 ### Using a Secret reference
 
-```yaml
-apiVersion: v1
+```sh
+echo 'apiVersion: v1
 kind: Secret
 metadata:
   name: konnect-api-auth-secret
-  namespace: default
+  namespace: kong
   labels:
     konghq.com/secret: konnect
 stringData:
-  token: '$KONNECT_TOKEN'
+  token: "'$KONNECT_TOKEN'"' | kubectl apply -f -
 ```
 
 <!-- vale off -->
