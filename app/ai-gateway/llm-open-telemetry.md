@@ -23,7 +23,9 @@ plugins:
 min_version:
   gateway: '3.13'
 
-description: "Reference for OpenTelemetry span attributes emitted by Kong AI Gateway for generative AI requests, including model parameters, token usage, and tool-call metadata."
+tech_preview: true
+
+description: "Reference for OpenTelemetry Gen AI span attributes emitted by Kong AI Gateway for generative AI requests."
 
 related_resources:
   - text: Kong AI Gateway

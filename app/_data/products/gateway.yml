@@ -1296,7 +1296,7 @@ releases:
   - release: "3.13"
     unreleased: true
     latest: false
-    ee-version: "3.12.0.1"
+    ee-version: "3.13.0.0"
     eol: 2026-12-08
     distributions:
       - amazonlinux2:

@@ -17,7 +17,7 @@ works_on:
     - konnect
 
 min_version:
-  gateway: '3.4'
+  gateway: '3.13'
 
 plugins:
   - opentelemetry
@@ -32,6 +32,8 @@ tags:
     - analytics
     - monitoring
     - dynatrace
+
+tech_preview: true
 
 prereqs:
   entities:
@@ -224,7 +226,9 @@ body:
 
 {% endvalidation %}
 
-## Check traces in Jaeger
+## Validate `gen_ai` traces in Jaeger
+
+Verify that the trace includes the expected span attributes for LLM operations.
 
 1. Open the Jaeger UI at `http://localhost:16686/`.
 1. In the **Service** dropdown, select `kong-dev`.
@@ -233,6 +237,16 @@ body:
 1. In the trace detail view, locate and expand the span labeled `kong.access.plugin.ai-proxy`.
 1. Locate and expand the child span labeled `kong.gen_ai`.
 1. Verify the following span attributes are present:
-   - `gen_ai.input.messages`: Contains the system and user messages sent to the LLM
    - `gen_ai.operation.name`: Set to `chat`
-   - `gen_ai.output.messages`: Contains the complete OpenAI API response, including the assistant's message, token usage, and model information
+   - `gen_ai.provider.name`: Set to `openai`
+   - `gen_ai.request.model`: The model identifier (for example, `gpt-4o`)
+   - `gen_ai.request.max_tokens`: Maximum token limit (for example, `512`)
+   - `gen_ai.request.temperature`: Sampling temperature (for example, `1`)
+   - `gen_ai.input.messages`: Array of messages sent to the LLM with `role` and `content` fields
+   - `gen_ai.output.type`: Set to `json`
+   - `gen_ai.output.messages`: Complete API response including choices, usage statistics, and metadata
+   - `gen_ai.response.id`
+   - `gen_ai.response.model`: Actual model version used (for example, `gpt-4o-2024-08-06`)
+   - `gen_ai.response.finish_reasons`: Array of finish reasons (for example, `["stop"]`)
+   - `gen_ai.usage.input_tokens`
+   - `gen_ai.usage.output_tokens`
