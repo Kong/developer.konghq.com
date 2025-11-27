@@ -56,7 +56,7 @@ prereqs:
         - **API Endpoint**: The Vertex AI API endpoint URL (typically `https://{location}-aiplatform.googleapis.com`)
 
         Export these values as environment variables:
-      ```sh
+        ```sh
         export GEMINI_API_KEY="<your_gemini_api_key>"
         export GCP_PROJECT_ID="<your-gemini-project-id>"
         export GEMINI_LOCATION_ID="<your-gemini-location_id>"
@@ -133,26 +133,28 @@ cleanup:
 First, let's configure the AI Proxy plugin for the Azure provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
 
 {% entity_examples %}
-config:
-  llm_format: anthropic
-  targets:
-    - route_type: llm/v1/chat
-      logging:
-        log_statistics: true
-        log_payloads: false
-      auth:
-        allow_override: false
-        gcp_use_service_account: true
-        gcp_service_account_json: ${gcp_service_account_key}
-      model:
-          provider: gemini
-          name: gemini-2.0-flash
-          options:
-            gemini:
-              api_endpoint: ${gcp_api_endpoint}
-              project_id: ${gcp_project_id}
-              location_id: ${gcp_location_id}
-          max_tokens: 8192
+entities:
+  plugins:
+    config:
+      llm_format: anthropic
+      targets:
+        - route_type: llm/v1/chat
+          logging:
+            log_statistics: true
+            log_payloads: false
+          auth:
+            allow_override: false
+            gcp_use_service_account: true
+            gcp_service_account_json: ${gcp_service_account_key}
+          model:
+              provider: gemini
+              name: gemini-2.0-flash
+              options:
+                gemini:
+                  api_endpoint: ${gcp_api_endpoint}
+                  project_id: ${gcp_project_id}
+                  location_id: ${gcp_location_id}
+              max_tokens: 8192
 variables:
   gcp_service_account_key:
     value: $GEMINI_API_KEY
