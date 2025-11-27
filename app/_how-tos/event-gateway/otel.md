@@ -185,7 +185,7 @@ command: |
           - job_name: kong
             scrape_interval: 5s
             static_configs:
-              - targets: ['kong_event_gateway:8080']
+              - targets: ['event-gateway-quickstart:8080']
 
   processors:
     batch: {}
@@ -250,14 +250,15 @@ cat <<EOF > docker-compose.yaml
 
 name: otel-stack
 networks:
-  kafka_event_gateway:
+  kafka:
+    name: kafka_event_gateway
     external: true
 
 services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     networks:
-      - kafka_event_gateway
+      - kafka
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
@@ -268,7 +269,7 @@ services:
   jaeger:
     image: jaegertracing/all-in-one:latest
     networks:
-      - kafka_event_gateway
+      - kafka
     ports:
       - "6831:6831/udp" # UDP port for Jaeger agent
       - "16686:16686"   # Web UI
@@ -277,7 +278,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     networks:
-      - kafka_event_gateway
+      - kafka
     command:
       - '--config.file=/etc/prometheus/prometheus.yaml'
       - '--storage.tsdb.path=/prometheus'
