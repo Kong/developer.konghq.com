@@ -95,7 +95,7 @@ Datakit nodes can:
 * Send an external HTTP request
 * Modify the response from an upstream before sending it to the client
 * Perform internal authentication
-* Execute branching conditional worksflows
+* Execute branching conditional workflows
 
 Most of these tasks can be performed in isolation by other Kong plugins, or by creating custom plugins.
 Datakit can string together an execution plan from several nodes, connecting the output from one into the input of another:
@@ -607,10 +607,10 @@ The `cache` node takes the following inputs:
 
 The `cache` node produces the following outputs:
 
-* `hit`: `true` if a cache hit occured
+* `hit`: `true` if a cache hit occurred
 * `miss`: `true` if a cache miss occurred
-* `stored`: `true` if data was successfuly stored into cache
-* `data`: The data that was stored into cache
+* `stored`: `true` if data was successfully stored into the cache
+* `data`: The data that was stored into the cache
 
 ### Call node
 
