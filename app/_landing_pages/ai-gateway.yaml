@@ -230,30 +230,11 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Audit log
-            description: Learn about AI Gateway logging capabilities.
-            icon: /assets/icons/audit.svg
-            cta:
-              url: /ai-gateway/ai-audit-log-reference/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: LLM metrics
-            description: Expose and visualize LLM metrics.
-            icon: /assets/icons/monitor.svg
-            cta:
-              url: /ai-gateway/monitor-ai-llm-metrics/
-              align: end
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: '{{site.konnect_short_name}} Advanced Analytics'
-            description: Visualize LLM metrics in {{site.konnect_short_name}}.
+            title: Observability and metrics
+            description: Learn about AI Gateway observability capabilities.
             icon: /assets/icons/analytics.svg
             cta:
-              url: /advanced-analytics/
+              url: ./#observability-and-metrics
               align: end
       - blocks:
         - type: card
@@ -264,6 +245,7 @@ rows:
             cta:
               url: /ai-gateway/streaming/
               align: end
+  - columns:
       - blocks:
         - type: card
           config:
@@ -272,16 +254,6 @@ rows:
             icon: /assets/icons/lock.svg
             cta:
               url: /how-to/configure-the-konnect-config-store/
-              align: end
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Prompt compression
-            description: Keep your prompts lean, reduce latency, and optimize LLM usage for cost efficiency
-            icon: /assets/icons/plugins/ai-prompt-compressor.png
-            cta:
-              url: /plugins/ai-prompt-compressor
               align: end
       - blocks:
         - type: card
@@ -556,10 +528,60 @@ rows:
         - type: card
           config:
             title: Save LLM usage costs with semantic load balancing
-            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on [semantic similarity](/ai-gateway/semantic-similarity/).
+            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
             icon: /assets/icons/money.svg
             cta:
               url: /how-to/use-semantic-load-balancing
+              align: end
+  - header:
+      type: h3
+      text: "Observability and metrics"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    AI Gateway provides multiple approaches to monitor LLM traffic and operations. Track token usage, latency, and costs through audit logs and metrics exporters. Instrument request flows with OpenTelemetry to trace prompts and responses across your infrastructure. Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
+
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Audit log
+            description: Learn about AI Gateway logging capabilities.
+            icon: /assets/icons/audit.svg
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: '{{site.konnect_short_name}} Advanced Analytics'
+            description: Visualize LLM metrics in {{site.konnect_short_name}}.
+            icon: /assets/icons/analytics.svg
+            cta:
+              url: /advanced-analytics/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: LLM metrics
+            description: Expose and visualize LLM metrics.
+            icon: /assets/icons/monitor.svg
+            cta:
+              url: /ai-gateway/monitor-ai-llm-metrics/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Gen AI OpenTelemetry
+            description: Expose and visualize LLM metrics.
+            icon: /assets/icons/opentelemetry.svg
+            cta:
+              url: /ai-gateway/llm-open-telemetry/
               align: end
 
   - header:
