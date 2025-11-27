@@ -84,7 +84,7 @@ At this point, tags should be visible in the [Gateway Manager](https://cloud.kon
 
 Alternatively you can use the `konghq.com/tags` annotation to add tags to any {{site.konnect_product_name}} entity that supports tagging.
 
-Value of this annotation is treated as comma-separated list of tags.
+The value of this annotation is treated as comma-separated list of tags.
 
 For example, to add tags to a `KongService` object using the `konghq.com/tags` annotation, you can apply the following YAML manifest:
 
