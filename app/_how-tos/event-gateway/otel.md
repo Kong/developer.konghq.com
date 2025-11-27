@@ -146,7 +146,7 @@ rows:
   - param: "`OTEL_SERVICE_NAME`"
     default: none
     new: "`eventgw`"
-    desc: Name of the OTEL service identified in the observability tools. For example, metrics in Prometheus will be prefixed with `kong_eventgw_*`.
+    desc: Name of the OTEL service identified in the observability tools. For example, in Jaeger, the service will appear as `eventgw`.
 {% endtable %}
 
 This sets up an {{site.event_gateway_short}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
