@@ -73,7 +73,7 @@ rows:
               icon: /assets/icons/graph.svg
               cta:
                 text: Learn more
-                url: /plugins/datakit/#datakit-flow-editor
+                url: /gateway/datakit-flow-editor/
 
   - header:
       type: h2
@@ -186,7 +186,9 @@ rows:
                     - [`jq`](/plugins/datakit/#jq-node): Transform data and cast variables using `jq`  
                     - [`exit`](/plugins/datakit/#exit-node): Return directly to the client  
                     - [`property`](/plugins/datakit/#property-node): Read and write {{site.base_gateway}} properties  
-                    - [`static`](/plugins/datakit/#static-node): Define static input values  
+                    - [`static`](/plugins/datakit/#static-node): Define static input values 
+                    - [`xml_to_json`](/plugins/datakit/#xml-to-json-node): Convert XML to JSON strings or Lua tables
+                    - [`json_to_xml`](/plugins/datakit/#json-to-xml-node): Convert JSON strings or Lua tables to XML
                     
                     Datakit also supports [implicit nodes](/plugins/datakit/#implicit-nodes) such as `request`, `response`, `vault`, and `service_request`, which represent gateway lifecycle events.
       - blocks:
