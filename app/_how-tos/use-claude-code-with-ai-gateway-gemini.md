@@ -1,16 +1,16 @@
 ---
-title: Route Claude CLI traffic through Kong AI Gateway and OpenAI
+title: Route Claude CLI traffic through Kong AI Gateway and Azure
 content_type: how_to
 
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Claude CLI traffic using OpenAI models
+description: Configure AI Gateway to proxy Claude CLI traffic using Azure OpenAI models
 
 products:
   - gateway
@@ -44,10 +44,25 @@ tools:
   - deck
 
 prereqs:
+  prereqs:
   inline:
-    - title: OpenAI
-      include_content: prereqs/openai
-      icon_url: /assets/icons/openai.svg
+    - title: Gemini
+      content: |
+        Before you begin, you must get the following credentials from Google Cloud:
+
+        - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
+        - **Project ID**: Your Google Cloud project identifier
+        - **Location ID**: The region where your Vertex AI endpoint is deployed (for example, `us-central1`)
+        - **API Endpoint**: The Vertex AI API endpoint URL (typically `https://{location}-aiplatform.googleapis.com`)
+
+        Export these values as environment variables:
+      ```sh
+        export GEMINI_API_KEY="<your_gemini_api_key>"
+        export GCP_PROJECT_ID="<your-gemini-project-id>"
+        export GEMINI_LOCATION_ID="<your-gemini-location_id>"
+        export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
+        ```
+      icon_url: /assets/icons/gcp.svg
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
       content: |
@@ -115,26 +130,38 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, let's configure the AI Proxy plugin for the OpenAI provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+First, let's configure the AI Proxy plugin for the Azure provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        llm_format: anthropic
-        route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${openai_key}
-          allow_override: false
-        model:
-          provider: openai
-          name: gpt-5-mini
-        max_request_body_size: 524288
+config:
+  llm_format: anthropic
+  targets:
+    - route_type: llm/v1/chat
+      logging:
+        log_statistics: true
+        log_payloads: false
+      auth:
+        allow_override: false
+        gcp_use_service_account: true
+        gcp_service_account_json: ${gcp_service_account_key}
+      model:
+          provider: gemini
+          name: gemini-2.0-flash
+          options:
+            gemini:
+              api_endpoint: ${gcp_api_endpoint}
+              project_id: ${gcp_project_id}
+              location_id: ${gcp_location_id}
+          max_tokens: 8192
 variables:
-  openai_key:
-    value: "$OPENAI_API_KEY"
+  gcp_service_account_key:
+    value: $GEMINI_API_KEY
+  gcp_api_endpoint:
+    value: $GEMINI_API_ENDPOINT
+  gcp_project_id:
+    value: $GCP_PROJECT_ID
+  gcp_location_id:
+    value: $GEMINI_LOCATION_ID
 {% endentity_examples %}
 
 ## Configure the File Log plugin
@@ -153,9 +180,12 @@ entities:
 
 Now, we can start a Claude Code session that points it to the local AI Gateway endpoint:
 
+{:.warning}
+> Ensure that `ANTHROPIC_MODEL` matches the model you deployed in Gemini.
+
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=gpt-5-mini \
+ANTHROPIC_MODEL=gpt-4.1 \
 claude
 ```
 
@@ -179,23 +209,19 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 
 Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach the Gateway.
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach the Gateway.
-
 ```text
-Tell me about Procopius' Secret History.
+Tell me about Vienna Oribasius manuscript.
 ```
 
 Claude Code might prompt you approve its web search for answering the question. When you select **Yes** Claude will produce a full-length response to your request:
 
 ```text
-Procopius’ Secret History (Greek: Ἀνέκδοτα, Anekdota) is a fascinating and
-notorious work of Byzantine literature written in the 6th century by the
-court historian Procopius of Caesarea. Unlike his official histories
-(“Wars” and “Buildings”), which paint the Byzantine Emperor Justinian I
-and his wife Theodora in a generally positive and conventional manner, the
-Secret History offers a scandalous, behind-the-scenes account that
-sharply criticizes and even vilifies the emperor, the empress, and other
-key figures of the time.
+The "Vienna Oribasius manuscript" refers to a famous illustrated medical
+codex that preserves the works of Oribasius of Pergamon, a noted Greek
+physician who lived in the 4th century CE. Oribasius was a compiler of
+earlier medical knowledge, and his writings form an important link in the
+transmission of Greco-Roman medical science to the Byzantine, Islamic, and
+later European worlds.
 ```
 {:.no-copy-code}
 
@@ -209,43 +235,47 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 
 ```json
 {
-  ...
   "method": "POST",
   "headers": {
     "user-agent": "claude-cli/2.0.37 (external, cli)",
     "content-type": "application/json"
   },
   "ai": {
-    "meta": {
-      "request_model": "gpt-5-mini",
-      "request_mode": "oneshot",
-      "response_model": "gpt-5-mini-2025-08-07",
-      "provider_name": "openai",
-      "llm_latency": 6786,
-      "plugin_id": "22122dc5-456e-4707-aec9-7ae3a0250ad5"
-    },
-    "usage": {
-      "completion_tokens": 456,
-      "completion_tokens_details": {
-        "accepted_prediction_tokens": 0,
-        "audio_tokens": 0,
-        "rejected_prediction_tokens": 0,
-        "reasoning_tokens": 256
+    "proxy": {
+      "tried_targets": [
+        {
+          "provider": "gemini",
+          "model": "gemini-2.0-flash",
+          "port": 443,
+          "upstream_scheme": "https",
+          "host": "us-central1-aiplatform.googleapis.com",
+          "upstream_uri": "/v1/projects/summit-demo-2022/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent",
+          "route_type": "llm/v1/chat",
+          "ip": "142.250.109.95"
+        }
+      ],
+      "meta": {
+        "request_model": "gemini-2.0-flash",
+        "request_mode": "oneshot",
+        "response_model": "gemini-2.0-flash",
+        "provider_name": "gemini",
+        "llm_latency": 1694,
+        "plugin_id": "13f5c57a-77b2-4c1f-9492-9048566db7cf"
       },
-      "total_tokens": 481,
-      "cost": 0,
-      "time_per_token": 14.881578947368,
-      "time_to_first_token": 6785,
-      "prompt_tokens": 25,
-      "prompt_tokens_details": {
-        "cached_tokens": 0,
-        "audio_tokens": 0
+      "usage": {
+        "completion_tokens": 19,
+        "completion_tokens_details": {},
+        "total_tokens": 11203,
+        "cost": 0,
+        "time_per_token": 89.157894736842,
+        "time_to_first_token": 1694,
+        "prompt_tokens": 11184,
+        "prompt_tokens_details": {}
       }
     }
   }
-  ...
 }
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through Kong AI Gateway using the `gpt-5-mini` model we selected while starting Claude Code session.
+This output confirms that Claude Code routed the request through Kong AI Gateway using the `gemini-2.0-flash` model we selected while starting Claude Code session.

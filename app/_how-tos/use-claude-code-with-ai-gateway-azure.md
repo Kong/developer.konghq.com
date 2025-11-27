@@ -5,8 +5,8 @@ content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
+  - text: AI Proxy
+    url: /plugins/ai-proxy/
   - text: File Log
     url: /plugins/file-log/
 
@@ -166,7 +166,7 @@ Now, we can start a Claude Code session that points it to the local AI Gateway e
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=gpt-4.1 \
+ANTHROPIC_MODEL=<your_azure_model> \
 claude
 ```
 
