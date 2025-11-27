@@ -40,13 +40,13 @@ required to connect your Kubernetes cluster to {{ site.konnect_short_name }}.
 
 It can store either:
 
-- Personal Access Token or,
-- System Account Access Token.
+- A Personal Access Token
+- A System Account Access Token
 
 Depending on your preferences, you can either:
 
 - Create a `KonnectAPIAuthConfiguration` object with the token specified directly in the spec and use RBAC to restrict access to its type.
-- Or you can use a Kubernetes `Secret` (of type `Opaque`) and reference it from the `KonnectAPIAuthConfiguration` object.
+- Use a Kubernetes `Secret` of type `Opaque` and reference it from the `KonnectAPIAuthConfiguration` object.
   The token has to be specified in `Secret`'s `token` data field.
 
 The `serverURL` should be set to the {{site.konnect_short_name}} API url in the region where your account is located.
@@ -88,7 +88,7 @@ spec:
   type: secretRef
   secretRef:
     name: konnect-api-auth-secret
-  serverURL: us.api.konghq.tech
+  serverURL: us.api.konghq.com
 {% endkonnect_crd %}
 <!-- vale on -->
 
@@ -104,7 +104,7 @@ You should see output similar to the following:
 
 ```bash
 NAME               VALID   ORGID                                  SERVERURL
-konnect-api-auth   True    5ca26716-02f7-4430-9117-1d1a7a2695e7   https://us.api.konghq.tech
+konnect-api-auth   True    5ca26716-02f7-4430-9117-1d1a7a2695e7   https://us.api.konghq.com
 ```
 
 If you prefer to work with status conditions programmatically, you can also run:
