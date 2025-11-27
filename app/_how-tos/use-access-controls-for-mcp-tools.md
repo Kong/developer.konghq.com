@@ -220,10 +220,10 @@ entities:
         default_acl:
           - scope: tools
             allow:
-              - "developer"
-              - "admin"
+              - developer
+              - admin
             deny:
-              - "suspended"
+              - suspended
         logging:
           log_payloads: false
           log_statistics: true
@@ -232,25 +232,36 @@ entities:
           - description: List users
             name: list_users
             acl:
-              allow: ["admin", "eason"]
-              deny: ["developer"]
+              allow:
+                - admin
+                - eason
+              deny:
+                - developer
           - description: Get user
             name: get_user
             acl:
-              allow: ["admin", "developer"]
+              allow:
+                - admin
+                - developer
           - description: List orders
             name: list_orders
             acl:
-              allow: ["admin", "developer"]
+              allow:
+                - admin
+                - developer
           - description: List orders for users
             name: list_orders_for_user
             acl:
-              allow: ["admin", "developer"]
+              allow:
+                - admin
+                - developer
           - description: Search orders by name (case-insensitive substring)
             name: search_orders
             acl:
-              allow: ["admin"]
-              deny: ["developer"]
+              allow:
+                - admin
+              deny:
+                - developer
 {% endentity_examples %}
 
 ## Validate the configuration
@@ -310,7 +321,7 @@ Now let's verify access for each user by connecting with their API key:
 1. Enter `apikey` in the Key field.
 1. Enter `carol-key` in the Value field.
 1. Click the **Connect** button.
-1. The connection should fail with a **403 Forbidden** response.<br/>
+1. The connection should fail with a `INVALID_PARAMS -32602` response.<br/>
    Carol belongs to the **suspended** group, which is globally denied access to all tools.
 1. Click **Disconnect** to switch to another user.
 

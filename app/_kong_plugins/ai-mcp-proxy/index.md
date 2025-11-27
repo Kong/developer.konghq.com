@@ -303,7 +303,7 @@ rows:
     response: 403
   - condition: "`allow` list exists and subject is not in it"
     proxy: No
-    response: 403
+    response: INVALID_PARAMS -32602
   - condition: "Only `deny` list exists and subject is not in it"
     proxy: Yes
     response: 200
@@ -330,7 +330,7 @@ The AI MCP Proxy plugin evaluates ACLs for both tool discovery and tool invocati
 3. AI MCP Proxy loads the Consumer's group memberships
 4. Plugin evaluates the tool-specific ACL (if configured) or default ACL (if not configured)
 5. Plugin logs the access attempt (allowed or denied)
-6. Plugin returns `403 Forbidden` if denied, or forwards the request to the upstream MCP server if allowed
+6. Plugin returns `INVALID_PARAMS -32602` if denied, or forwards the request to the upstream MCP server if allowed
 
 <!-- vale off -->
 {% mermaid %}
@@ -353,7 +353,7 @@ sequenceDiagram
     alt Allowed
       Kong-->>Client: Filtered tool list
     else Denied
-      Kong-->>Client: 403 Forbidden
+      Kong-->>Client: INVALID_PARAMS -32602
     end
   end
 
@@ -370,7 +370,7 @@ sequenceDiagram
       Up-->>Kong: Response
       Kong-->>Client: Response
     else Denied
-      Kong-->>Client: 403 Forbidden
+      Kong-->>Client: INVALID_PARAMS -32602
     end
   end
 {% endmermaid %}

@@ -99,24 +99,13 @@ entities:
 Let's generate MCP traffic and verify it appears in the logs. In Chatwise, enter the following:
 
 ```text
-List all users available in my marketplace
+How many orders are there in my marketplace?
 ```
 
 You should see Chatwise successfully call the `list_users` tool with a response like:
 
 ```text
-Here is the list of users in your marketplace:
-
-Alice Johnson
-Bob Smith
-Charlie Lee
-Diana Evans
-Ethan Brown
-Fiona Clark
-George Harris
-Hannah Lewis
-Ian Walker
-Julia Turner
+There are 27 orders in your marketplace.
 ```
 
 Next, check the audit logs in your Docker container:
@@ -131,35 +120,37 @@ You should see output similar to:
 {
   "ai": {
     "mcp": {
-      "audit": [
+      "rpc": [
         {
-          "primitive_name": "list_users",
-          "primitive": "tool",
-          "action": "allow",
-          "consumer": {
-            "name": "admin",
-            "id": "e6b415a7-4823-abcd-1234-d86324780e06",
-            "identifier": "consumer_group"
-          },
-          "scope": "primitive"
-        },
-        {
-          "action": "allow",
-          "consumer": {
-            "name": "admin",
-            "id": "e6b415a7-4823-abcd-1234-d86324780e06",
-            "identifier": "consumer_group"
-          },
-          "scope": "global"
+          "method": "tools/call",
+          "latency": 6,
+          "id": "2",
+          "response_body_size": 5030,
+          "tool_name": "list_orders"
         }
       ],
+      "audit": [
+        {
+          "primitive_name": "list_orders",
+          "consumer": {
+            "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+            "name": "admin",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "allow"
+        }
+      ]
+    }
+  },
       "rpc": [
         {
           "method": "tools/call",
           "id": "1",
           "latency": 3,
-          "tool_name": "list_users",
-          "response_body_size": 1375
+          "tool_name": "list_orders",
+          "response_body_size": 5030
         }
       ]
     }

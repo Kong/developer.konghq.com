@@ -370,7 +370,7 @@ rows:
       {% new_in 3.13 %} The type of consumer identifier (for example, `consumer_group`).
   - property: "`ai.mcp.audit[].scope`"
     description: |
-      {% new_in 3.13 %} The scope of the access control check: `primitive` for specific MCP primitives or `global` for server-wide access.
+      {% new_in 3.13 %} The scope of the access control check.
 {% endtable %}
 <!-- vale on -->
 
@@ -482,44 +482,43 @@ The following example shows a structured AI Gateway log entry:
 The following example shows an MCP log entry:
 
 ```json
-"ai": {
-  "mcp": {
-    "mcp_session_id": "session-id",
-    "rpc": [
-      {
-        "id": "4",
-        "latency": 1,
-        "payload": {
-          "response": "$OPTIONAL_MCP_PAYLOAD_REQUEST",
-          "request": "$OPTIONAL_MCP_PAYLOAD_REQUEST"
-        },
-        "method": "tools/call",
-        "tool_name": "tool 1",
-        "response_body_size": 100
-      }
-    ],
-    "audit": [
-    {
-      "primitive_name": "list_users",
-      "primitive": "tool",
-      "action": "allow",
-      "consumer": {
-        "name": "admin",
-        "id": "e6b415a7-4823-abcd-1234-d86324780e06",
-        "identifier": "consumer_group"
-      },
-      "scope": "primitive"
-    },
-    {
-      "action": "allow",
-      "consumer": {
-        "name": "admin",
-        "id": "e6b415a7-4823-abcd-1234-d86324780e06",
-        "identifier": "consumer_group"
-      },
-      "scope": "global"
+{
+  "ai": {
+    "mcp": {
+      "rpc": [
+        {
+          "method": "tools/call",
+          "latency": 6,
+          "id": "2",
+          "response_body_size": 5030,
+          "tool_name": "list_orders"
+        }
+      ],
+      "audit": [
+        {
+          "primitive_name": "list_orders",
+          "consumer": {
+            "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+            "name": "admin",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "allow"
+        }
+      ]
     }
-  ]
+  },
+      "rpc": [
+        {
+          "method": "tools/call",
+          "id": "1",
+          "latency": 3,
+          "tool_name": "list_orders",
+          "response_body_size": 5030
+        }
+      ]
+    }
   }
 }
 ```
