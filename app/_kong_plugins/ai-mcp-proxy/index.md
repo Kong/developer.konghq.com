@@ -280,8 +280,8 @@ rows:
 
 Both default and per-tool ACLs use `allow` and `deny` lists. Evaluation follows this order:
 
-1. **Deny list**: If the subject matches any `deny` entry, the request is rejected (`403`).
-2. **Allow list (optional)**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`403`).
+1. **Deny list**: If the subject matches any `deny` entry, the request is rejected (`INVALID_PARAMS -32602`).
+2. **Allow list (optional)**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`INVALID_PARAMS -32602`).
 3. **Only deny configured**: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
 4. **No ACL configuration**: If neither list exists, the request is allowed.
 
@@ -300,7 +300,7 @@ columns:
 rows:
   - condition: "Subject matches any `deny` rule"
     proxy: No
-    response: 403
+    response: INVALID_PARAMS -32602
   - condition: "`allow` list exists and subject is not in it"
     proxy: No
     response: INVALID_PARAMS -32602
