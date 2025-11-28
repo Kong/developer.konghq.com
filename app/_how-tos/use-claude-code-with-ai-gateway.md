@@ -112,7 +112,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, configure the AI Proxy plugin for the Anthropic provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here. The client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+First, configure the AI Proxy plugin for the [Anthropic provider](/ai-gateway/ai-providers/#anthropic). This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here. The client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
 
 Set `llm_format: anthropic` to tell Kong AI Gateway that requests and responses use Claude's native API format. This parameter controls schema validation and prevents format mismatches between Claude Code and the gateway.
 
@@ -134,7 +134,7 @@ entities:
 
 ## Configure the File Log plugin
 
-Now, let's enable the File Log plugin on the service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
+Now, let's enable the [File Log](/plugins/file-log/) plugin on the service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
 
 {% entity_examples %}
 entities:
@@ -172,7 +172,7 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach the Gateway.
+Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach Kong AI Gateway.
 
 ```text
 Tell me about Madrid Skylitzes manuscript.
