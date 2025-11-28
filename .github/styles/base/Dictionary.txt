@@ -953,6 +953,7 @@ workingDir
 workqueue
 workspace
 workspace's
+xai
 xbox
 xenial
 yaml
