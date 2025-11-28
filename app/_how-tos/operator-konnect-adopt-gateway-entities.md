@@ -9,7 +9,7 @@ breadcrumbs:
     group: Konnect
   - index: operator
     group: Konnect
-    section: "Konnect CRDs: Gateway"
+    section: "Konnect CRDs: Adopting from Existing Entities"
 
 products:
   - operator

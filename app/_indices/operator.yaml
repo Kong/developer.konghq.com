@@ -100,6 +100,9 @@ groups:
       - title: "Konnect CRDs: Cloud Gateways"
         items:
           - path: /operator/konnect/crd/cloud-gateways/**/*
+      - title: "Konnect CRDs: Adopting from Existing Entities"
+        items:
+          - path: /operator/konnect/crd/adoption/gateway
       - title: Troubleshooting
         items:
           - path: /operator/konnect/troubleshooting/status/
