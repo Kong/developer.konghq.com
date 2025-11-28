@@ -2,6 +2,9 @@
 title: 'Image generation with xAI'
 description: 'Configure an image generation route with the xAI Grok 2 Image Gen model.'
 
+min_version:
+  gateway: '3.13'
+
 weight: 900
 
 min_version:

@@ -18,7 +18,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.6'
+  gateway: '3.13'
 
 plugins:
   - ai-proxy

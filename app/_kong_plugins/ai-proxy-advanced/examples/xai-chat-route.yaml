@@ -2,6 +2,9 @@
 title: 'Chat route with xAI'
 description: 'Configure a chat route using the xAI Grok 4 model.'
 
+min_version:
+  gateway: '3.13'
+
 weight: 900
 
 min_version:
