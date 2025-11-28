@@ -100,9 +100,9 @@ faqs:
       {{site.base_gateway}} will parse the response of the read secret API automatically and return the secret value.
   - q: Can Azure Key Vault be used with a proxy?
     a: |
-      {% new_in 3.12 %} Yes. Azure Vault supports proxy configuration using either environment variables or client constructor arguments.
+      {% new_in 3.12 %} Yes. Azure Key Vault supports proxy configuration using either environment variables or client constructor arguments.
 
-      **Environment Variables**
+      **Environment variables**
 
       ```sh
       export AZURE_HTTP_PROXY=http://proxy.example.com:8080
@@ -112,7 +112,7 @@ faqs:
       export AZURE_AUTH_PASSWORD=proxypass
       ```
 
-      **Constructor Arguments**
+      **Constructor arguments**
 
       ```lua
       local azure_client = require("resty.azure"):new({
@@ -126,7 +126,7 @@ faqs:
         auth_password = "proxypass",
       })
       ```
-      
+
       {:.info}
       > **Notes:**
       > * Constructor arguments take precedence over environment variables.
