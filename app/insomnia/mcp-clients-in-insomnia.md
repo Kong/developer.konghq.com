@@ -150,7 +150,7 @@ Elicitation supports workflows where the server needs more context or specific f
 1. Collects the user input
 1. Returns the elicitation response to the server
 
-### How Elicitation Works
+### How Elicitation works
 
 1. The MCP server returns an **elicitation request** while handling an operation.  
 1. Insomnia displays an **Elicitation Form** in the response pane based on the fields defined in the request.  
