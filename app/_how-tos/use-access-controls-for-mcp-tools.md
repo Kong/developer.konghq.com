@@ -101,7 +101,7 @@ prereqs:
 ---
 ## Set up Consumer authentication
 
-Let's configure authentication so the "{{site.base_gateway}}" can identify each caller. We'll use the [Key Auth](/plugins/key-auth/) plugin so each user (or AI agent) presents an API key with requests:
+Let's configure authentication so the {{site.base_gateway}} can identify each caller. We'll use the [Key Auth](/plugins/key-auth/) plugin so each user (or AI agent) presents an API key with requests:
 
 {% entity_examples %}
 entities:
