@@ -29,8 +29,8 @@ rows:
 
                       The guides below show how to configure the gateway and CLI tool for each provider.
 
-                      {:.warning}
-                      > **Limitations:**
+                      {:.info}
+                      > **Current limitations:**
                       > * Load balancing or failover features currently only work if all providers share the same model identifier.
                       > * Streaming is not supported when using non-Claude models with the following providers: Azure OpenAI, Google Gemini, and AWS Bedrock. Token usage might be reported as 0, but otherwise functionality is not affected.
 
@@ -82,6 +82,15 @@ rows:
             description: Use Claude Code with Gemini models
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-gemini/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with Vertex AI
+            icon: /assets/icons/vertex.svg
+            description: Use Claude Code with Vertex AI models
+            cta:
+              url: /how-to/use-claude-code-with-ai-gateway-vertex/
               align: end
   - header:
       type: h3
