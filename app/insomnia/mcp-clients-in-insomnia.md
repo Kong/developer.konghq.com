@@ -141,7 +141,7 @@ If the authorization server does not support Dynamic Client Registration, you ca
 - Use a **Personal Access Token (PAT)**, for example GitHub Copilot MCP Server.  
 - Register your own **OAuth application**, then enter the Client ID and Secret in Insomnia.
 
-## Elicitation Responses
+## Elicitation responses
 
 Insomnia supports **MCP Elicitation**, a feature that allows a server to request additional information from the client during a request. When a server returns an elicitation request, Insomnia displays the fields defined by the server so you can provide the required information. Insomnia then returns the submitted values to the server so it can continue processing the original request.
 
