@@ -130,7 +130,9 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, let's configure the AI Proxy plugin for the Azure provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+First, configure the AI Proxy plugin for the Gemini provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here. The client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+
+The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Gemini endpoint.
 
 {% entity_examples %}
 entities:
@@ -187,7 +189,7 @@ Now, we can start a Claude Code session that points it to the local AI Gateway e
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=gpt-4.1 \
+ANTHROPIC_MODEL=<your_gemini_model> \
 claude
 ```
 
@@ -212,18 +214,17 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach the Gateway.
 
 ```text
-Tell me about Vienna Oribasius manuscript.
+Tell me about Anna Komnene's Alexiad.
 ```
 
 Claude Code might prompt you approve its web search for answering the question. When you select **Yes** Claude will produce a full-length response to your request:
 
 ```text
-The "Vienna Oribasius manuscript" refers to a famous illustrated medical
-codex that preserves the works of Oribasius of Pergamon, a noted Greek
-physician who lived in the 4th century CE. Oribasius was a compiler of
-earlier medical knowledge, and his writings form an important link in the
-transmission of Greco-Roman medical science to the Byzantine, Islamic, and
-later European worlds.
+Anna Komnene (1083-1153?) was a Byzantine princess, scholar, physician,
+hospital administrator, and historian. She is known for writing the
+Alexiad, a historical account of the reign of her father, Emperor Alexios
+I Komnenos (r. 1081-1118). The Alexiad is a valuable primary source for
+understanding Byzantine history and the First Crusade.
 ```
 {:.no-copy-code}
 
@@ -237,11 +238,13 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 
 ```json
 {
+  ...
   "method": "POST",
   "headers": {
     "user-agent": "claude-cli/2.0.37 (external, cli)",
     "content-type": "application/json"
   },
+  ...
   "ai": {
     "proxy": {
       "tried_targets": [
@@ -276,6 +279,7 @@ You should find an entry that shows the upstream request made by Claude Code. A 
       }
     }
   }
+  ...
 }
 ```
 {:.no-copy-code}

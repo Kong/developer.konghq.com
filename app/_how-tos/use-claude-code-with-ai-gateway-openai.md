@@ -115,7 +115,9 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, let's configure the AI Proxy plugin for the OpenAI provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here, because the client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+First, configure the AI Proxy plugin for the OpenAI provider. This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here. The client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+
+The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the OpenAI endpoint.
 
 {% entity_examples %}
 entities:
