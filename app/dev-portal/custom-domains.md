@@ -18,8 +18,6 @@ works_on:
 description: "Use a custom URL for Dev Portal."
 
 related_resources:
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: Dev Portal settings
