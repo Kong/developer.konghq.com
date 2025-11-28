@@ -1,0 +1,16 @@
+metadata:
+  title: "Proxy AI CLI tools through Kong AI Gateway"
+  content_type: landing_page
+  description: Configure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers for logging, cost tracking, and rate limiting.
+  products:
+    - ai-gateway
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - ai
+    - cli
+rows:
+  - header:
+      type: h1
+      text: "Proxy AI CLI tools through Kong AI Gateway"
