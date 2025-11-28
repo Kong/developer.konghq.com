@@ -1,8 +1,8 @@
-description: 'Configure the AI Lakera Guard plugin to inspect reponses'
+description: 'Configure the AI Lakera Guard plugin to inspect reponses.'
 
 # extended_description: '' # Displays on the page; can use any markdown formatting
 
-title: 'Inspect requests only with ai-lakera-guard to inspect responses'
+title: 'Configure the AI Lakera Guard plugin to inspect reponses'
 
 weight: 900
 
@@ -20,7 +20,7 @@ config:
 
 
 min_version:
-  gateway: '3.12'
+  gateway: '3.13'
 
 tools:
   - deck

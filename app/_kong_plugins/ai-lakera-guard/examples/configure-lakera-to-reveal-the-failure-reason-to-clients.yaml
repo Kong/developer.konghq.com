@@ -1,4 +1,4 @@
-description: 'Configure the AI Lakera Guard plugin to inspect reponses'
+description: 'Configure the AI Lakera Guard plugin to reveal or conceal the failure reason to clients.'
 
 # extended_description: '' # Displays on the page; can use any markdown formatting
 
@@ -13,15 +13,20 @@ variables:
   lakera_api_key:
     description: 'The API key for your Lakera account.'
     value: LAKERA_API_KEY
+  project_id: 
+    description: "The Lakera project identifier used to evaluate the request."
+    value: project-9418537666
+  reveal_failure_categories: 
+    description: "Set to true to return failure-category details to clients when a request is blocked."
+    value: true  
 
 config:
   api_key:  "${lakera_api_key}"
   project_id: "project-9418537666"
   reveal_failure_categories: true
 
-
 min_version:
-  gateway: '3.12'
+  gateway: '3.13'
 
 tools:
   - deck

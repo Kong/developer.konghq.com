@@ -1,0 +1,28 @@
+description: 'Use the Lakera self-hosted instead of the cloud-hosted SaaS.'
+
+# extended_description: '' # Displays on the page; can use any markdown formatting
+
+title: 'Use the Lakera self-hosted instead of the cloud-hosted SaaS'
+
+weight: 900
+
+requirements: 
+  - You have a Lakera account and an API key.
+
+variables:
+  lakera_service_url: 
+    description: "The URL of your self-hosted Lakera Guard service."
+    value: "https://my-lakera.svc.cluster.local:8443/v2/guard"
+
+config:
+  lakera_service_url: "https://my-lakera.svc.cluster.local:8443/v2/guard"
+
+min_version:
+  gateway: '3.13'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
