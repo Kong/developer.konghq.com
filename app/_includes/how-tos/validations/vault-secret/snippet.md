@@ -1,6 +1,6 @@
 {% assign command=include.command %}
-{% if include.command == nil %}
-{% assign command="docker exec " | append: include.container %}
+{% if include.command == empty %}
+{% assign command="docker exec {{include.container}}" %}
 {% endif %}
 
 ```bash
