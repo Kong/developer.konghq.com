@@ -54,16 +54,10 @@ prereqs:
       include_content: prereqs/hashicorp
       icon_url: /assets/icons/hashicorp.svg
     - title: OpenAI
-      content: |
-        This tutorial uses OpenAI:
-          1. [Create an OpenAI account](https://auth.openai.com/create-account).
-          1. [Get an API key](https://platform.openai.com/api-keys).
+      include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
     - title: Mistral
-      content: |
-        This tutorial uses OpenAI:
-          1. [Create a Mistral account](https://auth.mistral.ai/ui/).
-          1. [Get your API key](https://console.mistral.ai/api-keys).
+      include_content: prereqs/mistral
       icon_url: /assets/icons/mistral.svg
 
 cleanup:
@@ -78,22 +72,29 @@ cleanup:
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 ## Create secrets in HashiCorp Vault
 
-Replace the placeholder with your actual OpenAI API key and run:
+Replace the placeholder with your OpenAI API key and run:
 
-```bash
-vault kv put secret/openai key="YOUR_OPENAI_API_KEY"
-```
+{% validation custom-command %}
+command: |
+  vault kv put secret/openai key=$DECK_OPENAI_API_KEY
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
-Next, replace the placeholder with your actual Mistral API key and run:
+Next, replace the placeholder with your Mistral API key and run:
 
-```bash
-vault kv put secret/mistral key="YOUR_MISTRAL_API_KEY"
-```
+{% validation custom-command %}
+command: |
+  vault kv put secret/mistral key=$DECK_MISTRAL_API_KEY
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 Both secrets will be stored under their respective paths (`secret/openai` and `secret/mistral`) in the key field.
 
@@ -106,7 +107,7 @@ In this tutorial, we're using `host.docker.internal` as our host instead of the 
 Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value.
 
 {% env_variables %}
-DECK_HCV_HOST: host.docker.internal
+DECK_HCV_HOST: 'host.docker.internal'
 DECK_HCV_TOKEN: 'root'
 {% endenv_variables %}
 
@@ -148,13 +149,13 @@ To validate that the secret was stored correctly in HashiCorp Vault, you can cal
 
 {% validation vault-secret %}
 secret: '{vault://hashicorp-vault/mistral/key}'
-value: MISTRAL_API_KEY
+value: $DECK_MISTRAL_API_KEY
 {% endvalidation %}
 
 
 {% validation vault-secret %}
 secret: '{vault://hashicorp-vault/openai/key}'
-value: OPENAI_API_KEY
+value: $DECK_OPENAI_API_KEY
 {% endvalidation %}
 
 
