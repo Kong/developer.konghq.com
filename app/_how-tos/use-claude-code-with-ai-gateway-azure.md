@@ -237,9 +237,9 @@ You should find an entry that shows the upstream request made by Claude Code. A 
         "llm_latency": 4606,
         "provider_name": "azure",
         "azure_deployment_id": "gpt-4.1",
-        "plugin_id": "22122dc5-456e-4707-aec9-7ae3a0250ad5",
+        "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "azure_api_version": "2024-12-01-preview",
-        "azure_instance_id": "test-azyre-openai"
+        "azure_instance_id": "example-azure-openai"
       },
       "usage": {
         "completion_tokens": 414,

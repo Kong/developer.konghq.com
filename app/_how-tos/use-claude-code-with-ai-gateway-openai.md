@@ -224,7 +224,7 @@ You should find an entry that shows the upstream request made by Claude Code. A 
       "response_model": "gpt-5-mini-2025-08-07",
       "provider_name": "openai",
       "llm_latency": 6786,
-      "plugin_id": "22122dc5-456e-4707-aec9-7ae3a0250ad5"
+      "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
     },
     "usage": {
       "completion_tokens": 456,

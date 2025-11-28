@@ -254,9 +254,9 @@ You should find an entry that shows the upstream request made by Claude Code. A 
           "port": 443,
           "upstream_scheme": "https",
           "host": "us-central1-aiplatform.googleapis.com",
-          "upstream_uri": "/v1/projects/summit-demo-2022/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent",
+          "upstream_uri": "/v1/projects/example-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent",
           "route_type": "llm/v1/chat",
-          "ip": "142.250.109.95"
+          "ip": "xxx.xxx.xxx.xxx"
         }
       ],
       "meta": {

@@ -246,7 +246,7 @@ You should find an entry that shows the upstream request made by Claude Code. A 
         "request_model": "claude-sonnet-4-20250514",
         "response_model": "claude-sonnet-4-20250514",
         "llm_latency": 3310,
-        "plugin_id": "7705ed4d-2423-444f-b635-b5f5bb4b3331",
+        "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "request_mode": "stream",
         "provider_name": "anthropic"
       }
