@@ -9,12 +9,10 @@ metadata:
     - konnect
   tags:
     - ai
-    - cli
 rows:
   - header:
       type: h1
       text: "Proxy AI CLI tools through Kong AI Gateway"
-
     columns:
       - blocks:
           - type: structured_text
@@ -26,36 +24,80 @@ rows:
 
                       Supported tools:
 
-                      - **Claude Code**: Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock
-                      - **Codex CLI**: OpenAI
+                      - [**Claude Code**](./#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock
+                      - [**Codex CLI**](./#codex-cli): OpenAI
 
                       The guides below show how to configure the gateway and CLI tool for each provider.
+
   - header:
-        type: h2
-        text: "Claude Code"
+      type: h3
+      text: "Claude Code"
     columns:
-        - blocks:
+      - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    some text
-          - blocks:
-            - type: card
-              config:
-                title: Universal API
-                description: Route client requests to various AI providers.
-                icon: /assets/icons/plugins/universal-api.svg
-                cta:
-                  url: ./#universal-api
-                  align: end
-          - blocks:
-            - type: card
-              config:
-                title: Rate limiting
-                description: Manage traffic to your LLM API.
-                icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
-                cta:
-                  url: /plugins/ai-rate-limiting-advanced/
-                  align: end
+                    Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team.
+  - column_count: 4
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with Anthropic
+            description: Use Claude Code with Anthropic models
+            icon: /assets/icons/anthropic.svg
+            cta:
+              url: /how-to/use-claude-code-with-ai-gateway/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with OpenAI
+            icon: /assets/icons/openai.svg
+            description: Use Claude Code with OpenAI models
+            cta:
+              url: /how-to/use-claude-code-with-ai-gateway-openai/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with Azure AI
+            icon: /assets/icons/azure.svg
+            description: Use Claude Code with Azure AI models
+            cta:
+              url: /how-to/use-claude-code-with-ai-gateway-azure/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with Gemini
+            icon: /assets/icons/gcp.svg
+            description: Use Claude Code with Gemini models
+            cta:
+              url: /how-to/use-claude-code-with-ai-gateway-gemini/
+              align: end
+  - header:
+      type: h3
+      text: "Codex CLI"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management.
+
+  - column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Codex CLI with OpenAI
+              description: Use Codex CLI with OpenAI models
+              icon: /assets/icons/openai.svg
+              cta:
+                url: /how-to/use-claude-code-with-ai-gateway/
+                align: end
