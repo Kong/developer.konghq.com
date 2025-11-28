@@ -33,15 +33,12 @@ async function extractPrereqs(page) {
     .locator('[data-test-id="prereqs"] > *')
     .all();
 
-  let extractedBlocks = await extractPrereqsBlocks(page);
-  blocks.push(...extractedBlocks);
-
   for (const prereq of prerequisites) {
     if (await prereq.isVisible()) {
       const trigger = await prereq.locator(".accordion-trigger");
       await trigger.click();
     }
-    extractedBlocks = await extractPrereqsBlocks(page);
+    const extractedBlocks = await extractPrereqsBlocks(page);
     blocks.push(...extractedBlocks);
   }
 
