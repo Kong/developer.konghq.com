@@ -1,6 +1,7 @@
 FROM ubuntu:latest
 RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl
-RUN curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.49.1/deck_v1.49.1_amd64.deb && \
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.49.1/deck_v1.49.1_${ARCH}.deb && \
     dpkg -i deck_v1.deb
 RUN apt-get update
 RUN apt-get install ca-certificates curl
@@ -13,12 +14,20 @@ RUN echo \
   $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
     tee /etc/apt/sources.list.d/docker.list > /dev/null
 RUN apt-get update && apt-get install -y docker-compose-plugin
-RUN curl -L https://go.dev/dl/go1.25.3.linux-amd64.tar.gz -o go.tar.gz && \
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -L https://go.dev/dl/go1.25.3.linux-${ARCH}.tar.gz -o go.tar.gz && \
     tar -C /usr/local -xzf go.tar.gz && \
     rm go.tar.gz
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 ENV GOPATH="/go"
 ENV PATH="${GOPATH}/bin:${PATH}"
+ENV VAULT_DISABLE_MLOCK=true
 
 RUN go install github.com/deviceinsight/kafkactl/v5@latest
+
+# Install HashiCorp Vault
+RUN apt-get update && apt-get install -y wget gnupg lsb-release && \
+    wget -O - https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list && \
+    apt-get update && apt-get install -y vault

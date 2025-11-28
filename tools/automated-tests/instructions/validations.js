@@ -332,6 +332,43 @@ async function trafficGenerator(
   return assertions;
 }
 
+async function vaultSecret(validationName, config, runtimeConfig, container) {
+  let result;
+  let expectedValue;
+
+  let command = "";
+  if (config.command) {
+    command = `${config.command} kong vault get ${config.secret}`;
+  } else {
+    command = `docker exec ${config.container} kong vault get ${config.secret}`;
+  }
+
+  try {
+    expectedValue = await executeCommand(container, `echo ${config.value}`);
+    result = await executeCommand(container, command);
+  } catch (error) {
+    result = error;
+  }
+  if (result.exitCode !== 0) {
+    logAndError(
+      validationName,
+      "Failed to retrieve the secret from the vault",
+      [`Expected: command to have return code 0, got: ${result.exitCode}`]
+    );
+  } else if (
+    expectedValue &&
+    result &&
+    !result.output.trim().includes(expectedValue.output.trim())
+  ) {
+    logAndError(
+      validationName,
+      "Failed to retrieve the secret from the vault",
+      [`Expected: the vault to return ${expectedValue}, got: ${result}`]
+    );
+  }
+  return [];
+}
+
 export async function validate(container, validation, runtimeConfig) {
   let result;
   log(`   ${validation.name}`);
@@ -383,6 +420,14 @@ export async function validate(container, validation, runtimeConfig) {
       break;
     case "traffic-generator":
       result = await trafficGenerator(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container
+      );
+      break;
+    case "vault-secret":
+      result = await vaultSecret(
         validation.name,
         validation.config,
         runtimeConfig,
