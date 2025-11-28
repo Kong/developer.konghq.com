@@ -7,6 +7,8 @@ metadata:
   works_on:
     - on-prem
     - konnect
+  breadcrumbs:
+    - /ai-gateway/
   tags:
     - ai
 rows:
@@ -20,11 +22,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                      Kong AI Gateway can proxy requests from AI command-line tools to LLM providers. This lets you log requests, track costs, apply rate limits, and switch providers without changing CLI configurations.
+                    Kong AI Gateway can proxy requests from AI command-line tools to LLM providers. This gives you centralized control over AI traffic: log all requests, track costs across teams, enforce rate limits, or apply security policies and guardrails.
 
-                      Supported tools:
+                      Supported AI CLI tools:
 
-                      - [**Claude Code**](./#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock
+                      - [**Claude Code**](./#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex and AWS Bedrock
                       - [**Codex CLI**](./#codex-cli): OpenAI
 
                       The guides below show how to configure the gateway and CLI tool for each provider.
@@ -92,6 +94,15 @@ rows:
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-vertex/
               align: end
+      # - blocks:
+      #   - type: card
+      #     config:
+      #       title: Claude Code with Bedrock
+      #       icon: /assets/icons/bedrock.svg
+      #       description: Use Claude Code with Bedrock models
+      #       cta:
+      #         url: /how-to/use-claude-code-with-ai-gateway-vertex/
+      #         align: end
   - header:
       type: h3
       text: "Codex CLI"

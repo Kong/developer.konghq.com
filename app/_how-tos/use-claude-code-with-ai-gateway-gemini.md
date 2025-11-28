@@ -1,5 +1,5 @@
 ---
-title: Route Claude CLI traffic through Kong AI Gateway and Azure
+title: Route Claude CLI traffic through Kong AI Gateway and Gemini
 content_type: how_to
 
 related_resources:
@@ -10,7 +10,7 @@ related_resources:
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Claude CLI traffic using Azure OpenAI models
+description: Configure AI Gateway to proxy Claude CLI traffic using Gemini models
 
 products:
   - gateway
