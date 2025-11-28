@@ -5,6 +5,6 @@ This tutorial uses xAI:
 1. Click **Create API key**.
 1. Create a decK variable with the API key:
 
-{% env_variables %}
-DECK_XAI_API_KEY: 'YOUR XAI API KEY'
-{% endenv_variables %}
+   ```sh
+   export DECK_XAI_API_KEY: 'YOUR XAI API KEY'
+   ```
