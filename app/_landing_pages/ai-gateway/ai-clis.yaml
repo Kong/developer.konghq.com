@@ -14,3 +14,48 @@ rows:
   - header:
       type: h1
       text: "Proxy AI CLI tools through Kong AI Gateway"
+
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                      Kong AI Gateway can proxy requests from AI command-line tools to LLM providers. This lets you log requests, track costs, apply rate limits, and switch providers without changing CLI configurations.
+
+                      Supported tools:
+
+                      - **Claude Code**: Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock
+                      - **Codex CLI**: OpenAI
+
+                      The guides below show how to configure the gateway and CLI tool for each provider.
+  - header:
+        type: h2
+        text: "Claude Code"
+    columns:
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    some text
+          - blocks:
+            - type: card
+              config:
+                title: Universal API
+                description: Route client requests to various AI providers.
+                icon: /assets/icons/plugins/universal-api.svg
+                cta:
+                  url: ./#universal-api
+                  align: end
+          - blocks:
+            - type: card
+              config:
+                title: Rate limiting
+                description: Manage traffic to your LLM API.
+                icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
+                cta:
+                  url: /plugins/ai-rate-limiting-advanced/
+                  align: end
