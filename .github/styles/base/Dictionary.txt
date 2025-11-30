@@ -41,6 +41,7 @@ Arya
 Arya
 arya
 assumeRole
+async
 Atlassian
 auditability
 authtoken
