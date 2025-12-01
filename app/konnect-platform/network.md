@@ -157,4 +157,4 @@ rows:
 
 ## Mesh hostnames in {{site.konnect_short_name}}
 
-If you use {{site.konnect_short_name}} to manage your Kong service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+If you use {{site.konnect_short_name}} to manage your service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.

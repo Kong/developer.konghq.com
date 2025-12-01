@@ -96,7 +96,7 @@ This process assumes you're migrating zones one by one. During migration, zone-t
    kumactl apply -f {file_name}
    ```
 
-## Connect the zone Control Plane to {{site.konnect_short_name}}
+## Connect the zone control plane to {{site.konnect_short_name}}
 
 1. [Create a new zone](/mesh/konnect-global-control-plane/#create-a-zone-in-the-global-control-plane) in {{site.konnect_short_name}}.
 
