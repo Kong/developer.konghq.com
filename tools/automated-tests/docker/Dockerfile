@@ -1,5 +1,10 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv
+
+# set python env
+RUN python3 -m venv /opt/myenv
+ENV PATH="/opt/myenv/bin:$PATH"
+
 RUN ARCH=$(dpkg --print-architecture) && \
     curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.49.1/deck_v1.49.1_${ARCH}.deb && \
     dpkg -i deck_v1.deb
