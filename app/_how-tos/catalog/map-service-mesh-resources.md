@@ -30,7 +30,7 @@ related_resources:
 
 ## Create a service in {{site.konnect_catalog}}
 
-In this tutorial, you'll map services from Service Mesh to a service in {{site.konnect_catalog}}. Because the Service Mesh integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
+In this tutorial, you'll map services from {{site.mesh_product_name}} to a service in {{site.konnect_catalog}}. Because the Service Mesh integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
 
 Create a service that you'll map to your Service Mesh resources:
 
