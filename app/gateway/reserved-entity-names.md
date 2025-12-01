@@ -74,3 +74,12 @@ The reserved entity names are the following:
 * `vaults`
 * `workspaces`
 * `workspace_entity_counters`
+
+## Vaults
+
+The following keywords are reserved for the default vault. They cannot be used as vault names:
+
+* `azure`
+* `gcp`
+* `aws`
+* `hcv`
