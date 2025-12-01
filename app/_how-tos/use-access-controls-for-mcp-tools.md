@@ -82,13 +82,6 @@ prereqs:
         http://localhost:3001/mcp
         ```
       icon_url: /assets/icons/github.svg
-    - title: ChatWise desktop application
-      content: |
-        Download and install [ChatWise](https://chatwise.app/) for your OS.
-
-        After installation:
-        1. Launch the app.
-        2. In Settings > Providers, configure your AI provider endpoint and API key.
 
   entities:
     services:

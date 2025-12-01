@@ -1,10 +1,9 @@
-description: 'Configure default and per-tool access control for conversion-listener mode HTTP endpoints'
+description: 'Set access control rules for MCP tools by consumer group'
 
-title: 'Configure default and per-tool access control for conversion-listener mode HTTP endpoints'
+title: 'Set access control rules for MCP tools based on consumer groups'
 
 extended_description: |
-  Configure default and per-tool access control for conversion-listener mode HTTP endpoints.
-
+  Define which consumer groups can access specific MCP tools in conversion-listener mode. Use default rules that apply to all tools, then override access for individual tools as needed.
   {:.info}
   > For this configuration to work properly, you need to create the following {{site.base_gateway}} entities:
   > ```yaml

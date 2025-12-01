@@ -1,11 +1,10 @@
-description: 'Configure default and per-tool access control for passthrough-listener mode MCP servers'
-
+description: 'Set access control rules for passthrough-listener mode MCP servers'
 
 title: 'Configure default and per-tool access control for passthrough-listener mode MCP servers'
 
-
 extended_description: |
-  Configure default and per-tool access control for passthrough-listener mode MCP servers
+  Configure default and per-tool access control for passthrough-listener mode MCP servers.
+
 
   {:.info}
   > For this configuration to work properly, you need to create the following {{site.base_gateway}} entities:
