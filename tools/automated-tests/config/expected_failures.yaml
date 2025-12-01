@@ -22,3 +22,4 @@ input/instructions/how-to/use-custom-function-for-ai-rate-limiting/gateway.yaml:
 input/instructions/how-to/use-semantic-load-balancing/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
 input/instructions/how-to/use-ai-aws-guardrails-plugin/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
 input/instructions/how-to/use-ai-rag-injector-plugin/gateway.yaml: "Expected: request http://localhost:8001/ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk to have status code 200, got: 500."
+input/instructions/how-to/use-ai-gcp-model-armor-plugin/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 404, got: 500."

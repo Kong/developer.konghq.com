@@ -216,6 +216,8 @@ This test verifies that the content filter blocks hate speech and derogatory req
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:
@@ -234,6 +236,8 @@ This test ensures the filter blocks requests for dangerous or illegal instructio
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:
@@ -252,6 +256,8 @@ This test checks that harassment, threats, and abusive messaging are blocked.
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:
@@ -270,6 +276,8 @@ This test confirms that benign, everyday requests are allowed through the system
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:
