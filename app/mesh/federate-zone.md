@@ -13,7 +13,7 @@ tags:
   - service-mesh
 ---
 
-If you already have a zone Control Plane that's not connected to any global Control Plane, you can federate it to {{site.konnect_short_name}}.
+If you already have a zone control plane that's not connected to any global control plane, you can federate it to {{site.konnect_short_name}}.
 
 By federating a zone Control Plane, you move {{site.mesh_product_name}} from a single-zone setup to a [multi-zone](/mesh/multi-zone-authentication/) setup. This enables automatic service failover if a specific zone becomes unavailable.
 
@@ -23,9 +23,9 @@ This guide explains how to federate a zone Control Plane to {{site.konnect_short
 
 * A universal or Kubernetes cluster with a running zone Control Plane that's not yet connected to a global Control Plane
 * The latest version of [`kumactl`](/mesh/#install-kong-mesh) installed and configured
-* A [{{site.mesh_product_name}} global Control Plane in {{site.konnect_short_name}}](/mesh/konnect-global-control-plane/#create-a-zone-in-the-global-control-plane)
+* A [{{site.mesh_product_name}} global control plane in {{site.konnect_short_name}}](/mesh/konnect-global-control-plane/#create-a-zone-in-the-global-control-plane)
 
-## Transfer resources from the zone Control Plane to {{site.konnect_short_name}}
+## Transfer resources from the zone control plane to {{site.konnect_short_name}}
 
 1. In the {{site.konnect_short_name}} menu, navigate to [**Service Mesh**](https://cloud.konghq.com/mesh-manager).
 

@@ -1,7 +1,7 @@
 ---
 title: Migrate a self-managed zone Control Plane to {{site.konnect_short_name}}
 content_type: reference
-description: 'Move your existing {{site.mesh_product_name}} zone Control Planes from a self-managed global Control Plane to a managed global Control Plane in {{site.konnect_short_name}}.'
+description: 'Move your existing {{site.mesh_product_name}} zone control planes from a self-managed global Control Plane to a managed global Control Plane in {{site.konnect_short_name}}.'
 layout: reference
 breadcrumbs:
   - /mesh/
@@ -11,7 +11,7 @@ tags:
   - service-mesh
 ---
 
-If you already have zone Control Planes in {{site.mesh_product_name}}, you can migrate them to {{site.konnect_short_name}}.
+If you already have zone control planes in {{site.mesh_product_name}}, you can migrate them to {{site.konnect_short_name}}.
 
 Here are a few benefits of managing your service mesh in {{site.konnect_short_name}}:
 
@@ -35,10 +35,10 @@ This process assumes you're migrating zones one by one. During migration, zone-t
 
 * A Kubernetes or universal cluster with a zone Control Plane connected to a self-managed global Control Plane
 * [`kumactl`](/mesh/#install-kong-mesh) installed and configured
-* A [global Control Plane in {{site.konnect_short_name}}](/mesh/konnect-global-control-plane/)
+* A [global control plane in {{site.konnect_short_name}}](/mesh/konnect-global-control-plane/)
 * [`yq`](https://github.com/mikefarah/yq) installed
 
-## Transfer resources from the self-managed global Control Plane
+## Transfer resources from the self-managed global control plane
 
 1. Make sure your self-managed global Control Plane is the active context:
 

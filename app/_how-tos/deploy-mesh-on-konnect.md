@@ -264,7 +264,7 @@ kuma-dp run \
 {% endnavtabs %}
 
 {:.info}
-When using the {{site.konnect_short_name}} managed Control Plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}}](https://cloud.konghq.com/us/mesh-manager).
+When using the {{site.konnect_short_name}} managed control plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}}](https://cloud.konghq.com/us/mesh-manager).
 
 
 ## Forward ports

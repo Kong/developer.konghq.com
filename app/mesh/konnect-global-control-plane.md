@@ -13,7 +13,7 @@ tags:
   - service-mesh
 ---
 
-Using the Mesh GUI in {{site.konnect_short_name}}, you can create global Control Planes to manage your {{site.mesh_product_name}} meshes. This guide explains how to configure a global Control Plane and then install the Kubernetes demo app to test out the {{site.mesh_product_name}} interface in {{site.konnect_short_name}}.
+Using the Mesh GUI in {{site.konnect_short_name}}, you can create global control planes to manage your {{site.mesh_product_name}} instances. This guide explains how to configure a global control plane and then install the Kubernetes demo app to test out the {{site.mesh_product_name}} interface in {{site.konnect_short_name}}.
 
 ## Prerequisites
 
