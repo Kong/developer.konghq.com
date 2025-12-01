@@ -87,7 +87,7 @@ In particular, every role must be tagged at a minimum with `kuma.io/type` set to
 either `dataplane`, `ingress`, or `egress`. For `dataplane`, i.e. a normal data
 plane proxy, the `kuma.io/mesh` tag is also required to be set.
 
-{% new_in 2.13 %} When using [`MeshIdentity`](/mesh/policies/meshidentity/) with the `kuma.io/workload` label in its SPIFFE ID path template (e.g., `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}`), the IAM role must also include a matching `kuma.io/workload` tag. This validation is enforced to ensure secure identity binding between IAM roles and dataplanes when workload labels are used.
+{% new_in 2.13 %} When using `MeshIdentity` with the `kuma.io/workload` label in its SPIFFE ID path template (e.g., `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}`), the IAM role must also include a matching `kuma.io/workload` tag. This validation is enforced to ensure secure identity binding between IAM roles and dataplanes when workload labels are used.
 
 This means that the setting of these tags on IAM roles
 must be restricted accordingly for your AWS account
@@ -236,7 +236,7 @@ It must always have the `kuma.io/type` tag set to either `"dataplane"`,
 
 If it's a `"dataplane"` type, then it must also have the `kuma.io/mesh` tag set.
 
-{% new_in 2.13 %} When a [`MeshIdentity`](/mesh/policies/meshidentity/) resource uses the `kuma.io/workload` label in its SPIFFE ID path template, the IAM role must include a `kuma.io/workload` tag that matches the dataplane's metadata labels. Ensure that:
+{% new_in 2.13 %} When a `MeshIdentity` resource uses the `kuma.io/workload` label in its SPIFFE ID path template, the IAM role must include a `kuma.io/workload` tag that matches the dataplane's metadata labels. Ensure that:
 
 - **For Kubernetes**: Add `kuma.io/workload` to Pod labels (automatically synced to dataplane metadata)
 - **For Universal/ECS**: Add `kuma.io/workload` to dataplane metadata labels:
