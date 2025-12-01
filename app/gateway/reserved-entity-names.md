@@ -77,7 +77,7 @@ The reserved entity names are the following:
 
 ## Vaults
 
-The following keywords are reserved for the default vault. They cannot be used as vault prefixes:
+The following keywords are reserved for the default [Vault](/gateway/entities/vault/). They cannot be used as Vault prefixes:
 
 * `azure`
 * `gcp`
