@@ -29,175 +29,24 @@ related_resources:
   - text: Inso CLI configuration
     url: /inso-cli/configuration/
 ---
-Use the Inso CLI to export collection run results as a JSON file. Output supports two modes:
-- Metadata only
-- Full data with optional redaction
+Use the Inso CLI to export collection run results as a JSON file. The CLI supports two output modes:
+- **Metadata-only** (default)
+- **Full data**, with optional redaction and truncation controls
 
-## Export collection run results
+## Export collection run results (metadata only)
 
-Run the following command to export a results file:
-
-```sh
-inso run collection <collection name> --env <environment> --output <file>
-```
-
-### Export modes
-
-The Inso CLI supports the following export modes:
-
-{% table %}
-columns:
-  - title: Mode
-    key: mode
-  - title: Description
-    key: description
-rows:
-  - mode: Metadata only
-    description: "Exports identifiers, timings, status codes, and test results. Doesn't include headers, bodies, authentication fields, or environment data."
-  - mode: Full data
-    description: "Exports complete request and response information. Requires the `includeFullData` mode flag and an explicit acceptance flag for security."
-{% endtable %}
-
-### Export metadata only
-
-Metadata reports include:
-
-- Request identifiers  
-- Timestamps  
-- Response status codes  
-- Execution timings  
-- Test results  
-Example:
+Run the following command to export collection run metadata that contains identifiers, timings, and test results:
 
 ```
-inso run collection "My Collection" \
-  --env "Base Environment" \
-  --output results.json
+./inso run collection "Flights 0.1.0" --env "Base Environment" --output file.json
 ```
 
-### Export full request and response data
+### Export full data
 
-A full data export includes:
+If you require all of the information associated with a collection run, perform a full-data export. Full-data exports include request headers, authentication fields, parameters, request bodies, response headers, response bodies, timings, and environment values. Sensitive fields appear in plaintext or as redacted values, depending on the mode selected.
 
-- Request headers  
-- Authentication fields  
-- Query parameters and request bodies  
-- Response headers  
-- Response bodies  
-- Execution timings  
-- Environment data (redacted or plaintext depending on mode)  
-
-To prevent accidental exposure of secure credentials, full export requires:
-
-1. A full-data mode value  
-2. An explicit risk-acceptance flag
-
-If a full-data mode is set without `--acceptRisk`, Inso CLI interrupts the operation and displays:
-
+To include full request and response data with redaction activated, activate full-data mode and accept the security risk:
 ```
-SECURITY WARNING
-The output file may contain sensitive data like API tokens. Exposing this file is a security risk.
-To continue, run again with --acceptRisk.
+./inso run collection "Flights 0.1.0" --env "Base Environment" --output file.json --includeFullData=redact --acceptRisk
 ```
-
-## Choose a full-data mode
-Use `includeFullData` to set the exposure mode:
-
-{% table %}
-columns:
-  - title: Value
-    key: value
-  - title: Behaviour
-    key: behaviour
-rows:
-  - value: redact
-    behaviour: |
-      Exports all fields but replaces sensitive values with `<Redacted by Insomnia>`. For example:
-      ```sh
-      inso run collection "My Collection" \
-      --env "Base Environment" \
-      --includeFullData=redact \
-      --acceptRisk \
-      --output results.json
-      ``` 
-  - value: plaintext
-    behaviour: |
-      Exports every field exactly as stored. Sensitive information is included in full. For example:
-      ```sh
-      inso run collection "My Collection" \
-      --env "Base Environment" \
-      --includeFullData=plaintext \
-      --acceptRisk \
-      --output results.json
-      ```
-{% endtable %}
-
-## Review redaction behaviour
-
-When using `includeFullData=redact`, Insomnia keeps keys visible and replaces sensitive values with:
-
-```
-<Redacted by Insomnia>
-```
-
-Sensitive fields include:
-
-- Cookies  
-- Authorization headers  
-- Bearer tokens  
-- API keys  
-- CSRF and XSRF tokens  
-- Refresh tokens  
-- Proxy authorization values  
-
-Redaction applies to request fields, response fields, and environment variables.
-
-## Adjust truncation limits
-
-To prevent oversized output, Inso CLI truncates large fields.
-
-- Default limit: **4 KB**
-- Applies to bodies in requests and responses
-- Truncated fields remain valid JSON and indicate truncation
-
-Increase the limit with `--maxDataSize` (bytes):
-
-```sh
-inso run collection "My Collection" \
-  --env "Base Environment" \
-  --includeFullData=redact \
-  --acceptRisk \
-  --maxDataSize 16384 \
-  --output results.json
-```
-
-## Validate exported results
-
-Confirm that the generated results file contains:
-
-1. A `collection` object with metadata  
-2. An `environment` section (redacted or plaintext)  
-3. A populated `executions` array  
-4. Redacted values marked as `<Redacted by Insomnia>`  
-5. Truncated fields where expected  
-6. Full request and response data only when includeFullData is set
-
-Exported run results follow this structure:
-
-```
-{
-  "timings": {},
-  "stats": {},
-  "collection": {},
-  "environment": {},
-  "executions": [
-    {
-      "request": {},
-      "response": {},
-      "tests": []
-    }
-  ],
-  "proxy": {},
-  "error": null
-}
-```
+For detailed information about export modes, redaction rules, truncation limits, and the JSON structure, go to the [Collection run results export](/insomnia/collection-run-results-export/) reference article.
