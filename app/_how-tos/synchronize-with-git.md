@@ -13,8 +13,6 @@ tags:
 - mock-servers
 - git
 
-tier: pro
-
 min_version:
   insomnia: '11.0'
 

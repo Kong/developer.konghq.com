@@ -1,4 +1,8 @@
 gateway:
+  env:
+    WEBHOOK_URL: http://httpbin.konghq.com/anything
+    SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
+    ANTHROPIC_API_KEY: anthropic-api-key
   versions:
     - version: "3.12"
       env:
@@ -24,29 +28,78 @@ gateway:
       env:
         KONG_IMAGE_NAME: kong/kong-gateway
         KONG_IMAGE_TAG: "3.4"
-  env:
-    WEBHOOK_URL: http://httpbin.konghq.com/anything
-    SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
-    ANTHROPIC_API_KEY: anthropic-api-key
-
-  setup:
-    commands:
-      - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
-      - sleep 5
-
-    rbac:
+  gateway:
+    setup:
       commands:
-        - |
-          curl -Ls https://get.konghq.com/quickstart | bash -s --  -r ""  -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e "KONG_LICENSE_DATA" -e "KONG_ENFORCE_RBAC=on" -e "KONG_ADMIN_GUI_AUTH=basic-auth" -e "KONG_PASSWORD=kong" -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
-    wasm:
+        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
+        - sleep 5
+
+      rbac:
+        commands:
+          - |
+            curl -Ls https://get.konghq.com/quickstart | bash -s --  -r ""  -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e "KONG_LICENSE_DATA" -e "KONG_ENFORCE_RBAC=on" -e "KONG_ADMIN_GUI_AUTH=basic-auth" -e "KONG_PASSWORD=kong" -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
+      wasm:
+        commands:
+          - |
+            curl -Ls https://get.konghq.com/quickstart | bash -s --  -r ""  -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e "KONG_LICENSE_DATA" -e KONG_WASM=on
+
+    cleanup:
       commands:
-        - |
-          curl -Ls https://get.konghq.com/quickstart | bash -s --  -r ""  -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e "KONG_LICENSE_DATA" -e KONG_WASM=on
+        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
 
-  cleanup:
-    commands:
-      - curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
+    reset:
+      commands:
+        - deck gateway reset -f
 
-  reset:
-    commands:
-      - deck gateway reset -f
+  ai-gateway:
+    setup:
+      commands:
+        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
+        - sleep 5
+
+    cleanup:
+      commands:
+        - curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
+
+    reset:
+      commands:
+        - deck gateway reset -f
+
+konnect:
+  gateway:
+    setup:
+      commands: []
+
+    cleanup:
+      commands: []
+
+    reset:
+      commands: []
+
+  ai-gateway:
+    setup:
+      commands: []
+
+    cleanup:
+      commands: []
+
+    reset:
+      commands: []
+
+  event-gateway:
+    setup:
+      commands: []
+
+    cleanup:
+      commands:
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
+        - docker compose -f /files/event-gateway/docker-compose.yaml down
+
+    reset:
+      commands:
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
+        - docker compose -f /files/event-gateway/docker-compose.yaml down
+        - docker compose -f /files/event-gateway/docker-compose.yaml up -d
+        - sleep 5
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart | tail -1 >> /env-vars.sh
+        - sleep 5

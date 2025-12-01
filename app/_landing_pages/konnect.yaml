@@ -157,7 +157,7 @@ rows:
     - blocks:
           - type: card
             config:
-              title: Event Gateway (Beta)
+              title: Event Gateway
               description: |
                 {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters. 
                 It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads and keys.
@@ -196,6 +196,7 @@ rows:
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}}, {{site.base_gateway}}, and {{site.mesh_product_name}}"
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"
                     - "[{{site.konnect_short_name}} APIs](/konnect-api/): Manage all aspects of the {{site.konnect_short_name}} platform, applications, and runtimes using APIs"
+                    - "[Kong AI assistant](/konnect-platform/kai/): Use Kong's AI assistant, KAi, to detect issues and suggest fixes."
 
         
 

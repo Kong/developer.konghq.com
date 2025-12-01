@@ -1,11 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.0.10
+  version: 3.0.11
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@db794d79217507e281f72d4b0b0df015b4800e2c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/db794d79217507e281f72d4b0b0df015b4800e2c'
 servers:
   - url: 'https://custom.example.com'
     description: Production

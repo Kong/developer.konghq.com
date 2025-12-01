@@ -20,7 +20,7 @@ rows:
                 - type: text
                   text: |
                     {:.warning}
-                    > **Review domain breaking changes for Dev Portal v3 and migrate to the new domain before October 1, 2025.** [Review breaking changes](/dev-portal/breaking-changes/)
+                    > [Review domain breaking changes for Dev Portal v3](/dev-portal/breaking-changes/)
   
   - columns:
       - blocks:

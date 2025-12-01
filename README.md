@@ -3,10 +3,11 @@
 
 ## Run Locally
 
-```bash
-# Install prerequisites
-make install-prerequisites
+Make sure you have [mise](https://mise.jdx.dev/getting-started.html)
 
+If you want to make sure you will always use the right version of tools, [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise).
+
+```bash
 # Install dependencies
 make install
 

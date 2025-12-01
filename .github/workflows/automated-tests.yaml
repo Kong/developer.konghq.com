@@ -20,7 +20,7 @@ jobs:
           - '3.12'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           egress-policy: audit
 
@@ -28,45 +28,11 @@ jobs:
         with:
           submodules: 'recursive'
 
-      # Configure Ruby to build Jekyll site
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@84684c07c1965536eb4802c8daf1a77968df0cb1 # v1
-        with:
-          ruby-version: .ruby-version
+      - name: Install deps
+        uses: './.github/reusable-steps/install-deps'
 
-      - name: Ruby gem cache
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: ${{ github.workspace }}/vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-      - name: Bundle Setup
-        run: bundle config path ${{ github.workspace }}/vendor/bundle
-      - name: Bundle Install
-        run: bundle install --jobs 4 --retry 3
-
-      # Configure Node to build assets
-      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
-        with:
-          node-version: "22"
-      - name: Cache node modules
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-
-      - name: npm install
-        run: npm ci
       - name: Run site
-        env:
-          ENABLE_ALGOLIA: 0
-        run: |
-          npx netlify dev & npx wait-on http://localhost:8888
+        uses: './.github/reusable-steps/run-site'
 
       - name: Download Kong License
         uses: Kong/kong-license@master
@@ -75,28 +41,18 @@ jobs:
           op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
       - name: Generate instruction files
-        working-directory: tools/automated-tests
-        run: |
-          npm ci
-          npx playwright install --with-deps chromium
-          npm run generate-instruction-files
+        uses: './.github/reusable-steps/generate-instruction-files'
 
       - name: Run tests
         working-directory: tools/automated-tests
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           RUNTIME: gateway
+          PRODUCT: gateway
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |
           DEBUG=tests:*,debug npm run run-tests
 
       - name: Publish Test Report
-        uses: ctrf-io/github-test-reporter@9bd31188517cfb3ff683f135041cc3bfbb0c78b3 # v1
-        with:
-          report-path: './tools/automated-tests/testReport.json'
-          summary-report: true
-          test-report: true
-          failed-folded-report: true
-          skipped-report: true
-          report-order: 'summary-report,test-report,failed-folded-report,skipped-report'
+        uses: './.github/reusable-steps/publish-test-report'
         if: always()

@@ -55,6 +55,14 @@ faqs:
       3. Find the offending request and clear its `body` field.
       4. Search for any other uses of the same request ID and clear those `body` fields as well.
       5. Save and relaunch Insomnia.
+  - q: Can I use variables in request paths?
+    a: |
+      Yes. Insomnia supports variables in request paths through **template tags** and **environment variables**.  
+      Define variables in your environment, then reference them directly in a request URL using Liquid syntax, for example:  
+      ```liquid
+      {% raw %}https://api.example.com/users/{{ user_id }}{% endraw %}
+      ```  
+      For detailed usage examples, go to [**Pre-request scripts**](/how-to/write-pre-request-scripts/). 
 ---
 
 ## How do I create requests in Insomnia?
@@ -96,6 +104,9 @@ rows:
     steps: Select an HTTP method in the dropdown list, or add a custom method.
   - element: Endpoint
     steps: Enter a URL, and use environment variables and template tags if needed.
+  - element: Path parameters
+    steps: >-
+      Define dynamic values that replace variables in the request path. For example, in **Path Parameters**, if the URL is `https://api.example.com/users/{id}` and you set `id = 123`, Insomnia sends the request to `https://api.example.com/users/123`.
   - element: Query parameters
     steps: >-
       In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multi-line text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.
@@ -167,7 +178,6 @@ This method allows you to send raw CSV files directly in the request payload.
 
 Insomnia provides [template tags](/insomnia/template-tags/) that allow you to generate random data. Add a template tag in a request URL, query parameters, body, or authentication by pressing `Control+Space` and selecting a **Faker** tag. You can generate random timestamps, dates, text, and passwords.
 
-
 ## What can I do with folders in a request collection?
 
 Folders can be used to organize requests, but you can also add configuration to be used by all requests in the folder:
@@ -178,3 +188,17 @@ Folders can be used to organize requests, but you can also add configuration to 
 * Environment variables
 
 You can also add documentation about the folder.
+
+## Request timeout (ms)
+
+Use the **Request timeout (ms)** preference to control how long the application waits before failing a network request.
+
+Go to **Preferences > General > Request / Response > Request timeout (ms)**.
+
+Enter the timeout value in milliseconds. The default is **30000 ms**. This value determines how long Insomnia allows a request to remain active before timing out during execution.
+
+To configure request timeout behaviour for automated or CI-based workflows, use the Inso CLI.  
+See the following pages for the CLI flag and configuration options:
+
+- [Inso CLI overview](/inso-cli/)
+- [Inso CLI configuration](/inso-cli/configuration/)

@@ -1,0 +1,29 @@
+title: Apply as a nested policy
+
+description: Apply a Modify Headers policy as a nested policy within a Schema Validation policy.
+
+weight: 900
+
+requirements:
+  - A parent [Schema Validation policy](/event-gateway/policies/?terms=schema%2520validation) to contain this nested policy.
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+name: remove-and-replace-header
+type: modify_headers
+parent_policy_id: ${policy_id}
+config:
+  actions:
+    - op: remove
+      key: example-header1
+    - op: set
+      key: example-header2
+      value: example
+
+
+tools:
+  - konnect-api
+  - terraform

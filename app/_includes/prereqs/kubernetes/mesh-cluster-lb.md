@@ -1,0 +1,2 @@
+This guide requires a running Kubernetes cluster that supports the `LoadBalancer` service type. If you already have a Kubernetes cluster running, you can skip this step. 
+It can be a cluster running locally, like Docker, or in a public cloud like AWS EKS, GCP GKE, etc.

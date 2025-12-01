@@ -19,8 +19,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). Insomnia offers cloud-hosted mock servers, but you can also deploy self-hosted mocks.
-
+                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). They can be self-hosted or hosted on the cloud.
   - columns:
       - blocks:
           - type: structured_text
@@ -46,6 +45,18 @@ rows:
                   Enterprise users can deploy self-hosted mock servers using [Insomnia Mockbin](https://github.com/kong/insomnia-mockbin). This allows you to have more control over usage for your mocks.
 
                   [Learn more about self-hosted mock servers &rarr;](/insomnia/self-hosted-mocks/)
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h2
+                text: "Auto-generated mocks"
+              blocks:
+                - type: text
+                  text: | 
+                    Auto-generate a mock server from a natural language prompt and one of the following input types: URL, OpenAPI, or JSON. This feature is optional and can be deactivated.
+                     
+                    [Learn more about auto-generated mock servers &rarr;](/insomnia/self-hosted-mocks#create-an-auto-generated-mock-server)   
   - columns:
       - blocks:
           - type: structured_text
@@ -60,6 +71,22 @@ rows:
                     * Like any URL, mock servers can contain malicious content or redirects.
                     * To enable easy use from anywhere, especially for front-end feature development, Insomnia's mock servers have a very permissive CORS configuration (`Access-Control-Allow-Origin: *`, `Access-Control-Allow-Credentials: true`). 
                     A malicious API could be used to exfiltrate data.
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h2
+                text: "Dynamic mocking"
+              blocks:
+                - type: text
+                  text: | 
+                    Dynamic mocking expands Insomnia’s mock servers with templates that generate context-aware and realistic responses.  
+                    Each response is rendered server-side by the mock server using  templates with a safe, restricted tag set.  
+                    Insomnia also provides **Faker template tags** for generating random names, dates, and other test data at runtime.
+
+                    Dynamic mocking is supported in **self-hosted** mock servers, and powered by the Insomnia **Mockbin** service.
+                    [Learn more about Dynamic mocking](/insomnia/dynamic-mocking/)
   - header:
       text: "Frequently asked questions"
       type: h2
@@ -74,3 +101,7 @@ rows:
                 Yes, you can generate a mock endpoint from a request response. 
                 After sending a request, go to the **Mock** tab in the right panel and select or create a new mock server and route.
                 The generated endpoint will contain the response body, headers, and status.
+            - q: Are Mock request available on local Scratch Pad?
+              a: |
+                No. Mock servers are not available in the local **Scratch Pad**. To use mock servers, sign up for an Insomnia account.
+
