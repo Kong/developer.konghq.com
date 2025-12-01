@@ -1,0 +1,475 @@
+---
+title: Control access to knowledge base collections with the AI RAG Injector plugin
+content_type: how_to
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI RAG Injector
+    url: /plugins/ai-rag-injector/
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
+
+description: Learn how to configure access control and metadata filtering for the AI RAG Injector plugin.
+
+products:
+  - gateway
+  - ai-gateway
+
+works_on:
+  - on-prem
+
+min_version:
+  gateway: '3.9'
+
+plugins:
+  - ai-proxy-advanced
+  - ai-rag-injector
+  - key-auth
+
+entities:
+  - service
+  - route
+  - plugin
+  - consumer
+  - consumer_group
+
+tags:
+  - ai
+  - openai
+  - security
+  - acl
+
+tldr:
+  q: How do I restrict access to specific knowledge base collections based on user groups?
+  a: Use the AI RAG Injector plugin's ACL configuration to control which Consumer Groups can access specific collections. Configure collection-level access rules and optionally add metadata filters to refine search results within authorized collections.
+
+tools:
+  - deck
+
+prereqs:
+  inline:
+    - title: OpenAI
+      include_content: prereqs/openai
+      icon_url: /assets/icons/openai.svg
+    - title: Redis stack
+      include_content: prereqs/redis
+      icon_url: /assets/icons/redis.svg
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
+
+cleanup:
+  inline:
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
+---
+
+## Configure the AI Proxy Advanced plugin
+
+Configure the AI Proxy Advanced plugin to proxy prompt requests to your model provider:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy-advanced
+      config:
+        targets:
+          - route_type: llm/v1/chat
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${openai_api_key}
+            model:
+              provider: openai
+              name: gpt-4o
+              options:
+                max_tokens: 512
+                temperature: 1.0
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+{% endentity_examples %}
+
+## Enable key authentication
+
+Configure an authentication plugin to identify consumers. This example uses the Key Auth plugin:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      config:
+        key_names:
+          - apikey
+        key_in_header: true
+        key_in_query: true
+        hide_credentials: true
+{% endentity_examples %}
+
+## Create Consumer Groups
+
+Create Consumer Groups that map to different access levels in your organization:
+
+{% entity_examples %}
+entities:
+  consumer_groups:
+    - name: public
+    - name: finance
+    - name: executive
+    - name: contractor
+{% endentity_examples %}
+
+## Create Consumers
+
+Create Consumers with credentials and assign each to appropriate Consumer Groups:
+
+{% entity_examples %}
+entities:
+  consumers:
+    - username: cfo
+      custom_id: cfo-001
+      groups:
+        - name: finance
+        - name: executive
+      keyauth_credentials:
+        - key: cfo-key
+    - username: financial-analyst
+      custom_id: analyst-001
+      groups:
+        - name: finance
+      keyauth_credentials:
+        - key: analyst-key
+    - username: contractor-dev
+      custom_id: contractor-001
+      groups:
+        - name: contractor
+      keyauth_credentials:
+        - key: contractor-key
+    - username: public-user
+      custom_id: public-001
+      groups:
+        - name: public
+      keyauth_credentials:
+        - key: public-key
+{% endentity_examples %}
+
+## Configure the AI RAG Injector plugin
+
+Configure the AI RAG Injector plugin with ACL rules and metadata support:
+
+{% entity_examples %}
+entities:
+  plugins:
+  - name: ai-rag-injector
+    id: b924e3e8-7893-4706-aacb-e75793a1d2e9
+    config:
+      embeddings:
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${openai_api_key}
+        model:
+          provider: openai
+          name: text-embedding-3-large
+      vectordb:
+        strategy: redis
+        dimensions: 3072
+        distance_metric: cosine
+        redis:
+          host: ${redis_host}
+          port: 6379
+      inject_template: |
+        Use the following context to answer the question. If the context does not contain relevant information, say so.
+        Context:
+        <CONTEXT>
+        Question: <PROMPT>
+      inject_as_role: system
+      consumer_identifier: consumer_group
+      global_acl_config:
+        allow:
+          - public
+        deny: []
+      collection_acl_config:
+        public-docs:
+          allow: []
+          deny: []
+        finance-reports:
+          allow:
+            - finance
+            - executive
+          deny:
+            - contractor
+        executive-confidential:
+          allow:
+            - executive
+          deny:
+            - contractor
+            - finance
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+  redis_host:
+    value: $REDIS_HOST
+{% endentity_examples %}
+
+{:.info}
+> If your Redis instance runs in a separate Docker container from Kong, use `host.docker.internal` for `vectordb.redis.host`.
+
+## Ingest content with metadata
+
+Ingest content into different collections with metadata tags. Each chunk specifies its collection, source, date, and tags.
+
+### Public investor relations content
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "Public Investor FAQ: Our fiscal year ends December 31st. Quarterly earnings calls occur in January, April, July, and October. All public filings are available on our investor relations website. For questions, contact investor.relations@company.com."
+    metadata:
+      collection: public-docs
+      source: website
+      date: "2024-01-15T00:00:00Z"
+      tags:
+        - public
+        - investor-relations
+        - faq
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+### Financial reports
+
+Ingest quarterly and annual financial data:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "Q4 2024 Financial Results: Revenue increased 15% year-over-year to $2.3B. Operating margin improved to 24%, up from 21% in Q3. Key drivers included strong enterprise sales and improved operational efficiency."
+    metadata:
+      collection: finance-reports
+      source: internal
+      date: "2024-10-14T00:00:00Z"
+      tags:
+        - finance
+        - quarterly
+        - q4
+        - "2024"
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "Q3 2024 Financial Results: Revenue reached $2.0B with 12% year-over-year growth. Operating margin held steady at 21%. International markets contributed 35% of total revenue."
+    metadata:
+      collection: finance-reports
+      source: internal
+      date: "2024-07-15T00:00:00Z"
+      tags:
+        - finance
+        - quarterly
+        - q3
+        - "2024"
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "2023 Annual Report: Full-year revenue totaled $7.8B, representing 18% growth. The company expanded into three new markets and launched five major product updates. Board approved $500M share buyback program."
+    metadata:
+      collection: finance-reports
+      source: internal
+      date: "2023-12-31T00:00:00Z"
+      tags:
+        - finance
+        - annual
+        - "2023"
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "Historical Data Archive: Q2 2022 revenue was $1.5B with 8% growth. This data is retained for historical analysis but may not reflect current business conditions or reporting standards."
+    metadata:
+      collection: finance-reports
+      source: archive
+      date: "2022-06-15T00:00:00Z"
+      tags:
+        - finance
+        - quarterly
+        - q2
+        - "2022"
+        - archive
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+### Executive confidential content
+
+Ingest sensitive M&A information accessible only to executives:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "CONFIDENTIAL - M&A Discussion: Preliminary valuation for Target Corp acquisition ranges from $400M-$500M. Due diligence reveals strong synergies in enterprise segment. Board vote scheduled for Q1 2025. Legal counsel: Morrison & Associates. Internal deal code: MA-2024-087."
+    metadata:
+      collection: executive-confidential
+      source: internal
+      date: "2024-11-20T00:00:00Z"
+      tags:
+        - confidential
+        - m&a
+        - executive
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+Each ingestion request returns metadata about the operation:
+
+```json
+{
+  "metadata": {
+    "embeddings_tokens_count": 42,
+    "chunk_id": "3fa85f64-5717-4562-b3fc-2c963fabcdef",
+    "ingest_duration": 550
+  }
+}
+```
+{:.no-copy-code}
+
+## Test ACL enforcement
+
+Verify that ACL rules correctly restrict access based on consumer group membership.
+
+### CFO access (finance + executive groups)
+
+The CFO belongs to both finance and executive groups, so they can access all collections:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey: cfo-key'
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: user
+      content: What were our Q4 2024 results?
+{% endvalidation %}
+
+Expected result: The response includes information from both `finance-reports` and `executive-confidential` collections.
+
+Query for M&A information:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey: cfo-key'
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: user
+      content: What acquisitions are we considering?
+{% endvalidation %}
+
+Expected result: The response includes confidential M&A information from the `executive-confidential` collection.
+
+### Financial analyst access (finance group)
+
+Financial analysts can access financial reports but not executive confidential information:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey: analyst-key'
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: user
+      content: Show me quarterly reports from 2024
+{% endvalidation %}
+
+Expected result: The response includes Q3 and Q4 2024 data from `finance-reports`.
+
+Query for confidential information:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey: analyst-key'
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: user
+      content: What acquisitions are we considering?
+{% endvalidation %}
+
+Expected result: The response does not include M&A information. The AI should indicate it cannot answer based on available information.
+
+### Contractor access (contractor group)
+
+Contractors are explicitly denied access to both financial collections:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey: contractor-key'
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: user
+      content: What are the latest financial results?
+{% endvalidation %}
+
+Expected result: No financial data is returned. The AI responds based only on publicly available information or indicates it cannot answer.
+
+### Public user access (public group)
+
+Public users can access only public documents:
+
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey: public-key'
+  - 'Content-Type: application/json'
+body:
+  messages:
+    - role: user
+      content: How can I contact investor relations?
+{% endvalidation %}
+
+Expected result: The response includes information from `public-docs` collection only.
