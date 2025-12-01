@@ -47,7 +47,7 @@ columns:
     key: description
 rows:
   - mode: Metadata only
-    description: "Exports identifiers, timings, status codes, and test results. Does not include headers, bodies, authentication fields, environment values, or proxy details."
+    description: "Exports identifiers, timings, status codes, and test results. Doesn't include headers, bodies, authentication fields, environment values, or proxy details."
   - mode: Full data
     description: "Exports the complete request information and the complete response information. Requires a full-data mode value and a risk-acceptance flag."
 {% endtable %} 
