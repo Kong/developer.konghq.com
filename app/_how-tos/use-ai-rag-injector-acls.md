@@ -38,7 +38,6 @@ tags:
   - ai
   - openai
   - security
-  - acl
 
 tldr:
   q: How do I restrict access to specific knowledge base collections based on user groups?
