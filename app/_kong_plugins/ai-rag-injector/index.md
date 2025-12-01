@@ -91,7 +91,7 @@ faqs:
       failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
       ```
 
-      This means that the hardcoded MemoryDB instance limit has been reached. 
+      This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 ---
 
@@ -246,3 +246,231 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 ## Vector databases
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+## Access control and metadata filtering {% new_in 3.13 %}
+
+Once you've configured your vector database and ingested content, you can control which consumers access specific knowledge base articles and refine query results using metadata filters.
+
+### Collections
+
+A collection is a logical grouping of knowledge base articles with independent access control rules.
+
+```json
+{
+  "content": "Quarterly revenue increased 15%...",
+  "metadata": {
+    "collection": "finance-reports",
+    "date": "2023-10-14",
+    "tags": ["finance", "quarterly"],
+    "source": "internal"
+  }
+}
+```
+
+Two independent mechanisms control which results consumers receive:
+
+- **ACL filtering**: Server restricts collections based on consumer groups
+- **Metadata filtering**: Clients specify criteria (tags, dates, sources) to narrow results within authorized collections
+
+### Configuration
+
+Configure ACLs at two levels: global rules that apply to all collections, and per-collection rules that override global settings.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: |
+      [`consumer_identifier`](/#schema--config-consumer-identifier)
+    description: |
+      Determines which consumer attribute is matched against ACL rules. Options: `consumer_group`, `username`, `custom_id`, or `consumer_id`
+  - field: |
+      [`global_acl_config.allow`](/#schema--config-global-acl-config-allow)
+    description: |
+      Group names with access to all collections (unless overridden)
+  - field: |
+      [`global_acl_config.deny`](/#schema--config-global-acl-config-deny)
+    description: |
+      Group names explicitly denied access to all collections
+  - field: |
+      [`collection_acl_config.<name>.allow[]`]()
+    description: |
+      Group names with access to this specific collection. Empty list means allow all
+  - field: |
+      [`collection_acl_config.<name>.deny[]`](/#schema--config-collection-acl-config)
+    description: |
+      Group names explicitly denied access to this specific collection
+{% endtable %}
+<!-- vale on -->
+
+Configuration example:
+
+```yaml
+consumer_identifier: consumer_group
+
+global_acl_config:
+  allow: []
+  deny: []
+
+collection_acl_config:
+  finance-reports:
+    allow: ["finance", "admin"]
+    deny: ["contractor"]
+  public-docs:
+    allow: []
+    deny: []
+```
+
+Collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
+
+### ACL evaluation
+
+The plugin checks access in this order:
+
+1. **Deny list**: If subject matches, deny access
+2. **Allow list**: If list exists and subject doesn't match, deny access
+3. **Empty ACL**: If both lists are empty, allow access
+
+{:.info}
+> Collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
+
+### Metadata filtering
+
+Clients refine search results by specifying filter criteria in the query request. Filters apply within the collections a consumer is authorized to access.
+
+The following operators are supported:
+
+- `equals`: Exact match
+- `greaterThan`, `greaterThanOrEquals`, `lessThan`, `lessThanOrEquals`: Comparisons
+- `in`: Match any value in array
+- `andAll`: Combine conditions
+
+### Query example
+
+```json
+POST /v1/chat/completions
+{
+  "model": "gpt-4",
+  "messages": [{"role": "user", "content": "What were Q4 results?"}],
+  "extra_body": {
+    "ai-rag-injector": {
+      "filters": {
+        "andAll": [
+          {"equals": {"key": "source", "value": "internal"}},
+          {"in": {"key": "tags", "values": ["q4", "quarterly"]}}
+        ]
+      },
+      "filter_mode": "strict",
+      "stop_on_filter_error": false
+    }
+  }
+}
+```
+
+### Filter parameters
+
+- `filters`: JSON object with filter clauses
+- `filter_mode`:
+  - `"compatible"`: Includes chunks matching filter OR with no metadata
+  - `"strict"`: Includes only chunks matching filter
+- `stop_on_filter_error`: Fail query on filter parse error (default: `false`)
+
+### Query flow
+
+The following diagram shows how ACL and metadata filtering work together during query processing:
+
+{% mermaid %}
+flowchart TB
+    Start([Query Request]) --> Auth[Authenticate Consumer]
+    Auth --> CheckACL{Authorized<br/>Collections?}
+    CheckACL -->|No| Deny[❌ Access Denied]
+    CheckACL -->|Yes| HasFilter{Has<br/>Filters?}
+    HasFilter -->|No| SearchAll[Search all chunks]
+    HasFilter -->|Yes| FilterMode{Filter<br/>Mode?}
+    FilterMode -->|compatible| SearchCompat[Match filter OR no metadata]
+    FilterMode -->|strict| SearchStrict[Match filter only]
+    SearchAll --> Return[Return Results]
+    SearchCompat --> Return
+    SearchStrict --> Return
+{% endmermaid %}
+
+### Admin API
+
+Use the Admin API to ingest content with metadata and collection assignments.
+
+#### Archive data
+
+Ingest historical financial data:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "Historical Data Archive: Q2 2022 revenue was $1.5B with 8% growth. This data is retained for historical analysis but may not reflect current business conditions or reporting standards."
+    metadata:
+      collection: finance-reports
+      source: archive
+      date: "2022-06-15T00:00:00Z"
+      tags:
+        - finance
+        - quarterly
+        - q2
+        - "2022"
+        - archive
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+#### Executive confidential content
+
+Ingest sensitive M&A information accessible only to executives:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'apikey: admin-key'
+    - 'Content-Type: application/json'
+body:
+    content: "CONFIDENTIAL - M&A Discussion: Preliminary valuation for Target Corp acquisition ranges from $400M-$500M. Due diligence reveals strong synergies in enterprise segment. Board vote scheduled for Q1 2025. Legal counsel: Morrison & Associates. Internal deal code: MA-2024-087."
+    metadata:
+      collection: executive-confidential
+      source: internal
+      date: "2024-11-20T00:00:00Z"
+      tags:
+        - confidential
+        - m&a
+        - executive
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+### Example: Public and private collections
+
+```yaml
+consumer_identifier: consumer_group
+
+global_acl_config:
+  allow: ["admin"]
+  deny: []
+
+collection_acl_config:
+  public-docs:
+    allow: []
+    deny: []
+  finance-reports:
+    allow: ["finance", "admin"]
+    deny: ["contractor"]
+```
+
+Results:
+- `public-docs`: Accessible to all (empty allow list)
+- `finance-reports`: Accessible to finance/admin only, contractors denied
+- Other collections: Admin only (global rule)
