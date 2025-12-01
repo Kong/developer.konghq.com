@@ -22,7 +22,7 @@ config:
       text_block_name: "#text"
       input: request.body
 
-    - name: exit
+    - name: EXIT
       type: exit
       inputs:
         body: JSON_XML

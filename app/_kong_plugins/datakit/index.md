@@ -70,7 +70,7 @@ rows:
     description: Authenticate to a third-party service using Vault secrets.
   - usecase: "[Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)"
     description: "Leverage the `cache` and `branch` nodes to conditionally store or retrieve cache items."
-  - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/transform-xml-data/)"
+  - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)"
     description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
 {% endtable %}
 <!--vale on-->
@@ -1499,11 +1499,6 @@ Set common request headers for different API requests:
 
 Transforms XML strings to JSON or a Lua table.
 
-Supported types:
-* `number`: Numbers, integers, and floating points.
-* `boolean`: Booleans are case-sensitive. The node accepts only `true` as true and `false` as false.
-* `null`: `null` values will be converted to JSON `null`.
-
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `xml_to_json` from the node object dropdown to see all node attributes.
 
 {:.info}
@@ -1565,7 +1560,7 @@ The configuration for the node would look like this:
 
 Where `CALL_FOO` is a call node that calls an API, and that API outputs XML.
 
-For a more detailed example, see [Convert XML into JSON](plugins/datakit/examples/convert-xml-into-json/).
+For a more detailed example, see [Convert XML into JSON](/plugins/datakit/examples/convert-xml-into-json/).
 
 For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
 
@@ -1632,7 +1627,7 @@ The configuration for the node would look like this:
 ```
 Where `CALL_BAR` is a call node that calls an API, and that API outputs JSON.
 
-For a more detailed example, see [Convert JSON into XML](plugins/datakit/examples/convert-json-into-xml/).
+For a more detailed example, see [Convert JSON into XML](/plugins/datakit/examples/convert-json-into-xml/).
 
 For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
 
