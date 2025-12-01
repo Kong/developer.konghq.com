@@ -18,6 +18,8 @@
      -F {{data[0]}}="{{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.body %} \
      --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.body_cmd %} \
      --json "{{ include.body_cmd }}"{% endif %}{% if include.jq %} | jq -r "{{ include.jq | strip }}"{% endif %}{% if include.capture -%}
+     {%- if include.inline_sleep %}
+  sleep {{include.inline_sleep}}{%- endif %}
 ){% endif -%}
 {% if count > 1 %}; done{% endif %}
 ```
