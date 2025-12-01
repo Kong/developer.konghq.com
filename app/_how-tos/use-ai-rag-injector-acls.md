@@ -19,7 +19,7 @@ works_on:
   - on-prem
 
 min_version:
-  gateway: '3.9'
+  gateway: '3.13'
 
 plugins:
   - ai-proxy-advanced
@@ -71,10 +71,9 @@ cleanup:
 
 automated_tests: false
 ---
-
 ## Configure the AI Proxy Advanced plugin
 
-Configure the AI Proxy Advanced plugin to proxy prompt requests to your model provider:
+First, you'll need to configure the AI Proxy Advanced plugin to proxy prompt requests to your model provider, and handle authentication:
 
 {% entity_examples %}
 entities:
@@ -99,7 +98,7 @@ variables:
 
 ## Enable key authentication
 
-Configure an authentication plugin to identify consumers. This example uses the Key Auth plugin:
+Configure authentication so {{site.base_gateway}} can identify each consumer. Use the [Key Auth](/plugins/key-auth/) plugin so each user presents an API key with requests:
 
 {% entity_examples %}
 entities:
@@ -113,9 +112,13 @@ entities:
         hide_credentials: true
 {% endentity_examples %}
 
-## Create Consumer Groups
+## Create Consumer Groups for knowledge base access levels
 
-Create Consumer Groups that map to different access levels in your organization:
+Configure Consumer Groups that reflect organizational roles. These groups govern access to knowledge base collections:
+- `public` - access to public investor relations content
+- `finance` - access to financial reports
+- `executive` - access to all financial data including confidential information
+- `contractor` - external users with restricted access
 
 {% entity_examples %}
 entities:
@@ -128,7 +131,7 @@ entities:
 
 ## Create Consumers
 
-Create Consumers with credentials and assign each to appropriate Consumer Groups:
+Configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions that govern access to knowledge base collections:
 
 {% entity_examples %}
 entities:
@@ -162,7 +165,44 @@ entities:
 
 ## Configure the AI RAG Injector plugin
 
-Configure the AI RAG Injector plugin with ACL rules and metadata support:
+Configure the AI RAG Injector plugin to apply collection-level access rules. The plugin controls which users can access specific knowledge base collections. Access is determined by Consumer Groups using allow and deny lists. A collection ACL replaces the global rule when present.
+
+The table below shows the effective permissions for the configuration:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Collection
+    key: collection
+  - title: Executive group
+    key: executive
+  - title: Finance group
+    key: finance
+  - title: Public group
+    key: public
+  - title: Contractor group
+    key: contractor
+
+rows:
+  - collection: "`public-docs`"
+    public: Yes
+    finance: Yes
+    executive: Yes
+    contractor: Yes
+  - collection: "`finance-reports`"
+    public: No
+    finance: Yes
+    executive: Yes
+    contractor: No
+  - collection: "`executive-confidential`"
+    public: No
+    finance: No
+    executive: Yes
+    contractor: No
+{% endtable %}
+<!-- vale on -->
+
+The following plugin configuration applies the ACL rules for the collections shown in the table above:
 
 {% entity_examples %}
 entities:
@@ -185,7 +225,7 @@ entities:
           host: ${redis_host}
           port: 6379
       inject_template: |
-        Use the following context to answer the question. If the context does not contain relevant information, say so.
+        Use the following context to answer the question. If the context doesnt contain relevant information, say so.
         Context:
         <CONTEXT>
         Question: <PROMPT>
@@ -208,9 +248,6 @@ entities:
         executive-confidential:
           allow:
             - executive
-          deny:
-            - contractor
-            - finance
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
