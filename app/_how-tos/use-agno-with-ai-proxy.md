@@ -63,7 +63,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 ## Configure the AI Proxy plugin
 

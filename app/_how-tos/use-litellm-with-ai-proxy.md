@@ -59,8 +59,6 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 published: false
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy plugin
