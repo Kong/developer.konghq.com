@@ -88,7 +88,8 @@ prereqs:
       - `list_orders_for_user`
       - `search_orders`
    1. Close **Settings**.
-   1. In the chat window, click the hammer icon to enable tools. You should see `1` next to the icon. Clicking it will show the name of your MCP server and the number of available tools.
+   1. In the chat window, click the hammer icon to enable tools.
+   1. Toggle your MCP server on. You should see `1` next to the hammer icon. Click the icon to view the server name and the number of available tools.
 
 ## Configure the File Log plugin
 

@@ -320,8 +320,8 @@ The AI MCP Proxy plugin evaluates ACLs for both tool discovery and tool invocati
 1. MCP client requests the list of available tools
 2. Kong AuthN plugin validates the request and identifies the Consumer
 3. AI MCP Proxy loads the Consumer's group memberships
-4. Plugin evaluates the default ACL (`default_acl`) for each tool
-5. Plugin returns an HTTP 200 response with only the tools the Consumer is allowed to access (tools are filtered, not blocked)
+4. Plugin evaluates each tool against the `default_acl`
+5. Plugin returns an HTTP 200 response with only the tools the Consumer is allowed to access
 6. Plugin logs the discovery attempt
 
 **Tool invocation**:
