@@ -54,7 +54,7 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 ## {{site.mesh_product_name}} compatibility
 
-To use Service Mesh in {{site.konnect_short_name}}, you must use a compatible version of {{site.mesh_product_name}}:
+To use Mesh in {{site.konnect_short_name}}, you must use a compatible version of {{site.mesh_product_name}}:
 
 {% feature_table %}
 item_title: "{{site.mesh_product_name}} version"
