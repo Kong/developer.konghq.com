@@ -261,7 +261,7 @@ The IAM role must have a corresponding tag:
 kuma.io/workload: <workload-name>
 ```
 
-{:.note}
+{:.info}
 > This validation only applies when a `MeshIdentity` exists for the mesh and uses `kuma.io/workload` in its SPIFFE ID path template.
 
 ### Sidecar
