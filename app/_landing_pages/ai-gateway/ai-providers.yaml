@@ -97,7 +97,8 @@ rows:
             icon: /assets/icons/mistral.svg
             cta:
               url: ./#mistral
-  - columns:
+  - column_count: 3
+    columns:
       - blocks:
         - type: icon_card
           config:
