@@ -224,7 +224,7 @@ rows:
 
 When exposing MCP servers through {{site.base_gateway}}, you may need granular control over which authenticated API consumers can discover and invoke specific tools. The AI MCP Proxy plugin's ACL feature lets you define access rules at both the default level (applying to all tools) and per-tool level (for fine-grained exceptions)
 
-This way consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/) or OIDC flows), and the resulting Consumer identity is used for ACL checks.
+This way, consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/) or OIDC flows), and the resulting Consumer identity is used for ACL checks.
 
 {:.info}
 > **ACL in `listener` Mode**
@@ -280,9 +280,9 @@ rows:
 
 Both default and per-tool ACLs use `allow` and `deny` lists. Evaluation follows this order:
 
-1. **Deny list**: If the subject matches any `deny` entry, the request is rejected (`INVALID_PARAMS -32602`).
-2. **Allow list (optional)**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`INVALID_PARAMS -32602`).
-3. **Only deny configured**: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
+1. **Deny list configuration**: If a `deny` list exists and the subject matches any `deny` entry, the request is rejected (`INVALID_PARAMS -32602`).
+2. **Allow list configuration**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`INVALID_PARAMS -32602`).
+3. **No allow list configuration**: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
 4. **No ACL configuration**: If neither list exists, the request is allowed.
 
 All access attempts (allowed or denied) are written to the plugin's audit log.
@@ -328,7 +328,7 @@ The AI MCP Proxy plugin evaluates ACLs for both tool discovery and tool invocati
 1. MCP client invokes a specific tool
 2. Kong AuthN plugin validates the request and identifies the Consumer
 3. AI MCP Proxy loads the Consumer's group memberships
-4. Plugin evaluates the tool-specific ACL (if configured) or default ACL (if not configured)
+4. Plugin evaluates the tool-specific ACL if it exists, or the default ACL otherwise
 5. Plugin logs the access attempt (allowed or denied)
 6. Plugin returns `INVALID_PARAMS -32602` if denied, or forwards the request to the upstream MCP server if allowed
 

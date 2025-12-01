@@ -64,7 +64,7 @@ prereqs:
 
 1. Open Chatwise and go to **Settings > MCP**:
 
-   1. Choose **HTTP server (http)** from the **Type** dropdown.
+   1. Click **+** at the bottom of the window and choose **HTTP server (http)** from the **Type** dropdown.
    1. Enter a user-friendly name in the **Name** field.
    1. Enter `http://localhost:8000/mcp` in the **URL** field.
    1. Enable the **Run tools automatically** option.
@@ -107,6 +107,7 @@ You should see Chatwise successfully call the `list_users` tool with a response 
 ```text
 There are 27 orders in your marketplace.
 ```
+{:.no-copy-code}
 
 Next, check the audit logs in your Docker container:
 

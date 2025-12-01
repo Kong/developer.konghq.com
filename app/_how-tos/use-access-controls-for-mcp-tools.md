@@ -84,7 +84,7 @@ prereqs:
       icon_url: /assets/icons/github.svg
     - title: ChatWise desktop application
       content: |
-        Download and install ChatWise (available at https://chatwise.app/) for your OS.
+        Download and install [ChatWise](https://chatwise.app/) for your OS.
 
         After installation:
         1. Launch the app.
@@ -115,7 +115,7 @@ entities:
 
 ## Create Consumer Groups for each AI usage tier
 
-Now, let's configure Consumer groups that reflect access levels. These groups govern MCP tool permissions:
+Now, let's configure Consumer Groups that reflect access levels. These groups govern MCP tool permissions:
 - `admin` - full access
 - `developer` - limited access
 - `suspended` - blocked from MCP tools
@@ -160,7 +160,7 @@ entities:
 
 ## Configure the AI MCP Proxy plugin
 
-Now, let's configure the AI MCP Proxy plugin to apply tool-level access rules. The plugin controls which users or AI agents can see or call each MCP tool. Access is determined by Consumer groups and individual Consumers using allow and deny lists. A tool ACL replaces the default rule when present.
+Now, let's configure the AI MCP Proxy plugin to apply tool-level access rules. The plugin controls which users or AI agents can see or call each MCP tool. Access is determined by Consumer Groups and individual Consumers using allow and deny lists. A tool ACL replaces the default rule when present.
 
 The table below shows the effective permissions for the configuration:
 
@@ -308,7 +308,6 @@ Now let's verify access for each user by connecting with their API key:
    get_user
    list_orders
    list_orders_for_user
-   search_orders
    ```
    {:.no-copy-code}
 
@@ -335,7 +334,6 @@ Now let's verify access for each user by connecting with their API key:
 
    ```text
    list_users
-   search_orders
    ```
   {:.no-copy-code}
 

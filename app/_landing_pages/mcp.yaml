@@ -80,8 +80,6 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Apply security, governance, and observability controls to MCP servers using Kong Gateway plugins.
-
                   Use available {{site.base_gateway}} [plugins](/plugins/) to:
                   - **Secure access** with the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) or other authentication methods.
                   - **Monitor MCP traffic** using [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
