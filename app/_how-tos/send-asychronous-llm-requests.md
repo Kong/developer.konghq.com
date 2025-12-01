@@ -64,6 +64,7 @@ prereqs:
         {"custom_id": "prod5", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a concise product description for a compact and durable travel backpack with laptop compartment."}], "max_tokens": 60}}
         EOF
         ```
+        {: data-test-prereqs="block" }
   entities:
     services:
       - files-service
@@ -80,8 +81,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure AI Proxy plugins

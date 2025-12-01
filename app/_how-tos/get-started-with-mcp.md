@@ -95,7 +95,6 @@ faqs:
       * **Ensure the resources exist** in the correct control plane and region.
       * **Validate time ranges** used in analytics queries to ensure they cover a period with data.
 
-automated_tests: false
 ---
 
 ## Check that {{site.base_gateway}} is running

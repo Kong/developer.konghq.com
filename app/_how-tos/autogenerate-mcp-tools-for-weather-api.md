@@ -75,7 +75,6 @@ prereqs:
     - name: KONG_STATUS_LISTEN
       value: '0.0.0.0:8100'
 
-automated_tests: false
 ---
 
 ## Add an API key using the Request Transformer Advanced plugin
