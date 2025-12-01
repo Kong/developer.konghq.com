@@ -8,7 +8,7 @@ extended_description: |
   1. The node `JSON_XML` converts the incoming JSON request body into XML format.
   2. The node `EXIT` sends the produced XML data back directly as the response body, without proxying it upstream.
   
-title: Transform XML into JSON
+title: Transform JSON into XML
 weight: 900
 
 
