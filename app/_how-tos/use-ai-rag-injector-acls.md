@@ -96,6 +96,7 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
+
 ## Enable key authentication
 
 Configure authentication so {{site.base_gateway}} can identify each consumer. Use the [Key Auth](/plugins/key-auth/) plugin so each user presents an API key with requests:
@@ -415,7 +416,7 @@ Verify that ACL rules correctly restrict access based on consumer group membersh
 
 ### CFO access (finance + executive groups)
 
-The CFO belongs to both finance and executive groups, so they can access all collections:
+The CFO belongs to both finance and executive groups, so they can access all collections. The response includes information from both `finance-reports` and `executive-confidential` collections.
 
 {% validation request-check %}
 url: /anything
@@ -426,11 +427,11 @@ body:
   messages:
     - role: user
       content: What were our Q4 2024 results?
+status_code: 200
+message: In Q4 2024, revenue increased by 15% year-over-year to $2.3 billion, and the operating margin improved to 24%, up from 21% in Q3. Key drivers of this performance included strong enterprise sales and improved operational efficiency.
 {% endvalidation %}
 
-Expected result: The response includes information from both `finance-reports` and `executive-confidential` collections.
-
-Query for M&A information:
+Query for M&A information. The response should include confidential M&A information from the `executive-confidential` collection
 
 {% validation request-check %}
 url: /anything
@@ -441,13 +442,13 @@ body:
   messages:
     - role: user
       content: What acquisitions are we considering?
+status_code: 200
+message: The context mentions that there is a consideration of the acquisition of Target Corp, with a preliminary valuation ranging from $400M to $500M. The board vote for this acquisition is scheduled for Q1 2025.
 {% endvalidation %}
-
-Expected result: The response includes confidential M&A information from the `executive-confidential` collection.
 
 ### Financial analyst access (finance group)
 
-Financial analysts can access financial reports but not executive confidential information:
+Financial analysts can access financial reports but not executive confidential information. The response should include Q3 and Q4 2024 data from `finance-reports`:
 
 {% validation request-check %}
 url: /anything
@@ -458,11 +459,11 @@ body:
   messages:
     - role: user
       content: Show me quarterly reports from 2024
+status_code: 200
+message: |
+    I’m sorry, but I don’t have access to the full quarterly reports from 2024. However, based on the available excerpts:\n\n- **Q3 2024:** Revenue was $2.0 billion, with a year-over-year growth of 12%. The operating margin was 21%, and international markets made up 35% of total revenue.\n- **Q4 2024:** Revenue increased by 15% year-over-year to $2.3 billion. The operating margin improved to 24%, supported by strong enterprise sales and better operational efficiency.\n\nFor full reports, you may need to visit the company's investor relations website or contact their investor relations department.
 {% endvalidation %}
 
-Expected result: The response includes Q3 and Q4 2024 data from `finance-reports`.
-
-Query for confidential information:
 
 {% validation request-check %}
 url: /anything
@@ -473,6 +474,8 @@ body:
   messages:
     - role: user
       content: What acquisitions are we considering?
+status_code: 200
+message: The context does not contain relevant information about acquisitions being considered.
 {% endvalidation %}
 
 Expected result: The response does not include M&A information. The AI should indicate it cannot answer based on available information.
@@ -490,13 +493,15 @@ body:
   messages:
     - role: user
       content: What are the latest financial results?
+status_code: 200
+message: |
+    The context does not provide the latest financial results. For the most up-to-date information, you can check the latest quarterly earnings call details or public filings on the company's investor relations website.
 {% endvalidation %}
 
-Expected result: No financial data is returned. The AI responds based only on publicly available information or indicates it cannot answer.
 
 ### Public user access (public group)
 
-Public users can access only public documents:
+Public users can access only public documents. The response should information from `public-docs` collection only.
 
 {% validation request-check %}
 url: /anything
@@ -507,6 +512,6 @@ body:
   messages:
     - role: user
       content: How can I contact investor relations?
+status_code: 200
+message: You can contact investor relations by emailing investor.relations@company.com.
 {% endvalidation %}
-
-Expected result: The response includes information from `public-docs` collection only.

@@ -43,10 +43,10 @@ related_resources:
     url: /plugins/ai-semantic-cache/
   - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
     url: /how-to/use-ai-rag-injector-plugin/
-
+  - text: Control access to knowledge base collections with the AI RAG Injector plugin
+    url: /how-to/use-ai-rag-injector-acls/
 tags:
   - ai
-
 search_aliases:
   - ai-semantic-cache
   - ai
@@ -253,8 +253,9 @@ Once you've configured your vector database and ingested content, you can contro
 
 ### Collections
 
-A collection is a logical grouping of knowledge base articles with independent access control rules.
+A collection is a logical grouping of knowledge base articles with independent access control rules. When you ingest content via the Admin API, assign it to a collection using the `collection` field in the metadata.
 
+Example metadata structure:
 ```json
 {
   "content": "Quarterly revenue increased 15%...",
@@ -267,14 +268,12 @@ A collection is a logical grouping of knowledge base articles with independent a
 }
 ```
 
+### Configuration
+
 Two independent mechanisms control which results consumers receive:
 
 - **ACL filtering**: Server restricts collections based on consumer groups
 - **Metadata filtering**: Clients specify criteria (tags, dates, sources) to narrow results within authorized collections
-
-### Configuration
-
-Configure ACLs at two levels: global rules that apply to all collections, and per-collection rules that override global settings.
 
 <!-- vale off -->
 {% table %}
@@ -289,11 +288,11 @@ rows:
     description: |
       Determines which consumer attribute is matched against ACL rules. Options: `consumer_group`, `username`, `custom_id`, or `consumer_id`
   - field: |
-      [`global_acl_config.allow`](/#schema--config-global-acl-config-allow)
+      [`global_acl_config.allow[]`](/#schema--config-global-acl-config-allow)
     description: |
       Group names with access to all collections (unless overridden)
   - field: |
-      [`global_acl_config.deny`](/#schema--config-global-acl-config-deny)
+      [`global_acl_config.deny[]`](/#schema--config-global-acl-config-deny)
     description: |
       Group names explicitly denied access to all collections
   - field: |
@@ -307,22 +306,31 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-Configuration example:
+This configuration creates the following access rules:
+- `finance-reports`: Accessible only to consumers in the `finance` or `admin` groups. Contractors are explicitly denied.
+- `public-docs`: Accessible to all consumers (empty allow and deny lists).
+- Other collections: No access (empty global ACL means deny by default).
+
 
 ```yaml
-consumer_identifier: consumer_group
-
-global_acl_config:
-  allow: []
-  deny: []
-
-collection_acl_config:
-  finance-reports:
-    allow: ["finance", "admin"]
-    deny: ["contractor"]
-  public-docs:
-    allow: []
-    deny: []
+plugins:
+  - name: ai-rag-injector
+    config:
+      ...
+      consumer_identifier: consumer_group
+      global_acl_config:
+        allow: []
+        deny: []
+      collection_acl_config:
+        finance-reports:
+          allow:
+            - finance
+            - admin
+          deny:
+            - contractor
+        public-docs:
+          allow: []
+          deny: []
 ```
 
 Collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
@@ -340,7 +348,7 @@ The plugin checks access in this order:
 
 ### Metadata filtering
 
-Clients refine search results by specifying filter criteria in the query request. Filters apply within the collections a consumer is authorized to access.
+Clients can refine search results by specifying filter criteria in the query request. Filters apply within the collections a consumer is authorized to access.
 
 The following operators are supported:
 
@@ -371,8 +379,7 @@ POST /v1/chat/completions
 }
 ```
 
-### Filter parameters
-
+The following filter parameters are available:
 - `filters`: JSON object with filter clauses
 - `filter_mode`:
   - `"compatible"`: Includes chunks matching filter OR with no metadata
@@ -388,89 +395,30 @@ flowchart TB
     Start([Query Request]) --> Auth[Authenticate Consumer]
     Auth --> CheckACL{Authorized<br/>Collections?}
     CheckACL -->|No| Deny[❌ Access Denied]
-    CheckACL -->|Yes| HasFilter{Has<br/>Filters?}
-    HasFilter -->|No| SearchAll[Search all chunks]
-    HasFilter -->|Yes| FilterMode{Filter<br/>Mode?}
-    FilterMode -->|compatible| SearchCompat[Match filter OR no metadata]
-    FilterMode -->|strict| SearchStrict[Match filter only]
-    SearchAll --> Return[Return Results]
+    CheckACL -->|Yes| HasFilter{Metadata<br/>Filters<br/>Specified?}
+    HasFilter -->|No| SearchAll[Search all chunks<br/>in authorized collections]
+    HasFilter -->|Yes| FilterMode{filter_mode<br/>setting?}
+    FilterMode -->|compatible| SearchCompat[Return chunks matching filter<br/>OR chunks with no metadata]
+    FilterMode -->|strict| SearchStrict[Return only chunks<br/>matching filter]
+    SearchAll --> Return[✓ Return Results]
     SearchCompat --> Return
     SearchStrict --> Return
 {% endmermaid %}
 
 ### Admin API
 
-Use the Admin API to ingest content with metadata and collection assignments.
+Use the [Admin API](/plugins/ai-rag-injector/api/) to ingest content with metadata and collection assignments.
 
-#### Archive data
+- Ingest chunk:
 
-Ingest historical financial data:
+  ```bash
+  POST /ai-rag-injector/:plugin_id/ingest_chunk
+  {"content": "...", "metadata": {"collection": "finance-reports", ...}}
+  ```
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "Historical Data Archive: Q2 2022 revenue was $1.5B with 8% growth. This data is retained for historical analysis but may not reflect current business conditions or reporting standards."
-    metadata:
-      collection: finance-reports
-      source: archive
-      date: "2022-06-15T00:00:00Z"
-      tags:
-        - finance
-        - quarterly
-        - q2
-        - "2022"
-        - archive
-{% endcontrol_plane_request %}
-<!--vale on-->
+- Lookup chunks:
 
-#### Executive confidential content
-
-Ingest sensitive M&A information accessible only to executives:
-
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "CONFIDENTIAL - M&A Discussion: Preliminary valuation for Target Corp acquisition ranges from $400M-$500M. Due diligence reveals strong synergies in enterprise segment. Board vote scheduled for Q1 2025. Legal counsel: Morrison & Associates. Internal deal code: MA-2024-087."
-    metadata:
-      collection: executive-confidential
-      source: internal
-      date: "2024-11-20T00:00:00Z"
-      tags:
-        - confidential
-        - m&a
-        - executive
-{% endcontrol_plane_request %}
-<!--vale on-->
-
-### Example: Public and private collections
-
-```yaml
-consumer_identifier: consumer_group
-
-global_acl_config:
-  allow: ["admin"]
-  deny: []
-
-collection_acl_config:
-  public-docs:
-    allow: []
-    deny: []
-  finance-reports:
-    allow: ["finance", "admin"]
-    deny: ["contractor"]
-```
-
-Results:
-- `public-docs`: Accessible to all (empty allow list)
-- `finance-reports`: Accessible to finance/admin only, contractors denied
-- Other collections: Admin only (global rule)
+  ```bash
+  POST /ai-rag-injector/:plugin_id/lookup_chunks
+  {"prompt": "...", "collection": "finance-reports", "filters": {...}}
+  ```
