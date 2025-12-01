@@ -45,6 +45,22 @@ async function extractPrereqs(page) {
   return { blocks };
 }
 
+async function extractCleanup(page) {
+  const instructions = [];
+  const blocks = await page.locator("[data-test-cleanup='block']").all();
+
+  for (const elem of blocks) {
+    if (await elem.isVisible()) {
+      const copy = await elem.locator(".copy-action");
+      await copy.click();
+
+      const copiedText = await copyFromClipboard(page);
+      instructions.push(copiedText);
+    }
+  }
+  return instructions;
+}
+
 async function extractSetup(page) {
   // Fetch all elements that have data-test-setup and copy its value.
   const instructions = [];
@@ -154,6 +170,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
+      const cleanup = await extractCleanup(page);
       const instructionsFile = await writeInstructionsToFile(
         url,
         config,
@@ -164,6 +181,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
           products,
           prereqs,
           steps,
+          cleanup,
         }
       );
 

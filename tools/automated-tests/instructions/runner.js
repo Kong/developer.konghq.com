@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import yaml from "js-yaml";
 import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
+import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
 import { executeCommand } from "../docker-helper.js";
@@ -80,6 +81,15 @@ async function runPrereqs(prereqs, container) {
     const config = await processPrereqs(prereqs);
     await runConfig(config, container);
     log(`   prereq ✅ .`);
+  }
+}
+
+async function runCleanup(cleanup, container) {
+  log("Running cleanup...");
+  if (cleanup) {
+    const config = await processCleanup(cleanup);
+    await runConfig(config, container);
+    log(`   cleanup ✅ .`);
   }
 }
 
@@ -166,6 +176,8 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       await executeCommand(container, command);
     }
   }
+
+  await runCleanup(instructions.cleanup, container);
 
   return result;
 }
