@@ -491,7 +491,9 @@ rows:
               Configure the AI Proxy plugin to proxy requests to an xAI model
             cta:
               url: /plugins/ai-proxy/examples/xai-chat-route/
-
+      - blocks:
+        - type: card
+          config:
             title: AI Proxy Advanced with xAI
             description:
               Configure the AI Proxy plugin to proxy requests to an xAI model
