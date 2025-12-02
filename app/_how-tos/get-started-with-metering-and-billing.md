@@ -97,10 +97,6 @@ flowchart TB
     consumer1 --> customer1
     subscription --> plan
 
-    style plan stroke:#000000,fill:#BBDEFB
-    style subscription fill:#C8E6C9
-    style gateway fill:#C8E6C9
-    style metering fill:#E1BEE7
 {% endmermaid %}
 
 
