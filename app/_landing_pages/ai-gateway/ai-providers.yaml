@@ -102,6 +102,13 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: xAI
+            icon: /assets/icons/xai.svg
+            cta:
+              url: ./#xai
+      - blocks:
+        - type: icon_card
+          config:
             title: Alibaba Cloud DashScope
             icon: /assets/icons/dashscope.svg
             cta:
@@ -472,6 +479,41 @@ rows:
   #             quantity: 3
   #             allow_empty: true
 
+  - header:
+      type: h3
+      text: "xAI"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with xAI
+            description:
+              Configure the AI Proxy plugin to proxy requests to an xAI model
+            cta:
+              url: /plugins/ai-proxy/examples/xai-chat-route/
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with xAI
+            description:
+              Configure the AI Proxy plugin to proxy requests to an xAI model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/xai-chat-route/    
+  - header:
+      type: h4
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags:
+                - xai
+              quantity: 3
+              allow_empty: true
+  
   - header:
       type: h3
       text: "Alibaba Cloud DashScope"
