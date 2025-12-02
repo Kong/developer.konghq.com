@@ -15,6 +15,7 @@ related_resources:
 
 min_version:
   insomnia: "12.0"
+  gateway: "3.12"
 
 tags:
   - ai
