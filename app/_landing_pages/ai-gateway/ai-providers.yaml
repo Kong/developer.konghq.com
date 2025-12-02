@@ -522,6 +522,9 @@ rows:
               url: /plugins/ai-proxy/examples/dashscope-chat-route/
               align: end
               text: Configuration example
+      - blocks:
+        - type: card
+          config:
             title: AI Proxy Advanced with DashScope
             description:
               Configure the AI Proxy Advanced plugin to proxy requests to a DashScope model
