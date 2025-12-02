@@ -72,6 +72,8 @@ rows:
     description: Authenticate to a third-party service using Vault secrets.
   - usecase: "[Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)"
     description: "Leverage the `cache` and `branch` nodes to conditionally store or retrieve cache items."
+  - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)"
+    description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
 {% endtable %}
 <!--vale on-->
 
@@ -1351,6 +1353,143 @@ Set common request headers for different API requests:
     headers: HEADERS
 ```
 
+
+### XML to JSON node {% new_in 3.13 %}
+
+Transforms XML strings to JSON or a Lua table.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `xml_to_json` from the node object dropdown to see all node attributes.
+
+{:.info}
+> **Note:** One of the `attributes_block_name` or `attributes_name_prefix` is required. 
+
+#### XML to JSON node inputs
+
+The XML to JSON node accepts XML as input.
+
+#### XML to JSON node outputs
+
+The XML to JSON node outputs JSON strings or Lua tables.
+
+#### Examples
+
+If provided the following XML:
+
+```xml
+<root>
+  <name>Alice</name>
+  <age>30</age>
+  <is_student>false</is_student>
+  <courses>Math</courses>
+  <courses>Science</courses>
+  <address>
+    <street>123 Main St</street>
+    <city>Wonderland</city>
+  </address>
+  <null_value>null</null_value>
+</root>
+```
+
+The XML to JSON node will output the following JSON:
+
+```json
+ {
+  "root": {
+    "name": "Alice",
+    "age": 30,
+    "is_student": false,
+    "courses": ["Math", "Science"],
+    "address": {
+      "street": "123 Main St",
+      "city": "Wonderland"
+    },
+    "null_value": null
+  }
+}
+```
+
+The configuration for the node would look like this:
+```yaml
+- name: CONVERT_XML_TO_JSON
+  type: xml_to_json
+  root_element_name: root
+  attributes_block_name: "#attr"
+  input: CALL_FOO
+```
+
+Where `CALL_FOO` is a call node that calls an API, and that API outputs XML.
+
+For a more detailed example, see [Convert XML into JSON](/plugins/datakit/examples/convert-xml-into-json/).
+
+For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
+
+### JSON to XML node {% new_in 3.13 %}
+
+Transforms JSON strings or Lua tables into XML.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `json_to_xml` from the node object dropdown to see all node attributes.
+
+{:.info}
+> **Note:** One of the `attributes_block_name` or `attributes_name_prefix` is required. 
+
+#### JSON to XML node inputs
+
+The JSON to XML node accepts JSON strings or Lua tables as input.
+
+#### JSON to XML node outputs
+
+The JSON to XML node outputs XML.
+
+#### Examples
+
+If provided the following JSON:
+```json
+ {
+  "root": {
+    "name": "Alice",
+    "age": 30,
+    "is_student": false,
+    "courses": ["Math", "Science"],
+    "address": {
+      "street": "123 Main St",
+      "city": "Wonderland"
+    },
+    "null_value": null
+  }
+}
+```
+
+The JSON to XML node will output the following XML:
+
+```xml
+<root>
+  <name>Alice</name>
+  <age>30</age>
+  <is_student>false</is_student>
+  <courses>Math</courses>
+  <courses>Science</courses>
+  <address>
+    <street>123 Main St</street>
+    <city>Wonderland</city>
+  </address>
+  <null_value>null</null_value>
+</root>
+```
+
+The configuration for the node would look like this:
+```yaml
+- name: CONVERT_JSON_TO_XML
+  type: json_to_xml
+  root_element_name: root
+  attributes_block_name: "#attr"
+  input: CALL_BAR
+```
+Where `CALL_BAR` is a call node that calls an API, and that API outputs JSON.
+
+For a more detailed example, see [Convert JSON into XML](/plugins/datakit/examples/convert-json-into-xml/).
+
+For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
+
 ### Implicit nodes
 
 Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
@@ -1447,7 +1586,6 @@ nodes:
       secret2: vault.secret2
     jq: "."
 ```
-
 ## Resources
 
 Datakit supports a global `resources` object that can be used to declare shared resource configurations.
