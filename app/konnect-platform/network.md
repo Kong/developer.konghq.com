@@ -24,7 +24,7 @@ faqs:
       * **Configuration** – The Control Plane sends config data to the Data Plane nodes.
       * **Telemetry** – Data plane nodes send usage data to the Control Plane for Analytics and billing.
 
-      Telemetry includes traffic metrics by Service, Route, and consuming application. It does not include any customer data. 
+      Telemetry includes traffic metrics by Service, Route, and consuming application. It does not include any customer data.
       All telemetry is encrypted using mTLS.
 
       If you use [Debugger](/gateway/debugger/), {{site.konnect_short_name}} will collect request and response data. {{site.konnect_short_name}} only collects this data if you've opted in to Debugger, it doesn't collect this data by default.
@@ -37,21 +37,21 @@ faqs:
       You can customize this interval using the [`analytics_flush_interval`](/gateway/configuration/#analytics-flush-interval) setting.
   - q: How long can Data Plane nodes remain disconnected from the Control Plane?
     a: |
-      Data plane nodes continue pinging the Control Plane until reconnected or stopped. 
+      Data plane nodes continue pinging the Control Plane until reconnected or stopped.
       They use cached config and function normally, unless:
       * The license expires
       * The cached config file (`config.json.gz` or `dbless.lmdb`) is deleted
   - q: Where is configuration cached on Data Plane nodes?
     a: |
-      When a Data Plane node receives new configuration from the Control Plane, it immediately loads it into memory and also caches it to disk. 
+      When a Data Plane node receives new configuration from the Control Plane, it immediately loads it into memory and also caches it to disk.
       The cache location depends on the Gateway version:
 
       * **2.x Gateway** – Configuration is stored in an unencrypted cache file, `config.json.gz`, located in the {{site.base_gateway}} prefix path.
       * **3.x Gateway** – Configuration is stored in an unencrypted LMDB database directory, `dbless.lmdb`, also in the {{site.base_gateway}} prefix path.
   - q: What happens if the Control Plane and Data Plane nodes disconnect?
     a: |
-      Data plane nodes use the cached configuration until they can reconnect. 
-      Once reconnected, the Control Plane sends the latest configuration. 
+      Data plane nodes use the cached configuration until they can reconnect.
+      Once reconnected, the Control Plane sends the latest configuration.
       It does not queue or replay any older configuration changes.
   - q: Can I restart a Data Plane node if the Control Plane is down or disconnected?
     a: |
@@ -67,11 +67,11 @@ faqs:
       You can configure the buffer size using the [`analytics_buffer_size_limit`](/gateway/configuration/#analytics-buffer-size-limit) setting.
   - q: How do the Control Plane and Data Plane communicate?
     a: |
-      Data traveling between Control Planes and Data Planes is secured through a mutual TLS handshake. 
-      Data plane nodes initiate the connection to the {{site.konnect_short_name}} Control Plane. 
+      Data traveling between Control Planes and Data Planes is secured through a mutual TLS handshake.
+      Data plane nodes initiate the connection to the {{site.konnect_short_name}} Control Plane.
       Once the connection is established, the Control Plane can send configuration data to the connected Data Plane nodes.
 
-      Each Data Plane node maintains a persistent connection with the Control Plane and sends a heartbeat every 30 seconds. 
+      Each Data Plane node maintains a persistent connection with the Control Plane and sends a heartbeat every 30 seconds.
       If the Control Plane doesn't respond, the Data Plane node attempts to reconnect after a 5–10 second delay.
   - q: What IP addresses are associated with {{site.konnect_short_name}} regional hostnames?
     a: Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for the list of IPs associated to regional hostnames. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
@@ -99,16 +99,16 @@ rows:
     description: >-
       Cluster communication port for configuration and telemetry data. The {{site.konnect_short_name}} Control Plane uses this port to listen for connections and to communicate with Data Plane nodes.<br>
       The cluster communication port must be accessible to Data Plane nodes within the same cluster. This port is protected by mTLS to ensure end-to-end security and integrity.
-  - port: "`8071`"
+  - port: "`8071`<br>`20010`"
     protocol: "TCP<br>UDP"
-    description: "Port used for audit logging."
+    description: "Ports used for audit logging."
 {% endtable %}
 
 
-{{site.base_gateway}}'s hosted Control Plane expects traffic on these ports, so they can't be customized. 
+{{site.base_gateway}}'s hosted Control Plane expects traffic on these ports, so they can't be customized.
 
 {:.info}
-> **Note**: If you can't make outbound connections using port `443`, you can use an existing proxy in your network to make the connection. See [Use a forward proxy to secure communication across a firewall](/gateway/cp-dp-communication/#use-a-forward-proxy-to-secure-communication-across-a-firewall) for details. 
+> **Note**: If you can't make outbound connections using port `443`, you can use an existing proxy in your network to make the connection. See [Use a forward proxy to secure communication across a firewall](/gateway/cp-dp-communication/#use-a-forward-proxy-to-secure-communication-across-a-firewall) for details.
 
 ## Data plane node ports
 

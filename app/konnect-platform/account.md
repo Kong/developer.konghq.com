@@ -78,12 +78,14 @@ faqs:
 
   - q: How do I change the Owner of my organization?
     a: |
-      There's no self-service way to change the Owner of an organization in {{site.konnect_short_name}}. Only Kong Support can complete the ownership transfer.
+      The Owner of an organization in {{site.konnect_short_name}} can transfer ownership in {{site.konnect_short_name}}.
       
-      To change the Owner:
-      1. Ensure that the new Owner is already a member of the [Organization Admin pre-defined team](/konnect-platform/teams-and-roles/#predefined-teams).
-      2. Open a [Kong support ticket](https://support.konghq.com/).
-      3. In your support ticket, specify the current organization, the current Owner, and the user that you want to designate as the new Owner.
+      To change the Owner, ensure that the new Owner is already a member of the [Organization Admin pre-defined team](/konnect-platform/teams-and-roles/#predefined-teams) and follow these steps:
+      1. Go to [**Organization**](https://cloud.konghq.com/global/organization/settings/) > **General**.
+      1. Select a new Organization Owner
+      1. Click **Save**
+      
+      If an Org Owner has left the organization without transfering ownership reach out to [Kong support](https://support.konghq.com/).
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
@@ -98,7 +100,7 @@ When you create a {{site.konnect_short_name}} account, {{site.ee_product_name}},
 licenses are automatically provisioned to the organization. You do not need to manage these
 licenses manually.
 
-Any data plane nodes or {{site.kic_product_name}} associations configured through the [Gateway Manager](/gateway-manager/)
+Any data plane nodes or {{site.kic_product_name}} associations configured in {{site.konnect_short_name}}
 also implicitly receive the same license from the {{site.konnect_short_name}}
 control plane. You should never have to deal with a license directly.
 

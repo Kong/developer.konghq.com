@@ -5,5 +5,22 @@
       "type": "feature",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.1": [
+    {
+      "message": "Fixed an issue where MCP server could not call upstream when proxy protocol is used.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where forwarding client headers to upstream could not be disabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where MCP server could not call upstream when self-signed certificate is used in Kong.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

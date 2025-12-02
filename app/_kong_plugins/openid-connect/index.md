@@ -597,7 +597,7 @@ The plugin has been tested with several OpenID Connect providers:
 - [Connect2id](https://connect2id.com/products/server)
 - [Curity](https://curity.io/resources/learn/openid-connect-overview/)
 - [Dex](https://dexidp.io/docs/openid-connect/)
-- [Gluu](https://gluu.org/docs/ce/api-guide/openid-connect-api/)
+- [Gluu](https://docs-4.gluu.org/gluu-server/admin-guide/openid-connect/)
 - [Google](https://developers.google.com/identity/protocols/oauth2/openid-connect)
 - [IdentityServer](https://duendesoftware.com/)
 - [Keycloak](http://www.keycloak.org/documentation.html)

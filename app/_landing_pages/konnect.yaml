@@ -115,15 +115,13 @@ rows:
               - text: Get started
                 url: /ai-gateway/get-started/
                 align: end
-              - text: Manage
-                url: /ai-manager/
-                align: end
+  
     - blocks:
           - type: card
             config:
               title: API Gateway
               description: |
-                Gateway Manager is a {{site.konnect_short_name}} module that lets you catalog, connect to, and monitor the status of all {{site.base_gateway}} control planes and data plane nodes in one place.
+                {{site.konnect_short_name}} lets you catalog, connect to, and monitor the status of all {{site.base_gateway}} control planes and data plane nodes in one place.
               icon: /assets/icons/gateway.svg
               ctas:
               - text: Learn
@@ -131,9 +129,6 @@ rows:
                 align: end
               - text: Get started
                 url: /gateway/get-started/
-                align: end
-              - text: Manage
-                url: /gateway-manager/
                 align: end
               
     - blocks:
@@ -193,6 +188,7 @@ rows:
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}}, {{site.base_gateway}}, and {{site.mesh_product_name}}"
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"
                     - "[{{site.konnect_short_name}} APIs](/konnect-api/): Manage all aspects of the {{site.konnect_short_name}} platform, applications, and runtimes using APIs"
+                    - "[Kong AI assistant](/konnect-platform/kai/): Use Kong's AI assistant, KAi, to detect issues and suggest fixes."
 
         
 
@@ -295,7 +291,7 @@ rows:
               icon: /assets/icons/deployment.svg
               cta:
                 text: "{{site.konnect_short_name}} data plane reference"
-                url: /gateway-manager/data-plane-reference/
+                url: /gateway/data-plane-reference/
                 align: end
       - blocks:
           - type: card
@@ -391,7 +387,7 @@ rows:
                 licenses are automatically provisioned to your organization. You do not need to manage these
                 licenses manually.
 
-                Any data plane nodes or {{site.kic_product_name}} associations configured through the Gateway Manager
+                Any data plane nodes or {{site.kic_product_name}} associations configured through {{site.konnect_short_name}}
                 also implicitly receive the same license from the {{site.konnect_saas}}
                 control plane. You should never have to deal with a license directly.
 

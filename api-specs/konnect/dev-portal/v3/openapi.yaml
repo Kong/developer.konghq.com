@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.0.10
+  version: 3.0.11
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1a50c0a00fdbbab1b9d085e7bb215490eca69682
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1a50c0a00fdbbab1b9d085e7bb215490eca69682'
+  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -3197,6 +3197,17 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Too Many Requests
+    CredentialListItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          type: string
+      additionalProperties: false
+      required:
+        - id
+        - display_name
     ListCredentialsResponse:
       type: object
       properties:
@@ -3205,16 +3216,7 @@ components:
         data:
           type: array
           items:
-            type: object
-            additionalProperties: false
-            properties:
-              id:
-                $ref: '#/components/schemas/UUID'
-              display_name:
-                type: string
-            required:
-              - id
-              - display_name
+            $ref: '#/components/schemas/CredentialListItem'
       additionalProperties: false
       required:
         - data

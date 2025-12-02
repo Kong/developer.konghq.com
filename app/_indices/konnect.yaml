@@ -9,6 +9,7 @@ sections:
         description: Get started by setting up {{site.konnect_short_name}} hybrid deployment and walking through some common API management tasks. 
         url: /gateway/get-started/
       - path: /gateway/topology-hosting-options/
+      - path: /konnect-platform/kai/
   
   - title: Konnect Applications
     items:
@@ -16,7 +17,7 @@ sections:
       - path: /catalog/
       - path: /advanced-analytics/
       - path: /ai-manager/
-      - path: /gateway-manager/
+      - path: /gateway/
       - path: /mesh/
 
   - title: Org and Account Management

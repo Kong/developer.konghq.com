@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.0.0
+  version: 3.0.1
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28'
+  x-oas-source: kong/platform-api@7d824963a8659aaf8b9db42df1c777b078a7413f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7d824963a8659aaf8b9db42df1c777b078a7413f'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -763,6 +763,8 @@ paths:
           schema:
             type: object
             properties:
+              entity_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
               role_name:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               entity_type_name:
@@ -1078,6 +1080,8 @@ paths:
           schema:
             type: object
             properties:
+              entity_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
               role_name:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               entity_type_name:
@@ -2368,16 +2372,9 @@ components:
               example: Conflict
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
@@ -2425,24 +2422,18 @@ components:
             detail:
               example: Forbidden
     LegacyStringFieldFilter:
-      description: 'Filter using **one** of the following operators: `contains`'
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
       properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
         contains:
           description: The field contains the provided value.
           type: string
           example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
       x-examples:
         example-1:
           contains: some-value

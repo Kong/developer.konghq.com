@@ -29,7 +29,7 @@ related_resources:
 faqs:
   - q: Are the {{site.konnect_short_name}} Control Plane and associated database migrations or upgrades done by Kong Inc.?
     a: The {{site.base_gateway}} Control Plane and its dependencies are fully managed by {{site.konnect_short_name}}. As new versions of {{site.base_gateway}} are released, {{site.konnect_short_name}} supports them as long as they are under our [active support schedule](/gateway/version-support-policy/).
-  - q: Will {{site.konnect_short_name}} Control Plane upgrades always show incompatible messages on the Gateway Manager page if the Data Plane nodes are not the same version as the {{site.konnect_short_name}} Control Plane?
+  - q: Will {{site.konnect_short_name}} Control Plane upgrades always show incompatible messages on the API Gateway page in {{site.konnect_short_name}} if the Data Plane nodes are not the same version as the {{site.konnect_short_name}} Control Plane?
     a: An old configuration may still be 100% compatible with older Data Plane nodes and therefore not show any error messages in the {{site.konnect_short_name}} UI. If there are compatibility issues detected when pushing the payload down to the Data Plane, then this will be reflected in the UI.
   - q: Will new features be available if the {{site.konnect_short_name}} Control Plane detects incompatible Data Plane nodes?
     a: |

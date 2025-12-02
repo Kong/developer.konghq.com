@@ -17,6 +17,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@1271ef747690f068287732330269a47c8984b1d9
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1271ef747690f068287732330269a47c8984b1d9'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -120,7 +122,7 @@ paths:
       tags:
         - Event Gateways
     put:
-      operationId: update-houdini-event-gateway
+      operationId: update-event-gateway
       summary: Update Event Gateway
       description: Update an individual gateway.
       requestBody:
@@ -4679,16 +4681,9 @@ components:
       readOnly: true
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
@@ -5374,7 +5369,7 @@ tags:
       Virtual clusters are the primary way clients interact with the Event Gateway proxy. They allow you to isolate clients from each other when connecting to the same backend cluster, and provide each client with modified view while still appearing as a standard Kafka cluster.
   - name: Event Gateway Listeners
     description: |
-      A listeners represents hostname-port or IP-port combinations that connect to TCP sockets. Listeners need at least as many ports as backend brokers if you use port mapping in a Forward to Virtual Cluster policy. For SNI routing, you can route all brokers using a listener with only one port. Ports can be expressed as a single port or range. Addresses can be IPv4, IPv6, or hostnames.
+      A listener represents hostname-port or IP-port combinations that connect to TCP sockets. Listeners need at least as many ports as backend brokers if you use port mapping in a Forward to Virtual Cluster policy. For SNI routing, you can route all brokers using a listener with only one port. Ports can be expressed as a single port or range. Addresses can be IPv4, IPv6, or hostnames.
 
       A listener can have policies that enforce TLS certificates and perform SNI routing. The listener runs at Layer 4 of the network stack. In Kong Event Gateway, listeners first take in the connection and then route the TCP connection to a virtual cluster based on conditions defined in listener policies.
   - name: Event Gateway Listener Policies
@@ -5387,22 +5382,22 @@ tags:
       Policies control how Kafka protocol traffic is modified between the client and the backend cluster.
 
       Cluster policies are transformation and validation policies that can be applied to Kafka messages.
-  - name: Event Gateway Virtual Cluster Consume Policies
-    description: |
-      Policies control how Kafka protocol traffic is modified between the client and the backend cluster.
-
-      Cluster policies are transformation and validation policies that can be applied to Kafka messages.
   - name: Event Gateway Virtual Cluster Produce Policies
     description: |
-      Policies control how Kafka protocol traffic is modified between the client and the backend cluster.
+      Produce policies operate on Kafka messages before they are written to the Kafka cluster.
 
-      Cluster policies are transformation and validation policies that can be applied to Kafka messages.
+      Where possible, apply transformations to the data using produce policies rather than consume policies for maximum efficiency.
+  - name: Event Gateway Virtual Cluster Consume Policies
+    description: |
+      Consume policies operate on Kafka messages as they are read from a Kafka cluster.
+
+      Transformations may be applied at consume time, but they are applied once per Consumer. Where possible, transofmrations should be applied as a Produce policy
   - name: Event Gateway DataPlane Certificates
     description: |
       DataPlane certificates control how your running Event Gateway instances connect to the Control Plane
   - name: Event Gateway Static Keys
     description: |
-      Static Keys are a used by the Encrypt and Decrypt policies to encrypt data at rest
+      Static Keys are used by the Encrypt and Decrypt policies to encrypt data at rest
   - name: Event Gateway Schema Registries
     description: |
       Configure a schema registry that can be used to validate payloads when producing/consuming messages

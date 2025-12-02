@@ -74,7 +74,13 @@ faqs:
       Subscriptions that are paid for by credit card are called **Self-serve Enterprise** subscriptions and don't require an activation code.  
       Access is granted automatically once payment is completed.  
     
-      If you purchased Enterprise through the **sales team**, you will receive an activation code as part of the onboarding process.    
+      If you purchased Enterprise through the **sales team**, you will receive an activation code as part of the onboarding process.
+  - q: How do I know that I have successfully upgraded to Insomnia Enterprise?
+    a: |
+      Look for the **Enterprise** badge in the top-right corner of the app.
+
+      If you don’t see the badge, you're either not part of an Enterprise workspace, or you don't have an **Owner** or **Co-owner** role. If you require support, reach out to **Insomnia Support** at support@insomnia.rest or [https://support.konghq.com/support/s/](https://support.konghq.com/support/s/).
+    
 ---
 
 If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance in [**Insomnia Admin**](https://app.insomnia.rest/).
@@ -84,8 +90,9 @@ If you're new to Insomnia Enterprise, this document will guide you through the f
 
 ## 1. Activate your Enterprise membership
 
-Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code.
-The first thing you'll need to do is:
+Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code. If you're already an **Owner** or **Co-owner** of an upgraded Enterprise workspace, skip this step.
+
+To activate the code you'll need to follow these steps:
 
 1. In the Insomnia Admin app, click **Upgrade**.
 1. On the [Change subscription plan](https://app.insomnia.rest/app/subscription/update) page, select the Enterprise plan.
