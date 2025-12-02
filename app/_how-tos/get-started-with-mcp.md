@@ -49,14 +49,6 @@ prereqs:
         - single-consumer
 
   inline:
-    - title: OpenAI
-      content: |
-        This tutorial uses the AI Proxy plugin with OpenAI. You'll need to [create an OpenAI account](https://auth.openai.com/create-account) and [get an API key](https://platform.openai.com/api-keys). Once you have your API key, create an environment variable:
-
-        ```sh
-        export OPENAI_KEY='YOUR-API-KEY'
-        ```
-      icon_url: /assets/icons/openai.svg
     - title: Claude account and Claude desktop
       content: |
         To complete this tutorial, you'll need to have a [Claude](https://claude.ai) account and [Claude desktop](https://claude.ai/download).
