@@ -111,6 +111,6 @@ rows:
     description: A floating-point number for the elapsed time in seconds (including milliseconds as the decimal part) from the epoch for the current timestamp from the Nginx cached time.
 {% endtable %}
 
-## File-log plugin
+## File Log plugin
 
-When this plugin is used together with [File-log](https://developer.konghq.com/plugins/file-log/) the correlation_id field is added to the JSON log object. 
+When this plugin is used together with the [File Log](/plugins/file-log/) plugin, the `correlation_id` field is added to the JSON log object. 
