@@ -37,8 +37,8 @@ tags:
   - openai
 
 tldr:
-  q: How do I run Claude CLI through Kong AI Gateway?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the AI Gateway for monitoring and control.
+  q: How do I run Claude CLI through Kong AI Gateway for Azure OpenAI models?
+  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable the File Log plugin to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the AI Gateway for monitoring and control.
 
 tools:
   - deck
@@ -114,9 +114,12 @@ cleanup:
 ---
 ## Configure the AI Proxy plugin
 
-First, configure the AI Proxy plugin for the [Azure AI provider](/ai-gateway/ai-providers/#azure-ai). This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts. You do not pass the API key here. The client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
+First, configure the AI Proxy plugin for the [Azure AI provider](/ai-gateway/ai-providers/#azure-ai):
+* This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. 
+* The configuration also raises the maximum request body size to 512 KB to support larger prompts. 
+* You don't pass the API key here. The client-side prerequisite steps store and supply it through the [helper script](#claude-code-cli).
 
-The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Azure endpoint.
+The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Azure endpoint.
 
 {% entity_examples %}
 entities:
@@ -148,7 +151,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
+Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
 
 {% entity_examples %}
 entities:
@@ -158,7 +161,7 @@ entities:
         path: "/tmp/claude.json"
 {% endentity_examples %}
 
-## Verify traffic through Kong
+## Verify traffic through AI Gateway
 
 Now, we can start a Claude Code session that points it to the local AI Gateway endpoint:
 
@@ -167,7 +170,7 @@ Now, we can start a Claude Code session that points it to the local AI Gateway e
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=<your_azure_model> \
+ANTHROPIC_MODEL=YOUR_AZURE_MODEL \
 claude
 ```
 
@@ -195,7 +198,7 @@ Select **Yes, continue**. The session starts. Ask a simple question to confirm t
 Tell me about Vienna Oribasius manuscript.
 ```
 
-Claude Code might prompt you approve its web search for answering the question. When you select **Yes** Claude will produce a full-length response to your request:
+Claude Code might prompt you approve its web search for answering the question. When you select **Yes**, Claude will produce a full-length response to your request:
 
 ```text
 The "Vienna Oribasius manuscript" refers to a famous illustrated medical
@@ -262,4 +265,4 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through Kong AI Gateway using the `gpt-4.1` Azure AI model we selected while starting Claude Code session.
+This output confirms that Claude Code routed the request through Kong AI Gateway using the `gpt-4.1` Azure AI model we selected while starting the Claude Code session.

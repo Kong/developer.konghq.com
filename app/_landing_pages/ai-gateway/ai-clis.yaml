@@ -26,10 +26,9 @@ rows:
 
                       Supported AI CLI tools:
 
-                      - [**Claude Code**](./#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex and AWS Bedrock
-                      - [**Codex CLI**](./#codex-cli): OpenAI
+                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex and AWS Bedrock
+                      - [**Codex CLI**](#codex-cli): OpenAI
 
-                      The guides below show how to configure the gateway and CLI tool for each provider.
 
                       {:.info}
                       > **Current limitations:**
