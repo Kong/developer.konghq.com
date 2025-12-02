@@ -45,6 +45,8 @@ related_resources:
     url: /how-to/use-ai-rag-injector-plugin/
   - text: Control access to knowledge base collections with the AI RAG Injector plugin
     url: /how-to/use-ai-rag-injector-acls/
+  - text: Filter knowledge base queries with the AI RAG Injector plugin
+    url: /how-to/filter-knowledge-based-queries-with-rag-injector/
 tags:
   - ai
 search_aliases:
@@ -241,7 +243,7 @@ sequenceDiagram
 <!-- vale on -->
 
 
-Rather than guessing from memory, the LLM paired with the RAG pipeline now has the ability to look up the information it needs in real time, which will dramatically reduce hallucinations and increase the accuracy of the AI output.
+Rather than guessing from memory, the LLM paired with the RAG pipeline now has the ability to look up the information it needs in real time, which reduces hallucinations and increases the accuracy of the AI output.
 
 ## Vector databases
 
@@ -249,13 +251,14 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 
 ## Access control and metadata filtering {% new_in 3.13 %}
 
-Once you've configured your vector database and ingested content, you can control which consumers access specific knowledge base articles and refine query results using metadata filters.
+Once you've configured your vector database and ingested content, you can control which [Consumers](/gateway/entities/consumer/) access specific knowledge base articles and refine query results using metadata filters.
 
 ### Collections
 
 A collection is a logical grouping of knowledge base articles with independent access control rules. When you ingest content via the Admin API, assign it to a collection using the `collection` field in the metadata.
 
 Example metadata structure:
+
 ```json
 {
   "content": "Quarterly revenue increased 15%...",
@@ -272,7 +275,7 @@ Example metadata structure:
 
 Two independent mechanisms control which results consumers receive:
 
-- **ACL filtering**: Server restricts collections based on consumer groups
+- **ACL filtering**: Server restricts collections based on [Consumer Groups](/gateway/entities/consumer-group/)
 - **Metadata filtering**: Clients specify criteria (tags, dates, sources) to narrow results within authorized collections
 
 <!-- vale off -->
@@ -307,8 +310,8 @@ rows:
 <!-- vale on -->
 
 This configuration creates the following access rules:
-- `finance-reports`: Accessible only to consumers in the `finance` or `admin` groups. Contractors are explicitly denied.
-- `public-docs`: Accessible to all consumers (empty allow and deny lists).
+- `finance-reports`: Accessible only to Consumers in the `finance` or `admin` groups. Contractors are explicitly denied.
+- `public-docs`: Accessible to all Consumers (empty allow and deny lists).
 - Other collections: No access (empty global ACL means deny by default).
 
 
@@ -333,7 +336,10 @@ plugins:
           deny: []
 ```
 
-Collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
+In this configuration, collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
+
+{:.info}
+> Check the [how-to guide](/how-to/use-ai-rag-injector-acls/) fro details about how ACLs work in the AI RAG Injector plugin.
 
 ### ACL evaluation
 
@@ -348,9 +354,7 @@ The plugin checks access in this order:
 
 ### Metadata filtering
 
-Clients refine search results by specifying filter criteria in the query request. Filters apply within the collections a consumer is authorized to access.
-
-The plugin uses a Bedrock-compatible filter grammar with the following operators:
+LLM clients can refine search results by specifying filter criteria in the query request. Filters apply within the collections. The AI RAG Injector plugin uses a Bedrock-compatible filter grammar with the following operators:
 
 - `equals`: Exact match
 - `greaterThan`: Greater than (>)
@@ -359,6 +363,9 @@ The plugin uses a Bedrock-compatible filter grammar with the following operators
 - `lessThanOrEquals`: Less than or equal to (<=)
 - `in`: Match any value in array
 - `andAll`: Combine multiple filter clauses
+
+{:.info}
+> Check the [how-to guide](/how-to/filter-knowledge-based-queries-with-rag-injector/) for details about how metadata filtering works.
 
 You can combine multiple conditions with `andAll`:
 
@@ -402,23 +409,42 @@ rows:
 You can include filters in the `extra_body` parameter of your request:
 
 ```json
-POST /v1/chat/completions
-{
-  "model": "gpt-4",
-  "messages": [{"role": "user", "content": "What were Q4 results?"}],
-  "extra_body": {
-    "ai-rag-injector": {
-      "filters": {
-        "andAll": [
-          {"equals": {"key": "source", "value": "internal"}},
-          {"in": {"key": "tags", "value": ["q4", "quarterly"]}}
-        ]
-      },
-      "filter_mode": "strict",
-      "stop_on_filter_error": false
-    }
-  }
-}
+curl "http://localhost:8000/" \
+     -H "Content-Type: application/json" \
+     --json '{
+       "messages": [
+         {
+           "role": "user",
+           "content": "What were Q4 results?"
+         }
+       ],
+       "extra_body": {
+         "ai-rag-injector": {
+           "filters": {
+             "andAll": [
+               {
+                 "equals": {
+                   "key": "source",
+                   "value": "internal"
+                 }
+               },
+               {
+                 "in": {
+                   "key": "tags",
+                   "value": [
+                     "q4",
+                     "quarterly"
+                   ]
+                 }
+               }
+             ]
+           },
+           "filter_mode": "strict",
+           "stop_on_filter_error": false
+         }
+       }
+     }'
+
 ```
 
 ### Query flow
@@ -447,13 +473,13 @@ Use the [Admin API](/plugins/ai-rag-injector/api/) to ingest content with metada
 - Ingest chunk:
 
   ```bash
-  POST /ai-rag-injector/:plugin_id/ingest_chunk
+  POST /ai-rag-injector/{pluginID}/ingest_chunk
   {"content": "...", "metadata": {"collection": "finance-reports", ...}}
   ```
 
 - Lookup chunks:
 
   ```bash
-  POST /ai-rag-injector/:plugin_id/lookup_chunks
+  POST /ai-rag-injector/{pluginID}/lookup_chunks
   {"prompt": "...", "collection": "finance-reports", "filters": {...}}
   ```

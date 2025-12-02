@@ -69,6 +69,16 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+search_aliases:
+  - ai-semantic-cache
+  - ai
+  - llm
+  - rag
+  - intelligence
+  - language
+  - model
+  - acl
+
 automated_tests: false
 ---
 ## Configure the AI Proxy Advanced plugin
@@ -99,7 +109,7 @@ variables:
 
 ## Enable key authentication
 
-Configure authentication so {{site.base_gateway}} can identify each consumer. Use the [Key Auth](/plugins/key-auth/) plugin so each user presents an API key with requests:
+Next, let's configure authentication so {{site.base_gateway}} can identify each consumer. Use the [Key Auth](/plugins/key-auth/) plugin so each user presents an API key with requests:
 
 {% entity_examples %}
 entities:
@@ -132,7 +142,7 @@ entities:
 
 ## Create Consumers
 
-Configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions that govern access to knowledge base collections:
+Noe we can configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions that govern access to knowledge base collections:
 
 {% entity_examples %}
 entities:
@@ -166,7 +176,7 @@ entities:
 
 ## Configure the AI RAG Injector plugin
 
-Configure the AI RAG Injector plugin to apply collection-level access rules. The plugin controls which users can access specific knowledge base collections. Access is determined by Consumer Groups using allow and deny lists. A collection ACL replaces the global rule when present.
+Let's configure the AI RAG Injector plugin to apply collection-level access rules. The plugin controls which users can access specific knowledge base collections. Access is determined by Consumer Groups using allow and deny lists. A collection ACL replaces the global rule when present.
 
 The table below shows the effective permissions for the configuration:
 
@@ -261,7 +271,7 @@ variables:
 
 ## Ingest content with metadata
 
-Ingest content into different collections with metadata tags. Each chunk specifies its collection, source, date, and tags.
+Ingest content into different collections with metadata tags. Each chunk specifies its collection, source, date, and tags. Use the Admin API to send ingestion requests with the metadata fields you'll use for filtering later.
 
 ### Public investor relations content
 
