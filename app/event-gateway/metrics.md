@@ -11,7 +11,7 @@ related_resources:
   - text: "{{site.event_gateway}}"
     url: /event-gateway/
   - text: Set up observability for {{site.event_gateway_short}}
-    url: /how-to/event-gateway/otel/
+    url: /how-to/event-gateway/configure-observability-with-otel/
 
 products:
     - event-gateway
