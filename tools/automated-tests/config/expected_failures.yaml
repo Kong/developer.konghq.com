@@ -25,3 +25,4 @@ input/instructions/how-to/use-ai-rag-injector-plugin/gateway.yaml: "Expected: re
 input/instructions/how-to/use-ai-gcp-model-armor-plugin/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 404, got: 500."
 input/instructions/how-to/compare-llm-models-accuracy/gateway.yaml: "Expected: request 1 to have status code 200, got: 401."
 input/instructions/how-to/use-agno-with-ai-proxy/gateway.yaml: "Expected: command to have return code 0, got: 1"
+input/instructions/how-to/use-langchain-with-ai-proxy/gateway.yaml: "Expected: command to have return code 0, got: 1"

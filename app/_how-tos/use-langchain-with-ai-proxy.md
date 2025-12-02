@@ -43,6 +43,9 @@ prereqs:
   - title: OpenAI
     include_content: prereqs/openai
     icon_url: /assets/icons/openai.svg
+  - title: Python
+    include_content: prereqs/python
+    icon_url: /assets/icons/python.svg
   entities:
     services:
         - example-service
@@ -108,28 +111,20 @@ entities:
 
 Load the LangChain SDK into your Python dependencies:
 
-{% navtabs "langchain" %}
-{% navtab "WSL2, Linux, macOS native" %}
-```sh
-pip3 install -U langchain-openai
-```
-{% endnavtab %}
-
-{% navtab "macOS, with Python installed via Homebrew" %}
-```sh
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -U langchain-openai
-```
-{% endnavtab %}
-{% endnavtabs %}
+{% validation custom-command %}
+command: pip3 install -U langchain-openai
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 ## Create a LangChain script
 
 Use the following command to create a file named `app.py` containing a LangChain Python script:
 
-```sh
-echo 'from langchain_openai import ChatOpenAI
+```bash
+cat <<EOF > app.py
+from langchain_openai import ChatOpenAI
 
 kong_url = "http://127.0.0.1:8000"
 kong_route = "anything"
@@ -141,12 +136,14 @@ llm = ChatOpenAI(
 )
 
 response = llm.invoke("What are you?")
-print(f"$ ChainAnswer:> {response.content}")' > app.py
+print(f"$ ChainAnswer:> {response.content}")
+EOF
 ```
-{: data-deployment-topology="on-prem" }
+{: data-deployment-topology="on-prem" data-test-step="block" }
 
-```sh
-echo 'from langchain_openai import ChatOpenAI
+```bash
+cat <<EOF > app.py
+from langchain_openai import ChatOpenAI
 import os
 
 kong_url = os.environ['KONNECT_PROXY_URL']
@@ -159,9 +156,10 @@ llm = ChatOpenAI(
 )
 
 response = llm.invoke("What are you?")
-print(f"$ ChainAnswer:> {response.content}")' > app.py
+print(f"$ ChainAnswer:> {response.content}")
+EOF
 ```
-{: data-deployment-topology="konnect" }
+{: data-deployment-topology="konnect" data-test-step="block" }
 
 With the `base_url` parameter, we can override the OpenAI base URL that LangChain uses by default with the URL to our {{site.base_gateway}} Route. This way, we can proxy requests and apply {{site.base_gateway}} plugins, while also using LangChain integrations and tools.
 
@@ -171,9 +169,12 @@ In the `api_key` parameter, we'll add the API key we created, without the `Beare
 
 Run your script to validate that LangChain can access the Route:
 
-```sh
-python3 ./app.py
-```
+{% validation custom-command %}
+command: python3 ./app.py
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 The response should look like this:
 ```sh
