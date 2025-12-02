@@ -73,7 +73,7 @@ rows:
               icon: /assets/icons/graph.svg
               cta:
                 text: Learn more
-                url: /plugins/datakit/#datakit-flow-editor
+                url: /gateway/datakit-flow-editor/
 
   - header:
       type: h2
