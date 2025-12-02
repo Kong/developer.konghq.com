@@ -90,32 +90,21 @@ variables:
 
 ## Install required packages
 
-{% navtabs "Historical Agent" %}
-{% navtab "WSL2, Linux, macOS native" %}
-
-```sh
-pip3 install -U agno openai duckduckgo-search newspaper4k lxml_html_clean
-```
 Install the necessary Python packages for running the Agno's research agent:
 
-{% endnavtab %}
-{% navtab "macOS, with Python via Homebrew" %}
-
-```sh
-python3 -m venv .venv
-source .venv/bin/activate
-
-pip3 install -U agno openai duckduckgo-search newspaper4k lxml_html_clean
-```
-{% endnavtab %}
-{% endnavtabs %}
+{% validation custom-command %}
+command: pip3 install -U agno openai duckduckgo-search newspaper4k lxml_html_clean ddgs
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 
 ## Create an Agno script for research agent
 
 Use the following command to create a file named `research-agent.py` containing an Agno Python script:
 
-```sh
+```bash
 cat <<EOF > research-agent.py
 
 import os
@@ -140,7 +129,7 @@ model = OpenAILike(
 
 research_agent = Agent(
     model=model,
-    tools=[DuckDuckGoTools(), Newspaper4kTools()],
+    tools=[DuckDuckGoTools(fixed_max_results=2), Newspaper4kTools(article_length=500)],
     description=dedent("""\
         You are a historical analyst with deep expertise in ancient and medieval history.
         Your expertise includes:
@@ -155,25 +144,25 @@ research_agent = Agent(
     """),
     instructions=dedent("""\
         1. Research Phase 📚
-           - Locate academic analyses, historical summaries, and expert commentary
-           - Identify internal and external factors contributing to the fall
-           - Note military conflicts, economic instability, and political fragmentation
+          - Locate academic analyses, historical summaries, and expert commentary
+          - Identify internal and external factors contributing to the fall
+          - Note military conflicts, economic instability, and political fragmentation
 
         2. Analysis Phase 🔍
-           - Weigh the long-term structural issues versus short-term triggers
-           - Consider geopolitical pressures, internal weaknesses, and cultural shifts
-           - Highlight contributions of leadership decisions and external actors
+          - Weigh the long-term structural issues versus short-term triggers
+          - Consider geopolitical pressures, internal weaknesses, and cultural shifts
+          - Highlight contributions of leadership decisions and external actors
 
         3. Reporting Phase 📝
-           - Write a compelling executive summary and clear narrative
-           - Structure by thematic causes (military, political, economic, religious)
-           - Include quotes or viewpoints from notable historians
-           - Present lessons learned or possible historical counterfactuals
+          - Write a compelling executive summary and clear narrative
+          - Structure by thematic causes (military, political, economic, religious)
+          - Include quotes or viewpoints from notable historians
+          - Present lessons learned or possible historical counterfactuals
 
         4. Review Phase ✔️
-           - Validate all claims against reputable sources
-           - Ensure neutrality and historical rigor
-           - Provide a bibliography or references list
+          - Validate all claims against reputable sources
+          - Ensure neutrality and historical rigor
+          - Provide a bibliography or references list
     """),
     expected_output=dedent("""\
         # The Fall of the Byzantine Empire: A Tapestry of Decline and Siege ⚔️
@@ -193,8 +182,6 @@ research_agent = Agent(
         Last Updated: {current_time}
         """),
     markdown=True,
-    show_tool_calls=True,
-    add_datetime_to_instructions=True,
 )
 
 
@@ -207,12 +194,11 @@ if __name__ == "__main__":
     )
 EOF
 ```
-{: data-deployment-topology="on-prem" }
+{: data-deployment-topology="on-prem" data-test-step="block" }
 
 
-```sh
+```bash
 cat <<EOF > research-agent.py
-
 import os
 
 from textwrap import dedent
@@ -249,25 +235,25 @@ research_agent = Agent(
     """),
     instructions=dedent("""\
         1. Research Phase 📚
-           - Locate academic analyses, historical summaries, and expert commentary
-           - Identify internal and external factors contributing to the fall
-           - Note military conflicts, economic instability, and political fragmentation
+          - Locate academic analyses, historical summaries, and expert commentary
+          - Identify internal and external factors contributing to the fall
+          - Note military conflicts, economic instability, and political fragmentation
 
         2. Analysis Phase 🔍
-           - Weigh the long-term structural issues versus short-term triggers
-           - Consider geopolitical pressures, internal weaknesses, and cultural shifts
-           - Highlight contributions of leadership decisions and external actors
+          - Weigh the long-term structural issues versus short-term triggers
+          - Consider geopolitical pressures, internal weaknesses, and cultural shifts
+          - Highlight contributions of leadership decisions and external actors
 
         3. Reporting Phase 📝
-           - Write a compelling executive summary and clear narrative
-           - Structure by thematic causes (military, political, economic, religious)
-           - Include quotes or viewpoints from notable historians
-           - Present lessons learned or possible historical counterfactuals
+          - Write a compelling executive summary and clear narrative
+          - Structure by thematic causes (military, political, economic, religious)
+          - Include quotes or viewpoints from notable historians
+          - Present lessons learned or possible historical counterfactuals
 
         4. Review Phase ✔️
-           - Validate all claims against reputable sources
-           - Ensure neutrality and historical rigor
-           - Provide a bibliography or references list
+          - Validate all claims against reputable sources
+          - Ensure neutrality and historical rigor
+          - Provide a bibliography or references list
     """),
     expected_output=dedent("""\
         # The Fall of the Byzantine Empire: A Tapestry of Decline and Siege ⚔️
@@ -301,7 +287,7 @@ if __name__ == "__main__":
     )
 EOF
 ```
-{: data-deployment-topology="konnect" }
+{: data-deployment-topology="konnect" data-test-step="block" }
 
 With the `base_url` parameter, we can override the OpenAI base URL that LangChain uses by default with the URL to our {{site.base_gateway}} Route. This way, we can proxy requests and apply {{site.base_gateway}} plugins, while also using Agno integrations and tools.
 
@@ -309,9 +295,13 @@ With the `base_url` parameter, we can override the OpenAI base URL that LangChai
 
 Run your script to validate that Agno agent can access the Route:
 
-```sh
-python3 research-agent.py
-```
+{% validation custom-command %}
+command: python3 research-agent.py
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+
 
 The response should look like this:
 
