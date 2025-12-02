@@ -34,8 +34,6 @@ entities:
 
 tags:
   - ai
-  - bedrock
-  - aws
 
 tldr:
   q: How do I run Claude CLI through Kong AI Gateway with AWS Bedrock?
