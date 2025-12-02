@@ -1944,7 +1944,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D283
     Severity: error
     Description: |
@@ -1955,7 +1955,7 @@ messages:
       Unset the `consumer_group` fields for the plugin, or upgrade Kong Gateway to a
       version >= 3.9.0.0.
     DocumentationURL: |
-      
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D284
     Severity: warning
     Description: |
@@ -1975,7 +1975,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D286
     Severity: warning
     Description: |
@@ -1984,7 +1984,7 @@ messages:
     Resolution: |
       Remove the unsupported plugins
     DocumentationURL: |
-      
+      [Unsupported Plugins in Cloud Gateways](/konnect/gateway-management/cloud-gateway/#unsupported-plugins)
   - ID: D290
     Severity: error
     Description: |
@@ -1995,7 +1995,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [JSON Threat Protection plugin](/plugins/json-threat-protection/)
   - ID: D291
     Severity: warning
     Description: |
@@ -2009,7 +2009,7 @@ messages:
       3.9.1.0 or above for the 3.9.x series or newer than `3.10.0.0`, or use a
       supported AWS region.
     DocumentationURL: |
-      
+      [AWS Vaults](/gateway/vaults/aws/)
   - ID: D292
     Severity: error
     Description: |
@@ -2020,7 +2020,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
   - ID: D293
     Severity: error
     Description: |
@@ -2028,7 +2028,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI RAG Injector plugin](/plugins/ai-rag-injector/)
   - ID: D294
     Severity: error
     Description: |
@@ -2038,7 +2038,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent plugin](/plugins/confluent/)
   - ID: D295
     Severity: error
     Description: |
@@ -2049,7 +2049,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
   - ID: D296
     Severity: error
     Description: |
@@ -2060,7 +2060,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent plugin](/plugins/confluent/)
   - ID: D297
     Severity: error
     Description: |
@@ -2071,7 +2071,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
   - ID: D298
     Severity: error
     Description: |
@@ -2079,7 +2079,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Sanitizer plugin](/plugins/ai-sanitizer/)
   - ID: D299
     Severity: error
     Description: |
@@ -2087,7 +2087,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Request Callout plugin](/plugins/request-callout/)
   - ID: D300
     Severity: error
     Description: |
@@ -2098,7 +2098,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D301
     Severity: error
     Description: |
@@ -2109,7 +2109,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent plugin](/plugins/confluent/)
   - ID: D302
     Severity: error
     Description: |
@@ -2117,7 +2117,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D303
     Severity: error
     Description: |
@@ -2125,7 +2125,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D304
     Severity: error
     Description: |
@@ -2137,7 +2137,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D305
     Severity: error
     Description: |
@@ -2148,7 +2148,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D307
     Severity: error
     Description: |
@@ -2160,7 +2160,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
   - ID: D308
     Severity: error
     Description: |
@@ -2171,7 +2171,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
   - ID: D309
     Severity: error
     Description: |
@@ -2183,7 +2183,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
   - ID: D310
     Severity: error
     Description: |
@@ -2198,7 +2198,7 @@ messages:
       version `3.10.0.0` or above., Update the plugin configuration to use the correct
       field types.
     DocumentationURL: |
-      
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
   - ID: D311
     Severity: warning
     Description: |
@@ -2212,7 +2212,7 @@ messages:
       Please take one or more of the following actions: Update the plugin
       configuration to use the new field types
     DocumentationURL: |
-      
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
   - ID: D312
     Severity: error
     Description: |
@@ -2223,7 +2223,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Graphql Rate Limiting Advanced plugin](/plugins/graphql-rate-limiting-advanced/)
   - ID: D321
     Severity: error
     Description: |
@@ -2236,7 +2236,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D322
     Severity: error
     Description: |
@@ -2248,7 +2248,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D323
     Severity: error
     Description: |
@@ -2261,7 +2261,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D324
     Severity: error
     Description: |
@@ -2273,7 +2273,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D325
     Severity: error
     Description: |
@@ -2286,7 +2286,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
   - ID: D326
     Severity: error
     Description: |
@@ -2298,7 +2298,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
   - ID: D327
     Severity: error
     Description: |
@@ -2309,7 +2309,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D328
     Severity: error
     Description: |
@@ -2320,7 +2320,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
   - ID: D329
     Severity: error
     Description: |
@@ -2332,7 +2332,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Plugins](/gateway/configuration/plugins/ai-plugins/)
   - ID: D330
     Severity: error
     Description: |
@@ -2343,7 +2343,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D331
     Severity: error
     Description: |
@@ -2354,7 +2354,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
   - ID: D332
     Severity: error
     Description: |
@@ -2367,7 +2367,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D333
     Severity: error
     Description: |
@@ -2377,7 +2377,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D334
     Severity: error
     Description: |
@@ -2387,7 +2387,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D335
     Severity: error
     Description: |
@@ -2397,7 +2397,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
   - ID: D336
     Severity: error
     Description: |
@@ -2412,7 +2412,7 @@ messages:
       Please either update the redis timeout values to be the same or upgrade to Kong
       Gateway to versions 3.10.0.1 and above.
     DocumentationURL: |
-      
+      [Redis configuration for plugins](/gateway/configuration/plugins/plugin-redis-configuration/)
   - ID: D337
     Severity: error
     Description: |
@@ -2422,7 +2422,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent plugin](/plugins/confluent/)
   - ID: D338
     Severity: error
     Description: |
@@ -2432,7 +2432,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Log plugin](/plugins/kafka-log/)
   - ID: D339
     Severity: error
     Description: |
@@ -2443,7 +2443,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
   - ID: D340
     Severity: error
     Description: |
@@ -2452,7 +2452,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Prompt Compressor plugin](/plugins/ai-prompt-compressor/)
   - ID: D341
     Severity: error
     Description: |
@@ -2473,7 +2473,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
   - ID: D343
     Severity: error
     Description: |
@@ -2481,7 +2481,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI LLM as Judge plugin](/plugins/ai-llm-as-judge/)
   - ID: D349
     Severity: error
     Description: |
@@ -2521,7 +2521,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D353
     Severity: error
     Description: |
@@ -2547,7 +2547,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D355
     Severity: error
     Description: |
@@ -2555,7 +2555,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Solace Upstream plugin](/plugins/solace-upstream/)
   - ID: D356
     Severity: error
     Description: |
@@ -2565,7 +2565,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent plugin](/plugins/confluent/)
   - ID: D357
     Severity: error
     Description: |
@@ -2576,7 +2576,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D358
     Severity: error
     Description: |
@@ -2587,7 +2587,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D359
     Severity: error
     Description: |
@@ -2598,7 +2598,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Log plugin](/plugins/kafka-log/)
   - ID: D360
     Severity: error
     Description: |
@@ -2609,7 +2609,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
   - ID: D361
     Severity: error
     Description: |
@@ -2620,7 +2620,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D362
     Severity: error
     Description: |
@@ -2631,7 +2631,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D364
     Severity: error
     Description: |
@@ -2649,7 +2649,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/)
   - ID: D367
     Severity: error
     Description: |
@@ -2657,7 +2657,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/)
   - ID: D368
     Severity: error
     Description: |
@@ -2665,7 +2665,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [Datakit plugin](/plugins/datakit/)
   - ID: D369
     Severity: error
     Description: |
@@ -2677,7 +2677,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D370
     Severity: error
     Description: |
@@ -2693,7 +2693,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D371
     Severity: error
     Description: |
@@ -2704,7 +2704,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D372
     Severity: error
     Description: |
@@ -2715,7 +2715,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D390
     Severity: error
     Description: |
@@ -2726,7 +2726,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D391
     Severity: error
     Description: |
@@ -2737,7 +2737,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D392
     Severity: error
     Description: |
@@ -2748,7 +2748,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI RAG Injector plugin](/plugins/ai-rag-injector/)
   - ID: D393
     Severity: error
     Description: |
@@ -2759,7 +2759,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D394
     Severity: error
     Description: |
@@ -2770,7 +2770,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
   - ID: D395
     Severity: warning
     Description: |
@@ -2783,7 +2783,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D396
     Severity: warning
     Description: |
@@ -2796,7 +2796,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
   - ID: D397
     Severity: warning
     Description: |
@@ -2809,7 +2809,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D398
     Severity: warning
     Description: |
@@ -2822,7 +2822,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
   - ID: D399
     Severity: error
     Description: |
@@ -2833,7 +2833,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Prompt Guard plugin](/plugins/ai-semantic-prompt-guard/)
   - ID: D400
     Severity: error
     Description: |
@@ -2844,7 +2844,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D401
     Severity: error
     Description: |
@@ -2865,7 +2865,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D403
     Severity: error
     Description: |
@@ -2876,7 +2876,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
   - ID: D405
     Severity: error
     Description: |
@@ -2885,7 +2885,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Semantic Response Guard plugin](/plugins/ai-semantic-response-guard/)
   - ID: D406
     Severity: error
     Description: |
@@ -2896,7 +2896,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/)
   - ID: D407
     Severity: error
     Description: |
@@ -2907,7 +2907,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/)
   - ID: D408
     Severity: error
     Description: |
@@ -2918,7 +2918,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/)
   - ID: D409
     Severity: error
     Description: |
@@ -2929,7 +2929,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/)
   - ID: D410
     Severity: error
     Description: |
@@ -2940,7 +2940,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/)
   - ID: D411
     Severity: error
     Description: |
@@ -2953,7 +2953,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D412
     Severity: error
     Description: |
@@ -2965,7 +2965,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D413
     Severity: error
     Description: |
@@ -2977,7 +2977,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D414
     Severity: error
     Description: |
@@ -2989,7 +2989,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D415
     Severity: error
     Description: |
@@ -3001,7 +3001,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D416
     Severity: error
     Description: |
@@ -3013,7 +3013,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
   - ID: D417
     Severity: error
     Description: |
@@ -3025,7 +3025,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Log plugin](/plugins/kafka-log/)
   - ID: D418
     Severity: error
     Description: |
@@ -3037,7 +3037,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent plugin](/plugins/confluent/)
   - ID: D420
     Severity: error
     Description: |
@@ -3048,7 +3048,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D421
     Severity: error
     Description: |
@@ -3059,7 +3059,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D422
     Severity: error
     Description: |
@@ -3070,7 +3070,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D423
     Severity: error
     Description: |
@@ -3081,7 +3081,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Sanitizer plugin](/plugins/ai-sanitizer/)
   - ID: D424
     Severity: error
     Description: |
@@ -3089,7 +3089,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Solace Consume plugin](/plugins/solace-consume/)
   - ID: D425
     Severity: error
     Description: |
@@ -3100,7 +3100,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D426
     Severity: error
     Description: |
@@ -3110,7 +3110,7 @@ messages:
     Resolution: |
       Unset the `service` fields for the plugin
     DocumentationURL: |
-      
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D427
     Severity: error
     Description: |
@@ -3118,7 +3118,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [ACE plugin](/plugins/ace/)
   - ID: D428
     Severity: error
     Description: |
@@ -3127,7 +3127,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      N/A
   - ID: D429
     Severity: error
     Description: |
@@ -3136,7 +3136,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI GCP Model Armor plugin](/plugins/ai-gcp-model-armor/)
   - ID: D430
     Severity: error
     Description: |
@@ -3148,7 +3148,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Request Callout plugin](/plugins/request-callout/)
   - ID: D431
     Severity: error
     Description: |
@@ -3156,7 +3156,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Solace Log plugin](/plugins/solace-log/)
   - ID: D432
     Severity: error
     Description: |
@@ -3169,7 +3169,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Injection Protection plugin](/plugins/injection-protection/)
   - ID: D433
     Severity: error
     Description: |
@@ -3180,7 +3180,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [OpenID Connect plugin](/plugins/openid-connect/)
   - ID: D434
     Severity: error
     Description: |
@@ -3190,7 +3190,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Session plugin](/plugins/session/)
   - ID: D435
     Severity: error
     Description: |
@@ -3198,7 +3198,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      N/A
   - ID: D436
     Severity: error
     Description: |
@@ -3206,7 +3206,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/)
   - ID: D437
     Severity: error
     Description: |
@@ -3219,7 +3219,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [Solace Upstream plugin](/plugins/solace-upstream/)
   - ID: D438
     Severity: error
     Description: |
@@ -3227,7 +3227,7 @@ messages:
     Resolution: |
       Remove the invalid Datakit node or upgrade to a version that supports it.
     DocumentationURL: |
-      
+      N/A
   - ID: D439
     Severity: error
     Description: |
@@ -3236,7 +3236,7 @@ messages:
       Remove the invalid Datakit config element or upgrade to a version that supports
       it.
     DocumentationURL: |
-      
+      N/A
   - ID: D440
     Severity: error
     Description: |
@@ -3245,7 +3245,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      N/A
   - ID: D441
     Severity: error
     Description: |
@@ -3258,7 +3258,7 @@ messages:
       `SESSION_GUARANTEED_WITH_WEB_TRANSPORT` from `session.properties` in the plugin
       configuration
     DocumentationURL: |
-      
+      [Solace Upstream plugin](/plugins/solace-upstream/)
   - ID: D442
     Severity: error
     Description: |
@@ -3269,7 +3269,7 @@ messages:
     Resolution: |
       Please set the `enforce_latest_offset_reset` field to false.
     DocumentationURL: |
-
+      [Kafka Consume plugin](/plugins/kafka-consume/)
   - ID: D443
     Severity: error
     Description: |
@@ -3280,7 +3280,7 @@ messages:
     Resolution: |
       Please set the `enforce_latest_offset_reset` field to false.
     DocumentationURL: |
-
+      [Confluent Consume plugin](/plugins/confluent-consume/)
   - ID: D444
     Severity: error
     Description: |
@@ -3292,7 +3292,7 @@ messages:
     Resolution: |
       Please set the `decrease_by_fractions_in_redis` field to false.
     DocumentationURL: |
-
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
   - ID: D447
     Severity: error
     Description: |
@@ -3304,7 +3304,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
-      
+      [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/)
   - ID: D448
     Severity: error
     Description: |
@@ -3314,7 +3314,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
-      
+      N/A
   - ID: D449
     Severity: error
     Description: |
@@ -3326,7 +3326,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
-      
+      [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/)
   - ID: D497
     Severity: error
     Description: |
@@ -3337,7 +3337,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |    
-    
+      [OAuth 2.0 Introspection plugin](/plugins/oauth2-introspection/)
   - ID: E999
     Severity: error
     Description: |
@@ -3445,7 +3445,7 @@ messages:
     Resolution: |
       Reconnect the data plane node using the Kong Enterprise version.
     DocumentationURL: |
-      
+      N/A
   - ID: P101
     Severity: error
     Description: |
@@ -3891,7 +3891,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.1.0.0` or above.
     DocumentationURL: |
-      
+      [Keys entity](/gateway/entities/key/)
   - ID: P144
     Severity: error
     Description: |
@@ -5623,16 +5623,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      N/A
-  - ID: P307
-    Severity: error
-    Description: |
-      The `custom_plugins` entity is being used, but Kong Gateway versions < 3.9.0.0
-      do not support this entity.
-    Resolution: |
-      Please upgrade Kong Gateway to version `3.9.0.0` or above.
-    DocumentationURL: |
-      
+      [Custom plugins](/custom-plugins/)   
   - ID: P309
     Severity: error
     Description: |
@@ -5654,6 +5645,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
       
   - ID: P311
     Severity: error
@@ -5666,6 +5658,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
+      [AI Proxy plugin](/plugins/ai-proxy/)
       
   - ID: P312
     Severity: error
@@ -5677,6 +5670,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
+      [AI Proxy plugin](/plugins/ai-proxy/)
       
   - ID: P313
     Severity: error
@@ -5687,6 +5681,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
+      [Prometheus plugin](/plugins/prometheus/)
       
   - ID: P314
     Severity: error
@@ -5697,6 +5692,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
+      [Cors plugin](/plugins/cors/)
       
   - ID: P315
     Severity: error
@@ -5710,7 +5706,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [OpenTelemetry plugin](/plugins/opentelemetry/)
   - ID: P316
     Severity: error
     Description: |
@@ -5722,7 +5718,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Zipkin plugin](/plugins/zipkin/)
   - ID: P317
     Severity: error
     Description: |
@@ -5735,7 +5731,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Zipkin plugin](/plugins/zipkin/)
   - ID: P318
     Severity: error
     Description: |
@@ -5745,7 +5741,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [Key Auth plugin](/plugins/key-auth/)
   - ID: P319
     Severity: warning
     Description: |
@@ -5766,7 +5762,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P321
     Severity: error
     Description: |
@@ -5777,7 +5773,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [JWT Signer plugin](/plugins/jwt-signer/)
   - ID: P322
     Severity: error
     Description: |
@@ -5790,7 +5786,7 @@ messages:
       Update the value of all `content` fields to contain <= 500 characters or upgrade
       to Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Prompt Decorator plugin](/plugins/ai-prompt-decorator/)
   - ID: P323
     Severity: error
     Description: |
@@ -5801,7 +5797,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P325
     Severity: error
     Description: |
@@ -5812,7 +5808,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AWS Lambda plugin](/plugins/aws-lambda/)
   - ID: P327
     Severity: error
     Description: |
@@ -5823,7 +5819,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P328
     Severity: error
     Description: |
@@ -5834,7 +5830,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
   - ID: P329
     Severity: error
     Description: |
@@ -5845,7 +5841,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
   - ID: P330
     Severity: warning
     Description: |
@@ -5858,7 +5854,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Prompt Decorator plugin](/plugins/ai-prompt-decorator/)
   - ID: P331
     Severity: warning
     Description: |
@@ -5871,7 +5867,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Prompt Guard plugin](/plugins/ai-prompt-guard/)
   - ID: P332
     Severity: warning
     Description: |
@@ -5884,7 +5880,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P333
     Severity: error
     Description: |
@@ -5894,7 +5890,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P334
     Severity: error
     Description: |
@@ -5905,7 +5901,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Prompt Guard plugin](/plugins/ai-prompt-guard/)
   - ID: P335
     Severity: error
     Description: |
@@ -5920,7 +5916,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P336
     Severity: error
     Description: |
@@ -5932,7 +5928,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P337
     Severity: error
     Description: |
@@ -5943,7 +5939,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P338
     Severity: error
     Description: |
@@ -5954,7 +5950,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
   - ID: P339
     Severity: error
     Description: |
@@ -5965,7 +5961,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
   - ID: P340
     Severity: error
     Description: |
@@ -5975,7 +5971,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P341
     Severity: error
     Description: |
@@ -5986,7 +5982,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
   - ID: P342
     Severity: error
     Description: |
@@ -5997,7 +5993,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
   - ID: P343
     Severity: error
     Description: |
@@ -6008,7 +6004,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P344
     Severity: error
     Description: |
@@ -6019,7 +6015,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P345
     Severity: error
     Description: |
@@ -6030,7 +6026,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P346
     Severity: error
     Description: |
@@ -6041,7 +6037,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      
+      [OpenID Connect plugin](/plugins/openid-connect/)
   - ID: P347
     Severity: error
     Description: |
@@ -6052,7 +6048,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
-      
+      [Basic Auth plugin](/plugins/basic-auth/)
   - ID: P360
     Severity: error
     Description: |
@@ -6063,7 +6059,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      
+      [OpenTelemetry plugin](/plugins/opentelemetry/)
   - ID: P381
     Severity: error
     Description: |
@@ -6077,7 +6073,7 @@ messages:
       `3.7.1.5` or above for the 3.7.x series, 3.8.1.1 or above for the 3.8.x series,
       3.9.1.0 or above for the 3.9.x series or newer than `3.10.0.0`.
     DocumentationURL: |
-
+      [Session plugin](/plugins/session/)
   - ID: P999
     Severity: warning
     Description: |
@@ -6090,4 +6086,6 @@ messages:
       The old redis fields will be deprecated in Kong 4.0. Please update the
       configuration to use the new fields.
     DocumentationURL: |
-      
+      [ACME plugin](/plugins/acme/)
+      [Rate Limiting plugin](/plugins/rate-limiting/)
+      [Response Rate Limiting plugin](/plugins/response-ratelimiting/)
