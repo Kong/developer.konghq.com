@@ -1,7 +1,7 @@
 description: Configure the AI RAG Injector plugin with access control lists to restrict knowledge base collections based on consumer groups.
 
 extended_description: |
-  Configure the AI RAG Injector plugin with access control lists (ACLs) to restrict which consumer groups can access specific knowledge base collections. This configuration uses Redis as the vector database and OpenAI text-embedding-3-large for embeddings.
+  {% new_in 3.13 %} Configure the AI RAG Injector plugin with access control lists (ACLs) to restrict which consumer groups can access specific knowledge base collections. This configuration uses Redis as the vector database and OpenAI text-embedding-3-large for embeddings.
 
   The example demonstrates a three-tier access model:
   - Public documents accessible to all authenticated users
