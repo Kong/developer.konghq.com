@@ -48,7 +48,7 @@ prereqs:
         This tutorial uses the AI Proxy plugin with OpenAI. You'll need to [create an OpenAI account](https://auth.openai.com/create-account) and [get an API key](https://platform.openai.com/api-keys). Once you have your API key, create an environment variable:
 
         ```sh
-        export OPENAI_KEY='<api-key>'
+        export OPENAI_API_KEY='<api-key>'
         ```
 
 cleanup:
@@ -145,7 +145,7 @@ method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $OPENAI_KEY'
+    - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
   model: gpt-5-mini
   messages:
