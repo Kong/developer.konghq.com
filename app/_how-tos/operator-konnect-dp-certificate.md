@@ -22,7 +22,7 @@ works_on:
 entities: []
 related_resources: 
   - text: Data Plane reference
-    url: /gateway-manager/data-plane-reference/
+    url: /gateway/data-plane-reference/
 tags:
   - konnect-crd
  
