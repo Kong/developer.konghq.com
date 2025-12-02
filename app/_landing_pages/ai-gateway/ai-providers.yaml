@@ -106,10 +106,14 @@ rows:
             icon: /assets/icons/xai.svg
             cta:
               url: ./#xai
+      - blocks:
+        - type: icon_card
+          config:
             title: Alibaba Cloud DashScope
             icon: /assets/icons/dashscope.svg
             cta:
               url: ./#alibaba-cloud-dashscope
+
 
   - header:
       type: h2
