@@ -464,6 +464,7 @@ message: |
     I’m sorry, but I don’t have access to the full quarterly reports from 2024. However, based on the available excerpts:\n\n- **Q3 2024:** Revenue was $2.0 billion, with a year-over-year growth of 12%. The operating margin was 21%, and international markets made up 35% of total revenue.\n- **Q4 2024:** Revenue increased by 15% year-over-year to $2.3 billion. The operating margin improved to 24%, supported by strong enterprise sales and better operational efficiency.\n\nFor full reports, you may need to visit the company's investor relations website or contact their investor relations department.
 {% endvalidation %}
 
+Financial analysts are explicitly denied access to executive data:
 
 {% validation request-check %}
 url: /anything
@@ -477,8 +478,6 @@ body:
 status_code: 200
 message: The context does not contain relevant information about acquisitions being considered.
 {% endvalidation %}
-
-Expected result: The response does not include M&A information. The AI should indicate it cannot answer based on available information.
 
 ### Contractor access (contractor group)
 

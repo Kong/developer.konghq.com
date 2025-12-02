@@ -348,16 +348,58 @@ The plugin checks access in this order:
 
 ### Metadata filtering
 
-Clients can refine search results by specifying filter criteria in the query request. Filters apply within the collections a consumer is authorized to access.
+Clients refine search results by specifying filter criteria in the query request. Filters apply within the collections a consumer is authorized to access.
 
-The following operators are supported:
+The plugin uses a Bedrock-compatible filter grammar with the following operators:
 
 - `equals`: Exact match
-- `greaterThan`, `greaterThanOrEquals`, `lessThan`, `lessThanOrEquals`: Comparisons
+- `greaterThan`: Greater than (>)
+- `greaterThanOrEquals`: Greater than or equal to (>=)
+- `lessThan`: Less than (<)
+- `lessThanOrEquals`: Less than or equal to (<=)
 - `in`: Match any value in array
-- `andAll`: Combine conditions
+- `andAll`: Combine multiple filter clauses
 
-### Query example
+You can combine multiple conditions with `andAll`:
+
+```json
+{
+  "andAll": [
+    {"equals": {"key": "source", "value": "internal"}},
+    {"in": {"key": "tags", "value": ["finance", "quarterly"]}},
+    {"greaterThanOrEquals": {"key": "date", "value": "2023-01-01"}}
+  ]
+}
+```
+
+Filter parameters:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Description
+    key: description
+rows:
+  - parameter: |
+      `filters`
+    description: |
+      JSON object with filter clauses using the grammar above
+  - parameter: |
+      `filter_mode`
+    description: |
+      Controls how chunks with no metadata are handled:<br/>
+      • `"compatible"`: Includes chunks matching filter OR chunks with no metadata<br/>
+      • `"strict"`: Includes only chunks matching filter
+  - parameter: |
+      `stop_on_filter_error`
+    description: |
+      Fail query on filter parse error (default: `false`)
+{% endtable %}
+<!-- vale on -->
+
+You can include filters in the `extra_body` parameter of your request:
 
 ```json
 POST /v1/chat/completions
@@ -369,7 +411,7 @@ POST /v1/chat/completions
       "filters": {
         "andAll": [
           {"equals": {"key": "source", "value": "internal"}},
-          {"in": {"key": "tags", "values": ["q4", "quarterly"]}}
+          {"in": {"key": "tags", "value": ["q4", "quarterly"]}}
         ]
       },
       "filter_mode": "strict",
@@ -378,13 +420,6 @@ POST /v1/chat/completions
   }
 }
 ```
-
-The following filter parameters are available:
-- `filters`: JSON object with filter clauses
-- `filter_mode`:
-  - `"compatible"`: Includes chunks matching filter OR with no metadata
-  - `"strict"`: Includes only chunks matching filter
-- `stop_on_filter_error`: Fail query on filter parse error (default: `false`)
 
 ### Query flow
 
