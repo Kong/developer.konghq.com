@@ -1,6 +1,10 @@
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 # Renames
+/mesh-manager/federate-zone/  /mesh/federate-zone/
+/mesh-manager/migrate-zone/  /mesh/migrate-zone/
+/mesh-manager/service-mesh/  /mesh/konnect-global-control-plane/
+/mesh-manager/ /mesh/
 /gateway-manager/aws-private-link/ /gateway/aws-private-link/
 /gateway-manager/data-plane-reference/ /gateway/data-plane-reference/
 /gateway-manager/control-plane-groups/ /gateway/control-plane-groups/
