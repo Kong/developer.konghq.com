@@ -23,9 +23,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Insomnia is an open-source desktop client for designing, testing, and documenting APIs. It is built for speed and simplicity, and it supports fully offline workflows.
+                    Insomnia is an open-source desktop client for designing, testing, and documenting APIs. It's built for speed and simplicity, and supports fully offline workflows.
 
-                    Insomnia helps developers review and validate what they ship, whether they work with traditional API endpoints or emerging agent-based patterns. It does not restrict where teams store their code or data, and it keeps control with the user. Work can remain local and private, or teams can choose to share it through Git or cloud sync.
+                    Insomnia helps developers review and validate what they ship, whether they work with traditional API endpoints or emerging agent-based patterns. It doesn't restrict where teams store their code or data, and it keeps control with the user. Work can remain local and private, or teams can choose to share it through Git or cloud sync.
 
                     This page compares Insomnia and Postman across core functional areas to help teams understand their differences in workflow, storage models, and API development capabilities.
       - blocks:
