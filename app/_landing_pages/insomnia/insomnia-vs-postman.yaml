@@ -86,7 +86,7 @@ rows:
                   key: postman
               features:
                 - title: |
-                    [Open source (Apache-2.0 license)](/insomnia/accounts#what-software-license-does-insomnia-use)
+                    [Open source](/insomnia/accounts#what-software-license-does-insomnia-use)
                   subtitle: Open-source desktop client with an Apache-2.0 license and an active contributor community.
                   insomnia: true
                   postman: false
