@@ -142,7 +142,7 @@ entities:
 
 ## Create Consumers
 
-Noe we can configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions that govern access to knowledge base collections:
+Now we can configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions that govern access to knowledge base collections:
 
 {% entity_examples %}
 entities:
