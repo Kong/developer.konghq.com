@@ -76,6 +76,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed an issue where for incremental sync, consumer related caches may not be properly invalidated, causing stale data to be served.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the OIDC plugin caused the third-party IDP to throw an error during logout attempts if the session had already been invalidated.\nAdded the `client_id` to the logout URL to ensure the logout request is sent to the correct client, preventing such errors.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",
