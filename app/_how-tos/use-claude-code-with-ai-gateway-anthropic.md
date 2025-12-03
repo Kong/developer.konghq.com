@@ -45,55 +45,12 @@ tools:
 
 prereqs:
   inline:
+    - title: Anthropic
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/openai
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
-      content: |
-        1. Install Claude:
-
-            ```sh
-            curl -fsSL https://claude.ai/install.sh | bash
-            ```
-
-        2. Create or edit the Claude settings file:
-
-            ```sh
-            mkdir -p ~/.claude
-            nano ~/.claude/settings.json
-            ```
-
-            Put this exact content in the file:
-
-            ```json
-            {
-              "apiKeyHelper": "~/.claude/anthropic_key.sh"
-            }
-            ```
-
-        3. Create the API key helper script:
-
-            ```sh
-            nano ~/.claude/anthropic_key.sh
-            ```
-
-            Inside, put your real API key:
-
-            ```sh
-            echo "sk-your-real-anthropic-key-here"
-            ```
-
-        4. Make the script executable:
-
-            ```sh
-            chmod +x ~/.claude/anthropic_key.sh
-            ```
-
-        5. Verify it works by running the script:
-
-            ```sh
-            ~/.claude/anthropic_key.sh
-            ```
-
-            You should see only your API key printed.
+      include_content: prereqs/claude-code
   entities:
     services:
       - example-service
@@ -112,8 +69,8 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, configure the AI Proxy plugin for the [Anthropic provider](/ai-gateway/ai-providers/#anthropic). 
-* This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. 
+First, configure the AI Proxy plugin for the [Anthropic provider](/ai-gateway/ai-providers/#anthropic).
+* This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
 * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
 * You don't pass the API key here. The client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
 
@@ -124,6 +81,9 @@ entities:
   plugins:
     - name: ai-proxy
       config:
+        auth:
+          header_name: x-api-key
+          header_value: ${key}
         model:
           provider: anthropic
           options:
@@ -133,6 +93,10 @@ entities:
           log_statistics: true
         max_request_body_size: 524288
         route_type: llm/v1/chat
+variables:
+  key:
+    value: $ANTHROPIC_API_KEY
+    description: The API key to use to connect to Anthropic.
 {% endentity_examples %}
 
 ## Configure the File Log plugin

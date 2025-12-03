@@ -50,53 +50,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
-      content: |
-        1. Install Claude:
-
-            ```sh
-            curl -fsSL https://claude.ai/install.sh | bash
-            ```
-
-        2. Create or edit the Claude settings file:
-
-            ```sh
-            mkdir -p ~/.claude
-            nano ~/.claude/settings.json
-            ```
-
-            Put this exact content in the file:
-
-            ```json
-            {
-              "apiKeyHelper": "~/.claude/anthropic_key.sh"
-            }
-            ```
-
-        3. Create the API key helper script:
-
-            ```sh
-            nano ~/.claude/anthropic_key.sh
-            ```
-
-            Inside, put a dummy API key:
-
-            ```sh
-            echo "x"
-            ```
-
-        4. Make the script executable:
-
-            ```sh
-            chmod +x ~/.claude/anthropic_key.sh
-            ```
-
-        5. Verify it works by running the script:
-
-            ```sh
-            ~/.claude/anthropic_key.sh
-            ```
-
-            You should see only your API key printed.
+      include_content: prereqs/claude-code
   entities:
     services:
       - example-service
@@ -116,8 +70,8 @@ cleanup:
 ## Configure the AI Proxy plugin
 
 First, configure the AI Proxy plugin for the [OpenAI provider](/ai-gateway/ai-providers/#openai):
- * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. 
- * The configuration also raises the maximum request body size to 512 KB to support larger prompts. 
+ * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
+ * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
  * You don't pass the API key here. The client-side prerequisite steps store and supply it through the [helper script](#claude-code-cli).
 
 The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the OpenAI endpoint.
