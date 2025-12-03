@@ -103,6 +103,7 @@ certificate_admin
 charset
 chatbot
 chatbots
+chatwise
 cidr
 cidrs
 cleartext
@@ -215,6 +216,7 @@ DPPs
 drilldown
 dynatrace
 Dynatrace
+eason
 ecs
 ElastiCache
 ElastiCache
@@ -690,6 +692,7 @@ RequestResponse
 Rerank
 reranking
 resourceVersion
+response_format
 Resty
 Resty
 resty
@@ -952,6 +955,7 @@ workingDir
 workqueue
 workspace
 workspace's
+xai
 xbox
 xenial
 yaml
