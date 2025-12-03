@@ -356,7 +356,6 @@ The plugin checks access in this order:
 
 LLM clients can refine search results by specifying filter criteria in the query request. Filters apply within the collections. The AI RAG Injector plugin uses a Bedrock-compatible filter grammar with the following operators:
 
-<!-- vale off -->
 - `equals`: Exact match
 - `greaterThan`: Greater than (>)
 - `greaterThanOrEquals`: Greater than or equal to (>=)
@@ -364,7 +363,6 @@ LLM clients can refine search results by specifying filter criteria in the query
 - `lessThanOrEquals`: Less than or equal to (<=)
 - `in`: Match any value in array
 - `andAll`: Combine multiple filter clauses
-<!-- vale on -->
 
 {:.info}
 > Check the [how-to guide](/how-to/filter-knowledge-based-queries-with-rag-injector/) for details about how metadata filtering works.

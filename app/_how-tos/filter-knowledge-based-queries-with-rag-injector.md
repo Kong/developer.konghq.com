@@ -311,6 +311,7 @@ Send queries with different filter combinations to demonstrate how metadata filt
 
 Query for recent reports (2024 only). This filter excludes older historical data and the results should include Q3 2024, Q4 2024, and 2024 annual report data, but exclude 2022 and 2023 data.
 
+<!--vale off-->
 {% validation request-check %}
 url: /anything
 headers:
@@ -329,11 +330,13 @@ status_code: 200
 message: |
   The context provides financial results for Q3 and Q4 2024, as well as the annual results for 2024:\n\n- **Q3 2024:** Revenue was $2.0 billion with 12% year-over-year growth. Operating margin was 21%. International markets contributed 35% of total revenue.\n\n- **Q4 2024:** Revenue increased 15% year-over-year to $2.3 billion. Operating margin improved to 24%. Key drivers were strong enterprise sales and improved operational efficiency.\n\n- **2024 Annual Report:** Full-year revenue totaled $8.7 billion, representing 20% growth. The company expanded into five new markets and launched seven major product updates. The board approved a $600 million share buyback program.
 {% endvalidation %}
+<!--vale on-->
 
 ### Filter by source
 
 Query for internal reports only, excluding external analyst reports. The results should include internal quarterly and annual reports, but exclude analyst reports from Morgan Stanley and Goldman Sachs
 
+<!--vale off-->
 {% validation request-check %}
 url: /anything
 headers:
@@ -351,11 +354,13 @@ status_code: 200
 message: |
   Based on the provided context, our financial performance shows solid growth across the board. In Q4 2024, revenue increased by 15% year-over-year to $2.3 billion, with an improved operating margin of 24%. The key drivers for this performance included strong enterprise sales and improved operational efficiency. For the full year of 2024, revenue totaled $8.7 billion, indicating a 20% growth. The company expanded into five new markets and launched seven major product updates. Additionally, the board approved a $600 million share buyback program.\n\nCompared to 2023, where the full-year revenue was $7.8 billion with 18% growth, the company showed continued strong performance and strategic expansion efforts in 2024.
 {% endvalidation %}
+<!--vale on-->
 
 ### Filter by report type
 
 Query for quarterly reports only. The results should include Q3 and Q4 2024 quarterly reports, but exclude annual reports and analyst reports.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -373,11 +378,13 @@ status_code: 200
 message: |
   The provided context contains data on quarterly and annual financial performance for the years 2023 and 2024, but it does not provide a detailed breakdown of quarterly performance trends for 2023. However, it does give insights into the quarterly performance of 2024:\n\n1. **Q3 2024:**\n   - Revenue: $2.0B\n   - Year-over-year growth: 12%\n   - Operating margin: 21%\n   - International markets contributed 35% of total revenue.\n\n2. **Q4 2024:**\n   - Revenue: $2.3B\n   - Year-over-year growth: 15%\n   - Operating margin improved to 24% (up from 21% in Q3).\n\nThe trends observed indicate a growth in revenue and operating margin in Q4 2024 compared to Q3 2024. There's a notable increase in both revenue and operating efficiency, primarily driven by strong enterprise sales and improved operational efficiency. For a comprehensive quarterly trend analysis, more data points from other quarters would be necessary, which are not provided in the current context.
 {% endvalidation %}
+<!-- vale on -->
 
 ### Filter by tags
 
 Query for current (non-archived) data only using tag filtering. The results should include 2024 quarterly reports and annual report, but exclude 2022 archived data:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -396,11 +403,13 @@ status_code: 200
 message: |
   The latest financial metrics provided in the context are from Q4 2024, where the revenue increased by 15% year-over-year to reach $2.3 billion. The operating margin improved to 24%. For the full year of 2024, the revenue totaled $8.7 billion, representing a 20% growth."
 {% endvalidation %}
+<!-- vale on -->
 
 ### Combine multiple filters
 
 Query for internal quarterly reports from 2024. The results should include only Q3 and Q4 2024 internal quarterly reports. Annual reports, analyst reports, and 2022/2023 data should be excluded in the response:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -425,11 +434,13 @@ status_code: 200
 message: |
   The latest financial metrics are from Q4 2024, where the revenue increased by 15% year-over-year to $2.3 billion, and the operating margin improved to 24% from 21% in Q3 2024. Additionally, the full-year revenue for 2024 totaled $8.7 billion, representing a 20% growth. The company expanded into five new markets and launched seven major product updates. The board also approved a $600 million share buyback program.
 {% endvalidation %}
+<!-- vale on -->
 
 ### Filter for external analyst perspectives
 
 Query for external analyst reports only. The results should include only Morgan Stanley and Goldman Sachs analyst reports, excluding all internal company reports:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -453,6 +464,7 @@ status_code: 200
 message: |
   The context provided does not contain information specific to your company. It includes a Morgan Stanley report maintaining an Overweight rating with a $145 price target for an unnamed company and a Goldman Sachs analysis of the software sector.
 {% endvalidation %}
+<!-- vale on -->
 
 ## Validate filter modes
 
@@ -462,6 +474,7 @@ The AI RAG Injector plugin supports two filter modes that control how chunks wit
 
 Use `filter_mode: compatible` to include chunks that match the filter OR have no metadata. This mode is useful when your knowledge base contains both tagged and untagged content:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -480,11 +493,13 @@ status_code: 200
 message: |
   The context provided does not contain specific quarterly reports, but it does include some quarterly financial results and key performance highlights:\n\n- Q2 2022: Revenue was $1.5 billion with 8% growth.\n- Q3 2024: Revenue was $2.0 billion with 12% year-over-year growth. The operating margin was steady at 21%, and international markets contributed 35% of total revenue.\n- Q4 2024: Revenue increased 15% year-over-year to $2.3 billion. The operating margin improved to 24%.\n\nIf you need detailed quarterly reports beyond what is summarized here, please check the company's official filings or financial statements.
 {% endvalidation %}
+<!-- vale on -->
 
 ### Strict mode
 
 Use `filter_mode: strict` to include only chunks that match the filter. This mode excludes chunks with no metadata:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -505,6 +520,7 @@ status_code: 200
 message: |
   The context provided includes quarterly financial data for two specific quarters:\n\n1. **Q3 2024 Financial Results**:\n   - Revenue: $2.0 billion\n   - Year-over-year growth: 12%\n   - Operating margin: 21%\n   - Contribution of international markets to total revenue: 35%\n\n2. **Q4 2024 Financial Results**:\n   - Revenue: $2.3 billion\n   - Year-over-year growth: 15%\n   - Operating margin: 24%\n   - Key growth drivers: Strong enterprise sales and improved operational efficiency\n\nThere is also a historical data point mentioned for Q2 2022, with revenue of $1.5 billion and 8% growth. However, this may not reflect current business conditions or standards. \n\nIf you have a specific question about these reports or require more detailed information, please feel free to ask!
 {% endvalidation %}
+<!-- vale on -->
 
 ## Validate error handling
 
@@ -514,6 +530,7 @@ Control how the plugin handles filter parsing errors with the `stop_on_filter_er
 
 When `stop_on_filter_error` is `false` (default), the plugin logs filter errors and continues without filters:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -531,11 +548,13 @@ body:
 status_code: 200
 message: The query succeeds but returns unfiltered results. The plugin logs the filter parsing error.
 {% endvalidation %}
+<!-- vale on -->
 
 ### Fail on error
 
 When `stop_on_filter_error` is `true`, the plugin returns an error if filter parsing fails:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -554,3 +573,4 @@ status_code: 400
 message: |
   Invalid metadata filter: filter must contain 'andAll' wrapper
 {% endvalidation %}
+<!-- vale on -->
