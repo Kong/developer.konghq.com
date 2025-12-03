@@ -1,8 +1,8 @@
 title: 'Configure AI Proxy Advanced for Claude Code with Anthropic'
-description: 'Set up the AI Proxy Advanced plugin to work with Claude Code, using Anthropic as the LLM provider with API version 2023-06-01.'
+description: 'Set up the AI Proxy Advanced plugin to work with Claude Code, using Anthropic as the LLM provider.'
 
 extended_description: |
-  {% new_in 3.13 %}Set up the AI Proxy Advanced plugin to work with Claude Code, using Anthropic as the LLM provider with API version 2023-06-01.
+  {% new_in 3.13 %} Set up the AI Proxy Advanced plugin to work with Claude Code, using Anthropic as the LLM provider.
   For a detailed guide on how to use Anthropic with Claude Code see [this-guide](/how-to/use-claude-code-with-ai-gateway-anthropic/)
 
 show_in_api: true
