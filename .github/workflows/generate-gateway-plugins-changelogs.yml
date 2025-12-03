@@ -32,10 +32,18 @@ jobs:
         with:
           egress-policy: audit
 
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@d7ee28121512479a18a428398f948ac5ce15fb4c
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
       - name: Checkout developer.konghq.com
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
@@ -57,7 +65,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           repository: 'Kong/kong-ee'
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           path: 'kong-ee'
           ref: ${{ inputs.kong_ee_branch }}
 
@@ -110,7 +118,7 @@ jobs:
             ${{format('- Set release date for version {0} to {1}', inputs.version, inputs.release_date)}}
 
           labels: skip-changelog,review:general
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           branch: auto/generate-gateway-plugins-changelogs-${{ github.run_number }}
 
       - name: No changes detected
