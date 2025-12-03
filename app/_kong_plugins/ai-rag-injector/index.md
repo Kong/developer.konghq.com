@@ -406,7 +406,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-You can include filters in the `extra_body` parameter of your request:
+You can include filters in the `ai_rag_injector` parameter of your request:
 
 ```json
 curl "http://localhost:8000/" \
@@ -418,33 +418,30 @@ curl "http://localhost:8000/" \
            "content": "What were Q4 results?"
          }
        ],
-       "extra_body": {
-         "ai-rag-injector": {
-           "filters": {
-             "andAll": [
-               {
-                 "equals": {
-                   "key": "source",
-                   "value": "internal"
-                 }
-               },
-               {
-                 "in": {
-                   "key": "tags",
-                   "value": [
-                     "q4",
-                     "quarterly"
-                   ]
-                 }
+       "ai-rag-injector": {
+         "filters": {
+           "andAll": [
+             {
+               "equals": {
+                 "key": "source",
+                 "value": "internal"
                }
-             ]
-           },
-           "filter_mode": "strict",
-           "stop_on_filter_error": false
-         }
+             },
+             {
+               "in": {
+                 "key": "tags",
+                 "value": [
+                   "q4",
+                   "quarterly"
+                 ]
+               }
+             }
+           ]
+         },
+         "filter_mode": "strict",
+         "stop_on_filter_error": false
        }
      }'
-
 ```
 
 ### Query flow

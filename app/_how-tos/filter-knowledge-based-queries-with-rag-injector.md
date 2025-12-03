@@ -319,13 +319,12 @@ body:
   messages:
     - role: user
       content: What were our financial results?
-  extra_body:
-    ai-rag-injector:
-      filters:
-        andAll:
-          - greaterThanOrEquals:
-              key: date
-              value: "2024-01-01"
+  ai-rag-injector:
+    filters:
+      andAll:
+        - greaterThanOrEquals:
+            key: date
+            value: "2024-01-01"
 status_code: 200
 message: |
   The context provides financial results for Q3 and Q4 2024, as well as the annual results for 2024:\n\n- **Q3 2024:** Revenue was $2.0 billion with 12% year-over-year growth. Operating margin was 21%. International markets contributed 35% of total revenue.\n\n- **Q4 2024:** Revenue increased 15% year-over-year to $2.3 billion. Operating margin improved to 24%. Key drivers were strong enterprise sales and improved operational efficiency.\n\n- **2024 Annual Report:** Full-year revenue totaled $8.7 billion, representing 20% growth. The company expanded into five new markets and launched seven major product updates. The board approved a $600 million share buyback program.
@@ -343,12 +342,11 @@ body:
   messages:
     - role: user
       content: Summarize our financial performance
-  extra_body:
-    ai-rag-injector:
-      filters:
-        equals:
-          key: source
-          value: internal
+  ai-rag-injector:
+    filters:
+      equals:
+        key: source
+        value: internal
 status_code: 200
 message: |
   Based on the provided context, our financial performance shows solid growth across the board. In Q4 2024, revenue increased by 15% year-over-year to $2.3 billion, with an improved operating margin of 24%. The key drivers for this performance included strong enterprise sales and improved operational efficiency. For the full year of 2024, revenue totaled $8.7 billion, indicating a 20% growth. The company expanded into five new markets and launched seven major product updates. Additionally, the board approved a $600 million share buyback program.\n\nCompared to 2023, where the full-year revenue was $7.8 billion with 18% growth, the company showed continued strong performance and strategic expansion efforts in 2024.
@@ -366,12 +364,11 @@ body:
   messages:
     - role: user
       content: Show quarterly performance trends
-  extra_body:
-    ai-rag-injector:
-      filters:
-        equals:
-          key: report_type
-          value: quarterly
+  ai-rag-injector:
+    filters:
+      equals:
+        key: report_type
+        value: quarterly
 status_code: 200
 message: |
   The provided context contains data on quarterly and annual financial performance for the years 2023 and 2024, but it does not provide a detailed breakdown of quarterly performance trends for 2023. However, it does give insights into the quarterly performance of 2024:\n\n1. **Q3 2024:**\n   - Revenue: $2.0B\n   - Year-over-year growth: 12%\n   - Operating margin: 21%\n   - International markets contributed 35% of total revenue.\n\n2. **Q4 2024:**\n   - Revenue: $2.3B\n   - Year-over-year growth: 15%\n   - Operating margin improved to 24% (up from 21% in Q3).\n\nThe trends observed indicate a growth in revenue and operating margin in Q4 2024 compared to Q3 2024. There's a notable increase in both revenue and operating efficiency, primarily driven by strong enterprise sales and improved operational efficiency. For a comprehensive quarterly trend analysis, more data points from other quarters would be necessary, which are not provided in the current context.
@@ -389,13 +386,12 @@ body:
   messages:
     - role: user
       content: What are the latest financial metrics?
-  extra_body:
-    ai-rag-injector:
-      filters:
-        in:
-          key: tags
-          value:
-            - current
+  ai-rag-injector:
+    filters:
+      in:
+        key: tags
+        value:
+          - current
 status_code: 200
 message: |
   The latest financial metrics provided in the context are from Q4 2024, where the revenue increased by 15% year-over-year to reach $2.3 billion. The operating margin improved to 24%. For the full year of 2024, the revenue totaled $8.7 billion, representing a 20% growth."
@@ -413,19 +409,18 @@ body:
   messages:
     - role: user
       content: Compare our quarterly results this year
-  extra_body:
-    ai-rag-injector:
-      filters:
-        andAll:
-          - equals:
-              key: source
-              value: internal
-          - equals:
-              key: report_type
-              value: quarterly
-          - greaterThanOrEquals:
-              key: date
-              value: "2024-01-01"
+  ai-rag-injector:
+    filters:
+      andAll:
+        - equals:
+            key: source
+            value: internal
+        - equals:
+            key: report_type
+            value: quarterly
+        - greaterThanOrEquals:
+            key: date
+            value: "2024-01-01"
 status_code: 200
 message: |
   The latest financial metrics are from Q4 2024, where the revenue increased by 15% year-over-year to $2.3 billion, and the operating margin improved to 24% from 21% in Q3 2024. Additionally, the full-year revenue for 2024 totaled $8.7 billion, representing a 20% growth. The company expanded into five new markets and launched seven major product updates. The board also approved a $600 million share buyback program.
@@ -443,18 +438,17 @@ body:
   messages:
     - role: user
       content: What do analysts say about our company?
-  extra_body:
-    ai-rag-injector:
-      filters:
-        andAll:
-          - equals:
-              key: source
-              value: external
-          - in:
-              key: tags
-              value:
-                - analyst
-                - recommendation
+  ai-rag-injector:
+    filters:
+      andAll:
+        - equals:
+            key: source
+            value: external
+        - in:
+            key: tags
+            value:
+              - analyst
+              - recommendation
 status_code: 200
 message: |
   The context provided does not contain information specific to your company. It includes a Morgan Stanley report maintaining an Overweight rating with a $145 price target for an unnamed company and a Goldman Sachs analysis of the software sector.
@@ -476,13 +470,12 @@ body:
   messages:
     - role: user
       content: Show me quarterly reports
-  extra_body:
-    ai-rag-injector:
-      filters:
-        equals:
-          key: report_type
-          value: quarterly
-      filter_mode: compatible
+  ai-rag-injector:
+    filters:
+      equals:
+        key: report_type
+        value: quarterly
+    filter_mode: compatible
 status_code: 200
 message: |
   The context provided does not contain specific quarterly reports, but it does include some quarterly financial results and key performance highlights:\n\n- Q2 2022: Revenue was $1.5 billion with 8% growth.\n- Q3 2024: Revenue was $2.0 billion with 12% year-over-year growth. The operating margin was steady at 21%, and international markets contributed 35% of total revenue.\n- Q4 2024: Revenue increased 15% year-over-year to $2.3 billion. The operating margin improved to 24%.\n\nIf you need detailed quarterly reports beyond what is summarized here, please check the company's official filings or financial statements.
@@ -500,15 +493,14 @@ body:
   messages:
     - role: user
       content: Show me quarterly reports
-  extra_body:
-    ai-rag-injector:
-      filters:
-        andAll:
-          - in:
-              key: tags
-              value:
-                - quarterly
-      filter_mode: strict
+  ai-rag-injector:
+    filters:
+      andAll:
+        - in:
+            key: tags
+            value:
+              - quarterly
+    filter_mode: strict
 status_code: 200
 message: |
   The context provided includes quarterly financial data for two specific quarters:\n\n1. **Q3 2024 Financial Results**:\n   - Revenue: $2.0 billion\n   - Year-over-year growth: 12%\n   - Operating margin: 21%\n   - Contribution of international markets to total revenue: 35%\n\n2. **Q4 2024 Financial Results**:\n   - Revenue: $2.3 billion\n   - Year-over-year growth: 15%\n   - Operating margin: 24%\n   - Key growth drivers: Strong enterprise sales and improved operational efficiency\n\nThere is also a historical data point mentioned for Q2 2022, with revenue of $1.5 billion and 8% growth. However, this may not reflect current business conditions or standards. \n\nIf you have a specific question about these reports or require more detailed information, please feel free to ask!
@@ -530,13 +522,12 @@ body:
   messages:
     - role: user
       content: Show me reports
-  extra_body:
-    ai-rag-injector:
-      filters:
-        invalidOperator:
-          key: report_type
-          value: quarterly
-      stop_on_filter_error: false
+  ai-rag-injector:
+    filters:
+      invalidOperator:
+        key: report_type
+        value: quarterly
+    stop_on_filter_error: false
 status_code: 200
 message: The query succeeds but returns unfiltered results. The plugin logs the filter parsing error.
 {% endvalidation %}
@@ -553,13 +544,12 @@ body:
   messages:
     - role: user
       content: Show me reports
-  extra_body:
-    ai-rag-injector:
-      filters:
-        invalidOperator:
-          key: report_type
-          value: quarterly
-      stop_on_filter_error: true
+  ai-rag-injector:
+    filters:
+      invalidOperator:
+        key: report_type
+        value: quarterly
+    stop_on_filter_error: true
 status_code: 400
 message: |
   Invalid metadata filter: filter must contain 'andAll' wrapper
