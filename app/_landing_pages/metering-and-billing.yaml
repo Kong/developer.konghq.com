@@ -12,3 +12,134 @@ rows:
       type: h1
       text: "Metering and Billing"
       sub_text: Turn any events, logs, and metrics into revenue with usage-based metering and billing.
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} Metering and Billing provides a full system for tracking usage, creating billable products, enforcing entitlements, and generating invoices.  
+                    It is designed for AI and API-first businesses that need accurate usage metering, flexible pricing models, and customer-level billing detail.
+
+                    You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
+                    You can define features, build pricing plans, create subscriptions, and connect customers to Stripe or other external systems.
+
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/metering/overview.png
+              alt_text: Metering and Billing Overview
+
+
+  - header:
+      type: h2
+      text: "Get started with Metering and Billing"
+
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Meter LLM traffic
+              description: |
+                Track prompt tokens, completion tokens, and model usage from {{site.base_gateway}} or any AI gateway backed by Konnect.
+              icon: /assets/icons/ai.svg
+              cta:
+                text: Learn how
+                url: /metering-and-billing/monitor-llm-traffic/
+      - blocks:
+          - type: card
+            config:
+              title: Meter {{site.base_gateway}} API requests
+              description: |
+                Convert raw API request events into billable usage. Create meters, features, pricing, and subscriptions.
+              icon: /assets/icons/gateway.svg
+              cta:
+                text: Get started
+                url: /metering-and-billing/get-started/
+      - blocks:
+          - type: card
+            config:
+              title: Understand Customers and Subjects
+              description: |
+                Learn how {{site.konnect_short_name}} models customers, subjects, and usage mapping for billing systems.
+              icon: /assets/icons/team.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/subjects/
+
+  - header:
+      type: h2
+      text: "Integrations"
+      sub_text: "Connect Metering and Billing to external payment, CRM, and invoicing systems"
+
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Stripe
+              description: |
+                Send invoices, calculate tax, and collect payments.
+              icon: /assets/icons/third-party/stripe.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/stripe"
+
+      - blocks:
+          - type: card
+            config:
+              title: Custom Invoicing
+              description: |
+                Implement custom billing flows using your own invoicing and payment systems.
+              icon: /assets/icons/third-party/custom.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/custom"
+
+      - blocks:
+          - type: card
+            config:
+              title: HubSpot
+              description: |
+                Sync customer data and analyze customer interactions through HubSpot CRM.
+              icon: /assets/icons/third-party/hubspot.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/hubspot"
+
+      - blocks:
+          - type: card
+            config:
+              title: Salesforce
+              description: |
+                Integrate with Salesforce CRM to manage accounts, subscriptions, and customer insights.
+              icon: /assets/icons/third-party/salesforce.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/salesforce"
+
+      - blocks:
+          - type: card
+            config:
+              title: PayPal
+              description: |
+                Accept customer payments using PayPal’s global payment platform.
+              icon: /assets/icons/third-party/paypal.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/paypal"
+
+      - blocks:
+          - type: card
+            config:
+              title: Adyen
+              description: |
+                Process global payments with Adyen’s payment infrastructure.
+              icon: /assets/icons/third-party/adyen.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/adyen"
+
+
+  
