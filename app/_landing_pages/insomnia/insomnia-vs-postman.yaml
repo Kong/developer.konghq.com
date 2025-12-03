@@ -69,9 +69,6 @@ rows:
                 - title: Local environment vault
                   insomnia: true
                   details: Encrypt environment values locally with no cloud storage requirement.
-                - title: Native gRPC + AsyncAPI editor
-                  insomnia: true
-                  details: Design and test gRPC and AsyncAPI specs directly in the client with no cloud-binding.
   - header:
       type: h2
       text: "At a glance"
@@ -134,11 +131,6 @@ rows:
                   subtitle: Organize work into projects and workspaces that can sync through Cloud or Git.
                   insomnia: true
                   postman: true
-                - title: |
-                    [Version control workflows](/insomnia/version-control/)
-                  subtitle: Use Git-based workflows to version API definitions, collections, and tests without cloud dependency.
-                  insomnia: true
-                  postman: false
                 - title: |
                     [Private-by-default sharing](/insomnia/storage#local-vault)
                   subtitle: Store projects locally or on Git by default, not in the cloud.
@@ -253,7 +245,7 @@ rows:
                   postman: false
                 - title: |
                     [Generate runnable requests](/inso-cli#what-can-inso-cli-do)
-                  subtitle: Convert API specs directly into runnable requests without cloud tools.
+                  subtitle: Convert API specifications directly into runnable requests without cloud tools.
                   insomnia: true
                   postman: false
                 - title: |
