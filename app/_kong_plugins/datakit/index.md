@@ -522,6 +522,16 @@ rows:
     description: "Configure static input values ahead of time."
     inputs: none
     outputs: user-defined
+  - nodetype: |
+      [`xml_to_json`](#xml-to-json-node) {% new_in 3.13 %}
+    description: "Transforms XML strings into JSON or a Lua table."
+    inputs: XML formatted data
+    outputs: JSON formatted data
+  - nodetype: |
+      [`json_to_xml`](#json-to-xml-node) {% new_in 3.13 %}
+    description: "Transforms JSON or a Lua table into XML strings."
+    inputs: JSON formatted data or Lua tables
+    outputs: XML formatted data
 {% endtable %}
 <!--vale on-->
 
