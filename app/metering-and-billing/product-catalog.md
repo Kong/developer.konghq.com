@@ -55,16 +55,41 @@ To support this, plans consist of Rate Cards, Add-ons, and Subscriptions.
 
 ## Rate Cards
 
-Rate Cards define the configuration of features that subscribers will be entitled to and charged for. 
+Rate Cards define the configuration of features that subscribers will be entitled to and charged for.
 
-### Discounts and commitments
+### Pricing Models
+Rate cards offer several different pricing models, which you can see in the table below.
 
-Rate Cards support two different types of discounts that can be applied to charges: 
+{% table %}
+columns:
+  - title: Pricing model
+    key: model
+  - title: Description
+    key: description
+rows:
+  - model: "Free"
+    description: "Free pricing"
+  - model: "Flat fee"
+    description: "A one-time or recurring fee"
+  - model: "Usage based"
+    description: "Linear pricing based on metered usage"
+  - model: "Tiered"
+    description: "Tiered pricing based on metered usage"
+  - model: "Package"
+    description: "Pricing based on fixed-sized usage packages"
+  - model: "Dynamic"
+    description: "USD prices created dynamically from meter values"
+{% endtable %}
 
-* Percentage discount: Reduce price by a fixed percent across all usage
-* Usage discount: Enable you to provide discounts on the metered value. 
+Besides the **Free** pricing model, other models require configuration that you can see from the {{site.konnect_short_name}} UI. 
 
-For more information see [Discounts](/)
+### Entitlements
+
+Entitlements are used to control access to different features, they make it possible to implement complex pricing scenarios such as monthly quotas, prepaid billing, and per-customer pricing. 
+
+
+{% include_cached /konnect/metering-and-billing/discounts.md %}
+
 
 ## Subscriptions
 
