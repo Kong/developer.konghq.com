@@ -5,8 +5,8 @@ content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
+  - text: AI Proxy
+    url: /plugins/ai-proxy/
   - text: File Log
     url: /plugins/file-log/
 
@@ -24,7 +24,7 @@ min_version:
   gateway: '3.13'
 
 plugins:
-  - ai-proxy-advanced
+  - ai-proxy
   - file-log
 
 entities:
@@ -46,7 +46,7 @@ prereqs:
   prereqs:
   inline:
     - title: AWS Bedrock
-      icon_url: /assets/icons/third-party/aws.svg
+      icon_url: /assets/icons/bedrock.svg
       content: |
         1. Enable model access in AWS Bedrock:
            - Sign in to the AWS Management Console

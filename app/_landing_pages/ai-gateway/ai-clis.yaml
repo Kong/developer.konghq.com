@@ -52,7 +52,7 @@ rows:
         - type: card
           config:
             title: Claude Code with Anthropic
-            description: Use Claude Code with Anthropic models
+            description: Use Claude Code with Anthropic provider
             icon: /assets/icons/anthropic.svg
             cta:
               url: /how-to/use-claude-code-with-ai-gateway/
@@ -62,7 +62,7 @@ rows:
           config:
             title: Claude Code with OpenAI
             icon: /assets/icons/openai.svg
-            description: Use Claude Code with OpenAI models
+            description: Use Claude Code with OpenAI provider
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-openai/
               align: end
@@ -71,7 +71,7 @@ rows:
           config:
             title: Claude Code with Azure AI
             icon: /assets/icons/azure.svg
-            description: Use Claude Code with Azure AI models
+            description: Use Claude Code with Azure AI provider
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-azure/
               align: end
@@ -80,7 +80,7 @@ rows:
           config:
             title: Claude Code with Gemini
             icon: /assets/icons/gcp.svg
-            description: Use Claude Code with Gemini models
+            description: Use Claude Code with Gemini provider
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-gemini/
               align: end
@@ -89,7 +89,7 @@ rows:
           config:
             title: Claude Code with Vertex AI
             icon: /assets/icons/vertex.svg
-            description: Use Claude Code with Vertex AI models
+            description: Use Claude Code with Vertex AI provider
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-vertex/
               align: end
@@ -98,10 +98,19 @@ rows:
           config:
             title: Claude Code with Bedrock
             icon: /assets/icons/bedrock.svg
-            description: Use Claude Code with Bedrock models
+            description: Use Claude Code with Bedrock provider
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-bedrock/
               align: end
+      # - blocks:
+      #   - type: card
+      #     config:
+      #       title: Claude Code with HuggingFace
+      #       icon: /assets/icons/huggingface.svg
+      #       description: Use Claude Code with HuggingFace provider
+      #       cta:
+      #         url: /how-to/use-claude-code-with-ai-gateway-bedrock/
+      #         align: end
   - header:
       type: h3
       text: "Codex CLI"

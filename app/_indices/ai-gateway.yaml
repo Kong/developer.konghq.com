@@ -44,6 +44,9 @@ sections:
       - title: AI Gateway resource sizing guidelines
         description: Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
+      - title: Proxy AI CLI tools through Kong AI Gateway
+        description: Configure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers for logging, cost tracking, and rate limiting.
+        url: /ai-gateway/ai-clis/
   - title: AI Gateway plugins
     items:
       - path: /plugins/?category=ai
