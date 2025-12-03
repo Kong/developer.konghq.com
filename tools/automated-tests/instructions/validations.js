@@ -181,7 +181,9 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
 
         if (
           config.retry &&
-          (extractedValue === undefined || extractedValue === "")
+          (extractedValue === undefined ||
+            extractedValue === "" ||
+            value === null)
         ) {
           shouldRetry = true;
         }
@@ -200,7 +202,10 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
         }
         await setEnvVariable(container, field.variable, value);
 
-        if (config.retry && (value === undefined || value === "")) {
+        if (
+          config.retry &&
+          (value === undefined || value === "" || value === null)
+        ) {
           shouldRetry = true;
         }
       }
