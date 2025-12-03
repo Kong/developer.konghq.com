@@ -96,7 +96,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
   const initialRetryDelay = 5000; // 5 seconds initial delay
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
-    console.log(`Attempt ${attempt} to make request to ${config.url}`);
+    log(`Attempt ${attempt} to make request to ${config.url}`);
     const headers = await processHeaders(config, container);
     const env = await getLiveEnv(container);
 
@@ -219,7 +219,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
     // If retry is needed and we haven't exhausted attempts
     if (attempt < maxRetries - 1) {
       const backoffDelay = initialRetryDelay * Math.pow(2, attempt);
-      console.log(
+      log(
         `Retry attempt ${
           attempt + 1
         } - extracted values were undefined/empty, retrying in ${backoffDelay}ms...`
@@ -229,9 +229,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
     }
 
     // Max retries reached, return the last response
-    console.log(
-      `Max retries (${maxRetries}) reached, proceeding with last response`
-    );
+    log(`Max retries (${maxRetries}) reached, proceeding with last response`);
     return onResponse(response, body);
   }
 }
