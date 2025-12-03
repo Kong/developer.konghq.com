@@ -488,7 +488,7 @@ columns:
     key: outputs
 rows:
   - nodetype: |
-      [`branch`](#branch-node) {% new_in 3.12 %}
+      [Branch (`branch`)](#branch-node) {% new_in 3.12 %}
     description: "Execute different nodes based on matching input conditions."
     inputs: |
       User-defined.
@@ -499,7 +499,7 @@ rows:
       * If the input is a non-boolean value, an error is raised
     outputs: none
   - nodetype: |
-      [`cache`](#cache-node) {% new_in 3.12 %}
+      [Cache (`cache`)](#cache-node) {% new_in 3.12 %}
     description: "Store and fetch cached data."
     inputs: |
       * `key` (**required**): The cache key string
@@ -511,7 +511,7 @@ rows:
       * `stored`: `true` if data was successfully stored into the cache
       * `data`: The data that was stored into the cache
   - nodetype: |
-      [`call`](#call-node)
+      [Call (`call`)](#call-node)
     description: "Send third-party HTTP calls."
     inputs: |
       * `body`: Request body
@@ -522,38 +522,38 @@ rows:
       * `headers`: The response headers
       * `status`: The HTTP status code of the response
   - nodetype: |
-      [`jq`](#jq-node)
+      [jq (`jq`)](#jq-node)
     description: "Transform data and cast variables with `jq` to be shared with other nodes."
     inputs: |
       User-defined. See [jq node inputs](#jq-node-inputs) for more detail.
     outputs: |
       User-defined. See [jq node outputs](#jq-node-outputs) for more detail.
   - nodetype: |
-      [`exit`](#exit-node)
+      [Exit (`exit`)](#exit-node)
     description: "Return directly to the client without forwarding any further."
     inputs: |
       * `body`: Body to use in the early-exit response.
       * `headers`: Headers to use in the early-exit response.
     outputs: None
   - nodetype: |
-      [`property`](#property-node)
+      [Property (`property`)](#property-node)
     description: "Get and set {{site.base_gateway}}-specific data."
     inputs: |
       Accepts `$self`. See [property node inputs](#property-node-inputs) for more detail. 
     outputs: |
       Outputs `$self`. See [property node outputs](#property-node-outputs) for more detail. 
   - nodetype: |
-      [`static`](#static-node)
+      [Static (`static`)](#static-node)
     description: "Configure static input values ahead of time."
     inputs: None
     outputs: User-defined. See [static node outputs](#static-node-outputs) for more detail.
   - nodetype: |
-      [`xml_to_json`](#xml-to-json-node) {% new_in 3.13 %}
+      [XML to JSON (`xml_to_json`)](#xml-to-json-node) {% new_in 3.13 %}
     description: "Transforms XML strings into JSON or a Lua table."
     inputs: XML formatted data
     outputs: JSON formatted data
   - nodetype: |
-      [`json_to_xml`](#json-to-xml-node) {% new_in 3.13 %}
+      [JSON to XML (`json_to_xml`)](#json-to-xml-node) {% new_in 3.13 %}
     description: "Transforms JSON or a Lua table into XML strings."
     inputs: JSON formatted data or Lua tables
     outputs: XML formatted data
