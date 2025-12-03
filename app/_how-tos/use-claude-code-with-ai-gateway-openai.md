@@ -83,6 +83,9 @@ entities:
       config:
         llm_format: anthropic
         route_type: llm/v1/chat
+        logging:
+          log_statistics: true
+          log_payloads: false
         auth:
           header_name: Authorization
           header_value: Bearer ${openai_key}

@@ -26,7 +26,7 @@ rows:
 
                       Supported AI CLI tools:
 
-                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex and AWS Bedrock
+                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex, AWS Bedrock, and Alibaba Cloud (Dashscope)
                       - [**Codex CLI**](#codex-cli): OpenAI
 
 
@@ -102,6 +102,15 @@ rows:
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-bedrock/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with Alibaba Cloud
+            icon: /assets/icons/alibaba-cloud.svg
+            description: Use Claude Code with Alibaba Cloud (Dashscope) provider
+            cta:
+              url: /how-to/use-claude-code-with-ai-gateway-dashscope/
+              align: end
       # - blocks:
       #   - type: card
       #     config:
@@ -123,7 +132,7 @@ rows:
                   text: |
                     Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management.
 
-  - column_count: 2
+  - column_count: 4
     columns:
       - blocks:
           - type: card

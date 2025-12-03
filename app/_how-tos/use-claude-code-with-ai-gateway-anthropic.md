@@ -81,6 +81,9 @@ entities:
   plugins:
     - name: ai-proxy
       config:
+        logging:
+          log_statistics: true
+          log_payloads: false
         auth:
           header_name: x-api-key
           header_value: ${key}
