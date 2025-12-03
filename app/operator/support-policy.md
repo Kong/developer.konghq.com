@@ -23,7 +23,33 @@ LTS versions of {{site.operator_product_name}} are supported for 3 years after r
 
 > *Table 1: Version Support for {{site.operator_product_name}}*
 
-{% include support/support-policy.md %}
+{% table %}
+columns:  
+  - version: "2.0.x"
+    release: "2025-09-09"
+    support: "2026-09-09"
+  - version: "1.6.x"
+    release: "2025-05-07"
+    support: "2026-05-07"
+  - version: "1.5.x"
+    release: "2025-03-11"
+    support: "2026-03-11"
+  - version: "1.4.x"
+    release: "2024-10-31"
+    support: "2025-10-31"
+  - version: "1.3.x"
+    release: "2024-06-24"
+    support: "2025-06-24"
+  - version: "1.2.x"
+    release: "2024-03-15"
+    support: "2025-03-15"
+  - version: "1.1.x"
+    release: "2023-11-20"
+    support: "2024-11-20"
+  - version: "1.0.x"
+    release: "2023-09-27"
+    support: "2024-09-29"
+{% endtable %}
 
 ## Version compatibility with Kubernetes
 
