@@ -371,6 +371,7 @@ LLM clients can refine search results by specifying filter criteria in the query
 
 You can combine multiple conditions with `andAll`:
 
+<!-- vale off -->
 ```json
 {
   "andAll": [
@@ -380,6 +381,7 @@ You can combine multiple conditions with `andAll`:
   ]
 }
 ```
+<!-- vale on -->
 
 Filter parameters:
 
@@ -410,6 +412,7 @@ rows:
 
 You can include filters in the `ai_rag_injector` parameter of your request:
 
+<!-- vale off -->
 ```json
 curl "http://localhost:8000/" \
      -H "Content-Type: application/json" \
@@ -445,6 +448,7 @@ curl "http://localhost:8000/" \
        }
      }'
 ```
+<!-- vale on -->
 
 ### Query flow
 
