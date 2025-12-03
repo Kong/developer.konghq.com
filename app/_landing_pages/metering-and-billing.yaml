@@ -95,7 +95,7 @@ rows:
               icon: /assets/icons/third-party/custom.svg
               cta:
                 text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/custom"
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/custom_invoicing"
 
       - blocks:
           - type: card
@@ -105,8 +105,8 @@ rows:
                 Sync customer data and analyze customer interactions through HubSpot CRM.
               icon: /assets/icons/third-party/hubspot.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/hubspot"
+                text: Contact Sales
+                url: "https://cloud.konghq.com/us/metering-billing/apps"
 
       - blocks:
           - type: card
@@ -116,8 +116,8 @@ rows:
                 Integrate with Salesforce CRM to manage accounts, subscriptions, and customer insights.
               icon: /assets/icons/third-party/salesforce.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/salesforce"
+                text: Contact Sales
+                url: "https://cloud.konghq.com/us/metering-billing/apps"
 
       - blocks:
           - type: card
@@ -127,8 +127,8 @@ rows:
                 Accept customer payments using PayPal’s global payment platform.
               icon: /assets/icons/third-party/paypal.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/paypal"
+                text: Contact Sales
+                url: "https://cloud.konghq.com/us/metering-billing/apps"
 
       - blocks:
           - type: card
@@ -138,8 +138,8 @@ rows:
                 Process global payments with Adyen’s payment infrastructure.
               icon: /assets/icons/third-party/adyen.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/adyen"
+                text: Contact Sales
+                url: "https://cloud.konghq.com/us/metering-billing/apps"
 
 
   
