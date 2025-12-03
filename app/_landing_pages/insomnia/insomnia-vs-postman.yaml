@@ -37,14 +37,12 @@ rows:
 
   - header:
       type: h2
-      text: "Insomnia-only advantages"
+      text: "Insomnia advantages"
     columns:
       - blocks:
           - type: feature_table
             config:
               columns:
-                - title: Feature
-                  key: feature
                 - title: Insomnia
                   key: insomnia
                 - title: Why it matters
