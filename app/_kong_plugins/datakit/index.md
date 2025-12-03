@@ -490,38 +490,63 @@ rows:
   - nodetype: |
       [`branch`](#branch-node) {% new_in 3.12 %}
     description: "Execute different nodes based on matching input conditions."
-    inputs: "user-defined"
+    inputs: |
+      User-defined.
+      <br>
+      The input to a branch node represents a boolean condition to test and branch on:
+      * If the input is `true`, the nodes named by the `then` array are executed
+      * If the input is `false`, the nodes named by the `else` array are executed
+      * If the input is a non-boolean value, an error is raised
     outputs: none
   - nodetype: |
       [`cache`](#cache-node) {% new_in 3.12 %}
     description: "Store and fetch cached data."
-    inputs: "`key`, `ttl`, `data`"
-    outputs: "`hit`, `miss`, `stored`, `data`"
+    inputs: |
+      * `key` (**required**): The cache key string
+      * `ttl`: The TTL (Time to Live) in seconds
+      * `data`: The data to be cached. If not null, the cache node works in `set` mode storing data into cache; if null, the cache node fetches data.
+    outputs: |
+      * `hit`: `true` if a cache hit occurred
+      * `miss`: `true` if a cache miss occurred
+      * `stored`: `true` if data was successfully stored into the cache
+      * `data`: The data that was stored into the cache
   - nodetype: |
       [`call`](#call-node)
     description: "Send third-party HTTP calls."
-    inputs: "`body`, `headers`, `query`"
-    outputs: "`body`, `headers`, `status`"
+    inputs: |
+      * `body`: Request body
+      * `headers`: Request headers
+      * `query`: Key-value pairs to encode as the request query string
+    outputs: |
+      * `body`: The response body
+      * `headers`: The response headers
+      * `status`: The HTTP status code of the response
   - nodetype: |
       [`jq`](#jq-node)
     description: "Transform data and cast variables with `jq` to be shared with other nodes."
-    inputs: user-defined
-    outputs: user-defined
+    inputs: |
+      User-defined. See [jq node inputs](#jq-node-inputs) for more detail.
+    outputs: |
+      User-defined. See [jq node outputs](#jq-node-outputs) for more detail.
   - nodetype: |
       [`exit`](#exit-node)
     description: "Return directly to the client without forwarding any further."
-    inputs: "`body`, `headers`"
-    outputs: none
+    inputs: |
+      * `body`: Body to use in the early-exit response.
+      * `headers`: Headers to use in the early-exit response.
+    outputs: None
   - nodetype: |
       [`property`](#property-node)
     description: "Get and set {{site.base_gateway}}-specific data."
-    inputs: "`$self`"
-    outputs: "`$self`"
+    inputs: |
+      Accepts `$self`. See [property node inputs](#property-node-inputs) for more detail. 
+    outputs: |
+      Outputs `$self`. See [property node outputs](#property-node-outputs) for more detail. 
   - nodetype: |
       [`static`](#static-node)
     description: "Configure static input values ahead of time."
-    inputs: none
-    outputs: user-defined
+    inputs: None
+    outputs: User-defined. See [static node outputs](#static-node-outputs) for more detail.
   - nodetype: |
       [`xml_to_json`](#xml-to-json-node) {% new_in 3.13 %}
     description: "Transforms XML strings into JSON or a Lua table."
@@ -541,14 +566,7 @@ You can learn more about the supported configuration parameters for each node in
 
 Execute different nodes based on matching input conditions, such as a cache hit or miss.
 
-See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `branch` from the node object dropdown to see all node attributes.
-
-#### Branch node inputs 
-
-The input to a branch node represents a boolean condition to test and branch on:
-* If the input is `true`, the nodes named by the `then` array are executed.
-* If the input is `false`, the nodes named by the `else` array are executed.
-* If the input is a non-boolean value, an error is raised.
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `branch` from the node object dropdown to see all node attributes, including inputs and outputs.
 
 {:.info}
 > **Note:** When using the `branch` node, the `then` and `else` parameters must list all nodes for both branches.
@@ -596,43 +614,16 @@ See the [configuration reference](/plugins/datakit/reference/#schema--config-nod
 The `cache` node requires a [`resources.cache` resource definition](#cache-resource) containing 
 cache configuration.
 
-#### Cache node inputs
+#### Examples
 
-The `cache` node takes the following inputs: 
-
-* `key` (**required**): the cache key string
-* `ttl`: The TTL (Time to Live) in seconds
-* `data`: The data to be cached. If not null, the cache node works in set mode, 
-  storing data into cache; if null, the cache node fetches data
-  
-#### Cache node outputs
-
-The `cache` node produces the following outputs:
-
-* `hit`: `true` if a cache hit occurred
-* `miss`: `true` if a cache miss occurred
-* `stored`: `true` if data was successfully stored into the cache
-* `data`: The data that was stored into the cache
+For a complete example, see:
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
 
 ### Call node
 
 Send an HTTP request and retrieve the response.
 
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `call` from the node object dropdown to see all node attributes.
-
-#### Call node inputs
-
-The `call` node takes the following inputs:
-
-* `body`: Request body
-* `headers`: Request headers
-* `query`: Key-value pairs to encode as the request query string
-
-#### Call node outputs
-
-* `body`: The response body
-* `headers`: The response headers
-* `status`: The HTTP status code of the response
 
 #### Examples
 
@@ -660,6 +651,14 @@ Send a POST request with a JSON body:
     id: 123
     name: Datakit
 ```
+
+Call nodes are used in most datakit workflows. For complete examples, see:
+* [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
+* [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
+* [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
+* [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
+* [Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)
 
 #### Automatic JSON body handling
 
@@ -1011,6 +1010,13 @@ Join the output of two API calls:
   jq: "."
 ```
 
+For more detailed examples, see:
+
+* [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
+* [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
+* [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
+* [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+
 ### Exit node
 
 Trigger an early exit that produces a direct response, rather than forwarding
@@ -1019,13 +1025,6 @@ a proxied response.
 There are no outputs for an exit node.
 
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `exit` from the node object dropdown to see all node attributes.
-
-#### Exit node inputs
-
-The `exit` node accepts the following inputs:
-
-* `body`: Body to use in the early-exit response.
-* `headers`: Headers to use in the early-exit response.
 
 #### Examples
 
@@ -1040,6 +1039,13 @@ Make an HTTP request and send the response directly to the client:
   type: exit
   input: CALL
 ```
+
+For more detailed examples, see:
+
+* [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
+* [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
+* [Convert JSON into XML](/plugins/datakit/examples/convert-json-into-xml/)
 
 ### Property node
 
@@ -1258,11 +1264,9 @@ rows:
 Emits static values to be used as inputs for other nodes. 
 The `static` node can help you with hardcoding some known value for an input.
 
+There are no inputs for a static node.
+
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `static` from the node object dropdown to see all node attributes.
-
-#### Static node inputs
-
-None.
 
 #### Static node outputs
 
@@ -1363,6 +1367,10 @@ Set common request headers for different API requests:
     headers: HEADERS
 ```
 
+For more detailed examples, see:
+* [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
+* [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
 
 ### XML to JSON node {% new_in 3.13 %}
 
@@ -1372,14 +1380,6 @@ See the [configuration reference](/plugins/datakit/reference/#schema--config-nod
 
 {:.info}
 > **Note:** One of the `attributes_block_name` or `attributes_name_prefix` is required. 
-
-#### XML to JSON node inputs
-
-The XML to JSON node accepts XML as input.
-
-#### XML to JSON node outputs
-
-The XML to JSON node outputs JSON strings or Lua tables.
 
 #### Examples
 
@@ -1441,14 +1441,6 @@ See the [configuration reference](/plugins/datakit/reference/#schema--config-nod
 
 {:.info}
 > **Note:** One of the `attributes_block_name` or `attributes_name_prefix` is required. 
-
-#### JSON to XML node inputs
-
-The JSON to XML node accepts JSON strings or Lua tables as input.
-
-#### JSON to XML node outputs
-
-The JSON to XML node outputs XML.
 
 #### Examples
 
