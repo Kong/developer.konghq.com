@@ -104,6 +104,7 @@ certificate_admin
 charset
 chatbot
 chatbots
+chatwise
 cidr
 cidrs
 cleartext
@@ -216,6 +217,7 @@ DPPs
 drilldown
 dynatrace
 Dynatrace
+eason
 ecs
 ElastiCache
 ElastiCache
