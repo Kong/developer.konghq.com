@@ -339,7 +339,7 @@ plugins:
 In this configuration, collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
 
 {:.info}
-> Check the [how-to guide](/how-to/use-ai-rag-injector-acls/) fro details about how ACLs work in the AI RAG Injector plugin.
+> Check the [how-to guide](/how-to/use-ai-rag-injector-acls/) for details about how ACLs work in the AI RAG Injector plugin.
 
 ### ACL evaluation
 
