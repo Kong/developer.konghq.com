@@ -29,9 +29,9 @@ faqs:
          ```
          http://35.233.198.16:80/mock
          ```
-  - q: Can I choose a specific {{site.base_gateway}} version when using quickstart scripts in Gateway Manager?
+  - q: Can I choose a specific {{site.base_gateway}} version when using quickstart scripts?
     a: |
-      Yes. Gateway Manager lets you select the {{site.base_gateway}} version for your quickstart scripts.
+      Yes. {{site.konnect_short_name}} lets you select the {{site.base_gateway}} version for your quickstart scripts.
 
   - q: Can I SSH directly into {{site.konnect_short_name}} Data Plane nodes?
     a: |
@@ -43,8 +43,6 @@ faqs:
 
 
 related_resources:
-  - text: Gateway Manager
-    url: /gateway-manager/
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
   - text: Serverless Gateways
@@ -56,12 +54,12 @@ tags:
   - gateway-manager
 
 breadcrumbs:
-  - /gateway-manager/
+  - /konnect/
 ---
 
 
 A Data Plane node is a single instance of {{site.base_gateway}} that acts as a proxy and serves traffic.
-In {{site.konnect_short_name}}, Data Plane nodes are managed by [Control Planes](/gateway-manager/control-plane-groups/). 
+In {{site.konnect_short_name}}, Data Plane nodes are managed by [Control Planes](/gateway/control-plane-groups/). 
 Control Planes manage and store configurations in {{site.konnect_short_name}}, and they distribute those configurations to Data Planes nodes. 
 Data Plane nodes don't manage their own configurations.
 
@@ -185,9 +183,8 @@ This is a zero downtime upgrade because {{site.konnect_short_name}} synchronizes
 and shut down the nodes you are replacing.
 
     {:.info}
-    > You can't shut down data plane nodes from within Gateway Manager. Old
-    nodes will also remain listed as `Connected` in Gateway Manager for a
-    few hours after they have been removed or shut down.
+    > You can't shut down data plane nodes from the {{site.konnect_short_name}} UI. 
+    Old nodes will also remain listed as `Connected` for a few hours after they have been removed or shut down.
 
 1. Test passing data through your new data plane node by accessing your proxy URL.
 
@@ -268,7 +265,7 @@ rows:
 
 ## Custom Data Plane labels
 
-Labels are commonly used for metadata information. Set anything that you need to identify your Data Plane nodes -- deployment type, region, size, the team that the node belongs to, the purpose it serves, or any other identifiable information. For more information, review the [{{site.konnect_short_name}} labels](/gateway-manager/konnect-labels/) documentation.
+Labels are commonly used for metadata information. Set anything that you need to identify your Data Plane nodes -- deployment type, region, size, the team that the node belongs to, the purpose it serves, or any other identifiable information. For more information, review the [{{site.konnect_short_name}} labels](/konnect-platform/konnect-labels/) documentation.
 
 ## Troubleshoot Data Plane nodes
 
@@ -282,7 +279,7 @@ If this happens, you will see the status `Out of sync` on the Data Plane Nodes p
 **Solution:** Troubleshoot the issue using the following methods:
 
 * Ensure the Data Plane node is running. If it's not running, start it; if it is running, restart it. 
-After starting it, check the sync status in the Gateway Manager.
+After starting it, check the sync status in {{site.konnect_short_name}}.
 
 * Check the logs of the Data Plane node that's appearing as `Out of sync`. 
 The default directory for {{site.base_gateway}} logs is [`/usr/local/kong/logs`](/gateway/configuration/#log-level).
@@ -294,7 +291,7 @@ The default directory for {{site.base_gateway}} logs is [`/usr/local/kong/logs`]
     * Data Plane node failed to receive a ping response from the Control Plane.
 
     You may have an issue on the host network where the node resides.
-    Diagnose and resolve the issue, then restart the node and check the sync status in the Gateway Manager.
+    Diagnose and resolve the issue, then restart the node and check the sync status in {{site.konnect_short_name}}.
 
 If the logs show a license issue, or if you are unable to resolve sync issues using the above methods, contact [Kong Support](https://support.konghq.com/).
 
@@ -321,7 +318,7 @@ If your version is up-to-date but the feature still isn't working, contact [Kong
 
 ### Kubernetes Data Plane node installation doesn't work
 
-**Problem:** You followed the Kubernetes installation instructions in Gateway Manager but your Data Plane node isn't connecting.
+**Problem:** You followed the Kubernetes installation instructions in the {{site.konnect_short_name}} UI but your Data Plane node isn't connecting.
  
 **Solution:** Check your deployment logs for errors:
 

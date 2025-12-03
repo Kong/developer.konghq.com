@@ -41,6 +41,7 @@ Arya
 Arya
 arya
 assumeRole
+async
 Atlassian
 auditability
 authtoken
@@ -743,6 +744,7 @@ slos
 SLT_Enc
 sni
 snis
+sonarqube
 Splunk
 Splunk
 ssl

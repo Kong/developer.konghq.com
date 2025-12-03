@@ -66,7 +66,7 @@ Now configure Terraform to import a dashboard from {{site.konnect_short_name}}.
 ```hcl
 echo '
 import {
-  provider = "konnect-beta"
+  provider = konnect-beta
   to = konnect_dashboard.service_dashboard_template
   id = "8e66b804-a060-466a-aa6c-145e7f696228"
 }

@@ -100,7 +100,7 @@ When you create a {{site.konnect_short_name}} account, {{site.ee_product_name}},
 licenses are automatically provisioned to the organization. You do not need to manage these
 licenses manually.
 
-Any data plane nodes or {{site.kic_product_name}} associations configured through the [Gateway Manager](/gateway-manager/)
+Any data plane nodes or {{site.kic_product_name}} associations configured in {{site.konnect_short_name}}
 also implicitly receive the same license from the {{site.konnect_short_name}}
 control plane. You should never have to deal with a license directly.
 
