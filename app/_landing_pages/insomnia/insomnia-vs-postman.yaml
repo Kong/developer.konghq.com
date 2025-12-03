@@ -62,7 +62,7 @@ rows:
                   details: Run mocks locally or on your own infrastructure.
                 - title: Unlimited local usage
                   insomnia: true
-                  details: No quotas on requests, mocks, or collection runs when working locally.
+                  details: No quotas on requests or collection runs when working locally.
                 - title: Private-by-default projects
                   insomnia: true
                   details: Keep all API data local or in Git until you explicitly choose to sync.
