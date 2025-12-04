@@ -17,6 +17,7 @@ import {
   instructionFileFromConfig,
   groupInstructionFilesByProductAndRuntime,
 } from "./instructions-file.js";
+import "@dotenvx/dotenvx/config";
 
 const docker = new Dockerode({
   socketPath: "/var/run/docker.sock",
