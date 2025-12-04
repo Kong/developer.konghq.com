@@ -71,7 +71,7 @@ automated_tests: false
 
 To use OAuth2 authentication for your HashiCorp Vault with Auth0 as the identity provider (IdP), there are two important configurations to prepare in Auth0. First, you must authorize an Auth0 application so {{site.base_gateway}} can use the Auth0 Management API on your behalf. Next, you will create an API audience that {{site.base_gateway}} applications will be granted access to.
 
-To get started configuring Auth0, log in to your Auth0 dashboard and complete the following:
+To get started configuring Auth0, log in to your [Auth0 dashboard](https://manage.auth0.com/dashboard/) and complete the following:
 
 1. From the sidebar, select **Applications > Applications**.
 
