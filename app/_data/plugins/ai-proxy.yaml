@@ -601,6 +601,63 @@ providers:
         model_example: 'grok-2-image-1212'
         min_version: '3.13'
 
+  - name: 'xAI'
+    url_pattern: 'https://api.x.ai:443/{route_type_path}'
+    min_version: '3.13'
+    chat:
+      supported: true
+      streaming: false
+      upstream_path: '/v1/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'grok-4'
+      min_version: '3.13'
+    completions:
+      supported: false
+      streaming: false
+    embeddings:
+      supported: false
+      streaming: false
+    files:
+      supported: false
+      streaming: false
+    batches:
+      supported: false
+      streaming: false
+    assistants:
+      supported: false
+      streaming: false
+    responses:
+      supported: true
+      streaming: false
+      upstream_path: '/v1/responses'
+      route_type: 'llm/v1/responses'
+      model_example: 'gpt-4'
+      min_version: '3.13'
+    audio:
+      speech:
+        supported: false
+        streaming: false
+      transcriptions:
+        supported: false
+        streaming: false
+      translations:
+        supported: false
+        streaming: false
+    image:
+      generations:
+        supported: true
+        streaming: false
+        upstream_path: '/v1/images/generations'
+        route_type: 'image/v1/images/generations'
+        model_example: 'grok-2-image'
+        min_version: '3.13'
+      edits:
+        supported: false
+        streaming: false
+    realtime:
+      supported: false
+      streaming: false
+
 parameters:
   provider: 'config.targets[].model.provider'
   route_type: 'config.targets.route_type'
