@@ -44,6 +44,9 @@ When {{ site.kic_product_name }} starts running it looks for services that match
 
 {{ site.kic_product_name }} proceeds to send configuration to all detected {{ site.base_gateway }} instances using the `POST /config` endpoint on each running Data Plane. Once the Data Plane has loaded configuration, it is marked as ready and can start proxying traffic.
 
+{:.info}
+> Starting from version 3.0.3, the Kong Ingress Controller has deprecated plain HTTP connections to the Admin API service. This change affects deployments that communicate with Kong's Admin API without TLS encryption (GitHub Pull Request: https://github.com/Kong/kubernetes-ingress-controller/pull/5043/).
+
 <!--vale off-->
 {% mermaid %}
 flowchart LR
