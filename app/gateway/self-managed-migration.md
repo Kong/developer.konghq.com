@@ -130,7 +130,7 @@ a list of Workspaces for a particular {{site.base_gateway}} deployment by using 
 
 {{site.base_gateway}} Workspaces provide a way to share runtime infrastructure across isolated configurations.
 With {{site.konnect_short_name}}, this is achieved using
-[Control Plane groups](/gateway-manager/control-plane-groups/). Control Planes can be added to
+[Control Plane groups](/gateway/control-plane-groups/). Control Planes can be added to
 and removed from Control Plane groups, and you can set them up to mirror your existing multi-tenant Workspace configuration.
 
 With Control Plane groups set up, you can connect Data Plane instances to each group, creating
@@ -157,8 +157,8 @@ on [custom plugin support](/gateway/entities/plugin/#custom-plugins) requirement
 
 Migrating custom plugins to {{site.konnect_short_name}} requires uploading and associating your custom plugin's `schema.lua` file to
 the desired Control Plane. This can be done using the
-Konnect UI in [Gateway Manager](https://cloud.konghq.com/gateway-manager/) or the
-[Konnect Control Planes Config API](/api/konnect/control-planes-config/#/operations/list-plugin-schemas).
+{{site.konnect_short_name}} UI or the
+[{{site.konnect_short_name}} Control Planes Config API](/api/konnect/control-planes-config/#/operations/list-plugin-schemas).
 
 Just like in self-managed deployments, the custom plugin code must be distributed to the Data Plane instances.
 
@@ -218,8 +218,8 @@ The recommended approach for migrating your Data Plane instances to {{site.konne
 create new Data Plane instances connected to your Control Plane, validate their configuration and connectivity,
 and then decommission the self-managed Data Plane instances.
 
-See the [Data Plane hosting options](/gateway/topology-hosting-options/) for more information. The easiest
-way to deploy new Data Planes is using the {{site.konnect_short_name}} Gateway Manager, which provides integrated
+See the [Data Plane hosting options](/gateway/topology-hosting-options/) for more information. 
+The easiest way to deploy new Data Planes is using the {{site.konnect_short_name}} UI, which provides integrated
 launchers for popular operating systems and compute platforms.
 
 ## Next steps

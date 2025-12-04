@@ -16,8 +16,7 @@ related_resources:
     url: /gateway/network/
   - text: " {{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
-  - text: Mesh Manager
-    url: /mesh-manager/
+
 faqs:
   - q: What types of data travel between the {{site.konnect_short_name}} Control Plane and the Data Plane nodes, and how?
     a: |
@@ -156,6 +155,6 @@ rows:
 {:.warning}
 > **Important:** Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for a full list of regional and service ingress IPs. The `ingressIPs` section contains a list of all ingress IPs per geo and consolidated IPs per service. To avoid coupling firewall rules to specific services or DNS suffixes (such as `cp`, `tp`), we recommend allowlisting the values in the `ingressIPs` block for each region. This ensures your setup is more resilient to future infrastructure or DNS changes. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
 
-## Mesh Manager hostnames
+## Mesh hostnames in {{site.konnect_short_name}}
 
-If you use [Mesh Manager](/mesh-manager/) to manage your Kong service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+If you use {{site.konnect_short_name}} to manage your service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.

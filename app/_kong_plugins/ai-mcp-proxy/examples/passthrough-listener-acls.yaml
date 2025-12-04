@@ -1,0 +1,131 @@
+description: 'Set access control rules for passthrough-listener mode MCP servers'
+
+title: 'Configure default and per-tool access control for passthrough-listener mode MCP servers'
+
+extended_description: |
+  Configure default and per-tool access control for passthrough-listener mode MCP servers.
+
+
+  {:.info}
+  > For this configuration to work properly, you need to create the following {{site.base_gateway}} entities:
+  >
+  > ```yaml
+  > services:
+  >   - name: mcp-acl-service
+  >     url: http://host.docker.internal:3001/mcp
+  > routes:
+  >   - name: mcp-acl-route
+  >     paths:
+  >       - "/mcp"
+  >     service:
+  >       name: mcp-acl-service
+  > plugins:
+  >   - name: key-auth
+  >     config:
+  >       key_names:
+  >         - apikey
+  >
+  > consumer_groups:
+  >   - name: admin
+  >   - name: developer
+  >   - name: suspended
+  >
+  > consumers:
+  >   - username: alice
+  >     groups:
+  >       - name: admin
+  >     keyauth_credentials:
+  >       - key: alice-key
+  >
+  >   - username: bob
+  >     groups:
+  >       - name: developer
+  >     keyauth_credentials:
+  >       - key: bob-key
+  >
+  >   - username: carol
+  >     groups:
+  >       - name: suspended
+  >     keyauth_credentials:
+  >       - key: carol-key
+  >
+  >   - username: eason
+  >     keyauth_credentials:
+  >       - key: eason-key
+  > ```
+
+  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you'll need an upstream HTTP API to expose.
+  Use this mock API to test the plugin without relying on an external service. It simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+
+  ```bash
+  git clone https://github.com/tomek-labuk/marketplace-acl.git && \
+  cd marketplace-acl && \
+  npm install && \
+  npm run build && \
+  node dist/server.js
+  ```
+
+  Check [this how-to](/mcp/use-access-controls-for-mcp-tools/) for a detailed walkthrough guide.
+
+weight: 900
+
+requirements:
+  - "A running and exposed API"
+
+config:
+  mode: passthrough-listener
+  include_consumer_groups: true
+  default_acl:
+    - scope: tools
+      allow:
+        - developer
+        - admin
+      deny:
+        - suspended
+  logging:
+    log_payloads: false
+    log_statistics: true
+    log_audits: true
+  tools:
+    - description: List users
+      name: list_users
+      acl:
+        allow:
+          - admin
+          - eason
+        deny:
+          - developer
+    - description: Get user
+      name: get_user
+      acl:
+        allow:
+          - admin
+          - developer
+    - description: List orders
+      name: list_orders
+      acl:
+        allow:
+          - admin
+          - developer
+    - description: List orders for users
+      name: list_orders_for_user
+      acl:
+        allow:
+          - admin
+          - developer
+    - description: Search orders by name (case-insensitive substring)
+      name: search_orders
+      acl:
+        allow:
+          - admin
+        deny:
+          - developer
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: mcp-acls

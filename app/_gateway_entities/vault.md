@@ -20,7 +20,7 @@ related_resources:
   - text: Managing sensitive data with decK
     url: /deck/gateway/sensitive-data/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 
 faqs:
@@ -98,6 +98,39 @@ faqs:
 
       {{site.base_gateway}} uses the client token retrieved in the authentication step to call the Read Secret API and retrieve the secret value. The request varies depending on the secrets engine version you're using.
       {{site.base_gateway}} will parse the response of the read secret API automatically and return the secret value.
+  - q: Can Azure Key Vault be used with a proxy?
+    a: |
+      {% new_in 3.12 %} Yes. Azure Key Vault supports proxy configuration using either environment variables or client constructor arguments.
+
+      **Environment variables**
+
+      ```sh
+      export AZURE_HTTP_PROXY=http://proxy.example.com:8080
+      export AZURE_HTTPS_PROXY=http://proxy.example.com:8080
+      export AZURE_NO_PROXY=localhost,127.0.0.1,.local
+      export AZURE_AUTH_USERNAME=proxyuser
+      export AZURE_AUTH_PASSWORD=proxypass
+      ```
+
+      **Constructor arguments**
+
+      ```lua
+      local azure_client = require("resty.azure"):new({
+        tenant_id = "tenant-uuid",
+        client_id = "app-registration-client-id",
+        client_secret = "app-registration-client-secret",
+        http_proxy = "http://proxy.example.com:8080",
+        https_proxy = "http://proxy.example.com:8080",
+        no_proxy = "localhost,127.0.0.1,.local",
+        auth_username = "proxyuser",
+        auth_password = "proxypass",
+      })
+      ```
+
+      {:.info}
+      > **Notes:**
+      > * Constructor arguments take precedence over environment variables.
+      > * When `auth_username` and `auth_password` are provided, they will be automatically converted to a Basic authentication header for both HTTP and HTTPS proxy authorization.
 
 tools:
     - admin-api

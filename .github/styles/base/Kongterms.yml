@@ -16,5 +16,5 @@ swap:
   Kong Gateway Operator: "{{site.gateway_operator_product_name}}"
   "{{site.kgo_product_name}}": "{{site.gateway_operator_product_name}}"
   ServiceHub: Service Hub
-  Runtime Manager: Gateway Manager
+  Runtime Manager: API Gateway
   dbless: DB-less
