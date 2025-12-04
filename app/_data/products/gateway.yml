@@ -2182,6 +2182,9 @@ release_dates:
 
 public_keys:
   # e.g.: https://cloudsmith.io/~kong/repos/internal-gateway-37/pub-keys/
+  "313":
+    rsa_key: 45BBB5BD8790E760
+    gpg_key: B3A98B904066BD1F
   "312":
     rsa_key: CF99E3B118DABBFB
     gpg_key: 875433A518B93006
