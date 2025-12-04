@@ -99,7 +99,7 @@ columns:
   - title: Supported APIs
     key: apis
 rows:
-  - llm_format: "[`gemini`](./examples/gemini-native-routes/)"
+  - llm_format: "`gemini`"
     provider: Gemini
     apis: |
       - `/v1beta/models/{model_name}:generateContent`
@@ -109,7 +109,7 @@ rows:
       - `/v1beta/batches`
       - `/upload/{file_id}/files`
       - `/v1beta/files`
-  - llm_format: "[`gemini`](./examples/gemini-native-routes/)"
+  - llm_format: "`gemini`"
     provider: Vertex
     apis: |
       - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:generateContent`
@@ -119,7 +119,7 @@ rows:
       - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:predictLongRunning`
       - `/v1/projects/{project_id}/locations/{location}/rankingConfigs/{config_name}:rank`
       - `/v1/projects/{project_id}/locations/{location}/batchPredictionJobs`
-  - llm_format: "[`bedrock`](./examples/bedrock-native-routes/)"
+  - llm_format: "`bedrock`"
     provider: Bedrock
     apis: |
       - `/model/{model_name}/converse`
@@ -131,16 +131,22 @@ rows:
       - `/model/{model_name}/rerank`
       - `/model/{model_name}/async-invoke`
       - `/model-invocations`
-  - llm_format: "[`cohere`](./examples/cohere-native-routes/)"
+  - llm_format: "`cohere`"
     provider: Cohere
     apis: |
       - `/v1/rerank`
       - `/v2/rerank`
-  - llm_format: "[`huggingface`](./examples/hugging-face-native-routes/)"
+  - llm_format: "`huggingface`"
     provider: Hugging Face
     apis: |
       - `/generate`
       - `/generate_stream`
+  - llm_format: "`anthropic`"
+    provider: Hugging Face
+    apis: |
+      - `/v1/messages`
+      - `/v1/messages/batches`
+
 {% endtable %}
 <!-- vale on -->
 

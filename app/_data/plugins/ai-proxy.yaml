@@ -24,12 +24,23 @@ providers:
       model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
       min_version: '3.11'
     batches: # Native format from SDK only
-      supported: true
+      supported: 'n/a'
       streaming: false
       upstream_path: 'Uses the <code>ModelInvocationJob</code> API'
       route_type: 'llm/v1/batches'
       model_example: 'n/a'
-      min_version: '3.13'
+      min_version: ''
+      note:
+        content: 'Batches processing for Bedrock is supported in the native format from SDK only'
+    files:
+      supported: 'n/a'
+      streaming: false
+      upstream_path: '/openai/files'
+      route_type: 'llm/v1/files'
+      model_example: 'n/a'
+      min_version: ''
+      note:
+        content: 'Bedrock does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to AWS S3.'
     image:
       generations:
         supported: true
@@ -71,6 +82,15 @@ providers:
       route_type: 'llm/v1/completions'
       model_example: 'claude-2.1'
       min_version: '3.6'
+    batches: # Native format from SDK only
+      supported: 'n/a'
+      streaming: true
+      upstream_path: '/v1/messages/batches'
+      route_type: 'files/v1/batches'
+      model_example: 'n/a'
+      min_version: ''
+      note:
+        content: 'Batches processing for Antropic is supported in the native format from SDK only'
 
   - name: 'Azure'
     url_pattern: 'https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{route_type_path}'
@@ -264,19 +284,23 @@ providers:
       model_example: 'text-embedding-004'
       min_version: '3.11'
     files: # Native format from SDK only
-      supported: true
+      supported: 'n/a'
       streaming: false
       upstream_path: 'Uses <code>uploadFile</code> and <code>files</code> API'
       route_type: 'llm/v1/files'
       model_example: 'n/a'
-      min_version: '3.13'
+      min_version: ''
+      note:
+        content: 'Files processing for Gemini is supported in the native format from SDK only'
     batches: # Native format from SDK only
-      supported: true
+      supported: 'n/a'
       streaming: false
       upstream_path: 'Uses <code>batches</code> API'
       route_type: 'llm/v1/batches'
       model_example: 'n/a'
-      min_version: '3.13'
+      min_version: ''
+      note:
+        content: 'Batches processing for Gemini is supported in the native format from SDK only'
     image:
       generations:
         supported: true
@@ -299,6 +323,8 @@ providers:
       route_type: 'realtime/v1/realtime'
       model_example: 'gemini-live-2.5-flash-preview-native-audio-09-2025'
       min_version: '3.13'
+      note:
+        content: 'Realtime processing for Gemini is supported in the native format from SDK only'
     video:
       generations:
         supported: true
@@ -332,7 +358,16 @@ providers:
       route_type: 'llm/v1/embeddings'
       model_example: 'text-embedding-004'
       min_version: '3.11'
-    batches: # Native format from SDK only
+    files:
+      supported: 'n/a'
+      streaming: false
+      upstream_path: '/openai/files'
+      route_type: 'llm/v1/files'
+      model_example: 'n/a'
+      min_version: '3.11'
+      note:
+        content: 'Gemini Vertex does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+    batches:
       supported: true
       streaming: false
       upstream_path: 'Uses <code>batchPredictionJobs</code> API'
@@ -539,7 +574,7 @@ providers:
         route_type: 'video/v1/videos/generations'
         model_example: 'sora-2'
         min_version: '3.13'
-  
+
   - name: 'xAI'
     url_pattern: 'https://api.x.ai/{route_type_path}'
     min_version: '3.13'

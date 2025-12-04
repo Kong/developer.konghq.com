@@ -63,6 +63,13 @@
     plugin=plugin %}
 {% endnavtab %}
 
+{% navtab "Cerebras" %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Cerebras"
+    plugin=plugin %}
+{% endnavtab %}
+
 {% navtab "Cohere" %}
   {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
     providers=providers
@@ -106,6 +113,13 @@
   {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
     providers=providers
     provider_name="Mistral"
+    plugin=plugin %}
+{% endnavtab %}
+
+{% navtab "xAI" %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="xAI"
     plugin=plugin %}
 {% endnavtab %}
 
