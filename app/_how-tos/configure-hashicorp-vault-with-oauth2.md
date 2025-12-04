@@ -144,7 +144,7 @@ To get started configuring Auth0, log in to your [Auth0 dashboard](https://manag
   
 1. Add a secret:
    ```
-   vault kv put -mount="secret" "password" pass=mypassword
+   vault kv put -mount="secret" "password" pass1=my-password
    ```
 
 1. Export the HashiCorp host and token to your environment:
@@ -163,7 +163,7 @@ To get started configuring Auth0, log in to your [Auth0 dashboard](https://manag
 
 1. Click **Policies**.
 
-1. Click **_default**.
+1. Click **default**.
 
 1. Click **Edit policy** and add the following to the policy file:
    ```
@@ -218,7 +218,7 @@ To validate that the secret was stored correctly in HashiCorp Vault, you can cal
 
 {% validation vault-secret %}
 secret: '{vault://hashicorp-vault/password/pw1}'
-value: 'mypassword'
+value: 'my-password'
 {% endvalidation %}
 
 If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://hashicorp-vault/password/pass1}` to reference the secret in any referenceable field.
