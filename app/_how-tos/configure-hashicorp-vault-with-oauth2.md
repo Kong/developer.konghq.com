@@ -19,6 +19,7 @@ related_resources:
 
 works_on:
     - on-prem
+    - konnect
 
 min_version:
   gateway: '3.13'
@@ -39,6 +40,13 @@ tldr:
 tools:
     - deck
 
+
+prereqs:
+  inline: 
+    - title: Auth0
+      content: |
+        You'll need an [Auth0 account](https://auth0.com/) to complete this tutorial.
+      icon_url: /assets/icons/third-party/auth0.svg
 
 cleanup:
   inline:
@@ -108,3 +116,130 @@ next_steps:
 automated_tests: false
 ---
 
+## Configure access to the Auth0 Management API
+
+To use OAuth2 authentication for your HashiCorp Vault with Auth0 as the identity provider (IdP), there are two important configurations to prepare in Auth0. First, you must authorize an Auth0 application so {{site.base_gateway}} can use the Auth0 Management API on your behalf. Next, you will create an API audience that {{site.base_gateway}} applications will be granted access to.
+
+{{site.base_gateway}} will use a client ID and secret from an Auth0 application that has been authorized to perform specific actions in the Auth0 Management API.
+
+To get started configuring Auth0, log in to your Auth0 dashboard and complete the following:
+
+1. From the sidebar, select **Applications > Applications**.
+
+1. Click **Create Application**.
+
+1. Give the application a memorable name, like "HashiCorp Vault OAuth2".
+
+1. Select the application type **Machine to Machine Applications** and click **Create**.
+
+1. Select **Auth0 Management API** from the drop-down list.
+
+1. In the **Permissions** section, select the following permissions to grant access, then click **Authorize**:
+   * `read:client_grants`
+   * `create:client_grants`
+   * `delete:client_grants`
+   * `update:client_grants`
+   * `read:clients`
+   * `create:clients`
+   * `delete:clients`
+   * `update:clients`
+   * `update:client_keys`
+  
+   {:.info}
+   > **Note:** If you’re using Developer Managed Scopes, add `read:resource_servers` to the permissions for your initial client application.
+
+1. Click **Authorize**.
+
+1. On the application page, click the **Settings** tab, locate the values for **Domain**, **Client ID** and **Client Secret**, and export them as environment variables:
+
+   ```sh
+   export DECK_DOMAIN="YOUR AUTH0 DOMAIN"
+   export DECK_CLIENT_ID="YOUR AUTH0 CLIENT ID"
+   export DECK_CLIENT_SECRET="YOUR AUTH0 CLIENT SECRET"
+   ```
+
+## Configure your HashiCorp Vault
+
+{:.warning}
+> **Important:** This tutorial uses the literal `root` string as your token, which should only be used in testing and development environments.
+
+1. [Install HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault).
+1. In a new terminal, start your Vault dev server with `root` as your token.
+   ```
+   vault server -dev -dev-root-token-id root
+   ```
+
+1. In the output from the previous command, copy the `VAULT_ADDR` to export.
+1. In the terminal window where you exported your Auth0 variables, export your `VAULT_ADDR` as an environment variable.
+1. Verify that your Vault is running correctly:
+   ```
+   vault status
+   ```
+
+1. Enable JWT and add the Auth0 JWKS URL:
+   ```
+   vault auth enable jwt
+   vault write auth/jwt/config jwks_url="https://$DECK_DOMAIN/.well-known/jwks.json"
+   ```
+
+1. Configure a JWT role named `demo`:
+   ```
+   vault write auth/jwt/role/demo \
+    role_type=jwt \
+    user_claim=sub \
+    token_type=batch \
+    token_policies="read" \
+    bound_subject="$DECK_CLIENT_ID@clients" \
+    bound_audiences="https://$DECK_DOMAIN/api/v2/"
+   ```
+  
+1. Add a secret:
+   ```
+   vault kv put -mount="secret" "passwd" db=good
+   ```
+
+## Create a Vault entity for HashiCorp Vault 
+
+Using decK, create a Vault entity in the `kong.yaml` file with the required parameters for HashiCorp Vault:
+
+{% entity_examples %}
+entities:
+  vaults:
+    - name: hcv
+      prefix: hashicorp-vault
+      description: Storing secrets in HashiCorp Vault
+      config:
+        auth_method: oauth2
+        oauth2_role_name: demo
+        oauth2_token_endpoint: https://${domain}/oauth/token
+        oauth2_client_id: ${client_id}
+        oauth2_client_secret: ${client_secret}
+
+variables:
+  domain:
+    value: $DOMAIN
+  client_id:
+    value: $CLIENT_ID
+  client_secret:
+    value: $CLIENT_SECRET
+{% endentity_examples %}
+
+## Validate
+
+Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
+{: data-deployment-topology="konnect" }
+```sh
+export KONNECT_DP_CONTAINER='your-dp-container-name'
+```
+{: data-deployment-topology="konnect" }
+
+To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
+
+{% validation vault-secret %}
+secret: '{vault://hashicorp-vault/passwd/db}'
+value: 'ACME Inc.'
+{% endvalidation %}
+
+If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://hashicorp-vault/passwd/db}` to reference the secret in any referenceable field.
+
+For more information about supported secret types, see [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret).  
