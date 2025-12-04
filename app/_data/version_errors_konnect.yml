@@ -3236,7 +3236,7 @@ messages:
       Remove the invalid Datakit config element or upgrade to a version that supports
       it.
     DocumentationURL: |
-      N/A
+      [Plugins Datakit](/plugins/datakit/)
   - ID: D440
     Severity: error
     Description: |
@@ -3245,7 +3245,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      N/A
+      [Targets](/gateway/entities/target/)
   - ID: D441
     Severity: error
     Description: |
@@ -3436,7 +3436,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.10 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility)    
+      [Compatibility](/konnect-platform/compatibility/)    
   - ID: P001
     Severity: error
     Description: |
@@ -5634,7 +5634,7 @@ messages:
       Enable streaming custom plugin support on the data plane node or remove
       custom-plugin entities from the config.
     DocumentationURL: |
-      [Custom Plugin](/gateway/latest/plugin-development)
+      [Custom Plugin](/custom-plugins/)
   - ID: P310
     Severity: error
     Description: |
@@ -5692,7 +5692,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      [Cors plugin](/plugins/cors/)
+      [`CORS` plugin](/plugins/cors/)
       
   - ID: P315
     Severity: error
