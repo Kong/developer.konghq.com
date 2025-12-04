@@ -547,7 +547,7 @@ rows:
     description: |
       Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, `approle`, or `oauth2`.
 
-      For OAuth2, te IdP SSL certificate must be present in the Lua SSL trusted certificate when using HTTPS.
+      For OAuth2, the IdP SSL certificate must be present in the Lua SSL trusted certificate when using HTTPS.
   - parameter: |
       `vaults.config.kube_role` {% new_in 3.1 %}
     field-name: Kubernetes Role
