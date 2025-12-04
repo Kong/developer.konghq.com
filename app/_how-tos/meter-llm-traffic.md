@@ -63,7 +63,7 @@ entities:
 
 ## Create a meter
 
-In Metering & Billing, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and auditable data.
+In Metering & Billing, meters track and record the consumption of a resource or service over time.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
 1. Enable **AI Gateway Tokens**.
@@ -95,7 +95,7 @@ Plans are the core building blocks of your product catalog. They are a collectio
 
 A rate card describes price and usage limits or access control for a feature or item. Rate cards are made up of the associated feature, price, and optional usage limits or access control for the feature, called entitlements.
 
-In this section, you'll create a Premium plan that charges custosmers based on the AI token usage at a rate of $0.00002 per use.
+In this section, you'll create a Premium plan that charges customers based on the AI token usage at a rate of $0.00002 per use.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
 1. In the Metering & Billing sidebar, click **Product Catalog**.
