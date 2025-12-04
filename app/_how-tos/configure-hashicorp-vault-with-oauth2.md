@@ -188,15 +188,42 @@ To get started configuring Auth0, log in to your Auth0 dashboard and complete th
     role_type=jwt \
     user_claim=sub \
     token_type=batch \
-    token_policies="read" \
+    token_policies="default" \
     bound_subject="$DECK_CLIENT_ID@clients" \
     bound_audiences="https://$DECK_DOMAIN/api/v2/"
    ```
   
 1. Add a secret:
    ```
-   vault kv put -mount="secret" "passwd" db=good
+   vault kv put -mount="secret" "password" pass=mypassword
    ```
+
+1. Export the HashiCorp host and token to your environment:
+   ```
+   export DECK_HCV_HOST=host.docker.internal
+   export DECK_HCV_TOKEN=root
+   ```
+
+   In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault uses by default. This is because if you used the quick-start script {{site.base_gateway}} is running in a Docker container and uses a different `localhost`. Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value.
+
+## Allow read access to your HashiCorpVault
+
+1. Navigate to [](http://localhost:8200/) to access the HashiCorp Vault UI.
+
+1. Enter "root" in the **Token** field and click **Sign in**.
+
+1. Click **Policies**.
+
+1. Click **_default**.
+
+1. Click **Edit policy** and add the following to the policy file:
+   ```
+   path "secret/*" {
+    capabilities = ["read"]
+   }
+   ```
+
+1. Click **Save**
 
 ## Create a Vault entity for HashiCorp Vault 
 
@@ -209,13 +236,24 @@ entities:
       prefix: hashicorp-vault
       description: Storing secrets in HashiCorp Vault
       config:
+        host: ${hcv_host}
+        token: ${hcv_token}
+        kv: v2
+        mount: secret
+        port: 8200
+        protocol: http
         auth_method: oauth2
         oauth2_role_name: demo
         oauth2_token_endpoint: https://${domain}/oauth/token
         oauth2_client_id: ${client_id}
         oauth2_client_secret: ${client_secret}
+        oauth2_audiences: https://${domain}/api/v2/
 
 variables:
+  hcv_host:
+    value: $HCV_HOST
+  hcv_token:
+    value: $HCV_TOKEN
   domain:
     value: $DOMAIN
   client_id:
@@ -224,22 +262,16 @@ variables:
     value: $CLIENT_SECRET
 {% endentity_examples %}
 
-## Validate
 
-Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
-{: data-deployment-topology="konnect" }
-```sh
-export KONNECT_DP_CONTAINER='your-dp-container-name'
-```
-{: data-deployment-topology="konnect" }
+## Validate
 
 To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
 
 {% validation vault-secret %}
-secret: '{vault://hashicorp-vault/passwd/db}'
-value: 'ACME Inc.'
+secret: '{vault://hashicorp-vault/password/pw1}'
+value: 'mypassword'
 {% endvalidation %}
 
-If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://hashicorp-vault/passwd/db}` to reference the secret in any referenceable field.
+If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://hashicorp-vault/password/pass1}` to reference the secret in any referenceable field.
 
 For more information about supported secret types, see [What can be stored as a secret](/gateway/entities/vault/#what-can-be-stored-as-a-secret).  
