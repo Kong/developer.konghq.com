@@ -127,7 +127,7 @@ rows:
 
 ## Configuring SSL connections through kong.conf
 
-You can directly upload certificates and keys to {{site.base_gateway}} through configuration in `kong.conf`.
+You can directly upload certificates and keys to {{site.base_gateway}} through [configuration in `kong.conf`](/gateway/configuration/).
 
 All of the following parameters can also be set via [environment variables](/gateway/manage-kong-conf/).
 
@@ -145,6 +145,7 @@ config:
   - name: status_ssl_cert
   - name: status_ssl_cert_key
   - name: lua_ssl_trusted_certificate
+  - name: tls_certificate_verify
 directives:
   - name: nginx_proxy_proxy_ssl_trusted_certificate
     description: |
@@ -153,3 +154,10 @@ directives:
 <!--vale on-->
 
 {{site.base_gateway}} also provides many customization settings for SSL connections. See the [Kong Configuration Reference](/gateway/configuration/) for all available options.
+
+### Using TLS verification {% new_in 3.13 %}
+
+You can set [`tls_certificate_verify`](/gateway/configuration/#tls_certificate_verify) to `true` to enforce global certificate verification when connecting to secure endpoints.
+When this setting is enabled, configurations containing Services or plugins where `tls_verify` is set to `off` will fail to be inserted or updated. You will need to manually update each Service or plugin instance to resolve this error.
+
+If you need finer-grained control, you can also enable TLS certificate verification on a plugin-by-plugin basis. See the TLS verification setting for your [plugin](/plugins/) by choosing a plugin, going to the Configuration Reference tab for that plugin doc, and looking for the `*_verify` option.
