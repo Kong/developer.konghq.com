@@ -160,9 +160,9 @@ rows:
             ctas:
               - text: Reference
                 url: "/catalog/integrations/azure-devops/"
-              - text: Tutorial ({{site.konnect_short_name}} API)
+              - text: Connect Azure DevOps repositories to Catalog with the Konnect API
                 url: "/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/"
-              - text: Tutorial ({{site.konnect_short_name}} UI)
+              - text: Connect Azure DevOps repositories to Catalog with the Konnect UI
                 url: "/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/"        
   
   - header:
