@@ -157,7 +157,7 @@ To get started configuring Auth0, log in to your [Auth0 dashboard](https://manag
 
 ## Allow read access to your HashiCorpVault
 
-1. Navigate to [](http://localhost:8200/) to access the HashiCorp Vault UI.
+1. Navigate to [http://localhost:8200/](http://localhost:8200/) to access the HashiCorp Vault UI.
 
 1. Enter "root" in the **Token** field and click **Sign in**.
 
@@ -217,7 +217,7 @@ variables:
 To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
 
 {% validation vault-secret %}
-secret: '{vault://hashicorp-vault/password/pw1}'
+secret: '{vault://hashicorp-vault/password/pass1}'
 value: 'my-password'
 {% endvalidation %}
 
