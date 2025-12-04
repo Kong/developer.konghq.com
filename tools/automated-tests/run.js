@@ -28,11 +28,11 @@ function checkEnvVariables() {
     console.error("Missing env variable KONG_LICENSE_DATA");
     process.exit(1);
   }
-  if (!process.env.PRODUCT) {
-    console.error("Missing env variable PRODUCT");
+  if (!process.env.PRODUCTS) {
+    console.error("Missing env variable PRODUCTS");
     process.exit(1);
   }
-  if (process.env.PRODUCT === "gateway" && !process.env.PRODUCT) {
+  if (process.env.PRODUCTS === "gateway" && !process.env.PRODUCTS) {
     console.error("Missing env variable RUNTIME");
     process.exit(1);
   }
@@ -66,10 +66,11 @@ export async function loadConfig() {
     const filesByProductAndRuntime =
       await groupInstructionFilesByProductAndRuntime(files);
 
+    const products = process.env.PRODUCTS.split(",");
     for (const [product, instructionFilesByRuntime] of Object.entries(
       filesByProductAndRuntime
     )) {
-      if (process.env.PRODUCT !== product) {
+      if (!products.includes(product)) {
         continue;
       }
 
@@ -98,9 +99,9 @@ export async function loadConfig() {
           results.push(result);
         }
         await cleanupRuntime(runtimeConfig, product, container);
+        await afterAll(testsConfig, container);
       }
     }
-    await afterAll(testsConfig, container);
     await stopContainer(container);
     await removeContainer(container);
   } catch (error) {

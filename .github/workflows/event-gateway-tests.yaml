@@ -51,7 +51,7 @@ jobs:
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           RUNTIME: konnect
-          PRODUCT: event-gateway
+          PRODUCTS: event-gateway
           TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
         run: |
           DEBUG=tests:*,debug npm run run-tests
