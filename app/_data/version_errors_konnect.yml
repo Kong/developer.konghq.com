@@ -5750,7 +5750,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      [Key entity](/gateway/api/admin-ee/latest/#/Key)
+      [Key entity](/gateway/entities/key/)
   - ID: P320
     Severity: warning
     Description: |
