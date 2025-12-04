@@ -1984,7 +1984,7 @@ messages:
     Resolution: |
       Remove the unsupported plugins
     DocumentationURL: |
-      [Unsupported Plugins in Cloud Gateways](/konnect/gateway-management/cloud-gateway/#unsupported-plugins)
+      [Kong Gateway Plugins Compatibility](/plugins/compatibility/)
   - ID: D290
     Severity: error
     Description: |
@@ -2009,7 +2009,7 @@ messages:
       3.9.1.0 or above for the 3.9.x series or newer than `3.10.0.0`, or use a
       supported AWS region.
     DocumentationURL: |
-      [AWS Vaults](/gateway/vaults/aws/)
+      [Vault provider-specific configuration parameters](/gateway/entities/vault/?tab=aws#vault-provider-specific-configuration-parameters)
   - ID: D292
     Severity: error
     Description: |
@@ -2332,7 +2332,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
-      [AI Plugins](/gateway/configuration/plugins/ai-plugins/)
+      [Kong Plugin Hub](/plugins/)
   - ID: D330
     Severity: error
     Description: |
@@ -2412,7 +2412,7 @@ messages:
       Please either update the redis timeout values to be the same or upgrade to Kong
       Gateway to versions 3.10.0.1 and above.
     DocumentationURL: |
-      [Redis configuration for plugins](/gateway/configuration/plugins/plugin-redis-configuration/)
+      [Kong Plugins](/plugins/))
   - ID: D337
     Severity: error
     Description: |
@@ -2462,7 +2462,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/)
   - ID: D342
     Severity: error
     Description: |
@@ -2490,7 +2490,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/#vault-provider-specific-configuration-parameters)
   - ID: D350
     Severity: error
     Description: |
@@ -2500,7 +2500,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/)
   - ID: D351
     Severity: error
     Description: |
@@ -2536,7 +2536,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      [Upstream entity](/gateway/api/admin-ee/latest/#/Upstream)
+      [Upstream entity](/gateway/entities/upstream/)
   - ID: D354
     Severity: error
     Description: |
@@ -2641,7 +2641,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.10.0.6` or above.
     DocumentationURL: |
-      [Service entity](/gateway/api/admin-ee/latest/#/Service)
+      [Service entity](/gateway/entities/service/)
   - ID: D365
     Severity: error
     Description: |
@@ -2854,7 +2854,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.7.0.0` or above.
     DocumentationURL: |
-      [Route entity](/gateway/api/admin-ee/latest/#/Route)
+      [Route entity](/gateway/entities/route/)
   - ID: D402
     Severity: error
     Description: |
@@ -3118,7 +3118,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      [ACE plugin](/plugins/ace/)
+      N/A
   - ID: D428
     Severity: error
     Description: |
@@ -3198,7 +3198,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.12.0.0` or above.
     DocumentationURL: |
-      N/A
+      [JWT Signer plugin](/plugins/jwt-signer/)
   - ID: D436
     Severity: error
     Description: |
@@ -3227,7 +3227,7 @@ messages:
     Resolution: |
       Remove the invalid Datakit node or upgrade to a version that supports it.
     DocumentationURL: |
-      N/A
+      [Plugins Datakit](/plugins/datakit/)
   - ID: D439
     Severity: error
     Description: |
