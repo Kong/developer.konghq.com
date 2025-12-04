@@ -2412,7 +2412,7 @@ messages:
       Please either update the redis timeout values to be the same or upgrade to Kong
       Gateway to versions 3.10.0.1 and above.
     DocumentationURL: |
-      [Kong Plugins](/plugins/))
+      [Kong Plugins](/plugins/)
   - ID: D337
     Severity: error
     Description: |
