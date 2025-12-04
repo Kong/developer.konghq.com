@@ -10,6 +10,8 @@ related_resources:
     url: /gateway/secrets-management/
   - text: Configure HashiCorp Vault as a vault backend with certificate authentication
     url: /how-to/configure-hashicorp-vault-with-cert-auth/
+  - text: Configure HashiCorp Vault as a vault backend with OAuth2
+    url: /how-to/configure-hashicorp-vault-with-oauth2/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
   - text: Configure Hashicorp Vault with {{ site.kic_product_name }}
