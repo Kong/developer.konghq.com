@@ -84,7 +84,10 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-Configure the AI Proxy plugin for the [AWS Bedrock provider](/ai-gateway/ai-providers/#bedrock). This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route. The configuration also raises the maximum request body size to 512 KB to support larger prompts.
+Configure the AI Proxy plugin for the [AWS Bedrock provider](/ai-gateway/ai-providers/#bedrock).
+
+* This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
+* The configuration also raises the maximum token count to 8192 KB to support larger prompts.
 
 The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Bedrock endpoint.
 

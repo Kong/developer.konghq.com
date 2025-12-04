@@ -86,8 +86,7 @@ cleanup:
 
 First, configure the AI Proxy plugin for the Gemini provider.
 * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
-* The configuration also raises the maximum request body size to 512 KB to support larger prompts.
-* You don't pass the API key here. The client-side prerequisite steps store and supply it through the [helper script](#claude-code-cli).
+* The configuration also raises the maximum tokens count size to 8192 to support larger prompts.
 
 The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Gemini endpoint.
 

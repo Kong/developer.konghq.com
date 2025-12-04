@@ -1,5 +1,5 @@
 ---
-title: Route Claude CLI traffic through Kong AI Gateway
+title: Route Claude CLI traffic through Kong AI Gateway and Anthropic
 content_type: how_to
 
 related_resources:
@@ -72,7 +72,6 @@ cleanup:
 First, configure the AI Proxy plugin for the [Anthropic provider](/ai-gateway/ai-providers/#anthropic).
 * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
 * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
-* You don't pass the API key here. The client-side steps store and supply it through the [helper script](/how-to/use-claude-code-with-ai-gateway/#claude-code-cli).
 
 Set `llm_format: anthropic` to tell Kong AI Gateway that requests and responses use Claude's native API format. This parameter controls schema validation and prevents format mismatches between Claude Code and the gateway.
 

@@ -111,15 +111,15 @@ rows:
             cta:
               url: /how-to/use-claude-code-with-ai-gateway-dashscope/
               align: end
-      # - blocks:
-      #   - type: card
-      #     config:
-      #       title: Claude Code with HuggingFace
-      #       icon: /assets/icons/huggingface.svg
-      #       description: Use Claude Code with HuggingFace provider
-      #       cta:
-      #         url: /how-to/use-claude-code-with-ai-gateway-bedrock/
-      #         align: end
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with HuggingFace
+            icon: /assets/icons/huggingface.svg
+            description: Use Claude Code with HuggingFace provider
+            cta:
+              url: /how-to/use-claude-code-with-ai-gateway-bedrock/
+              align: end
   - header:
       type: h3
       text: "Codex CLI"
