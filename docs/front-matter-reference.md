@@ -29,6 +29,7 @@ Applies to pages located under `/app/_how_tos/`.
 | `faqs` | (Optional) Array of FAQ entries in `q:` and `a:` format. Takes the following attributes:<br>  - `q`: The question displayed as the title of the collapsed section.<br>  - `a`: The answer, which is hidden in a collapsible section. | <pre>faqs:<br>  - q: What if I have a question?<br>    a: You get this answer.</pre> |
 | `series` | (Optional) Marks this page as part of a series. Takes the following attributes:<br> - `id`: Series ID, e.g. `custom-dashboards`. All items in a specific series must have the same ID.<br>  - `position`: The order this page comes in in the series, e.g. `1`. | <pre>series:<br>  id: custom-dashboards<br>  position: 1</pre>
 | `automated_tests` | (Optional) Specifies whether automated tests should run on this page. Default is `true`, set to `false` to disable on any page that can't be tested programmatically. | `automated_tests: false` |
+|`expand_accordion: false` | (Optional) doesn't expand the accordion for prereqs|
 
 Look at any how-to under [`app/_how_tos/`](https://github.com/Kong/developer.konghq.com/tree/main/app/_how-tos) for examples.
 
