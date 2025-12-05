@@ -44,7 +44,7 @@ You need to configure the following:
 - An [Azure DevOps account](https://azure.microsoft.com/en-gb/pricing/purchase-options/azure-account?icid=devops).
 - An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code:Read` permission.
 
-### Configure the integration
+### Authenticate the Azure DevOps integration
 {% navtabs "azure-devops-integration" %}
 {% navtab "UI" %}
 
