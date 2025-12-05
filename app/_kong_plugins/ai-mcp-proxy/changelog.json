@@ -22,5 +22,32 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.2": [
+    {
+      "message": "Fixed an issue where failing to fetch tools cache was not handled properly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where trusted ip relative headers were forwarded upstream.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `tools/call` could accept malformed requests and generate wrong responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where path invalid error was not handled properly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where we could not override the upstream's scheme when converting MCP tool to RESTful API.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }
