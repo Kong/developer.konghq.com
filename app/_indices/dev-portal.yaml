@@ -32,8 +32,6 @@ sections:
       - path: /dev-portal/customizations/dev-portal-customizations/
       - path: /dev-portal/pages-and-content/
       - path: /dev-portal/custom-domains/
-      - path: /dev-portal/customization-settings/
-      - path: /dev-portal/portal-customization/
   - title: Access and approvals
     items:
       - path: /dev-portal/team-mapping/
