@@ -14,4 +14,3 @@ after:
     - docker rm -f automated-tests-keycloak
     - docker rm -f redis-stack-server
     - docker rm -f vault
-    - pkill vault || true
