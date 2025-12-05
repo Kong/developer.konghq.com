@@ -5,16 +5,12 @@
 {% endif %}
 {% capture details_content %}
 
-<!-- TODO: remove this if condition once KO v2.1.0 is out -->
-{% if include.v_maj == 1 %}
 1. Add the Kong Helm charts:
 
    ```bash
    helm repo add kong https://charts.konghq.com
    helm repo update
    ```
-
-{% endif %}
 
 1. Install {{ site.operator_product_name }} using Helm:
 
