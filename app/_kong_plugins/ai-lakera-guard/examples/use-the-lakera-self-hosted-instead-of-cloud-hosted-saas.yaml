@@ -15,7 +15,7 @@ variables:
     value: "https://my-lakera.svc.cluster.local:8443/v2/guard"
 
 config:
-  lakera_service_url: "https://my-lakera.svc.cluster.local:8443/v2/guard"
+  lakera_service_url: ${lakera_service_url}
 
 min_version:
   gateway: '3.13'

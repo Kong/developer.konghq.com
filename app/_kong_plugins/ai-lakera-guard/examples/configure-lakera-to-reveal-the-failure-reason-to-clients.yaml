@@ -16,13 +16,10 @@ variables:
   project_id: 
     description: "The Lakera project identifier used to evaluate the request."
     value: project-9418537666
-  reveal_failure_categories: 
-    description: "Set to true to return failure-category details to clients when a request is blocked."
-    value: true  
 
 config:
-  api_key:  "${lakera_api_key}"
-  project_id: "project-9418537666"
+  api_key:  ${lakera_api_key}
+  project_id: ${project_id}
   reveal_failure_categories: true
 
 min_version:
