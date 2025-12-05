@@ -37,12 +37,12 @@ tags:
   - helm
 ---
 
-{% assign gwapi_version = "1.3.0" %}
+{% assign gwapi_version = "1.4.0" %}
 
 ## Install CRDs
 
 ```shell
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ gwapi_version }}/standard-install.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ gwapi_version }}/standard-install.yaml --server-side
 ```
 
 ## Cert-Manager integration
@@ -53,9 +53,11 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {: data-deployment-topology="konnect" }
 {% include prereqs/products/operator.md raw=true v_maj=2 platform="konnect" %}
+{: data-deployment-topology="konnect" }
 
 {: data-deployment-topology="on-prem" }
 {% include prereqs/products/operator.md raw=true v_maj=2 platform="on-prem" %}
+{: data-deployment-topology="on-prem" }
 
 ## Validate
 
