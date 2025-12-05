@@ -2,7 +2,7 @@
 title: Create API Authentication
 description: Set up authentication between your Kubernetes cluster and {{ site.konnect_short_name }} using the `KonnectAPIAuthConfiguration` and `KonnectExtension` resources.
 content_type: how_to
-permalink: /operator/konnect/get-started/authentication/
+permalink: /operator/get-started/konnect-crds/authentication/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,7 +12,7 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
+  id: operator-get-started-konnect-crds
   position: 2
 
 tldr:
