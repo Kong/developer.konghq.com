@@ -80,7 +80,10 @@ Replace the placeholder with your OpenAI API key and run:
 
 {% validation custom-command %}
 command: |
-  vault kv put secret/openai key=$DECK_OPENAI_API_KEY
+  curl -X POST http://127.0.0.1:8200/v1/secret/data/openai \
+       -H "X-Vault-Token: $VAULT_TOKEN" \
+       -H "Content-Type: application/json" \
+       --data '{"data": {"key": "'$DECK_OPENAI_API_KEY'" }}'
 expected:
   return_code: 0
 render_output: false
@@ -90,7 +93,10 @@ Next, replace the placeholder with your Mistral API key and run:
 
 {% validation custom-command %}
 command: |
-  vault kv put secret/mistral key=$DECK_MISTRAL_API_KEY
+  curl -X POST http://127.0.0.1:8200/v1/secret/data/mistral \
+       -H "X-Vault-Token: $VAULT_TOKEN" \
+       -H "Content-Type: application/json" \
+       --data '{"data": {"key": "'$DECK_MISTRAL_API_KEY'" }}'
 expected:
   return_code: 0
 render_output: false
