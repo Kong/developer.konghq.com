@@ -12,15 +12,29 @@ async function extractPrereqsBlocks(page) {
   // As an alternative, the prereq (accordion-item) could have the data-test-prereqs set,
   // and we could extract all the codeblocks it contains.
   const instructions = [];
-  const blocks = await page.locator("[data-test-prereqs='block']").all();
+  const blocks = await page.locator("[data-test-prereqs]").all();
 
   for (const elem of blocks) {
     if (await elem.isVisible()) {
-      const copy = await elem.locator(".copy-action");
-      await copy.click();
+      const instruction = await elem.getAttribute("data-test-prereqs");
 
-      const copiedText = await copyFromClipboard(page);
-      instructions.push(copiedText);
+      if (instruction === "block") {
+        const copy = await elem.locator(".copy-action");
+        await copy.click();
+
+        const copiedText = await copyFromClipboard(page);
+        instructions.push(copiedText);
+      } else {
+        try {
+          const json = JSON.parse(instruction);
+          instructions.push(json);
+        } catch (error) {
+          console.error(
+            "There was an error parsing the prereq instruction:",
+            error
+          );
+        }
+      }
     }
   }
   return instructions;
