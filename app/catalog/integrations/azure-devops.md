@@ -2,7 +2,7 @@
 title: "Azure DevOps"
 content_type: reference
 layout: reference
-icon: /assets/icons/third-party/azuredevops.png
+icon: /assets/icons/azure-devops.svg
 
 products:
   - catalog
