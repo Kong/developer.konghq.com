@@ -164,6 +164,19 @@ rows:
                 url: "/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/"
               - text: Tutorial ({{site.konnect_short_name}} UI)
                 url: "/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/"        
+      - blocks:
+        - type: card
+          config:
+            title: SonarQube
+            description: Connect SonarQube SaaS projects directly to your {{site.konnect_catalog}} services.
+            icon: /assets/icons/third-party/sonarqube.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/sonarqube/"
+              - text: Tutorial ({{site.konnect_short_name}} API)
+                url: "/how-to/monitor-sonarqube-projects-with-konnect-api/"
+              - text: Tutorial ({{site.konnect_short_name}} UI)
+                url: "/how-to/monitor-sonarqube-projects-with-konnect-ui/"
   
   - header:
       type: h2
