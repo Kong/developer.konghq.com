@@ -92,3 +92,5 @@ The matching behavior is as follows:
 ## Vector databases
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+{% include plugins/redis-cloud-auth.md %}
