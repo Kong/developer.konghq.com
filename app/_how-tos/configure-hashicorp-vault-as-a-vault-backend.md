@@ -100,7 +100,7 @@ Write a secret to HashiCorp Vault:
 
 {% validation custom-command %}
 command: |
-  curl -X POST http://localhost:8200/v1/secret/data/customer/acme \
+  curl -X POST http://host.docker.internal:8200/v1/secret/data/customer/acme \
        -H "X-Vault-Token: $VAULT_TOKEN" \
        -H "Content-Type: application/json" \
        -d '{"data":{"name":"ACME Inc."}}' \
