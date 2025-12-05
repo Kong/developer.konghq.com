@@ -55,7 +55,7 @@ Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, y
 
 ## Create a catalog service and map the Azure DevOps resources
 
-After you configure the Azure DevOps integration, create a service in Catalog and link it to a repository from your Azure DevOps organization. This associates the service with its source code location and uses that repository as a system of record.
+After you configure the Azure DevOps integration, create a service in {{site.konnect_catalog}} and link it to a repository from your Azure DevOps organization. This associates the service with its source code location and uses that repository as a system of record.
 
 {:.note}
 > In this tutorial, we’ll refer to your Azure DevOps repository as `user-service`.
