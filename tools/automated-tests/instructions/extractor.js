@@ -50,7 +50,9 @@ async function extractPrereqs(page) {
   for (const prereq of prerequisites) {
     if (await prereq.isVisible()) {
       const trigger = await prereq.locator(".accordion-trigger");
-      await trigger.click();
+      if (prerequisites.length > 1) {
+        await trigger.click();
+      }
     }
     const extractedBlocks = await extractPrereqsBlocks(page);
     blocks.push(...extractedBlocks);
