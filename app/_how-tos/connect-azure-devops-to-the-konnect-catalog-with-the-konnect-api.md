@@ -35,18 +35,28 @@ prereqs:
       icon_url: /assets/icons/kogo-white.svg
     - title: Create and configure an Azure account
       content: |
-        You need to configure the following in Azure DevOps:
-        - An [Azure DevOps account](https://azure.microsoft.com/en-gb/pricing/purchase-options/azure-account?icid=devops).
-        - An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code: Read` permission.
-        
-        {:.warning}
-        > Your PAT expires after one year. Make sure that you renew it when it expires.
+        1. You need to configure the following in Azure DevOps:
+            - An [Azure DevOps account](https://azure.microsoft.com/en-gb/pricing/purchase-options/azure-account?icid=devops).
+            - An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code:Read` permission.
 
+           {:.warning}
+           > Your PAT expires after one year. Make sure that you renew it when it expires.
+
+        1. Set the personal access token as an environment variable:
+           ```sh
+           export AZUREDEVOPS_PAT='YOUR-AZURE-DEV-OPS-PERSONAL-ACCESS-TOKEN'
+           ```
 ---
 
 ## Configure the Azure DevOps integration
 
-Before you can discover Azure DevOps repositories in Catalog, you must configure the integration:
+Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, export your Azure organization name exactly as it appears in Azure DevOps:
+
+```sh
+export AZURE_ORG_NAME="YOUR-ORG-NAME"
+```
+
+Now, configure the integration:
 
 {% konnect_api_request %}
 url: /v1/integration-instances
@@ -57,14 +67,13 @@ body:
   name: "azure-devops"
   display_name: "Azure DevOps"
   config:
-    organization: "kong-konnect"
+    organization: "$AZURE_ORG_NAME"
+extract_body:
+    - name: 'id'
+      variable: AZUREDEVOPS_INTEGRATION_ID
+capture: AZUREDEVOPS_INTEGRATION_ID
+jq: ".id"
 {% endkonnect_api_request %}
-
-Export the ID of your Azure DevOps integration:
-
-```sh
-export AZUREDEVOPS_INTEGRATION_ID='YOUR-INTEGRATION-ID'
-```
 
 Next, authorize the integration with your Azure DevOps PAT:
 
@@ -93,13 +102,12 @@ method: POST
 body:
   name: "user-service"
   display_name: "User Service"
+extract_body:
+    - name: 'id'
+      variable: AZUREDEVOPS_SERVICE_ID
+capture: AZUREDEVOPS_SERVICE_ID
+jq: ".id"
 {% endkonnect_api_request %}
-
-Export the service ID:
-
-```sh
-export AZUREDEVOPS_SERVICE_ID="YOUR-SERVICE-ID"
-```
 
 ## List Azure Dev Ops resources
 
@@ -109,15 +117,17 @@ Before you map Azure DevOps resources to a service in Catalog, locate the resour
 url: /v1/resources?filter%5Bintegration.name%5D=azure-devops
 status_code: 200
 method: GET
+extract_body:
+    - name: 'id'
+      variable: AZUREDEVOPS_RESOURCE_ID
+capture: AZUREDEVOPS_RESOURCE_ID
+jq: ".data[0].id"
 {% endkonnect_api_request %}
 
- If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
+If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
 
-Export the resource ID you want to map to the service:
-
-```sh
-export AZUREDEVOPS_RESOURCE_ID="YOUR-RESOURCE-ID"
-```
+{:.info}
+> {{site.konnect_short_name}} uses the first resource in the list when you run this command. To select a different resource, replace `.data[0].id` in the `jq` filter with the index of the resource you want to use or manually specify the resource ID.
 
 ## Map resources to a service
 

@@ -35,7 +35,8 @@ prereqs:
         You need to configure the following in Azure DevOps:
         - An [Azure DevOps account](https://azure.microsoft.com/en-gb/pricing/purchase-options/azure-account?icid=devops).
         - An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code: Read` permission.
-        {:.info}
+        
+        {:.warning}
         > Your PAT expires after one year. Make sure that you renew it after it expires.
 ---
 
@@ -44,7 +45,7 @@ prereqs:
 Before you can discover Azure DevOps repositories in Catalog, you must configure the integration:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **Integrations**.
+1. In the {{site.konnect_catalog}} sidebar, click **Integrations**.
 1. Click **Azure DevOps**.
 1. Click **Add Azure DevOps instance**.
 1. In the **Azure DevOps organization name** field, enter your organization name exactly as it is in Azure DevOps.
@@ -55,7 +56,7 @@ Before you can discover Azure DevOps repositories in Catalog, you must configure
 ## Create a catalog service and map the Azure DevOps resources
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **Services**.
+1. In the {{site.konnect_catalog}} sidebar, click **Services**.
 1. Click **New service**.
 1. In the **Display Name** field, enter `user-service`.
 1. Click **Create**.
@@ -65,7 +66,7 @@ Before you can discover Azure DevOps repositories in Catalog, you must configure
 ## Validate the mapping
 To confirm that the Azure DevOps resource is now mapped to the intended service, navigate to the new service:
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **Services**.
+1. In the {{site.konnect_catalog}} sidebar, click **Services**.
 1. Click the `user-service` service.
 1. Click the **Resources** tab.
 
