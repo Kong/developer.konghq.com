@@ -1,5 +1,5 @@
 ---
-title: Connect Azure DevOps repositories to Catalog with the konnect UI
+title: Connect Azure DevOps repositories to Catalog with the {{site.konnect_short_name}} UI
 content_type: how_to
 description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} services in {{site.konnect_short_name}} using the UI.
 products:
@@ -37,12 +37,12 @@ prereqs:
         - An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code: Read` permission.
         
         {:.warning}
-        > Your PAT expires after one year. Make sure that you renew it after it expires.
+        > Your PAT can be created with an expiration period of your choice, up to a maximum of one year. Make sure to renew the PAT before it expires to avoid interruptions.
 ---
 
 ## Configure the Azure DevOps integration
 
-Before you can discover Azure DevOps repositories in Catalog, you must configure the integration:
+Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, you must configure the integration:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Integrations**.

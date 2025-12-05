@@ -1,5 +1,5 @@
 ---
-title: Connect Azure DevOps repositories to Catalog with the Konnect API
+title: Connect Azure DevOps repositories to Catalog with the {{site.konnect_short_name}} API
 content_type: how_to
 description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} services in {{site.konnect_short_name}} using the Konnect API.
 products:
@@ -40,7 +40,7 @@ prereqs:
             - An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code:Read` permission.
 
            {:.warning}
-           > Your PAT expires after one year. Make sure that you renew it when it expires.
+           > Your PAT can be created with an expiration period of your choice, up to a maximum of one year. Make sure to renew the PAT before it expires to avoid interruptions.
 
         1. Set the personal access token as an environment variable:
            ```sh
@@ -50,10 +50,10 @@ prereqs:
 
 ## Configure the Azure DevOps integration
 
-Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, export your Azure organization name exactly as it appears in Azure DevOps:
+Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, export your Azure DevOps organization name exactly as it appears in Azure DevOps:
 
 ```sh
-export AZURE_ORG_NAME="YOUR-ORG-NAME"
+export AZURE_DEVOPS_ORG_NAME="YOUR-ORG-NAME"
 ```
 
 Now, configure the integration:
@@ -109,7 +109,7 @@ capture: AZUREDEVOPS_SERVICE_ID
 jq: ".id"
 {% endkonnect_api_request %}
 
-## List Azure Dev Ops resources
+## List Azure DevOps resources
 
 Before you map Azure DevOps resources to a service in Catalog, locate the resources that {{site.konnect_short_name}} ingests from Azure DevOps:
 
