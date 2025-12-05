@@ -2,10 +2,12 @@
 title: 'AI Lakera Guard'
 name: 'AI Lakera Guard'
 
+tier: ai_gateway_enterprise
+
 content_type: plugin
 
 publisher: kong-inc
-description: 'Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs.'
+description: 'Inspect and enforce Lakera Guard safety policies on LLM requests and responses before they reach upstream models.'
 
 category: AI
 
@@ -39,19 +41,20 @@ search_aliases:
 icon: ai-lakera.png
 
 categories:
-   - ai
+  - ai
 
 ---
-The AI Lakera Guard plugin integrates with Kong to inspect and guard traffic that is flowing to and from Large Language Models (LLMs) across different phases of the client's LLM call.
+The AI Lakera Guard plugin evaluates requests and responses that pass through Kong to Large Language Models (LLMs). It uses the Lakera Guard SaaS service to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The plugin supports multiple inspection modes and operates across several Kong phases to guard both inbound prompts and outbound model outputs.
 
 ## Overview
 
-Depending on the phase of the client's LLM call, the plugin performs three distinct operations depending on the phase of the client’s LLM call:
+The plugin inspects model traffic at three points in the LLM request lifecycle. Each phase pages data into memory, extracts content that Lakera Guard can evaluate, and sends that content to Lakera for inspection.
+
 * **Request Phase**: Also known as the **Access** phase in Kong. Inspection occurs **before** any data leaves the gateway toward the target LLM. The plugin buffers the full request body in memory, extracts the fields that Lakera Guard can evaluate, and sends them for inspection.
 * **Response Phase (buffered)**: Also known as the **Response** phase in Kong. Inspection occurs **before** any byte is transmitted back toward the client. The plugin buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before Kong sends any part of the response back to the client.”
 * **Response Phase (per-frame)**: Also called the **body_filter** phase in Kong. The plugin runs during streaming responses like Server-Sent Events. Kong processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the plugin inspects that segment with Lakera Guard before forwarding the frame to the client.
 
-The plugin operates on both the request and response phases. However, it skips Lakera Guard checks on responses that are not "text responses" based on the current limitations of the Lakera Guard product itself.
+The plugin inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on response types that are not text responses based on Lakera Guard’s current product limitations.
 
 Content that the plugin inspects:
 
@@ -99,17 +102,17 @@ Use the logging capabilities of the `ai-lakera-guard` plugin to monitor the insp
 * **Unsupported Logging Outputs**: Prometheus, Splunk, or OpenTelemetry.
 * **Logging Outputs**:  HTTP-Log, File-Log, and TCP-Log.
 
- By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to Kong logs for administrators. To change this behavior, use `reveal_failure_categories: true`. If activated, you'll receive a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
+By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to Kong logs for administrators. To change this behavior, use `reveal_failure_categories: true`. If activated, you'll receive a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
 
- Standard logging subsystem example:
- ```
- "ai": {
-  "proxy": {
-    "lakera-guard": {
-      "input_processing_latency": 72,
-      "lakera_service_url": "https://api.lakera.ai/v2/guard",
-      "input_request_uuid": "c420d835-551c-47e3-9f39-82f87d56f3c0",
-      "lakera_project_id": "default"
+Standard logging subsystem example:
+```
+"ai": {
+"proxy": {
+  "lakera-guard": {
+    "input_processing_latency": 72,
+    "lakera_service_url": "https://api.lakera.ai/v2/guard",
+    "input_request_uuid": "c420d835-551c-47e3-9f39-82f87d56f3c0",
+    "lakera_project_id": "default"
     }
   }
 }
@@ -137,4 +140,5 @@ Violations log example:
       "lakera_project_id": "default"
     }
   }
+}
 ```
