@@ -46,7 +46,7 @@ categories:
 ---
 The AI Lakera Guard plugin evaluates requests and responses that pass through Kong to Large Language Models (LLMs). It uses the Lakera Guard SaaS service to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The plugin supports multiple inspection modes and operates across several Kong phases to guard both inbound prompts and outbound model outputs.
 
-## Overview
+## How it works
 
 The plugin inspects model traffic at three points in the LLM request lifecycle. Each phase pages data into memory, extracts content that Lakera Guard can evaluate, and sends that content to Lakera for inspection.
 
@@ -56,10 +56,9 @@ The plugin inspects model traffic at three points in the LLM request lifecycle. 
 
 The plugin inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on response types that are not text responses based on Lakera Guard’s current product limitations.
 
-Content that the plugin inspects:
+## Inspected content
 
-{% feature_table %} 
-item_title: Supported Content Inspection
+{% table %}
 columns:
   - title: Inspection Type
     key: type
@@ -70,41 +69,44 @@ columns:
   - title: Content type
     key: content
   - title: Limitations
-    key: limitation     
-
-features:
-  - type: "Chat Completions"
+    key: limitation
+rows:
+  - type: "/chat/completions"
     input: true
     output: true
-    content: Array of string content.
-    limitation: If multi-modal, it only inspects the text segments.
+    content: "Array of string content."
+    limitation: "If multi-modal, inspects text segments only."
   - type: "/responses"
     input: true
     output: true
-    content: Input string, array of input strings, or array of input chat messages. 
-    limitation: If multi-modal, it only inspects the text segments.
+    content: "Input string, array of input strings, or array of chat messages."
+    limitation: "If multi-modal, inspects text segments only."
   - type: "/images/generations"
     input: true
     output: false
-    content: Prompt string, input string, or array of input strings.
-    limitation: N/A
+    content: "Prompt string, input string, or array of input strings."
+    limitation: "Image outputs cannot be inspected."
   - type: "/embeddings"
     input: true
     output: false
-    content: Input string or array of input strings.
-    limitation: N/A
-{% endfeature_table %}
+    content: "Input string or array of input strings."
+    limitation: "Embedding outputs cannot be inspected."
+{% endtable %}
 
 ## Logging
-Use the logging capabilities of the `ai-lakera-guard` plugin to monitor the inspection process and understand the detected violations. The plugin provides detailed logging and controls over how violations are reported:
+Use the logging capabilities of the `ai-lakera-guard` plugin to monitor the inspection process and understand the detected violations. 
+
+The plugin provides detailed logging and controls over how violations are reported:
 * **SaaS Platform Logging**: All inspected requests, responses, and chats are made available on the Lakera SaaS platform.
-* **Standard Kong Logging**: Kong logs all request and response "Lakera request UUIDs" to the standard logging subsystem.
+* **Standard Kong Logging**: Kong logs all request and response **Lakera request UUIDs** to the standard logging subsystem.
 * **Unsupported Logging Outputs**: Prometheus, Splunk, or OpenTelemetry.
 * **Logging Outputs**:  HTTP-Log, File-Log, and TCP-Log.
 
-By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to Kong logs for administrators. To change this behavior, use `reveal_failure_categories: true`. If activated, you'll receive a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
+By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to Kong logs for administrators. 
 
-Standard logging subsystem example:
+To change this behavior, use `reveal_failure_categories: true`. If activated, you'll receive a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
+
+### Standard logging subsystem example
 ```
 "ai": {
 "proxy": {
@@ -118,7 +120,7 @@ Standard logging subsystem example:
 }
 ```
 
-Violations log example:
+### Violations log example
 ```
 "ai": {
   "proxy": {
