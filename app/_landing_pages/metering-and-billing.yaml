@@ -28,7 +28,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/metering/overview.png
+              url: /assets/images/konnect/metering.png
               alt_text: Metering and Billing Overview
 
 
