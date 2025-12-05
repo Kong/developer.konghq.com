@@ -113,7 +113,6 @@ export async function setupRuntime(runtimeConfig, product, docker) {
     Tty: true,
     ENV: env,
     HostConfig: {
-      CapAdd: ["IPC_LOCK"], // For Vault
       Binds: [
         "/var/run/docker.sock:/var/run/docker.sock",
         `${exportedRealmHostPath}:/realms`,
