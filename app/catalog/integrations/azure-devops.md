@@ -10,7 +10,7 @@ products:
 
 tags:
   - integrations
-  - azuredevops
+
 search_aliases:
   - service catalog
 breadcrumbs:
@@ -19,7 +19,8 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: 
+description: "description: Provides information about the Azure DevOps integration, which lets the Konnect Catalog read repository metadata from Azure DevOps and use it for service mapping and governance workflows."
+
 
 related_resources:
   - text: "{{site.konnect_catalog}}"
@@ -30,7 +31,7 @@ related_resources:
     url: /how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/
 ---
 
-The Azure DevOps integration lets Konnect Catalog securely read and ingest repository metadata from Azure DevOps using a PAT with `Code: Read` access. Teams can reference and manage their source-code assets inside {{site.konnect_catalog}} and prepare for future governance and scorecard workflows.
+The Azure DevOps integration lets Konnect Catalog securely read and ingest repository metadata from Azure DevOps using a PAT with `Code:Read` access. Teams can reference and manage their source-code assets inside {{site.konnect_catalog}} and prepare for future governance and scorecard workflows.
 
 For a complete tutorial, choose one of the following:
 - [Connect Azure DevOps repositories to Catalog with the Konnect API](/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/)
@@ -39,7 +40,7 @@ For a complete tutorial, choose one of the following:
 ### Prerequisites
 You need to configure the following:
 - An [Azure DevOps account](https://azure.microsoft.com/en-gb/pricing/purchase-options/azure-account?icid=devops)
-- An [Azure DevOps personal access token (PAT)]([Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code: Read` permission.
+- An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code:Read` permission.
 
 ### Configure the integration
 {% navtabs "azure-devops-integration" %}

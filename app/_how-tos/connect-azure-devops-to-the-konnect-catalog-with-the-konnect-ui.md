@@ -1,5 +1,5 @@
 ---
-title: Connect Azure DevOps repositories to Catalog with the {{site.konnect_short_name}} UI
+title: Connect Azure DevOps repositories to Catalog with the konnect UI
 content_type: how_to
 description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} services in {{site.konnect_short_name}} using the UI.
 products:
@@ -8,7 +8,6 @@ works_on:
   - konnect
 tags:
   - integrations
-  - azure-devops
 search_aliases:
   - devops
   - azure repos
@@ -25,14 +24,14 @@ related_resources:
 automated_tests: false
 tldr:
   q: How do I connect Azure DevOps repositories to {{site.konnect_short_name}}?
-  a: Install the Azure DevOps integration in {{site.konnect_short_name}}, authorize it with a Personal Access Token (PAT) that has Code → Read access, then map an Azure DevOps repository to your {{site.konnect_catalog}} service.
+  a: Install the Azure DevOps integration in {{site.konnect_short_name}}, authorize it with a Personal Access Token (PAT) that has Code:Read access, then map an Azure DevOps repository to your {{site.konnect_catalog}} service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
       include_content: prereqs/service-catalog-integration-role
       icon_url: /assets/icons/kogo-white.svg
     - title: Create and configure an Azure account
-       content: |
+      content: |
         You need to configure the following in Azure DevOps:
         - An [Azure DevOps account](https://azure.microsoft.com/en-gb/pricing/purchase-options/azure-account?icid=devops).
         - An [Azure DevOps personal access token (PAT)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) with `Code: Read` permission.
