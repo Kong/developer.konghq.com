@@ -33,6 +33,25 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.13.x breaking changes
+
+Review the [changelog](/gateway/changelog/#31300) for all the changes in this release.
+
+### 3.13.0.0
+
+Breaking changes in the 3.13.0.0 release.
+
+#### Admin API: empty value encoding
+
+Record/map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects. 
+They were previously incorrectly encoded as arrays. 
+
+#### AI Semantic Prompt Guard: request body size parameter
+
+Replaced the parameter `config.rules.max_request_body_size` with `config.max_request_body_size`. 
+
+`config.rules.max_request_body_size` is now deprecated and will be removed in a future version.
+
 ## 3.12.x breaking changes
 
 Review the [changelog](/gateway/changelog/#31200) for all the changes in this release.

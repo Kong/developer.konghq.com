@@ -1,0 +1,38 @@
+description: |
+  Use the Datakit plugin to transform XML request bodies into JSON.
+
+extended_description: |
+  Use the Datakit plugin to transform XML request bodies into JSON.
+
+  This example contains the following nodes:
+  1. The node `XML_JSON` converts the incoming XML request body into JSON format.
+  2. The node `EXIT` sends the produced JSON data back directly as the response body, without proxying it upstream.
+  
+title: Transform XML into JSON
+weight: 900
+
+config:
+  debug: true
+  nodes:
+    - name: XML_JSON
+      type: xml_to_json
+      attributes_block_name: null
+      attributes_name_prefix: "-"
+      recognize_type: true
+      text_block_name: "#text"
+      input: request.body
+      xpath: null
+    - name: EXIT
+      type: exit
+      inputs:
+        body: XML_JSON
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.13'
