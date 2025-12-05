@@ -32,6 +32,34 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
              end
       old_id = heading['id']
 
+      # Check if there's an anchor tag with an id inside the heading
+      inner_anchor = heading.at_css('a[id]')
+      if inner_anchor && inner_anchor['id'] && !inner_anchor['id'].empty?
+        # Use the inner anchor's ID and skip creating a wrapper
+        heading['id'] = inner_anchor['id']
+
+        # Update the existing anchor to have the proper styling
+        inner_anchor['href'] = "##{inner_anchor['id']}"
+        inner_anchor['aria-label'] = 'Anchor'
+        inner_anchor['title'] = text
+        inner_anchor['class'] = 'flex items-center gap-2 link-anchor group w-full hover:no-underline text-primary'
+
+        # Add the icon span if not already present
+        unless inner_anchor.at_css('.link-anchor-icon')
+          span = Nokogiri::HTML::DocumentFragment.parse(
+            <<-HTML
+              <span class="text-brand hidden link-anchor-icon group-hover:flex">
+                #{File.read('app/assets/icons/link.svg')}
+              </span>
+            HTML
+          )
+          inner_anchor.add_child(span)
+        end
+
+        changes = true
+        next
+      end
+
       # Index pages have specific heading IDs to account for groups
       unless heading.attr('data-skip-process-heading-id') && heading.attr('data-skip-process-heading-id') == 'true'
         heading['id'] = Jekyll::Utils.slugify(text)
