@@ -156,7 +156,7 @@ rows:
           config:
             title: Azure DevOps
             description: Connect Azure DevOps repositories directly to your {{site.konnect_catalog}} services.
-            icon: /assets/icons/third-party/azure-devops.png
+            icon: /assets/icons/azure-devops.svg
             ctas:
               - text: Reference
                 url: "/catalog/integrations/azure-devops/"
