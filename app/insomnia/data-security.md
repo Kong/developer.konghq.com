@@ -38,6 +38,9 @@ faqs:
     a: No. Data sent to AI features is not end-to-end encrypted, and therefore is not covered by this document. Organization administrators can disable specific AI features for all users. Individual users can disable available features in **Preferences > AI Features**. When a feature is disabled at the organization level, its option appears greyed with a tooltip explaining that it has been turned off by an administrator.
   - q: What is a resource group in Insomnia and how are they securely shared?
     a: The ability to share Resource Groups is the reason that every Resource Group needs its own key, and every account needs a public/private key-pair to securely share said key. Here’s an example involving two users, Jane and Bob. For Jane to share a Resource Group with Bob, she must encrypt the Resource Group’s key with Bob’s public key and store it on the server (M_Link). Now, Bob can use his account’s private key to decrypt the Resource Group’s key and gain access to the data. This is a classic example of the Diffie-Hellman key exchange being put to good use.
+  - q: What happens to my sensitive data when I log out of Insomnia?
+    a: |
+      When you log out of Insomnia, the app removes the vault key from your local settings. Without this key, encrypted values from earlier sessions cannot be unlocked. Any files or projects that you saved locally stay on your device until you delete them.  
 ---
 
 Insomnia implements end-to-end encryption (E2EE), which means that all encryption keys are generated locally, all encryption is performed before sending any data over the network, and all decryption is performed after receiving data from the network. At no point in the sync process can the Insomnia servers, or an intruder read or access sensitive application project data.
