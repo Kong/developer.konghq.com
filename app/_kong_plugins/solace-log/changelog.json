@@ -5,5 +5,12 @@
       "type": "feature",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.2": [
+    {
+      "message": "Fixed end-to-end tracing context propagation.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }
