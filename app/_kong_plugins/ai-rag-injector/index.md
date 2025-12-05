@@ -247,6 +247,15 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 
 ## Vector databases
 
+{:.info}
+> GCP Memorystore Redis clusters do not support the AI RAG Injector plugin. The Redis JSON module required for vector operations is not available in GCP's managed Redis service.
+>
+> Attempting to ingest chunks with GCP Redis results in the following error:
+>
+> ```json
+> {"message":"Failed to load the 'redis' vector database driver: failed to initialize vector database strategy: failed to create index: JSON module is not loaded."}
+>```
+
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
 ## Access control and metadata filtering {% new_in 3.13 %}

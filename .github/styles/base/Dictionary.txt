@@ -506,6 +506,7 @@ md
 mebibytes
 Memcached
 Memcached
+Memorystore
 meshopa
 meshopas
 meshpassthrough
