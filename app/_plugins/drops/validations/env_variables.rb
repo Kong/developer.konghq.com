@@ -8,11 +8,11 @@ module Jekyll
     module Validations
       class EnvVariables < Base # rubocop:disable Style/Documentation
         def variables
-          @variables ||= @yaml
+          @variables ||= @yaml.except('section')
         end
 
         def data_validate
-          JSON.dump({name: id, config: variables})
+          JSON.dump({ name: id, config: variables })
         end
 
         def validate_yaml!

@@ -75,12 +75,21 @@ async function checkSetup(setup, runtimeConfig, container) {
   return true;
 }
 
-async function runPrereqs(prereqs, container) {
+async function runPrereqs(prereqs, container, runtimeConfig) {
   log("Running prereqs...");
   if (prereqs) {
     const config = await processPrereqs(prereqs);
-    await runConfig(config, container);
-    log(`   prereq ✅ .`);
+
+    if (config.commands) {
+      for (const command of config.commands) {
+        if (typeof command === "string") {
+          await executeCommand(container, command);
+        } else {
+          await validate(container, command, runtimeConfig);
+        }
+      }
+      log(`   prereq ✅ .`);
+    }
   }
 }
 
@@ -152,7 +161,7 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       }
     }
 
-    await runPrereqs(instructions.prereqs, container);
+    await runPrereqs(instructions.prereqs, container, runtimeConfig);
 
     const assertions = await runSteps(
       instructions.steps,
