@@ -17,6 +17,8 @@ breadcrumbs:
   - /catalog/
   - /catalog/integrations/
 
+discovery_support: true
+
 works_on:
     - konnect
 description: "description: Provides information about the Azure DevOps integration, which lets the Konnect {{site.konnect_catalog}} read repository metadata from Azure DevOps and use it for service mapping and governance workflows."
