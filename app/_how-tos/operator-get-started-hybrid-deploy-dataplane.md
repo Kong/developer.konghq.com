@@ -67,13 +67,13 @@ spec:
 
 ## Check the Ready status
 
-If the `DataPlane` has `Ready` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected Data Planes for your Control Plane:
-
 <!-- vale off -->
 {% validation kubernetes-resource %}
-kind: dataplane
+kind: DataPlane
 name: dataplane-example
 conditionType: Ready
 reason: Ready
 {% endvalidation %}
 <!-- vale on -->
+
+If the `DataPlane` has `Ready` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected Data Planes for your Control Plane.
