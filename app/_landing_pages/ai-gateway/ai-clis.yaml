@@ -141,5 +141,5 @@ rows:
               description: Use Codex CLI with OpenAI models
               icon: /assets/icons/openai.svg
               cta:
-                url: /how-to/use-claude-code-with-ai-gateway/
+                url: /how-to/use-codex-with-ai-gateway/
                 align: end
