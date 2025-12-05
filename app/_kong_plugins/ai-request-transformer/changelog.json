@@ -54,6 +54,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.1": [
     {
       "message": "Fixed issue of template not being resolved correctly and supported nested fields.\n",

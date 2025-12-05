@@ -76,6 +76,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",

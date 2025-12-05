@@ -422,6 +422,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed integration with HuggingFace by adding support for the new serverless API, ensuring seamless compatibility.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where extra inputs were not permitted for huggingface inference provider\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.1": [
     {
       "message": "Fixed issue of template not being resolved correctly and supported nested fields.\n",

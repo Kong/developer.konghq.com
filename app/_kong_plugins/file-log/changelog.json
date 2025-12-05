@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed an issue where the configuration with leading or trailing spaces in the `path` field could cause upgrade failures.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.2.1.0": [
     {
       "message": "**Improved Plugin Documentation**: Revised docs for the following plugins to include examples: \n- [CORS](/plugins/cors/)\n- [File Log](/plugins/file-log/)\n- [HTTP Log](/plugins/http-log/)\n- [JWT Signer](/plugins/jwt-signer/)\n- [Key Auth](/plugins/key-auth/)\n- [OpenID Connect](/plugins/openid-connect/)\n- [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)\n- [SAML](/plugins/saml/)\n- [StatsD](/plugins/statsd/)",
