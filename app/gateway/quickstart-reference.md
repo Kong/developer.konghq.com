@@ -101,7 +101,7 @@ This key will not be exposed outside of the host machine.
 The script creates a [Gateway Service](/gateway/entities/service/) with two [Routes](/gateway/entities/route/), and configures the AI Proxy plugin on those Routes based on the provider that you specify.
 
 Check out the full script at [https://get.konghq.com/ai](https://get.konghq.com/ai) to see which entities 
-it generates, and access all of your Routes and Services by visiting either [Gateway Manager in {{site.konnect_short_name}}](https://cloud.konghq.com/gateway-manager/) or 
+it generates, and access all of your Routes and Services by visiting either [API Gateway in {{site.konnect_short_name}}](https://cloud.konghq.com/gateway-manager/) or 
 [Kong Manager](/gateway/kong-manager/) at `https://localhost:8002` in any browser.
 
 {:.info}
