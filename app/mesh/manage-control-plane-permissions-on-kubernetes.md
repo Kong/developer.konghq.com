@@ -1,6 +1,6 @@
 ---
 title: Manage control plane permissions on Kubernetes
-description: This guide explains how to manage Control Plane permissions on Kubernetes
+description: This guide explains how to manage control plane permissions on Kubernetes
 content_type: reference
 layout: reference
 products:
