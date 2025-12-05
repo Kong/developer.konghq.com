@@ -32,3 +32,6 @@ mcp-conversion:
 mcp-weather-api:
   title: Autogenerate and observe MCP tools for Weather API
   url: /mcp/autogenerate-mcp-tools-for-weather-api/
+mcp-acls:
+  title: Control MCP tool access with Consumer and Consumer Group ACLs
+  url: /mcp/use-access-controls-for-mcp-tools/

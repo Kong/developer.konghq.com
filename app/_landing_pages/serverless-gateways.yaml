@@ -26,7 +26,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+                    Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
 
                     Serverless gateways offer the following benefits:
                     * {{site.konnect_short_name}} manages provisioning and placement.
@@ -37,9 +37,9 @@ rows:
             config:
               diagram: |
                 flowchart LR
-                  A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Catalog)
+                  A(Dev Portal &bull; Advanced Analytics &bull; Catalog)
                   B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong-managed Control Plane #40;Kong Gateway instance#41;)
-                  C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane #40;Kong Gateway instance#41;)
+                  C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane #40;Kong Gateway instance#41;)
 
                   subgraph id1 [Konnect]
                   A --- B
