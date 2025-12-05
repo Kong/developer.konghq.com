@@ -10,7 +10,7 @@ This how-to requires you to have a dev mode or self-managed HashiCorp Vault. The
 2. Export the `VAULT_ADDR` and `VAULT_TOKEN`:
 {% capture vars %}
 {% env_variables %}
-VAULT_ADDR: "http://0.0.0.0:8200"
+VAULT_ADDR: "http://host.docker.internal:8200"
 VAULT_TOKEN: root
 section: prereqs
 {% endenv_variables %}
