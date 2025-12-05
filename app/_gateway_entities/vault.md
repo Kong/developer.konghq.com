@@ -493,6 +493,7 @@ For a complete tutorial on how to set up HashiCorp Vault as a Vault entity, see 
 * [Set up HashiCorp Vault with {{ site.base_gateway }}](/how-to/configure-hashicorp-vault-as-a-vault-backend/)
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and certificate authentication](/how-to/configure-hashicorp-vault-with-cert-auth/)
 * [Set up HashiCorp Vault with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/hashicorp/)
+* [Set up HashiCorp Vault with {{ site.base_gateway }} and OAuth2](/how-to/configure-hashicorp-vault-with-oauth2/)
 
 <!--vale off-->
 {% table %}
@@ -544,7 +545,9 @@ rows:
       `vaults.config.auth_method` {% new_in 3.1 %}
     field-name: Authentication Method
     description: |
-      Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, or `approle`.
+      Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, `approle`, or `oauth2`.
+
+      For OAuth2, the IdP SSL certificate must be present in the Lua SSL trusted certificate when using HTTPS.
   - parameter: |
       `vaults.config.kube_role` {% new_in 3.1 %}
     field-name: Kubernetes Role
@@ -597,6 +600,31 @@ rows:
     field-name: Role Name
     description: |
       The trusted certificate role name.
+  - parameter: |
+      `vaults.config.oauth2_role_name` {% new_in 3.13 %}
+    field-name: OAuth2 Role Name
+    description: |
+      The configured role name in HashiCorp Vault for OAuth2 auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `jwt` and the `token_policies` have permissions to read the secrets.
+  - parameter: |
+      `vaults.config.oauth2_token_endpoint` {% new_in 3.13 %}
+    field-name: OAuth2 Token Endpoint
+    description: |
+      The OAuth2 token endpoint for Hashicorp Vault's OAuth2 auth method.
+  - parameter: |
+      `vaults.config.oauth2_client_id` {% new_in 3.13 %}
+    field-name: OAuth2 Client ID
+    description: |
+      The OAuth2 client ID.
+  - parameter: |
+      `vaults.config.oauth2_client_secret` {% new_in 3.13 %}
+    field-name: OAuth2 Client Secret
+    description: |
+      The OAuth2 client secret.
+  - parameter: |
+      `vaults.config.oauth2_audiences` {% new_in 3.13 %}
+    field-name: OAuth2 Audiences
+    description: |
+      Comma-separated list of OAuth2 audiences.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
