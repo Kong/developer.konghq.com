@@ -44,6 +44,9 @@ sections:
       - title: AI Gateway resource sizing guidelines
         description: Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
+      - title: Gen AI OpenTelemetry attributes reference
+        description: Reference for OpenTelemetry span attributes emitted by Kong AI Gateway for generative AI requests, including model parameters, token usage, and tool-call metadata.
+        url: /ai-gateway/llm-open-telemetry/
   - title: AI Gateway plugins
     items:
       - path: /plugins/?category=ai
