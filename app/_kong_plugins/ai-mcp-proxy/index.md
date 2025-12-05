@@ -193,7 +193,8 @@ rows:
       [`conversion-listener`](./examples/conversion-listener/)
     description: |
       Converts RESTful API paths into MCP tools **and** accepts incoming MCP requests on the Route path.
-      You can define tools directly in the plugin configuration and optionally set a server block.
+      You can define tools directly in the plugin configuration and optionally set a server block.<br/><br/>
+      {% new_in 3.13 %} The conversion-listener mode also supports adding session identifiers set by authentication services in the configuration parameters. See the [cookie conversion example](./examples/conversion-listener/) for details on handling cookie-based authentication.
     usecase: |
       Use when you want to make an existing REST API available to MCP clients directly through {{site.base_gateway}}.
       Common for services that both define and handle their own tools.
