@@ -212,6 +212,7 @@ For example, load balancers with the following target combinations are supported
 > * Additional HTTP error codes, like `http_429` or `http_502`
 > * The `non_idempotent` setting, as most AI services accept POST requests
 
+## Health check and circuit breaker {% new_in 3.13 %}
 
 {% include ai-gateway/circuit-breaker.md %}
 

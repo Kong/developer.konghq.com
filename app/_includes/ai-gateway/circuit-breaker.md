@@ -1,5 +1,3 @@
-### Health check and circuit breaker {% new_in 3.13 %}
-
 The [load balancer](/ai-gateway/load-balancing/) supports health checks and circuit breakers to improve reliability. If the number of unsuccessful attempts to a target reaches [`config.balancer.max_fails`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-max-fails), the load balancer stops sending requests to that target until it reconsiders the target after the period defined by [`config.balancer.fail_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-fail-timeout). The diagram below illustrates this behavior:
 
 ![Circuit breaker](/assets/images/ai-gateway/circuit-breaker.jpg){: style="display:block; margin-left:auto; margin-right:auto; width:50%; border-radius:10px" }
