@@ -228,4 +228,6 @@ rows:
 > - Fallbacks only allowed between targets using the same API format.
 > - Example: OpenAI-to-OpenAI fallback is supported; OpenAI-to-OLLAMA is not.
 
+### Health check and circuit breaker {% new_in 3.13 %}
+
 {% include ai-gateway/circuit-breaker.md %}
