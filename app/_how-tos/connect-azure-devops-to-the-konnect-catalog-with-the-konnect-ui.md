@@ -65,6 +65,8 @@ After you configure the Azure DevOps integration, create a service in Catalog an
 1. Click **Map Resources**.
 1. Select `user-service`.
 
+If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
+
 ## Validate the mapping
 To confirm that the Azure DevOps resource is now mapped to the intended service, navigate to the new service:
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
