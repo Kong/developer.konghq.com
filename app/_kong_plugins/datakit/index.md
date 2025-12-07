@@ -74,6 +74,8 @@ rows:
     description: "Leverage the `cache` and `branch` nodes to conditionally store or retrieve cache items."
   - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)"
     description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
+  - usecase: "[Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)"
+    description: Use dynamic internal auth endpoint within your ecosystem to inject request headers before proxying a request.
 {% endtable %}
 <!--vale on-->
 
@@ -517,6 +519,7 @@ rows:
       * `body`: Request body
       * `headers`: Request headers
       * `query`: Key-value pairs to encode as the request query string
+      * `url`: The request URL resolved at runtime
     outputs: |
       * `body`: The response body
       * `headers`: The response headers
@@ -659,6 +662,7 @@ Call nodes are used in most datakit workflows. For complete examples, see:
 * [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
 * [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
 * [Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
 
 #### Automatic JSON body handling
 
@@ -703,6 +707,17 @@ The `call` node fails execution if a network-level error is encountered or if
 the endpoint returns a non-2xx status code. It will also fail if the endpoint
 returns a JSON mime-type in the `Content-Type` header if the response body is
 not valid JSON.
+
+#### Resolve URL at runtime
+The `url` attribute of the `call` node is statically defined at config-time. To override it at runtime, connect a value to the `url` input. If the URL resolves to nil, the statically defined URL will be used as a fallback. For example:
+
+```yaml
+- name: DYNAMIC_URL
+  type: call
+  url: https://example.com/default
+  inputs:
+    url: request.body
+```
 
 #### Limitations
 
@@ -1016,6 +1031,7 @@ For more detailed examples, see:
 * [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
 * [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
 * [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
 
 ### Exit node
 
@@ -1371,6 +1387,7 @@ For more detailed examples, see:
 * [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
 * [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
 * [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
 
 ### XML to JSON node {% new_in 3.13 %}
 
