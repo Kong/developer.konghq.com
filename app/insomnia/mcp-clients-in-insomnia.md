@@ -150,7 +150,7 @@ If the authorization server does not support Dynamic Client Registration, you ca
 Insomnia supports **MCP Elicitation**, a feature that allows a server to request additional information from the client during a request. When a server returns an elicitation request, Insomnia displays the fields defined by the server so you can provide the required information. Insomnia then returns the submitted values to the server so it can continue processing the original request.
 
 Elicitation supports workflows where the server needs more context or specific field values before it completes an action. Insomnia manages the entire flow: 
-1. It displays the elicitation UI
+1. Displays the elicitation UI
 1. Collects the user input
 1. Returns the elicitation response to the server
 
