@@ -1,6 +1,6 @@
 ---
 title: "{{site.konnect_product_name}} MCP Server"
-description: "Interact with Kong Konnect through AI clients using MCP tools. Access gateway entities, debug API performance, and search documentation."
+description: "Interact with Kong {{site.konnect_product_name}} through AI clients using MCP tools. Access gateway entities, debug API performance, and search documentation."
 content_type: reference
 layout: reference
 products:
@@ -52,16 +52,16 @@ faqs:
 
   - q: Tools return empty results for resources I know exist. What's wrong?
     a: |
-      Verify you're connecting to the correct regional server URL, check which region your resources are deployed in via the Konnect UI, and restart your MCP client after URL changes.
+      Verify you're connecting to the correct regional server URL, check which region your resources are deployed in via the {{site.konnect_product_name}} UI, and restart your MCP client after URL changes.
 
   - q: Tool execution is failing. How do I troubleshoot?
     a: |
       Check parameter correctness, verify you have resource access permissions, wait if you're rate limited, and confirm the resource exists.
 ---
 
-The {{site.konnect_product_name}} MCP Server enables developers to interact with Kong Konnect through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access gateway entities, debug API performance, and search Kong documentation from your development environment.
+The {{site.konnect_product_name}} MCP Server enables developers to interact with Kong {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access gateway entities, debug API performance, and search Kong documentation from your development environment.
 
-Many tools in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](https://docs.konghq.com/konnect/kai/), which provides an in-product experience for Konnect Plus and Enterprise accounts.
+Many tools in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect/kai/), which provides an in-product experience for {{site.konnect_product_name}} Plus and Enterprise accounts.
 
 {:.info}
 > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
@@ -82,7 +82,7 @@ The {{site.konnect_product_name}} MCP Server enables several workflows for manag
 
 ## Authentication
 
-To use the {{site.konnect_product_name}} MCP Server authentication, you will need a Personal Access Token for authentication: Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+To use the {{site.konnect_product_name}} MCP Server authentication, you will need a Personal Access Token for authentication: Create a new personal access token by opening the [{{site.konnect_product_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
 
 ### Organization settings
 
@@ -119,7 +119,7 @@ rows:
 {:.info}
 > The regional endpoint for {{site.konnect_product_name}} MCP Server defaults to US region.
 >
-> Organizations using multiple Konnect regions need separate MCP server connections for each region. Resources cannot be accessed across regions from a single connection.
+> Organizations using multiple {{site.konnect_product_name}} regions need separate MCP server connections for each region. Resources cannot be accessed across regions from a single connection.
 
 ## Installation
 
@@ -162,7 +162,7 @@ Verify the configuration. List all configured servers:
 claude mcp list
 ```
 
-Get details for the Kong Konnect server
+Get details for the Kong {{site.konnect_product_name}} server
 
 ```bash
 claude mcp get kong-konnect
@@ -173,7 +173,7 @@ claude mcp get kong-konnect
 1. Open Visual Studio Code
 2. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
 3. Type "MCP" and select "MCP: Configure Servers"
-4. Add the Kong Konnect server configuration:
+4. Add the Kong {{site.konnect_product_name}} server configuration:
 
 ```json
 {
@@ -192,7 +192,7 @@ claude mcp get kong-konnect
 6. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
 7. Save the configuration file
 8. Reload VS Code window (Command Palette > "Developer: Reload Window")
-9. Open the AI assistant and verify Kong Konnect tools are available
+9. Open the AI assistant and verify Kong {{site.konnect_product_name}} tools are available
 
 {% endnavtab %}
 {% navtab "Cursor" %}
@@ -221,7 +221,7 @@ claude mcp get kong-konnect
 8. Save the configuration file
 9. Return to the Cursor settings tab. You should now see the `kong-konnect` MCP server with available tools listed
 10. To open a new Cursor chat, press `Cmd+L` (Mac) or `Ctrl+L` (Windows/Linux)
-11. In the Cursor chat tab, click `@` Add Context and select tools from the Kong Konnect server
+11. In the Cursor chat tab, click `@` Add Context and select tools from the Kong {{site.konnect_product_name}} server
 
 {% endnavtab %}
 {% navtab "GitHub Copilot - VS Code" %}
@@ -230,7 +230,7 @@ claude mcp get kong-konnect
 2. Ensure GitHub Copilot extension is installed and configured
 3. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
 4. Type "MCP" and select "MCP: Configure Servers"
-5. Add the Kong Konnect server configuration:
+5. Add the Kong {{site.konnect_product_name}} server configuration:
 
 ```json
 {
@@ -249,7 +249,7 @@ claude mcp get kong-konnect
 7. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
 8. Save the configuration file
 9. Reload VS Code window (Command Palette > "Developer: Reload Window")
-10. Open GitHub Copilot chat and verify Kong Konnect tools are available
+10. Open GitHub Copilot chat and verify Kong {{site.konnect_product_name}} tools are available
 
 {% endnavtab %}
 {% navtab "GitHub Copilot - JetBrains" %}
@@ -261,14 +261,14 @@ claude mcp get kong-konnect
 3. Go to Tools > GitHub Copilot > MCP Servers
 4. Click the "+" button to add a new server
 5. Enter the server details:
-   - **Name**: Kong Konnect
+   - **Name**: Kong {{site.konnect_product_name}}
    - **URL**: `https://us.mcp.konghq.com/` (or your regional URL)
    - **Transport**: SSE
    - **Authentication**: Bearer Token
-   - **Token**: Your Konnect PAT
+   - **Token**: Your {{site.konnect_product_name}} PAT
 6. Click "OK" to save
 7. Restart your IDE
-8. Invoke GitHub Copilot and verify Kong Konnect tools are available
+8. Invoke GitHub Copilot and verify Kong {{site.konnect_product_name}} tools are available
 
 **Manual Configuration:**
 
@@ -301,14 +301,14 @@ Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KON
 4. Select "MCP Servers"
 5. Click "Add"
 6. Configure the server:
-   - **Name**: Kong Konnect
+   - **Name**: Kong {{site.konnect_product_name}}
    - **Server URL**: `https://us.mcp.konghq.com/` (or your regional URL)
    - **Transport Type**: Server-Sent Events
    - **Authentication**: Bearer Token
-   - **Token**: Your Konnect PAT
+   - **Token**: Your {{site.konnect_product_name}} PAT
 7. Click "OK" to save
 8. Restart Visual Studio
-9. Open GitHub Copilot chat and verify Kong Konnect tools are available
+9. Open GitHub Copilot chat and verify Kong {{site.konnect_product_name}} tools are available
 
 **Configuration File Location:**
 `%LOCALAPPDATA%\Microsoft\VisualStudio\<Version>\Extensions\mcp-config.json`
