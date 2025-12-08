@@ -353,29 +353,23 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation type: "`\"list\"`", `\"get_by_id\"`, `\"get_by_name\"`, or `\"get_by_route\"`
   - parameter: "`id`"
     type: string
-    required: Conditional
     description: |
       Control plane UUID. Required when `operation=\"get_by_id\"`
   - parameter: "`name`"
     type: string
-    required: Conditional
     description: |
       Control plane display name. Required when `operation=\"get_by_name\"`
   - parameter: "`path`"
     type: string
-    required: Conditional
     description: |
       API route path (e.g., `/api/users`). Required when `operation=\"get_by_route\"`
 {% endtable %}
@@ -397,18 +391,14 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_group_id`"
     type: string
-    required: Yes
     description: UUID of the control plane group
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Must be `"list"`
 {% endtable %}
@@ -429,28 +419,22 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation type: "`"list"`", `"get_by_id"`, or `"get_by_name"`
   - parameter: "`consumer_id`"
     type: string
-    required: Conditional
     description: |
       Consumer UUID. Required when `operation="get_by_id"`
   - parameter: "`consumer_name`"
     type: string
-    required: Conditional
     description: |
       Consumer username. Required when `operation="get_by_name"`
 {% endtable %}
@@ -470,18 +454,14 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Must be `"list"`
 {% endtable %}
@@ -501,28 +481,22 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation type: "`"list"`", `"get_by_id"`, or `"get_by_name"`
   - parameter: "`service_id`"
     type: string
-    required: Conditional
     description: |
       Service UUID. Required when `operation="get_by_id"`
   - parameter: "`service_name`"
     type: string
-    required: Conditional
     description: |
       Service name. Required when `operation="get_by_name"`
 {% endtable %}
@@ -542,28 +516,22 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation type: "`"list"`", `"get_by_id"`, or `"get_by_name"`
   - parameter: "`route_id`"
     type: string
-    required: Conditional
     description: |
       Route UUID. Required when `operation="get_by_id"`
   - parameter: "`route_name`"
     type: string
-    required: Conditional
     description: |
       Route display name. Required when `operation="get_by_name"`
 {% endtable %}
@@ -583,23 +551,18 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation type: "`"list"`" or `"get_by_id"`
   - parameter: "`plugin_id`"
     type: string
-    required: Conditional
     description: |
       Plugin UUID. Required when `operation="get_by_id"`
 {% endtable %}
@@ -620,28 +583,22 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation type: "`"list"`", `"get_by_id"`, or `"get_by_name"`
   - parameter: "`vault_id`"
     type: string
-    required: Conditional
     description: |
       Vault UUID. Required when `operation="get_by_id"`
   - parameter: "`vault_name`"
     type: string
-    required: Conditional
     description: |
       Vault name. Required when `operation="get_by_name"`
 {% endtable %}
@@ -662,69 +619,55 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`time_range`"
     type: string
-    required: Yes
     description: |
       Time window: `"15M"`, `"1H"`, `"6H"`, `"12H"`, `"24H"`, or `"7D"`
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation type: "`"query_api_requests"`" or `"get_consumer_requests"`
   - parameter: "`status_codes`"
     type: list of integers
-    required: No
     description: |
       HTTP status codes to include (for `query_api_requests`)
   - parameter: "`excluded_status_codes`"
     type: list of integers
-    required: No
     description: |
       HTTP status codes to exclude (for `query_api_requests`)
   - parameter: "`http_methods`"
     type: list of strings
-    required: No
     description: |
       HTTP methods to include (for `query_api_requests`)
   - parameter: "`consumer_ids`"
     type: list of strings
-    required: No
     description: |
       Consumer IDs to filter by (for `query_api_requests`)
   - parameter: "`service_ids`"
     type: list of strings
-    required: No
     description: |
       Service IDs to filter by (for `query_api_requests`)
   - parameter: "`route_ids`"
     type: list of strings
-    required: No
     description: |
       Route IDs to filter by (for `query_api_requests`)
   - parameter: "`consumer_id`"
     type: string
-    required: Conditional
     description: |
       Specific consumer ID. Required when `operation="get_consumer_requests"`
   - parameter: "`successOnly`"
     type: boolean
-    required: No
     description: |
       Return only successful requests (200-299) (for `get_consumer_requests`)
   - parameter: "`failureOnly`"
     type: boolean
-    required: No
     description: |
       Return only failed requests (≥400) (for `get_consumer_requests`)
   - parameter: "`max_results`"
     type: integer
-    required: No
     description: |
       Maximum number of results (default: 100)
 {% endtable %}
@@ -747,47 +690,37 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`http_path`"
     type: string
-    required: No
     description: |
       API endpoint path (e.g., `/checkout`, `/api/users`)
   - parameter: "`http_method`"
     type: string
-    required: No
     description: |
       HTTP method: `"GET"`, `"POST"`, `"PUT"`, `"DELETE"`, `"PATCH"`
   - parameter: "`http_status_code`"
     type: string
-    required: No
     description: |
       Status code filter (e.g., `"500"`, `"404"`)
   - parameter: "`http_latency`"
     type: string
-    required: No
     description: |
       Latency threshold in format `">=XYms"` (e.g., `">=1000ms"`)
   - parameter: "`service_id`"
     type: string
-    required: No
     description: Service UUID to filter traces
   - parameter: "`session_duration`"
     type: integer
-    required: No
     description: |
       Duration in seconds (default: 60)
   - parameter: "`max_samples`"
     type: integer
-    required: No
     description: |
       Maximum number of traces to collect (default: 100)
 {% endtable %}
@@ -811,32 +744,25 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`control_plane_id`"
     type: string
-    required: Yes
     description: Control plane UUID
   - parameter: "`debug_session_id`"
     type: string
-    required: Yes
     description: Debug session UUID from CreateDebugSession
   - parameter: "`operation`"
     type: string
-    required: Yes
     description: |
       Operation: `"fetch_status"`, `"summarize_session"`, `"compact_traces"`, `"compressed_traces"`, or `"stop_session"`
   - parameter: "`plugin_filter`"
     type: string
-    required: No
     description: |
       Plugin UUID to filter traces. Used with `operation="compact_traces"`
   - parameter: "`phase`"
     type: string
-    required: No
     description: |
       Trace phase filter: `"ingress"` or `"egress"`. Used with `operation="compact_traces"`
 {% endtable %}
@@ -866,14 +792,11 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`alert_event_id`"
     type: string
-    required: Yes
     description: Alert event UUID from notification
 {% endtable %}
 
@@ -895,14 +818,11 @@ columns:
     key: parameter
   - title: Type
     key: type
-  - title: Required
-    key: required
   - title: Description
     key: description
 rows:
   - parameter: "`query`"
     type: string
-    required: Yes
     description: Natural language question or search topic
 {% endtable %}
 
