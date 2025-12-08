@@ -1,6 +1,5 @@
 description: 'Configure the AI Lakera Guard plugin to reveal or conceal the failure reason to clients.'
 
-# extended_description: '' # Displays on the page; can use any markdown formatting
 
 title: 'Inspect requests only with ai-lakera-guard to inspect responses'
 
