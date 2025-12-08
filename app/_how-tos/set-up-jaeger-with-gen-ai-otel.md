@@ -152,7 +152,7 @@ faqs:
 
 automated_tests: false
 ---
-## Configure the plugin
+## Configure the AI Proxy plugin
 
 The AI Proxy plugin routes LLM requests to external providers like OpenAI. To observe these interactions in detail, enable the plugin's logging capabilities, which instrument requests and responses as OpenTelemetry spans.
 
