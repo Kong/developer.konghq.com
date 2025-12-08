@@ -40,6 +40,8 @@ related_resources:
     url: /gateway/tracing/
   - text: Set up Jaeger with Gen AI OpenTelemetry
     url: /how-to/set-up-jaeger-with-gen-ai-otel/
+  - text: Validate Gen AI tool calls with Jaeger and OpenTelemetry
+    url: /how-to/set-up-jaeger-with-gen-ai-otel-for-tool-calls/
 
 works_on:
   - on-prem

@@ -4,6 +4,8 @@ content_type: how_to
 related_resources:
   - text: Set up Dynatrace with OpenTelemetry
     url: /how-to/set-up-dynatrace-with-otel/
+  - text: Validate Gen AI tool calls with Jaeger and OpenTelemetry
+    url: /how-to/set-up-jaeger-with-gen-ai-otel-for-tool-calls/
 
 description: Use the OpenTelemetry plugin to send {{site.base_gateway}} analytics and monitoring data to Jaeger dashboards.
 
@@ -146,6 +148,7 @@ faqs:
       ```
 
       See the [OpenTelemetry Collector documentation](https://opentelemetry.io/docs/collector/configuration/) for more information. Now you can enable the OTEL plugin.
+
 
 automated_tests: false
 ---
