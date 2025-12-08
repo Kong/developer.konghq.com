@@ -23,13 +23,13 @@ config:
       host: ${instance_address}
       username: ${instance_username}
       port: 6379
-    cloud_authentication:
-      auth_provider: aws
-      aws_cache_name: ${aws_cache}
-      aws_is_serverless: false
-      aws_region: ${aws_region}
-      aws_access_key_id: ${aws_key_id}
-      aws_secret_access_key: ${aws_secret_key}
+      cloud_authentication:
+        auth_provider: aws
+        aws_cache_name: ${aws_cache}
+        aws_is_serverless: false
+        aws_region: ${aws_region}
+        aws_access_key_id: ${aws_key_id}
+        aws_secret_access_key: ${aws_secret_key}
 
 variables:
   email:
@@ -49,7 +49,7 @@ variables:
     description: The ElastiCache instance address.
   instance_username:
     value: $INSTANCE_USERNAME
-    description: The ElastiCache instance username.
+    description: The ElastiCache username with [IAM Auth mode configured](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup).
   aws_cache:
     value: $AWS_CACHE_NAME
     description: Name of your AWS ElastiCache instance.
