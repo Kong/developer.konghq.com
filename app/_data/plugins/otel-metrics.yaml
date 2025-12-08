@@ -15,7 +15,7 @@ metrics:
       - kong.route.name
       - kong.workspace.name
   - name: kong.latency.internal
-    description: "Kong’s internal processing time in milliseconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
+    description: "Kong’s internal processing time in seconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
     attributes:
       - kong.service.name
       - kong.route.name
@@ -43,74 +43,74 @@ metrics:
     attributes:
       - kong.shared_dict.name
       - kong.subsystem
-  - name: 
-    description:
+  - name: kong.shared_dict.size
+    description: Total memory size of a shared dict in bytes.
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.shared_dict.name
+      - kong.subsystem
+  - name: kong.memory.workers.lua_vm
+    description: "Memory used by the worker’s Lua VM in bytes."
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.pid
+      - kong.subsystem
+  - name: kong.nginx.connection.count
+    description: Number of client connections in Nginx.
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.subsystem
+      - kong.connection.state
+  - name: kong.nginx.timer.count
+    description: Number of internal scheduled timers Nginx is running in the background.
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.timer.state
+  - name: kong.db.connection.status
+    description: Shows whether Kong has an active database connection. A value of 1 means connected. A value of 0 means not connected.
+  - name: kong.cp.connection.status
+    description: Shows whether the data plane has an active connection to the control plane. A value of 1 means connected. A value of 0 means not connected.
+  - name: kong.upstream.target.status
+    description: "Upstream target’s health. The actual status is in the state attribute, with the metric value set to 1 when a state is populated."
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.upstream.name
+      - kong.target.address
+      - server.address
+      - kong.upstream.state
+      - kong.subsystem
+  - name: kong.dp.connection.last_seen
+    description: Timestamp when the control plane last saw a data plane connect. This metric appears only on control plane nodes and is reported per data plane.
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.dp.host.name
+      - kong.dp.node.id
+      - kong.dp.node.ip
+  - name: kong.dp.version.compatible
+    description: "Shows whether a data plane is compatible with the control plane’s version. This metric appears only on control plane nodes and is reported per data plane. A value of 1 means compatible and 0 means not."
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.dp.host.name
+      - kong.dp.node.id
+      - kong.dp.node.ip
+      - kong.dp.node.version
+  - name: kong.dp.config_hash
+    description: Shows the config hash the control plane has for each data plane. This metric appears only on control plane nodes and is reported per data plane.
     attributes:
-      - 
-  - name: 
-    description:
+      - kong.dp.host.name
+      - kong.dp.node.id
+      - kong.dp.node.ip
+  - name: kong.dp.cluster_cert.expiry
+    description: "Timestamp when the data plane’s cluster certificate will expire."
+  - name: kong.db.entity.count
+    description: "Number of entities stored in Kong’s database."
+  - name: kong.db.entity.error.count
+    description: Number of errors seen during database entity count collection.
+  - name: kong.ee.license.signature
+    description: Last 8 bytes of the Enterprise license signature as a number.
+  - name: kong.ee.license.expiration
+    description: Unix epoch time when the license expires, shifted by 24 hours to avoid timezone differences.
+  - name: kong.ee.license.features
+    description: |
+      Indicates whether the data plane can read or write entities under the current license. 
+      Each capability (<code>ee_entity_read</code> and <code>ee_entity_write</code>) is reported as its own metric, where 1 means allowed and 0 means not allowed.
     attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
-  - name: 
-    description:
-    attributes:
-      - 
+      - kong.ee.license.feature
+  - name: kong.ee.license.error.count
+    description: Number of errors that occurred while collecting license information.
 
 attributes:
   kong.service.name: Name of the Gateway Service.
@@ -127,7 +127,7 @@ attributes:
   kong.workspace.name: Name of the Workspace.
   http.request.method: Method used in the HTTP request.
   kong.shared_dict.name: Name of the shared dict.
-  kong.subsystem: 
+  kong.subsystem: TODO
   kong.connection.state: |
     State of the client connection.
     <br>
@@ -140,4 +140,30 @@ attributes:
       <li><code>reading</code></li>
       <li><code>writing</code></li>
       <li><code>waiting</code></li>
+    </ul>
+  kong.pid: Worker process ID.
+  kong.timer.state: State of the timer.
+  kong.upstream.name: Name of the Upstream.
+  kong.target.address: Address of the Target.
+  server.address: Address of the server.
+  kong.upstream.state: |
+    Health of the Upstream Target.
+    <br>
+    Possible values:
+    <ul>
+      <li><code>healthy</code></li>
+      <li><code>unhealthy</code></li>
+      <li><code>dns_error</code></li>
+    </ul>
+  kong.dp.host.name: Host name fo the data plane.
+  kong.dp.node.id: ID of the data plane node.
+  kong.dp.node.ip: IP address of the data plane node.
+  kong.dp.node.version: Version of the data plane node.
+  kong.ee.license.feature: |
+    Enterprise feature.
+    <br>
+    Possible values:
+    <ul>
+      <li><code>ee_entity_read</code></li>
+      <li><code>ee_entity_write</code></li>
     </ul>
