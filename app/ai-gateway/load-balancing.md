@@ -110,7 +110,7 @@ rows:
     description: |
       Routes requests based on semantic similarity between the prompt and model descriptions. In the configuration, embeddings are generated using a specified model (e.g., `text-embedding-3-small`), and similarity is calculated using vector search.
 
-      {% new_in 3.13 %} Multiple targets can be configured with [identical descriptions](/plugins/ai-proxy-advanced/semantic-with-fallback). When multiple targets share the same description, the AI balancer performs round-robin fallback among these targets if the primary target fails. Weights affect the order in which fallback targets are selected.
+      {% new_in 3.13 %} Multiple targets can be configured with [identical descriptions](/plugins/ai-proxy-advanced/examples/semantic-with-fallback/). When multiple targets share the same description, the AI balancer performs round-robin fallback among these targets if the primary target fails. Weights affect the order in which fallback targets are selected.
     considerations: |
       * Uses vector search (for example, Redis) to find the best match based on prompt embeddings.
       * `distance_metric` and `threshold` settings fine-tune matching sensitivity.
