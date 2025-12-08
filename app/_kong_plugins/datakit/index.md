@@ -75,7 +75,7 @@ rows:
   - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)"
     description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
   - usecase: "[Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)"
-    description: Use dynamic internal auth endpoint within your ecosystem to inject request headers before proxying a request.
+    description: Use a dynamic internal auth endpoint to inject request headers before proxying the request.
 {% endtable %}
 <!--vale on-->
 
@@ -522,8 +522,8 @@ rows:
       * `url`: The request URL resolved at runtime
       * `https_proxy`: The HTTPS proxy URL to use for the request
       * `http_proxy`: The HTTP proxy URL to use for the request
-      * `proxy_auth_username`: The username to authentication with proxy
-      * `proxy_auth_password`: The password to authentication with proxy
+      * `proxy_auth_username`: The username to authenticate with the proxy
+      * `proxy_auth_password`: The password to authenticate with the proxy
     outputs: |
       * `body`: The response body
       * `headers`: The response headers
@@ -659,7 +659,7 @@ Send a POST request with a JSON body:
     name: Datakit
 ```
 
-Perform request via a proxy server:
+Perform a request through a proxy server:
 
 ```yaml
 - name: CALL
@@ -725,7 +725,9 @@ returns a JSON mime-type in the `Content-Type` header if the response body is
 not valid JSON.
 
 #### Resolve URL at runtime
-The `url` attribute of the `call` node is statically defined at config-time. To override it at runtime, connect a value to the `url` input. If the URL resolves to nil, the statically defined URL will be used as a fallback. For example:
+The `url` attribute on a `call` node is set at config-time. To override it at runtime, provide a value through the `url` input. If that value is `nil`, Datakit falls back to the statically defined URL. 
+
+For example:
 
 ```yaml
 - name: DYNAMIC_URL

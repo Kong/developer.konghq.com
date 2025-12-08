@@ -1,15 +1,15 @@
 description: |
-  Use dynamic internal auth endpoint within your ecosystem to inject request headers before proxying a request.
+  Use a dynamic internal auth endpoint to inject request headers before proxying a request.
 
 extended_description: |
-  Use dynamic internal auth endpoint within your ecosystem to inject request headers before proxying a request.
+  Use a dynamic internal auth endpoint to inject request headers before proxying a request.
 
   This example contains the following nodes:
   1. The node `STATIC_INPUTS` sets some static values that will be used as inputs to other nodes.
-  2. The node `BUILD_HEADERS` fetches an API key from the client query and injects it into the request headers that will be sent to the auth service.
-  3. The node `BUILD_URL` constructs the auth service URL dynamically based on the request path parameter from request headers.
-  4. The node `AUTH_REQUEST` makes a POST request to the auth service.
-  5. The node `UPSTREAM_AUTH_HEADER` composes an Authorization header from the access token received from the auth service and 
+  1. The node `BUILD_HEADERS` fetches an API key from the client query and injects it into the request headers that will be sent to the auth service.
+  1. The node `BUILD_URL` constructs the auth service URL dynamically based on the request path parameter from request headers.
+  1. The node `AUTH_REQUEST` makes a POST request to the auth service.
+  1. The node `UPSTREAM_AUTH_HEADER` composes an Authorization header from the access token received from the auth service and 
   adds it to the service request headers before proxying the request.
 
 title: Authenticate Kong to a third-party service resolved at runtime
