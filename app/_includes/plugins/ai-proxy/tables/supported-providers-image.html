@@ -17,7 +17,16 @@
   <tbody>
     {% for provider in include.providers %}
     <tr id="{{ provider.name }}-image-realtime">
-      <td>{{ provider.name }}{% if provider.formats %} ({{ provider.formats }}){% endif %}</td>
+      <td>
+        {{ provider.name }}{% if provider.formats %} ({{ provider.formats }}){% endif %}
+        {% if provider.image.generations.supported and provider.image.generations.min_version %}
+          {% new_in {{ provider.image.generations.min_version }} %}
+        {% elsif provider.image.edits.supported and provider.image.edits.min_version %}
+          {% new_in {{ provider.image.edits.min_version }} %}
+        {% elsif show_realtime and provider.realtime.supported and provider.realtime.min_version %}
+          {% new_in {{ provider.realtime.min_version }} %}
+        {% endif %}
+      </td>
       <td>{{ provider.image.generations.supported | to_check }}</td>
       <td>{{ provider.image.edits.supported | to_check }}</td>
       {% if show_realtime %}

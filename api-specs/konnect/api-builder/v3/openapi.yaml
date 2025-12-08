@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Builder
-  version: 3.0.26
+  version: 3.0.27
   description: The management API for building APIs for Konnect Dev Portals.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
+  x-oas-source: kong/platform-api@db794d79217507e281f72d4b0b0df015b4800e2c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/db794d79217507e281f72d4b0b0df015b4800e2c'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region

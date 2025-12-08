@@ -55,9 +55,6 @@ faqs:
       Ensure that the DNS records are public as it will not work with private DNS records.
 ---
 
-{:.warning}
-> **Dev Portal v3 domain breaking changes:** [Review custom domain breaking changes](/dev-portal/breaking-changes/#migrate-your-custom-domain) for Dev Portal v3 and migrate to the new domain before October 1, 2025.
-
 Every Dev Portal instance has an auto-generated default URL. You can also manage custom URLs within {{site.konnect_short_name}}.
 This gives users the ability to access the Dev Portal from either the default URL, for example `https://example.{geo}.kongportals.com`, or a custom URL like `portal.example.com`.
 

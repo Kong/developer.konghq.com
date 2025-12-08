@@ -39,6 +39,7 @@ rows:
             config:
               url: /assets/images/gateway/ai-gateway-overview.svg
               alt_text: Overview of AI gateway
+
   - columns:
       - blocks:
         - type: structured_text
@@ -91,6 +92,30 @@ rows:
               url: /ai-gateway/ai-providers/
               align: end
 
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "AI Gateway in {{site.konnect_short_name}}"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} provides a [unified control plane](https://cloud.konghq.com/ai-manager) to create, manage, and monitor LLMs
+                    using the {{site.konnect_short_name}} platform.
+
+                    Key features include:
+                    * **Routing and [load balancing](/ai-gateway/load-balancing/)**: Assign Gateway Services and define how traffic is distributed across models.
+                    * **Streaming and authentication**: Enable streaming responses and manage authentication through the AI Gateway.
+                    * **Access control**: Create and apply access tiers to control how clients interact with LLMs.
+                    * **Usage analytics**: Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
+                    * **Visual traffic maps**: Explore interactive maps that show how requests flow between clients and models in real time.
+
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/ai-manager.png
+              alt_text: "AI Gateway Dashboard in Konnect"
 
   - header:
     columns:
@@ -115,7 +140,7 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[AI Manager](/ai-manager/): GUI for managing all your Kong AI Gateway resources in one place."
+                    - "[AI Gateway editor](https://cloud.konghq.com/ai-manager): GUI for managing all your Kong AI Gateway resources in one place."
                     - "[decK](/deck/): Manage Kong AI Gateway and {{site.base_gateway}} configuration through declarative state files."
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}."
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services."
@@ -561,7 +586,7 @@ rows:
         - type: card
           config:
             title: Save LLM usage costs with semantic load balancing
-            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on [semantic similarity](/ai-gateway/semantic-similarity/).
+            description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
             icon: /assets/icons/money.svg
             cta:
               url: /how-to/use-semantic-load-balancing
