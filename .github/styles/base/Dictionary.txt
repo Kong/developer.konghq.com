@@ -462,6 +462,7 @@ Kustomize
 kustomize
 kustomize
 kv
+Lakera
 langchain
 lapis
 lastTimestamp
