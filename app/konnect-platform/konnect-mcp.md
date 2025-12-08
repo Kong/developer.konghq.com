@@ -61,7 +61,7 @@ faqs:
 
 The {{site.konnect_product_name}} MCP Server enables developers to interact with Kong {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access gateway entities, debug API performance, and search Kong documentation from your development environment.
 
-Many tools in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect/kai/), which provides an in-product experience for {{site.konnect_product_name}} Plus and Enterprise accounts.
+Many tools in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), which provides an in-product experience for {{site.konnect_product_name}} Plus and Enterprise accounts.
 
 {:.info}
 > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
