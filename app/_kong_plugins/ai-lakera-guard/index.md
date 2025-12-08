@@ -50,9 +50,9 @@ The AI Lakera Guard plugin evaluates requests and responses that pass through Ko
 
 The plugin inspects model traffic at three points in the LLM request lifecycle. Each phase pages data into memory, extracts content that Lakera Guard can evaluate, and sends that content to Lakera for inspection.
 
-* **Request Phase**: Also known as the **Access** phase in Kong. Inspection occurs **before** any data leaves the gateway toward the target LLM. The plugin buffers the full request body in memory, extracts the fields that Lakera Guard can evaluate, and sends them for inspection.
-* **Response Phase (buffered)**: Also known as the **Response** phase in Kong. Inspection occurs **before** any byte is transmitted back toward the client. The plugin buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before Kong sends any part of the response back to the client.”
-* **Response Phase (per-frame)**: Also called the **body_filter** phase in Kong. The plugin runs during streaming responses like Server-Sent Events. Kong processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the plugin inspects that segment with Lakera Guard before forwarding the frame to the client.
+* **Request phase**: Also known as the **Access** phase in Kong. Inspection occurs **before** any data leaves the gateway toward the target LLM. The plugin buffers the full request body in memory, extracts the fields that Lakera Guard can evaluate, and sends them for inspection.
+* **Response phase (buffered)**: Also known as the **Response** phase in Kong. Inspection occurs **before** any byte is transmitted back toward the client. The plugin buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before Kong sends any part of the response back to the client.
+* **Response phase (per-frame)**: Also called the **body_filter** phase in Kong. The plugin runs during streaming responses like Server-Sent Events. Kong processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the plugin inspects that segment with Lakera Guard before forwarding the frame to the client.
 
 The plugin inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on response types that are not text responses based on Lakera Guard’s current product limitations.
 
@@ -97,10 +97,10 @@ rows:
 Use the logging capabilities of the `ai-lakera-guard` plugin to monitor the inspection process and understand the detected violations. 
 
 The plugin provides detailed logging and controls over how violations are reported:
-* **SaaS Platform Logging**: All inspected requests, responses, and chats are made available on the Lakera SaaS platform.
-* **Standard Kong Logging**: Kong logs all request and response **Lakera request UUIDs** to the standard logging subsystem.
-* **Unsupported Logging Outputs**: Prometheus, Splunk, or OpenTelemetry.
-* **Logging Outputs**:  HTTP-Log, File-Log, and TCP-Log.
+* **SaaS platform logging**: All inspected requests, responses, and chats are made available on the Lakera SaaS platform.
+* **Standard Kong logging**: Kong logs all request and response **Lakera request UUIDs** to the standard logging subsystem.
+* **Unsupported logging outputs**: Prometheus, Splunk, or OpenTelemetry.
+* **Logging outputs**:  HTTP-Log, File-Log, and TCP-Log.
 
 By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to Kong logs for administrators. 
 
