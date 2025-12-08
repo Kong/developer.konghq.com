@@ -5,9 +5,12 @@ Starting in {{site.base_gateway}} 3.13, you can authenticate with a cloud Redis 
 The following providers are supported:
 * AWS ElastiCache
 * Azure Managed Redis
-* Google Cloud Memorystore
+* Google Cloud Memorystore (with or without Valkey)
 
 Each provider also supports an instance and cluster configuration.
+
+{:.warning}
+> **Important:** {{site.base_gateway}} open source plugins do not support any Redis cloud provider cluster configurations.
 
 To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 
