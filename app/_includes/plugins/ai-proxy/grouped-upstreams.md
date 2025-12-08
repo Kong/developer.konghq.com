@@ -63,6 +63,13 @@
     plugin=plugin %}
 {% endnavtab %}
 
+{% navtab "Cerebras" %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="Cerebras"
+    plugin=plugin %}
+{% endnavtab %}
+
 {% navtab "Cohere" %}
   {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
     providers=providers
@@ -76,7 +83,7 @@
     provider_name="Gemini"
     plugin=plugin %}
 {:.warning}
-> **[1]**: Kong AI Gateway does **not** support the [Imagen](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/imagen-4.0-generate-preview-06-06?inv=1&invt=Ab46EA&project=summit-demo-2022) model family. For image generation with Google Vertex AI, use [Gemini models](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/image-generation) instead.
+> **[1]**: Kong AI Gateway before 3.13 does **not** support the [Imagen](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/imagen-4.0-generate-preview-06-06?inv=1&invt=Ab46EA) model family. For image generation with Google Vertex AI, use [Gemini models](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/image-generation) instead.
 {% endnavtab %}
 
 {% navtab "Gemini Vertex" %}
@@ -85,7 +92,7 @@
     provider_name="Gemini Vertex"
     plugin=plugin %}
 {:.warning}
-> **[1]**: Kong AI Gateway does **not** support the [Imagen](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/imagen-4.0-generate-preview-06-06?inv=1&invt=Ab46EA&project=summit-demo-2022) model family. For image generation with Google Vertex AI, use [Gemini models](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/image-generation) instead.
+> **[1]**: Kong AI Gateway before 3.13 does **not** support the [Imagen](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/imagen-4.0-generate-preview-06-06?inv=1&invt=Ab46EA) model family. For image generation with Google Vertex AI, use [Gemini models](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/image-generation) instead.
 {% endnavtab %}
 
 {% navtab "Hugging Face" %}
@@ -106,6 +113,13 @@
   {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
     providers=providers
     provider_name="Mistral"
+    plugin=plugin %}
+{% endnavtab %}
+
+{% navtab "xAI" %}
+  {% include plugins/ai-proxy/tables/upstream-paths/upstream-paths.html
+    providers=providers
+    provider_name="xAI"
     plugin=plugin %}
 {% endnavtab %}
 
