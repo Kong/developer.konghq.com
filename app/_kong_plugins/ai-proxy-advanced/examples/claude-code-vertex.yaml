@@ -15,23 +15,24 @@ requirements:
 
 config:
   llm_format: anthropic
-  route_type: llm/v1/chat
-  logging:
-    log_payloads: false
-    log_statistics: true
-  auth:
-    allow_override: false
-    gcp_use_service_account: true
-    gcp_service_account_json: "${gcp_service_account_json}"
-  model:
-    provider: gemini
-    name: gemini-2.5-flash
-    options:
-      anthropic_version: vertex-2023-10-16
-      gemini:
-        api_endpoint: "${vertex_api_endpoint}"
-        project_id: "${gcp_project_id}"
-        location_id: "${gcp_location_id}"
+  targets:
+  - route_type: llm/v1/chat
+    logging:
+      log_payloads: false
+      log_statistics: true
+    auth:
+      allow_override: false
+      gcp_use_service_account: true
+      gcp_service_account_json: "${gcp_service_account_json}"
+    model:
+      provider: gemini
+      name: gemini-2.5-flash
+      options:
+        anthropic_version: vertex-2023-10-16
+        gemini:
+          api_endpoint: "${vertex_api_endpoint}"
+          project_id: "${gcp_project_id}"
+          location_id: "${gcp_location_id}"
 
 variables:
   gcp_service_account_json:

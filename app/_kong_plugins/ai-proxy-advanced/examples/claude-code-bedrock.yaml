@@ -15,19 +15,20 @@ requirements:
 
 config:
   llm_format: anthropic
-  route_type: llm/v1/chat
-  auth:
-    allow_override: false
-    aws_access_key_id: "${aws_access_key_id}"
-    aws_secret_access_key: "${aws_secret_access_key}"
-  model:
-    provider: bedrock
-    name: us.anthropic.claude-haiku-4-5-20251001-v1:0
-    options:
-      anthropic_version: bedrock-2023-05-31
-      bedrock:
-        aws_region: "${aws_region}"
-      max_tokens: 8192
+  targets:
+  - route_type: llm/v1/chat
+    auth:
+      allow_override: false
+      aws_access_key_id: "${aws_access_key_id}"
+      aws_secret_access_key: "${aws_secret_access_key}"
+    model:
+      provider: bedrock
+      name: us.anthropic.claude-haiku-4-5-20251001-v1:0
+      options:
+        anthropic_version: bedrock-2023-05-31
+        bedrock:
+          aws_region: "${aws_region}"
+        max_tokens: 8192
 
 variables:
   aws_access_key_id:

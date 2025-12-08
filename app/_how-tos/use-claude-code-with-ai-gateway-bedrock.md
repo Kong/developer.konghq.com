@@ -60,9 +60,13 @@ prereqs:
            - Create a new user or select an existing user
            - Attach the `AmazonBedrockFullAccess` policy or create a custom policy with `bedrock:InvokeModel` permissions
            - Create access keys for the user
-           - Save the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 
-        3. Note your AWS region where Bedrock is enabled (for example, `us-west-2`)
+        3. Export the Access Key ID, Secret Access Key and AWS region to your environment:
+           ```sh
+           export DECK_AWS_ACCESS_KEY_ID='YOUR AWS ACCESS KEY ID'
+           export DECK_AWS_SECRET_ACCESS_KEY='YOUR AWS SECRET ACCESS KEY'
+           export DECK_AWS_REGION='YOUR AWS REGION'
+           ```
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
       include_content: prereqs/claude-code

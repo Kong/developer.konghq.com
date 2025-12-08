@@ -15,23 +15,24 @@ requirements:
 
 config:
   llm_format: anthropic
-  route_type: llm/v1/chat
-  logging:
-    log_statistics: true
-    log_payloads: false
-  auth:
-    allow_override: false
-    gcp_use_service_account: true
-    gcp_service_account_json: "${gcp_service_account_json}"
-  model:
-    provider: gemini
-    name: gemini-2.0-flash
-    options:
-      gemini:
-        api_endpoint: "${gemini_api_endpoint}"
-        project_id: "${gcp_project_id}"
-        location_id: "${gcp_location_id}"
-      max_tokens: 8192
+  targets:
+  - route_type: llm/v1/chat
+    logging:
+      log_statistics: true
+      log_payloads: false
+    auth:
+      allow_override: false
+      gcp_use_service_account: true
+      gcp_service_account_json: "${gcp_service_account_json}"
+    model:
+      provider: gemini
+      name: gemini-2.0-flash
+      options:
+        gemini:
+          api_endpoint: "${gemini_api_endpoint}"
+          project_id: "${gcp_project_id}"
+          location_id: "${gcp_location_id}"
+        max_tokens: 8192
 
 variables:
   gcp_service_account_json:

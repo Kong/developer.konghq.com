@@ -34,7 +34,7 @@ entities:
 
 tags:
   - ai
-  - openai
+  - anthropic
 
 tldr:
   q: How do I run Claude CLI through Kong AI Gateway?
@@ -46,8 +46,8 @@ tools:
 prereqs:
   inline:
     - title: Anthropic
-      icon_url: /assets/icons/third-party/claude.svg
-      include_content: prereqs/openai
+      icon_url: /assets/icons/anthropic.svg
+      include_content: prereqs/anthropic
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
       include_content: prereqs/claude-code

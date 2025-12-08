@@ -48,7 +48,10 @@ prereqs:
     - title: DashScope
       icon_url: /assets/icons/dashscope.svg
       content: |
-        You need an active DashScope account with API access. Sign up at the [Alibaba Cloud DashScope platform](https://dashscope.aliyuncs.com/) and obtain your API key from the API-KEY interface.
+        You need an active DashScope account with API access. Sign up at the [Alibaba Cloud DashScope platform](https://dashscope.aliyuncs.com/), obtain your API key from the API-KEY interface, and export it to your environment:
+        ```sh
+        export DECK_DASHSCOPE_API_KEY='YOUR DASHSCOPE API KEY'
+        ```
 
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg

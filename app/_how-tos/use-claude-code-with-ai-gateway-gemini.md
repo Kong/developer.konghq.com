@@ -34,7 +34,6 @@ entities:
 
 tags:
   - ai
-  - openai
 
 tldr:
   q: How do I run Claude CLI through Kong AI Gateway?
@@ -93,6 +92,7 @@ The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request an
 {% entity_examples %}
 entities:
   plugins:
+  - name: ai-proxy-advanced
     config:
       llm_format: anthropic
       targets:
