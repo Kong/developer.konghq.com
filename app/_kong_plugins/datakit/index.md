@@ -520,6 +520,10 @@ rows:
       * `headers`: Request headers
       * `query`: Key-value pairs to encode as the request query string
       * `url`: The request URL resolved at runtime
+      * `https_proxy`: The HTTPS proxy URL to use for the request
+      * `http_proxy`: The HTTP proxy URL to use for the request
+      * `proxy_auth_username`: The username to authentication with proxy
+      * `proxy_auth_password`: The password to authentication with proxy
     outputs: |
       * `body`: The response body
       * `headers`: The response headers
@@ -655,6 +659,18 @@ Send a POST request with a JSON body:
     name: Datakit
 ```
 
+Perform request via a proxy server:
+
+```yaml
+- name: CALL
+  type: call
+  url: https://example.com/foo
+  inputs:
+    https_proxy: http://my-proxy.example.com:8080
+    proxy_auth_username: my-username
+    proxy_auth_password: my-password
+```
+
 Call nodes are used in most datakit workflows. For complete examples, see:
 * [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
 * [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
@@ -718,6 +734,9 @@ The `url` attribute of the `call` node is statically defined at config-time. To 
   inputs:
     url: request.body
 ```
+
+#### Proxy options
+The `call` node supports performing requests via a proxy server. This is controlled by proxy options.
 
 #### Limitations
 
