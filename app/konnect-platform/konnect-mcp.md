@@ -1,6 +1,6 @@
 ---
 title: "{{site.konnect_product_name}} MCP Server"
-description: "Interact with Kong Konnect through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access gateway entities, debug API performance, and search documentation."
+description: "Interact with Kong Konnect through AI clients using MCP tools. Access gateway entities, debug API performance, and search documentation."
 content_type: reference
 layout: reference
 products:
@@ -78,24 +78,15 @@ The {{site.konnect_product_name}} MCP Server enables several workflows for manag
 
 - **Alert-driven investigation**<br> Fetch detailed context from Kong alerting events to understand what triggered an alert. Use pre-configured debug session parameters for immediate investigation.
 
-- **Documentation Search**<br> Search Kong's documentation for configuration guidance, troubleshooting steps, and best practices without leaving your development environment.
+- **Kong Documentation search**<br> Search Kong's documentation for configuration guidance, troubleshooting steps, and best practices without leaving your development environment.
 
 ## Authentication
 
-The {{site.konnect_product_name}} MCP Server uses Personal Access Tokens (PAT) or System Personal Access Tokens (SPAT) for authentication.
-
-### Generating a Personal Access Token
-
-1. Log in to Kong Konnect
-2. Navigate to account settings > Personal Access Tokens
-3. Click "Generate New Token"
-4. Select appropriate scopes for the tools you need
-5. Copy the token (it won't be shown again)
-
+To use the {{site.konnect_product_name}} MCP Server authentication, you will need a Personal Access Token for authentication: Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
 
 ### Organization settings
 
-MCP server access is enabled by default. Organization administrators can disable it from Organization Settings. When disabled, authentication attempts return "access denied".
+{{site.konnect_product_name}} MCP Server access is **enabled by default**. Organization administrators can disable it from Organization Settings. When disabled, authentication attempts return "access denied".
 
 {:.info}
 >**KAi Integration**
@@ -121,12 +112,6 @@ rows:
     url: "`https://eu.mcp.konghq.com/`"
   - region: Australia (AU)
     url: "`https://au.mcp.konghq.com/`"
-  - region: India (IN)
-    url: "`https://in.mcp.konghq.com/`"
-  - region: Singapore (SG)
-    url: "`https://sg.mcp.konghq.com/`"
-  - region: Middle East (ME)
-    url: "`https://me.mcp.konghq.com/`"
 {% endtable %}
 
 <!-- vale on -->
@@ -138,7 +123,7 @@ rows:
 
 ## Installation
 
-Configure your MCP client by adding the {{site.konnect_product_name}} MCP Server with your regional URL and PAT.
+Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your regional URL and PAT.
 
 {% navtabs "mcp-client-installation" %}
 {% navtab "Claude Code CLI" %}
@@ -150,17 +135,10 @@ claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/ \
   --header "Authorization: Bearer YOUR_KONNECT_PAT"
 ```
 
-**Using an environment variable (more secure):**
+{:.ino}
+> Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual Personal Access Token.
 
-```bash
-claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/ \
-  --env KONG_TOKEN="YOUR_KONNECT_PAT" \
-  --header "Authorization: Bearer ${KONG_TOKEN}"
-```
-
-Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual Personal Access Token.
-
-**Editing the configuration file directly:**
+You can also confiogure editing the configuration file directly:**
 
 Claude CLI stores its configuration in `~/.claude.json` (or `.mcp.json` for project scope):
 
@@ -178,19 +156,17 @@ Claude CLI stores its configuration in `~/.claude.json` (or `.mcp.json` for proj
 }
 ```
 
-Verify the configuration:
+Verify the configuration. List all configured servers:
 
 ```bash
-# List all configured servers
 claude mcp list
-
-# Get details for the Kong Konnect server
-claude mcp get kong-konnect
-
-# In Claude Code, check status
-> /mcp
 ```
 
+Get details for the Kong Konnect server
+
+```bash
+claude mcp get kong-konnect
+```
 {% endnavtab %}
 {% navtab "Visual Studio Code" %}
 
@@ -406,7 +382,7 @@ rows:
 
 <!-- vale on -->
 
-**Returns:** Control plane objects with `id`, `name`, and `tags`. The `id` field should be extracted as `control_plane_id` for downstream tools.
+This tool returns Control plane objects with `id`, `name`, and `tags`. The `id` field should be extracted as `control_plane_id` for downstream tools.
 
 
 ### `GetControlPlaneGroup`
@@ -438,7 +414,7 @@ rows:
 {% endtable %}
 
 <!-- vale on -->
-**Returns:** Array of control plane objects with `id`, `name`, and `tags`.
+This tool returns Array of control plane objects with `id`, `name`, and `tags`.
 
 
 ### `GetConsumer`
@@ -480,7 +456,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-**Returns:** Consumer objects with `id`, `username`, `custom_id`, and `tags`. Use `username` for human communication and `id` when calling GetPlugin.
+This tool returns Consumer objects with `id`, `username`, `custom_id`, and `tags`. Use `username` for human communication and `id` when calling GetPlugin.
 
 
 ### `GetConsumerGroup`
@@ -511,7 +487,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-**Returns:** Array of consumer group objects with `id`, `name`, `created_at`, and `tags`.
+This tool returns an array of consumer group objects with `id`, `name`, `created_at`, and `tags`.
 
 
 ### `GetService`
@@ -552,7 +528,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-**Returns:** Service objects with upstream configuration (host, port, protocol, timeouts, retries, certificates).
+This tool returns Service objects with upstream configuration (host, port, protocol, timeouts, retries, certificates).
 
 
 ### `GetRoute`
@@ -593,7 +569,7 @@ rows:
 {% endtable %}
 
 <!-- vale on -->
-**Returns:** Route objects with path mappings, HTTP methods, and service associations.
+This tool returns Route objects with path mappings, HTTP methods, and service associations.
 
 
 ### `GetPlugin`
@@ -629,7 +605,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-**Returns:** Plugin objects with `id`, `name`, `enabled` status, configuration, and scope associations (service, route, consumer).
+This tool returns plugin objects with `id`, `name`, `enabled` status, configuration, and scope associations (service, route, consumer).
 
 
 ### `GetVault`
@@ -671,7 +647,7 @@ rows:
 {% endtable %}
 
 <!-- vale on -->
-**Returns:** Vault objects with `id`, `name`, `prefix`, `provider`, and configuration details.
+This tool returns Vault objects with `id`, `name`, `prefix`, `provider`, and configuration details.
 
 
 ### `GetAnalytics`
@@ -754,7 +730,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-**Returns:**
+This tool returns
 - For `query_api_requests`: Detailed request data with metadata, latency breakdowns, and trace identifiers
 - For `get_consumer_requests`: Aggregated statistics and per-request details for a specific consumer
 
@@ -817,7 +793,7 @@ rows:
 {% endtable %}
 
 <!-- vale on -->
-**Returns:** `debug_session_id` for use with ActiveTracingSession tool.
+This tool returns `debug_session_id` for use with ActiveTracingSession tool.
 
 {:.warning}
 > Using `CreateDebugSession` requires user confirmation before starting. The session must complete before data can be analyzed.
@@ -866,7 +842,8 @@ rows:
 {% endtable %}
 
 <!-- vale on -->
-**Operations:**
+
+Available opertations:
 
 - **`fetch_status`**: Returns session status (`"in_progress"`, `"completed"`, `"timed_out"`, `"cancelled"`, or `"pending"`)
 - **`summarize_session`**: Returns aggregated span-level metrics, latency analysis, and bottleneck identification
@@ -874,7 +851,7 @@ rows:
 - **`compressed_traces`**: Returns unique traces in compacted format
 - **`stop_session`**: Stops an active session immediately
 
-**Returns:** Varies by operation. Trace data uses schema-based format for efficient transmission.
+This tool returns Varies by operation. Trace data uses schema-based format for efficient transmission.
 
 
 ### `FetchAlertingEventDetails`
@@ -901,7 +878,7 @@ rows:
 {% endtable %}
 
 <!-- vale on -->
-**Returns:** AlertEvent object with:
+This tool returns AlertEvent object with:
 - Affected entity details (`control_plane_id`, `entity_id`, `entity_type`)
 - Optional `debug_session_inputs` with pre-configured parameters for CreateDebugSession
 
@@ -930,7 +907,7 @@ rows:
 {% endtable %}
 
 <!-- vale on -->
-**Returns:** Plain text documentation excerpts with configuration examples and procedures.
+This tool returns plain text documentation excerpts with configuration examples and procedures.
 
 ## Hierarchical dependencies between tools
 
