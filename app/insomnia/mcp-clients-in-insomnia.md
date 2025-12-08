@@ -163,3 +163,20 @@ Elicitation supports workflows where the server needs more context or specific f
 1. The server continues processing using the new information.
 
 For more details, see the MCP client specification for [elicitation](https://modelcontextprotocol.io/specification/draft/client/elicitation)
+
+## Sampling responses
+
+Insomnia supports **MCP Sampling**. Sampling is a workflow where an MCP server requests Insomnia to generate a model response based on the current context. Insomnia then uses its AI integration to produce the sampling response, and it presents the request and response steps in a dedicated interface in the Response pane.
+
+### How sampling works
+
+1. The MCP server issues a `sampling/createMessage` request to the Insomnia MCP client.
+1. Insomnia displays the sampling request in the Response pane so that the user can review and modify it before generation.
+1. After the user approves the request, Insomnia forwards it to the model that's using Insomnia AI.
+1. Insomnia receives the model’s output and then displays the response so that the user can review and modify it.
+1. After the user approves the response, Insomnia then returns the final result to the MCP server. 
+
+{:.info}
+> When supported by the server, this process can continue across additional turns.
+
+For more information about sampling, go to the MCP [Sampling](https://modelcontextprotocol.io/specification/draft/client/sampling) documentation.
