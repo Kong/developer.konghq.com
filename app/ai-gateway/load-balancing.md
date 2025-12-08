@@ -53,6 +53,12 @@ Kong AI Gateway supports multiple load balancing strategies to optimize traffic 
 
 The table below provides a detailed overview of the available algorithms, along with considerations to keep in mind when selecting the best option for your use case.
 
+### Load balancing algorithms
+
+Kong AI Gateway supports multiple load balancing strategies to optimize traffic distribution across AI models. Each algorithm is suited for different performance goals such as balancing load, improving cache-hit ratios, reducing latency, or ensuring [failover reliability](#retry-and-fallback).
+
+The table below provides a detailed overview of the available algorithms, along with considerations to keep in mind when selecting the best option for your use case.
+
 <!--vale off-->
 {% table %}
 columns:
@@ -77,6 +83,13 @@ rows:
       * Especially effective with consistent keys like user IDs.
       * Requires diverse hash inputs for balanced distribution.
       * Ideal for maintaining session persistence.
+  - algorithm: "[Least-connections](/plugins/ai-proxy-advanced/examples/least-connections/)"
+    description: |
+      {% new_in 3.13 %} Routes requests to backends with the highest spare capacity based on in-flight request counts. In the configuration, the [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) parameter calculates the connection capacity of each backend.
+    considerations: |
+      * Provides good distribution of traffic.
+      * More dynamic, automatically routing new requests to other backends when slower backends accumulate more open connections.
+      * Does not improve cache-hit ratios.
   - algorithm: "[Lowest-usage](/plugins/ai-proxy-advanced/examples/lowest-usage/)"
     description: |
       Routes requests to the least-utilized models based on resource usage metrics. In the configuration, the [`tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) (for example, `prompt-tokens`) defines how usage is measured, focusing on prompt tokens or other resource indicators.
@@ -88,7 +101,7 @@ rows:
     description: |
       Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (for example, `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times. By default, the latency is calculated based on the time the model takes to generate each token (`tpot`).
 
-      The latency algorithm is based on peak EWMA (Exponentially Weighted Moving Average), which ensures that the balancer selects the backend by the lowest latency. The latency metric used is the full request cycle, from TCP connect to body response time. Since it’s a moving average, the metrics will decay over time.
+      The latency algorithm is based on peak EWMA (Exponentially Weighted Moving Average), which ensures that the balancer selects the backend by the lowest latency. The latency metric used is the full request cycle, from TCP connect to body response time. Since it's a moving average, the metrics will decay over time.
     considerations: |
       * Prioritizes models with the fastest response times.
       * Optimizes for real-time performance in time-sensitive applications.
@@ -96,6 +109,8 @@ rows:
   - algorithm: "[Semantic](/plugins/ai-proxy-advanced/examples/semantic/)"
     description: |
       Routes requests based on semantic similarity between the prompt and model descriptions. In the configuration, embeddings are generated using a specified model (e.g., `text-embedding-3-small`), and similarity is calculated using vector search.
+
+      {% new_in 3.13 %} Multiple targets can be configured with [identical descriptions](/plugins/ai-proxy-advanced/semantic-with-fallback). When multiple targets share the same description, the AI balancer performs round-robin fallback among these targets if the primary target fails. Weights affect the order in which fallback targets are selected.
     considerations: |
       * Uses vector search (for example, Redis) to find the best match based on prompt embeddings.
       * `distance_metric` and `threshold` settings fine-tune matching sensitivity.
