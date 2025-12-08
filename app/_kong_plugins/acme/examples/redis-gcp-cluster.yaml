@@ -22,9 +22,9 @@ config:
     redis:
       cluster_nodes: ${cluster_address}
       port: 6379
-    cloud_authentication:
-      auth_provider: gcp
-      gcp_service_account_json: ${service_account}
+      cloud_authentication:
+        auth_provider: gcp
+        gcp_service_account_json: ${service_account}
 
 variables:
   email:
