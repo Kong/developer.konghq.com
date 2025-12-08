@@ -1,0 +1,142 @@
+metrics:
+  - name: http.server.request.count
+    description: Total number of incoming HTTP requests.
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.auth.consumer.name
+      - kong.response.source
+      - kong.workspace.name
+      - http.request.method
+  - name: kong.latency.total
+    description: Complete end-to-end duration of a request in seconds.
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: kong.latency.internal
+    description: "Kong’s internal processing time in milliseconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: kong.latency.upstream
+    description: Upstream processing time in seconds, from when the Gateway sends the request to the upstream, to when the data is returned to Kong.
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: http.server.request.size
+    description: Size of each incoming HTTP request in bytes.
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.auth.consumer.name
+  - name: http.server.response.size
+    description: Total size of the HTTP response sent back to the client in bytes.
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.auth.consumer.name
+  - name: kong.shared_dict.usage
+    description: Current memory usage of a shared dict in bytes.
+    attributes:
+      - kong.shared_dict.name
+      - kong.subsystem
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+  - name: 
+    description:
+    attributes:
+      - 
+
+attributes:
+  kong.service.name: Name of the Gateway Service.
+  kong.route.name: Name of the Route.
+  kong.auth.consumer.name: Name of the authenticated Consumer.
+  kong.response.source:  |
+    Origin of the current response.
+    <br>
+    Possible values:
+    <ul>
+      <li><code>upstream</code> if the response originated by successfully contacting the upstream service</li>
+      <li><code>kong</code> otherwise</li>
+    </ul>
+  kong.workspace.name: Name of the Workspace.
+  http.request.method: Method used in the HTTP request.
+  kong.shared_dict.name: Name of the shared dict.
+  kong.subsystem: 
+  kong.connection.state: |
+    State of the client connection.
+    <br>
+    Possible values:
+    <ul>
+      <li><code>accepted</code></li>
+      <li><code>handled</code></li>
+      <li><code>total</code></li>
+      <li><code>active</code></li>
+      <li><code>reading</code></li>
+      <li><code>writing</code></li>
+      <li><code>waiting</code></li>

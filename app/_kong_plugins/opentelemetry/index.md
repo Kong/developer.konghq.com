@@ -64,8 +64,18 @@ There are two ways to set up an OpenTelemetry backend:
   
   You can view all the available OpenTelemetry Collector exporters at [open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter).
 
-## Metrics {% new_in 3.8 %}
-Metrics are enabled using the `contrib` version of the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/installation/).
+## Metrics {% new_in 3.13 %}
+
+In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry plugin. You can send metrics using the parameters under [`config.metrics`](./reference/#schema--config-metrics).
+
+The following metrics are exposed:
+
+{% include plugins/otel/metric_tables.html %}
+
+
+### Metrics with {{site.base_gateway}} 3.12 or earlier
+
+If you're using {{site.base_gateway}} 3.12 or earlier, metrics are enabled using the `contrib` version of the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/installation/).
 
 The `spanmetrics` connector allows you to aggregate traces and provide metrics to any third party observability platform.
 

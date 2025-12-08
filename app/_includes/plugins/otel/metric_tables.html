@@ -1,0 +1,62 @@
+{% assign metrics = site.data.plugins.otel-metrics.metrics %}
+{% assign attributes = site.data.plugins.otel-metrics.attributes %}
+
+<table>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Metric description</th>
+        <th>Attibute</th>
+        <th>Attribute description</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics %}
+        {% assign span = metric.attributes.size | plus: 1 %}
+        <tr id="{{ metric.name }}">
+            <td rowspan={{ span }}><code>{{ metric.name }}</code></td>
+            <td rowspan={{ span }}>{{ metric.description }}</td>
+        </tr>
+        {% for attribute in metric.attributes %}
+        <tr id="{{ attribute }}">
+                <td><code>{{ attribute }}</code></td>
+                <td>{{ attributes[attribute]}}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </tbody>
+  </table>
+
+
+{% for metric in metrics %}
+
+<h3 id="{{metric.name}}">{{metric.name}}</h3>
+
+
+<p>{{metric.description}}</p>
+
+{% if metric.attributes %}
+
+<p>This metric includes the following attributes:</p>
+
+<table>
+    <thead>
+      <tr>
+        <th>Attibute</th>
+        <th>Attribute description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attribute in metric.attributes %}
+      <tr id="{{ attribute }}">
+        <td><code>{{ attribute }}</code></td>
+        <td>{{ attributes[attribute]}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endif %}
+
+{% endfor %}
+  
