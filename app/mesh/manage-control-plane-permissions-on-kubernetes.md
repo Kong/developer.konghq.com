@@ -25,23 +25,23 @@ related_resources:
     url: /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/
 ---
 
-By default, {{site.mesh_product_name}} deployed on Kubernetes reacts to events and observes all resources at the cluster scope. This approach benefits first-time users who want to explore its functionality and simplifies migration into the mesh. However, in production environments, restricting access to specific resources can enhance security and ensure that {{site.mesh_product_name}} does not impact running applications.
+By default, {{site.mesh_product_name}} deployed on Kubernetes reacts to events and observes all resources at the cluster scope. This approach benefits first-time users who want to explore its functionality and simplifies migration. However, in production environments, restricting access to specific resources can enhance security and ensure that {{site.mesh_product_name}} doesn't impact running applications.
 
 ## Restrict permissions to selected namespaces
 
-You can define a list of namespaces that {{site.mesh_product_name}}’s control plane can access. When this list is set, {{site.mesh_product_name}} will only have permissions in those selected namespaces and in its own system namespace. It won’t be able to access or manage resources in any other namespace.
+You can define a list of namespaces that the {{site.mesh_product_name}} control plane can access. When this list is set, {{site.mesh_product_name}} will only have permissions in those selected namespaces and in its own system namespace. It won’t be able to access or manage resources in any other namespace.
 
-To restrict {{site.mesh_product_name}} to a specific set of namespaces, set the following option during installation:
+To restrict {{site.mesh_product_name}} to a specific set of namespaces, set the `kuma.namespaceAllowList` option during installation:
 
 {% cpinstall namespaceAllowList %}
 namespaceAllowList={first-namespace,second-namespace}
 {% endcpinstall %}
 
-This will create a `RoleBinding` in each listed namespace, binding the {{site.mesh_cp_name}}-workloads `ClusterRole` to that namespace. It will also configure {{site.mesh_product_name}}’s mutating and validating webhooks to only work within the specified namespaces.
+This will create a `RoleBinding` in each listed namespace, binding the `{{site.mesh_cp_name}}-workloads` `ClusterRole` to that namespace. It will also configure {{site.mesh_product_name}}’s mutating and validating webhooks to only work within the specified namespaces.
 
 ## Manually manage RBAC resources
 
-If your environment restricts creating cluster-scoped resources (`ClusterRole` or `ClusterRoleBinding`), or if you prefer to manage permissions yourself, you can disable automatic creation during installation.
+If your environment restricts creating cluster-scoped resources (`ClusterRole` or `ClusterRoleBinding`), or if you prefer to manage permissions yourself, you can disable automatic resource creation during installation.
 
 Before installing {{site.mesh_product_name}}, you must manually create the following resources:
 
@@ -53,7 +53,7 @@ You can find the complete set of required manifests here:
 
 {% rbacresources %}
 
-These manifests include the `{{ kuma-control-plane-workloads }}` binding, granting the control plane write access to resources across all namespaces.
+These manifests include the `{{site.mesh_cp_name}}-workloads` binding, granting the control plane write access to resources across all namespaces.
 
 {:.warning}
 > All required resources must be created **before** installing {{site.mesh_product_name}}.
