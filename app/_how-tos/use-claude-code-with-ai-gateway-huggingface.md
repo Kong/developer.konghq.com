@@ -164,16 +164,32 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach Kong AI Gateway.
 
 ```text
-Hi!
+Try creating a logging.py that logs simple http logs.
 ```
 
 Claude Code might prompt you to approve its web search for answering the question. When you select **Yes**, Claude will produce a full-length response to your request:
 
 ```text
-{"type": "function", "name": "AskUserQuestion", "parameters":
-  {"questions": "[{header: Greeting, multiSelect: false, options: [{label:
-  Hello, description: A friendly greeting}, {label: Hi, description: A
-  casual greeting}], question: How would you like me to greet you?}]"}}
+Create file
+╭───────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ logging.py                                                                                            │
+│                                                                                                       │
+│ import logging                                                                                        │
+│                                                                                                       │
+│ logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s -              │
+│ %(message)s')                                                                                         │
+│                                                                                                       │
+│ def log_info(message):                                                                                │
+│     logging.info(message)                                                                             │
+│                                                                                                       │
+│ def log_warning(message):                                                                             │
+│     logging.warning(message)                                                                          │
+│                                                                                                       │
+│ def log_error(message):                                                                               │
+│     logging.error(message)                                                                            │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Do you want to create logging.py?
+ ❯ 1. Yes
 ```
 {:.no-copy-code}
 
