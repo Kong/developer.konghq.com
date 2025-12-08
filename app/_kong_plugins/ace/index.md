@@ -27,7 +27,7 @@ topologies:
 tags:
   - traffic-control
 
-icon: acme.png 
+icon: ace.png 
 
 categories:
   - traffic-control

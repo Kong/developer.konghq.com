@@ -21,12 +21,7 @@ requirements:
 - "An API or API package in Dev Portal"
 
 config: 
-  match_policy: required
-  redis: 
-    host: localhost
-    port: 6379
-  sync_rate: 1
-  anonymous: anonymous
+  match_policy: if_present
 
 min_version:
   gateway: '3.13'

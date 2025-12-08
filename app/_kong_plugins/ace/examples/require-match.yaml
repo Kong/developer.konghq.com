@@ -17,11 +17,6 @@ requirements:
 
 config: 
   match_policy: required
-  redis: 
-    host: localhost
-    port: 6379
-  sync_rate: 1
-  anonymous: anonymous
 
 min_version:
   gateway: '3.13'

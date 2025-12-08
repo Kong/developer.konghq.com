@@ -9,10 +9,6 @@ requirements:
 
 config: 
   match_policy: ignored
-  redis: 
-    host: localhost
-    port: 6379
-  sync_rate: 1
   anonymous: anonymous
 
 min_version:
