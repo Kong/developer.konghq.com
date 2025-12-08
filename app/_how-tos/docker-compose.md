@@ -77,7 +77,7 @@ services:
     image: postgres:latest           # Official Postgres image
     restart: on-failure              # Restart if the container fails
     volumes:
-      - kong_db_data:/var/lib/postgresql/data  # Mount the volume for persistent data
+      - kong_db_data:/var/lib/postgresql  # Mount the volume for persistent data
     networks:
       - kong-ee-net                  # Connect to the shared Kong network
     environment:
