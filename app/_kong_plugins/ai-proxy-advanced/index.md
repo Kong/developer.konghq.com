@@ -197,7 +197,7 @@ rows:
     description: |
       The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case.
 
-      {% new_in 3.13 %} Multiple targets can be [configured with identical descriptions](/plugins/ai-proxy-advanced/semantic-with-fallback). When multiple targets share the same description, the AI balancer performs round-robin fallback among these targets if the primary target fails. Weights affect the order in which fallback targets are selected.
+      {% new_in 3.13 %} Multiple targets can be [configured with identical descriptions](/plugins/ai-proxy-advanced/examples/semantic-with-fallback/). When multiple targets share the same description, the AI balancer performs round-robin fallback among these targets if the primary target fails. Weights affect the order in which fallback targets are selected.
 {% endtable %}
 <!--vale on-->
 
