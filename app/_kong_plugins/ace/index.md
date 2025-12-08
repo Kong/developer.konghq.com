@@ -1,6 +1,6 @@
 ---
-title: 'ACE'
-name: 'ACE'
+title: 'Access Control Enforcement'
+name: 'Access Control Enforcement'
 
 content_type: plugin
 
@@ -27,7 +27,7 @@ topologies:
 tags:
   - traffic-control
 
-icon: ace.png 
+icon: acme.png 
 
 categories:
   - traffic-control
@@ -37,7 +37,10 @@ related_resources:
     url: /dev-portal/api-catalog-and-packaging/
 ---
 
-The ACE plugin manages developer access control to APIs published with Dev Portal.
+{:.warning}
+> **Important:** The Access Control Enforcement plugin can only be used with API packages in Dev Portal, which is a private beta feature. Contact your account manager for access.
+
+The Access Control Enforcement (ACE) plugin manages developer access control to APIs published with Dev Portal.
 
 Previously, when you created an API catalog in Dev Portal and linked the APIs to a Gateway Service, {{site.konnect_short_name}} would automatically apply the {{site.konnect_short_name}} application auth (KAA) plugin automatically. API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services in those control planes.
 
