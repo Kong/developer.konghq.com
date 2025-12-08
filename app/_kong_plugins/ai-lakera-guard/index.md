@@ -52,7 +52,7 @@ The plugin inspects model traffic at three points in the LLM request lifecycle. 
 
 * **Request phase**: Also known as the **Access** phase in Kong. Inspection occurs **before** any data leaves the gateway toward the target LLM. The plugin buffers the full request body in memory, extracts the fields that Lakera Guard can evaluate, and sends them for inspection.
 * **Response phase (buffered)**: Also known as the **Response** phase in Kong. Inspection occurs **before** any byte is transmitted back toward the client. The plugin buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before Kong sends any part of the response back to the client.
-* **Response phase (per-frame)**: Also called the **body_filter** phase in Kong. The plugin runs during streaming responses like Server-Sent Events. Kong processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the plugin inspects that segment with Lakera Guard before forwarding the frame to the client.
+* **Response phase (per-frame)**: The plugin runs during streaming responses like Server-Sent Events. Kong processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the plugin inspects that segment with Lakera Guard before forwarding the frame to the client.
 
 The plugin inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on response types that are not text responses based on Lakera Guard’s current product limitations.
 
