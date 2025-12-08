@@ -4,7 +4,7 @@ metadata:
   description: Learn how to use Kong's AI assistant, KAi.
   products:
     - konnect
-  breadcrumbs: 
+  breadcrumbs:
     - /konnect/
   tags:
     - ai
@@ -17,7 +17,7 @@ rows:
       type: h1
       text: "Kong AI assistant"
       sub_text: KAi is Kong's AI assistant that can help you detect issues and suggest fixes.
-  
+
   - columns:
       - blocks:
           - type: structured_text
@@ -26,8 +26,8 @@ rows:
                 - type: text
                   text: |
                     Kong's AI assistant, KAi, can detect issues, suggest fixes, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
-                    KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. 
-                    KAi is always disabled by default for Enterprise accounts. 
+                    KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts.
+                    KAi is always disabled by default for Enterprise accounts.
                     Enterprise accounts can enable KAi by contacting their Kong account manager.
 
                     KAi can help you do the following:
@@ -43,7 +43,7 @@ rows:
             config:
               url: /assets/images/konnect/kai.png
               alt_text: "KAi"
-  
+
   - header:
       text: "How KAi works"
       type: h2
@@ -54,13 +54,13 @@ rows:
             blocks:
               - type: text
                 text: |
-                  KAi is made up of a series of components running inside {{site.konnect_short_name}}. 
-                  The agent can perform smart orchestration and analysis of {{site.konnect_short_name}} data and entities. 
+                  KAi is made up of a series of components running inside {{site.konnect_short_name}}.
+                  The agent can perform smart orchestration and analysis of {{site.konnect_short_name}} data and entities.
                   You can interact with the agent in the following ways:
                   * Use the chat in the {{site.konnect_short_name}} UI by clicking the sparkle icon <span style="opacity:0.5">✨</span> on the top right.
                   * Use the `kongctl` command-line tool with the `kongctl kai` command.
 
-                  The KAi agent uses backend LLMs for reasoning and natural language tasks. It also uses a {{site.konnect_short_name}} MCP server to provide information about {{site.konnect_short_name}} and the user's entities and data. 
+                  The KAi agent uses backend LLMs for reasoning and natural language tasks. It also uses a {{site.konnect_short_name}} MCP server to provide information about {{site.konnect_short_name}} and the user's entities and data.
                   Because the MCP server is authenticated via the logged-in user's session, it only has access to data and resources that the user themselves has permission to access.
 
                   KAi also has access to Kong's documentation and support knowledge base, so it can provide guidance on configuration, architecture, and troubleshooting.
@@ -103,9 +103,29 @@ rows:
                 text: |
                   To start a chat with KAi, click the sparkle icon <span style="opacity:0.5">✨</span> on the top right of the {{site.konnect_short_name}} UI.
 
-                  KAi is context-sensitive, so if you navigate to a control plane or Gateway Service, KAi will use that entity context to answer questions. 
+                  KAi is context-sensitive, so if you navigate to a control plane or Gateway Service, KAi will use that entity context to answer questions.
                   You can create a new session from the **Active session** dropdown menu by selecting "New conversation". Each user is limited to three sessions. To delete a session, click the action menu icon next to the session and click **Delete**.
-  
+  - header:
+      text: "Use the {{site.konnect_short_name}} MCP Server with external tools"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The same {{site.konnect_short_name}} MCP Server that powers KAi is available for use with external AI assistants and IDE copilots. This allows you to interact with your {{site.konnect_short_name}} resources directly from your development environment.
+
+                  With the MCP server, you can:
+                  * Query gateway entities (control planes, services, routes, consumers, plugins)
+                  * Create and analyze debug sessions for performance issues
+                  * Search Kong documentation
+                  * Investigate alerts and analyze API traffic
+        - type: button
+          config:
+            text: "Learn how to configure the MCP server"
+            url: /konnect-platform/konnect-mcp/
   - header:
       text: "What's new in KAi"
       type: h2
@@ -157,7 +177,7 @@ rows:
                 supported: Planned (~Q4'25)
               - product: Organizations
                 supported: Planned (~Q4'25)
-  
+
   - header:
       text: "Frequently asked questions"
       type: h2
