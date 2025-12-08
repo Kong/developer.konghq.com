@@ -32,8 +32,7 @@ entities:
 tags:
     - analytics
     - monitoring
-    - tool-calls
-    - function-calling
+    - ai
 
 tech_preview: true
 
@@ -165,6 +164,7 @@ For more information about the ports Jaeger uses, see [API Ports](https://www.ja
 
 Send a request that includes a tool definition. The LLM will respond with a tool call if it determines the user's query requires function execution.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 status_code: 201
@@ -191,8 +191,8 @@ body:
     messages:
         - role: user
           content: What is the temperature in New York?
-
 {% endvalidation %}
+<!-- vale on -->
 
 ## Validate `gen_ai.tool` attributes in Jaeger
 
