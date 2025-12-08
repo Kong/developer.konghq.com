@@ -138,7 +138,7 @@ claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/ \
 {:.ino}
 > Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual Personal Access Token.
 
-You can also confiogure editing the configuration file directly:**
+You can also configure editing the configuration file directly:**
 
 Claude CLI stores its configuration in `~/.claude.json` (or `.mcp.json` for project scope):
 
@@ -843,16 +843,16 @@ rows:
 
 <!-- vale on -->
 
-Available opertations:
+Available operations:
 
-- **`fetch_status`**: Returns session status (`"in_progress"`, `"completed"`, `"timed_out"`, `"cancelled"`, or `"pending"`)
-- **`summarize_session`**: Returns aggregated span-level metrics, latency analysis, and bottleneck identification
-- **`compact_traces`**: Returns detailed trace data in compacted format with optional filtering
-- **`compressed_traces`**: Returns unique traces in compacted format
-- **`stop_session`**: Stops an active session immediately
+- `fetch_status`: Returns session status (`"in_progress"`, `"completed"`, `"timed_out"`, `"cancelled"`, or `"pending"`)
+- `summarize_session`: Returns aggregated span-level metrics, latency analysis, and bottleneck identification
+- `compact_traces`: Returns detailed trace data in compacted format with optional filtering
+- `compressed_traces`: Returns unique traces in compacted format
+- `stop_session`: Stops an active session immediately
 
-This tool returns Varies by operation. Trace data uses schema-based format for efficient transmission.
-
+{:.info}
+> Return value varies by operation.
 
 ### `FetchAlertingEventDetails`
 
