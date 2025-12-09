@@ -2,7 +2,9 @@ title: 'Brute force protection with Redis'
 description: 'Protect against brute force attacks.'
 extended_description: |
   [Protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection` and the `redis` strategy.
-  This will return an `429 Too Many Requests` error after the third failed login attempt.
+  This will return an `429 Too Many Requests` error after the fourth failed login attempt.
+
+  For a complete tutorial, see [Protect against brute force attacks with basic authentication](/how-to/protect-against-brute-force-attacks/).
 weight: 900
 
 requirements: 

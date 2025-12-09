@@ -30,7 +30,7 @@ tags:
 
 tldr:
     q: How do I protect against brute force attacks with basic authentication?
-    a: Create a [Consumer](/gateway/entities/consumer/) with a username and password in the `basicauth_credentials` configuration. Enable the [Basic Authentication plugin](/plugins/basic-auth/) globally, and attempt to authenticate with the wrong base64-encoded Consumer credentials three times. This will return an `429 Too Many Requests` error after the third failed login attempt.
+    a: Create a [Consumer](/gateway/entities/consumer/) with a username and password in the `basicauth_credentials` configuration. Enable the [Basic Authentication plugin](/plugins/basic-auth/) globally with `brute_force_protection`, and attempt to authenticate with the wrong base64-encoded Consumer credentials four times. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
 
 tools:
     - deck
@@ -41,10 +41,6 @@ prereqs:
         - example-service
     routes:
         - example-route
-  inline:
-    - title: Redis stack
-      include_content: prereqs/redis
-      icon_url: /assets/icons/redis.svg
 
 cleanup:
   inline:
@@ -74,7 +70,7 @@ entities:
 
 ## Enable authentication
 
-Authentication lets you identify a Consumer. In this how-to, we'll be using the [Basic Authentication plugin](/plugins/basic-auth/) for authentication, which allows users to authenticate with a username and password when they make a request.
+Authentication lets you identify a Consumer. In this how-to, we'll be using the [Basic Authentication plugin](/plugins/basic-auth/) for authentication with brute force protection enabled. This allows users to authenticate with a username and password when they make a request.
 
 Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
 
@@ -91,22 +87,12 @@ entities:
 
 When a Consumer authenticates with basic auth, the authorization header must be base64-encoded. For example, since we are using `jsmith` as the username and `my-password` as the password, then the field’s value is the base64 encoding of `jsmith:my-password`, or `anNtaXRoOm15LXBhc3N3b3Jk`.
 
-Run the following three times to verify that unauthorized requests return a `429` error after the third attempt:
+Run the following four times to verify that unauthorized requests return a `429` error after the third attempt:
 
 <!--vale off-->
 {% validation unauthorized-check %}
 url: /anything
 headers:
-  - 'authorization: Basic wrongpassword'
+  - 'authorization: Basic dGVzdDp3cm9uZ3Bhc3N3b3Jk'
 {% endvalidation %}
 <!--vale on-->
-
-Then, run the following command to test Consumer authentication:
-
-{% validation request-check %}
-url: '/anything'
-display_headers: true
-headers:
-  - 'authorization: Basic anNtaXRoOm15LXBhc3N3b3Jk'
-status_code: 200
-{% endvalidation %}

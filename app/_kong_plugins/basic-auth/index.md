@@ -60,7 +60,7 @@ Basic authentication can be used with both HTTP and HTTPS requests and is an eff
 
 The Basic Authentication plugin requires at least one Consumer to work. When you create the Consumer, you must specify a username and password, for example: `Ariel:Password`. The Consumer's password must be base64-encoded when it's used in the Authentication header. For example, `Ariel:Password` would become `QXJpZWw6UGFzc3dvcmQ=`.
 
-Then, you can enable the plugin on a Gateway Service, Route, or globally. When a Consumer makes a request to the associated Gateway Service or Route, the plugin checks for valid credentials in the `Proxy-Authorization` and `Authorization` headers (in that order). In {{site.base_gateway}} 3.13 or later, you can [protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection`. This will return an `429 Too Many Requests` error after the third failed login attempt.
+Then, you can enable the plugin on a Gateway Service, Route, or globally. When a Consumer makes a request to the associated Gateway Service or Route, the plugin checks for valid credentials in the `Proxy-Authorization` and `Authorization` headers (in that order). In {{site.base_gateway}} 3.13 or later, you can [protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection`. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
 
 ### Using multiple authentication plugins
 
@@ -95,7 +95,7 @@ rows:
   - use_case: |
       Protect against brute force attacks {% new_in 3.13 %}
     description: |
-      [Protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection`. This will return an `429 Too Many Requests` error after the third failed login attempt.
+      [Protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection`. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
 {% endtable %}
 <!--vale on-->
 
