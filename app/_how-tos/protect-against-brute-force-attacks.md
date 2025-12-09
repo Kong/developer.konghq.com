@@ -30,7 +30,7 @@ tags:
 
 tldr:
     q: How do I protect against brute force attacks with basic authentication?
-    a: Create a [Consumer](/gateway/entities/consumer/) with a username and password in the `basicauth_credentials` configuration. Enable the [Basic Authentication plugin](/plugins/basic-auth/) globally with `brute_force_protection`, and attempt to authenticate with the wrong base64-encoded Consumer credentials four times. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
+    a: Enable the [Basic Authentication plugin](/plugins/basic-auth/) globally with `brute_force_protection`, and attempt to authenticate with the wrong base64-encoded Consumer credentials four times. This will return an `429 Too Many Requests` error after the fourth failed login attempt.
 
 tools:
     - deck
@@ -55,7 +55,7 @@ cleanup:
 ## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-We're going to use basic [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs a username and password to access any {{site.base_gateway}} Services.
+We're going to use [basic authentication](/plugins/basic-auth/) in this tutorial, so the Consumer needs a username and password to access any {{site.base_gateway}} Services.
 
 Create a Consumer:
 
@@ -70,9 +70,9 @@ entities:
 
 ## Enable authentication
 
-Authentication lets you identify a Consumer. In this how-to, we'll be using the [Basic Authentication plugin](/plugins/basic-auth/) for authentication with brute force protection enabled. This allows users to authenticate with a username and password when they make a request.
+Use the [Basic Authentication plugin](/plugins/basic-auth/) to identify Consumers with username-and-password credentials, including optional brute-force protection.
 
-Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
+Enable the plugin globally, across all {{site.base_gateway}} Services and Routes:
 
 {% entity_examples %}
 entities:

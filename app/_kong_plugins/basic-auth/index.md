@@ -109,7 +109,7 @@ This feature protects against brute force attacks by doing the following:
 1. Each additional failed attempt doubles the previous wait time. The wait time is calculated as 2^(number of failed attempts) seconds, with a maximum configurable wait time of 1 hour. There is no cache to clear.
 
 Keep the following limitations in mind when you configure brute force protection:
-* Counters are only reset when their TTL is reached. A successful login attempt **does not** reset the failed attempt counter; the user will still be blocked until the TTL expires.
+* Counters are only reset when their TTL is reached. A successful login attempt **does not** reset the failed attempt counter. The user will still be blocked until the TTL expires.
 * There is no way to unlock a user. You can manually delete the counter key from Redis or PostgreSQL.
 * If the Redis connection fails, the brute force protection will error out.
 * Each backend has different impacts on performance. In-memory has the best performance, PostgreSQL the poorest, and Redis is better than PostgreSQL. 
