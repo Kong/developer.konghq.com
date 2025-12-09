@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.29
+  version: 3.0.30
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@838b389a23a4384f3b8112eb63a3e9116d7f5902
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/838b389a23a4384f3b8112eb63a3e9116d7f5902'
+  x-oas-source: kong/platform-api@68ca27ae0417f8becbf33682beb720b7b1f42428
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/68ca27ae0417f8becbf33682beb720b7b1f42428'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
