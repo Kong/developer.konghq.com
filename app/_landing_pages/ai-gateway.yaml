@@ -266,7 +266,7 @@ rows:
             description: Expose and visualize LLM metrics
             icon: /assets/icons/monitor.svg
             cta:
-              url: /ai-gateway/monitor-ai-llm-metrics/
+              url: ./#observability-and-metrics
               align: end
       - blocks:
         - type: card
@@ -275,7 +275,7 @@ rows:
             description: Visualize LLM metrics in {{site.konnect_short_name}}
             icon: /assets/icons/analytics.svg
             cta:
-              url: ./#observability-and-metrics
+              url: /advanced-analytics/llm-reporting/
               align: end
       - blocks:
         - type: card
