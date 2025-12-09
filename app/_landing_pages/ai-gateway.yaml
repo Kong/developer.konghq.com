@@ -273,8 +273,6 @@ rows:
           config:
             title: '{{site.konnect_short_name}} Advanced Analytics'
             description: Visualize LLM metrics in {{site.konnect_short_name}}
-            title: Observability and metrics
-            description: Learn about AI Gateway observability capabilities.
             icon: /assets/icons/analytics.svg
             cta:
               url: ./#observability-and-metrics
@@ -477,7 +475,7 @@ rows:
         - type: plugin
           config:
             slug: ai-lakera-guard
-            icon: ai-lakera.png      
+            icon: ai-lakera.png
       - blocks:
         - type: card
           config:
