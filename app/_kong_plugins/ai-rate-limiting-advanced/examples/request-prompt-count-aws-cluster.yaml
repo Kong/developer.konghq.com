@@ -18,7 +18,9 @@ weight: 900
 config:
   strategy: redis
   redis:
-    cluster_nodes: ${cluster_address}
+    cluster_nodes:
+    - ip: ${cluster_address}
+      port: 6379
     username: ${cluster_username}
     port: 6379
     cloud_authentication:
