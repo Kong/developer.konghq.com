@@ -9,7 +9,8 @@ products:
     - gateway
 
 tags:
-  - gcp
+  - database
+  - 
 
 min_version:
     gateway: '3.13'
@@ -19,11 +20,11 @@ description: "Learn how to use GCP Identity and Access Management (IAM) and Work
 related_resources:
   - text: "Install {{site.base_gateway}}"
     url: /gateway/install/
-  - text: Connect a Kong Gateway Azure PostgreSQL Server using Azure Managed Identity
+  - text: Connect a {{site.base_gateway}} Azure PostgreSQL Server using Azure Managed Identity
     url: /gateway/azure-pg-authentication-with-azure-managed-identity/
-  - text: Connect a Kong Gateway Azure PostgreSQL Server using Azure Service Principal
+  - text: Connect a {{site.base_gateway}} Azure PostgreSQL Server using Azure Service Principal
     url: /gateway/azure-pg-authentication-with-azure-app-service-principal/
-  - text: Kong Gateway Amazon RDS database authentication with AWS IAM
+  - text: {{site.base_gateway}} Amazon RDS database authentication with AWS IAM
     url: /gateway/amazon-rds-authentication-with-aws-iam/
 
 faqs:
