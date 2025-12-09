@@ -165,7 +165,7 @@ To get started configuring Auth0, log in to your [Auth0 dashboard](https://manag
 
 1. Click **default**.
 
-1. Click **Edit policy** and add the following to the policy file:
+1. Click **Edit policy** and append the following to the policy file:
    ```
    path "secret/*" {
     capabilities = ["read"]
