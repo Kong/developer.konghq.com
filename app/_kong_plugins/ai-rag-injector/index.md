@@ -95,6 +95,11 @@ faqs:
 
       This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
+  - q: Does the AI RAG Injector plugin work with GCP Memorystore Redis clusters?
+    a: |
+      No. GCP Memorystore Redis clusters do not support the AI RAG Injector plugin. The Redis JSON module required for vector operations is not available in GCP's managed Redis service.
+
+      Attempting to ingest chunks with GCP Redis results in the following error:
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?
@@ -246,15 +251,6 @@ sequenceDiagram
 Rather than guessing from memory, the LLM paired with the RAG pipeline now has the ability to look up the information it needs in real time, which reduces hallucinations and increases the accuracy of the AI output.
 
 ## Vector databases
-
-{:.info}
-> GCP Memorystore Redis clusters do not support the AI RAG Injector plugin. The Redis JSON module required for vector operations is not available in GCP's managed Redis service.
->
-> Attempting to ingest chunks with GCP Redis results in the following error:
->
-> ```json
-> {"message":"Failed to load the 'redis' vector database driver: failed to initialize vector database strategy: failed to create index: JSON module is not loaded."}
->```
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
