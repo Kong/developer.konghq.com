@@ -42,7 +42,7 @@ rows:
           - type: button
             config:
               text: "Install {{site.konnect_product_name}} MCP Server"
-              url: "/konnect-platform/konnect-mcp/installation/"
+              url: "./#installation"
       - blocks:
           - type: image
             config:

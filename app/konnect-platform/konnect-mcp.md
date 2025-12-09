@@ -58,6 +58,7 @@ faqs:
     a: |
       Check parameter correctness, verify you have resource access permissions, wait if you're rate limited, and confirm the resource exists.
 ---
+DO NOT REVIEW: THIS DOCUMENT WILL BE REMOVED BEFORE MERGING
 
 The {{site.konnect_product_name}} MCP Server enables developers to interact with Kong {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access gateway entities, debug API performance, and search Kong documentation from your development environment.
 
