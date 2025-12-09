@@ -158,40 +158,40 @@ rows:
                   text: |
                     You can enable the AI Gateway features through a set of modern and specialized plugins, using the same model you use for any other {{site.base_gateway}} plugin.
                     When deployed alongside existing {{site.base_gateway}} plugins, {{site.base_gateway}} users can quickly assemble a sophisticated AI management platform without custom code or deploying new and unfamiliar tools.
-  - columns:
-    - blocks:
-      - type: card
-        config:
-          title: Universal API
-          description: Route client requests to various AI providers.
-          icon: /assets/icons/plugins/universal-api.svg
-          cta:
-            url: ./#universal-api
-            align: end
-    - blocks:
-      - type: card
-        config:
-          title: Rate limiting
-          description: Manage traffic to your LLM API.
-          icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
-          cta:
-            url: /plugins/ai-rate-limiting-advanced/
-            align: end
-    - blocks:
-      - type: card
-        config:
-          title: Semantic caching
-          description: Semantically cache responses from LLMs.
-          icon: /assets/icons/plugins/ai-semantic-cache.png
-          cta:
-            url: /plugins/ai-semantic-cache/
-            align: end
-  - columns:
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Universal API
+            description: Route client requests to various AI providers
+            icon: /assets/icons/plugins/universal-api.svg
+            cta:
+              url: ./#universal-api
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Rate limiting
+            description: Manage traffic to your LLM API
+            icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
+            cta:
+              url: /plugins/ai-rate-limiting-advanced/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Semantic caching
+            description: Semantically cache responses from LLMs
+            icon: /assets/icons/plugins/ai-semantic-cache.png
+            cta:
+              url: /plugins/ai-semantic-cache/
+              align: end
       - blocks:
         - type: card
           config:
             title: Semantic routing
-            description: Semantically distribute requests to different LLM models.
+            description: Semantically distribute requests to different LLM models
             icon: /assets/icons/plugins/ai-proxy-advanced.png
             cta:
               url: /plugins/ai-proxy-advanced/examples/semantic/
@@ -209,17 +209,16 @@ rows:
         - type: card
           config:
             title: Automated RAG injection
-            description: Automatically embed RAG logic into your workflows.
+            description: Automatically embed RAG logic into your workflows
             icon: /assets/icons/plugins/ai-rag-injector.png
             cta:
               url: ./#automated-rag
               align: end
-  - columns:
       - blocks:
         - type: card
           config:
             title: Data governance
-            description: Use AI plugins to control AI data and usage.
+            description: Use AI plugins to control AI data and usage
             icon: /assets/icons/security.svg
             cta:
               url: ./#data-governance
@@ -228,7 +227,7 @@ rows:
         - type: card
           config:
             title: Guardrails
-            description: Inspect requests and configure content safety and moderation.
+            description: Inspect requests and configure content safety and moderation
             icon: /assets/icons/lock.svg
             cta:
               url: ./#guardrails-and-content-safety
@@ -237,17 +236,16 @@ rows:
         - type: card
           config:
             title: Prompt engineering
-            description: Create prompt templates and manipulate client prompts.
+            description: Create prompt templates and manipulate client prompts
             icon: /assets/icons/code.svg
             cta:
               url: ./#prompt-engineering
               align: end
-  - columns:
       - blocks:
         - type: card
           config:
             title: Load balancing
-            description: Learn about the load balancing algorithms available for AI Gateway.
+            description: Learn about the load balancing algorithms available for AI Gateway
             icon: /assets/icons/load-balance.svg
             cta:
               url: ./#load-balancing
@@ -255,11 +253,29 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Observability and metrics
-            description: Learn about AI Gateway observability capabilities.
-            icon: /assets/icons/analytics.svg
+            title: Audit log
+            description: Learn about AI Gateway logging capabilities
+            icon: /assets/icons/audit.svg
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: LLM metrics
+            description: Expose and visualize LLM metrics
+            icon: /assets/icons/monitor.svg
             cta:
               url: ./#observability-and-metrics
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: '{{site.konnect_short_name}} Advanced Analytics'
+            description: Visualize LLM metrics in {{site.konnect_short_name}}
+            icon: /assets/icons/analytics.svg
+            cta:
+              url: /advanced-analytics/llm-reporting/
               align: end
       - blocks:
         - type: card
@@ -270,7 +286,6 @@ rows:
             cta:
               url: /ai-gateway/streaming/
               align: end
-  - columns:
       - blocks:
         - type: card
           config:
@@ -293,10 +308,19 @@ rows:
         - type: card
           config:
             title: Request transformations
-            description: Use AI to transform requests and responses.
+            description: Use AI to transform requests and responses
             icon: /assets/icons/plugins/ai-request-transformer.png
             cta:
               url: ./#request-transformations
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Proxy AI CLI tools through Kong AI Gateway
+            description: Configure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers
+            icon: /assets/icons/terminal.svg
+            cta:
+              url: /ai-gateway/ai-clis/
               align: end
 
 
@@ -451,7 +475,7 @@ rows:
         - type: plugin
           config:
             slug: ai-lakera-guard
-            icon: ai-lakera.png      
+            icon: ai-lakera.png
       - blocks:
         - type: card
           config:

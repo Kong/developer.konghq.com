@@ -68,6 +68,8 @@ examples_groups:
     text: Azure processing routes
   - slug: native-routes
     text: Native routes
+  - slug: claude-code
+    text: claude-code
 
 faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?
