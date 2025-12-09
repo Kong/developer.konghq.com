@@ -10,7 +10,6 @@ products:
 
 tags:
   - database
-  - 
 
 min_version:
     gateway: '3.13'
