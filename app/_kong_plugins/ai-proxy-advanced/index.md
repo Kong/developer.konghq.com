@@ -173,6 +173,9 @@ rows:
   - algorithm: "[Consistent-hashing (sticky-session on given header value)](/plugins/ai-proxy-advanced/examples/consistent-hashing/)"
     description: |
       The consistent-hashing algorithm routes requests based on a specified header value (`X-Hashing-Header`). Requests with the same header are repeatedly routed to the same model, enabling sticky sessions for maintaining context or affinity across user interactions.
+  - algorithm: "[Least-connections](/plugins/ai-proxy-advanced/examples/least-connections/)"
+    description: |
+      {% new_in 3.13 %} The least-connections algorithm tracks the number of in-flight requests for each backend. Weights are used to calculate the connection capacity of a backend. Requests are routed to the backend with the highest spare capacity. This option is more dynamic, automatically routing new requests to other backends when slower backends accumulate more open connections.
   - algorithm: "[Lowest-latency](/plugins/ai-proxy-advanced/examples/lowest-latency/)"
     description: |
       The lowest-latency algorithm is based on the response time for each model. It distributes requests to models with the lowest response time.
@@ -191,10 +194,12 @@ rows:
       The priority algorithm routes requests to groups of models based on assigned weights. Higher-weighted groups are preferred, and if all models in a group fail, the plugin falls back to the next group. This allows for reliable failover and cost-aware routing across multiple AI models.
   - algorithm: "[Round-robin (weighted)](/plugins/ai-proxy-advanced/examples/round-robin/)"
     description: |
-      The round-robin algorithm distributes requests across models based on their respective weights. For example, if your models `gpt-4`, `gpt-4o-mini`, and `gpt-3` have weights of `70`, `25`, and `5` respectively, they’ll receive approximately 70%, 25%, and 5% of the traffic in turn. Requests are distributed proportionally, independent of usage or latency metrics.
+      The round-robin algorithm distributes requests across models based on their respective weights. For example, if your models `gpt-4`, `gpt-4o-mini`, and `gpt-3` have weights of `70`, `25`, and `5` respectively, they'll receive approximately 70%, 25%, and 5% of the traffic in turn. Requests are distributed proportionally, independent of usage or latency metrics.
   - algorithm: "[Semantic](/plugins/ai-proxy-advanced/examples/semantic/)"
     description: |
       The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case.
+
+      {% new_in 3.13 %} Multiple targets can be [configured with identical descriptions](/plugins/ai-proxy-advanced/examples/semantic-with-fallback/). When multiple targets share the same description, the AI balancer performs round-robin fallback among these targets if the primary target fails. Weights affect the order in which fallback targets are selected.
 {% endtable %}
 <!--vale on-->
 

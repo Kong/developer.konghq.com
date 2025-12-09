@@ -154,6 +154,55 @@ rows:
     description: Detected feature level for a user-defined category (for example, `Hate`, `Violence`). There can be multiple entries per request depending on configuration and detected content.
 {% endtable %}
 
+### AI Lakera Guard logs {% new_in 3.13 %}
+
+If you're using the [AI Lakera Guard plugin](/plugins/ai-lakera-guard/), AI Gateway logs include additional fields under the lakera-guard object for each plugin entry. These fields provide insight into inspection behavior. For example, processing latency, request UUIDs, and violation details when requests or responses are blocked.
+
+The following fields appear in AI logs when the AI Lakera Guard plugin is enabled:
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.lakera-guard.input_processing_latency`"
+    description: |
+      The time, in milliseconds, that Lakera took to process the inspected request.
+  - property: "`ai.proxy.lakera-guard.lakera_service_url`"
+    description: |
+      The Lakera API endpoint used for inspection, such as `https://api.lakera.ai/v2/guard`.
+  - property: "`ai.proxy.lakera-guard.input_request_uuid`"
+    description: |
+      The unique identifier assigned by Lakera for the inspected request.
+  - property: "`ai.proxy.lakera-guard.lakera_project_id`"
+    description: |
+      The Lakera project identifier used for the inspection.
+  - property: "`ai.proxy.lakera-guard.input_block_detail`"
+    description: |
+      An array of violation objects present when Lakera blocks a request.  
+      Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`,  
+      `detected` (boolean), and `detector_type`, such as `moderated_content/hate`.
+  - property: "`ai.proxy.lakera-guard.input_block_reason`"
+    description: |
+      The detector type that caused Lakera to block the request.
+  - property: "`ai.proxy.lakera-guard.output_processing_latency`"
+    description: |
+      The time, in milliseconds, that Lakera took to process the inspected response.
+  - property: "`ai.proxy.lakera-guard.output_request_uuid`"
+    description: |
+      The unique identifier assigned by Lakera for the inspected response.
+  - property: "`ai.proxy.lakera-guard.output_block_detail`"
+    description: |
+      An array of violation objects present when Lakera blocks a response.  
+      The structure matches `input_block_detail`.
+  - property: "`ai.proxy.lakera-guard.output_block_reason`"
+    description: |
+      The detector type that caused Lakera to block the response.
+{% endtable %}
+
+
 ### AI PII Sanitizer logs {% new_in 3.10 %}
 
 If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), AI Gateway logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.

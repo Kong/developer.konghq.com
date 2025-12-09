@@ -47,6 +47,9 @@ sections:
       - title: Proxy AI CLI tools through Kong AI Gateway"
         description: onfigure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers.
         url: /ai-gateway/ai-clis/
+      - title: Gen AI OpenTelemetry attributes reference
+        description: Reference for OpenTelemetry span attributes emitted by Kong AI Gateway for generative AI requests, including model parameters, token usage, and tool-call metadata.
+        url: /ai-gateway/llm-open-telemetry/
   - title: AI Gateway plugins
     items:
       - path: /plugins/?category=ai
