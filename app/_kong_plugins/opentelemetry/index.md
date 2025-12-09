@@ -113,7 +113,7 @@ For more information, see the [Tracing reference](/gateway/tracing/).
 
 When processing generative AI traffic through Kong AI Gateway, additional span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
 
-For the complete attribute reference, see [Gen AI OpenTelemetry attributes](/ai-gateway/gen-ai-otel-attributes/).
+For the complete attribute reference, see [Gen AI OpenTelemetry attributes](/ai-gateway/llm-open-telemetry/).
 
 ### Propagation
 
