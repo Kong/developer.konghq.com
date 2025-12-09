@@ -41,7 +41,7 @@ tags:
 
 tldr:
   q: How do I restrict access to specific knowledge base collections based on user groups?
-  a: Use the AI RAG Injector plugin's ACL configuration to control which Consumer Groups can access specific collections. Configure collection-level access rules and optionally add metadata filters to refine search results within authorized collections.
+  a: Use the AI RAG Injector plugin’s ACL settings to limit which Consumer Groups can access each knowledge-base collection. Set collection-level rules and, if needed, add metadata filters to further restrict what authorized users can see.
 
 tools:
   - deck
@@ -176,7 +176,7 @@ entities:
 
 ## Configure the AI RAG Injector plugin
 
-Let's configure the AI RAG Injector plugin to apply collection-level access rules. The plugin controls which users can access specific knowledge base collections. Access is determined by Consumer Groups using allow and deny lists. A collection ACL replaces the global rule when present.
+Configure the AI RAG Injector plugin to apply access rules at the collection level. The plugin controls which users can access specific knowledge base collections. Access is then determined by Consumer Groups using allow and deny lists. A collection ACL replaces the global rule when present.
 
 The table below shows the effective permissions for the configuration:
 
@@ -426,7 +426,7 @@ Verify that ACL rules correctly restrict access based on consumer group membersh
 
 ### CFO access (finance + executive groups)
 
-The CFO belongs to both finance and executive groups, so they can access all collections. The response includes information from both `finance-reports` and `executive-confidential` collections.
+The CFO belongs to both finance and executive groups, so they can access all collections. The response includes information from both the `finance-reports` and `executive-confidential` collections.
 
 {% validation request-check %}
 url: /anything
@@ -471,7 +471,7 @@ body:
       content: Show me quarterly reports from 2024
 status_code: 200
 message: |
-    I’m sorry, but I don’t have access to the full quarterly reports from 2024. However, based on the available excerpts:\n\n- **Q3 2024:** Revenue was $2.0 billion, with a year-over-year growth of 12%. The operating margin was 21%, and international markets made up 35% of total revenue.\n- **Q4 2024:** Revenue increased by 15% year-over-year to $2.3 billion. The operating margin improved to 24%, supported by strong enterprise sales and better operational efficiency.\n\nFor full reports, you may need to visit the company's investor relations website or contact their investor relations department.
+    I’m sorry, but I don’t have access to the full quarterly reports from 2024. However, based on the available excerpts:- **Q3 2024:** Revenue was $2.0 billion, with a year-over-year growth of 12%. The operating margin was 21%, and international markets made up 35% of total revenue.- **Q4 2024:** Revenue increased by 15% year-over-year to $2.3 billion. The operating margin improved to 24%, supported by strong enterprise sales and better operational efficiency. For full reports, you may need to visit the company's investor relations website or contact their investor relations department.
 {% endvalidation %}
 
 Financial analysts are explicitly denied access to executive data:

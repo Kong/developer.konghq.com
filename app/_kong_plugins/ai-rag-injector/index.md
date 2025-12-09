@@ -374,7 +374,7 @@ LLM clients can refine search results by specifying filter criteria in the query
 - `andAll`: Combine multiple filter clauses
 
 {:.info}
-> Check the [how-to guide](/how-to/filter-knowledge-based-queries-with-rag-injector/) for details about how metadata filtering works.
+> Review the [how-to guide](/how-to/filter-knowledge-based-queries-with-rag-injector/) for details about how metadata filtering works.
 
 You can combine multiple conditions with `andAll`:
 
