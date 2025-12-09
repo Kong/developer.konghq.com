@@ -8,7 +8,6 @@ products:
 tags:
   - ai
   - mcp
-  - tools
 works_on:
   - konnect
 breadcrumbs:
