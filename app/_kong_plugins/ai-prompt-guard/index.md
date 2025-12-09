@@ -76,7 +76,7 @@ The matching behavior is as follows:
 
 ## Best practices
 
-Configure the AI Prompt Guard plugin to detect hidden Unicode characters that attackers commonly use to embed malicious instructions in user input:
+Configure the AI Prompt Guard plugin to detect hidden unicode characters that attackers commonly use to embed malicious instructions in user input:
 
 {% entity_examples %}
 entities:
