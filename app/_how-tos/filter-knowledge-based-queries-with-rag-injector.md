@@ -50,6 +50,9 @@ prereqs:
     - title: Redis stack
       include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
+    - title: Python
+      include_content: prereqs/python
+      icon_url: /assets/icons/python.svg
   entities:
     services:
         - example-service
@@ -64,6 +67,9 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Flush Redis database
+      include_content: cleanup/third-party/redis
+      icon_url: /assets/icons/redis.svg
 
 search_aliases:
   - ai-semantic-cache
@@ -146,162 +152,132 @@ variables:
 
 Ingest financial documents with metadata. Each chunk includes tags, dates, and sources that you can filter on. Use the Admin API to send ingestion requests with the metadata fields you'll use for filtering later.
 
-### Current quarterly reports
+### Create ingestion script
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'Content-Type: application/json'
-body:
-    content: "Q4 2024 Financial Results: Revenue increased 15% year-over-year to $2.3B. Operating margin improved to 24%, up from 21% in Q3. Key drivers included strong enterprise sales and improved operational efficiency."
-    metadata:
-      collection: finance-reports
-      source: internal
-      date: "2024-10-14T00:00:00Z"
-      report_type: quarterly
-      tags:
-        - finance
-        - quarterly
-        - q4
-        - "2024"
-        - current
-{% endcontrol_plane_request %}
-<!--vale on-->
+Create a Python script to ingest financial reports with metadata:
+```bash
+cat > ingest-filtering.py << 'EOF'
+#!/usr/bin/env python3
+import requests
+import json
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'Content-Type: application/json'
-body:
-    content: "Q3 2024 Financial Results: Revenue reached $2.0B with 12% year-over-year growth. Operating margin held steady at 21%. International markets contributed 35% of total revenue."
-    metadata:
-      collection: finance-reports
-      source: internal
-      date: "2024-07-15T00:00:00Z"
-      report_type: quarterly
-      tags:
-        - finance
-        - quarterly
-        - q3
-        - "2024"
-        - current
-{% endcontrol_plane_request %}
-<!--vale on-->
+BASE_URL = "http://localhost:8001/ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk"
 
-### Annual reports
+chunks = [
+    {
+        "content": "Q4 2024 Financial Results: Revenue increased 15% year-over-year to $2.3B. Operating margin improved to 24%, up from 21% in Q3. Key drivers included strong enterprise sales and improved operational efficiency.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "internal",
+            "date": "2024-10-14T00:00:00Z",
+            "report_type": "quarterly",
+            "tags": ["finance", "quarterly", "q4", "2024", "current"]
+        }
+    },
+    {
+        "content": "Q3 2024 Financial Results: Revenue reached $2.0B with 12% year-over-year growth. Operating margin held steady at 21%. International markets contributed 35% of total revenue.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "internal",
+            "date": "2024-07-15T00:00:00Z",
+            "report_type": "quarterly",
+            "tags": ["finance", "quarterly", "q3", "2024", "current"]
+        }
+    },
+    {
+        "content": "2024 Annual Report: Full-year revenue totaled $8.7B, representing 20% growth. The company expanded into five new markets and launched seven major product updates. Board approved $600M share buyback program.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "internal",
+            "date": "2024-12-31T00:00:00Z",
+            "report_type": "annual",
+            "tags": ["finance", "annual", "2024", "current"]
+        }
+    },
+    {
+        "content": "2023 Annual Report: Full-year revenue totaled $7.8B, representing 18% growth. The company expanded into three new markets and launched five major product updates. Board approved $500M share buyback program.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "internal",
+            "date": "2023-12-31T00:00:00Z",
+            "report_type": "annual",
+            "tags": ["finance", "annual", "2023"]
+        }
+    },
+    {
+        "content": "Morgan Stanley Analyst Report (Oct 2024): Maintains 'Overweight' rating with $145 price target. Cites strong execution, market expansion, and operating leverage as key positives. Recommends Buy.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "external",
+            "date": "2024-10-20T00:00:00Z",
+            "report_type": "analyst",
+            "tags": ["analyst", "external", "2024", "recommendation"]
+        }
+    },
+    {
+        "content": "Goldman Sachs Sector Analysis (Sep 2024): Software sector shows resilient growth despite macro headwinds. Enterprise software spending expected to grow 12-15% in 2025. Cloud migration remains primary driver.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "external",
+            "date": "2024-09-15T00:00:00Z",
+            "report_type": "analyst",
+            "tags": ["analyst", "external", "sector", "2024"]
+        }
+    },
+    {
+        "content": "Historical Data Archive: Q2 2022 revenue was $1.5B with 8% growth. This data is retained for historical analysis but may not reflect current business conditions or reporting standards.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "archive",
+            "date": "2022-06-15T00:00:00Z",
+            "report_type": "quarterly",
+            "tags": ["finance", "quarterly", "q2", "2022", "archive"]
+        }
+    }
+]
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'Content-Type: application/json'
-body:
-    content: "2024 Annual Report: Full-year revenue totaled $8.7B, representing 20% growth. The company expanded into five new markets and launched seven major product updates. Board approved $600M share buyback program."
-    metadata:
-      collection: finance-reports
-      source: internal
-      date: "2024-12-31T00:00:00Z"
-      report_type: annual
-      tags:
-        - finance
-        - annual
-        - "2024"
-        - current
-{% endcontrol_plane_request %}
-<!--vale on-->
+def ingest_chunks():
+    headers = {"Content-Type": "application/json"}
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'Content-Type: application/json'
-body:
-    content: "2023 Annual Report: Full-year revenue totaled $7.8B, representing 18% growth. The company expanded into three new markets and launched five major product updates. Board approved $500M share buyback program."
-    metadata:
-      collection: finance-reports
-      source: internal
-      date: "2023-12-31T00:00:00Z"
-      report_type: annual
-      tags:
-        - finance
-        - annual
-        - "2023"
-{% endcontrol_plane_request %}
-<!--vale on-->
+    for i, chunk in enumerate(chunks, 1):
+        try:
+            response = requests.post(BASE_URL, json=chunk, headers=headers)
+            response.raise_for_status()
+            print(f"[{i}/{len(chunks)}] Ingested: {chunk['content'][:50]}...")
+            print(response.json())
+        except requests.exceptions.RequestException as e:
+            print(f"[{i}/{len(chunks)}] Failed: {e}")
+            if hasattr(e.response, 'text'):
+                print(f"  Response: {e.response.text}")
 
-### External analyst reports
+if __name__ == "__main__":
+    ingest_chunks()
+EOF
+```
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'Content-Type: application/json'
-body:
-    content: "Morgan Stanley Analyst Report (Oct 2024): Maintains 'Overweight' rating with $145 price target. Cites strong execution, market expansion, and operating leverage as key positives. Recommends Buy."
-    metadata:
-      collection: finance-reports
-      source: external
-      date: "2024-10-20T00:00:00Z"
-      report_type: analyst
-      tags:
-        - analyst
-        - external
-        - "2024"
-        - recommendation
-{% endcontrol_plane_request %}
-<!--vale on-->
+Run the script to ingest all chunks:
+```bash
+python3 ingest-filtering.py
+```
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'Content-Type: application/json'
-body:
-    content: "Goldman Sachs Sector Analysis (Sep 2024): Software sector shows resilient growth despite macro headwinds. Enterprise software spending expected to grow 12-15% in 2025. Cloud migration remains primary driver."
-    metadata:
-      collection: finance-reports
-      source: external
-      date: "2024-09-15T00:00:00Z"
-      report_type: analyst
-      tags:
-        - analyst
-        - external
-        - sector
-        - "2024"
-{% endcontrol_plane_request %}
-<!--vale on-->
-
-### Historical archive data
-
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'Content-Type: application/json'
-body:
-    content: "Historical Data Archive: Q2 2022 revenue was $1.5B with 8% growth. This data is retained for historical analysis but may not reflect current business conditions or reporting standards."
-    metadata:
-      collection: finance-reports
-      source: archive
-      date: "2022-06-15T00:00:00Z"
-      report_type: quarterly
-      tags:
-        - finance
-        - quarterly
-        - q2
-        - "2022"
-        - archive
-{% endcontrol_plane_request %}
-<!--vale on-->
+The script outputs the ingestion status and metadata for each chunk:
+```
+[1/7] Ingested: Q4 2024 Financial Results: Revenue increased 15% y...
+{'metadata': {'ingest_duration': 714, 'chunk_id': 'a525cb7f-14f9-4628-a80f-779b3ca6b627', 'collection': 'finance-reports', 'embeddings_tokens_count': 50}}
+[2/7] Ingested: Q3 2024 Financial Results: Revenue reached $2.0B w...
+{'metadata': {'ingest_duration': 503, 'chunk_id': '7ed88dd1-7f92-4809-ad2b-7a2e080c4a04', 'collection': 'finance-reports', 'embeddings_tokens_count': 42}}
+[3/7] Ingested: 2024 Annual Report: Full-year revenue totaled $8.7...
+{'metadata': {'ingest_duration': 582, 'chunk_id': 'dc62bd16-49b1-4914-aa6c-3980fe775e85', 'collection': 'finance-reports', 'embeddings_tokens_count': 45}}
+[4/7] Ingested: 2023 Annual Report: Full-year revenue totaled $7.8...
+{'metadata': {'ingest_duration': 608, 'chunk_id': '1484e52c-fd17-4832-9f66-8e39be901a17', 'collection': 'finance-reports', 'embeddings_tokens_count': 45}}
+[5/7] Ingested: Morgan Stanley Analyst Report (Oct 2024): Maintain...
+{'metadata': {'ingest_duration': 347, 'chunk_id': 'dddf62f3-fb7f-4bbd-8d01-410f4915a18a', 'collection': 'finance-reports', 'embeddings_tokens_count': 43}}
+[6/7] Ingested: Goldman Sachs Sector Analysis (Sep 2024): Software...
+{'metadata': {'ingest_duration': 365, 'chunk_id': 'd3def3c0-18a4-48de-b4b2-4f9afbe982ad', 'collection': 'finance-reports', 'embeddings_tokens_count': 44}}
+[7/7] Ingested: Historical Data Archive: Q2 2022 revenue was $1.5B...
+{'metadata': {'ingest_duration': 598, 'chunk_id': '84258915-7061-46c5-9c11-7cb1b4cf5a19', 'collection': 'finance-reports', 'embeddings_tokens_count': 41}}
+```
+{:.no-copy-code}
 
 ## Validate metadata filtering
 
@@ -417,7 +393,7 @@ headers:
 body:
   messages:
     - role: user
-      content: Compare our quarterly results this year
+      content: Compare our quarterly results for 2024
   ai-rag-injector:
     filters:
       andAll:
@@ -432,7 +408,7 @@ body:
             value: "2024-01-01"
 status_code: 200
 message: |
-  The latest financial metrics are from Q4 2024, where the revenue increased by 15% year-over-year to $2.3 billion, and the operating margin improved to 24% from 21% in Q3 2024. Additionally, the full-year revenue for 2024 totaled $8.7 billion, representing a 20% growth. The company expanded into five new markets and launched seven major product updates. The board also approved a $600 million share buyback program.
+  The context provided contains the necessary information to compare the quarterly results for 2024, specifically for Q3 and Q4:\n\n- **Q3 2024:**\n  - Revenue: $2.0 billion\n  - Year-over-year growth: 12%\n  - Operating margin: 21%\n  - International markets contributed 35% of total revenue.\n\n- **Q4 2024:**\n  - Revenue: $2.3 billion\n  - Year-over-year growth: 15%\n  - Operating margin: 24%\n  - Key drivers for this quarter included strong enterprise sales and improved operational efficiency.\n\nIn summary, from Q3 to Q4 2024, revenue increased from $2.0 billion to $2.3 billion, indicating a continued upward trend in growth with 15% year-over-year in Q4, compared to 12% in Q3. The operating margin improved as well, from 21% in Q3 to 24% in Q4, mainly due to strong enterprise sales and better operational efficiency in the fourth quarter.
 {% endvalidation %}
 <!-- vale on -->
 
@@ -525,30 +501,6 @@ message: |
 ## Validate error handling
 
 Control how the plugin handles filter parsing errors with the `stop_on_filter_error` parameter.
-
-### Continue on error
-
-When `stop_on_filter_error` is `false` (default), the plugin logs filter errors and continues without filters:
-
-<!-- vale off -->
-{% validation request-check %}
-url: /anything
-headers:
-  - 'Content-Type: application/json'
-body:
-  messages:
-    - role: user
-      content: Show me reports
-  ai-rag-injector:
-    filters:
-      invalidOperator:
-        key: report_type
-        value: quarterly
-    stop_on_filter_error: false
-status_code: 200
-message: The query succeeds but returns unfiltered results. The plugin logs the filter parsing error.
-{% endvalidation %}
-<!-- vale on -->
 
 ### Fail on error
 

@@ -68,6 +68,12 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Flush Redis database
+      include_content: cleanup/third-party/redis
+      icon_url: /assets/icons/redis.svg
+    - title: Python
+      include_content: prereqs/python
+      icon_url: /assets/icons/python.svg
 
 search_aliases:
   - ai-semantic-cache
@@ -273,150 +279,115 @@ variables:
 
 Ingest content into different collections with metadata tags. Each chunk specifies its collection, source, date, and tags. Use the Admin API to send ingestion requests with the metadata fields you'll use for filtering later.
 
-### Public investor relations content
+### Create ingestion script
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "Public Investor FAQ: Our fiscal year ends December 31st. Quarterly earnings calls occur in January, April, July, and October. All public filings are available on our investor relations website. For questions, contact investor.relations@company.com."
-    metadata:
-      collection: public-docs
-      source: website
-      date: "2024-01-15T00:00:00Z"
-      tags:
-        - public
-        - investor-relations
-        - faq
-{% endcontrol_plane_request %}
-<!--vale on-->
+Create a Python script to ingest multiple chunks:
+```bash
+cat > ingest-collection.py << 'EOF'
+#!/usr/bin/env python3
+import requests
+import json
 
-### Financial reports
+BASE_URL = "http://localhost:8001/ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk"
 
-Ingest quarterly and annual financial data:
+chunks = [
+    {
+        "content": "Public Investor FAQ: Our fiscal year ends December 31st. Quarterly earnings calls occur in January, April, July, and October. All public filings are available on our investor relations website. For questions, contact investor.relations@company.com.",
+        "metadata": {
+            "collection": "public-docs",
+            "source": "website",
+            "date": "2024-01-15T00:00:00Z",
+            "tags": ["public", "investor-relations", "faq"]
+        }
+    },
+    {
+        "content": "Q4 2024 Financial Results: Revenue increased 15% year-over-year to $2.3B. Operating margin improved to 24%, up from 21% in Q3. Key drivers included strong enterprise sales and improved operational efficiency.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "internal",
+            "date": "2024-10-14T00:00:00Z",
+            "tags": ["finance", "quarterly", "q4", "2024"]
+        }
+    },
+    {
+        "content": "Q3 2024 Financial Results: Revenue reached $2.0B with 12% year-over-year growth. Operating margin held steady at 21%. International markets contributed 35% of total revenue.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "internal",
+            "date": "2024-07-15T00:00:00Z",
+            "tags": ["finance", "quarterly", "q3", "2024"]
+        }
+    },
+    {
+        "content": "2023 Annual Report: Full-year revenue totaled $7.8B, representing 18% growth. The company expanded into three new markets and launched five major product updates. Board approved $500M share buyback program.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "internal",
+            "date": "2023-12-31T00:00:00Z",
+            "tags": ["finance", "annual", "2023"]
+        }
+    },
+    {
+        "content": "Historical Data Archive: Q2 2022 revenue was $1.5B with 8% growth. This data is retained for historical analysis but may not reflect current business conditions or reporting standards.",
+        "metadata": {
+            "collection": "finance-reports",
+            "source": "archive",
+            "date": "2022-06-15T00:00:00Z",
+            "tags": ["finance", "quarterly", "q2", "2022", "archive"]
+        }
+    },
+    {
+        "content": "CONFIDENTIAL - M&A Discussion: Preliminary valuation for Target Corp acquisition ranges from $400M-$500M. Due diligence reveals strong synergies in enterprise segment. Board vote scheduled for Q1 2025. Legal counsel: Morrison & Associates. Internal deal code: MA-2024-087.",
+        "metadata": {
+            "collection": "executive-confidential",
+            "source": "internal",
+            "date": "2024-11-20T00:00:00Z",
+            "tags": ["confidential", "m&a", "executive"]
+        }
+    }
+]
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "Q4 2024 Financial Results: Revenue increased 15% year-over-year to $2.3B. Operating margin improved to 24%, up from 21% in Q3. Key drivers included strong enterprise sales and improved operational efficiency."
-    metadata:
-      collection: finance-reports
-      source: internal
-      date: "2024-10-14T00:00:00Z"
-      tags:
-        - finance
-        - quarterly
-        - q4
-        - "2024"
-{% endcontrol_plane_request %}
-<!--vale on-->
+def ingest_chunks():
+    headers = {
+        "Content-Type": "application/json",
+        "apikey": "admin-key"
+    }
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "Q3 2024 Financial Results: Revenue reached $2.0B with 12% year-over-year growth. Operating margin held steady at 21%. International markets contributed 35% of total revenue."
-    metadata:
-      collection: finance-reports
-      source: internal
-      date: "2024-07-15T00:00:00Z"
-      tags:
-        - finance
-        - quarterly
-        - q3
-        - "2024"
-{% endcontrol_plane_request %}
-<!--vale on-->
+    for i, chunk in enumerate(chunks, 1):
+        try:
+            response = requests.post(BASE_URL, json=chunk, headers=headers)
+            response.raise_for_status()
+            print(f"[{i}/{len(chunks)}] Ingested: {chunk['content'][:50]}...")
+            print(response.json())
+        except requests.exceptions.RequestException as e:
+            print(f"[{i}/{len(chunks)}] Failed: {e}")
+            if hasattr(e.response, 'text'):
+                print(f"  Response: {e.response.text}")
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "2023 Annual Report: Full-year revenue totaled $7.8B, representing 18% growth. The company expanded into three new markets and launched five major product updates. Board approved $500M share buyback program."
-    metadata:
-      collection: finance-reports
-      source: internal
-      date: "2023-12-31T00:00:00Z"
-      tags:
-        - finance
-        - annual
-        - "2023"
-{% endcontrol_plane_request %}
-<!--vale on-->
+if __name__ == "__main__":
+    ingest_chunks()
+EOF
+```
 
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "Historical Data Archive: Q2 2022 revenue was $1.5B with 8% growth. This data is retained for historical analysis but may not reflect current business conditions or reporting standards."
-    metadata:
-      collection: finance-reports
-      source: archive
-      date: "2022-06-15T00:00:00Z"
-      tags:
-        - finance
-        - quarterly
-        - q2
-        - "2022"
-        - archive
-{% endcontrol_plane_request %}
-<!--vale on-->
+Run the script to ingest all chunks:
+```bash
+python3 ingest-collection.py
+```
 
-### Executive confidential content
-
-Ingest sensitive M&A information accessible only to executives:
-
-<!--vale off-->
-{% control_plane_request %}
-url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
-headers:
-    - 'apikey: admin-key'
-    - 'Content-Type: application/json'
-body:
-    content: "CONFIDENTIAL - M&A Discussion: Preliminary valuation for Target Corp acquisition ranges from $400M-$500M. Due diligence reveals strong synergies in enterprise segment. Board vote scheduled for Q1 2025. Legal counsel: Morrison & Associates. Internal deal code: MA-2024-087."
-    metadata:
-      collection: executive-confidential
-      source: internal
-      date: "2024-11-20T00:00:00Z"
-      tags:
-        - confidential
-        - m&a
-        - executive
-{% endcontrol_plane_request %}
-<!--vale on-->
-
-Each ingestion request returns metadata about the operation:
-
-```json
-{
-  "metadata": {
-    "embeddings_tokens_count": 42,
-    "chunk_id": "3fa85f64-5717-4562-b3fc-2c963fabcdef",
-    "ingest_duration": 550
-  }
-}
+The script outputs the ingestion status and metadata for each chunk:
+```
+[1/6] Ingested: Public Investor FAQ: Our fiscal year ends December...
+{'metadata': {'embeddings_tokens_count': 49, 'chunk_id': '68ceba6d-0d4f-4506-a4a5-361ba2c813e7', 'ingest_duration': 680, 'collection': 'public-docs'}}
+[2/6] Ingested: Q4 2024 Financial Results: Revenue increased 15% y...
+{'metadata': {'embeddings_tokens_count': 50, 'chunk_id': 'e0528202-045f-49ac-9cf7-4d009593a7a4', 'ingest_duration': 3177, 'collection': 'finance-reports'}}
+[3/6] Ingested: Q3 2024 Financial Results: Revenue reached $2.0B w...
+{'metadata': {'embeddings_tokens_count': 42, 'chunk_id': 'fc83226f-154c-4498-880d-c23998ef12a3', 'ingest_duration': 368, 'collection': 'finance-reports'}}
+[4/6] Ingested: 2023 Annual Report: Full-year revenue totaled $7.8...
+{'metadata': {'embeddings_tokens_count': 45, 'chunk_id': '11067634-4a05-442f-a0c6-cd9b5cba8012', 'ingest_duration': 518, 'collection': 'finance-reports'}}
+[5/6] Ingested: Historical Data Archive: Q2 2022 revenue was $1.5B...
+{'metadata': {'embeddings_tokens_count': 41, 'chunk_id': '2372438e-a63b-4470-9f3c-ac1ec55a727e', 'ingest_duration': 413, 'collection': 'finance-reports'}}
+[6/6] Ingested: CONFIDENTIAL - M&A Discussion: Preliminary valuati...
+{'metadata': {'embeddings_tokens_count': 62, 'chunk_id': '3ee8ad00-51ba-45ce-b837-83f69840cbe0', 'ingest_duration': 472, 'collection': 'executive-confidential'}}
 ```
 {:.no-copy-code}
 
@@ -468,7 +439,7 @@ headers:
 body:
   messages:
     - role: user
-      content: Show me quarterly reports from 2024
+      content: Show me quarterly reports from Q3 2024
 status_code: 200
 message: |
     I’m sorry, but I don’t have access to the full quarterly reports from 2024. However, based on the available excerpts:- **Q3 2024:** Revenue was $2.0 billion, with a year-over-year growth of 12%. The operating margin was 21%, and international markets made up 35% of total revenue.- **Q4 2024:** Revenue increased by 15% year-over-year to $2.3 billion. The operating margin improved to 24%, supported by strong enterprise sales and better operational efficiency. For full reports, you may need to visit the company's investor relations website or contact their investor relations department.
