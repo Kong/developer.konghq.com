@@ -6,7 +6,7 @@ extended_description: |
   This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. 
   This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
   
-  A limitation of this method is that all traffic outside of published APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. 
+  A limitation of this method is that all traffic outside of APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. 
   Dev Portal will not be able to protect all operations.
 
   Use cases:
@@ -18,7 +18,7 @@ title: 'Only engage when a request matches an operation'
 weight: 900
 
 requirements: 
-- "An API or API package in Dev Portal"
+- "An API or API package in Dev Portal, linked to the control plane that uses the ACE plugin instance"
 
 config: 
   match_policy: if_present

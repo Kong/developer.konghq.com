@@ -38,7 +38,7 @@ related_resources:
 ---
 
 {:.warning}
-> **Important:** The Access Control Enforcement plugin can only be used with API packages in Dev Portal, which is a private beta feature. Contact your account manager for access.
+> **Important:** The Access Control Enforcement plugin can only be used with APIs that are linked to a control plane, which is a private beta feature. Contact your account manager for access.
 
 The Access Control Enforcement (ACE) plugin manages developer access control to APIs published with Dev Portal.
 
@@ -71,7 +71,7 @@ rows:
       > **Warning:** Setting the `match_policy` to `required` can **block all traffic with a 404**. Any undefined endpoints will be blocked. If you accidentally enable this in your control planes, this could cause a potential outage in production.
     limitations: |
       * Misconfigurations can overexpose unintended Routes.
-      * Shuts down all traffic outside of published Dev Portal APIs.
+      * Shuts down all traffic outside of ACE-enabled Dev Portal APIs.
       * If the plugin is improperly configured, potentially all traffic could be terminated.
     use-case: |
       * You want to lock down {{site.konnect_short_name}} so that only traffic that is part of an explicitly defined API operation is allowed through.
@@ -79,7 +79,7 @@ rows:
   - setting: |
       `if_present`
     description: |
-      The ACE plugin only engages with a request when it matches an operation. If a request doesn't match, ACE lets the request pass through untouched. This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
+      By default, the ACE plugin only engages with a request when it matches an operation. If a request doesn't match, ACE lets the request pass through untouched. This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
     limitations: |
       All traffic outside of published APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. Dev Portal will not be able to protect all operations.
     use-case: |

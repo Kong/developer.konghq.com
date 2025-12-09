@@ -13,7 +13,7 @@ title: 'Require all requests to match operation'
 weight: 900
 
 requirements: 
-- "An API or API package in Dev Portal"
+- "An API or API package in Dev Portal, linked to the control plane that uses the ACE plugin instance"
 
 config: 
   match_policy: required
