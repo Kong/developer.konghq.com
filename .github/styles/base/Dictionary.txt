@@ -870,7 +870,7 @@ unescaped
 ungroup
 ungrouped
 Unicode
-Unicode
+unicode
 unix
 unmanaged
 unmarshalled
