@@ -112,6 +112,75 @@ metrics:
   - name: kong.ee.license.error.count
     description: Number of errors that occurred while collecting license information.
 
+access_logs:
+  - client.address
+  - url.query
+  - url.full
+  - url.path
+  - user_agent.original
+  - http.request.method
+  - http.request.size
+  - http.request.header.*
+  - http.response.header.*
+  - http.response.size
+  - http.response.status_code
+  - kong.request.id
+  - kong.request.started_at
+  - kong.response.source
+  - kong.workspace.id
+  - kong.workspace.name
+  - kong.latency.client
+  - kong.latency.third_party.total
+  - kong.latency.third_party.dns
+  - kong.latency.third_party.http_client
+  - kong.latency.third_party.redis
+  - kong.latency.internal
+  - kong.latency.upstream
+  - kong.latency.receive
+  - kong.latency.total
+  - kong.latency.socket
+  - kong.route.created_at
+  - kong.route.http_redirect_status_code
+  - kong.route.id
+  - kong.route.name
+  - kong.route.tags
+  - kong.route.path_handling
+  - kong.route.paths
+  - kong.route.preserve_host
+  - kong.route.protocols
+  - kong.route.regex_priority
+  - kong.route.request_buffering
+  - kong.route.response_buffering
+  - kong.route.service.id
+  - kong.route.strip_path
+  - kong.route.updated_at
+  - kong.route.ws_id
+  - kong.service.connect_timeout
+  - kong.service.created_at
+  - kong.service.enabled
+  - kong.service.host
+  - kong.service.id
+  - kong.service.name
+  - kong.service.port
+  - kong.service.protocol
+  - kong.service.read_timeout
+  - kong.service.retries
+  - kong.service.updated_at
+  - kong.service.write_timeout
+  - kong.service.ws_id
+  - kong.service.tags
+  - kong.upstream.try.*
+  - kong.upstream.status_code
+  - kong.upstream.uri
+  - kong.auth.type
+  - kong.auth.consumer.*
+  - kong.auth.authenticated_entity.*
+
+resource_attributes:
+  service.name: Name of the service exposing the signal. In most, if not all, this value will be <code>kong</code> by default.
+  service.version: Gateway version of the node exposing the signal.
+  service.instance.id: ID of the node exposing the signal.
+
 attributes:
   kong.service.name: Name of the Gateway Service.
   kong.route.name: Name of the Route.
@@ -127,7 +196,14 @@ attributes:
   kong.workspace.name: Name of the Workspace.
   http.request.method: Method used in the HTTP request.
   kong.shared_dict.name: Name of the shared dict.
-  kong.subsystem: TODO
+  kong.subsystem: |
+    Nginx subsystem that produced the metric. 
+    <br>
+    Possible values:
+    <ul>
+      <li><code>http</code></li>
+      <li><code>stream</code></li>
+    </ul>
   kong.connection.state: |
     State of the client connection.
     <br>
@@ -167,3 +243,60 @@ attributes:
       <li><code>ee_entity_read</code></li>
       <li><code>ee_entity_write</code></li>
     </ul>
+  client.address:
+  url.query:
+  url.full:
+  url.path:
+  user_agent.original:
+  http.request.size:
+  http.request.header.*:
+  http.response.header.*:
+  http.response.size:
+  http.response.status_code:
+  kong.request.id:
+  kong.request.started_at:
+  kong.workspace.id:
+  kong.latency.client:
+  kong.latency.third_party.total:
+  kong.latency.third_party.dns:
+  kong.latency.third_party.http_client:
+  kong.latency.third_party.redis:
+  kong.latency.internal:
+  kong.latency.upstream:
+  kong.latency.receive:
+  kong.latency.total:
+  kong.latency.socket:
+  kong.route.created_at:
+  kong.route.http_redirect_status_code:
+  kong.route.id:
+  kong.route.tags:
+  kong.route.path_handling:
+  kong.route.paths:
+  kong.route.preserve_host:
+  kong.route.protocols:
+  kong.route.regex_priority:
+  kong.route.request_buffering:
+  kong.route.response_buffering:
+  kong.route.service.id:
+  kong.route.strip_path:
+  kong.route.updated_at:
+  kong.route.ws_id:
+  kong.service.connect_timeout:
+  kong.service.created_at:
+  kong.service.enabled:
+  kong.service.host:
+  kong.service.id:
+  kong.service.port:
+  kong.service.protocol:
+  kong.service.read_timeout:
+  kong.service.retries:
+  kong.service.updated_at:
+  kong.service.write_timeout:
+  kong.service.ws_id:
+  kong.service.tags:
+  kong.upstream.try.*:
+  kong.upstream.status_code:
+  kong.upstream.uri:
+  kong.auth.type:
+  kong.auth.consumer.*:
+  kong.auth.authenticated_entity.*:
