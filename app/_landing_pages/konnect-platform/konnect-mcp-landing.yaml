@@ -27,18 +27,21 @@ rows:
               blocks:
                 - type: text
                   text: |
+                    {:.success}
+                    > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
+
                     The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment.
 
                     Many tools in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), which provides an in-product experience for {{site.konnect_product_name}} Plus and Enterprise accounts.
 
-                    Key capabilities:
+                    Core capabilities:
                     * Query gateway entities (control planes, services, routes, consumers, plugins)
                     * Create debug sessions with active tracing to investigate performance issues
                     * Search Kong documentation for configuration guidance
                     * Analyze API traffic patterns and investigate error trends
           - type: button
             config:
-              text: "Get started with installation"
+              text: "Install {{site.konnect_product_name}} MCP Server"
               url: "/konnect-platform/konnect-mcp/installation/"
       - blocks:
           - type: image
@@ -76,7 +79,6 @@ rows:
                   * You need to debug API performance issues with active tracing
                   * You prefer working with AI assistants for infrastructure tasks
                   * You need to query analytics and traffic patterns programmatically
-
   - header:
       text: "Authentication"
       type: h2
@@ -96,7 +98,6 @@ rows:
                   {{site.konnect_product_name}} MCP Server access is **enabled by default**. Organization administrators can disable it from Organization Settings. When disabled, authentication attempts return "access denied".
 
                   Enabling KAi automatically enables MCP server access. Disabling MCP server also disables KAi.
-
 
   - header:
       text: "Regional server endpoints"

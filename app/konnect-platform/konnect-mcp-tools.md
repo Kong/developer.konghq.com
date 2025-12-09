@@ -8,6 +8,7 @@ products:
 tags:
   - ai
   - mcp
+  - tools
 works_on:
   - konnect
 breadcrumbs:
@@ -31,7 +32,7 @@ The following tools are available in the current release. Tool availability depe
 
 ## GetControlPlane
 
-Retrieves control plane information. List all control planes, get details by UUID or display name, or identify which control plane serves a specific API path.
+Retrieves control plane information. List all control planes, get details by UUID or display name, or identify which control plane serves a specific API path. Use this tool to identify which control plane handles a specific API endpoint, list all control planes for configuration audits, or retrieve control plane details before modifying gateway configuration.
 
 <!-- vale off -->
 
@@ -69,7 +70,7 @@ rows:
 
 ## GetControlPlaneGroup
 
-Retrieves control planes within a specific control plane group.
+Retrieves control planes within a specific control plane group. Use this tool to list all control planes in a specific environment or team group, audit configurations across related control planes, or perform bulk operations on grouped control planes.
 
 <!-- vale off -->
 
@@ -98,7 +99,7 @@ rows:
 
 ## GetConsumer
 
-Retrieves API consumer information for a control plane. List all consumers, get details by UUID or username, or investigate authentication issues.
+Retrieves API consumer information for a control plane. List all consumers, get details by UUID or username, or investigate authentication issues. Use this tool to investigate authentication failures for specific consumers, review consumer configuration and credentials, identify consumers generating high error rates, or audit consumer access patterns.
 
 <!-- vale off -->
 
@@ -135,7 +136,7 @@ rows:
 
 ## GetConsumerGroup
 
-Retrieves consumer group information for a control plane.
+Retrieves consumer group information for a control plane. Use this tool to review rate limiting tiers and consumer group assignments, audit consumer group membership, or verify consumer group configuration for different service tiers.
 
 <!-- vale off -->
 
@@ -164,7 +165,7 @@ rows:
 
 ## GetService
 
-Retrieves upstream service configurations for a control plane. List all services, get details by UUID or name, or troubleshoot connectivity issues.
+Retrieves upstream service configurations for a control plane. List all services, get details by UUID or name, or troubleshoot connectivity issues. Use this tool to investigate service connectivity issues and timeout errors, review upstream configuration and health check settings, verify service endpoints and retry policies, or audit certificate configurations for secure services.
 
 <!-- vale off -->
 
@@ -201,7 +202,7 @@ rows:
 
 ## GetRoute
 
-Retrieves route configurations for a control plane. List all routes, get configuration by UUID or name, or investigate routing issues.
+Retrieves route configurations for a control plane. List all routes, get configuration by UUID or name, or investigate routing issues. Use this tool to debug 404 errors and routing misconfigurations, verify path matching and HTTP method restrictions, review route priority and regex patterns, or identify which service handles specific API endpoints.
 
 <!-- vale off -->
 
@@ -238,7 +239,7 @@ rows:
 
 ## GetPlugin
 
-Retrieves plugin configurations for a control plane. List all plugins, get configuration by UUID, or troubleshoot plugin issues.
+Retrieves plugin configurations for a control plane. List all plugins, get configuration by UUID, or troubleshoot plugin issues. Use this tool to identify which plugins affect a specific route or service, review rate limiting policies and authentication requirements, debug plugin configuration errors, or audit security policies across gateway entities.
 
 <!-- vale off -->
 
@@ -271,7 +272,7 @@ rows:
 
 ## GetVault
 
-Retrieves vault configurations for secrets management. List all vaults, get details by UUID or name, or troubleshoot credential access.
+Retrieves vault configurations for secrets management. List all vaults, get details by UUID or name, or troubleshoot credential access. Use this tool to troubleshoot authentication failures due to expired credentials, verify vault configuration and secret rotation policies, audit secrets management across control planes, or identify which vault provider stores specific credentials.
 
 <!-- vale off -->
 
@@ -308,7 +309,7 @@ rows:
 
 ## GetAnalytics
 
-Retrieves API request analytics and statistics. Query API requests with filters, analyze traffic patterns, or monitor performance metrics.
+Retrieves API request analytics and statistics. Query API requests with filters, analyze traffic patterns, or monitor performance metrics. Use this tool to identify error trends and spikes in failed requests, analyze consumer-specific traffic patterns and usage, investigate performance degradation over time, monitor API health and identify high-latency endpoints, or track rate limiting violations and throttled requests.
 
 <!-- vale off -->
 
@@ -380,7 +381,7 @@ rows:
 
 ## CreateDebugSession
 
-Creates a targeted tracing session to collect real-time performance data. Requires user confirmation before starting.
+Creates a targeted tracing session to collect real-time performance data. Requires user confirmation before starting. Use this tool to investigate slow API responses and identify latency bottlenecks, debug intermittent 500 errors in production, analyze plugin execution order and performance impact, trace request flow through multiple services, or capture detailed timing for specific endpoints.
 
 <!-- vale off -->
 
@@ -435,7 +436,7 @@ rows:
 
 ## ActiveTracingSession
 
-Performs operations on active tracing sessions for debugging and analysis.
+Performs operations on active tracing sessions for debugging and analysis. Use this tool to monitor debug session progress and wait for completion, identify which plugin adds the most latency, analyze request and response flow through gateway, filter traces by specific plugins to isolate issues, or generate performance summary reports.
 
 <!-- vale off -->
 
@@ -483,7 +484,7 @@ rows:
 
 ## FetchAlertingEventDetails
 
-Retrieves detailed context for Kong alerting events for root cause analysis.
+Retrieves detailed context for Kong alerting events for root cause analysis. Use this tool to investigate triggered alerts with pre-configured debug parameters, quickly create debug sessions with optimal filters for alert context, identify which entity triggered an alert, or correlate alerts with gateway configuration changes.
 
 <!-- vale off -->
 
@@ -510,7 +511,7 @@ rows:
 
 ## KnowledgeBaseSearch
 
-Searches Kong documentation and knowledge base for configuration guidance and best practices.
+Searches Kong documentation and knowledge base for configuration guidance and best practices. Use this tool to find plugin configuration examples, look up best practices for rate limiting or authentication, search for troubleshooting steps for specific errors, get guidance on gateway deployment patterns, or learn about new features and capabilities.
 
 <!-- vale off -->
 
