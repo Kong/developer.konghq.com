@@ -121,7 +121,7 @@ It is an equivalent of the following patch:
 
 _Appears in:_
 
-- [KongPlugin](#configuration-konghq-com-v1-types-kongplugin)
+- [KongPlugin](#configuration-konghq-com-v1-kongplugin)
 
 #### ConfigSource
 
@@ -137,7 +137,7 @@ ConfigSource is a wrapper around SecretValueFromSource.
 _Appears in:_
 
 - [ConfigPatch](#configuration-konghq-com-v1-types-configpatch)
-- [KongPlugin](#configuration-konghq-com-v1-types-kongplugin)
+- [KongPlugin](#configuration-konghq-com-v1-kongplugin)
 
 #### KongClusterPluginStatus
 
@@ -152,7 +152,7 @@ KongClusterPluginStatus represents the current status of the KongClusterPlugin r
 
 _Appears in:_
 
-- [KongClusterPlugin](#configuration-konghq-com-v1-types-kongclusterplugin)
+- [KongClusterPlugin](#configuration-konghq-com-v1-kongclusterplugin)
 
 #### KongConsumerSpec
 
@@ -169,7 +169,7 @@ KongConsumerSpec defines the specification of the KongConsumer.
 
 _Appears in:_
 
-- [KongConsumer](#configuration-konghq-com-v1-types-kongconsumer)
+- [KongConsumer](#configuration-konghq-com-v1-kongconsumer)
 
 #### KongConsumerStatus
 
@@ -185,7 +185,7 @@ KongConsumerStatus represents the current status of the KongConsumer resource.
 
 _Appears in:_
 
-- [KongConsumer](#configuration-konghq-com-v1-types-kongconsumer)
+- [KongConsumer](#configuration-konghq-com-v1-kongconsumer)
 
 #### KongPluginStatus
 
@@ -200,7 +200,7 @@ KongPluginStatus represents the current status of the KongPlugin resource.
 
 _Appears in:_
 
-- [KongPlugin](#configuration-konghq-com-v1-types-kongplugin)
+- [KongPlugin](#configuration-konghq-com-v1-kongplugin)
 
 #### KongProtocol
 
@@ -214,8 +214,8 @@ This alias is necessary to deal with https://github.com/kubernetes-sigs/controll
 
 _Appears in:_
 
-- [KongClusterPlugin](#configuration-konghq-com-v1-types-kongclusterplugin)
-- [KongPlugin](#configuration-konghq-com-v1-types-kongplugin)
+- [KongClusterPlugin](#configuration-konghq-com-v1-kongclusterplugin)
+- [KongPlugin](#configuration-konghq-com-v1-kongplugin)
 
 #### NamespacedConfigPatch
 
@@ -232,7 +232,7 @@ to the generated configuration of plugin in Kong.
 
 _Appears in:_
 
-- [KongClusterPlugin](#configuration-konghq-com-v1-types-kongclusterplugin)
+- [KongClusterPlugin](#configuration-konghq-com-v1-kongclusterplugin)
 
 #### NamespacedConfigSource
 
@@ -247,7 +247,7 @@ NamespacedConfigSource is a wrapper around NamespacedSecretValueFromSource.
 
 _Appears in:_
 
-- [KongClusterPlugin](#configuration-konghq-com-v1-types-kongclusterplugin)
+- [KongClusterPlugin](#configuration-konghq-com-v1-kongclusterplugin)
 - [NamespacedConfigPatch](#configuration-konghq-com-v1-types-namespacedconfigpatch)
 
 #### NamespacedSecretValueFromSource
@@ -662,7 +662,7 @@ IngressClassParametersSpec defines the desired state of IngressClassParameters.
 
 _Appears in:_
 
-- [IngressClassParameters](#configuration-konghq-com-v1alpha1-types-ingressclassparameters)
+- [IngressClassParameters](#configuration-konghq-com-v1alpha1-ingressclassparameters)
 
 #### KeySetRef
 
@@ -747,7 +747,7 @@ KongCACertificateSpec contains the specification for the KongCACertificate.
 
 _Appears in:_
 
-- [KongCACertificate](#configuration-konghq-com-v1alpha1-types-kongcacertificate)
+- [KongCACertificate](#configuration-konghq-com-v1alpha1-kongcacertificate)
 
 #### KongCACertificateStatus
 
@@ -763,7 +763,7 @@ KongCACertificateStatus defines the observed state of KongCACertificate.
 
 _Appears in:_
 
-- [KongCACertificate](#configuration-konghq-com-v1alpha1-types-kongcacertificate)
+- [KongCACertificate](#configuration-konghq-com-v1alpha1-kongcacertificate)
 
 #### KongCertificateAPISpec
 
@@ -803,7 +803,7 @@ KongCertificateSpec contains the specification for the KongCertificate.
 
 _Appears in:_
 
-- [KongCertificate](#configuration-konghq-com-v1alpha1-types-kongcertificate)
+- [KongCertificate](#configuration-konghq-com-v1alpha1-kongcertificate)
 
 #### KongCertificateStatus
 
@@ -819,7 +819,7 @@ KongCertificateStatus defines the observed state of KongCertificate.
 
 _Appears in:_
 
-- [KongCertificate](#configuration-konghq-com-v1alpha1-types-kongcertificate)
+- [KongCertificate](#configuration-konghq-com-v1alpha1-kongcertificate)
 
 #### KongCredentialACLAPISpec
 
@@ -853,7 +853,7 @@ KongCredentialACLSpec defines specification of Kong ACL.
 
 _Appears in:_
 
-- [KongCredentialACL](#configuration-konghq-com-v1alpha1-types-kongcredentialacl)
+- [KongCredentialACL](#configuration-konghq-com-v1alpha1-kongcredentialacl)
 
 #### KongCredentialACLStatus
 
@@ -869,7 +869,7 @@ KongCredentialACLStatus represents the current status of the ACL credential reso
 
 _Appears in:_
 
-- [KongCredentialACL](#configuration-konghq-com-v1alpha1-types-kongcredentialacl)
+- [KongCredentialACL](#configuration-konghq-com-v1alpha1-kongcredentialacl)
 
 #### KongCredentialAPIKeyAPISpec
 
@@ -903,7 +903,7 @@ KongCredentialAPIKeySpec defines specification of a Kong API key credential.
 
 _Appears in:_
 
-- [KongCredentialAPIKey](#configuration-konghq-com-v1alpha1-types-kongcredentialapikey)
+- [KongCredentialAPIKey](#configuration-konghq-com-v1alpha1-kongcredentialapikey)
 
 #### KongCredentialAPIKeyStatus
 
@@ -919,7 +919,7 @@ KongCredentialAPIKeyStatus represents the current status of the API Key credenti
 
 _Appears in:_
 
-- [KongCredentialAPIKey](#configuration-konghq-com-v1alpha1-types-kongcredentialapikey)
+- [KongCredentialAPIKey](#configuration-konghq-com-v1alpha1-kongcredentialapikey)
 
 #### KongCredentialBasicAuthAPISpec
 
@@ -955,7 +955,7 @@ KongCredentialBasicAuthSpec defines specification of a Kong BasicAuth credential
 
 _Appears in:_
 
-- [KongCredentialBasicAuth](#configuration-konghq-com-v1alpha1-types-kongcredentialbasicauth)
+- [KongCredentialBasicAuth](#configuration-konghq-com-v1alpha1-kongcredentialbasicauth)
 
 #### KongCredentialBasicAuthStatus
 
@@ -971,7 +971,7 @@ KongCredentialBasicAuthStatus represents the current status of the BasicAuth cre
 
 _Appears in:_
 
-- [KongCredentialBasicAuth](#configuration-konghq-com-v1alpha1-types-kongcredentialbasicauth)
+- [KongCredentialBasicAuth](#configuration-konghq-com-v1alpha1-kongcredentialbasicauth)
 
 #### KongCredentialHMACAPISpec
 
@@ -1009,7 +1009,7 @@ KongCredentialHMACSpec defines specification of a Kong HMAC credential.
 
 _Appears in:_
 
-- [KongCredentialHMAC](#configuration-konghq-com-v1alpha1-types-kongcredentialhmac)
+- [KongCredentialHMAC](#configuration-konghq-com-v1alpha1-kongcredentialhmac)
 
 #### KongCredentialHMACStatus
 
@@ -1025,7 +1025,7 @@ KongCredentialHMACStatus represents the current status of the HMAC credential re
 
 _Appears in:_
 
-- [KongCredentialHMAC](#configuration-konghq-com-v1alpha1-types-kongcredentialhmac)
+- [KongCredentialHMAC](#configuration-konghq-com-v1alpha1-kongcredentialhmac)
 
 #### KongCredentialJWTAPISpec
 
@@ -1067,7 +1067,7 @@ KongCredentialJWTSpec defines specification of a Kong JWT credential.
 
 _Appears in:_
 
-- [KongCredentialJWT](#configuration-konghq-com-v1alpha1-types-kongcredentialjwt)
+- [KongCredentialJWT](#configuration-konghq-com-v1alpha1-kongcredentialjwt)
 
 #### KongCredentialJWTStatus
 
@@ -1083,7 +1083,7 @@ KongCredentialJWTStatus represents the current status of the JWT credential reso
 
 _Appears in:_
 
-- [KongCredentialJWT](#configuration-konghq-com-v1alpha1-types-kongcredentialjwt)
+- [KongCredentialJWT](#configuration-konghq-com-v1alpha1-kongcredentialjwt)
 
 #### KongCustomEntitySpec
 
@@ -1101,7 +1101,7 @@ KongCustomEntitySpec defines the specification of the KongCustomEntity.
 
 _Appears in:_
 
-- [KongCustomEntity](#configuration-konghq-com-v1alpha1-types-kongcustomentity)
+- [KongCustomEntity](#configuration-konghq-com-v1alpha1-kongcustomentity)
 
 #### KongCustomEntityStatus
 
@@ -1116,7 +1116,7 @@ KongCustomEntityStatus defines the status of the KongCustomEntity.
 
 _Appears in:_
 
-- [KongCustomEntity](#configuration-konghq-com-v1alpha1-types-kongcustomentity)
+- [KongCustomEntity](#configuration-konghq-com-v1alpha1-kongcustomentity)
 
 #### KongDataPlaneClientCertificateAPISpec
 
@@ -1148,7 +1148,7 @@ KongDataPlaneClientCertificateSpec defines the spec for a KongDataPlaneClientCer
 
 _Appears in:_
 
-- [KongDataPlaneClientCertificate](#configuration-konghq-com-v1alpha1-types-kongdataplaneclientcertificate)
+- [KongDataPlaneClientCertificate](#configuration-konghq-com-v1alpha1-kongdataplaneclientcertificate)
 
 #### KongDataPlaneClientCertificateStatus
 
@@ -1164,7 +1164,7 @@ KongDataPlaneClientCertificateStatus defines the status for a KongDataPlaneClien
 
 _Appears in:_
 
-- [KongDataPlaneClientCertificate](#configuration-konghq-com-v1alpha1-types-kongdataplaneclientcertificate)
+- [KongDataPlaneClientCertificate](#configuration-konghq-com-v1alpha1-kongdataplaneclientcertificate)
 
 
 
@@ -1219,7 +1219,7 @@ KongKeySetSpec defines the spec for a KongKeySet.
 
 _Appears in:_
 
-- [KongKeySet](#configuration-konghq-com-v1alpha1-types-kongkeyset)
+- [KongKeySet](#configuration-konghq-com-v1alpha1-kongkeyset)
 
 #### KongKeySetStatus
 
@@ -1235,7 +1235,7 @@ KongKeySetStatus defines the status for a KongKeySet.
 
 _Appears in:_
 
-- [KongKeySet](#configuration-konghq-com-v1alpha1-types-kongkeyset)
+- [KongKeySet](#configuration-konghq-com-v1alpha1-kongkeyset)
 
 #### KongKeySpec
 
@@ -1257,7 +1257,7 @@ KongKeySpec defines the spec for a KongKey.
 
 _Appears in:_
 
-- [KongKey](#configuration-konghq-com-v1alpha1-types-kongkey)
+- [KongKey](#configuration-konghq-com-v1alpha1-kongkey)
 
 #### KongKeyStatus
 
@@ -1273,7 +1273,7 @@ KongKeyStatus defines the status for a KongKey.
 
 _Appears in:_
 
-- [KongKey](#configuration-konghq-com-v1alpha1-types-kongkey)
+- [KongKey](#configuration-konghq-com-v1alpha1-kongkey)
 
 #### KongLicenseControllerStatus
 
@@ -1306,7 +1306,7 @@ KongLicenseStatus stores the status of the KongLicense being processesed in each
 
 _Appears in:_
 
-- [KongLicense](#configuration-konghq-com-v1alpha1-types-konglicense)
+- [KongLicense](#configuration-konghq-com-v1alpha1-konglicense)
 
 #### KongPluginBindingScope
 
@@ -1348,7 +1348,7 @@ KongPluginBindingSpec defines specification of a KongPluginBinding.
 
 _Appears in:_
 
-- [KongPluginBinding](#configuration-konghq-com-v1alpha1-types-kongpluginbinding)
+- [KongPluginBinding](#configuration-konghq-com-v1alpha1-kongpluginbinding)
 
 #### KongPluginBindingStatus
 
@@ -1364,7 +1364,7 @@ KongPluginBindingStatus represents the current status of the KongBinding resourc
 
 _Appears in:_
 
-- [KongPluginBinding](#configuration-konghq-com-v1alpha1-types-kongpluginbinding)
+- [KongPluginBinding](#configuration-konghq-com-v1alpha1-kongpluginbinding)
 
 #### KongPluginBindingTargets
 
@@ -1448,7 +1448,7 @@ KongRouteSpec defines spec of a Kong Route.
 
 _Appears in:_
 
-- [KongRoute](#configuration-konghq-com-v1alpha1-types-kongroute)
+- [KongRoute](#configuration-konghq-com-v1alpha1-kongroute)
 
 #### KongRouteStatus
 
@@ -1464,7 +1464,7 @@ KongRouteStatus represents the current status of the Kong Route resource.
 
 _Appears in:_
 
-- [KongRoute](#configuration-konghq-com-v1alpha1-types-kongroute)
+- [KongRoute](#configuration-konghq-com-v1alpha1-kongroute)
 
 #### KongSNIAPISpec
 
@@ -1498,7 +1498,7 @@ KongSNISpec defines specification of a Kong SNI.
 
 _Appears in:_
 
-- [KongSNI](#configuration-konghq-com-v1alpha1-types-kongsni)
+- [KongSNI](#configuration-konghq-com-v1alpha1-kongsni)
 
 #### KongSNIStatus
 
@@ -1514,7 +1514,7 @@ KongSNIStatus defines the status for a KongSNI.
 
 _Appears in:_
 
-- [KongSNI](#configuration-konghq-com-v1alpha1-types-kongsni)
+- [KongSNI](#configuration-konghq-com-v1alpha1-kongsni)
 
 #### KongServiceAPISpec
 
@@ -1572,7 +1572,7 @@ KongServiceSpec defines specification of a Kong Service.
 
 _Appears in:_
 
-- [KongService](#configuration-konghq-com-v1alpha1-types-kongservice)
+- [KongService](#configuration-konghq-com-v1alpha1-kongservice)
 
 #### KongServiceStatus
 
@@ -1588,7 +1588,7 @@ KongServiceStatus represents the current status of the Kong Service resource.
 
 _Appears in:_
 
-- [KongService](#configuration-konghq-com-v1alpha1-types-kongservice)
+- [KongService](#configuration-konghq-com-v1alpha1-kongservice)
 
 #### KongTargetAPISpec
 
@@ -1624,7 +1624,7 @@ KongTargetSpec defines the spec of KongTarget.
 
 _Appears in:_
 
-- [KongTarget](#configuration-konghq-com-v1alpha1-types-kongtarget)
+- [KongTarget](#configuration-konghq-com-v1alpha1-kongtarget)
 
 #### KongTargetStatus
 
@@ -1640,7 +1640,7 @@ KongTargetStatus defines the observed state of KongTarget.
 
 _Appears in:_
 
-- [KongTarget](#configuration-konghq-com-v1alpha1-types-kongtarget)
+- [KongTarget](#configuration-konghq-com-v1alpha1-kongtarget)
 
 #### KongUpstreamAPISpec
 
@@ -1706,7 +1706,7 @@ KongUpstreamSpec defines the spec of Kong Upstream.
 
 _Appears in:_
 
-- [KongUpstream](#configuration-konghq-com-v1alpha1-types-kongupstream)
+- [KongUpstream](#configuration-konghq-com-v1alpha1-kongupstream)
 
 #### KongUpstreamStatus
 
@@ -1722,7 +1722,7 @@ KongUpstreamStatus represents the current status of the Kong Upstream resource.
 
 _Appears in:_
 
-- [KongUpstream](#configuration-konghq-com-v1alpha1-types-kongupstream)
+- [KongUpstream](#configuration-konghq-com-v1alpha1-kongupstream)
 
 #### KongVaultSpec
 
@@ -1743,7 +1743,7 @@ KongVaultSpec defines specification of a custom Kong vault.
 
 _Appears in:_
 
-- [KongVault](#configuration-konghq-com-v1alpha1-types-kongvault)
+- [KongVault](#configuration-konghq-com-v1alpha1-kongvault)
 
 #### KongVaultStatus
 
@@ -1759,7 +1759,7 @@ KongVaultStatus represents the current status of the KongVault resource.
 
 _Appears in:_
 
-- [KongVault](#configuration-konghq-com-v1alpha1-types-kongvault)
+- [KongVault](#configuration-konghq-com-v1alpha1-kongvault)
 
 
 
@@ -1981,7 +1981,7 @@ KongConsumerGroupSpec defines the desired state of KongConsumerGroup.
 
 _Appears in:_
 
-- [KongConsumerGroup](#configuration-konghq-com-v1beta1-types-kongconsumergroup)
+- [KongConsumerGroup](#configuration-konghq-com-v1beta1-kongconsumergroup)
 
 #### KongConsumerGroupStatus
 
@@ -1997,7 +1997,7 @@ KongConsumerGroupStatus represents the current status of the KongConsumerGroup r
 
 _Appears in:_
 
-- [KongConsumerGroup](#configuration-konghq-com-v1beta1-types-kongconsumergroup)
+- [KongConsumerGroup](#configuration-konghq-com-v1beta1-kongconsumergroup)
 
 #### KongUpstreamActiveHealthcheck
 
@@ -2134,7 +2134,7 @@ KongUpstreamPolicySpec contains the specification for KongUpstreamPolicy.
 
 _Appears in:_
 
-- [KongUpstreamPolicy](#configuration-konghq-com-v1beta1-types-kongupstreampolicy)
+- [KongUpstreamPolicy](#configuration-konghq-com-v1beta1-kongupstreampolicy)
 
 #### KongUpstreamStickySessions
 
@@ -2361,7 +2361,7 @@ AIGatewaySpec defines the desired state of an AIGateway.
 
 _Appears in:_
 
-- [AIGateway](#gateway-operator-konghq-com-v1alpha1-types-aigateway)
+- [AIGateway](#gateway-operator-konghq-com-v1alpha1-aigateway)
 
 #### AIGatewayStatus
 
@@ -2377,7 +2377,7 @@ AIGatewayStatus defines the observed state of AIGateway.
 
 _Appears in:_
 
-- [AIGateway](#gateway-operator-konghq-com-v1alpha1-types-aigateway)
+- [AIGateway](#gateway-operator-konghq-com-v1alpha1-aigateway)
 
 #### CloudHostedLargeLanguageModel
 
@@ -2415,7 +2415,7 @@ DataPlaneMetricsExtensionSpec defines the spec for the DataPlaneMetricsExtension
 
 _Appears in:_
 
-- [DataPlaneMetricsExtension](#gateway-operator-konghq-com-v1alpha1-types-dataplanemetricsextension)
+- [DataPlaneMetricsExtension](#gateway-operator-konghq-com-v1alpha1-dataplanemetricsextension)
 
 #### DataPlaneMetricsExtensionStatus
 
@@ -2430,7 +2430,7 @@ DataPlaneMetricsExtensionStatus defines the status of the DataPlaneMetricsExtens
 
 _Appears in:_
 
-- [DataPlaneMetricsExtension](#gateway-operator-konghq-com-v1alpha1-types-dataplanemetricsextension)
+- [DataPlaneMetricsExtension](#gateway-operator-konghq-com-v1alpha1-dataplanemetricsextension)
 
 #### EndpointNetworkAccessHint
 
@@ -2472,7 +2472,7 @@ KongPluginInstallationSpec provides the information necessary to retrieve and in
 
 _Appears in:_
 
-- [KongPluginInstallation](#gateway-operator-konghq-com-v1alpha1-types-kongplugininstallation)
+- [KongPluginInstallation](#gateway-operator-konghq-com-v1alpha1-kongplugininstallation)
 
 #### KongPluginInstallationStatus
 
@@ -2488,7 +2488,7 @@ KongPluginInstallationStatus defines the observed state of KongPluginInstallatio
 
 _Appears in:_
 
-- [KongPluginInstallation](#gateway-operator-konghq-com-v1alpha1-types-kongplugininstallation)
+- [KongPluginInstallation](#gateway-operator-konghq-com-v1alpha1-kongplugininstallation)
 
 #### LLMPrompt
 
@@ -2665,7 +2665,7 @@ WatchNamespaceGrantSpec defines the desired state of an WatchNamespaceGrant.
 
 _Appears in:_
 
-- [WatchNamespaceGrant](#gateway-operator-konghq-com-v1alpha1-types-watchnamespacegrant)
+- [WatchNamespaceGrant](#gateway-operator-konghq-com-v1alpha1-watchnamespacegrant)
 
 ## gateway-operator.konghq.com/v1beta1
 
@@ -2862,7 +2862,7 @@ ControlPlaneSpec defines the desired state of ControlPlane
 
 _Appears in:_
 
-- [ControlPlane](#gateway-operator-konghq-com-v1beta1-types-controlplane)
+- [ControlPlane](#gateway-operator-konghq-com-v1beta1-controlplane)
 
 #### ControlPlaneStatus
 
@@ -2877,7 +2877,7 @@ ControlPlaneStatus defines the observed state of ControlPlane
 
 _Appears in:_
 
-- [ControlPlane](#gateway-operator-konghq-com-v1beta1-types-controlplane)
+- [ControlPlane](#gateway-operator-konghq-com-v1beta1-controlplane)
 
 #### DataPlaneDeploymentOptions
 
@@ -3073,7 +3073,7 @@ DataPlaneSpec defines the desired state of DataPlane
 
 _Appears in:_
 
-- [DataPlane](#gateway-operator-konghq-com-v1beta1-types-dataplane)
+- [DataPlane](#gateway-operator-konghq-com-v1beta1-dataplane)
 
 #### DataPlaneStatus
 
@@ -3094,7 +3094,7 @@ DataPlaneStatus defines the observed state of DataPlane
 
 _Appears in:_
 
-- [DataPlane](#gateway-operator-konghq-com-v1beta1-types-dataplane)
+- [DataPlane](#gateway-operator-konghq-com-v1beta1-dataplane)
 
 #### DeploymentOptions
 
@@ -3239,7 +3239,7 @@ GatewayConfigurationSpec defines the desired state of GatewayConfiguration
 
 _Appears in:_
 
-- [GatewayConfiguration](#gateway-operator-konghq-com-v1beta1-types-gatewayconfiguration)
+- [GatewayConfiguration](#gateway-operator-konghq-com-v1beta1-gatewayconfiguration)
 
 #### GatewayConfigurationStatus
 
@@ -3254,7 +3254,7 @@ GatewayConfigurationStatus defines the observed state of GatewayConfiguration
 
 _Appears in:_
 
-- [GatewayConfiguration](#gateway-operator-konghq-com-v1beta1-types-gatewayconfiguration)
+- [GatewayConfiguration](#gateway-operator-konghq-com-v1beta1-gatewayconfiguration)
 
 
 
@@ -4084,7 +4084,7 @@ ControlPlaneSpec defines the desired state of ControlPlane
 
 _Appears in:_
 
-- [ControlPlane](#gateway-operator-konghq-com-v2beta1-types-controlplane)
+- [ControlPlane](#gateway-operator-konghq-com-v2beta1-controlplane)
 
 #### ControlPlaneStatus
 
@@ -4102,7 +4102,7 @@ ControlPlaneStatus defines the observed state of ControlPlane
 
 _Appears in:_
 
-- [ControlPlane](#gateway-operator-konghq-com-v2beta1-types-controlplane)
+- [ControlPlane](#gateway-operator-konghq-com-v2beta1-controlplane)
 
 #### ControlPlaneTranslationOptions
 
@@ -4352,7 +4352,7 @@ GatewayConfigurationSpec defines the desired state of GatewayConfiguration
 
 _Appears in:_
 
-- [GatewayConfiguration](#gateway-operator-konghq-com-v2beta1-types-gatewayconfiguration)
+- [GatewayConfiguration](#gateway-operator-konghq-com-v2beta1-gatewayconfiguration)
 
 #### GatewayConfigurationStatus
 
@@ -4367,7 +4367,7 @@ GatewayConfigurationStatus defines the observed state of GatewayConfiguration
 
 _Appears in:_
 
-- [GatewayConfiguration](#gateway-operator-konghq-com-v2beta1-types-gatewayconfiguration)
+- [GatewayConfiguration](#gateway-operator-konghq-com-v2beta1-gatewayconfiguration)
 
 
 
@@ -4716,7 +4716,7 @@ KongServiceFacadeSpec defines the desired state of KongServiceFacade.
 
 _Appears in:_
 
-- [KongServiceFacade](#incubator-konghq-com-v1alpha1-types-kongservicefacade)
+- [KongServiceFacade](#incubator-konghq-com-v1alpha1-kongservicefacade)
 
 #### KongServiceFacadeStatus
 
@@ -4731,7 +4731,7 @@ KongServiceFacadeStatus defines the observed state of KongServiceFacade.
 
 _Appears in:_
 
-- [KongServiceFacade](#incubator-konghq-com-v1alpha1-types-kongservicefacade)
+- [KongServiceFacade](#incubator-konghq-com-v1alpha1-kongservicefacade)
 
 ## konnect.konghq.com/v1alpha1
 
@@ -5079,7 +5079,7 @@ KonnectAPIAuthConfigurationSpec is the specification of the KonnectAPIAuthConfig
 
 _Appears in:_
 
-- [KonnectAPIAuthConfiguration](#konnect-konghq-com-v1alpha1-types-konnectapiauthconfiguration)
+- [KonnectAPIAuthConfiguration](#konnect-konghq-com-v1alpha1-konnectapiauthconfiguration)
 
 #### KonnectAPIAuthConfigurationStatus
 
@@ -5096,7 +5096,7 @@ KonnectAPIAuthConfigurationStatus is the status of the KonnectAPIAuthConfigurati
 
 _Appears in:_
 
-- [KonnectAPIAuthConfiguration](#konnect-konghq-com-v1alpha1-types-konnectapiauthconfiguration)
+- [KonnectAPIAuthConfiguration](#konnect-konghq-com-v1alpha1-konnectapiauthconfiguration)
 
 #### KonnectAPIAuthType
 
@@ -5135,7 +5135,7 @@ KonnectCloudGatewayDataPlaneGroupConfigurationSpec defines the desired state of 
 
 _Appears in:_
 
-- [KonnectCloudGatewayDataPlaneGroupConfiguration](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaydataplanegroupconfiguration)
+- [KonnectCloudGatewayDataPlaneGroupConfiguration](#konnect-konghq-com-v1alpha1-konnectcloudgatewaydataplanegroupconfiguration)
 
 #### KonnectCloudGatewayDataPlaneGroupConfigurationStatus
 
@@ -5155,7 +5155,7 @@ KonnectCloudGatewayDataPlaneGroupConfigurationStatus defines the observed state 
 
 _Appears in:_
 
-- [KonnectCloudGatewayDataPlaneGroupConfiguration](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaydataplanegroupconfiguration)
+- [KonnectCloudGatewayDataPlaneGroupConfiguration](#konnect-konghq-com-v1alpha1-konnectcloudgatewaydataplanegroupconfiguration)
 
 #### KonnectCloudGatewayDataPlaneGroupConfigurationStatusGroup
 
@@ -5198,7 +5198,7 @@ KonnectCloudGatewayNetworkSpec defines the desired state of KonnectCloudGatewayN
 
 _Appears in:_
 
-- [KonnectCloudGatewayNetwork](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaynetwork)
+- [KonnectCloudGatewayNetwork](#konnect-konghq-com-v1alpha1-konnectcloudgatewaynetwork)
 
 #### KonnectCloudGatewayNetworkStatus
 
@@ -5217,7 +5217,7 @@ KonnectCloudGatewayNetworkStatus defines the observed state of KonnectCloudGatew
 
 _Appears in:_
 
-- [KonnectCloudGatewayNetwork](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaynetwork)
+- [KonnectCloudGatewayNetwork](#konnect-konghq-com-v1alpha1-konnectcloudgatewaynetwork)
 
 #### KonnectCloudGatewayTransitGatewaySpec
 
@@ -5236,7 +5236,7 @@ KonnectCloudGatewayTransitGatewaySpec defines the desired state of KonnectCloudG
 
 _Appears in:_
 
-- [KonnectCloudGatewayTransitGateway](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaytransitgateway)
+- [KonnectCloudGatewayTransitGateway](#konnect-konghq-com-v1alpha1-konnectcloudgatewaytransitgateway)
 
 #### KonnectCloudGatewayTransitGatewayStatus
 
@@ -5256,7 +5256,7 @@ KonnectCloudGatewayTransitGatewayStatus defines the current state of KonnectClou
 
 _Appears in:_
 
-- [KonnectCloudGatewayTransitGateway](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaytransitgateway)
+- [KonnectCloudGatewayTransitGateway](#konnect-konghq-com-v1alpha1-konnectcloudgatewaytransitgateway)
 
 #### KonnectConfigurationDataPlaneGroup
 
@@ -5409,7 +5409,7 @@ KonnectExtensionSpec defines the desired state of KonnectExtension.
 
 _Appears in:_
 
-- [KonnectExtension](#konnect-konghq-com-v1alpha1-types-konnectextension)
+- [KonnectExtension](#konnect-konghq-com-v1alpha1-konnectextension)
 
 #### KonnectExtensionStatus
 
@@ -5428,7 +5428,7 @@ KonnectExtensionStatus defines the observed state of KonnectExtension.
 
 _Appears in:_
 
-- [KonnectExtension](#konnect-konghq-com-v1alpha1-types-konnectextension)
+- [KonnectExtension](#konnect-konghq-com-v1alpha1-konnectextension)
 
 #### KonnectGatewayControlPlaneSpec
 
@@ -5453,7 +5453,7 @@ KonnectGatewayControlPlaneSpec defines the desired state of KonnectGatewayContro
 
 _Appears in:_
 
-- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha1-types-konnectgatewaycontrolplane)
+- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha1-konnectgatewaycontrolplane)
 
 #### KonnectGatewayControlPlaneStatus
 
@@ -5472,7 +5472,7 @@ KonnectGatewayControlPlaneStatus defines the observed state of KonnectGatewayCon
 
 _Appears in:_
 
-- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha1-types-konnectgatewaycontrolplane)
+- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha1-konnectgatewaycontrolplane)
 
 #### KonnectTransitGatewayAPISpec
 
@@ -6024,7 +6024,7 @@ KonnectExtensionSpec defines the desired state of KonnectExtension.
 
 _Appears in:_
 
-- [KonnectExtension](#konnect-konghq-com-v1alpha2-types-konnectextension)
+- [KonnectExtension](#konnect-konghq-com-v1alpha2-konnectextension)
 
 #### KonnectExtensionStatus
 
@@ -6043,7 +6043,7 @@ KonnectExtensionStatus defines the observed state of KonnectExtension.
 
 _Appears in:_
 
-- [KonnectExtension](#konnect-konghq-com-v1alpha2-types-konnectextension)
+- [KonnectExtension](#konnect-konghq-com-v1alpha2-konnectextension)
 
 #### KonnectGatewayControlPlaneSpec
 
@@ -6062,7 +6062,7 @@ KonnectGatewayControlPlaneSpec defines the desired state of KonnectGatewayContro
 
 _Appears in:_
 
-- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha2-types-konnectgatewaycontrolplane)
+- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha2-konnectgatewaycontrolplane)
 
 #### KonnectGatewayControlPlaneStatus
 
@@ -6082,7 +6082,7 @@ KonnectGatewayControlPlaneStatus defines the observed state of KonnectGatewayCon
 
 _Appears in:_
 
-- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha2-types-konnectgatewaycontrolplane)
+- [KonnectGatewayControlPlane](#konnect-konghq-com-v1alpha2-konnectgatewaycontrolplane)
 
 #### MirrorKonnect
 
