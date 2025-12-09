@@ -26,7 +26,7 @@ tags:
  
 tldr:
   q: How can I create a Service and Route for {{site.konnect_short_name}} using KGO?
-  a: Define a `KongService` and `KongRoute` in your Kubernetes cluster to provision and configure Gateway entities through the {{site.konnect_short_name}} Gateway Manager.
+  a: Define a `KongService` and `KongRoute` in your Kubernetes cluster to provision and configure Gateway entities in {{site.konnect_short_name}}.
 
 
 prereqs:
@@ -39,7 +39,7 @@ prereqs:
 
 ## Create a `KongService` 
 
-Create a Gateway Service in the [{{site.konnect_short_name}} Gateway Manager](/gateway-manager/). The Service must reference an existing `KonnectGatewayControlPlane`.
+Create a Gateway Service in {{site.konnect_short_name}}. The Service must reference an existing `KonnectGatewayControlPlane`.
 
 <!-- vale off -->
 {% konnect_crd %}

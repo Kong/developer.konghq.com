@@ -53,7 +53,7 @@ rows:
   - header:
       type: h2
       text: "Next Steps"
-      sub_text: After installing KGO, use one of the following tutorials to get started.              
+      sub_text: After installing {{site.operator_product_name_short}}, use one of the following tutorials to get started.
     columns:
       - blocks:
         - type: card
@@ -86,7 +86,7 @@ rows:
             title: Configure {{ site.konnect_short_name }}
             description: |
               Configure your {{ site.konnect_short_name }} organization using CRDs. Create control planes and configure {{ site.base_gateway }} 
-              entities, or configure Dedicated Cloud Gateways deployments. 
+              entities, or configure Dedicated Cloud Gateways deployments.
             cta:
               text: Create and configure a Control Plane in {{ site.konnect_short_name }}
               url: /operator/konnect/crd/control-planes/hybrid/
