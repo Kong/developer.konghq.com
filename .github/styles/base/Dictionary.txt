@@ -504,6 +504,7 @@ md
 mebibytes
 Memcached
 Memcached
+Memorystore
 meshopa
 meshopas
 meshpassthrough
@@ -929,6 +930,7 @@ Valero
 Valero
 validator
 validators
+Valkey
 vararg
 vc
 viewport

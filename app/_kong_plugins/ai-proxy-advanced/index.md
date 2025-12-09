@@ -230,3 +230,5 @@ For example, load balancers with the following target combinations are supported
 ## Vector databases
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+{% include plugins/redis-cloud-auth.md %}
