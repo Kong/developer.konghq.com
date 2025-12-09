@@ -162,11 +162,7 @@ If you use [Mesh Manager](/mesh-manager/) to manage your Kong service mesh, you 
 
 ## Specify IP addresses that can connect to {{site.konnect_short_name}}
 
-Org Admins can specify an IP address or a range of IP addresses that can connect to {{site.konnect_short_name}} on any of its channels: UI, [APIs](/konnect-api/) (including [Admin API](/admin-api/)), [decK](/deck/), and [Terraform](/terraform/). This IP range restriction applies to all {{site.konnect_short_name}} communication including:
-* Admin API
-* Control plane and data plane communication
-* {{site.konnect_short_name}} and {{site.mesh_product_name}} communication
-* {{site.konnect_short_name}} and Consumer communication
+Org Admins can specify an IP address or a range of IP addresses that can connect to {{site.konnect_short_name}} on any of its channels: UI, [APIs](/konnect-api/) (including [Admin API](/admin-api/)), [decK](/deck/), and [Terraform](/terraform/). This IP range restriction applies to all {{site.konnect_short_name}} communication from the Admin API.
 
 {:.warning}
 > **Important:** If the source IP goes down and IP restriction is configured, you won't be able to access {{site.konnect_short_name}}.
