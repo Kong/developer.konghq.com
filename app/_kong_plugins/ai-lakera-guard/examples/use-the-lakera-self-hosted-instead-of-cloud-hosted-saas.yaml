@@ -11,7 +11,7 @@ requirements:
 variables:
   lakera_service_url: 
     description: "The URL of your self-hosted Lakera Guard service."
-    value: "LAKERA_SERVICE_URL"
+    value: $LAKERA_SERVICE_URL
 
 config:
   lakera_service_url: ${lakera_service_url}

@@ -11,10 +11,10 @@ requirements:
 variables:
   lakera_api_key:
     description: 'The API key for your Lakera account.'
-    value: LAKERA_API_KEY
+    value: $LAKERA_API_KEY
   project_id: 
     description: "The Lakera project identifier used to evaluate the request."
-    value: LAKERA_PROJECT
+    value: $LAKERA_PROJECT
 
 config:
   api_key:  ${lakera_api_key}
