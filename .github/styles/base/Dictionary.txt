@@ -238,6 +238,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+evaluable
 example_service
 exfiltrate
 failover
@@ -462,6 +463,7 @@ Kustomize
 kustomize
 kustomize
 kv
+Lakera
 langchain
 lapis
 lastTimestamp
