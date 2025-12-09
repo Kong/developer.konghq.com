@@ -24,7 +24,7 @@ related_resources:
     url: /gateway/azure-pg-authentication-with-azure-managed-identity/
   - text: Connect a {{site.base_gateway}} Azure PostgreSQL Server using Azure Service Principal
     url: /gateway/azure-pg-authentication-with-azure-app-service-principal/
-  - text: {{site.base_gateway}} Amazon RDS database authentication with AWS IAM
+  - text: "{{site.base_gateway}} Amazon RDS database authentication with AWS IAM"
     url: /gateway/amazon-rds-authentication-with-aws-iam/
 
 faqs:
