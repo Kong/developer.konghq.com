@@ -124,11 +124,18 @@ export async function setupRuntime(runtimeConfig, product, docker) {
 
   await container.start();
 
-  await container.exec({
-    Cmd: ["sh", "-c", 'echo "172.17.0.1 host.docker.internal" >> /etc/hosts'],
-    AttachStdout: true,
-    AttachStderr: true,
-  });
+  let result = await executeCommand(
+    container,
+    'echo "=== IP Routes ==="; ip route; echo "=== /etc/hosts ==="; cat /etc/hosts; echo "=== Docker bridge ==="; ip addr show docker0 2>/dev/null || echo "No docker0"'
+  );
+  console.log(result.output);
+
+  console.log("Adding host.docker.internal to /etc/hosts in container...");
+  result = await executeCommand(
+    container,
+    'echo "172.17.0.1 host.docker.internal" >> /etc/hosts || echo "127.0.0.1 host.docker.internal" >> /etc/hosts && cat /etc/hosts'
+  );
+  console.log(result.output);
 
   await setEnvVariable(container, "REALM_PATH", exportedRealmHostPath);
 
