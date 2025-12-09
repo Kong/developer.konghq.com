@@ -8,7 +8,7 @@ requirements:
 - "An API or API package in Dev Portal"
 
 config: 
-  match_policy: ignored
+  match_policy: if_present
   anonymous: anonymous
 
 min_version:
