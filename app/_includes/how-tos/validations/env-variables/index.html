@@ -1,6 +1,6 @@
 {% if page.works_on contains 'on-prem' %}
 <div data-deployment-topology="on-prem" markdown="1" data-test-step="{{ config.data_validate | escape }}">
-    {% include how-tos/validations/env-variables/snippet.md variables=config.variables %}
+{% include how-tos/validations/env-variables/snippet.md variables=config.variables %}
 </div>
 {% endif %}
 {% if page.works_on contains 'konnect' %}
