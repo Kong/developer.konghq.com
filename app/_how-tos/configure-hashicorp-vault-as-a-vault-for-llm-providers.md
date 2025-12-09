@@ -80,7 +80,7 @@ Replace the placeholder with your OpenAI API key and run:
 
 {% validation custom-command %}
 command: |
-  curl -X POST http://host.docker.internal:8200/v1/secret/data/openai \
+  curl -X POST http://localhost:8200/v1/secret/data/openai \
        -H "X-Vault-Token: $VAULT_TOKEN" \
        -H "Content-Type: application/json" \
        --data '{"data": {"key": "'$DECK_OPENAI_API_KEY'" }}'
@@ -93,7 +93,7 @@ Next, replace the placeholder with your Mistral API key and run:
 
 {% validation custom-command %}
 command: |
-  curl -X POST http://host.docker.internal:8200/v1/secret/data/mistral \
+  curl -X POST http://localhost:8200/v1/secret/data/mistral \
        -H "X-Vault-Token: $VAULT_TOKEN" \
        -H "Content-Type: application/json" \
        --data '{"data": {"key": "'$DECK_MISTRAL_API_KEY'" }}'
