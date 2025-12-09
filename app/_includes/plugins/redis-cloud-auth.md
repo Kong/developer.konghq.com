@@ -53,7 +53,9 @@ config:
   storage: redis
   storage_config:
     redis:
-      cluster_nodes: $CLUSTER_ADDRESS
+      cluster_nodes:
+      - ip: $CLUSTER_ADDRESS
+        port: 6379
       username: $CLUSTER_USERNAME
       port: 6379
       cloud_authentication:
@@ -108,7 +110,9 @@ config:
   storage: redis
   storage_config:
     redis:
-      cluster_nodes: $CLUSTER_ADDRESS
+      cluster_nodes:
+      - ip: $CLUSTER_ADDRESS
+        port: 6379
       username: $CLUSTER_USERNAME
       port: 6379
       cloud_authentication:
@@ -153,7 +157,9 @@ config:
   storage: redis
   storage_config:
     redis:
-      cluster_nodes: $CLUSTER_ADDRESS
+      cluster_nodes:
+      - ip: $CLUSTER_ADDRESS
+        port: 6379 
       port: 6379
       cloud_authentication:
         auth_provider: gcp
