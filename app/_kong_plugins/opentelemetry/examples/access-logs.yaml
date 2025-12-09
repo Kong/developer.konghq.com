@@ -1,0 +1,18 @@
+description: "Enables the OTEL plugin with an endpoint for API transaction logs."
+
+title: 'Enable the OTEL plugin for access logs'
+
+weight: 900
+
+requirements: 
+  - An OpenTelemetry backend
+
+config:
+  access_logs_endpoint: http://localhost:4318/v1/logs
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
