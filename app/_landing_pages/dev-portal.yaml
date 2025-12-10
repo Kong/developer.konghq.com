@@ -121,8 +121,6 @@ rows:
                 url: "/dev-portal/pages-and-content/"
               - text: Custom domains
                 url: "/dev-portal/custom-domains/"
-              - text: Customization settings
-                url: "/dev-portal/portal-customization/"
               - text: Dev Portal settings
                 url: "/dev-portal/portal-settings/"
       - blocks:
