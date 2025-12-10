@@ -33,6 +33,7 @@ prereqs:
             KONG_ADMIN_TOKEN: kong
             ADMIN_NAME: tim
             USER_TOKEN: my-admin-token
+            section: prereqs
             {% endenv_variables %}
 
         icon_url: /assets/icons/file.svg
