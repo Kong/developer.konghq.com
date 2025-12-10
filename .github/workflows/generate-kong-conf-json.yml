@@ -12,6 +12,10 @@ on:
         required: true
         default: 'main'
         type: string
+      dev_site_base_branch:
+        description: 'Dev site base branch, e.g. main'
+        required: true
+        type: string
       kong_conf_path:
         description: 'Path to kong.conf file in kong-ee repo (relative to repo root)'
         required: false
@@ -96,6 +100,7 @@ jobs:
           labels: skip-changelog,review:general
           token: ${{ secrets.PAT }}
           branch: auto/generate-kong-conf-json-${{ github.run_number }}
+          base: ${{ inputs.dev_site_base_branch }}
 
       - name: No changes detected
         if: steps.changes.outputs.changed == 'false'
