@@ -27,22 +27,12 @@ rows:
               blocks:
                 - type: text
                   text: |
+                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. Query gateway entities, create debug sessions with active tracing, and search Kong documentation without leaving your IDE or terminal.
+
+                    The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}} Plus and Enterprise accounts.
+
                     {:.success}
                     > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
-
-                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment.
-
-                    Many tools in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), which provides an in-product experience for {{site.konnect_product_name}} Plus and Enterprise accounts.
-
-                    Core capabilities:
-                    * Query gateway entities (control planes, services, routes, consumers, plugins)
-                    * Create debug sessions with active tracing to investigate performance issues
-                    * Search Kong documentation for configuration guidance
-                    * Analyze API traffic patterns and investigate error trends
-          - type: button
-            config:
-              text: "Install {{site.konnect_product_name}} MCP Server"
-              url: "./#installation"
       - blocks:
           - type: image
             config:
@@ -98,7 +88,9 @@ rows:
                   * Claude Code CLI for terminal-based workflows
                   * Any MCP-compatible client application
 
-                  The MCP server authenticates using your Personal Access Token (PAT), which means it only accesses resources you have permission to view. All queries respect your organization's role-based access controls and regional data boundaries.
+                  **Authentication and access**
+
+                  The MCP server authenticates using your Personal Access Token (PAT), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
 
                   The server connects to {{site.konnect_short_name}} backend services to retrieve gateway configuration, analytics data, active tracing sessions, and Kong's documentation. This allows AI assistants to provide contextual assistance for debugging, configuration, and operational tasks.
       - blocks:
@@ -106,17 +98,17 @@ rows:
           config:
             url: /assets/images/konnect/konnect-mcp-architecture.svg
             alt_text: "Kong Konnect MCP Server architecture diagram showing user environment, MCP server, and backend services"
-  - header:
-      text: "Authentication"
-      type: h2
-    columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  To use the {{site.konnect_product_name}} MCP Server, you need a Personal Access Token (PAT). Create a token by opening the [{{site.konnect_product_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+  # - header:
+  #     text: "Authentication"
+  #     type: h2
+  #   columns:
+  #     - blocks:
+  #       - type: structured_text
+  #         config:
+  #           blocks:
+  #             - type: text
+  #               text: |
+  #                 To use the {{site.konnect_product_name}} MCP Server, you need a Personal Access Token (PAT). Create a token by opening the [{{site.konnect_product_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
 
   - header:
         text: "Regional server endpoints"
@@ -253,6 +245,8 @@ rows:
                   text: |
                     The {{site.konnect_product_name}} MCP Server provides tools for managing gateway entities, debugging performance, and accessing documentation.
                     Tool availability depends on your user permissions and organization entitlements.
+
+                    [View detailed tool reference](/konnect-platform/konnect-mcp/tools/)
           - type: table
             config:
               columns:
@@ -278,10 +272,6 @@ rows:
                 - category: Documentation
                   tools: "[KnowledgeBaseSearch](/konnect-platform/konnect-mcp/tools/#knowledgebasesearch)"
                   description: Search Kong documentation and best practices
-          - type: button
-            config:
-              text: "View detailed tool reference"
-              url: "/konnect-platform/konnect-mcp/tools/"
 
   - header:
       text: "Common usage patterns"
