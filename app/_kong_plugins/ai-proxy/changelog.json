@@ -98,6 +98,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.2": [
+    {
+      "message": "Fixed an issue where cohere embedding model on Bedrock returned a bad request error\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where large request payload was not logged.\n",
