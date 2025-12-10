@@ -1,5 +1,5 @@
 ---
-title: "Customers and usage attributes"
+title: "Customers and usage attribution"
 content_type: reference
 description: "Learn how Customers and usage attributes work in {{site.konnect_short_name}} Metering and Billing and how they access features."
 layout: reference
@@ -18,10 +18,9 @@ related_resources:
 
 ## What is a customer?
 
-Customers represent individuals or organizations that subscribe to plans and gain access to features. 
+Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
 
-Billable events ingested into OpenMeter always include a usage attribute.  
-Usage attributes represent usage-producing entities within your system, such as {{site.base_gateway}} [Consumers](/gateway/entities/consumer/), [Dev Portal applications](/dev-portal/self-service/), or [subjects](#what-is-a-subject) (for usage outside of {{site.konnect_short_name}}).
+Billable events ingested into Metering & Billing always include a subject field that represents metered entities within your system, such as {{site.base_gateway}} [Consumers](/gateway/entities/consumer/), [Dev Portal applications](/dev-portal/self-service/), or [subjects](#what-is-a-subject) or entities outside of {{site.konnect_short_name}}.  
 
 A customer can have **one or many** usage attributes assigned, allowing you to group usage and billing. For example, if a customer has multiple departments that are producing usage, you could create two usage attributes for each department that are assigned to one customer.
 
@@ -59,13 +58,13 @@ columns:
     key: recommendation
 rows:
   - use-case: |
-      Attribute AI token usage to customers.
+      Attribute Kong AI Gateway token usage to customers.
     recommendation: "[Consumers](/gateway/entities/consumer/)"
   - use-case: |
-      Attribute API request usage to customers. 
+      Attribute {{site.base_gateway}} API request usage to customers. 
     recommendation: "[Consumers](/gateway/entities/consumer/)"
   - use-case: |
-      Attribute Dev Portal application usage to customers.
+      Attribute {{site.konnect_short_name}} Dev Portal application requests to customers.
     recommendation: "[Applications](/dev-portal/self-service/)"
   - use-case: |
       Attribute usage from sources outside of {{site.base_gateway}} and {{site.konnect_short_name}} to customers.
@@ -84,15 +83,6 @@ A subject can represent any unique event in your system, such as:
 
 The subject model is intentionally generic, enabling flexible application across different metering scenarios.
 
-Each subject contains the following fields:
-
-* **Key** – The subject’s unique identifier  
-* **Display name** – A human-readable label shown in the UI  
-* **Metadata** – Optional key-value attributes for additional context  
-
-{:.info}
-> We recommend creating a subject when a new customer or user is created in your system and deleting a subject when a customer or user is deleted. Keeping the subjects in sync in Metering and Billing is necessary if you synchronize usage to external systems, such as Stripe billing or CRMs, as {{site.konnect_short_name}} knows the mapping between the subject and the external system.
-> {{site.konnect_short_name}} Metering and Billing will also automatically create a subject for you when you ingest an usage event for a new subject.
 
 
 #### Data ingestion
