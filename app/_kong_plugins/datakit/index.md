@@ -738,7 +738,16 @@ For example:
 ```
 
 #### Proxy options
-The `call` node supports performing requests via a proxy server. This is controlled by proxy options.
+The `call` node supports performing requests via a proxy server. This is controlled by proxy options. See above example for more details.
+
+#### Request body encoding
+Call node supports following content types for request body encoding:
+* `application/json`
+* `application/x-www-form-urlencoded`
+
+By default, if the body input is an object, it will be encoded as JSON. To override this behavior and use `application/x-www-form-urlencoded`, set the `Content-Type` header accordingly in the `headers` input for the call node.
+
+See [Third-party auth](/plugins/datakit/examples/authenticate-third-party/) for an example of using `application/x-www-form-urlencoded` request body encoding.
 
 #### Limitations
 
