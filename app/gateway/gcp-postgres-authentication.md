@@ -56,6 +56,7 @@ GCP authentication has some limitations. Go through each one before you use this
 * When `pg_gcp_auth` is enabled, the `pg_password` won't be used. You can't use both methods at the same time.
 * Anything related to an improper configuration on the GCP side will result in a failure in initializing the database connection. For example, an improperly configured managed identity, not creating a corresponding role inside GCP Postgres, etc.
 
+For additional recommendations and limitations, see the [IAM authentication restrictions](https://docs.cloud.google.com/sql/docs/postgres/iam-authentication#restrictions) in the Google Cloud documentation.
 
 ## Enabling GCP authentication
 
@@ -70,6 +71,7 @@ Before you enable the GCP authentication, you must configure your Google Cloud P
 
 * [A GCP service account key](https://docs.cloud.google.com/iam/docs/keys-create-delete#creating).
 * [A database user bound to the GCP service account](https://docs.cloud.google.com/sql/docs/postgres/add-manage-iam-users#creating-a-database-user).
+* For IAM database authentication, a principal [requires the `cloudsql.instances.login` permission](https://docs.cloud.google.com/sql/docs/mysql/iam-authentication) to log in to an instance, which is included in the Cloud SQL Instance User role.
 
 ### Configuring GCP authentication in {{site.base_gateway}}
 
