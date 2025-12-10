@@ -82,7 +82,7 @@ The Keyring integration with HashiCorp Vaults allows you to store and version Ke
 First, we need to add a key and key ID to the Vault. Let's create a secret named `keyring`:
 {% validation custom-command %}
 command: |
-  curl http://host.docker.internal:8200/v1/secret/data/keyring \
+  curl http://localhost:8200/v1/secret/data/keyring \
        -H "X-Vault-Token: $VAULT_TOKEN" \
        -H "Content-Type: application/json" \
        -d '{"data":{"id":"8zgITLQh","key":"t6NWgbj3g9cbNVC3/D6oZ2Md1Br5gWtRrqb1T2FZy44="}}'
