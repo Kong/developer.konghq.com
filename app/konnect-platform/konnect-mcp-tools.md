@@ -27,7 +27,7 @@ related_resources:
     url: /konnect-platform/kai/
 ---
 
-The following tools are available in the current release. Tool availability depends on your user permissions and organization entitlements.
+The {{site.konnect_product_name}} MCP Server provides tools to query gateway entities, create debug sessions, analyze API traffic, investigate alerts, and search Kong documentation. All operations require authentication with a Personal Access Token and respect your user permissions.
 
 ## GetControlPlane
 

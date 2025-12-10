@@ -18,7 +18,7 @@ rows:
   - header:
       type: h1
       text: "{{site.konnect_product_name}} MCP Server"
-      sub_text: "Interact with Kong {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access gateway entities, debug API performance, and search Kong documentation from your development environment."
+      sub_text: "Interact with Kong {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access {{site.base_gateway}} entities, debug API performance, and search Kong documentation from your development environment."
 
   - columns:
       - blocks:
@@ -27,7 +27,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. Query gateway entities, create debug sessions with active tracing, and search Kong documentation without leaving your IDE or terminal.
+                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. Query {{site.base_gateway}} entities, create debug sessions with active tracing, and search Kong documentation without leaving your IDE or terminal.
 
                     The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}} Plus and Enterprise accounts.
 
@@ -50,7 +50,7 @@ rows:
                 text: |
                   The {{site.konnect_product_name}} MCP Server enables several workflows for managing and debugging your API infrastructure:
 
-                  * **Gateway entity management**: Query control planes, services, routes, consumers, consumer groups, plugins, and vaults.
+                  * **{{site.base_gateway}} entity management**: Query control planes, services, routes, consumers, consumer groups, plugins, and vaults.
                   * **API debugging**: Create debug sessions with active tracing to investigate performance issues and identify bottlenecks.
                   * **Analytics and monitoring**: Query API request data with filters for time range, status codes, consumers, services, and routes.
                   * **Alert-driven investigation**: Fetch detailed context from Kong alerting events and use pre-configured debug session parameters.
@@ -80,7 +80,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  {{site.konnect_product_name}} MCP Server provides programmatic access to your {{site.konnect_short_name}} resources through the Model Context Protocol. The server exposes 13 specialized tools that AI assistants can use to query gateway entities, analyze traffic, debug performance issues, and search documentation.
+                  {{site.konnect_product_name}} MCP Server provides programmatic access to your {{site.konnect_short_name}} resources through the Model Context Protocol. The server exposes 13 specialized tools that AI assistants can use to query {{site.base_gateway}} entities, analyze traffic, debug performance issues, and search documentation.
 
                   You can connect to the MCP server from:
                   * IDEs with MCP client support (VS Code, Cursor, IntelliJ)
@@ -92,24 +92,12 @@ rows:
 
                   The MCP server authenticates using your Personal Access Token (PAT), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
 
-                  The server connects to {{site.konnect_short_name}} backend services to retrieve gateway configuration, analytics data, active tracing sessions, and Kong's documentation. This allows AI assistants to provide contextual assistance for debugging, configuration, and operational tasks.
+                  The server connects to {{site.konnect_short_name}} backend services to retrieve {{site.base_gateway}} configuration, analytics data, active tracing sessions, and Kong's documentation. This allows AI assistants to provide contextual assistance for debugging, configuration, and operational tasks.
       - blocks:
         - type: image
           config:
             url: /assets/images/konnect/konnect-mcp-architecture.svg
             alt_text: "Kong Konnect MCP Server architecture diagram showing user environment, MCP server, and backend services"
-  # - header:
-  #     text: "Authentication"
-  #     type: h2
-  #   columns:
-  #     - blocks:
-  #       - type: structured_text
-  #         config:
-  #           blocks:
-  #             - type: text
-  #               text: |
-  #                 To use the {{site.konnect_product_name}} MCP Server, you need a Personal Access Token (PAT). Create a token by opening the [{{site.konnect_product_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-
   - header:
         text: "Regional server endpoints"
         type: h2
@@ -154,7 +142,6 @@ rows:
                     {{site.konnect_product_name}} MCP Server access is **enabled by default**. Organization administrators can disable it from Organization Settings.
 
                     Enabling KAi automatically enables MCP server access. Disabling MCP server also disables KAi.
-
 
 
   - header:
@@ -226,9 +213,9 @@ rows:
         - type: card
           config:
             icon: /assets/icons/cog.svg
-            title: Manual Configuration
+            title: Other IDEs
             description: |
-              Manual setup instructions for Visual Studio, Eclipse, and other IDEs
+              Manual setup instructions for Windsurf, Eclipse, and other IDEs
             ctas:
               - text: Installation guide
                 url: "/konnect-platform/konnect-mcp/installation/#other-ides"
@@ -243,23 +230,23 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_product_name}} MCP Server provides tools for managing gateway entities, debugging performance, and accessing documentation.
+                    The {{site.konnect_product_name}} MCP Server provides tools for managing {{site.base_gateway}} entities, debugging performance, and accessing documentation.
                     Tool availability depends on your user permissions and organization entitlements.
 
                     [View detailed tool reference](/konnect-platform/konnect-mcp/tools/)
           - type: table
             config:
               columns:
-                - title: Tool Category
+                - title: Tool category
                   key: category
                 - title: Tools
                   key: tools
                 - title: Description
                   key: description
               rows:
-                - category: Gateway Entities
+                - category: Gateway entities
                   tools: "[GetControlPlane](/konnect-platform/konnect-mcp/tools/#getcontrolplane), [GetConsumer](/konnect-platform/konnect-mcp/tools/#getconsumer), [GetConsumerGroup](/konnect-platform/konnect-mcp/tools/#getconsumergroup), [GetService](/konnect-platform/konnect-mcp/tools/#getservice), [GetRoute](/konnect-platform/konnect-mcp/tools/#getroute), [GetPlugin](/konnect-platform/konnect-mcp/tools/#getplugin), [GetVault](/konnect-platform/konnect-mcp/tools/#getvault)"
-                  description: Query and manage gateway configuration
+                  description: Query and manage {{site.base_gateway}} configuration
                 - category: Debugging
                   tools: "[CreateDebugSession](/konnect-platform/konnect-mcp/tools/#createdebugsession), [ActiveTracingSession](/konnect-platform/konnect-mcp/tools/#activetracingsession)"
                   description: Create tracing sessions and analyze performance
@@ -277,7 +264,7 @@ rows:
       text: "Common usage patterns"
       type: h2
       sub_text: |
-        The following patterns demonstrate multi-step workflows using the {{site.konnect_product_name}} MCP Server tools.
+        The following workflows combine multiple {{site.konnect_product_name}} MCP Server tools to accomplish specific debugging and management tasks. Each pattern shows the exact sequence of tool calls needed, which IDs to extract, and how to pass them to subsequent steps.
     columns:
       - blocks:
         - type: structured_text
@@ -425,7 +412,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Audit gateway configuration across all control planes.
+                  Audit {{site.base_gateway}} configuration across all control planes.
         - type: text
           config: |
             ```text
