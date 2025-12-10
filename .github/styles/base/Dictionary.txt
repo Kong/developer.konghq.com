@@ -13,6 +13,7 @@ agentic
 Agno
 Agno's
 Alertmanager
+Alibaba
 allow_terminated
 allowlist
 allowlisting
@@ -239,6 +240,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+evaluable
 example_service
 exfiltrate
 failover
@@ -465,6 +467,7 @@ Kustomize
 kustomize
 kustomize
 kv
+Lakera
 langchain
 lapis
 lastTimestamp
