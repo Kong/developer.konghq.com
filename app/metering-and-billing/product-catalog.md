@@ -131,12 +131,12 @@ rows:
 
 Rate cards can be configured with or without a feature:
 
-* **With a feature:** Rate cards with features can be priced as recurring, one-time flat, or usage-based. Rate cards with features can have an entitlement to control access. When the the associated feature has a meter, the rate card can describe usage limits.
+* **With a feature:** Rate cards with features can be priced as recurring, one-time flat, or usage-based. Rate cards with features can have an entitlement to control access. When the associated feature has a meter, the rate card can describe usage limits.
 * **Without a feature:** Rate cards without features can only have a flat-fee price. Rate cards without features don't have an entitlement to control access.
 
 #### Add-ons
 
-Add-ons let you extend your plans with optional features or capacity that customers can purchase on demand. They are versioned and consist of one or more rate cards defining pricing, entitlements, and billing cadence independently of the base plan. Add-ons allow you to upsell extra features, overage packs, or services without changing the core plan.
+Add-ons let you extend your plans with optional features or capacity that customers can purchase on demand. They are versioned and consist of one or more rate cards defining pricing, entitlements, and billing cadence independently of the base plan. Add-ons allow you to sell extra features, overage packs, or services without changing the core plan.
 
 #### Pricing models
 
@@ -194,7 +194,7 @@ rows:
     description: |
       Define customer-specific configurations as a JSON value. e.g. `{ "enabledModels": ["gpt-3", "gpt-4"] }`
 
-      For example, you may only give freemium users access to a subset of AI models. With static entitlements, you can specify which models the customer can use based on their tier.
+      For example, you may only give free users access to a subset of AI models. With static entitlements, you can specify which models the customer can use based on their tier.
   - type: Boolean
     description: |
       Describe access to specific features, like SAML SSO, without needing configuration or metering.
@@ -212,10 +212,10 @@ Subscriptions are bound to a specific version of the plan and can be migrated to
 
 A plan can have multiple phases, such as a free trial for the first 30 days and then converting to a paid plan after the 30 days are up. Each phase can have a different price and entitlement. Phases can be used to create automatic time-based offering changes, like trials, reverse trials, ramp-up phases.
 
-Exmaple for reverse trials with plan phases:
+Example for reverse trials with plan phases:
 
 * Phase 1 (Trial): limited to 100,000 tokens, premium features included
-* Phase 2 (Freemium): limited to 1,000 tokens
+* Phase 2 (Free): limited to 1,000 tokens
 
 
 {% include_cached /konnect/metering-and-billing/discounts.md %}
