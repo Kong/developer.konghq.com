@@ -21,6 +21,7 @@ allowlisted
 Amal
 Amberflo
 amberflo
+andAll
 anonymization
 anonymized
 Anonymizer
@@ -288,6 +289,8 @@ GPUs
 gbps
 grafana
 Grafana
+greaterThan
+greaterThanOrEquals
 grpc
 grpcbin
 GRPCRoute
@@ -471,6 +474,8 @@ Lakera
 langchain
 lapis
 lastTimestamp
+lessThan
+lessThanOrEquals
 Librato
 Librato
 libxml2
@@ -508,6 +513,7 @@ md
 mebibytes
 Memcached
 Memcached
+Memorystore
 meshopa
 meshopas
 meshpassthrough
