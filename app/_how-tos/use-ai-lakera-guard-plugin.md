@@ -145,7 +145,7 @@ automated_tests: false
 
 ## Configure the plugin
 
-First, let's configue the AI Proxy plugin. This plugin will forward requests to the LLM upstream, while the AI Lakera Guard plugin will enforce content safety and guardrails on prompts and responses.
+First, let's configure the AI Proxy plugin. This plugin will forward requests to the LLM upstream, while the AI Lakera Guard plugin will enforce content safety and guardrails on prompts and responses.
 
 {% entity_examples %}
 entities:
@@ -173,7 +173,7 @@ variables:
 
 ## Configure the AI Lakera Guard plugin
 
-After configuring AI Proxy to route requests to Antropic LLM, we can apply the AI [Lakera Guard](/plugins/ai-lakera-guard/) plugin to enforce content safety on prompts and responses. In our example, the plugin is configured to use the project we [created earlier](./#lakera-policy-and-project) and reveal blocked categories when content is filtered by setting `reveal_failure_categories` to `true`.
+After configuring AI Proxy to route requests to Anthropic LLM, we can apply the AI [Lakera Guard](/plugins/ai-lakera-guard/) plugin to enforce content safety on prompts and responses. In our example, the plugin is configured to use the project we [created earlier](./#lakera-policy-and-project) and reveal blocked categories when content is filtered by setting `reveal_failure_categories` to `true`.
 
 {% entity_examples %}
 entities:
