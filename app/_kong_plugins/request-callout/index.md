@@ -49,6 +49,9 @@ under a `kong.ctx.shared.callouts.CALLOUT_NAME`. Responses can be cached with a 
 > Content modifications in both callout and upstream bodies assume a JSON content 
 type.
 
+{:.warning}
+> When `tls_certificate_verify` is enabled in {{site.base_gateway}}, certificate verification for this plugin is enforced at runtime, not at configuration time. Since the `url` field can be set dynamically {% new_in 3.13 %}, the plugin cannot validate whether `ssl_verify=false` is appropriate until the request is processed. If the URL resolves to an HTTPS endpoint with `ssl_verify=false`, the request will be blocked. Conversely, if the URL resolves to an HTTP endpoint, the configuration is valid and the request proceeds.
+
 ## Callout context
 
 Callout request and response context is stored in `kong.ctx.shared.callouts.CALLOUT_NAME`. 
