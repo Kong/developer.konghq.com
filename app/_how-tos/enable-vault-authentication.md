@@ -90,7 +90,7 @@ body:
   name: kong-auth
   mount: secret
   protocol: http
-  host: $VAULT_ADDR
+  host: $VAULT_HOST
   port: 8200
   vault_token: root
   kv: v2
