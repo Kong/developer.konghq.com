@@ -834,6 +834,7 @@ Terraform's
 Terraform's
 text_splitters
 tfvars
+thinkingConfig
 timeframe
 timeframes
 timeseries
