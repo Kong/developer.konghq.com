@@ -67,7 +67,7 @@ body:
   name: "azure-devops"
   display_name: "Azure DevOps"
   config:
-    organization: "$AZURE_ORG_NAME"
+    organization: "$AZURE_DEVOPS_ORG_NAME"
 extract_body:
     - name: 'id'
       variable: AZUREDEVOPS_INTEGRATION_ID
