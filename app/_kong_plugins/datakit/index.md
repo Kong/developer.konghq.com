@@ -78,7 +78,7 @@ rows:
   - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)"
     description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
   - usecase: "[Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)"
-    description: Use a dynamic internal auth endpoint to inject request headers before proxying the request.
+    description: Dynamically resolve an internal authentication endpoint and inject the necessary request headers prior to proxying the request.
 {% endtable %}
 <!--vale on-->
 
@@ -728,7 +728,8 @@ returns a JSON mime-type in the `Content-Type` header if the response body is
 not valid JSON.
 
 #### Resolve URL at runtime
-The `url` attribute on a `call` node is set at config-time. To override it at runtime, provide a value through the `url` input. If that value is `nil`, Datakit falls back to the statically defined URL. 
+
+A `call` node defines its `url` statically during configuration. To substitute a different endpoint at runtime, pass a value via the `url` input. If the input is `nil`, Datakit automatically reverts to the configured static URL.
 
 For example:
 
