@@ -11,7 +11,7 @@ rows:
   - header:
       type: h1
       text: "Metering and Billing"
-      sub_text: Turn any events, logs, and metrics into revenue with usage-based metering and billing.
+      sub_text: Meter, bill, and monetize the entire AI connectivity data path.
     columns:
       - blocks:
           - type: structured_text
@@ -19,11 +19,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} Metering and Billing provides a full system for tracking usage, creating billable products, enforcing entitlements, and generating invoices.  
+                    {{site.konnect_short_name}} Metering & Billing provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices.  
                     It is designed for AI and API-first businesses that need accurate usage metering, flexible pricing models, and customer-level billing detail.
 
                     You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
-                    You can define features, build pricing plans, create subscriptions, and connect customers to Stripe or other external systems.
+                    You can create and publish pricing plans, manage subscriptions, and automate revenue collection with payment providers like Stripe and ERPs.
 
       - blocks:
           - type: image
@@ -60,9 +60,9 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Understand Customers and Subjects
+              title: Understand customers
               description: |
-                Learn how {{site.konnect_short_name}} models customers, subjects, and usage mapping for billing systems.
+                Learn how {{site.konnect_short_name}} models customers and usage mapping for billing systems.
               icon: /assets/icons/team.svg
               cta:
                 text: Learn more
@@ -106,7 +106,7 @@ rows:
               icon: /assets/icons/third-party/hubspot.svg
               cta:
                 text: Contact Sales
-                url: "https://cloud.konghq.com/us/metering-billing/apps"
+                url: "https://konghq.com/contact-sales"
 
       - blocks:
           - type: card
@@ -117,7 +117,7 @@ rows:
               icon: /assets/icons/third-party/salesforce.svg
               cta:
                 text: Contact Sales
-                url: "https://cloud.konghq.com/us/metering-billing/apps"
+                url: "https://konghq.com/contact-sales"
 
       - blocks:
           - type: card
@@ -128,7 +128,7 @@ rows:
               icon: /assets/icons/third-party/paypal.svg
               cta:
                 text: Contact Sales
-                url: "https://cloud.konghq.com/us/metering-billing/apps"
+                url: "https://konghq.com/contact-sales"
 
       - blocks:
           - type: card
@@ -139,7 +139,7 @@ rows:
               icon: /assets/icons/third-party/adyen.svg
               cta:
                 text: Contact Sales
-                url: "https://cloud.konghq.com/us/metering-billing/apps"
+                url: "https://konghq.com/contact-sales"
 
 
   
