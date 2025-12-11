@@ -77,7 +77,7 @@ If you don't immediately see resources, try manually syncing your Azure DevOps i
 To confirm that the Azure DevOps resource is now mapped to the intended service, navigate to the new service:
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
-1. Click the `azure-devops-api` service.
+1. Click the `azure-devops-api-service` service.
 1. Click the **Resources** tab.
 
-You'll see the `azure-devops-api` resource listed.
+You'll see the `azure-devops-api-service` resource listed.
