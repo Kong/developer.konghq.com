@@ -1,0 +1,58 @@
+title: 'Configure AI Proxy for Claude Code with Google Gemini'
+description: 'Set up the AI Proxy plugin to work with Claude Code, using Google Gemini 2.0 Flash with GCP service account authentication.'
+
+extended_description: |
+  {% new_in 3.13%} Set up the AI Proxy plugin to work with Claude Code, using Google Gemini 2.0 Flash with GCP service account authentication.
+  For a detailed guide on how to use Google Gemini with Claude Code see [this guide](/how-to/use-claude-code-with-ai-gateway-gemini/)
+
+show_in_api: true
+weight: 902
+
+requirements:
+- Google Cloud Platform account
+- Vertex AI API enabled
+- Service account with appropriate permissions
+
+config:
+  llm_format: anthropic
+  targets:
+  - route_type: llm/v1/chat
+    logging:
+      log_statistics: true
+      log_payloads: false
+    auth:
+      allow_override: false
+      gcp_use_service_account: true
+      gcp_service_account_json: "${gcp_service_account_json}"
+    model:
+      provider: gemini
+      name: gemini-2.0-flash
+      options:
+        gemini:
+          api_endpoint: "${gemini_api_endpoint}"
+          project_id: "${gcp_project_id}"
+          location_id: "${gcp_location_id}"
+        max_tokens: 8192
+
+variables:
+  gcp_service_account_json:
+    value: $GCP_SERVICE_ACCOUNT_JSON
+    description: The GCP service account JSON credentials for authentication.
+  gemini_api_endpoint:
+    value: $GEMINI_API_ENDPOINT
+    description: The Gemini API endpoint (for example us-central1-aiplatform.googleapis.com).
+  gcp_project_id:
+    value: $GCP_PROJECT_ID
+    description: The GCP project ID.
+  gcp_location_id:
+    value: $GCP_LOCATION_ID
+    description: The GCP location/region ID (for example us-central1).
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: claude-code
