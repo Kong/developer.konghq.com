@@ -339,7 +339,7 @@ Publishing an API makes it available to one or more [Dev Portals](/dev-portal/).
    Publishing an API requires you to have the [`Product Publisher` {{site.konnect_short_name}} role](/konnect-platform/teams-and-roles/#dev-portal).
 
 {:.info}
-> * The visibility of [pages](/dev-portal/pages-and-content/) and [menus](/dev-portal/portal-customization/) is configured independently from APIs, maximizing your flexibility.
+> * The visibility of [pages](/dev-portal/pages-and-content/) and [menus](/dev-portal/customizations/dev-portal-customizations/) is configured independently from APIs, maximizing your flexibility.
 > * {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
 With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/self-service/) settings, you can publish an API securely to the appropriate audience. The following table describes various Dev Portal access control scenarios and their settings:
