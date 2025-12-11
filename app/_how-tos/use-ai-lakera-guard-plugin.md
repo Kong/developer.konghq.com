@@ -9,6 +9,14 @@ related_resources:
     url: /plugins/ai-lakera-guard/
   - text: AI Gateway
     url: /ai-gateway/
+  - text: Use the AI GCP Model Armor plugin
+    url: /how-to/use-ai-gcp-model-armor-plugin/
+  - text: Use AI PII Sanitizer to protect sensitive data in requests
+    url: /how-to/protect-sensitive-information-with-ai/
+  - text: Use Azure Content Safety plugin
+    url: /how-to/use-azure-ai-content-safety/
+  - text: Use the AI AWS Guardrails plugin
+    url: /how-to/use-ai-aws-guardrails-plugin/
 
 description: Learn how to use the AI Lakera Guard plugin to protect your AI Gateway from prompt injection attacks, harmful content, data leakage, and malicious links using Lakera's threat detection service.
 
@@ -132,16 +140,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-related_resources:
-  - text: Use the AI GCP Model Armor plugin
-    url: /how-to/use-ai-gcp-model-armor-plugin/
-  - text: Use AI PII Sanitizer to protect sensitive data in requests
-    url: /how-to/protect-sensitive-information-with-ai/
-  - text: Use Azure Content Safety plugin
-    url: /how-to/use-azure-ai-content-safety/
-  - text: Use the AI AWS Guardrails plugin
-    url: /how-to/use-ai-aws-guardrails-plugin/
-
 automated_tests: false
 ---
 
@@ -211,6 +209,7 @@ These tests verify that the prompt defense blocks injection attacks and jailbrea
 
 This test verifies that the prompt defense blocks injection attacks attempting to override system instructions.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -239,12 +238,14 @@ message: |
       "error": true
     }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% navtab "Jailbreak" %}
 
 This test ensures the filter blocks jailbreak attempts that try to bypass safety guidelines.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -273,6 +274,7 @@ message: |
     "error": true
   }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -286,6 +288,7 @@ These tests ensure the filter blocks harmful content including hate speech, viol
 
 This test verifies that the content filter blocks hate speech and derogatory requests.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -314,12 +317,14 @@ message: |
       "error": true
     }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% navtab "Violence" %}
 
 This test ensures the filter blocks requests for violent or harmful instructions.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -361,6 +366,7 @@ message: |
       "error": true
     }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 
@@ -368,6 +374,7 @@ message: |
 
 This test verifies that requests for illegal activities are blocked.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -404,11 +411,12 @@ message: |
       "error": true
     }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% endnavtabs %}
 
-### Data Leakage Prevention
+### Data leakage prevention
 
 These tests check that various types of Personally Identifiable Information (PII) are detected and blocked.
 
@@ -417,6 +425,7 @@ These tests check that various types of Personally Identifiable Information (PII
 
 This test verifies that US social security numbers are detected and blocked.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -445,12 +454,14 @@ message: |
       "error": true
     }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% navtab "SSN" %}
 
 This test verifies that US social security numbers are detected and blocked.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -479,12 +490,14 @@ message: |
       "error": true
     }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% navtab "Multiple PII" %}
 
 This test checks that various PII types are detected.
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 headers:
@@ -513,6 +526,7 @@ message: |
       "error": true
     }
 {% endvalidation %}
+<!-- vale on -->
 
 {% endnavtab %}
 {% endnavtabs %}
