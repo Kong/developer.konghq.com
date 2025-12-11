@@ -90,7 +90,7 @@ body:
   name: kong-auth
   mount: secret
   protocol: http
-  host: host.docker.internal
+  host: $VAULT_ADDR
   port: 8200
   vault_token: root
   kv: v2
