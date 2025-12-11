@@ -51,22 +51,25 @@ Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, y
 1. In the **Azure DevOps organization name** field, enter your organization name exactly as it appears in Azure DevOps.
 1. In the **Azure DevOps personal access token (PAT)** field, enter your Azure DevOps token.
 1. (Optional) In the **Description** field, enter a description for this instance.
+1. In the **Display name** field, enter `azure-devops-api-service`.
+1. In the **Instance name** field, enter `azure-devops-api-service`.
 1. Click **Save**.
 
-## Create a catalog service and map the Azure DevOps resources
+## Create a {{site.konnect_catalog}} service and map the Azure DevOps resources
 
 After you configure the Azure DevOps integration, create a service in {{site.konnect_catalog}} and link it to a repository from your Azure DevOps organization. This associates the service with its source code location and uses that repository as a system of record.
 
 {:.note}
-> In this tutorial, we’ll refer to your Azure DevOps repository as `user-service`.
+> In this tutorial, we’ll refer to your Azure DevOps repository as `azure-devops-api`.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
 1. Click **New service**.
-1. In the **Display Name** field, enter `user-service`.
+1. In the **Display Name** field, enter `azure-devops-api-service`.
 1. Click **Create**.
 1. Click **Map Resources**.
-1. Select `user-service`.
+1. Select `azure-devops-api`.
+1. Click **Map 1 Resource**.
 
 If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
 
@@ -74,7 +77,7 @@ If you don't immediately see resources, try manually syncing your Azure DevOps i
 To confirm that the Azure DevOps resource is now mapped to the intended service, navigate to the new service:
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
-1. Click the `user-service` service.
+1. Click the `azure-devops-api` service.
 1. Click the **Resources** tab.
 
-You'll see the `user-service` resource listed.
+You'll see the `azure-devops-api` resource listed.
