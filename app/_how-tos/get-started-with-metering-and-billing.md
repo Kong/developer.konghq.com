@@ -62,11 +62,11 @@ automated_tests: false
 This getting-started guide shows how you can meter {{site.base_gateway}} API requests and invoice your customers based on their API consumption with Metering & Billing in {{site.konnect_short_name}}. 
 
 In this guide, you'll:
-* Create a Consumer that you'll map as a customer
+* Create a {{site.base_gateway}} Consumer that you'll map as a customer
 * Set up a meter for {{site.base_gateway}} API requests
 * Create a premium plan based on API usage
 * Start subscriptions for a customer
-* Collect an invoice for a customer on the paid premium plan and see their API usage
+* Generate an invoice for a customer on the paid premium plan and see their API usage
 
 The following diagram shows how {{site.base_gateway}} entities and Metering & Billing entities are associated:
 
@@ -136,7 +136,7 @@ entities:
 
 ## Create a meter
 
-In Metering & Billing, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and auditable data.
+In Metering & Billing, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and data you can audit.
 
 In this guide, you'll enable API Gateway requests for metering. This will meter API request traffic in Metering & Billing so that you can charge customers for API traffic usage.
 
