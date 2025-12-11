@@ -43,7 +43,6 @@ tools:
   - deck
 
 prereqs:
-  prereqs:
   inline:
     - title: Vertex
       content: |
