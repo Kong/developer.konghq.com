@@ -576,32 +576,6 @@ providers:
         min_version: '3.13'
 
   - name: 'xAI'
-    url_pattern: 'https://api.x.ai/{route_type_path}'
-    min_version: '3.13'
-    chat:
-      supported: true
-      streaming: true
-      upstream_path: '/v1/chat/completions'
-      route_type: 'llm/v1/chat'
-      model_example: 'grok-4-1-fast-reasoning'
-      min_version: '3.13'
-    responses:
-      supported: true
-      streaming: false
-      upstream_path: '/v1/responses'
-      route_type: 'llm/v1/responses'
-      model_example: 'grok-4-1-fast-reasoning'
-      min_version: '3.13'
-    image:
-      generations:
-        supported: true
-        streaming: false
-        upstream_path: '/v1/images/generations'
-        route_type: 'image/v1/images/generations'
-        model_example: 'grok-2-image-1212'
-        min_version: '3.13'
-
-  - name: 'xAI'
     url_pattern: 'https://api.x.ai:443/{route_type_path}'
     min_version: '3.13'
     chat:
