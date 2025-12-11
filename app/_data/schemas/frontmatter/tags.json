@@ -194,6 +194,7 @@
     "webhook",
     "websocket",
     "windows",
+    "xai",
     "zipkin",
     "zone-tokens",
     "zones"

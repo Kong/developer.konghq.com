@@ -1,0 +1,144 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "client": {
+          "properties": {
+            "binary": {
+              "properties": {
+                "schema": {
+                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
+                  "enum": [
+                    "draft4"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schema",
+                "type"
+              ],
+              "type": "object"
+            },
+            "text": {
+              "properties": {
+                "schema": {
+                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
+                  "enum": [
+                    "draft4"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schema",
+                "type"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "upstream": {
+          "properties": {
+            "binary": {
+              "properties": {
+                "schema": {
+                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
+                  "enum": [
+                    "draft4"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schema",
+                "type"
+              ],
+              "type": "object"
+            },
+            "text": {
+              "properties": {
+                "schema": {
+                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
+                  "enum": [
+                    "draft4"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schema",
+                "type"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "ws",
+        "wss"
+      ],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": [
+          "ws",
+          "wss"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

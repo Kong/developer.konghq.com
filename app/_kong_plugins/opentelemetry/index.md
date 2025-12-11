@@ -54,23 +54,15 @@ Propagate distributed tracing spans and report low-level spans to a OTLP-compati
 
 The OpenTelemetry plugin is fully compatible with the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/) and can be used with any OpenTelemetry compatible backend.
 
-## Collecting telemetry data
-
-There are two ways to set up an OpenTelemetry backend:
-* Using an OpenTelemetry-compatible backend directly, like Jaeger (v1.35.0+). 
-  
-  All the vendors supported by OpenTelemetry are listed in [OpenTelemetry's Vendor support](https://opentelemetry.io/vendors/).
-* Using the OpenTelemetry Collector, which is middleware that can be used to proxy OpenTelemetry spans to a compatible backend.
-  
-  You can view all the available OpenTelemetry Collector exporters at [open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter).
+{% include plugins/otel/collecting-otel-data.md  %}
 
 ## Metrics {% new_in 3.8 %}
 Metrics are enabled using the `contrib` version of the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/installation/).
 
 The `spanmetrics` connector allows you to aggregate traces and provide metrics to any third party observability platform.
 
-To include span metrics for application traces, configure the collector exporters section of 
-the OpenTelemetry Collector configuration file: 
+To include span metrics for application traces, configure the collector exporters section of
+the OpenTelemetry Collector configuration file:
 
 ```yaml
 connectors:
@@ -117,6 +109,12 @@ The top level span has the following attributes:
 
 For more information, see the [Tracing reference](/gateway/tracing/).
 
+### Gen AI tracing attributes {% new_in 3.13 %}
+
+When processing generative AI traffic through Kong AI Gateway, additional span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
+
+For the complete attribute reference, see [Gen AI OpenTelemetry attributes](/ai-gateway/llm-open-telemetry/).
+
 ### Propagation
 
 The OpenTelemetry plugin supports propagation of the following header formats:
@@ -134,7 +132,7 @@ See the plugin's [configuration reference](/plugins/opentelemetry/reference/#sch
 
 
 {:.info}
-> **Note:** If any of the [`config.propagation.*`](/plugins/opentelemetry/reference/#schema--config-propagation) configuration options (`extract`, `clear`, or `inject`) are configured, the `config.propagation` configuration takes precedence over the deprecated `header_type` parameter. 
+> **Note:** If any of the [`config.propagation.*`](/plugins/opentelemetry/reference/#schema--config-propagation) configuration options (`extract`, `clear`, or `inject`) are configured, the `config.propagation` configuration takes precedence over the deprecated `header_type` parameter.
 If none of the `config.propagation.*` configuration options are set, the `header_type` parameter is still used to determine the propagation behavior.
 
 In {{site.base_gateway}} 3.6 or earlier, the plugin detects the propagation format from the headers and will use the appropriate format to propagate the span context.
@@ -169,7 +167,7 @@ The OpenTelemetry plugin is built on top of the {{site.base_gateway}} tracing PD
 
    -- Append attributes
    span:set_attribute("custom.attribute", "custom value")
-      
+
    -- Close the span
    span:finish()
    ```
@@ -226,7 +224,7 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 
 ### Logging for custom plugins
 
-The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin. 
+The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin.
 The module records a structured log entry, which is reported via the OpenTelemetry plugin.
 
 ## Queuing
@@ -235,7 +233,7 @@ The module records a structured log entry, which is reported via the OpenTelemet
 
 ## Trace IDs in serialized logs {% new_in 3.5 %}
 
-When the OpenTelemetry plugin is configured along with a plugin that uses the 
+When the OpenTelemetry plugin is configured along with a plugin that uses the
 [Log Serializer](/gateway/pdk/reference/kong.log/#kong-log-serialize),
 the trace ID of each request is added to the key `trace_id` in the serialized log output.
 
