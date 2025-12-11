@@ -89,7 +89,7 @@ To view invoices in {{site.konnect_short_name}}, navigate to **Metering & Billin
 ### Invoice lifecycle
 
 The following table describes the different states of the invoice lifecycle:
-
+<!--vale off-->
 {% table %}
 columns:
   - title: State
@@ -127,6 +127,7 @@ rows:
     transitions: N/A
     description: "The invoice has been deleted and is no longer available."
 {% endtable %}
+<!--vale on-->
 
 ### Gathered invoices
 

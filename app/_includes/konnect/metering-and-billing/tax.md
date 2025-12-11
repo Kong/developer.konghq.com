@@ -9,7 +9,7 @@
 You can enable tax collection from a [Rate Card](/metering-and-billing/product-catalog/) or the [billing profile settings](https://cloud.konghq.com/metering-billing/billing-profiles).
 
 In {{site.metering_and_billing}}, you can define the tax behavior on multiple levels, from lowest to highest precedence:
-
+<!--vale off-->
 {% table %}
 columns:
   - title: Use Case
@@ -28,6 +28,7 @@ rows:
   - use_case: "Override the tax behavior per invoice line item."
     setting: "[Invoice](https://cloud.konghq.com/metering-billing/invoices)"
 {% endtable %}
+<!--vale on-->
 
 We recommend setting the tax behavior on the payment provider level if you use Stripe for tax calculation. Tax behavior is optional at the billing profile, plan rate card, and subscription rate card levels.
 
