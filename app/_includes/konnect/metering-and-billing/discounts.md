@@ -1,20 +1,30 @@
 ## Discounts and commitments
 
-Rate Cards support two different types of discounts that can be applied to charges: 
+Rate Cards discounts and commitments allow you to adjust the price of a feature in a plan. 
 
-* Percentage discount: Reduce price by a fixed percent across all usage
-* Usage discount: Enable you to provide discounts on the metered value. 
+The following table describes the discounts and commitment types:
 
-### Usage Discounts
+{% table %}
+columns:
+  - title: Discount
+    key: discount
+  - title: Description
+    key: description
+rows:
+  - discount: Percentage discount
+    description: "Reduces price by a fixed percent across all usage."
+  - discount: "[Usage discount](#usage-discounts)"
+    description: "Provides discounts on the metered value."
+  - discount: Minimum spend
+    description: "Guarantees a customer pays a specified amount, even if their usage is less. For example, if the minimum spend is set to $10, customers will pay $10 even if they only use $2 worth of the API or LLM token. The minimum spend line only appears on the invoice that includes the end of the line’s billing period."
+  - discount: Maximum spend
+    description: "Sets the maximum amount a customer will pay for a feature. For example, if maximum spend is set to $10, customers will only pay $10, even if they have a $100 worth of usage."
+{% endtable %}
+
+### Usage discounts
 Usage discounts apply **only to usage-based line items** (not flat-fee prices).
 
-The discount configuration is defined in:
-
-* `rateCard.discounts.usage` — the discount definition  
-* `line.discounts.usage` — the calculated discount applied to the line  
-* `line.meteredQuantity` — the raw metered value for the billing period  
-
-When **usage discounts** are combined with **Progressive Billing**, the discount may be consumed across multiple invoices.  
+The discount can be consumed across multiple invoices.  
 The discount is applied until the total available discount amount is fully depleted.
 
 For example: 
@@ -45,19 +55,3 @@ The discount is applied progressively:
    * Billed quantity: **100**
 
 
-### Percentage discounts
-
-The effect of a **percentage discount** (the actual discounted amount) is available in the line’s `discounts.amount` array.  
-The discount’s `reason` field is set to the same value as `rateCard.discounts.percentage`.
-
-### Minimum spend
-
-A **minimum spend** is always shown as an additional detailed line.  
-The line’s `category` is set to `charge`.
-
-If **Progressive Billing** is enabled, the minimum spend line only appears on the invoice that includes the **end** of the line’s billing period.
-
-### Maximum spend
-
-Any spend above the configured **maximum spend** threshold results in an amount discount, populated in `discounts.amount`.  
-The `reason` field for these discount entries is set to `maximumSpend`.
