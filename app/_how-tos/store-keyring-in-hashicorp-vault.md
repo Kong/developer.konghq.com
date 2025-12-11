@@ -104,7 +104,7 @@ command: |
   curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -e KONG_LICENSE_DATA \
       -e KONG_KEYRING_ENABLED=on \
       -e KONG_KEYRING_STRATEGY=vault \
-      -e KONG_KEYRING_VAULT_HOST=http://host.docker.internal:8200 \
+      -e KONG_KEYRING_VAULT_HOST=$VAULT_ADDR \
       -e KONG_KEYRING_VAULT_MOUNT=secret  \
       -e KONG_KEYRING_VAULT_PATH=keyring \
       -e KONG_KEYRING_VAULT_AUTH_METHOD=token  \
