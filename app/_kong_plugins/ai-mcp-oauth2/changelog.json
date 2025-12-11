@@ -10,5 +10,27 @@
       "type": "feature",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.2": [
+    {
+      "message": "Fixed an issue where MCP-like request was not authenticated. Previously, we only authenticated requests that satisfied the MCP spec. As a result, the attacker can bypass this via an MCP-like request. Therefore, now we change to authenticate all the requests.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the oidc schema was polluted during merging.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where resource without path was not correctly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where x-forwarded-* headers were not respected.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }
