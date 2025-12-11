@@ -82,7 +82,7 @@ cleanup:
 faqs:
   - q: What version of {{site.base_gateway}} supports thinkingConfig?
     a: |
-      The `thinkingConfig` feature requires {{site.base_gateway}} 3.13 or later (or 3.12.0.2+ with backport).
+      The `thinkingConfig` feature requires {{site.base_gateway}} 3.13 or later.
   - q: How are reasoning traces formatted in the response?
     a: |
       Reasoning traces are returned as part of the text content with `<thought>` tags for easy parsing. You can extract these sections programmatically or display them to end users.
