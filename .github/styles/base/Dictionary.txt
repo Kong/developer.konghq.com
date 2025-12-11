@@ -267,6 +267,7 @@ gatewayclass
 gateway_entity
 gcloud
 gcp
+generationConfig
 geo
 geos
 getter
