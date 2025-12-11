@@ -1,5 +1,5 @@
 ---
-title: Use Gemini's imageConfig with AI Proxy in {{site.base_gateway}}
+title: Use Gemini's imageConfig with AI Proxy in Kong AI Gateway
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -170,26 +170,26 @@ try:
             }
         }
     )
-    
+
     response.raise_for_status()
     data = response.json()
-    
+
     print(f"✓ Image generated (4:3, 1k)")
-    
+
     image_data = data['data'][0]
-    
+
     if 'url' in image_data:
         img_response = requests.get(image_data['url'])
         with open("circle_4x3_1k.png", "wb") as f:
             f.write(img_response.content)
         print(f"Saved to circle_4x3_1k.png")
-        
+
     elif 'b64_json' in image_data:
         image_bytes = base64.b64decode(image_data['b64_json'])
         with open("circle_4x3_1k.png", "wb") as f:
             f.write(image_bytes)
         print(f"Saved to circle_4x3_1k.png")
-    
+
 except Exception as e:
     print(f"Failed: {e}")
 
@@ -211,26 +211,26 @@ try:
             }
         }
     )
-    
+
     response.raise_for_status()
     data = response.json()
-    
+
     print(f"✓ Image generated (16:9, 2k)")
-    
+
     image_data = data['data'][0]
-    
+
     if 'url' in image_data:
         img_response = requests.get(image_data['url'])
         with open("landscape_16x9_2k.png", "wb") as f:
             f.write(img_response.content)
         print(f"Saved to landscape_16x9_2k.png")
-        
+
     elif 'b64_json' in image_data:
         image_bytes = base64.b64decode(image_data['b64_json'])
         with open("landscape_16x9_2k.png", "wb") as f:
             f.write(image_bytes)
         print(f"Saved to landscape_16x9_2k.png")
-    
+
 except Exception as e:
     print(f"Failed: {e}")
 
@@ -252,26 +252,26 @@ try:
             }
         }
     )
-    
+
     response.raise_for_status()
     data = response.json()
-    
+
     print(f"✓ Image generated (1:1, 4k)")
-    
+
     image_data = data['data'][0]
-    
+
     if 'url' in image_data:
         img_response = requests.get(image_data['url'])
         with open("letter_a_1x1_4k.png", "wb") as f:
             f.write(img_response.content)
         print(f"Saved to letter_a_1x1_4k.png")
-        
+
     elif 'b64_json' in image_data:
         image_bytes = base64.b64decode(image_data['b64_json'])
         with open("letter_a_1x1_4k.png", "wb") as f:
             f.write(image_bytes)
         print(f"Saved to letter_a_1x1_4k.png")
-    
+
 except Exception as e:
     print(f"Failed: {e}")
 

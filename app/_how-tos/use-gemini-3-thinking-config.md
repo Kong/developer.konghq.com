@@ -1,5 +1,5 @@
 ---
-title: Use Gemini's thinkingConfig with AI Proxy Advanced in {{site.base_gateway}}
+title: Use Gemini's thinkingConfig with AI Proxy Advanced in Kong AI Gateway
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -192,36 +192,35 @@ python3 thinking-config.py
 Example output:
 
 ```text
-✓ Thoughts included in response
+✓ Thoughts found
 
-<thought>**Calculating the Average Speed**
+=== Content ===
+<thought>**Dissecting the Riddle's Elements**
 
-I've zeroed in on the core goal: figuring out the train's average speed. To get there, I'm breaking the trip into two segments. I've noted down the distance and time for the first part and need to find the distance for the second leg of the trip.
+I'm focused on the riddle's core. The bartender's question sets the stage, and each logician's response is key. I'm noting how the information unfolds with each "I don't know," allowing the final "Yes!" to make logical sense. Each element in the question and answer is important.
+
 
 </thought>
-To find the average speed for the entire journey, we need to use the formula for average speed:
+This is a classic logic puzzle disguised as a joke. To understand the answers, you have to look at the specific question asked: **"Do *all* of you want a drink?"**
 
-$$\text{Average Speed} = \frac{\text{Total Distance}}{\text{Total Time}}$$
+Here is the breakdown of each logician’s thought process:
 
-Here is the step-by-step calculation:
+**The First Logician**
+*   **The Situation:** The first logician wants a drink.
+*   **The Logic:** If he *didn't* want a drink, the answer to "Do **all** of you want a drink?" would be "No" (because if one person doesn't want one, they don't *all* want one). However, simply knowing that *he* wants a drink isn't enough to answer "Yes," because he doesn't know what the other two want.
+*   **The Answer:** Since he cannot say "No" (because he wants one) but cannot say "Yes" (because he doesn't know about the others), his only truthful logical answer is **"I don't know."**
 
-**Step 1: Calculate the total distance traveled.**
-*   Distance in the first part: 120 km
-*   Distance in the second part: 200 km
-*   Total Distance = $120 \text{ km} + 200 \text{ km} = 320 \text{ km}$
+**The Second Logician**
+*   **The Situation:** The second logician also wants a drink.
+*   **The Logic:** She hears the first logician say "I don't know." She deduces that the first logician *must* want a drink (otherwise he would have said "No"). Now she looks at her own desire. If *she* didn't want a drink, she would answer "No" (because the condition "all" would fail). But she *does* want a drink. However, like the first logician, she doesn't know what the third logician wants.
+*   **The Answer:** Since she wants a drink but is unsure of the third person, she also must answer **"I don't know."**
 
-**Step 2: Calculate the total time taken.**
-*   Time for the first part: 2 hours
-*   Time for the second part: 2 hours
-*   Total Time = $2 \text{ hours} + 2 \text{ hours} = 4 \text{ hours}$
-
-**Step 3: Calculate the average speed.**
-Divide the total distance by the total time:
-*   Average Speed = $320 \text{ km} / 4 \text{ hours}$
-*   Average Speed = $80 \text{ km/h}$
-
-**Answer:**
-The average speed for the entire journey was **80 km/h**.
+**The Third Logician**
+*   **The Situation:** The third logician wants a drink.
+*   **The Logic:** He has heard the first two answer "I don't know."
+    *   From the first answer, he deduces Logician #1 wants a drink.
+    *   From the second answer, he deduces Logician #2 wants a drink.
+*   **The Answer:** Since he knows he wants a drink himself, and he has deduced that the other two also want drinks, he now has complete information. Everyone wants a drink. Therefore, he can definitively answer **"Yes!"**
 ```
 
 The response includes the model's reasoning process in the `<thought>` section, followed by the final answer with step-by-step calculations which solve the puzzle.

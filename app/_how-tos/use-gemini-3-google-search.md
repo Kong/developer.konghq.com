@@ -1,5 +1,5 @@
 ---
-title: Use Gemini's googleSearch tool with AI Proxy Advanced in {{site.base_gateway}}
+title: Use Gemini's googleSearch tool with AI Proxy Advanced in Kong AI Gateway
 content_type: how_to
 related_resources:
   - text: AI Gateway
