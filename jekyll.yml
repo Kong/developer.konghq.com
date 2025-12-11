@@ -106,6 +106,7 @@ operator_product_name_short: KO
 event_gateway: Kong Event Gateway
 event_gateway_short: Event Gateway
 konnect_catalog: Catalog
+metering_and_billing: Metering & Billing
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
