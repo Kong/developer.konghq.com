@@ -12,6 +12,10 @@ on:
         required: true
         default: 'main'
         type: string
+      dev_site_base_branch:
+        description: 'Dev site base branch, e.g. main'
+        required: true
+        type: string
       release_date:
         description: 'Release date for the version (YYYY/MM/DD format). Only used when version is specified.'
         required: true
@@ -120,6 +124,9 @@ jobs:
           labels: skip-changelog,review:general
           token: ${{ steps.app-token.outputs.token }}
           branch: auto/generate-gateway-plugins-changelogs-${{ github.run_number }}
+          base: ${{ inputs.dev_site_base_branch }}
+          add-paths: |
+            app/**
 
       - name: No changes detected
         if: steps.changes.outputs.changed == 'false'
