@@ -89,9 +89,6 @@ faqs:
   - q: What image sizes are available?
     a: |
       The `imageSize` parameter accepts values like `1k`, `2k`, and `4k`. Higher values produce higher resolution images but may increase generation time.
-  - q: Can I use the OpenAI SDK for image generation?
-    a: |
-      The OpenAI SDK's `images.generate()` method does not support passing `generationConfig`. Use raw HTTP requests to pass Gemini-specific parameters like `imageConfig`.
 ---
 
 ## Configure the plugin
@@ -147,7 +144,7 @@ cat < generate-images.py
 import requests
 import base64
 
-BASE_URL = "http://localhost:8000/v1/images/generations"
+BASE_URL = "http://localhost:8000/anything"
 
 print("Generating images with Gemini 3 imageConfig")
 print("=" * 50)
@@ -286,7 +283,7 @@ This script demonstrates three different image generation configurations:
 2. **16:9 aspect ratio with 2k resolution**: Produces a widescreen landscape with higher resolution.
 3. **1:1 aspect ratio with 4k resolution**: Creates a square image with maximum resolution.
 
-The script uses the OpenAI Images API format (`/v1/images/generations` endpoint) with the `generationConfig` parameter to pass Gemini-specific configuration. {{site.base_gateway}} forwards these parameters to Vertex AI and returns the generated images as either URLs or base64-encoded data. The script handles both response formats and saves the images locally.
+The script uses the OpenAI Images API format (`/v1/images/generations` endpoint) with the `generationConfig` parameter to pass Gemini-specific configuration. Kong AI Gateway forwards these parameters to Vertex AI and returns the generated images as either URLs or base64-encoded data. The script handles both response formats and saves the images locally.
 
 Run the script:
 ```sh
