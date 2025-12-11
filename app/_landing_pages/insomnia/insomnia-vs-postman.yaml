@@ -23,9 +23,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Insomnia is an open-source desktop client for designing, testing, and documenting APIs. It's built for speed and simplicity, and supports fully offline workflows.
+                    Insomnia is an open-source desktop client for designing, testing, and documenting APIs. It's built for speed and simplicity, and supports fully offline workflows. Insomnia keeps code and data under the user's control, and never dictates where that information must live.
 
-                    Insomnia helps developers review and validate what they ship, whether they work with traditional API endpoints or emerging agent-based patterns. It doesn't restrict where teams store their code or data, and it keeps control with the user. Work can remain local and private, or teams can choose to share it through Git or cloud sync.
+                    Insomnia helps developers review and validate what they ship, whether they work with traditional API endpoints or emerging agent-based patterns. Work can remain local and private, or teams can choose to share it through Git or cloud sync.
 
                     This page compares Insomnia and Postman across core functional areas to help teams understand their differences in workflow, storage models, and API development capabilities.
       - blocks:
@@ -51,24 +51,27 @@ rows:
                 - title: Open-source desktop client (Apache-2.0)
                   insomnia: true
                   details: Insomnia is open source and extensible.
-                - title: Local-first workflow
-                  insomnia: true
-                  details: Use Insomnia entirely offline with no login or cloud workspace dependency.
                 - title: Local Git-driven storage
                   insomnia: true
-                  details: Directly store and version API definitions, collections, and tests using your own Git repos.
+                  details: Store and version your API definitions, collections, and tests in your own Git repositories. All data moves directly between your machine and Git, not through Insomnia’s servers.
                 - title: Self-hosted mock servers
                   insomnia: true
                   details: Run mocks locally or on your own infrastructure.
                 - title: Unlimited local usage
                   insomnia: true
-                  details: No quotas on requests or collection runs when working locally.
+                  details: Run requests and collections locally with no quotas or limits on any plan.
                 - title: Private-by-default projects
                   insomnia: true
                   details: Keep all API data local or in Git until you explicitly choose to sync.
+                - title: Local-first workflow
+                  insomnia: true
+                  details: Use Insomnia without logging in and without relying on any cloud workspace.  
                 - title: Local environment vault
                   insomnia: true
                   details: Encrypt environment values locally with no cloud storage requirement.
+                - title: Local Git-driven workflows
+                  insomnia: true
+                  details: Edit, test, and version your work by using local Git repositories. Similar support in Postman is still in progress 
   - header:
       type: h2
       text: "At a glance"
@@ -214,11 +217,6 @@ rows:
                   subtitle: Automate testing and linting through CLI tooling.
                   insomnia: true
                   postman: true
-                - title: |
-                    [Local Git-driven workflows](/insomnia/storage#git-sync)
-                  subtitle: Drive editing, testing, and versioning directly from local Git repositories.
-                  insomnia: true
-                  postman: false
 
   - header:
       type: h2
