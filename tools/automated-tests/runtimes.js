@@ -124,12 +124,6 @@ export async function setupRuntime(runtimeConfig, product, docker) {
 
   await container.start();
 
-  let result = await executeCommand(
-    container,
-    'echo "172.17.0.1 host.docker.internal" >> /etc/hosts && cat /etc/hosts'
-  );
-  console.log(result.output);
-
   await setEnvVariable(container, "REALM_PATH", exportedRealmHostPath);
 
   for (const variable of env) {
