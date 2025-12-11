@@ -106,9 +106,6 @@ entities:
         genai_category: text/generation
         targets:
           - route_type: llm/v1/chat
-            logging:
-              log_payloads: false
-              log_statistics: true
             model:
               provider: gemini
               name: gemini-3-pro-preview
@@ -145,7 +142,7 @@ cat < thinking-config.py
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8000/v1",
+    base_url="http://localhost:8000/anything",
     api_key="ignored"
 )
 
@@ -178,9 +175,9 @@ print(content)
 EOF
 ```
 
-This script sends a logic puzzle that requires multi-step reasoning. Complex queries like this are more likely to produce visible reasoning traces showing how the model analyzes the problem, deduces information from each response, and reaches its conclusion. The `thinking_budget` of 200 allows for detailed reasoning traces.
+This script sends a logic puzzle that requires multi-step reasoning. Complex queries like this are more likely to produce visible reasoning traces showing how the model analyzes the problem, deduces information from each response, and reaches its conclusion. The [`thinking_budget`](https://ai.google.dev/gemini-api/docs/thinking#set-budget) of 200 allows for detailed reasoning traces.
 
-The OpenAI SDK sends requests to {{site.base_gateway}} using the OpenAI chat completions format. The `extra_body` parameter passes Gemini-specific configuration through to the model. {{site.base_gateway}} transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format with reasoning traces wrapped in `<thought>` tags.
+The OpenAI SDK sends requests to Kong AI Gateway using the OpenAI chat completions format. The `extra_body` parameter passes Gemini-specific configuration through to the model. Kong AI Gateway transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format with reasoning traces wrapped in `<thought>` tags.
 
 
 Now, let's run the script:

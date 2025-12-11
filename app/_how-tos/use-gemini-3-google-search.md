@@ -135,7 +135,8 @@ Gemini 3 models support built-in tools including `googleSearch`, which allows th
 To enable the `googleSearch` tool, add it to the `tools` array in your request. The tool declaration tells Gemini it has access to web search. Gemini uses this capability when the query requires current information.
 
 Create a Python script to test the `googleSearch` tool:
-````sh
+
+```py
 cat < google-search.py
 #!/usr/bin/env python3
 """Test Gemini 3 googleSearch tool via Kong AI Gateway"""
@@ -144,15 +145,14 @@ from openai import OpenAI
 import json
 
 client = OpenAI(
-    base_url="http://localhost:8000/v1",
+    base_url="http://localhost:8000/anything",
     api_key="ignored"
 )
 
 print("Testing Gemini 3 googleSearch tool")
 print("=" * 50)
 
-# Test 1: Query requiring current data
-print("\n=== Test 1: Current Weather Data ===")
+print("\n=== Step 1: Current weather data ===")
 response = client.chat.completions.create(
     model="gemini-3-pro-preview",
     messages=[
@@ -167,8 +167,7 @@ content = response.choices[0].message.content
 print(f"Response includes current data: {'✓' if '2025' in content else '✗'}")
 print(f"\n{content}\n")
 
-# Test 2: Structured output with search
-print("\n=== Test 2: Search with JSON Output ===")
+print("\n=== Step 2: Search with JSON output ===")
 response = client.chat.completions.create(
     model="gemini-3-pro-preview",
     messages=[
@@ -182,7 +181,6 @@ response = client.chat.completions.create(
 
 content = response.choices[0].message.content
 
-# Strip markdown fences if present
 if content.startswith("```"):
     lines = content.split("\n")
     content_clean = "\n".join(lines[1:-1])
@@ -200,8 +198,7 @@ except Exception as e:
 
 print(f"\n{content}\n")
 
-# Test 3: Query not requiring search
-print("\n=== Test 3: Query Without Search Need ===")
+print("\n=== Step 3: Query without search need ===")
 response = client.chat.completions.create(
     model="gemini-3-pro-preview",
     messages=[
@@ -226,7 +223,7 @@ This script demonstrates three scenarios:
 2. **Structured output with search**: Requests conference information formatted as JSON. Combines search with structured output.
 3. **Query without search need**: Asks a simple math question. Gemini answers directly without using search.
 
-The OpenAI SDK sends requests to {{site.base_gateway}} using the OpenAI chat completions format. The `tools` array declares available capabilities. {{site.base_gateway}} transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format. Search results appear directly in the response content, not as separate `tool_calls` objects.
+The OpenAI SDK sends requests to Kong AI Gateway using the OpenAI chat completions format. The `tools` array declares available capabilities. Kong AI Gateway transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format. Search results appear directly in the response content, not as separate `tool_calls` objects.
 
 Run the script:
 ````sh
