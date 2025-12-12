@@ -48,12 +48,14 @@ You need to configure the following:
 {% navtabs "azure-devops-integration" %}
 {% navtab "UI" %}
 
-1. In the Konnect sidebar, click **Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Integrations**.
 1. Click **Azure DevOps**.
 1. Click **Add Azure DevOps instance**.
-1. In the **Azure DevOps organization name** field, enter your organization name exactly as it is in Azure DevOps.
+1. In the **Azure DevOps organization name** field, enter your organization name exactly as it appears in Azure DevOps.
 1. In the **Azure DevOps personal access token (PAT)** field, enter your Azure DevOps token.
+1. In the **Display name** field, enter `azure-devops-repository-service`.
+1. In the **Instance name** field, enter `azure-devops-repository-service`.
 1. (Optional) In the **Description** field, enter a description for this instance.
 1. Click **Save**.
 
