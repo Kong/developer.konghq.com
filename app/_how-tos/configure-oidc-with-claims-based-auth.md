@@ -165,7 +165,7 @@ You'll see an `Authorization` header in the response.
 
 Export the value of the header to an environment variable:
 
-```
+```sh
 export TOKEN=YOUR_BEARER_TOKEN
 ```
 

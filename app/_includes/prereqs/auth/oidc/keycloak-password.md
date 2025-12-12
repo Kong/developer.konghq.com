@@ -54,5 +54,5 @@ For example:
 ```sh
 export DECK_ISSUER='http://host.docker.internal:8080/realms/master'
 export DECK_CLIENT_ID='kong'
-export CLIENT_SECRET='UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW'
+export DECK_CLIENT_SECRET='UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW'
 ```
