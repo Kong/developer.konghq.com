@@ -90,7 +90,7 @@ providers:
       model_example: 'n/a'
       min_version: ''
       note:
-        content: 'Batches processing for Antropic is supported in the native format from SDK only'
+        content: 'Batches processing for Anthropic is supported in the native format from SDK only'
 
   - name: 'Azure'
     url_pattern: 'https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{route_type_path}'
