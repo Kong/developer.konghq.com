@@ -58,7 +58,7 @@ jobs:
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           RUNTIME: gateway
-          PRODUCT: gateway
+          PRODUCTS: gateway
           GATEWAY_VERSION: next
           KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}

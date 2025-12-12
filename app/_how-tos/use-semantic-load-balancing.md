@@ -85,8 +85,6 @@ faqs:
   - q: Can temperature affect which model is selected?
     a: |
       Indirectly. Temperature influences output style and can help distinguish models during embedding training or similarity scoring. Use it to align behavior with intent categories.
-
-automated_tests: false
 ---
 
 ## Configure AI Proxy Advanced Plugin
@@ -213,6 +211,8 @@ These prompts are focused on Python coding and technical questions, leveraging g
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -224,6 +224,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -239,6 +241,8 @@ These examples target common IT support questions where `gpt-4o`’s balanced cr
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -250,6 +254,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -265,6 +271,8 @@ These catchall prompts reflect general or casual queries best handled by the lig
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -276,6 +284,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -349,6 +359,8 @@ Now, with the AI Prompt Guard plugin configured as shown above, any prompt that 
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 400
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -363,6 +375,8 @@ In contrast, prompts that **do not** match any denied patterns are forwarded to 
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
 - 'Content-Type: application/json'
 - 'Authorization: Bearer $DECK_OPENAI_API_KEY'

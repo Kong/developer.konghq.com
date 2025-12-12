@@ -52,48 +52,33 @@ prereqs:
       content: |
         To complete this tutorial, make sure you have Ollama installed and running locally.
 
-        1. Visit the [Ollama download page](https://ollama.com/download) and download the installer for your operating system. Follow the installation instructions for your platform.
+        {% capture ollama %}
+        {% validation custom-command %}
+        command: docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+        expected:
+          return_code: 0
+        render_output: false
+        section: prereqs
+        {% endvalidation %}
+        {% endcapture %}
 
         1. Start Ollama:
-           ```sh
-           ollama start
-           ```
+           {{ollama | indent: 3}}
 
-        1. After installation, open a new terminal window and run the following command to pull the orca-mini model we will be using in this tutorial:
+        2. After installation, open a new terminal window and run the following command to pull the orca-mini model we will be using in this tutorial:
 
            ```sh
-           ollama run orca-mini
+           curl http://host.docker.internal:11434/api/generate -d '{ "model": "orca-mini" }' > orca.log 2>&1 &
            ```
+           {: data-test-prereqs="block" }
 
-        1. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance.
-
-           By default, Ollama runs at `localhost:11434`. You can verify this by running:
-
-           ```sh
-           lsof -i :11434
-           ```
-
-           You should see output similar to:
-
-           ```
-           COMMAND   PID            USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
-           ollama   23909  your_user_name   4u  IPv4 0x...            0t0  TCP localhost:11434 (LISTEN)
-           ```
-           {:.no-copy-code}
-
-           If Ollama is running on a different port, run:
-
-           ```sh
-           lsof -iTCP -sTCP:LISTEN -n -P | grep 'ollama'
-           ```
-
-           Then look for the `ollama` process in the output and note the port number it’s listening on.
+        3. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance.
 
            In this example, we're running {{site.base_gateway}} locally in a Docker container, so the host is `host.docker.internal`:
 
-           ```sh
-           export DECK_OLLAMA_UPSTREAM_URL='http://host.docker.internal:11434/api/chat'
-           ```
+           {% env_variables %}
+           DECK_OLLAMA_UPSTREAM_URL: 'http://host.docker.internal:11434/api/chat'
+           {% endenv_variables %}
       icon_url: /assets/icons/ollama.svg
 
   entities:
@@ -104,6 +89,13 @@ prereqs:
 
 cleanup:
   inline:
+    - title: Remove Ollama's container
+      content: |
+        ```sh
+        docker rm -f ollama
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/ollama.svg
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
@@ -111,7 +103,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 ## Configure the AI Proxy Advanced plugin
@@ -246,52 +237,59 @@ entities:
 
 Let's run a simple log collector script which collects logs at the `9999` port. Copy and run this snippet in your terminal:
 
-```
-cat <<EOF > log_server.py
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import datetime
+{% validation custom-command %}
+command: |
+  cat <<EOF > log_server.py
+  from http.server import BaseHTTPRequestHandler, HTTPServer
+  import datetime
 
-LOG_FILE = "kong_logs.txt"
+  LOG_FILE = "kong_logs.txt"
 
-class LogHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        timestamp = datetime.datetime.now().isoformat()
+  class LogHandler(BaseHTTPRequestHandler):
+      def do_POST(self):
+          timestamp = datetime.datetime.now().isoformat()
 
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length).decode('utf-8')
+          content_length = int(self.headers['Content-Length'])
+          post_data = self.rfile.read(content_length).decode('utf-8')
 
-        log_entry = f"{timestamp} - {post_data}\n"
-        with open(LOG_FILE, "a") as f:
-            f.write(log_entry)
+          log_entry = f"{timestamp} - {post_data}\n"
+          with open(LOG_FILE, "a") as f:
+              f.write(log_entry)
 
-        print("="*60)
-        print(f"Received POST request at {timestamp}")
-        print(f"Path: {self.path}")
-        print("Headers:")
-        for header, value in self.headers.items():
-            print(f"  {header}: {value}")
-        print("Body:")
-        print(post_data)
-        print("="*60)
+          print("="*60)
+          print(f"Received POST request at {timestamp}")
+          print(f"Path: {self.path}")
+          print("Headers:")
+          for header, value in self.headers.items():
+              print(f"  {header}: {value}")
+          print("Body:")
+          print(post_data)
+          print("="*60)
 
-        # Send OK response
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"OK")
+          # Send OK response
+          self.send_response(200)
+          self.end_headers()
+          self.wfile.write(b"OK")
 
-if __name__ == '__main__':
-    server_address = ('', 9999)
-    httpd = HTTPServer(server_address, LogHandler)
-    print("Starting log server on http://0.0.0.0:9999")
-    httpd.serve_forever()
-EOF
-```
+  if __name__ == '__main__':
+      server_address = ('', 9999)
+      httpd = HTTPServer(server_address, LogHandler)
+      print("Starting log server on http://0.0.0.0:9999")
+      httpd.serve_forever()
+  EOF
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 Now, run this script with Python:
 
-```sh
-python3 log_server.py
-```
+{% validation custom-command %}
+command: python3 log_server.py 2>&1 &
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 If the script is successful, you'll receive the following prompt in your terminal:
 
@@ -303,22 +301,17 @@ Starting log server on http://0.0.0.0:9999
 
 Send test requests to the `example-route` Route to see model responses scored:
 
-```sh
-for i in {1..5}; do
-  curl -s -X POST "http://localhost:8000/anything" \
-    -H "Content-Type: application/json" \
-    --json '{
-      "messages": [
-        {
-          "role": "user",
-          "content": "Who was Jozef Mackiewicz?"
-        }
-      ]
-    }'
-
-  sleep 3
-done
-```
+{% validation traffic-generator %}
+iterations: 5
+url: '/anything'
+method: POST
+status_code: 200
+body:
+  messages:
+    - role: "user"
+      content: "Who was Jozef Mackiewicz?"
+inline_sleep: 3
+{% endvalidation %}
 
 You should see JSON logs from your HTTP log plugin endpoint in `kong_logs.txt`. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model’s evaluation.
 

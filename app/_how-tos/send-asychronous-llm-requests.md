@@ -57,13 +57,10 @@ prereqs:
 
         ```bash
         cat <<EOF > batch.jsonl
-        {"custom_id": "prod1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a compelling product description for a stainless steel water bottle suitable for outdoor activities."}], "max_tokens": 60}}
-        {"custom_id": "prod2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a product description for a pair of wireless noise-cancelling headphones with long battery life."}], "max_tokens": 60}}
-        {"custom_id": "prod3", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write an engaging product description for a stylish red leather wallet with multiple compartments."}], "max_tokens": 60}}
-        {"custom_id": "prod4", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a detailed product description for a Bluetooth wireless speaker with waterproof features."}], "max_tokens": 60}}
-        {"custom_id": "prod5", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o-mini", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a concise product description for a compact and durable travel backpack with laptop compartment."}], "max_tokens": 60}}
+        {% include _files/ai-gateway/batch.jsonl %}
         EOF
         ```
+        {: data-test-prereqs="block" }
   entities:
     services:
       - files-service
@@ -80,8 +77,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure AI Proxy plugins
@@ -133,9 +128,21 @@ variables:
 
 Use the following command to upload your [batching file](./#batch-jsonl-file) to the `/files` route:
 
-```bash
-curl localhost:8000/files -F purpose="batch" -F file="@batch.jsonl"
-```
+<!-- vale off -->
+{% validation request-check %}
+url: "/files"
+status_code: 200
+method: POST
+form_data:
+  purpose: "batch"
+  file: "@batch.jsonl"
+file_dir: ai-gateway
+extract_body:
+  - name: 'id'
+    variable: FILE_ID
+{% endvalidation %}
+<!-- vale on -->
+
 
 You will see a JSON response like this:
 
@@ -169,15 +176,20 @@ Send a POST request to the `/batches` Route to create a batch using your uploade
 >
 > In this example we use the `/v1/chat/completions` route for batching because we are sending multiple structured chat-style prompts in OpenAI's chat completions format to be processed in bulk.
 
-```bash
-curl http://localhost:8000/batches \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"input_file_id\": \"$FILE_ID\",
-    \"endpoint\": \"/v1/chat/completions\",
-    \"completion_window\": \"24h\"
-  }"
-```
+<!-- vale off -->
+{% validation request-check %}
+url: '/batches'
+method: POST
+status_code: 200
+body:
+  input_file_id: $FILE_ID
+  endpoint: "/v1/chat/completions"
+  completion_window: "24h"
+extract_body:
+  - name: 'id'
+    variable: BATCH_ID
+{% endvalidation %}
+<!-- vale on -->
 
 You will receive a response similar to:
 
@@ -222,9 +234,16 @@ export BATCH_ID=YOUR_BATCH_ID
 
 Wait for a moment for the batching request to be completed, then check the status of your batch by sending the following request:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /batches/$BATCH_ID
+status_code: 200
+extract_body:
+  - name: 'output_file_id'
+    variable: OUTPUT_FILE_ID
+retry: true
 {% endvalidation %}
+<!-- vale on -->
 
 A completed batch response looks like this:
 
@@ -273,9 +292,12 @@ The output file ID will only be available once the batch request has completed. 
 
 Now, we can download the batched responses from the `/files` endpoint by appending `/content` to the file ID URL. For details, see the [OpenAI API documentation](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
 
-```bash
-curl http://localhost:8000/files/$OUTPUT_FILE_ID/content > batched-response.jsonl
-```
+{% validation request-check %}
+url: "/files/$OUTPUT_FILE_ID/content"
+status_code: 200
+output: batched-response.jsonl
+{% endvalidation %}
+
 
 This command saves the batched responses to the `batched-response.jsonl` file.
 

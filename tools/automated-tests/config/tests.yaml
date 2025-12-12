@@ -5,8 +5,15 @@ productionUrl: https://developer.konghq.com
 
 before:
   commands:
-    - docker run -d --name automated-tests-keycloak -p 127.0.0.1:8080:8080 -e KC_DB_USERNAME=keycloak -e KC_DB_PASSWORD=password -e KC_DB_DATABASE=keycloak -v $REALM_PATH:/opt/keycloak/data/import quay.io/keycloak/keycloak  start-dev --import-realm
+    - docker network create kong-quickstart-net >/dev/null 2>&1 || true
+    - docker run -d --name automated-tests-keycloak -p 127.0.0.1:8080:8080 --network kong-quickstart-net -e KC_DB_USERNAME=keycloak -e KC_DB_PASSWORD=password -e KC_DB_DATABASE=keycloak -v $REALM_PATH:/opt/keycloak/data/import quay.io/keycloak/keycloak  start-dev --import-realm
+    - docker run -d --name redis-stack-server -p 6379:6379  --network kong-quickstart-net redis/redis-stack-server:latest
+    - docker run -d --name vault -p 8200:8200 --network kong-quickstart-net  -e 'VAULT_DEV_ROOT_TOKEN_ID=root' hashicorp/vault
+    - sleep 10
+
 
 after:
   commands:
     - docker rm -f automated-tests-keycloak
+    - docker rm -f redis-stack-server
+    - docker rm -f vault

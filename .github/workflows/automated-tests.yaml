@@ -48,7 +48,7 @@ jobs:
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           RUNTIME: gateway
-          PRODUCT: gateway
+          PRODUCTS: ai-gateway,gateway
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |
           DEBUG=tests:*,debug npm run run-tests

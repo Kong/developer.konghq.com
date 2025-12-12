@@ -64,8 +64,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the plugin
@@ -137,9 +135,11 @@ Now, you can test the rate limiting configuration.
 <!--vale off-->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'x-prompt-count: 100000'
+display_headers: true
 body:
   messages:
     - role: system
@@ -147,7 +147,7 @@ body:
     - role: user
       content: Tell me about Google?
 status_code: 200
-message: 'OK'
+message: "HTTP/1.1 200 OK"
 {% endvalidation %}
 <!--vale on-->
 
@@ -156,6 +156,8 @@ Now, you can test the rate limiting function by sending the following request:
 <!--vale off-->
 {% validation request-check %}
 url: /anything
+method: POST
+display_headers: true
 headers:
   - 'Content-Type: application/json'
   - 'x-prompt-count: 950000'
@@ -166,6 +168,6 @@ body:
     - role: user
       content: Tell me about Google?
 status_code: 429
-message: 'Rate limit exceeded for provider: cohere'
+message: "HTTP/1.1 429 AI token rate limit exceeded for provider(s): cohere"
 {% endvalidation %}
 <!--vale on-->

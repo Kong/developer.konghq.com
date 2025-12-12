@@ -99,7 +99,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin with claims-based authorization
@@ -166,7 +165,7 @@ You'll see an `Authorization` header in the response.
 
 Export the value of the header to an environment variable:
 
-```
+```sh
 export TOKEN=YOUR_BEARER_TOKEN
 ```
 
