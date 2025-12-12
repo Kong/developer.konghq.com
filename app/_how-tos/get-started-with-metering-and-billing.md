@@ -1,5 +1,5 @@
 ---
-title: Get started with Metering and Billing in {{site.konnect_short_name}}
+title: Get started with {{site.metering_and_billing}} in {{site.konnect_short_name}}
 description: Learn how to...
 content_type: how_to
 
@@ -18,11 +18,11 @@ tags:
     - get-started
 
 tldr: 
-  q: What is Metering and Billing in {{site.konnect_short_name}}, and how can I get started with it?
+  q: What is {{site.metering_and_billing}} in {{site.konnect_short_name}}, and how can I get started with it?
   a: |
-    [Metering & Billing](/metering-and-billing/) provides flexible billing and metering for AI and DevTool companies. It also includes real-time insights and usage limit enforcement.
+    [{{site.metering_and_billing}}](/metering-and-billing/) provides flexible billing and metering for AI and DevTool companies. It also includes real-time insights and usage limit enforcement.
 
-    This tutorial will help you get started with Metering & Billing by setting up metering based on {{site.base_gateway}} API requests, turn raw API usage into billable product offerings by defining features and pricing plans, and start subscriptions to assign to customers.
+    This tutorial will help you get started with {{site.metering_and_billing}} by setting up metering based on {{site.base_gateway}} API requests, turn raw API usage into billable product offerings by defining features and pricing plans, and start subscriptions to assign to customers.
 
 tools:
     - deck
@@ -36,7 +36,7 @@ prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
       content: |
-        You need the [? role](/konnect-platform/teams-and-roles/#service-catalog) in {{site.konnect_short_name}} to configure metering and billing.
+        You need the [? role](/konnect-platform/teams-and-roles/#service-catalog) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
       icon_url: /assets/icons/kogo-white.svg
 
 cleanup:
@@ -59,7 +59,7 @@ next_steps:
 automated_tests: false
 ---
 
-This getting-started guide shows how you can meter {{site.base_gateway}} API requests and invoice your customers based on their API consumption with Metering & Billing in {{site.konnect_short_name}}. 
+This getting-started guide shows how you can meter {{site.base_gateway}} API requests and invoice your customers based on their API consumption with {{site.metering_and_billing}} in {{site.konnect_short_name}}. 
 
 In this guide, you'll:
 * Create a {{site.base_gateway}} Consumer that you'll map as a customer
@@ -68,7 +68,7 @@ In this guide, you'll:
 * Start subscriptions for a customer
 * Generate an invoice for a customer on the paid premium plan and see their API usage
 
-The following diagram shows how {{site.base_gateway}} entities and Metering & Billing entities are associated:
+The following diagram shows how {{site.base_gateway}} entities and {{site.metering_and_billing}} entities are associated:
 
 {% mermaid %}
 flowchart TB
@@ -78,7 +78,7 @@ flowchart TB
         route["example-route"]
         consumer1["Consumer-Kong Air"]
   end
-  subgraph metering["<b>Konnect Metering & Billing</b>"]
+  subgraph metering["<b>Konnect {{site.metering_and_billing}}</b>"]
     direction LR
         meter["Meter"]
     subgraph plan["Premium Plan"]
@@ -102,7 +102,7 @@ flowchart TB
 
 ## Create a Consumer
 
-Before you configure metering and billing, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in Metering & Billing and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
+Before you configure {{site.metering_and_billing}}, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in {{site.metering_and_billing}} and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
 
 You're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
@@ -136,11 +136,11 @@ entities:
 
 ## Create a meter
 
-In Metering & Billing, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and data you can audit.
+In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and data you can audit.
 
-In this guide, you'll enable API Gateway requests for metering. This will meter API request traffic in Metering & Billing so that you can charge customers for API traffic usage.
+In this guide, you'll enable API Gateway requests for metering. This will meter API request traffic in {{site.metering_and_billing}} so that you can charge customers for API traffic usage.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. Enable **API Gateway Requests**.
 
 ## Create a feature
@@ -151,8 +151,8 @@ Features are customer-facing, and show up on the invoice for paid plans. Feature
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Product Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `example-service`.
 1. From the **Meter** dropdown menu, select "kong_konnect_api_request". 
@@ -171,8 +171,8 @@ A rate card describes price and usage limits or access control for a feature or 
 
 In this section, you'll create a Premium plan that grants paying customers access to the `example-service` at a rate of 5,000 requests per month:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Product Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click the **Plans** tab.
 1. Click **Create Plan**.
 1. In the **Name** field, enter `Premium`.
@@ -192,8 +192,8 @@ In this section, you'll create a Premium plan that grants paying customers acces
 
 Customers are the entities who pay for the consumption. In many cases, it's equal to your Consumer. Here you are going to create a customer and map our Consumer to it.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
 1. In the **Include usage from** dropdown, select "kong-air". 
@@ -219,13 +219,13 @@ headers:
 {% endvalidation %}
 <!--vale on-->
 
-This will generate six requests. Now, check the invoice that was created in Metering & Billing:
+This will generate six requests. Now, check the invoice that was created in {{site.metering_and_billing}}:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the **Invoices** tab.
 1. Click **Kong Air**.
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.
 
-You'll see in Lines that `example-service` is listed and was used six times. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **Metering & Billing** > **Settings**.
+You'll see in Lines that `example-service` is listed and was used six times. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.

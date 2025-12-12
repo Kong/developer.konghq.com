@@ -1,7 +1,7 @@
 metadata:
-  title: "Metering and Billing"
+  title: "{{site.metering_and_billing}}"
   content_type: landing_page
-  description: Learn how to meter and bill for your features with Metering and Billing.
+  description: Learn how to meter and bill for your features with {{site.metering_and_billing}}.
   breadcrumbs:
     - /metering-and-billing/
   products:
@@ -10,7 +10,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Metering and Billing"
+      text: "{{site.metering_and_billing}}"
       sub_text: Meter, bill, and monetize the entire AI connectivity data path.
     columns:
       - blocks:
@@ -19,7 +19,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} Metering & Billing provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices.  
+                    {{site.konnect_short_name}} {{site.metering_and_billing}} provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices.  
                     It is designed for AI and API-first businesses that need accurate usage metering, flexible pricing models, and customer-level billing detail.
 
                     You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
@@ -29,49 +29,49 @@ rows:
           - type: image
             config:
               url: /assets/images/konnect/metering.png
-              alt_text: Metering and Billing Overview
+              alt_text: "{{site.metering_and_billing}} Overview"
 
 
   - header:
       type: h2
-      text: "Get started with Metering and Billing"
+      text: "Learn more"
 
     columns:
       - blocks:
           - type: card
             config:
-              title: Meter LLM traffic
+              title: Product Catalog
               description: |
-                Track prompt tokens, completion tokens, and model usage from {{site.base_gateway}} or any AI gateway backed by Konnect.
-              icon: /assets/icons/ai.svg
+                {{site.konnect_short_name}} {{site.metering_and_billing}}’s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place.
+              icon: /assets/icons/document.svg
               cta:
-                text: Learn how
-                url: /metering-and-billing/monitor-llm-traffic/
+                text: Learn more
+                url: /metering-and-billing/product-catalog/
       - blocks:
           - type: card
             config:
-              title: Meter {{site.base_gateway}} API requests
+              title: Customers and usage attribution
               description: |
-                Convert raw API request events into billable usage. Create meters, features, pricing, and subscriptions.
-              icon: /assets/icons/gateway.svg
-              cta:
-                text: Get started
-                url: /metering-and-billing/get-started/
-      - blocks:
-          - type: card
-            config:
-              title: Understand customers
-              description: |
-                Learn how {{site.konnect_short_name}} models customers and usage mapping for billing systems.
+                Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
               icon: /assets/icons/team.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/subjects/
+                url: /metering-and-billing/customer/
+      - blocks:
+          - type: card
+            config:
+              title: Billing, invoicing, and subscriptions
+              description: |
+                Learn how to set up billing, invoicing, and subscriptions in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/billing-invoicing-subscriptions/
 
   - header:
       type: h2
       text: "Integrations"
-      sub_text: "Connect Metering and Billing to external payment, CRM, and invoicing systems"
+      sub_text: "Connect {{site.metering_and_billing}} to external payment, CRM, and invoicing systems"
 
     column_count: 3
     columns:

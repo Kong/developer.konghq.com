@@ -1,7 +1,7 @@
 ---
 title: "Product Catalog"
 content_type: reference
-description: "Learn how the Product Catalog work in {{site.konnect_short_name}} Metering and Billing and how they relate to usage tracking and external billing systems."
+description: "Learn how the Product Catalog work in {{site.konnect_short_name}} {{site.metering_and_billing}} and how they relate to usage tracking and external billing systems."
 layout: reference
 products:
   - metering-and-billing
@@ -12,7 +12,7 @@ works_on:
 breadcrumbs:
   - /metering-and-billing/
 related_resources:
-  - text: "{{site.konnect_short_name}} Metering and Billing"
+  - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
   - text: "Subjects"
     url: /metering-and-billing/subjects/
@@ -20,7 +20,7 @@ related_resources:
 ---
 
 
-{{site.konnect_short_name}} Metering and Billing's Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place. 
+{{site.konnect_short_name}} {{site.metering_and_billing}}'s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place. 
 
 Each Product Catalog plan consists of:
 * [Features](#features) that are associated with a meter
@@ -95,7 +95,7 @@ Features can be archived, after which no new entitlements can be created for the
 
 ## Plans
 
-Plans are a core component of the Product Catalog. Plans define the pricing and entitlements your customers receive in {{site.konnect_short_name}} Metering and Billing. They act as reusable templates that describe what a customer gets and how they are charged. Each plan can include multiple phases, prices, and entitlements, and can be versioned. 
+Plans are a core component of the Product Catalog. Plans define the pricing and entitlements your customers receive in {{site.konnect_short_name}} {{site.metering_and_billing}}. They act as reusable templates that describe what a customer gets and how they are charged. Each plan can include multiple phases, prices, and entitlements, and can be versioned. 
 
 Plans can take different forms, for example: 
 
@@ -227,4 +227,4 @@ Example for reverse trials with plan phases:
 
 ## Subscriptions
 
-{{site.konnect_short_name}} Metering and Billing subscriptions link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/).
+{{site.konnect_short_name}} {{site.metering_and_billing}} subscriptions link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/).

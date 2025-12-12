@@ -1,7 +1,7 @@
 ---
 title: "Customers and usage attribution"
 content_type: reference
-description: "Learn how Customers and usage attributes work in {{site.konnect_short_name}} Metering and Billing and how they access features."
+description: "Learn how Customers and usage attributes work in {{site.konnect_short_name}} {{site.metering_and_billing}} and how they access features."
 layout: reference
 products:
   - metering-and-billing
@@ -12,7 +12,7 @@ works_on:
 breadcrumbs:
   - /metering-and-billing/
 related_resources:
-  - text: "{{site.konnect_short_name}} Metering and Billing"
+  - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
 ---
 
@@ -20,7 +20,7 @@ related_resources:
 
 Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
 
-Billable events ingested into Metering & Billing always include a subject field that represents metered entities within your system, such as {{site.base_gateway}} [Consumers](/gateway/entities/consumer/), [Dev Portal applications](/dev-portal/self-service/), or [subjects](#what-is-a-subject) or entities outside of {{site.konnect_short_name}}.  
+Billable events ingested into {{site.metering_and_billing}} always include a subject field that represents metered entities within your system, such as {{site.base_gateway}} [Consumers](/gateway/entities/consumer/), [Dev Portal applications](/dev-portal/self-service/), or [subjects](#what-is-a-subject) or entities outside of {{site.konnect_short_name}}.  
 
 A customer can have **one or many** usage attributes assigned, allowing you to group usage and billing. For example, if a customer has multiple departments that are producing usage, you could create two usage attributes for each department that are assigned to one customer.
 
@@ -73,7 +73,7 @@ rows:
 
 ### What is a subject?
 
-Subjects represent the entity that consumes metered resources in {{site.konnect_short_name}} Metering and Billing. Billable events ingested to Metering and Billing have a subject associated with them.
+Subjects represent the entity that consumes metered resources in {{site.konnect_short_name}} {{site.metering_and_billing}}. Billable events ingested to {{site.metering_and_billing}} have a subject associated with them.
 
 A subject can represent any unique event in your system, such as: 
 * Customer ID or User ID  
@@ -108,8 +108,8 @@ To create a customer in {{site.konnect_short_name}}, do the following:
 {% navtabs "customer" %}
 {% navtab "Consumer" %}
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter your customer's name.
 1. Select **Consumers**.
@@ -119,8 +119,8 @@ To create a customer in {{site.konnect_short_name}}, do the following:
 {% endnavtab %}
 {% navtab "Application" %}
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter your customer's name.
 1. Select **Applications**.
@@ -169,7 +169,7 @@ curl https://openmeter.cloud/api/v1/customers \
 Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or system access token](/konnect-api/#system-accounts-and-access-tokens).
 
 {:.info}
-> {{site.konnect_short_name}} Metering and Billing will also automatically create a subject for you when you ingest an usage event for a new subject.
+> {{site.konnect_short_name}} {{site.metering_and_billing}} will also automatically create a subject for you when you ingest an usage event for a new subject.
 
 {% endnavtab %}
 {% endnavtabs %}

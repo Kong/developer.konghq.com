@@ -12,7 +12,7 @@ works_on:
 breadcrumbs:
   - /metering-and-billing/
 related_resources:
-  - text: "{{site.konnect_short_name}} Metering and Billing"
+  - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
 ---
 
@@ -24,7 +24,7 @@ Each {{site.metering_and_billing}} instance has one default billing profile that
 
 A billing profile is linked to a specific App. This association is established during the billing profile's creation and remains immutable. When transitioning to a new app, organizations must [migrate to a new billing profile](#customer-billing-profile-overrides).
 
-Billing profiles can be managed from the [**Billing Profiles**](https://cloud.konghq.com/metering-billing/billing-profiles) tab in **Metering & Billing > Settings** in the {{site.konnect_short_name}} UI.
+Billing profiles can be managed from the [**Billing Profiles**](https://cloud.konghq.com/metering-billing/billing-profiles) tab in **{{site.metering_and_billing}} > Settings** in the {{site.konnect_short_name}} UI.
 
 ### Invoicing settings
 
@@ -64,7 +64,7 @@ Customer overrides can be useful for the following use cases:
 * **Enterprise billing**: Set up one billing profile for SaaS customers and another for Enterprise customers (with send invoice for bank transfer selected).
 * **Migrating customers billing**: Create a new billing profile that you want to migrate customers to and then assign them to the new profile with a customer override.
 
-Configure customer overrides by navigating to **Metering & Billing** > [**Billing**](https://cloud.konghq.com/metering-billing/customers), click a customer, then navigate to the **Billing Profile** section of the customer settings.
+Configure customer overrides by navigating to **{{site.metering_and_billing}}** > [**Billing**](https://cloud.konghq.com/metering-billing/customers), click a customer, then navigate to the **Billing Profile** section of the customer settings.
 
 ## Tax calculations
 
@@ -84,7 +84,7 @@ The invoice document maintains comprehensive and structured information that is 
 * The total amount of taxes
 * The total amount after taxes and discounts charged to the customer
 
-To view invoices in {{site.konnect_short_name}}, navigate to **Metering & Billing** > **Billing** and click the **Invoices** tab. 
+To view invoices in {{site.konnect_short_name}}, navigate to **{{site.metering_and_billing}}** > **Billing** and click the **Invoices** tab. 
 
 ### Invoice lifecycle
 
@@ -155,7 +155,7 @@ Subscriptions automate the billing lifecycle by:
 
 Subscriptions can be created from predefined plans or fully customized at creation time to accommodate unique customer requirements. This flexibility supports everything from self-serve sign-ups to enterprise contract negotiations.
 
-To add a subscription to a customer, navigate to **Metering & Billing** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
+To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
 
 ## Plan migration
 
