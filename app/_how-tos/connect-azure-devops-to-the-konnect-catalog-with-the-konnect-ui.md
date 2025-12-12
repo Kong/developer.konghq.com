@@ -68,7 +68,7 @@ After you configure the Azure DevOps integration, create a service in {{site.kon
 1. In the **Display Name** field, enter `azure-devops-repository-service`.
 1. Click **Create**.
 1. Click **Map Resources**.
-1. Select `azure-devops-repository`.
+1. Select the `azure-devops-repository` checkbox.
 1. Click **Map 1 Resource**.
 
 If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
