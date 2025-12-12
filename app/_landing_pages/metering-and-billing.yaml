@@ -40,10 +40,20 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Metering
+              description: |
+                {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/metering/
+      - blocks:
+          - type: card
+            config:
               title: Product Catalog
               description: |
                 {{site.konnect_short_name}} {{site.metering_and_billing}}’s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place.
-              icon: /assets/icons/document.svg
+              icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/product-catalog/
