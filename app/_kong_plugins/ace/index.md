@@ -44,7 +44,7 @@ The Access Control Enforcement (ACE) plugin manages developer access control to 
 
 Previously, when you created an API catalog in Dev Portal and linked the APIs to a Gateway Service, {{site.konnect_short_name}} would automatically apply the {{site.konnect_short_name}} application auth (KAA) plugin automatically. API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services in those control planes.
 
-The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. For example, if you have Key Authentication configured and it rejects a request, the ACE plugin *will not* run. If you're using the `config.anonymous` ACE plugin configuration, the [plugin priority](/gateway/entities/plugin/#plugin-priority) needs to be set in such a way that it executes after all other authentication plugins. For example, you can set a provisional priority of 949 so the plugin runs after KAA (which has a priority  of 950).
+The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. For example, if you have Key Authentication configured and it rejects a request, the ACE plugin *will not* run. To allow for multiple authentication plugins, each must set the `config.anonymous` plugin configuration. Additionally, the choice to allow or reject an `anonymous` result after all authentication plugins have run needs to be controlled as described in [using multiple authentication methods](gateway/authentication/#using-multiple-authentication-methods).
 
 ## Route matching policy
 
