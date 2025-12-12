@@ -47,6 +47,7 @@ export async function testeableUrlsFromFiles(config, files) {
         const name = `[${frontmatter.title}](${config.productionUrl}${howToUrl})`;
         skipped.push({
           status: "skipped",
+          products: frontmatter.products,
           duration: 0,
           name,
           message,

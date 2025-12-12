@@ -54,6 +54,7 @@ export async function loadConfig() {
   const args = minimist(process.argv.slice(2));
   const testsConfig = await loadConfig();
   const start = Date.now();
+  const products = process.env.PRODUCTS.split(",");
   try {
     if (args.files) {
       files = Array.isArray(args.files) ? args.files : [args.files];
@@ -66,7 +67,6 @@ export async function loadConfig() {
     const filesByProductAndRuntime =
       await groupInstructionFilesByProductAndRuntime(files);
 
-    const products = process.env.PRODUCTS.split(",");
     for (const [product, instructionFilesByRuntime] of Object.entries(
       filesByProductAndRuntime
     )) {
@@ -113,10 +113,10 @@ export async function loadConfig() {
     await stopContainer(container);
     await removeContainer(container);
 
-    await logResults(results, start, Date.now());
+    await logResults(results, start, Date.now(), products);
     process.exit(1);
   }
-  await logResults(results, start, Date.now());
+  await logResults(results, start, Date.now(), products);
 
   const failedTests = results.filter(
     (r) => r.status === "failed" && !isFailureExpected(r)
