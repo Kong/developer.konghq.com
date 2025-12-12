@@ -54,23 +54,23 @@ GCP authentication has some limitations. Go through each one before you use this
 
 * This feature cannot be used together with databases from other cloud providers, such as [AWS RDS](/gateway/amazon-rds-authentication-with-aws-iam/). These auth providers are mutually exclusive. 
 * When `pg_gcp_auth` is enabled, the `pg_password` won't be used. You can't use both methods at the same time.
-* Any incorrect configuration on the GCP side will result in a failure in initializing the database connection. For example, an improperly configured managed identity or not creating a corresponding role inside GCP Postgres.
+* Any incorrect configuration on the GCP side will result in a failure in initializing the database connection, such as an improperly configured managed identity or a missing role inside GCP Postgres.
 
 For additional recommendations and limitations, see the [IAM authentication restrictions](https://docs.cloud.google.com/sql/docs/postgres/iam-authentication#restrictions) in the Google Cloud documentation.
 
 ## Enabling GCP authentication
 
-You can enable GCP authentication through an environment variable or the {{site.base_gateway}} configuration file. It supports both read-only and read-write modes, or you can enable it in read-only mode only.
+You can enable GCP authentication through an environment variable or the {{site.base_gateway}} configuration file. You can enable it for both read-write and read-only modes, or for read-only mode only.
 
 {:.info}
-> **Note:** When GCP authentication is enabled, {{site.base_gateway}} ignores the corresponding password configurations. If authentication is enabled only for read-only mode, the read-write settings—such as `pg_user` and `pg_password` remain unaffected and continue to function as usual.
+> **Note:** When GCP authentication is enabled, {{site.base_gateway}} ignores the corresponding password configurations. If authentication is enabled only for read-only mode, the read-write settings—such as `pg_user` and `pg_password`—remain unaffected and continue to function as usual.
 
 ### Configuring your GCP resources
 
-Before you enable the GCP authentication, you must configure your Google Cloud Postgres database and the IAM role or Workload Identity that {{site.base_gateway}} uses.
+Before you enable GCP authentication, you must configure your Google Cloud Postgres database and the IAM role or Workload Identity that {{site.base_gateway}} uses.
 
-* [A GCP service account key](https://docs.cloud.google.com/iam/docs/keys-create-delete#creating). The service account must have sufficiently broad permissions; at minimum it must be able to access GCP Postgres.
-* [A database user bound to the GCP service account](https://docs.cloud.google.com/sql/docs/postgres/add-manage-iam-users#creating-a-database-user) with the Cloud SQL Instance User role (`roles/cloudsql.instanceUser`). The user must also be able to connect to their GCP Postgres from their GCP VM using `psql`.
+* [A GCP service account key](https://docs.cloud.google.com/iam/docs/keys-create-delete#creating). The service account must have sufficiently broad permissions; at minimum, it must be able to access GCP Postgres.
+* [A database user bound to the GCP service account](https://docs.cloud.google.com/sql/docs/postgres/add-manage-iam-users#creating-a-database-user) with the Cloud SQL Instance User role (`roles/cloudsql.instanceUser`). The user must also be able to connect to the GCP Postgres instance from their GCP VM using `psql`.
 * For IAM database authentication, you need a principal with [the `cloudsql.instances.login` permission](https://docs.cloud.google.com/sql/docs/mysql/iam-authentication) to log in to an instance, which is included in the Cloud SQL Instance User role.
 
 ### Configuring GCP authentication in {{site.base_gateway}}
@@ -106,7 +106,7 @@ KONG_PG_GCP_SERVICE_ACCOUNT_JSON='{"type":"service_account","project_id":"exampl
 ```
 
 {:.info}
-> **Workload Identity only:** If you're using the Workload Identity to authenticate, you don't need to configure the `KONG_PG_GCP_SERVICE_ACCOUNT_JSON`. {{site.base_gateway}}'s GCP authentication feature is designed to automatically fall back to the Workload Identity mechanism if the GCP service account JSON key isn't found in the configuration.
+> **Workload Identity only:** If you're using Workload Identity to authenticate, you don't need to configure the `KONG_PG_GCP_SERVICE_ACCOUNT_JSON`. {{site.base_gateway}}'s GCP authentication feature is designed to automatically fall back to the Workload Identity mechanism if the GCP service account JSON key isn't found in the configuration.
 
 {% endnavtab %}
 
@@ -132,7 +132,7 @@ pg_gcp_service_account_json={"type":"service_account","project_id":"example-proj
 
 {:.info}
 > **Notes:** 
-> * If you enable GCP authentication in the configuration file, you must specify the configuration file with the feature property on when you run the migrations command. For example, `kong migrations bootstrap -c /path/to/kong.conf`.
+> * If you enable GCP authentication in the configuration file, you must specify the configuration file with this feature configured on when you run the migrations command. For example, `kong migrations bootstrap -c /path/to/kong.conf`.
 > * Workload Identity only: If you're using the Workload Identity to authenticate, you don't need to configure the `pg_gcp_service_account_json`. {{site.base_gateway}}'s GCP authentication feature is designed to automatically fall back to the Workload Identity mechanism if the GCP service account JSON key isn't found in the configuration.
 
 {% endnavtab %}
