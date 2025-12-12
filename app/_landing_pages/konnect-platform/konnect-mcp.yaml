@@ -430,12 +430,18 @@ rows:
             ```
 
   - header:
-      text: "Frequently asked questions"
-      type: h2
+        text: "Frequently asked questions"
+        type: h2
     columns:
       - blocks:
         - type: faqs
           config:
+            - q: Can I disable MCP access for my organization?
+              a: |
+                MCP server access is enabled by default for all organizations. Organization admins can disable this from Organization Settings > AI Settings, after which no user will be able to access the MCP server.
+            - q: How does user access control work for MCP tools?
+              a: |
+                Access to MCP tools is based on the permission levels of the user whose PAT is used for authentication.
             - q: How should I structure my tool workflows?
               a: |
                 Start with GetControlPlane to identify the correct control plane before accessing nested resources. For `get_by_name` operations that return no results, fall back to `list` and perform fuzzy matching. Always confirm CreateDebugSession parameters with the user before starting, and check `fetch_status` until the session reaches `"completed"` before analyzing traces.
