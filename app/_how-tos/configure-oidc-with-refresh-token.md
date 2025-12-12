@@ -134,7 +134,7 @@ You should see a `Refresh-Token` header in the response.
 
 Export the token to an environment variable:
 
-```
+```sh
 export REFRESH_TOKEN='{your-refresh-token}'
 ```
 
