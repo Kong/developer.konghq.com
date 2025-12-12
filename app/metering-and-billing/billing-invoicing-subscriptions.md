@@ -159,7 +159,7 @@ To add a subscription to a customer, navigate to **Metering & Billing** > **Bill
 
 ## Plan migration
 
-Plans in {{site.metering_and_billing}} are versioned. When you update a plan, existing subscriptions remain on their current version this is known as "grandfathering". Customers keep their existing pricing until they're explicitly migrated.
+Plans in {{site.metering_and_billing}} are versioned. When you update a plan, existing subscriptions remain on their current version. This is known as "grandfathering". Customers keep their existing pricing until they're explicitly migrated.
 
 Migrating a subscription to a new plan version allows you to:
 
