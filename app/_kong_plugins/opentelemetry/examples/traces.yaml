@@ -2,7 +2,7 @@ description: "Enables the OTEL plugin with an endpoint for tracing."
 
 title: 'Enable the OTEL plugin for traces'
 
-weight: 900
+weight: 890
 
 requirements: 
   - "An OpenTelemetry backend"

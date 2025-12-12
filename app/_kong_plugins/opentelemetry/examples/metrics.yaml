@@ -2,7 +2,10 @@ description: "Configures the OTEL plugin to push metrics every 10 seconds,"
 
 title: 'Enable the OTEL plugin for metrics'
 
-weight: 900
+weight: 890
+
+min_version:
+  gateway: '3.13'
 
 requirements: 
   - An OpenTelemetry backend

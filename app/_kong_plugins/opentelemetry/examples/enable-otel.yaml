@@ -1,9 +1,12 @@
-description: "Enables the OTEL plugin with an endpoint for tracing and logs."
-extended_description: "Enables the OTEL plugin with an endpoint for tracing and logs. It also adds the `X-Auth-Token` header in the HTTP request sent to the OTLP server. For a complete tutorial with Jaeger, see [Set up Jaeger with OpenTelemetry](/how-to/set-up-jaeger-with-otel/)."
+description: "Enables the OTEL plugin with an endpoint for metrics, tracing and logs."
+extended_description: "Enables the OTEL plugin with an endpoint for metrics, tracing and logs. It also adds the `X-Auth-Token` header in the HTTP request sent to the OTLP server. For a complete tutorial with Jaeger, see [Set up Jaeger with OpenTelemetry](/how-to/set-up-jaeger-with-otel/)."
 
-title: 'Enable the OTEL plugin'
+title: 'Enable the OTEL plugin for metrics, tracing and logs'
 
-weight: 900
+weight: 1000
+
+min_version:
+  gateway: '3.13'
 
 requirements: 
   - "An OpenTelemetry backend"
@@ -13,6 +16,9 @@ requirements:
 config:
   traces_endpoint: http://localhost:4318/v1/traces
   logs_endpoint: http://localhost:4318/v1/logs
+  access_logs_endpoint: http://localhost:4318/v1/logs
+  metrics:
+    endpoint: http://localhost:4318/v1/metrics
   headers:
     X-Auth-Token: secret-token
 
