@@ -133,7 +133,9 @@ To configure a meter in {{site.konnect_short_name}}, do the following:
 To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and[Route](/gateway/entities/route/#set-up-a-route). 
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. Enable **API Gateway Requests**.
+1. Enable **Gateway**.
+1. Select a Gateway
+1. Click **Enable Gateway**
 
 {% endnavtab %}
 {% navtab "Kong AI Gateway LLM tokens" %}
