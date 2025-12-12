@@ -165,6 +165,10 @@ rows:
 
 Besides the **Free** pricing model, other models require configuration that you can see from the {{site.konnect_short_name}} UI. 
 
+#### Tax calculations
+
+{% include_cached /konnect/metering-and-billing/tax.md %}
+
 #### Entitlements
 
 Entitlements are used to control access to different features, they make it possible to implement complex pricing scenarios such as monthly quotas, prepaid billing, and per-customer pricing.
