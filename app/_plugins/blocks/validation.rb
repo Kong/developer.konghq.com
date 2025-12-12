@@ -18,7 +18,7 @@ module Jekyll
 
       products = @page.fetch('products', [])
 
-      unless %w[gateway kic ai-gateway operator event-gateway].any? { |p| products.include?(p) }
+      unless %w[gateway kic ai-gateway operator event-gateway metering-and-billing].any? { |p| products.include?(p) }
         raise ArgumentError,
               "Unsupported product for {% validation #{@name} %}"
       end

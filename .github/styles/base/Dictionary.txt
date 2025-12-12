@@ -423,6 +423,7 @@ Knatives
 knep
 kong
 kongair
+kong_konnect_api_request
 kong_name
 kong-ip
 Kong/kong
@@ -733,6 +734,7 @@ serializer
 serverless
 serviceaccounts
 serviceless
+service_name
 shm
 show_in_api
 Sigstore
