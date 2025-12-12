@@ -1,4 +1,4 @@
-If you want cert-manager to issue and rotate the admission and conversion webhook certificates, [install cert-manager](https://cert-manager.io/docs/installation/) to your cluster and enable cert-manager integration by passing the following argument while installing: 
+If you need to use cert-manager to issue and rotate the admission and conversion webhook certificates, [install cert-manager](https://cert-manager.io/docs/installation/) to your cluster and enable cert-manager integration by passing the following arguments while installing: 
 
 ```bash
 --set global.webhooks.options.certManager.enabled=true
