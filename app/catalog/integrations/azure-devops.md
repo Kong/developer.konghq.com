@@ -63,7 +63,7 @@ You need to configure the following:
 Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, export your Azure organization name exactly as it appears in Azure DevOps:
 
 ```sh
-export AZURE_ORG_NAME="YOUR-ORG-NAME"
+export AZURE_DEVOPS_ORG_NAME="YOUR-ORG-NAME"
 ```
 
 Now, configure the integration:
@@ -77,7 +77,7 @@ body:
   name: "azure-devops"
   display_name: "Azure DevOps"
   config:
-    organization: "$AZURE_ORG_NAME"
+    organization: "$AZURE_DEVOPS_ORG_NAME"
 extract_body:
     - name: 'id'
       variable: AZUREDEVOPS_INTEGRATION_ID

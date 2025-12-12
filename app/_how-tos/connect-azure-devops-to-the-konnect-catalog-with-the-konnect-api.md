@@ -124,8 +124,6 @@ capture: AZUREDEVOPS_RESOURCE_ID
 jq: ".data[0].id"
 {% endkonnect_api_request %}
 
-If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
-
 {:.info}
 > {{site.konnect_short_name}} uses the first resource in the list when you run this command. To select a different resource, replace `.data[0].id` in the `jq` filter with the index of the resource you want to use or manually specify the resource ID.
 
