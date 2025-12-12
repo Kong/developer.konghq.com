@@ -22,9 +22,9 @@ rows:
   - use_case: "Define the default tax behavior, if any, for all customers."
     setting: "[Billing profile](https://cloud.konghq.com/metering-billing/billing-profiles)"
   - use_case: "Override the default tax behavior on a per Rate Card basis."
-    setting: "[Plan Rate Card](/)"
+    setting: "[Plan Rate Card](/metering-and-billing/product-catalog/#rate-cards)"
   - use_case: "Override the default tax behavior on a per-subscription basis."
-    setting: "[Subscription Rate Card](/)"
+    setting: "[Subscription Rate Card](/metering-and-billing/product-catalog/#rate-cards)"
   - use_case: "Override the tax behavior per invoice line item."
     setting: "[Invoice](https://cloud.konghq.com/metering-billing/invoices)"
 {% endtable %}

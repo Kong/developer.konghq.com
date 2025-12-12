@@ -227,4 +227,4 @@ Example for reverse trials with plan phases:
 
 ## Subscriptions
 
-{{site.konnect_short_name}} {{site.metering_and_billing}} subscriptions link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/).
+{{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).
