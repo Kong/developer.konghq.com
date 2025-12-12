@@ -70,6 +70,7 @@ export AZURE_DEVOPS_ORG_NAME="YOUR-ORG-NAME"
 
 Now, configure the integration:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/integration-instances
 status_code: 201
@@ -86,9 +87,11 @@ extract_body:
 capture: AZUREDEVOPS_INTEGRATION_ID
 jq: ".id"
 {% endkonnect_api_request %}
+<!--vale on-->
 
 Next, authorize the integration with your Azure DevOps PAT:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/integration-instances/$AZUREDEVOPS_INTEGRATION_ID/auth-credential
 status_code: 201
@@ -100,12 +103,14 @@ body:
       - name: authorization
         key: $AZUREDEVOPS_PAT
 {% endkonnect_api_request %}
+<!--vale on-->
 
 {% endnavtab %}
 {% endnavtabs %}
 
 For additional Azure DevOps resources, use the following table:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Entity
@@ -118,7 +123,7 @@ rows:
   - entity: "[Personal Access Tokens (PATs)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Window)"
     description: "Authenticate with Azure DevOps by generating a time-limited token that grants scoped access, follow least-privilege practices by selecting only required permissions, and store the token securely to prevent misuse."
 {% endtable %}
-
+<!--vale on-->
 
 ## Discovery information
 
