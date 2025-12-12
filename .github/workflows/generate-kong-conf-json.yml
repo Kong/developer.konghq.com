@@ -101,6 +101,8 @@ jobs:
           token: ${{ secrets.PAT }}
           branch: auto/generate-kong-conf-json-${{ github.run_number }}
           base: ${{ inputs.dev_site_base_branch }}
+          add-paths: |
+            app/**
 
       - name: No changes detected
         if: steps.changes.outputs.changed == 'false'

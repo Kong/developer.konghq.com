@@ -1109,7 +1109,7 @@ releases:
 
   - release: "3.12"
     latest: true
-    ee-version: "3.12.0.1"
+    ee-version: "3.12.0.2"
     eol: 2026-10-01
     distributions:
       - amazonlinux2:
@@ -1311,6 +1311,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.12.0.2': 2025/12/10
   '3.12.0.1': 2025/11/18
   '3.12.0.0': 2025/10/01
   '3.11.0.6': 2025/11/03
