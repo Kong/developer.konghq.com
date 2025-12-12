@@ -57,13 +57,16 @@ prereqs:
         export GCP_PROJECT_ID="<your-project-id>"
         ```
       icon_url: /assets/icons/gcp.svg
-    - title: Python and required libraries
+    - title: Python
+      include_content: prereqs/python
+      icon_url: /assets/icons/python.svg
+    - title: OpenAI SDK and required libraries
       content: |
-        Install Python 3 and the requests library:
+        Install the OpenAI SDK the requests library:
         ```sh
         pip install openai requests
         ```
-      icon_url: /assets/icons/python.svg
+      icon_url: /assets/icons/openai.svg
   entities:
     services:
       - example-service
