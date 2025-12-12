@@ -241,16 +241,6 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 - `SpanID`: Request span ID.
 - `TraceFlags`: W3C trace flag.
 
-### API transaction log entry {% new_in 3.13 %}
-
-Each API transaction log entry includes the following attributes:
-
-{% include plugins/otel/access_log_attributes.html %}
-
-Additionally, the following resource attributes are included in each record:
-
-{% include plugins/otel/resource_attributes.html %}
-
 ### Logging for custom plugins
 
 The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin. 
