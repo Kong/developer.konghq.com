@@ -43,6 +43,8 @@ faqs:
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
     a: |
       [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
+  - q: My team has a Dev Portal, why can't I see APIs?
+    a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
 ---
 
 {:.success}
