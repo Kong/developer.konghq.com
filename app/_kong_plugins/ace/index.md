@@ -44,11 +44,11 @@ The Access Control Enforcement (ACE) plugin manages developer access control to 
 
 Previously, when you created an API catalog in Dev Portal and linked the APIs to a Gateway Service, {{site.konnect_short_name}} would automatically apply the {{site.konnect_short_name}} application auth (KAA) plugin automatically. API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services in those control planes.
 
-The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. For example, if you have Key Authentication configured and it rejects a request, the ACE plugin *will not* run. To allow for multiple authentication plugins, each must set the `config.anonymous` plugin configuration. Additionally, the choice to allow or reject an `anonymous` result after all authentication plugins have run needs to be controlled as described in [using multiple authentication methods](/gateway/authentication/#using-multiple-authentication-methods).
+The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. For example, if you have [Key Authentication](/plugins/key-auth/) configured and it rejects a request, the ACE plugin *will not* run. To allow for multiple authentication plugins, each must set the [`config.anonymous`](/reference/#schema--config-anonymous) plugin configuration. Additionally, the choice to allow or reject an `anonymous` result after all authentication plugins have run needs to be controlled as described in [using multiple authentication methods](/gateway/authentication/#using-multiple-authentication-methods).
 
 ## Route matching policy
 
-When you configure the ACE plugin, you must set either `required` or `present` for `config.match_policy`. This determines how the ACE plugin will behave when a request doesn't match an existing Route.
+When you configure the ACE plugin, you must set either `required` or `present` for [`config.match_policy`](./reference/#schema--config-match-policy). This determines how the ACE plugin will behave when a request doesn't match an existing Route.
 
 Keep in mind that misconfigurations can overexpose unintended Routes. 
 
@@ -70,7 +70,7 @@ rows:
       Requires every incoming request to match a defined operation from an API or API package in Dev Portal. If a request doesn't match, ACE rejects the request outright with a 404. All traffic will be rejected except operations or Routes in published APIs linked to an ACE-enabled {{site.base_gateway}}. 
 
       {:.danger}
-      > **Warning:** Setting the `match_policy` to `required` can **block all traffic with a 404**. Any undefined endpoints will be blocked. If you accidentally enable this in your control planes, this could cause a potential outage in production.
+      > **Warning:** Setting the [`match_policy`](/reference/#schema--config-match-policy) to `required` can **block all traffic with a 404**. Any undefined endpoints will be blocked. If you accidentally enable this in your control planes, this could cause a potential outage in production.
     limitations: |
       * Shuts down all traffic outside of ACE-enabled Dev Portal APIs.
       * If the plugin is improperly configured, potentially all traffic could be terminated.
