@@ -23,8 +23,8 @@ related_resources:
     url: /how-to/connect-azure-devops-with-konnect-api/
 automated_tests: false
 tldr:
-  q: How do I connect Azure DevOps repositories to {{site.konnect_short_name}}?
-  a: Install the Azure DevOps integration in {{site.konnect_short_name}}, authorize it with a Personal Access Token (PAT) that has Code:Read access, then map an Azure DevOps repository to your {{site.konnect_catalog}} service.
+  q: How do I connect an Azure DevOps repository to a service in {{site.konnect_short_name}}?
+  a: Configure the Azure DevOps integration with your organization name and PAT, create a {{site.konnect_catalog}} service, then map the discovered Azure DevOps repository resource to that {{site.konnect_catalog}} service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -51,24 +51,24 @@ Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, y
 1. In the **Azure DevOps organization name** field, enter your organization name exactly as it appears in Azure DevOps.
 1. In the **Azure DevOps personal access token (PAT)** field, enter your Azure DevOps token.
 1. (Optional) In the **Description** field, enter a description for this instance.
-1. In the **Display name** field, enter `azure-devops-api-service`.
-1. In the **Instance name** field, enter `azure-devops-api-service`.
+1. In the **Display name** field, enter `azure-devops-repository-service`.
+1. In the **Instance name** field, enter `azure-devops-repository-service`.
 1. Click **Save**.
 
 ## Create a {{site.konnect_catalog}} service and map the Azure DevOps resources
 
-After you configure the Azure DevOps integration, create a service in {{site.konnect_catalog}} and link it to a repository from your Azure DevOps organization. This associates the service with its source code location and uses that repository as a system of record.
+After you configure the Azure DevOps integration, create a service in {{site.konnect_catalog}} and map an Azure DevOps repository resource to it. This links your {{site.konnect_catalog}} service to its source code location in Azure DevOps.
 
 {:.info}
-> In this tutorial, we’ll refer to your Azure DevOps repository as `azure-devops-api`.
+> In this tutorial, we’ll refer to your Azure DevOps repository as `azure-devops-repository`.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
 1. Click **New service**.
-1. In the **Display Name** field, enter `azure-devops-api-service`.
+1. In the **Display Name** field, enter `azure-devops-repository-service`.
 1. Click **Create**.
 1. Click **Map Resources**.
-1. Select `azure-devops-api`.
+1. Select `azure-devops-repository`.
 1. Click **Map 1 Resource**.
 
 If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
@@ -77,7 +77,7 @@ If you don't immediately see resources, try manually syncing your Azure DevOps i
 To confirm that the Azure DevOps resource is now mapped to the intended service, navigate to the new service:
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Services**.
-1. Click the `azure-devops-api-service` service.
+1. Click the `azure-devops-repository-service` service.
 1. Click the **Resources** tab.
 
-You'll see the `azure-devops-api-service` resource listed.
+You'll see the `azure-devops-repository-service` resource listed.
