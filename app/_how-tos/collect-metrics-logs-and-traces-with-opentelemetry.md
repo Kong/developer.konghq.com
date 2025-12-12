@@ -85,9 +85,9 @@ automated_tests: false
 
 ## Enable the OTEL plugin
 
-In this tutorial, we'll be configuring the OpenTelemetry plugin to send {{site.base_gateway}} traces to Jaeger.
+In this tutorial, we'll be configuring the OpenTelemetry plugin to send {{site.base_gateway}} metrics, traces, and logs to OpenTelemetry Collector.
 
-Enable the OTEL plugin with Jaeger settings configured:
+Enable the OTEL plugin with the OTEL Collector endpoints settings configured:
 
 {% entity_examples %}
 entities:
