@@ -137,15 +137,13 @@ The `thinkingConfig` supports the following parameters:
 Create a Python script using the OpenAI SDK:
 
 
-```sh
-cat < thinking-config.py
+```py
+cat << 'EOF' > thinking-config.py
 from openai import OpenAI
-
 client = OpenAI(
     base_url="http://localhost:8000/anything",
     api_key="ignored"
 )
-
 response = client.chat.completions.create(
     model="gemini-3-pro-preview",
     messages=[
@@ -163,14 +161,11 @@ response = client.chat.completions.create(
         }
     }
 )
-
 content = response.choices[0].message.content
-
-if '' in content:
+if '<thinking>' in content:
     print("✓ Thoughts included in response\n")
 else:
     print("✗ No thoughts found\n")
-
 print(content)
 EOF
 ```

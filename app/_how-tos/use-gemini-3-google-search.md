@@ -130,28 +130,24 @@ variables:
 
 ## Use the OpenAI SDK with `googleSearch`
 
-Gemini 3 models support built-in tools including `googleSearch`, which allows the model to retrieve current information from the web. Unlike OpenAI function calling, Gemini's built-in tools work automatically. The model decides when to use search based on the query, and integrates results directly into the response. For more information, see [Gemini Built-in Tools](https://ai.google.dev/gemini-api/docs/function-calling).
+Gemini 3 models support built-in tools including `googleSearch`, which allows the LLM to retrieve current information from the web. Unlike OpenAI function calling, Gemini's built-in tools work automatically. The model decides when to use search based on the query, and integrates results directly into the response. For more information, see [Gemini Built-in Tools](https://ai.google.dev/gemini-api/docs/function-calling).
 
 To enable the `googleSearch` tool, add it to the `tools` array in your request. The tool declaration tells Gemini it has access to web search. Gemini uses this capability when the query requires current information.
 
 Create a Python script to test the `googleSearch` tool:
 
 ```py
-cat < google-search.py
+cat << 'EOF' > google-search.py
 #!/usr/bin/env python3
 """Test Gemini 3 googleSearch tool via Kong AI Gateway"""
-
 from openai import OpenAI
 import json
-
 client = OpenAI(
     base_url="http://localhost:8000/anything",
     api_key="ignored"
 )
-
 print("Testing Gemini 3 googleSearch tool")
 print("=" * 50)
-
 print("\n=== Step 1: Current weather data ===")
 response = client.chat.completions.create(
     model="gemini-3-pro-preview",
@@ -162,11 +158,9 @@ response = client.chat.completions.create(
         {"googleSearch": {}}
     ]
 )
-
 content = response.choices[0].message.content
 print(f"Response includes current data: {'✓' if '2025' in content else '✗'}")
 print(f"\n{content}\n")
-
 print("\n=== Step 2: Search with JSON output ===")
 response = client.chat.completions.create(
     model="gemini-3-pro-preview",
@@ -178,15 +172,12 @@ response = client.chat.completions.create(
     ],
     response_format={"type": "json_object"}
 )
-
 content = response.choices[0].message.content
-
 if content.startswith("```"):
     lines = content.split("\n")
     content_clean = "\n".join(lines[1:-1])
 else:
     content_clean = content
-
 try:
     parsed = json.loads(content_clean)
     print(f"✓ Valid JSON response")
@@ -195,9 +186,7 @@ try:
         print(f"  Items: {len(parsed)}")
 except Exception as e:
     print(f"Parse result: {e}")
-
 print(f"\n{content}\n")
-
 print("\n=== Step 3: Query without search need ===")
 response = client.chat.completions.create(
     model="gemini-3-pro-preview",
@@ -208,16 +197,14 @@ response = client.chat.completions.create(
         {"googleSearch": {}}
     ]
 )
-
 content = response.choices[0].message.content
 print(f"Simple answer: {content}\n")
-
 print("=" * 50)
 print("Complete")
 EOF
-````
+```
 
-This script demonstrates three scenarios:
+This script goes through three scenarios:
 
 1. **Current data query**: Asks for real-time weather information. Gemini uses search to retrieve current data.
 2. **Structured output with search**: Requests conference information formatted as JSON. Combines search with structured output.
@@ -226,11 +213,13 @@ This script demonstrates three scenarios:
 The OpenAI SDK sends requests to Kong AI Gateway using the OpenAI chat completions format. The `tools` array declares available capabilities. Kong AI Gateway transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format. Search results appear directly in the response content, not as separate `tool_calls` objects.
 
 Run the script:
-````sh
+
+```sh
 python3 google-search.py
-````
+```
 
 Example output:
+
 ````text
 Testing Gemini 3 googleSearch tool
 ==================================================

@@ -136,19 +136,16 @@ The `imageConfig` supports the following parameters:
 {{site.base_gateway}} now supports passing `generationConfig` parameters through to Gemini. Any parameters within reasonable size limits will be forwarded to the Gemini API, allowing you to use Gemini-specific features like `imageConfig`.
 
 Create a Python script to generate images with different configurations:
-```sh
-cat < generate-images.py
+
+```py
+cat << 'EOF' > generate-images.py
 #!/usr/bin/env python3
 """Generate images with Gemini 3 via Kong AI Gateway using imageConfig"""
-
 import requests
 import base64
-
 BASE_URL = "http://localhost:8000/anything"
-
 print("Generating images with Gemini 3 imageConfig")
 print("=" * 50)
-
 # Example 1: 4:3 aspect ratio, 1k resolution
 print("\n=== Example 1: 4:3 Aspect Ratio, 1k Size ===")
 try:
@@ -167,29 +164,22 @@ try:
             }
         }
     )
-
     response.raise_for_status()
     data = response.json()
-
     print(f"✓ Image generated (4:3, 1k)")
-
     image_data = data['data'][0]
-
     if 'url' in image_data:
         img_response = requests.get(image_data['url'])
         with open("circle_4x3_1k.png", "wb") as f:
             f.write(img_response.content)
         print(f"Saved to circle_4x3_1k.png")
-
     elif 'b64_json' in image_data:
         image_bytes = base64.b64decode(image_data['b64_json'])
         with open("circle_4x3_1k.png", "wb") as f:
             f.write(image_bytes)
         print(f"Saved to circle_4x3_1k.png")
-
 except Exception as e:
     print(f"Failed: {e}")
-
 # Example 2: 16:9 aspect ratio, 2k resolution
 print("\n=== Example 2: 16:9 Aspect Ratio, 2k Size ===")
 try:
@@ -208,29 +198,22 @@ try:
             }
         }
     )
-
     response.raise_for_status()
     data = response.json()
-
     print(f"✓ Image generated (16:9, 2k)")
-
     image_data = data['data'][0]
-
     if 'url' in image_data:
         img_response = requests.get(image_data['url'])
         with open("landscape_16x9_2k.png", "wb") as f:
             f.write(img_response.content)
         print(f"Saved to landscape_16x9_2k.png")
-
     elif 'b64_json' in image_data:
         image_bytes = base64.b64decode(image_data['b64_json'])
         with open("landscape_16x9_2k.png", "wb") as f:
             f.write(image_bytes)
         print(f"Saved to landscape_16x9_2k.png")
-
 except Exception as e:
     print(f"Failed: {e}")
-
 # Example 3: 1:1 aspect ratio, 4k resolution
 print("\n=== Example 3: 1:1 Aspect Ratio, 4k Size ===")
 try:
@@ -249,29 +232,22 @@ try:
             }
         }
     )
-
     response.raise_for_status()
     data = response.json()
-
     print(f"✓ Image generated (1:1, 4k)")
-
     image_data = data['data'][0]
-
     if 'url' in image_data:
         img_response = requests.get(image_data['url'])
         with open("letter_a_1x1_4k.png", "wb") as f:
             f.write(img_response.content)
         print(f"Saved to letter_a_1x1_4k.png")
-
     elif 'b64_json' in image_data:
         image_bytes = base64.b64decode(image_data['b64_json'])
         with open("letter_a_1x1_4k.png", "wb") as f:
             f.write(image_bytes)
         print(f"Saved to letter_a_1x1_4k.png")
-
 except Exception as e:
     print(f"Failed: {e}")
-
 print("\n" + "=" * 50)
 print("Complete")
 EOF
@@ -309,6 +285,14 @@ Saved to letter_a_1x1_4k.png
 
 ==================================================
 Complete
+```
+
+Open the generated images:
+
+```sh
+open circle_4x3_1k.png
+open landscape_16x9_2k.png
+open letter_a_1x1_4k.png
 ```
 
 The script generates three images with different aspect ratios and resolutions, demonstrating how `imageConfig` controls the output dimensions and quality. All generated images are saved to the current directory.
