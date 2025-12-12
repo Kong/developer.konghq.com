@@ -186,10 +186,10 @@ entities:
 variables:
   lakera_api_key:
     description: Lakera API key
-    value: $DECK_LAKERA_API_KEY
+    value: $LAKERA_API_KEY
   lakera_project_id:
     description: Lakera project identifier
-    value: $DECK_LAKERA_PROJECT
+    value: $LAKERA_PROJECT
 {% endentity_examples %}
 
 
