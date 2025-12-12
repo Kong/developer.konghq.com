@@ -60,7 +60,7 @@ entities:
 {% endentity_examples %}
 <!--vale on-->
 
-## Create a meter
+## Enable Metering  
 
 In Metering & Billing, meters track and record the consumption of a resource or service over time.
 
