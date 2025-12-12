@@ -278,6 +278,7 @@ gojira
 Golang
 Goroutine
 Goroutine
+GPUs
 gbps
 grafana
 Grafana
