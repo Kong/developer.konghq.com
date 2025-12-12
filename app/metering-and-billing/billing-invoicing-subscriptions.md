@@ -30,7 +30,7 @@ Billing profiles can be managed from the [**Billing Profiles**](https://cloud.ko
 
 The invoicing settings define the invoice creation process and lifecycle management parameters, including:
 
-* Whether invoices are sent automatically (auto advance) for payment collection or if they require approval first
+* Whether invoices are sent automatically for payment collection or if they require approval first
 * If intermediate invoices are allowed
 * How long to wait for late usage events
 * How long to wait before sending the invoice
@@ -54,7 +54,7 @@ Payment method determines the invoice settlement process. {{site.metering_and_bi
 * **Charge automatically:** Processes payment immediately using the customer's stored payment card.
 * **Send invoice:** Issues an invoice to the customer for payment via their preferred method (credit card, bank transfer, or other supported payment options).
 
-Invoice due after/Payment due after (period) specifies the duration allowed for invoice payment after finalization. This grace period applies to all payment methods, including credit card payments which may be declined. If payment is not received within this timeframe, the invoice status will transition to overdue.
+Invoice due after/Payment due after specifies the duration allowed for invoice payment after finalization. This grace period applies to all payment methods, including credit card payments which may be declined. If payment is not received within this timeframe, the invoice status will transition to overdue.
 
 ### Customer billing profile overrides
 
@@ -131,7 +131,7 @@ rows:
 
 ### Gathered invoices
 
-To enable threshold billing scenarios, {{site.metering_and_billing}} creates gathering invoices with upcoming charges for the next billing cycle. These gathering invoices show current pending charges for the user's current billing period in real-time when fetched or viewed, providing visibility into accruing usage before the final invoice is issued.
+To enable threshold billing scenarios, {{site.metering_and_billing}} creates gathered invoices with upcoming charges for the next billing cycle. These invoices show current pending charges for the user's current billing period in real-time when fetched or viewed, providing visibility into accruing usage before the final invoice is issued.
 
 Gathering invoices are automatically deleted when the last item for a subscription has been billed for.
 
