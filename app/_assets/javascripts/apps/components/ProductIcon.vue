@@ -17,6 +17,7 @@ import catalog from '@/icons/products/catalog.svg'
 import eventGateway from '@/icons/products/event-gateway.svg'
 import konnect from '@/icons/products/konnect.svg'
 import referencePlatform from '@/icons/products/konnect-reference-platform.svg'
+import meteringBilling from '@/icons/products/metering-and-billing.svg'
 
 const productIcons = {
   'advanced-analytics': advancedAnalytics,
@@ -28,6 +29,7 @@ const productIcons = {
   'catalog': catalog,
   'konnect': konnect,
   'reference-platform': referencePlatform,
+  'metering-and-billing': meteringBilling,
   operator,
   kic,
   mesh

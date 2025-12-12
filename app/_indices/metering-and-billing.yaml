@@ -1,0 +1,12 @@
+title: "{{site.metering_and_billing}} Documentation Index"
+sections:
+  - title: Reference
+    items:
+      - path: /metering-and-billing/
+      - path: /metering-and-billing/**/*
+    auto_exclude: true
+  - title: How-Tos
+    items:
+      - type: how-to
+        products:
+          - metering-and-billing
