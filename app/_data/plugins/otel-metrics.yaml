@@ -9,19 +9,19 @@ metrics:
       - kong.workspace.name
       - http.request.method
   - name: kong.latency.total
-    description: Complete end-to-end duration of a request in seconds.
+    description: &latency_total Complete end-to-end duration of a request in seconds.
     attributes:
       - kong.service.name
       - kong.route.name
       - kong.workspace.name
   - name: kong.latency.internal
-    description: "Kong’s internal processing time in seconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
+    description: &latency_internal "Kong’s internal processing time in seconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
     attributes:
       - kong.service.name
       - kong.route.name
       - kong.workspace.name
   - name: kong.latency.upstream
-    description: Upstream processing time in seconds, from when the Gateway sends the request to the upstream, to when the data is returned to Kong.
+    description: &latency_upstream Upstream processing time in seconds, from when the Gateway sends the request to the upstream, to when the data is returned to Kong.
     attributes:
       - kong.service.name
       - kong.route.name
@@ -243,60 +243,86 @@ attributes:
       <li><code>ee_entity_read</code></li>
       <li><code>ee_entity_write</code></li>
     </ul>
-  client.address:
-  url.query:
-  url.full:
-  url.path:
-  user_agent.original:
-  http.request.size:
-  http.request.header.*:
-  http.response.header.*:
-  http.response.size:
-  http.response.status_code:
-  kong.request.id:
-  kong.request.started_at:
-  kong.workspace.id:
-  kong.latency.client:
+  client.address: IP address of the client.
+  url.query: Query in the request URL.
+  url.full: Full URL ued in the request.
+  url.path: Path in the request URL.
+  user_agent.original: Original user agent.
+  http.request.size: Size of the request.
+  http.request.header.*: Value of the request header.
+  http.response.header.*: Value of the response header.
+  http.response.size: Size of the response.
+  http.response.status_code: Status code of the response.
+  kong.request.id: ID of the request.
+  kong.request.started_at: Timestamp of the request start time.
+  kong.workspace.id: ID of the Workspace.
+  kong.latency.client: 
   kong.latency.third_party.total:
   kong.latency.third_party.dns:
   kong.latency.third_party.http_client:
   kong.latency.third_party.redis:
-  kong.latency.internal:
-  kong.latency.upstream:
+  kong.latency.internal: *latency_internal
+  kong.latency.upstream: *latency_upstream
   kong.latency.receive:
-  kong.latency.total:
+  kong.latency.total: *latency_total
   kong.latency.socket:
-  kong.route.created_at:
-  kong.route.http_redirect_status_code:
-  kong.route.id:
-  kong.route.tags:
-  kong.route.path_handling:
-  kong.route.paths:
-  kong.route.preserve_host:
-  kong.route.protocols:
-  kong.route.regex_priority:
-  kong.route.request_buffering:
-  kong.route.response_buffering:
-  kong.route.service.id:
-  kong.route.strip_path:
-  kong.route.updated_at:
-  kong.route.ws_id:
-  kong.service.connect_timeout:
-  kong.service.created_at:
-  kong.service.enabled:
-  kong.service.host:
-  kong.service.id:
-  kong.service.port:
-  kong.service.protocol:
-  kong.service.read_timeout:
-  kong.service.retries:
-  kong.service.updated_at:
-  kong.service.write_timeout:
-  kong.service.ws_id:
-  kong.service.tags:
+  kong.route.created_at: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-created-at"><code>created_at</code></a> parameter.
+  kong.route.http_redirect_status_code: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-http-redirect-status-code"><code>http_redirect_status_code</code></a> parameter.
+  kong.route.id: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-id"><code>id</code></a> parameter.
+  kong.route.tags: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-tags"><code>tags</code></a> parameter.
+  kong.route.path_handling: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-path-handling"><code>path_handling</code></a> parameter.
+  kong.route.paths: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-paths"><code>paths</code></a> parameter.
+  kong.route.preserve_host: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-preserve-host"><code>preserve_host</code></a> parameter.
+  kong.route.protocols: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-protocols"><code>protocols</code></a> parameter.
+  kong.route.regex_priority: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-regex-priority"><code>regex_priority</code></a> parameter.
+  kong.route.request_buffering: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-request-buffering"><code>request_buffering</code></a> parameter.
+  kong.route.response_buffering: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-response-buffering"><code>response_buffering</code></a> parameter.
+  kong.route.service.id: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-service-id"><code>service.id</code></a> parameter.
+  kong.route.strip_path: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-strip-path"><code>strip_path</code></a> parameter.
+  kong.route.updated_at: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-updated-at"><code>updated_at</code></a> parameter.
+  kong.route.ws_id: Workspace ID of the Route.
+  kong.service.connect_timeout: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-connect-timeout"><code>connect_timeout</code></a> parameter.
+  kong.service.created_at: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-created-at"><code>created_at</code></a> parameter.
+  kong.service.enabled: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-enabled"><code>enabled</code></a> parameter.
+  kong.service.host: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-host"><code>host</code></a> parameter.
+  kong.service.id: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-id"><code>id</code></a> parameter.
+  kong.service.port: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-port"><code>port</code></a> parameter.
+  kong.service.protocol: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-protocol"><code>protocol</code></a> parameter.
+  kong.service.read_timeout: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-read-timeout"><code>read_timeout</code></a> parameter.
+  kong.service.retries: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-retries"><code>retries</code></a> parameter.
+  kong.service.updated_at: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-updated-at"><code>updated_at</code></a> parameter.
+  kong.service.write_timeout: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-write-timeout"><code>write_timeout</code></a> parameter.
+  kong.service.ws_id: Workspace ID of the Gateway Service
+  kong.service.tags: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-tags"><code>tags</code></a> parameter.
   kong.upstream.try.*:
-  kong.upstream.status_code:
-  kong.upstream.uri:
-  kong.auth.type:
-  kong.auth.consumer.*:
-  kong.auth.authenticated_entity.*:
+  kong.upstream.status_code: Status code of the Upstream.
+  kong.upstream.uri: URI of the Upstream.
+  kong.auth.type: Type of authentication.
+  kong.auth.consumer.*: Consumer entity accessing the resource.
+  kong.auth.authenticated_entity.*: Credential used for authentication.
