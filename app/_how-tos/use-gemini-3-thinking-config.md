@@ -48,10 +48,10 @@ prereqs:
 
         - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
         - **Project ID**: Your Google Cloud project identifier
-        - **Location ID**: The region where your Vertex AI endpoint is deployed (for example, `us-central1`)
-        - **API Endpoint**: The Vertex AI API endpoint URL (typically `https://{location}-aiplatform.googleapis.com`)
+        - **API Endpoint**: The global Vertex AI API endpoint `https://aiplatform.googleapis.com`
 
         Export these values as environment variables:
+
         ```sh
         export GCP_SERVICE_ACCOUNT_JSON="<your-service-account-json>"
         export GCP_PROJECT_ID="<your-project-id>"
