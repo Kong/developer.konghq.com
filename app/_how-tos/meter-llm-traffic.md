@@ -51,7 +51,6 @@ This getting-started guide shows how to meter LLM traffic—such as token consum
 
 Before you configure metering and billing, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in Metering & Billing and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
 
-You're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 <!--vale off-->
 {% entity_examples %}
@@ -72,7 +71,7 @@ You will see `kong_konnect_llm_tokens` available from the list of available mete
 
 ## Create a feature
 
-Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering LLM token usage you need to label that as something you want to price or govern. 
+Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering LLM token usage, you need to label that as something you want to price or govern. 
 
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
@@ -86,7 +85,7 @@ In this guide, you'll create a feature for the `example-service` you created in 
    The group by filter ensures you only bill for LLM tokens from a specific provider.
 1. From the **Group by** dropdown menu, select "Provider".
 1. From the **Operator** dropdown menu, select "Equals".
-1. From the **Value** dropdown menu, type "OpenAI".
+1. In the **Value** dropdown menu, enter `OpenAI`.
 1. Click **Save**. 
 
 ## Create a Plan and Rate Card
@@ -143,7 +142,7 @@ method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $OPENAI_KEY'
+    - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
 body:
   model: gpt-4
   messages:
@@ -161,4 +160,4 @@ This will generate AI LLM token useage that will be captured by Metering & Billi
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.
 
-You'll see in Lines that `ai-token` is listed and was used six times. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **Metering & Billing** > **Settings**.
+You'll see in Lines that `ai-token` is listed and was used once. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **Metering & Billing** > **Settings**.
