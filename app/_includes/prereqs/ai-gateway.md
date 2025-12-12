@@ -34,7 +34,7 @@ method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $OPENAI_KEY'
+    - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
 body:
   model: gpt-4
   messages:
