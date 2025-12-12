@@ -77,6 +77,8 @@ rows:
     description: "Leverage the `cache` and `branch` nodes to conditionally store or retrieve cache items."
   - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)"
     description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
+  - usecase: "[Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)"
+    description: Dynamically resolve an internal authentication endpoint and inject the necessary request headers prior to proxying the request.
 {% endtable %}
 <!--vale on-->
 
@@ -520,6 +522,11 @@ rows:
       * `body`: Request body
       * `headers`: Request headers
       * `query`: Key-value pairs to encode as the request query string
+      * `url`: The request URL resolved at runtime
+      * `https_proxy`: The HTTPS proxy URL to use for the request
+      * `http_proxy`: The HTTP proxy URL to use for the request
+      * `proxy_auth_username`: The username to authenticate with the proxy
+      * `proxy_auth_password`: The password to authenticate with the proxy
     outputs: |
       * `body`: The response body
       * `headers`: The response headers
@@ -655,6 +662,18 @@ Send a POST request with a JSON body:
     name: Datakit
 ```
 
+Perform a request through a proxy server:
+
+```yaml
+- name: CALL
+  type: call
+  url: https://example.com/foo
+  inputs:
+    https_proxy: http://my-proxy.example.com:8080
+    proxy_auth_username: my-username
+    proxy_auth_password: my-password
+```
+
 Call nodes are used in most datakit workflows. For complete examples, see:
 * [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
 * [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
@@ -662,6 +681,7 @@ Call nodes are used in most datakit workflows. For complete examples, see:
 * [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
 * [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
 * [Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
 
 #### Automatic JSON body handling
 
@@ -706,6 +726,32 @@ The `call` node fails execution if a network-level error is encountered or if
 the endpoint returns a non-2xx status code. It will also fail if the endpoint
 returns a JSON mime-type in the `Content-Type` header if the response body is
 not valid JSON.
+
+#### Resolve URL at runtime
+
+A `call` node defines its `url` statically during configuration. To substitute a different endpoint at runtime, pass a value via the `url` input. If the input is `nil`, Datakit automatically reverts to the configured static URL.
+
+For example:
+
+```yaml
+- name: DYNAMIC_URL
+  type: call
+  url: https://example.com/default
+  inputs:
+    url: request.body
+```
+
+#### Proxy options
+The `call` node supports performing requests via a proxy server. This is controlled by proxy options. See above example for more details.
+
+#### Request body encoding
+Call node supports following content types for request body encoding:
+* `application/json`
+* `application/x-www-form-urlencoded`
+
+By default, if the body input is an object, it will be encoded as JSON. To override this behavior and use `application/x-www-form-urlencoded`, set the `Content-Type` header accordingly in the `headers` input for the call node.
+
+See [Third-party auth](/plugins/datakit/examples/authenticate-third-party/) for an example of using `application/x-www-form-urlencoded` request body encoding.
 
 #### Limitations
 
@@ -1019,6 +1065,7 @@ For more detailed examples, see:
 * [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
 * [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
 * [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
 
 ### Exit node
 
@@ -1374,6 +1421,7 @@ For more detailed examples, see:
 * [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
 * [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
 * [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
 
 ### XML to JSON node {% new_in 3.13 %}
 
