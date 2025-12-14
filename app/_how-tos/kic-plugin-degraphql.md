@@ -142,7 +142,14 @@ curl -X POST -H "Content-Type:application/json" -H "X-Hasura-Role:admin" http://
 
 Our Hasura API will be exposed using the `/contacts` path. Create an `HTTPRoute` or `Ingress` resource pointing to the `hasura` Service that we can attach the `degraphql` plugin to:
 
-{% include_cached /k8s/httproute.md path='/contacts' name='demo-graphql' service='hasura' port='80' namespace='kong' skip_host=true %}
+{% httproute %}
+name: demo-graphql
+matches:
+  - path: /contacts
+    service: hasura
+    port: 80
+skip_host: true
+{% endhttproute %}
 
 ## Configure the DeGraphQL plugin
 

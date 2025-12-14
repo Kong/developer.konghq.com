@@ -111,4 +111,14 @@ For Routes in Kubernetes Gateway APIs (like `HTTPRoute`), refer to the correspon
 
 For example, this is how you can create a `Ingress` or `HTTPRoute` for routing internal traffic:
 
-{% include /k8s/httproute.md name='echo-internal' service='echo' namespace='internal' ingress_class='internal' gateway_namespace='internal' skip_host=true %}
+{% httproute %}
+name: echo-internal
+namespace: internal
+gateway_namespace: internal
+ingress_class: internal
+matches:
+  - path: /echo
+    service: echo
+    port: 1027
+skip_host: true
+{% endhttproute %}

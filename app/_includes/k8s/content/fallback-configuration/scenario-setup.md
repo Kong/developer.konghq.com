@@ -53,8 +53,27 @@ Let's create two Routes for testing purposes:
 * `route-a` has no plugins attached
 * `route-b` has the three plugins created above attached
 
-{% include /k8s/httproute.md path='/route-a' name='route-a' service='echo' port='1027' skip_host=true %}
-{% include /k8s/httproute.md path='/route-b' name='route-b' service='echo' port='1027' skip_host=true annotation_plugins='key-auth,rate-limit-base,rate-limit-consumer'%}
+{% httproute %}
+name: route-a
+matches:
+  - path: /route-a
+    service: echo
+    port: 1027
+skip_host: true
+{% endhttproute %}
+
+{% httproute %}
+name: route-b
+matches:
+  - path: /route-b
+    service: echo
+    port: 1027
+skip_host: true
+annotation_plugins:
+  - key-auth
+  - rate-limit-base
+  - rate-limit-consumer
+{% endhttproute %}
 
 ## Create a Consumer
 

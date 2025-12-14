@@ -76,7 +76,15 @@ kubectl patch -n kong --type=json gateway kong -p='[
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
-{% include_cached /k8s/httproute.md path='/echo' name='echo' service='echo' port='1027' hostname='demo.example.com' section_name='https' %}
+{% httproute %}
+name: echo
+matches:
+  - path: /echo
+    service: echo
+    port: 1027
+hostname: demo.example.com
+section_name: https
+{% endhttproute %}
 
 ## Validate your configuration
 

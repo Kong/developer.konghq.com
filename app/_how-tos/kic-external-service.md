@@ -59,7 +59,13 @@ spec:
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
-{% include_cached /k8s/httproute.md path='/httpbin' name='proxy-from-k8s-to-httpbin' service='proxy-to-httpbin' port='80' skip_host=true %}
+{% httproute %}
+name: proxy-from-k8s-to-httpbin
+matches:
+  - path: /httpbin
+    service: proxy-to-httpbin
+    port: 80
+{% endhttproute %}
 
 ## Validate your configuration
 
