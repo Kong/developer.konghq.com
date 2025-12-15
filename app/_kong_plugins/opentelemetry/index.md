@@ -54,6 +54,11 @@ Propagate distributed tracing spans and report low-level spans to a OTLP-compati
 
 The OpenTelemetry plugin is fully compatible with the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/) and can be used with any OpenTelemetry compatible backend.
 
+The OpenTelemetry plugin allows you to collect data for the following signals:
+* [Metrics](#metrics) {% new_in 3.13 %}
+* [Traces](#tracing)
+* [Logging](#logging)
+
 ## Use cases
 
 Common use cases for the OpenTelemetry plugin:
@@ -85,11 +90,6 @@ rows:
 <!--vale on-->
 
 {% include plugins/otel/collecting-otel-data.md  %}
-
-The OpenTelemetry plugin allows you to collect data for the following signals:
-* [Metrics](#metrics) {% new_in 3.13 %}
-* [Traces](#tracing)
-* [Logging](#logging)
 
 ## Metrics {% new_in 3.13 %}
 
@@ -325,3 +325,4 @@ Span #6 name=balancer try #1 duration=0.99328ms attributes={"net.peer.ip":"104.2
   via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin for tracing.
 - Doesn't support `custom_fields_by_lua`.
 - Doesn't support AI Gateway and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.
+- The [`http.server.request.size`](#http-server-request-size) and [`http.server.response.size`](#http-server-response-size) point type is a counter instead of a histogram.
