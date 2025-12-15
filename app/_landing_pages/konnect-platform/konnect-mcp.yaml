@@ -18,7 +18,7 @@ rows:
   - header:
       type: h1
       text: "{{site.konnect_product_name}} MCP Server"
-      sub_text: "Interact with Kong {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access {{site.base_gateway}} entities, debug API performance, and search Kong documentation from your development environment."
+      sub_text: "Interact with {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access {{site.base_gateway}} entities, debug API performance, and search documentation from your development environment."
 
   - columns:
       - blocks:
@@ -27,7 +27,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. Query {{site.base_gateway}} entities, create debug sessions with active tracing, and search Kong documentation without leaving your IDE or agentic CLI coding tool. You can also plug in the {{site.konnect_product_name}} to your AI agents to automate tasks like configuration management and performance troubleshooting.
+                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. You can also plug in {{site.konnect_product_name}} to your AI agents to automate tasks like configuration management and performance troubleshooting.
 
                     The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}}.
 
@@ -58,7 +58,7 @@ rows:
         - type: structured_text
           config:
             header:
-              text: "When should I use MCP Server?"
+              text: "When should I use an MCP Server?"
             blocks:
               - type: text
                 text: |
@@ -70,7 +70,7 @@ rows:
                   * You need to query analytics and traffic patterns programmatically
 
   - header:
-      text: "How {{site.konnect_product_name}} MCP Server works"
+      text: "How the {{site.konnect_product_name}} MCP Server works"
       type: h2
     columns:
       - blocks:
@@ -89,7 +89,7 @@ rows:
 
                   **Authentication and access**
 
-                  The MCP server authenticates using your Personal Access Token (PAT), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
+                  The MCP server authenticates using your Personal Access Token (PAT), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} tokens page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
 
                   For automation or service accounts, you can use a System Access Token instead of a Personal Access Token. System Access Tokens allow authentication using a system account rather than a specific user's credentials. Create these tokens under **Organization Settings > System Accounts**. For more information, see [System Accounts and Access Tokens](https://developer.konghq.com/konnect-api/#system-accounts-and-access-tokens).
 
@@ -109,7 +109,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The MCP server is deployed regionally. Connect to the server in the same region where your resources are deployed.
+                    The MCP server is deployed regionally. Connect to the server in the same region where your {{site.konnect_short_name}} resources are deployed.
 
           - type: table
             config:
@@ -140,7 +140,7 @@ rows:
 
                     **Organization settings**
 
-                    {{site.konnect_product_name}} MCP Server access is **enabled by default**. Organization administrators can disable it from Organization Settings.
+                    {{site.konnect_product_name}} MCP Server access is **enabled by default**. Organization administrators can disable it from the Organization Settings.
 
 
 

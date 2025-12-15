@@ -119,9 +119,9 @@ For regional server URLs, see [Regional server endpoints](/konnect-platform/konn
 
 For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
-1. Open your Cursor desktop app
+1. Open the Cursor desktop app
 1. Navigate to **Cursor Settings** (gear icon in top right corner)
-1. Select **MCP** in the left sidebar
+1. Select **MCP** from the left sidebar
 1. Click **+ Add new global MCP server**
 1. Paste the following JSON configuration into the `mcp.json` file:
 
