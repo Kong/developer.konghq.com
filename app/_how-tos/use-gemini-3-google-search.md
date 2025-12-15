@@ -43,29 +43,13 @@ tools:
 prereqs:
   inline:
     - title: Vertex AI
-      content: |
-        Before you begin, you must get the following credentials from Google Cloud:
-
-        - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
-        - **Project ID**: Your Google Cloud project identifier
-        - **API Endpoint**: The global Vertex AI API endpoint `https://aiplatform.googleapis.com`
-
-        Export these values as environment variables:
-
-        ```sh
-        export DECK_GCP_SERVICE_ACCOUNT_JSON="your-service-account-json"
-        export DECK_GCP_PROJECT_ID="your-project-id"
-        ```
+      include_content: prereqs/vertex-ai
       icon_url: /assets/icons/gcp.svg
     - title: Python
       include_content: prereqs/python
       icon_url: /assets/icons/python.svg
     - title: OpenAI SDK
-      content: |
-        Install the OpenAI SDK:
-        ```sh
-        pip install openai
-        ```
+      include_content: prereqs/openai-sdk
       icon_url: /assets/icons/openai.svg
   entities:
     services:
