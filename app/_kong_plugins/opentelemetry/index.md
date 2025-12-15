@@ -84,16 +84,12 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Collecting telemetry data
-
-There are two ways to set up an OpenTelemetry backend:
-* Using an OpenTelemetry-compatible backend directly, like Jaeger (v1.35.0+). 
-  
-  All the vendors supported by OpenTelemetry are listed in [OpenTelemetry's Vendor support](https://opentelemetry.io/vendors/).
-* Using the OpenTelemetry Collector, which is middleware that can be used to proxy OpenTelemetry spans to a compatible backend.
-  
-  You can view all the available OpenTelemetry Collector exporters at [open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter).
 {% include plugins/otel/collecting-otel-data.md  %}
+
+The OpenTelemetry plugin allows you to collect data for the following signals:
+* [Metrics](#metrics) {% new_in 3.13 %}
+* [Traces](#tracing)
+* [Logging](#logging)
 
 ## Metrics {% new_in 3.13 %}
 
