@@ -63,7 +63,7 @@ The following examples show standardized text-based request formats for each sup
 
 {% include plugins/ai-proxy/text-inputs.md %}
 
-#### Audio and image generation inputs
+#### Audio, image and video generation inputs
 
 The following examples show standardized audio and image request formats for each supported route. These formats are normalized across providers to help simplify downstream parsing and integration.
 
@@ -77,7 +77,7 @@ Conversely, the response formats are also transformed to a standard format acros
 
 {% include plugins/ai-proxy/text-responses.md %}
 
-#### Image, and audio responses
+#### Image, audio and video responses
 
 The following examples show standardized response formats returned by supported `audio/` and `image/` routes. These formats are normalized across providers to support consistent multimodal output parsing.
 
