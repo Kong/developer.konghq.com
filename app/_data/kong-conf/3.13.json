@@ -75,73 +75,73 @@
     {
       "title": "TUNING & BEHAVIOR",
       "start": 2161,
-      "end": 2304,
+      "end": 2312,
       "description": ""
     },
     {
       "title": "MISCELLANEOUS",
-      "start": 2305,
-      "end": 2426,
+      "start": 2313,
+      "end": 2434,
       "description": "Additional settings inherited from lua-nginx-module allowing for more\nflexibility and advanced usage.\n\nSee the lua-nginx-module documentation for more information:\nhttps://github.com/openresty/lua-nginx-module\n"
     },
     {
       "title": "KONG MANAGER",
-      "start": 2427,
-      "end": 2702,
+      "start": 2435,
+      "end": 2710,
       "description": "\nThe Admin GUI for Kong Enterprise.\n\n"
     },
     {
       "title": "Konnect",
-      "start": 2703,
-      "end": 2709,
+      "start": 2711,
+      "end": 2717,
       "description": ""
     },
     {
       "title": "Analytics for Konnect",
-      "start": 2710,
-      "end": 2730,
+      "start": 2718,
+      "end": 2738,
       "description": ""
     },
     {
       "title": "ADMIN SMTP CONFIGURATION",
-      "start": 2731,
-      "end": 2745,
+      "start": 2739,
+      "end": 2753,
       "description": ""
     },
     {
       "title": "GENERAL SMTP CONFIGURATION",
-      "start": 2746,
-      "end": 2796,
+      "start": 2754,
+      "end": 2804,
       "description": ""
     },
     {
       "title": "DATA & ADMIN AUDIT",
-      "start": 2797,
-      "end": 2842,
+      "start": 2805,
+      "end": 2850,
       "description": "When enabled, Kong will store detailed audit data regarding Admin API and\ndatabase access. In most cases, updates to the database are associated with\nAdmin API requests. As such, database object audit log data is tied to a\ngiven HTTP request via a unique identifier, providing built-in association of\nAdmin API and database traffic.\n\n"
     },
     {
       "title": "ROUTE COLLISION DETECTION/PREVENTION",
-      "start": 2843,
-      "end": 2890,
+      "start": 2851,
+      "end": 2898,
       "description": ""
     },
     {
       "title": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
-      "start": 2891,
-      "end": 3119,
+      "start": 2899,
+      "end": 3127,
       "description": "When enabled, Kong will transparently encrypt sensitive fields, such as consumer\ncredentials, TLS private keys, and RBAC user tokens, among others. A full list\nof encrypted fields is available from the Kong Enterprise documentation site.\nEncrypted data is transparently decrypted before being displayed to the Admin\nAPI or made available to plugins or core routing logic.\n\nWhile this feature is GA, do note that we currently do not provide normal semantic\nversioning compatibility guarantees on the keyring feature's APIs in that Kong may\nmake a breaking change to the feature in a minor version. Also note that\nmismanagement of keyring data may result in irrecoverable data loss.\n\n"
     },
     {
       "title": "CLUSTER FALLBACK CONFIGURATION",
-      "start": 3120,
-      "end": 3179,
+      "start": 3128,
+      "end": 3187,
       "description": ""
     },
     {
       "title": "REQUEST DEBUGGING",
-      "start": 3180,
-      "end": 3242,
+      "start": 3188,
+      "end": 3250,
       "description": "Request debugging is a mechanism that allows admins to collect the timing of\nproxy path requests in the response header (X-Kong-Request-Debug-Output)\nand optionally, the error log.\n\nThis feature provides insights into the time spent within various components of Kong,\nsuch as plugins, DNS resolution, load balancing, and more. It also provides contextual\ninformation such as domain names tried during these processes.\n\n"
     }
   ],
@@ -1201,7 +1201,7 @@
     },
     "vault_hcv_auth_method": {
       "defaultValue": "token",
-      "description": "Defines the authentication mechanism when\nconnecting to the Hashicorp Vault service.\nAccepted values are: `token`,\n`kubernetes`, `approle`, `cert` or `oauth2`.\n",
+      "description": "Defines the authentication mechanism when\nconnecting to the Hashicorp Vault service.\nAccepted values are: `token`,\n`kubernetes`, `approle`, `cert` or `jwt`.\n",
       "sectionTitle": "VAULTS"
     },
     "vault_hcv_kube_role": {
@@ -1259,14 +1259,14 @@
       "description": "The contents of the private key for use in\nHashicorp Vault auth if\n`auth_method` is set to `cert`.\n",
       "sectionTitle": "VAULTS"
     },
-    "vault_hcv_oauth2_role_name": {
+    "vault_hcv_jwt_role": {
       "defaultValue": null,
-      "description": "The configured role name in HashiCorp Vault\nfor OAuth2 auth.\nWhen creating the role in HashiCorp Vault, make sure\nthat the `role_type` is `jwt` and the `token_policies`\nhave permissions to read the secrets.\n",
+      "description": "The configured role name in HashiCorp Vault\nfor JWT auth.\nWhen creating the role in HashiCorp Vault, make sure\nthat the `role_type` is `jwt` and the `token_policies`\nhave permissions to read the secrets.\n",
       "sectionTitle": "VAULTS"
     },
     "vault_hcv_oauth2_token_endpoint": {
       "defaultValue": null,
-      "description": "The OAuth2 token endpoint for Hashicorp Vault's OAuth2 auth method.\n",
+      "description": "The OAuth2 token endpoint for Hashicorp Vault's JWT auth method.\n",
       "sectionTitle": "VAULTS"
     },
     "vault_hcv_oauth2_client_id": {
@@ -1382,6 +1382,11 @@
     "pdk_response_exit_header_filter_early_exit": {
       "defaultValue": "off",
       "description": "A boolean value that controls whether the PDK\nfunction `kong.response.exit` can stop further\nplugin execution within the header_filter phase.\nIf 'on', it would interrupt the execution flow\nof plugins in header_filter phase.\n",
+      "sectionTitle": "TUNING & BEHAVIOR"
+    },
+    "via_header_comply_rfc": {
+      "defaultValue": "off",
+      "description": "When enabled, the `Via` header added by Kong\nto proxied requests and responses will not\ninclude the Kong version number (like `1.1 kong`).\nPreviously `Via` header includes dashes `-` in it\n(like `1.1 kong/3.13.0.0-enterprise-edition`),\nwhich is not allowed by RFC 9001 and may cause\nissues with some HTTP servers.\n",
       "sectionTitle": "TUNING & BEHAVIOR"
     },
     "lua_ssl_trusted_certificate": {
