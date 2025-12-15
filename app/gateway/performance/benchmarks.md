@@ -125,6 +125,7 @@ rows:
     p99: 9.77
     p95: 5.45
 {% endtable %}
+{% endnavtab %}
 
 {% navtab "3.12" %}
 
