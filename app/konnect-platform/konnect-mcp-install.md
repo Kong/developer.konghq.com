@@ -29,6 +29,8 @@ Configure the MCP client of your choice by adding the {{site.konnect_product_nam
 
 ## Claude Code CLI
 
+For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
+
 Using the `claude mcp add` command:
 
 ```bash
@@ -73,12 +75,14 @@ kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 
 ## Visual Studio Code
 
+For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
+
 1. Open Visual Studio Code
 1. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
-1. Type "MCP" and select "MCP: Open user configuration"
+1. Type "MCP" and select **MCP: Open User Configuration**
 1. Add the {{site.konnect_product_name}} server configuration:
 
-  ```json
+    ```json
     {
       "inputs": [
         {
@@ -95,60 +99,61 @@ kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
           "headers": {
             "Authorization": "Bearer ${input:konnect_mcp_pat}"
           }
-        },
+        }
       }
     }
-  ```
-1. Replace `https://us.mcp.konghq.com/` with your regional server URL
+    ```
+
+1. Replace `https://us.mcp.konghq.com/` with your regional server URL if needed
 1. Save the configuration file
-1. Reload VS Code window (Command Palette > "Developer: Reload Window")
+1. Reload VS Code window (Command Palette > **Developer: Reload Window**)
+1. When prompted, enter your {{site.konnect_product_name}} Personal Access Token
 1. Open the AI assistant and verify Kong {{site.konnect_product_name}} tools are available
+
+{:.info}
+> VS Code securely stores your PAT after the first prompt. The value is not visible in the configuration file.
 
 ## Cursor
 
-1. Open your Cursor desktop app
-1. Navigate to **Settings** in the top right corner (gear icon)
-1. In the Cursor **Settings** tab, go to **Tools & MCP** in the left sidebar
-1. In the Installed MCP Servers section, click "New MCP Server"
-1. Paste the following JSON configuration into the newly opened `mcp.json` tab:
+For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
-  ```json
+1. Open your Cursor desktop app
+1. Navigate to **Cursor Settings** (gear icon in top right corner)
+1. Select **MCP** in the left sidebar
+1. Click **+ Add new global MCP server**
+1. Paste the following JSON configuration into the `mcp.json` file:
+
+    ```json
     {
-      "inputs": [
-        {
-          "type": "promptString",
-          "id": "konnect_mcp_pat",
-          "description": "Konnect Personal Access Token",
-          "password": true
-        }
-      ],
-      "servers": {
+      "mcpServers": {
         "kong-konnect": {
-          "type": "http",
           "url": "https://us.mcp.konghq.com/",
           "headers": {
-            "Authorization": "Bearer ${input:konnect_mcp_pat}"
+            "Authorization": "Bearer YOUR_KONNECT_PAT"
           }
-        },
+        }
       }
     }
+    ```
 
 1. Replace `https://us.mcp.konghq.com/` with your regional server URL
 1. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
 1. Save the configuration file
-1. Return to **Cursor settings > Tools & MCP**. You should now see the `kong-konnect` MCP server with available tools listed
+1. Return to **Cursor Settings > MCP**. You should now see the `kong-konnect` MCP server with available tools listed
 1. To open a new Cursor chat, press `Cmd+L` (Mac) or `Ctrl+L` (Windows/Linux)
-1. In the Cursor chat tab, click `@` Add Context and select tools from the Kong {{site.konnect_product_name}} server
+1. In the Cursor chat, click `@` to add context and select tools from the Kong {{site.konnect_product_name}} server
 
 ## GitHub Copilot for VS Code
+
+For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
 1. Open Visual Studio Code
 1. Ensure GitHub Copilot extension is installed and configured
 1. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
-1. Type "MCP" and select "MCP: Configure Servers"
+1. Type "MCP" and select **MCP: Open User Configuration**
 1. Add the {{site.konnect_product_name}} server configuration:
 
-  ```json
+    ```json
     {
       "inputs": [
         {
@@ -165,93 +170,114 @@ kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
           "headers": {
             "Authorization": "Bearer ${input:konnect_mcp_pat}"
           }
-        },
+        }
       }
     }
+    ```
 
-1. Replace `https://us.mcp.konghq.com/` with your regional server URL
+1. Replace `https://us.mcp.konghq.com/` with your regional server URL if needed
 1. Save the configuration file
-1. Reload VS Code window (Command Palette > "Developer: Reload Window")
+1. Reload VS Code window (Command Palette > **Developer: Reload Window**)
+1. When prompted, enter your {{site.konnect_product_name}} Personal Access Token
 1. Open GitHub Copilot chat and verify Kong {{site.konnect_product_name}} tools are available
+
+{:.info}
+> VS Code securely stores your PAT after the first prompt. The value is not visible in the configuration file.
 
 ## GitHub Copilot for JetBrains
 
-**For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:**
+For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
+
+For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
 
 1. Open your JetBrains IDE
-2. Navigate to Settings/Preferences (`Cmd+,` on Mac, `Ctrl+Alt+S` on Windows/Linux)
-3. Go to Tools > GitHub Copilot > MCP Servers
-4. Click the "+" button to add a new server
-5. Enter the server details:
-   - **Name**: Kong {{site.konnect_product_name}}
-   - **URL**: `https://us.mcp.konghq.com/` (or your regional URL)
-   - **Transport**: SSE
-   - **Authentication**: Bearer Token
-   - **Token**: Your {{site.konnect_product_name}} PAT
-6. Click "OK" to save
-7. Restart your IDE
-8. Invoke GitHub Copilot and verify Kong {{site.konnect_product_name}} tools are available
+1. Ensure GitHub Copilot plugin is installed and configured (version 1.5.50 or later)
+1. Click the **GitHub Copilot** icon in the toolbar
+1. Select **Open Chat**
+1. Switch to **Agent mode** in the chat panel
+1. Click the **tools icon** (wrench/settings)
+1. Select **Edit settings** to open the MCP configuration
+1. Add the {{site.konnect_product_name}} server configuration:
 
-**Manual Configuration:**
-
-If your JetBrains IDE doesn't provide the UI option, edit the configuration file at:
-`~/.config/JetBrains/<IDE>/mcp-servers.json`
-
-```json
-  {
-    "inputs": [
-      {
-        "type": "promptString",
-        "id": "konnect_mcp_pat",
-        "description": "Konnect Personal Access Token",
-        "password": true
-      }
-    ],
-    "servers": {
-      "kong-konnect": {
-        "type": "http",
-        "url": "https://us.mcp.konghq.com/",
-        "headers": {
-          "Authorization": "Bearer ${input:konnect_mcp_pat}"
+    ```json
+    {
+      "servers": {
+        "kong-konnect": {
+          "type": "http",
+          "url": "https://us.mcp.konghq.com/",
+          "headers": {
+            "Authorization": "Bearer YOUR_KONNECT_PAT"
+          }
         }
-      },
+      }
     }
-  }
-```
+    ```
 
-{:.info}
-> Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual token, then restart your IDE.
+1. Replace `https://us.mcp.konghq.com/` with your regional server URL
+1. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
+1. Save the configuration file
+1. Restart your IDE
+1. Open GitHub Copilot chat and verify Kong {{site.konnect_product_name}} tools are available
+
+{:.note}
+> **Note:** HTTP MCP server support in JetBrains GitHub Copilot may have limitations. If you experience connection issues, check for plugin updates.
+
+## Windsurf
+
+For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
+
+1. Open Windsurf
+1. Navigate to the configuration directory: `~/.codeium/windsurf/`
+1. Create or edit the file `mcp_config.json`:
+
+    ```json
+    {
+      "mcpServers": {
+        "kong-konnect": {
+          "url": "https://us.mcp.konghq.com/",
+          "headers": {
+            "Authorization": "Bearer YOUR_KONNECT_PAT"
+          }
+        }
+      }
+    }
+    ```
+
+1. Replace `https://us.mcp.konghq.com/` with your regional server URL
+1. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
+1. Save the file
+1. Restart Windsurf
+1. Open Cascade chat and verify Kong {{site.konnect_product_name}} tools are available
 
 ## Other IDEs
 
-For IDEs without native MCP UI support (Windsurf, Eclipse, Xcode, and others), manually edit the MCP configuration file:
+For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
-```json
-  {
-    "inputs": [
-      {
-        "type": "promptString",
-        "id": "konnect_mcp_pat",
-        "description": "Konnect Personal Access Token",
-        "password": true
-      }
-    ],
-    "servers": {
-      "kong-konnect": {
-        "type": "http",
-        "url": "https://us.mcp.konghq.com/",
-        "headers": {
-          "Authorization": "Bearer ${input:konnect_mcp_pat}"
+For Eclipse, Xcode, and other IDEs with GitHub Copilot support:
+
+1. Install the GitHub Copilot extension/plugin for your IDE
+1. Open the GitHub Copilot preferences or settings
+1. Navigate to the MCP configuration section
+1. Add the {{site.konnect_product_name}} MCP server configuration:
+
+    ```json
+    {
+      "mcpServers": {
+        "kong-konnect": {
+          "url": "https://us.mcp.konghq.com/",
+          "headers": {
+            "Authorization": "Bearer YOUR_KONNECT_PAT"
+          }
         }
-      },
+      }
     }
-  }
-```
+    ```
 
-Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual token, then restart your IDE.
+1. Replace `https://us.mcp.konghq.com/` with your regional server URL
+1. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
+1. Save the configuration
+1. Restart your IDE
+1. Open the AI assistant and verify Kong {{site.konnect_product_name}} tools are available
 
-**Common configuration file locations:**
-- **Windsurf**: `~/.windsurf/mcp-config.json`
-- **Eclipse**: `.metadata/.plugins/org.eclipse.core.runtime/.settings/com.github.copilot.prefs`
-- **Xcode**: `~/Library/Application Support/Xcode/mcp-config.json`
-- **Other IDEs**: Consult your IDE's MCP or AI assistant documentation for the configuration file location
+{:.info}
+> Configuration methods vary by IDE. Consult your IDE's GitHub Copilot or MCP documentation for specific setup instructions.
