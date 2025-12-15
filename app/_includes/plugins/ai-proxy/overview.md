@@ -205,9 +205,12 @@ Support for chat, completions, and embeddings:
 
 ### Advanced text generation {% new_in 3.11 %}
 
-Support for function calling, tool use, and batch processing:
+Support for files and batch processing and function calling (tool use):
 
 {% include plugins/ai-proxy/tables/supported-providers-processing.html providers=providers %}
+
+{:.info}
+> Function calling uses the llm/v1/chat route type.
 
 ### Audio features {% new_in 3.11 %}
 
