@@ -12,6 +12,26 @@ requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
   - A running Redis instance on an [AWS ElastiCache cluster](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html) for Valkey 7.2 or later or Elasticache for Redis OSS version 7.0 or later
   -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - The [Elasticache user needs to set "Authentication mode" to "IAM"](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup)
+  - |
+    The following policy assigned to the IAM user/IAM role that is used to connect to the ElastiCache:
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "elasticache:Connect"
+                ],
+                "Resource": [
+                    "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE",
+                    "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE_USER"
+                ]
+            }
+        ]
+    }
+    ```
 
 weight: 900
 

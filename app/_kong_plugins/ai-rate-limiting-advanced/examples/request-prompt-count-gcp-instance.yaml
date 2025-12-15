@@ -11,7 +11,11 @@ title: 'Request prompt function Google Cloud Memorystore instance auth'
 requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
   - A running Redis instance on an [Google Cloud Memorystore instance](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
-  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - |
+    Assign the principal to the corresponding role: 
+    * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
+    * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
 weight: 900
 

@@ -17,7 +17,27 @@ To configure cloud authentication with Redis, add the following parameters to yo
 {% navtabs "providers" %}
 {% navtab "AWS instance" %}
 
-You need a running Redis instance on an [AWS ElastiCache instance](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html) for Valkey 7.2 or later or ElastiCache for Redis OSS version 7.0 or later.
+You need:
+* A running Redis instance on an [AWS ElastiCache instance](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html) for Valkey 7.2 or later or ElastiCache for Redis OSS version 7.0 or later
+* The [Elasticache user needs to set "Authentication mode" to "IAM"](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup)
+* The following policy assigned to the IAM user/IAM role that is used to connect to the ElastiCache:
+  ```json
+  {
+      "Version": "2012-10-17",
+      "Statement": [
+          {
+              "Effect": "Allow",
+              "Action": [
+                  "elasticache:Connect"
+              ],
+              "Resource": [
+                  "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE",
+                  "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE_USER"
+              ]
+          }
+      ]
+  }
+  ```
 
 ```yaml
 config:
@@ -46,7 +66,27 @@ Replace the following with your actual values:
 {% endnavtab %}
 {% navtab "AWS cluster" %}
 
-You need a running Redis instance on an [AWS ElastiCache cluster](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html) for Valkey 7.2 or later or ElastiCache for Redis OSS version 7.0 or later.
+You need:
+* A running Redis instance on an [AWS ElastiCache cluster](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html) for Valkey 7.2 or later or ElastiCache for Redis OSS version 7.0 or later
+* The [Elasticache user needs to set "Authentication mode" to "IAM"](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup)
+* The following policy assigned to the IAM user/IAM role that is used to connect to the ElastiCache:
+  ```json
+  {
+      "Version": "2012-10-17",
+      "Statement": [
+          {
+              "Effect": "Allow",
+              "Action": [
+                  "elasticache:Connect"
+              ],
+              "Resource": [
+                  "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE",
+                  "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE_USER"
+              ]
+          }
+      ]
+  }
+  ```
 
 ```yaml
 config:
@@ -77,7 +117,9 @@ Replace the following with your actual values:
 {% endnavtab %}
 {% navtab "Azure instance" %}
 
-You need a running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured.
+You need:
+* A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
+* Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
 ```yaml
 config:
@@ -103,7 +145,9 @@ Replace the following with your actual values:
 {% endnavtab %}
 {% navtab "Azure cluster" %}
 
-You need a running Redis instance on an [Azure Managed Redis cluster](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured.
+You need:
+* A running Redis instance on an [Azure Managed Redis cluster](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
+* Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
 ```yaml
 config:
@@ -131,7 +175,11 @@ Replace the following with your actual values:
 {% endnavtab %}
 {% navtab "GCP instance" %}
 
-You need a running Redis instance on an [Google Cloud Memorystore instance](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth).
+You need:
+* A running Redis instance on an [Google Cloud Memorystore instance](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
+* Assign the principal to the corresponding role: 
+    * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
+    * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
 ```yaml
 config:
@@ -150,7 +198,11 @@ Replace the following with your actual values:
 {% endnavtab %}
 {% navtab "GCP cluster" %}
 
-You need a running Redis instance on an [Google Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth).
+You need:
+* A running Redis instance on an [Google Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
+* Assign the principal to the corresponding role: 
+    * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
+    * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
 ```yaml
 config:

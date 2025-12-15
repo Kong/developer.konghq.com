@@ -11,7 +11,8 @@ title: 'Request prompt function with Azure Managed Redis instance auth'
 requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
   - A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
-  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
 weight: 900
 

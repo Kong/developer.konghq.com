@@ -8,6 +8,7 @@ requirements:
 - A public IP and a resolvable DNS
 - '{{site.base_gateway}} accepts proxy traffic on port 80'
 - A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
+- Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
 config:
   account_email: ${email}
