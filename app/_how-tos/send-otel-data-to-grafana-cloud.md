@@ -272,4 +272,4 @@ Traces are being ingested properly
   * Loki for logs
   * Tempo for traces
 
-If everything is working as expected, ou should see graphs with your data.
+If everything is working as expected, you should see graphs with your data. You can now start building dashboards.
