@@ -58,6 +58,7 @@ export AZURE_DEVOPS_ORG_NAME="YOUR-ORG-NAME"
 
 Now, configure the integration:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/integration-instances
 status_code: 201
@@ -74,9 +75,11 @@ extract_body:
 capture: AZUREDEVOPS_INTEGRATION_ID
 jq: ".id"
 {% endkonnect_api_request %}
+<!--vale on-->
 
 Next, authorize the integration with your Azure DevOps PAT:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/integration-instances/$AZUREDEVOPS_INTEGRATION_ID/auth-credential
 status_code: 201
@@ -88,6 +91,7 @@ body:
       - name: authorization
         key: $AZUREDEVOPS_PAT
 {% endkonnect_api_request %}
+<!--vale on-->
 
 Once authorized, resources from your Azure DevOps account are discoverable in the UI.
 
@@ -95,6 +99,7 @@ Once authorized, resources from your Azure DevOps account are discoverable in th
 
 Create a service to map to your Azure DevOps resources:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/catalog-services
 status_code: 201
@@ -108,11 +113,13 @@ extract_body:
 capture: AZUREDEVOPS_SERVICE_ID
 jq: ".id"
 {% endkonnect_api_request %}
+<!--vale on-->
 
 ## List Azure DevOps resources
 
 Before you map Azure DevOps resources to a service in Catalog, locate the resources that {{site.konnect_short_name}} ingests from Azure DevOps:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/resources?filter%5Bintegration.name%5D=azure-devops
 status_code: 200
@@ -123,6 +130,7 @@ extract_body:
 capture: AZUREDEVOPS_RESOURCE_ID
 jq: ".data[0].id"
 {% endkonnect_api_request %}
+<!--vale on-->
 
 {:.info}
 > {{site.konnect_short_name}} uses the first resource in the list when you run this command. To select a different resource, replace `.data[0].id` in the `jq` filter with the index of the resource you want to use or manually specify the resource ID.
@@ -131,6 +139,7 @@ jq: ".data[0].id"
 
 Now, map the Azure DevOps resource to the service:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/resource-mappings
 status_code: 201
@@ -139,13 +148,16 @@ body:
   service: $AZUREDEVOPS_SERVICE_ID
   resource: $AZUREDEVOPS_RESOURCE_ID
 {% endkonnect_api_request %}
+<!--vale on-->
 
 ## Validate the mapping
 
 To confirm that the Azure DevOps resource is now mapped to the intended service, list the service’s mapped resources:
 
+<!--vale off-->
 {% konnect_api_request %}
 url: /v1/catalog-services/$AZUREDEVOPS_SERVICE_ID/resources
 status_code: 200
 method: GET
 {% endkonnect_api_request %}
+<!--vale on-->
