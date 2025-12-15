@@ -48,7 +48,7 @@ prereqs:
   inline:
   - title: OpenTelemetry Collector
     content: |
-      In this tutorial, we'll collect data in OpenTelemetry Collector. Use the following command to launch a Collector instance that listens on port 4318 and writes its output to a text file:
+      In this tutorial, we'll collect data in OpenTelemetry Collector. Use the following command to launch a Collector instance with default configuration that listens on port 4318 and writes its output to a text file:
 
       ```sh
       docker run \
@@ -66,7 +66,10 @@ prereqs:
 
 tldr:
     q: How do I send {{site.base_gateway}} data to OpenTelemetry Collector?
-    a: You can use the OpenTelemetry plugin to send telemetry data to OpenTelemetry Collector. Set `KONG_TRACING_INSTRUMENTATIONS=all` and `KONG_TRACING_SAMPLING_RATE=1.0` for tracing. Enable the OTEL plugin with your OpenTelemetry Collector tracing, logging, and metrics endpoints, and specify the name you want to track the traces by in `resource_attributes.service.name`.
+    a: |
+     For a basic configuration that sends traces, metrics, and logs to a locally running OpenTelemetry Collector, 
+     first set `KONG_TRACING_INSTRUMENTATIONS=all` and `KONG_TRACING_SAMPLING_RATE=1.0` when deploying {{site.base_gateway}} 
+     to enable tracing. Then deploy OpenTelemetry Collector with the default configuration and enable the OTEL plugin with your OpenTelemetry Collector's default OTLP endpoints.
 
 tools:
     - deck

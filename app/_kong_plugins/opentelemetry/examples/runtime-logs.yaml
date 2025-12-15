@@ -1,6 +1,6 @@
-description: "Enables the OTEL plugin with an endpoint for data plane and error."
+description: "Enables the OTEL plugin with an endpoint for runtime and error logs."
 
-title: 'Enable the OTEL plugin for data plane logs'
+title: 'Enable the OTEL plugin for runtime logs'
 
 weight: 890
 

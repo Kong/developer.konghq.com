@@ -8,28 +8,37 @@
 
 <p>{{metric.description}}</p>
 
-{% if metric.attributes %}
-
-<p>This metric includes the following attributes:</p>
-
-<table>
-    <thead>
-      <tr>
-        <th>Attribute</th>
-        <th>Attribute description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for attribute in metric.attributes %}
-      <tr id="{{ attribute }}">
-        <td><code>{{ attribute }}</code></td>
-        <td>{{ attributes[attribute]}}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
+<ul>
+  {% if metric.unit %}
+  <li><b>Instrument unit</b>: <code>{{metric.unit}}</code></li>
+  {% endif %}
+  {% if metric.type %}
+  <li><b>Instrument type</b>: <code>{{metric.type}}</code></li>
   {% endif %}
 
+  {% if metric.attributes %}
+  <li><p><b>Attributes</b>:</p>
+  <table>
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Attribute description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attribute in metric.attributes %}
+        <tr id="{{ attribute }}">
+          <td><code>{{ attribute }}</code></td>
+          <td>{{ attributes[attribute]}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </li>
+  {% else %}
+  <li><b>No attributes</b></li>
+  {% endif %}
+</ul>
 {% endfor %}
   

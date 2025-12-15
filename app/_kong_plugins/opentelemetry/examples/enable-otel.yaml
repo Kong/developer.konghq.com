@@ -14,8 +14,7 @@ min_version:
 
 requirements: 
   - "An OpenTelemetry backend"
-  - "Set [`tracing_instrumentations = all`](/gateway/configuration/#tracing-instrumentations) in `kong.conf`"
-  - "Set [`tracing_sampling_rate = 1.0`](/gateway/configuration/#tracing-sampling-rate) in `kong.conf`"
+  - "To enable tracing, set [`tracing_instrumentations = all`](/gateway/configuration/#tracing-instrumentations) and [`tracing_sampling_rate = 1.0`](/gateway/configuration/#tracing-sampling-rate) in `kong.conf`"
 
 config:
   traces_endpoint: http://localhost:4318/v1/traces

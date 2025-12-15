@@ -1,6 +1,8 @@
 metrics:
   - name: http.server.request.count
     description: Total number of incoming HTTP requests.
+    unit: "{request}"
+    type: Sum
     attributes:
       - kong.service.name
       - kong.route.name
@@ -10,64 +12,90 @@ metrics:
       - http.request.method
   - name: kong.latency.total
     description: &latency_total Complete end-to-end duration of a request in seconds.
+    unit: "s"
+    type: Histogram
     attributes:
       - kong.service.name
       - kong.route.name
       - kong.workspace.name
   - name: kong.latency.internal
     description: &latency_internal "Kong’s internal processing time in seconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
+    unit: "s"
+    type: Histogram
     attributes:
       - kong.service.name
       - kong.route.name
       - kong.workspace.name
   - name: kong.latency.upstream
     description: &latency_upstream Upstream processing time in seconds, from when the Gateway sends the request to the upstream, to when the data is returned to Kong.
+    unit: "s"
+    type: Histogram
     attributes:
       - kong.service.name
       - kong.route.name
       - kong.workspace.name
   - name: http.server.request.size
     description: Size of each incoming HTTP request in bytes.
+    unit: "By"
+    type: Histogram
     attributes:
       - kong.service.name
       - kong.route.name
       - kong.auth.consumer.name
   - name: http.server.response.size
     description: Total size of the HTTP response sent back to the client in bytes.
+    unit: "By"
+    type: Histogram
     attributes:
       - kong.service.name
       - kong.route.name
       - kong.auth.consumer.name
   - name: kong.shared_dict.usage
     description: Current memory usage of a shared dict in bytes.
+    unit: "By"
+    type: Gauge
     attributes:
       - kong.shared_dict.name
       - kong.subsystem
   - name: kong.shared_dict.size
     description: Total memory size of a shared dict in bytes.
+    unit: "By"
+    type: Gauge
     attributes:
       - kong.shared_dict.name
       - kong.subsystem
   - name: kong.memory.workers.lua_vm
     description: "Memory used by the worker’s Lua VM in bytes."
+    unit: "By"
+    type: Gauge
     attributes:
       - kong.pid
       - kong.subsystem
   - name: kong.nginx.connection.count
     description: Number of client connections in Nginx.
+    unit: "{connection}"
+    type: Gauge
     attributes:
       - kong.subsystem
       - kong.connection.state
   - name: kong.nginx.timer.count
     description: Number of internal scheduled timers Nginx is running in the background.
+    unit: "{timer}"
+    type: Gauge
     attributes:
       - kong.timer.state
   - name: kong.db.connection.status
     description: Shows whether Kong has an active database connection. A value of 1 means connected. A value of 0 means not connected.
+    unit: "1"
+    type: Gauge
   - name: kong.cp.connection.status
     description: Shows whether the data plane has an active connection to the control plane. A value of 1 means connected. A value of 0 means not connected.
+    unit: "1"
+    type: Gauge
   - name: kong.upstream.target.status
     description: "Upstream target’s health. The actual status is in the state attribute, with the metric value set to 1 when a state is populated."
+    unit: "1"
+    type: Gauge
     attributes:
       - kong.upstream.name
       - kong.target.address
@@ -76,12 +104,16 @@ metrics:
       - kong.subsystem
   - name: kong.dp.connection.last_seen
     description: Timestamp when the control plane last saw a data plane connect. This metric appears only on control plane nodes and is reported per data plane.
+    unit: "s"
+    type: Gauge
     attributes:
       - kong.dp.host.name
       - kong.dp.node.id
       - kong.dp.node.ip
   - name: kong.dp.version.compatible
     description: "Shows whether a data plane is compatible with the control plane’s version. This metric appears only on control plane nodes and is reported per data plane. A value of 1 means compatible and 0 means not."
+    unit: "1"
+    type: Gauge
     attributes:
       - kong.dp.host.name
       - kong.dp.node.id
@@ -89,28 +121,43 @@ metrics:
       - kong.dp.node.version
   - name: kong.dp.config_hash
     description: Shows the config hash the control plane has for each data plane. This metric appears only on control plane nodes and is reported per data plane.
+    unit: "1"
+    type: Gauge
     attributes:
       - kong.dp.host.name
       - kong.dp.node.id
       - kong.dp.node.ip
   - name: kong.dp.cluster_cert.expiry
     description: "Timestamp when the data plane’s cluster certificate will expire."
+    unit: "s"
+    type: Gauge
   - name: kong.db.entity.count
     description: "Number of entities stored in Kong’s database."
+    unit: "{entity}"
+    type: Gauge
   - name: kong.db.entity.error.count
     description: Number of errors seen during database entity count collection.
+    unit: "{error}"
+    type: Sum
   - name: kong.ee.license.signature
     description: Last 8 bytes of the Enterprise license signature as a number.
+    type: Gauge
   - name: kong.ee.license.expiration
     description: Unix epoch time when the license expires, shifted by 24 hours to avoid timezone differences.
+    unit: "s"
+    type: Gauge
   - name: kong.ee.license.features
     description: |
       Indicates whether the data plane can read or write entities under the current license. 
       Each capability (<code>ee_entity_read</code> and <code>ee_entity_write</code>) is reported as its own metric, where 1 means allowed and 0 means not allowed.
+    unit: "1"
+    type: Gauge
     attributes:
       - kong.ee.license.feature
   - name: kong.ee.license.error.count
     description: Number of errors that occurred while collecting license information.
+    unit: "{error}"
+    type: Sum
 
 access_logs:
   - client.address
@@ -177,7 +224,7 @@ access_logs:
   - kong.auth.authenticated_entity.*
 
 resource_attributes:
-  service.name: Name of the service exposing the signal. In most, if not all, this value will be <code>kong</code> by default.
+  service.name: Name of the service exposing the signal. This is optional, the default value is <code>kong</code>.
   service.version: Gateway version of the node exposing the signal.
   service.instance.id: ID of the node exposing the signal.
 
@@ -186,9 +233,7 @@ attributes:
   kong.route.name: Name of the Route.
   kong.auth.consumer.name: Name of the authenticated Consumer.
   kong.response.source:  |
-    Origin of the current response.
-    <br>
-    Possible values:
+    Origin of the current response.. Possible values:
     <ul>
       <li><code>upstream</code> if the response originated by successfully contacting the upstream service</li>
       <li><code>kong</code> otherwise</li>
@@ -197,17 +242,13 @@ attributes:
   http.request.method: Method used in the HTTP request.
   kong.shared_dict.name: Name of the shared dict.
   kong.subsystem: |
-    Nginx subsystem that produced the metric. 
-    <br>
-    Possible values:
+    Nginx subsystem that produced the metric.. Possible values:
     <ul>
       <li><code>http</code></li>
       <li><code>stream</code></li>
     </ul>
   kong.connection.state: |
-    State of the client connection.
-    <br>
-    Possible values:
+    State of the client connection. Possible values:
     <ul>
       <li><code>accepted</code></li>
       <li><code>handled</code></li>
@@ -223,9 +264,7 @@ attributes:
   kong.target.address: Address of the Target.
   server.address: Address of the server.
   kong.upstream.state: |
-    Health of the Upstream Target.
-    <br>
-    Possible values:
+    Health of the Upstream Target. Possible values:
     <ul>
       <li><code>healthy</code></li>
       <li><code>unhealthy</code></li>
@@ -236,9 +275,7 @@ attributes:
   kong.dp.node.ip: IP address of the data plane node.
   kong.dp.node.version: Version of the data plane node.
   kong.ee.license.feature: |
-    Enterprise feature.
-    <br>
-    Possible values:
+    Enterprise feature. Possible values:
     <ul>
       <li><code>ee_entity_read</code></li>
       <li><code>ee_entity_write</code></li>

@@ -1,6 +1,6 @@
-description: "Enables the OTEL plugin with an endpoint for API transaction logs."
+description: "Enables the OTEL plugin with an endpoint for API transactional logs."
 
-title: 'Enable the OTEL plugin for access logs'
+title: 'Enable the OTEL plugin for transactional logs'
 
 weight: 890
 
