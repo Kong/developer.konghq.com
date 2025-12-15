@@ -329,6 +329,16 @@
           },
           "type": "object"
         },
+        "security": {
+          "properties": {
+            "ssl_verify": {
+              "default": false,
+              "description": "Enables verification of the certificate presented by the server.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "timeout": {
           "default": 10000,
           "description": "Socket timeout in milliseconds.",

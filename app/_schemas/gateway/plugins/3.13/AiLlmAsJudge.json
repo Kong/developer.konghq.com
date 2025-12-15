@@ -153,8 +153,10 @@
               "type": "object"
             },
             "metadata": {
+              "additionalProperties": true,
               "description": "For internal use only. ",
-              "type": "string"
+              "nullable": true,
+              "type": "object"
             },
             "model": {
               "properties": {

@@ -24,6 +24,11 @@
           "minimum": 0,
           "type": "integer"
         },
+        "ssl_verify": {
+          "default": false,
+          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+          "type": "boolean"
+        },
         "timeout": {
           "default": 10000,
           "description": "An optional timeout in milliseconds when sending data to the upstream server.",
