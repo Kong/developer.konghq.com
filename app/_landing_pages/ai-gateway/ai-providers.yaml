@@ -113,6 +113,13 @@ rows:
             icon: /assets/icons/dashscope.svg
             cta:
               url: ./#alibaba-cloud-dashscope
+      - blocks:
+        - type: icon_card
+          config:
+            title: Cerebras
+            icon: /assets/icons/cerebras.svg
+            cta:
+              url: ./#cerebras
 
 
   - header:
@@ -498,7 +505,7 @@ rows:
             description:
               Configure the AI Proxy plugin to proxy requests to an xAI model
             cta:
-              url: /plugins/ai-proxy-advanced/examples/xai-chat-route/    
+              url: /plugins/ai-proxy-advanced/examples/xai-chat-route/
   - header:
       type: h4
       text: How-to Guides
@@ -513,7 +520,7 @@ rows:
                 - xai
               quantity: 3
               allow_empty: true
-  
+
   - header:
       type: h3
       text: "Alibaba Cloud DashScope"
@@ -536,6 +543,44 @@ rows:
               Configure the AI Proxy Advanced plugin to proxy requests to a DashScope model
             cta:
               url: /plugins/ai-proxy-advanced/examples/dashscope-chat-route/
+              align: end
+              text: Configuration example
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags:
+  #               - dashscope
+  #             quantity: 3
+  #             allow_empty: true
+  - header:
+      type: h3
+      text: "Cerebras"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Cerebras
+            description:
+              Configure the AI Proxy plugin to proxy requests to a DashScope model
+            cta:
+              url: /plugins/ai-proxy/examples/cerebras-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Cerebras
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to a DashScope model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/cerebras-chat-route/
               align: end
               text: Configuration example
   # - header:

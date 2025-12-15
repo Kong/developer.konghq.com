@@ -13,6 +13,7 @@ agentic
 Agno
 Agno's
 Alertmanager
+Alibaba
 allow_terminated
 allowlist
 allowlisting
@@ -20,6 +21,7 @@ allowlisted
 Amal
 Amberflo
 amberflo
+andAll
 anonymization
 anonymized
 Anonymizer
@@ -238,6 +240,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+evaluable
 example_service
 exfiltrate
 failover
@@ -284,6 +287,8 @@ Goroutine
 gbps
 grafana
 Grafana
+greaterThan
+greaterThanOrEquals
 grpc
 grpcbin
 GRPCRoute
@@ -462,9 +467,12 @@ Kustomize
 kustomize
 kustomize
 kv
+Lakera
 langchain
 lapis
 lastTimestamp
+lessThan
+lessThanOrEquals
 Librato
 Librato
 libxml2
@@ -501,6 +509,7 @@ md
 mebibytes
 Memcached
 Memcached
+Memorystore
 meshopa
 meshopas
 meshpassthrough
@@ -873,7 +882,7 @@ unescaped
 ungroup
 ungrouped
 Unicode
-Unicode
+unicode
 unix
 unmanaged
 unmarshalled

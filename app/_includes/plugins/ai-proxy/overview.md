@@ -51,7 +51,6 @@ features:
     examples: |
       * [`llm/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`llm/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
@@ -209,6 +208,12 @@ Support for text-to-speech, transcription, and translation:
 Support for image generation, image editing{% if plugin == "AI Proxy Advanced" %}, and realtime streaming{% endif %} interaction:
 
 {% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers plugin=plugin %}
+
+### Video features {% new_in 3.13 %}
+
+Support for video generation:
+
+{% include plugins/ai-proxy/tables/supported-providers-video.html providers=providers plugin=plugin %}
 
 ## How it works
 

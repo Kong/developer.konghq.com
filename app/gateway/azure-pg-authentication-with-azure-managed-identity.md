@@ -23,6 +23,8 @@ related_resources:
     url: /gateway/azure-pg-authentication-with-azure-app-service-principal/
   - text: "{{site.base_gateway}} Amazon RDS database authentication with AWS IAM"
     url: /gateway/amazon-rds-authentication-with-aws-iam/
+  - text: "{{site.base_gateway}} Google Cloud Postgres database authentication with GCP IAM and Workload Identity"
+    url: /gateway/gcp-postgres-authentication/
 
 search_aliases:
   - Entra

@@ -288,6 +288,10 @@
                     "description": "A string representing an SNI (server name indication) value for TLS.",
                     "type": "string"
                   },
+                  "ssl_verify": {
+                    "description": "Whether to verify the TLS certificate when making HTTPS requests.",
+                    "type": "boolean"
+                  },
                   "timeout": {
                     "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
                     "maximum": 2147483646,
@@ -419,7 +423,6 @@
                 "description": "transform JSON or lua table to XML",
                 "properties": {
                   "attributes_block_name": {
-                    "default": "#attr",
                     "maxLength": 32,
                     "minLength": 1,
                     "type": "string"
@@ -564,13 +567,11 @@
                     "x-terraform-transform-const": true
                   },
                   "values": {
+                    "additionalProperties": true,
                     "description": "An object with string keys and freeform values",
-                    "type": "string"
+                    "type": "object"
                   }
                 },
-                "required": [
-                  "values"
-                ],
                 "title": "static",
                 "type": "object"
               },
@@ -578,7 +579,6 @@
                 "description": "convert XML to JSON",
                 "properties": {
                   "attributes_block_name": {
-                    "default": "#attr",
                     "maxLength": 32,
                     "minLength": 1,
                     "type": "string"
@@ -606,15 +606,6 @@
                     "maxLength": 255,
                     "minLength": 1,
                     "type": "string"
-                  },
-                  "outputs": {
-                    "additionalProperties": {
-                      "maxLength": 255,
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "description": "a map object converted from XML document. If connected to `request.body` or `response.body`, the output will be a JSON object.",
-                    "type": "object"
                   },
                   "recognize_type": {
                     "default": true,
