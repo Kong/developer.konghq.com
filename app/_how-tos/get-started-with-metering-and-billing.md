@@ -1,6 +1,6 @@
 ---
 title: Get started with {{site.metering_and_billing}} in {{site.konnect_short_name}}
-description: Learn how to...
+description: Learn how to meter and monetize API Gateway requests with {{site.konnect_short_name}} and {{site.metering_and_billing}}. 
 content_type: how_to
 
 permalink: /metering-and-billing/get-started/
@@ -36,7 +36,7 @@ prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
       content: |
-        You need the [? role](/konnect-platform/teams-and-roles/#service-catalog) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
+        You need the [{{site.metering_and_billing}} Admin role](/konnect-platform/teams-and-roles/#metering-billing) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
       icon_url: /assets/icons/kogo-white.svg
 
 cleanup:
@@ -158,7 +158,7 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `example-service`.
-1. From the **Meter** dropdown menu, select "kong_konnect_api_request". 
+1. From the **Meter** dropdown menu, select "API Gateway Requests". 
 1. Click **Add group by filter**. 
    The group by filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs.
 1. From the **Group by** dropdown menu, select "service_name".
@@ -183,11 +183,10 @@ In this section, you'll create a Premium plan that grants paying customers acces
 1. Click **Save**.
 1. Click **Add Rate Card**.
 1. From the **Feature** dropdown menu, select "example-service".
-1. Click **Next**.
-1. From the **Pricing model** dropdown menu, select "Usage Based".
-1. In the **Price per package** field, enter `1`.
-1. In the **Quantity per package** field, enter `5000`.
-1. Click **Next**. 
+1. Click **Next Step**.
+1. From the **Pricing model** dropdown menu, select "Usage based".
+1. In the **Price per unit** field, enter `1`.
+1. Click **Next Step**. 
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.
 
@@ -204,7 +203,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.
 1. From the **Subscribed Plan** dropdown, select "Premium".
-1. Click **Next**.
+1. Click **Next Step**.
 1. Click **Create Subscription**.
 
 <!--Note: Want to delete a customer? Cancel their subscription first and then you can delete them.-->
@@ -214,12 +213,13 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 You can run the following command to test the that the Kong Air Consumer is invoiced correctly:
 
 <!--vale off-->
-{% validation rate-limit-check %}
-iterations: 6
-url: '/anything'
-headers:
-  - 'apikey:air-key'
-{% endvalidation %}
+```sh
+for _ in {1..6}; do
+  curl  -i $KONNECT_PROXY_URL/anything \
+       -H "apikey:air-key" 
+  echo
+done
+```
 <!--vale on-->
 
 This will generate six requests. Now, check the invoice that was created in {{site.metering_and_billing}}:
