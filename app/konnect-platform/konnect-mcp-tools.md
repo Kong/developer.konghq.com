@@ -27,7 +27,26 @@ related_resources:
     url: /konnect-platform/kai/
 ---
 
-The {{site.konnect_product_name}} MCP Server provides tools to query gateway entities, create debug sessions, analyze API traffic, investigate alerts, and search Kong documentation. All operations require authentication with a Personal Access Token and respect your user permissions.
+The {{site.konnect_product_name}} MCP Server provides tools to query gateway entities, create debug sessions, analyze API traffic, and search Kong documentation. All operations require authentication with a Personal Access Token and respect your user permissions.
+
+The following regional endpoints are supported:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Region
+    key: region
+  - title: Server URL
+    key: url
+rows:
+  - region: United States (US)
+    url: "`https://us.mcp.konghq.com/`"
+  - region: Europe (EU)
+    url: "`https://eu.mcp.konghq.com/`"
+  - region: Australia (AU)
+    url: "`https://au.mcp.konghq.com/`"
+{% endtable %}
+<!-- vale on -->
 
 ## GetControlPlane
 
@@ -480,33 +499,6 @@ rows:
 
 {:.info}
 > Return value varies by operation.
-
-## FetchAlertingEventDetails
-
-Retrieves detailed context for Kong alerting events for root cause analysis. Use this tool to investigate triggered alerts with pre-configured debug parameters, quickly create debug sessions with optimal filters for alert context, identify which entity triggered an alert, or correlate alerts with gateway configuration changes.
-
-<!-- vale off -->
-
-{% table %}
-columns:
-  - title: Parameter
-    key: parameter
-  - title: Type
-    key: type
-  - title: Description
-    key: description
-rows:
-  - parameter: "`alert_event_id`"
-    type: string
-    description: Alert event UUID from notification
-{% endtable %}
-
-<!-- vale on -->
-
-**Returns:** AlertEvent object with:
-- Affected entity details (`control_plane_id`, `entity_id`, `entity_type`)
-- Optional `debug_session_inputs` with pre-configured parameters for CreateDebugSession
-
 
 ## KnowledgeBaseSearch
 

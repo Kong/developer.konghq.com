@@ -78,21 +78,28 @@ kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 1. Type "MCP" and select "MCP: Open user configuration"
 1. Add the {{site.konnect_product_name}} server configuration:
 
-    ```json
+  ```json
     {
-    "mcpServers": {
+      "inputs": [
+        {
+          "type": "promptString",
+          "id": "konnect_mcp_pat",
+          "description": "Konnect Personal Access Token",
+          "password": true
+        }
+      ],
+      "servers": {
         "kong-konnect": {
-        "url": "https://us.mcp.konghq.com/",
-        "headers": {
-            "Authorization": "Bearer YOUR_KONNECT_PAT"
-        }
-        }
+          "type": "http",
+          "url": "https://us.mcp.konghq.com/",
+          "headers": {
+            "Authorization": "Bearer ${input:konnect_mcp_pat}"
+          }
+        },
+      }
     }
-    }
-    ```
-
+  ```
 1. Replace `https://us.mcp.konghq.com/` with your regional server URL
-1. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
 1. Save the configuration file
 1. Reload VS Code window (Command Palette > "Developer: Reload Window")
 1. Open the AI assistant and verify Kong {{site.konnect_product_name}} tools are available
@@ -105,18 +112,26 @@ kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 1. In the Installed MCP Servers section, click "New MCP Server"
 1. Paste the following JSON configuration into the newly opened `mcp.json` tab:
 
-    ```json
+  ```json
     {
-    "mcpServers": {
+      "inputs": [
+        {
+          "type": "promptString",
+          "id": "konnect_mcp_pat",
+          "description": "Konnect Personal Access Token",
+          "password": true
+        }
+      ],
+      "servers": {
         "kong-konnect": {
-        "url": "https://us.mcp.konghq.com/",
-        "headers": {
-            "Authorization": "Bearer YOUR_KONNECT_PAT"
-        }
-        }
+          "type": "http",
+          "url": "https://us.mcp.konghq.com/",
+          "headers": {
+            "Authorization": "Bearer ${input:konnect_mcp_pat}"
+          }
+        },
+      }
     }
-    }
-    ```
 
 1. Replace `https://us.mcp.konghq.com/` with your regional server URL
 1. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
@@ -133,21 +148,28 @@ kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 1. Type "MCP" and select "MCP: Configure Servers"
 1. Add the {{site.konnect_product_name}} server configuration:
 
-    ```json
+  ```json
     {
-    "mcpServers": {
+      "inputs": [
+        {
+          "type": "promptString",
+          "id": "konnect_mcp_pat",
+          "description": "Konnect Personal Access Token",
+          "password": true
+        }
+      ],
+      "servers": {
         "kong-konnect": {
-        "url": "https://us.mcp.konghq.com/",
-        "headers": {
-            "Authorization": "Bearer YOUR_KONNECT_PAT"
-        }
-        }
+          "type": "http",
+          "url": "https://us.mcp.konghq.com/",
+          "headers": {
+            "Authorization": "Bearer ${input:konnect_mcp_pat}"
+          }
+        },
+      }
     }
-    }
-    ```
 
 1. Replace `https://us.mcp.konghq.com/` with your regional server URL
-1. Replace `YOUR_KONNECT_PAT` with your actual Personal Access Token
 1. Save the configuration file
 1. Reload VS Code window (Command Palette > "Developer: Reload Window")
 1. Open GitHub Copilot chat and verify Kong {{site.konnect_product_name}} tools are available
@@ -176,16 +198,25 @@ If your JetBrains IDE doesn't provide the UI option, edit the configuration file
 `~/.config/JetBrains/<IDE>/mcp-servers.json`
 
 ```json
-{
-  "mcpServers": {
-    "kong-konnect": {
-      "url": "https://us.mcp.konghq.com/",
-      "headers": {
-        "Authorization": "Bearer YOUR_KONNECT_PAT"
+  {
+    "inputs": [
+      {
+        "type": "promptString",
+        "id": "konnect_mcp_pat",
+        "description": "Konnect Personal Access Token",
+        "password": true
       }
+    ],
+    "servers": {
+      "kong-konnect": {
+        "type": "http",
+        "url": "https://us.mcp.konghq.com/",
+        "headers": {
+          "Authorization": "Bearer ${input:konnect_mcp_pat}"
+        }
+      },
     }
   }
-}
 ```
 
 {:.info}
@@ -194,17 +225,27 @@ If your JetBrains IDE doesn't provide the UI option, edit the configuration file
 ## Other IDEs
 
 For IDEs without native MCP UI support (Windsurf, Eclipse, Xcode, and others), manually edit the MCP configuration file:
+
 ```json
-{
-  "mcpServers": {
-    "kong-konnect": {
-      "url": "https://us.mcp.konghq.com/",
-      "headers": {
-        "Authorization": "Bearer YOUR_KONNECT_PAT"
+  {
+    "inputs": [
+      {
+        "type": "promptString",
+        "id": "konnect_mcp_pat",
+        "description": "Konnect Personal Access Token",
+        "password": true
       }
+    ],
+    "servers": {
+      "kong-konnect": {
+        "type": "http",
+        "url": "https://us.mcp.konghq.com/",
+        "headers": {
+          "Authorization": "Bearer ${input:konnect_mcp_pat}"
+        }
+      },
     }
   }
-}
 ```
 
 Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual token, then restart your IDE.

@@ -1,7 +1,7 @@
 metadata:
   title: "{{site.konnect_product_name}} MCP Server"
   content_type: landing_page
-  description: "Interact with Kong {{site.konnect_product_name}} through AI clients using MCP tools. Access gateway entities, debug API performance, and search documentation."
+  description: "Interact with {{site.konnect_product_name}} through AI clients using MCP tools."
   products:
     - konnect
   breadcrumbs:
@@ -29,7 +29,7 @@ rows:
                   text: |
                     The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. Query {{site.base_gateway}} entities, create debug sessions with active tracing, and search Kong documentation without leaving your IDE or agentic CLI coding tool.
 
-                    The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}} Plus and Enterprise accounts.
+                    The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}}.
 
                     {:.success}
                     > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
@@ -50,10 +50,9 @@ rows:
                 text: |
                   The {{site.konnect_product_name}} MCP Server enables several workflows for managing and debugging your API infrastructure:
 
-                  * **{{site.base_gateway}} entity management**: Query control planes, services, routes, consumers, consumer groups, plugins, and vaults.
+                  * **{{{site.konnect_product_name}} entity management**: Query control planes, services, routes, consumers, consumer groups, plugins, and vaults.
                   * **API debugging**: Create debug sessions with active tracing to investigate performance issues and identify bottlenecks.
                   * **Analytics and monitoring**: Query API request data with filters for time range, status codes, consumers, services, and routes.
-                  * **Alert-driven investigation**: Fetch detailed context from Kong alerting events and use pre-configured debug session parameters.
                   * **Kong documentation search**: Search Kong's documentation for configuration guidance and troubleshooting steps.
       - blocks:
         - type: structured_text
@@ -80,7 +79,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  {{site.konnect_product_name}} MCP Server provides programmatic access to your {{site.konnect_short_name}} resources through the Model Context Protocol. The server exposes 13 specialized tools that AI assistants can use to query {{site.base_gateway}} entities, analyze traffic, debug performance issues, and search documentation.
+                  {{site.konnect_product_name}} MCP Server provides programmatic access to your {{site.konnect_short_name}} resources through the Model Context Protocol. The server exposes specialized tools that AI assistants can use to query {{site.base_gateway}} entities, analyze traffic, debug performance issues, and search documentation.
 
                   You can connect to the MCP server from:
                   * IDEs with MCP client support (VS Code, Cursor, IntelliJ)
@@ -141,7 +140,6 @@ rows:
 
                     {{site.konnect_product_name}} MCP Server access is **enabled by default**. Organization administrators can disable it from Organization Settings.
 
-                    Enabling KAi automatically enables MCP server access. Disabling MCP server also disables KAi.
 
 
   - header:
@@ -253,9 +251,9 @@ rows:
                 - category: Analytics
                   tools: "[GetAnalytics](/konnect-platform/konnect-mcp/tools/#getanalytics)"
                   description: Query API requests and traffic patterns
-                - category: Alerting
-                  tools: "[FetchAlertingEventDetails](/konnect-platform/konnect-mcp/tools/#fetchalertingeventdetails)"
-                  description: Investigate alert events with pre-configured debug parameters
+                # - category: Alerting
+                #   tools: "[FetchAlertingEventDetails](/konnect-platform/konnect-mcp/tools/#fetchalertingeventdetails)"
+                #   description: Investigate alert events with pre-configured debug parameters
                 - category: Documentation
                   tools: "[KnowledgeBaseSearch](/konnect-platform/konnect-mcp/tools/#knowledgebasesearch)"
                   description: Search Kong documentation and best practices
@@ -330,14 +328,14 @@ rows:
             4. GetPlugin (control_plane_id=<from_step_1>, operation="list")
                → Check plugins affecting the route/service
             ```
-        - type: structured_text
-          config:
-            header:
-              text: "Pattern 3: Alert-driven investigation"
-            blocks:
-              - type: text
-                text: |
-                  Use pre-configured parameters from alert events to start targeted debugging.
+        # - type: structured_text
+        #   config:
+        #     header:
+        #       text: "Pattern 3: Alert-driven investigation"
+        #     blocks:
+        #       - type: text
+        #         text: |
+        #           Use pre-configured parameters from alert events to start targeted debugging.
         - type: text
           config: |
             ```text

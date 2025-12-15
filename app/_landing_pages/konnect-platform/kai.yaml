@@ -121,7 +121,7 @@ rows:
                   * Query gateway entities (control planes, services, routes, consumers, plugins)
                   * Create and analyze debug sessions for performance issues
                   * Search Kong documentation
-                  * Investigate alerts and analyze API traffic
+                  * Analyze API traffic
         - type: button
           config:
             text: "Learn how to configure the MCP server"
