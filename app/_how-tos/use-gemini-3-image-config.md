@@ -53,8 +53,8 @@ prereqs:
         Export these values as environment variables:
 
         ```sh
-        export GCP_SERVICE_ACCOUNT_JSON="<your-service-account-json>"
-        export GCP_PROJECT_ID="<your-project-id>"
+        export DECK_GCP_SERVICE_ACCOUNT_JSON="your-service-account-json"
+        export DECK_GCP_PROJECT_ID="your-project-id"
         ```
       icon_url: /assets/icons/gcp.svg
     - title: Python
