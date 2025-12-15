@@ -66,7 +66,7 @@ faqs:
       To update the storage type, go to the project’s **Project Settings**, select **Change** from the **Type** dropdown, choose **Cloud Sync**, and then click **Update**. 
       
       {:.decorative}
-      > **Tip:** Before converting, make sure you pull the latest updates from the repository, as any changes not pulled beforehand will not be included in the Cloud Sync project. If needed, switch the project back to a local or Git-based workflow later.    
+      > **Tip:** Before converting, make sure that you pull the latest updates from the repository, as any changes that aren't pulled beforehand aren't included in the Cloud Sync project. If needed, switch the project back to a local or Git-based workflow later.    
   - q: Can I change a Git Sync project into a Local Vault project?
     a: |
       Yes. You can convert a Git Sync storage type project to Local Vault storage type at any time. Go to the project’s **Project Settings**, select **Change** from the **Type** dropdown, choose **Local Vault**, and then click **Update**. 
@@ -74,7 +74,7 @@ faqs:
       After conversion, the project is stored entirely on your local device and is no longer synchronized with Git. Changes made to the project will not be reflected in your local or remote repository. This action does not delete or modify the remote repository. 
       
       {:.decorative}
-      > **Tip:** Before converting, make sure that you pull the latest project updates, as any changes not pulled beforehand aren't included in the Local Vault project.
+      > **Tip:** Before converting, make sure that you pull the latest project updates, as any changes that aren't pulled beforehand aren't included in the Local Vault project.
   - q: What happens if my Git repository contains legacy Insomnia content when I create a Git Sync project?
     a: If the Git repository you connect contains legacy Insomnia content, Insomnia automatically converts that content to the current project format during project creation. This ensures that the content is compatible with modern Insomnia workflows. If the repository already contains Insomnia content, whether legacy or current, Insomnia prompts you to import that content into the new Git Sync project before continuing.
 ---
