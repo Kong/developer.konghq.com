@@ -59,3 +59,5 @@ Set absolute maximum rate limits for Gateway Services using the Service Protecti
 You can use this plugin together with other rate limiting plugins to apply granular rate limits based on different entities.
 
 If you want to apply global rate limits or apply rate limits to Routes and Consumers, see the [Rate Limiting with {{site.base_gateway}}](/gateway/rate-limiting/) page for additional rate limiting plugins.
+
+{% include plugins/redis-cloud-auth.md %}

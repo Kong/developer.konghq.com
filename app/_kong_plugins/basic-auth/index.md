@@ -113,3 +113,5 @@ Keep the following limitations in mind when you configure brute force protection
 * There is no way to unlock a user. You can manually delete the counter key from Redis or PostgreSQL.
 * If the Redis connection fails, the brute force protection will error out.
 * Each backend has different impacts on performance. In-memory has the best performance, PostgreSQL the poorest, and Redis is better than PostgreSQL. 
+
+{% include plugins/redis-cloud-auth.md %}
