@@ -7,7 +7,7 @@ curl http://localhost:8000 \
   -F "prompt=A large red square that is rotating"
 ```
 
-{:.note}
+{:.info}
 > **Note**: The following additional parameters are supported when using OpenAI request format through the `extra_body` feature:
 >
 > * **Bedrock**: Set the `fps` parameter for video generation.
