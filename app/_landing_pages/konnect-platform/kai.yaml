@@ -88,9 +88,6 @@ rows:
                 User --> kai
                 kai --> backends
 
-                style backends fill:#E3F2FD,stroke:#90CAF9,stroke-width:1px
-                style kai fill:#E8F5E9,stroke:#81C784,stroke-width:1px
-
   - header:
       text: "How to interact with KAi in the UI"
       type: h2
