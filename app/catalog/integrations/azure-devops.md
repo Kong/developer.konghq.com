@@ -18,6 +18,7 @@ breadcrumbs:
   - /catalog/integrations/
 
 discovery_support: true
+bindable_entities: "Repositories"
 
 works_on:
     - konnect
