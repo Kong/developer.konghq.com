@@ -243,6 +243,7 @@ eventTime
 evaluable
 example_service
 exfiltrate
+extra_body
 failover
 fapi
 Fargate
@@ -266,6 +267,7 @@ gatewayclass
 gateway_entity
 gcloud
 gcp
+generationConfig
 geo
 geos
 getter
@@ -282,6 +284,7 @@ gluu
 Gluu
 gojira
 Golang
+googleSearch
 Goroutine
 Goroutine
 gbps
@@ -834,6 +837,9 @@ Terraform's
 Terraform's
 text_splitters
 tfvars
+thinkingConfig
+thinking_budget
+imageConfig
 timeframe
 timeframes
 timeseries
