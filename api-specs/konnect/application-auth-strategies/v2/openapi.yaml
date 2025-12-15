@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.2
+  version: 2.0.3
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3a23fcee8d40e0fce64d7cfb28d51c270a2b9e28'
+  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -686,16 +686,6 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyDisableRefreshSecret'
       additionalProperties: false
       title: CreateDcrConfigHttpInRequest
-    DcrProviderType:
-      description: 'The type of DCR provider. Can be one of the following - auth0, azureAd, curity, okta, http'
-      type: string
-      enum:
-        - auth0
-        - azureAd
-        - curity
-        - okta
-        - http
-      title: DcrProviderType
     DcrProviderBase:
       description: Properties common to all DCR Providers.
       type: object
@@ -1193,7 +1183,14 @@ components:
             display_name:
               $ref: '#/components/schemas/DcrProviderDisplayName'
             provider_type:
-              $ref: '#/components/schemas/DcrProviderType'
+              description: The type of DCR provider.
+              type: string
+              enum:
+                - auth0
+                - azureAd
+                - curity
+                - okta
+                - http
           required:
             - id
             - name
@@ -1289,7 +1286,14 @@ components:
             display_name:
               $ref: '#/components/schemas/DcrProviderDisplayName'
             provider_type:
-              $ref: '#/components/schemas/DcrProviderType'
+              description: The type of DCR provider.
+              type: string
+              enum:
+                - auth0
+                - azureAd
+                - curity
+                - okta
+                - http
           required:
             - id
             - name
@@ -1801,48 +1805,52 @@ components:
       nullable: true
       writeOnly: true
     StringFieldFilter:
-      description: 'Filter using **one** of the following operators: `oeq`, `neq`, `contains`, `ocontains`'
-      type: object
-      properties:
-        contains:
-          description: The field contains the provided value.
-          type: string
-          example: '?filter[field_name_here][contains]=foo'
-        ocontains:
-          description: The field contains any of the provided values.
-          type: string
-          example: '?filter[field_name_here][ocontains]=foo,bar'
-        oeq:
-          description: The field matches any of the provided values.
-          type: string
-          example: '?filter[field_name_here][oeq]=foo,bar'
-        neq:
-          description: The field does not match the provided value.
-          type: string
-          example: '?filter[field_name_here][neq]=bar'
-      additionalProperties: false
       oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
           properties:
             eq:
+              description: The field exactly matches the provided value.
               type: string
-          required:
-            - eq
-      x-examples:
-        example-1:
-          contains: some-value
-          ocontains: 'this-value,or-that-value'
-          oeq: 'some-value,some-other-value'
-          neq: not-this-value
-        example-2:
-          eq: some-value
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
+          type: string
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
     UuidFieldFilter:
-      description: 'Filter using **one** of the following operators: `oeq`, `neq`'
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
       properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
         oeq:
           description: The field matches any of the provided values.
           type: string
@@ -1852,16 +1860,6 @@ components:
           type: string
           example: '?filter[field_name_here][neq]=bar'
       additionalProperties: false
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
       x-examples:
         example-1:
           oeq: 'some-value,some-other-value'

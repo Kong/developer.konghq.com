@@ -85,7 +85,7 @@ This toggle lets you enable or disable data collection for your API traffic per 
 
 **Modes:**
 - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
-- **Off:** Advanced analytics collection stops, but basic API metrics remain available in Gateway Manager, 
+- **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway in {{site.konnect_short_name}}, 
 and can still be used for custom reports.
 
 ## Metrics

@@ -51,6 +51,45 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.1": [
+    {
+      "message": "Fixed an issue where the token count for Gemini Vertex embeddings API in native format was incorrect.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the token count for Gemini Vertex embeddings API in OpenAI format was incorrect.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the native format option did not work correctly for non-openai formats.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the semantic load balancing with pgvector namespace was not functioning correctly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock invoke command is not properly proxied.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.12.0.2": [
+    {
+      "message": "Fixed intermittent 500 responses from the AI Proxy Advanced plugin when using Azure OpenAI\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Files content analytics extraction is not handled properly for Azure.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Add `tried_targets` field in serialized analytics logs for record of all tried ai targets.\n",

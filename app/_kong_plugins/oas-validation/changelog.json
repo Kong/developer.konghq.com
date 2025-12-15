@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.1": [
+    {
+      "message": "Fixed an issue where parameter data extraction failed when `$` appears in the path pattern.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added support for validating `multipart/form-data` requests.",
@@ -65,6 +72,13 @@
   "3.10.0.3": [
     {
       "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

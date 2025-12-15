@@ -41,6 +41,7 @@ Arya
 Arya
 arya
 assumeRole
+async
 Atlassian
 auditability
 authtoken
@@ -97,6 +98,7 @@ callees
 CAs
 callout
 callouts
+camelCase
 cef
 certificate_admin
 charset
@@ -396,6 +398,7 @@ jwt
 jwts
 kafka
 kafkactl
+KAi
 kbps
 kds
 keepalive
@@ -745,6 +748,7 @@ slos
 SLT_Enc
 sni
 snis
+sonarqube
 Splunk
 Splunk
 ssl
@@ -829,6 +833,7 @@ tlds
 tls
 TLSRoute
 TLSRoutes
+tokenization
 toolchain
 tooltip
 tproxy
@@ -869,7 +874,7 @@ unescaped
 ungroup
 ungrouped
 Unicode
-Unicode
+unicode
 unix
 unmanaged
 unmarshalled

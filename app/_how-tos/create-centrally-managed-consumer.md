@@ -33,7 +33,7 @@ tags:
 
 tldr:
     q: How do I centrally manage Consumers in {{site.konnect_short_name}}?
-    a: Centrally-managed Consumers exist outside of a Control Plane. To create one, you must first create a realm using the {{site.konnect_short_name}} API as well as a Consumer associated with the realm. Then, create a key for the centrally-managed Consumer that they can use for authentication. Enable the Key Authentication plugin, configuring `identity_realms`. Centrally-managed Consumers can then authenticate via key auth with their key.
+    a: Centrally-managed Consumers exist outside of a control plane. To create one, you must first create a realm using the {{site.konnect_short_name}} API as well as a Consumer associated with the realm. Then, create a key for the centrally-managed Consumer that they can use for authentication. Enable the Key Authentication plugin, configuring `identity_realms`. Centrally-managed Consumers can then authenticate via key auth with their key.
 faqs:
   - q: When should I use centrally-managed Consumers instead of Consumers scoped to control planes?
     a: |
@@ -58,15 +58,15 @@ cleanup:
 
 ## Create a realm
 
-First, export your Control Plane ID and [region](/konnect-platform/geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
+First, export your control plane ID and [region](/konnect-platform/geos/) (for example, `us`) so we can use it in the request. You can find these under your [control plane settings](https://cloud.konghq.com/gateway-manager/):
 ```sh
 export KONNECT_CONTROL_PLANE_ID={control-plane-id}
 export DECK_CONTROL_PLANE_REGION={region}
 ```
 
-Centrally-managed Consumers are assigned to realms instead of Control Planes. Realms exist outside of the Control Plane.
+Centrally-managed Consumers are assigned to realms instead of control planes. Realms exist outside of the control plane.
 
-Use the [`/realms` endpoint](/api/konnect/consumers/#/operations/create-realm) to create a realm and associate it with allowed Control Planes:
+Use the [`/realms` endpoint](/api/konnect/consumers/#/operations/create-realm) to create a realm and associate it with allowed control planes:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -126,7 +126,7 @@ export CONSUMER_KEY={consumer-key}
 
 ## Enable authentication with the Key Authentication plugin
 
-Consumers require authentication. Currently, you can only use the [Key Auth plugin](/plugins/key-auth/) to authenticate centrally-managed Consumers. In this example, we'll configure `identity_realms` on first the realm and then the Control Plane. By doing it this way, the Data Plane will first reach out to the realm. If the API key is not found in the realm, the Data Plane will look for the API key in the Control Plane config.
+Consumers require authentication. Currently, you can only use the [Key Auth plugin](/plugins/key-auth/) to authenticate centrally-managed Consumers. In this example, we'll configure `identity_realms` on first the realm and then the control plane. By doing it this way, the data plane will first reach out to the realm. If the API key is not found in the realm, the data plane will look for the API key in the control plane config.
 
 Enable the Key Auth plugin on the `example-service`:
 
@@ -152,7 +152,7 @@ variables:
     value: $CONTROL_PLANE_REGION
 {% endentity_examples %}
 
-`identity_realms` are scoped to the Control Plane by default (`scope: cp`). The order in which you configure the `identity_realms` dictates the priority in which the Data Plane attempts to authenticate the provided API keys. See [identity realms precedence](/plugins/key-auth/#identity-realms) for more information.
+`identity_realms` are scoped to the control plane by default (`scope: cp`). The order in which you configure the `identity_realms` dictates the priority in which the data plane attempts to authenticate the provided API keys. See [identity realms precedence](/plugins/key-auth/#identity-realms) for more information.
 
 ## Validate
 

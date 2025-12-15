@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'pathname'
 require_relative '../../lib/site_accessor'
 
 module Jekyll
@@ -53,11 +54,18 @@ module Jekyll
         end
 
         def kong_schema_file_path
-          @kong_schema_file_path ||= File.join(
-            site.config['plugin_schemas_path'],
-            plugin_slug,
-            "#{@release.number}.json"
-          )
+          @kong_schema_file_path ||= begin
+            path = File.join(
+              site.config['plugin_schemas_path'],
+              release.number,
+              "#{plugin_slug.split('-').map(&:capitalize).join}.json"
+            )
+            dir = File.dirname(path)
+            filename = File.basename(path)
+            Dir.glob("#{dir}/*", File::FNM_CASEFOLD).find do |file|
+              File.basename(file).downcase == filename.downcase
+            end
+          end
         end
 
         def third_party_file_path
