@@ -1942,3 +1942,5 @@ a result of `NODE_SKIPPED`.
 consumption to aid development and testing. Backwards-incompatible changes to
 the report format _may_ be included with any new release of
 {{site.base_gateway}}.
+
+{% include plugins/redis-cloud-auth.md %}
