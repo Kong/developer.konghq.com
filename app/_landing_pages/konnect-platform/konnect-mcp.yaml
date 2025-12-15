@@ -27,7 +27,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. Query {{site.base_gateway}} entities, create debug sessions with active tracing, and search Kong documentation without leaving your IDE or terminal.
+                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. Query {{site.base_gateway}} entities, create debug sessions with active tracing, and search Kong documentation without leaving your IDE or agentic CLI coding tool.
 
                     The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}} Plus and Enterprise accounts.
 
