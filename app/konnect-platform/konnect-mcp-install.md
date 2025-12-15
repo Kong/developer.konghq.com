@@ -73,7 +73,6 @@ You should see the following output:
 kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 ```
 
-```markdown
 ## Visual Studio Code
 
 For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
