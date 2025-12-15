@@ -1,6 +1,6 @@
 {% assign note_counter = 0 %}
 {% assign notes = "" | split: "" %}
-{% assign features = "files,batches,assistants,responses" | split: "," %}
+{% assign features = "files,batches,assistants,responses,function_calling" | split: "," %}
 
 {% comment %}First pass: collect all notes{% endcomment %}
 {% for provider in include.providers %}
@@ -24,6 +24,7 @@
       <th>Batches</th>
       <th>Assistants</th>
       <th>Responses</th>
+      <th>Function Calling</th>
     </tr>
   </thead>
   <tbody>
