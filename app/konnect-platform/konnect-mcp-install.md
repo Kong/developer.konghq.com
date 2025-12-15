@@ -73,6 +73,7 @@ You should see the following output:
 kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 ```
 
+```markdown
 ## Visual Studio Code
 
 For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
@@ -107,8 +108,9 @@ For regional server URLs, see [Regional server endpoints](/konnect-platform/konn
 1. Replace `https://us.mcp.konghq.com/` with your regional server URL if needed
 1. Save the configuration file
 1. Reload VS Code window (Command Palette > **Developer: Reload Window**)
-1. When prompted, enter your {{site.konnect_product_name}} Personal Access Token
-1. Open the AI assistant and verify Kong {{site.konnect_product_name}} tools are available
+1. When prompted, enter your {{site.konnect_product_name}} Personal Access Token or System Access Token
+1. Press Enter to confirm
+1. In the `mcp.json` settings file you should see that the server is running and that the tools are available
 
 {:.info}
 > VS Code securely stores your PAT after the first prompt. The value is not visible in the configuration file.
