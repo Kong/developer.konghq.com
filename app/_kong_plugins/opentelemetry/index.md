@@ -289,6 +289,6 @@ Span #6 name=balancer try #1 duration=0.99328ms attributes={"net.peer.ip":"104.2
 - Only supports the HTTP protocols (http/https) of {{site.base_gateway}}.
 - May impact the performance of {{site.base_gateway}}.
   We recommend setting the sampling rate (`tracing_sampling_rate`)
-  via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin.
+  via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin for tracing.
 - Doesn't support `custom_fields_by_lua`.
 - Doesn't support AI Gateway and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.
