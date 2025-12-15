@@ -209,6 +209,12 @@ Support for image generation, image editing{% if plugin == "AI Proxy Advanced" %
 
 {% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers plugin=plugin %}
 
+### Video features {% new_in 3.13 %}
+
+Support for video generation:
+
+{% include plugins/ai-proxy/tables/supported-providers-video.html providers=providers plugin=plugin %}
+
 ## How it works
 
 The {{ plugin }} plugin will mediate the following for you:
