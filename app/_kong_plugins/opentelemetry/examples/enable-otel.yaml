@@ -5,7 +5,7 @@ extended_description: |
   * [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/)
   * [Send OpenTelemetry data to Grafana Cloud](/how-to/send-otel-data-to-grafana-cloud/)
 
-title: 'Enable the OTEL plugin for metrics, tracing and logs'
+title: 'Enable the OTEL plugin for metrics, traces and logs'
 
 weight: 1000
 
