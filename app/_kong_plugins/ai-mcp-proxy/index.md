@@ -164,7 +164,7 @@ sequenceDiagram
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
-> - An MCP-compatible client (such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/) is available to connect to Kong.
+> - An MCP-compatible client (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
 > - The Kong AI Gateway instance supports the AI MCP Proxy plugin (is 3.12 or higher).
 
 ## Configuration modes
