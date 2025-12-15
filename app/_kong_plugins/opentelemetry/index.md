@@ -325,4 +325,3 @@ Span #6 name=balancer try #1 duration=0.99328ms attributes={"net.peer.ip":"104.2
   via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin for tracing.
 - Doesn't support `custom_fields_by_lua`.
 - Doesn't support AI Gateway and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.
-- The [`http.server.request.size`](#http-server-request-size) and [`http.server.response.size`](#http-server-response-size) point type is a counter instead of a histogram.
