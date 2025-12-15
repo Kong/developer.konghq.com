@@ -1,4 +1,5 @@
 description: "Enables the OTEL plugin with an endpoint for tracing."
+extended_description: "Enables the OTEL plugin with an endpoint for tracing. For a complete tutorial with Jaeger, see [Set up Jaeger with OpenTelemetry](/how-to/set-up-jaeger-with-otel/)."
 
 title: 'Enable the OTEL plugin for traces'
 

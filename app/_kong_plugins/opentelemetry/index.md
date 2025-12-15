@@ -54,6 +54,36 @@ Propagate distributed tracing spans and report low-level spans to a OTLP-compati
 
 The OpenTelemetry plugin is fully compatible with the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/) and can be used with any OpenTelemetry compatible backend.
 
+## Use cases
+
+Common use cases for the OpenTelemetry plugin:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: "[Enable the OTEL plugin for metrics, tracing and logs](./examples/enable-otel/)"
+    description: Configure the OpenTelemetry plugin to send metrics, tracing and data plane/error logs and API transaction logs.
+
+  - use_case: "[Extract, clear, and inject tracing data](./examples/extract-clear-inject/)"
+    description: Configure the OpenTelemetry plugin to extract tracing context, clear specific headers, and inject tracing context using a specific format.
+
+  - use_case: "[Ignore incoming headers](./examples/ignore-incoming-headers/)"
+    description: Configure the OpenTelemetry plugin to inject tracing context in multiple formats.
+
+  - use_case: "[Multiple injection](./examples/multiple-injection/)"
+    description: Configure the OpenTelemetry plugin to extract tracing context in one format and inject tracing context in multiple formats.
+
+  - use_case: "[Preserve incoming format](./examples/preserve-incoming-format/)"
+    description: Configure the OpenTelemetry plugin to extract and preserve the tracing context in the same header type.
+
+{% endtable %}
+<!--vale on-->
+
 ## Collecting telemetry data
 
 There are two ways to set up an OpenTelemetry backend:

@@ -57,6 +57,15 @@ prereqs:
       content: |
         This tutorial requires a Grafana Cloud account. You can create an account with a free trial at [https://grafana.com/products/cloud/](https://grafana.com/products/cloud/).
       icon: assets/icons/third-party/grafana.svg
+
+cleanup:
+  inline:
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
 ---
 
 ## Configure the OpenTelemetry Collector integration in Grafana
@@ -201,7 +210,7 @@ export DECK_OTEL_HOST=host.docker.internal
 
 ## Enable the OpenTelemetry plugin
 
-In this tutorial, we'll configure the OpenTelemetry plugin to send {{site.base_gateway}} metrics, traces, and logs to Grafana via OpenTelemetry Collector.
+In this tutorial, we'll configure the [OpenTelemetry plugin](/plugins/opentelemetry/) to send {{site.base_gateway}} metrics, traces, and logs to Grafana via OpenTelemetry Collector.
 
 Enable the OTEL plugin with the OTEL Collector endpoints settings configured:
 
