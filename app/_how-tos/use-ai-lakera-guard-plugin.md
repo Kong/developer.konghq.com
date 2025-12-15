@@ -106,7 +106,7 @@ prereqs:
 
         **Create project:**
 
-        1. Go to [Projects](INSERT-LINK).
+        1. Go to [Projects](https://platform.lakera.ai/dashboard/projects).
         1. Click **New project** button.
 
         1. Enter the name of your project in the **Project details** section.
@@ -196,7 +196,7 @@ variables:
 
 ## Validate configuration
 
-Now that the AI Lakera Guard plugin is configured, let's test different categories of prompts to make sure that the Lakera guardrails are working. 
+Now that the AI Lakera Guard plugin is configured, let's test different categories of prompts to make sure that the Lakera guardrails are working.
 
 The system blocks prompt categories that you disallow and returns a `403` error message when the plugin detects a violation, including the detector type and a request UUID for traceability.
 
