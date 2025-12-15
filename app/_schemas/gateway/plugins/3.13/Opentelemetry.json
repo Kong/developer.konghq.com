@@ -54,6 +54,46 @@
           "type": "string",
           "x-referenceable": true
         },
+        "metrics": {
+          "properties": {
+            "enable_bandwidth_metrics": {
+              "default": false,
+              "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size` and `http.server.response.size` metrics will be exported.",
+              "type": "boolean"
+            },
+            "enable_consumer_attribute": {
+              "default": false,
+              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the consumer attribute when available.",
+              "type": "boolean"
+            },
+            "enable_latency_metrics": {
+              "default": false,
+              "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong.latency.total`, `kong.latency.internal` and `kong.latency.upstream` metrics will be exported.",
+              "type": "boolean"
+            },
+            "enable_request_metrics": {
+              "default": false,
+              "description": "A boolean value that determines if request count metrics should be collected. If enabled, `http.server.request.count` metrics will be exported.",
+              "type": "boolean"
+            },
+            "enable_upstream_health_metrics": {
+              "default": false,
+              "description": "A boolean value that determines if upstream health metrics should be collected. If enabled, `kong.upstream.target.status` metrics will be exported.",
+              "type": "boolean"
+            },
+            "endpoint": {
+              "description": "An HTTP URL endpoint where metrics are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            },
+            "push_interval": {
+              "default": 60,
+              "description": "The interval in seconds at which metrics are pushed to the OTLP server. This setting is only applicable when `endpoint` is set.",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
         "propagation": {
           "default": {
             "default_format": "w3c"
@@ -243,13 +283,20 @@
         "http",
         "https"
       ],
-      "description": "A set of strings representing HTTP protocols.",
+      "description": "A set of strings representing protocols.",
       "items": {
+        "description": "A string representing a protocol, such as HTTP or HTTPS.",
         "enum": [
           "grpc",
           "grpcs",
           "http",
-          "https"
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
         ],
         "type": "string"
       },
