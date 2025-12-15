@@ -109,7 +109,7 @@ variables:
 
 ## Validate
 
-Send a `POST` request to generate traffic that we can use to validate that OpenTelemetry Collector is receiving the traces:
+Send a `POST` request to generate traffic that we can use to validate that OpenTelemetry Collector is receiving the telemetry data:
 
 {% validation request-check %}
 url: /anything
@@ -972,3 +972,4 @@ StartTimestamp: 2025-12-12 10:39:30.785728512 +0000 UTC
 Timestamp: 2025-12-12 10:47:51.154936576 +0000 UTC
 Value: 1000461175230928640
 ```
+{:.no-copy-code}
