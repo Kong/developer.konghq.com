@@ -257,4 +257,16 @@ Traces are being ingested properly
 ```
 {:.no-copy-code}
 
-You can now start building dashboards with your {{site.base_gateway}} telemetry data.
+## Validate that Grafana is receiving {{site.base_gateway}} data
+
+1. In the sidebar, click **Drilldown**.
+1. Click the signal you want to see:
+  * **Metrics**
+  * **Logs**
+  * **Traces**
+1. Select the relevant data source:
+  * Prometheus for metrics
+  * Loki for logs
+  * Tempo for traces
+
+If everything is working as expected, ou should see graphs with your data.
