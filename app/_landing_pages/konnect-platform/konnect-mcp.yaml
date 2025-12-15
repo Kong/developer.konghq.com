@@ -64,7 +64,7 @@ rows:
                 text: |
                   Use the {{site.konnect_product_name}} MCP Server when:
 
-                  * You want to manage Kong resources from your IDE or terminal
+                  * You want to manage {{site.konnect_short_name}} resources from your IDE or terminal
                   * You need to debug API performance issues with active tracing
                   * You prefer working with AI assistants for infrastructure tasks
                   * You need to query analytics and traffic patterns programmatically
