@@ -46,17 +46,21 @@
           "type": "string"
         },
         "guardrails_id": {
-          "description": "The guardrail identifier used in the request to apply the guardrail",
+          "description": "The guardrail identifier used in the request to apply the guardrail.",
           "type": "string"
         },
         "guardrails_version": {
-          "description": "The guardrail version used in the request to apply the guardrail",
+          "description": "The guardrail version used in the request to apply the guardrail. Note that the value of this field must match the pattern `(([1-9][0-9]{0,7})|(DRAFT))` according to the AWS documentation https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ApplyGuardrail.html#API_runtime_ApplyGuardrail_RequestSyntax.",
           "type": "string"
         },
         "response_buffer_size": {
           "default": 100,
           "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrails service. This only applies to the response content guard.",
           "type": "number"
+        },
+        "ssl_verify": {
+          "description": "Verify TLS certificate when connecting to the bedrock service.",
+          "type": "boolean"
         },
         "stop_on_error": {
           "default": true,

@@ -24,7 +24,7 @@
             "custom_id",
             "username"
           ],
-          "description": "When the plugin tries to apply an access token to a Kong consumer mapping, it tries to find a matching Kong consumer from properties defined using this configuration parameter. The parameter can take an array of alues. Valid values are `id`, `username`, and `custom_id`.",
+          "description": "When the plugin tries to apply an access token to a Kong consumer mapping, it tries to find a matching Kong consumer from properties defined using this configuration parameter. The parameter can take an array of values. Valid values are `id`, `username`, and `custom_id`.",
           "items": {
             "enum": [
               "custom_id",
@@ -41,6 +41,10 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "access_token_endpoints_ssl_verify": {
+          "description": "Whether to verify the TLS certificate if any of `access_token_introspection_endpoint`, `access_token_jwks_uri`, or `access_token_keyset` is an HTTPS URI.",
+          "type": "boolean"
         },
         "access_token_expiry_claim": {
           "default": [
@@ -182,7 +186,7 @@
           "default": [
             "scope"
           ],
-          "description": "Specify the claim/property in access token introspection results (`JSON`) to be verified against values of `config.access_token_introspection_scopes_required`. This supports nested claims. For example, with Keycloak you could use `[ \"realm_access\", \"roles\" ]`, hich can be given as `realm_access,roles` (form post). If the claim is not found in access token introspection results, and you have specified `config.access_token_introspection_scopes_required`, the plugin responds with `403 Forbidden`.",
+          "description": "Specify the claim/property in access token introspection results (`JSON`) to be verified against values of `config.access_token_introspection_scopes_required`. This supports nested claims. For example, with Keycloak you could use `[ \"realm_access\", \"roles\" ]`, which can be given as `realm_access,roles` (form post). If the claim is not found in access token introspection results, and you have specified `config.access_token_introspection_scopes_required`, the plugin responds with `403 Forbidden`.",
           "items": {
             "type": "string"
           },
@@ -486,6 +490,10 @@
           },
           "type": "array"
         },
+        "channel_token_endpoints_ssl_verify": {
+          "description": "Whether to verify the TLS certificate if any of `channel_token_introspection_endpoint`, `channel_token_jwks_uri`, or `channel_token_keyset` is an HTTPS URI.",
+          "type": "boolean"
+        },
         "channel_token_expiry_claim": {
           "default": [
             "exp"
@@ -686,7 +694,7 @@
           "type": "string"
         },
         "channel_token_jwks_uri_client_certificate": {
-          "description": "The client certificate that will be used to authenticate Kong if `access_token_jwks_uri` is an https uri that requires mTLS Auth.",
+          "description": "The client certificate that will be used to authenticate Kong if `channel_token_jwks_uri` is an https uri that requires mTLS Auth.",
           "properties": {
             "id": {
               "type": "string"
@@ -882,7 +890,7 @@
           "type": "string"
         },
         "realm": {
-          "description": "When authentication or authorization fails, or there is an unexpected error, the plugin sends an `WWW-Authenticate` header with the `realm` attribute value.",
+          "description": "When authentication or authorization fails, or there is an unexpected error, the plugin sends a `WWW-Authenticate` header with the `realm` attribute value.",
           "type": "string"
         },
         "remove_access_token_claims": {
