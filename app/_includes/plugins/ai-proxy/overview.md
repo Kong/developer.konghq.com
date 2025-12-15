@@ -74,6 +74,12 @@ features:
       * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
       * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
 
+  - title: "Video generation"
+    description: Generates videos from text prompts for multimodal agent output.
+    openai_compatible: true
+    examples: |
+      * [`/v1/videos/generations`](./examples/video-generation-openai/)<br>
+
   - title: "AWS Bedrock agent APIs"
     description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
     openai_compatible: false
@@ -142,6 +148,12 @@ features:
     examples: |
       * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
       * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
+
+  - title: "Video generation"
+    description: Generates videos from text prompts for multimodal agent output.
+    openai_compatible: true
+    examples: |
+      * [`/v1/videos/generations`](./examples/video-generation-openai/)<br>
 
   - title: "Realtime streaming"
     description: "Stream completions token-by-token for low-latency, interactive experiences, and live analytics."
