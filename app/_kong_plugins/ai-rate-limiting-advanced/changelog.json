@@ -66,6 +66,13 @@
       "type": "bugfix"
     }
   ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed an issue where the plugin decreased requests by whole numbers when using Redis. This is an opt-in fix and can be enabled by setting `decrease_by_fractions_in_redis` to true in the plugin configuration.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Added support for Huggingface provider to the AI Rate Limiting Advanced plugin.\n",

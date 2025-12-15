@@ -112,6 +112,10 @@
           "default": false,
           "description": "Skip consumer lookup once certificate is trusted against the configured CA list.",
           "type": "boolean"
+        },
+        "ssl_verify": {
+          "description": "This option enables verification of the certificate presented by the server of the OCSP responder's URL and by the server of the CRL Distribution Point.",
+          "type": "boolean"
         }
       },
       "required": [

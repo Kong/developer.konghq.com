@@ -17978,5 +17978,284 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.10.0.7": {
+    "kong": [
+      {
+        "message": "Bumped lua-resty-healthcheck to version 3.1.1 to remove incorrect deprecation notice on active healthchecks headers.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where OpenAI, OpenAI-compatible, and HuggingFace models may have a 0 `completion_tokens` count with SSE streaming responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.1 to 2.7.3.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped PCRE2 from 10.45 to 10.47.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy**: Fixed integration with HuggingFace by adding support for the new serverless API, ensuring seamless compatibility.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-driver**: Fixed an issue where AI Proxy and AI Proxy Advanced generated incorrect default ports for upstream schemes, leading to 400 errors.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where the plugin decreased requests by whole numbers when using Redis. This is an opt-in fix and can be enabled by setting `decrease_by_fractions_in_redis` to true in the plugin configuration.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Request Transformer**: Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Kong Manager failed to generate a cookie when OIDC was enabled due to a missing `password` grant type in `auth_methods`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**balancer**: Fixed an issue where the dns query not stopped when related upstream deleted.\n",
+        "type": "bugfix",
+        "scope": "Configuration"
+      },
+      {
+        "message": "Fixed an issue where for incremental sync, consumer group renaming may not be properly populated, causing stale data to be served.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**OpenID-Connect**: Fixed an issue where for incremental sync, consumer related caches may not be properly invalidated, causing stale data to be served.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Clustering** Fixed an issue where consumer groups may cause incremental sync to fail at the first sync of a DP.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**event-hooks**: Fixed an issue where the event_hook crud events cannot be handled in traditional cluster mode.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the prometheus metric `kong_control_plane_connected` was missing when the Data Plane side enabled incremental sync.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Key-Auth-Enc**: Fixed an issue where for incremental sync, caches may not be properly invalidated, causing stale data to be served.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**llm**: Fixed an issue where the subrequest implemented in LLM drivers did not handle error properly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where migrations could fail due to missing database relations by repositioning basic-auth and key-auth plugin scripts for correct execution order.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenID-Connect**: Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where the OIDC plugin caused the third-party IDP to throw an error during logout attempts if the session had already been invalidated.\nAdded the `client_id` to the logout URL to ensure the logout request is sent to the correct client, preventing such errors.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ACL**: Fixed an issue where the cache was not being invalidated for incremental sync in certain scenarios, leading to stale data being served.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Semantic Plugins**: Fixed an issue by using a separate column to store namespace instead of including it in the table name to avoid truncation. This change invalidates previous caches created AI Semantic Cache, AI Semantic Prompt Guard and AI Proxy Advanced, if user is using a very long cache TTL, another cache warmup is required after this change.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**response-transformer-advanced**: Fixed an issue where the failure occurred when Nginx gzip was enabled for upstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the data plane did not stop the health checker before cleaning up old configurations, which could lead to resource leaks.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**AI Proxy**: Fixed an issue where extra inputs were not permitted for huggingface inference provider\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**file-log**: Fixed an issue where the configuration with leading or trailing spaces in the `path` field could cause upgrade failures.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**core**: Improved performance of deleting expired rows for Postgres versions below 12.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.12.0.2": {
+    "kong": [
+      {
+        "message": "Bumped lua-resty-healthcheck to version 3.1.1 to remove incorrect deprecation notice on active healthchecks headers.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where it was not possible to use \"Search Tools\" and \"extra_body\" when calling Gemini models in OpenAI format.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat from 2.7.1 to 2.7.3.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a configuration option `authenticated_groups_delimiter` (available values: `,`, `;`, `|`) to `admin_gui_auth_conf` for OIDC. This option specifies the delimiter used to split group values retrieved from JWT claims. \nWhen multiple group values are concatenated in a single claim using a specific delimiter, this configuration allows multiple groups to be extracted from that single claim value",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ace**: Fixed an issue where the anonymous consumer was not being set properly when authentication failed.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where MCP-like request was not authenticated. Previously, we only authenticated requests that satisfied the MCP spec. As a result, the attacker can bypass this via an MCP-like request. Therefore, now we change to authenticate all the requests.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where the oidc schema was polluted during merging.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where resource without path was not correctly handled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where failing to fetch tools cache was not handled properly.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where trusted ip relative headers were forwarded upstream.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where `tools/call` could accept malformed requests and generate wrong responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where x-forwarded-* headers were not respected.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where path invalid error was not handled properly.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where we could not override the upstream's scheme when converting MCP tool to RESTful API.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed intermittent 500 responses from the AI Proxy Advanced plugin when using Azure OpenAI\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where cohere embedding model on Bedrock returned a bad request error\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where cost savings attributes `ai_proxy_cache_cost_savings` were not properly calculated when cache hits.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where Files content analytics extraction is not handled properly for Azure.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**balancer**: Fixed an issue where the unsupported field `sticky_sessions_cookie_path` was blocking configuration syncing on data planes older than version 3.11.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where `log_payloads` configuration would not work when `log_statistics` was disabled in the logging configuration.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**solace-log**: Fixed end-to-end tracing context propagation.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**solace-upstream**: Fixed end-to-end tracing context propagation.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ace**: Fixed an issue where observability headers could not be set correctly in some unhappy paths.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**core**: Improved performance of deleting expired rows for Postgres versions below 12.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

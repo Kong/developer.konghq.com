@@ -408,6 +408,11 @@
             "ssl": {
               "description": "Enables TLS.",
               "type": "boolean"
+            },
+            "ssl_verify": {
+              "default": false,
+              "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+              "type": "boolean"
             }
           },
           "type": "object"

@@ -13,7 +13,7 @@
           "type": "string"
         },
         "default_acl": {
-          "description": "Optional list of default ACL rules keyed by scope (for example, tools).",
+          "description": "Optional list of default ACL rules keyed by scope (for example: tools).",
           "items": {
             "description": "Default ACL entry for the given scope. `deny` has higher precedence than `allow`.",
             "properties": {
@@ -183,7 +183,12 @@
               },
               "parameters": {
                 "description": "The API parameters specification defined in OpenAPI. For example, '[{\"name\": \"city\", \"in\": \"query\", \"description\": \"Name of the city to get the weather for\", \"required\": true, \"schema\": {\"type\": \"string\"}}]'.See https://swagger.io/docs/specification/v3_0/describing-parameters/ for more details.",
-                "type": "string"
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "nullable": true,
+                "type": "array"
               },
               "path": {
                 "description": "The path of the exported API. By default, Kong will extract the path from API configuration. If the configured path is not exactly matched, this field is required. Paths not starting with '/' are treated as relative paths.",
@@ -200,12 +205,16 @@
                 "type": "object"
               },
               "request_body": {
+                "additionalProperties": true,
                 "description": "The API requestBody specification defined in OpenAPI. For example, '{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"type\":\"object\",\"properties\":{\"color\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details.",
-                "type": "string"
+                "nullable": true,
+                "type": "object"
               },
               "responses": {
+                "additionalProperties": true,
                 "description": "The API responses specification defined in OpenAPI. This specification will be used to validate the upstream response and map it back to the structuredOutput. For example, '{\"200\":{\"description\":\"Successful response\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"result\":{\"type\":\"string\"}}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-responses/ for more details.Only one non-error (status code < 400) responses are supported.",
-                "type": "string"
+                "nullable": true,
+                "type": "object"
               },
               "scheme": {
                 "description": "The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it.",

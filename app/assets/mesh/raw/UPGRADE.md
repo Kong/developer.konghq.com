@@ -54,6 +54,18 @@ If you are using `OPAPolicy`, two choices:
 
 ## Upgrade to `2.11.x`
 
+### Helm upgrade with `--reuse-values` and `namespaceAllowList`
+
+If you upgrade to `2.11.8` (or earlier `2.11.x` patch versions) using Helm with the `--reuse-values` flag, the upgrade may fail with a template error related to `namespaceAllowList`.
+
+**Workaround:** Add the following to your `values.yaml` file before upgrading:
+
+```yaml
+namespaceAllowList: []
+```
+
+This issue is resolved in version `2.11.9` and later.
+
 ### Introduce an option to skip RBAC creation
 
 By default, we create all RBAC resources required for the mesh to function properly. Since `2.11.x`, it's possible to skip the creation of `ClusterRole`, `ClusterRoleBinding`, `Role`, and `RoleBinding`. We introduced two flags:
