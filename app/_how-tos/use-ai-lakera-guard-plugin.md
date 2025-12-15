@@ -106,6 +106,7 @@ prereqs:
 
         **Create project:**
 
+        1. Go to [Projects](INSERT-LINK).
         1. Click **New project** button.
 
         1. Enter the name of your project in the **Project details** section.
@@ -145,7 +146,7 @@ automated_tests: false
 
 ## Configure the plugin
 
-First, let's configure the AI Proxy plugin. This plugin will forward requests to the LLM upstream, while the AI Lakera Guard plugin will enforce content safety and guardrails on prompts and responses.
+First, let's configure the AI Proxy plugin. This plugin forwards requests to the LLM upstream, while the AI Lakera Guard plugin enforces content safety and guardrails on prompts and responses.
 
 {% entity_examples %}
 entities:
@@ -173,7 +174,7 @@ variables:
 
 ## Configure the AI Lakera Guard plugin
 
-After configuring AI Proxy to route requests to Anthropic LLM, we can apply the AI [Lakera Guard](/plugins/ai-lakera-guard/) plugin to enforce content safety on prompts and responses. In our example, the plugin is configured to use the project we [created earlier](./#lakera-policy-and-project) and reveal blocked categories when content is filtered by setting `reveal_failure_categories` to `true`.
+After configuring AI Proxy to route requests to Anthropic LLM, let's apply the AI [Lakera Guard](/plugins/ai-lakera-guard/) plugin to enforce content safety on prompts and responses. In our example, the plugin is configured to use the project we [created earlier](./#lakera-policy-and-project) and reveal blocked categories when content is filtered by setting `reveal_failure_categories` to `true`.
 
 {% entity_examples %}
 entities:
@@ -195,7 +196,9 @@ variables:
 
 ## Validate configuration
 
-Now that the AI Lakera Guard plugin is configured, we can test different categories of prompts to make sure the Lakera guardrails are working. Disallowed prompt categories should be blocked and return a `403` error message with details about which detector triggered, including the detector type and a request UUID for traceability.
+Now that the AI Lakera Guard plugin is configured, let's test different categories of prompts to make sure that the Lakera guardrails are working. 
+
+The system blocks prompt categories that you disallow and returns a `403` error message when the plugin detects a violation, including the detector type and a request UUID for traceability.
 
 {:.info}
 > For more detailed [log tracing](/ai-gateway/ai-audit-log-reference/#ai-lakera-guard-logs), configure `config.logging` in the AI Proxy plugin and use any [{{site.base_gateway}} logging plugin](/plugins/?category=logging) of your choice.
@@ -207,7 +210,7 @@ These tests verify that the prompt defense blocks injection attacks and jailbrea
 {% navtabs "lakera-guard-prompt-defense" %}
 {% navtab "Injection attempt" %}
 
-This test verifies that the prompt defense blocks injection attacks attempting to override system instructions.
+This test verifies that the prompt defense blocks injection attacks that are attempting to override system instructions.
 
 <!-- vale off -->
 {% validation request-check %}
@@ -243,7 +246,7 @@ message: |
 {% endnavtab %}
 {% navtab "Jailbreak" %}
 
-This test ensures the filter blocks jailbreak attempts that try to bypass safety guidelines.
+This test ensures that the filter blocks jailbreak attempts that try to bypass safety guidelines.
 
 <!-- vale off -->
 {% validation request-check %}
@@ -281,7 +284,7 @@ message: |
 
 ### Content Moderation
 
-These tests ensure the filter blocks harmful content including hate speech, violence, sexual content, and criminal activity.
+These tests ensure that the filter blocks harmful content including hate speech, violence, sexual content, and criminal activity.
 
 {% navtabs "lakera-guard-content-moderation" %}
 {% navtab "Hate speech" %}
@@ -322,7 +325,7 @@ message: |
 {% endnavtab %}
 {% navtab "Violence" %}
 
-This test ensures the filter blocks requests for violent or harmful instructions.
+This test ensures that the filter blocks requests for violent or harmful instructions.
 
 <!-- vale off -->
 {% validation request-check %}
