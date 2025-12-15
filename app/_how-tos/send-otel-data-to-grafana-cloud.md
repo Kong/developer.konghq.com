@@ -79,24 +79,28 @@ There are multiple ways to do this, but in this example, we'll use the OpenTelem
 1. In the **Access Policy token name** enter a name for the token, "kong-otel" for example.
 1. Click **Create token**.
 
-    Grafana provides configuration, but we'll only use part of it.
-    Export the values under `extensions.basicauth/grafana_cloud.client_auth` to your environment:
+   Grafana provides configuration, but we'll only use part of it.
+   Export the values under `extensions.basicauth/grafana_cloud.client_auth` to your environment:
 
-    ```sh
-    export GRAFANA_USERNAME='username value'
-    export GRAFANA_PASSWORD='password value'
-    ```
+   ```sh
+   export GRAFANA_USERNAME='username value'
+   export GRAFANA_PASSWORD='password value'
+   ```
 
-    Then export the URL under `exporters.otlphttp/grafana_cloud.endpoint`:
+   Then export the URL under `exporters.otlphttp/grafana_cloud.endpoint`:
 
-    ```sh
-    export GRAFANA_ENDPOINT='endpoint value'
-    ```
+   ```sh
+   export GRAFANA_ENDPOINT='endpoint value'
+   ```
 
 1. In a terminal, create a configuration file for OpenTelemetry Collector:
 
    ```sh
-   cat <<EOF > otel-config.yaml
+   nano otel-config.yaml
+   ```
+
+   Add the following content to the file and save it:
+   ```yaml
    extensions:
      basicauth/grafana_cloud:
        client_auth:
@@ -169,7 +173,6 @@ There are multiple ways to do this, but in this example, we'll use the OpenTelem
          exporters: [debug,otlphttp/grafana_cloud]
    
      extensions: [health_check, pprof, zpages, basicauth/grafana_cloud]
-   EOF
    ```
 
    This configuration is the default OpenTelemetry Collector configuration, with the addition of the Grafana exporter.
