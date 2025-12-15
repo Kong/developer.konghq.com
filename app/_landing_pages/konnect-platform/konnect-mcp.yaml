@@ -50,7 +50,7 @@ rows:
                 text: |
                   The {{site.konnect_product_name}} MCP Server enables several workflows for managing and debugging your API infrastructure:
 
-                  * **{{{site.konnect_product_name}} entity management**: Query control planes, services, routes, consumers, consumer groups, plugins, and vaults.
+                  * **{{site.konnect_product_name}} entity management**: Query control planes, services, routes, consumers, consumer groups, plugins, and vaults.
                   * **API debugging**: Create debug sessions with active tracing to investigate performance issues and identify bottlenecks.
                   * **Analytics and monitoring**: Query API request data with filters for time range, status codes, consumers, services, and routes.
                   * **Kong documentation search**: Search Kong's documentation for configuration guidance and troubleshooting steps.
