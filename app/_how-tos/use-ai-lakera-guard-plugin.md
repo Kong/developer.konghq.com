@@ -87,7 +87,7 @@ prereqs:
 
         **Create policy from template:**
 
-        1. Go to [Policies](https://platform.lakera.ai/policies).
+        1. Go to [Policies](https://platform.lakera.ai/dashboard/policies).
 
         1. Click **New policy** button.
 
