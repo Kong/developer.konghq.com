@@ -129,9 +129,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### Gathered invoices
+### Gathering invoices
 
-To enable threshold billing scenarios, {{site.metering_and_billing}} creates gathered invoices with upcoming charges for the next billing cycle. These invoices show current pending charges for the user's current billing period in real-time when fetched or viewed, providing visibility into accruing usage before the final invoice is issued.
+{{site.metering_and_billing}} gathers invoices with upcoming charges for the active running billing cycle. These invoices show current pending charges for the user's current billing period in real-time when fetched or viewed, providing visibility into accruing usage before the final invoice is issued.
 
 Gathering invoices are automatically deleted when the last item for a subscription has been billed for.
 

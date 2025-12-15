@@ -201,7 +201,7 @@ columns:
     key: description
 rows:
   - role: "`Ingest`"
-    description: "Ingests events only (intended for the {{site.konnect_short_name}} access token level only)."
+    description: "Ingests events only (intended only for machines)."
   - role: "`Admin`"
     description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
   - role: "`Viewer`"

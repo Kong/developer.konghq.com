@@ -141,7 +141,10 @@ In {{site.metering_and_billing}}, meters track and record the consumption of a r
 In this guide, you'll enable API Gateway requests for metering. This will meter API request traffic in {{site.metering_and_billing}} so that you can charge customers for API traffic usage.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. Enable **API Gateway Requests**.
+1. In the API Gateway Requests settings, click **Enable Gateways**.
+1. Select the "quickstart" control plane.
+1. Click **Enable 1 Gateways**.
+
 
 ## Create a feature
 

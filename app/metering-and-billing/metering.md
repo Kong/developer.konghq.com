@@ -51,7 +51,6 @@ Each generic meter is comprised from the following attributes:
 * Value type: The JSON path to the property that contains the value to be metered. This is optional when the aggregation is `COUNT`.
 * Aggregation type: The [aggregation type](#aggregation-types) to use for the meter.
 * Group by: (Optional) A map of JSON paths to group the metered data by.
-* Window size: The size of the time window to use for the meter. This is optional and defaults to `MINUTE`.
 
 ## Aggregation types
 
@@ -66,12 +65,12 @@ columns:
   - title: Description
     key: description
 rows:
-  - aggregation_type: SUM
-    description: "The `SUM` aggregation type calculates the total sum of the metered values for a specific time window. This is useful for accumulating metrics like total API calls made, total data transferred, LLM tokens used or total time spent on a service."
   - aggregation_type: COUNT
-    description: "The `COUNT` aggregation type counts the number of events that occur within a specific time window. This is often used for metrics that are inherently countable, such as the number of transactions processed. The COUNT aggregation type does not require a valueProperty to be defined."
+    description: "The `COUNT` aggregation type counts the number of events that occur within a specific time window. This is often used for metrics that are inherently countable, such as the number of transactions processed or API calls made. The `COUNT` aggregation type doesn't have the `valueProperty`."
+  - aggregation_type: SUM
+    description: "The `SUM` aggregation type calculates the total sum of the metered values for a specific time window. `SUM` aggregates over the events `valueProperty`. This is useful for accumulating metrics like total LLM tokens used, total data transferred, or total time spent on a service."
   - aggregation_type: UNIQUE COUNT
-    description: "The `UNIQUE_COUNT` aggregation type counts the number of unique events. This is useful when events are unique by a specific field. The valueProperty defines the field that makes the ingested event unique. The property's value in the ingested event must be a string or number."
+    description: "The `UNIQUE_COUNT` aggregation type counts the number of unique events. This is useful when events are unique by a specific field. The `valueProperty` defines the field that makes the ingested event unique. The property's value in the ingested event must be a string or number."
   - aggregation_type: LATEST
     description: "The `LATEST` aggregation type returns the latest value for a specific time window. This is useful for when you track the size of a resource on your own and report periodically the value of it to {{site.metering_and_billing}}. For example disk size, number of resources or seats. The latest aggregation takes the last value reported for the period."
   - aggregation_type: MIN

@@ -23,7 +23,7 @@ related_resources:
 {{site.konnect_short_name}} {{site.metering_and_billing}}'s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place. 
 
 Each Product Catalog plan consists of:
-* [Features](#features) that are associated with a meter
+* [Features](#features) that you want to price or govern. Can be metered or static.
 * [Rate cards](#rate-cards) that determine which features ([entitlements](#entitlements)) and how much of the feature a subscriber can access ([pricing models](#pricing-models))
 * Optional [add-ons](#add-ons) that allow customers to purchase additional usage or features on demand
 
@@ -65,7 +65,7 @@ flowchart TB
 
 Features are part of your product offering and the building blocks of your plans and entitlements. They are the resource you want to govern and invoice for. For example, LLM Models, tokens, storage units. Features are associated with a meter, so that you can connect usage to a feature that you can then charge for.
 
-Features are the building blocks of your product offering, they represent the various capabilities of your system. Practically speaking, they typically translate to line items on your pricing page.
+Features are the building blocks of your product offering, they represent the various capabilities of your system. Practically speaking, they typically translate to line items on your pricing page and show up on the invoice.
 
 The feature set between plans can vary in terms of what features are available, what configurations are available for a given feature, and what usage limits are enforced. 
 

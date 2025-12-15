@@ -1,4 +1,4 @@
-{{site.metering_and_billing}} automatically uses external services to calculate and add taxes to invoices. Currently, {{site.metering_and_billing}} supports [Stripe Tax](https://stripe.com/tax).
+{{site.metering_and_billing}} doesn't calculate taxes itself. Instead, it configures external services to do so with Product Catalog. Currently, {{site.metering_and_billing}} supports [Stripe Tax](https://stripe.com/tax).
 
 {{site.metering_and_billing}} supports the following tax settings:
 
