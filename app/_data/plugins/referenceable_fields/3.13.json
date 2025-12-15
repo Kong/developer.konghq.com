@@ -610,6 +610,7 @@
   "opentelemetry": [
     "config.access_logs_endpoint",
     "config.logs_endpoint",
+    "config.metrics.endpoint",
     "config.traces_endpoint"
   ],
   "proxy-cache-advanced": [

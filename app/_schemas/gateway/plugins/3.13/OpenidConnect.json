@@ -1779,6 +1779,16 @@
           "description": "The memcached unix socket path.",
           "type": "string"
         },
+        "session_memcached_ssl": {
+          "default": false,
+          "description": "If set to true, uses SSL to connect to memcached",
+          "type": "boolean"
+        },
+        "session_memcached_ssl_verify": {
+          "default": false,
+          "description": "If set to true, verifies the validity of the memcached server SSL certificate",
+          "type": "boolean"
+        },
         "session_remember": {
           "default": false,
           "description": "Enables or disables persistent sessions.",
