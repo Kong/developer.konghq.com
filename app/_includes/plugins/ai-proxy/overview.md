@@ -81,20 +81,29 @@ features:
       * [`/v1/videos/generations`](./examples/video-generation-openai/)<br>
 
   - title: "AWS Bedrock agent APIs"
-    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+    description: |
+      Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock.
     openai_compatible: false
     examples: |
       * [`/converse`](./#supported-native-llm-formats)<br>
       * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
 
-  - title: "Hugging Face text generation"
-    description: Provides text generation and streaming using open-source Hugging Face models.
+  - title: "HuggingFace text generation"
+    description: |
+      Provides text generation and streaming using open-source Hugging Face models.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for HuggingFace.
     openai_compatible: false
     examples: |
       * [`/text-generation`](./#supported-native-llm-formats)<br>
 
   - title: "Rerank"
-    description: Improves relevance in RAG pipelines by reordering documents based on context.
+    description: |
+      Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock and Cohere.
     openai_compatible: false
     examples: |
       * [`/rerank`](./#supported-native-llm-formats)<br>
@@ -125,7 +134,6 @@ features:
     examples: |
       * [`/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
@@ -162,20 +170,29 @@ features:
       * [`/v1/realtime`](./examples/realtime-route-openai/)<br>
 
   - title: "AWS Bedrock agent APIs"
-    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+    description: |
+      Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock.
     openai_compatible: false
     examples: |
       * [`/converse`](./#supported-native-llm-formats)<br>
       * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
 
-  - title: "Hugging Face text generation"
-    description: Provides text generation and streaming using open-source Hugging Face models.
+  - title: "HuggingFace text generation"
+    description: |
+      Provides text generation and streaming using open-source Hugging Face models.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for HuggingFace.
     openai_compatible: false
     examples: |
       * [`/text-generation`](./#supported-native-llm-formats)<br>
 
   - title: "Rerank"
-    description: Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+    description: |
+      Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock and Cohere.
     openai_compatible: false
     examples: |
       * [`/rerank`](./#supported-native-llm-formats)<br>
