@@ -236,7 +236,7 @@ attributes:
   kong.route.name: Name of the Route.
   kong.auth.consumer.name: Name of the authenticated Consumer.
   kong.response.source:  |
-    Origin of the current response.. Possible values:
+    Origin of the current response. Possible values:
     <ul>
       <li><code>upstream</code> if the response originated by successfully contacting the upstream service</li>
       <li><code>kong</code> otherwise</li>
@@ -245,7 +245,7 @@ attributes:
   http.request.method: Method used in the HTTP request.
   kong.shared_dict.name: Name of the shared dict.
   kong.subsystem: |
-    Nginx subsystem that produced the metric.. Possible values:
+    Nginx subsystem that produced the metric. Possible values:
     <ul>
       <li><code>http</code></li>
       <li><code>stream</code></li>
