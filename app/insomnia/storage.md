@@ -22,7 +22,7 @@ related_resources:
 
 faqs:
   - q: What is the difference between Local Vault and Scratch pad?
-    a: In both Local Cault and Scratch pad, project data is stored locally. With Local Vault, you can also use Git Sync. In scratch pad, all data is stored locally, so it is best suited for individual developers who aren't working as part of a team.
+    a: In both Local Vault and Scratch pad, project data is stored locally. With Local Vault, you can also use Git Sync. In scratch pad, all data is stored locally, so it is best suited for individual developers who aren't working as part of a team.
   - q: Should I use Git Sync or Cloud Sync?
     a: Both allow you to use version control and collaborate with your team. You should use Git Sync if you're already using a Git repository and your team requires detailed version tracking and rollback capabilities.
   - q: Can I create branch protections in Insomnia for Cloud Sync?
