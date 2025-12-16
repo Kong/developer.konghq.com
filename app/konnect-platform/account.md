@@ -88,11 +88,13 @@ faqs:
       If an Org Owner has left the organization without transfering ownership reach out to [Kong support](https://support.konghq.com/).
   - q: How can I create a support case in {{site.konnect_short_name}}?
     a: |
-      If you're an org admin with an Enterprise account and a [Kong Support portal](https://support.konghq.com/support/s/) account, you can create a support case in {{site.konnect_short_name}} by navigating to the **?** icon on the top right menu and clicking **Create support case**. If you don't have a Kong Support portal account, request access from your org admin or reach out to a Kong representative for an invite.
+      If you're an org admin with an Enterprise account and a [Kong Support portal](https://support.konghq.com/support/s/) account, you can create a support case in {{site.konnect_short_name}} by navigating to the **?** icon on the top right menu and clicking **Create support case**. 
 
       This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity.
 
       You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
+      
+      If you don't have a Kong Support portal account, request access from your org admin or reach out to a Kong representative for an invite.
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
