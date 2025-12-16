@@ -1,4 +1,16 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "allowed basic auth credentials to be passed from downstream clients.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed end-to-end tracing context propagation.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added the `solace-log` plugin to support logging to Solace PubSub+ event broker.",
