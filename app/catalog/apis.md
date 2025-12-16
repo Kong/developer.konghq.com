@@ -92,19 +92,25 @@ resource "konnect_api" "my_api" {
 {% endnavtab %}
 {% endnavtabs %}
 
-## API versioning
+## API versions
 
-When you create your API, you can choose to keep it unversioned or version it using a free text string. This allows you to follow the versioning system of your choice:
-* Semantic versioning (examples: `v1`, `v2`)
-* Date-based versioning (examples: `2024-05-10`, `2024-10-22`) 
-* Custom naming scheme (example: `a1b2c3-internal-xxyyzz00`)
+When you create your API, version can be optionally specified as a free text string. Semantic versioning (examples: `1.0`, `2.0`) is best supported by Catalog and Dev Portal (in areas such as default order), but there are no constraints on the version style. 
 
-Each API is identified using the combination of `name+version`. For example, if your API is named `My Test API` and it has a version of `v3`, then it will be accessible via the API as `my-test-api-v3` in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). If a `version` isn't specified, then `name` is used as the unique identifier. 
+APIs have a unique constraint based on the combination of `name+version`. It is generally recommended to create a unique API for each major version, although there is no constraint.
+
+The API `slug` determines Dev Portal URl routing in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis), which defaults to a slugified name and version (major version if semver), e.g. `my-test-api-3`. If a `version` isn't specified, then `name` is used as the unique identifier. 
+
+### API Specifications in Versions
+
+If OpenAPI or AsyncAPI specifications are used when the API is created, the API version will default and be constrained to the version in the specification. Multiple versions of API specifications can be specified within the API entity. This is best supported when used for minor versions of an API. When multiple `versions` are specified, a selector will be provided in the generated API reference to switch between versions of the API specification.
+
+The API entity's `version` property is treated as "current", meaning it is the version that will be listed in your your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). 
+
 
 To version an API, do one of the following:
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
+Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create). Enter a version in the **API version** field, or upload an API specification, which will set the version to match the API spec version. You can also add a version on existing APIs when editing, if no API specifications are in use. To manage multiple versions of the API specification navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Add or Upload Spec**. If a newer version is in the API Specification, you will be prompted to add a new `version`, and set the current version.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
@@ -135,48 +141,10 @@ resource "konnect_api_version" "my_apiversion" {
 {% endnavtab %}
 {% endnavtabs %}
 
-
-## API specs
-
-All API specification files are validated during upload, although invalid specifications are permitted. If specifications are invalid, features like generated documentation and search may be degraded. 
-
-To upload a spec to an API, do one of the following:
-{% navtabs "api-specs" %}
-{% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
-{% endnavtab %}
-{% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
-<!--vale off-->
-{% konnect_api_request %}
-url: /v3/apis/$API_ID/versions
-status_code: 201
-method: POST
-body:
-    version: 1.0.0
-    spec:
-        content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
-{% endkonnect_api_request %}
-<!--vale on-->
-{% endnavtab %}
-{% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
-```hcl
-echo '
-resource "konnect_api_version" "my_apiversion" {
-  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
-  spec = {
-    content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
-    type    = "oas3"
-  }
-  version = "1.0.0"
-}
-' >> main.tf
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ### API spec validation
+
+All API specification files are validated during upload, although invalid specifications are permitted. If specifications are invalid, features like generated documentation and search may be degraded. 
 
 {{site.konnect_short_name}} looks for the following during spec validation:
 
