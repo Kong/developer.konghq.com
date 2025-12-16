@@ -262,7 +262,8 @@ attributes:
       <li><code>waiting</code></li>
     </ul>
   kong.pid: Worker process ID.
-  kong.timer.state: State of the timer. Possible values:
+  kong.timer.state: |
+    State of the timer. Possible values:
     <ul>
       <li><code>pending</code></li>
       <li><code>running</code></li>
