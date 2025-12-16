@@ -1425,7 +1425,8 @@ For more detailed examples, see:
 
 ### XML to JSON node {% new_in 3.13 %}
 
-Transforms XML strings to JSON or a Lua table.
+Transforms XML strings to JSON or a Lua table. Empty XML tags or elements are converted into empty JSON objects. The resulting JSON won't preserve any information about the original XML element order.
+
 
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `xml_to_json` from the node object dropdown to see all node attributes.
 
@@ -1486,12 +1487,12 @@ For an example of using this node as part of a workflow, see [Transform JSON int
 
 ### JSON to XML node {% new_in 3.13 %}
 
-Transforms JSON strings or Lua tables into XML.
+Transforms JSON strings or Lua tables into XML. Empty string, empty array, and empty object values are converted into empty XML elements. The resulting XML won't preserve any information about the original JSON object key order. 
 
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `json_to_xml` from the node object dropdown to see all node attributes.
 
 {:.info}
-> **Note:** One of the `attributes_block_name` or `attributes_name_prefix` is required. 
+> The order of elements in the generated XML is non-deterministic and must not be relied upon.
 
 #### Examples
 
