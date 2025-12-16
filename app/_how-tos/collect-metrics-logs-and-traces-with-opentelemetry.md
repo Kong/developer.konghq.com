@@ -92,7 +92,7 @@ automated_tests: false
 
 ## Enable the OTEL plugin
 
-In this tutorial, we'll be configuring the [OpenTelemetry plugin](/plugins/opentelemetry/) to send {{site.base_gateway}} metrics, traces, and logs to OpenTelemetry Collector.
+In this tutorial, let's configure the [OpenTelemetry plugin](/plugins/opentelemetry/) to send {{site.base_gateway}} metrics, traces, and logs to OpenTelemetry Collector.
 
 Enable the OTEL plugin with the OTEL Collector endpoints settings configured:
 
