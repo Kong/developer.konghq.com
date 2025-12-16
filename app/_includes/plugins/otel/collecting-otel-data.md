@@ -1,5 +1,6 @@
 {% assign plugin = include.plugin | default: "default" %}
 
+{% capture data %}
 ## Collecting telemetry data
 
 There are two ways to set up an OpenTelemetry backend:
@@ -15,8 +16,16 @@ There are two ways to set up an OpenTelemetry backend:
   This option is useful when you need capabilities such as signal fan-out, filtering, enrichment, batching, or exporting to multiple backends. The OpenTelemetry Collector supports a wide range of exporters, available at [open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter).
 
 Both approaches rely on backends that support OTLP over HTTP using Protobuf encoding.
+{% endcapture %}
 
-{% unless plugin == "OpenTelemetry" %}
+{% if plugin == "OpenTelemetry" %}
+
+{{data}}
+
+{% else %}
+
+{{data}}
+
 {:.info}
 > Check [OpenTelemetry](/plugins/opentelemetry/) and [{{site.base_gateway}} tracing](/gateway/tracing/) documentation for more details about OpenTelemetry in {{site.base_gateway}}.
-{% endunless %}
+{% endif %}
