@@ -220,9 +220,6 @@ For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
 1. Restart your IDE
 1. Open GitHub Copilot chat and verify Kong {{site.konnect_product_name}} tools are available
 
-{:.note}
-> **Note:** HTTP MCP server support in JetBrains GitHub Copilot may have limitations. If you experience connection issues, check for plugin updates.
-
 ## Windsurf
 
 For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
