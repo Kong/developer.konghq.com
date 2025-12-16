@@ -87,13 +87,13 @@ rows:
                   * Claude Code CLI for terminal-based workflows
                   * Any MCP-compatible client application
 
+                  The server connects to {{site.konnect_short_name}} backend services to retrieve {{site.base_gateway}} configuration, analytics data, active tracing sessions, and Kong's documentation. This allows AI assistants to provide contextual assistance for debugging, configuration, and operational tasks.
+
                   **Authentication and access**
 
-                  The MCP server authenticates using your Personal Access Token (PAT), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} tokens page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
+                  The MCP server authenticates using your [**Personal Access Token (PAT)**](/konnect-api/#personal-access-tokens), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} tokens page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
 
-                  For automation or service accounts, you can use a System Access Token instead of a Personal Access Token. System Access Tokens allow authentication using a system account rather than a specific user's credentials. Create these tokens under **Organization Settings > System Accounts**. For more information, see [System Accounts and Access Tokens](https://developer.konghq.com/konnect-api/#system-accounts-and-access-tokens).
-
-                  The server connects to {{site.konnect_short_name}} backend services to retrieve {{site.base_gateway}} configuration, analytics data, active tracing sessions, and Kong's documentation. This allows AI assistants to provide contextual assistance for debugging, configuration, and operational tasks.
+                  For automation or service accounts, you can use a [**System Access Token**](/konnect-api/#system-accounts-and-access-tokens) instead of a Personal Access Token. System Access Tokens allow authentication using a system account rather than a specific user's credentials. Create these tokens under **Organization Settings > System Accounts**. For more information, see [System Accounts and Access Tokens](https://developer.konghq.com/konnect-api/#system-accounts-and-access-tokens).
       - blocks:
         - type: image
           config:
@@ -136,7 +136,7 @@ rows:
 
                     The regional endpoint defaults to **US region**.
 
-                    Organizations using multiple {{site.konnect_product_name}} regions need separate MCP server connections for each region. Resources cannot be accessed across regions from a single connection.
+                    Organizations using multiple {{site.konnect_product_name}} regions require separate MCP server connections for each region. Resources cannot be accessed across regions from a single connection.
 
                     **Organization settings**
 
@@ -338,25 +338,25 @@ rows:
         #       - type: text
         #         text: |
         #           Use pre-configured parameters from alert events to start targeted debugging.
-        - type: text
-          config: |
-            ```text
-            1. FetchAlertingEventDetails (alert_event_id=<from_notification>)
-               → Extract control_plane_id
-               → Check if debug_session_inputs exists
+        # - type: text
+        #   config: |
+        #     ```text
+        #     1. FetchAlertingEventDetails (alert_event_id=<from_notification>)
+        #        → Extract control_plane_id
+        #        → Check if debug_session_inputs exists
 
-            2. If debug_session_inputs present:
-               CreateDebugSession (
-                 control_plane_id=<from_step_1>,
-                 ...spread debug_session_inputs
-               )
-               → Use pre-configured optimal filters
+        #     2. If debug_session_inputs present:
+        #        CreateDebugSession (
+        #          control_plane_id=<from_step_1>,
+        #          ...spread debug_session_inputs
+        #        )
+        #        → Use pre-configured optimal filters
 
-            3. Otherwise:
-               Manually configure CreateDebugSession based on alert context
+        #     3. Otherwise:
+        #        Manually configure CreateDebugSession based on alert context
 
-            4. Follow Pattern 2 steps 3-4 for analysis
-            ```
+        #     4. Follow Pattern 2 steps 3-4 for analysis
+        #     ```
 
   - column_count: 2
     columns:
@@ -364,7 +364,7 @@ rows:
         - type: structured_text
           config:
             header:
-              text: "Pattern 4: Consumer-specific analysis"
+              text: "Pattern 3: Consumer-specific analysis"
             blocks:
               - type: text
                 text: |
@@ -408,7 +408,7 @@ rows:
         - type: structured_text
           config:
             header:
-              text: "Pattern 5: Configuration audit"
+              text: "Pattern 4: Configuration audit"
             blocks:
               - type: text
                 text: |
