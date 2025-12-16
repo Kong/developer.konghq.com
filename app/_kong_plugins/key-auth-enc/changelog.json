@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue where for incremental sync, caches may not be properly invalidated, causing stale data to be served.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.1": [
     {
       "message": "Fixed an issue where for incremental sync, caches may not be properly invalidated, causing stale data to be served.\n",
