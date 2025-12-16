@@ -1,0 +1,338 @@
+---
+metadata:
+  title: "Insomnia vs Postman"
+  content_type: landing_page
+  description: Compare Insomnia and Postman at a glance. See how Insomnia’s open-source foundation, plugin ecosystem, and Kong integrations make it faster, lighter, and more flexible for API design and testing.
+  breadcrumbs:
+    - /insomnia/
+  products:
+    - insomnia
+  tags:
+    - design-apis
+    - test-apis
+    - postman
+
+rows:
+  - header:
+      type: h1
+      text: "Insomnia vs Postman"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Insomnia is an open-source desktop client for designing, testing, and documenting APIs. It's built for speed and simplicity, and supports fully offline workflows. Insomnia keeps code and data under the user's control, and never dictates where that information must live.
+
+                    Insomnia helps developers review and validate what they ship, whether they work with traditional API endpoints or emerging agent-based patterns. Work can remain local and private, or teams can choose to share it through Git or cloud sync.
+
+                    This page compares Insomnia and Postman across core functional areas to help teams understand their differences in workflow, storage models, and API development capabilities.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/insomnia-breakdown.png
+              alt_text: Insomnia feature breakdown
+              width: 200px
+
+  - header:
+      type: h2
+      text: "Insomnia advantages"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Insomnia
+                  key: insomnia
+                - title: Why it matters
+                  key: details
+              features:
+                - title: Open-source desktop client (Apache-2.0)
+                  insomnia: true
+                  details: Insomnia is open source and extensible.
+                - title: Local Git-driven storage
+                  insomnia: true
+                  details: Store and version your API definitions, collections, and tests in your own Git repositories. All data moves directly between your machine and Git, not through Insomnia’s servers.
+                - title: Self-hosted mock servers
+                  insomnia: true
+                  details: Run mocks locally or on your own infrastructure.
+                - title: Unlimited local usage
+                  insomnia: true
+                  details: Run requests and collections locally with no quotas or limits on any plan.
+                - title: Private-by-default projects
+                  insomnia: true
+                  details: Keep all API data local or in Git until you explicitly choose to sync.
+                - title: Local-first workflow
+                  insomnia: true
+                  details: Use Insomnia without logging in and without relying on any cloud workspace.  
+                - title: Local environment vault
+                  insomnia: true
+                  details: Encrypt environment values locally with no cloud storage requirement.
+                - title: Local Git-driven workflows
+                  insomnia: true
+                  details: Edit, test, and version your work by using local Git repositories. Similar support in Postman is still in progress 
+  - header:
+      type: h2
+      text: "At a glance"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Insomnia
+                  key: insomnia
+                - title: Postman
+                  key: postman
+              features:
+                - title: |
+                    [Open source](/insomnia/accounts#what-software-license-does-insomnia-use)
+                  subtitle: Open-source desktop client with an Apache-2.0 license and an active contributor community.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [Local-first workflow](/insomnia/storage#local-vault)
+                  subtitle: Utilize full offline capability with no required login or cloud workspace.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [Broad protocol support](/insomnia/requests#websocket-support-in-insomnia)
+                  subtitle: Support REST, GraphQL, gRPC, WebSockets, SOAP, and event streams.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Plugin ecosystem](/insomnia/plugins/)
+                  subtitle: Extend functionality through plugins, integrations, and community tooling.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Flexible integration](/insomnia/storage/)
+                  subtitle: Integrate with local files, Git, CI/CD, and external tooling without cloud requirements.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [Local Git-driven workflows](/insomnia/version-control/)
+                  subtitle: Use offline Git workflows for versioning and collaboration.
+                  insomnia: true
+                  postman: false
+
+  - header:
+      type: h2
+      text: "Collaboration and workflows"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Insomnia
+                  key: insomnia
+                - title: Postman
+                  key: postman
+              features:
+                - title: |
+                    [Workspace model](/insomnia/organizations/)
+                  subtitle: Organize work into projects and workspaces that can sync through Cloud or Git.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Private-by-default sharing](/insomnia/storage#local-vault)
+                  subtitle: Store projects locally or on Git by default, not in the cloud.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [Access control and SSO](/insomnia/enterprise/)
+                  subtitle: Apply organizational access control and single sign-on (SSO).
+                  insomnia: true
+                  postman: true
+
+  - header:
+      type: h2
+      text: "Environment management and security"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Insomnia
+                  key: insomnia
+                - title: Postman
+                  key: postman
+              features:
+                - title: |
+                    [Variable hierarchy](/insomnia/environments#variable-scope)
+                  subtitle: Use global, collection, and folder-level variables with inheritance.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Variable inheritance levels](/insomnia/environments#variable-scope)
+                  subtitle: Apply variables at global, collection, and folder level.
+                  insomnia: true
+                  postman: false  
+                - title: |
+                    [Secure environment storage](/insomnia/storage/)
+                  subtitle: Store and encrypt sensitive values locally without forcing cloud storage.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [Response chaining and autocomplete](/insomnia/template-tags/)
+                  subtitle: Reference previous responses and variables with type-ahead suggestions.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Environment switching](/insomnia/environments/)
+                  subtitle: Switch environments for each collection or workspace with inherited overrides.
+                  insomnia: true
+                  postman: true
+
+  - header:
+      type: h2
+      text: "Testing and automation"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Insomnia
+                  key: insomnia
+                - title: Postman
+                  key: postman
+              features:
+                - title: |
+                    [Collection runner](/how-to/use-the-collection-runner/)
+                  subtitle: Run collections and export results for analysis or CI.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Pre-request and test scripts](/inso-cli/continuous-integration/)
+                  subtitle: Use JavaScript-based scripts for setup and assertions.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Parallel execution](/insomnia/collections/)
+                  subtitle: Run requests or collections in parallel using multiple windows, processes, or CLI runs.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [CLI-driven automation](/inso-cli/continuous-integration/)
+                  subtitle: Automate testing and linting through CLI tooling.
+                  insomnia: true
+                  postman: true
+
+  - header:
+      type: h2
+      text: "Design and documentation"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Insomnia
+                  key: insomnia
+                - title: Postman
+                  key: postman
+              features:
+                - title: |
+                    [Supported formats](/insomnia/api-specs#what-api-spec-formats-are-supported-in-insomnia)
+                  subtitle: Work with OpenAPI, GraphQL, gRPC, and AsyncAPI.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Real-time preview](/insomnia/design#design-and-preview-new-apis-with-openapi)
+                  subtitle: Preview API designs locally in real time without cloud requirements.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [Generate runnable requests](/inso-cli#what-can-inso-cli-do)
+                  subtitle: Convert API specifications directly into runnable requests without cloud tools.
+                  insomnia: true
+                  postman: false
+                - title: |
+                    [AsyncAPI and gRPC design support](/insomnia/grpc-requests/)
+                  subtitle: Design and edit AsyncAPI and gRPC specifications alongside OpenAPI and GraphQL.
+                  insomnia: true
+                  postman: false  
+                - title: |
+                    [Documentation editing](/insomnia/documents/)
+                  subtitle: Write and edit documentation within OpenAPI files or request descriptions.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Export and publish](/insomnia/import-export/)
+                  subtitle: Export locally and publish through your own systems.
+                  insomnia: true
+                  postman: true
+
+  - header:
+      type: h2
+      text: "Mock servers and simulations"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Insomnia
+                  key: insomnia
+                - title: Postman
+                  key: postman
+              features:
+                - title: |
+                    [Cloud mocks](/insomnia/mock-servers#cloud-hosted-mocks)
+                  subtitle: Create cloud-hosted mock servers.
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Self-hosted mocks](/insomnia/mock-servers#self-hosted-mocks) 
+                  subtitle: Host mock servers locally or on your own infrastructure.  
+                  insomnia: true  
+                  postman: false
+                - title: |
+                    [Dynamic responses](/insomnia/dynamic-mocking/)
+                  subtitle: Generate mock responses with templates and Faker-style variables. 
+                  insomnia: true
+                  postman: true
+                - title: |
+                    [Auto-generate mock servers from spec or text](/insomnia/mock-servers#auto-generated-mocks)
+                  subtitle: Create mock servers from an OpenAPI, URL, or natural-language prompt with dynamic responses.
+                  insomnia: true
+                  postman: false  
+  - header:
+      type: h2
+      text: ""
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **Related resources**
+
+                    Explore more resources that support migration, API design, and workflow improvements:
+
+                    - Design APIs with [Design](/insomnia/design/).
+                    - Import workflows with [Import and Export](/insomnia/import-export/).
+                    - Migrate work with [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/).
+                    - Migrate collections with [Migrate collections and environments from Postman to Insomnia](/how-to/migrate-collections-and-environments-from-postman-to-insomnia/).
+                    - Use Git automation with the [Inso CLI](/inso-cli/).
+                    - Connect Insomnia to Kong Gateway and Konnect with [MCP Clients in Insomnia](/insomnia/mcp-clients-in-insomnia/).
+                    - Learn about Kong’s API workflows with [Kong Gateway](/gateway/).
+                    - View deployment and management options with [Konnect](/konnect/).
+
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **Next steps**
+
+                    Continue exploring Insomnia’s capabilities:
+
+                    - Learn about [Documents](/insomnia/documents/).
+                    - Explore [Collections](/insomnia/collections/).
+                    - Manage [Environments](/insomnia/environments/).
+                    - Simulate APIs with [Mock servers](/insomnia/mock-servers/).
+                    - Write tests with [Scripts](/insomnia/scripts/).
+                    - Review advanced features in [Insomnia Enterprise](/insomnia/enterprise/).
+
+                  
