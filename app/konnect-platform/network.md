@@ -161,12 +161,12 @@ If you use {{site.konnect_short_name}} to manage your service mesh, you must add
 
 ## Specify IP addresses that can connect to {{site.konnect_short_name}}
 
-Org Admins can specify an IP address or a range of IP addresses that can connect to {{site.konnect_short_name}} on any of its channels: UI, [APIs](/konnect-api/) (including [Admin API](/admin-api/)), [decK](/deck/), and [Terraform](/terraform/). This IP range restriction applies to all {{site.konnect_short_name}} communication from the Admin API.
+Org Admins can specify an IP address or a range of IP addresses that can connect to {{site.konnect_short_name}} on any of its channels: UI, [APIs](/konnect-api/) (including [Admin API](/admin-api/)), [decK](/deck/), and [Terraform](/terraform/). This IP range allow list applies to all {{site.konnect_short_name}} communication from the Admin API.
 
 {:.warning}
-> **Important:** If the source IP goes down and IP restriction is configured, you won't be able to access {{site.konnect_short_name}}.
+> **Important:** If the source IP goes down and IP allow list is configured, you won't be able to access {{site.konnect_short_name}}.
 
-To configure IP restriction for {{site.konnect_short_name}}, send a PATCH request to the `/source-ip-restriction` endpoint:
+To configure IP allow list for {{site.konnect_short_name}}, send a PATCH request to the `/source-ip-restriction` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
