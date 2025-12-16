@@ -133,40 +133,23 @@ To create a customer in {{site.konnect_short_name}}, do the following:
 {:.warning}
 > **Important:** During the billing beta, customers are limited to **one subject**. Support for multiple subjects will be available in the future.
 
-Subjects are created when you create the customer. To create a customer associated with a subject, send a `POST` request to the `/api/v1/customers` endpoint:
+Subjects are created when you create the customer. To create a customer associated with a subject, send a `POST` request to the `/openmeter/customers` endpoint:
 
-```
-curl https://openmeter.cloud/api/v1/customers \
-  --request POST \
-  --header 'Content-Type: application/json' \
-  --header 'Authorization: Bearer $KONNECT_TOKEN' \
-  --data '{
-  "name": "",
-  "description": "",
-  "metadata": {
-    "externalId": "019142cc-a016-796a-8113-1a942fecd26d"
-  },
-  "key": "",
-  "usageAttribution": {
-    "subjectKeys": [
-      "$YOUR-SUBJECT"
-    ]
-  },
-  "primaryEmail": "",
-  "currency": "USD",
-  "billingAddress": {
-    "country": "US",
-    "postalCode": "",
-    "state": "",
-    "city": "",
-    "line1": "",
-    "line2": "",
-    "phoneNumber": ""
-  }
-}'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+status_code: 201
+method: POST
+body:
+    name: "ACME Inc."
+    key: "019ae40f-4258-7f15-9491-842f42a7d6ac"
+    usageAttribution:
+      subjectKeys:
+      - "YOUR-SUBJECT-KEY"
+{% endkonnect_api_request %}
+<!--vale on-->
 
-Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or system access token](/konnect-api/#system-accounts-and-access-tokens).
+Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or system access token](/konnect-api/#system-accounts-and-access-tokens) and `YOUR-SUBJECT-KEY` with the subject key from events that are associated with the customer.
 
 {:.info}
 > {{site.konnect_short_name}} {{site.metering_and_billing}} will also automatically create a subject for you when you ingest an usage event for a new subject.

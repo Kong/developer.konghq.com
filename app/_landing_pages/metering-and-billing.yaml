@@ -24,6 +24,10 @@ rows:
 
                     You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
                     You can create and publish pricing plans, manage subscriptions, and automate revenue collection with payment providers like Stripe and ERPs.
+          - type: button
+            config:
+              text: "Start metering and billing API Gateway requests &rarr;"
+              url: /metering-and-billing/get-started/
 
       - blocks:
           - type: image
