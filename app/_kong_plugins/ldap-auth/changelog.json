@@ -1,4 +1,16 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue where a failed ssl handshake with the ldap server would return 401 instead of 500.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "added support for the `tls_certificate_verify` global option. When this option is enabled and LDAPS is used, the plugin's `verify_ldap_host` or `start_tls` setting cannot be disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",

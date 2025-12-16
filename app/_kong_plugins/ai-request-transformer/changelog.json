@@ -1,4 +1,16 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `https_verify` setting cannot be disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.1": [
     {
       "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
