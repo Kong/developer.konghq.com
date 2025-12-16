@@ -98,6 +98,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.2": [
+    {
+      "message": "Fixed an issue where cohere embedding model on Bedrock returned a bad request error\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where large request payload was not logged.\n",
@@ -418,6 +425,23 @@
     },
     {
       "message": "Fixed an issue with Azure Managed Identity credentials causing improper request balancing.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed integration with HuggingFace by adding support for the new serverless API, ensuring seamless compatibility.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where extra inputs were not permitted for huggingface inference provider\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -14,11 +14,14 @@ info:
     Additionally, `x-sensitive` flag indicates that a field contains sensitive information. When the value
     of the field is provided in plain text, it's encrypted at rest and it's never returned in API responses.
     When the value is an expression, the expression itself is stored and returned in API responses.
+
+    `x-min-runtime-version` indicates the minimum Event Gateway runtime version required to use a certain policy or
+    policy feature. The runtime version can be configured at the Event Gateway entity level.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1271ef747690f068287732330269a47c8984b1d9
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1271ef747690f068287732330269a47c8984b1d9'
+  x-oas-source: kong/platform-api@6071deefac069662eeb4c62ea0a0ed67eaca705d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6071deefac069662eeb4c62ea0a0ed67eaca705d'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -131,6 +134,33 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateGatewayRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateGatewayResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '503':
+          $ref: '#/components/responses/NotAvailable'
+      tags:
+        - Event Gateways
+    patch:
+      operationId: patch-event-gateway
+      summary: Partially Update Event Gateway
+      description: Patch an individual gateway.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchGatewayRequest'
       responses:
         '200':
           $ref: '#/components/responses/UpdateGatewayResponse'
@@ -1627,12 +1657,14 @@ components:
         virtual_clusters_total:
           description: The total number of virtual clusters associated with the Event Gateway.
           type: integer
+        min_runtime_version:
+          $ref: '#/components/schemas/MinRuntimeVersion'
         version:
           description: |
             The version number of the event gateway. Every change to an entity
             under this gateway will modify the version.
           type: string
-          example: v1_123
+          example: v1.123
       additionalProperties: false
       required:
         - id
@@ -1641,6 +1673,7 @@ components:
         - updated_at
         - nodes_total
         - virtual_clusters_total
+        - min_runtime_version
         - version
       x-examples:
         Example 1:
@@ -1779,6 +1812,7 @@ components:
           description: The unique identifier of the virtual cluster.
           type: string
           format: uuid
+          minLength: 1
       required:
         - id
     VirtualClusterReferenceByName:
@@ -2122,6 +2156,7 @@ components:
           description: The unique identifier of the backend cluster.
           type: string
           format: uuid
+          minLength: 1
       required:
         - id
     BackendClusterReferenceByName:
@@ -2502,6 +2537,7 @@ components:
           description: The unique identifier of the schema registry.
           type: string
           format: uuid
+          minLength: 1
       required:
         - id
     SchemaRegistryReferenceByName:
@@ -3881,6 +3917,7 @@ components:
           description: The ID of the static key defined in the key source.
           type: string
           format: uuid
+          minLength: 1
       required:
         - id
     EncryptionKeyStaticReferenceByName:
@@ -4611,6 +4648,14 @@ components:
         maxLength: 63
       maxProperties: 50
       title: Labels
+    MinRuntimeVersion:
+      description: |
+        The minimum runtime version supported by the API. This is the lowest version of the data plane
+        release that can be used with the entity model.
+        When not specified, the minimum runtime version will be pinned to the latest available release.
+      type: string
+      example: '1.1'
+      pattern: ^\d+\.\d+$
     CreateGatewayRequest:
       description: The request schema for the create gateway request.
       type: object
@@ -4619,6 +4664,8 @@ components:
           $ref: '#/components/schemas/GatewayName'
         description:
           $ref: '#/components/schemas/GatewayDescription'
+        min_runtime_version:
+          $ref: '#/components/schemas/MinRuntimeVersion'
         labels:
           $ref: '#/components/schemas/Labels'
       additionalProperties: false
@@ -4655,6 +4702,14 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
+    MinRuntimeVersionUpdate:
+      description: |
+        The minimum runtime version supported by the API. This is the lowest version of the data plane
+        release that can be used with the entity model.
+        When not specified, the minimum runtime version will not be updated.
+      type: string
+      example: '1.1'
+      pattern: ^\d+\.\d+$
     UpdateGatewayRequest:
       description: The request schema for the update gateway request.
       type: object
@@ -4663,10 +4718,50 @@ components:
           $ref: '#/components/schemas/GatewayName'
         description:
           $ref: '#/components/schemas/GatewayDescription'
+        min_runtime_version:
+          $ref: '#/components/schemas/MinRuntimeVersionUpdate'
         labels:
           $ref: '#/components/schemas/Labels'
       additionalProperties: false
       title: UpdateGatewayRequest
+    PatchGatewayRequest:
+      description: The request schema for the patch gateway request.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/GatewayName'
+        description:
+          description: A human-readable description of the Gateway.
+          type: string
+          maxLength: 512
+          nullable: true
+        min_runtime_version:
+          description: |
+            The minimum runtime version supported by the API. This is the lowest version of the data plane
+            release that can be used with the entity model.
+            When not specified, the minimum runtime version will not be updated.
+          type: string
+          example: '1.1'
+          nullable: true
+          pattern: ^\d+\.\d+$
+        labels:
+          description: |
+            Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+            Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+          type: object
+          example:
+            env: test
+          additionalProperties:
+            type: string
+            pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+            minLength: 1
+            maxLength: 63
+          maxProperties: 50
+          nullable: true
+          title: Labels
+      additionalProperties: false
+      title: PatchGatewayRequest
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
