@@ -21,6 +21,7 @@ title: Kong Docs
 description: "Documentation for Kong, the Cloud Connectivity Company for APIs and Microservices."
 
 links:
+  share: https://developer.konghq.com
   web: https://developer.konghq.com
   direct: https://packages.konghq.com/public
 
