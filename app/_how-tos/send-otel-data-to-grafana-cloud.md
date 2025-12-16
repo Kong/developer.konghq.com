@@ -271,6 +271,6 @@ If you don't see your data, check that:
    * `grafanacloud-<stack-name>-prom` for metrics
    * `grafanacloud-<stack-name>-logs` for logs
    * `grafanacloud-<stack-name>-traces` for traces
-1. You're viewing the correct time range 
+1. You're viewing the correct time range. 
 
 If everything is working as expected, you should see graphs with your data. You can now start building dashboards.
