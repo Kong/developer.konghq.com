@@ -5,7 +5,7 @@ description: Use the OpenTelemetry plugin to send metrics, logs, and traces to G
 
 tldr:
   q: How do I send my {{site.base_gateway}} telemetry data to Grafana Cloud?
-  a: In Grafana, configure OpenTelemetry Collector as an integration, then deploy OTEL Collector with the Grafana username, password, and endpoint, and configure the OpenTelemetry plugin to send data to OTEL Collector. 
+  a: In Grafana, configure OpenTelemetry Collector as an integration, then deploy OTEL Collector with the Grafana `username`, `password`, and `endpoint`, and configure the OpenTelemetry plugin to send data to OTEL Collector. 
 
 products:
   - gateway
@@ -70,13 +70,12 @@ cleanup:
 
 ## Configure the OpenTelemetry Collector integration in Grafana
 
-We need to add a connection to OpenTelemetry in Grafana to generate the configuration we'll need. 
-There are multiple ways to do this, but in this example, we'll use the OpenTelemetry Collector.
+We need to add a connection to OpenTelemetry in Grafana to generate the configuration we need. 
 
 1. Log in to Grafana and launch your Grafana Cloud stack.
 1. In the sidebar, click **Connections** > **Add new connection**.
 1. Click **OpenTelemetry Collector**.
-1. In the **Access Policy token name** enter a name for the token, "kong-otel" for example.
+1. In the **Access Policy token name** field, enter a name for the token, "kong-otel" for example.
 1. Click **Create token**.
 
    Grafana provides configuration, but we'll only use part of it.
@@ -177,7 +176,7 @@ There are multiple ways to do this, but in this example, we'll use the OpenTelem
 
    This configuration is the default OpenTelemetry Collector configuration, with the addition of the Grafana exporter.
 
-1. In Grafana Cloud, enter a name in the **Service name** field, in this example, we'll use "kong-dev".
+1. In Grafana Cloud, in the **Service name** field,  enter a name. In this example, we'll use "kong-dev".
 1. In your terminal, export the following environment variables:
    ```sh
    export OTEL_SERVICE_NAME='kong-dev'
@@ -188,7 +187,7 @@ There are multiple ways to do this, but in this example, we'll use the OpenTelem
 
 ## Deploy OpenTelemetry Collector
 
-Now that we have the OpenTelemetry Collector configuration, we can deploy it. We'll use the [`opentelemetry-collector-contrib`](https://hub.docker.com/r/otel/opentelemetry-collector-contrib) image and apply the configuration and environment variables that we defined in the previous step:
+Now that we have the OpenTelemetry Collector configuration, we can deploy it. Use the [`opentelemetry-collector-contrib`](https://hub.docker.com/r/otel/opentelemetry-collector-contrib) image and apply the configuration and environment variables that we defined in the previous step:
 
 ```sh
 docker run \
@@ -206,14 +205,14 @@ docker run \
 
 You should already see some data in the terminal, however, this data will not be sent to Grafana since it doesn't use the `kong-dev` service name.
 
-In a new terminal, export the OTEL Collector host. In this example, use the following host:
+In a new terminal, export the OTEL Collector host:
 ```sh
 export DECK_OTEL_HOST=host.docker.internal
 ```
 
 ## Enable the OpenTelemetry plugin
 
-In this tutorial, we'll configure the [OpenTelemetry plugin](/plugins/opentelemetry/) to send {{site.base_gateway}} metrics, traces, and logs to Grafana via OpenTelemetry Collector.
+Let's configure the [OpenTelemetry plugin](/plugins/opentelemetry/) to send {{site.base_gateway}} metrics, traces, and logs to Grafana using the OpenTelemetry Collector.
 
 Enable the OTEL plugin with the OTEL Collector endpoints settings configured:
 
@@ -253,7 +252,7 @@ headers:
 
 You should see data in your OpenTelemetry Collector terminal.
 
-Now go back to the OTEL collector configuration in Grafana Cloud and click **Test connection**. You should see the following message:
+Now, go back to the OTEL collector configuration in Grafana Cloud and click **Test connection**. You should see the following message:
 
 ```sh
 Traces are being ingested properly
