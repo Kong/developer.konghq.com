@@ -76,7 +76,7 @@ rows:
     description: Configure the OpenTelemetry plugin to send API transactional logs.
 
   - use_case: "[Enable the OTEL plugin for runtime logs](./examples/runtime-logs/)"
-    description: Configure the OpenTelemetry plugin to send runtime and error logs.
+    description: "Configure the OpenTelemetry plugin to logs about the data plane's internal execution."
 
   - use_case: "[Enable the OTEL plugin for traces](./examples/traces/)"
     description: Configure the OpenTelemetry plugin to send traces.
@@ -254,7 +254,7 @@ This plugin supports [OpenTelemetry Logging](https://opentelemetry.io/docs/specs
 
 Two different kinds of logs are exported:
   * {% new_in 3.13 %} API transactional logs (also known as access logs) represent metadata about client requests. These access logs are produced during the request lifecycle. These logs typically don't have a severity.
-  * Runtime and error logs aren't directly associated with a request. They're produced outside the request lifecycle. For example, they could be logs generated asynchronously (in a timer) or during a worker's startup.
+  * Runtime and error logs aren't directly associated with a request. They're produced by the data plane and provide data about its internal execution. For example, they could be logs generated asynchronously (in a timer) or during a worker's startup.
 
 ### Log level
 

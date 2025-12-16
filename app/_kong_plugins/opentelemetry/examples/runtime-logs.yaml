@@ -1,4 +1,4 @@
-description: "Enables the OTEL plugin with an endpoint for runtime and error logs."
+description: "Enables the OTEL plugin with an endpoint for logs about the data plane's internal execution."
 
 title: 'Enable the OTEL plugin for runtime logs'
 
