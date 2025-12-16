@@ -10,6 +10,7 @@ metrics:
       - kong.response.source
       - kong.workspace.name
       - http.request.method
+      - kong.response.status_code
   - name: kong.latency.total
     description: &latency_total Complete end-to-end duration of a request in seconds.
     unit: "s"
@@ -42,6 +43,7 @@ metrics:
       - kong.service.name
       - kong.route.name
       - kong.auth.consumer.name
+      - kong.workspace.name
   - name: http.server.response.size
     description: Total size of the HTTP response sent back to the client in bytes.
     unit: "By"
@@ -50,6 +52,7 @@ metrics:
       - kong.service.name
       - kong.route.name
       - kong.auth.consumer.name
+      - kong.workspace.name
   - name: kong.shared_dict.usage
     description: Current memory usage of a shared dict in bytes.
     unit: "By"
@@ -109,7 +112,7 @@ metrics:
     attributes:
       - kong.dp.host.name
       - kong.dp.node.id
-      - kong.dp.node.ip
+      - kong.dp.host.ip
   - name: kong.dp.version.compatible
     description: "Shows whether a data plane is compatible with the control plane’s version. This metric appears only on control plane nodes and is reported per data plane. A value of 1 means compatible and 0 means not."
     unit: "1"
@@ -117,7 +120,7 @@ metrics:
     attributes:
       - kong.dp.host.name
       - kong.dp.node.id
-      - kong.dp.node.ip
+      - kong.dp.host.ip
       - kong.dp.node.version
   - name: kong.dp.config_hash
     description: Shows the config hash the control plane has for each data plane. This metric appears only on control plane nodes and is reported per data plane.
@@ -126,7 +129,7 @@ metrics:
     attributes:
       - kong.dp.host.name
       - kong.dp.node.id
-      - kong.dp.node.ip
+      - kong.dp.host.ip
   - name: kong.dp.cluster_cert.expiry
     description: "Timestamp when the data plane’s cluster certificate will expire."
     unit: "s"
@@ -259,7 +262,11 @@ attributes:
       <li><code>waiting</code></li>
     </ul>
   kong.pid: Worker process ID.
-  kong.timer.state: State of the timer.
+  kong.timer.state: State of the timer. Possible values:
+    <ul>
+      <li><code>pending</code></li>
+      <li><code>running</code></li>
+    </ul>
   kong.upstream.name: Name of the Upstream.
   kong.target.address: Address of the Target.
   server.address: Address of the server.
@@ -272,7 +279,7 @@ attributes:
     </ul>
   kong.dp.host.name: Host name fo the data plane.
   kong.dp.node.id: ID of the data plane node.
-  kong.dp.node.ip: IP address of the data plane node.
+  kong.dp.host.ip: IP address of the data plane host.
   kong.dp.node.version: Version of the data plane node.
   kong.ee.license.feature: |
     Enterprise feature. Possible values:
@@ -363,3 +370,4 @@ attributes:
   kong.auth.type: Type of authentication.
   kong.auth.consumer.*: Consumer entity accessing the resource.
   kong.auth.authenticated_entity.*: Credential used for authentication.
+  kong.response.status_code: HTTP status code of the response.
