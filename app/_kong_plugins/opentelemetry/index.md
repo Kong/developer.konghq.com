@@ -99,7 +99,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{% include plugins/otel/collecting-otel-data.md  %}
+{% include plugins/otel/collecting-otel-data.md plugin=page.name %}
 
 ## Resource attributes
 

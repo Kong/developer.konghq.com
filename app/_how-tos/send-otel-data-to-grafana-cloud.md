@@ -265,9 +265,12 @@ Traces are being ingested properly
   * **Metrics**
   * **Logs**
   * **Traces**
-1. Select the relevant data source:
-  * Prometheus for metrics
-  * Loki for logs
-  * Tempo for traces
+
+If you don't see your data, check that:
+1. You're viewing the correct data source. In the **Data source** dropdown list, select:
+   * `grafanacloud-<stack-name>-prom` for metrics
+   * `grafanacloud-<stack-name>-logs` for logs
+   * `grafanacloud-<stack-name>-traces` for traces
+1. You're viewing the correct time range 
 
 If everything is working as expected, you should see graphs with your data. You can now start building dashboards.
