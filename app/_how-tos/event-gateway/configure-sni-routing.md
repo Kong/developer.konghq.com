@@ -42,15 +42,39 @@ prereqs:
 
 ## Create a backend cluster
 
-{% include knep/create-backend-cluster.md %}
+Use the following command to create a [backend cluster](/event-gateway/entities/backend-cluster/) that connects to the Kafka servers you set up:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
+status_code: 201
+method: POST
+body:
+  name: backend_cluster
+  bootstrap_servers:
+    - kafka1:9092
+    - kafka2:9092
+    - kafka3:9092
+  authentication:
+    type: anonymous
+  tls:
+    enabled: false
+  insecure_allow_anonymous_virtual_cluster_auth: true
+extract_body:
+  - name: id
+    variable: BACKEND_CLUSTER_ID
+capture: BACKEND_CLUSTER_ID
+jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Create an analytics virtual cluster
 
-{% include knep/create-virtual-cluster.md name="analytics" %}
+{% include knep/create-virtual-cluster-anonymous.md name="analytics" %}
 
 ## Create a payments virtual cluster
 
-{% include knep/create-virtual-cluster.md name="payments" %}
+{% include knep/create-virtual-cluster-anonymous.md name="payments" %}
 
 ## Define the kafkactl context
 
