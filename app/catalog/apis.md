@@ -94,23 +94,34 @@ resource "konnect_api" "my_api" {
 
 ## API versions
 
-When you create your API, version can be optionally specified as a free text string. Semantic versioning (examples: `1.0`, `2.0`) is best supported by Catalog and Dev Portal (in areas such as default order), but there are no constraints on the version style. 
+When you create an API, you can optionally specify the version as a free text string.
 
-APIs have a unique constraint based on the combination of `name+version`. It is generally recommended to create a unique API for each major version, although there is no constraint.
+While you can use any version style, we recommend the following:
+* Semantic versioning (for example `1.0.0`, `2.1.0`) is best supported for default ordering
+* Create a unique API for each major version, since APIs must be unique based on the combination of `name` + `version`
 
-The API `slug` determines Dev Portal URl routing in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis), which defaults to a slugified name and version (major version if semver), e.g. `my-test-api-3`. If a `version` isn't specified, then `name` is used as the unique identifier. 
+The API `slug` determines Dev Portal URL routing in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis), which defaults to a name and version (major version if semantic versioning) in slug form. For example, if your API is named `my-test-api` and the version is `3`, this will default to `my-test-api-3`. If a version isn't specified, then `name` is used as the unique identifier. 
 
-### API Specifications in Versions
+### API specification versions
 
-If OpenAPI or AsyncAPI specifications are used when the API is created, the API version will default and be constrained to the version in the specification. Multiple versions of API specifications can be specified within the API entity. This is best supported when used for minor versions of an API. When multiple `versions` are specified, a selector will be provided in the generated API reference to switch between versions of the API specification.
+If you upload OpenAPI or AsyncAPI specifications when you create the API, the API version will default to and be constrained by the version in the specification. You can specify multiple versions of API specifications in the API entity. Ideally, use multiple versions of API specs for minor versions of an API. When multiple `versions` are specified, a selector displays in the generated API reference to switch between versions of the API specification.
 
-The API entity's `version` property is treated as "current", meaning it is the version that will be listed in your your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). 
+The API entity's `version` property is treated as "current", meaning it is the version that will be listed in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). 
 
 
 To version an API, do one of the following:
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create). Enter a version in the **API version** field, or upload an API specification, which will set the version to match the API spec version. You can also add a version on existing APIs when editing, if no API specifications are in use. To manage multiple versions of the API specification navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Add or Upload Spec**. If a newer version is in the API Specification, you will be prompted to add a new `version`, and set the current version.
+1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
+1. Click [**New API**](https://cloud.konghq.com/apis/create).
+1. Enter a version in the **API version** field, or upload an API specification, which will set the version to match the API spec version. 
+
+You can also add versions to existing APIs when you edit them if they aren't associated with an API specification. To manage multiple versions of the API specification, do the following:
+1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/). 
+1. Click your API. 
+1. Click the **API specification** tab.
+1. From the Actions dropdown menu, select "Add or update API spec". 
+1. If a newer version is in the API specification, you will be prompted to add a new `version` and set the current version.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
