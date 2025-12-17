@@ -136,9 +136,7 @@ Generate the certificates we'll need to enable TLS:
    
    [alt_names]
    DNS.1 = *.analytics.127-0-0-1.sslip.io
-   DNS.2 = analytics.127-0-0-1.sslip.io
-   DNS.3 = *.payments.127-0-0-1.sslip.io
-   DNS.4 = payments.127-0-0-1.sslip.io
+   DNS.2 = *.payments.127-0-0-1.sslip.io
    EOF
    ```
   
