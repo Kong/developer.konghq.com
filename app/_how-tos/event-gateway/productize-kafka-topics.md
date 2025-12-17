@@ -44,6 +44,8 @@ prereqs:
 related_resources:
   - text: Event Gateway
     url: /event-gateway/
+  - text: Configure SNI routing with {{site.event_gateway}}
+    url: /event-gateway/configure-sni-routing/
 ---
 
 ## Create kafka topics
@@ -93,7 +95,7 @@ This virtual cluster will be used to access topics with the `payments_` prefix, 
 ## Create an analytics listener with a policy
 
 For testing purposes, we'll use **port forwarding** to route traffic to each virtual cluster.  
-In production environments, you should use **SNI routing** instead.
+In production environments, you should use [**SNI routing**](/event-gateway/configure-sni-routing/) instead.
 
 Use the following command to create the listener for the `analytics` category:
 
