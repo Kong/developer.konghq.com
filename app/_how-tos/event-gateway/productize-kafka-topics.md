@@ -82,13 +82,11 @@ render_output: false
 
 ## Create an analytics virtual cluster
 
-{% include knep/create-virtual-cluster-auth.md name="analytics" %}
-
-This virtual cluster provides access to topics with the `analytics_` prefix, and the `user_actions` topic.
+{% include knep/create-virtual-cluster.md name="analytics" auth=true %}
 
 ## Create a payments virtual cluster
 
-{% include knep/create-virtual-cluster-auth.md name="payments" %}
+{% include knep/create-virtual-cluster.md name="payments" auth=true %}
 
 This virtual cluster will be used to access topics with the `payments_` prefix, and the `user_actions` topic.
 

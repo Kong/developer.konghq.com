@@ -1,4 +1,5 @@
 {% assign cluster = include.name %}
+{% assign auth = include.auth %}
 
 Use the following command to create the `{{cluster}}` virtual cluster:
 
@@ -12,6 +13,8 @@ body:
   destination:
     id: $BACKEND_CLUSTER_ID
   dns_label: {{cluster}}
+
+{% if auth == true %}
   authentication:
     - type: sasl_plain
       mediation: terminate
@@ -19,6 +22,12 @@ body:
         - username: {{cluster}}_user
           password: {{cluster}}_password
   acl_mode: enforce_on_gateway
+{% else %}
+  authentication:
+    - type: anonymous
+  acl_mode: passthrough
+{% endif %}
+
   namespace:
     prefix: {{cluster}}_
     mode: hide_prefix
@@ -35,3 +44,5 @@ capture: {{cluster | upcase}}_VC_ID
 jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
+
+This virtual cluster provides access to topics with the `analytics_` prefix, and the `user_actions` topic.
