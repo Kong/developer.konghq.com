@@ -326,6 +326,15 @@ rows:
             cta:
               url: ./#request-transformations
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Canary release
+            description: Slowly roll out software changes to a subset of users.
+            icon: /assets/icons/plugins/canary.png
+            cta:
+              url: /plugins/canary/
+              align: end
 
 
   - header:
