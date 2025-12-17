@@ -64,8 +64,8 @@ platform:
     - title: Govern APIs
       links:
         - text: Analytics
-          url: /advanced-analytics/
-          product: advanced-analytics
+          url: /observability/
+          product: observability
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
           url: /catalog/scorecards/

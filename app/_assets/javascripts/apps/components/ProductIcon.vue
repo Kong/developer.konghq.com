@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import advancedAnalytics from '@/icons/products/advanced-analytics.svg'
+import observability from '@/icons/products/observability.svg'
 import AIGateway from '@/icons/products/ai-gateway.svg'
 import devPortal from '@/icons/products/dev-portal.svg'
 import gateway from '@/icons/products/gateway.svg'
@@ -19,7 +19,7 @@ import konnect from '@/icons/products/konnect.svg'
 import referencePlatform from '@/icons/products/konnect-reference-platform.svg'
 
 const productIcons = {
-  'advanced-analytics': advancedAnalytics,
+  'observability': observability,
   'ai-gateway': AIGateway,
   'event-gateway': eventGateway,
   'dev-portal': devPortal,

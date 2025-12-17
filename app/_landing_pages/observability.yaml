@@ -1,17 +1,17 @@
 metadata:
-  title: "Konnect Advanced Analytics"
+  title: "Konnect Observability"
   content_type: landing_page
   products: 
-    - advanced-analytics
-  description: Gain real-time insights into API health, performance, and usage with Konnect Advanced Analytics.
+    - observability
+  description: Gain real-time insights into API health, performance, and usage with Konnect Observability.
   tags:
     - analytics
   breadcrumbs:
-    - /advanced-analytics/
+    - /observability/
 rows:
   - header:
       type: h1
-      text: "Konnect Advanced Analytics"
+      text: "Konnect Observability"
       sub_text: A single location for context-rich, business-critical API and AI insights
 
   - columns:
@@ -19,11 +19,11 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "What is Konnect Advanced Analytics?"
+                text: "What is Konnect Observability?"
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} Advanced Analytics is a real-time, highly contextual analytics platform 
+                    {{site.konnect_short_name}} Observability is a real-time, highly contextual analytics platform 
                     that provides deep insights into API health, performance, and usage. It helps businesses optimize their API strategies 
                     and improve operational efficiency. This feature is offered as a premium service within {{site.konnect_short_name}}.
 
@@ -37,35 +37,22 @@ rows:
         - type: image
           config:
             url: /assets/images/analytics/konnect-api-usage-summary.png
-            alt_text: "Summary dashboard of Konnect Advanced Analytics"
+            alt_text: "Summary dashboard of Konnect Observability"
   
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Dashboard"
-              blocks:
-                - type: text
-                  text: |
-                    The [summary dashboard](https://cloud.konghq.com/us/analytics/summary) shows performance and health statistics of all your APIs across your organization on a 
-                    single page and provides insights into your Service usage. 
-
-                    Manage data ingestion from any **Control Plane Dashboard** using the **Advanced Analytics** toggle. 
-                    This toggle lets you enable or disable data collection for your API traffic per control plane.
-
-                    **Modes:**
-                    - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
-                    - **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway, 
-                    and can still be used for custom reports.
-                    
-                    Advanced Analytics includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
-                    You can create them from scratch or use existing templates. The functionality is powered by a robust [API](/api/konnect/analytics-dashboards/), and [Terraform integration](/how-to/automate-dashboard-terraform/).
-
   - header:
       type: h2
       text: "Features"
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: Debugger
+              description: |
+                Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes.
+              icon: /assets/icons/debug.svg
+              cta:
+                text: See the API Explorer
+                url: /observability/explorer/
       - blocks:
           - type: card
             config:
@@ -75,7 +62,7 @@ rows:
               icon: /assets/icons/menu.svg
               cta:
                 text: See the API Explorer
-                url: /advanced-analytics/explorer/
+                url: /observability/explorer/
       - blocks:
           - type: card
             config:
@@ -95,4 +82,27 @@ rows:
               icon: /assets/icons/logs.svg
               cta:
                 text: Set up LLM reporting
-                url: /advanced-analytics/llm-reporting/
+                url: /observability/llm-reporting/
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Dashboard"
+              blocks:
+                - type: text
+                  text: |
+                    The [summary dashboard](https://cloud.konghq.com/us/analytics/summary) shows performance and health statistics of all your APIs across your organization on a 
+                    single page and provides insights into your Service usage. 
+
+                    Manage data ingestion from any **Control Plane Dashboard** using the **Observability** toggle. 
+                    This toggle lets you enable or disable data collection for your API traffic per control plane.
+
+                    **Modes:**
+                    - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
+                    - **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway, 
+                    and can still be used for custom reports.
+                    
+                    Observability includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
+                    You can create them from scratch or use existing templates. The functionality is powered by a robust [API](/api/konnect/analytics-dashboards/), and [Terraform integration](/how-to/automate-dashboard-terraform/).

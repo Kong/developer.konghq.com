@@ -4,7 +4,7 @@ description: Learn how to create a dashboard from a template in {{site.konnect_s
 content_type: how_to
 automated_tests: false
 products:
-    - advanced-analytics
+    - observability
     - konnect
 works_on:
     - konnect
@@ -27,23 +27,22 @@ prereqs:
         You must be either an [Organization admin or Analytics admin](/konnect-platform/teams-and-roles/). 
 related_resources:
   - text: Custom Dashboards
-    url: /advanced-analytics/custom-dashboards/
+    url: /observability/custom-dashboards/
   - text: Custom dashboards reference
-    url: /advanced-analytics/custom-dashboards-reference/
+    url: /observability/custom-dashboards-reference/
   - text: Automate dashboards with Terraform
     url: /how-to/automate-dashboard-terraform/
 ---
 
 ## Create a dashboard
 
-You can create custom dashboards either from scratch or from a [template](/advanced-analytics/custom-dashboards-reference/#templates). In this tutorial, we'll use a template.
+You can create custom dashboards either from scratch or from a [template](/observability/custom-dashboards-reference/#templates). In this tutorial, we'll use a template.
 
 To create a custom dashboard, do the following: 
 
-1. In {{site.konnect_short_name}}, navigate to [Dashboards](https://cloud.konghq.com/us/analytics/dashboards) in the sidebar.
-
+1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
+1. In the Observability sidebar, click [**Dashboards**](https://cloud.konghq.com/us/analytics/dashboards).
 1. From the **Create dashboard** dropdown menu, select "Create from template".
-
 1. Click **Quick summary dashboard**.
 1. Click **Use template**.
 

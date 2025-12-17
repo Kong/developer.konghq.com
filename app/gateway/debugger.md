@@ -17,7 +17,7 @@ faqs:
   - q: Will the {{site.konnect_short_name}} Debugger impact latency?
     a: Under normal conditions, the Debugger adds negligible latency. However, under heavy load, the Debugger may impact the throughput of data planes being traced.
   - q: How is data localization enforced in Debugger?
-    a: "The entire infrastructure is regionally deployed. All logs, traces, and payload captures are stored within the local geographic region. To see a list of supported geos, visit: [Supported Geos](/konnect-platform/geos/#supported-geos)"
+    a: "The entire infrastructure is regionally deployed. All logs, traces, and payload captures are stored within the local geographic region. To see a list of supported geos, see [Supported Geos](/konnect-platform/geos/#supported-geos)."
     
 tags:
   - tracing
@@ -138,9 +138,8 @@ To begin using the Debugger, ensure the following requirements are met:
 > From version 3.10 and later, these environment variables are enabled by default and no manual configuration is required.
 
 
-1. In {{site.konnect_short_name}}, navigate to [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in the {{site.konnect_short_name}} sidebar.
-1. Click the control plane that contains the data plane to be traced.
-1. Navigate to **Debugger** in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
+1. In the Observability sidebar, click **Debugger**.
 1. Click **New session**.
 1. Define the sampling criteria.
 1. Click **Start Session**.

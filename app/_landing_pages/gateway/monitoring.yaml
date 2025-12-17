@@ -158,13 +158,13 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Advanced Analytics 
+            title: Observability 
             description: |
-              Advanced Analytics is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
+              Observability is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
             icon: /assets/icons/analytics.svg
             cta:
               text: Explore analytics
-              url: /advanced-analytics/
+              url: /observability/
               align: end
       - blocks:
         - type: card

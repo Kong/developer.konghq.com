@@ -640,7 +640,7 @@ For example, you can have H1 > H2 > H3 > H2 > H3, but not H1 > H3 > H2.
 ```yaml
   - header:
       type: h1
-      text: "Konnect Advanced Analytics"
+      text: "Konnect Observability"
       sub_text: A single location for context-rich, business-critical API and AI insights
 
   - header:
