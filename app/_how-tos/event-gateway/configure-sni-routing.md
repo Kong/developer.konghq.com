@@ -225,10 +225,39 @@ body:
 
 ## Validate
 
+Get a list of topics from the `analytics` virtual cluster:
+
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  kafkactl -C kafkactl.yaml --context payments list topics
+  kafkactl -C kafkactl.yaml --context analytics list topics
+expected:
+  return_code: 0
+  message: |
+    TOPIC            PARTITIONS     REPLICATION FACTOR
+    clicks           1              1
+    orders           1              1
+    pageviews        1              1
+    user_actions     1              1
+render_output: false
+{% endvalidation %}
+
+You should see the following result:
+```sh
+TOPIC            PARTITIONS     REPLICATION FACTOR
+clicks           1              1
+orders           1              1
+pageviews        1              1
+user_actions     1              1
+```
+{:.no-copy-code}
+<!--vale on-->
+
+Get a list of topics from the `payments` virtual cluster:
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context  payments list topics
 expected:
   return_code: 0
   message: |
@@ -239,5 +268,15 @@ expected:
     user_actions     1              1
 render_output: false
 {% endvalidation %}
+
+You should see the following result:
+```sh
+TOPIC            PARTITIONS     REPLICATION FACTOR
+orders           1              1
+refunds          1              1
+transactions     1              1
+user_actions     1              1
+```
+{:.no-copy-code}
 
 <!--vale on-->
