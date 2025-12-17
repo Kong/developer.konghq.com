@@ -27,7 +27,7 @@ A {{site.konnect_catalog}} scorecard helps you evaluate services based on valida
 
 From the scorecard view, you can view details on either a per-service or per-criteria basis.
 
-You can use a prebuilt scorecard template that includes vetted criteria from Kong and industry best practices, or design your own scorecard from scratch. You can also mix both approaches by starting out with a template and adding criteria to fit your needs.
+You can use a prebuilt scorecard template that includes criteria from Kong and industry best practices, or design your own scorecard from scratch. You can also mix both approaches by starting out with a template and adding criteria to fit your needs.
 
 ## Scorecard templates
 
