@@ -63,18 +63,7 @@ We'll have an `analytics` category and a `payments` category, and both of these 
 
 First, we need to create these sample topics in the Kafka cluster we created in the [prerequisites](#start-a-local-kakfa-cluster):
 
-<!--vale off-->
-{% validation custom-command %}
-command: |
-  kafkactl -C kafkactl.yaml --context direct create topic \
-  analytics_pageviews analytics_clicks analytics_orders \
-  payments_transactions payments_refunds payments_orders \
-  user_actions
-expected:
-  return_code: 0
-render_output: false
-{% endvalidation %}
-<!--vale on-->
+{% include knep/create-kafka-topics.md %}
 
 ## Create a backend cluster
 
