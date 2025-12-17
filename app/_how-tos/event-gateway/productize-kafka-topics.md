@@ -88,8 +88,6 @@ render_output: false
 
 {% include knep/create-virtual-cluster.md name="payments" auth=true %}
 
-This virtual cluster will be used to access topics with the `payments_` prefix, and the `user_actions` topic.
-
 ## Create an analytics listener with a policy
 
 For testing purposes, we'll use **port forwarding** to route traffic to each virtual cluster.  
