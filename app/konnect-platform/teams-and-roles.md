@@ -189,6 +189,37 @@ schema: mesh_control_planes
 {% endkonnect_roles_table %}
 <!-- vale on -->
 
+#### {{site.metering_and_billing}}
+
+The following describes the predefined roles for [{{site.metering_and_billing}}](/metering-and-billing/):
+
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+rows:
+  - role: "`Ingest`"
+    description: "Ingests events only (intended only for machines)."
+  - role: "`Admin`"
+    description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
+  - role: "`Viewer`"
+    description: "Can read every resource. Includes billing apps, billing profiles, and notifications."
+  - role: "`Metering Admin`"
+    description: "Can write any metering resources (includes meters and events)."
+  - role: "`Metering Viewer`"
+    description: "Can read any metering resources (includes meters and events)."
+  - role: "`Product Catalog Admin`"
+    description: "Can write any Product Catalog resources (includes plans, features, and rate cards)."
+  - role: "`Product Catalog Viewer`"
+    description: "Can read any Product Catalog resources (includes plans, features, and rate cards)."
+  - role: "`Billing Admin`"
+    description: "Can read and write customer, subscription, entitlement, and invoice resources."
+  - role: "`Billing Viewer`"
+    description: "Can read customer, subscription, entitlement, and invoice resources."
+{% endtable %}
+
 #### Networks 
 
 The following describes the predefined roles for networks:

@@ -6,8 +6,6 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@500fc37689a283051fa72aa44bd6630a631fa694
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/500fc37689a283051fa72aa44bd6630a631fa694'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -58,6 +56,12 @@ paths:
         - Metering Events
 components:
   schemas:
+    DateTime:
+      description: '[RFC3339](https://tools.ietf.org/html/rfc3339) formatted date-time string in UTC.'
+      type: string
+      format: date-time
+      example: '2023-01-01T01:01:01.001Z'
+      title: RFC3339 Date-Time
     MeteringEvent:
       description: Metering event following the CloudEvents specification.
       type: object
@@ -105,10 +109,10 @@ components:
         time:
           description: Timestamp of when the occurrence happened. Must adhere to RFC 3339.
           type: string
-          format: date-time
           example: '2023-01-01T01:01:01.001Z'
+          allOf:
+            - $ref: '#/components/schemas/DateTime'
           nullable: true
-          title: RFC3339 Date-Time
         data:
           description: |-
             The event payload.
