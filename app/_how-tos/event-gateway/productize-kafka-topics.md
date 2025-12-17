@@ -64,13 +64,10 @@ First, we need to create these sample topics in the Kafka cluster we created in 
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  kafkactl -C kafkactl.yaml --context direct create topic analytics_pageviews
-  kafkactl -C kafkactl.yaml --context direct create topic analytics_clicks
-  kafkactl -C kafkactl.yaml --context direct create topic analytics_orders
-  kafkactl -C kafkactl.yaml --context direct create topic payments_transactions
-  kafkactl -C kafkactl.yaml --context direct create topic payments_refunds
-  kafkactl -C kafkactl.yaml --context direct create topic payments_orders
-  kafkactl -C kafkactl.yaml --context direct create topic user_actions
+  kafkactl -C kafkactl.yaml --context direct create topic \
+  analytics_pageviews analytics_clicks analytics_orders \
+  payments_transactions payments_refunds payments_orders \
+  user_actions
 expected:
   return_code: 0
 render_output: false

@@ -11,7 +11,7 @@ body:
   name: {{cluster}}_vc
   destination:
     id: $BACKEND_CLUSTER_ID
-  dns_label: analytics
+  dns_label: {{cluster}}
   authentication:
     - type: sasl_plain
       mediation: terminate

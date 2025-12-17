@@ -79,12 +79,18 @@ EOF
 
 ## Create Kafka topics
 
-```sh
-kafkactl --context backkend create topic \
-	analytics_pageviews analytics_clicks analytics_orders \
-	payments_transactions payments_refunds payments_orders \
-	user_actions
-```
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context backend create topic \
+  analytics_pageviews analytics_clicks analytics_orders \
+  payments_transactions payments_refunds payments_orders \
+  user_actions
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
 ## Generate root key and certificate
 
@@ -134,8 +140,8 @@ openssl x509 -req -in ./tls.csr \
 
 ## Export the key and certificate
 ```sh
-export CERTIFICATE=$(cat tls.cert)
-export KEY=$(cat tls.key)
+export CERTIFICATE=$(cat tls.crt | base64)
+export KEY=$(cat tls.key | base64)
 ```
 
 ## Create a listener
@@ -171,8 +177,8 @@ body:
   name: tls_server
   config:
     certificates:
-      certificate: $CERTIFICATE
-      key: $KEY
+      - certificate: $CERTIFICATE
+        key: $KEY
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -187,7 +193,7 @@ body:
   type: forward_to_virtual_cluster
   name: forward_to_virtual_cluster
   config:
-    type: port_mapping
+    type: sni
     advertised_port: 19092
     sni_suffix: .127-0-0-1.sslip.io
 {% endkonnect_api_request %}
@@ -198,7 +204,7 @@ body:
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  kafkactl -C namespaced-clusters.yaml --context  payments list topics
+  kafkactl -C kafkactl.yaml --context payments list topics
 expected:
   return_code: 0
   message: |
