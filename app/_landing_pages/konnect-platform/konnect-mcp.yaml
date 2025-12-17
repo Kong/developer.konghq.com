@@ -460,7 +460,8 @@ rows:
                   The following are the latest changes in {{site.konnect_product_name}} MCP Server:
 
                   * Public Beta release (December 19, 2025)
-
+                  
+                  For a complete changelog of all {{site.konnect_product_name}} MCP Server releases, see the [{{site.konnect_product_name}} MCP Server changelog](/konnect-platform/konnect-mcp/changelog/).
   - header:
         text: "Frequently asked questions"
         type: h2
@@ -470,7 +471,7 @@ rows:
           config:
             - q: Can I disable MCP access for my organization?
               a: |
-                MCP server access is enabled by default for all organizations. Organization admins can disable this from **Settings**, after which no user will be able to access the MCP server.
+                MCP server access is enabled by default for all organizations. Organization admins can disable this from **Organization > Settings**, after which no user will be able to access the MCP server.
             - q: How does user access control work for MCP tools?
               a: |
                 Access to MCP tools is based on the permission levels of the user whose PAT is used for authentication.
