@@ -45,4 +45,4 @@ jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-This virtual cluster provides access to topics with the `analytics_` prefix, and the `user_actions` topic.
+This virtual cluster provides access to topics with the `{{cluster}}_` prefix, and the `user_actions` topic.
