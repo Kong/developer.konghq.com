@@ -148,7 +148,7 @@ headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_KEY'
 body:
-  model: gpt-4
+  model: gpt-5-mini
   messages:
   - role: "user"
     content: "Say this is a test!"
