@@ -164,7 +164,7 @@ openssl x509 -req -in ./tls.csr \
 
 ## Export the key and certificate
 ```sh
-export CERTIFICATE=$(cat tls.crt | base64)
+export CERTIFICATE=$(awk '{printf "%s\\n", $0}' tls.crt)
 export KEY=$(cat tls.key | base64)
 ```
 
