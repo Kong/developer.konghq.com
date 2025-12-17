@@ -43,7 +43,9 @@ faqs:
   - q: What can I do after customizing an Explorer dashboard?
     a: |
         * **Save as a Report**: This function creates a new custom report based on your current view, allowing you to revisit these specific insights at a later time.
-        * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.   
+        * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.
+  - q: How do I check what location an API request is coming from?
+    a: In the Analytics Explorer, you can view the geographic origin of API requests by using the country dimension and the map chart type. Navigate to Analytics → Explorer, select an API Usage report, then group or filter by Country. Switch the chart view to Map to see request volumes by country. The country information is added automatically by {{site.base_gateway}} using the IP‑to‑country database [IPinfo](https://ipinfo.io/developers/ip-to-country-database).
   - q: What interactions are available when working with charts to investigate my data?
     a: |
        Charts in {{site.konnect_short_name}} Analytics include interactive options to help you investigate data:
@@ -83,7 +85,7 @@ This toggle lets you enable or disable data collection for your API traffic per 
 
 **Modes:**
 - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
-- **Off:** Advanced analytics collection stops, but basic API metrics remain available in Gateway Manager, 
+- **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway in {{site.konnect_short_name}}, 
 and can still be used for custom reports.
 
 ## Metrics

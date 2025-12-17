@@ -7,8 +7,8 @@ sections:
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
-      - title: Mesh release notes
-        description: Release notes for supported Kong Mesh versions.
+      - title: Mesh changelog
+        description: Changelog for supported Kong Mesh versions.
         url: /mesh/changelog/
       - path: /mesh/enterprise/
 
@@ -25,9 +25,6 @@ sections:
       - path: /mesh/ubi-images/
       - path: /mesh/deploy-with-terraform-konnect/
       - path: /mesh/import-konnect-deployment-to-terraform/
-      - title: Mesh Manager with Konnect
-        description: Manage service meshes and Control Planes in Konnect.
-        url: /mesh-manager/
 
   - title: Mesh guides
     items:
@@ -91,6 +88,7 @@ sections:
     items:
       - path: /mesh/ingress-gateway-delegated/
       - path: /mesh/using-mesh/managing-ingress-traffic/delegated
+      - path: /mesh/gateway-delegated/
 
   - title: Authentication and Authorization
     items:

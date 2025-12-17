@@ -1,4 +1,5 @@
 links:
+  share: http://localhost:4000
   web: http://localhost:4000
 
 # skip generators to speed up dev builds, the name matches the generator's name
@@ -6,6 +7,7 @@ skip:
   plugins: true # skip plugins generation, except for overviews
   indices: true # skip indices
   mesh_policy: true # skip mesh policies generation, except for overviews
+  event_gateway_policy: true # skip event gateway policies generation, except for overviews
   explorer: true # skip explorer
   auto_generated: true # skip auto_generated references, i.e. app/_referneces
   mesh: true # skip kuma to mesh generation

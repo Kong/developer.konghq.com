@@ -51,18 +51,22 @@ faqs:
   - q: I'm using AWS CDK, can I manage Kong resources with CDK instead of {{ site.kic_product_name }}?
     a: |
       Currently, you can't manage Kong resources via AWS CDK. We recommend managing Kong configurations by [deploying decK](/deck/) or custom automation (for example, Lambda functions) through CDK that interact with the [Admin API](/admin-api/). 
+
+tags:
+  - install
+  - helm
 ---
 
 {: data-deployment-topology="konnect" }
 ## Konnect setup
 
 {:.info}
-> For UI setup instructions to install {{ site.kic_product_name }} on {{ site.konnect_short_name }}, use the [Gateway Manager setup UI](https://cloud.konghq.com/us/gateway-manager/create-control-plane).
+> For UI setup instructions to install {{ site.kic_product_name }} on {{ site.konnect_short_name }}, use the [control plane setup UI](https://cloud.konghq.com/us/gateway-manager/create-control-plane).
 
 To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deployment, you need the following items:
 
-1. A {{ site.kic_product_name }} Control Plane, including the Control Plane URL
-1. An mTLS certificate for {{ site.kic_product_name }} to talk to {{ site.konnect_short_name }}
+1. A {{ site.kic_product_name }} control plane, including the control plane URL.
+1. An mTLS certificate for {{ site.kic_product_name }} to talk to {{ site.konnect_short_name }}.
 
 {% include k8s/kic-konnect-install.md %}
 

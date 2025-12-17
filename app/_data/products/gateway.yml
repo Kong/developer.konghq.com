@@ -27,7 +27,7 @@ deployment_topologies:
 
 releases:
   - release: "3.4"
-    ee-version: "3.4.3.21"
+    ee-version: "3.4.3.22"
     ce-version: "3.4.2"
     eol: 2026-08-31
     lts: true
@@ -737,7 +737,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.10"
-    ee-version: "3.10.0.6"
+    ee-version: "3.10.0.7"
     lts: true
     eol: 2028-03-31
     distributions:
@@ -922,7 +922,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.11"
-    ee-version: "3.11.0.4"
+    ee-version: "3.11.0.6"
     eol: 2026-07-03
     distributions:
       - amazonlinux2:
@@ -1109,7 +1109,7 @@ releases:
 
   - release: "3.12"
     latest: true
-    ee-version: "3.12.0.0"
+    ee-version: "3.12.0.2"
     eol: 2026-10-01
     distributions:
       - amazonlinux2:
@@ -1311,12 +1311,17 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.12.0.2': 2025/12/10
+  '3.12.0.1': 2025/11/18
   '3.12.0.0': 2025/10/01
+  '3.11.0.6': 2025/11/03
+  '3.11.0.5': 2025/10/23
   '3.11.0.4': 2025/09/30
   '3.11.0.3': 2025/09/05
   '3.11.0.2': 2025/07/28
   '3.11.0.1': 2025/07/16
   '3.11.0.0': 2025/07/03
+  '3.10.0.7': 2025/12/09
   '3.10.0.6': 2025/10/10
   '3.10.0.5': 2025/08/22
   '3.10.0.4': 2025/08/07
@@ -1358,6 +1363,7 @@ release_dates:
   '3.5.0.2': 2023/12/21
   '3.5.0.1': 2023/11/14
   '3.5.0.0': 2023/11/08
+  '3.4.3.22': 2025/11/24
   '3.4.3.21': 2025/09/05
   '3.4.3.20': 2025/06/25
   '3.4.3.19': 2025/06/10

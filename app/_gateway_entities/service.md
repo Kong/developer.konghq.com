@@ -18,7 +18,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 tools:
     - admin-api
@@ -26,9 +26,6 @@ tools:
     - kic
     - deck
     - terraform
-
-tags:
-  - service-application
 
 search_aliases:
   - upstream service

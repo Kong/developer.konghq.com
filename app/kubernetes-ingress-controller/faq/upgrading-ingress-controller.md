@@ -23,6 +23,9 @@ related_resources:
   - text: Upgrading {{ site.base_gateway }}
     url: /kubernetes-ingress-controller/faq/upgrading-gateway/
 
+tags:
+  - upgrade
+  - helm
 ---
 
 {:.warning}

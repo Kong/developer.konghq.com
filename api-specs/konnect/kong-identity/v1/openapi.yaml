@@ -2,6 +2,8 @@ openapi: 3.0.3
 info:
   title: Konnect Sliver
   version: 0.0.1
+  x-oas-source: kong/platform-api@08ca38f0c5f792f849a10852784d7ffe6d4a4ef6
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/08ca38f0c5f792f849a10852784d7ffe6d4a4ef6'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -107,10 +109,22 @@ paths:
     delete:
       operationId: deleteAuthServer
       summary: Delete an auth server
-      description: Delete an auth server. All resources associated with the auth server will also be deleted. This action is irreversible.
+      description: 'Delete an auth server. If force=true, delete the auth server and all its associated resources. If force=false, only allow deletion if no resources are associated with the auth server. This action is irreversible.'
+      parameters:
+        - name: force
+          in: query
+          description: 'If true, delete the specified auth server and all its associated resources. If false, only allow deletion if no clients, scopes or claims are associated with the auth server.'
+          schema:
+            type: string
+            default: 'false'
+            enum:
+              - 'true'
+              - 'false'
       responses:
         '204':
           description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
@@ -655,6 +669,7 @@ components:
         type: string
         format: uuid
       nullable: false
+      uniqueItems: true
     ClientId:
       description: The OAuth 2.0 client ID
       type: string
@@ -1027,40 +1042,32 @@ components:
       title: SortQuery
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
         example-2:
           eq: some-value
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
       properties:
-        contains:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
       x-examples:
         example-1:
           contains: some-value
-    LegacyStringFieldFilter:
-      description: Filter a string value field either by exact match or partial contains.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-      title: StringFieldFilter
+        example-2:
+          eq: some-value
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 

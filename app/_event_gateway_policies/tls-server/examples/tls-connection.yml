@@ -1,0 +1,29 @@
+title: Allow TLS connections
+
+description: Allow TLS connections to the {{site.event_gateway_short}} server.
+
+extended_description: |
+  Allow TLS connections to the {{site.event_gateway_short}} server.
+
+  The key value must be a reference to a secret.
+
+requirements:
+  - A certificate and key pair. The key must be stored as an environment variable. The certificate can be a literal value or a refernece to a secret.
+
+
+weight: 900
+
+name: tls
+type: tls_server
+config:
+  certificates:
+    - certificate: "${env[\"MY_CERTIFICATE\"]}"
+      key: "${env[\"MY_SECRET\"]}"
+  versions:
+    min: TLSv1.2
+    max: TLSv1.2
+  allow_plaintext: false
+
+tools:
+  - konnect-api
+  - terraform

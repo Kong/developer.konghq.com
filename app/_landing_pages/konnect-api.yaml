@@ -99,8 +99,8 @@ rows:
         blocks:
         - type: text
           config: |
-            Personal access tokens (PATs) let you access the Konnect API and CLIs as your personal user account. 
-            They are useful for admin tasks, and are the most commonly used and recommended token type.
+            Personal access tokens (PATs) let you access the {{site.konnect_short_name}} API and CLIs as your personal user account. 
+            They are useful for admin tasks, and are the most commonly used and recommended token type. 
             
             When using a PAT, be aware of the following:
             
@@ -108,6 +108,15 @@ rows:
             * The PAT has a maximum duration of 12 months.
             * There is a limit of 10 personal access tokens per user.
             * Unused tokens are deleted and revoked after 12 months of inactivity.
+            * A revoked token may be used for up to 15 minutes after revocation.
+
+            Org Admins can revoke personal access tokens for users that leave their organization by using the UI or {{site.konnect_short_name}} API: 
+            * **UI:** Navigate to **Organization > Users**, click the user, click the **Personal access tokens** tab
+            * **API:** Send a PATCH request to the `/users/{userId}/access-tokens/{tokenId}/revoke` endpoint
+
+    
+
+            Organization Admins can disable the use of PATs by all users by navigating to **Organization > Settings > General**.
       - header:
           type: h3
           text: "System accounts and access tokens"
@@ -133,7 +142,7 @@ rows:
           config: |
             Managed system accounts, denoted by `konnect_managed:true` in the Identity API, are system accounts whose lifecycle is managed by {{site.konnect_short_name}} instead of the user. 
 
-            [Mesh Manager](/mesh-manager/) automatically creates a managed system account that is only used to issue a token during the zone creation process. 
+            {{site.konnect_short_name}} automatically creates a managed system account that is only used to issue a token during the zone creation process. 
             This managed system account can't be edited or deleted manually. 
             Instead, it is deleted automatically by {{site.konnect_short_name}} when the zone is deleted.
     

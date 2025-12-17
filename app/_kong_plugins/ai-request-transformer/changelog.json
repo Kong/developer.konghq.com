@@ -1,4 +1,11 @@
 {
+  "3.12.0.1": [
+    {
+      "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where some of ai metrics was missed in analytics",
@@ -16,6 +23,13 @@
       "message": "Fixed an issue where the llm license migration could fail if the license counter contained more than one week of data.",
       "scope": "Plugin",
       "type": "bugfix"
+    }
+  ],
+  "3.11.0.5": [
+    {
+      "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
+      "type": "bugfix",
+      "scope": "Plugin"
     }
   ],
   "3.10.0.0": [
@@ -36,6 +50,13 @@
     },
     {
       "message": "- Fixed an issue where templates weren't being resolved correctly.\n- The plugins now support nested fields.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.7": [
+    {
+      "message": "Fixed an issue where ai-request-transformer plugin does not accept capture groups for deployment field\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -1,11 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Audit Log Settings
-  version: 3.0.0
+  version: 3.0.2
   description: The API for configuring Kong Konnect Audit Logs.
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@c3715ce9a30998943c165a49022d2d73edf6eb79
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c3715ce9a30998943c165a49022d2d73edf6eb79'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -561,42 +563,24 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
       properties:
-        contains:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
       x-examples:
         example-1:
           contains: some-value
-    LegacyStringFieldFilter:
-      description: Filter a string value field either by exact match or partial contains.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-      title: StringFieldFilter
+        example-2:
+          eq: some-value
     LogFormat:
       description: The output format of each log messages.
       type: string
@@ -971,7 +955,7 @@ components:
             properties:
               webhook_status:
                 description: |-
-                  Current status of a webhook. `active` indicates the webhook is sending or ready to send requests. 
+                  Current status of a webhook. `active` indicates the webhook is sending or ready to send requests.
                   `inactive` indicates the webhook has been turned off due to failed attempts.
                 type: string
                 example: active
@@ -980,7 +964,7 @@ components:
                   - inactive
               webhook_enabled:
                 description: |-
-                  Configured status of a webhook. `enabled` indicates the client will accept requests. 
+                  Configured status of a webhook. `enabled` indicates the client will accept requests.
                   `disabled` indicates the client will not accept requests.
                 type: boolean
                 example: true

@@ -1,34 +1,12 @@
 # frozen_string_literal: true
 
+require_relative '../../policies/pages/overview'
+
 module Jekyll
   module MeshPolicyPages
     module Pages
-      class Overview < Base # rubocop:disable Style/Documentation
-        def self.url(policy)
-          if policy.unreleased?
-            "/mesh/policies/#{policy.slug}/#{policy.min_release}/"
-          else
-            "/mesh/policies/#{policy.slug}/"
-          end
-        end
-
-        def content
-          @content ||= parser.content
-        end
-
-        def layout
-          'mesh_policies/with_aside'
-        end
-
-        def data
-          super.merge('overview?' => true)
-        end
-
-        private
-
-        def parser
-          @parser ||= Jekyll::Utils::MarkdownParser.new(File.read(file))
-        end
+      class Overview < Base
+        include Policies::Pages::Overview
       end
     end
   end

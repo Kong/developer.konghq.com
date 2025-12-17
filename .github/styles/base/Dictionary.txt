@@ -41,6 +41,7 @@ Arya
 Arya
 arya
 assumeRole
+async
 Atlassian
 auditability
 authtoken
@@ -57,6 +58,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avro
 aws
 AZs
 backfilled
@@ -96,6 +98,7 @@ callees
 CAs
 callout
 callouts
+camelCase
 cef
 certificate_admin
 charset
@@ -104,6 +107,7 @@ chatbots
 cidr
 cidrs
 cleartext
+client_credentials
 client_payload
 client_status
 clipanion
@@ -232,6 +236,7 @@ etcd
 event_hook
 eventhooks
 eventTime
+example_service
 exfiltrate
 failover
 fapi
@@ -253,6 +258,7 @@ full_name
 Gateway
 GatewayClass
 gatewayclass
+gateway_entity
 gcloud
 gcp
 geo
@@ -358,6 +364,7 @@ io
 ip
 ips
 iptables
+IPinfo
 Istio
 Istio
 Istio's
@@ -389,11 +396,13 @@ jwt
 jwts
 kafka
 kafkactl
+KAi
 kbps
 kds
 keepalive
 keps
 ketama
+key_sources
 Keycloak
 Keycloak
 keyless
@@ -463,6 +472,7 @@ LLM
 llm
 LLMLingua
 LLMs
+Lodash
 Loggly
 Loggly
 loggly
@@ -517,6 +527,8 @@ moesif
 MongoDB
 MongoDB
 multimodal
+multitenant
+multitenancy
 mutex
 nameserver
 nameservers
@@ -651,6 +663,8 @@ readme
 readonly
 real_ip_header
 real_ip_recursive
+rebalance
+render_output
 Realtime
 realtime
 reconverge
@@ -681,6 +695,7 @@ resourceVersion
 Resty
 Resty
 resty
+Resync
 retryOn
 reusability
 rockspec
@@ -730,6 +745,7 @@ slos
 SLT_Enc
 sni
 snis
+sonarqube
 Splunk
 Splunk
 ssl
@@ -746,6 +762,7 @@ status_code
 stderr
 stdin
 stdout
+Streamable
 stream_listen
 stringified
 Styra
@@ -813,6 +830,7 @@ tlds
 tls
 TLSRoute
 TLSRoutes
+tokenization
 toolchain
 tooltip
 tproxy
@@ -853,10 +871,11 @@ unescaped
 ungroup
 ungrouped
 Unicode
-Unicode
+unicode
 unix
 unmanaged
 unmarshalled
+unnamespaced
 unnormalized
 unpackage
 unparsed
@@ -906,6 +925,7 @@ Valero
 validator
 validators
 vararg
+vc
 viewport
 viewports
 vms

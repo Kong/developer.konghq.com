@@ -1,6 +1,6 @@
 ---
-title: Create a Route with {{ site.gateway_operator_product_name }}
-description: "Create a {{ site.base_gateway }} Service and Route using {{ site.gateway_operator_product_name }}."
+title: Create a Route with {{ site.operator_product_name }}
+description: "Create a {{ site.base_gateway }} Service and Route using {{ site.operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/create-route/
@@ -26,7 +26,7 @@ works_on:
   - konnect
 
 tldr:
-  q: How can I create a Route with {{ site.gateway_operator_product_name }}?
+  q: How can I create a Route with {{ site.operator_product_name }}?
   a: Create a `KongService` object , then create a `KongRoute` and associate it to the `KongService`.
 next_steps:
   - text: Learn about Custom resource definitions (CRDs)
@@ -38,7 +38,8 @@ next_steps:
 {:data-deployment-topology='konnect'}
 ## Create a Service
 
-Creating the `KongService` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} service in your [Gateway Manager](/gateway-manager/).  You can refer to the CR [API](/operator/reference/custom-resources/#kongservice) to see all the available fields.
+Creating the `KongService` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} service for your [API Gateway](/gateway/). 
+You can refer to the CR [API](/operator/reference/custom-resources/#kongservice) to see all the available fields.
 
 Your `KongService` must be associated with a `KonnectGatewayControlPlane` object that you've created in your cluster.
 
@@ -61,12 +62,12 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-At this point, you should see the Service in the Gateway Manager UI.
+At this point, you should see the Service in the API Gateway UI.
 
 ## Create a Route
 
-Creating the `KongRoute` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} Route in
-your [Gateway Manager](/gateway-manager/).
+Creating the `KongRoute` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} Route for
+your [API Gateway](/gateway/).
 You can refer to the CR [API](/operator/reference/custom-resources/#kongroute) to see all the available fields.
 
 ### Associate a Route with a Service

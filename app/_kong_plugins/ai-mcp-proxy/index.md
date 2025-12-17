@@ -154,7 +154,7 @@ sequenceDiagram
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
-> - An MCP-compatible client (such as [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
+> - An MCP-compatible client (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
 > - The Kong AI Gateway instance supports the AI MCP Proxy plugin (is 3.12 or higher).
 
 ## Configuration modes
@@ -191,7 +191,9 @@ rows:
       [`conversion-only`](./examples/conversion-only/)
     description: |
       Converts RESTful API paths into MCP tools but does **not** accept incoming MCP requests.
-      This mode requires [`config.server.tag`](./reference/#schema--config-server-tag) in the plugin configuration, but does not define a server.
+      `tags` can be defined at the plugin level and are used by `listener` plugins to expose the tools. This mode does not define a server.<br/><br/>
+
+      This mode must be used together with other AI MCP Proxy plugins configured with the `listener` mode.
     usecase: |
       Use when you want to define reusable tool specifications without serving them.
       Suitable for teams that maintain a shared library of tool definitions for other listener plugins.
@@ -199,12 +201,15 @@ rows:
       [`listener`](./examples/listener/)
     description: |
       Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` tools using the [`config.server.tag`](./reference/#schema--config-server-tag) property.
-      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.
+      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.<br/><br/>
+
+      This mode must be used together with other AI MCP Proxy plugins configured with the `conversion-only` mode.
     usecase: |
       Use when you need a single MCP endpoint that aggregates tools from multiple `conversion-only` plugins.
       Typical in multi-service or multi-team environments that expose a unified MCP interface.
 {% endtable %}
 <!-- vale on -->
+
 
 
 ## Scope of support

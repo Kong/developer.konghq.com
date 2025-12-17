@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -2206,6 +2208,17 @@ components:
         - client_id
         - client_secret
       title: Refresh token response
+    CredentialListItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          type: string
+      additionalProperties: false
+      required:
+        - id
+        - display_name
     ListCredentialsResponse:
       type: object
       properties:
@@ -2214,16 +2227,7 @@ components:
         data:
           type: array
           items:
-            type: object
-            additionalProperties: false
-            properties:
-              id:
-                $ref: '#/components/schemas/UUID'
-              display_name:
-                type: string
-            required:
-              - id
-              - display_name
+            $ref: '#/components/schemas/CredentialListItem'
       additionalProperties: false
       required:
         - data

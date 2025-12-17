@@ -10,7 +10,7 @@ breadcrumbs:
 
 tags:
   - security
-  - images
+  - docker
 search_aliases:
   - Docker
 

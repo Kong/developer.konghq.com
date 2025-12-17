@@ -1,0 +1,61 @@
+name: Event Gateway Automated Tests
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 0 1 * *'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
+
+permissions:
+  actions: read
+  contents: read
+  checks: write
+  statuses: write
+
+env:
+  VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          submodules: 'recursive'
+
+      - name: Install deps
+        uses: './.github/reusable-steps/install-deps'
+
+      - name: Run site
+        uses: './.github/reusable-steps/run-site'
+
+      - name: Generate instruction files
+        uses: './.github/reusable-steps/generate-instruction-files'
+
+      - name: Download Kong License
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      - name: Run tests
+        working-directory: tools/automated-tests
+        shell: bash
+        env:
+          KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
+          RUNTIME: konnect
+          PRODUCT: event-gateway
+          TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
+        run: |
+          DEBUG=tests:*,debug npm run run-tests
+
+      - name: Publish Test Report
+        uses: './.github/reusable-steps/publish-test-report'
+        if: always()

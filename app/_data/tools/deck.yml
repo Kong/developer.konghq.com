@@ -1,10 +1,16 @@
 name: deck
 
 releases:
-  - release: "1.52"
-    version: "1.52.0"
+  - release: "1.54"
+    version: "1.54.0"
     latest: true
-    released: 2025-09-30
+    released: 2025-11-28
+  - release: "1.53"
+    version: "1.53.2"
+    released: 2025-11-17
+  - release: "1.52"
+    version: "1.52.1"
+    released: 2025-10-29
   - release: "1.51"
     version: "1.51.1"
     released: 2025-09-23
@@ -26,9 +32,3 @@ releases:
   - release: "1.45"
     version: "1.45.0"
     released: 2025-02-26
-  - release: "1.44"
-    version: "1.44.2"
-    released: 2025-02-18
-  - release: "1.43"
-    version: "1.43.1"
-    released: 2025-01-29

@@ -7,7 +7,6 @@ metadata:
     {{site.konnect_saas}} authentication and authorization from your own identity
     provider.
   tags:
-    - konnect
     - authentication
   products:
     - konnect

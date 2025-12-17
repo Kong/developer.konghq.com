@@ -16,15 +16,30 @@ After merging release branch, and once the Netlify build is complete and docs ar
 
 For minor or major version releases (e.g. 3.10 or 4.0):
 
-1. [Generate references: kong.conf, CLI, PDK, plugin schemas](#generate-docs)
-1. [Update Admin API](#updating-the-gateway-admin-api-spec)
-1. [Add GPG and RSA keys](#add-gpg-and-rsa-keys)
-1. [Generate changelogs and update breaking changes](#generate-changelogs)
-1. [Update support matrix](#support-matrix)
-1. [Bump the release version, tag as latest, and set release date](#bump-release-version)
-1. [Update SBOM link](#sbom-link)
-1. Search for and remove all `if_version` tags for the release that you're publishing
-1. Add latest Postgres version to support matrix after engineering release tests pass
+- [Release checklists](#release-checklists)
+  - [Konnect release checklist](#konnect-release-checklist)
+  - [Gateway release checklist](#gateway-release-checklist)
+    - [Minor or major releases](#minor-or-major-releases)
+    - [Patch releases](#patch-releases)
+  - [Release tasks](#release-tasks)
+    - [Generate changelogs](#generate-changelogs)
+      - [Breaking changes](#breaking-changes)
+    - [Support matrix](#support-matrix)
+    - [Bump release version](#bump-release-version)
+    - [Add GPG and RSA keys](#add-gpg-and-rsa-keys)
+    - [SBOM link](#sbom-link)
+    - [Generate docs](#generate-docs)
+      - [kong.conf reference](#kongconf-reference)
+      - [PDK references](#pdk-references)
+      - [CLI reference](#cli-reference)
+      - [Plugin schemas, priorities and referenceable\_fields](#plugin-schemas-priorities-and-referenceable_fields)
+    - [OpenAPI specs](#openapi-specs)
+      - [Publishing a new spec](#publishing-a-new-spec)
+      - [Updating an existing Konnect spec](#updating-an-existing-konnect-spec)
+      - [Updating the Gateway Admin API spec](#updating-the-gateway-admin-api-spec)
+    - [Konnect support](#konnect-support)
+    - [Algolia](#algolia)
+    - [Kapa](#kapa)
 
 After merging release branch, and once the Netlify build is complete and docs are visible on developer.konghq.com:
 1. [Run Algolia crawler](#algolia)
@@ -35,7 +50,7 @@ After Gateway is available on Konnect:
 
 There are a few items that we expect to come from engineering teams with each release:
 * [Performance benchmark update](https://developer.konghq.com/gateway/performance/benchmarks/)
-* [Konnect compatibility errors reference](https://developer.konghq.com/gateway-manager/version-compatibility/)
+* [Konnect compatibility errors reference](https://developer.konghq.com/gateway/data-plane-version-compatibility/)
 
 ### Patch releases 
 
@@ -141,15 +156,11 @@ TBA.
 
 TBA.
 
-#### Plugin schemas
+#### Plugin schemas, priorities and referenceable_fields
 
-In the kong/docs-plugin-toolkit repo, you'll need to run a few workflows. 
+In the Kong/kong-admin-spec-generator/ repo, you'll need to run the following workflow.
 
-1. [Download schemas](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/download-schemas.yml)
-    Use the branch generated in this first step to run all the subsequent steps, in order.
-1. [Generate plugin priorities](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/generate-plugin-priorities.yml)
-1. [Generate referenceable fields](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/generate-referenceable-fields.yml)
-1. [Generate JSON schemas](https://github.com/Kong/docs-plugin-toolkit/actions/workflows/generate-json-schemas.yml)
+1. [Gen and Sync Docs](https://github.com/Kong/kong-admin-spec-generator/blob/main/.github/workflows/gen-and-sync-docs.yaml)
 
 ### OpenAPI specs
 
@@ -167,7 +178,9 @@ to make sure the new spec is included. If not, add it the new spec to it.
 
 1. Ask a PM to upload the spec to Konnect
 
-1. Run the [Sync Konnect OAS data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) workflow and merge the generated PR.
+1. Run the [Sync Konnect OAS data](https://github.com/Kong/developer.konghq.com/actions/workflows/sync-konnect-oas-data.yml) workflow.
+1. In this PR, create a new directory in `app/_api/konnect/<product-name>` for the new spec with an `_index.md` file that contains the API product ID for the new spec.
+1. Merge the PR.
 
 1. Make sure the spec is added to [Kapa](#kapa).
 

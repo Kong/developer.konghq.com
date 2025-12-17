@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@244ff7363a36bd242d8f49f235ebb904e3672d32
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/244ff7363a36bd242d8f49f235ebb904e3672d32'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -2578,11 +2580,19 @@ components:
             - resource_config
       required:
         - transit_gateway_attachment_config
+    PatchAwsTransitGateway:
+      description: Request schema for updating AWS Transit Gateway
+      properties:
+        cidr_blocks:
+          $ref: '#/components/schemas/TransitGatewayCIDRBlocks'
+      required:
+        - cidr_blocks
     PatchTransitGatewayRequest:
       description: Request schema for updating a transit gateway.
       type: object
       oneOf:
         - $ref: '#/components/schemas/PatchAwsResourceEndpointGateway'
+        - $ref: '#/components/schemas/PatchAwsTransitGateway'
       title: PatchTransitGatewayRequest
     CustomDomainState:
       description: State of the custom domain.
@@ -3132,11 +3142,28 @@ components:
         example-1:
           oeq: 'ready,initializing'
     IDFieldFilter:
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-      title: IDFieldFilter
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+      additionalProperties: false
+      x-examples:
+        example-1:
+          neq: not-this-value
+          oeq: 'some-value,some-other-value'
+        example-2:
+          eq: some-value
     ControlPlaneGeoFieldFilter:
       oneOf:
         - $ref: '#/components/schemas/ControlPlaneGeoFieldEqualsFilter'
@@ -3241,23 +3268,6 @@ components:
         - created_at
         - updated_at
       title: Default Resource Configuration
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
     StringFieldNEQFilter:
       description: Filters on the given string field value by exact match inequality.
       type: object
@@ -3883,6 +3893,7 @@ components:
           schema:
             oneOf:
               - $ref: '#/components/schemas/AwsResourceEndpointGatewayResponse'
+              - $ref: '#/components/schemas/AwsTransitGatewayResponse'
     ListTransitGatewaysResponse:
       description: A paginated list for a collection of transit gateways for a network.
       content:

@@ -69,7 +69,7 @@ Each section uses the format:
 - [Developer Signup](https://developer.konghq.com/dev-portal/developer-signup/): Configure signup workflows and required fields.
 - [Dynamic Client Registration](https://developer.konghq.com/dev-portal/dynamic-client-registration/): Enable dynamic OAuth2 registration from consumer applications.
 - [Pages & Content](https://developer.konghq.com/dev-portal/pages-and-content/): Manage CMS-like pages including markdown and templated content.
-- [Portal Customization](https://developer.konghq.com/dev-portal/portal-customization/): Themes, colors, fonts, and structural overrides for branding.
+- [Portal Customization](https://developer.konghq.com/dev-portal/customizations/dev-portal-customizations/): Themes, colors, fonts, and structural overrides for branding.
 - [Portal Settings](https://developer.konghq.com/dev-portal/portal-settings/): Configure portal-level security, appearance, and defaults.
 - [Security Settings](https://developer.konghq.com/dev-portal/security-settings/): Security and privacy features available per portal.
 - [SSO](https://developer.konghq.com/dev-portal/sso/): SSO configuration for portal login via identity providers.
@@ -129,7 +129,6 @@ Each section uses the format:
 - [Mesh CLI](https://developer.konghq.com/mesh/cli/): Reference guide for using the `kumactl` CLI to manage Kong Mesh.
 - [Kubernetes Support](https://developer.konghq.com/mesh/kubernetes/): Kong Mesh installation and operation within Kubernetes clusters.
 - [Universal Mode](https://developer.konghq.com/mesh/universal/): Running Kong Mesh outside of Kubernetes in a VM-based environment.
-- [Mesh Manager](https://developer.konghq.com/mesh-manager/): GUI and API for managing multiple Kong Mesh control planes.
 - [Ingress & Gateway Delegation](https://developer.konghq.com/mesh/ingress/): Routing external traffic into the mesh.
 - [Policies Intro](https://developer.konghq.com/mesh/policies-introduction/): Overview of available traffic policies and how to apply them.
 - [All Policies](https://developer.konghq.com/mesh/policies/): Complete index of supported traffic, security, and telemetry policies in Kong Mesh.
@@ -152,7 +151,7 @@ Each section uses the format:
 
 ---
 
-## Kong Gateway Operator
+## Kong Operator
 
 - [Operator Overview](https://developer.konghq.com/operator/): Kubernetes controller that automates deployment and configuration of Kong Gateway.
 - [Install the Operator](https://developer.konghq.com/operator/install/): Installation instructions and CRD setup.

@@ -28,6 +28,8 @@ categories:
   - transformations
 
 related_resources:
+  - text: Datakit overview
+    url: /gateway/datakit/
   - text: Get started with Datakit
     url: /how-to/get-started-with-datakit/
 
@@ -73,66 +75,29 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Datakit flow editor
+## Configuring Datakit
 
-In addition to the standard [{{site.base_gateway}} configuration tools](/tools/),
-{{site.konnect_short_name}} provides a drag-and-drop flow editor for Datakit. 
-The flow editor helps you visualize node connections, inputs, and outputs.
+You can configure the Datakit plugin in a number of ways:
+* Using the [Admin API](/api/gateway/admin-ee/) or [{{site.konnect_short_name}} API](/api/konnect/control-planes-config/)
+* Using declarative configuration with tools such as [decK](/deck/) or [Terraform](/terraform/)
+* [Using the Datakit flow editor](/gateway/datakit-flow-editor/) in the {{site.konnect_short_name}} UI, which lets you visually configure nodes by dragging and dropping them, or use a code editor to write declarative configuration right in {{site.konnect_short_name}}
 
 ![Full screen flow editor](/assets/images/konnect/datakit-flow-editor-node.png)
 > _Figure 1: The Datakit flow editor opens in a full screen with a list of nodes, a drag-and-drop diagram, and detailed configuration options for each node._
 
-You can find the flow editor in the Datakit plugin's configuration page in {{site.konnect_short_name}}.
-From here, you can configure Datakit in one of two ways:
-* Using the visual flow editor
-* Using the code editor
-
-Any changes you make in one editor are reflected in the other. 
-For instance, if you have a YAML configuration for Datakit that you want to visualize, you can add it to the code editor, then switch to the flow editor to see it in flow format.
-
-![Flow editor preview](/assets/images/konnect/datakit-flow-editor-preview.png)
-> _Figure 2: Toggle the Datakit plugin configuration to the Flow Editor to edit configuration using drag-and-drop. The flow editor shows a preview of the diagram, which you can click to edit in a full screen._
-
-![Code editor](/assets/images/konnect/datakit-code-editor.png)
-> _Figure 3: Toggle the Datakit plugin configuration to the Code Editor to edit configuration in YAML format._
-
-### Using the Datakit flow editor 
-
-To configure Datakit using the flow editor:
-
-1. In the {{site.konnect_short_name}} sidebar, navigate to [API Gateway](https://cloud.konghq.com/gateway-manager/). 
-1. Click your control plane. 
-1. In the API Gateway sidebar, click **Plugins**.  
-1. Click **New Plugin**.
-1. Click **Datakit**.
-1. In the Plugin Configuration section, click **Go to flow editor**.
-1. In the editor, drag any node from the menu onto the canvas to add it to your flow, or click **Examples** and choose a pre-configured example to customize.
-1. Expand the `inputs` or `outputs` on a node to see the options, then connect a specific input or output to another node.
-1. Select any node to open its detailed configuration in a slide-out menu.
-1. Fill out the configuration. Any changes to inputs or outputs will be reflected in the diagram.
-1. Click **Done**.
-
-{:.info}
-> **Notes:** 
-* Each input can connect to only one output, but one output can accept many inputs.
-* Your nodes don't have to connect to the prepopulated `request`/`service request` or `response`/`service response` nodes. 
-Whether you need them or not depends on your use case. Check out the **Examples** dropdown in the editor for some variations.
-
 ## How does the Datakit plugin work?
 
-The following sections describes what Datakit nodes are and how they work.
-
-### The node object
-
-The core component of Datakit is the `node` object. A `node` represents some
+Datakit executes workflows composed of **nodes**. A node represents some
 task that consumes input data, produces output data, or a combination of the two. 
 Datakit nodes can:
 
 * Read client request attributes
 * Send an external HTTP request
 * Modify the response from an upstream before sending it to the client
+* Perform internal authentication
+* Execute branching conditional workflows
 
-Most of these tasks can be performed in isolation by an existing plugin. 
+Most of these tasks can be performed in isolation by other Kong plugins, or by creating custom plugins.
 Datakit can string together an execution plan from several nodes, connecting the output from one into the input of another:
 
 * Read client request attributes _and_ use them to craft an external HTTP request
@@ -158,9 +123,9 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
-### Node I/O
+### Node input and output
 
-A Datakit node consumes data via `inputs` and emits data via `outputs`.
+A Datakit node consumes data via inputs and emits data via outputs.
 Connecting the output of one node to the input of another is accomplished by
 referencing the node's unique `name` in the plugin's configuration.
 
@@ -240,7 +205,11 @@ on the source node to select a target node for each named output:
 ```
 
 Node outputs can be copied to any number of inputs, but each input may only be
-connected to one output. This configuration is correct:
+connected to one output. 
+
+{% navtabs 'input-output-example' %}
+{% navtab "Correct configuration" %}
+This configuration is correct:
 
 ```yaml
 - name: GET_FOO
@@ -257,8 +226,9 @@ connected to one output. This configuration is correct:
   jq: "."
   input: GET_FOO
 ```
-
-But this configuration will yield an error for `GET_BAR.output`:
+{% endnavtab %}
+{% navtab "Incorrect configuration" %}
+This configuration will yield an error for `GET_BAR.output`:
 
 ```yaml
 - name: GET_FOO
@@ -281,6 +251,9 @@ Error:
 invalid connection ("GET_BAR" -> "FILTER"): conflicts with existing connection ("GET_FOO" -> "FILTER")
 ```
 {:.no-copy-code}
+
+{% endnavtab %}
+{% endnavtabs %}
 
 The `jq` node is especially flexible, allowing you to craft an ad-hoc input
 object by defining individual input fields in your configuration. Here's an
@@ -334,19 +307,21 @@ Configuration order _is_ a facet in determining execution order,
 but don't rely on your configuration to dictate the exact order in which nodes will be executed, 
 as Datakit can and will re-order nodes to optimize its execution plan.
 
-#### Data types, validation, and connection semantics
+### Data types
 
 A key component of Datakit is its type system. Datakit supports the following types:
 
-* Primitive, scalar types like `string`s and `number`s
+* Primitive, scalar types like `string` and `number`
 * Non-scalar container types:
     * `object`: Statically-defined, struct-like values
     * `map`: Dynamic string keys and static or dynamically typed values
 * Dynamic types:
     * `any`: Values whose type may not be known until runtime
 
-Datakit performs validation at "config-time" (when the plugin is created
-or updated via the admin API) by inspecting the type info on either side of a
+### Validation and connection semantics
+
+Datakit performs validation at config-time (when the plugin is created
+or updated via the Admin API) by inspecting the type info on either side of a
 connection, falling back to runtime checks when necessary:
 
 * If the input and output have the same type (for example, `string -> string`, 
@@ -367,7 +342,7 @@ connection, falling back to runtime checks when necessary:
 Connection labels can be in the form of `{node_name}` or `{node_name}.{field_name}`. 
 Connections without a field name are referred to in this reference as "node-wise" or `$self` connections.
 
-##### object -> object
+#### object -> object
 
 For this type of connection, Datakit iterates over each field that the nodes have in common and connects them. 
 If the nodes have no fields in common, a validation error will be raised.
@@ -423,7 +398,7 @@ reading the configuration, so a newly-added field in a subsequent Datakit
 release may be inherited by a configuration from a previous version and lead to
 unintended behavior changes. 
 
-##### object -> map
+#### object -> map
 
 This type of connection is not permitted.
 
@@ -440,7 +415,7 @@ invalid connection ("invalid" -> "service_request.headers"): type mismatch: obje
 ```
 {:.no-copy-code}
 
-##### object -> any
+#### object -> any
 
 This type of connection copies all data from the source `object` to the target
 input. In this example, `filter` will receive a JSON object as input with the
@@ -460,12 +435,12 @@ reading the configuration, so a newly-added field in a subsequent Datakit
 release may be inherited by a configuration from a previous version and lead to
 unintended behavior changes. 
 
-##### * -> any
+#### * -> any
 
 Connections of any output type to an `any` input type are always permitted. At
 runtime the data is copied as-is.
 
-##### any -> *
+#### any -> *
 
 Connections from `any` output types are permitted under almost all conditions
 and incur a runtime type conversion check (unless the target type is also `any`).
@@ -498,170 +473,70 @@ invalid connection ("get-bar" -> "response.body"): conflicts with existing conne
 
 The Datakit plugin provides the following node types:
 
-* `branch`: Execute different nodes based on matching input conditions.
-* `cache`: Store and fetch cached data.
-* `call`: Send third-party HTTP calls.
-* `jq`: Transform data and cast variables with `jq` to be shared with other nodes.
-* `exit`: Return directly to the client.
-* `property`: Get and set {{site.base_gateway}}-specific data.
-* `static`: Configure static input values ahead of time.
-
 <!--vale off-->
 {% table %}
 columns:
   - title: Node type
     key: nodetype
+  - title: Description
+    key: description
   - title: Inputs
     key: inputs
   - title: Outputs
     key: outputs
-  - title: Attributes
-    key: attributes
 rows:
-  - nodetype: "`branch`"
+  - nodetype: |
+      [`branch`](#branch-node) {% new_in 3.12 %}
+    description: "Execute different nodes based on matching input conditions."
     inputs: "user-defined"
     outputs: none
-    attributes: "`then`, `else`"
-  - nodetype: "`cache`"
+  - nodetype: |
+      [`cache`](#cache-node) {% new_in 3.12 %}
+    description: "Store and fetch cached data."
     inputs: "`key`, `ttl`, `data`"
     outputs: "`hit`, `miss`, `stored`, `data`"
-    attributes: "`bypass_on_error`, `ttl`"
-  - nodetype: "`call`"
+  - nodetype: |
+      [`call`](#call-node)
+    description: "Send third-party HTTP calls."
     inputs: "`body`, `headers`, `query`"
     outputs: "`body`, `headers`, `status`"
-    attributes: "`url`, `method`, `timeout`, `ssl_server_name`"
-  - nodetype: "`jq`"
+  - nodetype: |
+      [`jq`](#jq-node)
+    description: "Transform data and cast variables with `jq` to be shared with other nodes."
     inputs: user-defined
     outputs: user-defined
-    attributes: "`jq`"
-  - nodetype: "`exit`"
+  - nodetype: |
+      [`exit`](#exit-node)
+    description: "Return directly to the client without forwarding any further."
     inputs: "`body`, `headers`"
     outputs: none
-    attributes: "`status`"
-  - nodetype: "`property`"
+  - nodetype: |
+      [`property`](#property-node)
+    description: "Get and set {{site.base_gateway}}-specific data."
     inputs: "`$self`"
     outputs: "`$self`"
-    attributes: "`property`, `content_type`"
-  - nodetype: "`static`"
+  - nodetype: |
+      [`static`](#static-node)
+    description: "Configure static input values ahead of time."
     inputs: none
     outputs: user-defined
-    attributes: "`values`"
 {% endtable %}
 <!--vale on-->
 
-### Implicit nodes
+You can learn more about the supported configuration parameters for each node in the [configuration reference](/plugins/datakit/reference/#schema--config-nodes).
 
-Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
-These nodes can either be used without being explicitly declared, or declared under the global resources object.
-
-These reserved node names can't be used for user-defined
-nodes. They include:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Node
-    key: node
-  - title: Inputs
-    key: inputs
-  - title: Outputs
-    key: outputs
-  - title: Description
-    key: description
-  - title: declaration
-    key: declaration
-rows:
-  - node: "`request`"
-    inputs: none
-    outputs: "`body`, `headers`, `query`"
-    description: Reads incoming client request properties
-    declaration: none
-  - node: "`service_request`"
-    inputs: "`body`, `headers`, `query`"
-    outputs: none
-    description: Updates properties of the request sent to the service being proxied to
-    declaration: none
-  - node: "`service_response`"
-    inputs: none
-    outputs: "`body`, `headers`"
-    description: Reads response properties from the service being proxied to
-    declaration: none
-  - node: "`response`"
-    inputs: "`body`, `headers`"
-    outputs: none
-    description: Updates properties of the outgoing client response
-    declaration: none
-  - node: "`vault`"
-    inputs: none
-    outputs: "`$self`"
-    description: Vault reference to hold secret values
-    declaration: "resources.vault"
-{% endtable %}
-<!--vale off-->
-
-#### Headers
-
-The `headers` type produces and consumes maps from header names to their values:
-
-* Keys are header names. Original header name casing is preserved for maximum
-    compatibility.
-* Values are strings if there is a single instance of a header or arrays of
-    strings if there are multiple instances of the same header.
-
-#### Query
-
-The `query` type produces and consumes maps with key-value pairs representing
-decoded URL query strings.
-
-#### Body
-
-The `service_request.body` and `response.body` inputs both accept any data type.
-If the data is an object, it will automatically be JSON-encoded, and the
-`Content-Type` header set to `application/json` (if not already set in the
-`headers` input).
-
-The `request.body` and `service_response.body` outputs have a similar behavior.
-If the corresponding `Content-Type` header matches the JSON mime-type, the
-`body` output is automatically JSON-decoded.
-
-#### Vault node {% new_in 3.12 %}
-
-The `vault` node is an implicit node that allows you to declare secret references
-and can be used in other nodes as a source of secret values. Vault references are declared
-under the `resources.vault` configuration.
-
-##### Examples
-
-Declare two vault references and use them in a `jq` node:
-```yaml
-resources:
-  vault:
-    secret1: "{vault://env/my-secret1}"
-    secret2: "{vault://aws/my-secret2}"
-nodes:
-  - name: JQ
-    type: jq
-    inputs:
-      secret1: vault.secret1
-      secret2: vault.secret2
-    jq: "."
-```
-
-### branch node {% new_in 3.12 %}
+### Branch node {% new_in 3.12 %}
 
 Execute different nodes based on matching input conditions, such as a cache hit or miss.
 
-#### Input
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `branch` from the node object dropdown to see all node attributes.
+
+#### Branch node inputs 
 
 The input to a branch node represents a boolean condition to test and branch on:
 * If the input is `true`, the nodes named by the `then` array are executed.
 * If the input is `false`, the nodes named by the `else` array are executed.
 * If the input is a non-boolean value, an error is raised.
-
-#### Configuration attributes
-
-* `then`: Array of nodes to execute if the input condition is `true`.
-* `else`: Array of nodes to execute if the input condition is `false`.
 
 {:.info}
 > **Note:** When using the `branch` node, the `then` and `else` parameters must list all nodes for both branches.
@@ -700,58 +575,52 @@ Branch node based on cache hit or miss:
 
 See [Conditionally fetching or storing cache data](/plugins/datakit/examples/conditionally-store-cached-items/) for a full example.
 
-### cache node {% new_in 3.12 %}
+### Cache node {% new_in 3.12 %}
 
-Stored data into cache and fetch cached data from cache.
+Store data into a cache and fetch cached data from a cache.
 
-Inputs:
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `cache` from the node object dropdown to see all node attributes.
+
+The `cache` node requires a [`resources.cache` resource definition](#cache-resource) containing 
+cache configuration.
+
+#### Cache node inputs
+
+The `cache` node takes the following inputs: 
 
 * `key` (**required**): the cache key string
 * `ttl`: The TTL (Time to Live) in seconds
 * `data`: The data to be cached. If not null, the cache node works in set mode, 
   storing data into cache; if null, the cache node fetches data
   
-Outputs:
+#### Cache node outputs
 
-* `hit`: `true` if a cache hit occured
+The `cache` node produces the following outputs:
+
+* `hit`: `true` if a cache hit occurred
 * `miss`: `true` if a cache miss occurred
-* `stored`: `true` if data was successfuly stored into cache
-* `data`: The data that was stored into cache
+* `stored`: `true` if data was successfully stored into the cache
+* `data`: The data that was stored into the cache
 
-Configuration attributes:
-
-* `bypass_on_error`: if `true`, cache backend errors are treated as a cache 
-  miss
-* `ttl`: The TTL (Time to Live) in seconds
-
-### call node
+### Call node
 
 Send an HTTP request and retrieve the response.
 
-Inputs:
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `call` from the node object dropdown to see all node attributes.
+
+#### Call node inputs
+
+The `call` node takes the following inputs:
 
 * `body`: Request body
 * `headers`: Request headers
 * `query`: Key-value pairs to encode as the request query string
 
-#### cache resource {% new_in 3.12 %}
-
-The `cache` node requires a `resources.cache` resource definition containing 
-cache configuration.
-
-{% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
-
-Outputs:
+#### Call node outputs
 
 * `body`: The response body
 * `headers`: The response headers
 * `status`: The HTTP status code of the response
-
-Configuration attributes:
-
-* `url` (**required**): The URL
-* `method`: The HTTP method (default is `GET`)
-* `timeout`: The dispatch timeout, in milliseconds
 
 #### Examples
 
@@ -846,14 +715,16 @@ invalid dependency (node #1 (CALL) -> node service_response): circular dependenc
 ```
 {:.no-copy-code}
 
-### jq node type
+### jq node
 
 The `jq` node executes a jq script for processing JSON. See the official
 [jq docs](https://jqlang.org/) for more details.
 
-#### Inputs
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `jq` from the node object dropdown to see all node attributes.
 
-User-defined. For node-wise (`$self`) connections, `jq` can handle input of
+#### jq node inputs
+
+Inputs for the `jq` node are user-defined. For node-wise (`$self`) connections, `jq` can handle input of
 _any_ type:
 
 ```yaml
@@ -905,9 +776,9 @@ filter is done by using dot (`.`) notation:
     }
 ```
 
-#### Outputs
+#### jq node outputs
 
-User-defined. A `jq` filter script can produce _any_ type of data:
+jq node outputs are user-defined. A `jq` filter script can produce _any_ type of data:
 
 ```yaml
 - name: STRING
@@ -971,11 +842,6 @@ fields with `outputs` at config-time:
   type: exit
 ```
 
-#### Configuration attributes
-
-`jq`: the jq script to execute when the node is triggered.
-
-
 #### Handling HTTP headers in jq
 
 To enable a high level of transparency and compatibility when
@@ -1020,7 +886,7 @@ The following implementation normalizes header names to lowercase before looking
     }
 ```
 
-##### Recipe: merging header objects
+##### Merging header objects
 
 These examples take in client request headers and update them from a set of
 pre-defined values.
@@ -1133,22 +999,21 @@ Join the output of two API calls:
   jq: "."
 ```
 
-### exit node
+### Exit node
 
 Trigger an early exit that produces a direct response, rather than forwarding
 a proxied response.
 
-Inputs:
+There are no outputs for an exit node.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `exit` from the node object dropdown to see all node attributes.
+
+#### Exit node inputs
+
+The `exit` node accepts the following inputs:
 
 * `body`: Body to use in the early-exit response.
 * `headers`: Headers to use in the early-exit response.
-
-Outputs: None
-
-Configuration attributes:
-
-* `status`: The HTTP status code to use in the early-exit response (default is
-  `200`).
 
 #### Examples
 
@@ -1164,18 +1029,20 @@ Make an HTTP request and send the response directly to the client:
   input: CALL
 ```
 
-### property node
+### Property node
 
 Get and set {{site.base_gateway}} host and request properties.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `property` from the node object dropdown to see all node attributes.
+
+### Property node inputs
 
 Whether a `get` or `set` operation is performed depends upon the node inputs:
 
 * If an input is connected, `set` the property
 * If no input is connected, `get` the property and map it to the output
 
-#### Inputs
-
-This node accepts the `$self` input:
+The `property` node accepts the `$self` input:
 
 ```yaml
 - name: STORE_REQUEST
@@ -1195,9 +1062,9 @@ No individual field-level inputs are permitted:
     body: request.body
 ```
 
-#### Outputs
+#### Property node outputs
 
-This node produces the `$self` output.
+The `property` node produces the `$self` output.
 
 ```yaml
 - name: GET_ROUTE
@@ -1216,14 +1083,6 @@ Field-level output connections are not supported, even if the output data has kn
   outputs:
     id: response.body
 ```
-
-#### Configuration attributes
-
-* `property` (**required**): The name of the property
-* `content_type`: The expected mime type of the property value. When set to
-    `application/json`, `set` operations will JSON-encode input data before
-    writing it, and `get` operations will JSON-decode output data after
-    reading it. Otherwise, this setting has no effect.
 
 #### Supported properties
 
@@ -1382,15 +1241,18 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### static node
+### Static node
 
-Emits static values to be used as inputs for other nodes. The `static` node can help you with hardcoding some known value for an input.
+Emits static values to be used as inputs for other nodes. 
+The `static` node can help you with hardcoding some known value for an input.
 
-#### Inputs
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `static` from the node object dropdown to see all node attributes.
+
+#### Static node inputs
 
 None.
 
-#### Outputs
+#### Static node outputs
 
 This node produces outputs for each item in its `values` attribute:
 
@@ -1433,10 +1295,6 @@ validation error _instead_ of bubbling up at runtime:
   method: POST
   input: CALL_INPUTS
 ```
-
-#### Configuration attributes
-
-* `values` (**required**): A mapping of string keys to arbitrary values
 
 #### Examples
 
@@ -1493,11 +1351,116 @@ Set common request headers for different API requests:
     headers: HEADERS
 ```
 
+### Implicit nodes
+
+Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
+These nodes can either be used without being explicitly declared, or declared under the global resources object.
+
+These reserved node names can't be used for user-defined nodes. They include:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Node
+    key: node
+  - title: Description
+    key: description
+  - title: Inputs
+    key: inputs
+  - title: Outputs
+    key: outputs
+  - title: declaration
+    key: declaration
+rows:
+  - node: "`request`"
+    description: Reads incoming client request properties
+    inputs: none
+    outputs: "`body`, `headers`, `query`"
+    declaration: none
+  - node: "`service_request`"
+    description: Updates properties of the request sent to the service being proxied to
+    inputs: "`body`, `headers`, `query`"
+    outputs: none
+    declaration: none
+  - node: "`service_response`"
+    description: Reads response properties from the service being proxied to
+    inputs: none
+    outputs: "`body`, `headers`"
+    declaration: none
+  - node: "`response`"
+    description: Updates properties of the outgoing client response
+    inputs: "`body`, `headers`"
+    outputs: none
+    declaration: none
+  - node: "`vault`"
+    description: Vault reference to hold secret values
+    inputs: none
+    outputs: "`$self`"
+    declaration: "resources.vault"
+{% endtable %}
+<!--vale off-->
+
+#### Headers
+
+The `headers` type produces and consumes maps from header names to their values:
+
+* Keys are header names. Original header name casing is preserved for maximum
+    compatibility.
+* Values are strings if there is a single instance of a header or arrays of
+    strings if there are multiple instances of the same header.
+
+#### Query
+
+The `query` type produces and consumes maps with key-value pairs representing
+decoded URL query strings.
+
+#### Body
+
+The `service_request.body` and `response.body` inputs both accept any data type.
+If the data is an object, it will automatically be JSON-encoded, and the
+`Content-Type` header set to `application/json` (if not already set in the
+`headers` input).
+
+The `request.body` and `service_response.body` outputs have a similar behavior.
+If the corresponding `Content-Type` header matches the JSON mime-type, the
+`body` output is automatically JSON-decoded.
+
+#### Vault node {% new_in 3.12 %}
+
+The `vault` node is an implicit node that allows you to declare secret references
+and can be used in other nodes as a source of secret values. Vault references are declared
+under the `resources.vault` configuration.
+
+##### Examples
+
+Declare two vault references and use them in a `jq` node:
+```yaml
+resources:
+  vault:
+    secret1: "{vault://env/my-secret1}"
+    secret2: "{vault://aws/my-secret2}"
+nodes:
+  - name: JQ
+    type: jq
+    inputs:
+      secret1: vault.secret1
+      secret2: vault.secret2
+    jq: "."
+```
+
 ## Resources
 
 Datakit supports a global `resources` object that can be used to declare shared resource configurations.
 
-### Vault
+### Cache resource {% new_in 3.12 %}
+
+The [`cache` node](#cache-node) requires a `resources.cache` resource definition containing cache configuration.
+
+{% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
+
+### Vault resource {% new_in 3.12 %}
+
+Vaults can be referenced using a `resources.vault` definition.
 Refer to the [Vault node](#vault-node) for more details on how to use vault references in Datakit.
 
 ## Debugging

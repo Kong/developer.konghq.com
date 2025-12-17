@@ -34,7 +34,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 schema:
     api: gateway/admin-ee
@@ -70,6 +70,9 @@ faqs:
       ensuring consistent routing even if Targets change. Consistent hashing relies on hash inputs
       (like IP or header values) and can re-balance if Targets are added or removed, without guaranteeing session stickiness.
 
+tags:
+  - load-balancing
+  - failover
 ---
 
 ## What is an Upstream?
