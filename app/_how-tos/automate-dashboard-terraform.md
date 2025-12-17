@@ -4,7 +4,7 @@ description: Learn how to manage a dashboard in {{site.konnect_short_name}} Anal
 content_type: how_to
 automated_tests: false
 products:
-    - advanced-analytics
+    - observability
     - konnect
 works_on:
     - konnect
@@ -40,7 +40,7 @@ prereqs:
         This guide requires an existing dashboard in {{site.konnect_short_name}}. You can create one using the [Create a custom dashboard](/how-to/create-custom-dashboards/) guide.
 related_resources:
   - text: Custom Dashboards
-    url: /advanced-analytics/custom-dashboards/
+    url: /observability/custom-dashboards/
 ---
 
 ## Get the dashboard ID

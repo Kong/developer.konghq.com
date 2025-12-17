@@ -271,11 +271,11 @@ rows:
       - blocks:
         - type: card
           config:
-            title: '{{site.konnect_short_name}} Advanced Analytics'
-            description: Visualize LLM metrics in {{site.konnect_short_name}}
+            title: '{{site.konnect_short_name}} Observability'
+            description: Visualize LLM metrics in {{site.konnect_short_name}}.
             icon: /assets/icons/analytics.svg
             cta:
-              url: /advanced-analytics/llm-reporting/
+              url: /observability/
               align: end
       - blocks:
         - type: card

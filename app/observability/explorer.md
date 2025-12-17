@@ -1,14 +1,14 @@
 ---
-title: "Advanced Analytics Explorer"
+title: "Observability Explorer"
 content_type: reference
 layout: reference
 description: | 
     Explorer is an intuitive web-based interface that displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
 breadcrumbs:
-  - /advanced-analytics/
+  - /observability/
 products:
     - gateway
-    - advanced-analytics
+    - observability
 tags:
   - analytics
 works_on:
@@ -37,7 +37,7 @@ faqs:
         * **Status Code Group**
         * **Upstream Status Code**
         * **Upstream Status Code Group**
-  - q: What does "None" mean in Advanced Analytics?
+  - q: What does "None" mean in Observability?
     a: |
       "None" is a field that can capture data that doesn't belong to a specific category.
   - q: What can I do after customizing an Explorer dashboard?
@@ -60,20 +60,20 @@ faqs:
        - Open Explorer with the chart’s current filters and time range, by selecting **Explore**.
        - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
   - q: Why don't I see any API requests in my chart?
-    a: If you're sending requests from an internal IP address (local), those won't display in Advanced Analytics charts.
+    a: If you're sending requests from an internal IP address (local), those won't display in Observability charts.
 
 related_resources:
-  - text: Konnect Advanced Analytics
-    url: /advanced-analytics/
+  - text: Konnect Observability
+    url: /observability/
   - text: LLM Reporting
-    url: /advanced-analytics/llm-reporting/
+    url: /observability/llm-reporting/
   - text: Dev Portal analytics
     url: /dev-portal/analytics/
 ---
 
 The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to:
 * Diagnose performance issues
-* [Monitor LLM token consumption and costs](/advanced-analytics/llm-reporting/)
+* [Monitor LLM token consumption and costs](/observability/llm-reporting/)
 * Capture essential usage metrics
 
 The Analytics Explorer also lets you save the output as a custom report.
