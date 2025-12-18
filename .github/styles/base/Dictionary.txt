@@ -145,6 +145,7 @@ crd
 crds
 created_at
 creationTimestamp
+CRMs
 cronjob
 CrowdStrike
 cryptocurrency
@@ -279,6 +280,7 @@ gojira
 Golang
 Goroutine
 Goroutine
+GPUs
 gbps
 grafana
 Grafana
@@ -425,6 +427,7 @@ Knatives
 knep
 kong
 kongair
+kong_konnect_api_request
 kong_name
 kong-ip
 Kong/kong
@@ -736,6 +739,7 @@ serializer
 serverless
 serviceaccounts
 serviceless
+service_name
 shm
 show_in_api
 Sigstore
