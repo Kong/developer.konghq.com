@@ -93,7 +93,7 @@ EOF
 
 ## Create Kafka topics
 
-Create sample topics in the Kafka cluster we created in the [prerequisites](#start-a-local-kakfa-cluster):
+Create sample topics in the Kafka cluster that we created in the [prerequisites](#start-a-local-kakfa-cluster):
 
 <!--vale off-->
 {% validation custom-command %}
@@ -135,7 +135,7 @@ Generate the certificates we'll need to enable TLS:
    * `*` is used for the virtual cluster prefixes, which are the `analytics` and `payments` DNS labels we configured when creating the virtual clusters.
    * `.127-0-0-1.sslip.io` is the SNI suffix, which we'll use in the TLS listener policy configuration. In this example, we're using [sslip.io](https://sslip.io/) to resolve `127-0-0-1.sslip.io` to `127.0.0.1`.
 
-1. Create an OpenSSL extension file to explicitly set the subject alternative names for the certificate:
+1. To explicitly set the subject alternative names for the certificate, create an OpenSSL extension file:
 
    ```sh
    cat << EOF > ./tls.ext
@@ -151,7 +151,7 @@ Generate the certificates we'll need to enable TLS:
    EOF
    ```
   
-1. Sign the gateway certificate signing request to generate the certificate we'll need for the TLS listener policy:
+1. To generate the certificate we'll need for the TLS listener policy, sign the gateway certificate signing request:
 
    ```sh
    openssl x509 -req -in ./tls.csr \
