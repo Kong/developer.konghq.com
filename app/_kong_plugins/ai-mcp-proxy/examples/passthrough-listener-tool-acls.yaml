@@ -1,0 +1,127 @@
+description: 'Set per-tool access control for passthrough-listener mode MCP servers'
+
+title: 'Configure per-tool access control for passthrough-listener mode MCP servers'
+
+extended_description: |
+  Configure consumer groups and key authentication to control access to individual MCP tools based on consumer roles. This configuration applies access control rules at the tool level without a default policy.
+
+  {:.info}
+  > For this configuration to work properly, you need to create the following {{site.base_gateway}} entities:
+  > ```yaml
+  > services:
+  >   - name: mcp-acl-service
+  >     url: http://host.docker.internal:3001/mcp
+  > routes:
+  >   - name: mcp-acl-route
+  >     paths:
+  >       - "/mcp"
+  >     service:
+  >       name: mcp-acl-service
+  >
+  > plugins:
+  >   - name: key-auth
+  >     route: mcp-acl-route
+  >     config:
+  >       key_names:
+  >         - apikey
+  >
+  > consumer_groups:
+  >   - name: admin
+  >   - name: developer
+  >   - name: suspended
+  >
+  > consumers:
+  >   - username: alice
+  >     groups:
+  >       - name: admin
+  >     keyauth_credentials:
+  >       - key: alice-key
+  >
+  >   - username: bob
+  >     groups:
+  >       - name: developer
+  >     keyauth_credentials:
+  >       - key: bob-key
+  >
+  >   - username: carol
+  >     groups:
+  >       - name: suspended
+  >     keyauth_credentials:
+  >       - key: carol-key
+  >
+  >   - username: eason
+  >     keyauth_credentials:
+  >       - key: eason-key
+  > ```
+
+  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you'll need an upstream HTTP API to expose.
+  Use this mock API to test the plugin without relying on an external service. It simulates a small marketplace with sample users and orders exposed:
+
+  ```bash
+    git clone https://github.com/tomek-labuk/marketplace-acl.git && \
+    cd marketplace-acl && \
+    npm install && \
+    npm run build && \
+    node dist/server.js
+  ```
+
+  {:.warning}
+  > The `tools[n].name` fields must match the exact tools name from the upstream MCP server. If the names don't match, the ACL will fail to apply.
+
+  Check [this how-to](/mcp/use-access-controls-for-mcp-tools/) for a detailed walkthrough guide.
+
+weight: 900
+
+requirements:
+  - "A running and exposed API"
+
+config:
+  mode: passthrough-listener
+  include_consumer_groups: true
+  logging:
+    log_payloads: false
+    log_statistics: true
+    log_audits: true
+  tools:
+    - description: List users
+      name: list_users
+      acl:
+        allow:
+          - admin
+          - eason
+        deny:
+          - developer
+    - description: Get user
+      name: get_user
+      acl:
+        allow:
+          - admin
+          - developer
+    - description: List orders
+      name: list_orders
+      acl:
+        allow:
+          - admin
+          - developer
+    - description: List orders for users
+      name: list_orders_for_user
+      acl:
+        allow:
+          - admin
+          - developer
+    - description: Search orders by name (case-insensitive substring)
+      name: search_orders
+      acl:
+        allow:
+          - admin
+        deny:
+          - developer
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: mcp-acls
