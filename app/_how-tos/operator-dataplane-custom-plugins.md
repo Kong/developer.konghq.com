@@ -31,6 +31,9 @@ prereqs:
     routes:
       - echo
   operator:
+    konnect:
+      auth: true
+      control_plane: true
     controllers:
       - kongplugininstallation
 
@@ -78,6 +81,19 @@ docker push $YOUR_REGISTRY_ADDRESS/myheader:1.0.0
 ```
 
 In this example, the plugin is available in the public registry (Docker Hub) as `kong/plugin-example:1.0.0`. The following steps use the same source.
+
+{: data-deployment-topology="konnect" }
+## Register the plugin schema in Konnect
+
+To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane:
+
+```sh
+curl -X POST \
+  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+  --header 'Content-Type: application/json' \
+  --header "Authorization: Bearer $KONNECT_TOKEN" \
+  --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+```
 
 ## Install the plugin
 
