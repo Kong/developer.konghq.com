@@ -85,15 +85,36 @@ In this example, the plugin is available in the public registry (Docker Hub) as 
 {: data-deployment-topology="konnect" }
 ## Register the plugin schema in Konnect
 
-To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane:
+To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane.
 
-```sh
-curl -X POST \
-  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
-  --header 'Content-Type: application/json' \
-  --header "Authorization: Bearer $KONNECT_TOKEN" \
-  --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
-```
+1. Get your control plane ID:
+
+<!--vale off-->
+{% capture cpid %}
+{% konnect_api_request %}
+url: /v2/control-planes?filter%5Bname%5D%5Beq%5D=gateway-control-plane
+status_code: 200
+method: GET
+extract_body:
+  - name: data[0].id
+    variable: CONTROL_PLANE_ID
+capture: CONTROL_PLANE_ID
+jq: ".data[0].id"
+{% endkonnect_api_request %}
+{% endcapture %}
+<!--vale on-->
+
+{{cpid | indent: 3}}
+
+1. Upload your schema file to {{site.konnect_short_name}}:
+
+   ```sh
+   curl -X POST \
+     https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+     --header 'Content-Type: application/json' \
+     --header "Authorization: Bearer $KONNECT_TOKEN" \
+     --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+   ```
 
 ## Install the plugin
 
