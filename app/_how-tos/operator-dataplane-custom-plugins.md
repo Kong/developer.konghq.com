@@ -87,10 +87,9 @@ In this example, the plugin is available in the public registry (Docker Hub) as 
 
 To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane.
 
-1. Get your control plane ID:
+First, get your control plane ID:
 
 <!--vale off-->
-{% capture cpid %}
 {% konnect_api_request %}
 url: /v2/control-planes?filter%5Bname%5D%5Beq%5D=gateway-control-plane
 status_code: 200
@@ -101,20 +100,17 @@ extract_body:
 capture: CONTROL_PLANE_ID
 jq: ".data[0].id"
 {% endkonnect_api_request %}
-{% endcapture %}
 <!--vale on-->
 
-{{cpid | indent: 3}}
+Upload your schema file to {{site.konnect_short_name}}:
 
-1. Upload your schema file to {{site.konnect_short_name}}:
-
-   ```sh
-   curl -X POST \
-     https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
-     --header 'Content-Type: application/json' \
-     --header "Authorization: Bearer $KONNECT_TOKEN" \
-     --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
-   ```
+```sh
+curl -X POST \
+  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+  --header 'Content-Type: application/json' \
+  --header "Authorization: Bearer $KONNECT_TOKEN" \
+  --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+```
 
 ## Install the plugin
 
