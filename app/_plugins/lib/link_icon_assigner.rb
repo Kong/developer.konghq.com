@@ -50,8 +50,11 @@ module Jekyll
     end
 
     def icon_for_content_type
+      return 'service-document' if ENV['KONG_PRODUCTS']
+
       url = URI.parse(@resource['url']).path
       final_url = resolve_final_path(url, site_redirects)
+
       page = site.pages.detect { |p| p.url == final_url }
       page ||= site.documents.detect { |d| d.url == final_url }
 
@@ -65,6 +68,7 @@ module Jekyll
 
       while redirects.key?(url)
         return nil if visited.include?(url)
+
         visited.add(url)
         url = redirects[url]
       end
