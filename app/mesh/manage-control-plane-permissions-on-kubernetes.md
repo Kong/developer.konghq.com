@@ -58,7 +58,7 @@ These manifests include the `{{site.mesh_cp_name}}-workloads` binding, granting 
 {:.warning}
 > All required resources must be created **before** installing {{site.mesh_product_name}}.
 
-To disable automatic resource creation, use the following settings during installation:
+To disable automatic resource creation, use the `kuma.skipRBAC=true` or `kuma.controlPlane.skipClusterRoleCreation=true` parameters during installation.
 
 ### Skip creation of all resources
 
