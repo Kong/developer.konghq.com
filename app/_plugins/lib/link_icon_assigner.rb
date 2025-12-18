@@ -55,6 +55,8 @@ module Jekyll
       page = site.pages.detect { |p| p.url == final_url }
       page ||= site.documents.detect { |d| d.url == final_url }
 
+      raise ArgumentError, "Cannot determine icon for resource with URL #{@resource['url']}" unless page
+
       CONTENT_TYPE_ICON_MAP.fetch(page.data['content_type'], 'service-document')
     end
 
