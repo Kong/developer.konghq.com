@@ -31,7 +31,7 @@ providers:
       model_example: 'Model-dependent. Supported for Claude, Command, and select models'
       min_version: '3.8'
     batches: # Native format from SDK only
-      supported: 'n/a'
+      supported: true
       streaming: false
       upstream_path: 'Uses the <code>ModelInvocationJob</code> API'
       route_type: 'llm/v1/batches'
@@ -40,7 +40,7 @@ providers:
       note:
         content: 'Batches processing for Bedrock is supported in the native format from SDK only'
     files:
-      supported: 'n/a'
+      supported: true
       streaming: false
       upstream_path: '/openai/files'
       route_type: 'llm/v1/files'
@@ -97,7 +97,7 @@ providers:
       model_example: 'claude-3-opus-20240229'
       min_version: '3.6'
     batches: # Native format from SDK only
-      supported: 'n/a'
+      supported: true
       streaming: true
       upstream_path: '/v1/messages/batches'
       route_type: 'files/v1/batches'
@@ -319,7 +319,7 @@ providers:
       model_example: 'gemini-2.0-flash'
       min_version: '3.8'
     files: # Native format from SDK only
-      supported: 'n/a'
+      supported: true
       streaming: false
       upstream_path: 'Uses <code>uploadFile</code> and <code>files</code> API'
       route_type: 'llm/v1/files'
@@ -328,7 +328,7 @@ providers:
       note:
         content: 'Files processing for Gemini is supported in the native format from SDK only'
     batches: # Native format from SDK only
-      supported: 'n/a'
+      supported: true
       streaming: false
       upstream_path: 'Uses <code>batches</code> API'
       route_type: 'llm/v1/batches'
@@ -401,7 +401,7 @@ providers:
       model_example: 'gemini-2.0-flash'
       min_version: '3.8'
     files:
-      supported: 'n/a'
+      supported: true
       streaming: false
       upstream_path: '/openai/files'
       route_type: 'llm/v1/files'
