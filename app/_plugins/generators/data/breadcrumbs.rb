@@ -39,6 +39,8 @@ module Jekyll
         normalized_url = Utils::URL.normalize_path(url)
         breadcrumb = find_page_by_url(normalized_url)
 
+        return normalized_url if ENV['KONG_PRODUCTS']
+
         unless breadcrumb
           raise ArgumentError,
                 "On #{@page.relative_path}, the breadcrumb `#{normalized_url}` is invalid. No page exists with a matching URL." # rubocop:disable Layout/LineLength
