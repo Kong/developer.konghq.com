@@ -161,12 +161,14 @@ If you use {{site.konnect_short_name}} to manage your service mesh, you must add
 
 ## Specify IP addresses that can connect to {{site.konnect_short_name}}
 
-Org Admins can specify an IP address or a range of IP addresses that are allowed to connect to {{site.konnect_short_name}} through its supported interfaces. This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin AP](/admin-api/), [decK](/decK/, and [Terraform](/terraform/.
+Org Admins can specify an IP address or a range of IP addresses that are allowed to connect to {{site.konnect_short_name}} through its supported interfaces. This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin AP](/admin-api/), [decK](/decK/), and [Terraform](/terraform/).
 
 This IP allow list applies to all {{site.konnect_short_name}} communication that goes through the Admin API.
 
 {:.warning}
-> **Important:** If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to {{site.konnect_short_name}} will be blocked.
+> **Important:** 
+* If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to {{site.konnect_short_name}} will be blocked.
+> * If you're configuring IP allow list for the first time, it takes affect immediately. If you're editing existing IP allow list values, the changes will take affect after five minutes.
 
 To configure IP allow list for {{site.konnect_short_name}}, send a PATCH request to the `/source-ip-restriction` endpoint:
 
