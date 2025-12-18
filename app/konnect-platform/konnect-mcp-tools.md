@@ -477,7 +477,7 @@ rows:
     type: string
     description: |
       Operation: `"fetch_status"`, `"summarize_session"`, `"compact_traces"`, `"compressed_traces"`, or `"stop_session"`
-  - parameter: "`plugin_filter`"
+  - parameter: "`phase_filter`"
     type: string
     description: |
       Plugin UUID to filter traces. Used with `operation="compact_traces"`
