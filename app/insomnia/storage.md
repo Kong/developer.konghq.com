@@ -53,7 +53,7 @@ faqs:
       After conversion, you can still use Git Sync with the local project, and you can choose to synchronize the project back to the cloud later if you decide to collaborate again.
       
       {:.decorative}
-      > **Tip:** Before converting, make sure all collaborators pull the latest updates because any unpulled changes will be lost.
+      > **Tip:** Before converting, make sure all collaborators pull the latest updates. Any remote changes that are not present locally will be lost.
   - q: Can I change a Local Vault project into a Cloud Sync project?
     a: |
       Yes. You can convert a Local Vault storage type project to Cloud Sync storage type at any time. Go to the project’s **Project Settings**, select **Change** from the **Type** dropdown, choose **Cloud Sync**, and then click **Update**. 
