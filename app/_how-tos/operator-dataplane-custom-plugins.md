@@ -102,7 +102,7 @@ jq: ".data[0].id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Upload your schema file to {{site.konnect_short_name}}:
+Run the following command to upload your schema file to your {{site.konnect_short_name}} control plane:
 
 ```sh
 curl -X POST \
