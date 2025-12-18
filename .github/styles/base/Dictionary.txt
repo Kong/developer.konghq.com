@@ -194,6 +194,7 @@ deserialize
 deserialized
 destructuring
 dev
+devops
 Dex
 Dex
 dict
@@ -698,6 +699,7 @@ Rekor
 remediation
 remediations
 repo
+repos
 reportingComponent
 reportingInstance
 requery
