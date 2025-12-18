@@ -19566,6 +19566,11 @@
         "message": "*request-callout*: Ensure that upstream headers are cleared after custom expressions are executed.",
         "type": "bugfix",
         "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rag-injector**: Added metadata filtering and ACL (Access Control List) capabilities to the RAG plugin. This feature enables fine-grained control over document retrieval based on metadata attributes and user permissions, supporting both pgvector and Redis vector database backends.\n",
+        "scope": "Plugin",
+        "type": "feature"
       }
     ],
     "kong-manager-ee": [
