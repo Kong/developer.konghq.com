@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6071deefac069662eeb4c62ea0a0ed67eaca705d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6071deefac069662eeb4c62ea0a0ed67eaca705d'
+  x-oas-source: kong/platform-api@0213ffbc9d4858634a08845d1407b2a9d7acc625
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0213ffbc9d4858634a08845d1407b2a9d7acc625'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1732,6 +1732,7 @@ components:
       type: array
       items:
         type: string
+        minLength: 1
       minItems: 1
     EventGatewayListenerPorts:
       description: |
@@ -3722,6 +3723,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventGatewayACLRule'
+          minItems: 1
       required:
         - rules
     EventGatewayACLRule:
@@ -4789,6 +4791,7 @@ components:
         A literal value or a reference to an existing secret as a template string expression.
         The value is stored and returned by the API as-is, not treated as sensitive information.
       type: string
+      minLength: 1
       x-examples:
         reference:
           summary: Reference to a secret
@@ -4807,6 +4810,7 @@ components:
         If provided as an expression, the expression itself is stored and returned by the API.
       type: string
       example: '${vault.env[''MY_ENV_VAR'']}'
+      minLength: 1
       x-expression:
         type: string
         fields:
