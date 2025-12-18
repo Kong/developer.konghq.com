@@ -172,12 +172,34 @@ To configure Kong Identity, do the following:
 
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-placeholder
+1. In the {{site.konnect_short_name}} sidebar, click [**Identity**](https://cloud.konghq.com/identity/).
+1. Click **New authorization server**.
+1. In the **Name** field, enter a name.
+1. In the **Audience** field, enter the audience.
+   
+   {:.info}
+   > **Note:** The value in the **Audience** field is the audience that the token is intended for, like a client ID or the upstream URL of the Gateway Service for the API resource. For example, `https://api.example.com/payments` and `http://myhttpbin.dev`. If you don't have an intended audience, you can put a placeholder value, like `orders-api`, in this field.
+1. Click **Create**.
+1. Click **New scope**.
+1. In the **Name** field, enter a name for your scope.
+1. Click **Create**.
+1. Navigate back to your authorization server.
+1. Click **New claim**.
+1. In the **Name** field, enter a name for your claim.
+1. In the **Value** field, enter the value for your claim. These can also be [dynamic](#dynamic-claim-templates).
+1. From the **When to include this claim in tokens** dropdown menu, select an option.
+1. Click **Create**.
+1. Navigate back to your authorization server.
+1. Click **New client**. 
+1. In the **Name** field, enter a name for your client.
+1. From the **Allowed scopes** dropdown menu, select an option.
+1. Click **Create**.
+1. Copy and save your client ID and secret. 
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
-
+1. Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 <!--vale off-->
+{% capture auth-server %}
 {% konnect_api_request %}
 url: /v1/auth-servers
 status_code: 200
@@ -189,16 +211,17 @@ body:
   audience: "http://myhttpbin.dev"
   description: "Auth server for the Appointment dev environment"
 {% endkonnect_api_request %}
-
-Export the auth server ID and issuer URL:
-```sh
-export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
-export ISSUER_URL='YOUR-ISSUER-URL'
-```
-
-Configure a scope in your auth server using the [`/v1/auth-servers/$AUTH_SERVER_ID/scopes` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerScope):
-
+{% endcapture %}
+{{ auth-server | indent: 3 }}
+<!--vale on-->
+1. Export the auth server ID and issuer URL:
+   ```sh
+   export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
+   export ISSUER_URL='YOUR-ISSUER-URL'
+   ```
+1. Configure a scope in your auth server using the [`/v1/auth-servers/$AUTH_SERVER_ID/scopes` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerScope):
 <!--vale off-->
+{% capture scope %}
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/scopes 
 status_code: 200
@@ -212,16 +235,16 @@ body:
   include_in_metadata: false
   enabled: true
 {% endkonnect_api_request %}
+{% endcapture %}
+{{ scope | indent: 3 }}
 <!--vale on-->
-
-Export your scope ID:
-```sh
-export SCOPE_ID='YOUR-SCOPE-ID'
-```
-
-Configure a custom claim using the [`/v1/auth-servers/$AUTH_SERVER_ID/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim):
-
+1. Export your scope ID:
+   ```sh
+   export SCOPE_ID='YOUR-SCOPE-ID'
+   ```
+1. Configure a custom claim using the [`/v1/auth-servers/$AUTH_SERVER_ID/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim):
 <!--vale off-->
+{% capture claim %}
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/claims 
 status_code: 200
@@ -236,13 +259,13 @@ body:
   include_in_scopes: 
   - $SCOPE_ID
   enabled: true
-
 {% endkonnect_api_request %}
-<!--vale on-->
+{% endcapture %}
+{{ claim | indent: 3 }}
 
-Configure the client using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient):
-
+1. Configure the client using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient):
 <!--vale off-->
+{% capture client %}
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/clients
 status_code: 201
@@ -262,12 +285,13 @@ body:
     - id_token
     - token
 {% endkonnect_api_request %}
-<!--vale on-->
+{% endcapture %}
+{{ client | indent: 3 }}
 
-Export your client secret and client ID:
-```sh
-export CLIENT_SECRET='YOUR-CLIENT-SECRET'
-export CLIENT_ID='YOUR-CLIENT-ID'
-```
+1. Export your client secret and client ID:
+   ```sh
+   export CLIENT_SECRET='YOUR-CLIENT-SECRET'
+   export CLIENT_ID='YOUR-CLIENT-ID'
+   ```
 {% endnavtab %}
 {% endnavtabs %}
