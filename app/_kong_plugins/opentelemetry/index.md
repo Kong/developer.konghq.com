@@ -175,6 +175,11 @@ The top level span has the following attributes:
 
 For more information, see the [Tracing reference](/gateway/tracing/).
 
+{:.info}
+>**Note**: When the OpenTelemetry plugin is used together with the [Proxy Cache Advanced](/plugins/proxy-cache-advanced/) plugin, cache-HIT responses are not traced.
+> This is expected behavior. When a request results in a cache-HIT, the response is served before the request lifecycle reaches the phase where the OpenTelemetry plugin executes. As a result, no spans are generated for cache-HIT requests. Cache-MISS requests continue through the full request lifecycle and are traced normally.
+
+
 ### Gen AI tracing attributes {% new_in 3.13 %}
 
 When processing generative AI traffic through Kong AI Gateway, additional span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
