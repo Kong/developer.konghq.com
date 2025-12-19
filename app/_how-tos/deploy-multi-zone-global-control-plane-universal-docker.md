@@ -116,7 +116,8 @@ kumactl config control-planes add \
 ```
 
 ```sh
-DP_TOKEN=$(kumactl generate zone-token --zone=zone-1 --valid-for 24h --scope egress --scope ingress)
+kumactl generate zone-token --zone=zone-1 --valid-for 24h --scope egress --scope ingress > /tmp/zone-token
+kumactl generate dataplane-token --valid-for 24h --proxy-type ingress > /tmp/zone-token
 ```
 
 ```sh
@@ -132,16 +133,10 @@ networking:
 ## TODO
 
 ```sh
-docker run \
-  --network kong-mesh-system \
-  -v /tmp/zone-token:/tmp/zone-token \
-  -v /ingress-dp.yaml:/ingress-dp.yaml \
-  -e TOKEN \
-  kumahq/kuma-dp:2.12.5 run \
+kuma-dp run \
   --proxy-type=ingress \
-  --cp-address=http://kong-mesh-zone-1:25678 \
-  --name=ingress-01 \
-  --dataplane-token=$TOKEN \
+  --cp-address=https://localhost:5678 \
+  --dataplane-token-file=/tmp/zone-token \
   --dataplane-file=ingress-dp.yaml
 ```
 
