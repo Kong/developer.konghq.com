@@ -21,7 +21,7 @@
         "minimist": "^1.2.8",
         "node-fetch": "^3.3.2",
         "playwright": "^1.54.2",
-        "tough-cookie": "^5.1.2",
+        "tough-cookie": "^6.0.0",
         "undici": "^7.16.0"
     }
 }
