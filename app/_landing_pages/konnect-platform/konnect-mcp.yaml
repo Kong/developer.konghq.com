@@ -98,28 +98,26 @@ rows:
       text: Authentication and access
       type: h2
       sub_text: |
-        The {{site.konnect_product_name}} MCP Server uses token-based authentication to ensure secure access to your {{site.konnect_short_name}} resources. You can authenticate using either a Personal Access Token (PAT) or a Service Personal Access Token (SPAT), depending on your use case.
+        The {{site.konnect_product_name}} MCP Server uses token-based authentication to ensure secure access to your {{site.konnect_short_name}} resources. You can authenticate using either a Personal Access Token (PAT) or a Service Accout Access Token, depending on your use case.
     columns:
         - blocks:
           - type: structured_text
             config:
-              header:
-                text: "PAT-based authentication"
-                type: h4
               blocks:
                 - type: text
                   text: |
-                    The MCP server can authenticate using your [**Personal Access Token (PAT)**](/konnect-api/#personal-access-tokens), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} tokens page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
+                    **Personal Access Token**
+
+                    The MCP server can authenticate using your [Personal Access Token (PAT)](https://cloud.konghq.com/global/account/tokens), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} tokens page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
         - blocks:
           - type: structured_text
             config:
-              header:
-                text: "SPAT-based authentication"
-                type: h4  
               blocks:
                 - type: text
                   text: |
-                    For automated workflows, you can also use a [**Service Personal Access Token (SPAT)**](/konnect-api/#service-personal-access-tokens). SPATs are tied to specific service accounts with defined permissions, allowing secure machine-to-machine authentication without user intervention.
+                    **System Account Access Token**
+
+                    For automated workflows, you can also use a [System Account Access Token](https://cloud.konghq.com/global/organization/system-accounts/). SPATs are tied to specific service accounts with defined permissions, allowing secure machine-to-machine authentication without user intervention.
   - header:
         text: "Regional server endpoints"
         type: h2
@@ -449,7 +447,21 @@ rows:
 
             3. Aggregate and analyze configurations across all control planes
             ```
+  - header:
+      text: "What's new in {{site.konnect_product_name}} MCP Server"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The following are the latest changes in {{site.konnect_product_name}} MCP Server:
 
+                  * Public Beta release (December 19, 2025)
+                  
+                  For a complete changelog of all {{site.konnect_product_name}} MCP Server releases, see the [{{site.konnect_product_name}} MCP Server changelog](/konnect-platform/konnect-mcp/changelog/).
   - header:
         text: "Frequently asked questions"
         type: h2
@@ -459,7 +471,7 @@ rows:
           config:
             - q: Can I disable MCP access for my organization?
               a: |
-                MCP server access is enabled by default for all organizations. Organization admins can disable this from Organization Settings > AI Settings, after which no user will be able to access the MCP server.
+                MCP server access is enabled by default for all organizations. Organization admins can disable this from **Organization > Settings**, after which no user will be able to access the MCP server.
             - q: How does user access control work for MCP tools?
               a: |
                 Access to MCP tools is based on the permission levels of the user whose PAT is used for authentication.

@@ -982,6 +982,7 @@ workspace
 workspace's
 xai
 xbox
+xcode
 xenial
 yaml
 yml
