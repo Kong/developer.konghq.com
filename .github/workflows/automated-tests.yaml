@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         gateway:
-          - '3.12'
+          - '3.13'
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3

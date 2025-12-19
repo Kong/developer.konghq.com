@@ -39,14 +39,17 @@ related_resources:
 
 ## Create a project
 
-In this example, we'll create a new project with [Git Sync](/insomnia/storage/#git-sync), but you can also update an existing [cloud](/insomnia/storage/#cloud-sync) or [local](/insomnia/storage/#local-vault) project to use Git Sync from the project settings.
+{:.info}
+> A Projects storage type isn't fixed. If you have an existing [cloud](/insomnia/storage/#cloud-sync) or [local](/insomnia/storage/#local-vault) project, you can also update it to use Git Sync from the projects **Settings** option.
 
 1. In your Insomnia organization, click the **+** button under **PROJECTS** in the left pane.
-1. Name your project, select **Git Sync**, and click **Create**.
+1. In the **Project name** field, name your project.
+1. In the **Type** field, click **Git Sync**.
 1. Select whether you want to clone the repository from GitHub, GitLab, or Git:
 
 {% capture sync %}
-1. Click **Clone**.
+1. Click **Scan for files**.
+1. Click **Clone Project**.
 {% endcapture %}
 
 {% navtabs "repo" %}
@@ -68,19 +71,19 @@ In this example, we'll create a new project with [Git Sync](/insomnia/storage/#g
 
 {% endnavtabs %}
 
-If your Git repository already contains Insomnia content, you will be prompted to import the content to your project. {% new_in 11.5 %} You can also create the Git Sync project now and add a repository later. 
+If your Git repository already contains Insomnia content, you will be prompted to import the content to your project. You can also create the Git Sync project now and add a repository later. 
 
 {:.info}
-> {% new_in 11.2 %} If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in version 11.0.
+> If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in newer versions.
 
 ## Commit and push the content to your repository
 
 Once you've created content or made changes to existing content in your project, you can push the changes to your repository:
 
-1. Click the name of the branch at the bottom of the left pane.
+1. From the bottom of the left pane, click the name of the branch.
 1. Click **Commit**.
 1. Enter a commit message.
 1. Stage changes by clicking the **+** button next to the changes that you want to commit to the repository and click **Commit**.
 1. Click the name of the branch again and click **Push 1 Commit**.
 
-   {% new_in 11.4 %} Git status notifications will appear at the bottom right corner of the window.
+Git status notifications appear at the bottom right corner of the window.
