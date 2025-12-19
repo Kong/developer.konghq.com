@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@0213ffbc9d4858634a08845d1407b2a9d7acc625
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0213ffbc9d4858634a08845d1407b2a9d7acc625'
+  x-oas-source: kong/platform-api@a2342e1833b637311b792ce2657de55561111ec3
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a2342e1833b637311b792ce2657de55561111ec3'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3048,6 +3048,23 @@ components:
           type: integer
           maximum: 65535
           minimum: 1
+        broker_host_format:
+          description: |
+            Configures DNS names assigned to brokers in virtual clusters.
+
+            - `per_cluster_suffix` is the default and allocates one level in the hierarchy for virtual clusters: `broker-{node_id}.{virtual_cluster}.{sni_suffix}`
+            - `shared_suffix` puts all brokers from every virtual clusters into the same level: `broker-{node_id}-{virtual_cluster}.{sni_suffix}`. This makes it easier to manage certificates for this listener.
+          type: object
+          properties:
+            type:
+              type: string
+              default: per_cluster_suffix
+              enum:
+                - per_cluster_suffix
+                - shared_suffix
+          required:
+            - type
+          x-min-runtime-version: '1.1'
       additionalProperties: false
       required:
         - type
