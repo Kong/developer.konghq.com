@@ -121,11 +121,11 @@ Before we start migrating, we need to set up kumactl, which we'll use to export 
    export EXTERNAL_IP=host.minikube.internal
    ```
 
-   If you are not using minikube, you can find your external IP using this command:
-
-   ```sh
-   export EXTERNAL_IP=$(kubectl --context mesh-global get svc -n kong-mesh-system kong-mesh-global-zone-sync -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-   ```
+   {:.info}
+   > If you're not using minikube, you can find your external IP with this command:
+   > ```sh
+   > export EXTERNAL_IP=$(kubectl --context mesh-global get svc -n kong-mesh-system kong-mesh-global-zone-sync -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+   > ```
 
 1. Export the zone control plane resources:
 
