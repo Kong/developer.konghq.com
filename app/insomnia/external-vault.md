@@ -168,8 +168,10 @@ Use the following required scopes:
 Azure enforces these permissions during consent and applies Key Vault access control based on the user’s assigned roles. For more information about required scopes, go to [Scopes and permissions](https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc).
 
 To choose Azure Key Vault:
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **Azure**.
+1. In the Insomnia app, from your account settings, click **Preferences**.
+1. Click the **Cloud Credentials** tab.
+1. Click **Add Credentials**.
+1. Click **Azure**.
 1. You will be redirected to authorize Insomnia in your browser.
 1. After authorization, you'll return to Insomnia with your Azure account credential added.
 
