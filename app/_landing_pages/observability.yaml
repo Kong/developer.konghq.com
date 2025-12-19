@@ -1,9 +1,9 @@
 metadata:
-  title: "Konnect Observability"
+  title: "Konnect {{site.observability}}"
   content_type: landing_page
   products: 
     - observability
-  description: Gain real-time insights into API health, performance, and usage with Konnect Observability.
+  description: Gain real-time insights into API health, performance, and usage with Konnect {{site.observability}}.
   tags:
     - analytics
   breadcrumbs:
@@ -11,7 +11,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Konnect Observability"
+      text: "Konnect {{site.observability}}"
       sub_text: A single location for context-rich, business-critical API and AI insights
 
   - columns:
@@ -19,11 +19,11 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "What is Konnect Observability?"
+                text: "What is Konnect {{site.observability}}?"
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} Observability is a real-time, highly contextual analytics platform 
+                    {{site.konnect_short_name}} {{site.observability}} is a real-time, highly contextual analytics platform 
                     that provides deep insights into API health, performance, and usage. It helps businesses optimize their API strategies 
                     and improve operational efficiency. This feature is offered as a premium service within {{site.konnect_short_name}}.
 
@@ -37,7 +37,7 @@ rows:
         - type: image
           config:
             url: /assets/images/analytics/konnect-api-usage-summary.png
-            alt_text: "Summary dashboard of Konnect Observability"
+            alt_text: "Summary dashboard of Konnect {{site.observability}}"
   
   - header:
       type: h2
@@ -96,7 +96,7 @@ rows:
                     The [summary dashboard](https://cloud.konghq.com/us/analytics/summary) shows performance and health statistics of all your APIs across your organization on a 
                     single page and provides insights into your Service usage. 
 
-                    Manage data ingestion from any **Control Plane Dashboard** using the **Observability** toggle. 
+                    Manage data ingestion from any **Control Plane Dashboard** using the **{{site.observability}}** toggle. 
                     This toggle lets you enable or disable data collection for your API traffic per control plane.
 
                     **Modes:**
@@ -104,5 +104,5 @@ rows:
                     - **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway, 
                     and can still be used for custom reports.
                     
-                    Observability includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
+                    {{site.observability}} includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
                     You can create them from scratch or use existing templates. The functionality is powered by a robust [API](/api/konnect/analytics-dashboards/), and [Terraform integration](/how-to/automate-dashboard-terraform/).

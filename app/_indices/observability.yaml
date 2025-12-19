@@ -13,7 +13,7 @@ sections:
         url: /konnect-platform/teams-and-roles/
   - title: Custom Dashboards
     items: 
-      - path: /observability/custom-dashboards/
-      - path: /observability/custom-dashboards-reference/
+      - path: /how-to/custom-dashboards/
+      - path: /how-to/custom-dashboards-reference/
       - path: /how-to/create-custom-dashboards/
       - path: /how-to/automate-dashboard-terraform/

@@ -34,7 +34,7 @@ tldr:
         You can use any [logging plugin](/plugins/?category=logging) to send your AI Gateway metrics and logs to your dashboarding tool. 
         For testing purposes, you can start our [sample observability stack](https://github.com/KongHQ-CX/kong-ai-gateway-observability), send requests to `/gpt4o`, and visualize the results at `http://localhost:5601/app/dashboards#/view/aa8e4cb0-9566-11ef-beb2-c361d8db17a8`.
 
-        If you're using {{site.konnect_short_name}}, you can visualize AI Gateway metrics with [Observability](/observability/).
+        If you're using {{site.konnect_short_name}}, you can visualize AI Gateway metrics with [{{site.observability}}](/observability/).
 
 prereqs:
   skip_product: true
