@@ -52,6 +52,26 @@ Replaced the parameter `config.rules.max_request_body_size` with `config.max_req
 
 `config.rules.max_request_body_size` is now deprecated and will be removed in a future version.
 
+#### Known issues in 3.13.0.0
+
+The following is a list of known issues in 3.13.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "OpenTelemetry plugin: Incorrect attribute name for request count metric"
+    description: |
+      The `http.server.request.count` metric exposes the attribute `kong.response.status_code` instead of `http.response.status_code`.
+    status: Not fixed
+{% endtable %}
+
+
 ## 3.12.x breaking changes
 
 Review the [changelog](/gateway/changelog/#31200) for all the changes in this release.
