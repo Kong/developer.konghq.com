@@ -70,7 +70,7 @@ cleanup:
    ```sh
    No resources found
    ```
-{:.no-copy-code}
+   {:.no-copy-code}
 
 ## Create a mesh
 
@@ -594,7 +594,8 @@ Now that we've set up kumactl, we can migrate our policies.
    @ ["type.googleapis.com/envoy.config.cluster.v3.Cluster","redis_kong-mesh-demo_svc_6379","circuitBreakers","thresholds",0,"trackRemaining"]
    + true
    ```
-
+   {:.no-copy-code}
+   
 1. Remove the `kuma.io/effect: shadow` label from the new policy:
    ```sh
    kubectl label -n kong-mesh-system meshcircuitbreaker cb-global kuma.io/effect-
