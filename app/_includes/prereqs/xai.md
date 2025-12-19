@@ -6,5 +6,5 @@ This tutorial uses xAI:
 1. Create a decK variable with the API key:
 
    ```sh
-   export DECK_XAI_API_KEY: 'YOUR XAI API KEY'
+   export DECK_XAI_API_KEY='YOUR XAI API KEY'
    ```
