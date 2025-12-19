@@ -2,7 +2,6 @@
 title: "Kong Identity"
 content_type: reference
 layout: reference
-beta: true
 
 products:
     - konnect
