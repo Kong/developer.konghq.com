@@ -37,52 +37,82 @@ docker exec -it postgres psql -h localhost -U kong
 ```sh
 CREATE DATABASE kmesh;
 ```
+```sh
+exit
+```
 
 ## Create global control plane
 
 ```sh
-docker run \
-    -e KUMA_MODE=global \
-    -e KUMA_ENVIRONMENT=universal \
-    -e KUMA_STORE_TYPE=postgres \
-    -e KUMA_STORE_POSTGRES_HOST=postgres \
-    -e KUMA_STORE_POSTGRES_PORT=5432 \
-    -e KUMA_STORE_POSTGRES_USER=kong \
-    -e KUMA_STORE_POSTGRES_PASSWORD=pass123 \
-    -e KUMA_STORE_POSTGRES_DB_NAME=kmesh \
-    --network kong-mesh-system \
-  kumahq/kuma-cp:2.12.5 migrate up
+export PATH=$(pwd)/kuma-2.12.5/bin:$PATH
+```
+
+```sh
+    KUMA_STORE_TYPE=postgres \
+    KUMA_STORE_POSTGRES_HOST=localhost \
+    KUMA_STORE_POSTGRES_PORT=5432 \
+    KUMA_STORE_POSTGRES_USER=kong \
+    KUMA_STORE_POSTGRES_PASSWORD=pass123 \
+    KUMA_STORE_POSTGRES_DB_NAME=kmesh \
+  kuma-cp migrate up
+```
+
+
+```sh
+    KUMA_MODE=global \
+    KUMA_ENVIRONMENT=universal \
+    KUMA_STORE_TYPE=postgres \
+    KUMA_STORE_POSTGRES_HOST=localhost \
+    KUMA_STORE_POSTGRES_PORT=5432 \
+    KUMA_STORE_POSTGRES_USER=kong \
+    KUMA_STORE_POSTGRES_PASSWORD=pass123 \
+    KUMA_STORE_POSTGRES_DB_NAME=kmesh \
+  kuma-cp run
 ```
 
 ## Create zone control plane
 
 ```sh
-docker run \
- -e KUMA_MODE=zone \
- -e KUMA_MULTIZONE_ZONE_NAME=zone-1\
- -e KUMA_ENVIRONMENT=universal \
- -e KUMA_STORE_TYPE=postgres \
- -e KUMA_STORE_POSTGRES_HOST=postgres \
- -e KUMA_STORE_POSTGRES_PORT=5432 \
- -e KUMA_STORE_POSTGRES_USER=kong \
- -e KUMA_STORE_POSTGRES_PASSWORD=pass123 \
- -e KUMA_STORE_POSTGRES_DB_NAME=kmesh \
- -e KUMA_MULTIZONE_ZONE_GLOBAL_ADDRESS=grpcs://localhost:5685 \
- --network kong-mesh-system \
- kumahq/kuma-cp:2.12.5 run
+export PATH=$(pwd)/kuma-2.12.5/bin:$PATH
 ```
 
-## TODO
+```sh
+ KUMA_MODE=zone \
+ KUMA_MULTIZONE_ZONE_NAME=zone-1\
+ KUMA_ENVIRONMENT=universal \
+ KUMA_STORE_TYPE=postgres \
+ KUMA_STORE_POSTGRES_HOST=localhost \
+ KUMA_STORE_POSTGRES_PORT=5432 \
+ KUMA_STORE_POSTGRES_USER=kong \
+ KUMA_STORE_POSTGRES_PASSWORD=pass123 \
+ KUMA_STORE_POSTGRES_DB_NAME=kmesh \
+ KUMA_MULTIZONE_ZONE_GLOBAL_ADDRESS=grpcs://localhost:5685 \
+ KUMA_MULTIZONE_ZONE_KDS_TLS_SKIP_VERIFY=true
+ kuma-cp run
+```
+
+## Configure kumactl
+
+```sh
+TOKEN=$(curl http://localhost:5681/global-secrets/admin-user-token | jq -r .data | base64 -d)
+```
+
+```sh
+export PATH=$(pwd)/kuma-2.12.5/bin:$PATH
+```
 
 ```sh
 kumactl config control-planes add \
-  --address http://localhost:5681 \
-  --name "zone-1-cp" \
-  --overwrite
+ --name zone-1 \
+ --address http://localhost:5681 \
+ --auth-type=tokens \
+ --auth-conf token=$TOKEN \
+ --skip-verify \
+ --overwrite
 ```
 
 ```sh
-kumactl generate zone-token --zone=zone-1 --scope egress --scope ingress > /tmp/zone-token
+kumactl generate zone-token --zone=zone-1 --valid-for 24h --scope egress --scope ingress > /tmp/zone-token
 ```
 
 ```sh
@@ -95,6 +125,8 @@ networking:
   advertisedPort: 10000" > ingress-dp.yaml
 ```
 
+## TODO
+
 ```sh
 kuma-dp run \
   --proxy-type=ingress \
@@ -104,28 +136,17 @@ kuma-dp run \
 ```
 
 ```sh
-echo "type: ZoneEgress
-name: zoneegress-01
-networking:
-  address: 127.0.0.1
-  port: 10002" > zoneegress-dataplane.yaml
+export PATH=$(pwd)/kuma-2.12.5/bin:$PATH
 ```
 
 ```sh
- kuma-dp run \
-   --proxy-type=egress \
-   --cp-address=https://localhost:5678 \
-   --dataplane-token-file=/tmp/zone-token \
-   --dataplane-file=zoneegress-dataplane.yaml
-```
-
-```sh
-# forward traffic from local pc into global control plane in the cluster
-kubectl -n kuma-system port-forward svc/kuma-control-plane 5681:5681 &
-
-# configure control plane for kumactl
 kumactl config control-planes add \
   --name global-control-plane \
   --address http://localhost:5681 \
-  --skip-verify
+  --skip-verify \
+  --overwrite
+```
+
+```sh
+kumactl get zones
 ```
