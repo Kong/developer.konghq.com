@@ -87,3 +87,5 @@ To enforce these rules, the plugin:
 
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the plugin returns a `400 Bad Request` to the client without exposing that the Semantic Response Guard blocked it.
+
+{% include plugins/redis-cloud-auth.md %}

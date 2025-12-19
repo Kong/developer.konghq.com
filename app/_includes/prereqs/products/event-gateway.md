@@ -12,8 +12,9 @@ This sets up an {{site.base_gateway}} control plane named `event-gateway-quickst
 ```bash
 export EVENT_GATEWAY_ID=your-gateway-id
 ```
+{:.no-copy-code}
 
-Copy and paste this into your terminal to configure your session.
+Copy and paste the command with your Event Gateway ID into your terminal to configure your session.
 
 {:.info}
 > This quickstart script is meant for demo purposes only, therefore it runs locally with default parameters and a small number of exposed ports.

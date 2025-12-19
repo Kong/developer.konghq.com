@@ -1,0 +1,127 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "anonymous": {
+          "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request fails with an authentication failure `4xx`.",
+          "type": "string"
+        },
+        "attribute": {
+          "description": "Attribute to be used to search the user; e.g. cn",
+          "type": "string"
+        },
+        "base_dn": {
+          "description": "Base DN as the starting point for the search; e.g., dc=example,dc=com",
+          "type": "string"
+        },
+        "cache_ttl": {
+          "default": 60,
+          "description": "Cache expiry time in seconds.",
+          "type": "number"
+        },
+        "header_type": {
+          "default": "ldap",
+          "description": "An optional string to use as part of the Authorization header",
+          "type": "string"
+        },
+        "hide_credentials": {
+          "default": false,
+          "description": "An optional boolean value telling the plugin to hide the credential to the upstream server. It will be removed by Kong before proxying the request.",
+          "type": "boolean"
+        },
+        "keepalive": {
+          "default": 60000,
+          "description": "An optional value in milliseconds that defines how long an idle connection to LDAP server will live before being closed.",
+          "type": "number"
+        },
+        "ldap_host": {
+          "description": "A string representing a host name, such as example.com.",
+          "type": "string"
+        },
+        "ldap_port": {
+          "default": 389,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "ldaps": {
+          "default": false,
+          "description": "Set to `true` to connect using the LDAPS protocol (LDAP over TLS).  When `ldaps` is configured, you must use port 636. If the `ldap` setting is enabled, ensure the `start_tls` setting is disabled.",
+          "type": "boolean"
+        },
+        "realm": {
+          "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value.",
+          "type": "string"
+        },
+        "start_tls": {
+          "default": false,
+          "description": "Set it to `true` to issue StartTLS (Transport Layer Security) extended operation over `ldap` connection. If the `start_tls` setting is enabled, ensure the `ldaps` setting is disabled.",
+          "type": "boolean"
+        },
+        "timeout": {
+          "default": 10000,
+          "description": "An optional timeout in milliseconds when waiting for connection with LDAP server.",
+          "type": "number"
+        },
+        "verify_ldap_host": {
+          "default": false,
+          "description": "Set to `true` to authenticate LDAP server. The server certificate will be verified according to the CA certificates specified by the `lua_ssl_trusted_certificate` directive.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "attribute",
+        "base_dn",
+        "ldap_host"
+      ],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

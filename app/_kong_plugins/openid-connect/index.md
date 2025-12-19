@@ -588,6 +588,8 @@ If one of these other applications is causing issues, looking into using the fol
   * [Port maps](/gateway/configuration/#port-maps)
   * [`X-Forwarded-*` headers](/gateway/configuration/#trusted-ips)
 
+{% include plugins/redis-cloud-auth.md %}
+
 ## Supported identity providers
 
 The plugin has been tested with several OpenID Connect providers:

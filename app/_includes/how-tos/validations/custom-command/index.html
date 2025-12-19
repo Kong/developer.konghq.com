@@ -1,3 +1,3 @@
-<div markdown="1" data-test-step="{{ config.data_validate | escape }}" class="content">
+<div markdown="1" {% if config.section == 'prereqs' %}data-test-prereqs="block" {% else %}data-test-step="{{ config.data_validate | escape }}"{% endif %} class="content">
   {% include how-tos/validations/custom-command/snippet.md config=config %}
 </div>

@@ -140,12 +140,9 @@ DECK_OKTA_CLIENT_SECRET: 'YOUR-OKTA-APP-CLIENT-SECRET'
 1. Create a server named **Kong API Management** with an audience and description.
 1. Copy the issuer URL for your authorization server, strip the `/.well-known/oauth-authorization-server`, and export it as an environment variable:
 
-{% capture issuer %}
-{% env_variables %}
-DECK_ISSUER_URL: YOUR-ISSUER-URL
-{% endenv_variables %}
-{% endcapture %}
-{{ issuer | indent: 3 }}
+   ```sh
+   export DECK_ISSUER_URL='YOUR-ISSUER-URL'
+   ```
 
    It should be formatted like `https://domain.okta.com/oauth2/a36f045h4597`. 
 

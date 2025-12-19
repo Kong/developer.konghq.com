@@ -28,7 +28,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           submodules: 'recursive'
 
@@ -58,7 +58,7 @@ jobs:
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           RUNTIME: gateway
-          PRODUCT: gateway
+          PRODUCTS: gateway
           GATEWAY_VERSION: next
           KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}

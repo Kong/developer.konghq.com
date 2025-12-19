@@ -26,7 +26,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           submodules: 'recursive'
 
@@ -51,7 +51,7 @@ jobs:
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           RUNTIME: konnect
-          PRODUCT: event-gateway
+          PRODUCTS: event-gateway
           TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
         run: |
           DEBUG=tests:*,debug npm run run-tests

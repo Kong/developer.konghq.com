@@ -56,8 +56,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
-
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
@@ -65,6 +63,8 @@ related_resources:
     url: /ai-gateway/get-started/
   - text: Use LangChain with AI Proxy
     url: /how-to/use-langchain-with-ai-proxy/
+
+automated_tests: false
 ---
 
 ## Clone the sample repository

@@ -1,0 +1,19 @@
+{% assign logs = site.data.plugins.otel-metrics.access_logs %}
+{% assign attributes = site.data.plugins.otel-metrics.attributes %}
+<table>
+    <thead>
+      <tr>
+        <th>Attribute</th>
+        <th>Attribute description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attribute in logs %}
+      <tr id="{{ attribute }}">
+        <td><code>{{ attribute }}</code></td>
+        <td>{{ attributes[attribute] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+  

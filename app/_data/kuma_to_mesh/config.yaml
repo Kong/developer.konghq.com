@@ -18,16 +18,6 @@ links:
 pages:
 # Must for GA      
   -
-    path: app/_src/production/secure-deployment/manage-control-plane-permissions-on-kubernetes.md
-    title: 'Manage Control Plane permissions on Kubernetes'
-    description: 'This guide explains how to manage Control Plane permissions on Kubernetes'
-    url: /mesh/manage-control-plane-permissions-on-kubernetes/
-    related_resources: 
-      - text: Restrict permissions to selected namespaces on Kubernetes
-        url: '/mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/'
-    min_version:
-      mesh: '2.11'
-  -
   
     path: app/_src/guides/federate-kv.md
     title: 'Federate zone Control Plane'
@@ -68,18 +58,6 @@ pages:
         url: /mesh/kubernetes/
     min_version:
       mesh: '2.6'
-  -
-    path: app/_src/guides/migration-to-the-new-policies.md
-    title: 'Migration to the new policies'
-    description: 'Migrate from old to new policies in {{site.mesh_product_name}} to improve flexibility and transparency.'
-    url: '/mesh/migration-to-the-new-policies/'
-    related_resources:
-      - text: Mesh policies
-        url: '/mesh/policies-introduction/'
-      - text: Policy Hub
-        url: /mesh/policies/
-    min_version:
-      mesh: '2.7'
   -
     path: app/_src/guides/otel-metrics.md
     title: 'Collect metrics with OpenTelemetry'

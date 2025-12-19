@@ -63,7 +63,7 @@ The following examples show standardized text-based request formats for each sup
 
 {% include plugins/ai-proxy/text-inputs.md %}
 
-#### Audio and image generation inputs
+#### Audio, image and video generation inputs
 
 The following examples show standardized audio and image request formats for each supported route. These formats are normalized across providers to help simplify downstream parsing and integration.
 
@@ -77,7 +77,7 @@ Conversely, the response formats are also transformed to a standard format acros
 
 {% include plugins/ai-proxy/text-responses.md %}
 
-#### Image, and audio responses
+#### Image, audio and video responses
 
 The following examples show standardized response formats returned by supported `audio/` and `image/` routes. These formats are normalized across providers to support consistent multimodal output parsing.
 
@@ -99,29 +99,54 @@ columns:
   - title: Supported APIs
     key: apis
 rows:
-  - llm_format: "[`gemini`](./examples/gemini-native-routes/)"
+  - llm_format: "`gemini`"
     provider: Gemini
     apis: |
-      - `/generateContent`
-      - `/streamGenerateContent`
-  - llm_format: "[`bedrock`](./examples/bedrock-native-routes/)"
+      - `/v1beta/models/{model_name}:generateContent`
+      - `/v1beta/models/{model_name}:streamGenerateContent`
+      - `/v1beta/models/{model_name}:embedContent`
+      - `/v1beta/models/{model_name}:batchEmbedContent`
+      - `/v1beta/batches`
+      - `/upload/{file_id}/files`
+      - `/v1beta/files`
+  - llm_format: "`gemini`"
+    provider: Vertex
+    apis: |
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:generateContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:streamGenerateContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:embedContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:batchEmbedContent`
+      - `/v1/projects/{project_id}/locations/{location}/models/{model_name}:predictLongRunning`
+      - `/v1/projects/{project_id}/locations/{location}/rankingConfigs/{config_name}:rank`
+      - `/v1/projects/{project_id}/locations/{location}/batchPredictionJobs`
+  - llm_format: "`bedrock`"
     provider: Bedrock
     apis: |
-      - `/converse`
-      - `/converse-stream`
-      - `/retrieveAndGenerate`
-      - `/retrieveAndGenerateStream`
-      - `/rerank`
-  - llm_format: "[`cohere`](./examples/cohere-native-routes/)"
+      - `/model/{model_name}/converse`
+      - `/model/{model_name}/converse-stream`
+      - `/model/{model_name}/invoke`
+      - `/model/{model_name}/invoke-with-response-stream`
+      - `/model/{model_name}/retrieveAndGenerate`
+      - `/model/{model_name}/retrieveAndGenerateStream`
+      - `/model/{model_name}/rerank`
+      - `/model/{model_name}/async-invoke`
+      - `/model-invocations`
+  - llm_format: "`cohere`"
     provider: Cohere
     apis: |
       - `/v1/rerank`
       - `/v2/rerank`
-  - llm_format: "[`huggingface`](./examples/hugging-face-native-routes/)"
+  - llm_format: "`huggingface`"
     provider: Hugging Face
     apis: |
       - `/generate`
       - `/generate_stream`
+  - llm_format: "`anthropic`"
+    provider: Hugging Face
+    apis: |
+      - `/v1/messages`
+      - `/v1/messages/batches`
+
 {% endtable %}
 <!-- vale on -->
 
@@ -133,7 +158,7 @@ The following sections detail the provider and statistic logging limitations.
 
 * **Anthropic**: Does not support `llm/v1/completions` or `llm/v1/embeddings`.
 * **Llama2**: Raw format lacks support for `llm/v1/embeddings`.
-* **Bedrock** and **Gemini**: Only support `auth.allow_override = false`.
+* **Gemini**: Only supports `auth.allow_override = false`.
 
 #### Statistics logging limitations
 

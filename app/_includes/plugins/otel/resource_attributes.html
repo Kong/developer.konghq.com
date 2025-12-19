@@ -1,0 +1,17 @@
+{% assign attributes = site.data.plugins.otel-metrics.resource_attributes %}
+<table>
+    <thead>
+      <tr>
+        <th>Attribute</th>
+        <th>Attribute description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attribute in attributes %}
+      <tr id="{{ attribute[0] }}">
+        <td><code>{{ attribute[0] }}</code></td>
+        <td>{{ attribute[1] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
