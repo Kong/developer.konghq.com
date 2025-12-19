@@ -35,8 +35,7 @@ docker exec -it postgres psql -h localhost -U kong
 ```
 
 ```sh
-CREATE DATABASE global;
-CREATE DATABASE zone1;
+CREATE DATABASE kmesh;
 ```
 ```sh
 exit
@@ -51,9 +50,9 @@ docker run \
     -e KUMA_STORE_POSTGRES_PORT=5432 \
     -e KUMA_STORE_POSTGRES_USER=kong \
     -e KUMA_STORE_POSTGRES_PASSWORD=pass123 \
-    -e KUMA_STORE_POSTGRES_DB_NAME=global \
+    -e KUMA_STORE_POSTGRES_DB_NAME=kmesh \
     --network kong-mesh-system \
-  kong/kuma-cp:2.13.0 migrate up
+  kumahq/kuma-cp:2.12.5 migrate up
 ```
 
 
@@ -66,69 +65,58 @@ docker run \
     -e KUMA_STORE_POSTGRES_PORT=5432 \
     -e KUMA_STORE_POSTGRES_USER=kong \
     -e KUMA_STORE_POSTGRES_PASSWORD=pass123 \
-    -e KUMA_STORE_POSTGRES_DB_NAME=global \
+    -e KUMA_STORE_POSTGRES_DB_NAME=kmesh \
     -p 5681:5681 \
     -p 5685:5685 \
     --network kong-mesh-system \
     --name kong-mesh-global \
-  kong/kuma-cp:2.13.0 run
+  kumahq/kuma-cp:2.12.5 run
 ```
 
 ## Create zone control plane
 
 ```sh
 docker run \
- -e KUMA_STORE_TYPE=postgres \
- -e KUMA_STORE_POSTGRES_HOST=postgres \
- -e KUMA_STORE_POSTGRES_PORT=5432 \
- -e KUMA_STORE_POSTGRES_USER=kong \
- -e KUMA_STORE_POSTGRES_PASSWORD=pass123 \
- -e KUMA_STORE_POSTGRES_DB_NAME=zone1 \
- --network kong-mesh-system \
- kong/kuma-cp:2.13.0 migrate up
-```
-
-```sh
-docker run \
  -e KUMA_MODE=zone \
- -e KUMA_MULTIZONE_ZONE_NAME=zone1\
+ -e KUMA_MULTIZONE_ZONE_NAME=zone-1\
  -e KUMA_ENVIRONMENT=universal \
  -e KUMA_STORE_TYPE=postgres \
  -e KUMA_STORE_POSTGRES_HOST=postgres \
  -e KUMA_STORE_POSTGRES_PORT=5432 \
  -e KUMA_STORE_POSTGRES_USER=kong \
  -e KUMA_STORE_POSTGRES_PASSWORD=pass123 \
- -e KUMA_STORE_POSTGRES_DB_NAME=zone1 \
+ -e KUMA_STORE_POSTGRES_DB_NAME=kmesh \
  -e KUMA_MULTIZONE_ZONE_GLOBAL_ADDRESS=grpcs://kong-mesh-global:5685 \
  -e KUMA_MULTIZONE_ZONE_KDS_TLS_SKIP_VERIFY=true \
  --network kong-mesh-system \
  --name kong-mesh-zone-1 \
  -p 25681:5681 \
  -p 25678:5678 \
- kong/kuma-cp:2.13.0 run
+ kumahq/kuma-cp:2.12.5 run
 ```
 
 ## Configure kumactl
 
 ```sh
-TOKEN=$(docker exec -it kong-mesh-global wget -q -O - http://localhost:5681/global-secrets/admin-user-token | jq -r .data | base64 -d)
+TOKEN=$(docker exec -it kong-mesh-zone-1 wget -q -O - http://localhost:5681/global-secrets/admin-user-token | jq -r .data | base64 -d)
 ```
 
 ```sh
-export PATH=$(pwd)/kong-mesh-2.13.0/bin:$PATH
+export PATH=$(pwd)/kuma-2.12.5/bin:$PATH
 ```
 
 ```sh
 kumactl config control-planes add \
-  --address http://localhost:5681 \
-  --headers "authorization=Bearer $TOKEN" \
-  --name "global-cp" \
-  --skip-verify \
-  --overwrite
+ --name zone-1 \
+ --address http://localhost:25681 \
+ --auth-type=tokens \
+ --auth-conf token=$TOKEN \
+ --skip-verify \
+ --overwrite
 ```
 
 ```sh
-kumactl generate zone-token --zone=zone1 --valid-for 24h --scope egress --scope ingress > /tmp/zone-token
+DP_TOKEN=$(kumactl generate zone-token --zone=zone-1 --valid-for 24h --scope egress --scope ingress)
 ```
 
 ```sh
@@ -144,15 +132,21 @@ networking:
 ## TODO
 
 ```sh
-kuma-dp run \
+docker run \
+  --network kong-mesh-system \
+  -v /tmp/zone-token:/tmp/zone-token \
+  -v /ingress-dp.yaml:/ingress-dp.yaml \
+  -e TOKEN \
+  kumahq/kuma-dp:2.12.5 run \
   --proxy-type=ingress \
-  --cp-address=https://localhost:25678 \
-  --dataplane-token-file=/tmp/zone-token \
+  --cp-address=http://kong-mesh-zone-1:25678 \
+  --name=ingress-01 \
+  --dataplane-token=$TOKEN \
   --dataplane-file=ingress-dp.yaml
 ```
 
 ```sh
-export PATH=$(pwd)/kong-mesh-2.13.0/bin:$PATH
+export PATH=$(pwd)/kuma-2.12.5/bin:$PATH
 ```
 
 ```sh
