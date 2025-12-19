@@ -4,6 +4,10 @@ gateway:
     SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
     ANTHROPIC_API_KEY: anthropic-api-key
   versions:
+    - version: "3.13"
+      env:
+        KONG_IMAGE_NAME: kong/kong-gateway
+        KONG_IMAGE_TAG: "3.13"
     - version: "3.12"
       env:
         KONG_IMAGE_NAME: kong/kong-gateway
