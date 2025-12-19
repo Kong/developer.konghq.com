@@ -112,7 +112,16 @@ prereqs:
 cleanup:
   inline:
     - title: Clean up HashiCorp Vault
-      include_content: cleanup/third-party/hashicorp
+      content: |
+        [Stop the HashiCorp Vault dev server process](https://developer.hashicorp.com/vault/tutorials/get-started/setup#clean-up) by running the following:
+        ```
+        pkill vault
+        ```
+
+        Unset environment variables:
+        ```
+        unset VAULT_ADDR
+        ```
       icon_url: /assets/icons/hashicorp.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway

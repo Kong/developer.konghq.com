@@ -62,8 +62,6 @@ related_resources:
     url: /how-to/protect-sensitive-information-output-with-ai/
   - text: AI PII Sanitizer
     url: /plugins/ai-sanitizer/
-
-automated_tests: false
 ---
 
 ## Start the Kong AI PII Sanitizer service

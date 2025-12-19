@@ -59,7 +59,7 @@ or by passing the corresponding files, i.e.
 1. Runs a docker image named after the product with all the necessary tools, which can be found in `tools/automated-test/docker/Dockerfile` (temporary until we host them somewhere).
 1. Sets up the environment by running in the container the commands defined in `tools/automated-tests/config/runtimes.yaml` under the corresponding key. It also sets the `ENV` variables defined there in the container. For runtimes that have versions, it will set the corresponding env variables defined under `versions` of the entry matching `<RUNTIME>_VERSION`.
  E.g. for gateway, when running the tests with `GATEWAY_VERSION='3.9'` it will set the env variables defined in `gateway.versions` for the entry `version: '3.9'`.
-1. Tests can be scoped to a specific product by setting the `PRODUCT` env variable, e.g. `PRODUCT=gateway`.
+1. Tests can be scoped to a specific product by setting the `PRODUCTS` env variable, e.g. `PRODUCTS=gateway`.
 1. Runs the `setup` commands defined in `runtimes.yaml` once, and after each test it resets it by running the commands under `reset`.
 1. For each instruction file (test), it runs its `prereqs` block.
 1. Then, it runs the steps secuentially. In the case of `gateway`, steps that are strings are executed as bash commands. Validation steps (defined as json objects), are treated as assertions. They run custom code based on the step's configuration and fail/success depending on the expectation. The validation functions are defined in `tools/automated-tests/instructions/validations.js`.
@@ -78,7 +78,7 @@ From the root of the repo run:
 
 1. `cd tools/automated-tests`
 1. `npm ci` - installs dependencies
-1. `GATEWAY_VERSION='3.9' RUNTIME='gateway' PRODUCT='gateway' npm run run-tests`
+1. `GATEWAY_VERSION='3.9' RUNTIME='gateway' PRODUCTS='gateway' npm run run-tests`
 
 By default, it will run all the instruction files, but it also supports running specific tests, i.e.
 
@@ -86,7 +86,7 @@ By default, it will run all the instruction files, but it also supports running 
 
 #### Run unreleased gateway version
 
-`GATEWAY_VERSION='3.12' PRODUCT=gateway RUNTIME=konnect KONG_IMAGE_TAG=nightly KONG_IMAGE_NAME=kong/kong-gateway-dev npm run run-tests`
+`GATEWAY_VERSION='3.12' PRODUCTS=gateway RUNTIME=konnect KONG_IMAGE_TAG=nightly KONG_IMAGE_NAME=kong/kong-gateway-dev npm run run-tests`
 
 #### Supported Env variables
 
@@ -94,5 +94,5 @@ By default, it will run all the instruction files, but it also supports running 
 |----------|-------------|----------|---------------|
 | `GATEWAY_VERSION` | Specifies which gateway version to run the test agains. | true | null |
 | `RUNTIME` | Specifies which runtimes (konnect/gateway) to run, runs all tests by default. | true | null |
-| `PRODUCT` | Specifies which tests to run. | true | null |
+| `PRODUCTS` | Specifies which tests to run. | true | null |
 | `CONTINUE_ON_ERROR` | Whether to continue running tests after a test fails. | false | null |

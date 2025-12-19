@@ -83,8 +83,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy Advanced plugin
@@ -168,6 +166,8 @@ Use these prompts containing blocked `badwords` to test the guardrail:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -183,6 +183,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -207,6 +209,8 @@ Use these prompts to test the guardrail on the topic "quantum computing":
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -222,6 +226,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -246,6 +252,8 @@ Use these prompts to test the guardrail on blocked content categories:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -261,6 +269,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -276,6 +286,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -291,6 +303,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'

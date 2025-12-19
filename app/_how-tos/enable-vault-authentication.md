@@ -59,8 +59,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Create a Consumer
@@ -92,11 +90,14 @@ body:
   name: kong-auth
   mount: secret
   protocol: http
-  host: host.docker.internal
+  host: $VAULT_HOST
   port: 8200
   vault_token: root
   kv: v2
 status_code: 201
+extract_body:
+  - name: id
+    variable: DECK_VAULT_ID
 {% endcontrol_plane_request %}
 <!--vale on-->
 
@@ -131,6 +132,11 @@ method: POST
 headers:
     - 'Accept: application/json'
 status_code: 201
+extract_body:
+  - name: data.access_token
+    variable: ACCESS_TOKEN
+  - name: data.secret_token
+    variable: SECRET_TOKEN
 {% endcontrol_plane_request %}
 <!--vale on-->
 
@@ -144,7 +150,7 @@ export SECRET_TOKEN='YOUR_CONSUMER_SECRET_TOKEN'
 
 To validate that the authentication is working as expected, send a request to the Route we created in the [prerequisites](#pre-configured-entities) using the credentials we generated:
 <!--vale off-->
-{% validation unauthorized-check %}
+{% validation request-check %}
 url: '/anything'
 status_code: 200
 headers:
