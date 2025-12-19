@@ -51,7 +51,7 @@ rows:
       <!--vale on-->
   - category: Vitals
     description: |
-      The product component known as Vitals is no longer included in {{site.ee_product_name}}. Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism. {{site.konnect_short_name}} users can take advantage of our Observability offering, which provides a superset of Vitals functionality.
+      The product component known as Vitals is no longer included in {{site.ee_product_name}}. Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism. {{site.konnect_short_name}} users can take advantage of our {{site.observability}} offering, which provides a superset of Vitals functionality.
     action: |
       If you have purchased Vitals in the past and would like to continue to use it in 3.10, contact [Kong Support](https://support.konghq.com) for more information.
   - category: Plugins

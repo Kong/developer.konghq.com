@@ -1,5 +1,5 @@
 ---
-title: "Observability Explorer"
+title: "{{site.observability}} Explorer"
 content_type: reference
 layout: reference
 description: | 
@@ -37,7 +37,7 @@ faqs:
         * **Status Code Group**
         * **Upstream Status Code**
         * **Upstream Status Code Group**
-  - q: What does "None" mean in Observability?
+  - q: What does "None" mean in {{site.observability}}?
     a: |
       "None" is a field that can capture data that doesn't belong to a specific category.
   - q: What can I do after customizing an Explorer dashboard?
@@ -60,10 +60,10 @@ faqs:
        - Open Explorer with the chart’s current filters and time range, by selecting **Explore**.
        - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
   - q: Why don't I see any API requests in my chart?
-    a: If you're sending requests from an internal IP address (local), those won't display in Observability charts.
+    a: If you're sending requests from an internal IP address (local), those won't display in {{site.observability}} charts.
 
 related_resources:
-  - text: Konnect Observability
+  - text: Konnect {{site.observability}}
     url: /observability/
   - text: LLM Reporting
     url: /observability/llm-reporting/

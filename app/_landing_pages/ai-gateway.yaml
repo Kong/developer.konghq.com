@@ -271,7 +271,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: '{{site.konnect_short_name}} Observability'
+            title: '{{site.konnect_short_name}} {{site.observability}}'
             description: Visualize LLM metrics in {{site.konnect_short_name}}.
             icon: /assets/icons/analytics.svg
             cta:

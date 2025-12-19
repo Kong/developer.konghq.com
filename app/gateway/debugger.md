@@ -138,8 +138,8 @@ To begin using the Debugger, ensure the following requirements are met:
 > From version 3.10 and later, these environment variables are enabled by default and no manual configuration is required.
 
 
-1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
-1. In the Observability sidebar, click **Debugger**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
+1. In the {{site.observability}} sidebar, click **Debugger**.
 1. Click **New session**.
 1. Define the sampling criteria.
 1. Click **Start Session**.

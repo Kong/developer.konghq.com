@@ -54,9 +54,9 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Observability 
+            title: "{{site.konnect_short_name}} {{site.observability}}"
             description: |
-              Observability is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
+              {{site.konnect_short_name}} {{site.observability}} is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
             icon: /assets/icons/analytics.svg
             ctas:
               - text: Explore analytics

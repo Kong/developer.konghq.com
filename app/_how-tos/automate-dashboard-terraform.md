@@ -40,7 +40,7 @@ prereqs:
         This guide requires an existing dashboard in {{site.konnect_short_name}}. You can create one using the [Create a custom dashboard](/how-to/create-custom-dashboards/) guide.
 related_resources:
   - text: Custom Dashboards
-    url: /observability/custom-dashboards/
+    url: /how-to/custom-dashboards/
 ---
 
 ## Get the dashboard ID
