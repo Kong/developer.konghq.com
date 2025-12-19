@@ -21,8 +21,6 @@ breadcrumbs:
 related_resources:
   - text: "{{site.base_gateway}}"
     url: /gateway/
-  - text: "Mesh Manager"
-    url: /mesh-manager/
   - text: "decK"
     url: /deck/
   - text: "Plugins"
@@ -31,7 +29,7 @@ related_resources:
 faqs:
   - q: Are the {{site.konnect_short_name}} Control Plane and associated database migrations or upgrades done by Kong Inc.?
     a: The {{site.base_gateway}} Control Plane and its dependencies are fully managed by {{site.konnect_short_name}}. As new versions of {{site.base_gateway}} are released, {{site.konnect_short_name}} supports them as long as they are under our [active support schedule](/gateway/version-support-policy/).
-  - q: Will {{site.konnect_short_name}} Control Plane upgrades always show incompatible messages on the Gateway Manager page if the Data Plane nodes are not the same version as the {{site.konnect_short_name}} Control Plane?
+  - q: Will {{site.konnect_short_name}} Control Plane upgrades always show incompatible messages on the API Gateway page in {{site.konnect_short_name}} if the Data Plane nodes are not the same version as the {{site.konnect_short_name}} Control Plane?
     a: An old configuration may still be 100% compatible with older Data Plane nodes and therefore not show any error messages in the {{site.konnect_short_name}} UI. If there are compatibility issues detected when pushing the payload down to the Data Plane, then this will be reflected in the UI.
   - q: Will new features be available if the {{site.konnect_short_name}} Control Plane detects incompatible Data Plane nodes?
     a: |
@@ -44,6 +42,15 @@ faqs:
     a: Yes. All decK dumps, or YAML configurations, will continue to work in {{site.konnect_short_name}} after they are synced.
   - q: Are there any disruptions if I choose not to upgrade my Data Plane nodes?
     a: There is **no** disruption at all if you choose **not** to upgrade your Data Plane nodes as long as the version of the Data Plane is under our [{{site.base_gateway}} active support timeline](/konnect-platform/compatibility/#kong-gateway-version-compatibility). 
+  - q: How can I create a support case in {{site.konnect_short_name}}?
+    a: |
+      If you're an org admin with an Enterprise account and a [Kong Support portal](https://support.konghq.com/support/s/) account, you can create a support case in {{site.konnect_short_name}} by navigating to the **?** icon on the top right menu and clicking **Create support case**. 
+
+      This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity.
+
+      You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
+      
+      If you don't have a Kong Support portal account, request access from your org admin or reach out to a Kong representative for an invite.
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
@@ -56,7 +63,7 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 ## {{site.mesh_product_name}} compatibility
 
-To use [Mesh Manager](/mesh-manager/), you must also use a compatible version of {{site.mesh_product_name}}:
+To use Mesh in {{site.konnect_short_name}}, you must use a compatible version of {{site.mesh_product_name}}:
 
 {% feature_table %}
 item_title: "{{site.mesh_product_name}} version"

@@ -17,8 +17,8 @@ search_aliases:
 description: "Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal."
 
 related_resources:
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
+  - text: About Dev Portal customizations
+    url: /dev-portal/customizations/dev-portal-customizations/
   - text: Pages and content
     url: /dev-portal/pages-and-content/
   - text: "Configure SSO for a {{site.konnect_short_name}} org"

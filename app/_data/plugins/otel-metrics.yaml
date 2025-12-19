@@ -1,0 +1,349 @@
+metrics:
+  - name: http.server.request.count
+    description: Total number of incoming HTTP requests.
+    unit: "{request}"
+    type: Sum
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.auth.consumer.name
+      - kong.response.source
+      - kong.workspace.name
+      - http.request.method
+      - kong.response.status_code
+  - name: kong.latency.total
+    description: &latency_total Complete end-to-end duration of a request in seconds.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: kong.latency.internal
+    description: &latency_internal "Kong’s internal processing time in seconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: kong.latency.upstream
+    description: &latency_upstream Upstream processing time in seconds, from when the Gateway sends the request to the upstream, to when the data is returned to Kong.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: http.server.request.size
+    description: Size of each incoming HTTP request in bytes.
+    unit: "By"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.auth.consumer.name
+      - kong.workspace.name
+  - name: http.server.response.size
+    description: Total size of the HTTP response sent back to the client in bytes.
+    unit: "By"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.auth.consumer.name
+      - kong.workspace.name
+  - name: kong.shared_dict.usage
+    description: Current memory usage of a shared dict in bytes.
+    unit: "By"
+    type: Gauge
+    attributes:
+      - kong.shared_dict.name
+      - kong.subsystem
+  - name: kong.shared_dict.size
+    description: Total memory size of a shared dict in bytes.
+    unit: "By"
+    type: Gauge
+    attributes:
+      - kong.shared_dict.name
+      - kong.subsystem
+  - name: kong.memory.workers.lua_vm
+    description: "Memory used by the worker’s Lua VM in bytes."
+    unit: "By"
+    type: Gauge
+    attributes:
+      - kong.pid
+      - kong.subsystem
+  - name: kong.nginx.connection.count
+    description: Number of client connections in Nginx.
+    unit: "{connection}"
+    type: Gauge
+    attributes:
+      - kong.subsystem
+      - kong.connection.state
+  - name: kong.nginx.timer.count
+    description: Number of internal scheduled timers Nginx is running in the background.
+    unit: "{timer}"
+    type: Gauge
+    attributes:
+      - kong.timer.state
+  - name: kong.db.connection.status
+    description: Shows whether Kong has an active database connection. A value of 1 means connected. A value of 0 means not connected.
+    unit: "1"
+    type: Gauge
+  - name: kong.cp.connection.status
+    description: Shows whether the data plane has an active connection to the control plane. A value of 1 means connected. A value of 0 means not connected.
+    unit: "1"
+    type: Gauge
+  - name: kong.upstream.target.status
+    description: "Upstream target’s health. The actual status is in the state attribute, with the metric value set to 1 when a state is populated."
+    unit: "1"
+    type: Gauge
+    attributes:
+      - kong.upstream.name
+      - kong.target.address
+      - server.address
+      - kong.upstream.state
+      - kong.subsystem
+  - name: kong.dp.cluster_cert.expiry
+    description: "Timestamp when the data plane’s cluster certificate will expire."
+    unit: "s"
+    type: Gauge
+  - name: kong.db.entity.count
+    description: "Number of entities stored in Kong’s database."
+    unit: "{entity}"
+    type: Gauge
+  - name: kong.db.entity.error.count
+    description: Number of errors seen during database entity count collection.
+    unit: "{error}"
+    type: Sum
+  - name: kong.ee.license.signature
+    description: Last 8 bytes of the Enterprise license signature as a number.
+    type: Gauge
+  - name: kong.ee.license.expiration
+    description: Unix epoch time when the license expires, shifted by 24 hours to avoid timezone differences.
+    unit: "s"
+    type: Gauge
+  - name: kong.ee.license.features
+    description: |
+      Indicates whether the data plane can read or write entities under the current license. 
+      Each capability (<code>ee_entity_read</code> and <code>ee_entity_write</code>) is reported as its own metric, where 1 means allowed and 0 means not allowed.
+    unit: "1"
+    type: Gauge
+    attributes:
+      - kong.ee.license.feature
+  - name: kong.ee.license.error.count
+    description: Number of errors that occurred while collecting license information.
+    unit: "{error}"
+    type: Sum
+
+access_logs:
+  - client.address
+  - url.query
+  - url.full
+  - url.path
+  - user_agent.original
+  - http.request.method
+  - http.request.size
+  - http.request.header.*
+  - http.response.header.*
+  - http.response.size
+  - http.response.status_code
+  - kong.request.id
+  - kong.request.started_at
+  - kong.response.source
+  - kong.workspace.id
+  - kong.workspace.name
+  - kong.latency.client
+  - kong.latency.third_party.total
+  - kong.latency.third_party.dns
+  - kong.latency.third_party.http_client
+  - kong.latency.third_party.redis
+  - kong.latency.internal
+  - kong.latency.upstream
+  - kong.latency.receive
+  - kong.latency.total
+  - kong.latency.socket
+  - kong.route.created_at
+  - kong.route.http_redirect_status_code
+  - kong.route.id
+  - kong.route.name
+  - kong.route.tags
+  - kong.route.path_handling
+  - kong.route.paths
+  - kong.route.preserve_host
+  - kong.route.protocols
+  - kong.route.regex_priority
+  - kong.route.request_buffering
+  - kong.route.response_buffering
+  - kong.route.service.id
+  - kong.route.strip_path
+  - kong.route.updated_at
+  - kong.route.ws_id
+  - kong.service.connect_timeout
+  - kong.service.created_at
+  - kong.service.enabled
+  - kong.service.host
+  - kong.service.id
+  - kong.service.name
+  - kong.service.port
+  - kong.service.protocol
+  - kong.service.read_timeout
+  - kong.service.retries
+  - kong.service.updated_at
+  - kong.service.write_timeout
+  - kong.service.ws_id
+  - kong.service.tags
+  - kong.upstream.try.*
+  - kong.upstream.status_code
+  - kong.upstream.uri
+  - kong.auth.type
+  - kong.auth.consumer.*
+  - kong.auth.authenticated_entity.*
+
+resource_attributes:
+  service.name: Name of the service exposing the signal. This is optional, the default value is <code>kong</code>.
+  service.version: Gateway version of the node exposing the signal.
+  service.instance.id: ID of the node exposing the signal.
+
+attributes:
+  kong.service.name: Name of the Gateway Service.
+  kong.route.name: Name of the Route.
+  kong.auth.consumer.name: Name of the authenticated Consumer.
+  kong.response.source:  |
+    Origin of the current response. Possible values:
+    <ul>
+      <li><code>upstream</code> if the response originated by successfully contacting the upstream service</li>
+      <li><code>kong</code> otherwise</li>
+    </ul>
+  kong.workspace.name: Name of the Workspace.
+  http.request.method: Method used in the HTTP request.
+  kong.shared_dict.name: Name of the shared dict.
+  kong.subsystem: |
+    Nginx subsystem that produced the metric. Possible values:
+    <ul>
+      <li><code>http</code></li>
+      <li><code>stream</code></li>
+    </ul>
+  kong.connection.state: |
+    State of the client connection. Possible values:
+    <ul>
+      <li><code>accepted</code></li>
+      <li><code>handled</code></li>
+      <li><code>total</code></li>
+      <li><code>active</code></li>
+      <li><code>reading</code></li>
+      <li><code>writing</code></li>
+      <li><code>waiting</code></li>
+    </ul>
+  kong.pid: Worker process ID.
+  kong.timer.state: |
+    State of the timer. Possible values:
+    <ul>
+      <li><code>pending</code></li>
+      <li><code>running</code></li>
+    </ul>
+  kong.upstream.name: Name of the Upstream.
+  kong.target.address: Address of the Target.
+  server.address: Address of the server.
+  kong.upstream.state: |
+    Health of the Upstream Target. Possible values:
+    <ul>
+      <li><code>healthy</code></li>
+      <li><code>unhealthy</code></li>
+      <li><code>dns_error</code></li>
+    </ul>
+  kong.dp.host.name: Host name fo the data plane.
+  kong.dp.node.id: ID of the data plane node.
+  kong.dp.host.ip: IP address of the data plane host.
+  kong.dp.node.version: Version of the data plane node.
+  kong.ee.license.feature: |
+    Enterprise feature. Possible values:
+    <ul>
+      <li><code>ee_entity_read</code></li>
+      <li><code>ee_entity_write</code></li>
+    </ul>
+  client.address: IP address of the client.
+  url.query: Query in the request URL.
+  url.full: Full URL ued in the request.
+  url.path: Path in the request URL.
+  user_agent.original: Original user agent.
+  http.request.size: Size of the request.
+  http.request.header.*: Value of the request header.
+  http.response.header.*: Value of the response header.
+  http.response.size: Size of the response.
+  http.response.status_code: Status code of the response.
+  kong.request.id: ID of the request.
+  kong.request.started_at: Timestamp of the request start time.
+  kong.workspace.id: ID of the Workspace.
+  kong.latency.client: 
+  kong.latency.third_party.total:
+  kong.latency.third_party.dns:
+  kong.latency.third_party.http_client:
+  kong.latency.third_party.redis:
+  kong.latency.internal: *latency_internal
+  kong.latency.upstream: *latency_upstream
+  kong.latency.receive:
+  kong.latency.total: *latency_total
+  kong.latency.socket:
+  kong.route.created_at: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-created-at"><code>created_at</code></a> parameter.
+  kong.route.http_redirect_status_code: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-http-redirect-status-code"><code>http_redirect_status_code</code></a> parameter.
+  kong.route.id: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-id"><code>id</code></a> parameter.
+  kong.route.tags: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-tags"><code>tags</code></a> parameter.
+  kong.route.path_handling: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-path-handling"><code>path_handling</code></a> parameter.
+  kong.route.paths: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-paths"><code>paths</code></a> parameter.
+  kong.route.preserve_host: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-preserve-host"><code>preserve_host</code></a> parameter.
+  kong.route.protocols: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-protocols"><code>protocols</code></a> parameter.
+  kong.route.regex_priority: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-regex-priority"><code>regex_priority</code></a> parameter.
+  kong.route.request_buffering: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-request-buffering"><code>request_buffering</code></a> parameter.
+  kong.route.response_buffering: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-response-buffering"><code>response_buffering</code></a> parameter.
+  kong.route.service.id: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-service-id"><code>service.id</code></a> parameter.
+  kong.route.strip_path: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-strip-path"><code>strip_path</code></a> parameter.
+  kong.route.updated_at: |
+    Value of the Route's <a href="/gateway/entities/route/#schema-route-updated-at"><code>updated_at</code></a> parameter.
+  kong.route.ws_id: Workspace ID of the Route.
+  kong.service.connect_timeout: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-connect-timeout"><code>connect_timeout</code></a> parameter.
+  kong.service.created_at: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-created-at"><code>created_at</code></a> parameter.
+  kong.service.enabled: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-enabled"><code>enabled</code></a> parameter.
+  kong.service.host: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-host"><code>host</code></a> parameter.
+  kong.service.id: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-id"><code>id</code></a> parameter.
+  kong.service.port: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-port"><code>port</code></a> parameter.
+  kong.service.protocol: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-protocol"><code>protocol</code></a> parameter.
+  kong.service.read_timeout: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-read-timeout"><code>read_timeout</code></a> parameter.
+  kong.service.retries: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-retries"><code>retries</code></a> parameter.
+  kong.service.updated_at: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-updated-at"><code>updated_at</code></a> parameter.
+  kong.service.write_timeout: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-write-timeout"><code>write_timeout</code></a> parameter.
+  kong.service.ws_id: Workspace ID of the Gateway Service
+  kong.service.tags: |
+    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-tags"><code>tags</code></a> parameter.
+  kong.upstream.try.*:
+  kong.upstream.status_code: Status code of the Upstream.
+  kong.upstream.uri: URI of the Upstream.
+  kong.auth.type: Type of authentication.
+  kong.auth.consumer.*: Consumer entity accessing the resource.
+  kong.auth.authenticated_entity.*: Credential used for authentication.
+  kong.response.status_code: HTTP status code of the response.

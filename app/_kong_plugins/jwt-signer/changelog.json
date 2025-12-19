@@ -1,4 +1,16 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added support to the `tls_certificate_verify` global option.\nWhen this option is enabled the plugin's flags related to certificate\nverification cannot be disabled.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "added the flags `access_token_endpoints_ssl_verify`\nand `channel_token_endpoints_ssl_verify` to switch certificate verification\non the related fields.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added support for additional claim validations, including `notbefore`, `issuer`, `subject`, and `audience`.",

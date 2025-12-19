@@ -72,6 +72,8 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
+{% include plugins/redis-cloud-auth.md %}
+
 ## Headers sent to the client
 
 When this plugin is enabled, {{site.base_gateway}} sends some additional headers back to the client,

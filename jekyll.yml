@@ -21,6 +21,7 @@ title: Kong Docs
 description: "Documentation for Kong, the Cloud Connectivity Company for APIs and Microservices."
 
 links:
+  share: https://developer.konghq.com
   web: https://developer.konghq.com
   direct: https://packages.konghq.com/public
 
@@ -106,15 +107,14 @@ operator_product_name_short: KO
 event_gateway: Kong Event Gateway
 event_gateway_short: Event Gateway
 konnect_catalog: Catalog
+metering_and_billing: Metering & Billing
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
   developer_raw: https://raw.githubusercontent.com/Kong/developer.konghq.com
   docs: https://github.com/Kong/docs.konghq.com
 
-plugin_schemas_path: app/.repos/kong-plugins/json_schemas
-plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
-plugin_priorities_path: app/.repos/kong-plugins/data/priorities/ee
+plugin_schemas_path: app/_schemas/gateway/plugins
 
 mesh_policy_schemas_path: app/.repos/kuma/app/assets/
 

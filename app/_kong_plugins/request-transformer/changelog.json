@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "improved performance of the request-transformer plugin.\n",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue where renamed query parameters, url-encoded body parameters, and json body parameters were not handled properly when target name is the same as the source name in the request.",

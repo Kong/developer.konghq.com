@@ -59,7 +59,7 @@ faqs:
       failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
       ```
 
-      This means that the hardcoded MemoryDB instance limit has been reached. 
+      This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
 ---
 
@@ -141,6 +141,9 @@ The AI Semantic Cache plugin improves how AI systems provide responses by using 
 
 Together, these caching methods enhance the efficiency and relevance of AI responses, making interactions faster and more contextually accurate.
 
+{:.info}
+> When Exact Caching is enabled, the AI Semantic Cache plugin may still return results for queries that are similar but not identical. This is expected behavior: the plugin performs similarity-based caching regardless of the Exact Caching setting.
+
 ### Headers sent to the client
 
 When the AI Semantic Cache plugin is active, {{site.base_gateway}} sends additional headers
@@ -171,3 +174,5 @@ The plugin respects cache control headers to determine if requests and responses
 
 {:.info}
 > As most AI services always send `no-cache` in the response headers, setting `cache_control` to `true` will always result in a cache bypass. Only consider setting `no-cache` if you are using self-hosted services and have control over the response Cache Control headers.
+
+{% include plugins/redis-cloud-auth.md %}
