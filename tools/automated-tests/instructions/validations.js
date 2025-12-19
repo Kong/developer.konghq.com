@@ -1,5 +1,5 @@
 import debug from "debug";
-import tough from "tough-cookie";
+import { CookieJar } from "tough-cookie";
 import fetchCookie from "fetch-cookie";
 import { Agent } from "undici";
 import { FormData, File } from "formdata-node";
@@ -82,7 +82,7 @@ function getSessionFromCookieHeader(header) {
 async function fetchWithOptionalJar(url, options = {}, jarName) {
   if (jarName !== undefined) {
     if (!(jarName in cookieJars)) {
-      cookieJars[jarName] = new tough.CookieJar();
+      cookieJars[jarName] = new CookieJar();
       fetchInstances[jarName] = fetchCookie(fetch, cookieJars[jarName]);
     }
     const fetchWithJar = fetchInstances[jarName];
