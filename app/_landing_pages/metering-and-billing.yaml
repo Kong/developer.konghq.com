@@ -1,0 +1,159 @@
+metadata:
+  title: "{{site.metering_and_billing}}"
+  content_type: landing_page
+  description: Learn how to meter and bill for your features with {{site.metering_and_billing}}.
+  breadcrumbs:
+    - /metering-and-billing/
+  products:
+    - metering-and-billing
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.metering_and_billing}}"
+      sub_text: Meter, bill, and monetize the entire AI connectivity data path.
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} {{site.metering_and_billing}} provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices.  
+                    It is designed for AI and API-first businesses that need accurate usage metering, flexible pricing models, and customer-level billing detail.
+
+                    You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
+                    You can create and publish pricing plans, manage subscriptions, and automate revenue collection with payment providers like Stripe and ERPs.
+          - type: button
+            config:
+              text: "Start metering and billing API Gateway requests &rarr;"
+              url: /metering-and-billing/get-started/
+
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/metering.png
+              alt_text: "{{site.metering_and_billing}} Overview"
+
+
+  - header:
+      type: h2
+      text: "Learn more"
+
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Metering
+              description: |
+                {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/metering/
+      - blocks:
+          - type: card
+            config:
+              title: Product Catalog
+              description: |
+                {{site.konnect_short_name}} {{site.metering_and_billing}}’s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place.
+              icon: /assets/icons/document-list.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/
+      - blocks:
+          - type: card
+            config:
+              title: Customers and usage attribution
+              description: |
+                Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
+              icon: /assets/icons/team.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/customer/
+      - blocks:
+          - type: card
+            config:
+              title: Billing, invoicing, and subscriptions
+              description: |
+                Learn how to set up billing, invoicing, and subscriptions in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/billing-invoicing-subscriptions/
+
+  - header:
+      type: h2
+      text: "Integrations"
+      sub_text: "Connect {{site.metering_and_billing}} to external payment, CRM, and invoicing systems"
+
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Stripe
+              description: |
+                Send invoices, calculate tax, and collect payments.
+              icon: /assets/icons/third-party/stripe.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/stripe"
+
+      - blocks:
+          - type: card
+            config:
+              title: Custom Invoicing
+              description: |
+                Implement custom billing flows using your own invoicing and payment systems.
+              icon: /assets/icons/third-party/custom.svg
+              cta:
+                text: View integration
+                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/custom_invoicing"
+
+      - blocks:
+          - type: card
+            config:
+              title: HubSpot
+              description: |
+                Sync customer data and analyze customer interactions through HubSpot CRM.
+              icon: /assets/icons/third-party/hubspot.svg
+              cta:
+                text: Contact Sales
+                url: "https://konghq.com/contact-sales"
+
+      - blocks:
+          - type: card
+            config:
+              title: Salesforce
+              description: |
+                Integrate with Salesforce CRM to manage accounts, subscriptions, and customer insights.
+              icon: /assets/icons/third-party/salesforce.svg
+              cta:
+                text: Contact Sales
+                url: "https://konghq.com/contact-sales"
+
+      - blocks:
+          - type: card
+            config:
+              title: PayPal
+              description: |
+                Accept customer payments using PayPal’s global payment platform.
+              icon: /assets/icons/third-party/paypal.svg
+              cta:
+                text: Contact Sales
+                url: "https://konghq.com/contact-sales"
+
+      - blocks:
+          - type: card
+            config:
+              title: Adyen
+              description: |
+                Process global payments with Adyen’s payment infrastructure.
+              icon: /assets/icons/third-party/adyen.svg
+              cta:
+                text: Contact Sales
+                url: "https://konghq.com/contact-sales"
+
+
+  

@@ -120,7 +120,6 @@ prereqs:
 
 
         6. Export the template ID:
-            
            ```bash
            export DECK_GCP_TEMPLATE_ID="strict-guardrails"
            ```
@@ -140,8 +139,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the plugin
@@ -219,6 +216,8 @@ This test verifies that the content filter blocks hate speech and derogatory req
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:
@@ -237,6 +236,8 @@ This test ensures the filter blocks requests for dangerous or illegal instructio
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:
@@ -255,6 +256,8 @@ This test checks that harassment, threats, and abusive messaging are blocked.
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:
@@ -273,6 +276,8 @@ This test confirms that benign, everyday requests are allowed through the system
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
 body:

@@ -1,4 +1,76 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for Cerebras - a new AI Provider.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for HuggingFace's new serverless API in the AI Proxy plugin, enabling seamless integration and improved compatibility.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for native format video generation in Bedrock and Gemini LLM drivers, allowing direct passthrough of provider-specific video generation requests without format conversion.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for batch API of bedrock.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Introduced Alibaba Dashscope as new provider.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for batch mode of anthropic.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for inline batch mode of gemini\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where cohere embedding model on Bedrock returned a bad request error\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `tls_certificate_verify` configuration was not respected in JSON-RPC and AWS STS calls.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Added tool_calls passthrough and preserved finish_reason in Huggingface driver responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where HuggingFace embedding driver were incorrectly parsed responses from embedding API\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where extra inputs were not permitted for huggingface inference provider\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where using ai-proxy-advanced in conjunction with a logging plugin (such as file-log) resulting in missing information on the last entry of the balancer \"tries\" section.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added `time_to_first_token` and `request_mode` for observability.",

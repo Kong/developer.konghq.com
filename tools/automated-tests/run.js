@@ -17,6 +17,7 @@ import {
   instructionFileFromConfig,
   groupInstructionFilesByProductAndRuntime,
 } from "./instructions-file.js";
+import "@dotenvx/dotenvx/config";
 
 const docker = new Dockerode({
   socketPath: "/var/run/docker.sock",
@@ -27,11 +28,11 @@ function checkEnvVariables() {
     console.error("Missing env variable KONG_LICENSE_DATA");
     process.exit(1);
   }
-  if (!process.env.PRODUCT) {
-    console.error("Missing env variable PRODUCT");
+  if (!process.env.PRODUCTS) {
+    console.error("Missing env variable PRODUCTS");
     process.exit(1);
   }
-  if (process.env.PRODUCT === "gateway" && !process.env.PRODUCT) {
+  if (process.env.PRODUCTS === "gateway" && !process.env.PRODUCTS) {
     console.error("Missing env variable RUNTIME");
     process.exit(1);
   }
@@ -53,6 +54,7 @@ export async function loadConfig() {
   const args = minimist(process.argv.slice(2));
   const testsConfig = await loadConfig();
   const start = Date.now();
+  const products = process.env.PRODUCTS.split(",");
   try {
     if (args.files) {
       files = Array.isArray(args.files) ? args.files : [args.files];
@@ -68,7 +70,7 @@ export async function loadConfig() {
     for (const [product, instructionFilesByRuntime] of Object.entries(
       filesByProductAndRuntime
     )) {
-      if (process.env.PRODUCT !== product) {
+      if (!products.includes(product)) {
         continue;
       }
 
@@ -97,9 +99,9 @@ export async function loadConfig() {
           results.push(result);
         }
         await cleanupRuntime(runtimeConfig, product, container);
+        await afterAll(testsConfig, container);
       }
     }
-    await afterAll(testsConfig, container);
     await stopContainer(container);
     await removeContainer(container);
   } catch (error) {
@@ -111,10 +113,10 @@ export async function loadConfig() {
     await stopContainer(container);
     await removeContainer(container);
 
-    await logResults(results, start, Date.now());
+    await logResults(results, start, Date.now(), products);
     process.exit(1);
   }
-  await logResults(results, start, Date.now());
+  await logResults(results, start, Date.now(), products);
 
   const failedTests = results.filter(
     (r) => r.status === "failed" && !isFailureExpected(r)

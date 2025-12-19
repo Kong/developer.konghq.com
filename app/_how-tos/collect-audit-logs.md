@@ -11,7 +11,7 @@ related_resources:
     url: https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/#configure-an-httplogs-and-metrics-source
   - text: Collect Dev Portal audit logs
     url: /how-to/collect-dev-portal-audit-logs/
-automated_tests: false
+
 products:
     - gateway
     - ai-gateway

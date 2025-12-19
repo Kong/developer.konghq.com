@@ -30,7 +30,7 @@ module Jekyll
         break result if result.size == quantity
       end
 
-      if references.empty? && !config.fetch('allow_empty', false)
+      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil?
         raise "No references found for #{@context['page']['path']} - #{config}"
       end
 

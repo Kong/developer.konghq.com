@@ -98,6 +98,48 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
   end
 end
 
+class KongPluginsMetaInjector
+  def initialize(page_or_doc)
+    @page_or_doc = page_or_doc
+  end
+
+  def process
+    return unless should_inject?
+
+    inject_meta_tag(build_meta_tag)
+  end
+
+  private
+
+  def should_inject?
+    kong_plugins&.any?
+  end
+
+  def kong_plugins
+    @kong_plugins ||= @page_or_doc.data.fetch('kong_plugins', []).uniq
+  end
+
+  def build_meta_tag
+    %(<meta name="algolia:kong_plugins" content="#{kong_plugins.join(', ')}">)
+  end
+
+  def inject_meta_tag(meta_tag)
+    doc = Nokogiri::HTML(@page_or_doc.output)
+    head = doc.at_css('head')
+
+    last_meta = head.css('meta').last
+
+    if last_meta
+      last_meta.add_next_sibling("\n  #{meta_tag}")
+    else
+      head.prepend_child("#{meta_tag}\n  ")
+    end
+
+    @page_or_doc.output = doc.to_html
+  end
+end
+
 Jekyll::Hooks.register [:documents, :pages], :post_render do |page_or_doc|
   AddLinksToHeadings.new(page_or_doc).process
+  KongPluginsMetaInjector.new(page_or_doc).process
 end

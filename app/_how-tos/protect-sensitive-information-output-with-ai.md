@@ -64,7 +64,6 @@ related_resources:
   - text: AI PII Sanitizer
     url: /plugins/ai-sanitizer/
 
-automated_tests: false
 ---
 ## Start the Kong AI PII Sanitizer service
 

@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue that caused a crash when the NameID Format was set to `Unspecified`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.1": [
     {
       "message": "Fixed an issue that caused a crash when the NameID Format was set to `Unspecified`.",

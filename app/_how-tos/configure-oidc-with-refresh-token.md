@@ -66,8 +66,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin with refresh tokens
@@ -136,7 +134,7 @@ You should see a `Refresh-Token` header in the response.
 
 Export the token to an environment variable:
 
-```
+```sh
 export REFRESH_TOKEN='{your-refresh-token}'
 ```
 

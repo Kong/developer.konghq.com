@@ -12,15 +12,29 @@ async function extractPrereqsBlocks(page) {
   // As an alternative, the prereq (accordion-item) could have the data-test-prereqs set,
   // and we could extract all the codeblocks it contains.
   const instructions = [];
-  const blocks = await page.locator("[data-test-prereqs='block']").all();
+  const blocks = await page.locator("[data-test-prereqs]").all();
 
   for (const elem of blocks) {
     if (await elem.isVisible()) {
-      const copy = await elem.locator(".copy-action");
-      await copy.click();
+      const instruction = await elem.getAttribute("data-test-prereqs");
 
-      const copiedText = await copyFromClipboard(page);
-      instructions.push(copiedText);
+      if (instruction === "block") {
+        const copy = await elem.locator(".copy-action");
+        await copy.click();
+
+        const copiedText = await copyFromClipboard(page);
+        instructions.push(copiedText);
+      } else {
+        try {
+          const json = JSON.parse(instruction);
+          instructions.push(json);
+        } catch (error) {
+          console.error(
+            "There was an error parsing the prereq instruction:",
+            error
+          );
+        }
+      }
     }
   }
   return instructions;
@@ -33,19 +47,34 @@ async function extractPrereqs(page) {
     .locator('[data-test-id="prereqs"] > *')
     .all();
 
-  let extractedBlocks = await extractPrereqsBlocks(page);
-  blocks.push(...extractedBlocks);
-
   for (const prereq of prerequisites) {
     if (await prereq.isVisible()) {
       const trigger = await prereq.locator(".accordion-trigger");
-      await trigger.click();
+      if (prerequisites.length >= 1) {
+        await trigger.click();
+      }
     }
-    extractedBlocks = await extractPrereqsBlocks(page);
+    const extractedBlocks = await extractPrereqsBlocks(page);
     blocks.push(...extractedBlocks);
   }
 
   return { blocks };
+}
+
+async function extractCleanup(page) {
+  const instructions = [];
+  const blocks = await page.locator("[data-test-cleanup='block']").all();
+
+  for (const elem of blocks) {
+    if (await elem.isVisible()) {
+      const copy = await elem.locator(".copy-action");
+      await copy.click();
+
+      const copiedText = await copyFromClipboard(page);
+      instructions.push(copiedText);
+    }
+  }
+  return instructions;
 }
 
 async function extractSetup(page) {
@@ -157,6 +186,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
+      const cleanup = await extractCleanup(page);
       const instructionsFile = await writeInstructionsToFile(
         url,
         config,
@@ -167,6 +197,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
           products,
           prereqs,
           steps,
+          cleanup,
         }
       );
 

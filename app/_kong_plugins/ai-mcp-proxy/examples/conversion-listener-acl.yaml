@@ -1,0 +1,118 @@
+description: 'Set access control rules for MCP tools by consumer group'
+
+title: 'Set access control rules for MCP tools based on consumer groups'
+
+extended_description: |
+  Define which consumer groups can access specific MCP tools in conversion-listener mode. Use default rules that apply to all tools, then override access for individual tools as needed.
+  {:.info}
+  > For this configuration to work properly, you need to create the following {{site.base_gateway}} entities:
+  > ```yaml
+  > services:
+  > - name: mcp-service
+  >   url: http://host.docker.internal:3000
+  >   routes:
+  >   - name: mcp-route
+  >     paths:
+  >     - /marketplace
+  > plugins:
+  >   - name: key-auth
+  >     route: mcp-route
+  >     config:
+  >       key_names:
+  >         - apikey
+  >
+  > consumer_groups:
+  >   - name: admin
+  >   - name: developer
+  >   - name: suspended
+  >
+  > consumers:
+  >   - username: alice
+  >     groups:
+  >       - name: admin
+  >     keyauth_credentials:
+  >       - key: alice-key
+  >
+  >   - username: bob
+  >     groups:
+  >       - name: developer
+  >     keyauth_credentials:
+  >       - key: bob-key
+  >
+  >   - username: carol
+  >     groups:
+  >       - name: suspended
+  >     keyauth_credentials:
+  >       - key: carol-key
+  > ```
+
+  In conversion-listener and conversion-only modes, the plugin defines MCP tools directly from HTTP endpoint configurations. Each tool can optionally specify access control rules per consumer group.
+
+  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you'll need an upstream HTTP API to expose.
+  Use this mock API to test the plugin without relying on an external service. It simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+
+  ```bash
+  curl -s -o api.js "https://gist.githubusercontent.com/subnetmarco/5ddb23876f9ce7165df17f9216f75cce/raw/a44a947d69e6f597465050cc595b6abf4db2fbea/api.js"
+  npm install express
+  node api.js
+  ```
+
+weight: 900
+
+requirements:
+  - "A running and exposed API"
+
+config:
+  mode: conversion-listener
+  include_consumer_groups: true
+  default_acl:
+    - scope: tools
+      allow:
+        - developer
+        - admin
+      deny:
+        - suspended
+  tools:
+    - description: Get users
+      method: GET
+      path: "/marketplace/users"
+      annotations:
+        title: Get users
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional user ID
+      acl:
+        allow:
+          - admin
+    - description: Get orders for a user
+      method: GET
+      path: "/marketplace/orders"
+      annotations:
+        title: Get users orders
+      parameters:
+        - name: userid
+          in: query
+          required: true
+          schema:
+            type: string
+          description: User ID to filter orders
+      acl:
+        allow:
+          - admin
+          - developer
+  server:
+    timeout: 60000
+  max_request_body_size: 8192
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: mcp-acls

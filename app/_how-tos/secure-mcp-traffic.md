@@ -83,8 +83,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy Advanced plugin
@@ -150,6 +148,7 @@ The following request is valid, as it includes the `apikey` required by the Cons
 <!-- vale off -->
 {% validation request-check %}
   url: /anything
+  method: POST
   headers:
     - 'Content-Type: application/json'
     - 'apikey: hello_world'
@@ -173,6 +172,7 @@ On the following request, include an invalid value for `apikey`:
 <!-- vale off -->
 {% validation request-check %}
   url: /anything
+  method: POST
   headers:
     - 'Content-Type: application/json'
     - 'apikey: another_key'
@@ -186,7 +186,7 @@ On the following request, include an invalid value for `apikey`:
         headers:
           Authorization: Bearer $GITHUB_PAT
     input: How do I use GitHub MCP?
-  status_code: 400
+  status_code: 401
   message: 'Unauthorized'
 {% endvalidation %}
 <!-- vale on -->
@@ -196,6 +196,7 @@ Now, remove the required `apikey` from the request entirely:
 <!-- vale off -->
 {% validation request-check %}
   url: /anything
+  method: POST
   headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_API_KEY'

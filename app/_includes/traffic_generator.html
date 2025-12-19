@@ -1,12 +1,12 @@
 
 {% if page.works_on contains 'konnect' %}
 <div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}">
-  {% include how-tos/validations/request-check/snippet.md url=config.konnect_url headers=config.headers body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.iterations insecure=config.insecure expected_headers=config.expected_headers %}
+  {% include how-tos/validations/request-check/snippet.md url=config.konnect_url headers=config.headers body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.iterations insecure=config.insecure expected_headers=config.expected_headers inline_sleep=config.inline_sleep %}
 </div>
 {% endif %}
 
 {% if page.works_on contains 'on-prem' %}
 <div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ config.data_validate_on_prem | escape }}">
-  {% include how-tos/validations/request-check/snippet.md url=config.on_prem_url headers=config.headers body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.iterations insecure=config.insecure expected_headers=config.expected_headers %}
+  {% include how-tos/validations/request-check/snippet.md url=config.on_prem_url headers=config.headers body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.iterations insecure=config.insecure expected_headers=config.expected_headers inline_sleep=config.inline_sleep %}
 </div>
 {% endif %}
