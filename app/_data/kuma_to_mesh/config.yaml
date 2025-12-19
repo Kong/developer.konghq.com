@@ -59,18 +59,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/guides/migration-to-the-new-policies.md
-    title: 'Migration to the new policies'
-    description: 'Migrate from old to new policies in {{site.mesh_product_name}} to improve flexibility and transparency.'
-    url: '/mesh/migration-to-the-new-policies/'
-    related_resources:
-      - text: Mesh policies
-        url: '/mesh/policies-introduction/'
-      - text: Policy Hub
-        url: /mesh/policies/
-    min_version:
-      mesh: '2.7'
-  -
     path: app/_src/guides/otel-metrics.md
     title: 'Collect metrics with OpenTelemetry'
     description: 'Collect and export metrics from {{site.mesh_product_name}} with OpenTelemetry and visualize them using Prometheus and Grafana.'
