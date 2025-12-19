@@ -66,6 +66,8 @@ prereqs:
   konnect:
     - name: KONG_STATUS_LISTEN
       value: '0.0.0.0:8100'
+
+automated_tests: false
 ---
 
 ## Configure MCP tools in Chatwise
