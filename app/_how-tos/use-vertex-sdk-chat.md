@@ -34,8 +34,8 @@ tags:
   - ai
 
 tldr:
-  q: How do I configure Gemini authentication with a service account in Kong AI Gateway?
-  a: Configure the AI Proxy Advanced plugin with the Gemini provider and set gcp_use_service_account to true with your service account JSON credentials.
+  q: How do I use Vertex AI's native format with Kong AI Gateway?
+  a: Configure the AI Proxy Advanced plugin with llm_format set to gemini, then send requests using Vertex AI's native API format with the contents array structure.
 
 tools:
   - deck
