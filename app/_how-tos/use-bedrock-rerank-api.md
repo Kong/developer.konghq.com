@@ -8,6 +8,8 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: AWS Bedrock Rerank API
     url: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Rerank.html
+breadcrumbs:
+ - /ai-gateway/
 
 description: "Configure the AI Proxy plugin to use AWS Bedrock's Rerank API for improving document retrieval relevance in RAG pipelines."
 
@@ -101,14 +103,6 @@ Configure AI Proxy to use AWS Bedrock's Rerank API. This requires creating a ded
 
 {% entity_examples %}
 entities:
-  services:
-    - name: bedrock-service
-      url: https://bedrock-agent-runtime.${aws_region}.amazonaws.com
-  routes:
-    - name: rerank-route
-      paths:
-        - /rerank
-      service: bedrock-service
   plugins:
     - name: ai-proxy
       route: rerank-route
@@ -137,18 +131,19 @@ variables:
     value: $AWS_REGION
 {% endentity_examples %}
 
-The `llm_format: bedrock` setting enables Kong to accept native AWS Bedrock API requests. Kong detects the `/rerank` URI pattern and automatically routes requests to the Bedrock Agent Runtime service.
+{:.info}
+> The `config.llm_format: bedrock` setting enables Kong to accept native AWS Bedrock API requests. Kong detects the `/rerank` URI pattern and automatically routes requests to the Bedrock Agent Runtime service.
 
 ## Use AWS Bedrock Rerank API
 
-AWS Bedrock's Rerank API reorders candidate documents by semantic relevance to a query. You send a query and a list of documents (typically from vector or keyword search). The API returns the top N documents ordered by relevance score, filtering out low-scoring candidates. This reduces context size before LLM generation and prioritizes the most relevant information. Unlike document-grounded chat, the rerank API only scores and orders documents. It does not generate answers or citations.
+AWS Bedrock's Rerank API reorders candidate documents by semantic relevance to a query. Send a query and document list (typically from vector or keyword search). The API returns the top N documents ordered by relevance score. This reduces context size before LLM generation and prioritizes relevant information. The rerank API scores and orders documents. It does not generate answers or citations.
 
-The following script demonstrates this reordering behavior. It sends a query about exercise benefits along with five candidate documents. Three documents contain relevant information about exercise and health. Two documents discuss unrelated topics (the Eiffel Tower and Python programming). The script shows the original retrieval order, then the reranked order with relevance scores.
+The following script sends a query about exercise benefits with five candidate documents. Three documents contain relevant information about exercise and health. Two documents discuss unrelated topics (the Eiffel Tower and Python programming). The script shows the original retrieval order, then the reranked order with relevance scores.
 
 Create the script:
 
 ```sh
-cat < bedrock-rerank-demo.py
+cat > grounded-chat-demo.py << 'EOF'
 #!/usr/bin/env python3
 """Demonstrate AWS Bedrock Rerank for improving RAG retrieval quality"""
 

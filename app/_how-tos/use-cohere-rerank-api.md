@@ -6,8 +6,9 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
-
 description: "Use Cohere's rerank API for retrieval-augmented text generation with automatic relevance filtering and citations."
+breadcrumbs:
+  - /ai-gateway/
 
 products:
   - gateway
@@ -118,9 +119,9 @@ variables:
 
 ## Use Cohere document-grounded chat
 
-Cohere's document-grounded chat combines retrieval filtering and generation in a single API call. You send a query and candidate documents. The model determines which documents are relevant, generates an answer using only those documents, and returns citations that link answer segments to specific source documents. This replaces a multi-step RAG pipeline (retrieve, filter, concatenate, prompt, generate) with one request. The model ignores irrelevant documents and cites its sources, reducing hallucination risk and providing verifiable answers.
+Cohere's document-grounded chat filters candidate documents and generates answers in a single API call. Send a query with candidate documents. The model selects relevant documents, generates an answer using only those documents, and returns citations linking answer segments to sources. This replaces multi-step RAG pipelines with one request.
 
-The following script demonstrates this filtering behavior. It sends a query about green tea along with five candidate documents. Three documents contain relevant information about green tea's health benefits. Two documents discuss unrelated topics (the Eiffel Tower and Python programming). The script shows which documents the model selected, which it filtered out, and how the generated answer cites specific source documents.
+The following script sends a query about green tea with five candidate documents. Three documents contain relevant information about green tea's health benefits. Two documents discuss unrelated topics (the Eiffel Tower and Python programming). The script shows which documents the model selected, which it filtered out, and how the answer cites specific sources.
 
 Create the script:
 ```sh
