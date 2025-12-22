@@ -35,7 +35,7 @@ tags:
 
 tldr:
   q: How do I use the Google Generative AI SDK with Kong AI Gateway?
-  a: Configure the AI Proxy Advanced plugin with llm_format set to gemini, then use the Google Generative AI SDK to send requests through Kong Gateway.
+  a: Configure the AI Proxy Advanced plugin with `llm_format` set to `gemini`, then use the Google Generative AI SDK to send requests through Kong AI Gateway.
 
 tools:
   - deck
@@ -132,7 +132,7 @@ def gemini_chat():
         print(f"Connecting to: {BASE_URL}")
 
         client = genai.Client(
-            api_key="dummy-key",  # Kong handles authentication
+            api_key="dummy-key",  # Replace with your Gemini API Key
             vertexai=False
         )
 
