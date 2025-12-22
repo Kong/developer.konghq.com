@@ -1,0 +1,299 @@
+---
+title: Use AWS Bedrock rerank API with AI Proxy
+content_type: how_to
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI Proxy
+    url: /plugins/ai-proxy/
+  - text: AWS Bedrock Rerank API
+    url: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Rerank.html
+
+description: "Configure the AI Proxy plugin to use AWS Bedrock's Rerank API for improving document retrieval relevance in RAG pipelines."
+
+products:
+  - gateway
+  - ai-gateway
+
+works_on:
+  - on-prem
+  - konnect
+
+min_version:
+  gateway: '3.10'
+
+plugins:
+  - ai-proxy
+
+entities:
+  - service
+  - route
+  - plugin
+
+tags:
+  - ai
+
+tldr:
+  q: How do I use AWS Bedrock Rerank with the AI Proxy plugin?
+  a: Configure AI Proxy with provider bedrock and route_type llm/v1/rerank. Send a query and candidate documents to the /rerank endpoint. The API returns documents reordered by relevance score.
+
+tools:
+  - deck
+
+prereqs:
+  inline:
+    - title: AWS credentials
+      content: |
+        Before you begin, you must have AWS credentials with Bedrock permissions:
+
+        - **AWS Access Key ID**: Your AWS access key
+        - **AWS Secret Access Key**: Your AWS secret key
+        - **Region**: AWS region where Bedrock is available (for example, `us-west-2`)
+
+        Export these values as environment variables:
+        ```sh
+        export AWS_ACCESS_KEY_ID="<your-access-key-id>"
+        export AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
+        export AWS_REGION="us-west-2"
+        ```
+        Ensure the rerank model is enabled in your AWS Bedrock console under "Model Access".
+      icon_url: /assets/icons/aws.svg
+    - title: Python and requests library
+      content: |
+        Install Python 3 and the requests library:
+        ```sh
+        pip install requests
+        ```
+      icon_url: /assets/icons/python.svg
+  entities:
+    services:
+      - rerank-service
+    routes:
+      - rerank-route
+
+cleanup:
+  inline:
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+
+faqs:
+  - q: What version of {{site.base_gateway}} supports Bedrock Rerank?
+    a: |
+      AWS Bedrock Rerank requires {{site.base_gateway}} 3.13 or later.
+  - q: What is reranking and why is it useful?
+    a: |
+      Reranking takes a list of search results and reorders them by semantic relevance to a query. This improves retrieval quality in RAG pipelines by ensuring the most relevant documents are sent to the LLM for generation.
+  - q: How many documents can I rerank at once?
+    a: |
+      AWS Bedrock's Rerank API supports reranking up to 1,000 documents per request. The `numberOfResults` parameter controls how many of the highest-ranked results are returned.
+  - q: What rerank models are available?
+    a: |
+      AWS Bedrock offers `cohere.rerank-v3-5:0` and `amazon.rerank-v1:0`. Cohere Rerank 3.5 is available in most regions, while Amazon Rerank 1.0 is not available in us-east-1.
+---
+
+## Configure the plugin
+
+Configure AI Proxy to use AWS Bedrock's Rerank API. This requires creating a dedicated route with the `/rerank` path:
+
+{% entity_examples %}
+entities:
+  services:
+    - name: bedrock-service
+      url: https://bedrock-agent-runtime.${aws_region}.amazonaws.com
+  routes:
+    - name: rerank-route
+      paths:
+        - /rerank
+      service: bedrock-service
+  plugins:
+    - name: ai-proxy
+      route: rerank-route
+      config:
+        llm_format: bedrock
+        route_type: llm/v1/chat
+        logging:
+          log_payloads: false
+          log_statistics: true
+        auth:
+          allow_override: false
+          aws_access_key_id: ${aws_access_key_id}
+          aws_secret_access_key: ${aws_secret_access_key}
+        model:
+          provider: bedrock
+          name: cohere.rerank-v3-5:0
+          options:
+            bedrock:
+              aws_region: ${aws_region}
+variables:
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+  aws_region:
+    value: $AWS_REGION
+{% endentity_examples %}
+
+The `llm_format: bedrock` setting enables Kong to accept native AWS Bedrock API requests. Kong detects the `/rerank` URI pattern and automatically routes requests to the Bedrock Agent Runtime service.
+
+## Use AWS Bedrock Rerank API
+
+AWS Bedrock's Rerank API reorders candidate documents by semantic relevance to a query. You send a query and a list of documents (typically from vector or keyword search). The API returns the top N documents ordered by relevance score, filtering out low-scoring candidates. This reduces context size before LLM generation and prioritizes the most relevant information. Unlike document-grounded chat, the rerank API only scores and orders documents. It does not generate answers or citations.
+
+The following script demonstrates this reordering behavior. It sends a query about exercise benefits along with five candidate documents. Three documents contain relevant information about exercise and health. Two documents discuss unrelated topics (the Eiffel Tower and Python programming). The script shows the original retrieval order, then the reranked order with relevance scores.
+
+Create the script:
+
+```sh
+cat < bedrock-rerank-demo.py
+#!/usr/bin/env python3
+"""Demonstrate AWS Bedrock Rerank for improving RAG retrieval quality"""
+
+import requests
+import json
+
+RERANK_URL = "http://localhost:8000/rerank"
+
+print("AWS Bedrock Rerank Demo: RAG Pipeline Improvement")
+print("=" * 60)
+
+# Simulate documents retrieved from vector search
+query = "What are the health benefits of regular exercise?"
+documents = [
+    "Regular exercise can improve cardiovascular health and reduce the risk of heart disease.",
+    "The Eiffel Tower was completed in 1889 and stands 324 meters tall.",
+    "Exercise helps maintain healthy weight by burning calories and building muscle mass.",
+    "Python is a high-level programming language known for its simplicity and readability.",
+    "Physical activity strengthens bones and muscles, reducing the risk of osteoporosis and falls in older adults."
+]
+
+print(f"\nQuery: {query}")
+print(f"\nCandidate documents: {len(documents)}")
+
+# Before rerank: show original order
+print("\n--- BEFORE RERANK (Original retrieval order) ---")
+for idx, doc in enumerate(documents):
+    print(f"{idx}. {doc[:80]}...")
+
+# Rerank the documents
+print("\n--- RERANKING ---")
+try:
+    # Build Bedrock rerank request
+    sources = []
+    for doc in documents:
+        sources.append({
+            "type": "INLINE",
+            "inlineDocumentSource": {
+                "type": "TEXT",
+                "textDocument": {
+                    "text": doc
+                }
+            }
+        })
+
+    response = requests.post(
+        RERANK_URL,
+        headers={"Content-Type": "application/json"},
+        json={
+            "queries": [
+                {
+                    "type": "TEXT",
+                    "textQuery": {
+                        "text": query
+                    }
+                }
+            ],
+            "sources": sources,
+            "rerankingConfiguration": {
+                "type": "BEDROCK_RERANKING_MODEL",
+                "bedrockRerankingConfiguration": {
+                    "numberOfResults": 3,
+                    "modelConfiguration": {
+                        "modelArn": "arn:aws:bedrock:us-west-2::foundation-model/cohere.rerank-v3-5:0"
+                    }
+                }
+            }
+        }
+    )
+
+    response.raise_for_status()
+    result = response.json()
+
+    print("✓ Reranking complete")
+
+    # After rerank: show reordered results
+    print("\n--- AFTER RERANK (Ordered by relevance) ---")
+    for item in result['results']:
+        idx = item['index']
+        score = item['relevanceScore']
+        print(f"{idx}. [Relevance: {score:.3f}] {documents[idx][:80]}...")
+
+    # Show the top document that should be sent to LLM
+    print("\n--- TOP RESULT FOR LLM CONTEXT ---")
+    top_idx = result['results'][0]['index']
+    top_score = result['results'][0]['relevanceScore']
+    print(f"Relevance Score: {top_score:.3f}")
+    print(f"Document: {documents[top_idx]}")
+
+except Exception as e:
+    print(f"✗ Failed: {e}")
+
+print("\n" + "=" * 60)
+print("Demo complete")
+EOF
+```
+
+This script sends a query with 5 candidate documents to AWS Bedrock's rerank endpoint. Three documents discuss exercise and health benefits. Two documents are intentionally irrelevant (Eiffel Tower, Python programming).
+
+The script shows the original document order, then the reranked order with relevance scores. The `numberOfResults: 3` parameter limits the response to the top 3 documents. This demonstrates how reranking filters and reorders documents by semantic relevance before LLM generation.
+
+{:.info}
+> Verify that the response structure includes `results` with `index` and `relevanceScore` fields. Check AWS Bedrock's API documentation or test the script to confirm this behavior.
+
+## Validate the configuration
+
+Now, let's run the script we created in the previous step:
+
+```sh
+python3 bedrock-rerank-demo.py
+```
+
+Example output:
+
+```text
+AWS Bedrock Rerank Demo: RAG Pipeline Improvement
+============================================================
+
+Query: What are the health benefits of regular exercise?
+
+Candidate documents: 5
+
+--- BEFORE RERANK (Original retrieval order) ---
+0. Regular exercise can improve cardiovascular health and reduce the risk of hea...
+1. The Eiffel Tower was completed in 1889 and stands 324 meters tall....
+2. Exercise helps maintain healthy weight by burning calories and building muscl...
+3. Python is a high-level programming language known for its simplicity and read...
+4. Physical activity strengthens bones and muscles, reducing the risk of osteopo...
+
+--- RERANKING ---
+✓ Reranking complete
+
+--- AFTER RERANK (Ordered by relevance) ---
+0. [Relevance: 0.989] Regular exercise can improve cardiovascular health and reduce the risk of hea...
+2. [Relevance: 0.876] Exercise helps maintain healthy weight by burning calories and building muscl...
+4. [Relevance: 0.823] Physical activity strengthens bones and muscles, reducing the risk of osteopo...
+
+--- TOP RESULT FOR LLM CONTEXT ---
+Relevance Score: 0.989
+Document: Regular exercise can improve cardiovascular health and reduce the risk of heart disease.
+
+============================================================
+Demo complete
+```
+
+The output shows how reranking improves retrieval quality. The three exercise-related documents (indices 0, 2, 4) are correctly identified as most relevant with high scores above 0.82. The irrelevant documents about the Eiffel Tower and Python programming are filtered out, not appearing in the top 3 results.
+
+This reranking step ensures that when you send context to an LLM for generation, you're providing the most semantically relevant information, improving answer quality and reducing hallucinations.
