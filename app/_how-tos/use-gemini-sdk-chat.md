@@ -1,0 +1,169 @@
+---
+title: Use Google Generative AI SDK for Gemini AI service chats with Kong AI Gateway
+content_type: how_to
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
+  - text: Google Generative AI SDK
+    url: https://ai.google.dev/gemini-api/docs/sdks
+
+description: "Configure the AI Proxy Advanced plugin for Gemini and test with the Google Generative AI SDK using the standard Gemini API format."
+
+products:
+  - gateway
+  - ai-gateway
+
+works_on:
+  - on-prem
+  - konnect
+
+min_version:
+  gateway: '3.10'
+
+plugins:
+  - ai-proxy-advanced
+
+entities:
+  - service
+  - route
+  - plugin
+
+tags:
+  - ai
+
+tldr:
+  q: How do I use the Google Generative AI SDK with Kong AI Gateway?
+  a: Configure the AI Proxy Advanced plugin with the Gemini provider and service account authentication, then use the genai.Client to send requests through Kong Gateway.
+
+tools:
+  - deck
+
+prereqs:
+  inline:
+    - title: Vertex AI
+      include_content: prereqs/vertex-ai
+      icon_url: /assets/icons/gcp.svg
+    - title: Python
+      include_content: prereqs/python
+      icon_url: /assets/icons/python.svg
+    - title: Google Generative AI SDK
+      content: |
+        Install the Google Generative AI SDK:
+        ```sh
+        pip install google-generativeai
+        ```
+      icon_url: /assets/icons/gcp.svg
+  entities:
+    services:
+      - gemini-service
+    routes:
+      - gemini-route
+
+cleanup:
+  inline:
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+---
+
+## Configure the AI Proxy Advanced plugin
+
+The AI Proxy Advanced plugin supports Google's Gemini models and works with the Google Generative AI SDK. This configuration allows you to use the standard Gemini SDK while Kong Gateway handles authentication with GCP service accounts and manages the connection to Vertex AI endpoints.
+
+Apply the plugin configuration with your GCP service account credentials:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy-advanced
+      service: gemini-service
+      config:
+        llm_format: gemini
+        genai_category: text/generation
+        targets:
+          - route_type: llm/v1/chat
+            logging:
+              log_payloads: false
+              log_statistics: true
+            model:
+              provider: gemini
+              name: gemini-3-pro-preview
+              options:
+                anthropic_version: vertex-2023-10-16
+                gemini:
+                  api_endpoint: ${gcp_api_endpoint}
+                  project_id: ${gcp_project_id}
+                  location_id: ${gcp_location_id}
+            auth:
+              allow_override: false
+              gcp_use_service_account: true
+              gcp_service_account_json: ${gcp_service_account_json}
+variables:
+  gcp_api_endpoint:
+    value: $GCP_API_ENDPOINT
+  gcp_project_id:
+    value: $GCP_PROJECT_ID
+  gcp_service_account_json:
+    value: $GCP_SERVICE_ACCOUNT_JSON
+  gcp_location_id:
+    value: $GCP_LOCATION_ID
+{% endentity_examples %}
+
+## Test with Google Generative AI SDK
+
+Create a test script that uses the Google Generative AI SDK. The script initializes a client with a dummy API key because Kong Gateway handles authentication, then sends a generation request through the gateway:
+```py
+cat << 'EOF' > gemini.py
+#!/usr/bin/env python3
+"""Test Google Generative AI SDK via Kong Gateway"""
+from google import genai
+
+BASE_URL = "http://localhost:8000/gemini"
+
+def gemini_chat():
+    """Basic chat using Gemini API through Kong Gateway"""
+
+    try:
+        print(f"Connecting to: {BASE_URL}")
+
+        client = genai.Client(
+            api_key="dummy-key",  # Kong handles authentication
+            vertexai=False
+        )
+
+        print("Sending message...")
+        response = client.models.generate_content(
+            model="gemini-2.0-flash-exp",
+            contents="Hello! How are you?"
+        )
+
+        print(f"Response: {response.text}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+
+if __name__ == "__main__":
+    gemini_chat()
+EOF
+```
+
+Run the script:
+```sh
+python3 gemini.py
+```
+
+Expected output:
+```text
+Connecting to: http://localhost:8000/gemini
+Sending message...
+Response: Hello! I'm doing well, thank you for asking. As a large language model, I don't experience feelings or emotions in the way humans do, but I'm functioning properly and ready to assist you. How can I help you today?
+```
+
+The response contains the model's generated text. The SDK handles the request formatting and response parsing, while Kong Gateway manages authentication and proxying to Vertex AI.
