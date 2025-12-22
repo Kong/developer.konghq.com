@@ -52,7 +52,7 @@ First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gate
 <!-- vale off -->
 {% konnect_crd %}
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v2beta1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong-configuration
   namespace: kong
@@ -76,7 +76,7 @@ Next, configure a `GatewayClass` resource to use the `GatewayConfiguration` we j
 <!-- vale off -->
 {% on_prem_crd %}
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v2beta1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong-configuration
   namespace: kong
