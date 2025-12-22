@@ -51,11 +51,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 ## Install {{ site.operator_product_name }}
 
-{: data-deployment-topology="konnect" }
-{% include prereqs/products/operator.md raw=true v_maj=2 platform="konnect" %}
-
-{: data-deployment-topology="on-prem" }
-{% include prereqs/products/operator.md raw=true v_maj=2 platform="on-prem" %}
+{% include prereqs/products/operator.md raw=true v_maj=2 %}
 
 ## Validate
 

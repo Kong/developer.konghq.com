@@ -13,8 +13,7 @@
    helm repo add kong https://charts.konghq.com
    helm repo update
    helm upgrade --install kgo kong/gateway-operator -n kong-system \
-     --create-namespace{% if include.platform == "konnect" %} \
-     --set env.ENABLE_CONTROLLER_KONNECT=true{% endif %}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
+     --create-namespace{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
      --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
    ```
 
@@ -26,8 +25,7 @@
    git checkout v2.1.0-alpha.0
    helm upgrade --install kong-operator ./charts/kong-operator -n kong-system \
      --create-namespace \
-     --set image.tag=2.1.0-alpha.0{% if include.platform == "konnect" %} \
-     --set env.ENABLE_CONTROLLER_KONNECT=true{% endif %}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
+     --set image.tag=2.1.0-alpha.0{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
      --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
    ```
 
