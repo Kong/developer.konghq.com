@@ -92,6 +92,7 @@ groups:
           - path: /operator/konnect/reconciliation-loop/
           - path: /operator/konnect/labelling/
           - path: /operator/konnect/kongpluginbinding/
+          - path: /operator/konnect/cross-namespace-references/
       - title: "Konnect CRDs: Control Planes"
         items:
           - path: /operator/konnect/crd/control-planes/**/*
