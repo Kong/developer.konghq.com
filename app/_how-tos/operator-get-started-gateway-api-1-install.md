@@ -37,12 +37,10 @@ tags:
   - helm
 ---
 
-{% assign gwapi_version = "1.4.0" %}
-
 ## Install CRDs
 
 ```shell
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ gwapi_version }}/standard-install.yaml --server-side
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ site.gwapi_version }}/standard-install.yaml --server-side
 ```
 
 ## Cert-Manager integration
