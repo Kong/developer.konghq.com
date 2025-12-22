@@ -48,7 +48,7 @@ prereqs:
     - title: Python
       include_content: prereqs/python
       icon_url: /assets/icons/python.svg
-        - title: Google Generative AI SDK
+    - title: Google Generative AI SDK
       content: |
         Install the Google Generative AI SDK:
         ```sh
