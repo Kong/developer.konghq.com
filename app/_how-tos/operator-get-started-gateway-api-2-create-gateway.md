@@ -49,7 +49,7 @@ Use the `GatewayConfiguration` resource to configure a `GatewayClass` for Hybrid
 <!-- vale off -->
 {% konnect_crd %}
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v2beta1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong-configuration
   namespace: kong
@@ -73,7 +73,7 @@ Use the `GatewayConfiguration` resource to configure a `GatewayClass` for on-pre
 <!-- vale off -->
 {% on_prem_crd %}
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v2beta1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
   name: kong-configuration
   namespace: kong

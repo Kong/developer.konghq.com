@@ -5,18 +5,13 @@
 {% endif %}
 {% capture details_content %}
 
-1. Add the Kong Helm charts:
-
-   ```bash
-   helm repo add kong https://charts.konghq.com
-   helm repo update
-   ```
-
 1. Install {{ site.operator_product_name }} using Helm:
 
 {% if include.v_maj == 1 %}
 
    ```bash
+   helm repo add kong https://charts.konghq.com
+   helm repo update
    helm upgrade --install kgo kong/gateway-operator -n kong-system \
      --create-namespace{% if include.platform == "konnect" %} \
      --set env.ENABLE_CONTROLLER_KONNECT=true{% endif %}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
@@ -24,6 +19,7 @@
    ```
 
 {% else %}
+<!-- TODO: install from regular chart repo once KO v2.1.0 is out -->
 
    ```bash
    git clone https://github.com/kong/kong-operator && cd kong-operator
