@@ -6,8 +6,6 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
-  - text: Cohere Chat API
-    url: https://docs.cohere.com/reference/chat
 
 description: "Use Cohere's rerank API for retrieval-augmented text generation with automatic relevance filtering and citations."
 

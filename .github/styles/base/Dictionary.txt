@@ -709,6 +709,7 @@ requeue
 request_counts
 requestable
 RequestResponse
+rerank
 Rerank
 reranking
 resourceVersion
