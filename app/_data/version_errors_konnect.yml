@@ -2533,7 +2533,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/)
   - ID: D352
     Severity: error
     Description: |
@@ -3325,7 +3325,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/)
   - ID: D446
     Severity: error
     Description: |
@@ -3336,7 +3336,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/)
   - ID: D447
     Severity: error
     Description: |
