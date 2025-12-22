@@ -711,6 +711,7 @@ requestable
 RequestResponse
 rerank
 Rerank
+reranked
 reranking
 resourceVersion
 response_format
