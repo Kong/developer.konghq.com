@@ -14,10 +14,10 @@
 {% navtabs "http-route" %}
 {% unless include.disable_gateway %}
 {% navtab "Gateway API" %}
-{% assign gwapi_version = "v1" %}
+
 ```bash
 echo "
-apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: {{ name }}{% unless namespace == '' %}
