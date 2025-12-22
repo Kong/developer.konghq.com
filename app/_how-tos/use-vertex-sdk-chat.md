@@ -73,7 +73,7 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-The AI Proxy Advanced plugin supports Google's Vertex AI models with service account authentication. This configuration allows you to route requests in Vertex AI's native format through Kong Gateway. The plugin handles authentication with GCP, manages the connection to Vertex AI endpoints, and proxies requests without modifying the Gemini-specific request structure.
+The AI Proxy Advanced plugin supports Google's Vertex AI models with service account authentication. This configuration allows you to route requests in Vertex AI's native format through Kong AI Gateway. The plugin handles authentication with GCP, manages the connection to Vertex AI endpoints, and proxies requests without modifying the Gemini-specific request structure.
 
 Apply the plugin configuration with your GCP service account credentials:
 
@@ -120,7 +120,7 @@ Create a test script that sends a request using Vertex AI's native API format. T
 ```py
 cat << 'EOF' > vertex.py
 #!/usr/bin/env python3
-"""Test Vertex AI format via Kong Gateway"""
+"""Test Vertex AI format via Kong AI Gateway"""
 import requests
 import os
 
@@ -129,7 +129,7 @@ PROJECT_ID = os.getenv("DECK_GCP_PROJECT_ID")
 LOCATION = os.getenv("DECK_GCP_LOCATION_ID")
 
 def vertex_chat():
-    """Basic chat using Vertex AI format via Kong Gateway"""
+    """Basic chat using Vertex AI format via Kong AI Gateway"""
 
     url = f"{BASE_URL}/v1/projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/gemini-2.0-flash-exp:generateContent"
 
