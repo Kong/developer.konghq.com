@@ -121,36 +121,20 @@ Create a test script that sends a request using Vertex AI's native API format. T
 cat << 'EOF' > vertex.py
 #!/usr/bin/env python3
 """Test Vertex AI format via Kong AI Gateway"""
-import requests
-import os
+from google import genai
 
-BASE_URL = "http://localhost:8000/gemini"
-PROJECT_ID = os.getenv("DECK_GCP_PROJECT_ID")
-LOCATION = os.getenv("DECK_GCP_LOCATION_ID")
+client = genai.Client(
+    vertexai=True,
+    project="",  # Your project ID
+    location="" # Your location ID
+)
 
-def vertex_chat():
-    """Basic chat using Vertex AI format via Kong AI Gateway"""
+response = client.models.generate_content(
+    model="gemini-2.0-flash-exp",
+    contents="Hello!"
+)
 
-    url = f"{BASE_URL}/v1/projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/gemini-2.0-flash-exp:generateContent"
-
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "contents": [{
-            "role": "user",
-            "parts": [{"text": "Hello! How are you?"}]
-        }]
-    }
-
-    response = requests.post(url, headers=headers, json=payload)
-    print(f"Status: {response.status_code}")
-    print(f"Response: {response.json()}")
-
-if __name__ == "__main__":
-    vertex_chat()
-EOF
+print(response.text)
 ```
 
 ## Validate the configuration
@@ -164,7 +148,7 @@ Expected output:
 
 ```text
 Status: 200
-Response: {'candidates': [{'content': {'role': 'model', 'parts': [{'text': "I am doing well, thank you for asking! As a large language model, I don't experience feelings or emotions, but I am ready and available to assist you. How can I help you today?\n"}]}, 'finishReason': 'STOP', 'avgLogprobs': -0.21152742518935091}], 'usageMetadata': {'promptTokenCount': 6, 'candidatesTokenCount': 43, 'totalTokenCount': 49}, 'modelVersion': 'gemini-2.0-flash-exp'}
+Response:
 ```
 
 You should see that the response includes the model's generated text in the `candidates[0].content.parts[0].text` field, along with usage metadata showing token counts for the request and response.
