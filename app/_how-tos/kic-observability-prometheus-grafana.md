@@ -95,7 +95,7 @@ Deploy the Services and create routing resources:
 ```bash
 kubectl apply -f {{ site.links.web }}/manifests/kic/multiple-services.yaml -n kong
 ```
-
+<!--vale off-->
 {% httproute %}
 name: sample-routes
 matches:
@@ -110,6 +110,7 @@ matches:
     port: 80
 skip_host: true
 {% endhttproute %}
+<!--vale on-->
 
 ## Generate traffic
 

@@ -150,6 +150,7 @@ data:
 
 1. Create a Route to the `echo` service to test your custom plugin: 
 
+<!--vale off-->
 {% httproute %}
 name: echo
 matches:
@@ -159,6 +160,7 @@ matches:
 skip_host: true
 indent: 4
 {% endhttproute %}
+<!--vale on-->
 
 ## Validate your configuration
 

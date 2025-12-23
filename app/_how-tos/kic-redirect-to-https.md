@@ -51,6 +51,7 @@ cleanup:
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
+<!--vale off-->
 {% httproute %}
 matches:
   - path: /echo
@@ -58,6 +59,7 @@ matches:
     port: 1027
 skip_host: true
 {% endhttproute %}
+<!--vale on-->
 
 ## Add TLS configuration
 

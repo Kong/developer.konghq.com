@@ -58,7 +58,7 @@ spec:
 ## Create an HTTPRoute
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
-
+<!--vale off-->
 {% httproute %}
 name: proxy-from-k8s-to-httpbin
 matches:
@@ -66,14 +66,15 @@ matches:
     service: proxy-to-httpbin
     port: 80
 {% endhttproute %}
-
+<!--vale on-->
 ## Validate your configuration
 
 Once the resource has been reconciled, you'll be able to call the `/httpbin` endpoint and {{ site.base_gateway }} will route the request to the external `httpbin` service.
-
+<!--vale off-->
 {% validation request-check %}
 url: /httpbin/anything
 status_code: 200
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 {% endvalidation %}
+<!--vale on-->

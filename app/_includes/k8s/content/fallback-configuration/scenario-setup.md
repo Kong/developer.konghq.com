@@ -52,7 +52,7 @@ Let's create two Routes for testing purposes:
 
 * `route-a` has no plugins attached
 * `route-b` has the three plugins created above attached
-
+<!--vale off-->
 {% httproute %}
 name: route-a
 matches:
@@ -74,7 +74,7 @@ annotation_plugins:
   - rate-limit-base
   - rate-limit-consumer
 {% endhttproute %}
-
+<!--vale on-->
 ## Create a Consumer
 
 Finally, let's create a `KongConsumer` with credentials and associate the `rate-limit-consumer` `KongPlugin`.

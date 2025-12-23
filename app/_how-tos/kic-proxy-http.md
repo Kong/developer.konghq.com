@@ -48,7 +48,7 @@ cleanup:
 ## Create an HTTPRoute
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`:
-
+<!--vale off-->
 {% httproute %}
 name: echo
 matches:
@@ -57,7 +57,7 @@ matches:
     port: 1027
 skip_host: true
 {% endhttproute %}
-
+<!--vale on-->
 ## Validate your configuration
 
 Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service:

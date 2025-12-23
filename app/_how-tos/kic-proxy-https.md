@@ -76,6 +76,8 @@ kubectl patch -n kong --type=json gateway kong -p='[
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
+
+<!--vale off-->
 {% httproute %}
 name: echo
 matches:
@@ -85,7 +87,7 @@ matches:
 hostname: demo.example.com
 section_name: https
 {% endhttproute %}
-
+<!--vale on-->
 ## Validate your configuration
 
 Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service.

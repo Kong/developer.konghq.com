@@ -150,6 +150,7 @@ As part of the [prerequisites](#prerequisites), you deployed the `echo` Service 
 
 Now that the `echo` Service is serving an HTTPS endpoint, we need to expose it:
 
+<!--vale off-->
 {% httproute %}
 name: echo
 matches:
@@ -158,6 +159,7 @@ matches:
     port: 443
 host: kong.example
 {% endhttproute %}
+<!--vale on-->
 
 Verify connectivity by making an HTTP request to proxy. The Service serves HTTPS but {{ site.base_gateway }} initiates the connection and proxies it as HTTP in this case, so the request should be made over HTTP. The `Host` header  has to match the hostname of the Service.
 

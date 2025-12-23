@@ -61,6 +61,7 @@ The annotation can be used on `Ingress` and `HTTPRoute` resources, and configure
 
 The following definition creates a Route that matches the path `/external-path/(\w+)` and rewrites it to `/anything/$1` before sending the request upstream:
 
+<!--vale off-->
 {% httproute %}
 name: httpbin
 matches:
@@ -72,7 +73,7 @@ annotation_rewrite: /anything/$1
 skip_host: true
 disable_gateway: true
 {% endhttproute %}
-
+<!--vale on-->
 
 
 Alternatively, you can define this in a plugin configuration:

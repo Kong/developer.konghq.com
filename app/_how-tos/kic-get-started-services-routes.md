@@ -85,6 +85,8 @@ kubectl apply -f {{ site.links.web }}/manifests/kic/echo-service.yaml -n kong
 
 To route traffic to the `echo` service, create an `HTTPRoute` or `Ingress` resource:
 
+
+<!--vale off-->
 {% httproute %}
 matches:
   - path: /echo
@@ -92,6 +94,7 @@ matches:
     port: 1027
 skip_host: true
 {% endhttproute %}
+<!--vale on-->
 
 ## Validate your configuration
 
