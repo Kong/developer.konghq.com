@@ -28,7 +28,7 @@ In {{site.event_gateway}}, you can use a policy's condition field to determine w
 For example, you can create a condition that selects all topics that end with the suffix `my_suffix`:
 
 ```json
-"condition": "context.topic.name.endsWith('my_suffix')"
+{"condition": "context.topic.name.endsWith('my_suffix')"}
 ```
 
 Conditions must be between 1 and 1000 characters long.
@@ -65,10 +65,61 @@ rows:
 
 {{site.event_gateway}} supports the following string functions in conditional fields:
 
-* `includes`: Performs a case-sensitive search to determine whether a given string may be found within this string, as defined in the [JavaScript standard](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes).
-* `startsWith`: Determines whether the string begins with the characters of a specified string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
-* `endsWith`: Determines whether the string ends with the characters of a specified string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
+* `includes`: Performs a case-sensitive search to determine whether a given string may be found within this string, as
+  defined in
+  the [JavaScript standard](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes).
+* `startsWith`: Determines whether the string begins with the characters of a specified
+  string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
+* `endsWith`: Determines whether the string ends with the characters of a specified
+  string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
 * `substring`: Returns the part of this string from the start index up to and excluding the end index.
-* `match`: Retrieves the result of matching this string against an [RE2 regular expression](https://github.com/google/re2/wiki/syntax) string.
+* `match`: Retrieves the result of matching this string against
+  an [RE2 regular expression](https://github.com/google/re2/wiki/syntax) string.
+
+### Supported fields
+
+Depending on where an expression is authored the fields available in the context vary.
+In this section we state for each area how the context varies.
+The source of truth for these is the `x-expression` field in
+the [API specification](https://developer.konghq.com/api/konnect/event-gateway/v1/).
+
+| Variable                      | Type                  | Description                                                                     | Availability                                                       | Example                                   |
+|-------------------------------|-----------------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------|-------------------------------------------|
+| `context.auth.type`           | `string`              | The type of authentication used                                                 | Cluster, Produce and Consume policies                              | `context.auth.type == 'anonymous'`        |
+| `context.auth.principal.name` | `string`              | The name of the principal for this connection                                   | Cluster, Produce and Consume policies                              | `context.auth.principal.name == 'user1'`  |
+| `context.topic.name`          | `string`              | The name of the topic of the record                                             | Produce and Consume policies                                       | `context.topic.name == 'my-ns.my-topic'`  |
+| `record.headers`              | `map<string, string>` | The headers of the record                                                       | Produce and Consume policies                                       | `record.headers['skip-record'] == 'true'` |
+| `record.value.content`        | `map<string, string>` | The value of the record. Deep fields can be accessed using json object notation | Produce and Consume policies used as children of Schema Validation | `record.value.content['sub.other'] == 3`  |
+| `record.value.validated`      | `boolean`             | Whether record validation succeeded or not                                      | Produce and Consume policies used as children of Schema Validation | `record.value.validated == true`          |
+
+### Expression examples
 
 
+Don't apply a policy if a record has a `x-restricted=true` header and user is not admin:
+
+```
+context.topic.name == 'filterdemo' && record.headers['x-restricted'] == 'true' && context.auth.principal.name != 'admin'
+```
+
+Apply a policy only for `user1` and `user2`:
+```
+context.auth.principal.name == 'user1' || context.auth.principal.name == 'user2'
+```
+
+Apply a policy only for topics that start with `my-prefix`:
+
+```
+context.topic.name.startsWith('my-prefix')
+```
+
+Apply a policy if a header is present regardless of the value:
+
+```
+'x-optional-header' in record.headers
+```
+
+Apply a policy if the topic is `filterdemo` and that the record content has a field `foo` equal to `bar` and a sub field `sub.other` equal to 3.
+
+```
+context.topic.name == 'filterdemo' && record.value.content['foo'] == 'bar' || record.value.content['sub.other'] == 3
+```
