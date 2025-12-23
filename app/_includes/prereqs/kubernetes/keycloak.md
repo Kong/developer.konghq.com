@@ -13,7 +13,7 @@ kubectl apply -f https://raw.githubusercontent.com/keycloak/keycloak-quickstarts
 ### Create a Route
 
 We'll use {{ site.base_gateway }} to expose Keycloak in our cluster on a custom domain:
-
+<!--vale off-->
 {% httproute %}
 name: keycloak
 matches:
@@ -22,7 +22,7 @@ matches:
     port: 8080
 hostname: 'keycloak.$PROXY_IP.nip.io' 
 {% endhttproute %}
-
+<!--vale on-->
 ### Register a client and user
 
 Set two variables containing your client ID and secret:
