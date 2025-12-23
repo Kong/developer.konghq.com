@@ -16,22 +16,7 @@ links:
   '/features/?': '/mesh/enterprise/'
 
 pages:
-# Must for GA      
-  -
-  
-    path: app/_src/guides/federate-kv.md
-    title: 'Federate zone Control Plane'
-    description: 'Learn how to federate a {{site.base_product}} zone Control Plane into a multi-zone deployment. This guide walks through setting up a global Control Plane, copying resources, connecting zones, and verifying policy synchronization.'
-    url: /mesh/federate/
-    related_resources:
-      - text: Add a builtin gateway
-        url: '/mesh/add-builtin-gateway/'
-      - text: 'Producer and Consumer policies'
-        url: /mesh/consumer-producer-policies/
-      - text: 'Multi-zone deployment'
-        url: '/mesh/mesh-multizone-service-deployment/'
-    min_version:
-      mesh: '2.6'
+# Must for GA    
   -
     path: app/_src/guides/gateway-api.md
     title: 'Kubernetes Gateway API'
