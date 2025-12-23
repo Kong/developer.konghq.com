@@ -1,0 +1,5 @@
+name: rerank-route
+paths:
+  - /rerank
+service:
+  name: rerank-service
