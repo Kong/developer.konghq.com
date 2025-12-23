@@ -81,7 +81,7 @@ rows:
 Depending on where an expression is authored the fields available in the context vary.
 In this section we state for each area how the context varies.
 The source of truth for these is the `x-expression` field in
-the [API specification](https://developer.konghq.com/api/konnect/event-gateway/v1/).
+the [API specification](/api/konnect/event-gateway/v1/).
 
 | Variable                      | Type                  | Description                                                                     | Availability                                                       | Example                                   |
 |-------------------------------|-----------------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------|-------------------------------------------|
