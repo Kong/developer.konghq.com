@@ -510,18 +510,6 @@ pages:
       - text: Mesh observability
         url: '/mesh/observability/'
   -
-    path: app/_src/explore/cli.md
-    title: 'CLI'
-    description: 'Reference for the CLI tools included in {{site.mesh_product_name}}, including usage examples and commands for kumactl, kuma-cp, and kuma-dp.'
-    url: '/mesh/cli/'
-    related_resources:
-      - text: 'kuma-cp configuration reference'
-        url: '/mesh/reference/kuma-cp/'
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: Policy Hub
-        url: /mesh/policies/
-  -
     path: app/_src/explore/observability.md
     title: 'Observability'
     description: 'Learn how to configure observability in {{site.mesh_product_name}} using Prometheus, Grafana, Jaeger, Loki, and Datadog.'
