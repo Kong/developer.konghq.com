@@ -3,6 +3,19 @@
 {% if prereqs.enterprise %}
 {% assign summary = summary | append:' (with an Enterprise license)' %}
 {% endif %}
+
+{% capture license %}
+```
+echo "
+apiVersion: configuration.konghq.com/v1alpha1
+kind: KongLicense
+metadata:
+ name: kong-license
+rawLicenseString: '$(cat ./license.json)'
+" | kubectl apply -f -
+```
+{% endcapture %}
+
 {% capture details_content %}
 
 1. Add the Kong Helm charts:
@@ -57,16 +70,12 @@
 
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
+{{license | indent: 3}}
 
-   ```
-   echo "
-   apiVersion: configuration.konghq.com/v1alpha1
-   kind: KongLicense
-   metadata:
-    name: kong-license
-   rawLicenseString: '$(cat ./license.json)'
-   " | kubectl apply -f -
-   ```
+{% else %}
+This tutorial doesn't require a license, but you can add one using `KongLicense`. This assumes that your license is available in `./license.json`.
+{{license}}
+
 {% endif %}
 {% endcapture %}
 
