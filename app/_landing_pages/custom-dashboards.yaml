@@ -66,7 +66,7 @@ rows:
               description: Custom dashboard reference
               icon: /assets/icons/lock.svg
               cta:
-                url: /how-to/custom-dashboards-reference/
+                url: /observability/custom-dashboards-reference/
                 align: end
 
   - header:
@@ -81,7 +81,8 @@ rows:
                   The Org Admin and Analytics Admin roles can create and manage custom dashboards in {{site.konnect_short_name}}.
               - q: How can I give my team read-only access to dashboards?
                 a: |
-                  [Assign the Viewer role](/how-to/custom-dashboards-reference/#Role-based-access) to your team. They will be able to view dashboards shared with their group but not create or edit them.
+                  [Assign the Viewer role](/observability/custom-dashboards-reference/#role-based-access) to your team. They will be able to view dashboards shared with their group but not create or edit them.
+
               - q: Can I automate dashboard creation?
                 a: |
                   Yes. You can use the [API](/api/konnect/analytics-dashboards/) or [Terraform](/how-to/automate-dashboard-terraform/) to create dashboards from reusable definitions.
