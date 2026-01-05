@@ -187,4 +187,4 @@
 # Observability rename
 /advanced-analytics/*   /observability/:splat   301
 /advanced-analytics     /observability          301
-/index/advanced-analytics/  /index/observability/
+/index/advanced-analytics/  /index/observability/  301

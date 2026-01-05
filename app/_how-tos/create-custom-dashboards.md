@@ -27,16 +27,16 @@ prereqs:
         You must be either an [Organization admin or Analytics admin](/konnect-platform/teams-and-roles/). 
 related_resources:
   - text: Custom Dashboards
-    url: /how-to/custom-dashboards/
+    url: /custom-dashboards/
   - text: Custom dashboards reference
-    url: /how-to/custom-dashboards-reference/
+    url: /observability/custom-dashboards-reference/
   - text: Automate dashboards with Terraform
     url: /how-to/automate-dashboard-terraform/
 ---
 
 ## Create a dashboard
 
-You can create custom dashboards either from scratch or from a [template](/how-to/custom-dashboards-reference/#templates). In this tutorial, we'll use a template.
+You can create custom dashboards either from scratch or from a [template](/observability/custom-dashboards-reference/#templates). In this tutorial, we'll use a template.
 
 To create a custom dashboard, do the following: 
 
