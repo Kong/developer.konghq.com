@@ -498,6 +498,18 @@ pages:
       - text: Use Kong as a delegated Gateway
         url: '/mesh/gateway-delegated/'
   -
+    path: app/_src/documentation/health.md
+    title: 'Dataplane Health'
+    description: 'Overview of dataplane health features in {{site.mesh_product_name}}, including circuit breaking, active health checks, and integration with Kubernetes and Universal service probes.'
+    url: '/mesh/dataplane-health/'
+    related_resources:
+      - text: Mesh CLI
+        url: '/mesh/cli/'
+      - text: Mesh Control Plane configuration
+        url: '/mesh/cp-config/'
+      - text: Mesh observability
+        url: '/mesh/observability/'
+  -
     path: app/_src/explore/cli.md
     title: 'CLI'
     description: 'Reference for the CLI tools included in {{site.mesh_product_name}}, including usage examples and commands for kumactl, kuma-cp, and kuma-dp.'
