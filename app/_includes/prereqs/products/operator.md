@@ -16,6 +16,10 @@ rawLicenseString: '$(cat ./license.json)'
 ```
 {% endcapture %}
 
+{% capture cert %}
+{% include k8s/cert-manager.md %}
+{% endcapture %}
+
 {% capture details_content %}
 
 1. Add the Kong Helm charts:
@@ -65,7 +69,7 @@ rawLicenseString: '$(cat ./license.json)'
 
 {% endif %}
 
-{% include k8s/cert-manager.md %}
+{{cert | indent: 3}}
 
 
 {% if prereqs.enterprise %}
