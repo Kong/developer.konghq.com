@@ -29,7 +29,7 @@ related_resources:
 * `kumactl`: The user CLI to interact with {{site.mesh_product_name}} (`kuma-cp`) and its data.
 * `kuma-tcp-echo`: A sample application that echos back the requests we make, used for demo purposes.
 
-You can learn how to use each executable by running it with the `-h` flag, for example:
+You can learn how to use each executable by running it with the `-h` flag:
 
 ```sh
 kuma-cp -h
