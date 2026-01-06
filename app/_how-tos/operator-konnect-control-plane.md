@@ -59,6 +59,10 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
+
+{:.info}
+> Make sure that the `KonnectGatewayControlPlane` resource is in the same namespace as the `KonnectAPIAuthConfiguration` resource.
+
 ## Validate
 
 <!-- vale off -->
