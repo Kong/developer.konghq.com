@@ -27,8 +27,8 @@ prereqs:
   inline:
     - title: Helm
       include_content: prereqs/helm
-    - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster
+    - title: A running Kubernetes cluster with LoadBalancer support
+      include_content: prereqs/kubernetes/mesh-cluster-lb
     - title: Install {{site.mesh_product_name}} with demo configuration
       include_content: prereqs/kubernetes/mesh-quickstart
 
