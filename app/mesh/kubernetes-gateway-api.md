@@ -1,7 +1,6 @@
 ---
 title: "Kubernetes built-in gateways with {{site.mesh_product_name}}"
 description: "Learn how to use Kubernetes Gateway API with {{site.mesh_product_name}}, including support for built-in gateways, HTTP/TCP routing, TLS, GAMMA, and multi-zone limitations."
-permalink: /mesh/kubernetes-gateway-api/
 content_type: reference
 layout: reference
 products:
@@ -14,7 +13,7 @@ works_on:
   - konnect
 
 min_version:
-  - mesh: '2.9'
+  mesh: '2.9'
 
 related_resources:
   - text: Deploy Kong Mesh on Kubernetes
