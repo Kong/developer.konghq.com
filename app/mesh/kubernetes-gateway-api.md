@@ -16,7 +16,7 @@ min_version:
   mesh: '2.9'
 
 related_resources:
-  - text: Deploy Kong Mesh on Kubernetes
+  - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
   - text: Data Plane on Kubernetes
     url: /mesh/data-plane-kubernetes/
