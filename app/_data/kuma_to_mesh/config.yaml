@@ -357,7 +357,7 @@ pages:
     url: '/mesh/gateway-pods-k8s/'
     related_resources:
       - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
+        url: /how-to/set-up-a-built-in-mesh-gateway/
       - text: 'Deploy Kong Mesh on Kubernetes'
         url: '/mesh/kubernetes/'
       - text: Configure a built-in gateway
@@ -373,7 +373,7 @@ pages:
     url: '/mesh/gateway-listeners/'
     related_resources:
       - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
+        url: /how-to/set-up-a-built-in-mesh-gateway/
       - text: Configure a built-in gateway
         url: '/mesh/managing-ingress-traffic/gateway/'
       - text: 'Configuring built-in routes'
@@ -387,7 +387,7 @@ pages:
     url: '/mesh/gateway-routes/'
     related_resources:
       - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
+        url: /how-to/set-up-a-built-in-mesh-gateway/
       - text: Configure a built-in gateway
         url: '/mesh/managing-ingress-traffic/gateway/'
       - text: 'Configuring built-in listeners'
@@ -405,7 +405,7 @@ pages:
     url: '/mesh/managing-ingress-traffic/gateway/'
     related_resources:
       - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
+        url: /how-to/set-up-a-built-in-mesh-gateway/
       - text: 'Configuring built-in listeners'
         url: '/mesh/gateway-listeners/'
       - text: 'Configuring built-in routes'

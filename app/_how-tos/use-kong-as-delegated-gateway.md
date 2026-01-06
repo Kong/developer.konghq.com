@@ -12,7 +12,7 @@ bread-crumbs:
 
 related_resources:
   - text: Add a built-in gateway
-    url: /mesh/add-builtin-gateway/
+    url: /how-to/set-up-a-built-in-mesh-gateway/
   - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
   - text: "{{site.kic_product_name}}"
