@@ -17,7 +17,7 @@ related_resources:
     url: '/mesh/reference/kuma-cp/'
   - text: Mesh observability
     url: '/mesh/observability/'
-  - text: Policy Hub
+  - text: "{{site.mesh_product_name}} Policy Hub"
     url: /mesh/policies/
 ---
 
@@ -27,7 +27,7 @@ related_resources:
 * `kuma-dp`: The {{site.mesh_product_name}} data plane proxy executable that invokes `envoy`.
 * `envoy`: The [Envoy](https://www.envoyproxy.io/) executable that we bundle into the archive for convenience.
 * `kumactl`: The user CLI to interact with {{site.mesh_product_name}} (`kuma-cp`) and its data.
-* `kuma-tcp-echo`: A sample application that echos back the requests we make, used for demo purposes.
+* `kuma-tcp-echo`: A sample application that echoes back the requests we make, used for demo purposes.
 
 You can learn how to use each executable by running it with the `-h` flag:
 
@@ -35,7 +35,7 @@ You can learn how to use each executable by running it with the `-h` flag:
 kuma-cp -h
 ```
 
-You can check their version by running the `version [--detailed]` command:
+You can check their versions by running the `version [--detailed]` command:
 
 ```sh
 kuma-cp version --detailed
@@ -43,7 +43,7 @@ kuma-cp version --detailed
 
 ## kumactl
 
-The `kumactl` executable is a very important component in your journey with {{site.mesh_product_name}}. It allows you to:
+The `kumactl` executable is your primary CLI tool for managing {{site.mesh_product_name}}. It allows you to:
 
 * Retrieve the state of {{site.mesh_product_name}} and the configured [policies](/mesh/policies-introduction/) in every environment.
 * Change the state of {{site.mesh_product_name}} by applying new policies with the `kumactl apply [..]` command.
@@ -51,15 +51,16 @@ The `kumactl` executable is a very important component in your journey with {{si
   > This is only possible on Universal. On Kubernetes, `kumactl` is read-only. You can change the state of {{site.mesh_product_name}} by leveraging its CRDs.
 * Install {{site.mesh_product_name}} on Kubernetes, and configure the PostgreSQL schema on Universal (`kumactl install [..]`).
 
-{% tip %}
+{:.info}
 The `kumactl` application is a CLI client for the underlying {{site.mesh_product_name}} HTTP API. Therefore, you can access the state of {{site.mesh_product_name}} by leveraging with the API directly. On Universal, you can also make changes via the HTTP API, while on Kubernetes the HTTP API is read-only.
-{% endtip %}
 
-Available commands on `kumactl` are:
+
+### kumactl commands
+The following commands are available on `kumactl`:
 
 * `kumactl install [..]`: Provides helpers to install {{site.mesh_product_name}} components in Kubernetes.
   * `kumactl install control-plane`: Installs {{site.mesh_product_name}} in Kubernetes in a `{{site.mesh_namespace}}` namespace.
-  * `kumactl install observability`: Installs observability (metrics, logging, tracing) backend in Kubernetes cluster (Prometheus, Grafana, Loki, Jaeger, and Zipkin) in the `mesh-observability` namespace.
+  * `kumactl install observability`: Installs an observability (metrics, logging, tracing) backend in a Kubernetes cluster (Prometheus, Grafana, Loki, Jaeger, and Zipkin) in the `mesh-observability` namespace.
 * `kumactl config [..]`: Configures the local or zone control planes that `kumactl` should talk to. You can have more than one enabled, and the configuration will be stored in `~/.kumactl/config`.
 * `kumactl apply [..]`: Changes the state of {{site.mesh_product_name}}. Only available on Universal.
 * `kumactl get [..]`: Retrieves the raw state of {{site.mesh_product_name}} entities.
@@ -74,10 +75,10 @@ You can use `kumactl [cmd] --help` for documentation.
 
 ### Using variables
 
-When using `kumactl apply` you can specify variables to use your YAML as a template.
+When using `kumactl apply`, you can specify variables to use your YAML as a template.
 This is useful for configuring policies and specifying values at runtime.
 
-For example with this YAML:
+For example, using the following YAML snippet:
 
 ```yaml
 type: Mesh
@@ -91,7 +92,7 @@ mtls:
         expiration: 10h
 ```
 
-You can set the `caType` when applying it:
+You can set the `caType` when applying the configuration:
 
 ```sh
 kumactl apply -f ~/res/mesh.yaml -v caType=builtin
