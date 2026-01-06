@@ -42,9 +42,6 @@ In this guide we'll add a [built-in gateway](/mesh/managing-ingress-traffic/gate
 
 <!-- vale off -->
 {% mermaid %}
----
-title: service graph of the demo app with a builtin gateway on front
----
 flowchart LR
   subgraph edge-gateway
     gw0(/ :8080)
@@ -55,6 +52,7 @@ flowchart LR
   demo-app --> kv
 {% endmermaid %}
 <!-- vale on -->
+> _**Figure 1**: The diagram shows the demo app with a built-in gateway._
 
 ## Configure the gateway
 
