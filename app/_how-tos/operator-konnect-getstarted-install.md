@@ -21,8 +21,6 @@ products:
 works_on:
   - konnect
 
-entities: []
-
 prereqs:
   skip_product: true
 
@@ -35,9 +33,7 @@ tags:
   - helm
 ---
 
-## Install {{site.operator_product_name}}
-
-The {{site.operator_product_name}} can deploy and manage Data Planes connected to a {{ site.konnect_short_name }} Control Plane. Configuration for services, routes, and plugins is managed entirely through {{site.konnect_short_name}} and propagated automatically to Data Planes.
+{{site.operator_product_name}} can deploy and manage Data Planes connected to a {{ site.konnect_short_name }} Control Plane. Configuration for services, routes, and plugins is managed entirely through {{site.konnect_short_name}} and propagated automatically to Data Planes.
 
 ## Create the `kong` namespace
 
@@ -47,16 +43,14 @@ Create the `kong` namespace in your Kubernetes cluster, which is where the Getti
 kubectl create namespace kong
 ```
 
-## Install the Operator
+## Install {{site.operator_product_name}}
 
-{% include prereqs/products/operator.md raw=true v_maj=1 %}
-
-{% include k8s/cert-manager.md %}
+{% include prereqs/products/operator.md raw=true v_maj=2 %}
 
 ### Wait for readiness
 
-Wait for the {{site.operator_product_name}}'s controller deployment to become available before proceeding, ensuring it’s ready to manage resources:
+Wait for {{site.operator_product_name}}'s controller deployment to become available before proceeding, ensuring it’s ready to manage resources:
 
 {% include prereqs/products/operator-validate-deployment.md %}
 
-Once the {{site.operator_product_name}} is ready, you can begin provisioning Gateway Control Planes and Data Planes using {{site.konnect_short_name}} CRDs.
+Once the {{site.operator_product_name}} is ready, you can begin provisioning Gateway control planes and data planes using {{site.konnect_short_name}} CRDs.

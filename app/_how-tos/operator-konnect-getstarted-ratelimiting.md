@@ -71,7 +71,7 @@ Retrieve the external IP address of the deployed data plane:
 ```bash
 NAME=$(kubectl get -o yaml -n kong service | yq '.items[].metadata.name | select(contains("dataplane-ingress"))')
 export PROXY_IP=$(kubectl get svc -n kong $NAME -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
-curl -i $PROXY_IP
+echo $PROXY_IP
 ```
 
 

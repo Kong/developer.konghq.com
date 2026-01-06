@@ -54,4 +54,3 @@ Wait for {{ site.operator_product_name }} to be ready
 {% include prereqs/products/operator-validate-deployment.md %}
 
 Once the `kong-operator-kong-operator-controller-manager` deployment is ready, you can deploy a `DataPlane` resource that is attached to a {{ site.konnect_short_name }} Gateway control plane.
-You can use [this guide](/operator/dataplanes/konnectextension/#konnect-control-plane-reference) to learn more about how to do this.
