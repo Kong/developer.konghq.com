@@ -40,20 +40,6 @@ In the [demo](#install-kong-mesh-with-demo-configuration), traffic can only get 
 In production, you typically set up a gateway to receive traffic external to the mesh.
 In this guide we'll add a [built-in gateway](/mesh/managing-ingress-traffic/gateway/) in front of the demo-app service and expose it publicly.
 
-<!-- vale off -->
-{% mermaid %}
-flowchart LR
-  subgraph edge-gateway
-    gw0(/ :8080)
-  end
-  demo-app(demo-app :5050)
-  kv(kv :5050)
-  gw0 --> demo-app 
-  demo-app --> kv
-{% endmermaid %}
-<!-- vale on -->
-> _**Figure 1**: The diagram shows the demo app with a built-in gateway._
-
 ## Configure the gateway
 
 1. Create a `MeshGatewayInstance` resource to configure the pods that will run the gateway:
@@ -266,6 +252,9 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
    ```sh
    curl -X POST -v --insecure "https://$PROXY_IP:8080/api/counter"
    ```
+   
+   {:.info}
+   > Since we're using a self-signed certificate for testing purposes, we need the `--insecure` flag  .
    
    You should see a successful request with a TLS handshake:
 
