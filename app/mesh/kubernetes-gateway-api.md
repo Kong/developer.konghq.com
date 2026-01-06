@@ -101,7 +101,7 @@ spec:
 ### Multi-zone Deployments
 
 {% capture backendref-limitation %}
-{:.important}
+{:.warning}
 > This limitation exist because, {{site.mesh_product_name}} currently only allows referencing as `backendRefs` [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/).
 > 
 > This is a temporary limitation. [We're actively working on extending `backendRef` to support {{site.mesh_product_name}}'s `MeshServices`](https://github.com/kumahq/kuma/issues/9894). Once this feature is complete, you'll be able to reference services across different clusters within your mesh.
@@ -236,7 +236,7 @@ The Gateway API supports multi-zone deployments, but with some limitations:
 `HTTPRoute` in conformance with
 [the GAMMA specifications](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
 
-GAMMA is a Gateway API subproject focused on mesh implementations of Gateway API
+GAMMA is a Gateway API project focused on mesh implementations of Gateway API
 and extending the Gateway API resources to mesh use cases.
 
 The key feature of `HTTPRoute` for mesh routing is specifying a Kubernetes
