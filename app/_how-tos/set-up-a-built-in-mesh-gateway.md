@@ -67,7 +67,11 @@ kubectl get pods -n kong-mesh-demo
 ```
 
 ```sh
+demo-app-84d96db569-26hdl       2/2     Running   0          58s
+edge-gateway-5d5ddc8cf9-7lv7s   1/1     Running   0          12s
+kv-648747567c-7ddb4             2/2     Running   0          58s
 ```
+{:.no-copy-code}
 
 ```sh
 export PROXY_IP=$(kubectl get svc -n kong-mesh-demo edge-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -79,7 +83,16 @@ curl -i $PROXY_IP:8080
 ```
 
 ```sh
+HTTP/1.1 404 Not Found
+content-length: 62
+content-type: text/plain
+vary: Accept-Encoding
+date: Tue, 06 Jan 2026 14:36:29 GMT
+server: Kuma Gateway
+
+This is a Kuma MeshGateway. No routes match this MeshGateway!
 ```
+{:.no-copy-code}
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -108,11 +121,20 @@ spec:
 ```
 
 ```sh
-curl -v ${PROXY_IP}:8080
+curl -i $PROXY_IP:8080
 ```
 
 ```sh
+HTTP/1.1 403 Forbidden
+content-length: 19
+content-type: text/plain
+date: Tue, 06 Jan 2026 14:37:19 GMT
+server: Kuma Gateway
+x-envoy-upstream-service-time: 0
+
+RBAC: access denied%      
 ```
+{:.no-copy-code}
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -135,14 +157,16 @@ spec:
 ```
 
 ```sh
-curl -XPOST -v ${PROXY_IP}:8080/api/counter
+curl -XPOST -i $PROXY_IP:8080/api/counter
 ```
 
-```sh
+```json
+{"counter":1,"zone":""}
 ```
+{:.no-copy-code}
 
 ```sh
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=${PROXY_IP}"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=$PROXY_IP"
 ```
 
 ```sh
@@ -181,8 +205,10 @@ spec:
 ```
 
 ```sh
-curl -X POST -v --insecure "https://${PROXY_IP}:8080/api/counter"
+curl -X POST -i --insecure "https://$PROXY_IP:8080/api/counter"
 ```
 
 ```sh
+{"counter":2,"zone":""}
 ```
+{:.no-copy-code}
