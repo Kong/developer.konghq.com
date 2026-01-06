@@ -1,12 +1,12 @@
 ---
-title: Deploy a DataPlane
-description: "Deploy a DataPlane using {{ site.operator_product_name }}."
+title: Deploy a data plane
+description: "Deploy a data plane using {{ site.operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
 series:
   id: operator-get-started-hybrid
-  position: 2
+  position: 3
 
 breadcrumbs:
   - /operator/
@@ -25,22 +25,19 @@ works_on:
 entities: []
 
 tldr:
-  q: How can I deploy a DataPlane with {{ site.operator_product_name }}?
+  q: How can I deploy a data plane with {{ site.operator_product_name }}?
   a: Create a `DataPlane` object and use the `KonnectExtension` reference.
 
 prereqs:
-  show_works_on: true
   skip_product: true
   operator:
     konnect:
-      auth: true
-      control_plane: true
       konnectextension: true
 
 ---
 
 {:data-deployment-topology='konnect'}
-## Create the DataPlane
+## Create the data plane
 
 Configure a Kong `DataPlane` by using your `KonnectExtension` reference:
 
@@ -76,4 +73,4 @@ reason: Ready
 {% endvalidation %}
 <!-- vale on -->
 
-If the `DataPlane` has `Ready` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected Data Planes for your Control Plane.
+If the `DataPlane` has `Ready` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected data planes for your control plane.
