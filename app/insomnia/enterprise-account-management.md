@@ -28,7 +28,7 @@ faqs:
     In [**Enterprise Controls**](https://app.insomnia.rest/app/home), from the user drop-down menu, view the badge beneath your name and email address. There are three badges:
     - Owner: Owners have full administrative control. Owners manage organization settings, billing, authentication methods, user access, and security features. Each organization must have at least one owner.
     - Co-owner: Co-owners have nearly the same administrative capabilities as owners and can help manage users and organization settings. Co-owners exist to ensure continuity if the owner becomes unavailable. For reliability and access recovery, we strongly recommend always having at least one co-owner.
-    - Member: Members can access and work within projects assigned to them, based on the permissions granted by an owner or co-owner. Members cannot manage organization-wide settings, billing, or authentication configuration.
+    - Member: Members access and work within projects assigned to them, based on the permissions granted by an owner or a co-owner. Members can't manage organization-wide settings, billing, or authentication configuration.
 ---
 
 ## Enable Enterprise membership
