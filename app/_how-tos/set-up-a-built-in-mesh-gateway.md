@@ -9,7 +9,7 @@ bread-crumbs:
 related_resources:
   - text: Use Kong as a delegated Gateway
     url: '/mesh/gateway-delegated/'
-  - text: Deploy Kong Mesh on Kubernetes
+  - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
 
 min_version:
