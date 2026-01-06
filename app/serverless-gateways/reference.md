@@ -93,14 +93,14 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
 
 {{ request1 | indent:3 }}
 
-  Export the control plane ID to an environment variable: 
+1. Export the generated control plane ID to an environment variable: 
 
-  ```
-  export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
-  ```
+   ```
+   export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
+   ```
 
 <!--vale on -->
-2. Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
+1. Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
 {% capture request2 %}
 {% konnect_api_request %}
