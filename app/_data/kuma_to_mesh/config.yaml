@@ -32,18 +32,6 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/guides/gateway-builtin-kv.md
-    title: 'Add a builtin gateway'
-    description: 'Deploy a built-in gateway in {{site.base_product}} to expose internal mesh services to external traffic. This guide walks through setting up MeshGatewayInstance and MeshGateway resources, defining routes with MeshHTTPRoute, configuring permissions, and securing the gateway with TLS.'
-    url: /mesh/add-builtin-gateway/
-    related_resources:
-      - text: Use Kong as a delegated Gateway
-        url: '/mesh/gateway-delegated/'
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-    min_version:
-      mesh: '2.6'
-  -
     path: app/_src/guides/otel-metrics.md
     title: 'Collect metrics with OpenTelemetry'
     description: 'Collect and export metrics from {{site.mesh_product_name}} with OpenTelemetry and visualize them using Prometheus and Grafana.'
