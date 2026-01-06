@@ -18,20 +18,6 @@ links:
 pages:
 # Must for GA    
   -
-    path: app/_src/guides/gateway-api.md
-    title: 'Kubernetes Gateway API'
-    description: 'Expose your services to external traffic using the Kubernetes Gateway API with {{site.base_product}}. This guide walks through setting up a built-in gateway, defining routes, securing traffic with TLS, and configuring permissions.'
-    url: /mesh/gateway-api/
-    related_resources:
-      - text: Add a builtin gateway
-        url: '/mesh/add-builtin-gateway/'
-      - text: Deploy Kong Mesh in Production with Helm
-        url: /mesh/production-usuage-values/
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-    min_version:
-      mesh: '2.9'
-  -
     path: app/_src/guides/otel-metrics.md
     title: 'Collect metrics with OpenTelemetry'
     description: 'Collect and export metrics from {{site.mesh_product_name}} with OpenTelemetry and visualize them using Prometheus and Grafana.'
