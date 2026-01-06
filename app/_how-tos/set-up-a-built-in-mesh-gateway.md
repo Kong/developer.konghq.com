@@ -3,7 +3,6 @@ title: Set up a built-in {{site.mesh_product_name}} gateway
 description: This guide walks through setting up MeshGatewayInstance and MeshGateway resources, defining routes with MeshHTTPRoute, configuring permissions, and securing the gateway with TLS.
     
 content_type: how_to
-permalink: /mesh/add-builtin-gateway/
 bread-crumbs: 
   - /mesh/
 related_resources:
