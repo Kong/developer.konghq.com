@@ -95,6 +95,11 @@ faqs:
       You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
       
       If you don't have a Kong Support portal account, request access from your org admin or reach out to a Kong representative for an invite.
+  - q: Can a {{site.konnect_short_name}} Organization Admin or Owner reset a {{site.konnect_short_name}} user's password?
+    a: |
+      No, {{site.konnect_short_name}} Organization Admins or Owners can't reset a user's password directly. Each user can only reset their own password.
+      
+      To reset their password, the user should go through the password reset flow from the {{site.konnect_short_name}} [login page](https://signin.cloud.konghq.com). The user should enter their email, then click on **Forgot your password?** to start the reset flow.
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
