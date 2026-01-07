@@ -427,22 +427,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/using-mesh/managing-ingress-traffic/gateway-api.md
-    title: 'Kubernetes Gateway API'
-    description: 'How to use Kubernetes Gateway API with {{site.mesh_product_name}}, including support for built-in gateways, HTTP/TCP routing, TLS, GAMMA, and multi-zone limitations.'
-    url: '/mesh/kubernetes-gateway-api/'
-    related_resources:
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: Data Plane on Kubernetes
-        url: /mesh/data-plane-kubernetes/
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-    min_version:
-      mesh: '2.6'
-  -
     path: app/_src/using-mesh/managing-ingress-traffic/overview.md
     title: 'How ingress works'
     description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}, with visuals and key differences.'
