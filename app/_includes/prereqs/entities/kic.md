@@ -17,7 +17,11 @@ kubectl apply -f {{ site.links.web }}/manifests/kic/{{ service.name }}-service.y
 This how-to also requires {{ routeCount }} pre-configured route{% if routeCount > 1 %}s{% endif %}:
 
 {% for route in include.data.routes %}
-{% include /k8s/httproute.md path=route.path name=route.name service=route.service port=route.port skip_host=true %}
+{% httproute %}
+name: {{ route.name }}
+matches: [{{ route | json_prettify }}]
+skip_host: true
+{% endhttproute %}
 {% endfor %}
 
 {% endif %}

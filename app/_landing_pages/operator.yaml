@@ -65,6 +65,42 @@ rows:
 
   - header:
       type: h2
+      text: "Konnect features"
+      sub_text: Which {{ site.konnect_short_name }} features are available in {{site.operator_product_name}}?
+    columns:
+      - blocks:
+        - type: text
+          config: |
+
+            As we continue moving suport for Kubernetes Gateway API from self-managed control planes, as well as Konnect managed control 
+            planes, we will will open up support for other Konnect products when hosting your Gateway on Kubernetes.
+
+            Providing Gateway API configuration for Kong Gateway, as well as full integration with the Konnect platform opens up the entire
+            API ecosystem.
+
+      - blocks:
+        - type: table
+          config:
+            columns:
+              - title: Product
+                key: product
+              - title: Gateway API
+                key: supported_gwapi
+              - title: Kong entities
+                key: supported_kong
+            rows:
+              - product: Analytics
+                supported_gwapi: true
+                supported_kong: true
+              - product: Application Registration
+                supported_gwapi: Coming Soon
+                supported_kong: true
+              - product: Debugger
+                supported_gwapi: Coming Soon
+                supported_kong: true
+
+  - header:
+      type: h2
       text: "Konnect CRDs"
       sub_text: Manage {{ site.konnect_short_name }} declaratively with first-class CRD support
     columns:
@@ -108,3 +144,5 @@ rows:
                 supported: Planned
               - product: Organization Configuration
                 supported: Planned
+
+

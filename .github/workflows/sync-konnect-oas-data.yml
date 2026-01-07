@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
@@ -23,14 +23,14 @@ jobs:
           private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
           owner: Kong
 
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - name: Fetch OAS Data
         run: |
           cd tools/konnect-oas-data-generator
           npm ci
           node run.js --url ${{ vars.VITE_PORTAL_API_URL }}
       - name: Create pull request
-        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8
         with:
           title: Sync Konnect OAS Data
           commit-message: Sync Konnect OAS Data

@@ -112,5 +112,6 @@
     "https://developer.hashicorp.com/*",
     "https://www.meetup.com/topics/kong/all",
     "https://dashscope.aliyuncs.com/",
-    "https://huggingface.co/settings/tokens"
+    "https://huggingface.co/settings/tokens",
+    "https://docs.stripe.com/tax/tax-codes"
   ]
