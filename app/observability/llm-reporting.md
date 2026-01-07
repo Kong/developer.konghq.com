@@ -22,7 +22,7 @@ works_on:
 api_specs:
     - konnect/analytics-requests
 related_resources:
-  - text: {{site.konnect_short_name}} {{site.observability}}
+  - text: "{{site.konnect_short_name}} {{site.observability}}"
     url: /observability/
   - text: Explorer Reference
     url: /observability/explorer/

@@ -18,7 +18,7 @@ api_specs:
 schema:
     api: konnect/analytics-requests
 related_resources:
-  - text: {{site.konnect_short_name}} {{site.observability}}
+  - text: "{{site.konnect_short_name}} {{site.observability}}"
     url: /observability/
   - text: Dev Portal analytics
     url: /dev-portal/analytics/
