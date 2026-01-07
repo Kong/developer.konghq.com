@@ -115,26 +115,50 @@ variables:
 
 ## Create Python script
 
-Create a test script that sends a request using Vertex AI's native API format. The script constructs the Vertex AI endpoint URL with your project ID and location, then sends a properly formatted request with the required `role` and `parts` structure:
+Create a test script that sends a request using Vertex AI's native API format. The script constructs the Vertex AI endpoint URL with your project ID and location, then sends a properly formatted request:
 
 ```py
 cat << 'EOF' > vertex.py
 #!/usr/bin/env python3
-"""Test Vertex AI format via Kong AI Gateway"""
 from google import genai
+import sys
+import time
+import threading
+
+def spinner():
+    chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+    idx = 0
+    while not stop_spinner:
+        sys.stdout.write(f'\r{chars[idx % len(chars)]} Generating response...')
+        sys.stdout.flush()
+        idx += 1
+        time.sleep(0.1)
+    sys.stdout.write('\r' + ' ' * 30 + '\r')
+    sys.stdout.flush()
 
 client = genai.Client(
     vertexai=True,
-    project="",  # Your project ID
-    location="" # Your location ID
+    project="your-project", # Replace with your project ID
+    location="your-vertex-project-location" # Replace with your loaction ID
 )
 
-response = client.models.generate_content(
-    model="gemini-2.0-flash-exp",
-    contents="Hello!"
-)
+stop_spinner = False
+spinner_thread = threading.Thread(target=spinner)
+spinner_thread.start()
 
-print(response.text)
+try:
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-exp",
+        contents="Hello!"
+    )
+    stop_spinner = True
+    spinner_thread.join()
+    print(f"Model: {response.model_version}")
+    print(response.text)
+except Exception as e:
+    stop_spinner = True
+    spinner_thread.join()
+    print(f"Error: {e}")
 ```
 
 ## Validate the configuration
@@ -147,8 +171,6 @@ python3 vertex.py
 Expected output:
 
 ```text
-Status: 200
-Response:
+Model: gemini-2.0-flash-exp
+Hello there! How can I help you today?
 ```
-
-You should see that the response includes the model's generated text in the `candidates[0].content.parts[0].text` field, along with usage metadata showing token counts for the request and response.

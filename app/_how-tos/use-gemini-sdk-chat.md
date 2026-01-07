@@ -107,7 +107,6 @@ entities:
               provider: gemini
               name: gemini-3-pro-preview
               options:
-                anthropic_version: vertex-2023-10-16
                 gemini:
                   api_endpoint: ${gcp_api_endpoint}
                   project_id: ${gcp_project_id}
@@ -133,13 +132,11 @@ Create a test script that uses the Google Generative AI SDK. The script initiali
 ```py
 cat << 'EOF' > gemini.py
 #!/usr/bin/env python3
-"""Test Google Generative AI SDK via Kong AI Gateway"""
 from google import genai
 
 BASE_URL = "http://localhost:8000/gemini"
 
 def gemini_chat():
-    """Basic chat using Gemini API through Kong AI Gateway"""
 
     try:
         print(f"Connecting to: {BASE_URL}")
