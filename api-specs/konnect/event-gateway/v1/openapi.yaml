@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a2342e1833b637311b792ce2657de55561111ec3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a2342e1833b637311b792ce2657de55561111ec3'
+  x-oas-source: kong/platform-api@78264d1ee3e825ce2aea6c3f98014f716f9b5d2b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/78264d1ee3e825ce2aea6c3f98014f716f9b5d2b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2600,27 +2600,15 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
-        config:
-          description: The configuration of the policy.
-          type: object
         labels:
           $ref: '#/components/schemas/Labels'
         id:
           description: The unique identifier of the policy.
           type: string
           format: uuid
+        config:
+          description: The configuration of the policy.
+          type: object
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         parent_policy_id:
@@ -2630,14 +2618,21 @@ components:
           nullable: true
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          maxLength: 1000
+          minLength: 1
+          x-expression:
+            type: boolean
+            fields: []
       required:
         - type
-        - config
         - id
         - created_at
         - updated_at
     EventGatewayListenerPolicy:
-      description: A listener policy associated with an Event Gateway.
+      description: A policy associated with an Event Gateway.
       type: object
       properties:
         type:
@@ -2659,15 +2654,15 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        config:
-          description: The configuration of the policy.
-          type: object
         labels:
           $ref: '#/components/schemas/Labels'
         id:
           description: The unique identifier of the policy.
           type: string
           format: uuid
+        config:
+          description: The configuration of the policy.
+          type: object
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         parent_policy_id:
@@ -2679,7 +2674,6 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
       required:
         - type
-        - config
         - id
         - created_at
         - updated_at
@@ -2713,12 +2707,12 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayTLSListenerPolicyConfigSensitiveDataAware'
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
         - config
@@ -2752,12 +2746,12 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayTLSListenerPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
         - config
@@ -2943,6 +2937,8 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
@@ -2954,8 +2950,6 @@ components:
           oneOf:
             - $ref: '#/components/schemas/ForwardToClusterBySNIConfig'
             - $ref: '#/components/schemas/ForwardToClusterByPortMappingConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
         - config
@@ -3131,7 +3125,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/EventGatewayACLsPolicy'
     EventGatewayEncryptPolicy:
-      description: Encrypts portions of Kafka records using AES_128_GCM. Keys are therefore 128 bits long.
+      description: Encrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
       properties:
         type:
@@ -3156,24 +3150,25 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayEncryptConfig'
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
           maxLength: 1000
           minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
-        config:
-          description: The configuration of the policy.
-          type: object
-          $ref: '#/components/schemas/EventGatewayEncryptConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3197,7 +3192,7 @@ components:
         - part_of_record
         - encryption_key
     EventGatewayDecryptPolicy:
-      description: Decrypts portions of Kafka records using AES_128_GCM. Keys are therefore 128 bits long.
+      description: Decrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
       properties:
         type:
@@ -3222,24 +3217,25 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayDecryptPolicyConfig'
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
           maxLength: 1000
           minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
-        config:
-          description: The configuration of the policy.
-          type: object
-          $ref: '#/components/schemas/EventGatewayDecryptPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3292,25 +3288,8 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: |
-            A string containing the boolean expression that determines whether the policy is applied.
-
-            When the policy is applied as a child policy of schema_validation, the expression can also reference
-            `record.value` fields.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
-              - record.headers
-              - record.value.validated
-              - record.value.content
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the modify headers policy.
           type: object
@@ -3321,8 +3300,25 @@ components:
               items:
                 $ref: '#/components/schemas/EventGatewayModifyHeaderAction'
               minItems: 1
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          maxLength: 1000
+          minLength: 1
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
+              - record.value.validated
+              - record.value.content
       required:
         - type
         - config
@@ -3353,25 +3349,8 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: |
-            A string containing the boolean expression that determines whether the policy is applied.
-
-            When the policy is applied as a child policy of schema_validation, the expression can also reference
-            `record.value` fields.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
-              - record.headers
-              - record.value.validated
-              - record.value.content
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the modify headers policy.
           type: object
@@ -3382,8 +3361,25 @@ components:
               items:
                 $ref: '#/components/schemas/EventGatewayModifyHeaderAction'
               minItems: 1
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          maxLength: 1000
+          minLength: 1
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
+              - record.value.validated
+              - record.value.content
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
@@ -3397,9 +3393,12 @@ components:
       type: object
       properties:
         type:
+          description: The type name of the policy.
           type: string
           enum:
             - skip_record
+          maxLength: 255
+          minLength: 1
           x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
@@ -3415,6 +3414,8 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         condition:
           description: |
             A string containing the boolean expression that determines whether the policy is applied.
@@ -3422,20 +3423,18 @@ components:
             When the policy is applied as a child policy of schema_validation, the expression can also reference
             `record.value` fields.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: record.value.content.foo.bar == "a-value"
           maxLength: 1000
           minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
+              - context.topic.name
               - record.headers
               - record.value.validated
               - record.value.content
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
     EventGatewaySkipRecordPolicyCreate:
@@ -3443,9 +3442,12 @@ components:
       type: object
       properties:
         type:
+          description: The type name of the policy.
           type: string
           enum:
             - skip_record
+          maxLength: 255
+          minLength: 1
           x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
@@ -3461,6 +3463,8 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         condition:
           description: |
             A string containing the boolean expression that determines whether the policy is applied.
@@ -3468,20 +3472,18 @@ components:
             When the policy is applied as a child policy of schema_validation, the expression can also reference
             `record.value` fields.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: record.value.content.foo.bar == "a-value"
           maxLength: 1000
           minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
+              - context.topic.name
               - record.headers
               - record.value.validated
               - record.value.content
-        labels:
-          $ref: '#/components/schemas/Labels'
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
@@ -3559,18 +3561,8 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the schema validation policy.
           type: object
@@ -3585,8 +3577,19 @@ components:
               $ref: '#/components/schemas/ConsumeValueValidationAction'
           required:
             - type
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          maxLength: 1000
+          minLength: 1
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3617,24 +3620,25 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicyConfig'
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
           maxLength: 1000
           minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
-        config:
-          description: The configuration of the policy.
-          type: object
-          $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3709,24 +3713,23 @@ components:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        config:
+          description: The configuration of the policy.
+          type: object
+          $ref: '#/components/schemas/EventGatewayACLPolicyConfig'
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: context.auth.principal.name == "this-user"
           maxLength: 1000
           minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
-        config:
-          description: The configuration of the policy.
-          type: object
-          $ref: '#/components/schemas/EventGatewayACLPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
         - config

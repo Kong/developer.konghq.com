@@ -28,7 +28,7 @@ const productIcons = {
   'insomnia': insomnia,
   'catalog': catalog,
   'konnect': konnect,
-  'reference-platform': referencePlatform,
+  'konnect-reference-platform': referencePlatform,
   'metering-and-billing': meteringBilling,
   operator,
   kic,

@@ -48,6 +48,14 @@ related_resources:
     url: /plugins/zipkin/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+
+faqs:
+  - q: Why am I not getting traces for my request when it results in a cache hit?
+    a: |
+      Since the [Proxy Caching Advanced](/plugins/proxy-cache-advanced/) plugin runs before the OpenTelemetry plugin, when a response results in a cache hit, the process ends before the OpenTelemetry plugin can run. This means that no traces are produced for that request.
+
+      If needed, you can use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to run the OpenTelemetry plugin first, but be aware that this could impact performance.
+      
 ---
 
 The OpenTelemetry plugin provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.
