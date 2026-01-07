@@ -30,7 +30,7 @@ faqs:
     a: | 
       When you sign out of Insomnia, you can choose to clear all of your stored cloud credentials. This removes any saved credentials used by External Vault providers from your local Insomnia configuration.
 
-      Clearing cloud credentials doesn't break External Vault integrations. Insomnia supports External
+      Clearing cloud credentials doesn't break External Vault integrations. Insomnia supports External Vault providers even when credential fields are empty. This allows you to sign out securely without losing your vault setup.
 
       After signing back in, you might need to re-authenticate or provide credentials again, depending on how the cloud provider handles authentication.
   - q: Do empty credential configurations work across all External Vault cloud providers?
