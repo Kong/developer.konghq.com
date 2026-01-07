@@ -14,6 +14,7 @@
 /gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
+/mesh/requirements/ /mesh/version-compatibility/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
