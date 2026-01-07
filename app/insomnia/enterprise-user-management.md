@@ -88,18 +88,18 @@ In your Enterprise Plan, there are two types of users:
 - **Managed Users**: A user that operates Insomnia from one of your verified domains and is associated with your Enterprise account. These users consume a license.
 - **Unmanaged Users**: A user that operates Insomnia from one of your verified domains, but is not associated with your Enterprise account.
 
-View all of the Unmanaged Users associated with a domain:
-1. From Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains**.
+To view all of the unmanaged users associated with a domain, do the following:
+1. From Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
 1. Select your domain.
 1. From the **Unclaimed Accounts** section, click **Manage**.
 
 {:.decorative}
-> Tip: Keep all users associated with your Enterprise account to avoid compliance breaches and security risks.
+> **Tip:** Keep all users associated with your Enterprise account to avoid compliance breaches and security risks.
 
-To associate Unmanaged Users with your Enterprise account, enable [Domain Capture]():
-1. From Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains**.
+To associate unmanaged users with your Enterprise account, enable [Domain Capture](#domain-capture):
+1. From the Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
 1. Select your domain.
-1. Activate the **Enable** toggle.
+1. Enable the **Enable** toggle.
 
 {:.info}
-> If you have more than one domain, the number of Unmanaged Users will not match the number of Unclaimed Accounts. Unmanaged Users offers a cumulative view of all of the Unmanaged Users spread across all of your domains. When you view the Unclaimed Accounts that is associated with a domain, you are viewing only the Unmanaged Users associated with that specific domain.
+> The number of unmanaged users is cumulative across all your domains. Unclaimed accounts are specific to one domain and only reflect the unmanaged users associated with that specific domain. As a result, if you have more than one domain, the number of unmanaged users won't match the number of unclaimed accounts.
