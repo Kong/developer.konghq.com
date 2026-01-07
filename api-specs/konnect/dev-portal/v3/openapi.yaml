@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
+  x-oas-source: kong/platform-api@8aa1af16cf357a8dd4d57ec59dc7a4c8053a3b2f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8aa1af16cf357a8dd4d57ec59dc7a4c8053a3b2f'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -689,7 +689,7 @@ paths:
       security:
         - {}
       tags:
-        - Content
+        - Portal
   /api/v3/developer:
     post:
       operationId: register
