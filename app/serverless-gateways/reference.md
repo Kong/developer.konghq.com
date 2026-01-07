@@ -71,7 +71,6 @@ To provision a Serverless Gateway, you need to create a serverless control plane
 Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authentication) set in your environment.
 	
 1. Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
-
 <!-- vale off -->
 {% capture request1 %}
 {% control_plane_request %}
@@ -90,16 +89,15 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
       auth_type: pinned_client_certs
 {% endcontrol_plane_request %}
 {% endcapture %}
-
 {{ request1 | indent:3 }}
+<!--vale on -->
 
 1. Export the generated control plane ID to an environment variable: 
 
-   ```
-   export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
-   ```
+    ```
+    export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
+    ```
 
-<!--vale on -->
 1. Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
 {% capture request2 %}
