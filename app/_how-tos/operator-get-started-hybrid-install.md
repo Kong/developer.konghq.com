@@ -23,10 +23,7 @@ works_on:
   - konnect
 
 min_version:
-  kgo: '1.6.1'
-
-
-entities: []
+  operator: '1.6.1'
 
 tldr:
   q: How do I install {{ site.operator_product_name }} in {{ site.konnect_short_name }} hybrid mode?
