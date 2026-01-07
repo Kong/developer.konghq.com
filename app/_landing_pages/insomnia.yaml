@@ -311,5 +311,5 @@ rows:
               a: |
                 On macOS and Windows, Insomnia can update automatically. To enable automatic updates in Insomnia, go to **Preferences > General > Software Updates > Automatically download and install updates** and check the checkbox.
 
-                On Linux, update behavior depends on how you install Insomnia. For example, some installation methods like Flatpak or if your Linux system manages the app, then the app can't update itself. Because Insomnia does not own or maintain all Linux distribution mechanisms, automatic updates are not guaranteed on Linux.
+                On Linux, update behavior depends on how you install Insomnia. For example, some installation methods like Flatpak or if your Linux system manages the app, then the app can't update itself. Because Insomnia doesn't own or maintain all Linux distribution mechanisms, automatic updates aren't guaranteed on Linux.
             
