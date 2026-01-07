@@ -13,7 +13,7 @@ breadcrumbs:
 
 series:
   id: operator-konnectcrds-get-started
-  position: 5
+  position: 6
 
 tldr:
   q: How do I configure rate limiting with {{site.konnect_short_name}} CRDs?
@@ -32,8 +32,6 @@ works_on:
 entities: []
 
 ---
-
-## About rate limiting
 
 Rate limiting is used to control the rate of requests sent to an upstream service. It can be used to prevent DoS attacks, limit web scraping, and other forms of overuse. Without rate limiting, clients have unlimited access to your upstream services, which may negatively impact availability.
 
@@ -66,41 +64,14 @@ data:
 {% endentity_example %}
 <!-- vale on -->
 
-## Deploy a Data Plane
-
-Apply a `DataPlane` resource to deploy a {{site.base_gateway}} instance that connects to your {{site.konnect_short_name}} Control Plane:
-
-```bash
-echo '
-apiVersion: gateway-operator.konghq.com/v1beta1
-kind: DataPlane
-metadata:
-  name: dataplane-example
-  namespace: kong
-spec:
-  extensions:
-  - kind: KonnectExtension
-    name: my-konnect-config
-    group: konnect.konghq.com
-  deployment:
-    podTemplateSpec:
-      spec:
-        containers:
-        - name: proxy
-          image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-' | kubectl apply -f -
-```
-
 ## Get the Proxy IP
 
-Retrieve the external IP address of the deployed Data Plane service:
-
-
+Retrieve the external IP address of the deployed data plane:
 
 ```bash
 NAME=$(kubectl get -o yaml -n kong service | yq '.items[].metadata.name | select(contains("dataplane-ingress"))')
 export PROXY_IP=$(kubectl get svc -n kong $NAME -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
-curl -i $PROXY_IP
+echo $PROXY_IP
 ```
 
 
