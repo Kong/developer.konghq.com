@@ -1,6 +1,6 @@
 ---
-title: Create a Control Plane
-description: Define a Konnect Gateway Control Plane and bind it to your cluster using a `KonnectExtension`.
+title: Create a control plane
+description: Define a {{site.konnect_short_name}} Gateway control plane and bind it to your cluster using a `KonnectExtension`.
 content_type: how_to
 permalink: /operator/konnect/get-started/control-plane/
 breadcrumbs:
@@ -16,9 +16,9 @@ series:
   position: 3
 
 tldr:
-  q: How do I create a Control Plane
+  q: How do I create a control plane?
   a: |
-    Define a `KonnectGatewayControlPlane` to point to your Konnect instance, and a `KonnectExtension` to bind your Data Plane or Gateway to it.
+    Define a `KonnectGatewayControlPlane` to point to your {{site.konnect_short_name}} instance, and a `KonnectExtension` to bind your Data Plane or Gateway to it.
 
 products:
   - operator
@@ -26,21 +26,19 @@ products:
 works_on:
   - konnect
 
-entities: []
-
 related_resources:
-  - text: Deploy a DataPlane
+  - text: Deploy a data plane
     url: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
 
 ---
 
 ## Create a `KonnectGatewayControlPlane`
 
-Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short_name}} Control Plane that your CRDs will target. This enables your cluster to send configuration to Konnect.
+Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short_name}} Control Plane that your CRDs will target. This enables your cluster to send configuration to {{site.konnect_short_name}}.
 
-A `KonnectAPIAuthConfiguration` must already exist to authenticate with the Konnect API. If you haven’t created one yet, see [Create API Authentication](/operator/konnect/get-started/authentication/).
+A `KonnectAPIAuthConfiguration` must already exist to authenticate with the {{site.konnect_short_name}} API. If you haven’t created one yet, see [Create API Authentication](/operator/konnect/get-started/authentication/).
 
-Apply the following configuration to define a Control Plane named `gateway-control-plane`:
+Apply the following configuration to define a control plane named `gateway-control-plane`:
 
 
 <!-- vale off -->
@@ -58,12 +56,15 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-This resource links your cluster to a specific Control Plane instance in {{site.konnect_short_name}} using the credentials provided in `konnect-api-auth`.
+This resource links your cluster to a specific control plane instance in {{site.konnect_short_name}} using the credentials provided in `konnect-api-auth`.
+
+{:.info}
+> Make sure that the `KonnectGatewayControlPlane` resource is in the same namespace as the `KonnectAPIAuthConfiguration` resource.
 
 
-## Bind the Control Plane using a `KonnectExtension`
+## Bind the control plane using a `KonnectExtension`
 
-To finalize the connection between your cluster and the {{site.konnect_short_name}} control plane, create a `KonnectExtension` object. This resource binds your local Gateway or Data Plane to the {{site.konnect_short_name}} control plane you've defined.
+To finalize the connection between your cluster and the {{site.konnect_short_name}} control plane, create a `KonnectExtension` object. This resource binds your local Gateway or data plane to the {{site.konnect_short_name}} control plane you've defined.
 
 <!-- vale off -->
 {% konnect_crd %}
