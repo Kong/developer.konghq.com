@@ -179,12 +179,12 @@ mtls:
 > *   **Why is this needed?** This ensures every request between services is encrypted and identified. {{site.mesh_product_name}} handles the rotation of these certificates automatically (every day in this config), saving you from manual certificate management.
 
 
-## Recommended Pattern: {{site.base_gateway}} (Kong Operator)
+## Recommended Pattern: {{site.base_gateway}} ({{site.operator_product_name}})
 
-Instead of using the {{site.mesh_product_name}}-specific `MeshGateway`, you can use a standard **{{site.base_gateway}} (Koing Operator)** to bridge communication. This is our recommended pattern for production cross-mesh communication.
+Instead of using the {{site.mesh_product_name}}-specific `MeshGateway`, you can use a standard **{{site.base_gateway}} ({{site.operator_product_name}})** to bridge communication. This is our recommended pattern for production cross-mesh communication.
 
 In this model:
-1.  **Cluster 1 (Mesh 1)**: Exposes the `echo` service using a standard Kubernetes Ingress (managed by Kong Ingress Controller).
+1.  **Cluster 1 (Mesh 1)**: Exposes the `echo` service using a standard Kubernetes Ingress/Gateway API (managed by {{site.operator_product_name}}).
 2.  **Cluster 2 (Mesh 2)**: Calls the Ingress endpoint (e.g., `https://echo.example.com`) just like any other external web service.
 
 ### Benefits
