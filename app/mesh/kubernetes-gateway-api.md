@@ -26,14 +26,14 @@ related_resources:
     url: '/mesh/mesh-multizone-service-deployment/'
 ---
 
-{{site.mesh_product_name}} supports the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) for configuring [built-in gateway](/mesh/managing-ingress-traffic/gateway/) as well as traffic routing using the experimental [GAMMA](https://gateway-api.sigs.k8s.io/contributing/gamma/) [routing spec](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
+{{site.mesh_product_name}} supports the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) for configuring [built-in gateways](/mesh/managing-ingress-traffic/gateway/) as well as traffic routing using the experimental [GAMMA](https://gateway-api.sigs.k8s.io/contributing/gamma/) [routing spec](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
 
 To learn how to use the Kubernetes Gateway API to deploy a built-in gateway, see [Set up a built-in Kubernetes gateway with {{site.mesh_product_name}}](/how-to/set-up-a-built-in-kubernetes-gateway/). 
 
-### Customization
+## Customization
 
-The Gateway API provides the `parametersRef` field on `GatewayClass.spec` to add implementation-specific configuration to `Gateways`.
-When using the Gateway API with {{site.mesh_product_name}}, you can refer to a `MeshGatewayConfig` resource:
+The Gateway API provides the `parametersRef` field on `GatewayClass.spec` to add implementation-specific configuration to the `Gateway` resource.
+When using the Kubernetes Gateway API with {{site.mesh_product_name}}, you can refer to a `MeshGatewayConfig` resource:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -51,16 +51,16 @@ spec:
 This resource has the same structure as the [`MeshGatewayInstance` resource](/mesh/gateway-pods-k8s/), but the `tags` field is optional.
 With a `MeshGatewayConfig`, you can then customize the generated `Service` and `Deployment` resources.
 
-### Multi-mesh
+## Multi-mesh
 
 You can specify a `Mesh` for `Gateway` and `HTTPRoute` resources by setting the [`kuma.io/mesh` annotation](/mesh/annotations/#kuma-io-mesh)
 {:.info}
 > `HTTPRoutes` must also have the annotation to reference a `Gateway` from a non-default `Mesh`.
 
-### Cross-mesh
+## Cross-mesh
 
 [Cross-mesh gateways](/mesh/gateway-listeners/#cross-mesh) are supported with the Gateway API.
-You'll just need to create a corresponding `GatewayClass` pointing to a `MeshGatewayConfig` that sets `crossMesh: true`:
+You just need to create a corresponding `GatewayClass` pointing to a `MeshGatewayConfig` that sets `crossMesh: true`:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -98,11 +98,11 @@ spec:
     protocol: HTTP
 ```
 
-### Multi-zone Deployments
+## Multi-zone deployments
 
 {% capture backendref-limitation %}
 {:.warning}
-> This limitation exist because, {{site.mesh_product_name}} currently only allows referencing as `backendRefs` [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/).
+> This limitation exists because {{site.mesh_product_name}} currently only allows referencing as `backendRefs` [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/).
 > 
 > This is a temporary limitation. [We're actively working on extending `backendRef` to support {{site.mesh_product_name}}'s `MeshServices`](https://github.com/kumahq/kuma/issues/9894). Once this feature is complete, you'll be able to reference services across different clusters within your mesh.
 {% endcapture %}
@@ -206,11 +206,11 @@ The Gateway API supports multi-zone deployments, but with some limitations:
 
    {{ backendref-limitation | indent }}
 
-   To better visualize this limitation here's an example scenario that describes how you could configure multi-zone deployments with the Gateway API. In this example, you have the following resources:
+   To better visualize this limitation, here's an example scenario that describes how you could configure multi-zone deployments with the Gateway API. In this example, you have the following resources:
 
    - Two zones (`zone-1` and `zone-2`) in separate Kubernetes clusters
 
-   - Gateway with listener on port `8080` deployed in `zone-1`
+   - A Gateway with a listener on port `8080` deployed in `zone-1`
 
    - Two services:
 
@@ -232,17 +232,12 @@ The Gateway API supports multi-zone deployments, but with some limitations:
 
 ## Service to service routing
 
-{{site.mesh_product_name}} also supports routing between services with
-`HTTPRoute` in conformance with
-[the GAMMA specifications](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
+{{site.mesh_product_name}} also supports routing between services with `HTTPRoute` in conformance with [the GAMMA specifications](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
 
-GAMMA is a Gateway API project focused on mesh implementations of Gateway API
-and extending the Gateway API resources to mesh use cases.
+GAMMA is a Gateway API project focused on mesh implementations of the Gateway API and extending the Gateway API resources to mesh use cases.
 
-The key feature of `HTTPRoute` for mesh routing is specifying a Kubernetes
-`Service` as the `parentRef`, as opposed to a `Gateway`.
-All requests to this `Service` are then filtered and routed as specified in the
-`HTTPRoute`.
+The key feature of `HTTPRoute` for mesh routing is specifying a Kubernetes `Service` as the `parentRef`, as opposed to a `Gateway`.
+All requests to this `Service` are then filtered and routed as specified in the `HTTPRoute`.
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -263,23 +258,18 @@ spec:
       port: 5000
 ```
 
-The namespace of the `HTTPRoute` is key. If the route's namespace and the
-`parentRef`'s namespace are identical, {{site.mesh_product_name}} applies
-the route to _requests from all workloads_.
-If the route's namespace differs from its `parentRef`'s namespace,
-the `HTTPRoute` applies only to requests
-_from workloads in the route's namespace_.
+The namespace of the `HTTPRoute` is key. If the route's namespace and the `parentRef`'s namespace are identical, {{site.mesh_product_name}} applies the route to _requests from all workloads_.
+If the route's namespace differs from its `parentRef`'s namespace, the `HTTPRoute` applies only to requests _from workloads in the route's namespace_.
 
 {:.info}
-> Remember to tag your `Service` ports with `appProtocol: http` to use
-them in an `HTTPRoute`.
+> Remember to tag your `Service` ports with `appProtocol: http` to use them in an `HTTPRoute`.
 
 {:.warning}
-> Because of [how Kuma maps resources](#how-it-works) at the moment, the combination of the `HTTPRoute`s name and namespace and the parent `Service` name and namespace must be no more than 249 characters.
+> Because of [how {{site.mesh_product_name}} currently maps resources](#how-it-works), the combination of the `HTTPRoute` name and namespace and the parent `Service` name and namespace must be no more than 249 characters.
 
 ## How it works
 
-{{site.mesh_product_name}} includes controllers that reconcile Gateway API CRDs and convert them into the corresponding {{site.mesh_product_name}} CRDs.
+{{site.mesh_product_name}} includes controllers that reconcile the Gateway API CRDs and convert them into the corresponding {{site.mesh_product_name}} CRDs.
 This is why in the GUI, {{site.mesh_product_name}} `MeshGateways`/`MeshHTTPRoutes`/`MeshTCPRoutes` are visible and not Kubernetes Gateway API resources.
 
 Kubernetes Gateway API resources serve as the source of truth for {{site.mesh_product_name}} gateways and routes.
