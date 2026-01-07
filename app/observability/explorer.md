@@ -63,7 +63,7 @@ faqs:
     a: If you're sending requests from an internal IP address (local), those won't display in {{site.observability}} charts.
 
 related_resources:
-  - text: Konnect {{site.observability}}
+  - text: {{site.konnect_short_name}} {{site.observability}}
     url: /observability/
   - text: LLM Reporting
     url: /observability/llm-reporting/

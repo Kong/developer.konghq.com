@@ -38,7 +38,7 @@ rows:
         - type: image
           config:
             url: /assets/images/analytics/templates-aa.png
-            alt_text: "Summary dashboard of Konnect {{site.observability}}"
+            alt_text: "Summary dashboard of {{site.konnect_short_name}} {{site.observability}}"
 
   - columns:
       - blocks:

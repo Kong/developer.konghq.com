@@ -11,7 +11,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Konnect {{site.observability}}"
+      text: "{{site.konnect_short_name}} {{site.observability}}"
       sub_text: A single location for context-rich, business-critical API and AI insights
 
   - columns:
@@ -19,7 +19,7 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "What is Konnect {{site.observability}}?"
+                text: "What is {{site.konnect_short_name}} {{site.observability}}?"
               blocks:
                 - type: text
                   text: |
@@ -37,7 +37,7 @@ rows:
         - type: image
           config:
             url: /assets/images/analytics/konnect-api-usage-summary.png
-            alt_text: "Summary dashboard of Konnect {{site.observability}}"
+            alt_text: "Summary dashboard of {{site.konnect_short_name}} {{site.observability}}"
   
   - header:
       type: h2

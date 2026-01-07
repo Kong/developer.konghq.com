@@ -188,4 +188,4 @@
 /advanced-analytics/*   /observability/:splat   301
 /advanced-analytics     /observability          301
 /index/advanced-analytics/  /index/observability/  301
-/advanced-analytics/custom-dashboards/    /custom-dashboards/
+/advanced-analytics/custom-dashboards/    /custom-dashboards/ 301
