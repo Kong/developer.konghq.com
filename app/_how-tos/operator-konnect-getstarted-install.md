@@ -33,7 +33,7 @@ tags:
   - helm
 ---
 
-{{site.operator_product_name}} can deploy and manage Data Planes connected to a {{ site.konnect_short_name }} Control Plane. Configuration for services, routes, and plugins is managed entirely through {{site.konnect_short_name}} and propagated automatically to Data Planes.
+{{site.operator_product_name}} can deploy and manage data planes connected to a {{ site.konnect_short_name }} control plane. Configuration for Services, Routes, and plugins is managed entirely through {{site.konnect_short_name}} and propagated automatically to data planes.
 
 ## Create the `kong` namespace
 
