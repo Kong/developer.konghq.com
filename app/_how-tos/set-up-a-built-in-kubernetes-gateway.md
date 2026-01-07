@@ -12,6 +12,8 @@ related_resources:
     url: /mesh/production-usage-values/
   - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
+  - text: Kubernetes Gateway API
+    url: /mesh/kubernetes-gateway-api/
 
 min_version:
   mesh: '2.9'
@@ -36,7 +38,7 @@ prereqs:
 ---
 
 {% include /how-tos/steps/mesh-built-in-gateway.md section="intro" %}
-In this guide we'll add a [built-in gateway](/mesh/managing-ingress-traffic/gateway/) in front of the demo-app service and expose it publicly.
+In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-api/) to add a [built-in gateway](/mesh/managing-ingress-traffic/gateway/) in front of the demo-app service and expose it publicly.
 
 ## Install the Gateway API CRDs
 
@@ -59,6 +61,7 @@ In this guide we'll add a [built-in gateway](/mesh/managing-ingress-traffic/gate
 1. Restart the {{site.mesh_product_name}} control plane to apply the changes:
    ```sh
    kubectl rollout restart deployment kong-mesh-control-plane -n kong-mesh-system
+   kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
    ```
 
 
@@ -83,16 +86,17 @@ In this guide we'll add a [built-in gateway](/mesh/managing-ingress-traffic/gate
 1. Validate that the pods are running:
 
    ```sh
+   kubectl wait -n kong-mesh-demo --for=condition=ready pod --selector=app=built-in-gateway --timeout=90s
    kubectl get pods -n kong-mesh-demo
    ```
    
    You should see the following result:
 
    ```sh
-   NAME                              READY   STATUS    RESTARTS   AGE
-   demo-app-d8d8bdb97-vhgc8          2/2     Running   0          5m
-   built-in-gateway-cfcccf8c7-hlqz5  1/1     Running   0          20s
-   redis-5484ddcc64-6gbbx            2/2     Running   0          5m
+   NAME                               READY   STATUS    RESTARTS   AGE
+   built-in-gateway-c759dffc8-w7nlt   1/1     Running   0          9s
+   demo-app-84d96db569-6t8kx          2/2     Running   0          106s
+   kv-648747567c-qhmxj                2/2     Running   0          106s
    ```
    {:.no-copy-code}
    
@@ -163,7 +167,8 @@ In this guide we'll add a [built-in gateway](/mesh/managing-ingress-traffic/gate
          protocol: HTTPS
          tls:
            certificateRefs:
-             - name: my-gateway-certificate" | kubectl apply -f -
+             - name: my-gateway-certificate
+               namespace: kong-mesh-demo" | kubectl apply -f -
    ```
 
-{% include /how-tos/steps/mesh-built-in-gateway.md section="cert" %}
+{% include /how-tos/steps/mesh-built-in-gateway.md section="validate" %}

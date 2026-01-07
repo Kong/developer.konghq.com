@@ -80,9 +80,9 @@ In this guide we'll add a [built-in gateway](/mesh/managing-ingress-traffic/gate
 
    ```sh
    NAME                              READY   STATUS    RESTARTS   AGE
-   demo-app-84d96db569-26hdl         2/2     Running   0          58s
-   built-in-gateway-5d5ddc8cf9-7lv7s 1/1     Running   0          12s
-   kv-648747567c-7ddb4               2/2     Running   0          58s
+   built-in-gateway-c49549bf-4z66n   1/1     Running   0          9s
+   demo-app-84d96db569-dqjv6         2/2     Running   0          110s
+   kv-648747567c-4cbkh               2/2     Running   0          110s
    ```
    {:.no-copy-code}
    

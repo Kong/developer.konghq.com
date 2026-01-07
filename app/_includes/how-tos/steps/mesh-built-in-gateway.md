@@ -5,9 +5,9 @@ Used in:
 -->
 
 {% capture intro %}
-To get traffic from outside your mesh with {{site.mesh_product_name}} you can use a built-in gateway.
+To get traffic from outside your mesh with {{site.mesh_product_name}}, you can use a built-in gateway.
 
-In the [demo](#install-kong-mesh-with-demo-configuration), traffic can only get in the mesh by port-forwarding to an instance of an app inside the mesh.
+With the [demo configuration](#install-kong-mesh-with-demo-configuration), traffic can only get in the mesh by port-forwarding to an instance of an app inside the mesh.
 In production, you typically set up a gateway to receive traffic external to the mesh.
 {% endcapture %}
 
