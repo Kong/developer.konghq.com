@@ -13,7 +13,7 @@ breadcrumbs:
 
 series:
   id: operator-konnectcrds-get-started
-  position: 6
+  position: 7
 
 tldr:
   q: How do I enable response caching with {{site.konnect_short_name}} CRDs?
@@ -28,8 +28,6 @@ tools:
 
 works_on:
   - konnect
-
-entities: []
 
 tags:
   - caching
