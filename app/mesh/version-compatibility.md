@@ -16,7 +16,11 @@ works_on:
 related_resources:
   - text: "{{site.mesh_product_name}} version support policy"
     url: /mesh/support-policy/
+  - text: "{{site.mesh_product_name}} resource sizing guidelines"
+    url: /mesh/resource-sizing-guidelines/
 ---
+
+{{site.mesh_product_name}} is compatible with different versions of Kubernetes and Envoy.
 
 ## Kubernetes
 
