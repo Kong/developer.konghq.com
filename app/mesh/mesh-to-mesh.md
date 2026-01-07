@@ -25,8 +25,8 @@ related_resources:
 This guide demonstrates how to set up {{site.mesh_product_name}} across two Kubernetes clusters, configure multiple meshes (mesh1 and mesh2), and enable secure communication between services in different meshes.
 
 {:.warning}
-> **Preferred Pattern: Kong Gateway**
-> For production environments and long-term stability, we recommend using **Kong Gateway (Kong Gateway)** for cross-mesh communication. While {{site.mesh_product_name}} provides a built-in `MeshGateway`, **Kong Gateway** offers:
+> **Preferred Pattern: {{site.base_gateway}}**
+> For production environments and long-term stability, we recommend using **{{site.base_gateway}} ({{site.base_gateway}} Operator)** for cross-mesh communication. While {{site.mesh_product_name}} provides a built-in `MeshGateway`, **{{site.base_gateway}}** offers:
 > *   **Unified Strategy**: Use the same gateway for both North-South (Internet) and East-West (Cross-Mesh) traffic.
 > *   **Standardization**: Fully supports Kubernetes Gateway API.
 > *   **Feature Rich**: Access to the full suite of Kong plugins (OIDC, Rate Limiting, AI Proxy).
@@ -179,9 +179,9 @@ mtls:
 > *   **Why is this needed?** This ensures every request between services is encrypted and identified. {{site.mesh_product_name}} handles the rotation of these certificates automatically (every day in this config), saving you from manual certificate management.
 
 
-## Recommended Pattern: Kong Gateway (Ingress)
+## Recommended Pattern: {{site.base_gateway}} (Kong Operator)
 
-Instead of using the {{site.mesh_product_name}}-specific `MeshGateway`, you can use a standard **Kong Gateway (Ingress)** to bridge communication. This is our recommended pattern for production cross-mesh communication.
+Instead of using the {{site.mesh_product_name}}-specific `MeshGateway`, you can use a standard **{{site.base_gateway}} (Koing Operator)** to bridge communication. This is our recommended pattern for production cross-mesh communication.
 
 In this model:
 1.  **Cluster 1 (Mesh 1)**: Exposes the `echo` service using a standard Kubernetes Ingress (managed by Kong Ingress Controller).
@@ -254,7 +254,7 @@ kubectl apply -f mesh2mtp.yaml
 ```
 
 > **Concepts for Beginners: Traffic Permissions**
-> *   **Implicit Deny:** When mTLS is enabled, the default behavior of the mesh typically shifts to "deny-all" (refered to as `Exclusive` mode in generic terms, though configured via `meshServices` mode). This is a "Zero Trust" security model.
+> *   **Implicit Deny:** When mTLS is enabled, the default behavior of the mesh typically shifts to "deny-all" (referred to as `Exclusive` mode in generic terms, though configured via `meshServices` mode). This is a "Zero Trust" security model.
 > *   **Why `mesh2mtp.yaml`?** Just like Mesh 1, Mesh 2 is also secure by default. Even for a client to talk to the `MeshExternalService` (which looks like a local service), it needs permission. This policy grants that permission within Mesh 2.
 > *   **Granularity:** In a production environment, you would likely replace this with finer-grained permissions (e.g., "Only `frontend` can talk to `backend`").
 
