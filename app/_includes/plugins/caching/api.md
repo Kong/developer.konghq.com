@@ -10,5 +10,5 @@ To access these endpoints, [enable the plugin](./examples/) first.
 The {{include.name}} caching endpoints will appear once the plugin has been enabled.
 
 {:.warning}
-> When using the [`memory` caching strategy](./reference/#schema--config-memory) and running in the Gateway in [hybrid mode](/gateway/hybrid-mode/), this plugin's API endpoints are not available. 
+> When using the [`memory` caching strategy](./reference/#schema--config-memory) and running the Gateway in [hybrid mode](/gateway/hybrid-mode/), this plugin's API endpoints are not available. 
 The data that this API targets is located on the data planes, and data planes can't use the Kong Admin API or {{site.konnect_short_name}} Control Plane API.
