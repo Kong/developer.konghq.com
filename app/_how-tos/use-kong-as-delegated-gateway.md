@@ -11,7 +11,7 @@ bread-crumbs:
   - /mesh/
 
 related_resources:
-  - text: Add a built-in gateway
+  - text: Set up a built-in gateway with {{site.mesh_product_name}}
     url: /how-to/set-up-a-built-in-mesh-gateway/
   - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/

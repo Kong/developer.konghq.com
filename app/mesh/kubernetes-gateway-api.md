@@ -28,7 +28,7 @@ related_resources:
 
 {{site.mesh_product_name}} supports the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) for configuring [built-in gateway](/mesh/managing-ingress-traffic/gateway/) as well as traffic routing using the experimental [GAMMA](https://gateway-api.sigs.k8s.io/contributing/gamma/) [routing spec](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
 
-To learn how to use the Kubernetes Gateway API to deploy a built-in gateway, see [Set up a built-in Kubernetes gateway {{site.mesh_product_name}}](/how-to/set-up-a-built-in-kubernetes-gateway/). 
+To learn how to use the Kubernetes Gateway API to deploy a built-in gateway, see [Set up a built-in Kubernetes gateway with {{site.mesh_product_name}}](/how-to/set-up-a-built-in-kubernetes-gateway/). 
 
 ### Customization
 

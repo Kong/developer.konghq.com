@@ -1,12 +1,12 @@
 ---
-title: Set up a built-in Kubernetes gateway {{site.mesh_product_name}}
+title: Set up a built-in Kubernetes gateway with {{site.mesh_product_name}}
 description: This guide walks through setting up a built-in Kubernetes gateway, defining routes, securing traffic with TLS, and configuring permissions.
     
 content_type: how_to
 bread-crumbs: 
   - /mesh/
 related_resources:
-  - text: Set up a built-in {{site.mesh_product_name}} gateway
+  - text: Set up a built-in gateway with {{site.mesh_product_name}}
     url: '/how-to/set-up-a-built-in-mesh-gateway/'
   - text: Deploy {{site.mesh_product_name}} in Production with Helm
     url: /mesh/production-usage-values/
