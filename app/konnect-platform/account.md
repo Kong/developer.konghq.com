@@ -99,7 +99,7 @@ faqs:
     a: |
       No, {{site.konnect_short_name}} Organization Admins or Owners can't reset a user's password directly. Each user can only reset their own password.
       
-      To reset their password, the user should go through the password reset flow: [https://signin.cloud.konghq.com/u/reset-password](https://signin.cloud.konghq.com/u/reset-password).
+      To reset their password, the user should go through the password reset flow from the {{site.konnect_short_name}} [login page](https://signin.cloud.konghq.com). The user should enter their email, then click on **Forgot your password?** to start the reset flow.
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
