@@ -48,6 +48,14 @@ related_resources:
     url: /plugins/zipkin/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+
+faqs:
+  - q: Why am I not getting traces for my request when it results in a cache hit?
+    a: |
+      Since the [Proxy Caching Advanced](/plugins/proxy-cache-advanced/) plugin runs before the OpenTelemetry plugin, when a response results in a cache hit, the process ends before the OpenTelemetry plugin can run. This means that no traces are produced for that request.
+
+      If needed, you can use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to run the OpenTelemetry plugin first, but be aware that this could impact performance.
+      
 ---
 
 The OpenTelemetry plugin provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.
@@ -174,6 +182,11 @@ The top level span has the following attributes:
 - `net.peer.ip`: Client IP address
 
 For more information, see the [Tracing reference](/gateway/tracing/).
+
+{:.info}
+>**Note**: When the OpenTelemetry plugin is used together with the [Proxy Cache Advanced](/plugins/proxy-cache-advanced/) plugin, cache-HIT responses are not traced.
+> This is expected behavior. When a request results in a cache-HIT, the response is served before the request lifecycle reaches the phase where the OpenTelemetry plugin executes. As a result, no spans are generated for cache-HIT requests. Cache-MISS requests continue through the full request lifecycle and are traced normally.
+
 
 ### Gen AI tracing attributes {% new_in 3.13 %}
 

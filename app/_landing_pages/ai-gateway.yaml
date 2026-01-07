@@ -316,6 +316,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: Canary release
+            description: Slowly roll out software changes to a subset of users.
+            icon: /assets/icons/plugins/canary.png
+            cta:
+              url: /plugins/canary/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: Proxy AI CLI tools through Kong AI Gateway
             description: Configure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers
             icon: /assets/icons/terminal.svg

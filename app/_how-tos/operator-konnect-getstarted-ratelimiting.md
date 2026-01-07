@@ -66,7 +66,6 @@ data:
 {% endentity_example %}
 <!-- vale on -->
 
-
 ## Deploy a Data Plane
 
 Apply a `DataPlane` resource to deploy a {{site.base_gateway}} instance that connects to your {{site.konnect_short_name}} Control Plane:
