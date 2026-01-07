@@ -307,4 +307,9 @@ rows:
               a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
             - q: How often does Insomnia release updates?
               a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog).
+            - q: Does Insomnia automatically update to the latest version?
+              a: |
+                On macOS and Windows, Insomnia can update automatically. To enable automatic updates in Insomnia, go to **Preferences > General > Software Updates > Automatically download and install updates** and check the checkbox.
+
+                On Linux, update behavior depends on how you install Insomnia. For example, some installation methods like Flatpak or if your Linux system manages the app, then the app can't update itself. Because Insomnia does not own or maintain all Linux distribution mechanisms, automatic updates are not guaranteed on Linux.
             
