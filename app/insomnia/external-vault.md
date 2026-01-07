@@ -37,7 +37,7 @@ faqs:
     a: | 
       Yes. External Vault supports empty credential configurations across all supported cloud providers.
 
-      This means that your external vault integrations continue to work even when credential fields are empty. Insomnia can operate without permanently storing cloud credentials in the configuration. 
+      This means that your external vault integrations continue to work even when credential fields are empty. Insomnia can operate without permanently storing cloud credentials in the configuration.
 ---
 
 Insomnia supports integrating with external vault service providers to retrieve secret values automatically when sending requests.
