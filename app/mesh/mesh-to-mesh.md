@@ -9,7 +9,6 @@ products:
   - mesh
 tags: 
   - zones
-  - mesh
 works_on:
   - on-prem
   - konnect
