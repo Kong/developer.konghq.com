@@ -77,9 +77,6 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 faqs:
-  - q: What version of {{site.base_gateway}} supports Cohere document-grounded chat?
-    a: |
-      Cohere document-grounded chat requires {{site.base_gateway}} 3.13 or later.
   - q: What is document-grounded chat and why is it useful?
     a: |
       Document-grounded chat generates answers based only on provided documents, automatically filtering for relevance and providing citations. This improves RAG pipelines by combining retrieval filtering and answer generation in a single step.

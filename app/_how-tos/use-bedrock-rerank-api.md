@@ -83,9 +83,6 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 faqs:
-  - q: What version of {{site.base_gateway}} supports Bedrock Rerank?
-    a: |
-      AWS Bedrock Rerank requires {{site.base_gateway}} 3.13 or later.
   - q: What is reranking and why is it useful?
     a: |
       Reranking takes a list of search results and reorders them by semantic relevance to a query. This improves retrieval quality in RAG pipelines by ensuring the most relevant documents are sent to the LLM for generation.
