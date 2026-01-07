@@ -33,8 +33,8 @@ There are many ways to run workloads and deploy applications and while we test s
 
 To see if you may need to increase your control plane's spec, there are two main metrics to pay attention to:
 
-- propagation time (xds_delivery): this is the time it takes between a change in the mesh and the data plane receiving its updated configuration. Think about it as the "reactivity of your mesh".
-- configuration generation time (xds_generation): this is the time it takes for the configuration to be generated.
+- propagation time (`xds_delivery`): this is the time it takes between a change in the mesh and the data plane receiving its updated configuration. Think about it as the "reactivity of your mesh".
+- configuration generation time (`xds_generation`): this is the time it takes for the configuration to be generated.
 
 For any large mesh using transparent-proxy it's highly recommended to use [reachable-services](/docs/{{ page.release }}/production/dp-config/transparent-proxying/#reachable-services).
 
