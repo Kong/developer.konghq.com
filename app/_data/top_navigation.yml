@@ -63,9 +63,9 @@ platform:
           product: operator
     - title: Govern APIs
       links:
-        - text: Analytics
-          url: /advanced-analytics/
-          product: advanced-analytics
+        - text: Observability
+          url: /observability/
+          product: observability
         - text: Metering & Billing
           url: /metering-and-billing/
           product: metering-and-billing

@@ -17,7 +17,7 @@ description: |
     Learn how to view contextual developer and Dev Portal analytics.
 related_resources:
   - text: "{{site.konnect_short_name}} Analytics"
-    url: /advanced-analytics/
+    url: /observability/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
 ---
@@ -33,7 +33,7 @@ Each application has its own dashboard, which provides a high-level summary of t
 * Error code distribution
 
 {:.info}
-> All of these metrics can be viewed within a selected time frame of up to 90 days and are available exclusively to customers with [Advanced Analytics](/advanced-analytics/).
+> All of these metrics can be viewed within a selected time frame of up to 90 days and are available exclusively to customers with [{{site.konnect_short_name}} {{site.observability}}](/observability/).
 
 ![Dev Portal Analytics](/assets/images/dev-portal/dev-portal-analytics.png)
 > _**Figure 1:** An example dashboard for an application_
@@ -47,4 +47,4 @@ The {{site.konnect_short_name}} platform provides built-in contextual analytics 
 
 {:.info}
 > * In addition to these high-level insights, administrators can explore the [{{site.konnect_short_name}} Analytics](https://cloud.konghq.com/analytics/summary) section to create custom reports, build dashboards, and view detailed request data for a more comprehensive and flexible understanding of portal activity.
-> * Portal and API contextual analytics are available to all customers. Access to {{site.konnect_short_name}} Analytics and application contextual analytics insights requires Advanced Analytics.
+> * Portal and API contextual analytics are available to all customers. Access to {{site.konnect_short_name}} Analytics and application contextual analytics insights requires {{site.observability}}.

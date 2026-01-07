@@ -5,10 +5,10 @@ layout: reference
 description: |
     Custom Dashboards allow you to create dashboards for your specific use cases.
 breadcrumbs:
-  - /advanced-analytics/
+  - /observability/
   - /custom-dashboards/
 products:
-    - advanced-analytics
+    - observability
 tags:
   - custom-dashboards
 works_on:
@@ -18,8 +18,8 @@ api_specs:
 schema:
     api: konnect/analytics-requests
 related_resources:
-  - text: Konnect Advanced Analytics
-    url: /advanced-analytics/
+  - text: "{{site.konnect_short_name}} {{site.observability}}"
+    url: /observability/
   - text: Dev Portal analytics
     url: /dev-portal/analytics/
 ---
@@ -63,7 +63,7 @@ For more information, learn how to create a [custom dashboard from a template](/
 
 Tiles represent charts that you can add to your [Dashboards](https://cloud.konghq.com/us/analytics/dashboards/). You can create new chart tiles from scratch or add a tile from an existing report.
 
-To add a new tile, select **New Tile** from the view. After selecting from a series of charts, you'll be taken into a chart editor similar to the [Explorer](/advanced-analytics/explorer/) experience, where you can adjust the chart until it shows what you need.
+To add a new tile, select **New Tile** from the view. After selecting from a series of charts, you'll be taken into a chart editor similar to the [Explorer](/observability/explorer/) experience, where you can adjust the chart until it shows what you need.
 
 In the **Edit tile** view, you can:
 
