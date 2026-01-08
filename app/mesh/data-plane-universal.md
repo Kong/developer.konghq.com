@@ -1,5 +1,5 @@
 ---
-title: Data plane on Universal
+title: "{{site.mesh_product_name}} data plane on Universal"
 description: Configure data plane proxies on VMs or bare metal with manual Dataplane resource definitions and lifecycle management.
 
 content_type: reference
