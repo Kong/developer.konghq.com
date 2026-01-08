@@ -13,7 +13,7 @@ tags:
   - data-plane
 
 related_resources:
-  - text: Deploy Kong Mesh on Universal
+  - text: Deploy {{site.mesh_product_name}} on Universal
     url: '/mesh/universal/'
   - text: 'Data plane on Kubernetes'
     url: '/mesh/data-plane-kubernetes/'
