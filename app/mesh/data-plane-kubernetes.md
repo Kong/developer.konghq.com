@@ -1,5 +1,5 @@
 ---
-title: Data plane on Kubernetes
+title: "{{site.mesh_product_name}} data plane on Kubernetes"
 description: Configure data plane proxies on Kubernetes with automatic sidecar injection, tag generation, and custom container settings.
 
 content_type: reference
