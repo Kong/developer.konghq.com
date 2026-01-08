@@ -62,10 +62,10 @@ prereqs:
 
         3. Export the required values as environment variables:
            ```sh
-           export AWS_ACCESS_KEY_ID="<your-access-key-id>"
-           export AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
-           export AWS_REGION="<region>"
-           export AWS_MODEL="arn:aws:bedrock:<region>::foundation-model/cohere.rerank-v3-5:0"
+           export DECK_AWS_ACCESS_KEY_ID="<your-access-key-id>"
+           export DECK_AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
+           export DECK_AWS_REGION="<region>"
+           export DECK_AWS_MODEL="arn:aws:bedrock:<region>::foundation-model/cohere.rerank-v3-5:0"
            ```
 
            Replace `<region>` in both `AWS_REGION` and the `AWS_MODEL` ARN with your AWS Bedrock deployment region. See [FAQs](./#what-rerank-models-are-available) below for more details.
