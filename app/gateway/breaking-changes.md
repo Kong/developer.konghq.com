@@ -35,7 +35,7 @@ deployment methods, set of features in use, or custom plugins, for example.
 
 ## 3.13.x breaking changes
 
-Review the [changelog](/gateway/changelog/#31300) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-13-0-0) for all the changes in this release.
 
 ### 3.13.0.0
 
@@ -74,7 +74,7 @@ rows:
 
 ## 3.12.x breaking changes
 
-Review the [changelog](/gateway/changelog/#31200) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-12-0-0) for all the changes in this release.
 
 ### 3.12.0.0
 
@@ -126,7 +126,7 @@ rows:
 
 ## 3.11.x breaking changes
 
-Review the [changelog](/gateway/changelog/#31100) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-11-0-0) for all the changes in this release.
 
 ### 3.11.0.0
 
@@ -213,7 +213,7 @@ rows:
 
 ## 3.10.x breaking changes
 
-Review the [changelog](/gateway/changelog/#31000) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-10-0-0) for all the changes in this release.
 
 ### 3.10.0.0
 
@@ -295,7 +295,7 @@ rows:
 
 ## 3.9.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3900) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-9-0-0) for all the changes in this release.
 
 ### 3.9.0.0
 
@@ -353,7 +353,7 @@ rows:
 
 ## 3.8.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3800) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-8-0-0) for all the changes in this release.
 
 ### 3.8.0.0
 
@@ -433,7 +433,7 @@ rows:
 
 ## 3.7.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3700) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-7-0-0) for all the changes in this release.
 
 ### 3.7.0.0
 
@@ -496,7 +496,7 @@ rows:
 
 ## 3.6.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3600) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-6-0-0) for all the changes in this release.
 
 ### 3.6.1.0
 
