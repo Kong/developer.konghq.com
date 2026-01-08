@@ -37,7 +37,7 @@ tags:
 
 tldr:
   q: How do I use AWS Bedrock Rerank with the AI Proxy plugin?
-  a: Configure AI Proxy with provider bedrock and route_type llm/v1/rerank. Send a query and candidate documents to the /rerank endpoint. The API returns documents reordered by relevance score.
+  a: Configure AI Proxy with the `bedrock` provider and the `llm/v1/chat` route type. Send a query and candidate documents to the `/rerank` endpoint. The API returns documents reordered by relevance score.
 
 tools:
   - deck
@@ -54,9 +54,9 @@ prereqs:
 
         Export these values as environment variables:
         ```sh
-        export AWS_ACCESS_KEY_ID="<your-access-key-id>"
-        export AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
-        export AWS_REGION="us-west-2"
+        export DECK_AWS_ACCESS_KEY_ID="<your-access-key-id>"
+        export DECK_AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
+        export DECK_AWS_REGION="us-west-2"
         ```
         Ensure the rerank model is enabled in your AWS Bedrock console under "Model Access".
       icon_url: /assets/icons/aws.svg
@@ -135,12 +135,14 @@ variables:
 
 AWS Bedrock's Rerank API reorders candidate documents by semantic relevance to a query. Send a query and document list (typically from vector or keyword search). The API returns the top N documents ordered by relevance score. This reduces context size before LLM generation and prioritizes relevant information. The rerank API scores and orders documents. It does not generate answers or citations.
 
-The following script sends a query about exercise benefits with five candidate documents. Three documents contain relevant information about exercise and health. Two documents discuss unrelated topics (the Eiffel Tower and Python programming). The script shows the original retrieval order, then the reranked order with relevance scores.
+The following script sends a query with 5 candidate documents to AWS Bedrock's rerank endpoint. Three documents discuss exercise and health benefits. Two documents are intentionally irrelevant (Eiffel Tower, Python programming).
+
+The script shows the original document order, then the reranked order with relevance scores. The `numberOfResults: 3` parameter limits the response to the top 3 documents. This demonstrates how reranking filters and reorders documents by semantic relevance before LLM generation.
 
 Create the script:
 
 ```sh
-cat > grounded-chat-demo.py << 'EOF'
+cat > bedrock-rerank-demo.py << 'EOF'
 #!/usr/bin/env python3
 """Demonstrate AWS Bedrock Rerank for improving RAG retrieval quality"""
 
@@ -243,7 +245,7 @@ This script sends a query with 5 candidate documents to AWS Bedrock's rerank end
 The script shows the original document order, then the reranked order with relevance scores. The `numberOfResults: 3` parameter limits the response to the top 3 documents. This demonstrates how reranking filters and reorders documents by semantic relevance before LLM generation.
 
 {:.info}
-> Verify that the response structure includes `results` with `index` and `relevanceScore` fields. Check AWS Bedrock's API documentation or test the script to confirm this behavior.
+> Verify that the response structure includes `results` with `index` and `relevanceScore` fields. Check [AWS Bedrock's API documentation](https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html) or test the script to confirm this behavior.
 
 ## Validate the configuration
 

@@ -51,7 +51,7 @@ prereqs:
 
         Export the API key as an environment variable:
         ```sh
-        export COHERE_API_KEY="<your-api-key>"
+        export DECK_COHERE_API_KEY="<your-api-key>"
         ```
       icon_url: /assets/icons/cohere.svg
     - title: Python and requests library
@@ -118,7 +118,9 @@ variables:
 
 Cohere's document-grounded chat filters candidate documents and generates answers in a single API call. Send a query with candidate documents. The model selects relevant documents, generates an answer using only those documents, and returns citations linking answer segments to sources. This replaces multi-step RAG pipelines with one request.
 
-The following script sends a query about green tea with five candidate documents. Three documents contain relevant information about green tea's health benefits. Two documents discuss unrelated topics (the Eiffel Tower and Python programming). The script shows which documents the model selected, which it filtered out, and how the answer cites specific sources.
+The following script sends a query with 5 candidate documents to Cohere's chat endpoint. Three documents discuss green tea health benefits. Two documents are intentionally irrelevant (Eiffel Tower, Python programming).
+
+The script attempts to show which documents the model used by comparing the `documents` field in the response to the input documents. This demonstrates whether Cohere's document-grounded chat filters out irrelevant documents automatically.
 
 Create the script:
 ```sh
@@ -198,12 +200,9 @@ print("\n" + "=" * 60)
 EOF
 ```
 
-This script sends a query with 5 candidate documents to Cohere's chat endpoint. Three documents discuss green tea health benefits. Two documents are intentionally irrelevant (Eiffel Tower, Python programming).
-
-The script attempts to show which documents the model used by comparing the `documents` field in the response to the input documents. This demonstrates whether Cohere's document-grounded chat filters out irrelevant documents automatically.
 
 {:.info}
-> Verify that the `return_documents` parameter actually returns the filtered document subset. Check Cohere's API documentation or test the script to confirm this behavior.
+> Verify that the `return_documents` parameter actually returns the filtered document subset. Check [Cohere's API documentation](https://docs.cohere.com/reference/about) or test the script to confirm this behavior.
 
 ## Validate the configuration
 
