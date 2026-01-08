@@ -272,7 +272,7 @@ columns:
 rows:
   - issue: Incremental config sync doesn't work in stream mode
     description: |
-      When running in incremental sync mode ([`incremental_sync=on](/gateway/configuration/#incremental-sync)`), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
+      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
       This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
       <br><br>
       The HTTP subsystem is not affected.
@@ -280,7 +280,7 @@ rows:
       **Workaround**: 
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
       * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
-    status: Not fixed
+    status: Fixed in 3.10.0.6
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
