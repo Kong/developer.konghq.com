@@ -23,10 +23,10 @@ related_resources:
 
 ## Sizing your control plane
 
-Generally, a control plane with 4vCPU and 2GB of memory will be able to accommodate more than 1000 data planes.
+Generally, a {{site.mesh_product_name}} control plane with 4vCPU and 2GB of memory will be able to accommodate more than 1000 data planes.
 
-While it's difficult to give a precise number, a good rule of thumb is to assign about 1MB of memory per data plane.
-When it comes to CPUs, {{site.mesh_product_name}} handles parallelism extremely well since its architecture uses a lot of shared nothing go-routines, so more CPUs usually enable quicker propagation of changes.
+A good rule of thumb is to assign about 1MB of memory per data plane.
+When it comes to CPUs, {{site.mesh_product_name}} handles parallelism extremely well since its architecture uses a lot of shared-nothing goroutines, so more CPUs usually enable quicker propagation of changes.
 
 However, we highly recommend that you to run your own load tests prior to going to production.
 There are many ways to run workloads and deploy applications, and while we test some of them, you are in the best position to build a realistic benchmark of what you do.
@@ -36,9 +36,9 @@ To see if you may need to increase your control plane's spec, there are two main
 - Propagation time (`xds_delivery`): This is the time it takes between a change in the mesh and the data plane receiving its updated configuration. Think about it as the reactivity of your mesh.
 - Configuration generation time (`xds_generation`): This is the time it takes for the configuration to be generated.
 
-For any large mesh using a transparent proxy it's highly recommended to use [reachable services](/mesh/performance-tuning/#reachable-services).
+For any large mesh using a transparent proxy, we recommend using [reachable services](/mesh/performance-tuning/#reachable-services).
 
-You can also find tuning configuration in the [fine-tuning](/mesh/performance-tuning/) section of the docs.
+You can also find tuning configuration in the [performance fine-tuning](/mesh/performance-tuning/) documentation.
 
 ## Sizing your sidecar container on Kubernetes
 
@@ -54,7 +54,7 @@ resources:
         memory: 512Mi
 ```
 
-This configuration should be enough for most use cases. In some cases, when you can't scale horizontally or your service handles lots of concurrent traffic for example, you may need to change these values. You can do this using the [`ContainerPatch` resource](/mesh/data-plane-kubernetes/#custom-container-configuration). 
+This configuration should be enough for most use cases. In some cases (for example, when you can't scale horizontally or your service handles lots of concurrent traffic), you may need to change these values. You can do this using the [`ContainerPatch` resource](/mesh/data-plane-kubernetes/#custom-container-configuration). 
 
 For example, you can modify individual parameters under `resources`:
 
@@ -91,6 +91,5 @@ spec:
 
 Check the [`ContainerPatch` documentation](/mesh/data-plane-kubernetes/#workload-matching) to learn how to apply these resources to specific pods.
 
-{% tip %}
-**Note**: When changing these resources, remember that they must be described using [Kubernetes resource units](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes)
-{% endtip %} 
+{:.info}
+> **Note**: When changing these resources, remember that they must be described using [Kubernetes resource units](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes).

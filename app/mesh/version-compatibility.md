@@ -1,7 +1,7 @@
 ---
 title: "{{site.mesh_product_name}} version compatibility"
 description: "Learn about the versions of {{site.mesh_product_name}} compatible with specific versions of Kubernetes and Envoy."
-content_type: reference
+content_type: policy
 layout: reference
 products:
   - mesh
@@ -56,7 +56,7 @@ compatible_versions:
 
 The following table presents the general compatibility of {{site.mesh_product_name}} with specific Envoy versions.
 By default, each version of {{site.mesh_product_name}} uses the latest compatible Envoy version, and supports
-Envoy versions used in two previous minor version of {{site.mesh_product_name}}.
+Envoy versions used in the two previous minor versions of {{site.mesh_product_name}}.
 
 {% version_compatibility_table %}
 product: "{{site.mesh_product_name}}"
