@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@272b65b4e8f8824decfee08208b46d72954731f5
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/272b65b4e8f8824decfee08208b46d72954731f5'
+  x-oas-source: kong/platform-api@b4016a6364a5babc31b78a52b072e6cd046b7481
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b4016a6364a5babc31b78a52b072e6cd046b7481'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -5239,7 +5239,7 @@ components:
               type: boolean
               default: true
             try_it_insomnia:
-              description: Enables users to open the API spec in Insomnia to explore and send requests with the native client.
+              description: Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported.
               type: boolean
               default: true
             infinite_scroll:
