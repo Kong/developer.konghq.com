@@ -612,20 +612,6 @@ pages:
       - text: Zone Ingress
         url: /mesh/zone-ingress/
   -
-    path: app/_src/production/dp-config/dpp-on-universal.md
-    title: 'Data plane on Universal'
-    description: 'How to run and configure Data Plane proxies on Universal mode with {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-universal/'
-    related_resources:
-      - text: Deploy Kong Mesh on Universal
-        url: '/mesh/universal/'
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
     path: app/_src/production/dp-config/dpp.md
     title: 'Data plane proxy'
     description: 'Explanation of the components, behavior, and configuration of Data Plane proxies in {{site.mesh_product_name}}.'
